@@ -21,7 +21,7 @@ uses
   FMX.TMSWebGMapsCommon, FMX.TMSWebGMapsReverseGeocoding, FMX.ListBox,
   FMX.DateTimeCtrls, FMX.Controls3D, FMX.Layers3D, FMX.Menus, Generics.Collections,
   FMX.Gestures, System.Actions, FMX.ActnList, System.ImageList, FMX.ImgList,
-  FMX.Grid.Style, FMX.Media, FMX.Surfaces, FMX.VirtualKeyboard
+  FMX.Grid.Style, FMX.Media, FMX.Surfaces, FMX.VirtualKeyboard, FMX.SearchBox
   {$IFDEF ANDROID}
   ,FMX.Helpers.Android, Androidapi.Helpers,
   Androidapi.JNI.Location, Androidapi.JNIBridge,
@@ -328,6 +328,7 @@ type
     bCancelPhoto: TButton;
     ePhotoComment: TEdit;
     Label15: TLabel;
+    Label20: TLabel;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bReloginClick(Sender: TObject);
@@ -1775,6 +1776,13 @@ begin
   pMap.Visible := true;
   FWebGMap := TTMSFMXWebGMaps.Create(Self);
   FWebGMap.Align := TAlignLayout.Client;
+  FWebGMap.ControlsOptions.PanControl.Visible := false;
+  FWebGMap.ControlsOptions.ZoomControl.Visible := false;
+  FWebGMap.ControlsOptions.MapTypeControl.Visible := false;
+  FWebGMap.ControlsOptions.ScaleControl.Visible := false;
+  FWebGMap.ControlsOptions.StreetViewControl.Visible := false;
+  FWebGMap.ControlsOptions.OverviewMapControl.Visible := false;
+  FWebGMap.ControlsOptions.RotateControl.Visible := false;
   FWebGMap.MapOptions.ZoomMap := 18;
   FWebGMap.Parent := pMap;
   FWebGMap.OnDownloadFinish := WebGMapDownloadFinish;
@@ -1802,6 +1810,8 @@ begin
 end;
 
 procedure TfrmMain.ChangeMainPageUpdate(Sender: TObject);
+var
+  i : integer;
 begin
   if Assigned(FWebGMap) then
   try
@@ -1828,24 +1838,31 @@ begin
       sbBack.Visible := true;
     end;
 
-    lCaption.TextSettings.Font.Size := 18;
-    if tcMain.ActiveTab = tiRoutes then
-      lCaption.Text := 'Маршруты'
-    else
-    if tcMain.ActiveTab = tiPartners then
-      lCaption.Text := 'Торговые точки'
-    else
     if tcMain.ActiveTab =  tiPartnerInfo then
     begin
       lCaption.TextSettings.Font.Size := 11;
       lCaption.Text := DM.qryPartnerName.AsString;
     end
     else
-    if tcMain.ActiveTab = tiHandbook then
-      lCaption.Text := 'Справочники'
-    else
-    if tcMain.ActiveTab = tiOrderExternal then
-      lCaption.Text := 'Заявки сторонние';
+    begin
+      if (tcMain.ActiveTab <> tiMap) and (tcMain.ActiveTab <> tiPhotosList) then
+        lCaption.TextSettings.Font.Size := 18;
+
+      if tcMain.ActiveTab = tiRoutes then
+        lCaption.Text := 'Маршруты'
+      else
+      if tcMain.ActiveTab = tiPartners then
+        lCaption.Text := 'Торговые точки'
+      else
+      if tcMain.ActiveTab = tiHandbook then
+        lCaption.Text := 'Справочники'
+      else
+      if tcMain.ActiveTab = tiOrderExternal then
+        lCaption.Text := 'Заявки сторонние'
+      else
+      if tcMain.ActiveTab = tiStoreReal then
+        lCaption.Text := 'Остатки';
+    end;
   end;
 
 
@@ -1865,6 +1882,13 @@ begin
 
   if tcMain.ActiveTab = tiOrderExternal then
     AddedNewOrderItems;
+
+  if tcMain.ActiveTab = tiGoodsItems then
+    for I := 0 to lwGoodsItems.Controls.Count-1 do
+    if lwGoodsItems.Controls[I].ClassType = TSearchBox then
+    begin
+      TSearchBox(lwGoodsItems.Controls[I]).Text := '';
+    end;
 end;
 
 procedure TfrmMain.ChangePartnerInfoLeftUpdate(Sender: TObject);
@@ -2039,10 +2063,10 @@ begin
     CurGPSN := StringReplace(CurGPSN, ',', '.', [rfReplaceAll]);
     CurGPSE := StringReplace(CurGPSE, ',', '.', [rfReplaceAll]);
 
-    sQuery := sQuery + ' order by ((P.GPSN - ' + CurGPSN + ') * ' + LatitudeRatio + ') * ' +
-      '((P.GPSN - ' + CurGPSN + ') * ' + LatitudeRatio + ') + ' +
-      '((P.GPSE - ' + CurGPSE + ') * ' + LongitudeRatio + ') * ' +
-      '((P.GPSE - ' + CurGPSE + ') * ' + LongitudeRatio + ')';
+    sQuery := sQuery + ' order by ((IFNULL(P.GPSN, 0) - ' + CurGPSN + ') * ' + LatitudeRatio + ') * ' +
+      '((IFNULL(P.GPSN, 0) - ' + CurGPSN + ') * ' + LatitudeRatio + ') + ' +
+      '((IFNULL(P.GPSE, 0) - ' + CurGPSE + ') * ' + LongitudeRatio + ') * ' +
+      '((IFNULL(P.GPSE, 0) - ' + CurGPSE + ') * ' + LongitudeRatio + ')';
   end;
 
   DM.qryPartner.Open(sQuery);

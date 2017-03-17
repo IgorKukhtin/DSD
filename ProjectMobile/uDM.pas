@@ -30,7 +30,10 @@ type
   private
     FDataSets: TDataSets;
     FLastDataSet: TFDTable;
+    FIndexes: TStringList;
     function GetDataSet(const ATableName: String): TFDTable;
+    function GetIndex(const AIndex: integer): string;
+    function GetIndexCount: integer;
     procedure MakeIndex(ATable: TFDTable);
     procedure MakeDopIndex(ATable: TFDTable);
   public
@@ -40,6 +43,8 @@ type
     procedure AddTable(ATable: TFDTable);
     property DataSets: TDataSets read FDataSets;
     property DataSet[const ATableName: String]: TFDTable read GetDataSet;
+    property Indexes[const AIndex: integer]: string read GetIndex;
+    property IndexCount: integer read GetIndexCount;
   End;
 
   TDM = class(TDataModule)
@@ -225,6 +230,11 @@ type
     qryGoodsItemsGoodsID: TIntegerField;
     qryGoodsItemsKindID: TIntegerField;
     qryGoodsItemsFullInfo: TWideStringField;
+    qryGoodsItemsKind: TStringField;
+    qryGoodsItemsMeasure: TStringField;
+    qryGoodsItemsPrice: TFloatField;
+    qryGoodsItemsRemains: TFloatField;
+    qryGoodsItemsName: TStringField;
     tblMovement_OrderExternalId: TAutoIncField;
     tblObject_PriceListVATPercent: TFloatField;
     tblMovementItem_OrderExternalId: TAutoIncField;
@@ -253,11 +263,6 @@ type
     cdsOrderItemsGoodsId: TIntegerField;
     cdsOrderItemsKindId: TIntegerField;
     cdsOrderItemsWeight: TFloatField;
-    qryGoodsItemsKind: TStringField;
-    qryGoodsItemsMeasure: TStringField;
-    qryGoodsItemsPrice: TFloatField;
-    qryGoodsItemsRemains: TFloatField;
-    qryGoodsItemsName: TStringField;
     cdsOrderExternal: TClientDataSet;
     cdsOrderExternalName: TStringField;
     cdsOrderExternalPrice: TStringField;
@@ -324,6 +329,31 @@ type
     qryPartnerisOperDateOrder: TBooleanField;
     qryGoodsForPriceListKindName: TStringField;
     qryGoodsForPriceListFullName: TWideStringField;
+    tblMovement_Promo: TFDTable;
+    tblMovement_PromoId: TIntegerField;
+    tblMovement_PromoInvNumber: TStringField;
+    tblMovement_PromoOperDate: TDateTimeField;
+    tblMovement_PromoStatusId: TIntegerField;
+    tblMovement_PromoStartSale: TDateTimeField;
+    tblMovement_PromoEndSale: TDateTimeField;
+    tblMovement_PromoisChangePercent: TBooleanField;
+    tblMovement_PromoCommentMain: TStringField;
+    tblMovementItem_PromoPartner: TFDTable;
+    tblMovementItem_PromoPartnerId: TIntegerField;
+    tblMovementItem_PromoPartnerMovementId: TIntegerField;
+    tblMovementItem_PromoPartnerContractId: TIntegerField;
+    tblMovementItem_PromoPartnerPartnerId: TIntegerField;
+    tblMovementItem_PromoGoods: TFDTable;
+    tblMovementItem_PromoGoodsId: TIntegerField;
+    tblMovementItem_PromoGoodsMovementId: TIntegerField;
+    tblMovementItem_PromoGoodsGoodsId: TIntegerField;
+    tblMovementItem_PromoGoodsGoodsKindId: TIntegerField;
+    tblMovementItem_PromoGoodsPriceWithOutVAT: TFloatField;
+    tblMovementItem_PromoGoodsPriceWithVAT: TFloatField;
+    tblMovementItem_PromoGoodsTaxPromo: TFloatField;
+    cdsOrderItemsIsPromo: TBooleanField;
+    cdsOrderItemsisChangePercent: TBooleanField;
+    qryGoodsItemsPromoPrice: TWideStringField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -338,6 +368,7 @@ type
     function Connect: Boolean;
     function ConnectWithOutDB: Boolean;
     function CheckStructure: Boolean;
+    procedure CreateIndexes;
     function CreateDataBase: Boolean;
 
     function SynchronizeWithMainDatabase : string;
@@ -395,10 +426,12 @@ constructor TStructure.Create;
 begin
   inherited Create;
   FDataSets := TDataSets.Create(False);
+  FIndexes := TStringList.Create;
 end;
 
 destructor TStructure.Destroy;
 begin
+  FreeAndNil(FIndexes);
   freeAndNil(FDataSets);
   inherited;
 end;
@@ -420,6 +453,19 @@ begin
   result := nil;
 end;
 
+function TStructure.GetIndex(const AIndex: integer): string;
+begin
+  if (AIndex >=0) and (AIndex < FIndexes.Count)  then
+    Result := FIndexes[AIndex]
+  else
+    Result := '';
+end;
+
+function TStructure.GetIndexCount: integer;
+begin
+  Result := FIndexes.Count;
+end;
+
 procedure TStructure.OpenDS(ATable: TFDTable);
 begin
   if ATable.Active then
@@ -430,58 +476,26 @@ begin
 end;
 
 procedure TStructure.MakeIndex(ATable: TFDTable);
-{var
-  IndexName: String;}
+var
+  IndexName: String;
 begin
-
-
-  {???
-  IndexName := 'PK_' + ATable.TableName;
   if (ATable.IndexDefs.Count = 0) then
   Begin
-    if SameText(ATable.TableName, 'Words_rel_Table') then
-    begin
-      ATable.IndexDefs.Add(IndexName, ATable.Fields[0].FieldName + ';' +
-        ATable.Fields[1].FieldName + ';' + ATable.Fields[2].FieldName,
-        [ixPrimary, ixUnique]);
-      with ATable.Indexes.Add do
-      begin
-        Name := IndexName;
-        Fields := ATable.Fields[0].FieldName + ';' + ATable.Fields[1].FieldName
-          + ';' + ATable.Fields[2].FieldName;
-      end;
-    end
-    else if SameText(ATable.TableName, 'Doc_rel_Podmiot_Table') then
-    begin
-      ATable.IndexDefs.Add(IndexName, ATable.Fields[0].FieldName + ';' +
-        ATable.Fields[1].FieldName, [ixPrimary, ixUnique]);
-      with ATable.Indexes.Add do
-      begin
-        Name := IndexName;
-        Fields := ATable.Fields[0].FieldName + ';' + ATable.Fields[1]
-          .FieldName + ';';
-      end;
-    end
+    IndexName := 'PK_' + ATable.TableName;
+
+    if SameText(ATable.TableName, 'Object_Partner') then
+      FIndexes.Add('CREATE UNIQUE INDEX IF NOT EXISTS `' + IndexName + '` ON `' + ATable.TableName + '` (`Id`,`ContractId`)')
     else
-    begin
-      ATable.IndexDefs.Add(IndexName, ATable.Fields[0].FieldName,
-        [ixPrimary, ixUnique]);
-      with ATable.Indexes.Add do
-      begin
-        Name := IndexName;
-        Fields := ATable.Fields[0].FieldName;
-      end;
-    end;
-    ATable.IndexName := IndexName;
+    if SameText(ATable.Fields[0].FieldName, 'Id') and (ATable.Fields[0].DataType <> ftAutoInc) then
+      FIndexes.Add('CREATE UNIQUE INDEX IF NOT EXISTS `' + IndexName + '` ON `' + ATable.TableName + '` (`Id`)');
   End;
-  }
 end;
 
 procedure TStructure.MakeDopIndex(ATable: TFDTable);
 var
   IndexName: String;
 begin
-  if SameText(ATable.TableName, 'Words_Table') then
+  {if SameText(ATable.TableName, 'Words_Table') then
   begin
     IndexName := 'idx_Words_Table_TextWord';
     ATable.IndexDefs.Add(IndexName, 'TextWord', [ixUnique]);
@@ -500,7 +514,7 @@ begin
       Name := IndexName;
       Fields := 'DocID';
     end;
-  end;
+  end; }
 End;
 
 procedure TDM.InitStructure;
@@ -529,26 +543,23 @@ begin
     conMain.Connected := True;
   except
     ON E: Exception DO
-    Begin
+    begin
       if not ConnectWithOutDB or not CreateDataBase then
         Exit(False);
-    End;
+    end;
   end;
   if not conMain.Connected then
     Exit(False);
 
   if not CheckStructure then
-  Begin
-    conMain.Connected := False;
-    Exit(False);
-  End;
-  {
-  if not CheckSystemData then
   begin
     conMain.Connected := False;
     Exit(False);
-  End;
-  }
+  end
+  else
+    CreateIndexes;
+
+
   result := conMain.Connected;
 end;
 
@@ -704,6 +715,28 @@ begin
   result := True;
 end;
 
+procedure TDM.CreateIndexes;
+var
+  i : integer;
+  qryCreateIndex : TFDQuery;
+begin
+  if Structure.IndexCount > 0 then
+  begin
+    qryCreateIndex := TFDQuery.Create(nil);
+    try
+      qryCreateIndex.Connection := DM.conMain;
+
+      for i := 0 to Structure.IndexCount - 1 do
+      begin
+        qryCreateIndex.SQL.Text := Structure.Indexes[i];
+        qryCreateIndex.ExecSQL;
+      end;
+    finally
+      FreeAndNil(qryCreateIndex);
+    end;
+  end;
+end;
+
 function TDM.CreateDataBase: Boolean;
 begin
   if not conMain.Connected then
@@ -782,6 +815,9 @@ begin
     GetDictionaries('Contract');
     GetDictionaries('PriceList');
     GetDictionaries('PriceListItems');
+    GetDictionaries('PromoMain');
+    GetDictionaries('PromoPartner');
+    GetDictionaries('PromoGoods');
 
     conMain.Commit;
     Screen_Cursor_crDefault;
@@ -907,6 +943,24 @@ begin
     begin
       GetStoredProc.StoredProcName := 'gpSelectMobile_Object_PriceListItems';
       CurDictTable := tblObject_PriceListItems;
+    end
+    else
+    if AName = 'PromoMain' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Movement_Promo';
+      CurDictTable := tblMovement_Promo;
+    end
+    else
+    if AName = 'PromoPartner' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Movement_PromoPartner';
+      CurDictTable := tblMovementItem_PromoPartner;
+    end
+    else
+    if AName = 'PromoGoods' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_MovementItem_PromoGoods';
+      CurDictTable := tblMovementItem_PromoGoods;
     end;
 
     if GetStoredProc.StoredProcName = '' then
@@ -1259,7 +1313,7 @@ end;
 
 procedure TDM.GenerateStoreRealItemsList;
 begin
-  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA Name, GK.VALUEDATA Kind, ' +
+  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA Name, GK.VALUEDATA Kind, ''-'' PromoPrice, ' +
     'GLK.REMAINS, PI.ORDERPRICE PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
     'GK.VALUEDATA || '';'' || M.VALUEDATA || '';0'' FullInfo ' +
     'from OBJECT_GOODS G ' +
@@ -1485,7 +1539,9 @@ var
   ArrValue : TArray<string>;
   Recommend : Extended;
 begin
-  ArrValue := AGoods.Split([';']);
+  ArrValue := AGoods.Split([';']); //GoodsId;KindId;название товара;вид товара;рекомендуемое количество;
+                                   //остаток товара;цена;единица измерения;вес;цена по акции;учитывать ли скидку при акции;
+                                   //количество по умолчанию
 
   cdsOrderItems.Append;
   cdsOrderItemsId.AsString := ArrValue[0];
@@ -1493,7 +1549,8 @@ begin
   cdsOrderItemsKindId.AsString := ArrValue[2];    // KindId
   cdsOrderItemsName.AsString := ArrValue[3];      // название товара
   cdsOrderItemsType.AsString := ArrValue[4];      // вид товара
-  if (ArrValue[5] = '0') or (qryPartnerCalcDayCount.AsFloat = 0) then                         // рекомендуемое количество
+
+  if (ArrValue[5] = '0') or (qryPartnerCalcDayCount.AsFloat = 0) then // рекомендуемое количество
     cdsOrderItemsRecommend.AsString := '-'
   else
   begin
@@ -1510,11 +1567,26 @@ begin
     end;
   end;
 
-  cdsOrderItemsRemains.AsString := ArrValue[6];   // остаток товара
-  cdsOrderItemsPrice.AsString := ArrValue[7];     // цена
-  cdsOrderItemsMeasure.AsString := ' ' + ArrValue[8];   // единица измерения
-  cdsOrderItemsWeight.AsString := ArrValue[9];         // вес
-  cdsOrderItemsCount.AsString := ArrValue[10];             // количество по умолчанию
+  cdsOrderItemsRemains.AsString := ArrValue[6];       // остаток товара
+  cdsOrderItemsPrice.AsString := ArrValue[7];         // цена без акции
+  cdsOrderItemsMeasure.AsString := ' ' + ArrValue[8]; // единица измерения
+  cdsOrderItemsWeight.AsString := ArrValue[9];        // вес
+
+  if ArrValue[10] <> '-1' then                        // цена по акции
+  begin
+    cdsOrderItemsIsPromo.AsBoolean := true;
+    cdsOrderItemsPrice.AsString := ArrValue[10];
+    if ArrValue[11] = '1' then                        // учитывать ли скидку при акции
+      cdsOrderItemsisChangePercent.AsBoolean := true
+    else
+      cdsOrderItemsisChangePercent.AsBoolean := false;
+  end
+  else
+  begin
+    cdsOrderItemsIsPromo.AsBoolean := false;
+  end;
+
+  cdsOrderItemsCount.AsString := ArrValue[12];        // количество по умолчанию
 
   cdsOrderItems.Post;
 end;
@@ -1522,7 +1594,7 @@ end;
 procedure TDM.DefaultOrderExternalItems;
 var
   qryGoodsListSale : TFDQuery;
-  PriceField : string;
+  PriceField, PromoPriceField : string;
 begin
   cdsOrderItems.Open;
   cdsOrderItems.EmptyDataSet;
@@ -1536,9 +1608,15 @@ begin
     else
       PriceField := 'SalePrice';
 
+    if qryPartnerPriceWithVAT.AsBoolean then
+      PromoPriceField := 'PriceWithVAT'
+    else
+      PromoPriceField := 'PriceWithOutVAT';
+
     qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
-      'GK.VALUEDATA || '';'' || GLS.AMOUNTCALC || '';'' || CASE WHEN SRI.AMOUNT IS NULL THEN 0 ELSE SRI.AMOUNT END || ' +
-      ''';'' || PI.' + PriceField + ' || '';'' || M.VALUEDATA || '';'' || G.WEIGHT || '';0'', SRI.AMOUNT ' +
+      'GK.VALUEDATA || '';'' || GLS.AMOUNTCALC || '';'' || IFNULL(SRI.AMOUNT, 0) || '';'' || ' +
+      'PI.' + PriceField + ' || '';'' || M.VALUEDATA || '';'' || G.WEIGHT || '';'' || ' +
+      'IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 0) || '';0''' +
       'from OBJECT_GOODSLISTSALE GLS ' +
       'JOIN OBJECT_GOODS G ON GLS.GOODSID = G.ID ' +
       'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID AND GK.ISERASED = 0 ' +
@@ -1546,9 +1624,15 @@ begin
       ' AND DATE(SR.OPERDATE) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', Date())) + ' AND SR.STATUSID <> ' + tblObject_ConstStatusId_Erased.AsString + ' ' +
       'LEFT JOIN MOVEMENTITEM_STOREREAL SRI ON SRI.GOODSID = G.ID AND SRI.GOODSKINDID = GK.ID AND SRI.MOVEMENTID = SR.ID ' +
       'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
-      'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = ' + qryPartnerPRICELISTID.AsString + ' ' +
+      'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+      'LEFT JOIN MOVEMENTITEM_PROMOPARTNER PP ON PP.PARTNERID = :PARTNERID  and PP.CONTRACTID = :CONTRACTID ' +
+      'LEFT JOIN MOVEMENTITEM_PROMOGOODS PG ON PG.MOVEMENTID = PP.MOVEMENTID and PG.GOODSID = G.ID and PG.GOODSKINDID = GK.ID ' +
+      'LEFT JOIN MOVEMENT_PROMO P ON P.ID = PP.MOVEMENTID ' +
       'WHERE GLS.PARTNERID = ' + qryPartnerId.AsString + ' and GLS.ISERASED = 0 order by G.VALUEDATA ';
 
+    qryGoodsListSale.ParamByName('PARTNERID').AsInteger := qryPartnerId.AsInteger;
+    qryGoodsListSale.ParamByName('CONTRACTID').AsInteger := qryPartnerCONTRACTID.AsInteger;
+    qryGoodsListSale.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID.AsInteger;
     qryGoodsListSale.Open;
 
     qryGoodsListSale.First;
@@ -1567,23 +1651,30 @@ end;
 
 procedure TDM.LoadOrderExtrenalItems(AId : integer);
 var
-  qryGoodsListSale : TFDQuery;
-  PriceField : string;
+  qryGoodsListOrder : TFDQuery;
+  PriceField, PromoPriceField : string;
 begin
   cdsOrderItems.Open;
   cdsOrderItems.EmptyDataSet;
 
-  qryGoodsListSale := TFDQuery.Create(nil);
+  qryGoodsListOrder := TFDQuery.Create(nil);
   try
-    qryGoodsListSale.Connection := conMain;
+    qryGoodsListOrder.Connection := conMain;
 
     if qryPartnerisOperDateOrder.AsBoolean then
       PriceField := 'OrderPrice'
     else
       PriceField := 'SalePrice';
 
-    qryGoodsListSale.SQL.Text := 'select IEO.ID || '';'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || GK.VALUEDATA || '';'' || ' +
-      '0 || '';'' || CASE WHEN SRI.AMOUNT IS NULL THEN 0 ELSE SRI.AMOUNT END || '';'' || PI.' + PriceField + ' || '';'' || M.VALUEDATA || '';'' || G.WEIGHT || '';'' || IEO.AMOUNT ' +
+    if qryPartnerPriceWithVAT.AsBoolean then
+      PromoPriceField := 'PriceWithVAT'
+    else
+      PromoPriceField := 'PriceWithOutVAT';
+
+    qryGoodsListOrder.SQL.Text := 'select IEO.ID || '';'' || G.ID || '';'' || GK.ID || '';'' || ' +
+      'G.VALUEDATA || '';'' || GK.VALUEDATA || '';'' || 0 || '';'' || IFNULL(SRI.AMOUNT, 0) || '';'' || ' +
+      'PI.' + PriceField + ' || '';'' || M.VALUEDATA || '';'' || G.WEIGHT || '';'' || ' +
+      'IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 0) || '';'' || IEO.AMOUNT ' +
       'from MOVEMENTITEM_ORDEREXTERNAL IEO ' +
       'JOIN OBJECT_GOODS G ON IEO.GOODSID = G.ID ' +
       'JOIN OBJECT_GOODSKIND GK ON GK.ID = IEO.GOODSKINDID ' +
@@ -1591,45 +1682,62 @@ begin
       ' AND DATE(SR.OPERDATE) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', Date())) + ' AND SR.STATUSID <> ' + tblObject_ConstStatusId_Erased.AsString + ' ' +
       'LEFT JOIN MOVEMENTITEM_STOREREAL SRI ON SRI.GOODSID = G.ID AND SRI.GOODSKINDID = GK.ID AND SRI.MOVEMENTID = SR.ID ' +
       'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-      'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = ' + qryPartnerPRICELISTID.AsString + ' ' +
+      'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+      'LEFT JOIN MOVEMENTITEM_PROMOPARTNER PP ON PP.PARTNERID = :PARTNERID  and PP.CONTRACTID = :CONTRACTID ' +
+      'LEFT JOIN MOVEMENTITEM_PROMOGOODS PG ON PG.MOVEMENTID = PP.MOVEMENTID and PG.GOODSID = G.ID and PG.GOODSKINDID = GK.ID ' +
+      'LEFT JOIN MOVEMENT_PROMO P ON P.ID = PP.MOVEMENTID ' +
       'WHERE IEO.MOVEMENTID = ' + IntToStr(AId) + ' order by G.VALUEDATA ';
 
-    qryGoodsListSale.Open;
 
-    qryGoodsListSale.First;
-    while not qryGoodsListSale.EOF do
+    qryGoodsListOrder.ParamByName('PARTNERID').AsInteger := qryPartnerId.AsInteger;
+    qryGoodsListOrder.ParamByName('CONTRACTID').AsInteger := qryPartnerCONTRACTID.AsInteger;
+    qryGoodsListOrder.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID.AsInteger;
+    qryGoodsListOrder.Open;
+
+    qryGoodsListOrder.First;
+    while not qryGoodsListOrder.EOF do
     begin
-      AddedGoodsToOrderExternal(qryGoodsListSale.Fields[0].AsString);
+      AddedGoodsToOrderExternal(qryGoodsListOrder.Fields[0].AsString);
 
-      qryGoodsListSale.Next;
+      qryGoodsListOrder.Next;
     end;
 
-    qryGoodsListSale.Close;
+    qryGoodsListOrder.Close;
   finally
-    qryGoodsListSale.Free;
+    qryGoodsListOrder.Free;
   end;
 end;
 
 procedure TDM.GenerateOrderItemsList;
 var
-  PriceField : string;
+  PriceField, PromoPriceField : string;
 begin
   if qryPartnerisOperDateOrder.AsBoolean then
     PriceField := 'OrderPrice'
   else
     PriceField := 'SalePrice';
 
-  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA Name, GK.VALUEDATA Kind, ' +
+  if qryPartnerPriceWithVAT.AsBoolean then
+    PromoPriceField := 'PriceWithVAT'
+  else
+    PromoPriceField := 'PriceWithOutVAT';
+
+  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA Name, GK.VALUEDATA Kind, IFNULL(' + PromoPriceField + ', ''-'') PromoPrice, ' +
     'GLK.REMAINS, PI.' + PriceField + ' PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
     'GK.VALUEDATA || '';'' || 0 || '';'' || 0 || '';'' || PI.' + PriceField + ' || '';'' || ' +
-    'M.VALUEDATA || '';'' || G.WEIGHT || '';0'' FullInfo ' +
+    'M.VALUEDATA || '';'' || G.WEIGHT || '';'' || IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 0) || '';0'' FullInfo ' +
     'from OBJECT_GOODS G ' +
     'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID AND GLK.ISERASED = 0 ' +
     'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERASED = 0 ' +
     'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
     'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+    'LEFT JOIN MOVEMENTITEM_PROMOPARTNER PP ON PP.PARTNERID = :PARTNERID  and PP.CONTRACTID = :CONTRACTID ' +
+    'LEFT JOIN MOVEMENTITEM_PROMOGOODS PG ON PG.MOVEMENTID = PP.MOVEMENTID and PG.GOODSID = G.ID and PG.GOODSKINDID = GK.ID ' +
+    'LEFT JOIN MOVEMENT_PROMO P ON P.ID = PP.MOVEMENTID ' +
     'WHERE G.ISERASED = 0 order by Name';
 
+  qryGoodsItems.ParamByName('PARTNERID').AsInteger := qryPartnerId.AsInteger;
+  qryGoodsItems.ParamByName('CONTRACTID').AsInteger := qryPartnerCONTRACTID.AsInteger;
   qryGoodsItems.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID.AsInteger;
   qryGoodsItems.Open;
 end;
