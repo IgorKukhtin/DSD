@@ -913,7 +913,8 @@ uses
   ReestrReturnJournal in '..\..\Forms\Document\ReestrReturnJournal.pas' {ReestrReturnJournalForm: TParentForm},
   ReestrReturnStartMovement in '..\..\Forms\Document\ReestrReturnStartMovement.pas' {ReestrReturnStartMovementForm: TParentForm},
   ReestrReturnUpdateMovement in '..\..\Forms\Document\ReestrReturnUpdateMovement.pas' {ReestrReturnUpdateMovementForm: TParentForm},
-  MobilePriceListItems_Object in '..\..\Forms\Guides\MobilePriceListItems_Object.pas' {MobilePriceListItems_ObjectForm: TParentForm};
+  MobilePriceListItems_Object in '..\..\Forms\Guides\MobilePriceListItems_Object.pas' {MobilePriceListItems_ObjectForm: TParentForm},
+  MobileConst_Object in '..\..\Forms\Guides\MobileConst_Object.pas' {MobileConst_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -1,9 +1,9 @@
 object MobileConst_ObjectForm: TMobileConst_ObjectForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1088#1072#1081#1089' '#1083#1080#1089#1090'>'
-  ClientHeight = 464
-  ClientWidth = 1020
+  Caption = #1050#1086#1085#1089#1090#1072#1085#1090#1099
+  ClientHeight = 367
+  ClientWidth = 470
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,33 +18,236 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
-  object cxLabel3: TcxLabel
-    Left = 579
-    Top = 134
-    Caption = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090':'
+  object Panel: TPanel
+    Left = 0
+    Top = 26
+    Width = 470
+    Height = 335
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 2
+    ExplicitTop = 24
+    object cxLabel1: TcxLabel
+      Left = 167
+      Top = 148
+      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1041#1053
+    end
+    object edPaidKindName_First: TcxButtonEdit
+      Left = 167
+      Top = 166
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 1
+      Width = 140
+    end
   end
   object edPersonalTrade: TcxButtonEdit
-    Left = 668
-    Top = 133
+    Left = 188
+    Top = 43
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 5
-    Width = 247
+    TabOrder = 4
+    Width = 263
   end
-  object DataSource: TDataSource
-    DataSet = MasterCDS
-    Left = 40
-    Top = 120
+  object cxLabel3: TcxLabel
+    Left = 98
+    Top = 44
+    Caption = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090':'
   end
-  object MasterCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 152
+  object cxLabel4: TcxLabel
+    Left = 311
+    Top = 174
+    Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1053#1040#1051
+  end
+  object edPaidKindName_Second: TcxButtonEdit
+    Left = 311
     Top = 192
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 140
+  end
+  object cxLabel5: TcxLabel
+    Left = 21
+    Top = 84
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+  end
+  object edUnitName: TcxButtonEdit
+    Left = 21
+    Top = 102
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 10
+    Width = 210
+  end
+  object cxLabel6: TcxLabel
+    Left = 21
+    Top = 129
+    Caption = #1057#1090#1072#1090#1091#1089' - '#1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+  end
+  object edStatusName_UnComplete: TcxButtonEdit
+    Left = 21
+    Top = 147
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 12
+    Width = 140
+  end
+  object cxLabel7: TcxLabel
+    Left = 167
+    Top = 129
+    Caption = #1057#1090#1072#1090#1091#1089' - '#1055#1088#1086#1074#1077#1076#1077#1085
+  end
+  object edStatusName_Complete: TcxButtonEdit
+    Left = 167
+    Top = 147
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 14
+    Width = 140
+  end
+  object cxLabel8: TcxLabel
+    Left = 311
+    Top = 129
+    Caption = #1057#1090#1072#1090#1091#1089' - '#1059#1076#1072#1083#1077#1085
+  end
+  object edStatusName_Erased: TcxButtonEdit
+    Left = 311
+    Top = 147
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 16
+    Width = 140
+  end
+  object cxLabel9: TcxLabel
+    Left = 241
+    Top = 84
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1042#1086#1079#1074#1088#1072#1090#1072
+  end
+  object edUnitName_ret: TcxButtonEdit
+    Left = 241
+    Top = 102
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 18
+    Width = 210
+  end
+  object cxLabel10: TcxLabel
+    Left = 21
+    Top = 217
+    Caption = #1060#1080#1079'. '#1083#1080#1094#1086
+  end
+  object edMemberName: TcxButtonEdit
+    Left = 21
+    Top = 235
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 20
+    Width = 430
+  end
+  object cxLabel11: TcxLabel
+    Left = 21
+    Top = 174
+    Caption = #1050#1072#1089#1089#1072
+  end
+  object edCashName: TcxButtonEdit
+    Left = 21
+    Top = 192
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 22
+    Width = 140
+  end
+  object cxLabel12: TcxLabel
+    Left = 21
+    Top = 264
+    Caption = #1051#1086#1075#1080#1085
+  end
+  object edUserLogin: TcxButtonEdit
+    Left = 21
+    Top = 282
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 24
+    Width = 210
+  end
+  object cxLabel13: TcxLabel
+    Left = 241
+    Top = 264
+    Caption = #1055#1072#1088#1086#1083#1100
+  end
+  object edUserPassword: TcxButtonEdit
+    Left = 241
+    Top = 282
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 26
+    Width = 210
+  end
+  object cxLabel15: TcxLabel
+    Left = 21
+    Top = 312
+    Caption = #1042#1077#1073'-'#1089#1077#1088#1074#1080#1089
+  end
+  object edWebService: TcxButtonEdit
+    Left = 21
+    Top = 331
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 28
+    Width = 430
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -57,8 +260,8 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
-    Left = 296
-    Top = 120
+    Left = 448
+    Top = 208
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -77,8 +280,8 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 152
-    Top = 112
+    Left = 424
+    Top = 56
     DockControlHeights = (
       0
       0
@@ -103,18 +306,6 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         item
           Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem2'
         end
         item
           Visible = True
@@ -181,20 +372,18 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
-      Control = cxLabel3
     end
     object dxBarControlContainerItem2: TdxBarControlContainerItem
       Caption = 'New Item'
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
-      Control = edPersonalTrade
     end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 232
-    Top = 144
+    Left = 416
+    Top = 8
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -204,7 +393,7 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
           StoredProc = spGet_PersonalTrade
         end
         item
-          StoredProc = spSelect
+          StoredProc = spGet_Const
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -215,10 +404,10 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect
+      StoredProc = spGet_Const
       StoredProcList = <
         item
-          StoredProc = spSelect
+          StoredProc = spGet_Const
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -233,30 +422,22 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         item
           Name = 'Key'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Name'
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'JuridicalId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -274,7 +455,6 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
-      DataSource = DataSource
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -305,11 +485,8 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_PriceListItems_Mobile'
-    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = MasterCDS
       end>
     Params = <
       item
@@ -321,8 +498,8 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 80
-    Top = 216
+    Left = 304
+    Top = 65520
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -346,12 +523,12 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 464
-    Top = 288
+    Left = 344
+    Top = 65528
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 424
-    Top = 152
+    Left = 224
+    Top = 65528
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -361,8 +538,8 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
       item
         Component = PersonalTradeGuides
       end>
-    Left = 288
-    Top = 184
+    Left = 272
+    Top = 65528
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -377,13 +554,12 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 384
-    Top = 112
+    Left = 456
+    Top = 168
   end
   object PersonalTradeGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalTrade
-    Key = '0'
     FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -407,8 +583,109 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 703
-    Top = 136
+    Left = 103
+    Top = 72
+  end
+  object spGet_Const: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_Const_Mobile'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMemberId'
+        Value = '0'
+        Component = PersonalTradeGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindName_First'
+        Value = ''
+        Component = edPaidKindName_First
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindName_Second'
+        Value = Null
+        Component = edPaidKindName_Second
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StatusName_UnComplete'
+        Value = Null
+        Component = edStatusName_UnComplete
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StatusName_Complete'
+        Value = Null
+        Component = edStatusName_Complete
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StatusName_Erased'
+        Value = Null
+        Component = edStatusName_Erased
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = edUnitName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName_ret'
+        Value = Null
+        Component = edUnitName_ret
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CashName'
+        Value = Null
+        Component = edCashName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberName'
+        Value = Null
+        Component = edMemberName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserLogin'
+        Value = Null
+        Component = edUserLogin
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserPassword'
+        Value = Null
+        Component = edUserPassword
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'WebService'
+        Value = Null
+        Component = edWebService
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 448
+    Top = 256
   end
   object spGet_PersonalTrade: TdsdStoredProc
     StoredProcName = 'gpGetMobile_Object_Const'
@@ -431,7 +708,7 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 800
-    Top = 152
+    Left = 328
+    Top = 40
   end
 end

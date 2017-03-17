@@ -23,12 +23,11 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter, dxBarExtItems,
   dsdAddOn, cxCheckBox, dxSkinscxPCPainter, cxButtonEdit, cxContainer,
-  cxTextEdit, dsdGuides, cxLabel, cxCurrencyEdit;
+  cxTextEdit, dsdGuides, cxLabel, cxCurrencyEdit, Vcl.ComCtrls, dxCore,
+  cxDateUtils, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls;
 
 type
   TMobileConst_ObjectForm = class(TParentForm)
-    DataSource: TDataSource;
-    MasterCDS: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
@@ -49,13 +48,39 @@ type
     bbJuridicalGuides: TdxBarControlContainerItem;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    cxLabel3: TcxLabel;
-    edPersonalTrade: TcxButtonEdit;
     PersonalTradeGuides: TdsdGuides;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
-    spGet_PersonalTrade: TdsdStoredProc;
+    spGet_Const: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    Panel: TPanel;
+    cxLabel1: TcxLabel;
+    edPaidKindName_First: TcxButtonEdit;
+    edPersonalTrade: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    cxLabel4: TcxLabel;
+    edPaidKindName_Second: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    edUnitName: TcxButtonEdit;
+    spGet_PersonalTrade: TdsdStoredProc;
+    cxLabel6: TcxLabel;
+    edStatusName_UnComplete: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    edStatusName_Complete: TcxButtonEdit;
+    cxLabel8: TcxLabel;
+    edStatusName_Erased: TcxButtonEdit;
+    cxLabel9: TcxLabel;
+    edUnitName_ret: TcxButtonEdit;
+    cxLabel10: TcxLabel;
+    edMemberName: TcxButtonEdit;
+    cxLabel11: TcxLabel;
+    edCashName: TcxButtonEdit;
+    cxLabel12: TcxLabel;
+    edUserLogin: TcxButtonEdit;
+    cxLabel13: TcxLabel;
+    edUserPassword: TcxButtonEdit;
+    cxLabel15: TcxLabel;
+    edWebService: TcxButtonEdit;
   private
     { Private declarations }
   public

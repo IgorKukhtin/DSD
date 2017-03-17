@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Const_Mobile(
      IN inSession        TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (PaidKindId_First    Integer   -- Форма оплаты - БН
-             , PaidKindName_First  TVarChar  -- Форма оплаты - НАЛ
+             , PaidKindName_First  TVarChar  -- Форма оплаты - БН
              , PaidKindId_Second   Integer   -- Форма оплаты - НАЛ
              , PaidKindName_Second TVarChar  -- Форма оплаты - НАЛ
              , StatusId_UnComplete   Integer   -- Статус - Не проведен
@@ -34,13 +34,12 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMemberId Integer;
-   DECLARE calcUserId Integer;
    DECLARE calcSession TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
      vbUserId:= lpGetUserBySession (inSession);
-
+--vbMemberId:= inMemberId;
      vbMemberId:= (SELECT tmp.MemberId FROM gpGetMobile_Object_Const (inSession) AS tmp);
      IF (COALESCE(inMemberId,0) <> 0 AND COALESCE(vbMemberId,0) <> inMemberId)
         THEN
@@ -51,8 +50,6 @@ BEGIN
                      FROM ObjectLink AS ObjectLink_User_Member
                      WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                        AND ObjectLink_User_Member.ChildObjectId = vbMemberId);
-
-     calcUserId:= lpGetUserBySession (calcSession);
 
      -- Результат
      RETURN QUERY
@@ -76,35 +73,19 @@ BEGIN
             , tmpMobileConst.CashId
             , tmpMobileConst.CashName
 
-            , tmpPersonal.MemberId
-            , tmpPersonal.MemberName
-            , tmpPersonal.PersonalId
+            , tmpMobileConst.MemberId
+            , tmpMobileConst.MemberName
+            , tmpMobileConst.PersonalId
 
-            , Object_User.Id               AS UserId
-            , Object_User.ValueData        AS UserLogin
-            , ObjectString_User_.ValueData AS UserPassword
+            , tmpMobileConst.UserId
+            , tmpMobileConst.UserLogin
+            , tmpMobileConst.UserPassword
 
-            , Object_ConnectParam.ValueData AS WebService
+            , tmpMobileConst.WebService
 
-       FROM gpGetMobile_Object_Const (calcUserId) AS tmpMobileConst
-            LEFT JOIN Object AS Object_PaidKind_FirstForm  ON Object_PaidKind_FirstForm.Id = zc_Enum_PaidKind_FirstForm()
-            LEFT JOIN Object AS Object_PaidKind_SecondForm ON Object_PaidKind_SecondForm.Id = zc_Enum_PaidKind_SecondForm()
+       FROM gpGetMobile_Object_Const (calcSession) AS tmpMobileConst
 
-            LEFT JOIN Object AS Object_Status_Complete   ON Object_Status_Complete.Id   = zc_Enum_Status_Complete()
-            LEFT JOIN Object AS Object_Status_UnComplete ON Object_Status_UnComplete.Id = zc_Enum_Status_UnComplete()
-            LEFT JOIN Object AS Object_Status_Erased     ON Object_Status_Erased.Id     = zc_Enum_Status_Erased()
-
-            LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = 8459 -- Склад Реализации
-            LEFT JOIN Object AS Object_Unit_ret ON Object_Unit_ret.Id = 8461 -- Склад Возвратов
-            LEFT JOIN Object AS Object_Cash     ON Object_Cash.Id     = NULL
-
-            LEFT JOIN Object AS Object_User ON Object_User.Id = vbUserId
-            LEFT JOIN ObjectString AS ObjectString_User_
-                                   ON ObjectString_User_.ObjectId = Object_User.Id
-                                  AND ObjectString_User_.DescId = zc_ObjectString_User_Password()
-
-            LEFT JOIN Object AS Object_ConnectParam ON Object_ConnectParam.Id = zc_Enum_GlobalConst_ConnectParam ()
-      ;
+     ;
 
 
 END;$BODY$
@@ -113,8 +94,8 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 17.02.17                                        *
+ 17.03.17         *
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_Const_Mobile (inSession:= zfCalc_UserAdmin())
+--select * from gpGet_Object_Const_Mobile(inMemberId := 149833 ,  inSession := '5');
