@@ -777,6 +777,10 @@ object DM: TDM
       FieldName = 'FullInfo'
       Size = 1000
     end
+    object qryGoodsItemsPromoPrice: TWideStringField
+      FieldName = 'PromoPrice'
+      Size = 15
+    end
   end
   object tblMovement_Visit: TFDTable
     Connection = conMain
@@ -883,6 +887,12 @@ object DM: TDM
     end
     object cdsOrderItemsKindId: TIntegerField
       FieldName = 'KindId'
+    end
+    object cdsOrderItemsIsPromo: TBooleanField
+      FieldName = 'IsPromo'
+    end
+    object cdsOrderItemsisChangePercent: TBooleanField
+      FieldName = 'isChangePercent'
     end
   end
   object cdsOrderExternal: TClientDataSet
@@ -1057,6 +1067,86 @@ object DM: TDM
     end
     object cdsStoreRealItemsKindId: TIntegerField
       FieldName = 'KindId'
+    end
+  end
+  object tblMovement_Promo: TFDTable
+    Connection = conMain
+    UpdateOptions.UpdateTableName = 'Movement_Promo'
+    TableName = 'Movement_Promo'
+    Left = 960
+    Top = 264
+    object tblMovement_PromoId: TIntegerField
+      FieldName = 'Id'
+    end
+    object tblMovement_PromoInvNumber: TStringField
+      FieldName = 'InvNumber'
+      Size = 255
+    end
+    object tblMovement_PromoOperDate: TDateTimeField
+      FieldName = 'OperDate'
+    end
+    object tblMovement_PromoStatusId: TIntegerField
+      FieldName = 'StatusId'
+    end
+    object tblMovement_PromoStartSale: TDateTimeField
+      FieldName = 'StartSale'
+    end
+    object tblMovement_PromoEndSale: TDateTimeField
+      FieldName = 'EndSale'
+    end
+    object tblMovement_PromoisChangePercent: TBooleanField
+      FieldName = 'isChangePercent'
+    end
+    object tblMovement_PromoCommentMain: TStringField
+      FieldName = 'CommentMain'
+      Size = 255
+    end
+  end
+  object tblMovementItem_PromoPartner: TFDTable
+    Connection = conMain
+    UpdateOptions.UpdateTableName = 'MovementItem_PromoPartner'
+    TableName = 'MovementItem_PromoPartner'
+    Left = 960
+    Top = 336
+    object tblMovementItem_PromoPartnerId: TIntegerField
+      FieldName = 'Id'
+    end
+    object tblMovementItem_PromoPartnerMovementId: TIntegerField
+      FieldName = 'MovementId'
+    end
+    object tblMovementItem_PromoPartnerContractId: TIntegerField
+      FieldName = 'ContractId'
+    end
+    object tblMovementItem_PromoPartnerPartnerId: TIntegerField
+      FieldName = 'PartnerId'
+    end
+  end
+  object tblMovementItem_PromoGoods: TFDTable
+    Connection = conMain
+    UpdateOptions.UpdateTableName = 'MovementItem_PromoGoods'
+    TableName = 'MovementItem_PromoGoods'
+    Left = 960
+    Top = 408
+    object tblMovementItem_PromoGoodsId: TIntegerField
+      FieldName = 'Id'
+    end
+    object tblMovementItem_PromoGoodsMovementId: TIntegerField
+      FieldName = 'MovementId'
+    end
+    object tblMovementItem_PromoGoodsGoodsId: TIntegerField
+      FieldName = 'GoodsId'
+    end
+    object tblMovementItem_PromoGoodsGoodsKindId: TIntegerField
+      FieldName = 'GoodsKindId'
+    end
+    object tblMovementItem_PromoGoodsPriceWithOutVAT: TFloatField
+      FieldName = 'PriceWithOutVAT'
+    end
+    object tblMovementItem_PromoGoodsPriceWithVAT: TFloatField
+      FieldName = 'PriceWithVAT'
+    end
+    object tblMovementItem_PromoGoodsTaxPromo: TFloatField
+      FieldName = 'TaxPromo'
     end
   end
 end
