@@ -285,11 +285,12 @@ BEGIN
 
 --            , tmpAll.Amount :: TFloat          AS Amount
 --            , MIFloat_SummToPay.ValueData      AS AmountToPay
-            , (COALESCE (MIFloat_SummToPay.ValueData, 0) /*- COALESCE (tmpMIContainer.SummNalog, 0)*/
+            , (COALESCE (MIFloat_SummToPay.ValueData, 0) - COALESCE (tmpMIContainer.SummNalog, 0) + COALESCE (MIFloat_SummNalog.ValueData, 0)
              - COALESCE (MIFloat_SummCard.ValueData, 0)
              - COALESCE (MIFloat_SummCardSecond.ValueData, 0)
               ) :: TFloat AS AmountCash
             , (COALESCE (MIFloat_SummService.ValueData, 0) /*+ COALESCE (tmpMIContainer.SummNalog, 0)*/
+             + COALESCE (MIFloat_SummAdd.ValueData, 0)
              + COALESCE (MIFloat_SummHoliday.ValueData, 0)
               ) :: TFloat AS SummService
             , MIFloat_SummCard.ValueData       AS SummCard  
@@ -332,9 +333,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecond
                                         ON MIFloat_SummCardSecond.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummCardSecond.DescId = zc_MIFloat_SummCardSecond()
-           /* LEFT JOIN MovementItemFloat AS MIFloat_SummNalog
+            LEFT JOIN MovementItemFloat AS MIFloat_SummNalog
                                         ON MIFloat_SummNalog.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummNalog.DescId = zc_MIFloat_SummNalog()    */
+                                       AND MIFloat_SummNalog.DescId = zc_MIFloat_SummNalog() 
                                                           
             LEFT JOIN MovementItemFloat AS MIFloat_SummMinus
                                         ON MIFloat_SummMinus.MovementItemId = tmpAll.MovementItemId
@@ -386,7 +387,7 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Member_Official
                                     ON ObjectBoolean_Member_Official.ObjectId = tmpAll.MemberId_Personal
                                    AND ObjectBoolean_Member_Official.DescId = zc_ObjectBoolean_Member_Official()
-       WHERE 0 <> COALESCE (MIFloat_SummToPay.ValueData, 0) - COALESCE (tmpMIContainer.SummNalog, 0) - COALESCE (MIFloat_SummCard.ValueData, 0) - COALESCE (MIFloat_SummChild.ValueData, 0)
+       WHERE 0 <> COALESCE (MIFloat_SummToPay.ValueData, 0) + COALESCE (MIFloat_SummNalog.ValueData, 0) - COALESCE (tmpMIContainer.SummNalog, 0) - COALESCE (MIFloat_SummCard.ValueData, 0) - COALESCE (MIFloat_SummChild.ValueData, 0)
           OR 0 <> COALESCE (MIFloat_SummService.ValueData, 0) /*+ COALESCE (tmpMIContainer.SummNalog, 0)*/ + COALESCE (MIFloat_SummHoliday.ValueData, 0)
           OR 0 <> MIFloat_SummCard.ValueData
           OR 0 <> tmpMIContainer.SummNalog

@@ -37,7 +37,10 @@ BEGIN
                                                 ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
                                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                       WHERE Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
-                         OR Object_InfoMoney_View.InfoMoneyGroupId       = zc_Enum_InfoMoneyGroup_30000() -- Доходы 
+                          OR Object_InfoMoney_View.InfoMoneyGroupId       = zc_Enum_InfoMoneyGroup_30000() -- Доходы 
+                          OR (inUnitId = 951601 -- ЦЕХ упаковки мясо
+                          AND Object_InfoMoney_View.InfoMoneyDestinationId       = zc_Enum_InfoMoneyDestination_10100() -- 
+                             )
                      )
    , tmpMI_Union AS  (SELECT tmpMI.GoodsId
                            , tmpMI.GoodsKindId
@@ -48,7 +51,11 @@ BEGIN
                       FROM
                      (SELECT MIContainer.ObjectId_Analyzer           AS GoodsId
                            , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
-                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send()            AND MIContainer.IsActive = TRUE  THEN      MIContainer.Amount ELSE 0 END) AS Amount_Send_in
+                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send()            AND MIContainer.IsActive = TRUE  THEN      MIContainer.Amount ELSE 0 END
+                                + CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion() AND MIContainer.IsActive = TRUE AND MIContainer.ObjectExtId_Analyzer <> inUnitId AND inUnitId = 951601 -- ЦЕХ упаковки мясо
+                                            THEN MIContainer.Amount
+                                       ELSE 0
+                                  END) AS Amount_Send_in
                            , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send()            AND MIContainer.IsActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_Send_out
                            , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion() AND MIContainer.IsActive = FALSE AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReWork() THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_Production
                            , SUM (COALESCE (MIFloat_CountPack.ValueData ,0)) AS CountPack

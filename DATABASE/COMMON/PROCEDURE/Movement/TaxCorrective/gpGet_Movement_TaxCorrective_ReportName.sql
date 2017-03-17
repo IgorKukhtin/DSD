@@ -24,7 +24,10 @@ BEGIN
      -- поиск даты
      SELECT MAX (CASE WHEN tmpMovement.OperDate1 > tmpMovement.OperDate2 THEN tmpMovement.OperDate1 ELSE tmpMovement.OperDate2 END)
             INTO vbOperDate
-     FROM (SELECT COALESCE (MovementDate_DateRegistered.ValueData, Movement_find.OperDate) AS OperDate1
+     FROM (SELECT CASE WHEN Movement_find.OperDate < '01.03.2017' AND MovementDate_DateRegistered.ValueData >= '01.03.2017'
+                            THEN Movement_find.OperDate
+                       ELSE COALESCE (MovementDate_DateRegistered.ValueData, Movement_find.OperDate)
+                  END AS OperDate1
                 , Movement_find.OperDate AS OperDate2
            FROM Movement
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
@@ -42,7 +45,10 @@ BEGIN
            WHERE Movement.Id = inMovementId
              AND Movement.DescId = zc_Movement_TaxCorrective()
           UNION
-           SELECT COALESCE (MovementDate_DateRegistered.ValueData, Movement_Master.OperDate) AS OperDate1
+           SELECT CASE WHEN Movement_Master.OperDate < '01.03.2017' AND MovementDate_DateRegistered.ValueData >= '01.03.2017'
+                            THEN Movement_Master.OperDate
+                       ELSE COALESCE (MovementDate_DateRegistered.ValueData, Movement_Master.OperDate)
+                  END AS OperDate1
                 , Movement_Master.OperDate AS OperDate2
            FROM Movement
                 INNER JOIN MovementLinkMovement AS MovementLinkMovement_Master

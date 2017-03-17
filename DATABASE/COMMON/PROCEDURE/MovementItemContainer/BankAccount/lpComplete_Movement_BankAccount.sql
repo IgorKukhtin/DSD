@@ -244,7 +244,7 @@ BEGIN
 
                -- Месяц начислений: есть
              , CASE WHEN tmpPersonal.MemberId > 0
-                         THEN lpInsertFind_Object_ServiceDate (inOperDate:= _tmpItem.OperDate) -- !!!т.е. по дате документа!!!
+                         THEN lpInsertFind_Object_ServiceDate (inOperDate:= _tmpItem.OperDate - INTERVAL '1 MONTH') -- !!!т.е. по дате документа!!!
                     WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_60000() -- Заработная плата
                          THEN lpInsertFind_Object_ServiceDate (inOperDate:= MIDate_ServiceDate.ValueData)
                     ELSE 0

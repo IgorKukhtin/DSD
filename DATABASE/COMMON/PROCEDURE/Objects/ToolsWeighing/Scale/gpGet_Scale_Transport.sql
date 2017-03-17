@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpGet_Scale_Transport(
 RETURNS TABLE (MovementId            Integer
              , BarCode               TVarChar
              , InvNumber             TVarChar
+             , PersonalDriverId      Integer
              , PersonalDriverName    TVarChar
              , CarName               TVarChar
              , RouteName             TVarChar
@@ -77,6 +78,7 @@ BEGIN
        SELECT tmpMovement.Id                  AS MovementId
             , inBarCode                       AS BarCode
             , ('№ <' || tmpMovement.InvNumber || '>' || ' от <' || DATE (tmpMovement.OperDate) :: TVarChar || '>') :: TVarChar AS InvNumber
+            , Object_PersonalDriver.Id        AS PersonalDriverId
             , Object_PersonalDriver.ValueData AS PersonalDriverName
             , (COALESCE (Object_Car.ValueData, '') || ' ' || COALESCE (Object_CarModel.ValueData, '')) :: TVarChar AS CarName
             , Object_Route.ValueData          AS RouteName

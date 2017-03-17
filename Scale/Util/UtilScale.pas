@@ -715,6 +715,7 @@ begin
           or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Send)
           or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_ProductionUnion)
           or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_ProductionSeparate)
+          or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_ReturnOut)
            )
         then begin
                   PartionGoods:=myCalcPartionGoods(Edit.Text);

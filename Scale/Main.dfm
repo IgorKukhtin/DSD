@@ -1230,8 +1230,8 @@ object MainForm: TMainForm
         ExplicitWidth = 119
       end
       object EditPartionGoods: TEdit
-        Left = 5
-        Top = 17
+        Left = 6
+        Top = 18
         Width = 120
         Height = 23
         Font.Charset = RUSSIAN_CHARSET

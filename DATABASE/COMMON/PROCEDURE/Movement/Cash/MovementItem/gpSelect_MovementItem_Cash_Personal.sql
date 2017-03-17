@@ -74,15 +74,39 @@ BEGIN
                                                             ON MILinkObject_Position.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
                      )
+
+                , tmpSummNalog AS (SELECT CLO_Unit.ObjectId     AS UnitId
+                                        , CLO_Position.ObjectId AS PositionId
+                                        , CLO_Personal.ObjectId AS PersonalId
+                                        , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_PersonalService_Nalog() THEN MIContainer.Amount ELSE 0 END) AS SummNalog
+                                   FROM MovementItemContainer AS MIContainer
+                                        LEFT JOIN ContainerLinkObject AS CLO_Unit
+                                                                      ON CLO_Unit.ContainerId = MIContainer.ContainerId
+                                                                     AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                        LEFT JOIN ContainerLinkObject AS CLO_Position
+                                                                      ON CLO_Position.ContainerId = MIContainer.ContainerId
+                                                                     AND CLO_Position.DescId = zc_ContainerLinkObject_Position()
+                                        LEFT JOIN ContainerLinkObject AS CLO_Personal
+                                                                      ON CLO_Personal.ContainerId = MIContainer.ContainerId
+                                                                     AND CLO_Personal.DescId = zc_ContainerLinkObject_Personal()
+                                   WHERE MIContainer.MovementId = inParentId
+                                     AND MIContainer.DescId     = zc_MIContainer_Summ()
+                                     AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_PersonalService_Nalog())
+                                   GROUP BY CLO_Unit.ObjectId
+                                          , CLO_Position.ObjectId
+                                          , CLO_Personal.ObjectId
+                                  )
               , tmpParent AS (SELECT SUM (COALESCE (MIFloat_SummService.ValueData, 0))      AS SummService
-                                   , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0)
+                                   , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0) - COALESCE (tmpSummNalog.SummNalog, 0) + COALESCE (MIFloat_SummNalog.ValueData, 0)
                                         - COALESCE (MIFloat_SummCard.ValueData, 0)
                                         - COALESCE (MIFloat_SummCardSecond.ValueData, 0)
                                          ) AS SummToPay_cash
-                                   , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0))        AS SummToPay
+                                   , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0)  - COALESCE (tmpSummNalog.SummNalog, 0) + COALESCE (MIFloat_SummNalog.ValueData, 0)
+                                         ) AS SummToPay
                                    , SUM (COALESCE (MIFloat_SummCard.ValueData, 0))         AS SummCard
                                    , SUM (COALESCE (MIFloat_SummCardSecond.ValueData, 0))   AS SummCardSecond
-                                   , SUM (COALESCE (MIFloat_SummNalog.ValueData, 0))        AS SummNalog
+--                                 , SUM (COALESCE (MIFloat_SummNalog.ValueData, 0))        AS SummNalog
+                                   , SUM (COALESCE (tmpSummNalog.SummNalog, 0))             AS SummNalog
                                    , SUM (COALESCE (MIFloat_SummMinus.ValueData, 0))        AS SummMinus
                                    , SUM (COALESCE (MIFloat_SummAdd.ValueData, 0))          AS SummAdd
                                    , SUM (COALESCE (MIFloat_SummHoliday.ValueData, 0))      AS SummHoliday
@@ -171,6 +195,10 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummPhone
                                                                ON MIFloat_SummPhone.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummPhone.DescId = zc_MIFloat_SummPhone()
+
+                                   LEFT JOIN tmpSummNalog ON tmpSummNalog.PersonalId = MovementItem.ObjectId
+                                                         AND tmpSummNalog.UnitId     = MILinkObject_Unit.ObjectId
+                                                         AND tmpSummNalog.PositionId = MILinkObject_Position.ObjectId
 
                                    -- ограничение, если нужна только 1 запись
                                    LEFT JOIN (SELECT tmpMI.PersonalId, tmpMI.UnitId, tmpMI.PositionId, tmpMI.InfoMoneyId

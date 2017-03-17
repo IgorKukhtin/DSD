@@ -50,11 +50,12 @@ RETURNS TABLE (MovementId       Integer
              , OrderExternalName_master TVarChar
 
              , MovementId_Transport Integer
-             , Transport_BarCode TVarChar
-             , Transport_InvNumber TVarChar
-             , PersonalDriverName TVarChar
-             , CarName TVarChar
-             , RouteName TVarChar
+             , Transport_BarCode    TVarChar
+             , Transport_InvNumber  TVarChar
+             , PersonalDriverId     Integer
+             , PersonalDriverName   TVarChar
+             , CarName              TVarChar
+             , RouteName            TVarChar
 
              , TotalSumm TFloat
               )
@@ -281,6 +282,7 @@ BEGIN
             , tmpMovement.MovementId_Transport
             , zfFormat_BarCode (zc_BarCodePref_Movement(), tmpMovement.MovementId_Transport) AS Transport_BarCode
             , ('№ <' || tmpMovementTransport.InvNumber || '>' || ' от <' || DATE (tmpMovementTransport.OperDate) :: TVarChar || '>') :: TVarChar AS Transport_InvNumber
+            , Object_PersonalDriver.Id        AS PersonalDriverId
             , Object_PersonalDriver.ValueData AS PersonalDriverName
             , (COALESCE (Object_Car.ValueData, '') || ' ' || COALESCE (Object_CarModel.ValueData, '')) :: TVarChar AS CarName
             , Object_Route.ValueData          AS RouteName

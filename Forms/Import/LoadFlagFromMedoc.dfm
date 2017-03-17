@@ -29,7 +29,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
   object dePeriodDate: TcxDateEdit [3]
     Left = 155
     Top = 16
-    EditValue = 42005d
+    EditValue = 42736d
     Properties.AssignedValues.EditFormat = True
     Properties.DisplayFormat = 'mmmm yyyy'
     Properties.SaveTime = False
@@ -62,7 +62,9 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       MoveParams = <>
       PeriodDate.Value = 42005d
       PeriodDate.Component = dePeriodDate
-      CharCode.Value = 'J1201008'
+      PeriodDate.MultiSelectSeparator = ','
+      CharCode.Value = 'J1201009'
+      CharCode.MultiSelectSeparator = ','
       Caption = 'TaxJur'
     end
     object TaxCorrectiveJur: TMedocComAction
@@ -70,7 +72,9 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       MoveParams = <>
       PeriodDate.Value = 42005d
       PeriodDate.Component = dePeriodDate
-      CharCode.Value = 'J1201208'
+      PeriodDate.MultiSelectSeparator = ','
+      CharCode.Value = 'J1201209'
+      CharCode.MultiSelectSeparator = ','
       Caption = 'TaxCorrectiveJur'
     end
     object TaxFiz: TMedocComAction
@@ -78,7 +82,9 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       MoveParams = <>
       PeriodDate.Value = Null
       PeriodDate.Component = dePeriodDate
-      CharCode.Value = 'F1201008'
+      PeriodDate.MultiSelectSeparator = ','
+      CharCode.Value = 'F1201009'
+      CharCode.MultiSelectSeparator = ','
       Caption = 'TaxFiz'
     end
     object TaxCorrectiveFiz: TMedocComAction
@@ -86,7 +92,9 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       MoveParams = <>
       PeriodDate.Value = Null
       PeriodDate.Component = dePeriodDate
-      CharCode.Value = 'F1201208'
+      PeriodDate.MultiSelectSeparator = ','
+      CharCode.Value = 'F1201209'
+      CharCode.MultiSelectSeparator = ','
       Caption = 'TaxCorrectiveFiz'
     end
     object MultiAction: TMultiAction
@@ -144,6 +152,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
         Component = dePeriodDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 160

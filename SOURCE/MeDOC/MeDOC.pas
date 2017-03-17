@@ -598,11 +598,11 @@ begin
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A10', ReplaceStr(FormatFloat('0.00', FieldByName('AmountSummNoVAT_12').AsFloat), FormatSettings.DecimalSeparator, '.'));
 
            //Ознака імпортованого товару
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A132', FieldByName('TaxImport').AsString);
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A132', FieldByName('GoodsCodeTaxImport').AsString);
            //Послуги згідно з ДКПП
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A133', FieldByName('DKPP').AsString);
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A133', FieldByName('GoodsCodeDKPP').AsString);
            //Код виду діяльності сг товаровир
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A11', FieldByName('TaxAction').AsString);
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A11', FieldByName('GoodsCodeTaxAction').AsString);
 
            //Обсяги постачання без урахування ПДВ ("основна ставка")
            //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A17', ReplaceStr(FormatFloat('0.00', FieldByName('AmountSummNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
@@ -1460,11 +1460,11 @@ begin
 
 
            //Ознака імпортованого товару
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A32', FieldByName('TaxImport').AsString);
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A32', FieldByName('GoodsCodeTaxImport').AsString);
            //Послуги згідно з ДКПП
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A33', FieldByName('DKPP').AsString);
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A33', FieldByName('GoodsCodeDKPP').AsString);
            //Код виду діяльності сг товаровир
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A014', FieldByName('TaxAction').AsString);
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A014', FieldByName('GoodsCodeTaxAction').AsString);
 
            inc(i);
         end;

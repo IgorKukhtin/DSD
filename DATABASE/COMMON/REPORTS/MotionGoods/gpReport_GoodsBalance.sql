@@ -506,7 +506,8 @@ BEGIN
            , tmpUnitBaza AS (-- Подразделения для расчета "нормы" !!!временно!!!
                              SELECT Object.Id AS UnitId
                              FROM Object
-                             WHERE Object.Id = 8458
+                             WHERE (Object.Id = 8458   AND inLocationId <> 981821) -- Склад База ГП     + ЦЕХ шприц. мясо
+                                OR (Object.Id = 951601 AND inLocationId =  981821) -- ЦЕХ упаковки мясо + ЦЕХ шприц. мясо
                           )
          , tmpPriceStart AS (-- Цены Прайс начальные !!!временно * 1.2!!!
                              SELECT lfObjectHistory_PriceListItem.GoodsId
@@ -1044,6 +1045,7 @@ BEGIN
         , Object_GoodsGroup.ValueData    AS GoodsGroupName
         , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
         , CAST (COALESCE(Object_Goods.Id, 0) AS Integer)                 AS GoodsId
+-- , (select count(*) from tmpMIContainer_GP_all) :: Integer AS GoodsCode
         , Object_Goods.ObjectCode        AS GoodsCode
         , CAST (COALESCE(Object_Goods.ValueData, '') AS TVarChar)        AS GoodsName
         , CAST (COALESCE(Object_GoodsKind.Id, 0) AS Integer)             AS GoodsKindId
@@ -1305,4 +1307,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * from gpReport_GoodsBalance (inStartDate:= '01.09.2016', inEndDate:= '01.09.2016', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inIsInfoMoney:= TRUE, inIsAllMO:= TRUE, inIsAllAuto:= TRUE, inSession := '5');
+-- SELECT * from gpReport_GoodsBalance (inStartDate:= '01.09.2017', inEndDate:= '01.09.2017', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inIsInfoMoney:= TRUE, inIsAllMO:= TRUE, inIsAllAuto:= TRUE, inSession := '5');

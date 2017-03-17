@@ -167,7 +167,7 @@ begin
   inherited;
 end;
 
-function TMedocComAction.LocalExecute: boolean;
+ function TMedocComAction.LocalExecute: boolean;
 var DocumentList: IZDataset;
     s, SEND_DPA: string;
     ii, i, MovementId, MedocCode, FormCode: integer;
@@ -221,14 +221,19 @@ begin
          + #10 + #13;
 end;
 
-//showMessage(str1);
+if ParamStr(1) = 'FormCode' then
+begin if (ParamStr(2) <> '')and (ParamStr(2) = HeaderDataSet.Fields['SEND_DPA_RN'].Value) then showMessage('(FormCode = ' + IntToStr(FormCode) + ') ' + HeaderDataSet.Fields['SEND_DPA_RN'].Value + ' : ' + str1)
+      else if ParamStr(2) = '' then showMessage('(FormCode = ' + IntToStr(FormCode) + ') all : ' + str1);
+end;
 
                if ((SEND_DPA = '12') or (SEND_DPA = '11')) then
                try
                   FormCode := DocumentList.Fields['FORM'].Value;
-                  if FormCode <> 12943  then
+                  if  (FormCode <> 12943)
+                  // and (FormCode <> 14025)
+                  then
                   begin
-                  if (FormCode = 11518) or (FormCode = 11530) or (FormCode = 12860) then
+                  if (FormCode = 11518) or (FormCode = 11530) or (FormCode = 12860) or (FormCode = 14025) then
                      DocKind := 'Tax'
                   else
                      DocKind := 'TaxCorrective';
