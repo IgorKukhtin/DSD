@@ -35,15 +35,6 @@ const
   LongitudeRatio = '70.158308514';
 
 type
-  TOrderItemActionType = (otAdd, otDelete);
-
-  TOrderItem = record
-    GoodsName : string;
-    Count : integer;
-    ActionType : TOrderItemActionType;
-    Price : currency;
-  end;
-
   TFormStackItem = record
     PageIndex: Integer;
     Data: TObject;
@@ -164,22 +155,15 @@ type
     lwPriceList: TListView;
     tiPriceListItems: TTabItem;
     lwGoods: TListView;
-    bsGoods: TBindSourceDB;
-    pGoodsInfo: TPopup;
-    Panel2: TPanel;
+    ppGoodsInfo: TPopup;
+    pGoodsInfo: TPanel;
     lGoodsName: TLabel;
     Label10: TLabel;
     lGoodsCode: TLabel;
-    lGoodsCategory: TLabel;
-    Label13: TLabel;
-    lGoodsGroup: TLabel;
-    Label15: TLabel;
     lGoodsType: TLabel;
     Label17: TLabel;
     Label18: TLabel;
     lGoodsWeight: TLabel;
-    Label20: TLabel;
-    lGoodsDateEnd: TLabel;
     Label22: TLabel;
     lGoodsPrice: TLabel;
     tiOrderExternal: TTabItem;
@@ -190,11 +174,10 @@ type
     bSaveOI: TButton;
     Panel4: TPanel;
     lwPartner: TListView;
-    LinkListControlToField1: TLinkListControlToField;
     bsPartner: TBindSourceDB;
     LinkListControlToField2: TLinkListControlToField;
     ilPartners: TImageList;
-    Panel6: TPanel;
+    pOrderTotals: TPanel;
     lTotalPrice: TLabel;
     Panel8: TPanel;
     bSaveOrderExternal: TButton;
@@ -205,9 +188,6 @@ type
     tiCamera: TTabItem;
     Panel10: TPanel;
     imgCameraPreview: TImage;
-    Panel17: TPanel;
-    lPlate: TLabel;
-    ePhotoComment: TEdit;
     Panel11: TPanel;
     tiPhotos: TTabItem;
     Panel12: TPanel;
@@ -217,7 +197,7 @@ type
     bSavePartnerPhoto: TButton;
     bClosePhoto: TButton;
     lwPartnerPhotoGroups: TListView;
-    lwNewOrderExternal: TListView;
+    lwOrderExternalItems: TListView;
     bsSelectedOrderItems: TBindSourceDB;
     LinkListControlToField3: TLinkListControlToField;
     Panel14: TPanel;
@@ -328,7 +308,7 @@ type
     VertScrollBox5: TVertScrollBox;
     Panel23: TPanel;
     bSaveStoreReal: TButton;
-    lwStoreReal: TListView;
+    lwStoreRealItems: TListView;
     Panel24: TPanel;
     Label33: TLabel;
     eStoreRealComment: TEdit;
@@ -338,6 +318,16 @@ type
     Image14: TImage;
     bsStoreRealItems: TBindSourceDB;
     LinkListControlToField9: TLinkListControlToField;
+    lPriceWithPercent: TLabel;
+    Label13: TLabel;
+    lGoodsMeasure: TLabel;
+    bsGoodsForPriceList: TBindSourceDB;
+    LinkListControlToField1: TLinkListControlToField;
+    pPhotoComment: TPanel;
+    bSavePhoto: TButton;
+    bCancelPhoto: TButton;
+    ePhotoComment: TEdit;
+    Label15: TLabel;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bReloginClick(Sender: TObject);
@@ -381,14 +371,14 @@ type
     procedure bSavePartnerPhotoClick(Sender: TObject);
     procedure bClosePhotoClick(Sender: TObject);
     procedure bAddOrderItemClick(Sender: TObject);
-    procedure lwNewOrderExternalItemClickEx(const Sender: TObject;
+    procedure lwOrderExternalItemsItemClickEx(const Sender: TObject;
       ItemIndex: Integer; const LocalClickPos: TPointF;
       const ItemObject: TListItemDrawable);
     procedure b0Click(Sender: TObject);
     procedure bClearAmountClick(Sender: TObject);
     procedure bEnterAmountClick(Sender: TObject);
     procedure bAddAmountClick(Sender: TObject);
-    procedure lwNewOrderExternalFilter(Sender: TObject; const AFilter,
+    procedure lwOrderExternalItemsFilter(Sender: TObject; const AFilter,
       AValue: string; var Accept: Boolean);
     procedure bMinusAmountClick(Sender: TObject);
     procedure tMapToImageTimer(Sender: TObject);
@@ -409,7 +399,7 @@ type
       const ItemObject: TListItemDrawable);
     procedure lwPhotosUpdateObjects(const Sender: TObject;
       const AItem: TListViewItem);
-    procedure lwNewOrderExternalUpdateObjects(const Sender: TObject;
+    procedure lwOrderExternalItemsUpdateObjects(const Sender: TObject;
       const AItem: TListViewItem);
     procedure lwOrderExternalUpdateObjects(const Sender: TObject;
       const AItem: TListViewItem);
@@ -423,11 +413,11 @@ type
     procedure lwStoreRealListItemClickEx(const Sender: TObject;
       ItemIndex: Integer; const LocalClickPos: TPointF;
       const ItemObject: TListItemDrawable);
-    procedure lwStoreRealFilter(Sender: TObject; const AFilter, AValue: string;
+    procedure lwStoreRealItemsFilter(Sender: TObject; const AFilter, AValue: string;
       var Accept: Boolean);
-    procedure lwStoreRealItemClickEx(const Sender: TObject; ItemIndex: Integer;
+    procedure lwStoreRealItemsItemClickEx(const Sender: TObject; ItemIndex: Integer;
       const LocalClickPos: TPointF; const ItemObject: TListItemDrawable);
-    procedure lwStoreRealUpdateObjects(const Sender: TObject;
+    procedure lwStoreRealItemsUpdateObjects(const Sender: TObject;
       const AItem: TListViewItem);
     procedure bNewStoreRealClick(Sender: TObject);
     procedure bSaveStoreRealClick(Sender: TObject);
@@ -436,11 +426,18 @@ type
       const AItem: TListViewItem);
     procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
+    procedure lwGoodsFilter(Sender: TObject; const AFilter, AValue: string;
+      var Accept: Boolean);
+    procedure pGoodsInfoClick(Sender: TObject);
+    procedure bSavePhotoClick(Sender: TObject);
+    procedure bCancelPhotoClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
 
     FCanEditPartner : boolean;
+
+    FOldGoodsItemIndex : integer;
 
     FCurCoordinatesSet: boolean;
     FCurCoordinates: TLocationCoord2D;
@@ -594,29 +591,25 @@ begin
     begin
       Key := 0;
 
+      if pNewPhotoGroup.Visible then
+        bCanclePGClick(bCanclePG)
+      else
+      if pPhotoComment.Visible then
+        bCancelPhotoClick(bCancelPhoto)
+      else
       if tcMain.ActiveTab = tiStart then
-      begin
-        MessageDlg('Закрыть программу?', TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbOK, TMsgDlgBtn.mbCancel], -1, OnCloseDialog);
-      end
+        MessageDlg('Закрыть программу?', TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbOK, TMsgDlgBtn.mbCancel], -1, OnCloseDialog)
       else
       if tcMain.ActiveTab = tiGoodsItems then
-      begin
-        bCancelOIClick(bCancelOI);
-      end
+        bCancelOIClick(bCancelOI)
       else
       if tcMain.ActiveTab = tiCamera then
-      begin
-        bClosePhotoClick(bClosePhoto);
-      end
+        bClosePhotoClick(bClosePhoto)
       else
       if tcMain.ActiveTab = tiMain then
-      begin
-        bReloginClick(bRelogin);
-      end
+        bReloginClick(bRelogin)
       else
-      begin
         sbBackClick(sbBack);
-      end;
     end;
   end;
 end;
@@ -724,22 +717,39 @@ begin
     SwitchToForm(tiMain, nil);
 end;
 
+procedure TfrmMain.lwGoodsFilter(Sender: TObject; const AFilter, AValue: string;
+  var Accept: Boolean);
+begin
+  if Trim(AFilter) <> '' then
+    Accept :=  AValue.ToUpper.Contains(AFilter.ToUpper)
+  else
+    Accept := true;
+end;
+
 procedure TfrmMain.lwGoodsItemClick(const Sender: TObject;
   const AItem: TListViewItem);
 begin
-  lGoodsName.Text := DM.qryGoodsGoodsName.AsString;
-  lGoodsCode.Text := DM.qryGoodsOBJECTCODE.AsString;
-  lGoodsCategory.Text := '-';
-  lGoodsGroup.Text := DM.qryGoodsGroupName.AsString;
-  lGoodsType.Text := '-';
-  lGoodsWeight.Text := DM.qryGoodsweight.AsString + ' ' + DM.qryGoodsMeasureName.AsString;
-  lGoodsDateEnd.Text := DM.qryGoodsEndDate.AsString;
-  lGoodsPrice.Text := DM.qryGoodsPrice.AsString;
+  if ppGoodsInfo.IsOpen then
+  begin
+    ppGoodsInfo.IsOpen := false;
 
-  pGoodsInfo.IsOpen := true;
+    if FOldGoodsItemIndex = AItem.Index then
+      exit;
+  end;
+
+  FOldGoodsItemIndex := AItem.Index;
+
+  lGoodsName.Text := DM.qryGoodsForPriceListGoodsName.AsString;
+  lGoodsCode.Text := DM.qryGoodsForPriceListOBJECTCODE.AsString;
+  lGoodsType.Text := DM.qryGoodsForPriceListKindName.AsString;
+  lGoodsMeasure.Text := DM.qryGoodsForPriceListMeasureName.AsString;
+  lGoodsWeight.Text := DM.qryGoodsForPriceListWeight.AsString;
+  lGoodsPrice.Text := DM.qryGoodsForPriceListOrderPrice.AsString;
+
+  ppGoodsInfo.IsOpen := true;
 end;
 
-procedure TfrmMain.lwNewOrderExternalFilter(Sender: TObject; const AFilter,
+procedure TfrmMain.lwOrderExternalItemsFilter(Sender: TObject; const AFilter,
   AValue: string; var Accept: Boolean);
 begin
   if Trim(AFilter) <> '' then
@@ -748,7 +758,7 @@ begin
     Accept := true;
 end;
 
-procedure TfrmMain.lwNewOrderExternalItemClickEx(const Sender: TObject;
+procedure TfrmMain.lwOrderExternalItemsItemClickEx(const Sender: TObject;
   ItemIndex: Integer; const LocalClickPos: TPointF;
   const ItemObject: TListItemDrawable);
 begin
@@ -774,7 +784,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.lwNewOrderExternalUpdateObjects(const Sender: TObject;
+procedure TfrmMain.lwOrderExternalItemsUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
   TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
@@ -914,7 +924,7 @@ begin
   ShowPriceListItems;
 end;
 
-procedure TfrmMain.lwStoreRealFilter(Sender: TObject; const AFilter,
+procedure TfrmMain.lwStoreRealItemsFilter(Sender: TObject; const AFilter,
   AValue: string; var Accept: Boolean);
 begin
   if Trim(AFilter) <> '' then
@@ -923,7 +933,7 @@ begin
     Accept := true;
 end;
 
-procedure TfrmMain.lwStoreRealItemClickEx(const Sender: TObject;
+procedure TfrmMain.lwStoreRealItemsItemClickEx(const Sender: TObject;
   ItemIndex: Integer; const LocalClickPos: TPointF;
   const ItemObject: TListItemDrawable);
 begin
@@ -984,7 +994,7 @@ begin
   TListItemImage(AItem.Objects.FindDrawable('EditButton')).ImageIndex := 1;
 end;
 
-procedure TfrmMain.lwStoreRealUpdateObjects(const Sender: TObject;
+procedure TfrmMain.lwStoreRealItemsUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
   TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
@@ -1006,6 +1016,11 @@ procedure TfrmMain.OnCloseDialog(const AResult: TModalResult);
 begin
   if AResult = mrOK then
     Close;
+end;
+
+procedure TfrmMain.pGoodsInfoClick(Sender: TObject);
+begin
+  ppGoodsInfo.IsOpen := false;
 end;
 
 procedure TfrmMain.BackResult(const AResult: TModalResult);
@@ -1136,41 +1151,20 @@ procedure TfrmMain.bAddedPhotoGroupClick(Sender: TObject);
 begin
   vsbMain.Enabled := false;
   pNewPhotoGroup.Visible := true;
-  ePhotoComment.SetFocus;
+  ePhotoGroupName.SetFocus;
 end;
 
 procedure TfrmMain.bAddOrderItemClick(Sender: TObject);
 begin
-  DM.qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA Name, GK.VALUEDATA Kind, ' +
-    'GLK.REMAINS, PI.PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
-    'GK.VALUEDATA || '';'' || GLK.FORECAST || '';'' || GLK.REMAINS || '';'' || PI.PRICE || '';'' || ' +
-    'M.VALUEDATA || '';'' || G.WEIGHT || '';0'' FullInfo ' +
-    'from OBJECT_GOODS G ' +
-    'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID AND GLK.ISERASED = 0 ' +
-    'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERASED = 0 ' +
-    'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
-    'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
-    'WHERE G.ISERASED = 0 order by Name';
+  DM.GenerateOrderItemsList;
 
-  DM.qryGoodsItems.ParamByName('PRICELISTID').AsInteger := DM.qryPartner.FieldByName('PRICELISTID').AsInteger;
-  DM.qryGoodsItems.Open;
   SwitchToForm(tiGoodsItems, DM.qryGoodsItems);
 end;
 
 procedure TfrmMain.bAddStoreRealItemClick(Sender: TObject);
 begin
-  DM.qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA Name, GK.VALUEDATA Kind, ' +
-    'GLK.REMAINS, PI.PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
-    'GK.VALUEDATA || '';'' || M.VALUEDATA || '';0'' FullInfo ' +
-    'from OBJECT_GOODS G ' +
-    'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID AND GLK.ISERASED = 0 ' +
-    'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERASED = 0 ' +
-    'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
-    'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
-    'WHERE G.ISERASED = 0 order by Name';
+  DM.GenerateStoreRealItemsList;
 
-  DM.qryGoodsItems.ParamByName('PRICELISTID').AsInteger := DM.qryPartner.FieldByName('PRICELISTID').AsInteger;
-  DM.qryGoodsItems.Open;
   SwitchToForm(tiGoodsItems, DM.qryGoodsItems);
 end;
 
@@ -1179,6 +1173,12 @@ begin
   FCheckedGooodsItems.Clear;
 
   ReturnPriorForm;
+end;
+
+procedure TfrmMain.bCancelPhotoClick(Sender: TObject);
+begin
+  vsbMain.Enabled := true;
+  pPhotoComment.Visible := false;
 end;
 
 procedure TfrmMain.bCanclePGClick(Sender: TObject);
@@ -1309,7 +1309,6 @@ end;
 procedure TfrmMain.bPartnersClick(Sender: TObject);
 begin
   ShowPartners(8, 'Все ТТ');
-  SwitchToForm(tiPartners, nil);
 end;
 
 procedure TfrmMain.bPathonMapClick(Sender: TObject);
@@ -1375,6 +1374,8 @@ end;
 
 procedure TfrmMain.bRouteClick(Sender: TObject);
 begin
+  FCanEditPartner := false;
+
   SwitchToForm(tiRoutes, nil);
 end;
 
@@ -1425,6 +1426,23 @@ begin
 end;
 
 procedure TfrmMain.bSavePartnerPhotoClick(Sender: TObject);
+begin
+  vsbMain.Enabled := false;
+  pPhotoComment.Visible := true;
+  ePhotoComment.SetFocus;
+end;
+
+procedure TfrmMain.bSavePGClick(Sender: TObject);
+begin
+  DM.SavePhotoGroup(ePhotoGroupName.Text);
+
+  DM.qryPhotoGroups.Refresh;
+
+  vsbMain.Enabled := true;
+  pNewPhotoGroup.Visible := false;
+end;
+
+procedure TfrmMain.bSavePhotoClick(Sender: TObject);
 var
   BlobStream : TMemoryStream;
   Surf : TBitmapSurface;
@@ -1461,7 +1479,7 @@ begin
 
         qrySavePhoto.ExecSQL;
 
-        ShowMessage('Фото успешно сохранено');
+        ShowMessage('Фотография успешно сохранена');
 
         DM.qryPhotos.Refresh;
       finally
@@ -1479,18 +1497,11 @@ begin
       Showmessage(E.Message);
   end;
 
+  vsbMain.Enabled := true;
+  pPhotoComment.Visible := false;
+
   CameraFree;
   ReturnPriorForm;
-end;
-
-procedure TfrmMain.bSavePGClick(Sender: TObject);
-begin
-  DM.SavePhotoGroup(ePhotoGroupName.Text);
-
-  DM.qryPhotoGroups.Refresh;
-
-  vsbMain.Enabled := true;
-  pNewPhotoGroup.Visible := false;
 end;
 
 procedure TfrmMain.bSavePhotoCommentClick(Sender: TObject);
@@ -1817,12 +1828,22 @@ begin
       sbBack.Visible := true;
     end;
 
+    lCaption.TextSettings.Font.Size := 18;
     if tcMain.ActiveTab = tiRoutes then
-      lCaption.Text := 'Маршруты';
-    if (tcMain.ActiveTab = tiPartners) or (tcMain.ActiveTab =  tiPartnerInfo) then
-      lCaption.Text := 'Торговые точки';
+      lCaption.Text := 'Маршруты'
+    else
+    if tcMain.ActiveTab = tiPartners then
+      lCaption.Text := 'Торговые точки'
+    else
+    if tcMain.ActiveTab =  tiPartnerInfo then
+    begin
+      lCaption.TextSettings.Font.Size := 11;
+      lCaption.Text := DM.qryPartnerName.AsString;
+    end
+    else
     if tcMain.ActiveTab = tiHandbook then
-      lCaption.Text := 'Справочники';
+      lCaption.Text := 'Справочники'
+    else
     if tcMain.ActiveTab = tiOrderExternal then
       lCaption.Text := 'Заявки сторонние';
   end;
@@ -1900,12 +1921,7 @@ begin
 
   with DM.qryPartner do
   begin
-    DM.qryPartner.Open('select P.Id, P.CONTRACTID, J.VALUEDATA Name, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, ' +
-      'P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE, P.PRICELISTID, C.PAIDKINDID, C.CHANGEPERCENT, PL.PRICEWITHVAT, PL.VATPERCENT ' +
-      'from OBJECT_PARTNER P ' +
-      'JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID and J.ISERASED = 0 ' +
-      'JOIN Object_PriceList PL ON PL.ID = P.PRICELISTID and PL.ISERASED = 0 ' +
-      'JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID and C.ISERASED = 0 where P.ISERASED = 0');
+    Open(BasePartnerQuery);
 
     First;
     while not EOF do
@@ -2011,12 +2027,7 @@ begin
   lDayInfo.Text := 'МАРШРУТ: ' + Caption;
   DM.qryPartner.Close;
 
-  sQuery := 'select P.Id, P.CONTRACTID, J.VALUEDATA Name, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, ' +
-    'P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE, P.PRICELISTID, C.PAIDKINDID, C.CHANGEPERCENT, PL.PRICEWITHVAT, PL.VATPERCENT ' +
-    'from OBJECT_PARTNER P ' +
-    'JOIN OBJECT_JURIDICAL J ON J.ID=P.JURIDICALID and J.ISERASED = 0 ' +
-    'JOIN Object_PriceList PL ON PL.ID = P.PRICELISTID and PL.ISERASED = 0 ' +
-    'JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID and C.ISERASED = 0 where P.ISERASED = 0';
+  sQuery := BasePartnerQuery;
 
   if Day < 8 then
     sQuery := sQuery + ' and lower(substr(P.SCHEDULE, ' + IntToStr(2 * Day - 1) + ', 1)) = ''t''';
@@ -2085,13 +2096,19 @@ end;
 
 procedure TfrmMain.ShowPriceListItems;
 begin
-  DM.qryGoods.Open('select G.ID, G.VALUEDATA GoodsName, G.WEIGHT, G.OBJECTCODE, PLI.PRICE, PLI.ENDDATE, ' +
-    'GG.VALUEDATA GroupName, M.VALUEDATA MeasureName from OBJECT_GOODS G ' +
-    'JOIN OBJECT_PRICELISTITEMS PLI ON PLI.GOODSID = G.ID JOIN OBJECT_PRICELIST PL ON PL.ID = PLI.PRICELISTID ' +
-    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-    'LEFT JOIN OBJECT_GOODSGROUP GG ON GG.ID = G.GOODSGROUPID where G.ISERASED = 0 and PLI.PRICELISTID = ' + DM.qryPriceListId.AsString);
+  FOldGoodsItemIndex := -1;
 
-  SwitchToForm(tiPriceListItems, DM.qryGoods);
+  DM.qryGoodsForPriceList.Open('select G.ID, G.OBJECTCODE, G.VALUEDATA GoodsName, G.WEIGHT, GK.VALUEDATA KindName, ' +
+    'PLI.ORDERPRICE, PLI.SALEPRICE, M.VALUEDATA MeasureName, G.VALUEDATA || '' ('' || GK.VALUEDATA || '')'' FullName ' +
+    'FROM OBJECT_GOODS G ' +
+    'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID AND GLK.ISERASED = 0 ' +
+    'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERASED = 0 ' +
+    'JOIN OBJECT_PRICELISTITEMS PLI ON PLI.GOODSID = G.ID ' +
+    'JOIN OBJECT_PRICELIST PL ON PL.ID = PLI.PRICELISTID ' +
+    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+    'WHERE G.ISERASED = 0 and PLI.PRICELISTID = ' + DM.qryPriceListId.AsString);
+
+  SwitchToForm(tiPriceListItems, DM.qryGoodsForPriceList);
 end;
 
 procedure TfrmMain.ShowPathOnmap;
@@ -2151,21 +2168,26 @@ end;
 procedure TfrmMain.RecalculateTotalPriceAndWeight;
 var
  i : integer;
+ TotalPriceWithPercent, PriceWithPercent : Currency;
 begin
   DM.cdsOrderItems.DisableControls;
 
+  TotalPriceWithPercent := 0;
   FOrderTotalPrice := 0;
   FOrderTotalCountKg := 0;
 
   DM.cdsOrderItems.First;
   while not DM.cdsOrderItems.Eof do
   begin
+    PriceWithPercent := DM.cdsOrderItemsPrice.AsFloat * DM.cdsOrderItemsCount.AsFloat *
+      (100 + DM.qryPartnerChangePercent.AsCurrency) / 100;
+
+    TotalPriceWithPercent := TotalPriceWithPercent + PriceWithPercent;
+
     if DM.qryPartnerPriceWithVAT.AsBoolean then
-      FOrderTotalPrice := FOrderTotalPrice + DM.cdsOrderItemsPrice.AsFloat * DM.cdsOrderItemsCount.AsFloat *
-        (100 + DM.qryPartnerChangePercent.AsCurrency) / 100
+      FOrderTotalPrice := FOrderTotalPrice + PriceWithPercent
     else
-      FOrderTotalPrice := FOrderTotalPrice + DM.cdsOrderItemsPrice.AsFloat * DM.cdsOrderItemsCount.AsFloat *
-        ((100 + DM.qryPartnerChangePercent.AsCurrency) / 100) * ((100 + DM.qryPartnerVATPercent.AsCurrency) / 100);
+      FOrderTotalPrice := FOrderTotalPrice + PriceWithPercent * (100 + DM.qryPartnerVATPercent.AsCurrency) / 100;
 
     if FormatFloat('0.##', DM.cdsOrderItemsWeight.AsFloat) <> '0' then
       FOrderTotalCountKg := FOrderTotalCountKg + DM.cdsOrderItemsWeight.AsFloat * DM.cdsOrderItemsCount.AsFloat
@@ -2177,9 +2199,25 @@ begin
 
   DM.cdsOrderItems.EnableControls;
 
+  if DM.qryPartnerChangePercent.AsCurrency = 0 then
+  begin
+    lPriceWithPercent.Visible := false;
+    pOrderTotals.Height := 50;
+  end
+  else
+  begin
+    lPriceWithPercent.Visible := true;
+    pOrderTotals.Height := 70;
+
+    if DM.qryPartnerChangePercent.AsCurrency > 0 then
+      lPriceWithPercent.Text := ' Стоимость с учетом наценки (' +
+        FormatFloat('0.00', DM.qryPartnerChangePercent.AsCurrency) + '%) : ' + FormatFloat('0.00', TotalPriceWithPercent)
+    else
+      lPriceWithPercent.Text := ' Стоимость с учетом скидки (' +
+        FormatFloat('0.00', -DM.qryPartnerChangePercent.AsCurrency) + '%) : ' + FormatFloat('0.00', TotalPriceWithPercent);
+  end;
+
   lTotalPrice.Text := 'Общая стоимость (с учетом НДС) : ' + FormatFloat('0.00', FOrderTotalPrice);
-
-
 
   lTotalWeight.Text := 'Общий вес : ' + FormatFloat('0.00', FOrderTotalCountKg);
 end;
