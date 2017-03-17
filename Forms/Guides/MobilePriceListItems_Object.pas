@@ -1,4 +1,4 @@
-unit MobilePartner_Object;
+unit MobilePriceListItems_Object;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   cxTextEdit, dsdGuides, cxLabel, cxCurrencyEdit;
 
 type
-  TMobilePartner_ObjectForm = class(TParentForm)
+  TMobilePriceListItems_ObjectForm = class(TParentForm)
     DataSource: TDataSource;
     MasterCDS: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -43,29 +43,18 @@ type
     dxBarStatic1: TdxBarStatic;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    ceCode: TcxGridDBColumn;
-    ceJuridicalName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    PriceListName: TcxGridDBColumn;
     ceisErased: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
-    ceName: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    ceAddress: TcxGridDBColumn;
-    clContractName: TcxGridDBColumn;
-    clPriceListName: TcxGridDBColumn;
-    clPriceListName_ret: TcxGridDBColumn;
-    clDebtSum: TcxGridDBColumn;
-    clOverSum: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
     FormParams: TdsdFormParams;
     bbJuridicalLabel: TdxBarControlContainerItem;
     bbJuridicalGuides: TdxBarControlContainerItem;
-    clGPSN: TcxGridDBColumn;
-    clGPSE: TcxGridDBColumn;
-    clPrepareDayCount: TcxGridDBColumn;
-    clisSync: TcxGridDBColumn;
-    clOverDays: TcxGridDBColumn;
-    clSchedule: TcxGridDBColumn;
+    isSync: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     cxLabel3: TcxLabel;
@@ -75,9 +64,6 @@ type
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     spGet_PersonalTrade: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    ContractCode: TcxGridDBColumn;
-    spUpdate_Partner_Schedule: TdsdStoredProc;
-    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
@@ -89,6 +75,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TMobilePartner_ObjectForm);
+  RegisterClass(TMobilePriceListItems_ObjectForm);
 
 end.

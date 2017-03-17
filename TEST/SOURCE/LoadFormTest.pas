@@ -2309,6 +2309,9 @@ end;
 
 procedure TLoadFormTest.LoadMobileProjectFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePriceListItems_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobilePriceListItems_ObjectForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePartner_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobilePartner_ObjectForm');
 

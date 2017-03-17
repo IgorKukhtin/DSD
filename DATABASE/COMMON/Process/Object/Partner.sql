@@ -4,7 +4,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Partner_Params() RETURN
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Partner_PriceList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Partner_PriceList' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Partner_Address() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Partner_Address' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Partner_GLN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Partner_GLN' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
-
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Partner_Schedule() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Partner_Schedule' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 
 DO $$
 BEGIN
@@ -45,6 +45,12 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Partner
                                   , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Partner())||'> - сохранение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Update_Object_Partner_GLN');
 
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Partner_Schedule()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 6
+                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Partner())||'> - сохранение данных.'
+                                  , inEnumName:= 'zc_Enum_Process_Update_Object_Partner_Schedule');
+
 END $$;
 
 
@@ -52,6 +58,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.03.17         * add zc_Enum_Process_Update_Object_Partner_Schedule
  27.10.14                                        * add zc_Enum_Process_Update_Object_Partner_Order AND zc_Enum_Process_Update_Object_Partner_PriceList
  05.12.13         *
 */
