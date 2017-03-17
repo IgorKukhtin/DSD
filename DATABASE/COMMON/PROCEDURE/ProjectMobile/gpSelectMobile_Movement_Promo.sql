@@ -14,6 +14,7 @@ RETURNS TABLE (Id              Integer   -- Уникальный идентификатор, формируетс
              , EndSale         TDateTime -- Дата окончания отгрузки по акционной цене
              , isChangePercent Boolean   -- учитывать % скидки по договору, *важно* - если FALSE, тогда в строчной части заявки ChangePercent всегда = 0 
              , CommentMain     TVarChar  -- Примечание (общее)
+             , isSync          Boolean   
               )
 
 AS
@@ -51,6 +52,7 @@ BEGIN
                   , MovementDate_EndSale.ValueData       AS EndSale
                   , (MI_Child.ObjectId IS NULL)          AS isChangePercent
                   , MovementString_CommentMain.ValueData AS CommentMain
+                  , true::Boolean                        AS isSync  
              FROM Movement AS Movement_Promo
                   JOIN tmpPromoPartner ON tmpPromoPartner.ParentId = Movement_Promo.Id
                   LEFT JOIN MovementDate AS MovementDate_StartSale
