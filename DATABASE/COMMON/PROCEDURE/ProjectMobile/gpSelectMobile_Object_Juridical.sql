@@ -95,27 +95,27 @@ BEGIN
                                         LEFT JOIN tmpDayInfo ON tmpDayInfo.JuridicalId = CLO_Juridical.ObjectId
                                                             AND tmpDayInfo.ContractId = CLO_Contract.ObjectId
                                    WHERE Container_Summ.DescId = zc_Container_Summ()
+                                     AND Container_Summ.Amount <> 0.0
                                   )
                 , tmpMIContainer AS (SELECT MovementItemContainer.ContainerId
                                           , SUM (MovementItemContainer.Amount)::TFloat AS Summ
                                      FROM MovementItemContainer
                                           JOIN tmpContainer ON tmpContainer.ContainerId = MovementItemContainer.ContainerId
                                      WHERE MovementItemContainer.DescId = zc_MIContainer_Summ()
-                                       AND MovementItemContainer.MovementDescId = zc_Movement_Sale()
-                                       AND MovementItemContainer.OperDate > tmpContainer.ContractDate
+                                       AND (MovementItemContainer.MovementDescId = zc_Movement_Sale()
+                                        OR (MovementItemContainer.MovementDescId = zc_Movement_TransferDebtOut() AND MovementItemContainer.isActive))
+                                       AND MovementItemContainer.OperDate >= tmpContainer.ContractDate
                                      GROUP BY MovementItemContainer.ContainerId  
                                     )
                 , tmpDebt AS (SELECT tmpContainer.JuridicalId
                                    , tmpContainer.ContractId
                                    , SUM (tmpContainer.Amount)::TFloat                                               AS DebtSum
                                    , SUM (tmpContainer.Amount - COALESCE (tmpMIContainer.Summ, 0.0)::TFloat)::TFloat AS OverSum
-                                   , MAX (zfCalc_OverDayCount (tmpContainer.ContainerId, tmpContainer.ContractDate)) AS OverDays
+                                   , MAX (zfCalc_OverDayCount (tmpContainer.ContainerId, tmpContainer.Amount - COALESCE (tmpMIContainer.Summ, 0.0)::TFloat, tmpContainer.ContractDate)) AS OverDays
                               FROM tmpContainer
                                    LEFT JOIN tmpMIContainer ON tmpContainer.ContainerId = tmpMIContainer.ContainerId
-                              WHERE tmpContainer.Amount <> 0.0
                               GROUP BY tmpContainer.JuridicalId
                                      , tmpContainer.ContractId
-                              HAVING SUM (tmpContainer.Amount) > 0.0
                              )
              SELECT Object_Juridical.Id
                   , Object_Juridical.ObjectCode
