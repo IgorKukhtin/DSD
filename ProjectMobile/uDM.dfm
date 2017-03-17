@@ -34,11 +34,6 @@ object DM: TDM
     Left = 272
     Top = 32
   end
-  object qrySelect: TFDQuery
-    Connection = conMain
-    Left = 40
-    Top = 160
-  end
   object tblObject_Const: TFDTable
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_Const'
@@ -466,19 +461,26 @@ object DM: TDM
       FieldName = 'PriceListId'
     end
     object tblObject_PriceListItemsStartDate: TDateTimeField
-      FieldName = 'StartDate'
+      FieldName = 'OrderStartDate'
     end
     object tblObject_PriceListItemsEndDate: TDateTimeField
-      FieldName = 'EndDate'
+      FieldName = 'OrderEndDate'
     end
     object tblObject_PriceListItemsPrice: TFloatField
-      FieldName = 'Price'
+      FieldName = 'OrderPrice'
+    end
+    object tblObject_PriceListItemsSaleStartDate: TDateTimeField
+      FieldName = 'SaleStartDate'
+    end
+    object tblObject_PriceListItemsSaleEndDate: TDateTimeField
+      FieldName = 'SaleEndDate'
+    end
+    object tblObject_PriceListItemsSalePrice: TFloatField
+      FieldName = 'SalePrice'
     end
   end
   object qryPartner: TFDQuery
     Connection = conMain
-    SQL.Strings = (
-      'select * from Object_Partner')
     Left = 40
     Top = 224
     object qryPartnerId: TIntegerField
@@ -522,11 +524,20 @@ object DM: TDM
     object qryPartnerVATPercent: TFloatField
       FieldName = 'VATPercent'
     end
+    object qryPartnerCalcDayCount: TFloatField
+      FieldName = 'CalcDayCount'
+    end
+    object qryPartnerOrderDayCount: TFloatField
+      FieldName = 'OrderDayCount'
+    end
+    object qryPartnerisOperDateOrder: TBooleanField
+      FieldName = 'isOperDateOrder'
+    end
   end
   object qryPriceList: TFDQuery
     Connection = conMain
     SQL.Strings = (
-      'select * from Object_Partner')
+      '')
     Left = 32
     Top = 448
     object qryPriceListId: TIntegerField
@@ -537,38 +548,40 @@ object DM: TDM
       Size = 255
     end
   end
-  object qryGoods: TFDQuery
+  object qryGoodsForPriceList: TFDQuery
     Connection = conMain
-    SQL.Strings = (
-      'select * from Object_Partner')
     Left = 128
     Top = 448
-    object qryGoodsId: TIntegerField
+    object qryGoodsForPriceListId: TIntegerField
       FieldName = 'Id'
     end
-    object qryGoodsGoodsName: TStringField
+    object qryGoodsForPriceListFullName: TWideStringField
+      FieldName = 'FullName'
+      Size = 400
+    end
+    object qryGoodsForPriceListOBJECTCODE: TIntegerField
+      FieldName = 'OBJECTCODE'
+    end
+    object qryGoodsForPriceListGoodsName: TStringField
       FieldName = 'GoodsName'
       Size = 255
     end
-    object qryGoodsweight: TFloatField
-      FieldName = 'weight'
-    end
-    object qryGoodsPrice: TFloatField
-      FieldName = 'Price'
-    end
-    object qryGoodsEndDate: TDateTimeField
-      FieldName = 'EndDate'
-    end
-    object qryGoodsGroupName: TStringField
-      FieldName = 'GroupName'
+    object qryGoodsForPriceListKindName: TStringField
+      FieldName = 'KindName'
       Size = 255
     end
-    object qryGoodsMeasureName: TStringField
+    object qryGoodsForPriceListMeasureName: TStringField
       FieldName = 'MeasureName'
       Size = 255
     end
-    object qryGoodsOBJECTCODE: TIntegerField
-      FieldName = 'OBJECTCODE'
+    object qryGoodsForPriceListweight: TFloatField
+      FieldName = 'weight'
+    end
+    object qryGoodsForPriceListOrderPrice: TFloatField
+      FieldName = 'OrderPrice'
+    end
+    object qryGoodsForPriceListSalePrice: TFloatField
+      FieldName = 'SalePrice'
     end
   end
   object tblMovement_OrderExternal: TFDTable
@@ -801,32 +814,6 @@ object DM: TDM
       FieldName = 'isSync'
     end
   end
-  object qryPartnerPhotos: TFDQuery
-    FilterOptions = [foCaseInsensitive]
-    Connection = conMain
-    SQL.Strings = (
-      
-        'select Photo, Comment from Object_Partner_Photo where PartnerId ' +
-        '= :PartnerId and ContractId = :ContractId and isErased = 0')
-    Left = 128
-    Top = 224
-    ParamData = <
-      item
-        Name = 'PARTNERID'
-        ParamType = ptInput
-      end
-      item
-        Name = 'CONTRACTID'
-        ParamType = ptInput
-      end>
-    object qryPartnerPhotosPhoto: TBlobField
-      FieldName = 'Photo'
-    end
-    object qryPartnerPhotosComment: TStringField
-      FieldName = 'Comment'
-      Size = 255
-    end
-  end
   object tblObject_GoodsListSale: TFDTable
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_GoodsListSale'
@@ -880,8 +867,9 @@ object DM: TDM
     object cdsOrderItemsRemains: TFloatField
       FieldName = 'Remains'
     end
-    object cdsOrderItemsForecast: TFloatField
-      FieldName = 'Forecast'
+    object cdsOrderItemsRecommend: TStringField
+      FieldName = 'Recommend'
+      Size = 10
     end
     object cdsOrderItemsMeasure: TStringField
       FieldName = 'Measure'

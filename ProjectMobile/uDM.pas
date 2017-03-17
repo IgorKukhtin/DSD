@@ -15,6 +15,14 @@ uses
 CONST
   DataBaseFileName = 'aMobile.sdb';
 
+  BasePartnerQuery = 'select P.Id, P.CONTRACTID, J.VALUEDATA Name, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, ' +
+    'P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE, P.PRICELISTID, C.PAIDKINDID, C.CHANGEPERCENT, PL.PRICEWITHVAT, PL.VATPERCENT, ' +
+    'P.CalcDayCount, P.OrderDayCount, P.isOperDateOrder ' +
+    'from OBJECT_PARTNER P ' +
+    'JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID and J.ISERASED = 0 ' +
+    'JOIN Object_PriceList PL ON PL.ID = P.PRICELISTID and PL.ISERASED = 0 ' +
+    'JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID and C.ISERASED = 0 where P.ISERASED = 0 ';
+
 type
   TDataSets = TObjectList<TFDTable>;
 
@@ -40,7 +48,6 @@ type
     qryMeta2: TFDMetaInfoQuery;
     conMain: TFDConnection;
     FDGUIxWaitCursor1: TFDGUIxWaitCursor;
-    qrySelect: TFDQuery;
     tblObject_Const: TFDTable;
     tblObject_ConstPaidKindName_First: TStringField;
     tblObject_ConstPaidKindId_Second: TIntegerField;
@@ -169,17 +176,15 @@ type
     tblObject_PartnerGPSN: TFloatField;
     tblObject_PartnerGPSE: TFloatField;
     qryPriceList: TFDQuery;
-    qryGoods: TFDQuery;
+    qryGoodsForPriceList: TFDQuery;
     qryPriceListId: TIntegerField;
     qryPriceListValueData: TStringField;
-    qryGoodsId: TIntegerField;
-    qryGoodsGoodsName: TStringField;
-    qryGoodsweight: TFloatField;
-    qryGoodsPrice: TFloatField;
-    qryGoodsEndDate: TDateTimeField;
-    qryGoodsGroupName: TStringField;
-    qryGoodsMeasureName: TStringField;
-    qryGoodsOBJECTCODE: TIntegerField;
+    qryGoodsForPriceListId: TIntegerField;
+    qryGoodsForPriceListGoodsName: TStringField;
+    qryGoodsForPriceListweight: TFloatField;
+    qryGoodsForPriceListOrderPrice: TFloatField;
+    qryGoodsForPriceListMeasureName: TStringField;
+    qryGoodsForPriceListOBJECTCODE: TIntegerField;
     tblMovement_OrderExternal: TFDTable;
     tblMovement_OrderExternalGUID: TStringField;
     tblMovement_OrderExternalInvNumber: TStringField;
@@ -227,9 +232,6 @@ type
     tblMovement_VisitPartnerId: TIntegerField;
     tblMovement_VisitId: TAutoIncField;
     tblMovement_VisitComment: TStringField;
-    qryPartnerPhotos: TFDQuery;
-    qryPartnerPhotosPhoto: TBlobField;
-    qryPartnerPhotosComment: TStringField;
     tblObject_GoodsByGoodsKindRemains: TFloatField;
     tblObject_GoodsByGoodsKindForecast: TFloatField;
     tblObject_GoodsListSale: TFDTable;
@@ -245,7 +247,7 @@ type
     cdsOrderItemsType: TStringField;
     cdsOrderItemsPrice: TFloatField;
     cdsOrderItemsRemains: TFloatField;
-    cdsOrderItemsForecast: TFloatField;
+    cdsOrderItemsRecommend: TStringField;
     cdsOrderItemsCount: TFloatField;
     cdsOrderItemsMeasure: TStringField;
     cdsOrderItemsGoodsId: TIntegerField;
@@ -313,6 +315,15 @@ type
     tblObject_PartnerOrderDayCount: TFloatField;
     tblObject_PartnerisOperDateOrder: TBooleanField;
     tblObject_PartnerisSync: TBooleanField;
+    qryPartnerCalcDayCount: TFloatField;
+    qryPartnerOrderDayCount: TFloatField;
+    tblObject_PriceListItemsSaleStartDate: TDateTimeField;
+    tblObject_PriceListItemsSaleEndDate: TDateTimeField;
+    tblObject_PriceListItemsSalePrice: TFloatField;
+    qryGoodsForPriceListSalePrice: TFloatField;
+    qryPartnerisOperDateOrder: TBooleanField;
+    qryGoodsForPriceListKindName: TStringField;
+    qryGoodsForPriceListFullName: TWideStringField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -339,6 +350,7 @@ type
     procedure AddedGoodsToStoreReal(AGoods : string);
     procedure DefaultStoreRealItems;
     procedure LoadStoreRealItems(AId: integer);
+    procedure GenerateStoreRealItemsList;
 
     function SaveOrderExternal(OldOrderExternalId : string; OperDate: TDate;
       ToralPrice, TotalWeight: Currency; DelItems : string; var ErrorMessage : string) : boolean;
@@ -346,6 +358,7 @@ type
     procedure AddedGoodsToOrderExternal(AGoods : string);
     procedure DefaultOrderExternalItems;
     procedure LoadOrderExtrenalItems(AId: integer);
+    procedure GenerateOrderItemsList;
 
     procedure SavePhotoGroup(AGroupName: string);
     procedure LoadPhotoGroups;
@@ -822,10 +835,11 @@ end;
 
 procedure TDM.GetDictionaries(AName : string);
 var
-  x : integer;
+  x, y : integer;
   GetStoredProc : TdsdStoredProc;
   CurDictTable : TFDTable;
   FindRec : boolean;
+  Mapping : array of array[1..2] of integer;
 begin
   GetStoredProc := TdsdStoredProc.Create(nil);
   try
@@ -909,6 +923,21 @@ begin
       with GetStoredProc.DataSet do
       begin
         First;
+
+        SetLength(Mapping, 0);
+        for x := 0 to CurDictTable.Fields.Count - 1 do
+          for y := 0 to GetStoredProc.DataSet.Fields.Count - 1 do
+            if CompareText(CurDictTable.Fields[x].FieldName, GetStoredProc.DataSet.Fields[y].FieldName) = 0 then
+            begin
+              SetLength(Mapping, Length(Mapping) + 1);
+
+              Mapping[Length(Mapping) - 1][1] := x;
+              Mapping[Length(Mapping) - 1][2] := y;
+
+              break;
+            end;
+
+
         while not Eof do
         begin
           FindRec := false;
@@ -932,8 +961,8 @@ begin
 
           if FieldByName('isSync').AsBoolean then
           begin
-            for x := 0 to CurDictTable.Fields.Count - 1 do
-              CurDictTable.Fields[ x ].Value := GetStoredProc.DataSet.Fields[ x ].Value;
+            for x := 0 to Length(Mapping) - 1 do
+              CurDictTable.Fields[ Mapping[x][1] ].Value := GetStoredProc.DataSet.Fields[ Mapping[x][2] ].Value;
           end
           else
             CurDictTable.FieldByName('isErased').AsBoolean := true;
@@ -1228,6 +1257,22 @@ begin
   end;
 end;
 
+procedure TDM.GenerateStoreRealItemsList;
+begin
+  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA Name, GK.VALUEDATA Kind, ' +
+    'GLK.REMAINS, PI.ORDERPRICE PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
+    'GK.VALUEDATA || '';'' || M.VALUEDATA || '';0'' FullInfo ' +
+    'from OBJECT_GOODS G ' +
+    'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID AND GLK.ISERASED = 0 ' +
+    'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERASED = 0 ' +
+    'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
+    'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+    'WHERE G.ISERASED = 0 order by Name';
+
+  qryGoodsItems.ParamByName('PRICELISTID').AsInteger := DM.qryPartnerPRICELISTID.AsInteger;
+  qryGoodsItems.Open;
+end;
+
 
 function TDM.SaveOrderExternal(OldOrderExternalId : string; OperDate: TDate;
   ToralPrice, TotalWeight: Currency; DelItems : string; var ErrorMessage : string) : boolean;
@@ -1438,6 +1483,7 @@ end;
 procedure TDM.AddedGoodsToOrderExternal(AGoods : string);
 var
   ArrValue : TArray<string>;
+  Recommend : Extended;
 begin
   ArrValue := AGoods.Split([';']);
 
@@ -1447,7 +1493,23 @@ begin
   cdsOrderItemsKindId.AsString := ArrValue[2];    // KindId
   cdsOrderItemsName.AsString := ArrValue[3];      // название товара
   cdsOrderItemsType.AsString := ArrValue[4];      // вид товара
-  cdsOrderItemsForecast.AsString := ArrValue[5];  // рекомендуемое количество
+  if (ArrValue[5] = '0') or (qryPartnerCalcDayCount.AsFloat = 0) then                         // рекомендуемое количество
+    cdsOrderItemsRecommend.AsString := '-'
+  else
+  begin
+    if StrToFloatDef(ArrValue[5], 0) - StrToFloatDef(ArrValue[6], 0) <= 0 then
+      cdsOrderItemsRecommend.AsString := '0'
+    else
+    begin
+      Recommend := (StrToFloatDef(ArrValue[5], 0) - StrToFloatDef(ArrValue[6], 0)) / qryPartnerCalcDayCount.AsFloat *
+        qryPartnerOrderDayCount.AsFloat - StrToFloatDef(ArrValue[6], 0);
+      if Recommend <= 0 then
+        cdsOrderItemsRecommend.AsString := '0'
+      else
+        cdsOrderItemsRecommend.AsString := FormatFloat('0.00', Recommend);
+    end;
+  end;
+
   cdsOrderItemsRemains.AsString := ArrValue[6];   // остаток товара
   cdsOrderItemsPrice.AsString := ArrValue[7];     // цена
   cdsOrderItemsMeasure.AsString := ' ' + ArrValue[8];   // единица измерения
@@ -1460,6 +1522,7 @@ end;
 procedure TDM.DefaultOrderExternalItems;
 var
   qryGoodsListSale : TFDQuery;
+  PriceField : string;
 begin
   cdsOrderItems.Open;
   cdsOrderItems.EmptyDataSet;
@@ -1467,12 +1530,21 @@ begin
   qryGoodsListSale := TFDQuery.Create(nil);
   try
     qryGoodsListSale.Connection := conMain;
-    qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || GK.VALUEDATA || '';'' || ' +
-      'GLK.FORECAST || '';'' || GLK.REMAINS || '';'' || PI.PRICE || '';'' || M.VALUEDATA || '';'' || G.WEIGHT || '';0'' ' +
+
+    if qryPartnerisOperDateOrder.AsBoolean then
+      PriceField := 'OrderPrice'
+    else
+      PriceField := 'SalePrice';
+
+    qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
+      'GK.VALUEDATA || '';'' || GLS.AMOUNTCALC || '';'' || CASE WHEN SRI.AMOUNT IS NULL THEN 0 ELSE SRI.AMOUNT END || ' +
+      ''';'' || PI.' + PriceField + ' || '';'' || M.VALUEDATA || '';'' || G.WEIGHT || '';0'', SRI.AMOUNT ' +
       'from OBJECT_GOODSLISTSALE GLS ' +
       'JOIN OBJECT_GOODS G ON GLS.GOODSID = G.ID ' +
       'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID AND GK.ISERASED = 0 ' +
-      'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = GLS.GOODSID AND GLK.GOODSKINDID = GLS.GOODSKINDID AND GLK.ISERASED = 0 ' +
+      'LEFT JOIN MOVEMENT_STOREREAL SR ON SR.PARTNERID = ' + qryPartnerId.AsString +
+      ' AND DATE(SR.OPERDATE) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', Date())) + ' AND SR.STATUSID <> ' + tblObject_ConstStatusId_Erased.AsString + ' ' +
+      'LEFT JOIN MOVEMENTITEM_STOREREAL SRI ON SRI.GOODSID = G.ID AND SRI.GOODSKINDID = GK.ID AND SRI.MOVEMENTID = SR.ID ' +
       'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
       'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = ' + qryPartnerPRICELISTID.AsString + ' ' +
       'WHERE GLS.PARTNERID = ' + qryPartnerId.AsString + ' and GLS.ISERASED = 0 order by G.VALUEDATA ';
@@ -1496,6 +1568,7 @@ end;
 procedure TDM.LoadOrderExtrenalItems(AId : integer);
 var
   qryGoodsListSale : TFDQuery;
+  PriceField : string;
 begin
   cdsOrderItems.Open;
   cdsOrderItems.EmptyDataSet;
@@ -1503,12 +1576,20 @@ begin
   qryGoodsListSale := TFDQuery.Create(nil);
   try
     qryGoodsListSale.Connection := conMain;
+
+    if qryPartnerisOperDateOrder.AsBoolean then
+      PriceField := 'OrderPrice'
+    else
+      PriceField := 'SalePrice';
+
     qryGoodsListSale.SQL.Text := 'select IEO.ID || '';'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || GK.VALUEDATA || '';'' || ' +
-      'GLK.FORECAST || '';'' || GLK.REMAINS || '';'' || PI.PRICE || '';'' || M.VALUEDATA || '';'' || G.WEIGHT || '';'' || IEO.AMOUNT ' +
+      '0 || '';'' || CASE WHEN SRI.AMOUNT IS NULL THEN 0 ELSE SRI.AMOUNT END || '';'' || PI.' + PriceField + ' || '';'' || M.VALUEDATA || '';'' || G.WEIGHT || '';'' || IEO.AMOUNT ' +
       'from MOVEMENTITEM_ORDEREXTERNAL IEO ' +
       'JOIN OBJECT_GOODS G ON IEO.GOODSID = G.ID ' +
       'JOIN OBJECT_GOODSKIND GK ON GK.ID = IEO.GOODSKINDID ' +
-      'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = IEO.GOODSID AND GLK.GOODSKINDID = IEO.GOODSKINDID ' +
+      'LEFT JOIN MOVEMENT_STOREREAL SR ON SR.PARTNERID = ' + qryPartnerId.AsString +
+      ' AND DATE(SR.OPERDATE) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', Date())) + ' AND SR.STATUSID <> ' + tblObject_ConstStatusId_Erased.AsString + ' ' +
+      'LEFT JOIN MOVEMENTITEM_STOREREAL SRI ON SRI.GOODSID = G.ID AND SRI.GOODSKINDID = GK.ID AND SRI.MOVEMENTID = SR.ID ' +
       'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
       'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = ' + qryPartnerPRICELISTID.AsString + ' ' +
       'WHERE IEO.MOVEMENTID = ' + IntToStr(AId) + ' order by G.VALUEDATA ';
@@ -1527,6 +1608,30 @@ begin
   finally
     qryGoodsListSale.Free;
   end;
+end;
+
+procedure TDM.GenerateOrderItemsList;
+var
+  PriceField : string;
+begin
+  if qryPartnerisOperDateOrder.AsBoolean then
+    PriceField := 'OrderPrice'
+  else
+    PriceField := 'SalePrice';
+
+  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA Name, GK.VALUEDATA Kind, ' +
+    'GLK.REMAINS, PI.' + PriceField + ' PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
+    'GK.VALUEDATA || '';'' || 0 || '';'' || 0 || '';'' || PI.' + PriceField + ' || '';'' || ' +
+    'M.VALUEDATA || '';'' || G.WEIGHT || '';0'' FullInfo ' +
+    'from OBJECT_GOODS G ' +
+    'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID AND GLK.ISERASED = 0 ' +
+    'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERASED = 0 ' +
+    'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
+    'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+    'WHERE G.ISERASED = 0 order by Name';
+
+  qryGoodsItems.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID.AsInteger;
+  qryGoodsItems.Open;
 end;
 
 procedure TDM.SavePhotoGroup(AGroupName: string);
