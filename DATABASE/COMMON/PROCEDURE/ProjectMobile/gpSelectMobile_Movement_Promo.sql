@@ -43,6 +43,7 @@ BEGIN
                                                           AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
                                       WHERE Movement_PromoPartner.DescId = zc_Movement_PromoPartner()
                                         AND Movement_PromoPartner.ParentId IS NOT NULL 
+                                        AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
                                      )
              SELECT Movement_Promo.Id
                   , Movement_Promo.InvNumber
@@ -55,12 +56,14 @@ BEGIN
                   , true::Boolean                        AS isSync  
              FROM Movement AS Movement_Promo
                   JOIN tmpPromoPartner ON tmpPromoPartner.ParentId = Movement_Promo.Id
-                  LEFT JOIN MovementDate AS MovementDate_StartSale
-                                         ON MovementDate_StartSale.MovementId = Movement_Promo.Id
-                                        AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
-                  LEFT JOIN MovementDate AS MovementDate_EndSale
-                                         ON MovementDate_EndSale.MovementId = Movement_Promo.Id
-                                        AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
+                  JOIN MovementDate AS MovementDate_StartSale
+                                    ON MovementDate_StartSale.MovementId = Movement_Promo.Id
+                                   AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
+                                   AND MovementDate_StartSale.ValueData <= CURRENT_DATE
+                  JOIN MovementDate AS MovementDate_EndSale
+                                    ON MovementDate_EndSale.MovementId = Movement_Promo.Id
+                                   AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
+                                   AND MovementDate_EndSale.ValueData >= CURRENT_DATE
                   LEFT JOIN MovementItem AS MI_Child
                                          ON MI_Child.MovementId = Movement_Promo.Id
                                         AND MI_Child.DescId = zc_MI_Child() 
@@ -69,7 +72,8 @@ BEGIN
                   LEFT JOIN MovementString AS MovementString_CommentMain
                                            ON MovementString_CommentMain.MovementId = Movement_Promo.Id
                                           AND MovementString_CommentMain.DescId = zc_MovementString_CommentMain() 
-             WHERE Movement_Promo.DescId = zc_Movement_Promo();
+             WHERE Movement_Promo.DescId = zc_Movement_Promo()
+               AND Movement_Promo.StatusId = zc_Enum_Status_Complete();
       END IF;
 END;
 $BODY$
