@@ -263,6 +263,7 @@ type
     cdsOrderItemsGoodsId: TIntegerField;
     cdsOrderItemsKindId: TIntegerField;
     cdsOrderItemsWeight: TFloatField;
+    cdsOrderItemsisChangePercent: TBooleanField;
     cdsOrderExternal: TClientDataSet;
     cdsOrderExternalName: TStringField;
     cdsOrderExternalPrice: TStringField;
@@ -351,9 +352,54 @@ type
     tblMovementItem_PromoGoodsPriceWithOutVAT: TFloatField;
     tblMovementItem_PromoGoodsPriceWithVAT: TFloatField;
     tblMovementItem_PromoGoodsTaxPromo: TFloatField;
-    cdsOrderItemsIsPromo: TBooleanField;
-    cdsOrderItemsisChangePercent: TBooleanField;
     qryGoodsItemsPromoPrice: TWideStringField;
+    qryGoodsItemsSearchName: TWideStringField;
+    cdsOrderItemsIsPromo: TStringField;
+    tblMovement_ReturnIn: TFDTable;
+    tblMovement_ReturnInId: TAutoIncField;
+    tblMovement_ReturnInGUID: TStringField;
+    tblMovement_ReturnInInvNumber: TStringField;
+    tblMovement_ReturnInOperDate: TDateTimeField;
+    tblMovement_ReturnInStatusId: TIntegerField;
+    tblMovement_ReturnInChecked: TBooleanField;
+    tblMovement_ReturnInPriceWithVAT: TBooleanField;
+    tblMovement_ReturnInInsertDate: TDateTimeField;
+    tblMovement_ReturnInVATPercent: TFloatField;
+    tblMovement_ReturnInChangePercent: TFloatField;
+    tblMovement_ReturnInTotalCountKg: TFloatField;
+    tblMovement_ReturnInTotalSummPVAT: TFloatField;
+    tblMovement_ReturnInPaidKindId: TIntegerField;
+    tblMovement_ReturnInPartnerId: TIntegerField;
+    tblMovement_ReturnInContractId: TIntegerField;
+    tblMovement_ReturnInComment: TStringField;
+    tblMovement_ReturnInisSync: TBooleanField;
+    tblMovementItem_ReturnIn: TFDTable;
+    tblMovementItem_ReturnInId: TAutoIncField;
+    tblMovementItem_ReturnInMovementId: TIntegerField;
+    tblMovementItem_ReturnInGUID: TStringField;
+    tblMovementItem_ReturnInGoodsId: TIntegerField;
+    tblMovementItem_ReturnInGoodsKindId: TIntegerField;
+    tblMovementItem_ReturnInAmount: TFloatField;
+    tblMovementItem_ReturnInPrice: TFloatField;
+    tblMovementItem_ReturnInChangePercent: TFloatField;
+    cdsReturnIn: TClientDataSet;
+    cdsReturnInItems: TClientDataSet;
+    cdsReturnInId: TIntegerField;
+    cdsReturnInOperDate: TDateField;
+    cdsReturnInName: TStringField;
+    cdsReturnInPrice: TStringField;
+    cdsReturnInWeigth: TStringField;
+    cdsReturnInStatus: TStringField;
+    cdsReturnInItemsId: TIntegerField;
+    cdsReturnInItemsName: TStringField;
+    cdsReturnInItemsType: TStringField;
+    cdsReturnInItemsPrice: TFloatField;
+    cdsReturnInItemsWeight: TFloatField;
+    cdsReturnInItemsMeasure: TStringField;
+    cdsReturnInItemsCount: TFloatField;
+    cdsReturnInItemsGoodsId: TIntegerField;
+    cdsReturnInItemsKindId: TIntegerField;
+    cdsReturnInComment: TStringField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -374,6 +420,8 @@ type
     function SynchronizeWithMainDatabase : string;
     procedure GetConfigurationInfo;
     procedure GetDictionaries(AName : string);
+    procedure UploadDataToServer;
+    procedure UploadStoreReal;
 
     function SaveStoreReal(OldStoreRealId : string; Comment: string;
       DelItems : string; var ErrorMessage : string) : boolean;
@@ -389,7 +437,15 @@ type
     procedure AddedGoodsToOrderExternal(AGoods : string);
     procedure DefaultOrderExternalItems;
     procedure LoadOrderExtrenalItems(AId: integer);
-    procedure GenerateOrderItemsList;
+    procedure GenerateOrderExtrenalItemsList;
+
+    function SaveReturnIn(OldReturnInId : string; OperDate: TDate; Comment : string;
+      ToralPrice, TotalWeight: Currency; DelItems : string; var ErrorMessage : string) : boolean;
+    procedure LoadReturnIn(AId: string = '');
+    procedure AddedGoodsToReturnIn(AGoods : string);
+    procedure DefaultReturnInItems;
+    procedure LoadReturnInItems(AId: integer);
+    procedure GenerateReturnInItemsList;
 
     procedure SavePhotoGroup(AGroupName: string);
     procedure LoadPhotoGroups;
@@ -404,7 +460,7 @@ var
 implementation
 
 uses
-  System.IOUtils, CursorUtils;
+  System.IOUtils, CursorUtils, CommonData, Authentication, Storage;
 
 {%CLASSGROUP 'FMX.Controls.TControl'}
 
@@ -781,6 +837,8 @@ begin
   cdsStoreReals.CreateDataSet;
   cdsOrderItems.CreateDataSet;
   cdsOrderExternal.CreateDataSet;
+  cdsReturnInItems.CreateDataSet;
+  cdsReturnIn.CreateDataSet;
 end;
 
 function TDM.SynchronizeWithMainDatabase : string;
@@ -1039,6 +1097,79 @@ begin
   end;
 end;
 
+procedure TDM.UploadDataToServer;
+var
+  ErrorMessage: String;
+begin
+  if gc_User.Session = '' then
+  begin
+    try
+      ErrorMessage := TAuthentication.CheckLogin(TStorageFactory.GetStorage, gc_User.Login, gc_User.Password, gc_User);
+
+      if ErrorMessage = '' then
+      begin
+        UploadStoreReal;
+      end
+      else
+        ShowMessage(ErrorMessage);
+    except
+      on E: Exception do
+      begin
+        ShowMessage(E.Message);
+        exit;
+      end;
+    end;
+  end;
+end;
+
+procedure TDM.UploadStoreReal;
+var
+  UploadStoredProc : TdsdStoredProc;
+begin
+  UploadStoredProc := TdsdStoredProc.Create(nil);
+  try
+    // Загружаем шапки остатков
+    UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Movement_StoreReal';
+    UploadStoredProc.OutputType := otResult;
+
+    with tblMovement_StoreReal do
+    begin
+      Filter := 'isSync = 0 and StatusId <> ' + tblObject_ConstStatusId_Erased.AsString;
+      Filtered := true;
+      Open;
+
+      try
+       First;
+
+        while not EOF do
+        begin
+          UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
+          UploadStoredProc.Params.AddParam('inInvNumber', ftString, ptInput, FieldByName('INVNUMBER').AsString);
+          UploadStoredProc.Params.AddParam('inOperDate', ftDateTime, ptInput, FieldByName('OPERDATE').AsDateTime);
+          UploadStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, FieldByName('PARTNERID').AsString);
+
+          try
+            UploadStoredProc.Execute;
+          except
+            on E : Exception do
+            begin
+              raise Exception.Create(E.Message);
+            end;
+          end;
+
+          Next;
+        end;
+      finally
+        Close;
+        Filter := '';
+        Filtered := false;
+      end;
+    end;
+  finally
+    FreeAndNil(UploadStoredProc);
+  end;
+end;
+
 function TDM.SaveStoreReal(OldStoreRealId : string; Comment: string;
   DelItems : string; var ErrorMessage : string) : boolean;
 var
@@ -1229,16 +1360,16 @@ procedure TDM.AddedGoodsToStoreReal(AGoods : string);
 var
   ArrValue : TArray<string>;
 begin
-  ArrValue := AGoods.Split([';']);
+  ArrValue := AGoods.Split([';']);  //Id;GoodsId;KindId;название товара;вид товара;единица измерения;количество по умолчанию
 
   cdsStoreRealItems.Append;
   cdsStoreRealItemsId.AsString := ArrValue[0];
-  cdsStoreRealItemsGoodsId.AsString := ArrValue[1];   // GoodsId
-  cdsStoreRealItemsKindId.AsString := ArrValue[2];    // KindId
-  cdsStoreRealItemsName.AsString := ArrValue[3];      // название товара
-  cdsStoreRealItemsType.AsString := ArrValue[4];      // вид товара
-  cdsStoreRealItemsMeasure.AsString := ' ' + ArrValue[5];   // единица измерения
-  cdsStoreRealItemsCount.AsString := ArrValue[6];             // количество по умолчанию
+  cdsStoreRealItemsGoodsId.AsString := ArrValue[1];       // GoodsId
+  cdsStoreRealItemsKindId.AsString := ArrValue[2];        // KindId
+  cdsStoreRealItemsName.AsString := ArrValue[3];          // название товара
+  cdsStoreRealItemsType.AsString := ArrValue[4];          // вид товара
+  cdsStoreRealItemsMeasure.AsString := ' ' + ArrValue[5]; // единица измерения
+  cdsStoreRealItemsCount.AsString := ArrValue[6];         // количество по умолчанию
 
   cdsStoreRealItems.Post;
 end;
@@ -1315,7 +1446,7 @@ procedure TDM.GenerateStoreRealItemsList;
 begin
   qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA Name, GK.VALUEDATA Kind, ''-'' PromoPrice, ' +
     'GLK.REMAINS, PI.ORDERPRICE PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
-    'GK.VALUEDATA || '';'' || M.VALUEDATA || '';0'' FullInfo ' +
+    'GK.VALUEDATA || '';'' || M.VALUEDATA || '';0'' FullInfo, G.VALUEDATA || '';0'' SearchName ' +
     'from OBJECT_GOODS G ' +
     'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID AND GLK.ISERASED = 0 ' +
     'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERASED = 0 ' +
@@ -1427,6 +1558,7 @@ begin
           tblMovementItem_OrderExternalGoodsKindId.AsInteger := FieldbyName('KindId').AsInteger;
           tblMovementItem_OrderExternalAmount.AsFloat := FieldbyName('Count').AsFloat;
           tblMovementItem_OrderExternalPrice.AsFloat := FieldbyName('Price').AsFloat;
+          tblMovementItem_OrderExternalChangePercent.AsFloat := DM.qryPartnerChangePercent.AsFloat;
 
           tblMovementItem_OrderExternal.Post;
         end
@@ -1539,7 +1671,7 @@ var
   ArrValue : TArray<string>;
   Recommend : Extended;
 begin
-  ArrValue := AGoods.Split([';']); //GoodsId;KindId;название товара;вид товара;рекомендуемое количество;
+  ArrValue := AGoods.Split([';']); //Id;GoodsId;KindId;название товара;вид товара;рекомендуемое количество;
                                    //остаток товара;цена;единица измерения;вес;цена по акции;учитывать ли скидку при акции;
                                    //количество по умолчанию
 
@@ -1574,7 +1706,7 @@ begin
 
   if ArrValue[10] <> '-1' then                        // цена по акции
   begin
-    cdsOrderItemsIsPromo.AsBoolean := true;
+    cdsOrderItemsIsPromo.AsString := 'Акция!';
     cdsOrderItemsPrice.AsString := ArrValue[10];
     if ArrValue[11] = '1' then                        // учитывать ли скидку при акции
       cdsOrderItemsisChangePercent.AsBoolean := true
@@ -1583,7 +1715,8 @@ begin
   end
   else
   begin
-    cdsOrderItemsIsPromo.AsBoolean := false;
+    cdsOrderItemsIsPromo.AsString := '';
+    cdsOrderItemsisChangePercent.AsBoolean := true;
   end;
 
   cdsOrderItemsCount.AsString := ArrValue[12];        // количество по умолчанию
@@ -1616,19 +1749,19 @@ begin
     qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
       'GK.VALUEDATA || '';'' || GLS.AMOUNTCALC || '';'' || IFNULL(SRI.AMOUNT, 0) || '';'' || ' +
       'PI.' + PriceField + ' || '';'' || M.VALUEDATA || '';'' || G.WEIGHT || '';'' || ' +
-      'IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 0) || '';0''' +
+      'IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 1) || '';0''' +
       'from OBJECT_GOODSLISTSALE GLS ' +
       'JOIN OBJECT_GOODS G ON GLS.GOODSID = G.ID ' +
       'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID AND GK.ISERASED = 0 ' +
-      'LEFT JOIN MOVEMENT_STOREREAL SR ON SR.PARTNERID = ' + qryPartnerId.AsString +
-      ' AND DATE(SR.OPERDATE) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', Date())) + ' AND SR.STATUSID <> ' + tblObject_ConstStatusId_Erased.AsString + ' ' +
+      'LEFT JOIN MOVEMENT_STOREREAL SR ON SR.PARTNERID = :PARTNERID ' +
+      'AND DATE(SR.OPERDATE) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', Date())) + ' AND SR.STATUSID <> ' + tblObject_ConstStatusId_Erased.AsString + ' ' +
       'LEFT JOIN MOVEMENTITEM_STOREREAL SRI ON SRI.GOODSID = G.ID AND SRI.GOODSKINDID = GK.ID AND SRI.MOVEMENTID = SR.ID ' +
       'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
       'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
-      'LEFT JOIN MOVEMENTITEM_PROMOPARTNER PP ON PP.PARTNERID = :PARTNERID  and PP.CONTRACTID = :CONTRACTID ' +
-      'LEFT JOIN MOVEMENTITEM_PROMOGOODS PG ON PG.MOVEMENTID = PP.MOVEMENTID and PG.GOODSID = G.ID and PG.GOODSKINDID = GK.ID ' +
+      'LEFT JOIN MOVEMENTITEM_PROMOGOODS PG ON PG.MOVEMENTID = PP.MOVEMENTID and PG.GOODSID = G.ID and (PG.GOODSKINDID = GK.ID or PG.GOODSKINDID = 0) ' +
+      'LEFT JOIN MOVEMENTITEM_PROMOPARTNER PP ON PP.PARTNERID = :PARTNERID  and (PP.CONTRACTID = :CONTRACTID or PP.CONTRACTID = 0) ' +
       'LEFT JOIN MOVEMENT_PROMO P ON P.ID = PP.MOVEMENTID ' +
-      'WHERE GLS.PARTNERID = ' + qryPartnerId.AsString + ' and GLS.ISERASED = 0 order by G.VALUEDATA ';
+      'WHERE GLS.PARTNERID = :PARTNERID and GLS.ISERASED = 0 order by G.VALUEDATA ';
 
     qryGoodsListSale.ParamByName('PARTNERID').AsInteger := qryPartnerId.AsInteger;
     qryGoodsListSale.ParamByName('CONTRACTID').AsInteger := qryPartnerCONTRACTID.AsInteger;
@@ -1674,17 +1807,17 @@ begin
     qryGoodsListOrder.SQL.Text := 'select IEO.ID || '';'' || G.ID || '';'' || GK.ID || '';'' || ' +
       'G.VALUEDATA || '';'' || GK.VALUEDATA || '';'' || 0 || '';'' || IFNULL(SRI.AMOUNT, 0) || '';'' || ' +
       'PI.' + PriceField + ' || '';'' || M.VALUEDATA || '';'' || G.WEIGHT || '';'' || ' +
-      'IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 0) || '';'' || IEO.AMOUNT ' +
+      'IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 1) || '';'' || IEO.AMOUNT ' +
       'from MOVEMENTITEM_ORDEREXTERNAL IEO ' +
       'JOIN OBJECT_GOODS G ON IEO.GOODSID = G.ID ' +
       'JOIN OBJECT_GOODSKIND GK ON GK.ID = IEO.GOODSKINDID ' +
-      'LEFT JOIN MOVEMENT_STOREREAL SR ON SR.PARTNERID = ' + qryPartnerId.AsString +
+      'LEFT JOIN MOVEMENT_STOREREAL SR ON SR.PARTNERID = :PARTNERID' +
       ' AND DATE(SR.OPERDATE) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', Date())) + ' AND SR.STATUSID <> ' + tblObject_ConstStatusId_Erased.AsString + ' ' +
       'LEFT JOIN MOVEMENTITEM_STOREREAL SRI ON SRI.GOODSID = G.ID AND SRI.GOODSKINDID = GK.ID AND SRI.MOVEMENTID = SR.ID ' +
       'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
       'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
-      'LEFT JOIN MOVEMENTITEM_PROMOPARTNER PP ON PP.PARTNERID = :PARTNERID  and PP.CONTRACTID = :CONTRACTID ' +
-      'LEFT JOIN MOVEMENTITEM_PROMOGOODS PG ON PG.MOVEMENTID = PP.MOVEMENTID and PG.GOODSID = G.ID and PG.GOODSKINDID = GK.ID ' +
+      'LEFT JOIN MOVEMENTITEM_PROMOGOODS PG ON PG.MOVEMENTID = PP.MOVEMENTID and PG.GOODSID = G.ID and (PG.GOODSKINDID = GK.ID or PG.GOODSKINDID = 0) ' +
+      'LEFT JOIN MOVEMENTITEM_PROMOPARTNER PP ON PP.PARTNERID = :PARTNERID  and (PP.CONTRACTID = :CONTRACTID or PP.CONTRACTID = 0) ' +
       'LEFT JOIN MOVEMENT_PROMO P ON P.ID = PP.MOVEMENTID ' +
       'WHERE IEO.MOVEMENTID = ' + IntToStr(AId) + ' order by G.VALUEDATA ';
 
@@ -1708,7 +1841,7 @@ begin
   end;
 end;
 
-procedure TDM.GenerateOrderItemsList;
+procedure TDM.GenerateOrderExtrenalItemsList;
 var
   PriceField, PromoPriceField : string;
 begin
@@ -1725,14 +1858,15 @@ begin
   qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA Name, GK.VALUEDATA Kind, IFNULL(' + PromoPriceField + ', ''-'') PromoPrice, ' +
     'GLK.REMAINS, PI.' + PriceField + ' PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
     'GK.VALUEDATA || '';'' || 0 || '';'' || 0 || '';'' || PI.' + PriceField + ' || '';'' || ' +
-    'M.VALUEDATA || '';'' || G.WEIGHT || '';'' || IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 0) || '';0'' FullInfo ' +
+    'M.VALUEDATA || '';'' || G.WEIGHT || '';'' || IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 1) || '';0'' FullInfo, ' +
+    'G.VALUEDATA || CASE WHEN ' + PromoPriceField + ' IS NULL THEN '';0'' ELSE '';1'' END SearchName ' +
     'from OBJECT_GOODS G ' +
     'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID AND GLK.ISERASED = 0 ' +
     'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERASED = 0 ' +
     'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
     'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
-    'LEFT JOIN MOVEMENTITEM_PROMOPARTNER PP ON PP.PARTNERID = :PARTNERID  and PP.CONTRACTID = :CONTRACTID ' +
-    'LEFT JOIN MOVEMENTITEM_PROMOGOODS PG ON PG.MOVEMENTID = PP.MOVEMENTID and PG.GOODSID = G.ID and PG.GOODSKINDID = GK.ID ' +
+    'LEFT JOIN MOVEMENTITEM_PROMOGOODS PG ON PG.MOVEMENTID = PP.MOVEMENTID and PG.GOODSID = G.ID and (PG.GOODSKINDID = GK.ID or PG.GOODSKINDID = 0) ' +
+    'LEFT JOIN MOVEMENTITEM_PROMOPARTNER PP ON PP.PARTNERID = :PARTNERID  and (PP.CONTRACTID = :CONTRACTID or PP.CONTRACTID = 0) ' +
     'LEFT JOIN MOVEMENT_PROMO P ON P.ID = PP.MOVEMENTID ' +
     'WHERE G.ISERASED = 0 order by Name';
 
@@ -1741,6 +1875,333 @@ begin
   qryGoodsItems.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID.AsInteger;
   qryGoodsItems.Open;
 end;
+
+
+function TDM.SaveReturnIn(OldReturnInId : string; OperDate: TDate; Comment : string;
+  ToralPrice, TotalWeight: Currency; DelItems : string; var ErrorMessage : string) : boolean;
+var
+  GlobalId : TGUID;
+  i, MovementId, NewInvNumber : integer;
+  qryMaxInvNumber : TFDQuery;
+begin
+  Result := false;
+
+  if OldReturnInId = '' then
+  begin
+    NewInvNumber := 1;
+
+    qryMaxInvNumber := TFDQuery.Create(nil);
+    try
+      qryMaxInvNumber.Connection := conMain;
+      qryMaxInvNumber.Open('select Max(InvNumber) from Movement_ReturnIn');
+      if qryMaxInvNumber.RecordCount > 0 then
+        NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1;
+    finally
+      FreeAndNil(qryMaxInvNumber);
+    end;
+  end;
+
+  conMain.StartTransaction;
+  try
+    tblMovement_ReturnIn.Open;
+
+    if OldReturnInId = '' then
+    begin
+      tblMovement_ReturnIn.Append;
+
+      CreateGUID(GlobalId);
+      tblMovement_ReturnInGUID.AsString := GUIDToString(GlobalId);
+      tblMovement_ReturnInInvNumber.AsString := IntToStr(NewInvNumber);
+      tblMovement_ReturnInOperDate.AsDateTime := OperDate;
+      tblMovement_ReturnInComment.AsString := Comment;
+      tblMovement_ReturnInStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
+      tblMovement_ReturnInPartnerId.AsInteger := qryPartnerId.AsInteger;
+      tblMovement_ReturnInPaidKindId.AsInteger := qryPartnerPaidKindId.AsInteger;
+      tblMovement_ReturnInContractId.AsInteger := qryPartnerCONTRACTID.AsInteger;
+      tblMovement_ReturnInPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT.AsBoolean;
+      tblMovement_ReturnInVATPercent.AsFloat := qryPartnerVATPercent.AsFloat;
+      tblMovement_ReturnInChangePercent.AsFloat := qryPartnerChangePercent.AsFloat;
+      tblMovement_ReturnInTotalCountKg.AsFloat := TotalWeight;
+      tblMovement_ReturnInTotalSummPVAT.AsFloat := ToralPrice;
+      tblMovement_ReturnInInsertDate.AsDateTime := Now();
+      tblMovement_ReturnInisSync.AsBoolean := false;
+
+      tblMovement_ReturnIn.Post;
+      {??? Возможно есть лучший способ получения значения Id новой записи }
+      tblMovement_ReturnIn.Refresh;
+      tblMovement_ReturnIn.Last;
+      {???}
+      MovementId := tblMovement_ReturnInId.AsInteger;
+    end
+    else
+    begin
+      if tblMovement_ReturnIn.Locate('Id', OldReturnInId) then
+      begin
+        tblMovement_ReturnIn.Edit;
+
+        tblMovement_ReturnInOperDate.AsDateTime := OperDate;
+        tblMovement_ReturnInComment.AsString := Comment;
+        tblMovement_ReturnInStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
+        tblMovement_ReturnInPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT.AsBoolean;
+        tblMovement_ReturnInVATPercent.AsFloat := qryPartnerVATPercent.AsFloat;
+        tblMovement_ReturnInChangePercent.AsFloat := qryPartnerChangePercent.AsFloat;
+        tblMovement_ReturnInTotalCountKg.AsFloat := TotalWeight;
+        tblMovement_ReturnInTotalSummPVAT.AsFloat := ToralPrice;
+
+        tblMovement_ReturnIn.Post;
+
+        MovementId := StrToInt(OldReturnInId);
+      end
+      else
+      begin
+        ErrorMessage := 'Ошибка работы с БД: не найдена редактируемая заявка на возврат';
+        exit;
+      end;
+    end;
+
+    tblMovementItem_ReturnIn.Open;
+
+    with cdsReturnInItems do
+    begin
+      First;
+      while not EOF do
+      begin
+        if FieldbyName('Id').AsInteger = -1 then // новая запись
+        begin
+          tblMovementItem_ReturnIn.Append;
+
+          tblMovementItem_ReturnInMovementId.AsInteger := MovementId;
+          CreateGUID(GlobalId);
+          tblMovementItem_ReturnInGUID.AsString := GUIDToString(GlobalId);
+          tblMovementItem_ReturnInGoodsId.AsInteger := FieldbyName('GoodsId').AsInteger;
+          tblMovementItem_ReturnInGoodsKindId.AsInteger := FieldbyName('KindId').AsInteger;
+          tblMovementItem_ReturnInAmount.AsFloat := FieldbyName('Count').AsFloat;
+          tblMovementItem_ReturnInPrice.AsFloat := FieldbyName('Price').AsFloat;
+          tblMovementItem_ReturnInChangePercent.AsFloat := DM.qryPartnerChangePercent.AsFloat;
+
+          tblMovementItem_ReturnIn.Post;
+        end
+        else
+        begin
+          if tblMovementItem_ReturnIn.Locate('Id', FieldbyName('Id').AsInteger) then
+          begin
+            tblMovementItem_ReturnIn.Edit;
+
+            tblMovementItem_ReturnInChangePercent.AsFloat := DM.qryPartnerChangePercent.AsFloat;
+            tblMovementItem_ReturnInAmount.AsFloat := FieldbyName('Count').AsFloat;
+            tblMovementItem_ReturnInPrice.AsFloat := FieldbyName('Price').AsFloat;
+
+            tblMovementItem_ReturnIn.Post;
+          end;
+        end;
+
+        Next;
+      end;
+    end;
+
+    if DelItems <> '' then
+      conMain.ExecSQL('delete from MOVEMENTITEM_RETURNIN where ID in (' + DelItems + ')');
+
+    conMain.Commit;
+
+    if OldReturnInId = '' then
+      LoadReturnIn(IntToStr(MovementId))
+    else
+    begin
+      cdsReturnIn.Edit;
+
+      cdsReturnInOperDate.AsDateTime := OperDate;
+      cdsReturnInComment.AsString := Comment;
+      cdsReturnInName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', OperDate);
+      cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat('0.00', ToralPrice);
+      cdsReturnInWeigth.AsString := 'Вес: ' + FormatFloat('0.00', TotalWeight);
+      cdsReturnInStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_Complete.AsString;
+
+      cdsReturnIn.Post;
+    end;
+
+    Result := true;
+  except
+    on E : Exception do
+    begin
+      conMain.Rollback;
+      ErrorMessage := E.Message;
+    end;
+  end;
+end;
+
+procedure TDM.LoadReturnIn(AId : string = '');
+var
+  qryReturnIn : TFDQuery;
+begin
+  if AId = '' then
+  begin
+    cdsReturnIn.Open;
+    cdsReturnIn.EmptyDataSet;
+  end;
+
+  qryReturnIn := TFDQuery.Create(nil);
+  try
+    qryReturnIn.Connection := conMain;
+    qryReturnIn.SQL.Text := 'select ID, OPERDATE, TOTALCOUNTKG, TOTALSUMMPVAT, ISSYNC, STATUSID, COMMENT' +
+      ' from MOVEMENT_RETURNIN' +
+      ' where PARTNERID = ' + qryPartnerId.AsString + ' and CONTRACTID = ' + qryPartnerCONTRACTID.AsString +
+      ' and STATUSID <> ' + tblObject_ConstStatusId_Erased.AsString;
+    if AId <> '' then
+      qryReturnIn.SQL.Text := qryReturnIn.SQL.Text + ' and ID = ' + AId;
+    qryReturnIn.SQL.Text := qryReturnIn.SQL.Text + ' order by OPERDATE desc';
+
+    qryReturnIn.Open;
+    cdsReturnIn.Open;
+
+    qryReturnIn.First;
+    while not qryReturnIn.EOF do
+    begin
+      cdsReturnIn.Append;
+      cdsReturnInId.AsInteger := qryReturnIn.FieldByName('ID').AsInteger;
+      cdsReturnInOperDate.AsDateTime := qryReturnIn.FieldByName('OPERDATE').AsDateTime;
+      cdsReturnInComment.AsString := qryReturnIn.FieldByName('COMMENT').AsString;
+      cdsReturnInName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', qryReturnIn.FieldByName('OPERDATE').AsDateTime);
+      cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat('0.00', qryReturnIn.FieldByName('TOTALSUMMPVAT').AsFloat);
+      cdsReturnInWeigth.AsString := 'Вес: ' + FormatFloat('0.00', qryReturnIn.FieldByName('TOTALCOUNTKG').AsFloat);
+
+      if qryReturnIn.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Complete.AsInteger then
+        cdsReturnInStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_Complete.AsString
+      else
+      if qryReturnIn.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_UnComplete.AsInteger then
+        cdsReturnInStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_UnComplete.AsString
+      else
+      if qryReturnIn.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Erased.AsInteger then
+        cdsReturnInStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_Erased.AsString
+      else
+        cdsReturnInStatus.AsString := 'Статус: Неизвестный';
+
+      cdsReturnIn.Post;
+
+      qryReturnIn.Next;
+    end;
+
+    qryReturnIn.Close;
+  finally
+    qryReturnIn.Free;
+  end;
+end;
+
+procedure TDM.AddedGoodsToReturnIn(AGoods : string);
+var
+  ArrValue : TArray<string>;
+  Recommend : Extended;
+begin
+  ArrValue := AGoods.Split([';']); //Id;GoodsId;KindId;название товара;вид товара;цена;единица измерения;вес;количество по умолчанию
+
+  cdsReturnInItems.Append;
+  cdsReturnInItemsId.AsString := ArrValue[0];
+  cdsReturnInItemsGoodsId.AsString := ArrValue[1];       // GoodsId
+  cdsReturnInItemsKindId.AsString := ArrValue[2];        // KindId
+  cdsReturnInItemsName.AsString := ArrValue[3];          // название товара
+  cdsReturnInItemsType.AsString := ArrValue[4];          // вид товара
+  cdsReturnInItemsPrice.AsString := ArrValue[5];         // цена
+  cdsReturnInItemsMeasure.AsString := ' ' + ArrValue[6]; // единица измерения
+  cdsReturnInItemsWeight.AsString := ArrValue[7];        // вес
+
+  cdsReturnInItemsCount.AsString := ArrValue[8];         // количество по умолчанию
+
+  cdsReturnInItems.Post;
+end;
+
+procedure TDM.DefaultReturnInItems;
+var
+  qryGoodsListSale : TFDQuery;
+begin
+  cdsReturnInItems.Open;
+  cdsReturnInItems.EmptyDataSet;
+
+  qryGoodsListSale := TFDQuery.Create(nil);
+  try
+    qryGoodsListSale.Connection := conMain;
+
+    qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
+      'GK.VALUEDATA || '';'' || PI.OrderPrice || '';'' || M.VALUEDATA || '';'' || G.WEIGHT || '';0''' +
+      'from OBJECT_GOODSLISTSALE GLS ' +
+      'JOIN OBJECT_GOODS G ON GLS.GOODSID = G.ID ' +
+      'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID AND GK.ISERASED = 0 ' +
+      'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
+      'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+      'WHERE GLS.PARTNERID = :PARTNERID and GLS.ISERASED = 0 order by G.VALUEDATA ';
+
+    qryGoodsListSale.ParamByName('PARTNERID').AsInteger := qryPartnerId.AsInteger;
+    qryGoodsListSale.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID.AsInteger;
+    qryGoodsListSale.Open;
+
+    qryGoodsListSale.First;
+    while not qryGoodsListSale.EOF do
+    begin
+      AddedGoodsToReturnIn(qryGoodsListSale.Fields[0].AsString);
+
+      qryGoodsListSale.Next;
+    end;
+
+    qryGoodsListSale.Close;
+  finally
+    qryGoodsListSale.Free;
+  end;
+end;
+
+procedure TDM.LoadReturnInItems(AId : integer);
+var
+  qryGoodsListReturn : TFDQuery;
+begin
+  cdsReturnInItems.Open;
+  cdsReturnInItems.EmptyDataSet;
+
+  qryGoodsListReturn := TFDQuery.Create(nil);
+  try
+    qryGoodsListReturn.Connection := conMain;
+
+    qryGoodsListReturn.SQL.Text := 'select IR.ID || '';'' || G.ID || '';'' || GK.ID || '';'' || ' +
+      'G.VALUEDATA || '';'' || GK.VALUEDATA || '';'' || PI.OrderPrice || '';'' || M.VALUEDATA || '';'' || ' +
+      'G.WEIGHT || '';'' || IR.AMOUNT ' +
+      'from MOVEMENTITEM_RETURNIN IR ' +
+      'JOIN OBJECT_GOODS G ON IR.GOODSID = G.ID ' +
+      'JOIN OBJECT_GOODSKIND GK ON GK.ID = IR.GOODSKINDID ' +
+      'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+      'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+      'WHERE IR.MOVEMENTID = ' + IntToStr(AId) + ' order by G.VALUEDATA ';
+
+    qryGoodsListReturn.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID.AsInteger;
+    qryGoodsListReturn.Open;
+
+    qryGoodsListReturn.First;
+    while not qryGoodsListReturn.EOF do
+    begin
+      AddedGoodsToReturnIn(qryGoodsListReturn.Fields[0].AsString);
+
+      qryGoodsListReturn.Next;
+    end;
+
+    qryGoodsListReturn.Close;
+  finally
+    qryGoodsListReturn.Free;
+  end;
+end;
+
+procedure TDM.GenerateReturnInItemsList;
+begin
+  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA Name, GK.VALUEDATA Kind, ''-'' PromoPrice, ' +
+    'GLK.REMAINS, PI.OrderPrice PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
+    'GK.VALUEDATA || '';'' || PI.OrderPrice || '';'' || ' + 'M.VALUEDATA || '';'' || G.WEIGHT || '';0'' FullInfo, ' +
+    'G.VALUEDATA || '';0'' SearchName ' +
+    'from OBJECT_GOODS G ' +
+    'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID AND GLK.ISERASED = 0 ' +
+    'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERASED = 0 ' +
+    'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
+    'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+    'WHERE G.ISERASED = 0 order by Name';
+
+  qryGoodsItems.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID.AsInteger;
+  qryGoodsItems.Open;
+end;
+
 
 procedure TDM.SavePhotoGroup(AGroupName: string);
 var
