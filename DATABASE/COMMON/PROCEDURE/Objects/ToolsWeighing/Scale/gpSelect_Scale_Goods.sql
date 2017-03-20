@@ -212,7 +212,8 @@ BEGIN
                                  , FALSE AS isTare
                             FROM (SELECT vbGoodsId AS GoodsId, zc_GoodsKind_Basis() AS GoodsKindId WHERE vbGoodsId <> 0
                                  UNION ALL
-                                  SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     AS GoodsId
+                                  SELECT DISTINCT
+                                         ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     AS GoodsId
                                        , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId AS GoodsKindId
                                   FROM ObjectBoolean AS ObjectBoolean_ScaleCeh
                                        INNER JOIN Object AS Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.Id = ObjectBoolean_ScaleCeh.ObjectId AND Object_GoodsByGoodsKind.isErased = FALSE
@@ -224,7 +225,7 @@ BEGIN
                                                              ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectBoolean_ScaleCeh.ObjectId
                                                             AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
                                                             AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId <> zc_GoodsKind_Basis()
-                                  WHERE ObjectBoolean_ScaleCeh.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_ScaleCeh()
+                                  WHERE ObjectBoolean_ScaleCeh.DescId    IN (zc_ObjectBoolean_GoodsByGoodsKind_ScaleCeh(), zc_ObjectBoolean_GoodsByGoodsKind_Order())
                                     AND ObjectBoolean_ScaleCeh.ValueData = TRUE
                                  ) AS tmp
                                  LEFT JOIN tmpMI_Order ON tmpMI_Order.GoodsId     = tmp.GoodsId
@@ -450,10 +451,15 @@ BEGIN
                            ) AS tmp
                             GROUP BY tmp.GoodsId
                            )
-    , tmpGoods_ScaleCeh AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId                         AS GoodsId
-                                 , STRING_AGG (COALESCE (Object_GoodsKind.Id, 0) :: TVarChar, ',')         AS GoodsKindId_List
-                                 , STRING_AGG (COALESCE (Object_GoodsKind.ValueData, '') ::TVarChar, ',')  AS GoodsKindName_List
-                                 , ABS (MIN (COALESCE (CASE WHEN Object_GoodsKind.Id = zc_GoodsKind_Basis() THEN -1 ELSE 1 END * Object_GoodsKind.Id, 0))) AS GoodsKindId_max
+    , tmpGoods_ScaleCeh AS (SELECT tmp.GoodsId
+                                 , STRING_AGG (tmp.GoodsKindId :: TVarChar, ',')   AS GoodsKindId_List
+                                 , STRING_AGG (tmp.GoodsKindName, ',')             AS GoodsKindName_List
+                                 , ABS (MIN (COALESCE (CASE WHEN tmp.GoodsKindId = zc_GoodsKind_Basis() THEN -1 ELSE 1 END * tmp.GoodsKindId, 0))) AS GoodsKindId_max
+                            FROM
+                           (SELECT DISTINCT
+                                   ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId AS GoodsId
+                                 , COALESCE (Object_GoodsKind.Id, 0)               AS GoodsKindId
+                                 , COALESCE (Object_GoodsKind.ValueData, '')       AS GoodsKindName
                             FROM ObjectBoolean AS ObjectBoolean_ScaleCeh
                                  INNER JOIN Object AS Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.Id = ObjectBoolean_ScaleCeh.ObjectId AND Object_GoodsByGoodsKind.isErased = FALSE
                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
@@ -463,10 +469,11 @@ BEGIN
                                                       ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectBoolean_ScaleCeh.ObjectId
                                                      AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
                                  LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, zc_Enum_GoodsKind_Main())
-                            WHERE ObjectBoolean_ScaleCeh.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_ScaleCeh()
+                            WHERE ObjectBoolean_ScaleCeh.DescId    IN (zc_ObjectBoolean_GoodsByGoodsKind_ScaleCeh(), zc_ObjectBoolean_GoodsByGoodsKind_Order())
                               AND ObjectBoolean_ScaleCeh.ValueData = TRUE
                               AND inMovementId >= 0
-                            GROUP BY ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId
+                           ) AS tmp
+                            GROUP BY tmp.GoodsId
                            )
       , tmpGoods AS (SELECT Object_Goods.Id                               AS GoodsId
                           , Object_Goods.ObjectCode                       AS GoodsCode
