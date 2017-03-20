@@ -29,6 +29,13 @@ type
     ExecuteDialog: TExecuteDialog;
     colisSP: TcxGridDBColumn;
     colGroupMemberSPName: TcxGridDBColumn;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
+    PrintDialog: TExecuteDialog;
+    actPrint: TdsdPrintAction;
+    macPrint: TMultiAction;
+    bbmacPrint: TdxBarButton;
   private
     { Private declarations }
   public

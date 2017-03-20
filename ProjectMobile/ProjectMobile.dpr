@@ -9,7 +9,8 @@ uses
   uMain in 'uMain.pas' {frmMain},
   uConstants in 'uConstants.pas',
   uDM in 'uDM.pas' {DM: TDataModule},
-  Authentication in 'Common\Authentication.pas';
+  Authentication in 'Common\Authentication.pas',
+  uNetwork in 'uNetwork.pas';
 
 {$R *.res}
 

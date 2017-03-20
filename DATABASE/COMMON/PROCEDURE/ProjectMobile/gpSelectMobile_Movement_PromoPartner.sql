@@ -45,7 +45,8 @@ BEGIN
                                                ON MovementLinkObject_Contract.MovementId = Movement_PromoPartner.Id
                                               AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract() 
              WHERE Movement_PromoPartner.DescId = zc_Movement_PromoPartner()
-               AND Movement_PromoPartner.ParentId IS NOT NULL;
+               AND Movement_PromoPartner.ParentId IS NOT NULL
+               AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased();
       END IF;
 END;
 $BODY$

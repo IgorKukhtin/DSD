@@ -25,8 +25,7 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
     Height = 335
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 2
-    ExplicitTop = 24
+    TabOrder = 1
     object cxLabel1: TcxLabel
       Left = 167
       Top = 148
@@ -54,7 +53,7 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 4
+    TabOrder = 3
     Width = 263
   end
   object cxLabel3: TcxLabel
@@ -76,7 +75,7 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 6
     Width = 140
   end
   object cxLabel5: TcxLabel
@@ -93,7 +92,7 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 10
+    TabOrder = 8
     Width = 210
   end
   object cxLabel6: TcxLabel
@@ -110,7 +109,7 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 12
+    TabOrder = 10
     Width = 140
   end
   object cxLabel7: TcxLabel
@@ -127,7 +126,7 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 14
+    TabOrder = 12
     Width = 140
   end
   object cxLabel8: TcxLabel
@@ -144,7 +143,7 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 16
+    TabOrder = 14
     Width = 140
   end
   object cxLabel9: TcxLabel
@@ -161,7 +160,7 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 18
+    TabOrder = 16
     Width = 210
   end
   object cxLabel10: TcxLabel
@@ -178,7 +177,7 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 20
+    TabOrder = 18
     Width = 430
   end
   object cxLabel11: TcxLabel
@@ -195,7 +194,7 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 22
+    TabOrder = 20
     Width = 140
   end
   object cxLabel12: TcxLabel
@@ -212,7 +211,7 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 24
+    TabOrder = 22
     Width = 210
   end
   object cxLabel13: TcxLabel
@@ -229,7 +228,7 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 26
+    TabOrder = 25
     Width = 210
   end
   object cxLabel15: TcxLabel

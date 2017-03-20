@@ -1,12 +1,12 @@
 -- Function: gpSelect_Movement_StoreReal()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_StoreReal(TDateTime, TDateTime, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_StoreReal(TDateTime, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_StoreReal (
     IN inStartDate        TDateTime , --
     IN inEndDate          TDateTime , --
     IN inIsErased         Boolean ,
-    IN inJuridicalBasisId Integer ,
     IN inSession          TVarChar    -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (Id Integer
@@ -15,12 +15,7 @@ RETURNS TABLE (Id Integer
              , StatusName TVarChar
              , InsertDate TDateTime
              , InsertName TVarChar
-             , PriceListName TVarChar
              , PartnerName TVarChar
-             , PriceWithVAT Boolean
-             , VATPercent TFloat
-             , TotalCountKg TFloat
-             , TotalSummPVAT TFloat
               )
 AS
 $BODY$
@@ -73,14 +68,7 @@ BEGIN
              , Object_Status.ValueData       AS StatusName
              , MovementDate_Insert.ValueData AS InsertDate
              , Object_User.ValueData         AS InsertName
-             , Object_PriceList.ValueData    AS PriceListName
              , Object_Partner.ValueData      AS PartnerName
-
-             , COALESCE(MovementBoolean_PriceWithVAT.ValueData, FALSE) AS PriceWithVAT
-             , MovementFloat_VATPercent.ValueData                      AS VATPercent
-
-             , MovementFloat_TotalCountKg.ValueData  AS TotalCountKg
-             , MovementFloat_TotalSummPVAT.ValueData AS TotalSummPVAT
         FROM (SELECT Movement.id
               FROM tmpStatus
                    JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
@@ -101,36 +89,15 @@ BEGIN
                                          AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
              LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_Insert.ObjectId
 
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
-                                          ON MovementLinkObject_PriceList.MovementId = Movement.Id
-                                         AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
-             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
-           
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                           ON MovementLinkObject_Partner.MovementId = Movement.Id
                                          AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
-             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
-
-             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
-                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
-
-             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
-                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
-                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
-
-             LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
-                                     ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
-                                    AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
-
-             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
-                                     ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
-                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT();
+             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
-ALTER FUNCTION gpSelect_Movement_StoreReal(TDateTime, TDateTime, Boolean, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_StoreReal(TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
@@ -139,4 +106,4 @@ ALTER FUNCTION gpSelect_Movement_StoreReal(TDateTime, TDateTime, Boolean, Intege
 */
 
 -- òåñò
--- SELECT * FROM gpSelect_Movement_StoreReal(inStartDate := '01.12.2016', inEndDate := '01.12.2016', inJuridicalBasisId := 0, inIsErased := FALSE, inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_StoreReal(inStartDate := '01.12.2016', inEndDate := '01.12.2016', inIsErased := FALSE, inSession := zfCalc_UserAdmin())

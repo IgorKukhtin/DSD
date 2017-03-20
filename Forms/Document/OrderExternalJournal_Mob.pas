@@ -78,6 +78,10 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    cxLabel3: TcxLabel;
+    edPersonalTrade: TcxButtonEdit;
+    PersonalTradeGuides: TdsdGuides;
+    spGet_PersonalTrade: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -482,7 +482,7 @@ object DM: TDM
   object qryPartner: TFDQuery
     Connection = conMain
     Left = 40
-    Top = 224
+    Top = 176
     object qryPartnerId: TIntegerField
       FieldName = 'Id'
     end
@@ -748,7 +748,7 @@ object DM: TDM
     SQL.Strings = (
       '')
     Left = 40
-    Top = 320
+    Top = 280
     object qryGoodsItemsGoodsID: TIntegerField
       FieldName = 'GoodsID'
     end
@@ -780,6 +780,10 @@ object DM: TDM
     object qryGoodsItemsPromoPrice: TWideStringField
       FieldName = 'PromoPrice'
       Size = 15
+    end
+    object qryGoodsItemsSearchName: TWideStringField
+      FieldName = 'SearchName'
+      Size = 257
     end
   end
   object tblMovement_Visit: TFDTable
@@ -850,7 +854,7 @@ object DM: TDM
     Params = <>
     StoreDefs = True
     Left = 224
-    Top = 288
+    Top = 224
     object cdsOrderItemsId: TIntegerField
       FieldName = 'Id'
     end
@@ -888,8 +892,9 @@ object DM: TDM
     object cdsOrderItemsKindId: TIntegerField
       FieldName = 'KindId'
     end
-    object cdsOrderItemsIsPromo: TBooleanField
+    object cdsOrderItemsIsPromo: TStringField
       FieldName = 'IsPromo'
+      Size = 50
     end
     object cdsOrderItemsisChangePercent: TBooleanField
       FieldName = 'isChangePercent'
@@ -899,7 +904,7 @@ object DM: TDM
     Aggregates = <>
     Params = <>
     Left = 128
-    Top = 288
+    Top = 224
     object cdsOrderExternalid: TIntegerField
       FieldName = 'id'
     end
@@ -928,8 +933,8 @@ object DM: TDM
     FetchOptions.AssignedValues = [evDetailCascade]
     UpdateOptions.UpdateTableName = 'Movement_RouteMember'
     TableName = 'Movement_RouteMember'
-    Left = 800
-    Top = 376
+    Left = 888
+    Top = 32
     object AutoIncField1: TAutoIncField
       FieldName = 'Id'
       ProviderFlags = [pfInWhere]
@@ -1019,7 +1024,7 @@ object DM: TDM
     Aggregates = <>
     Params = <>
     Left = 128
-    Top = 344
+    Top = 280
     object cdsStoreRealsId: TIntegerField
       FieldName = 'Id'
     end
@@ -1043,7 +1048,7 @@ object DM: TDM
     Aggregates = <>
     Params = <>
     Left = 224
-    Top = 344
+    Top = 280
     object cdsStoreRealItemsId: TIntegerField
       FieldName = 'Id'
     end
@@ -1147,6 +1152,171 @@ object DM: TDM
     end
     object tblMovementItem_PromoGoodsTaxPromo: TFloatField
       FieldName = 'TaxPromo'
+    end
+  end
+  object tblMovement_ReturnIn: TFDTable
+    Connection = conMain
+    UpdateOptions.UpdateTableName = 'Movement_ReturnIn'
+    TableName = 'Movement_ReturnIn'
+    Left = 800
+    Top = 368
+    object tblMovement_ReturnInId: TAutoIncField
+      FieldName = 'Id'
+      ProviderFlags = [pfInWhere]
+      ReadOnly = True
+    end
+    object tblMovement_ReturnInGUID: TStringField
+      FieldName = 'GUID'
+      Size = 255
+    end
+    object tblMovement_ReturnInInvNumber: TStringField
+      FieldName = 'InvNumber'
+      Size = 255
+    end
+    object tblMovement_ReturnInOperDate: TDateTimeField
+      FieldName = 'OperDate'
+    end
+    object tblMovement_ReturnInStatusId: TIntegerField
+      FieldName = 'StatusId'
+    end
+    object tblMovement_ReturnInChecked: TBooleanField
+      FieldName = 'Checked'
+    end
+    object tblMovement_ReturnInPriceWithVAT: TBooleanField
+      FieldName = 'PriceWithVAT'
+    end
+    object tblMovement_ReturnInInsertDate: TDateTimeField
+      FieldName = 'InsertDate'
+    end
+    object tblMovement_ReturnInVATPercent: TFloatField
+      FieldName = 'VATPercent'
+    end
+    object tblMovement_ReturnInChangePercent: TFloatField
+      FieldName = 'ChangePercent'
+    end
+    object tblMovement_ReturnInTotalCountKg: TFloatField
+      FieldName = 'TotalCountKg'
+    end
+    object tblMovement_ReturnInTotalSummPVAT: TFloatField
+      FieldName = 'TotalSummPVAT'
+    end
+    object tblMovement_ReturnInPaidKindId: TIntegerField
+      FieldName = 'PaidKindId'
+    end
+    object tblMovement_ReturnInPartnerId: TIntegerField
+      FieldName = 'PartnerId'
+    end
+    object tblMovement_ReturnInContractId: TIntegerField
+      FieldName = 'ContractId'
+    end
+    object tblMovement_ReturnInComment: TStringField
+      FieldName = 'Comment'
+      Size = 255
+    end
+    object tblMovement_ReturnInisSync: TBooleanField
+      FieldName = 'isSync'
+    end
+  end
+  object tblMovementItem_ReturnIn: TFDTable
+    Connection = conMain
+    UpdateOptions.UpdateTableName = 'MovementItem_ReturnIn'
+    TableName = 'MovementItem_ReturnIn'
+    Left = 800
+    Top = 424
+    object tblMovementItem_ReturnInId: TAutoIncField
+      FieldName = 'Id'
+      ProviderFlags = [pfInWhere]
+      ReadOnly = True
+    end
+    object tblMovementItem_ReturnInMovementId: TIntegerField
+      FieldName = 'MovementId'
+    end
+    object tblMovementItem_ReturnInGUID: TStringField
+      FieldName = 'GUID'
+      Size = 255
+    end
+    object tblMovementItem_ReturnInGoodsId: TIntegerField
+      FieldName = 'GoodsId'
+    end
+    object tblMovementItem_ReturnInGoodsKindId: TIntegerField
+      FieldName = 'GoodsKindId'
+    end
+    object tblMovementItem_ReturnInAmount: TFloatField
+      FieldName = 'Amount'
+    end
+    object tblMovementItem_ReturnInPrice: TFloatField
+      FieldName = 'Price'
+    end
+    object tblMovementItem_ReturnInChangePercent: TFloatField
+      FieldName = 'ChangePercent'
+    end
+  end
+  object cdsReturnIn: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 128
+    Top = 336
+    object cdsReturnInId: TIntegerField
+      FieldName = 'Id'
+    end
+    object cdsReturnInOperDate: TDateField
+      FieldName = 'OperDate'
+    end
+    object cdsReturnInName: TStringField
+      FieldName = 'Name'
+      Size = 255
+    end
+    object cdsReturnInPrice: TStringField
+      FieldName = 'Price'
+      Size = 100
+    end
+    object cdsReturnInWeigth: TStringField
+      FieldName = 'Weigth'
+      Size = 100
+    end
+    object cdsReturnInStatus: TStringField
+      FieldName = 'Status'
+      Size = 200
+    end
+    object cdsReturnInComment: TStringField
+      FieldName = 'Comment'
+      Size = 255
+    end
+  end
+  object cdsReturnInItems: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 224
+    Top = 336
+    object cdsReturnInItemsId: TIntegerField
+      FieldName = 'Id'
+    end
+    object cdsReturnInItemsName: TStringField
+      FieldName = 'Name'
+      Size = 255
+    end
+    object cdsReturnInItemsType: TStringField
+      FieldName = 'Type'
+      Size = 255
+    end
+    object cdsReturnInItemsPrice: TFloatField
+      FieldName = 'Price'
+    end
+    object cdsReturnInItemsWeight: TFloatField
+      FieldName = 'Weight'
+    end
+    object cdsReturnInItemsMeasure: TStringField
+      FieldName = 'Measure'
+      Size = 100
+    end
+    object cdsReturnInItemsCount: TFloatField
+      FieldName = 'Count'
+    end
+    object cdsReturnInItemsGoodsId: TIntegerField
+      FieldName = 'GoodsId'
+    end
+    object cdsReturnInItemsKindId: TIntegerField
+      FieldName = 'KindId'
     end
   end
 end
