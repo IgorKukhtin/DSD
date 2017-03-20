@@ -12,7 +12,6 @@ object MobilePriceListItems_ObjectForm: TMobilePriceListItems_ObjectForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams

@@ -826,6 +826,8 @@ type
     N155: TMenuItem;
     actMobileConst: TdsdOpenForm;
     N156: TMenuItem;
+    actMobileContract: TdsdOpenForm;
+    N157: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

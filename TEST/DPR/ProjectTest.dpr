@@ -914,7 +914,8 @@ uses
   ReestrReturnStartMovement in '..\..\Forms\Document\ReestrReturnStartMovement.pas' {ReestrReturnStartMovementForm: TParentForm},
   ReestrReturnUpdateMovement in '..\..\Forms\Document\ReestrReturnUpdateMovement.pas' {ReestrReturnUpdateMovementForm: TParentForm},
   MobilePriceListItems_Object in '..\..\Forms\Guides\MobilePriceListItems_Object.pas' {MobilePriceListItems_ObjectForm: TParentForm},
-  MobileConst_Object in '..\..\Forms\Guides\MobileConst_Object.pas' {MobileConst_ObjectForm: TParentForm};
+  MobileConst_Object in '..\..\Forms\Guides\MobileConst_Object.pas' {MobileConst_ObjectForm: TParentForm},
+  MobileContract_Object in '..\..\Forms\Guides\MobileContract_Object.pas' {MobileContract_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

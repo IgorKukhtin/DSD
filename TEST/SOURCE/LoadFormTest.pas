@@ -2309,6 +2309,9 @@ end;
 
 procedure TLoadFormTest.LoadMobileProjectFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileContract_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobileContract_ObjectForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileConst_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileConst_ObjectForm');
 

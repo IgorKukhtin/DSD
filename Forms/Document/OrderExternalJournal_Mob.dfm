@@ -110,6 +110,11 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalCountSecond
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colFromName
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -465,6 +470,23 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     TabOrder = 7
     Width = 150
   end
+  object cxLabel3: TcxLabel [4]
+    Left = 475
+    Top = 6
+    Caption = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090':'
+  end
+  object edPersonalTrade: TcxButtonEdit [5]
+    Left = 564
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 150
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
   end
@@ -546,6 +568,14 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
+    end
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+        end>
     end
     object mactSilentList: TMultiAction [4]
       Category = 'Print'
@@ -727,6 +757,9 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           StoredProc = spGet_UserJuridicalBasis
         end
         item
+          StoredProc = spGet_PersonalTrade
+        end
+        item
           StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
@@ -773,6 +806,14 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Name = 'inJuridicalBasisId'
         Value = 'False'
         Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberId'
+        Value = Null
+        Component = PersonalTradeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -884,6 +925,9 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       end
       item
         Component = JuridicalBasisGuides
+      end
+      item
+        Component = PersonalTradeGuides
       end>
     Left = 400
     Top = 304
@@ -1129,6 +1173,59 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       end>
     PackSize = 1
     Left = 824
+    Top = 48
+  end
+  object PersonalTradeGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalTrade
+    Key = '0'
+    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMember_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = PersonalTradeGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PersonalTradeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 607
+  end
+  object spGet_PersonalTrade: TdsdStoredProc
+    StoredProcName = 'gpGetMobile_Object_Const'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'MemberId'
+        Value = '0'
+        Component = PersonalTradeGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberName'
+        Value = ''
+        Component = PersonalTradeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 592
     Top = 48
   end
 end

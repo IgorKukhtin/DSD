@@ -1,9 +1,13 @@
 -- Function: lpInsertUpdate_Object_Partner()
 
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, 
+                                                       TFloat, TFloat, Boolean, Boolean, Boolean,
+                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                       TDateTime, TDateTime, Integer);   
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
                                                        TFloat, TFloat, Boolean, Boolean, Boolean,
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                       TDateTime, TDateTime, Integer);     
+                                                       TDateTime, TDateTime, Integer);       
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ÍÎ˛˜ Ó·˙ÂÍÚ‡ < ÓÌÚ‡„ÂÌÚ> 
@@ -125,7 +129,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Integer) OWNER TO postgres;
+--ALTER FUNCTION lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
