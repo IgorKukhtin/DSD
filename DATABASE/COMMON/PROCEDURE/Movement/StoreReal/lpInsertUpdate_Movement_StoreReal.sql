@@ -1,16 +1,15 @@
 -- Function: lpInsertUpdate_Movement_StoreReal()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_StoreReal (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Boolean, TFloat);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_StoreReal (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_StoreReal (
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inUserId              Integer   , -- пользователь
-    IN inPriceListId         Integer   , -- Прайс лист
     IN inPartnerId           Integer   , -- Контрагент
-    IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
-    IN inVATPercent          TFloat      -- % НДС
+    IN inGUID                TVarChar    -- Глобальный уникальный идентификатор	для синхронизации с мобильными устройствами
 )
 RETURNS Integer 
 AS
@@ -41,19 +40,14 @@ BEGIN
            PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
       END IF;
 
-      -- сохранили связь с <Прайс лист>
-      PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_PriceList(), ioId, inPriceListId);
-
       -- сохранили связь с <Контрагент>
       PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_Partner(), ioId, inPartnerId);    
 
-      -- сохранили свойство <Цена с НДС (да/нет)>
-      PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
-      -- сохранили свойство <% НДС>
-      PERFORM lpInsertUpdate_MovementFloat(zc_MovementFloat_VATPercent(), ioId, inVATPercent);
-
-      -- пересчитали Итоговые суммы по накладной
-      PERFORM lpInsertUpdate_MovementFloat_TotalSumm(ioId);
+      -- сохраняем GUID, если задан
+      IF inGUID IS NOT NULL
+      THEN
+           PERFORM lpInsertUpdate_MovementString (zc_MovementString_GUID(), ioId, inGUID);
+      END IF;
 
       -- сохранили протокол
       PERFORM lpInsert_MovementProtocol(ioId, inUserId, vbIsInsert);
@@ -68,4 +62,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_Movement_StoreReal (ioId := 0, inInvNumber := '-1', inOperDate := CURRENT_DATE, inUserId := 2, inPriceListId := 0, inPartnerId := 0, inPriceWithVAT := TRUE, inVATPercent := 20);
+-- SELECT * FROM lpInsertUpdate_Movement_StoreReal (ioId:= 0, inInvNumber:= '-1', inOperDate:= CURRENT_DATE, inUserId:= 2, inPartnerId:= 0, inGUID:= NULL);
