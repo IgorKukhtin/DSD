@@ -75,6 +75,11 @@ type
     edMemberSP: TcxButtonEdit;
     MemberSPGuides: TdsdGuides;
     MedicSPGuides: TdsdGuides;
+    spSelectPrintCheck: TdsdStoredProc;
+    actPrintCheck: TdsdPrintAction;
+    PrintDialog: TExecuteDialog;
+    macPrintCheck: TMultiAction;
+    bbPrintCheck: TdxBarButton;
   private
     { Private declarations }
   public
