@@ -545,7 +545,7 @@ begin
      if (CDS.Filtered=false)and(Length(trim(EditGoodsCode.Text))>0)
      then begin fEnterGoodsCode:=true;CDS.Filtered:=true;end;
 
-     if (CDS.RecordCount=0)and(ParamsMovement.ParamByName('OrderExternalId').asInteger<>0)and(Code_begin>0)
+     if {(CDS.RecordCount=0}(SettingMain.isGoodsComplete = FALSE)and(ParamsMovement.ParamByName('OrderExternalId').asInteger<>0)and(Code_begin>0)
      then begin spSelect.Params.ParamByName('inGoodsCode').Value:=Code_begin;
                 actRefreshExecute(Self);
      end;
