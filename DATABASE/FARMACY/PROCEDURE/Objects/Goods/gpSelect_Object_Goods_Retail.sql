@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, IdBarCode TVarChar, Name TVarChar, isEr
              , Color_calc Integer
              , RetailCode Integer, RetailName TVarChar
              , isPromo boolean
+             , isMarketToday Boolean
              , InsertName TVarChar, InsertDate TDateTime 
              , UpdateName TVarChar, UpdateDate TDateTime
              , ConditionsKeepName TVarChar
@@ -56,6 +57,11 @@ BEGIN
                                                          AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                                                        --  AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
                          )
+     , tmpLoadPriceList AS (SELECT DISTINCT LoadPriceListItem.GoodsId AS MainGoodsId
+                            FROM LoadPriceList  
+                                 INNER JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
+                            WHERE LoadPriceList.OperDate >= CURRENT_DATE AND LoadPriceList.OperDate < CURRENT_DATE + INTERVAL '1 DAY'
+                            )
 
    SELECT 
              Object_Goods_View.Id
@@ -84,6 +90,7 @@ BEGIN
            , Object_Retail.ObjectCode AS RetailCode
            , Object_Retail.ValueData  AS RetailName
            , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
+           , CASE WHEN COALESCE(tmpLoadPriceList.MainGoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isMarketToday
 
            , COALESCE(Object_Insert.ValueData, '')         ::TVarChar  AS InsertName
            , COALESCE(ObjectDate_Insert.ValueData, Null)   ::TDateTime AS InsertDate
@@ -122,6 +129,7 @@ BEGIN
                             AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
         LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
+        LEFT JOIN tmpLoadPriceList ON tmpLoadPriceList.MainGoodsId = ObjectLink_Main.ChildObjectId
     WHERE Object_Retail.DescId = zc_Object_Retail();
 
    ELSE
@@ -147,6 +155,13 @@ BEGIN
                                                          AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                                                          AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
                          )
+
+     , tmpLoadPriceList AS (SELECT DISTINCT LoadPriceListItem.GoodsId AS MainGoodsId
+                            FROM LoadPriceList  
+                                 INNER JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
+                            WHERE LoadPriceList.OperDate >= CURRENT_DATE AND LoadPriceList.OperDate < CURRENT_DATE + INTERVAL '1 DAY'
+                            )
+
    SELECT 
              Object_Goods_View.Id
            , Object_Goods_View.GoodsCodeInt
@@ -174,6 +189,7 @@ BEGIN
            , Object_Retail.ObjectCode AS RetailCode
            , Object_Retail.ValueData  AS RetailName
            , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
+           , CASE WHEN COALESCE(tmpLoadPriceList.MainGoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isMarketToday
 
            , COALESCE(Object_Insert.ValueData, '')         ::TVarChar  AS InsertName
            , COALESCE(ObjectDate_Insert.ValueData, Null)   ::TDateTime AS InsertDate
@@ -213,6 +229,7 @@ BEGIN
                             AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
         LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
+        LEFT JOIN tmpLoadPriceList ON tmpLoadPriceList.MainGoodsId = ObjectLink_Main.ChildObjectId
     WHERE Object_Goods_View.ObjectId = vbObjectId;
 
    END IF;
@@ -226,6 +243,7 @@ ALTER FUNCTION gpSelect_Object_Goods_Retail(TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.03.17         *
  13.12.16         *
  13.07.16         * protocol
  30.04.16         *

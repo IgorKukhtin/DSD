@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Send(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat
+             , TotalSummFrom TFloat, TotalSummTo TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , Comment TVarChar
              , isAuto Boolean, MCSPeriod TFloat, MCSDay TFloat
@@ -64,6 +65,8 @@ BEGIN
            , MovementFloat_TotalSumm.ValueData      AS TotalSumm
            , MovementFloat_TotalSummMVAT.ValueData  AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData  AS TotalSummPVAT
+           , MovementFloat_TotalSummFrom.ValueData  AS TotalSummFrom
+           , MovementFloat_TotalSummTo.ValueData    AS TotalSummTo
            , Object_From.Id                         AS FromId
            , Object_From.ValueData                  AS FromName
            , Object_To.Id                           AS ToId
@@ -101,6 +104,13 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummFrom
+                                    ON MovementFloat_TotalSummFrom.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummFrom.DescId = zc_MovementFloat_TotalSummFrom()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummTo
+                                    ON MovementFloat_TotalSummTo.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummTo.DescId = zc_MovementFloat_TotalSummTo()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
                                     ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
@@ -171,6 +181,8 @@ ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 21.03.17         * add zc_MovementFloat_TotalSummFrom
+                        zc_MovementFloat_TotalSummTo
  15.11.16         * add isComplete
  28.06.16         *
  05.05.16         *
