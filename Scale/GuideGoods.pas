@@ -548,6 +548,7 @@ begin
      if {(CDS.RecordCount=0}(SettingMain.isGoodsComplete = FALSE)and(ParamsMovement.ParamByName('OrderExternalId').asInteger<>0)and(Code_begin>0)
      then begin spSelect.Params.ParamByName('inGoodsCode').Value:=Code_begin;
                 actRefreshExecute(Self);
+                fEnterGoodsCode:=true;CDS.Filtered:=False;CDS.Filtered:=True;
      end;
 
 
