@@ -30,6 +30,11 @@ BEGIN
       WHERE MovementString_GUID.DescId = zc_MovementString_GUID() 
         AND MovementString_GUID.ValueData = inMovementGUID;
 
+      IF COALESCE (vbMovementId, 0) = 0 
+      THEN
+           RAISE EXCEPTION 'Ошибка. Не заведена шапка документа.';
+      END IF; 
+
       -- получаем Id строки документа по GUID
       SELECT MIString_GUID.MovementItemId 
       INTO vbId 
@@ -37,9 +42,7 @@ BEGIN
            JOIN MovementItem AS MovementItem_StoreReal
                              ON MovementItem_StoreReal.Id = MIString_GUID.MovementItemId
                             AND MovementItem_StoreReal.DescId = zc_MI_Master()
-           JOIN Movement AS Movement_StoreReal
-                         ON Movement_StoreReal.Id = MovementItem_StoreReal.MovementId
-                        AND Movement_StoreReal.DescId = zc_Movement_StoreReal()
+                            AND MovementItem_StoreReal.MovementId = vbMovementId
       WHERE MIString_GUID.DescId = zc_MIString_GUID() 
         AND MIString_GUID.ValueData = inGUID;
 
