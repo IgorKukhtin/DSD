@@ -82,7 +82,7 @@ if ($OutputType=='otMultiExecute')
      $result_error = pg_result_error($result);
      if ($result_error != false)
      {
-         $res = '<error ';                                                   
+         $res = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?> <error ';                                                   
          //$res .= 'ErrorCode = "'.pg_result_error_field($result, PGSQL_DIAG_SQLSTATE).'"'.' ErrorMessage = "'.htmlspecialchars($result_error, ENT_COMPAT, 'WIN-1251').'"';
          $res .= 'ErrorCode = "'.pg_result_error_field($result, PGSQL_DIAG_SQLSTATE).'"'.' ErrorMessage = "'.htmlspecialchars($result_error, ENT_COMPAT, 'UTF-8').'"';
          $res .= ' />';
@@ -99,7 +99,7 @@ else
           
 if ($result_error != false)
 {
-     $res = '<error ';                                                   
+     $res = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?> <error ';                                                   
      //$res .= 'ErrorCode = "'.pg_result_error_field($result, PGSQL_DIAG_SQLSTATE).'"'.' ErrorMessage = "'.htmlspecialchars($result_error, ENT_COMPAT, 'WIN-1251').'"';
      $res .= 'ErrorCode = "'.pg_result_error_field($result, PGSQL_DIAG_SQLSTATE).'"'.' ErrorMessage = "'.htmlspecialchars($result_error, ENT_COMPAT, 'UTF-8').'"';
      $res .= ' />';
