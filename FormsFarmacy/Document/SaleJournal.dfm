@@ -199,6 +199,14 @@ inherited SaleJournalForm: TSaleJournalForm
             Options.Editing = False
             Width = 70
           end
+          object clInvNumber_Invoice_Full: TcxGridDBColumn
+            Caption = #1057#1095#1077#1090' ('#1087#1086#1089#1090'.1303)'
+            DataBinding.FieldName = 'InvNumber_Invoice_Full'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
         end
       end
     end

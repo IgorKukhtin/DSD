@@ -18,11 +18,17 @@ BEGIN
     --PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
 
     -- проверка - если есть <Child> Проведен, то <Ошибка>
-    PERFORM lfCheck_Movement_ChildStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
+    --PERFORM lfCheck_Movement_ChildStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
 
+    -- убираем ссылки на этот док в продажах
+    PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Child(), MLM_Child.MovementId, Null)
+    FROM MovementLinkMovement AS MLM_Child
+    WHERE MLM_Child.descId = zc_MovementLinkMovement_Child()
+      AND MLM_Child.MovementChildId = inMovementId;
+    
     -- Удаляем Документ
     PERFORM lpSetErased_Movement (inMovementId := inMovementId
-                                 , inUserId     := vbUserId);
+                                , inUserId     := vbUserId);
 
 END;
 $BODY$

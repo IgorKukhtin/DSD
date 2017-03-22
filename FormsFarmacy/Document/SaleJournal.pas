@@ -36,6 +36,7 @@ type
     actPrint: TdsdPrintAction;
     macPrint: TMultiAction;
     bbmacPrint: TdxBarButton;
+    clInvNumber_Invoice_Full: TcxGridDBColumn;
   private
     { Private declarations }
   public
