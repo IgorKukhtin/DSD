@@ -33,11 +33,6 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    TotalCountKg: TcxGridDBColumn;
-    PriceWithVAT: TcxGridDBColumn;
-    VATPercent: TcxGridDBColumn;
-    TotalSummPVAT: TcxGridDBColumn;
-    PriceListName: TcxGridDBColumn;
     spSavePrintState: TdsdStoredProc;
     actSPSavePrintState: TdsdExecStoredProc;
     mactPrint_Order: TMultiAction;

@@ -37,7 +37,6 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalCountKg
             end
             item
               Format = ',0.####'
@@ -54,7 +53,6 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPVAT
             end
             item
               Format = ',0.####'
@@ -76,7 +74,6 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalCountKg
             end
             item
               Format = ',0.####'
@@ -93,7 +90,6 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPVAT
             end
             item
               Format = ',0.####'
@@ -128,55 +124,9 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 70
           end
-          object PriceListName: TcxGridDBColumn
-            Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
-            DataBinding.FieldName = 'PriceListName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object TotalCountKg: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089
-            DataBinding.FieldName = 'TotalCountKg'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 50
-          end
-          object PriceWithVAT: TcxGridDBColumn
-            Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
-            DataBinding.FieldName = 'PriceWithVAT'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object VATPercent: TcxGridDBColumn
-            Caption = '% '#1053#1044#1057
-            DataBinding.FieldName = 'VATPercent'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 40
-          end
-          object TotalSummPVAT: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
-            DataBinding.FieldName = 'TotalSummPVAT'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
           object PartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'PartnerName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80

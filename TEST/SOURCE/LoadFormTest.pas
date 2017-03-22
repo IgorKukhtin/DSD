@@ -2139,6 +2139,8 @@ end;
 
 procedure TLoadFormTest.LoadStoreRealFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStoreRealForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStoreRealForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStoreRealJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStoreRealJournalForm');
 end;

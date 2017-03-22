@@ -420,7 +420,7 @@ uses
   Retail in '..\..\Forms\Guides\Retail.pas' {RetailForm: TParentForm},
   RetailEdit in '..\..\Forms\Guides\RetailEdit.pas' {RetailEditForm: TParentForm},
   StoreRealJournal in '..\..\Forms\Document\StoreRealJournal.pas' {StoreRealJournalForm: TParentForm},
-  OrderExternal in '..\..\Forms\Document\OrderExternal.pas' {OrderExternalForm: TParentForm},
+  StoreReal in '..\..\Forms\Document\StoreReal.pas' {StoreRealForm: TParentForm},
   AncestorDocument in '..\..\Forms\Ancestor\AncestorDocument.pas' {AncestorDocumentForm: TParentForm},
   ProductionSeparate in '..\..\Forms\Document\ProductionSeparate.pas' {ProductionSeparateForm: TParentForm},
   PriceCorrectiveJournal in '..\..\Forms\Document\PriceCorrectiveJournal.pas' {PriceCorrectiveJournalForm: TParentForm},
@@ -915,7 +915,8 @@ uses
   ReestrReturnUpdateMovement in '..\..\Forms\Document\ReestrReturnUpdateMovement.pas' {ReestrReturnUpdateMovementForm: TParentForm},
   MobilePriceListItems_Object in '..\..\Forms\Guides\MobilePriceListItems_Object.pas' {MobilePriceListItems_ObjectForm: TParentForm},
   MobileConst_Object in '..\..\Forms\Guides\MobileConst_Object.pas' {MobileConst_ObjectForm: TParentForm},
-  MobileContract_Object in '..\..\Forms\Guides\MobileContract_Object.pas' {MobileContract_ObjectForm: TParentForm};
+  MobileContract_Object in '..\..\Forms\Guides\MobileContract_Object.pas' {MobileContract_ObjectForm: TParentForm},
+  OrderExternal in '..\..\Forms\Document\OrderExternal.pas' {OrderExternalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

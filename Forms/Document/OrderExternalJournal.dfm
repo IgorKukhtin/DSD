@@ -5,7 +5,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1066
-  ExplicitHeight = 434
+  ExplicitHeight = 435
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -774,6 +774,12 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Value = 'False'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberId'
+        Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

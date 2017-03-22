@@ -7,10 +7,9 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_OrderExternal (TDateTime, TDateTime, B
 CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderExternal(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
-    IN inIsErased          Boolean ,
-    IN inJuridicalBasisId  Integer ,
-    IN inMemberId   Integer ,   -- торговый агент
-  
+    IN inIsErased          Boolean   ,
+    IN inJuridicalBasisId  Integer   ,
+    IN inMemberId          Integer   , -- торговый агент
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
@@ -82,7 +81,7 @@ BEGIN
                           FROM
                              (SELECT Movement.id
                               FROM tmpStatus
-                                   JOIN Movement ON Movement.OperDate BETWEEN '01.02.2017' AND '28.02.2017'  AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.StatusId = tmpStatus.StatusId
+                                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.StatusId = tmpStatus.StatusId
                                    JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
                               ) AS tmp
                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -301,4 +300,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderExternal (inStartDate:= '01.11.2015', inEndDate:= '01.11.2015', inIsErased := FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_OrderExternal (inStartDate:= '01.01.2017', inEndDate:= CURRENT_DATE, inIsErased:= FALSE, inJuridicalBasisId:=0, inMemberId:=0, inSession:= zfCalc_UserAdmin())

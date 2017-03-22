@@ -6,7 +6,8 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_StoreReal(TDateTime, TDateTime, Boolea
 CREATE OR REPLACE FUNCTION gpSelect_Movement_StoreReal (
     IN inStartDate        TDateTime , --
     IN inEndDate          TDateTime , --
-    IN inIsErased         Boolean ,
+    IN inIsErased         Boolean   ,
+    IN inJuridicalBasisId Integer   ,
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
@@ -20,17 +21,10 @@ RETURNS TABLE (Id Integer
 AS
 $BODY$
    DECLARE vbUserId      Integer;
-   DECLARE vbIsUserOrder Boolean;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_StoreReal());
       vbUserId := lpGetUserBySession(inSession);
-
-      -- определяется уровень доступа
-      vbIsUserOrder := EXISTS (SELECT Object_RoleAccessKeyGuide_View.AccessKeyId_UserOrder 
-                               FROM Object_RoleAccessKeyGuide_View 
-                               WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId 
-                                 AND Object_RoleAccessKeyGuide_View.AccessKeyId_UserOrder > 0);
 
       -- Результат
       RETURN QUERY
@@ -40,28 +34,6 @@ BEGIN
                            UNION 
                            SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                           )
-           , tmpRoleAccessKey_all  AS (SELECT AccessKeyId, UserId FROM Object_RoleAccessKey_View)
-           , tmpRoleAccessKey_user AS (SELECT AccessKeyId FROM tmpRoleAccessKey_all WHERE UserId = vbUserId GROUP BY AccessKeyId)
-           , tmpAccessKey_IsDocumentAll AS (SELECT 1 AS Id FROM ObjectLink_UserRole_View 
-                                            WHERE RoleId = zc_Enum_Role_Admin() 
-                                              AND UserId = vbUserId
-                                            UNION 
-                                            SELECT 1 AS Id FROM tmpRoleAccessKey_user 
-                                            WHERE AccessKeyId = zc_Enum_Process_AccessKey_DocumentAll() 
-                                              AND vbIsUserOrder = FALSE
-                                           )
-           , tmpRoleAccessKey AS (SELECT tmpRoleAccessKey_user.AccessKeyId 
-                                  FROM tmpRoleAccessKey_user 
-                                  WHERE NOT EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
-                                  UNION 
-                                  SELECT tmpRoleAccessKey_all.AccessKeyId 
-                                  FROM tmpRoleAccessKey_all 
-                                  WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll) 
-                                  GROUP BY tmpRoleAccessKey_all.AccessKeyId
-                                  UNION 
-                                  SELECT 0 AS AccessKeyId 
-                                  WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
-                                 )
         SELECT Movement.Id                   AS Id
              , Movement.InvNumber            AS InvNumber
              , Movement.OperDate             AS OperDate
@@ -74,7 +46,6 @@ BEGIN
                    JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
                                 AND Movement.DescId = zc_Movement_StoreReal() 
                                 AND Movement.StatusId = tmpStatus.StatusId
-                   JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
              ) AS tmpMovement
              LEFT JOIN Movement ON Movement.id = tmpMovement.id
 
@@ -97,8 +68,6 @@ END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
-ALTER FUNCTION gpSelect_Movement_StoreReal(TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Ярошенко Р.Ф.
@@ -106,4 +75,4 @@ ALTER FUNCTION gpSelect_Movement_StoreReal(TDateTime, TDateTime, Boolean, TVarCh
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_StoreReal(inStartDate := '01.12.2016', inEndDate := '01.12.2016', inIsErased := FALSE, inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_StoreReal(inStartDate:= '01.01.2017', inEndDate:= CURRENT_DATE, inIsErased:= FALSE, inJuridicalBasisId:= 0, inSession := zfCalc_UserAdmin())
