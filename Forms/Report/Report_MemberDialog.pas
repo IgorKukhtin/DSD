@@ -38,6 +38,9 @@ type
     edInfoMoney: TcxButtonEdit;
     GuidesInfoMoneyGroup: TdsdGuides;
     GuidesInfoMoney: TdsdGuides;
+    cxLabel1: TcxLabel;
+    ceMember: TcxButtonEdit;
+    GuidesMember: TdsdGuides;
   private
     { Private declarations }
   public

@@ -65,6 +65,9 @@ type
     Comment: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    cxLabel8: TcxLabel;
+    ceMember: TcxButtonEdit;
+    GuidesMember: TdsdGuides;
   private
     { Private declarations }
   public

@@ -1,30 +1,31 @@
 inherited Report_MemberForm: TReport_MemberForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091'>'
-  ClientHeight = 555
+  ClientHeight = 533
   ClientWidth = 1026
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1042
-  ExplicitHeight = 593
+  ExplicitHeight = 571
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
     Width = 1026
-    Height = 472
+    Height = 450
     TabOrder = 3
     ExplicitTop = 83
     ExplicitWidth = 1026
-    ExplicitHeight = 472
-    ClientRectBottom = 472
+    ExplicitHeight = 450
+    ClientRectBottom = 450
     ClientRectRight = 1026
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1026
-      ExplicitHeight = 472
+      ExplicitHeight = 450
       inherited cxGrid: TcxGrid
         Width = 1026
-        Height = 472
+        Height = 450
         ExplicitWidth = 1026
-        ExplicitHeight = 472
+        ExplicitHeight = 450
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -445,12 +446,12 @@ inherited Report_MemberForm: TReport_MemberForm
       ExplicitWidth = 52
     end
     object cxLabel3: TcxLabel
-      Left = 365
-      Top = 6
+      Left = 151
+      Top = 31
       Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
     end
     object ceInfoMoneyGroup: TcxButtonEdit
-      Left = 365
+      Left = 273
       Top = 30
       Properties.Buttons = <
         item
@@ -459,11 +460,11 @@ inherited Report_MemberForm: TReport_MemberForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 160
+      Width = 165
     end
     object ceInfoMoneyDestination: TcxButtonEdit
-      Left = 531
-      Top = 30
+      Left = 527
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
@@ -471,15 +472,15 @@ inherited Report_MemberForm: TReport_MemberForm
         end>
       Properties.ReadOnly = True
       TabOrder = 6
-      Width = 160
+      Width = 193
     end
     object cxLabel4: TcxLabel
-      Left = 531
+      Left = 444
       Top = 6
       Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077':'
     end
     object ceInfoMoney: TcxButtonEdit
-      Left = 697
+      Left = 565
       Top = 30
       Properties.Buttons = <
         item
@@ -488,11 +489,11 @@ inherited Report_MemberForm: TReport_MemberForm
         end>
       Properties.ReadOnly = True
       TabOrder = 8
-      Width = 160
+      Width = 155
     end
     object cxLabel5: TcxLabel
-      Left = 697
-      Top = 6
+      Left = 444
+      Top = 32
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
     end
     object cxLabel6: TcxLabel
@@ -501,8 +502,8 @@ inherited Report_MemberForm: TReport_MemberForm
       Caption = #1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077':'
     end
     object edAccount: TcxButtonEdit
-      Left = 151
-      Top = 30
+      Left = 234
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
@@ -510,11 +511,11 @@ inherited Report_MemberForm: TReport_MemberForm
         end>
       Properties.ReadOnly = True
       TabOrder = 11
-      Width = 208
+      Width = 204
     end
     object ceBranch: TcxButtonEdit
-      Left = 863
-      Top = 30
+      Left = 775
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
@@ -522,12 +523,29 @@ inherited Report_MemberForm: TReport_MemberForm
         end>
       Properties.ReadOnly = True
       TabOrder = 12
-      Width = 160
+      Width = 167
     end
     object cxLabel7: TcxLabel
-      Left = 863
+      Left = 728
       Top = 6
       Caption = #1060#1080#1083#1080#1072#1083':'
+    end
+    object cxLabel8: TcxLabel
+      Left = 726
+      Top = 29
+      Caption = #1060#1080#1079'.'#1083#1080#1094#1086':'
+    end
+    object ceMember: TcxButtonEdit
+      Left = 782
+      Top = 30
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 15
+      Width = 160
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -603,16 +621,19 @@ inherited Report_MemberForm: TReport_MemberForm
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object dsdPrintRealAction: TdsdPrintAction
       Category = 'DSDLib'
@@ -633,16 +654,19 @@ inherited Report_MemberForm: TReport_MemberForm
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object PersonalReportJournal: TdsdOpenForm
       Category = 'DSDLib'
@@ -651,24 +675,28 @@ inherited Report_MemberForm: TReport_MemberForm
       FormName = 'TPersonalReportJournalForm'
       FormNameParam.Value = 'TPersonalReportJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MemberId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MemberId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MemberName'
@@ -676,6 +704,7 @@ inherited Report_MemberForm: TReport_MemberForm
           Component = MasterCDS
           ComponentItem = 'MemberName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -688,6 +717,7 @@ inherited Report_MemberForm: TReport_MemberForm
       FormName = 'TReport_MemberDialogForm'
       FormNameParam.Value = 'TReport_MemberDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -695,6 +725,7 @@ inherited Report_MemberForm: TReport_MemberForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -702,6 +733,7 @@ inherited Report_MemberForm: TReport_MemberForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
@@ -710,6 +742,7 @@ inherited Report_MemberForm: TReport_MemberForm
           ComponentItem = 'Key'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -718,6 +751,7 @@ inherited Report_MemberForm: TReport_MemberForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyGroupId'
@@ -725,6 +759,7 @@ inherited Report_MemberForm: TReport_MemberForm
           Component = GuidesInfoMoneyGroup
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyGroupName'
@@ -733,6 +768,7 @@ inherited Report_MemberForm: TReport_MemberForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyDestinationId'
@@ -740,6 +776,7 @@ inherited Report_MemberForm: TReport_MemberForm
           Component = GuidesInfoMoneyDestination
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyDestinationName'
@@ -748,6 +785,7 @@ inherited Report_MemberForm: TReport_MemberForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
@@ -755,6 +793,7 @@ inherited Report_MemberForm: TReport_MemberForm
           Component = GuidesInfoMoney
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -763,6 +802,7 @@ inherited Report_MemberForm: TReport_MemberForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchId'
@@ -770,6 +810,7 @@ inherited Report_MemberForm: TReport_MemberForm
           Component = GuidesBranch
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchName'
@@ -778,6 +819,24 @@ inherited Report_MemberForm: TReport_MemberForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberId'
+          Value = Null
+          Component = GuidesMember
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName'
+          Value = Null
+          Component = GuidesMember
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -800,6 +859,7 @@ inherited Report_MemberForm: TReport_MemberForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -807,6 +867,7 @@ inherited Report_MemberForm: TReport_MemberForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountId'
@@ -814,6 +875,7 @@ inherited Report_MemberForm: TReport_MemberForm
         Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchId'
@@ -821,6 +883,7 @@ inherited Report_MemberForm: TReport_MemberForm
         Component = GuidesBranch
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
@@ -828,6 +891,7 @@ inherited Report_MemberForm: TReport_MemberForm
         Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyGroupId'
@@ -835,6 +899,7 @@ inherited Report_MemberForm: TReport_MemberForm
         Component = GuidesInfoMoneyGroup
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyDestinationId'
@@ -842,6 +907,15 @@ inherited Report_MemberForm: TReport_MemberForm
         Component = GuidesInfoMoneyDestination
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberId'
+        Value = Null
+        Component = GuidesMember
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 184
@@ -981,6 +1055,9 @@ inherited Report_MemberForm: TReport_MemberForm
       end
       item
         Component = GuidesBranch
+      end
+      item
+        Component = GuidesMember
       end>
     Top = 228
   end
@@ -989,6 +1066,7 @@ inherited Report_MemberForm: TReport_MemberForm
     LookupControl = ceInfoMoneyGroup
     FormNameParam.Value = 'TInfoMoneyGroup_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoneyGroup_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -999,6 +1077,7 @@ inherited Report_MemberForm: TReport_MemberForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1007,20 +1086,23 @@ inherited Report_MemberForm: TReport_MemberForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Member'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 416
-    Top = 45
+    Left = 392
+    Top = 29
   end
   object GuidesInfoMoneyDestination: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoneyDestination
     FormNameParam.Value = 'TInfoMoneyDestination_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoneyDestination_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1031,6 +1113,7 @@ inherited Report_MemberForm: TReport_MemberForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1039,20 +1122,23 @@ inherited Report_MemberForm: TReport_MemberForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Member'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 584
-    Top = 53
+    Top = 65525
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1061,6 +1147,7 @@ inherited Report_MemberForm: TReport_MemberForm
         Value = ''
         Component = GuidesInfoMoney
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1068,20 +1155,23 @@ inherited Report_MemberForm: TReport_MemberForm
         Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Member'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 752
-    Top = 45
+    Left = 648
+    Top = 37
   end
   object GuidesAccount: TdsdGuides
     KeyField = 'Id'
     LookupControl = edAccount
     FormNameParam.Value = 'TAccount_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccount_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1091,6 +1181,7 @@ inherited Report_MemberForm: TReport_MemberForm
         Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValueAll'
@@ -1099,14 +1190,15 @@ inherited Report_MemberForm: TReport_MemberForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Member'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 312
-    Top = 48
   end
   object spGetDescSets: TdsdStoredProc
     StoredProcName = 'gpGetDescSets'
@@ -1119,6 +1211,7 @@ inherited Report_MemberForm: TReport_MemberForm
         Component = FormParams
         ComponentItem = 'IncomeDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnOutDesc'
@@ -1126,6 +1219,7 @@ inherited Report_MemberForm: TReport_MemberForm
         Component = FormParams
         ComponentItem = 'ReturnOutDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SaleDesc'
@@ -1133,6 +1227,7 @@ inherited Report_MemberForm: TReport_MemberForm
         Component = FormParams
         ComponentItem = 'SaleDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnInDesc'
@@ -1140,6 +1235,7 @@ inherited Report_MemberForm: TReport_MemberForm
         Component = FormParams
         ComponentItem = 'ReturnInDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MoneyDesc'
@@ -1147,6 +1243,7 @@ inherited Report_MemberForm: TReport_MemberForm
         Component = FormParams
         ComponentItem = 'MoneyDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ServiceDesc'
@@ -1154,6 +1251,7 @@ inherited Report_MemberForm: TReport_MemberForm
         Component = FormParams
         ComponentItem = 'ServiceDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SendDebtDesc'
@@ -1161,6 +1259,7 @@ inherited Report_MemberForm: TReport_MemberForm
         Component = FormParams
         ComponentItem = 'SendDebtDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OtherDesc'
@@ -1168,6 +1267,7 @@ inherited Report_MemberForm: TReport_MemberForm
         Component = FormParams
         ComponentItem = 'OtherDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SaleRealDesc'
@@ -1175,6 +1275,7 @@ inherited Report_MemberForm: TReport_MemberForm
         Component = FormParams
         ComponentItem = 'SaleRealDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnInRealDesc'
@@ -1182,6 +1283,7 @@ inherited Report_MemberForm: TReport_MemberForm
         Component = FormParams
         ComponentItem = 'ReturnInRealDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TransferDebtDesc'
@@ -1189,6 +1291,7 @@ inherited Report_MemberForm: TReport_MemberForm
         Component = FormParams
         ComponentItem = 'TransferDebtDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 296
@@ -1200,56 +1303,100 @@ inherited Report_MemberForm: TReport_MemberForm
         Name = 'IncomeDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnOutDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SaleDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnInDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MoneyDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ServiceDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SendDebtDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OtherDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SaleRealDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnInRealDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TransferDebtDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberId'
+        Value = Null
+        Component = GuidesMember
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberName'
+        Value = Null
+        Component = GuidesMember
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 232
@@ -1259,6 +1406,7 @@ inherited Report_MemberForm: TReport_MemberForm
     LookupControl = ceBranch
     FormNameParam.Value = 'TBranch_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranch_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1269,6 +1417,7 @@ inherited Report_MemberForm: TReport_MemberForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1277,8 +1426,39 @@ inherited Report_MemberForm: TReport_MemberForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 912
-    Top = 53
+    Left = 824
+    Top = 65533
+  end
+  object GuidesMember: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceMember
+    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMember_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMember
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMember
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 880
+    Top = 29
   end
 end
