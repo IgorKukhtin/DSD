@@ -30,7 +30,7 @@ BEGIN
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
 
-      SELECT UnitId INTO vbUnitId FROM gpGetMobile_Object_Const (inSession);
+      SELECT UnitId_ret INTO vbUnitId FROM gpGetMobile_Object_Const (inSession);
 
       -- получаем Id документа по GUID
       SELECT MovementString_GUID.MovementId 
@@ -85,7 +85,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Ярошенко Р.Ф.
- 16.02.17                                                        *                                          
+ 21.03.17                                                        *
 */
 
 -- тест
@@ -94,7 +94,7 @@ $BODY$
                                                     , inOperDate      := CURRENT_DATE
                                                     , inStatusId      := zc_Enum_Status_UnComplete()  -- Виды статусов
                                                     , inChecked       := false                        -- Проверен
-                                                    , inPriceWithVAT  := true                         -- Цена с НДС (да/нет)
+                                                    , inPriceWithVAT  := false                        -- Цена с НДС (да/нет)
                                                     , inInsertDate    := CURRENT_TIMESTAMP            -- Дата/время создания документа
                                                     , inVATPercent    := 20.0                         -- % НДС
                                                     , inChangePercent := -5.0                         -- (-)% Скидки (+)% Наценки
