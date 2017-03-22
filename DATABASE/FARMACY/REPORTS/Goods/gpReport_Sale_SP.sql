@@ -15,9 +15,12 @@ CREATE OR REPLACE FUNCTION  gpReport_Sale_SP(
     IN inisGroupMemberSP  Boolean  ,  -- кроме выбранной категории пациента
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (UnitName       TVarChar
+RETURNS TABLE (MovementId     Integer
+             , UnitName       TVarChar
              , Unit_Address   TVarChar
+             , JuridicalId    Integer
              , JuridicalName  TVarChar
+             , HospitalId     Integer
              , HospitalName   TVarChar
              , InvNumberSP    TVarChar
              , MedicSP        TVarChar
@@ -72,6 +75,7 @@ RETURNS TABLE (UnitName       TVarChar
 
              , MedicFIO TVarChar
 
+             , ContractId         Integer
              , ContractName       TVarChar
              , Contract_StartDate TDateTime
              )
@@ -368,9 +372,12 @@ BEGIN
                     )
 
         -- результат
-        SELECT Object_Unit.ValueData               AS UnitName
+        SELECT tmpData.MovementId
+             , Object_Unit.ValueData               AS UnitName
              , tmpMovDetails.Address               AS Unit_Address
+             , Object_Juridical.Id                 AS JuridicalId
              , Object_Juridical.ValueData          AS JuridicalName
+             , Object_PartnerMedical.Id            AS HospitalId
              , Object_PartnerMedical.ValueData     AS HospitalName
              , tmpData.InvNumberSP
              , Object_MedicSP.ValueData            AS MedicSP
@@ -394,7 +401,7 @@ BEGIN
              , CAST (ROW_NUMBER() OVER (PARTITION BY Object_PartnerMedical.ValueData ORDER BY Object_PartnerMedical.ValueData,Object_Unit.ValueData, Object_Goods.ValueData ) AS Integer) AS NumLine
              , CAST (tmpCountR.CountSP AS Integer) AS CountSP
 
-           , tmpMovDetails.JuridicalFullName
+           , COALESCE (tmpMovDetails.JuridicalFullName,Object_Juridical.ValueData)
            , tmpMovDetails.JuridicalAddress
            , tmpMovDetails.OKPO
            , tmpMovDetails.AccounterName
@@ -422,12 +429,13 @@ BEGIN
            , tmpMovDetails.PartnerMedical_BankName
            , tmpMovDetails.PartnerMedical_MFO
            , tmpMovDetails.MedicFIO
+           , Object_Contract.Id           AS ContractId
            , Object_Contract.ValueData    AS ContractName
            , ObjectDate_Start.ValueData   AS Contract_StartDate 
 
         FROM tmpMI AS tmpData
              LEFT JOIN tmpMovDetails ON tmpData.MovementId = tmpMovDetails.MovementId
-                                       AND tmpData.ChangePercent = tmpMovDetails.PercentSP
+                                    AND tmpData.ChangePercent = tmpMovDetails.PercentSP
 
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId AND Object_Unit.DescId = zc_Object_Unit()
              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId AND Object_Juridical.DescId = zc_Object_Juridical()

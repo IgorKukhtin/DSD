@@ -498,7 +498,8 @@ uses
   MedicSP in '..\..\FormsFarmacy\Guides\MedicSP.pas' {MedicSPForm: TParentForm},
   MemberSPEdit in '..\..\FormsFarmacy\Guides\MemberSPEdit.pas' {MemberSPEditForm: TParentForm},
   MemberSP in '..\..\FormsFarmacy\Guides\MemberSP.pas' {MemberSPForm: TParentForm},
-  Report_RemainsOverGoods_To in '..\..\FormsFarmacy\Report\Report_RemainsOverGoods_To.pas' {Report_RemainsOverGoods_ToForm: TParentForm};
+  Report_RemainsOverGoods_To in '..\..\FormsFarmacy\Report\Report_RemainsOverGoods_To.pas' {Report_RemainsOverGoods_ToForm: TParentForm},
+  InvoiceJournal in '..\..\FormsFarmacy\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

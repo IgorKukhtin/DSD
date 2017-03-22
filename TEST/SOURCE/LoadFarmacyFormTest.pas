@@ -51,6 +51,7 @@ type
     procedure LoadInfoMoneyDestinationFormTest;
     procedure LoadInfoMoneyFormTest;
     procedure LoadInventoryFormTest;
+    procedure LoadInvoiceFormTest;
     procedure LoadJuridicalFormTest;
     procedure LoadLoadFormTest;
     procedure LoadLossDebtFormTest;
@@ -909,6 +910,12 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryPartionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInventoryPartionForm');
+end;
+
+procedure TLoadFormTest.LoadInvoiceFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInvoiceJournalForm');
 end;
 
 procedure TLoadFormTest.LoadLossFormTest;
