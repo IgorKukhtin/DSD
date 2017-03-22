@@ -24,6 +24,43 @@ CONST
     'JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID and C.ISERASED = 0 where P.ISERASED = 0 ';
 
 type
+  TProgressThread = class(TThread)
+  private
+    { Private declarations }
+    FProgress : integer;
+
+    procedure Update;
+  protected
+    procedure Execute; override;
+  end;
+
+  TSyncThread = class(TThread)
+  private
+    { Private declarations }
+    FAllProgress : integer;
+    FAllMax : integer;
+    FName : string;
+
+    LoadData: boolean;
+    UploadData: boolean;
+
+    SyncDataIn : TDate;
+    SyncDataOut : TDate;
+
+    procedure Update;
+    procedure SetNewProgressTask(AName : string);
+
+    procedure GetSyncDates;
+    procedure GetConfigurationInfo;
+    procedure GetDictionaries(AName : string);
+
+    procedure UploadStoreReal;
+    procedure UploadOrderExternal;
+    procedure UploadReturnIn;
+  protected
+    procedure Execute; override;
+  end;
+
   TDataSets = TObjectList<TFDTable>;
 
   TStructure = Class(TObject)
@@ -405,8 +442,6 @@ type
     { Private declarations }
     FConnected: Boolean;
     FDataBase: String;
-    FSyncDataIn : TDate;
-    FSyncDataOut : TDate;
 
     procedure InitStructure;
   public
@@ -417,11 +452,7 @@ type
     procedure CreateIndexes;
     function CreateDataBase: Boolean;
 
-    function SynchronizeWithMainDatabase : string;
-    procedure GetConfigurationInfo;
-    procedure GetDictionaries(AName : string);
-    procedure UploadDataToServer;
-    procedure UploadStoreReal;
+    procedure SynchronizeWithMainDatabase(LoadData: boolean = true; UploadData: boolean = true);
 
     function SaveStoreReal(OldStoreRealId : string; Comment: string;
       DelItems : string; var ErrorMessage : string) : boolean;
@@ -456,15 +487,692 @@ type
 var
   DM: TDM;
   Structure: TStructure;
+  ProgressThread : TProgressThread;
+  SyncThread : TSyncThread;
 
 implementation
 
 uses
-  System.IOUtils, CursorUtils, CommonData, Authentication, Storage;
+  System.IOUtils, CursorUtils, CommonData, Authentication, Storage, uMain;
 
 {%CLASSGROUP 'FMX.Controls.TControl'}
 
 {$R *.dfm}
+
+procedure TProgressThread.Update;
+var
+  d: single;
+begin
+  inc(FProgress);
+  if FProgress>= 100 then
+    FProgress := 0;
+
+  d := (FProgress * 360 / 100);
+
+  frmMain.pieProgress.StartAngle := d - 20;
+  frmMain.pieProgress.EndAngle := d;
+end;
+
+procedure TProgressThread.Execute;
+begin
+  FProgress := 0;
+
+  while true do
+  begin
+    if ProgressThread.Terminated then
+      exit;
+
+    Synchronize(Update);
+    sleep(20);
+  end;
+end;
+
+procedure TSyncThread.Update;
+var
+  d: single;
+begin
+  d := (FAllProgress * 360 / FAllMax);
+
+  frmMain.pieAllProgress.EndAngle := d;
+
+  frmMain.lProgress.Text := inttostr((FAllProgress * 100) div FAllMax) + '%';
+  frmMain.lProgressName.Text := FName;
+end;
+
+procedure TSyncThread.SetNewProgressTask(AName : string);
+begin
+  FName := AName;
+  inc(FAllProgress);
+
+  Synchronize(Update);
+end;
+
+procedure TSyncThread.GetSyncDates;
+begin
+  if DM.tblObject_Const.Active then
+    DM.tblObject_Const.Close;
+  DM.tblObject_Const.Open;
+
+  if DM.tblObject_Const.RecordCount = 1 then
+  begin
+    SyncDataIn := DM.tblObject_ConstSyncDateIn.AsDateTime;
+    SyncDataOut := DM.tblObject_ConstSyncDateOut.AsDateTime;
+  end
+  else
+  begin
+    SyncDataIn := 0;
+    SyncDataOut := 0;
+  end;
+end;
+
+procedure TSyncThread.GetConfigurationInfo;
+var
+  x : integer;
+  GetStoredProc : TdsdStoredProc;
+  str, str1 : string;
+begin
+  GetStoredProc := TdsdStoredProc.Create(nil);
+  try
+    GetStoredProc.StoredProcName := 'gpGetMobile_Object_Const';
+    GetStoredProc.OutputType := otDataSet;
+    GetStoredProc.DataSet := TClientDataSet.Create(nil);
+    try
+      GetStoredProc.Execute(false, false, false);
+
+      DM.tblObject_Const.First;
+      while not DM.tblObject_Const.Eof do
+        DM.tblObject_Const.Delete;
+
+      DM.tblObject_Const.Append;
+
+      for x := 0 to GetStoredProc.DataSet.Fields.Count - 1 do
+        DM.tblObject_Const.Fields[ x ].Value := GetStoredProc.DataSet.Fields[ x ].Value;
+
+      DM.tblObject_Const.FieldByName('SYNCDATEIN').AsDateTime := Date();
+
+      DM.tblObject_Const.Post;
+    except
+      on E : Exception do
+      begin
+        raise Exception.Create(E.Message);
+      end;
+    end;
+  finally
+    FreeAndNil(GetStoredProc);
+  end;
+end;
+
+procedure TSyncThread.GetDictionaries(AName : string);
+var
+  x, y : integer;
+  GetStoredProc : TdsdStoredProc;
+  CurDictTable : TFDTable;
+  FindRec : boolean;
+  Mapping : array of array[1..2] of integer;
+begin
+  GetStoredProc := TdsdStoredProc.Create(nil);
+  CurDictTable := TFDTable.Create(nil);
+  CurDictTable.Connection := DM.conMain;
+  try
+    if AName = 'Partner' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_Partner';
+      CurDictTable.TableName := 'Object_Partner';
+    end
+    else
+    if AName = 'Juridical' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_Juridical';
+      CurDictTable.TableName := 'Object_Juridical';
+    end
+    else
+    if AName = 'Route' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_Route';
+      CurDictTable.TableName := 'Object_Route';
+    end
+    else
+    if AName = 'GoodsGroup' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_GoodsGroup';
+      CurDictTable.TableName := 'Object_GoodsGroup';
+    end
+    else
+    if AName = 'Goods' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_Goods';
+      CurDictTable.TableName := 'Object_Goods';
+    end
+    else
+    if AName = 'GoodsKind' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_GoodsKind';
+      CurDictTable.TableName := 'Object_GoodsKind';
+    end
+    else
+    if AName = 'Measure' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_Measure';
+      CurDictTable.TableName := 'Object_Measure';
+    end
+    else
+    if AName = 'GoodsByGoodsKind' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_GoodsByGoodsKind';
+      CurDictTable.TableName := 'Object_GoodsByGoodsKind';
+    end
+    else
+    if AName = 'GoodsListSale' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_GoodsListSale';
+      CurDictTable.TableName := 'Object_GoodsListSale';
+    end
+    else
+    if AName = 'Contract' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_Contract';
+      CurDictTable.TableName := 'Object_Contract';
+    end
+    else
+    if AName = 'PriceList' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_PriceList';
+      CurDictTable.TableName := 'Object_PriceList';
+    end
+    else
+    if AName = 'PriceListItems' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_PriceListItems';
+      CurDictTable.TableName := 'Object_PriceListItems';
+    end
+    else
+    if AName = 'PromoMain' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Movement_Promo';
+      CurDictTable.TableName := 'Movement_Promo';
+    end
+    else
+    if AName = 'PromoPartner' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Movement_PromoPartner';
+      CurDictTable.TableName := 'MovementItem_PromoPartner';
+    end
+    else
+    if AName = 'PromoGoods' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_MovementItem_PromoGoods';
+      CurDictTable.TableName := 'MovementItem_PromoGoods';
+    end;
+
+    if GetStoredProc.StoredProcName = '' then
+      exit;
+
+    GetStoredProc.Params.AddParam('inSyncDateIn', ftDateTime, ptInput, SyncDataIn);
+    GetStoredProc.OutputType := otDataSet;
+    GetStoredProc.DataSet := TClientDataSet.Create(nil);
+
+    try
+      GetStoredProc.Execute(false, false, false);
+
+      CurDictTable.Open;
+
+      with GetStoredProc.DataSet do
+      begin
+        First;
+
+        SetLength(Mapping, 0);
+        for x := 0 to CurDictTable.Fields.Count - 1 do
+          for y := 0 to GetStoredProc.DataSet.Fields.Count - 1 do
+            if CompareText(CurDictTable.Fields[x].FieldName, GetStoredProc.DataSet.Fields[y].FieldName) = 0 then
+            begin
+              SetLength(Mapping, Length(Mapping) + 1);
+
+              Mapping[Length(Mapping) - 1][1] := x;
+              Mapping[Length(Mapping) - 1][2] := y;
+
+              break;
+            end;
+
+
+        while not Eof do
+        begin
+          FindRec := false;
+          if AName = 'Partner' then
+            FindRec := CurDictTable.Locate('Id;ContractId', VarArrayOf([FieldByName('Id').AsInteger, FieldByName('ContractId').AsInteger]))
+          else
+            FindRec := CurDictTable.Locate('Id', FieldByName('Id').AsInteger);
+
+          if FindRec then
+            CurDictTable.Edit
+          else
+          begin
+            if not FieldByName('isSync').AsBoolean then
+            begin
+              Next;
+              continue;
+            end;
+
+            CurDictTable.Append;
+          end;
+
+          if FieldByName('isSync').AsBoolean then
+          begin
+            for x := 0 to Length(Mapping) - 1 do
+              CurDictTable.Fields[ Mapping[x][1] ].Value := GetStoredProc.DataSet.Fields[ Mapping[x][2] ].Value;
+          end
+          else
+            CurDictTable.FieldByName('isErased').AsBoolean := true;
+
+          CurDictTable.Post;
+
+          Next;
+        end;
+      end;
+    except
+      on E : Exception do
+      begin
+        raise Exception.Create(E.Message);
+      end;
+    end;
+  finally
+    if Assigned(CurDictTable) then
+    begin
+      CurDictTable.Close;
+      FreeAndNil(CurDictTable);
+    end;
+    FreeAndNil(GetStoredProc);
+  end;
+end;
+
+procedure TSyncThread.UploadStoreReal;
+var
+  UploadStoredProc : TdsdStoredProc;
+begin
+  UploadStoredProc := TdsdStoredProc.Create(nil);
+  try
+    // Загружаем шапки остатков
+    UploadStoredProc.OutputType := otResult;
+
+    with DM.tblMovement_StoreReal do
+    begin
+      Filter := 'isSync = 0 and StatusId <> ' + DM.tblObject_ConstStatusId_Erased.AsString;
+      Filtered := true;
+      Open;
+
+      try
+        First;
+        while not Eof do
+        begin
+          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Movement_StoreReal';
+          UploadStoredProc.Params.Clear;
+          UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
+          UploadStoredProc.Params.AddParam('inInvNumber', ftString, ptInput, FieldByName('INVNUMBER').AsString);
+          UploadStoredProc.Params.AddParam('inOperDate', ftDateTime, ptInput, FieldByName('OPERDATE').AsDateTime);
+          UploadStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, FieldByName('PARTNERID').AsInteger);
+
+          try
+            UploadStoredProc.Execute(false, false, false);
+
+            // Загружаем товары остатков
+            DM.tblMovementItem_StoreReal.Close;
+            DM.tblMovementItem_StoreReal.Filter := 'MovementId = ' + FieldByName('ID').AsString;
+            DM.tblMovementItem_StoreReal.Filtered := true;
+            DM.tblMovementItem_StoreReal.Open;
+
+            DM.tblMovementItem_StoreReal.First;
+            while not DM.tblMovementItem_StoreReal.Eof do
+            begin
+              UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_MovementItem_StoreReal';
+              UploadStoredProc.Params.Clear;
+              UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, DM.tblMovementItem_StoreReal.FieldByName('GUID').AsString);
+              UploadStoredProc.Params.AddParam('inMovementGUID', ftString, ptInput, FieldByName('GUID').AsString);
+              UploadStoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, DM.tblMovementItem_StoreReal.FieldByName('GOODSID').AsInteger);
+              UploadStoredProc.Params.AddParam('inAmount', ftFloat, ptInput, DM.tblMovementItem_StoreReal.FieldByName('AMOUNT').AsFloat);
+              UploadStoredProc.Params.AddParam('inGoodsKindId', ftInteger, ptInput, DM.tblMovementItem_StoreReal.FieldByName('GOODSKINDID').AsInteger);
+
+              UploadStoredProc.Execute(false, false, false);
+
+              DM.tblMovementItem_StoreReal.Next;
+            end;
+
+            Edit;
+            FieldByName('IsSync').AsBoolean := true;
+            Post;
+          except
+            on E : Exception do
+            begin
+              raise Exception.Create(E.Message);
+            end;
+          end;
+
+          Next;
+        end;
+      finally
+        DM.tblMovementItem_StoreReal.Close;
+        DM.tblMovementItem_StoreReal.Filter := '';
+        DM.tblMovementItem_StoreReal.Filtered := false;
+
+        Close;
+        Filter := '';
+        Filtered := false;
+      end;
+    end;
+  finally
+    FreeAndNil(UploadStoredProc);
+  end;
+end;
+
+procedure TSyncThread.UploadOrderExternal;
+var
+  UploadStoredProc : TdsdStoredProc;
+begin
+  UploadStoredProc := TdsdStoredProc.Create(nil);
+  try
+    // Загружаем шапки остатков
+    UploadStoredProc.OutputType := otResult;
+
+    with DM.tblMovement_OrderExternal do
+    begin
+      Filter := 'isSync = 0 and StatusId <> ' + DM.tblObject_ConstStatusId_Erased.AsString;
+      Filtered := true;
+      Open;
+
+      try
+        First;
+        while not Eof do
+        begin
+          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Movement_OrderExternal';
+          UploadStoredProc.Params.Clear;
+          UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
+          UploadStoredProc.Params.AddParam('inInvNumber', ftString, ptInput, FieldByName('INVNUMBER').AsString);
+          UploadStoredProc.Params.AddParam('inOperDate', ftDateTime, ptInput, FieldByName('OPERDATE').AsDateTime);
+          UploadStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, FieldByName('PARTNERID').AsInteger);
+          UploadStoredProc.Params.AddParam('inPaidKindId', ftInteger, ptInput, FieldByName('PAIDKINDID').AsInteger);
+          UploadStoredProc.Params.AddParam('inContractId', ftInteger, ptInput, FieldByName('CONTRACTID').AsInteger);
+          UploadStoredProc.Params.AddParam('inPriceListId', ftInteger, ptInput, FieldByName('PRICELISTID').AsInteger);
+          UploadStoredProc.Params.AddParam('inPriceWithVAT', ftBoolean, ptInput, FieldByName('PRICEWITHVAT').AsBoolean);
+          UploadStoredProc.Params.AddParam('inVATPercent', ftFloat, ptInput, FieldByName('VATPERCENT').AsFloat);
+          UploadStoredProc.Params.AddParam('inChangePercent', ftFloat, ptInput, FieldByName('CHANGEPERCENT').AsFloat);
+
+          try
+            UploadStoredProc.Execute(false, false, false);
+
+            // Загружаем товары заявок
+            DM.tblMovementItem_OrderExternal.Close;
+            DM.tblMovementItem_OrderExternal.Filter := 'MovementId = ' + FieldByName('ID').AsString;
+            DM.tblMovementItem_OrderExternal.Filtered := true;
+            DM.tblMovementItem_OrderExternal.Open;
+
+            DM.tblMovementItem_OrderExternal.First;
+            while not DM.tblMovementItem_OrderExternal.Eof do
+            begin
+              UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_MovementItem_OrderExternal';
+              UploadStoredProc.Params.Clear;
+              UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, DM.tblMovementItem_OrderExternal.FieldByName('GUID').AsString);
+              UploadStoredProc.Params.AddParam('inMovementGUID', ftString, ptInput, FieldByName('GUID').AsString);
+              UploadStoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, DM.tblMovementItem_OrderExternal.FieldByName('GOODSID').AsInteger);
+              UploadStoredProc.Params.AddParam('inGoodsKindId', ftInteger, ptInput, DM.tblMovementItem_OrderExternal.FieldByName('GOODSKINDID').AsInteger);
+              UploadStoredProc.Params.AddParam('inChangePercent', ftFloat, ptInput, DM.tblMovementItem_OrderExternal.FieldByName('CHANGEPERCENT').AsFloat);
+              UploadStoredProc.Params.AddParam('inAmount', ftFloat, ptInput, DM.tblMovementItem_OrderExternal.FieldByName('AMOUNT').AsFloat);
+              UploadStoredProc.Params.AddParam('inPrice', ftFloat, ptInput, DM.tblMovementItem_OrderExternal.FieldByName('PRICE').AsFloat);
+
+              UploadStoredProc.Execute(false, false, false);
+
+              DM.tblMovementItem_OrderExternal.Next;
+            end;
+
+            Edit;
+            FieldByName('IsSync').AsBoolean := true;
+            Post;
+          except
+            on E : Exception do
+            begin
+              raise Exception.Create(E.Message);
+            end;
+          end;
+
+          Next;
+        end;
+      finally
+        DM.tblMovementItem_OrderExternal.Close;
+        DM.tblMovementItem_OrderExternal.Filter := '';
+        DM.tblMovementItem_OrderExternal.Filtered := false;
+        Close;
+        Filter := '';
+        Filtered := false;
+      end;
+    end;
+  finally
+    FreeAndNil(UploadStoredProc);
+  end;
+end;
+
+procedure TSyncThread.UploadReturnIn;
+var
+  UploadStoredProc : TdsdStoredProc;
+begin
+  UploadStoredProc := TdsdStoredProc.Create(nil);
+  try
+    // Загружаем шапки возвратов
+    UploadStoredProc.OutputType := otResult;
+
+    with DM.tblMovement_ReturnIn do
+    begin
+      Filter := 'isSync = 0 and StatusId <> ' + DM.tblObject_ConstStatusId_Erased.AsString;
+      Filtered := true;
+      Open;
+
+      try
+        First;
+        while not Eof do
+        begin
+          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Movement_ReturnIn';
+          UploadStoredProc.Params.Clear;
+          UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
+          UploadStoredProc.Params.AddParam('inInvNumber', ftString, ptInput, FieldByName('INVNUMBER').AsString);
+          UploadStoredProc.Params.AddParam('inOperDate', ftDateTime, ptInput, FieldByName('OPERDATE').AsDateTime);
+          UploadStoredProc.Params.AddParam('inStatusId', ftInteger, ptInput, FieldByName('STATUSID').AsInteger);
+          UploadStoredProc.Params.AddParam('inChecked', ftBoolean, ptInput, FieldByName('CHECKED').AsBoolean);
+          UploadStoredProc.Params.AddParam('inPriceWithVAT', ftBoolean, ptInput, FieldByName('PRICEWITHVAT').AsBoolean);
+          UploadStoredProc.Params.AddParam('inInsertDate', ftDateTime, ptInput, FieldByName('INSERTDATE').AsDateTime);
+          UploadStoredProc.Params.AddParam('inVATPercent', ftFloat, ptInput, FieldByName('VATPERCENT').AsFloat);
+          UploadStoredProc.Params.AddParam('inChangePercent', ftFloat, ptInput, FieldByName('CHANGEPERCENT').AsFloat);
+          UploadStoredProc.Params.AddParam('inPaidKindId', ftInteger, ptInput, FieldByName('PAIDKINDID').AsInteger);
+          UploadStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, FieldByName('PARTNERID').AsInteger);
+          UploadStoredProc.Params.AddParam('inContractId', ftInteger, ptInput, FieldByName('CONTRACTID').AsInteger);
+          UploadStoredProc.Params.AddParam('inComment', ftString, ptInput, FieldByName('COMMENT').AsString);
+
+          try
+            UploadStoredProc.Execute(false, false, false);
+
+            // Загружаем возвращаемые товары
+            DM.tblMovementItem_ReturnIn.Close;
+            DM.tblMovementItem_ReturnIn.Filter := 'MovementId = ' + FieldByName('ID').AsString;
+            DM.tblMovementItem_ReturnIn.Filtered := true;
+            DM.tblMovementItem_ReturnIn.Open;
+
+            DM.tblMovementItem_ReturnIn.First;
+            while not DM.tblMovementItem_ReturnIn.Eof do
+            begin
+              UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_MovementItem_ReturnIn';
+              UploadStoredProc.Params.Clear;
+              UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, DM.tblMovementItem_ReturnIn.FieldByName('GUID').AsString);
+              UploadStoredProc.Params.AddParam('inMovementGUID', ftString, ptInput, FieldByName('GUID').AsString);
+              UploadStoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, DM.tblMovementItem_ReturnIn.FieldByName('GOODSID').AsInteger);
+              UploadStoredProc.Params.AddParam('inGoodsKindId', ftInteger, ptInput, DM.tblMovementItem_ReturnIn.FieldByName('GOODSKINDID').AsInteger);
+              UploadStoredProc.Params.AddParam('inAmount', ftFloat, ptInput, DM.tblMovementItem_ReturnIn.FieldByName('AMOUNT').AsFloat);
+              UploadStoredProc.Params.AddParam('inPrice', ftFloat, ptInput, DM.tblMovementItem_ReturnIn.FieldByName('PRICE').AsFloat);
+              UploadStoredProc.Params.AddParam('inChangePercent', ftFloat, ptInput, DM.tblMovementItem_ReturnIn.FieldByName('CHANGEPERCENT').AsFloat);
+
+              UploadStoredProc.Execute(false, false, false);
+
+              DM.tblMovementItem_ReturnIn.Next;
+            end;
+
+            Edit;
+            FieldByName('IsSync').AsBoolean := true;
+            Post;
+          except
+            on E : Exception do
+            begin
+              raise Exception.Create(E.Message);
+            end;
+          end;
+
+          Next;
+        end;
+      finally
+        DM.tblMovementItem_ReturnIn.Close;
+        DM.tblMovementItem_ReturnIn.Filter := '';
+        DM.tblMovementItem_ReturnIn.Filtered := false;
+
+        Close;
+        Filter := '';
+        Filtered := false;
+      end;
+    end;
+  finally
+    FreeAndNil(UploadStoredProc);
+  end;
+end;
+
+procedure TSyncThread.Execute;
+var
+  Res : string;
+begin
+  Res := '';
+
+  FAllProgress := -1;
+  FAllMax := 0;
+
+  if LoadData then
+    FAllMax := FAllMax + 16;  // Количесто операций при загрузке данных из центра
+
+  if UploadData then
+    FAllMax := FAllMax + 3;  // Количесто операций при сохранении данных в центр
+
+  Synchronize(procedure
+              begin
+                frmMain.pProgress.Visible := true;
+                frmMain.vsbMain.Enabled := false;
+              end);
+
+  ProgressThread := TProgressThread.Create(true);
+  try
+    ProgressThread.FreeOnTerminate := true;
+    ProgressThread.Start;
+
+    if LoadData then
+    begin
+      Synchronize(GetSyncDates);
+
+      DM.conMain.TxOptions.AutoCommit := false;
+      DM.conMain.StartTransaction;
+      try
+        SetNewProgressTask('Загрузка констант');
+        Synchronize(GetConfigurationInfo);
+
+        SetNewProgressTask('Загрузка справочника ТТ');
+        GetDictionaries('Partner');
+
+        SetNewProgressTask('Загрузка справочника юридических лиц');
+        GetDictionaries('Juridical');
+
+        SetNewProgressTask('Загрузка справочника маршрутов');
+        GetDictionaries('Route');
+
+        SetNewProgressTask('Загрузка справочника договоров');
+        GetDictionaries('Contract');
+
+        SetNewProgressTask('Загрузка справочника групп товаров');
+        GetDictionaries('GoodsGroup');
+
+        SetNewProgressTask('Загрузка справочника товаров');
+        GetDictionaries('Goods');
+
+        SetNewProgressTask('Загрузка справочника видов товаров');
+        GetDictionaries('GoodsKind');
+
+        SetNewProgressTask('Загрузка справочника шаблонов товаров');
+        GetDictionaries('GoodsByGoodsKind');
+
+        SetNewProgressTask('Загрузка шаблонов товаров по покупателям');
+        GetDictionaries('GoodsListSale');
+
+        SetNewProgressTask('Загрузка справочника единиц измерения');
+        GetDictionaries('Measure');
+
+        SetNewProgressTask('Загрузка справочника прайс-листов');
+        GetDictionaries('PriceList');
+
+        SetNewProgressTask('Загрузка справочника товаров прайс-листов');
+        GetDictionaries('PriceListItems');
+
+        SetNewProgressTask('Загрузка справочника акций');
+        GetDictionaries('PromoMain');
+
+        SetNewProgressTask('Загрузка справочника акций ТТ');
+        GetDictionaries('PromoPartner');
+
+        SetNewProgressTask('Загрузка справочника акционных товаров');
+        GetDictionaries('PromoGoods');
+
+        DM.conMain.Commit;
+        DM.conMain.TxOptions.AutoCommit := true;
+      except
+        on E : Exception do
+        begin
+          DM.conMain.Rollback;
+          DM.conMain.TxOptions.AutoCommit := true;
+          Res := E.Message;
+          exit;
+        end;
+      end;
+    end;
+
+    if UploadData then
+    begin
+      try
+        SetNewProgressTask('Сохранение остатков');
+        UploadStoreReal;
+
+        SetNewProgressTask('Сохранение заявок');
+        UploadOrderExternal;
+
+        SetNewProgressTask('Сохранение возвратов');
+        UploadReturnIn;
+      except
+        on E : Exception do
+        begin
+          Res := E.Message;
+        end;
+      end;
+    end;
+  finally
+    ProgressThread.Terminate;
+
+    if Res = '' then
+    begin
+      SetNewProgressTask('Синхронизация завершена');
+      sleep(1000);
+
+      Synchronize(procedure
+                  begin
+                    frmMain.pProgress.Visible := false;
+                    frmMain.vsbMain.Enabled := true;
+                  end);
+    end
+    else
+    begin
+      Synchronize(procedure
+                  begin
+                    frmMain.pProgress.Visible := false;
+                    frmMain.vsbMain.Enabled := true;
+                    ShowMessage('Ошибка синхронизации (' + Res + ')');
+                  end);
+    end;
+  end;
+end;
 
 { TStructure }
 
@@ -841,266 +1549,16 @@ begin
   cdsReturnIn.CreateDataSet;
 end;
 
-function TDM.SynchronizeWithMainDatabase : string;
-begin
-  Result := '';
 
-  tblObject_Const.Open;
-  if tblObject_Const.RecordCount = 1 then
-  begin
-    FSyncDataIn := tblObject_ConstSyncDateIn.AsDateTime;
-    FSyncDataOut := tblObject_ConstSyncDateOut.AsDateTime;
-  end
-  else
-  begin
-    FSyncDataIn := 0;
-    FSyncDataOut := 0;
-  end;
-
-  conMain.StartTransaction;
-
-  try
-    GetConfigurationInfo;
-
-    GetDictionaries('Partner');
-    GetDictionaries('Juridical');
-    GetDictionaries('Route');
-    GetDictionaries('GoodsGroup');
-    GetDictionaries('Goods');
-    GetDictionaries('GoodsKind');
-    GetDictionaries('Measure');
-    GetDictionaries('GoodsByGoodsKind');
-    GetDictionaries('Contract');
-    GetDictionaries('PriceList');
-    GetDictionaries('PriceListItems');
-    GetDictionaries('PromoMain');
-    GetDictionaries('PromoPartner');
-    GetDictionaries('PromoGoods');
-
-    conMain.Commit;
-    Screen_Cursor_crDefault;
-  except
-    on E : Exception do
-    begin
-      conMain.Rollback;
-      Result := E.Message;
-    end;
-  end;
-end;
-
-procedure TDM.GetConfigurationInfo;
-var
-  x : integer;
-  GetStoredProc : TdsdStoredProc;
-  str, str1 : string;
-begin
-  GetStoredProc := TdsdStoredProc.Create(nil);
-  try
-    GetStoredProc.StoredProcName := 'gpGetMobile_Object_Const';
-    GetStoredProc.OutputType := otDataSet;
-    GetStoredProc.DataSet := TClientDataSet.Create(nil);
-    try
-      GetStoredProc.Execute;
-
-      tblObject_Const.Open;
-      tblObject_Const.First;
-      while not tblObject_Const.Eof do
-        tblObject_Const.Delete;
-
-      tblObject_Const.Append;
-
-      for x := 0 to GetStoredProc.DataSet.Fields.Count - 1 do
-        tblObject_Const.Fields[ x ].Value := GetStoredProc.DataSet.Fields[ x ].Value;
-
-      tblObject_Const.FieldByName('SYNCDATEIN').AsDateTime := Date();
-
-      tblObject_Const.Post;
-    except
-      on E : Exception do
-      begin
-        raise Exception.Create(E.Message);
-      end;
-    end;
-  finally
-    FreeAndNil(GetStoredProc);
-  end;
-end;
-
-
-procedure TDM.GetDictionaries(AName : string);
-var
-  x, y : integer;
-  GetStoredProc : TdsdStoredProc;
-  CurDictTable : TFDTable;
-  FindRec : boolean;
-  Mapping : array of array[1..2] of integer;
-begin
-  GetStoredProc := TdsdStoredProc.Create(nil);
-  try
-    if AName = 'Partner' then
-    begin
-      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_Partner';
-      CurDictTable := tblObject_Partner;
-    end
-    else
-    if AName = 'Juridical' then
-    begin
-      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_Juridical';
-      CurDictTable := tblObject_Juridical;
-    end
-    else
-    if AName = 'Route' then
-    begin
-      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_Route';
-      CurDictTable := tblObject_Route;
-    end
-    else
-    if AName = 'GoodsGroup' then
-    begin
-      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_GoodsGroup';
-      CurDictTable := tblObject_GoodsGroup;
-    end
-    else
-    if AName = 'Goods' then
-    begin
-      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_Goods';
-      CurDictTable := tblObject_Goods;
-    end
-    else
-    if AName = 'GoodsKind' then
-    begin
-      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_GoodsKind';
-      CurDictTable := tblObject_GoodsKind;
-    end
-    else
-    if AName = 'Measure' then
-    begin
-      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_Measure';
-      CurDictTable := tblObject_Measure;
-    end
-    else
-    if AName = 'GoodsByGoodsKind' then
-    begin
-      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_GoodsByGoodsKind';
-      CurDictTable := tblObject_GoodsByGoodsKind;
-    end
-    else
-    if AName = 'Contract' then
-    begin
-      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_Contract';
-      CurDictTable := tblObject_Contract;
-    end
-    else
-    if AName = 'PriceList' then
-    begin
-      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_PriceList';
-      CurDictTable := tblObject_PriceList;
-    end
-    else
-    if AName = 'PriceListItems' then
-    begin
-      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_PriceListItems';
-      CurDictTable := tblObject_PriceListItems;
-    end
-    else
-    if AName = 'PromoMain' then
-    begin
-      GetStoredProc.StoredProcName := 'gpSelectMobile_Movement_Promo';
-      CurDictTable := tblMovement_Promo;
-    end
-    else
-    if AName = 'PromoPartner' then
-    begin
-      GetStoredProc.StoredProcName := 'gpSelectMobile_Movement_PromoPartner';
-      CurDictTable := tblMovementItem_PromoPartner;
-    end
-    else
-    if AName = 'PromoGoods' then
-    begin
-      GetStoredProc.StoredProcName := 'gpSelectMobile_MovementItem_PromoGoods';
-      CurDictTable := tblMovementItem_PromoGoods;
-    end;
-
-    if GetStoredProc.StoredProcName = '' then
-      exit;
-
-    GetStoredProc.Params.AddParam('inSyncDateIn', ftDateTime, ptInput, FSyncDataIn);
-    GetStoredProc.OutputType := otDataSet;
-    GetStoredProc.DataSet := TClientDataSet.Create(nil);
-
-    try
-      GetStoredProc.Execute;
-
-      CurDictTable.Open;
-      with GetStoredProc.DataSet do
-      begin
-        First;
-
-        SetLength(Mapping, 0);
-        for x := 0 to CurDictTable.Fields.Count - 1 do
-          for y := 0 to GetStoredProc.DataSet.Fields.Count - 1 do
-            if CompareText(CurDictTable.Fields[x].FieldName, GetStoredProc.DataSet.Fields[y].FieldName) = 0 then
-            begin
-              SetLength(Mapping, Length(Mapping) + 1);
-
-              Mapping[Length(Mapping) - 1][1] := x;
-              Mapping[Length(Mapping) - 1][2] := y;
-
-              break;
-            end;
-
-
-        while not Eof do
-        begin
-          FindRec := false;
-          if AName = 'Partner' then
-            FindRec := CurDictTable.Locate('Id;ContractId', VarArrayOf([FieldByName('Id').AsInteger, FieldByName('Id').AsInteger]))
-          else
-            FindRec := CurDictTable.Locate('Id', FieldByName('Id').AsInteger);
-
-          if FindRec then
-            CurDictTable.Edit
-          else
-          begin
-            if not FieldByName('isSync').AsBoolean then
-            begin
-              Next;
-              continue;
-            end;
-
-            CurDictTable.Append;
-          end;
-
-          if FieldByName('isSync').AsBoolean then
-          begin
-            for x := 0 to Length(Mapping) - 1 do
-              CurDictTable.Fields[ Mapping[x][1] ].Value := GetStoredProc.DataSet.Fields[ Mapping[x][2] ].Value;
-          end
-          else
-            CurDictTable.FieldByName('isErased').AsBoolean := true;
-
-          CurDictTable.Post;
-
-          Next;
-        end;
-      end;
-    except
-      on E : Exception do
-      begin
-        raise Exception.Create(E.Message);
-      end;
-    end;
-  finally
-    if Assigned(CurDictTable) then
-      CurDictTable.Close;
-    FreeAndNil(GetStoredProc);
-  end;
-end;
-
-procedure TDM.UploadDataToServer;
+procedure TDM.SynchronizeWithMainDatabase(LoadData: boolean = true; UploadData: boolean = true);
 var
   ErrorMessage: String;
+  LoginOk: boolean;
 begin
+  if not LoadData and not UploadData then
+    exit;
+
+  LoginOk := false;
   if gc_User.Session = '' then
   begin
     try
@@ -1108,7 +1566,7 @@ begin
 
       if ErrorMessage = '' then
       begin
-        UploadStoreReal;
+        LoginOk := true;
       end
       else
         ShowMessage(ErrorMessage);
@@ -1119,54 +1577,17 @@ begin
         exit;
       end;
     end;
-  end;
-end;
+  end
+  else
+    LoginOk := true;
 
-procedure TDM.UploadStoreReal;
-var
-  UploadStoredProc : TdsdStoredProc;
-begin
-  UploadStoredProc := TdsdStoredProc.Create(nil);
-  try
-    // Загружаем шапки остатков
-    UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Movement_StoreReal';
-    UploadStoredProc.OutputType := otResult;
-
-    with tblMovement_StoreReal do
-    begin
-      Filter := 'isSync = 0 and StatusId <> ' + tblObject_ConstStatusId_Erased.AsString;
-      Filtered := true;
-      Open;
-
-      try
-       First;
-
-        while not EOF do
-        begin
-          UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
-          UploadStoredProc.Params.AddParam('inInvNumber', ftString, ptInput, FieldByName('INVNUMBER').AsString);
-          UploadStoredProc.Params.AddParam('inOperDate', ftDateTime, ptInput, FieldByName('OPERDATE').AsDateTime);
-          UploadStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, FieldByName('PARTNERID').AsString);
-
-          try
-            UploadStoredProc.Execute;
-          except
-            on E : Exception do
-            begin
-              raise Exception.Create(E.Message);
-            end;
-          end;
-
-          Next;
-        end;
-      finally
-        Close;
-        Filter := '';
-        Filtered := false;
-      end;
-    end;
-  finally
-    FreeAndNil(UploadStoredProc);
+  if LoginOk then
+  begin
+    SyncThread := TSyncThread.Create(true);
+    SyncThread.FreeOnTerminate := true;
+    SyncThread.LoadData := LoadData;
+    SyncThread.UploadData := UploadData;
+    SyncThread.Start;
   end;
 end;
 

@@ -21,7 +21,7 @@ uses
   FMX.TMSWebGMapsCommon, FMX.TMSWebGMapsReverseGeocoding, FMX.ListBox,
   FMX.DateTimeCtrls, FMX.Controls3D, FMX.Layers3D, FMX.Menus, Generics.Collections,
   FMX.Gestures, System.Actions, FMX.ActnList, System.ImageList, FMX.ImgList,
-  FMX.Grid.Style, FMX.Media, FMX.Surfaces, FMX.VirtualKeyboard, FMX.SearchBox
+  FMX.Grid.Style, FMX.Media, FMX.Surfaces, FMX.VirtualKeyboard, FMX.SearchBox, IniFiles
   {$IFDEF ANDROID}
   ,FMX.Helpers.Android, Androidapi.Helpers,
   Androidapi.JNI.Location, Androidapi.JNIBridge,
@@ -358,7 +358,22 @@ type
     LinkListControlToField10: TLinkListControlToField;
     bsReturnIn: TBindSourceDB;
     LinkListControlToField11: TLinkListControlToField;
-    bUploadToCenter: TButton;
+    bSyncData: TButton;
+    pProgress: TPanel;
+    Layout6: TLayout;
+    pieProgress: TPie;
+    pieAllProgress: TPie;
+    Pie3: TPie;
+    lProgress: TLabel;
+    lProgressName: TLabel;
+    Pie1: TPie;
+    Panel25: TPanel;
+    Panel27: TPanel;
+    cbLoadData: TCheckBox;
+    cbUploadData: TCheckBox;
+    tErrorMap: TTimer;
+    bRefreshMapScreen: TButton;
+    Image15: TImage;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bReloginClick(Sender: TObject);
@@ -471,8 +486,10 @@ type
     procedure bAddReturnInItemClick(Sender: TObject);
     procedure bSaveReturnInClick(Sender: TObject);
     procedure bNewReturnInClick(Sender: TObject);
-    procedure bUploadToCenterClick(Sender: TObject);
+    procedure bSyncDataClick(Sender: TObject);
     procedure bSyncClick(Sender: TObject);
+    procedure tErrorMapTimer(Sender: TObject);
+    procedure bRefreshMapScreenClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -521,7 +538,7 @@ type
     //function GetCoordinates(const Address: string; out Coordinates: TLocationCoord2D): Boolean;
     procedure WebGMapDownloadFinish(Sender: TObject);
     procedure ShowBigMap;
-    procedure GetMapPartnerScreenshot(SetCordinate: boolean; Coordinates: TLocationCoord2D);
+    procedure GetMapPartnerScreenshot(GPSN, GPSE: Double);
 
     procedure Wait(AWait: Boolean);
     procedure CheckDataBase;
@@ -574,8 +591,20 @@ var
   ScreenService: IFMXScreenService;
   OrientSet: TScreenOrientations;
   r : integer;
+  SettingsFile : TIniFile;
 begin
   FormatSettings.DecimalSeparator := '.';
+
+  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+  SettingsFile := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'settings.ini'));
+  {$ELSE}
+  SettingsFile := TIniFile.Create('settings.ini');
+  {$ENDIF}
+  try
+    LoginEdit.Text := SettingsFile.ReadString('LOGIN', 'USERNAME', '');
+  finally
+    FreeAndNil(SettingsFile);
+  end;
 
   {$IFDEF ANDROID}
   if TPlatformServices.Current.SupportsPlatformService(IFMXScreenService, IInterface(ScreenService)) then
@@ -706,12 +735,13 @@ procedure TfrmMain.LogInButtonClick(Sender: TObject);
 var
   ErrorMessage: String;
   LoginOk : boolean;
+  SettingsFile : TIniFile;
 begin
   LoginOk := false;
 
   if assigned(gc_User) then  { Проверяем только с данными из локальной БД }
   begin
-    {$IFDEF NotCheckLogin}
+    {$IFNDEF NotCheckLogin}
     if (LoginEdit.Text = gc_User.Login) or (PasswordEdit.Text = gc_User.Password) then
     {$ELSE}
     if true then
@@ -736,21 +766,16 @@ begin
 
       ErrorMessage := TAuthentication.CheckLogin(TStorageFactory.GetStorage, LoginEdit.Text, PasswordEdit.Text, gc_User);
 
+      Wait(False);
+
       if ErrorMessage = '' then
       begin
-        ErrorMessage := DM.SynchronizeWithMainDatabase;
+        LoginOk := true;
 
-        Wait(False);
-
-        if ErrorMessage = '' then
-          LoginOk := true
-        else
-          ShowMessage(ErrorMessage);
+        DM.SynchronizeWithMainDatabase;
       end
       else
       begin
-        Wait(False);
-
         if LoginOk then
           ShowMessage('Ошибка синхронизации (' + ErrorMessage + '). Робота будет продолжена с локальными данными')
         else
@@ -767,7 +792,20 @@ begin
   end;
 
   if LoginOk then
+  begin
+    {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+    SettingsFile := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'settings.ini'));
+    {$ELSE}
+    SettingsFile := TIniFile.Create('settings.ini');
+    {$ENDIF}
+    try
+      SettingsFile.WriteString('LOGIN', 'USERNAME', LoginEdit.Text);
+    finally
+      FreeAndNil(SettingsFile);
+    end;
+
     SwitchToForm(tiMain, nil);
+  end;
 end;
 
 procedure TfrmMain.lwGoodsFilter(Sender: TObject; const AFilter, AValue: string;
@@ -1216,9 +1254,7 @@ begin
       DM.qryPartner.Refresh;
       DM.qryPartner.Locate('Id;ContractId', VarArrayOf([Id, ContractId]), []);
 
-      FMarkerList.Clear;
-      FMarkerList.Add(FCurCoordinates);
-      GetMapPartnerScreenshot(true, FCurCoordinates);
+      GetMapPartnerScreenshot(FCurCoordinates.Latitude, FCurCoordinates.Longitude);
     end
     else
       ShowMessage('Не удалось получить текущие координаты');
@@ -1271,7 +1307,6 @@ procedure TfrmMain.bAddedPhotoGroupClick(Sender: TObject);
 begin
   vsbMain.Enabled := false;
   pNewPhotoGroup.Visible := true;
-  ePhotoGroupName.SetFocus;
 end;
 
 procedure TfrmMain.bAddOrderItemClick(Sender: TObject);
@@ -1487,50 +1522,57 @@ begin
   ShowPriceLists;
 end;
 
+procedure TfrmMain.bRefreshMapScreenClick(Sender: TObject);
+begin
+  GetMapPartnerScreenshot(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat);
+end;
+
 procedure TfrmMain.bRefreshPathOnMapClick(Sender: TObject);
 var
- i : integer;
+ i: integer;
+ RouteQuery: TFDQuery;
 begin
   FMarkerList.Clear;
 
-  with DM.tblMovement_RouteMember do
-  begin
-    if not cbShowAllPath.IsChecked then
-    begin
-      Filter := 'date(InsertDate) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', deDatePath.Date));
-      Filtered := true;
-    end;
-    Open;
-    First;
-
-    while not EOF do
-    begin
-       if (DM.tblMovement_RouteMemberGPSN.AsFloat <> 0) and (DM.tblMovement_RouteMemberGPSE.AsFloat <> 0) then
-         FMarkerList.Add(TLocationCoord2D.Create(DM.tblMovement_RouteMemberGPSN.AsFloat, DM.tblMovement_RouteMemberGPSE.AsFloat));
-
-      Next;
-    end;
-
-    Close;
-    Filter := '';
-    Filtered := false;
-  end;
-
-  if Assigned(FWebGMap) then
+  RouteQuery := TFDQuery.Create(nil);
   try
-    FWebGMap.Visible := False;
-    FreeAndNil(FWebGMap);
-  except
-    // buggy piece of shit
+    RouteQuery.Connection := DM.conMain;
+    try
+      if not cbShowAllPath.IsChecked then
+        RouteQuery.Open('select * from Movement_RouteMember')
+      else
+        RouteQuery.Open('select * from Movement_RouteMember where date(InsertDate) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', deDatePath.Date)));
+    except
+      on E: Exception do
+        Showmessage(E.Message);
+    end;
+
+    RouteQuery.First;
+    while not RouteQuery.EOF do
+    begin
+      FMarkerList.Add(TLocationCoord2D.Create(RouteQuery.FieldByName('GPSN').AsFloat, RouteQuery.FieldByName('GPSE').AsFloat));
+
+      RouteQuery.Next;
+    end;
+
+    if Assigned(FWebGMap) then
+    try
+      FWebGMap.Visible := False;
+      FreeAndNil(FWebGMap);
+    except
+      // buggy piece of shit
+    end;
+
+    FMapLoaded := False;
+
+    FWebGMap := TTMSFMXWebGMaps.Create(Self);
+    FWebGMap.OnDownloadFinish := WebGMapDownloadFinish;
+    FWebGMap.Align := TAlignLayout.Client;
+    FWebGMap.MapOptions.ZoomMap := 14;
+    FWebGMap.Parent := pPathOnMap;
+  finally
+    FreeAndNil(RouteQuery);
   end;
-
-  FMapLoaded := False;
-
-  FWebGMap := TTMSFMXWebGMaps.Create(Self);
-  FWebGMap.OnDownloadFinish := WebGMapDownloadFinish;
-  FWebGMap.Align := TAlignLayout.Client;
-  FWebGMap.MapOptions.ZoomMap := 14;
-  FWebGMap.Parent := pPathOnMap;
 end;
 
 procedure TfrmMain.bReloginClick(Sender: TObject);
@@ -1595,7 +1637,6 @@ procedure TfrmMain.bSavePartnerPhotoClick(Sender: TObject);
 begin
   vsbMain.Enabled := false;
   pPhotoComment.Visible := true;
-  ePhotoComment.SetFocus;
 end;
 
 procedure TfrmMain.bSavePGClick(Sender: TObject);
@@ -1751,9 +1792,9 @@ begin
   SwitchToForm(tiSync, nil);
 end;
 
-procedure TfrmMain.bUploadToCenterClick(Sender: TObject);
+procedure TfrmMain.bSyncDataClick(Sender: TObject);
 begin
-  DM.UploadDataToServer;
+  DM.SynchronizeWithMainDatabase(cbLoadData.IsChecked, cbUploadData.IsChecked);
 end;
 
 procedure TfrmMain.bNewReturnInClick(Sender: TObject);
@@ -1787,6 +1828,24 @@ begin
   SwitchToForm(tiRoutes, nil);
 end;
 
+procedure TfrmMain.tErrorMapTimer(Sender: TObject);
+begin
+  tErrorMap.Enabled := false;
+
+  vsbMain.Enabled := true;
+  FMapLoaded := true;
+
+  FWebGMap.Visible := false;
+  FreeAndNil(FWebGMap);
+
+  bRefreshMapScreen.Visible := true;
+  lNoMap.Visible := true;
+  lNoMap.Text := 'Не удалось загрузить карту с расположением ТТ';
+
+  pMapScreen.Visible := false;
+  pMap.Visible := true;
+end;
+
 procedure TfrmMain.tMapToImageTimer(Sender: TObject);
 {$IFDEF ANDROID}
 var
@@ -1798,6 +1857,8 @@ var
 {$ENDIF}
 begin
   tMapToImage.Enabled := false;
+
+  vsbMain.Enabled := true;
 
   {$IFDEF ANDROID}
   fn := TPath.Combine(TPath.GetDocumentsPath, 'mapscreen.jpg');
@@ -1951,6 +2012,9 @@ var
 begin
   if not FMapLoaded then
   begin
+    tErrorMap.Enabled := false;
+    FMapLoaded := True;
+
     FWebGMap.Markers.Clear;
 
     if FMarkerList.Count > 0 then
@@ -1966,8 +2030,6 @@ begin
 
       FWebGMap.MapPanTo(FWebGMap.Markers[0].Latitude, FWebGMap.Markers[0].Longitude);
     end;
-
-    FMapLoaded := True;
 
     if tcMain.ActiveTab = tiPartnerInfo then
       tMapToImage.Enabled := true;
@@ -1987,10 +2049,12 @@ begin
   FWebGMap.Parent := tiMap;
 end;
 
-procedure TfrmMain.GetMapPartnerScreenshot(SetCordinate: boolean; Coordinates: TLocationCoord2D);
+procedure TfrmMain.GetMapPartnerScreenshot(GPSN, GPSE: Double);
 var
   MobileNetworkStatus : TMobileNetworkStatus;
   isConnected : boolean;
+  SetCordinate: boolean;
+  Coordinates: TLocationCoord2D;
 begin
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
   MobileNetworkStatus := TMobileNetworkStatus.Create;
@@ -2005,6 +2069,24 @@ begin
 
   if isConnected then
   begin
+    SetCordinate := true;
+    FMarkerList.Clear;
+
+    if (GPSN <> 0) and (GPSE <> 0) then
+    begin
+      Coordinates := TLocationCoord2D.Create(GPSN, GPSE);
+      FMarkerList.Add(Coordinates);
+    end
+    else
+    begin
+      GetCurrentCoordinates;
+      if FCurCoordinatesSet then
+        Coordinates := TLocationCoord2D.Create(FCurCoordinates.Latitude, FCurCoordinates.Longitude)
+      else
+        SetCordinate := false;
+    end;
+
+    bRefreshMapScreen.Visible := false;
     lNoMap.Visible := false;
 
     FMapLoaded := False;
@@ -2028,10 +2110,16 @@ begin
       FWebGMap.CurrentLocation.Latitude := Coordinates.Latitude;
       FWebGMap.CurrentLocation.Longitude := Coordinates.Longitude;
     end;
+
+    vsbMain.Enabled := false;
+    tErrorMap.Enabled := true;
   end
   else
   begin
+    bRefreshMapScreen.Visible := true;
     lNoMap.Visible := true;
+    lNoMap.Text := 'Без соединения с интернет нельзя получить карту с расположением ТТ';
+
     pMapScreen.Visible := false;
     pMap.Visible := true;
   end;
@@ -2168,7 +2256,10 @@ begin
     exit;
   end;
 
+  if DM.tblObject_Const.Active then
+    DM.tblObject_Const.Close;
   DM.tblObject_Const.Open;
+
   if (DM.tblObject_Const.RecordCount > 0) and (DM.tblObject_ConstWebService.AsString <> '') then
   begin
     gc_User := TUser.Create(DM.tblObject_ConstUserLogin.AsString, DM.tblObject_ConstUserPassword.AsString);
@@ -2180,6 +2271,9 @@ begin
   end
   else
   begin
+    FreeAndNil(gc_User);
+    gc_WebService := '';
+
     WebServerLayout1.Visible := true;
     WebServerLayout2.Visible := true;
     SyncLayout.Visible := false;
@@ -2327,9 +2421,6 @@ begin
 end;
 
 procedure TfrmMain.ShowPartnerInfo;
-var
-  SetCordinate : boolean;
-  Coordinates: TLocationCoord2D;
 begin
   SwitchToForm(tiPartnerInfo, nil);
   tcPartnerInfo.ActiveTab := tiInfo;
@@ -2337,24 +2428,8 @@ begin
   lPartnerName.Text := DM.qryPartnerName.AsString;
   lPartnerAddress.Text := DM.qryPartnerAddress.AsString;
 
-  SetCordinate := true;
-  FMarkerList.Clear;
 
-  if (DM.qryPartnerGPSN.AsFloat <> 0) and (DM.qryPartnerGPSE.AsFloat <> 0) then
-  begin
-    Coordinates := TLocationCoord2D.Create(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat);
-    FMarkerList.Add(Coordinates);
-  end
-  else
-  begin
-    GetCurrentCoordinates;
-    if FCurCoordinatesSet then
-      Coordinates := TLocationCoord2D.Create(FCurCoordinates.Latitude, FCurCoordinates.Longitude)
-    else
-      SetCordinate := false;
-  end;
-
-  GetMapPartnerScreenshot(SetCordinate, Coordinates);
+  GetMapPartnerScreenshot(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat);
 
   DM.LoadStoreReal;
 
@@ -2459,12 +2534,14 @@ procedure TfrmMain.RecalculateTotalPriceAndWeight;
 var
  i : integer;
  TotalPriceWithPercent, PriceWithPercent : Currency;
+ b : TBookmark;
 begin
   TotalPriceWithPercent := 0;
   FOrderTotalPrice := 0;
   FOrderTotalCountKg := 0;
 
   DM.cdsOrderItems.DisableControls;
+  b := DM.cdsOrderItems.Bookmark;
   try
     DM.cdsOrderItems.First;
     while not DM.cdsOrderItems.Eof do
@@ -2490,6 +2567,7 @@ begin
       DM.cdsOrderItems.Next;
     end;
   finally
+    DM.cdsOrderItems.GotoBookmark(b);
     DM.cdsOrderItems.EnableControls;
   end;
 
@@ -2520,12 +2598,14 @@ procedure TfrmMain.RecalculateReturnInTotalPriceAndWeight;
 var
  i : integer;
  TotalPriceWithPercent, PriceWithPercent : Currency;
+ b : TBookmark;
 begin
   TotalPriceWithPercent := 0;
   FReturnInTotalPrice := 0;
   FReturnInTotalCountKg := 0;
 
   DM.cdsReturnInItems.DisableControls;
+  b := DM.cdsReturnInItems.Bookmark;
   try
     DM.cdsReturnInItems.First;
     while not DM.cdsReturnInItems.Eof do
@@ -2548,6 +2628,7 @@ begin
       DM.cdsReturnInItems.Next;
     end;
   finally
+    DM.cdsReturnInItems.GotoBookmark(b);
     DM.cdsReturnInItems.EnableControls;
   end;
 
@@ -2623,12 +2704,17 @@ begin
 
   FCameraZoomDistance := 0;
 
-  CameraComponent := TCameraComponent.Create(nil);
-  CameraComponent.OnSampleBufferReady := CameraComponentSampleBufferReady;
-  if CameraComponent.HasFlash then
-    CameraComponent.FlashMode := FMX.Media.TFlashMode.AutoFlash;
-  CameraComponent.Active := false;
-  bCaptureClick(bCapture);
+  try
+    CameraComponent := TCameraComponent.Create(nil);
+    CameraComponent.OnSampleBufferReady := CameraComponentSampleBufferReady;
+    if CameraComponent.HasFlash then
+      CameraComponent.FlashMode := FMX.Media.TFlashMode.AutoFlash;
+    CameraComponent.Active := false;
+    bCaptureClick(bCapture);
+  except
+    CameraFree;
+    ShowMessage('Ошибка инициализации камеры. Повторите попытку');
+  end;
 end;
 
 procedure TfrmMain.CameraFree;

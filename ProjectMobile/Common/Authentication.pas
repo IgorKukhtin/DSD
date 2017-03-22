@@ -109,15 +109,18 @@ begin
 
   if Assigned(N) then
   begin
-    if Assigned(pUser) then
-    begin
-      pUser.Session := N.GetAttribute(AnsiLowerCase(gcSession));
-      pUser.Local := false;
-    end
-    else
-      pUser := TUser.Create(pUserName, pPassword, N.GetAttribute(AnsiLowerCase(gcSession)), false);
-
     Result := N.GetAttribute(AnsiLowerCase(gcMessage));
+
+    if Result = '' then
+    begin
+      if Assigned(pUser) then
+      begin
+        pUser.Session := N.GetAttribute(AnsiLowerCase(gcSession));
+        pUser.Local := false;
+      end
+      else
+        pUser := TUser.Create(pUserName, pPassword, N.GetAttribute(AnsiLowerCase(gcSession)), false);
+    end;
   end
   else
     Result := 'Не удалось установить соединение';
