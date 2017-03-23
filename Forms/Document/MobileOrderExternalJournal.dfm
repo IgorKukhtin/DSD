@@ -1,4 +1,4 @@
-inherited OrderExternalJournalForm: TOrderExternalJournalForm
+inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 396
   ClientWidth = 1050
@@ -603,10 +603,12 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       ImageIndex = 3
     end
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TOrderExternalForm'
+      FormName = 'TMobileOrderExternalForm'
+      FormNameParam.Value = 'TMobileOrderExternalForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TOrderExternalForm'
+      FormName = 'TMobileOrderExternalForm'
+      FormNameParam.Value = 'TMobileOrderExternalForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -776,7 +778,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderExternal'
+    StoredProcName = 'gpSelect_Movement_OrderExternal_Mobile'
     Params = <
       item
         Name = 'instartdate'

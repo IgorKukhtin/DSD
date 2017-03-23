@@ -5,31 +5,33 @@ DROP FUNCTION IF EXISTS gpGetMobile_Object_Const (TVarChar);
 CREATE OR REPLACE FUNCTION gpGetMobile_Object_Const(
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (PaidKindId_First    Integer   -- Форма оплаты - БН
-             , PaidKindName_First  TVarChar  -- Форма оплаты - НАЛ
-             , PaidKindId_Second   Integer   -- Форма оплаты - НАЛ
-             , PaidKindName_Second TVarChar  -- Форма оплаты - НАЛ
+RETURNS TABLE (PaidKindId_First      Integer   -- Форма оплаты - БН
+             , PaidKindName_First    TVarChar  -- Форма оплаты - НАЛ
+             , PaidKindId_Second     Integer   -- Форма оплаты - НАЛ
+             , PaidKindName_Second   TVarChar  -- Форма оплаты - НАЛ
              , StatusId_UnComplete   Integer   -- Статус - Не проведен
              , StatusName_UnComplete TVarChar  -- Статус - Не проведен
              , StatusId_Complete     Integer   -- Статус - Проведен
              , StatusName_Complete   TVarChar  -- Статус - Проведен
-             , StatusId_Erased     Integer   -- Статус - Удален
-             , StatusName_Erased   TVarChar  -- Статус - Удален
-             , UnitId              Integer   -- Подразделение - на какой склад будет оформляться заказ + какие остатки будем загружать из главной БД + и т.п.
-             , UnitName            TVarChar  -- Подразделение
-             , UnitId_ret          Integer   -- Подразделение Возврата - на какой склад будет оформляться возврат
-             , UnitName_ret        TVarChar  -- Подразделение Возврата
-             , CashId              Integer   -- Касса - используется если будет формироваться приход денег
-             , CashName            TVarChar  -- Касса
-             , MemberId            Integer   -- Физ. лицо
-             , MemberName          TVarChar  -- Физ. лицо|информативно
-             , PersonalId          Integer   -- Сотрудник
-             , UserId              Integer   -- Пользователь
-             , UserLogin           TVarChar  -- Логин
-             , UserPassword        TVarChar  -- Пароль
-             , WebService          TVarChar  -- Веб-сервис через который происходит коннект к основной БД
-             -- , SyncDateIn          TDateTime -- Дата/время последней синхронизации - когда "успешно" загружалась входящая информация - актуальные справочники, цены, акции, долги, остатки и т.д
-             -- , SyncDateOut         TDateTime -- Дата/время последней синхронизации - когда "успешно" выгружалась иходящая информация - заказы, возвраты и т.д
+             , StatusId_Erased       Integer   -- Статус - Удален
+             , StatusName_Erased     TVarChar  -- Статус - Удален
+             , UnitId                Integer   -- Подразделение - на какой склад будет оформляться заказ + какие остатки будем загружать из главной БД + и т.п.
+             , UnitName              TVarChar  -- Подразделение
+             , UnitId_ret            Integer   -- Подразделение Возврата - на какой склад будет оформляться возврат
+             , UnitName_ret          TVarChar  -- Подразделение Возврата
+             , CashId                Integer   -- Касса - используется если будет формироваться приход денег
+             , CashName              TVarChar  -- Касса
+             , MemberId              Integer   -- Физ. лицо
+             , MemberName            TVarChar  -- Физ. лицо|информативно
+             , PersonalId            Integer   -- Сотрудник
+             , UserId                Integer   -- Пользователь
+             , UserLogin             TVarChar  -- Логин
+             , UserPassword          TVarChar  -- Пароль
+             , WebService            TVarChar  -- Веб-сервис через который происходит коннект к основной БД
+             -- , SyncDateIn         TDateTime -- Дата/время последней синхронизации - когда "успешно" загружалась входящая информация - актуальные справочники, цены, акции, долги, остатки и т.д
+             -- , SyncDateOut        TDateTime -- Дата/время последней синхронизации - когда "успешно" выгружалась иходящая информация - заказы, возвраты и т.д
+             , MobileVersion         TVarChar  -- Версия мобильного приложения. Пример: "1.0.3.625"
+             , MobileAPKFileName     TVarChar  -- Название ".apk" файла мобильного приложения. Пример: "ProjectMobile.apk"
 )
 AS
 $BODY$
@@ -89,6 +91,9 @@ BEGIN
 
             -- AS LastDateIn
             -- AS LastDateOut
+
+            , '1.0.0.0'::TVarChar           AS MobileVersion
+            , 'ProjectMobile.apk'::TVarChar AS MobileAPKFileName
 
        FROM tmpPersonal
             LEFT JOIN Object AS Object_PaidKind_FirstForm  ON Object_PaidKind_FirstForm.Id = zc_Enum_PaidKind_FirstForm()

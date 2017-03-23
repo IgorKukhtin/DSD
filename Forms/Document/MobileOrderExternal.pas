@@ -1,4 +1,4 @@
-unit StoreReal;
+unit MobileOrderExternal;
 
 interface
 
@@ -16,12 +16,13 @@ uses
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter;
 
 type
-  TStoreRealForm = class(TAncestorDocumentForm)
+  TMobileOrderExternalForm = class(TAncestorDocumentForm)
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
+    spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
     N3: TMenuItem;
     RefreshDispatcher: TRefreshDispatcher;
@@ -29,20 +30,77 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     PrintItemsSverkaCDS: TClientDataSet;
+    AmountSecond: TcxGridDBColumn;
+    cxLabel5: TcxLabel;
+    edInvNumberOrder: TcxTextEdit;
+    cxLabel3: TcxLabel;
+    edOperDateMark: TcxDateEdit;
+    cxLabel10: TcxLabel;
+    edOperDatePartner: TcxDateEdit;
+    cxLabel4: TcxLabel;
+    edFrom: TcxButtonEdit;
+    cxLabel6: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    cxLabel9: TcxLabel;
+    edContract: TcxButtonEdit;
+    cxLabel13: TcxLabel;
+    edRouteSorting: TcxButtonEdit;
+    PaidKindGuides: TdsdGuides;
+    ContractGuides: TdsdGuides;
+    GuidesRouteSorting: TdsdGuides;
+    GuidesFrom: TdsdGuides;
+    cxLabel7: TcxLabel;
+    edRoute: TcxButtonEdit;
+    GuidesRoute: TdsdGuides;
+    cxLabel16: TcxLabel;
+    edMember: TcxButtonEdit;
+    GuidesMember: TdsdGuides;
+    cxLabel11: TcxLabel;
+    edPriceList: TcxButtonEdit;
+    PriceListGuides: TdsdGuides;
+    Price: TcxGridDBColumn;
+    CountForPrice: TcxGridDBColumn;
+    AmountSumm: TcxGridDBColumn;
+    cxLabel8: TcxLabel;
+    edTo: TcxButtonEdit;
+    GuidesTo: TdsdGuides;
+    AmountSumm_Partner: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
+    edPriceWithVAT: TcxCheckBox;
+    cxLabel12: TcxLabel;
+    edVATPercent: TcxCurrencyEdit;
+    cxLabel14: TcxLabel;
+    edChangePercent: TcxCurrencyEdit;
     InfoMoneyCode: TcxGridDBColumn;
     InfoMoneyGroupName: TcxGridDBColumn;
     InfoMoneyDestinationName: TcxGridDBColumn;
     InfoMoneyName: TcxGridDBColumn;
+    edContractTag: TcxButtonEdit;
+    cxLabel17: TcxLabel;
+    ContractTagGuides: TdsdGuides;
+    AmountEDI: TcxGridDBColumn;
+    AmountRemains: TcxGridDBColumn;
     spSavePrintState: TdsdStoredProc;
     actSPSavePrintState: TdsdExecStoredProc;
     mactPrint_Order: TMultiAction;
+    cbPrinted: TcxCheckBox;
     GoodsGroupNameFull: TcxGridDBColumn;
     cxLabel21: TcxLabel;
     edPartner: TcxButtonEdit;
     PartnerGuides: TdsdGuides;
+    Article: TcxGridDBColumn;
+    cxLabel18: TcxLabel;
+    ceComment: TcxTextEdit;
+    cxLabel19: TcxLabel;
+    edOperDatePartner_sale: TcxDateEdit;
+    cbPromo: TcxCheckBox;
+    MovementPromo: TcxGridDBColumn;
+    PricePromo: TcxGridDBColumn;
     LineNum: TcxGridDBColumn;
+    isPriceEDIDiff: TcxGridDBColumn;
+    ChangePercent: TcxGridDBColumn;
     actShowMessage: TShowMessageAction;
+    AmountRecommended: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -54,6 +112,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TStoreRealForm);
+  RegisterClass(TMobileOrderExternalForm);
 
 end.
