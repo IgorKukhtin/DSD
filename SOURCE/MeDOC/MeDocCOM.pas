@@ -230,7 +230,7 @@ end;
                try
                   FormCode := DocumentList.Fields['FORM'].Value;
                   if  (FormCode <> 12943)
-                  // and (FormCode <> 14025)
+                   and (FormCode <> 14027)
                   then
                   begin
                   if (FormCode = 11518) or (FormCode = 11530) or (FormCode = 12860) or (FormCode = 14025) then
