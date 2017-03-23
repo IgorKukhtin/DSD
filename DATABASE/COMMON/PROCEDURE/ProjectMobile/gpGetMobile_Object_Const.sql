@@ -31,6 +31,7 @@ RETURNS TABLE (PaidKindId_First      Integer   -- Форма оплаты - БН
              -- , SyncDateIn         TDateTime -- Дата/время последней синхронизации - когда "успешно" загружалась входящая информация - актуальные справочники, цены, акции, долги, остатки и т.д
              -- , SyncDateOut        TDateTime -- Дата/время последней синхронизации - когда "успешно" выгружалась иходящая информация - заказы, возвраты и т.д
              , MobileVersion         TVarChar  -- Версия мобильного приложения. Пример: "1.0.3.625"
+             , MobileAPKFileName     TVarChar  -- Название ".apk" файла мобильного приложения. Пример: "ProjectMobile.apk"
 )
 AS
 $BODY$
@@ -90,7 +91,8 @@ BEGIN
             -- AS LastDateIn
             -- AS LastDateOut
 
-            , '1.0.0.0'::TVarChar AS MobileVersion
+            , '1.0.0.0'::TVarChar           AS MobileVersion
+            , 'ProjectMobile.apk'::TVarChar AS MobileAPKFileName
 
        FROM tmpPersonal
             LEFT JOIN Object AS Object_PaidKind_FirstForm  ON Object_PaidKind_FirstForm.Id = zc_Enum_PaidKind_FirstForm()
