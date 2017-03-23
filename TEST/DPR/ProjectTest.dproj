@@ -1233,8 +1233,8 @@
 				<Form>StoreRealJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\OrderExternal.pas">
-				<Form>OrderExternalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\StoreReal.pas">
+				<Form>StoreRealForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorDocument.pas">
@@ -3018,6 +3018,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\MobileContract_Object.pas">
 				<Form>MobileContract_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderExternal.pas">
+				<Form>OrderExternalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

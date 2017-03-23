@@ -66,7 +66,7 @@ $result = $MasterStoredProc->ExecStoredProc();
 
 if ($result == false)
 {
-     $res = '<error ';
+     $res = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?> <error ';
      //$res .= 'ErrorMessage = "'.htmlspecialchars(pg_last_error(), ENT_COMPAT, 'WIN-1251').'"';
      $res .= 'ErrorMessage = "'.htmlspecialchars(pg_last_error(), ENT_COMPAT, 'UTF-8').'"';
      $res .= ' />';
@@ -87,7 +87,7 @@ else
            $NewRes = $ChildStoredProc->ExecStoredProc();
            if ($NewRes == false)
            {
-               $res = '<error ';
+               $res = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?> <error ';
                //$res .= 'ErrorMessage = "'.htmlspecialchars(pg_last_error(), ENT_COMPAT, 'WIN-1251').'"';
                $res .= 'ErrorMessage = "'.htmlspecialchars(pg_last_error(), ENT_COMPAT, 'UTF-8').'"';
                $res .= ' />';

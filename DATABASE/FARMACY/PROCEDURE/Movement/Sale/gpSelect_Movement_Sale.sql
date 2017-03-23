@@ -33,6 +33,7 @@ RETURNS TABLE (Id Integer
              , MemberSPName TVarChar
              , GroupMemberSPName TVarChar
              , isSP Boolean
+             , InvNumber_Invoice_Full TVarChar
               )
 
 AS
@@ -105,12 +106,18 @@ BEGIN
                  THEN TRUE
                  ELSE FALSE
             END ::Boolean AS isSP
+
+          , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full 
         FROM
             tmpUnit
             LEFT JOIN Movement_Sale_View AS Movement_Sale ON Movement_Sale.UnitId = tmpUnit.UnitId
                                         AND Movement_Sale.OperDate BETWEEN inStartDate AND inEndDate
             INNER JOIN tmpStatus ON Movement_Sale.StatusId = tmpStatus.StatusId
             
+            LEFT JOIN MovementLinkMovement AS MLM_Child
+                                           ON MLM_Child.MovementId = Movement_Sale.Id
+                                          AND MLM_Child.descId = zc_MovementLinkMovement_Child()
+            LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Child.MovementChildId
         -- ORDER BY InvNumber
        ;
 
@@ -122,6 +129,7 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 22.03.17         *
  08.02.17         * add SP
  04.05.16         * 
  13.10.15                                                                        *

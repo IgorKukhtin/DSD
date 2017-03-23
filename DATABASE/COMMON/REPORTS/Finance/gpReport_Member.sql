@@ -1,6 +1,7 @@
 -- Function: gpReport_Member
 
 DROP FUNCTION IF EXISTS gpReport_Member (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Member (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Member(
     IN inStartDate        TDateTime , --
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_Member(
     IN inInfoMoneyId      Integer,    -- Управленческая статья
     IN inInfoMoneyGroupId Integer,    -- Группа управленческих статей
     IN inInfoMoneyDestinationId   Integer,    --
+    IN inMemberId         Integer,    -- Физ лицо
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ContainerId Integer, MemberId Integer, MemberCode Integer, MemberName TVarChar
@@ -45,6 +47,7 @@ BEGIN
 
                   LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = CLO_InfoMoney.ObjectId
                   WHERE CLO_Member.DescId = zc_ContainerLinkObject_Member()
+                    AND (CLO_Member.ObjectId = inMemberId OR inMemberId = 0)
                     AND (Object_InfoMoney_View.InfoMoneyDestinationId = inInfoMoneyDestinationId OR inInfoMoneyDestinationId = 0)
                     AND (Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId OR inInfoMoneyId = 0)
                     AND (Object_InfoMoney_View.InfoMoneyGroupId = inInfoMoneyGroupId OR inInfoMoneyGroupId = 0)
@@ -235,11 +238,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_Member (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpReport_Member (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.03.17         * add inMemberId
  27.09.14                                        *
  26.09.14                                                        *
  04.09.14                                                        *  + Branch

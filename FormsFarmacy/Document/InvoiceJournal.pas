@@ -1,4 +1,4 @@
-unit SaleJournal;
+unit InvoiceJournal;
 
 interface
 
@@ -16,19 +16,13 @@ uses
   dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TSaleJournalForm = class(TAncestorJournalForm)
-    spGet_Movement_Sale: TdsdStoredProc;
-    colUnitName: TcxGridDBColumn;
+  TInvoiceJournalForm = class(TAncestorJournalForm)
+    spUpdate: TdsdStoredProc;
+    colContractName: TcxGridDBColumn;
     colJuridicalName: TcxGridDBColumn;
-    colPaidKindName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
     colTotalSumm: TcxGridDBColumn;
-    colTotalSummPrimeCost: TcxGridDBColumn;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
-    colComment: TcxGridDBColumn;
+    clId: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
-    colisSP: TcxGridDBColumn;
-    colGroupMemberSPName: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
@@ -36,7 +30,10 @@ type
     actPrint: TdsdPrintAction;
     macPrint: TMultiAction;
     bbmacPrint: TdxBarButton;
-    clInvNumber_Invoice_Full: TcxGridDBColumn;
+    clOperDateEnd: TcxGridDBColumn;
+    DateRegistered: TcxGridDBColumn;
+    InvNumberRegistered: TcxGridDBColumn;
+    UpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
@@ -48,6 +45,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TSaleJournalForm);
+  RegisterClass(TInvoiceJournalForm);
 
 end.

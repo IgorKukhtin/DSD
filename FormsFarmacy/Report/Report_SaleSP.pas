@@ -63,6 +63,11 @@ type
     CountSP: TcxGridDBColumn;
     cxLabel11: TcxLabel;
     cePercentSP: TcxCurrencyEdit;
+    cbisInsert: TcxCheckBox;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    spSavePrintMovement: TdsdStoredProc;
+    actSaveMovement: TdsdExecStoredProc;
+    macPrintInvoice: TMultiAction;
   private
     { Private declarations }
   public

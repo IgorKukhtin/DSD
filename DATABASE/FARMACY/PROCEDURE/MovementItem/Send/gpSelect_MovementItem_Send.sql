@@ -12,10 +12,13 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Amount TFloat, AmountRemains TFloat, AmountCheck TFloat
              , PriceIn TFloat, SumPriceIn TFloat
              , PriceUnitFrom TFloat, PriceUnitTo TFloat
+             , SummaUnitFrom TFloat, SummaUnitTo TFloat
+
              , Price TFloat, Summa TFloat, PriceWithVAT TFloat, SummaWithVAT TFloat
              , AmountManual TFloat, AmountDiff TFloat
              , ReasonDifferencesId Integer, ReasonDifferencesName TVarChar
              , ConditionsKeepName TVarChar
+             , MinExpirationDate TDateTime
              , isErased Boolean
               )
 AS
@@ -65,6 +68,7 @@ BEGIN
                                     Container.ObjectId                  AS GoodsId
                                   , SUM(Container.Amount)::TFloat       AS Amount
                                   , AVG(MIFloat_Price.ValueData)::TFloat AS PriceIn
+                                  , MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
                                 FROM Container
                                     INNER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
                                                                    ON Container.Id = ContainerLinkObject_Unit.ContainerId 
@@ -80,6 +84,17 @@ BEGIN
                                     LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
                                                                       ON MIFloat_Price.MovementItemId = MovementItem.ID
                                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                    -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                    LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                           ON MIFloat_MovementItem.MovementItemId = MovementItem.Id
+                                          AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                    -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                    LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                      
+                                    LEFT JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                           ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MovementItem.Id) 
+                                          AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+
                                 WHERE Container.DescId = zc_Container_Count()
                                   AND Container.Amount <> 0
                                  -- AND 1=0
@@ -203,6 +218,9 @@ BEGIN
               , CASE WHEN vbisAuto = False THEN Object_Price_From.Price ELSE MovementItem_Send.PriceFrom END ::TFloat  AS PriceUnitFrom
               , CASE WHEN vbisAuto = False THEN Object_Price_To.Price ELSE MovementItem_Send.PriceTo END     ::TFloat  AS PriceUnitTo
 
+              , (MovementItem_Send.Amount * (CASE WHEN vbisAuto = False THEN Object_Price_From.Price ELSE MovementItem_Send.PriceFrom END)) ::TFloat  AS SummaUnitFrom
+              , (MovementItem_Send.Amount * (CASE WHEN vbisAuto = False THEN Object_Price_To.Price ELSE MovementItem_Send.PriceTo END))     ::TFloat  AS SummaUnitTo
+
               , MovementItem_Send.Price
               , MovementItem_Send.Summa
               , MovementItem_Send.PriceWithVAT
@@ -213,6 +231,7 @@ BEGIN
               , Object_ReasonDifferences.Id                               AS ReasonDifferencesId
               , Object_ReasonDifferences.ValueData                        AS ReasonDifferencesName
               , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
+              , tmpRemains.MinExpirationDate   
               , COALESCE(MovementItem_Send.IsErased,FALSE)                AS isErased
 
             FROM tmpRemains
@@ -309,6 +328,7 @@ BEGIN
                             , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))),0)                                 AS Summa
                             , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))/SUM(MIContainer_Count.Amount)),0)     AS PriceWithVAT
                             , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))),0)                                   AS SummaWithVAT
+                            , MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
                        FROM MovementItem_Send
                              LEFT OUTER JOIN MovementItemContainer AS MIContainer_Count
                                           ON MIContainer_Count.MovementItemId = MovementItem_Send.Id 
@@ -319,6 +339,7 @@ BEGIN
                                          AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
                              LEFT OUTER JOIN Object AS Object_PartionMovementItem 
                                           ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                             -- элемент прихода
                              LEFT OUTER JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
                              LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
                                           ON MIFloat_Price.MovementItemId = MovementItem.ID
@@ -332,6 +353,18 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
                                         ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
                                        AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+
+                            -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                            LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                   ON MIFloat_MovementItem.MovementItemId = MovementItem.Id
+                                  AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                            -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                            LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                      
+                            LEFT JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                   ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MovementItem.Id) 
+                                  AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+
                        GROUP BY MovementItem_Send.Id    
                        )
 
@@ -387,6 +420,9 @@ BEGIN
            , CASE WHEN vbisAuto = False THEN Object_Price_From.Price ELSE MovementItem_Send.PriceFrom END ::TFloat  AS PriceUnitFrom
            , CASE WHEN vbisAuto = False THEN Object_Price_To.Price ELSE MovementItem_Send.PriceTo END     ::TFloat  AS PriceUnitTo
 
+           , (MovementItem_Send.Amount * (CASE WHEN vbisAuto = False THEN Object_Price_From.Price ELSE MovementItem_Send.PriceFrom END)) ::TFloat  AS SummaUnitFrom
+           , (MovementItem_Send.Amount * (CASE WHEN vbisAuto = False THEN Object_Price_To.Price ELSE MovementItem_Send.PriceTo END))     ::TFloat  AS SummaUnitTo
+
            , tmpMIContainer.Price            ::TFloat  AS Price
            , tmpMIContainer.Summa            ::TFloat  AS Summa
            , tmpMIContainer.PriceWithVAT     ::TFloat  AS PriceWithVAT
@@ -397,6 +433,7 @@ BEGIN
            , Object_ReasonDifferences.Id                               AS ReasonDifferencesId
            , Object_ReasonDifferences.ValueData                        AS ReasonDifferencesName
            , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
+           , tmpMIContainer.MinExpirationDate   
            , MovementItem_Send.IsErased                                AS isErased
 
        FROM MovementItem_Send
@@ -431,6 +468,7 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    
+ 21.03.17         *
  22.01.17         *
  26.01.17         *
  15.01.17         * без вьюх

@@ -15,22 +15,30 @@ CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_MovementItem_OrderExternal(
 RETURNS Integer 
 AS
 $BODY$
-   DECLARE vbUserId     Integer;
-   DECLARE vbId         Integer;
+   DECLARE vbUserId Integer;
+   DECLARE vbId Integer;
    DECLARE vbMovementId Integer;
-   DECLARE vbIsInsert   Boolean;
+   DECLARE vbCountForPrice TFloat;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
 
-      SELECT MovementId INTO vbMovementId FROM MovementString WHERE DescId = zc_MovementString_GUID() AND ValueData = inMovementGUID;
+      SELECT MovementString_GUID.MovementId 
+      INTO vbMovementId 
+      FROM MovementString AS MovementString_GUID
+           JOIN Movement AS Movement_OrderExternal
+                         ON Movement_OrderExternal.Id = MovementString_GUID.MovementId
+                        AND Movement_OrderExternal.DescId = zc_Movement_OrderExternal()
+      WHERE MovementString_GUID.DescId = zc_MovementString_GUID() 
+        AND MovementString_GUID.ValueData = inMovementGUID;
 
       IF COALESCE (vbMovementId, 0) = 0 
       THEN
            RAISE EXCEPTION 'Ошибка. Не заведена шапка документа.';
       END IF; 
 
-      SELECT MovementItem.Id INTO vbId
+      SELECT MovementItem.Id 
+      INTO vbId
       FROM MovementItem
            JOIN MovementItemString 
              ON MovementItemString.MovementItemId = MovementItem.Id
@@ -38,34 +46,21 @@ BEGIN
             AND MovementItemString.ValueData = inGUID
       WHERE MovementItem.MovementId = vbMovementId;
 
-      -- определяется признак Создание/Корректировка
-      vbIsInsert:= COALESCE (vbId, 0) = 0;
+      -- сохранили
+      SELECT ioId INTO vbId FROM lpInsertUpdate_MovementItem_OrderExternal (ioId            := vbId
+                                                                          , inMovementId    := vbMovementId
+                                                                          , inGoodsId       := inGoodsId
+                                                                          , inAmount        := inAmount
+                                                                          , inAmountSecond  := 0
+                                                                          , inGoodsKindId   := inGoodsKindId
+                                                                          , ioPrice         := inPrice
+                                                                          , ioCountForPrice := vbCountForPrice
+                                                                          , inUserId        := vbUserId
+                                                                           );
 
-      -- сохранили <Элемент документа>
-      vbId:= lpInsertUpdate_MovementItem (vbId, zc_MI_Master(), inGoodsId, vbMovementId, inAmount, NULL);
+      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), vbId, inGUID);
 
-      -- сохранили связь с <Виды товаров>
-      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), vbId, inGoodsKindId);
-
-      -- сохранили свойство <(-)% Скидки (+)% Наценки>
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), vbId, inChangePercent);
-
-      -- сохранили свойство <Цена>
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), vbId, inPrice);
-
-      IF COALESCE (inGoodsId, 0) <> 0
-      THEN
-          -- создали объект <Связи Товары и Виды товаров>
-          PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, vbUserId);
-      END IF;
-
-      -- пересчитали Итоговые суммы по накладной
-      PERFORM lpInsertUpdate_MovemenTFloat_TotalSumm (vbMovementId);
-
-      -- сохранили протокол
-      PERFORM lpInsert_MovementItemProtocol (vbId, vbUserId, vbIsInsert);
-
-      RETURN vbId; 
+      RETURN vbId;
 
 END;
 $BODY$

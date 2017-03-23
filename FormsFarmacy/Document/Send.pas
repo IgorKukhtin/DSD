@@ -73,6 +73,7 @@ type
     ceChecked: TcxCheckBox;
     ChoiceReasonDifferences: TOpenChoiceForm;
     edisComplete: TcxCheckBox;
+    colMinExpirationDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

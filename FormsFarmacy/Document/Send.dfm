@@ -88,6 +88,16 @@ inherited SendForm: TSendForm
               Format = ',0.####'
               Kind = skSum
               Column = clAmountCheck
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummaUnitFrom
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummaUnitTo
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -156,6 +166,16 @@ inherited SendForm: TSendForm
               Format = ',0.####'
               Kind = skSum
               Column = clAmountCheck
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummaUnitFrom
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummaUnitTo
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -274,6 +294,26 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
+          object colSummaUnitFrom: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074' '#1094#1077#1085#1072#1093' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
+            DataBinding.FieldName = 'SummaUnitFrom'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object colSummaUnitTo: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074' '#1094#1077#1085#1072#1093' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+            DataBinding.FieldName = 'SummaUnitTo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
           object colSumPriceIn: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1091#1089#1088#1077#1076'. '#1079#1072#1082#1091#1087'. '#1094#1077#1085' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'SumPriceIn'
@@ -343,6 +383,13 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 75
+          end
+          object colMinExpirationDate: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'MinExpirationDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
         end
       end

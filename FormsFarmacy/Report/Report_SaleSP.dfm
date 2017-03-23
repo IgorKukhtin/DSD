@@ -590,6 +590,14 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
           end
         end
       end
+      object cbisInsert: TcxCheckBox
+        Left = 112
+        Top = 13
+        Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1089#1095#1077#1090
+        Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1089#1095#1077#1090
+        TabOrder = 1
+        Width = 108
+      end
     end
   end
   inherited Panel: TPanel
@@ -599,11 +607,13 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
     ExplicitHeight = 65
     inherited deStart: TcxDateEdit
       Left = 34
+      EditValue = 42736d
       ExplicitLeft = 34
     end
     inherited deEnd: TcxDateEdit
       Left = 34
       Top = 32
+      EditValue = 42736d
       ExplicitLeft = 34
       ExplicitTop = 32
     end
@@ -925,7 +935,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'HospitalName;JuridicalName'
+          IndexFieldNames = 'JuridicalName;HospitalName;ContractName;'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -1025,6 +1035,31 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       ReportNameParam.Value = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+    end
+    object macPrintInvoice: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSaveMovement
+        end
+        item
+          Action = actPrintInvoice
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 15
+    end
+    object actSaveMovement: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSavePrintMovement
+      StoredProcList = <
+        item
+          StoredProc = spSavePrintMovement
+        end>
+      Caption = 'actSPSavePrintState'
     end
   end
   inherited MasterDS: TDataSource
@@ -1137,6 +1172,14 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         end
         item
           Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1176,9 +1219,15 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       Category = 0
     end
     object bbPrintInvoice: TdxBarButton
-      Action = actPrintInvoice
+      Action = macPrintInvoice
       Category = 0
-      ImageIndex = 19
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cbisInsert
     end
   end
   inherited PeriodChoice: TPeriodChoice
@@ -1321,5 +1370,102 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       end>
     Left = 584
     Top = 32
+  end
+  object spSavePrintMovement: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_Invoice'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41640d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41640d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerMedicalId'
+        Value = ''
+        Component = HospitalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGroupMemberSPId'
+        Value = '0'
+        Component = GroupMemberSPGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPercentSP'
+        Value = Null
+        Component = cePercentSP
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisGroupMemberSP'
+        Value = Null
+        Component = cbGroupMemberSP
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateInvoice'
+        Value = ''
+        Component = edDateInvoice
+        ComponentItem = 'Key'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvoice'
+        Value = Null
+        Component = edInvoice
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisInsert'
+        Value = 'False'
+        Component = cbisInsert
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 704
+    Top = 192
   end
 end

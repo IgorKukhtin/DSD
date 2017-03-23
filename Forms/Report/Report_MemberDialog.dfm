@@ -3,8 +3,8 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091'>'
-  ClientHeight = 222
-  ClientWidth = 491
+  ClientHeight = 228
+  ClientWidth = 482
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 111
-    Top = 171
+    Left = 268
+    Top = 183
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 285
-    Top = 171
+    Left = 392
+    Top = 183
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -147,6 +147,23 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
     TabOrder = 15
     Width = 220
   end
+  object cxLabel1: TcxLabel
+    Left = 8
+    Top = 163
+    Caption = #1060#1080#1079'.'#1083#1080#1094#1086':'
+  end
+  object ceMember: TcxButtonEdit
+    Left = 8
+    Top = 181
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 17
+    Width = 220
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -154,7 +171,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
     Top = 16
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 224
+    Left = 216
     Top = 167
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -167,8 +184,8 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 400
-    Top = 169
+    Left = 360
+    Top = 165
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -178,6 +195,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
@@ -185,6 +203,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchId'
@@ -192,6 +211,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
         Component = GuidesBranch
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchName'
@@ -200,6 +220,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountId'
@@ -207,6 +228,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
         Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountName'
@@ -215,6 +237,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyDestinationId'
@@ -222,6 +245,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
         Component = GuidesInfoMoneyDestination
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyDestinationName'
@@ -230,6 +254,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyGroupId'
@@ -237,6 +262,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
         Component = GuidesInfoMoneyGroup
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyGroupName'
@@ -245,6 +271,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
@@ -252,6 +279,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
         Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
@@ -260,6 +288,24 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberId'
+        Value = Null
+        Component = GuidesMember
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberName'
+        Value = Null
+        Component = GuidesMember
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 160
@@ -269,6 +315,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
     LookupControl = edBranch
     FormNameParam.Value = 'TBranch_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranch_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -279,6 +326,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -287,6 +335,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 336
     Top = 65527
@@ -296,6 +345,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
     LookupControl = edAccount
     FormNameParam.Value = 'TAccount_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccount_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -306,6 +356,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -314,6 +365,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 128
     Top = 69
@@ -323,6 +375,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
     LookupControl = edInfoMoneyDestination
     FormNameParam.Value = 'TInfoMoneyDestination_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoneyDestination_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -333,6 +386,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -341,6 +395,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 110
     Top = 110
@@ -350,6 +405,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
     LookupControl = edInfoMoneyGroup
     FormNameParam.Value = 'TInfoMoneyGroup_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoneyGroup_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -360,6 +416,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -368,11 +425,13 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Juridical'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 336
     Top = 69
@@ -382,6 +441,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
     LookupControl = edInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -390,6 +450,7 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
         Value = ''
         Component = GuidesInfoMoney
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -397,13 +458,45 @@ object Report_MemberDialogForm: TReport_MemberDialogForm
         Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Juridical'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 368
     Top = 117
+  end
+  object GuidesMember: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceMember
+    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMember_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMember
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMember
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 128
+    Top = 165
   end
 end

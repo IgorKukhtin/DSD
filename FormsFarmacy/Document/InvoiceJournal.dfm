@@ -1,5 +1,5 @@
-inherited SaleJournalForm: TSaleJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1087#1088#1086#1076#1072#1078
+inherited InvoiceJournalForm: TInvoiceJournalForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1057#1095#1077#1090#1086#1074
   ClientHeight = 491
   ClientWidth = 745
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -7,7 +7,7 @@ inherited SaleJournalForm: TSaleJournalForm
   AddOnFormData.AddOnFormRefresh.DataSet = MasterCDS
   AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
-  AddOnFormData.AddOnFormRefresh.GetStoredProc = spGet_Movement_Sale
+  AddOnFormData.AddOnFormRefresh.GetStoredProc = spUpdate
   ExplicitWidth = 761
   ExplicitHeight = 529
   PixelsPerInch = 96
@@ -33,7 +33,6 @@ inherited SaleJournalForm: TSaleJournalForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colTotalSummSale
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -44,112 +43,52 @@ inherited SaleJournalForm: TSaleJournalForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colTotalSummPrimeCost
-            end
-            item
-              Format = #1057#1090#1088#1086#1082': ,0'
-              Kind = skCount
-              Column = colUnitName
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colTotalSummSale
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = clPartnerMedicalName
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object cxGridDBTableViewColumn1: TcxGridDBColumn [0]
+          object clId: TcxGridDBColumn [0]
             Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088
             DataBinding.FieldName = 'Id'
             Visible = False
+            Options.Editing = False
+            Width = 303
           end
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 49
           end
           inherited colInvNumber: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 71
           end
           inherited colOperDate: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 62
           end
-          object colUnitName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'UnitName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 108
-          end
           object colJuridicalName: TcxGridDBColumn
-            Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
+            Caption = #1070#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 98
-          end
-          object colPaidKindName: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaidKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 79
-          end
-          object colTotalCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'TotalCount'
-            PropertiesClassName = 'TcxCalcEditProperties'
-            Properties.DisplayFormat = ',0.000'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 46
-          end
-          object colTotalSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'TotalSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-          end
-          object colTotalSummSale: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
-            DataBinding.FieldName = 'TotalSummSale'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-          end
-          object colTotalSummPrimeCost: TcxGridDBColumn
-            AlternateCaption = #1057#1091#1084#1084#1072' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1080
-            Caption = #1057#1091#1084#1084#1072' '#1089#1077#1073'-'#1090#1080
-            DataBinding.FieldName = 'TotalSummPrimeCost'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1080
-          end
-          object colComment: TcxGridDBColumn
-            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
-            DataBinding.FieldName = 'Comment'
-            HeaderAlignmentVert = vaCenter
-            Width = 147
-          end
-          object colisSP: TcxGridDBColumn
-            Caption = #1054#1090#1087#1091#1097#1077#1085#1086' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' '#8470'1303'
-            DataBinding.FieldName = 'isSP'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1087#1091#1097#1077#1085#1086' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' '#8470'1303'
-            Width = 99
           end
           object clPartnerMedicalName: TcxGridDBColumn
             Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077
@@ -159,53 +98,52 @@ inherited SaleJournalForm: TSaleJournalForm
             Options.Editing = False
             Width = 119
           end
-          object clOperDateSP: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1088#1077#1094#1077#1087#1090#1072
-            DataBinding.FieldName = 'OperDateSP'
+          object colContractName: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 108
+          end
+          object colTotalSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object clOperDateStart: TcxGridDBColumn
+            Caption = #1053#1072#1095'. '#1087#1077#1088#1080#1086#1076#1072' '#1086#1090#1095#1077#1090#1072
+            DataBinding.FieldName = 'OperDateStart'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object clOperDateEnd: TcxGridDBColumn
+            Caption = #1050#1086#1085'. '#1087#1077#1088#1080#1086#1076#1072' '#1086#1090#1095#1077#1090#1072
+            DataBinding.FieldName = 'OperDateEnd'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 94
+          end
+          object DateRegistered: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1083#1072#1090#1077#1078#1082#1080' '#1073#1072#1085#1082#1072
+            DataBinding.FieldName = 'DateRegistered'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clInvNumberSP: TcxGridDBColumn
-            Caption = #1053#1086#1084#1077#1088' '#1088#1077#1094#1077#1087#1090#1072
-            DataBinding.FieldName = 'InvNumberSP'
+          object InvNumberRegistered: TcxGridDBColumn
+            Caption = #1053#1086#1084#1077#1088' '#1087#1083#1072#1090#1077#1078#1082#1080' '#1073#1072#1085#1082#1072
+            DataBinding.FieldName = 'InvNumberRegistered'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 68
-          end
-          object clMedicSPName: TcxGridDBColumn
-            Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
-            DataBinding.FieldName = 'MedicSPName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 98
-          end
-          object clMemberSPName: TcxGridDBColumn
-            Caption = #1060#1048#1054' '#1087#1072#1094#1080#1077#1085#1090#1072
-            DataBinding.FieldName = 'MemberSPName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 98
-          end
-          object colGroupMemberSPName: TcxGridDBColumn
-            Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1072#1094#1080#1077#1085#1090#1072
-            DataBinding.FieldName = 'GroupMemberSPName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
-          end
-          object clInvNumber_Invoice_Full: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' ('#1087#1086#1089#1090'.1303)'
-            DataBinding.FieldName = 'InvNumber_Invoice_Full'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 90
           end
         end
       end
@@ -214,6 +152,12 @@ inherited SaleJournalForm: TSaleJournalForm
   inherited Panel: TPanel
     Width = 745
     ExplicitWidth = 745
+    inherited deStart: TcxDateEdit
+      EditValue = 42736d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42736d
+    end
   end
   inherited ActionList: TActionList
     Left = 55
@@ -225,6 +169,40 @@ inherited SaleJournalForm: TSaleJournalForm
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TSaleForm'
       FormNameParam.Value = 'TSaleForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+    end
+    object UpdateDataSet: TdsdUpdateDataSet [15]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate
+        end>
+      Caption = 'UpdateDataSet'
+      DataSource = MasterDS
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -370,7 +348,7 @@ inherited SaleJournalForm: TSaleJournalForm
     end
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale'
+    StoredProcName = 'gpSelect_Movement_Invoice'
   end
   inherited BarManager: TdxBarManager
     DockControlHeights = (
@@ -381,15 +359,6 @@ inherited SaleJournalForm: TSaleJournalForm
     inherited Bar: TdxBar
       ItemLinks = <
         item
-          Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -424,22 +393,6 @@ inherited SaleJournalForm: TSaleJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbmacPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -456,12 +409,18 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
     end
     object bbmacPrint: TdxBarButton
-      Action = macPrint
+      Action = actPrint
       Category = 0
       ImageIndex = 15
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+      end>
+    ActionItemList = <
+      item
+      end>
     Left = 464
     Top = 408
   end
@@ -478,15 +437,15 @@ inherited SaleJournalForm: TSaleJournalForm
     Top = 8
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Sale'
+    StoredProcName = 'gpComplete_Movement_Invoice'
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_Sale'
+    StoredProcName = 'gpUnComplete_Movement_Invoice'
     Left = 384
     Top = 264
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_Sale'
+    StoredProcName = 'gpSetErased_Movement_Invoice'
     Left = 384
     Top = 216
   end
@@ -495,117 +454,44 @@ inherited SaleJournalForm: TSaleJournalForm
     Top = 400
   end
   inherited spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_Sale'
+    StoredProcName = 'gpReComplete_Movement_Invoice'
     Left = 384
     Top = 120
   end
-  object spGet_Movement_Sale: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Sale'
+  object spUpdate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Invoice'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
         Name = 'inMovementId'
         Value = 41640d
-        ParamType = ptInputOutput
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperDate'
+        Name = 'inDateRegistered'
         Value = 41640d
-        Component = deEnd
+        Component = MasterCDS
+        ComponentItem = 'DateRegistered'
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Id'
-        Value = False
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumber'
+        Name = 'inInvNumberRegistered'
         Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumberRegistered'
         DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperDate'
-        Value = 'NULL'
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'StatusCode'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'StatusName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TotalCount'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TotalSumm'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TotalSummPrimeCost'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'JuridicalId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'JuridicalName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Comment'
-        Value = Null
-        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 168
-    Top = 99
+    Left = 656
+    Top = 315
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

@@ -80,6 +80,16 @@ inherited SendJournalForm: TSendJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalSummPVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummFrom
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummTo
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -133,6 +143,16 @@ inherited SendJournalForm: TSendJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalSummPVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummFrom
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummTo
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -190,6 +210,7 @@ inherited SendJournalForm: TSendJournalForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 96
           end
@@ -199,6 +220,7 @@ inherited SendJournalForm: TSendJournalForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 120
           end
@@ -208,6 +230,27 @@ inherited SendJournalForm: TSendJournalForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 96
+          end
+          object colTotalSummFrom: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074' '#1094#1077#1085#1072#1093' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
+            DataBinding.FieldName = 'TotalSummFrom'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 96
+          end
+          object colTotalSummTo: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074' '#1094#1077#1085#1072#1093' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+            DataBinding.FieldName = 'TotalSummTo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 96
           end

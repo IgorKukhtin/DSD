@@ -1627,17 +1627,17 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingDialogForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalDialogForm');
-   {
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MemberForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MemberDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MemberDialogForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashDialogForm'));
@@ -1675,12 +1675,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_InternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InternalDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_InternalDialogForm');
-  }
+
   //Отчет Проверка кол-ва в привязке возврата
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_ReturnInToLinkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_ReturnInToLinkForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_ReturnInToLinkDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_ReturnInToLinkDialogForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadReportAssetFormTest;
@@ -2139,6 +2140,8 @@ end;
 
 procedure TLoadFormTest.LoadStoreRealFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStoreRealForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStoreRealForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStoreRealJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStoreRealJournalForm');
 end;

@@ -35,8 +35,8 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
--- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!! - Волошина Е.А.
-if inSession = '5' then  inSession :=  '140094'; end if;
+      -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!! - Волошина Е.А.
+      IF inSession = '5' THEN inSession:= '140094'; END IF;
 
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -84,7 +84,7 @@ if inSession = '5' then  inSession :=  '140094'; end if;
             , Object_User.ValueData        AS UserLogin
             , ObjectString_User_.ValueData AS UserPassword
 
-            , Object_ConnectParam.ValueData AS WebService
+            , REPLACE (LOWER (Object_ConnectParam.ValueData), '/project/', '/projectmobile/')::TVarChar AS WebService
 
             -- AS LastDateIn
             -- AS LastDateOut

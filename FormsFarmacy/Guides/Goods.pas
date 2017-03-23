@@ -10,7 +10,8 @@ uses
   dxBar, cxClasses, cxPropertiesStore, Datasnap.DBClient, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   Vcl.Controls, cxGrid, AncestorGuides, cxPCdxBarPopupMenu, Vcl.Menus, cxPC,
-  Vcl.DBActns;
+  Vcl.DBActns, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
+  dxSkinsdxBarPainter;
 
 type
   TGoodsForm = class(TAncestorGuidesForm)
@@ -47,6 +48,7 @@ type
     actSimplePublishedList: TMultiAction;
     actPublishedList: TMultiAction;
     bbPublished: TdxBarButton;
+    clisMarketToday: TcxGridDBColumn;
   private
     { Private declarations }
   public
