@@ -192,7 +192,7 @@ BEGIN
                                    AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
 
     WHERE Movement.DescId in (zc_Movement_OrderInternal(), zc_Movement_OrderExternal(), zc_Movement_Income(), zc_Movement_Send(), zc_Movement_Check())
-      AND Movement.OperDate BETWEEN inStartDate AND inEndDate 
+      AND Movement.OperDate >= inStartDate AND Movement.OperDate <inEndDate + interval '1 day'
       AND ((Object_Unit.Id = vbUnitId) OR (vbUnitId = 0)) 
       -- AND Object.Id = inGoodsId
      ;

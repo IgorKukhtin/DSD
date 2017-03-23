@@ -1,28 +1,74 @@
 inherited Report_MovementCheck_PromoForm: TReport_MovementCheck_PromoForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' ('#1090#1086#1074#1072#1088#1099' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1086#1075#1086' '#1082#1086#1085#1090#1088#1072#1082#1090#1072')'
+  ClientHeight = 318
   ClientWidth = 806
   ExplicitWidth = 822
+  ExplicitHeight = 356
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 806
+    Height = 261
     ExplicitWidth = 806
+    ExplicitHeight = 261
+    ClientRectBottom = 261
     ClientRectRight = 806
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 806
+      ExplicitHeight = 261
       inherited cxGrid: TcxGrid
         Width = 806
+        Height = 261
+        ExplicitLeft = -16
+        ExplicitTop = 3
         ExplicitWidth = 806
+        ExplicitHeight = 261
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
+              Kind = skSum
               Column = colAmount
             end
             item
               Kind = skSum
               Position = spFooter
               Column = colAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmount2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSumma
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummaWithVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummaSale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmount3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmount4
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -34,6 +80,41 @@ inherited Report_MovementCheck_PromoForm: TReport_MovementCheck_PromoForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = colName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmount2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSumma
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummaWithVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummaSale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmount3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmount4
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -104,12 +185,84 @@ inherited Report_MovementCheck_PromoForm: TReport_MovementCheck_PromoForm
             Width = 84
           end
           object colAmount: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086
+            Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' ('#1084#1072#1088#1082#1077#1090'. '#1074' '#1087#1077#1088#1080#1086#1076' '#1076#1086#1075#1086#1074#1086#1088#1072')'
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 46
+            Width = 90
+          end
+          object colAmount2: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' ('#1085#1077' '#1084#1072#1088#1082#1077#1090'. '#1074' '#1087#1077#1088#1080#1086#1076' '#1076#1086#1075#1086#1074#1086#1088#1072')'
+            DataBinding.FieldName = 'Amount2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object colAmount3: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' ('#1084#1072#1088#1082#1077#1090'. '#1074#1085#1077' '#1087#1077#1088#1080#1086#1076#1072' '#1076#1086#1075#1086#1074#1086#1088#1072')'
+            DataBinding.FieldName = 'Amount3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object colAmount4: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' ('#1087#1088#1086#1095#1077#1077')'
+            DataBinding.FieldName = 'Amount4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object colTotalAmount: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'TotalAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
+          end
+          object colSumma: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072', '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072' '#1073#1077#1079' '#1053#1044#1057
+            DataBinding.FieldName = 'Summa'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
+          end
+          object colSummaWithVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072', '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'SummaWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 93
+          end
+          object colSummaSale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072', '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079'. '
+            DataBinding.FieldName = 'SummaSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
           end
           object colStatusName: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089
@@ -151,6 +304,8 @@ inherited Report_MovementCheck_PromoForm: TReport_MovementCheck_PromoForm
           object colInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'InvNumber'
+            FooterAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 94
@@ -259,6 +414,23 @@ inherited Report_MovementCheck_PromoForm: TReport_MovementCheck_PromoForm
     Top = 192
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = GuidesMaker
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
     Left = 8
     Top = 232
   end
