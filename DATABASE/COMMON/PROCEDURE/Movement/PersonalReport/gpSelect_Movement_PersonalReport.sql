@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MovementDescName TVarChar
              , AmountIn TFloat, AmountOut TFloat
              , Comment TVarChar
-             , MemberCode Integer, MemberName TVarChar
+             , MemberId Integer, MemberCode Integer, MemberName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , ContractCode Integer, ContractInvNumber TVarChar
              , UnitCode Integer, UnitName TVarChar
@@ -68,6 +68,7 @@ BEGIN
 
            , MIString_Comment.ValueData         AS Comment
 
+           , Object_Member.Id                   AS MemberId
            , Object_Member.ObjectCode           AS MemberCode
            , Object_Member.ValueData            AS MemberName
            , View_InfoMoney.InfoMoneyGroupName
@@ -206,6 +207,7 @@ ALTER FUNCTION gpSelect_Movement_PersonalReport (TDateTime, TDateTime, Integer, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 23.03.17         *
  06.10.16         * add inJuridicalBasisId
  07.05.15         * add Contract
  08.04.15                                        * all

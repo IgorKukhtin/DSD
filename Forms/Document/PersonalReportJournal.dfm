@@ -497,16 +497,16 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
         item
           Name = 'inMemberId'
           Value = '0'
-          Component = GuidesMember
-          ComponentItem = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'MemberId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'inMemberName'
           Value = Null
-          Component = GuidesMember
-          ComponentItem = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'MemberName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
