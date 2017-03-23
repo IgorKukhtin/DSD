@@ -37,6 +37,10 @@ $BODY$
    DECLARE vbPriceWithVAT Boolean;
    DECLARE vbOperDate_promo TDateTime;
 
+   DECLARE vbStartDate_StoreReal TDateTime;
+   DECLARE vbEndDate_StoreReal TDateTime;
+   DECLARE vbDays_StoreReal Integer;
+
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_OrderExternal());
@@ -100,6 +104,100 @@ BEGIN
      vbIsOrderDnepr:= EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (402720, zc_Enum_Role_Admin())) -- Заявки-Днепр
                   AND EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = vbUnitId AND Object.ObjectCode >= 30000);
 
+
+    -- таблицы
+    CREATE TEMP TABLE _tmpMovStoreReal (Id Integer, OperDate TDateTime, Num Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpMovSale (GoodsId Integer, GoodsKindId Integer, Amount TFloat) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpMovReturnIn (GoodsId Integer, GoodsKindId Integer, Amount TFloat) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpRecommended (GoodsId Integer, GoodsKindId Integer, Amount TFloat) ON COMMIT DROP;
+
+    INSERT INTO _tmpMovStoreReal (Id, OperDate, Num)
+         SELECT Movement.Id, Movement.OperDate , row_number() OVER (ORDER BY Movement.OperDate DESC) AS Num
+         FROM Movement 
+              INNER JOIN MovementLinkObject AS MovementLinkObject_Partner
+                      ON MovementLinkObject_Partner.MovementId = Movement.Id
+                     AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+                     AND MovementLinkObject_Partner.ObjectId = vbPartnerId
+         WHERE Movement.OperDate <= inOperDate -- CURRENT_DATE
+           AND Movement.DescId = zc_Movement_StoreReal() 
+           AND Movement.StatusId <> zc_Enum_Status_Erased()
+         ORDER BY Movement.OperDate DESC
+         LIMIT 2;
+
+    vbStartDate_StoreReal := COALESCE ((select _tmpMovStoreReal.OperDate from _tmpMovStoreReal where Num = 2),inOperDate - interval '10 day');
+    vbEndDate_StoreReal := COALESCE ((select _tmpMovStoreReal.OperDate from _tmpMovStoreReal where Num = 1),inOperDate);
+    vbDays_StoreReal := (SELECT DATE_PART('day', (vbEndDate_StoreReal - vbStartDate_StoreReal )) + 1);
+
+    INSERT INTO _tmpMovSale (GoodsId, GoodsKindId, Amount)
+         SELECT MovementItem.ObjectId AS GoodsId
+              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+              , SUM (MovementItem.Amount) AS Amount
+         FROM
+             (SELECT Movement.Id
+              FROM Movement 
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                           ON MovementLinkObject_To.MovementId = Movement.Id
+                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                          AND MovementLinkObject_To.ObjectId = vbPartnerId
+               WHERE Movement.OperDate BETWEEN vbStartDate_StoreReal AND vbEndDate_StoreReal  --inOperDate AND inOperDate 
+                 AND Movement.DescId = zc_Movement_Sale()-- and 1=0
+              ) AS tmpMovement
+               INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
+                      AND MovementItem.DescId     = zc_MI_Master()
+                      AND MovementItem.isErased   = False
+                      AND MovementItem.Amount <> 0
+               LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+               GROUP BY MovementItem.ObjectId
+                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0);
+
+    INSERT INTO _tmpMovReturnIn (GoodsId, GoodsKindId, Amount)
+         SELECT MovementItem.ObjectId AS GoodsId
+              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+              , SUM (MovementItem.Amount) * (-1) AS Amount
+         FROM
+             (SELECT Movement.Id
+              FROM Movement 
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                           ON MovementLinkObject_From.MovementId = Movement.Id
+                          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                          AND MovementLinkObject_From.ObjectId = vbPartnerId
+              WHERE Movement.OperDate BETWEEN  vbStartDate_StoreReal AND vbEndDate_StoreReal
+                AND Movement.DescId = zc_Movement_ReturnIn() 
+                AND Movement.StatusId <> zc_Enum_Status_Erased() 
+              ) AS tmpMovement
+                INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
+                       AND MovementItem.DescId     = zc_MI_Master()
+                       AND MovementItem.isErased   = False
+                       AND MovementItem.Amount <> 0
+                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+         GROUP BY MovementItem.ObjectId
+                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0);
+
+    INSERT INTO _tmpRecommended (GoodsId, GoodsKindId, Amount)
+         SELECT tmp.GoodsId, tmp.GoodsKindId, CAST (SUM (tmp.Amount)/ vbDays_StoreReal * 7 AS NUMERIC (16,0)) AS Amount
+         FROM (
+               (SELECT MovementItem.ObjectId AS GoodsId
+                     , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                     , SUM ( CASE WHEN _tmpMovStoreReal.Num = 1 THEN MovementItem.Amount * (-1) ELSE MovementItem.Amount END ) AS Amount
+                FROM _tmpMovStoreReal
+                     JOIN MovementItem ON MovementItem.MovementId = _tmpMovStoreReal.Id
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                GROUP BY MovementItem.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0) 
+                )
+              UNION ALL
+                SELECT tmpSale.GoodsId, tmpSale.GoodsKindId, tmpSale.Amount
+                FROM _tmpMovSale AS tmpSale
+              UNION ALL
+                SELECT tmpReturnIn.GoodsId, tmpReturnIn.GoodsKindId, tmpReturnIn.Amount
+                FROM _tmpMovReturnIn AS tmpReturnIn
+              ) AS  tmp
+         GROUP BY tmp.GoodsId, tmp.GoodsKindId;
 
      -- Результат
      IF inShowAll THEN
@@ -403,7 +501,7 @@ BEGIN
                                                                AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
                                       WHERE ObjectString_ArticleGLN.ValueData <> ''
                                      )
-    , tmpStoreReal AS (SELECT MovementItem.ObjectId                         AS GoodsId
+  /*  , tmpStoreReal AS (SELECT MovementItem.ObjectId                         AS GoodsId
                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                             , MovementItem.Amount                           AS Amount
                        FROM (SELECT Movement.Id
@@ -424,7 +522,7 @@ BEGIN
                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                               AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                         )
-
+*/
 
        SELECT
              0 :: Integer               AS Id
@@ -449,7 +547,7 @@ BEGIN
            , 1 :: TFloat                AS CountForPrice
            , NULL :: TFloat             AS AmountSumm
            , NULL :: TFloat             AS AmountSumm_Partner
-           , COALESCE (tmpStoreReal.Amount,0)   ::TFloat AS AmountRecommended
+           , COALESCE (_tmpRecommended.Amount,0)   ::TFloat AS AmountRecommended
            , CASE WHEN COALESCE (tmpPromo.isChangePercent, TRUE) = TRUE THEN vbChangePercent ELSE 0 END :: TFloat AS ChangePercent
 
            , Object_InfoMoney_View.InfoMoneyCode
@@ -540,8 +638,8 @@ BEGIN
             LEFT JOIN tmpGoodsPropertyValue ON tmpGoodsPropertyValue.GoodsId     = tmpGoods.GoodsId
                                            AND tmpGoodsPropertyValue.GoodsKindId = tmpGoods.GoodsKindId
 
-            LEFT JOIN tmpStoreReal ON tmpStoreReal.GoodsId     = tmpGoods.GoodsId
-                                  AND tmpStoreReal.GoodsKindId = tmpGoods.GoodsKindId
+            LEFT JOIN _tmpRecommended ON _tmpRecommended.GoodsId     = tmpGoods.GoodsId
+                                     AND _tmpRecommended.GoodsKindId = tmpGoods.GoodsKindId
                                   
        WHERE tmpMI.GoodsId IS NULL
 
@@ -566,7 +664,7 @@ BEGIN
            , tmpMI.CountForPrice :: TFloat      AS CountForPrice
            , CAST ((tmpMI.Amount + tmpMI.AmountSecond) * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2)) :: TFloat AS AmountSumm
            , tmpMI.Summ               :: TFloat AS AmountSumm_Partner
-           , COALESCE (tmpStoreReal.Amount,0)   ::TFloat AS AmountRecommended
+           , COALESCE (_tmpRecommended.Amount,0)   ::TFloat AS AmountRecommended
            , tmpMI.ChangePercent      :: TFloat AS ChangePercent
 
            , Object_InfoMoney_View.InfoMoneyCode
@@ -628,8 +726,8 @@ BEGIN
 
             LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = tmpMI.MovementId_Promo
 
-            LEFT JOIN tmpStoreReal ON tmpStoreReal.GoodsId     = tmpMI.GoodsId
-                                  AND tmpStoreReal.GoodsKindId = tmpMI.GoodsKindId
+            LEFT JOIN _tmpRecommended ON _tmpRecommended.GoodsId     = tmpMI.GoodsId
+                                     AND _tmpRecommended.GoodsKindId = tmpMI.GoodsKindId
            ;
 
      ELSE
@@ -867,7 +965,7 @@ BEGIN
                                       WHERE ObjectString_ArticleGLN.ValueData <> ''
                                      )
 
-    , tmpStoreReal AS (SELECT MovementItem.ObjectId                         AS GoodsId
+   /* , tmpStoreReal AS (SELECT MovementItem.ObjectId                         AS GoodsId
                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                             , MovementItem.Amount                           AS Amount
                        FROM (SELECT Movement.Id
@@ -887,7 +985,7 @@ BEGIN
                         LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                               AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                        )
+                        )*/
 
        SELECT
              tmpMI.MovementItemId :: Integer    AS Id
@@ -909,7 +1007,7 @@ BEGIN
            , tmpMI.CountForPrice :: TFloat      AS CountForPrice
            , CAST ((tmpMI.Amount + tmpMI.AmountSecond) * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2)) :: TFloat AS AmountSumm
            , tmpMI.Summ               :: TFloat AS AmountSumm_Partner
-           , COALESCE (tmpStoreReal.Amount,0)   ::TFloat AS AmountRecommended
+           , COALESCE (_tmpRecommended.Amount,0)   ::TFloat AS AmountRecommended
            , tmpMI.ChangePercent      :: TFloat AS ChangePercent
 
            , Object_InfoMoney_View.InfoMoneyCode
@@ -971,8 +1069,8 @@ BEGIN
 
             LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = tmpMI.MovementId_Promo
 
-            LEFT JOIN tmpStoreReal ON tmpStoreReal.GoodsId     = tmpMI.GoodsId
-                                  AND tmpStoreReal.GoodsKindId = tmpMI.GoodsKindId
+            LEFT JOIN _tmpRecommended ON _tmpRecommended.GoodsId     = tmpMI.GoodsId
+                                     AND _tmpRecommended.GoodsKindId = tmpMI.GoodsKindId
        ;
 
      END IF;
@@ -986,6 +1084,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderExternal_Mobile (Integer, Integer, TDa
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 23.03.17         * add _tmpRecommended
  28.07.16         * add PriceEDI, isPriceEDIDiff
  17.06.15                                        * add vbIsOrderDnepr
  31.03.15         * add GoodsGroupNameFull
@@ -998,3 +1097,5 @@ ALTER FUNCTION gpSelect_MovementItem_OrderExternal_Mobile (Integer, Integer, TDa
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_OrderExternal_Mobile (inMovementId:= 25173, inPriceListId:= zc_PriceList_Basis(), inOperDate:= CURRENT_TIMESTAMP, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItem_OrderExternal_Mobile (inMovementId:= 25173, inPriceListId:= zc_PriceList_Basis(), inOperDate:= CURRENT_TIMESTAMP, inShowAll:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+
+--select * from gpSelect_MovementItem_OrderExternal_Mobile(inMovementId := 5123250  , inPriceListId := 18840 , inOperDate := ('01.12.2016')::TDateTime , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '5');
