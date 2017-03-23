@@ -31,13 +31,14 @@ RETURNS TABLE (PaidKindId_First      Integer   -- Форма оплаты - БН
              -- , SyncDateIn         TDateTime -- Дата/время последней синхронизации - когда "успешно" загружалась входящая информация - актуальные справочники, цены, акции, долги, остатки и т.д
              -- , SyncDateOut        TDateTime -- Дата/время последней синхронизации - когда "успешно" выгружалась иходящая информация - заказы, возвраты и т.д
              , MobileVersion         TVarChar  -- Версия мобильного приложения. Пример: "1.0.3.625"
+             , MobileAPKFileName     TVarChar  -- Название ".apk" файла мобильного приложения. Пример: "ProjectMobile.apk"
 )
 AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
       -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!! - Волошина Е.А.
-      IF inSession = '5' THEN inSession:= '140094'; END IF;
+      -- IF inSession = '5' THEN inSession:= '140094'; END IF;
 
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -50,8 +51,9 @@ BEGIN
                                  , MAX (View_Personal.PersonalId) :: Integer AS PersonalId
                             FROM (SELECT 1) AS tmp
                                  LEFT JOIN ObjectLink AS ObjectLink_User_Member
-                                                      ON ObjectLink_User_Member.ObjectId = vbUserId
-                                                        AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                                                      ON -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!! - Волошина Е.А.
+                                                         ObjectLink_User_Member.ObjectId = CASE WHEN inSession = '5' THEN 140094 ELSE vbUserId END
+                                                     AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                                  LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
                                  LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.MemberId = ObjectLink_User_Member.ChildObjectId
                             GROUP BY ObjectLink_User_Member.ChildObjectId
@@ -90,7 +92,8 @@ BEGIN
             -- AS LastDateIn
             -- AS LastDateOut
 
-            , '1.0.0.0'::TVarChar AS MobileVersion
+            , '1.0.0.0'::TVarChar           AS MobileVersion
+            , 'ProjectMobile.apk'::TVarChar AS MobileAPKFileName
 
        FROM tmpPersonal
             LEFT JOIN Object AS Object_PaidKind_FirstForm  ON Object_PaidKind_FirstForm.Id = zc_Enum_PaidKind_FirstForm()

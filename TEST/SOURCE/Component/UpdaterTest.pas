@@ -16,6 +16,7 @@ type
     procedure UpdateScaleCeh;
     procedure UpdateFarmacyCash;
     procedure UpdateFarmacyCashServise;
+    procedure UpdateMobile;
   end;
 
 implementation
@@ -73,6 +74,11 @@ begin
   SaveFile(ExtractFileDir(ParamStr(0)) + '\midas.dll');
   SaveFile(ExtractFileDir(ParamStr(0)) + '\Upgrader4.exe');
   SaveFile(ExtractFileDir(ParamStr(0)) + '\' + gc_ProgramName);
+end;
+
+procedure TUpdaterTest.UpdateMobile;
+begin
+  SaveFile(ExtractFileDir(ParamStr(0)) + '\ProjectMobile.apk');
 end;
 
 procedure TUpdaterTest.UpdateScale;

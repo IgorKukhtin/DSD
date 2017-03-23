@@ -87,6 +87,43 @@ BEGIN
      WHERE Movement.Id = inMovementId;
 
 
+     -- если надо - меняем Значение
+     IF inChangePercentAmount = 0
+        AND vbMovementDescId = zc_Movement_Sale()
+        AND EXIST (SELECT 1
+                   FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                        INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                              ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                             AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                             AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = inGoodsKindId
+                        INNER JOIN ObjectFloat AS ObjectFloat_ChangePercentAmount
+                                              ON ObjectFloat_ChangePercentAmount.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                             AND ObjectFloat_ChangePercentAmount.DescId    = zc_ObjectFloat_GoodsByGoodsKind_ChangePercentAmount()
+                                             AND ObjectFloat_ChangePercentAmount.ValueData <> 0
+                        JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                        ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId
+                                       AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                        JOIN Object_InfoMoney_View AS View_InfoMoney
+                                                   ON View_InfoMoney.InfoMoneyId            = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                  AND View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                   WHERE ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = inGoodsId
+                     AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                  )
+     THEN
+         inChangePercentAmount:= (SELECT ObjectFloat_ChangePercentAmount.ValueData
+                                  FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                       INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                             ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                            AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                                            AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = inGoodsKindId
+                                       INNER JOIN ObjectFloat AS ObjectFloat_ChangePercentAmount
+                                                             ON ObjectFloat_ChangePercentAmount.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                            AND ObjectFloat_ChangePercentAmount.DescId    = zc_ObjectFloat_GoodsByGoodsKind_ChangePercentAmount()
+                                  WHERE ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = inGoodsId
+                                    AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                 );
+     END IF;
+
      -- определили !!!только для Возвратов - поиск акций!!!
      IF vbMovementDescId IN (zc_Movement_ReturnIn())
      THEN
