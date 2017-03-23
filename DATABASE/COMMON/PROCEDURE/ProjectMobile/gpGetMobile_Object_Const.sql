@@ -36,7 +36,7 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
       -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!! - Волошина Е.А.
-      IF inSession = '5' THEN inSession:= '140094'; END IF;
+      -- IF inSession = '5' THEN inSession:= '140094'; END IF;
 
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -49,8 +49,9 @@ BEGIN
                                  , MAX (View_Personal.PersonalId) :: Integer AS PersonalId
                             FROM (SELECT 1) AS tmp
                                  LEFT JOIN ObjectLink AS ObjectLink_User_Member
-                                                      ON ObjectLink_User_Member.ObjectId = vbUserId
-                                                        AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                                                      ON -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!! - Волошина Е.А.
+                                                         ObjectLink_User_Member.ObjectId = CASE WHEN inSession = '5' THEN 140094 ELSE vbUserId END
+                                                     AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                                  LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
                                  LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.MemberId = ObjectLink_User_Member.ChildObjectId
                             GROUP BY ObjectLink_User_Member.ChildObjectId
