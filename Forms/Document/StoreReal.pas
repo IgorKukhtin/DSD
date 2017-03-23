@@ -29,18 +29,11 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     PrintItemsSverkaCDS: TClientDataSet;
-    AmountSecond: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
-    CountForPrice: TcxGridDBColumn;
-    AmountSumm: TcxGridDBColumn;
-    AmountSumm_Partner: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
     InfoMoneyCode: TcxGridDBColumn;
     InfoMoneyGroupName: TcxGridDBColumn;
     InfoMoneyDestinationName: TcxGridDBColumn;
     InfoMoneyName: TcxGridDBColumn;
-    AmountEDI: TcxGridDBColumn;
-    AmountRemains: TcxGridDBColumn;
     spSavePrintState: TdsdStoredProc;
     actSPSavePrintState: TdsdExecStoredProc;
     mactPrint_Order: TMultiAction;
@@ -48,12 +41,7 @@ type
     cxLabel21: TcxLabel;
     edPartner: TcxButtonEdit;
     PartnerGuides: TdsdGuides;
-    Article: TcxGridDBColumn;
-    MovementPromo: TcxGridDBColumn;
-    PricePromo: TcxGridDBColumn;
     LineNum: TcxGridDBColumn;
-    isPriceEDIDiff: TcxGridDBColumn;
-    ChangePercent: TcxGridDBColumn;
     actShowMessage: TShowMessageAction;
   private
     { Private declarations }
