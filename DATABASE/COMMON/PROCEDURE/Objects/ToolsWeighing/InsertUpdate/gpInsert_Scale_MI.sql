@@ -17,16 +17,16 @@ CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inCountForPrice_Return  TFloat    , -- Цена за количество
     IN inDayPrior_PriceReturn  Integer,
     IN inCount                 TFloat    , -- Количество пакетов или Количество батонов
-    IN inHeadCount             TFloat    , -- 
-    IN inBoxCount              TFloat    , -- 
-    IN inBoxCode               Integer   , -- 
+    IN inHeadCount             TFloat    , --
+    IN inBoxCount              TFloat    , --
+    IN inBoxCode               Integer   , --
     IN inPartionGoods          TVarChar  , -- Партия
     IN inPriceListId           Integer   , --
-    IN inBranchCode            Integer   , -- 
-    IN inMovementId_Promo      Integer   , -- 
-    IN inIsBarCode             Boolean   , -- 
+    IN inBranchCode            Integer   , --
+    IN inMovementId_Promo      Integer   , --
+    IN inIsBarCode             Boolean   , --
     IN inSession               TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS TABLE (Id        Integer
              , TotalSumm TFloat
               )
@@ -90,38 +90,40 @@ BEGIN
      -- если надо - меняем Значение
      IF inChangePercentAmount = 0
         AND vbMovementDescId = zc_Movement_Sale()
-        AND EXIST (SELECT 1
-                   FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
-                        INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+        AND EXISTS (SELECT 1
+                    FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                         LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
                                               ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                              AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
-                                             AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = inGoodsKindId
-                        INNER JOIN ObjectFloat AS ObjectFloat_ChangePercentAmount
-                                              ON ObjectFloat_ChangePercentAmount.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
-                                             AND ObjectFloat_ChangePercentAmount.DescId    = zc_ObjectFloat_GoodsByGoodsKind_ChangePercentAmount()
-                                             AND ObjectFloat_ChangePercentAmount.ValueData <> 0
-                        JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                        ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId
-                                       AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                        JOIN Object_InfoMoney_View AS View_InfoMoney
-                                                   ON View_InfoMoney.InfoMoneyId            = ObjectLink_Goods_InfoMoney.ChildObjectId
-                                                  AND View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
-                   WHERE ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = inGoodsId
-                     AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
-                  )
+                         INNER JOIN ObjectFloat AS ObjectFloat_ChangePercentAmount
+                                               ON ObjectFloat_ChangePercentAmount.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                              AND ObjectFloat_ChangePercentAmount.DescId    = zc_ObjectFloat_GoodsByGoodsKind_ChangePercentAmount()
+                                              AND ObjectFloat_ChangePercentAmount.ValueData <> 0
+                         JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                         ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId
+                                        AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                         JOIN Object_InfoMoney_View AS View_InfoMoney
+                                                    ON View_InfoMoney.InfoMoneyId            = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                   AND View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                    WHERE ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = inGoodsId
+                      AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                      AND COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, zc_GoodsKind_Basis())  = inGoodsKindId
+                   )
      THEN
          inChangePercentAmount:= (SELECT ObjectFloat_ChangePercentAmount.ValueData
                                   FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
-                                       INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
-                                                             ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
-                                                            AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
-                                                            AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = inGoodsKindId
+                                       LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                            ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                           AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
                                        INNER JOIN ObjectFloat AS ObjectFloat_ChangePercentAmount
                                                              ON ObjectFloat_ChangePercentAmount.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                                             AND ObjectFloat_ChangePercentAmount.DescId    = zc_ObjectFloat_GoodsByGoodsKind_ChangePercentAmount()
                                   WHERE ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = inGoodsId
                                     AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                    AND COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, zc_GoodsKind_Basis())  = inGoodsKindId
+                                  LIMIT 1 -- !!!вдруг будет и с пустым значение и с zc_GoodsKind_Basis!!!
                                  );
+
      END IF;
 
      -- определили !!!только для Возвратов - поиск акций!!!
@@ -149,9 +151,9 @@ BEGIN
 
 
      -- !!!теперь будет для ВСЕХ - если Возврат + Акция!!!
-     IF vbMovementDescId = zc_Movement_ReturnIn() AND inMovementId_Promo > 0 
+     IF vbMovementDescId = zc_Movement_ReturnIn() AND inMovementId_Promo > 0
      THEN
-         -- !!!замена!!! 
+         -- !!!замена!!!
          inPrice_Return:= vbPricePromo;
 
      ELSE
@@ -202,10 +204,10 @@ BEGIN
             INTO vbWeightPack, vbWeightTotal, vbAmount_byPack
      FROM Object_GoodsByGoodsKind_View
           LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
-                                ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                                ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id
                                AND ObjectFloat_WeightPackage.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
           LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
-                                ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                                ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
                                AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
      WHERE Object_GoodsByGoodsKind_View.GoodsId = inGoodsId
        AND Object_GoodsByGoodsKind_View.GoodsKindId = inGoodsKindId;
@@ -289,7 +291,7 @@ BEGIN
                                                        , inSession             := inSession
                                                         );
 
-     -- 
+     --
      vbTotalSumm:= (SELECT ValueData FROM MovementFloat WHERE MovementId = inMovementId AND DescId = zc_MovementFloat_TotalSumm());
 
      -- Результат
