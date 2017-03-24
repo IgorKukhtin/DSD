@@ -399,12 +399,14 @@ object Personal_ObjectForm: TPersonal_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'MemberCode'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -412,12 +414,14 @@ object Personal_ObjectForm: TPersonal_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'MemberName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PositionId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'PositionId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PositionName'
@@ -425,12 +429,14 @@ object Personal_ObjectForm: TPersonal_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'PositionName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -438,12 +444,14 @@ object Personal_ObjectForm: TPersonal_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'UnitName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName_all'
@@ -451,15 +459,18 @@ object Personal_ObjectForm: TPersonal_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyName_all'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = 0
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractName'
           Value = ''
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -509,6 +520,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -516,6 +528,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPeriod'
@@ -523,6 +536,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         Component = cbPeriod
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsShowAll'
@@ -530,6 +544,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 48
@@ -573,6 +588,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item

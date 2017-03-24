@@ -918,7 +918,9 @@ uses
   MobileContract_Object in '..\..\Forms\Guides\MobileContract_Object.pas' {MobileContract_ObjectForm: TParentForm},
   OrderExternal in '..\..\Forms\Document\OrderExternal.pas' {OrderExternalForm: TParentForm},
   MobileOrderExternalJournal in '..\..\Forms\Document\MobileOrderExternalJournal.pas' {MobileOrderExternalJournalForm: TParentForm},
-  MobileOrderExternal in '..\..\Forms\Document\MobileOrderExternal.pas' {MobileOrderExternalForm: TParentForm};
+  MobileOrderExternal in '..\..\Forms\Document\MobileOrderExternal.pas' {MobileOrderExternalForm: TParentForm},
+  TaskJournal in '..\..\Forms\Document\TaskJournal.pas' {TaskJournalForm: TParentForm},
+  Task in '..\..\Forms\Document\Task.pas' {TaskForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

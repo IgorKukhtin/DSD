@@ -155,6 +155,7 @@ type
     procedure LoadSheetWorkTimeFormTest;
     procedure LoadStaffListFormTest;
     procedure LoadStorage_ObjectFormTest;
+    procedure LoadTaskTest;
     procedure LoadTaxFormTest;
     procedure LoadTaxCorrectiveTest;
     procedure LoadTransportFormTest;
@@ -932,6 +933,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TTaxCorrectiveForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxCorrectiveJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxCorrectiveJournalForm');
+end;
+
+procedure TLoadFormTest.LoadTaskTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaskForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTaskForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaskJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTaskJournalForm');
 end;
 
 procedure TLoadFormTest.LoadReturnOutFormTest;

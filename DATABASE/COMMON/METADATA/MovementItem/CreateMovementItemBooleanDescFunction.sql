@@ -88,6 +88,9 @@ CREATE OR REPLACE FUNCTION zc_MIBoolean_SP() RETURNS Integer AS $BODY$BEGIN RETU
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MIBoolean_SP', 'признак что участвует в Соц. проекте' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_SP'); 
 
+CREATE OR REPLACE FUNCTION zc_MIBoolean_isSync() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_isSync'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_isSync', '"успешно" сохранена инфа в Главной БД' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_isSync'); 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
