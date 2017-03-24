@@ -114,11 +114,15 @@ INSERT INTO MovementDateDesc (Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_MovementDate_OperDateSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_OperDateSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_OperDateSP', 'Дата рецепта (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_OperDateSP');
-  
+
+CREATE OR REPLACE FUNCTION zc_MovementDate_InsertMobile() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_InsertMobile'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_InsertMobile', 'Дата/время создания на мобильном устройстве' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_InsertMobile');
     
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.    Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.    Воробкало А.А.   Ярошенко Р.Ф.
+ 24.03.17                                                                                          * zc_MovementDate_InsertMobile
  22.12.16         * zc_MovementDate_OperDateSP
  31.10.15                                                                         *zc_MovementDate_StartPromo, zc_MovementDate_EndPromo, zc_MovementDate_StartSale, zc_MovementDate_EndSale
  04.05.15         				 * add zc_MovementDate_Insert and zc_MovementDate_Update
