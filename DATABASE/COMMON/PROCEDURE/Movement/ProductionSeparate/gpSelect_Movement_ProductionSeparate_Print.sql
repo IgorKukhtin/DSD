@@ -147,7 +147,7 @@ BEGIN
 
         -- приход от поставщика : кол. и сумм.
       , tmpIncome AS (-- находим по партиям из проводкок
-                      SELECT tmpContainer.DescId
+                      /*SELECT tmpContainer.DescId
                            , tmpContainer.ContainerId
                            , MIContainer.MovementId
                            , MIContainer.ObjectId_analyzer AS GoodsId
@@ -172,6 +172,33 @@ BEGIN
                                                       AND COALESCE (MIContainer.AnalyzerId, 0) = 0
                    
                       GROUP BY tmpContainer.DescId, tmpContainer.ContainerId, MIContainer.MovementId, MIContainer.ObjectId_analyzer, MIContainer.DescId
+                      */
+                      SELECT MIContainer.DescId 
+                           , MIContainer.ContainerId
+                           , MIContainer.MovementId
+                           , MIContainer.ObjectId_analyzer AS GoodsId
+                           , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN (MIContainer.Amount) ELSE 0 END) AS Amount_count
+                           , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN (MIContainer.Amount) ELSE 0 END) AS Amount_summ  
+                           , SUM (COALESCE (MIFloat_AmountPacker.ValueData, 0)) AS CountPacker
+                           , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0))    AS HeadCount
+                      FROM MovementItemContainer AS MIContainer
+                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPacker
+                                                       ON MIFloat_AmountPacker.MovementItemId = MIContainer.MovementItemId
+                                                      AND MIFloat_AmountPacker.DescId = zc_MIFloat_AmountPacker()
+                                                      AND MIContainer.DescId = zc_MIContainer_Count()
+                                                      AND COALESCE (MIContainer.AnalyzerId, 0) = 0 
+                           LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+                                                       ON MIFloat_HeadCount.MovementItemId = MIContainer.MovementItemId
+                                                      AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                                                      AND MIContainer.DescId = zc_MIContainer_Count()
+                                                      AND COALESCE (MIContainer.AnalyzerId, 0) = 0 
+
+                      WHERE MIContainer.ContainerId IN (SELECT tmpContainer.ContainerId FROM tmpContainer)
+                        AND MIContainer.MovementDescId = zc_Movement_Income()
+                      GROUP BY MIContainer.DescId 
+                             , MIContainer.ContainerId
+                             , MIContainer.MovementId
+                             , MIContainer.ObjectId_analyzer
                      UNION ALL
                       -- находим по партиям из документа (т.к. не партионный учет то проводок по партиям нет)
                       SELECT 0 AS DescId
@@ -397,7 +424,9 @@ ALTER FUNCTION gpSelect_Movement_ProductionSeparate_Print (Integer,TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.03.17         *
  03.04.15         *
 */
 -- тест
--- SELECT * FROM gpSelect_Movement_ProductionSeparate_Print (inMovementId := 3519400, inSession:= zfCalc_UserAdmin());
+--SELECT * FROM gpSelect_Movement_ProductionSeparate_Print (inMovementId := 3519400, inSession:= zfCalc_UserAdmin());
+-- FETCH ALL "<unnamed portal 18>";
