@@ -538,7 +538,7 @@ object DM: TDM
     Connection = conMain
     SQL.Strings = (
       '')
-    Left = 32
+    Left = 40
     Top = 448
     object qryPriceListId: TIntegerField
       FieldName = 'Id'
@@ -555,10 +555,6 @@ object DM: TDM
     object qryGoodsForPriceListId: TIntegerField
       FieldName = 'Id'
     end
-    object qryGoodsForPriceListFullName: TWideStringField
-      FieldName = 'FullName'
-      Size = 400
-    end
     object qryGoodsForPriceListOBJECTCODE: TIntegerField
       FieldName = 'OBJECTCODE'
     end
@@ -570,18 +566,9 @@ object DM: TDM
       FieldName = 'KindName'
       Size = 255
     end
-    object qryGoodsForPriceListMeasureName: TStringField
-      FieldName = 'MeasureName'
-      Size = 255
-    end
-    object qryGoodsForPriceListweight: TFloatField
-      FieldName = 'weight'
-    end
-    object qryGoodsForPriceListOrderPrice: TFloatField
-      FieldName = 'OrderPrice'
-    end
-    object qryGoodsForPriceListSalePrice: TFloatField
-      FieldName = 'SalePrice'
+    object qryGoodsForPriceListPrice: TWideStringField
+      FieldName = 'Price'
+      Size = 200
     end
   end
   object tblMovement_OrderExternal: TFDTable
@@ -1317,6 +1304,74 @@ object DM: TDM
     end
     object cdsReturnInItemsKindId: TIntegerField
       FieldName = 'KindId'
+    end
+  end
+  object qryPromoList: TFDQuery
+    Connection = conMain
+    Left = 232
+    Top = 448
+    object qryPromoListId: TIntegerField
+      FieldName = 'Id'
+    end
+    object qryPromoListInvNumber: TStringField
+      FieldName = 'InvNumber'
+      Size = 255
+    end
+    object qryPromoListStartSale: TDateTimeField
+      FieldName = 'StartSale'
+    end
+    object qryPromoListEndSale: TDateTimeField
+      FieldName = 'EndSale'
+    end
+    object qryPromoListChangePercent: TWideStringField
+      FieldName = 'ChangePercent'
+      Size = 300
+    end
+    object qryPromoListCommentMain: TStringField
+      FieldName = 'CommentMain'
+      Size = 255
+    end
+    object qryPromoListTermin: TWideStringField
+      FieldName = 'Termin'
+      Size = 200
+    end
+  end
+  object qryPromoPartners: TFDQuery
+    Connection = conMain
+    Left = 312
+    Top = 448
+    object qryPromoPartnersName: TStringField
+      FieldName = 'Name'
+      Size = 255
+    end
+    object qryPromoPartnersContractName: TWideStringField
+      FieldName = 'ContractName'
+      Size = 300
+    end
+    object qryPromoPartnersAddress: TStringField
+      FieldName = 'Address'
+      Size = 255
+    end
+  end
+  object qryPromoGoods: TFDQuery
+    Connection = conMain
+    Left = 400
+    Top = 448
+    object qryPromoGoodsGoodsName: TStringField
+      FieldName = 'GoodsName'
+      Size = 255
+    end
+    object qryPromoGoodsKindName: TStringField
+      FieldName = 'KindName'
+      Size = 255
+    end
+    object qryPromoGoodsTax: TWideStringField
+      FieldName = 'Tax'
+      Size = 100
+    end
+    object qryPromoGoodsPrice: TWideStringField
+      FieldName = 'Price'
+      Size = 250
     end
   end
 end

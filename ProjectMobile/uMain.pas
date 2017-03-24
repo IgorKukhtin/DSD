@@ -27,7 +27,8 @@ uses
   Androidapi.JNI.Location, Androidapi.JNIBridge,
   Androidapi.JNI.GraphicsContentViewText,
   Androidapi.JNI.JavaTypes,
-  AndroidApi.JNI.WebKit
+  AndroidApi.JNI.WebKit,
+  Androidapi.JNI.Net
   {$ENDIF};
 
 const
@@ -152,20 +153,7 @@ type
     bRoute: TButton;
     bPartners: TButton;
     tiPriceList: TTabItem;
-    lwPriceList: TListView;
     tiPriceListItems: TTabItem;
-    lwGoods: TListView;
-    ppGoodsInfo: TPopup;
-    pGoodsInfo: TPanel;
-    lGoodsName: TLabel;
-    Label10: TLabel;
-    lGoodsCode: TLabel;
-    lGoodsType: TLabel;
-    Label17: TLabel;
-    Label18: TLabel;
-    lGoodsWeight: TLabel;
-    Label22: TLabel;
-    lGoodsPrice: TLabel;
     tiOrderExternal: TTabItem;
     VertScrollBox3: TVertScrollBox;
     tiGoodsItems: TTabItem;
@@ -259,8 +247,6 @@ type
     tMapToImage: TTimer;
     iPartnerMap: TImage;
     lwOrderExternalList: TListView;
-    LinkListControlToField4: TLinkListControlToField;
-    bsPriceList: TBindSourceDB;
     LinkListControlToField5: TLinkListControlToField;
     pNewOrderExternal: TPanel;
     bNewOrderExternal: TButton;
@@ -319,10 +305,7 @@ type
     bsStoreRealItems: TBindSourceDB;
     LinkListControlToField9: TLinkListControlToField;
     lPriceWithPercent: TLabel;
-    Label13: TLabel;
-    lGoodsMeasure: TLabel;
     bsGoodsForPriceList: TBindSourceDB;
-    LinkListControlToField1: TLinkListControlToField;
     pPhotoComment: TPanel;
     bSavePhoto: TButton;
     bCancelPhoto: TButton;
@@ -374,6 +357,62 @@ type
     tErrorMap: TTimer;
     bRefreshMapScreen: TButton;
     Image15: TImage;
+    lwGoods: TListView;
+    Popup2: TPopup;
+    Panel28: TPanel;
+    Label10: TLabel;
+    Button1: TButton;
+    Button16: TButton;
+    Button17: TButton;
+    Button18: TButton;
+    Button19: TButton;
+    Button20: TButton;
+    Button21: TButton;
+    Button22: TButton;
+    Button23: TButton;
+    Button24: TButton;
+    Button25: TButton;
+    Button26: TButton;
+    Button27: TButton;
+    Button28: TButton;
+    Label13: TLabel;
+    LinkFillControlToField2: TLinkFillControlToField;
+    bPromo: TButton;
+    tiPromoList: TTabItem;
+    tiPromoDetail: TTabItem;
+    tcPromo: TTabControl;
+    tiPromoPartner: TTabItem;
+    tiPromoGoods: TTabItem;
+    lwPromoGoods: TListView;
+    Popup3: TPopup;
+    Panel29: TPanel;
+    Label17: TLabel;
+    Button29: TButton;
+    Button30: TButton;
+    Button31: TButton;
+    Button32: TButton;
+    Button33: TButton;
+    Button34: TButton;
+    Button35: TButton;
+    Button36: TButton;
+    Button37: TButton;
+    Button38: TButton;
+    Button39: TButton;
+    Button40: TButton;
+    Button41: TButton;
+    Button42: TButton;
+    Label18: TLabel;
+    lwPromoPartners: TListView;
+    lwPromoList: TListView;
+    lwPriceList: TListView;
+    bsPriceList: TBindSourceDB;
+    LinkListControlToField1: TLinkListControlToField;
+    BindSourceDB1: TBindSourceDB;
+    LinkListControlToField4: TLinkListControlToField;
+    BindSourceDB2: TBindSourceDB;
+    LinkFillControlToField3: TLinkFillControlToField;
+    BindSourceDB3: TBindSourceDB;
+    LinkFillControlToField4: TLinkFillControlToField;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bReloginClick(Sender: TObject);
@@ -399,8 +438,6 @@ type
     procedure bPartnersClick(Sender: TObject);
     procedure bPriceListClick(Sender: TObject);
     procedure lwPriceListItemClick(const Sender: TObject;
-      const AItem: TListViewItem);
-    procedure lwGoodsItemClick(const Sender: TObject;
       const AItem: TListViewItem);
     procedure bNewOrderExternalClick(Sender: TObject);
     procedure lwGoodsItemsItemClick(const Sender: TObject;
@@ -474,7 +511,6 @@ type
       Shift: TShiftState);
     procedure lwGoodsFilter(Sender: TObject; const AFilter, AValue: string;
       var Accept: Boolean);
-    procedure pGoodsInfoClick(Sender: TObject);
     procedure bSavePhotoClick(Sender: TObject);
     procedure bCancelPhotoClick(Sender: TObject);
     procedure cbOnlyPromoChange(Sender: TObject);
@@ -490,6 +526,8 @@ type
     procedure bSyncClick(Sender: TObject);
     procedure tErrorMapTimer(Sender: TObject);
     procedure bRefreshMapScreenClick(Sender: TObject);
+    procedure bInfoClick(Sender: TObject);
+    procedure bPromoClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -547,6 +585,8 @@ type
     procedure ShowPartnerInfo;
     procedure ShowPriceLists;
     procedure ShowPriceListItems;
+    procedure ShowPromoList;
+    procedure ShowPromoItems;
     procedure ShowPathOnmap;
     procedure ShowPhotos;
     procedure ShowPhoto;
@@ -734,78 +774,66 @@ end;
 procedure TfrmMain.LogInButtonClick(Sender: TObject);
 var
   ErrorMessage: String;
-  LoginOk : boolean;
   SettingsFile : TIniFile;
+  NeedSync : boolean;
 begin
-  LoginOk := false;
+  NeedSync := not assigned(gc_User) or SyncCheckBox.IsChecked;
 
-  if assigned(gc_User) then  { Проверяем только с данными из локальной БД }
-  begin
-    {$IFNDEF NotCheckLogin}
-    if (LoginEdit.Text = gc_User.Login) or (PasswordEdit.Text = gc_User.Password) then
-    {$ELSE}
-    if true then
-    {$ENDIF}
+  if gc_WebService = '' then
+    gc_WebService := WebServerEdit.Text;
+
+  Wait(True);
+  try
+    ErrorMessage := TAuthentication.CheckLogin(TStorageFactory.GetStorage, LoginEdit.Text, PasswordEdit.Text, gc_User);
+
+    Wait(False);
+
+    if ErrorMessage <> '' then
     begin
-      LoginOk := true;
+      ShowMessage(ErrorMessage);
+      exit;
+    end;
+  except
+    Wait(False);
+
+    if assigned(gc_User) then  { Проверяем login и password в локальной БД }
+    begin
+      gc_User.Local := true;
+
+      if (LoginEdit.Text <> gc_User.Login) or (PasswordEdit.Text <> gc_User.Password) then
+      begin
+        ShowMessage('Введен неправильный логин или пароль');
+        exit;
+      end
+      else
+        ShowMessage('Нет связи с сервером. Программа переведена в режим автономной работы.');
     end
     else
     begin
-      ShowMessage('Wrong login or password');
+      ShowMessage('Нет связи с сервером. Продолжение работы невозможно');
       exit;
     end;
   end;
 
-  if (not LoginOk) or SyncCheckBox.IsChecked then
+  if (not gc_User.Local) and NeedSync then
   begin
-    Wait(True);
-
-    try
-      if gc_WebService = '' then
-        gc_WebService := WebServerEdit.Text;
-
-      ErrorMessage := TAuthentication.CheckLogin(TStorageFactory.GetStorage, LoginEdit.Text, PasswordEdit.Text, gc_User);
-
-      Wait(False);
-
-      if ErrorMessage = '' then
-      begin
-        LoginOk := true;
-
-        DM.SynchronizeWithMainDatabase;
-      end
-      else
-      begin
-        if LoginOk then
-          ShowMessage('Ошибка синхронизации (' + ErrorMessage + '). Робота будет продолжена с локальными данными')
-        else
-          ShowMessage(ErrorMessage);
-      end;
-    except
-    on E: Exception do
-      begin
-        Wait(False);
-        ShowMessage(E.Message);
-        exit;
-      end;
-    end;
+    DM.SynchronizeWithMainDatabase;
   end;
 
-  if LoginOk then
-  begin
-    {$IF DEFINED(iOS) or DEFINED(ANDROID)}
-    SettingsFile := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'settings.ini'));
-    {$ELSE}
-    SettingsFile := TIniFile.Create('settings.ini');
-    {$ENDIF}
-    try
-      SettingsFile.WriteString('LOGIN', 'USERNAME', LoginEdit.Text);
-    finally
-      FreeAndNil(SettingsFile);
-    end;
-
-    SwitchToForm(tiMain, nil);
+  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+  SettingsFile := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'settings.ini'));
+  {$ELSE}
+  SettingsFile := TIniFile.Create('settings.ini');
+  {$ENDIF}
+  try
+    SettingsFile.WriteString('LOGIN', 'USERNAME', LoginEdit.Text);
+  finally
+    FreeAndNil(SettingsFile);
   end;
+
+  bSync.Enabled := not gc_User.Local;
+
+  SwitchToForm(tiMain, nil);
 end;
 
 procedure TfrmMain.lwGoodsFilter(Sender: TObject; const AFilter, AValue: string;
@@ -815,29 +843,6 @@ begin
     Accept :=  AValue.ToUpper.Contains(AFilter.ToUpper)
   else
     Accept := true;
-end;
-
-procedure TfrmMain.lwGoodsItemClick(const Sender: TObject;
-  const AItem: TListViewItem);
-begin
-  if ppGoodsInfo.IsOpen then
-  begin
-    ppGoodsInfo.IsOpen := false;
-
-    if FOldGoodsItemIndex = AItem.Index then
-      exit;
-  end;
-
-  FOldGoodsItemIndex := AItem.Index;
-
-  lGoodsName.Text := DM.qryGoodsForPriceListGoodsName.AsString;
-  lGoodsCode.Text := DM.qryGoodsForPriceListOBJECTCODE.AsString;
-  lGoodsType.Text := DM.qryGoodsForPriceListKindName.AsString;
-  lGoodsMeasure.Text := DM.qryGoodsForPriceListMeasureName.AsString;
-  lGoodsWeight.Text := DM.qryGoodsForPriceListWeight.AsString;
-  lGoodsPrice.Text := DM.qryGoodsForPriceListOrderPrice.AsString;
-
-  ppGoodsInfo.IsOpen := true;
 end;
 
 procedure TfrmMain.lwOrderExternalItemsFilter(Sender: TObject; const AFilter,
@@ -1165,11 +1170,6 @@ begin
     Close;
 end;
 
-procedure TfrmMain.pGoodsInfoClick(Sender: TObject);
-begin
-  ppGoodsInfo.IsOpen := false;
-end;
-
 procedure TfrmMain.BackResult(const AResult: TModalResult);
 begin
   if AResult = mrYes then
@@ -1469,6 +1469,26 @@ begin
   SwitchToForm(tiHandbook, nil);
 end;
 
+procedure TfrmMain.bInfoClick(Sender: TObject);
+{$IFDEF ANDROID}
+var
+  intent: JIntent;
+  uri: Jnet_Uri;
+begin
+  Intent := TJIntent.Create;
+  Intent.setAction(TJIntent.JavaClass.ACTION_VIEW);
+
+  uri := TJnet_Uri.JavaClass.fromFile(TJFile.JavaClass.init(StringToJString(TPath.Combine(TPath.GetSharedDownloadsPath, 'TestStyles.apk'))));
+  Intent.setDataAndType(uri, StringToJString('application/vnd.android.package-archive'));
+  Intent.setFlags(TJIntent.JavaClass.FLAG_ACTIVITY_NEW_TASK);
+  SharedActivity.startActivity(Intent);
+end;
+{$ELSE}
+begin
+  //
+end;
+{$ENDIF}
+
 procedure TfrmMain.bMondayClick(Sender: TObject);
 begin
   ShowPartners(TButton(Sender).Tag, TButton(Sender).Text);
@@ -1520,6 +1540,11 @@ end;
 procedure TfrmMain.bPriceListClick(Sender: TObject);
 begin
   ShowPriceLists;
+end;
+
+procedure TfrmMain.bPromoClick(Sender: TObject);
+begin
+  ShowPromoList;
 end;
 
 procedure TfrmMain.bRefreshMapScreenClick(Sender: TObject);
@@ -2224,11 +2249,21 @@ begin
     AddedNewReturnInItems;
 
   if tcMain.ActiveTab = tiGoodsItems then
+  begin
     for I := 0 to lwGoodsItems.Controls.Count-1 do
     if lwGoodsItems.Controls[I].ClassType = TSearchBox then
     begin
       TSearchBox(lwGoodsItems.Controls[I]).Text := '';
     end;
+
+    lwGoodsItems.ScrollViewPos := 0;
+  end;
+
+  if tcMain.ActiveTab = tiPromoList then
+  begin
+    DM.qryPromoPartners.Close;
+    DM.qryPromoGoods.Close;
+  end;
 end;
 
 procedure TfrmMain.ChangePartnerInfoLeftUpdate(Sender: TObject);
@@ -2444,6 +2479,7 @@ procedure TfrmMain.ShowPriceLists;
 begin
   DM.qryPriceList.Open('select ID, VALUEDATA from OBJECT_PRICELIST where ISERASED = 0');
 
+  lwPriceList.ScrollViewPos := 0;
   SwitchToForm(tiPriceList, DM.qryPriceList);
 end;
 
@@ -2451,17 +2487,53 @@ procedure TfrmMain.ShowPriceListItems;
 begin
   FOldGoodsItemIndex := -1;
 
-  DM.qryGoodsForPriceList.Open('select G.ID, G.OBJECTCODE, G.VALUEDATA GoodsName, G.WEIGHT, GK.VALUEDATA KindName, ' +
-    'PLI.ORDERPRICE, PLI.SALEPRICE, M.VALUEDATA MeasureName, G.VALUEDATA || '' ('' || GK.VALUEDATA || '')'' FullName ' +
-    'FROM OBJECT_GOODS G ' +
+  DM.qryGoodsForPriceList.Open('select G.ID, G.OBJECTCODE, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ' +
+    '''Цена: '' || PLI.ORDERPRICE || '' за '' || M.VALUEDATA Price ' +
+    'FROM OBJECT_PRICELISTITEMS PLI ' +
+    'JOIN OBJECT_GOODS G ON G.ID = PLI.GOODSID AND G.ISERASED = 0 ' +
     'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID AND GLK.ISERASED = 0 ' +
     'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERASED = 0 ' +
-    'JOIN OBJECT_PRICELISTITEMS PLI ON PLI.GOODSID = G.ID ' +
-    'JOIN OBJECT_PRICELIST PL ON PL.ID = PLI.PRICELISTID ' +
     'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-    'WHERE G.ISERASED = 0 and PLI.PRICELISTID = ' + DM.qryPriceListId.AsString);
+    'WHERE PLI.PRICELISTID = ' + DM.qryPriceListId.AsString);
 
+  lwGoods.ScrollViewPos := 0;
   SwitchToForm(tiPriceListItems, DM.qryGoodsForPriceList);
+end;
+
+procedure TfrmMain.ShowPromoList;
+begin
+  DM.qryPromoList.Open('select Id, InvNumber, StartSale, EndSale, CommentMain, ' +
+    '''Действует с '' || DATE(StartSale) || '' по '' || DATE(EndSale) Termin, ' +
+    'CASE WHEN isChangePercent = 0 THEN ''Скидка по договору не предоставляется'' ELSE '''' END ChangePercent ' +
+    'from MOVEMENT_PROMO');
+
+  lwPromoList.ScrollViewPos := 0;
+  SwitchToForm(tiPromoList, DM.qryPromoList);
+end;
+
+procedure TfrmMain.ShowPromoItems;
+begin
+  FOldGoodsItemIndex := -1;
+
+  DM.qryPromoPartners.Open('select J.VALUEDATA Name, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, P.ADDRESS ' +
+    'from MOVEMENTITEM_PROMOPARTNER PP ' +
+    'JOIN OBJECT_PARTNER P ON P.ID = PP.PARTNERID AND P.CONTRACTID = PP.CONTRACTID' +
+    'JOIN OBJECT_CONTRACT C ON C.ID = PP.CONTRACTID ' +
+    'JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID ' +
+    'where PP.MOVEMENTID = ' + DM.qryPromoListId.AsString);
+
+  DM.qryPromoGoods.Open('select G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ' +
+    '''Скидка '' || PG.TAXPROMO || ''%'' Tax, ' +
+    '''Акционная цена: '' || PG.PRICEWITHOUTVAT || '' (с НДС '' || PG.PRICEWITHVAT || '') за '' || M.VALUEDATA Price ' +
+    'FROM MOVEMENTITEM_PROMOGOODS PG ' +
+    'JOIN OBJECT_GOODS G ON G.ID = PG.GOODSID ' +
+    'JOIN OBJECT_GOODSKIND GK ON GK.ID = PG.GOODSKINDID AND GK.ISERASED = 0 ' +
+    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+    'WHERE PG.MOVEMENTID = ' + DM.qryPromoListId.AsString);
+
+  lwPromoPartners.ScrollViewPos := 0;
+  lwPromoGoods.ScrollViewPos := 0;
+  SwitchToForm(tiPriceListItems, nil);
 end;
 
 procedure TfrmMain.ShowPathOnmap;
