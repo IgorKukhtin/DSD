@@ -25,6 +25,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbCurrencyId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -41,6 +42,8 @@ BEGIN
                         AND Movement_StoreReal.DescId = zc_Movement_ReturnIn()
       WHERE MovementString_GUID.DescId = zc_MovementString_GUID() 
         AND MovementString_GUID.ValueData = inGUID;
+
+      vbIsInsert:= (COALESCE (vbId, 0) = 0);
 
       SELECT ObjectLink_Contract_Currency.ChildObjectId
       INTO vbCurrencyId
@@ -77,6 +80,17 @@ BEGIN
       -- сохранили свойство <Глобальный уникальный идентификатор>                       
       PERFORM lpInsertUpdate_MovementString (zc_MovementString_GUID(), vbId, inGUID);   
                                                                                         
+      -- сохранили свойство <Дата/время создания на мобильном устройстве>
+      PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_InsertMobile(), vbId, inInsertDate);
+
+      IF vbIsInsert 
+      THEN
+           -- сохранили связь с <Пользователь>
+           PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_Insert(), vbId, vbUserId);
+           -- сохранили свойство <Дата создания>
+           PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_Insert(), vbId, CURRENT_TIMESTAMP);
+      END IF;
+
       RETURN vbId;
 END;
 $BODY$
