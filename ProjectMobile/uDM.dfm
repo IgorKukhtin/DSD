@@ -126,6 +126,14 @@ object DM: TDM
     object tblObject_ConstSyncDateOut: TDateTimeField
       FieldName = 'SyncDateOut'
     end
+    object tblObject_ConstMobileVersion: TStringField
+      FieldName = 'MobileVersion'
+      Size = 255
+    end
+    object tblObject_ConstMobileAPKFileName: TStringField
+      FieldName = 'MobileAPKFileName'
+      Size = 255
+    end
   end
   object tblObject_Partner: TFDTable
     Connection = conMain

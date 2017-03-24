@@ -450,6 +450,8 @@ type
     qryPromoGoodsTax: TWideStringField;
     qryPromoGoodsPrice: TWideStringField;
     qryPromoListTermin: TWideStringField;
+    tblObject_ConstMobileVersion: TStringField;
+    tblObject_ConstMobileAPKFileName: TStringField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -580,9 +582,10 @@ end;
 
 procedure TSyncThread.GetConfigurationInfo;
 var
-  x : integer;
+  x, y : integer;
   GetStoredProc : TdsdStoredProc;
   str, str1 : string;
+  Mapping : array of array[1..2] of integer;
 begin
   GetStoredProc := TdsdStoredProc.Create(nil);
   try
@@ -596,10 +599,23 @@ begin
       while not DM.tblObject_Const.Eof do
         DM.tblObject_Const.Delete;
 
+      SetLength(Mapping, 0);
+      for x := 0 to DM.tblObject_Const.Fields.Count - 1 do
+        for y := 0 to GetStoredProc.DataSet.Fields.Count - 1 do
+          if CompareText(DM.tblObject_Const.Fields[x].FieldName, GetStoredProc.DataSet.Fields[y].FieldName) = 0 then
+          begin
+            SetLength(Mapping, Length(Mapping) + 1);
+
+            Mapping[Length(Mapping) - 1][1] := x;
+            Mapping[Length(Mapping) - 1][2] := y;
+
+            break;
+          end;
+
       DM.tblObject_Const.Append;
 
-      for x := 0 to GetStoredProc.DataSet.Fields.Count - 1 do
-        DM.tblObject_Const.Fields[ x ].Value := GetStoredProc.DataSet.Fields[ x ].Value;
+      for x := 0 to Length(Mapping) - 1 do
+        DM.tblObject_Const.Fields[ Mapping[x][1] ].Value := GetStoredProc.DataSet.Fields[ Mapping[x][2] ].Value;
 
       DM.tblObject_Const.FieldByName('SYNCDATEIN').AsDateTime := Date();
 
