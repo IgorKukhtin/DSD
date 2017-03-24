@@ -503,11 +503,16 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PeriodDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PeriodDialogForm');
   }
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PromoDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_PromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_PromoForm');
-  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncome_PromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncome_PromoForm');
+   exit;
    {
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsForm'));

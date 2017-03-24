@@ -1,6 +1,7 @@
 inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1072#1084' ('#1090#1086#1074#1072#1088#1099' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1086#1075#1086' '#1082#1086#1085#1090#1088#1072#1082#1090#1072')'
   ClientWidth = 806
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 822
   PixelsPerInch = 96
   TextHeight = 13
@@ -293,6 +294,23 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
     Top = 192
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = GuidesMaker
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
     Left = 8
     Top = 232
   end
@@ -367,6 +385,54 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
       ImageIndex = 28
       ShortCut = 115
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_PromoDialogForm'
+      FormNameParam.Value = 'TReport_PromoDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42491d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42491d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MakerId'
+          Value = ''
+          Component = GuidesMaker
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MakerName'
+          Value = ''
+          Component = GuidesMaker
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -422,6 +488,14 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
         end
         item
           Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -443,6 +517,10 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
     end
     object bbOpenDocument: TdxBarButton
       Action = actOpenDocument
+      Category = 0
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
       Category = 0
     end
   end

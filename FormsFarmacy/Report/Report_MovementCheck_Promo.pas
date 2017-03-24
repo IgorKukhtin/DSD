@@ -39,6 +39,8 @@ type
     FormParams: TdsdFormParams;
     colPartionGoods: TcxGridDBColumn;
     colExpirationDate: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public
