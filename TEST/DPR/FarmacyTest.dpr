@@ -499,7 +499,8 @@ uses
   MemberSPEdit in '..\..\FormsFarmacy\Guides\MemberSPEdit.pas' {MemberSPEditForm: TParentForm},
   MemberSP in '..\..\FormsFarmacy\Guides\MemberSP.pas' {MemberSPForm: TParentForm},
   Report_RemainsOverGoods_To in '..\..\FormsFarmacy\Report\Report_RemainsOverGoods_To.pas' {Report_RemainsOverGoods_ToForm: TParentForm},
-  InvoiceJournal in '..\..\FormsFarmacy\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm};
+  InvoiceJournal in '..\..\FormsFarmacy\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm},
+  Report_PromoDialog in '..\..\FormsFarmacy\Report\Report_PromoDialog.pas' {Report_PromoDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

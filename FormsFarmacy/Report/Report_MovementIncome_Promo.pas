@@ -42,6 +42,8 @@ type
     colPaymentDate: TcxGridDBColumn;
     colInvNumberBranch: TcxGridDBColumn;
     colBranchDate: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public
