@@ -1,14 +1,17 @@
 -- Function: gpInsertUpdateMobile_Movement_StoreReal()
 
 DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Movement_StoreReal (TVarChar, TVarChar, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Movement_StoreReal (TVarChar, TVarChar, TDateTime, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Movement_StoreReal (TVarChar, TVarChar, TDateTime, Integer, TVarChar, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_Movement_StoreReal (
-    IN inGUID      TVarChar  , -- Глобальный уникальный идентификатор для синхронизации с мобильными устройствами
-    IN inInvNumber TVarChar  , -- Номер документа
-    IN inOperDate  TDateTime , -- Дата документа
-    IN inPartnerId Integer   , -- Контрагент
-    IN inComment   TVarChar  , -- Примечание
-    IN inSession   TVarChar    -- сессия пользователя
+    IN inGUID       TVarChar  , -- Глобальный уникальный идентификатор для синхронизации с мобильными устройствами
+    IN inInvNumber  TVarChar  , -- Номер документа
+    IN inOperDate   TDateTime , -- Дата документа
+    IN inPartnerId  Integer   , -- Контрагент
+    IN inComment    TVarChar  , -- Примечание
+    IN inInsertDate TDateTime , -- Дата/время создания
+    IN inSession    TVarChar    -- сессия пользователя
 )
 RETURNS Integer 
 AS
@@ -39,6 +42,9 @@ BEGIN
                                               , inComment:= inComment 
                                                );
 
+      -- сохранили свойство <Дата/время создания на мобильном устройстве>
+      PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_InsertMobile(), vbId, inInsertDate);
+
       RETURN vbId;
 END;
 $BODY$
@@ -51,4 +57,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdateMobile_Movement_StoreReal (inGUID:= '{678E6742-8182-4FF4-8882-D1DFF49D6C62}', inInvNumber:= '-3', inOperDate:= CURRENT_DATE, inPartnerId:= 17819, inComment:= 'Це з мобілки прийшло :)', inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpInsertUpdateMobile_Movement_StoreReal (inGUID:= '{678E6742-8182-4FF4-8882-D1DFF49D6C62}', inInvNumber:= '-3', inOperDate:= CURRENT_DATE, inPartnerId:= 17819, inComment:= 'Це з мобілки прийшло :)', inInsertDate:= CURRENT_TIMESTAMP, inSession:= zfCalc_UserAdmin());
