@@ -23,6 +23,7 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbisInsert Boolean;
    DECLARE vbId Integer;
    DECLARE vbOperDatePartner TDateTime;
    DECLARE vbRouteId Integer;
@@ -40,6 +41,8 @@ BEGIN
                         AND Movement_OrderExternal.DescId = zc_Movement_OrderExternal()
       WHERE MovementString_GUID.DescId = zc_MovementString_GUID() 
         AND MovementString_GUID.ValueData = inGUID;
+
+      vbisInsert:= (COALESCE(vbId, 0) = 0);
                                                                                        
       vbOperDatePartner:= inOperDate + (COALESCE ((SELECT ValueData FROM ObjectFloat 
                                                    WHERE ObjectId = inPartnerId 
@@ -104,10 +107,19 @@ BEGIN
       PERFORM lpInsertUpdate_MovementString (zc_MovementString_GUID(), vbId, inGUID);   
       -- Комментарий
       PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), vbId, inComment);
-      -- сохранили связь с <Пользователь>
-      PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_Insert(), vbId, vbUserId);
+
+      IF vbisInsert 
+      THEN
+           -- сохранили связь с <Пользователь>
+           PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_Insert(), vbId, vbUserId);
+      END IF;
+
       -- сохранили свойство <Дата создания>
-      PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_Insert(), vbId, inInsertDate);
+      -- формируетрся при загрузке с моб устр., здесь дата загрузки
+      PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_Insert(), vbId, CURRENT_TIMESTAMP);
+
+      -- сохранили свойство <Дата/время создания заказа на мобильном устройстве>
+      PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_InsertMobile(), vbId, inInsertDate);
 
       RETURN vbId;                                                                      
 END;                                                                                    
