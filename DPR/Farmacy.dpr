@@ -83,10 +83,10 @@ begin
   //≈сли все хорошо создаем главную форму Application.CreateForm();
   if ShowModal = mrOk then
   begin
-     TUpdater.AutomaticUpdateProgram;
-     TUpdater.AutomaticCheckConnect;
-     Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TMainForm, MainFormInstance);
+    TUpdater.AutomaticUpdateProgram;
+    TUpdater.AutomaticCheckConnect;
+    Application.CreateForm(TdmMain, dmMain);
+    Application.CreateForm(TMainForm, MainFormInstance);
   end;
   Application.Run;
 end.

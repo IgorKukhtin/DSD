@@ -541,7 +541,7 @@ begin
      if (length(AFieldName) = 2) then begin
         c  := lowercase(AFieldName)[1];
         c1 := lowercase(AFieldName)[2];
-        if CharInSet(c,['a'..'z']) and CharInSet(c,['a'..'z']) then
+        if CharInSet(c,['a'..'z']) and CharInSet(c1,['a'..'z']) then
            result := 'F' + IntToStr((byte(c) - byte('a') + 1) *26 + byte(c1) - byte('a') + 1);
      end;
   end;
