@@ -2,14 +2,16 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_StoreReal (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Boolean, TFloat);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_StoreReal (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_StoreReal (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_StoreReal (
- INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
-    IN inInvNumber           TVarChar  , -- Номер документа
-    IN inOperDate            TDateTime , -- Дата документа
-    IN inUserId              Integer   , -- пользователь
-    IN inPartnerId           Integer   , -- Контрагент
-    IN inGUID                TVarChar    -- Глобальный уникальный идентификатор	для синхронизации с мобильными устройствами
+ INOUT ioId        Integer   , -- Ключ объекта <Документ Перемещение>
+    IN inInvNumber TVarChar  , -- Номер документа
+    IN inOperDate  TDateTime , -- Дата документа
+    IN inUserId    Integer   , -- пользователь
+    IN inPartnerId Integer   , -- Контрагент
+    IN inGUID      TVarChar  , -- Глобальный уникальный идентификатор	для синхронизации с мобильными устройствами
+    IN inComment   TVarChar    -- Примечание
 )
 RETURNS Integer 
 AS
@@ -49,6 +51,9 @@ BEGIN
            PERFORM lpInsertUpdate_MovementString (zc_MovementString_GUID(), ioId, inGUID);
       END IF;
 
+      -- Комментарий
+      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+
       -- сохранили протокол
       PERFORM lpInsert_MovementProtocol(ioId, inUserId, vbIsInsert);
 END;
@@ -62,4 +67,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_Movement_StoreReal (ioId:= 0, inInvNumber:= '-1', inOperDate:= CURRENT_DATE, inUserId:= 2, inPartnerId:= 0, inGUID:= NULL);
+-- SELECT * FROM lpInsertUpdate_Movement_StoreReal (ioId:= 0, inInvNumber:= '-1', inOperDate:= CURRENT_DATE, inUserId:= 2, inPartnerId:= 17819, inGUID:= NULL, inComment:= 'Факт');

@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer
              , InsertDate TDateTime
              , InsertName TVarChar
              , PartnerName TVarChar
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -34,20 +35,21 @@ BEGIN
                            UNION 
                            SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                           )
-        SELECT Movement.Id                   AS Id
-             , Movement.InvNumber            AS InvNumber
-             , Movement.OperDate             AS OperDate
-             , Object_Status.ValueData       AS StatusName
-             , MovementDate_Insert.ValueData AS InsertDate
-             , Object_User.ValueData         AS InsertName
-             , Object_Partner.ValueData      AS PartnerName
-        FROM (SELECT Movement.id
+        SELECT Movement.Id
+             , Movement.InvNumber    
+             , Movement.OperDate       
+             , Object_Status.ValueData          AS StatusName
+             , MovementDate_Insert.ValueData    AS InsertDate
+             , Object_User.ValueData            AS InsertName
+             , Object_Partner.ValueData         AS PartnerName
+             , MovementString_Comment.ValueData AS Comment
+        FROM (SELECT Movement.Id
               FROM tmpStatus
                    JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
                                 AND Movement.DescId = zc_Movement_StoreReal() 
                                 AND Movement.StatusId = tmpStatus.StatusId
              ) AS tmpMovement
-             LEFT JOIN Movement ON Movement.id = tmpMovement.id
+             LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
 
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -63,7 +65,11 @@ BEGIN
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                           ON MovementLinkObject_Partner.MovementId = Movement.Id
                                          AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
-             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId;
+             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
+             
+             LEFT JOIN MovementString AS MovementString_Comment
+                                      ON MovementString_Comment.MovementId = Movement.Id
+                                     AND MovementString_Comment.DescId = zc_MovementString_Comment();
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

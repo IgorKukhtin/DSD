@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_Movement_StoreReal (
     IN inInvNumber TVarChar  , -- Номер документа
     IN inOperDate  TDateTime , -- Дата документа
     IN inPartnerId Integer   , -- Контрагент
+    IN inComment   TVarChar  , -- Примечание
     IN inSession   TVarChar    -- сессия пользователя
 )
 RETURNS Integer 
@@ -35,6 +36,7 @@ BEGIN
                                               , inUserId:= vbUserId
                                               , inPartnerId:= inPartnerId
                                               , inGUID:= inGUID
+                                              , inComment:= inComment 
                                                );
 
       RETURN vbId;
@@ -49,4 +51,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdateMobile_Movement_StoreReal (inGUID:= '{678E6742-8182-4FF4-8882-D1DFF49D6C62}', inInvNumber:= '-3', inOperDate:= CURRENT_DATE, inPartnerId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpInsertUpdateMobile_Movement_StoreReal (inGUID:= '{678E6742-8182-4FF4-8882-D1DFF49D6C62}', inInvNumber:= '-3', inOperDate:= CURRENT_DATE, inPartnerId:= 17819, inComment:= 'Це з мобілки прийшло :)', inSession:= zfCalc_UserAdmin());

@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer
              , InsertName TVarChar
              , PartnerId Integer
              , PartnerName TVarChar
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -31,29 +32,31 @@ BEGIN
       IF COALESCE(inMovementId, 0) = 0 
       THEN
            RETURN QUERY
-             SELECT 0                                                    AS Id
-                  , CAST (NEXTVAL('movement_storereal_seq') AS TVarChar) AS InvNumber
-                  , CURRENT_DATE :: TDateTime                            AS OperDate
-                  , Object_Status.Code                                   AS StatusCode
-                  , Object_Status.Name                                   AS StatusName
-                  , CAST('' AS TVarChar)                                 AS GUID
-                  , CURRENT_TIMESTAMP :: TDateTime                       AS InsertDate
-                  , vbUserName                                           AS InserName 
-                  , CAST(0  AS Integer)                                  AS PartnerId
-                  , CAST('' AS TVarChar)                                 AS PartnerName
+             SELECT 0::Integer                                  AS Id
+                  , NEXTVAL('movement_storereal_seq')::TVarChar AS InvNumber
+                  , CURRENT_DATE::TDateTime                     AS OperDate
+                  , Object_Status.Code                          AS StatusCode
+                  , Object_Status.Name                          AS StatusName
+                  , ''::TVarChar                                AS GUID
+                  , CURRENT_TIMESTAMP::TDateTime                AS InsertDate
+                  , vbUserName                                  AS InserName 
+                  , 0::Integer                                  AS PartnerId
+                  , ''::TVarChar                                AS PartnerName
+                  , ''::TVarChar                                AS Comment   
              FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
       ELSE
            RETURN QUERY
-             SELECT Movement.Id                                AS Id
-                  , Movement.InvNumber                         AS InvNumber
-                  , Movement.OperDate                          AS OperDate
-                  , Object_Status.ObjectCode                   AS StatusCode
-                  , Object_Status.ValueData                    AS StatusName
-                  , MovementString_GUID.ValueData              AS GUID
-                  , MovementDate_Insert.ValueData              AS InsertDate 
-                  , Object_User.ValueData                      AS InsertName
-                  , Object_Partner.id                          AS PartnerId
-                  , Object_Partner.ValueData                   AS PartnerName
+             SELECT Movement.Id                           
+                  , Movement.InvNumber                        
+                  , Movement.OperDate                      
+                  , Object_Status.ObjectCode         AS StatusCode
+                  , Object_Status.ValueData          AS StatusName
+                  , MovementString_GUID.ValueData    AS GUID
+                  , MovementDate_Insert.ValueData    AS InsertDate
+                  , Object_User.ValueData            AS InsertName
+                  , Object_Partner.Id                AS PartnerId
+                  , Object_Partner.ValueData         AS PartnerName
+                  , MovementString_Comment.ValueData AS Comment
              FROM Movement
                   LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -74,6 +77,10 @@ BEGIN
                                                ON MovementLinkObject_Partner.MovementId = Movement.Id
                                               AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
                   LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
+             
+                  LEFT JOIN MovementString AS MovementString_Comment
+                                           ON MovementString_Comment.MovementId = Movement.Id
+                                          AND MovementString_Comment.DescId = zc_MovementString_Comment()
              WHERE Movement.Id =  inMovementId
                AND Movement.DescId = zc_Movement_StoreReal();
       END IF;
@@ -91,4 +98,4 @@ ALTER FUNCTION gpGet_Movement_StoreReal (Integer, TDateTime, TVarChar) OWNER TO 
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_StoreReal (inMovementId := 1, inOperDate := CURRENT_TIMESTAMP, inSession := '9818')
+-- SELECT * FROM gpGet_Movement_StoreReal (inMovementId := 1, inOperDate := CURRENT_DATE, inSession := '9818')
