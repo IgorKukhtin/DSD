@@ -218,15 +218,14 @@ type
     tblObject_PartnerGPSN: TFloatField;
     tblObject_PartnerGPSE: TFloatField;
     qryPriceList: TFDQuery;
-    qryGoodsForPriceList: TFDQuery;
     qryPriceListId: TIntegerField;
     qryPriceListValueData: TStringField;
+    qryGoodsForPriceList: TFDQuery;
     qryGoodsForPriceListId: TIntegerField;
     qryGoodsForPriceListGoodsName: TStringField;
-    qryGoodsForPriceListweight: TFloatField;
-    qryGoodsForPriceListOrderPrice: TFloatField;
-    qryGoodsForPriceListMeasureName: TStringField;
     qryGoodsForPriceListOBJECTCODE: TIntegerField;
+    qryGoodsForPriceListKindName: TStringField;
+    qryGoodsForPriceListPrice: TWideStringField;
     tblMovement_OrderExternal: TFDTable;
     tblMovement_OrderExternalGUID: TStringField;
     tblMovement_OrderExternalInvNumber: TStringField;
@@ -363,10 +362,7 @@ type
     tblObject_PriceListItemsSaleStartDate: TDateTimeField;
     tblObject_PriceListItemsSaleEndDate: TDateTimeField;
     tblObject_PriceListItemsSalePrice: TFloatField;
-    qryGoodsForPriceListSalePrice: TFloatField;
     qryPartnerisOperDateOrder: TBooleanField;
-    qryGoodsForPriceListKindName: TStringField;
-    qryGoodsForPriceListFullName: TWideStringField;
     tblMovement_Promo: TFDTable;
     tblMovement_PromoId: TIntegerField;
     tblMovement_PromoInvNumber: TStringField;
@@ -437,6 +433,25 @@ type
     cdsReturnInItemsGoodsId: TIntegerField;
     cdsReturnInItemsKindId: TIntegerField;
     cdsReturnInComment: TStringField;
+    qryPromoList: TFDQuery;
+    qryPromoPartners: TFDQuery;
+    qryPromoGoods: TFDQuery;
+    qryPromoListId: TIntegerField;
+    qryPromoListInvNumber: TStringField;
+    qryPromoListStartSale: TDateTimeField;
+    qryPromoListEndSale: TDateTimeField;
+    qryPromoListChangePercent: TWideStringField;
+    qryPromoListCommentMain: TStringField;
+    qryPromoPartnersName: TStringField;
+    qryPromoPartnersContractName: TWideStringField;
+    qryPromoPartnersAddress: TStringField;
+    qryPromoGoodsGoodsName: TStringField;
+    qryPromoGoodsKindName: TStringField;
+    qryPromoGoodsTax: TWideStringField;
+    qryPromoGoodsPrice: TWideStringField;
+    qryPromoListTermin: TWideStringField;
+    tblObject_ConstMobileVersion: TStringField;
+    tblObject_ConstMobileAPKFileName: TStringField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -567,9 +582,10 @@ end;
 
 procedure TSyncThread.GetConfigurationInfo;
 var
-  x : integer;
+  x, y : integer;
   GetStoredProc : TdsdStoredProc;
   str, str1 : string;
+  Mapping : array of array[1..2] of integer;
 begin
   GetStoredProc := TdsdStoredProc.Create(nil);
   try
@@ -583,10 +599,23 @@ begin
       while not DM.tblObject_Const.Eof do
         DM.tblObject_Const.Delete;
 
+      SetLength(Mapping, 0);
+      for x := 0 to DM.tblObject_Const.Fields.Count - 1 do
+        for y := 0 to GetStoredProc.DataSet.Fields.Count - 1 do
+          if CompareText(DM.tblObject_Const.Fields[x].FieldName, GetStoredProc.DataSet.Fields[y].FieldName) = 0 then
+          begin
+            SetLength(Mapping, Length(Mapping) + 1);
+
+            Mapping[Length(Mapping) - 1][1] := x;
+            Mapping[Length(Mapping) - 1][2] := y;
+
+            break;
+          end;
+
       DM.tblObject_Const.Append;
 
-      for x := 0 to GetStoredProc.DataSet.Fields.Count - 1 do
-        DM.tblObject_Const.Fields[ x ].Value := GetStoredProc.DataSet.Fields[ x ].Value;
+      for x := 0 to Length(Mapping) - 1 do
+        DM.tblObject_Const.Fields[ Mapping[x][1] ].Value := GetStoredProc.DataSet.Fields[ Mapping[x][2] ].Value;
 
       DM.tblObject_Const.FieldByName('SYNCDATEIN').AsDateTime := Date();
 
@@ -618,12 +647,14 @@ begin
     begin
       GetStoredProc.StoredProcName := 'gpSelectMobile_Object_Partner';
       CurDictTable.TableName := 'Object_Partner';
+      DM.conMain.ExecSQL('update Object_Partner set isErased = 1');
     end
     else
     if AName = 'Juridical' then
     begin
       GetStoredProc.StoredProcName := 'gpSelectMobile_Object_Juridical';
       CurDictTable.TableName := 'Object_Juridical';
+      DM.conMain.ExecSQL('update Object_Juridical set isErased = 1');
     end
     else
     if AName = 'Route' then
@@ -660,12 +691,14 @@ begin
     begin
       GetStoredProc.StoredProcName := 'gpSelectMobile_Object_GoodsByGoodsKind';
       CurDictTable.TableName := 'Object_GoodsByGoodsKind';
+      DM.conMain.ExecSQL('update Object_GoodsByGoodsKind set isErased = 1');
     end
     else
     if AName = 'GoodsListSale' then
     begin
       GetStoredProc.StoredProcName := 'gpSelectMobile_Object_GoodsListSale';
       CurDictTable.TableName := 'Object_GoodsListSale';
+      DM.conMain.ExecSQL('update Object_GoodsListSale set isErased = 1');
     end
     else
     if AName = 'Contract' then
@@ -690,18 +723,21 @@ begin
     begin
       GetStoredProc.StoredProcName := 'gpSelectMobile_Movement_Promo';
       CurDictTable.TableName := 'Movement_Promo';
+      DM.conMain.ExecSQL('delete from Movement_Promo');
     end
     else
     if AName = 'PromoPartner' then
     begin
       GetStoredProc.StoredProcName := 'gpSelectMobile_Movement_PromoPartner';
       CurDictTable.TableName := 'MovementItem_PromoPartner';
+      DM.conMain.ExecSQL('delete from MovementItem_PromoPartner');
     end
     else
     if AName = 'PromoGoods' then
     begin
       GetStoredProc.StoredProcName := 'gpSelectMobile_MovementItem_PromoGoods';
       CurDictTable.TableName := 'MovementItem_PromoGoods';
+      DM.conMain.ExecSQL('delete from MovementItem_PromoGoods');
     end;
 
     if GetStoredProc.StoredProcName = '' then
@@ -761,7 +797,8 @@ begin
               CurDictTable.Fields[ Mapping[x][1] ].Value := GetStoredProc.DataSet.Fields[ Mapping[x][2] ].Value;
           end
           else
-            CurDictTable.FieldByName('isErased').AsBoolean := true;
+            if (AName <> 'PromoMain') and (AName <> 'PromoPartner') and (AName <> 'PromoGoods') then
+              CurDictTable.FieldByName('isErased').AsBoolean := true;
 
           CurDictTable.Post;
 
@@ -1551,44 +1588,15 @@ end;
 
 
 procedure TDM.SynchronizeWithMainDatabase(LoadData: boolean = true; UploadData: boolean = true);
-var
-  ErrorMessage: String;
-  LoginOk: boolean;
 begin
-  if not LoadData and not UploadData then
+  if gc_User.Local or (not LoadData and not UploadData) then
     exit;
 
-  LoginOk := false;
-  if gc_User.Session = '' then
-  begin
-    try
-      ErrorMessage := TAuthentication.CheckLogin(TStorageFactory.GetStorage, gc_User.Login, gc_User.Password, gc_User);
-
-      if ErrorMessage = '' then
-      begin
-        LoginOk := true;
-      end
-      else
-        ShowMessage(ErrorMessage);
-    except
-      on E: Exception do
-      begin
-        ShowMessage(E.Message);
-        exit;
-      end;
-    end;
-  end
-  else
-    LoginOk := true;
-
-  if LoginOk then
-  begin
-    SyncThread := TSyncThread.Create(true);
-    SyncThread.FreeOnTerminate := true;
-    SyncThread.LoadData := LoadData;
-    SyncThread.UploadData := UploadData;
-    SyncThread.Start;
-  end;
+  SyncThread := TSyncThread.Create(true);
+  SyncThread.FreeOnTerminate := true;
+  SyncThread.LoadData := LoadData;
+  SyncThread.UploadData := UploadData;
+  SyncThread.Start;
 end;
 
 function TDM.SaveStoreReal(OldStoreRealId : string; Comment: string;
