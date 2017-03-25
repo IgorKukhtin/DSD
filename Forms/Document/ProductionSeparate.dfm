@@ -746,8 +746,8 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     Top = 241
   end
   inherited RefreshAddOn: TRefreshAddOn
-    Left = 176
-    Top = 240
+    Left = 192
+    Top = 256
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionSeparate_Master_SetErased'

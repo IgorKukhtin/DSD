@@ -42,6 +42,7 @@ type
     edPosition: TcxButtonEdit;
     InsertRecord: TInsertRecord;
     bbInsertRecord: TdxBarButton;
+    GuidesPosition: TdsdGuides;
   private
     { Private declarations }
   public

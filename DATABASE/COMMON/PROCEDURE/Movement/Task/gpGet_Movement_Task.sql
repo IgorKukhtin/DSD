@@ -9,6 +9,9 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Task(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
+             , BranchCode Integer, BranchName TVarChar
+             , UnitCode Integer, UnitName TVarChar
+             , PositionCode Integer, PositionName TVarChar
              , PersonalTradeId Integer, PersonalTradeName TVarChar
              , InsertId Integer, InsertName TVarChar
              , InsertDate TDateTime
@@ -29,13 +32,27 @@ BEGIN
      IF COALESCE (inMovementId, 0) = 0
      THEN
          RETURN QUERY
-         WITH tmpBranch AS (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId)
+         WITH
+           tmpPersonal AS (SELECT lfSelect.MemberId
+                                , lfSelect.PersonalId
+                                , lfSelect.UnitId
+                                , lfSelect.PositionId
+                                , lfSelect.BranchId
+                           FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                           WHERE lfSelect.Ord = 1
+                          )
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('movement_Task_seq') AS TVarChar) AS InvNumber
              , inOperDate				AS OperDate
              , Object_Status.Code                       AS StatusCode
              , Object_Status.Name                       AS StatusName
+             , Object_Branch.ObjectCode                 AS BranchCode
+             , Object_Branch.ValueData                  AS BranchName
+             , Object_Unit.ObjectCode                   AS UnitCode
+             , Object_Unit.ValueData                    AS UnitName
+             , Object_Position.ObjectCode               AS PositionCode
+             , Object_Position.ValueData                AS PositionName
              , Object_PersonalTrade.Id		        AS PersonalTradeId
              , Object_PersonalTrade.ValueData	        AS PersonalTradeName
              , 0                     		        AS InsertId
@@ -43,17 +60,39 @@ BEGIN
              , CAST (NULL AS TDateTime)                 AS InsertDate
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
-               LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = vbMemberId
+            LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = vbMemberId
+
+            LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = Object_PersonalTrade.Id -- AND tmpPersonal.Ord = 1
+
+            LEFT JOIN Object AS Object_Branch   ON Object_Branch.Id   = tmpPersonal.BranchId
+            LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = tmpPersonal.UnitId
+            LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
+
          ;
      ELSE
 
      RETURN QUERY
- SELECT
+         WITH
+           tmpPersonal AS (SELECT lfSelect.MemberId
+                                , lfSelect.PersonalId
+                                , lfSelect.UnitId
+                                , lfSelect.PositionId
+                                , lfSelect.BranchId
+                           FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                           WHERE lfSelect.Ord = 1
+                          )
+       SELECT
              Movement.Id                               AS Id
            , Movement.InvNumber                        AS InvNumber
            , Movement.OperDate                         AS OperDate
            , Object_Status.ObjectCode                  AS StatusCode
            , Object_Status.ValueData                   AS StatusName
+           , Object_Branch.ObjectCode                  AS BranchCode
+           , Object_Branch.ValueData                   AS BranchName
+           , Object_Unit.ObjectCode                    AS UnitCode
+           , Object_Unit.ValueData                     AS UnitName
+           , Object_Position.ObjectCode                AS PositionCode
+           , Object_Position.ValueData                 AS PositionName
            , Object_PersonalTrade.Id                   AS PersonalTradeId
            , Object_PersonalTrade.ValueData            AS PersonalTradeName
            , Object_Insert.Id                          AS InsertId
@@ -78,6 +117,12 @@ BEGIN
                                          ON MovementLinkObject_PersonalTrade.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalTrade.DescId = zc_MovementLinkObject_PersonalTrade()
             LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = MovementLinkObject_PersonalTrade.ObjectId
+
+            LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = Object_PersonalTrade.Id -- AND tmpPersonal.Ord = 1
+
+            LEFT JOIN Object AS Object_Branch   ON Object_Branch.Id   = tmpPersonal.BranchId
+            LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = tmpPersonal.UnitId
+            LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
                                          ON MovementLinkObject_Insert.MovementId = Movement.Id

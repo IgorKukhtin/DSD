@@ -17,6 +17,8 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Task());
 
+     --vbUserId:=:= (CASE WHEN inSession = '5' THEN 140094 ELSE vbUserId);
+
      -- сохранили <Документ>
      ioId:= lpInsertUpdate_Movement_Task
                                        (ioId               := ioId

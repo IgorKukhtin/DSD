@@ -1,26 +1,26 @@
 inherited TaskForm: TTaskForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1076#1072#1085#1080#1077' '#1058#1086#1088#1075#1086#1074#1086#1084#1091' '#1072#1075#1077#1085#1090#1091'>'
-  ClientHeight = 394
-  ClientWidth = 891
-  ExplicitWidth = 907
-  ExplicitHeight = 432
+  ClientHeight = 426
+  ClientWidth = 873
+  ExplicitWidth = 889
+  ExplicitHeight = 464
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 127
-    Width = 891
-    Height = 267
+    Width = 873
+    Height = 299
     ExplicitTop = 127
     ExplicitWidth = 891
     ExplicitHeight = 267
-    ClientRectBottom = 267
-    ClientRectRight = 891
+    ClientRectBottom = 299
+    ClientRectRight = 873
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 891
       ExplicitHeight = 243
       inherited cxGrid: TcxGrid
-        Width = 891
-        Height = 243
+        Width = 873
+        Height = 275
         ExplicitWidth = 891
         ExplicitHeight = 243
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -180,7 +180,7 @@ inherited TaskForm: TTaskForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 891
+    Width = 873
     Height = 101
     TabOrder = 3
     ExplicitWidth = 891
@@ -292,6 +292,7 @@ inherited TaskForm: TTaskForm
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 779
+    Top = 288
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 40
@@ -301,7 +302,25 @@ inherited TaskForm: TTaskForm
     Left = 31
     Top = 175
     inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+        end>
       RefreshOnTabSetChanges = True
+    end
+    inherited actInsertUpdateMovement: TdsdExecStoredProc
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
+        item
+          StoredProc = spGet
+        end>
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -349,6 +368,7 @@ inherited TaskForm: TTaskForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -356,6 +376,7 @@ inherited TaskForm: TTaskForm
         end
         item
           Name = 'GoodsName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
@@ -546,6 +567,10 @@ inherited TaskForm: TTaskForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColumnEnterList = <
+      item
+        Column = colPartnerName
+      end>
     SummaryItemList = <
       item
         Param.Value = Null
@@ -572,7 +597,7 @@ inherited TaskForm: TTaskForm
     Params = <
       item
         Name = 'Id'
-        Value = Null
+        Value = '0'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
@@ -755,23 +780,19 @@ inherited TaskForm: TTaskForm
         Guides = GuidesPersonalTrade
       end
       item
+        Guides = GuidesPosition
       end>
     Left = 152
     Top = 152
   end
   inherited HeaderSaver: THeaderSaver
+    IdParam.Value = '0'
     ControlList = <
       item
         Control = edInvNumber
       end
       item
-      end
-      item
-      end
-      item
         Control = edOperDate
-      end
-      item
       end
       item
         Control = edPersonalTrade
@@ -795,14 +816,19 @@ inherited TaskForm: TTaskForm
       item
       end
       item
+      end
+      item
+      end
+      item
+      end
+      item
       end>
-    Left = 224
-    Top = 153
+    Left = 264
+    Top = 321
   end
   inherited RefreshAddOn: TRefreshAddOn
-    DataSet = ''
-    Left = 912
-    Top = 320
+    Left = 352
+    Top = 336
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Task_SetErased'
@@ -891,8 +917,8 @@ inherited TaskForm: TTaskForm
     Top = 272
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Left = 644
-    Top = 316
+    Left = 612
+    Top = 324
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -900,9 +926,15 @@ inherited TaskForm: TTaskForm
     ComponentList = <
       item
         Component = GuidesPersonalTrade
+      end
+      item
+        Component = edPersonalTrade
+      end
+      item
+        Component = edPosition
       end>
-    Left = 512
-    Top = 312
+    Left = 336
+    Top = 144
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -979,6 +1011,35 @@ inherited TaskForm: TTaskForm
         MultiSelectSeparator = ','
       end>
     Left = 500
-    Top = 40
+    Top = 56
+  end
+  object GuidesPosition: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPosition
+    FormNameParam.Value = 'TPositionForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPositionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPosition
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 260
+    Top = 48
   end
 end
