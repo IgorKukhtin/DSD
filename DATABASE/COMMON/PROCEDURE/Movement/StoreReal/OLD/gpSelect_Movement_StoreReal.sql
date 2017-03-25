@@ -1,6 +1,7 @@
 -- Function: gpSelect_Movement_StoreReal()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_StoreReal(TDateTime, TDateTime, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_StoreReal(TDateTime, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_StoreReal (
     IN inStartDate        TDateTime , --
@@ -14,10 +15,8 @@ RETURNS TABLE (Id Integer
              , OperDate TDateTime
              , StatusName TVarChar
              , InsertDate TDateTime
-             , InsertMobileDate TDateTime
              , InsertName TVarChar
              , PartnerName TVarChar
-             , GUID TVarChar
              , Comment TVarChar
               )
 AS
@@ -39,13 +38,11 @@ BEGIN
         SELECT Movement.Id
              , Movement.InvNumber    
              , Movement.OperDate       
-             , Object_Status.ValueData                AS StatusName
-             , MovementDate_Insert.ValueData          AS InsertDate
-             , MovementDate_InsertMobile.ValueData    AS InsertMobileDate
-             , Object_User.ValueData                  AS InsertName
-             , Object_Partner.ValueData               AS PartnerName
-             , MovementString_GUID.ValueData          AS GUID
-             , MovementString_Comment.ValueData       AS Comment
+             , Object_Status.ValueData          AS StatusName
+             , MovementDate_Insert.ValueData    AS InsertDate
+             , Object_User.ValueData            AS InsertName
+             , Object_Partner.ValueData         AS PartnerName
+             , MovementString_Comment.ValueData AS Comment
         FROM (SELECT Movement.Id
               FROM tmpStatus
                    JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
@@ -59,9 +56,6 @@ BEGIN
              LEFT JOIN MovementDate AS MovementDate_Insert 
                                     ON MovementDate_Insert.MovementId = Movement.Id
                                    AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
-             LEFT JOIN MovementDate AS MovementDate_InsertMobile 
-                                    ON MovementDate_InsertMobile.MovementId = Movement.Id
-                                   AND MovementDate_InsertMobile.DescId = zc_MovementDate_InsertMobile()
 
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert 
                                           ON MovementLinkObject_Insert.MovementId = Movement.Id
@@ -75,12 +69,7 @@ BEGIN
              
              LEFT JOIN MovementString AS MovementString_Comment
                                       ON MovementString_Comment.MovementId = Movement.Id
-                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
-             LEFT JOIN MovementString AS MovementString_GUID
-                                      ON MovementString_GUID.MovementId = Movement.Id
-                                     AND MovementString_GUID.DescId = zc_MovementString_GUID()
-;
-
+                                     AND MovementString_Comment.DescId = zc_MovementString_Comment();
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -88,7 +77,6 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ﬂÓ¯ÂÌÍÓ –.‘.
- 25.03.17         *
  16.02.17                                                        *
 */
 

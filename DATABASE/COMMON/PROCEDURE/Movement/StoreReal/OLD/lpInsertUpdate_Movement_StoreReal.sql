@@ -3,15 +3,15 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_StoreReal (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Boolean, TFloat);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_StoreReal (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_StoreReal (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_StoreReal (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_StoreReal (
  INOUT ioId        Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber TVarChar  , -- Номер документа
     IN inOperDate  TDateTime , -- Дата документа
-    IN inPartnerId Integer   , -- Контрагент
-    IN inComment   TVarChar    -- Примечание
     IN inUserId    Integer   , -- пользователь
+    IN inPartnerId Integer   , -- Контрагент
+    IN inGUID      TVarChar  , -- Глобальный уникальный идентификатор	для синхронизации с мобильными устройствами
+    IN inComment   TVarChar    -- Примечание
 )
 RETURNS Integer 
 AS
@@ -45,6 +45,12 @@ BEGIN
       -- сохранили связь с <Контрагент>
       PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_Partner(), ioId, inPartnerId);    
 
+      -- сохраняем GUID, если задан
+      IF inGUID IS NOT NULL
+      THEN
+           PERFORM lpInsertUpdate_MovementString (zc_MovementString_GUID(), ioId, inGUID);
+      END IF;
+
       -- Комментарий
       PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
@@ -57,7 +63,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Ярошенко Р.Ф.
- 25.03.17         *
  16.02.17                                                        *                                          
 */
 

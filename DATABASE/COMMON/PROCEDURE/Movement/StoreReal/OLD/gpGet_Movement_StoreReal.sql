@@ -14,7 +14,6 @@ RETURNS TABLE (Id Integer
              , StatusName TVarChar
              , GUID TVarChar
              , InsertDate TDateTime
-             , InsertMobileDate TDateTime
              , InsertName TVarChar
              , PartnerId Integer
              , PartnerName TVarChar
@@ -40,7 +39,6 @@ BEGIN
                   , Object_Status.Name                          AS StatusName
                   , ''::TVarChar                                AS GUID
                   , CURRENT_TIMESTAMP::TDateTime                AS InsertDate
-                  , Null ::TDateTime                            AS InsertMobileDate
                   , vbUserName                                  AS InserName 
                   , 0::Integer                                  AS PartnerId
                   , ''::TVarChar                                AS PartnerName
@@ -55,7 +53,6 @@ BEGIN
                   , Object_Status.ValueData          AS StatusName
                   , MovementString_GUID.ValueData    AS GUID
                   , MovementDate_Insert.ValueData    AS InsertDate
-                  , MovementDate_InsertMobile.ValueData AS InsertMobileDate
                   , Object_User.ValueData            AS InsertName
                   , Object_Partner.Id                AS PartnerId
                   , Object_Partner.ValueData         AS PartnerName
@@ -67,17 +64,9 @@ BEGIN
                                            ON MovementString_GUID.MovementId = Movement.Id
                                           AND MovementString_GUID.DescId = zc_MovementString_GUID()
 
-                  LEFT JOIN MovementString AS MovementString_Comment
-                                           ON MovementString_Comment.MovementId = Movement.Id
-                                          AND MovementString_Comment.DescId = zc_MovementString_Comment()
-
                   LEFT JOIN MovementDate AS MovementDate_Insert 
                                          ON MovementDate_Insert.MovementId = Movement.Id
                                         AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
-
-                  LEFT JOIN MovementDate AS MovementDate_InsertMobile 
-                                         ON MovementDate_InsertMobile.MovementId = Movement.Id
-                                        AND MovementDate_InsertMobile.DescId = zc_MovementDate_InsertMobile()
 
                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert 
                                                ON MovementLinkObject_Insert.MovementId = Movement.Id
@@ -89,17 +78,22 @@ BEGIN
                                               AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
                   LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
              
-             WHERE Movement.Id = inMovementId
+                  LEFT JOIN MovementString AS MovementString_Comment
+                                           ON MovementString_Comment.MovementId = Movement.Id
+                                          AND MovementString_Comment.DescId = zc_MovementString_Comment()
+             WHERE Movement.Id =  inMovementId
                AND Movement.DescId = zc_Movement_StoreReal();
       END IF;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
+ALTER FUNCTION gpGet_Movement_StoreReal (Integer, TDateTime, TVarChar) OWNER TO postgres;
+
+
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ﬂÓ¯ÂÌÍÓ –.‘.
- 25.03.17         *
  15.02.17                                                        *
 */
 

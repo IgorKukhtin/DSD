@@ -25,9 +25,10 @@ BEGIN
       ioId:= lpInsertUpdate_Movement_StoreReal (ioId        := ioId
                                               , inInvNumber := inInvNumber
                                               , inOperDate  := inOperDate
-                                              , inPartnerId := inPartnerId
-                                              , inComment   := inComment
                                               , inUserId    := vbUserId
+                                              , inPartnerId := inPartnerId
+                                              , inGUID      := NULL
+                                              , inComment   := inComment
                                                );
 
       SELECT ValueData INTO outPartnerName FROM Object WHERE Id = inPartnerId;
@@ -38,7 +39,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Ярошенко Р.Ф.
- 25.03.17         *
  16.02.17                                                        *
 */
 

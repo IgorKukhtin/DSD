@@ -1,7 +1,6 @@
 -- Function: lpInsertUpdate_MovementItem_StoreReal()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_StoreReal (Integer, Integer, Integer, TFloat, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_StoreReal (Integer, Integer, Integer, TFloat, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_StoreReal(
  INOUT ioId          Integer   , -- Ключ объекта <Элемент документа>
@@ -10,6 +9,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_StoreReal(
     IN inAmount      TFloat    , -- Количество
     IN inGoodsKindId Integer   , -- Виды товаров
     IN inUserId      Integer   , -- пользователь
+    IN inGUID        TVarChar    -- Глобальный уникальный идентификатор для синхронизации с мобильными устройствами
 )
 RETURNS Integer AS
 $BODY$
@@ -30,6 +30,12 @@ BEGIN
            PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, inUserId);
       END IF;
 
+      -- сохраняем GUID, если задан
+      IF inGUID IS NOT NULL
+      THEN
+           PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), ioId, inGUID);
+      END IF;
+      
       -- сохранили протокол
       PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 
@@ -40,7 +46,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Ярошенко Р.Ф.
- 25.03.17         *
  20.03.17                                                        *
 */
 
