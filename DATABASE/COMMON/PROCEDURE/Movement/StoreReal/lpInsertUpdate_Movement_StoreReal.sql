@@ -10,8 +10,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_StoreReal (
     IN inInvNumber TVarChar  , -- Номер документа
     IN inOperDate  TDateTime , -- Дата документа
     IN inPartnerId Integer   , -- Контрагент
-    IN inComment   TVarChar    -- Примечание
-    IN inUserId    Integer   , -- пользователь
+    IN inComment   TVarChar  , -- Примечание
+    IN inUserId    Integer    -- пользователь
 )
 RETURNS Integer 
 AS

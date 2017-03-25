@@ -43,6 +43,11 @@ type
     PartnerGuides: TdsdGuides;
     LineNum: TcxGridDBColumn;
     actShowMessage: TShowMessageAction;
+    cxLabel22: TcxLabel;
+    ceComment: TcxTextEdit;
+    cxLabel3: TcxLabel;
+    edGUID: TcxTextEdit;
+    colGUID: TcxGridDBColumn;
   private
     { Private declarations }
   public

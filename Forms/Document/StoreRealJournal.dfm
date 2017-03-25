@@ -1,26 +1,26 @@
 inherited StoreRealJournalForm: TStoreRealJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1060#1072#1082#1090#1080#1095#1077#1089#1082#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1058#1058'>'
   ClientHeight = 396
-  ClientWidth = 1050
+  ClientWidth = 953
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1066
-  ExplicitHeight = 435
+  ExplicitWidth = 969
+  ExplicitHeight = 434
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1050
+    Width = 953
     Height = 339
     TabOrder = 3
     ExplicitWidth = 1050
     ExplicitHeight = 339
     ClientRectBottom = 339
-    ClientRectRight = 1050
+    ClientRectRight = 953
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1050
       ExplicitHeight = 339
       inherited cxGrid: TcxGrid
-        Width = 1050
+        Width = 953
         Height = 339
         ExplicitWidth = 1050
         ExplicitHeight = 339
@@ -110,39 +110,94 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
           Styles.Footer = nil
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
-            DataBinding.FieldName = 'StatusName'
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
           inherited colInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
-            Width = 55
+            Width = 64
           end
           inherited colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1079#1072#1103#1074#1082#1080
             HeaderAlignmentHorz = taCenter
-            Width = 70
+            Width = 85
           end
           object PartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'PartnerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 212
+          end
+          object clComment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 166
+          end
+          object clGUID: TcxGridDBColumn
+            DataBinding.FieldName = 'GUID'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
+          end
+          object clInsertName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
+          end
+          object clInsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
+          end
+          object clInsertMobileDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.) '#1085#1072' '#1084#1086#1073'. '#1091#1089#1090#1088'.'
+            DataBinding.FieldName = 'InsertMobileDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1050
+    Width = 953
     ExplicitWidth = 1050
     inherited deStart: TcxDateEdit
       EditValue = 42370d
     end
     inherited deEnd: TcxDateEdit
       EditValue = 42370d
+    end
+    object cxLabel3: TcxLabel
+      Left = 475
+      Top = 6
+      Caption = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090':'
+    end
+    object edPersonalTrade: TcxButtonEdit
+      Left = 564
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 5
+      Width = 150
     end
   end
   object cxLabel27: TcxLabel [2]
@@ -213,8 +268,8 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_OrderExternal'
-      ReportNameParam.Value = 'PrintMovement_OrderExternal'
+      ReportName = 'PrintMovement_StoreReal'
+      ReportNameParam.Value = 'PrintMovement_StoreReal'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -239,7 +294,6 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
           Action = actPrintSilent
         end
         item
-          Action = actSPSavePrintState
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
@@ -269,11 +323,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
       Hint = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100
       ImageIndex = 3
     end
-    inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TStoreRealForm'
-      FormNameParam.Value = 'TStoreRealForm'
-    end
-    inherited actUpdate: TdsdInsertUpdateAction
+    inherited actUpdate: TdsdInsertUpdateAction [5]
       FormName = 'TStoreRealForm'
       FormNameParam.Value = 'TStoreRealForm'
       GuiParams = <
@@ -298,6 +348,16 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+    end
+    inherited actInsert: TdsdInsertUpdateAction [6]
+      FormName = 'TStoreRealForm'
+      FormNameParam.Value = 'TStoreRealForm'
+    end
+    inherited actInsertMask: TdsdInsertUpdateAction [7]
+    end
+    inherited actComplete: TdsdChangeMovementStatus [8]
+    end
+    inherited actUnComplete: TdsdChangeMovementStatus [9]
     end
     object actPrint: TdsdPrintAction [22]
       Category = 'Print'
@@ -345,17 +405,6 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actSPSavePrintState: TdsdExecStoredProc
-      Category = 'Print'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spSavePrintState
-      StoredProcList = <
-        item
-          StoredProc = spSavePrintState
-        end>
-      Caption = 'actSPSavePrintState'
-    end
     object mactPrint_Order: TMultiAction
       Category = 'Print'
       MoveParams = <
@@ -376,7 +425,6 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
           Action = actPrint
         end
         item
-          Action = actSPSavePrintState
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
@@ -426,6 +474,9 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
           StoredProc = spGet_UserJuridicalBasis
         end
         item
+          StoredProc = spGet_PersonalTrade
+        end
+        item
           StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
@@ -472,6 +523,14 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
         Name = 'inJuridicalBasisId'
         Value = 'False'
         Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberId'
+        Value = Null
+        Component = PersonalTradeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -559,6 +618,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
     object bbPrint: TdxBarButton
       Action = mactPrint_Order
       Category = 0
+      Visible = ivNever
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -583,12 +643,15 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
       end
       item
         Component = JuridicalBasisGuides
+      end
+      item
+        Component = PersonalTradeGuides
       end>
     Left = 400
     Top = 304
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_OrderExternal'
+    StoredProcName = 'gpComplete_Movement_StoreReal'
     Params = <
       item
         Name = 'inmovementid'
@@ -618,7 +681,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
     Top = 296
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_OrderExternal'
+    StoredProcName = 'gpUnComplete_Movement_StoreReal'
     Params = <
       item
         Name = 'inmovementid'
@@ -640,7 +703,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
     Top = 312
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_OrderExternal'
+    StoredProcName = 'gpSetErased_Movement_StoreReal'
     Params = <
       item
         Name = 'inmovementid'
@@ -708,8 +771,8 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
     Top = 200
   end
   inherited spMovementReComplete: TdsdStoredProc
-    Left = 396
-    Top = 108
+    Left = 388
+    Top = 164
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -724,7 +787,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderExternal_Print'
+    StoredProcName = 'gpSelect_Movement_StoreReal_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -746,40 +809,6 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
     PackSize = 1
     Left = 535
     Top = 248
-  end
-  object spSavePrintState: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_OrderExternal_Print'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inNewPrinted'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'isPrinted'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outPrinted'
-        Value = 'er'
-        Component = MasterCDS
-        ComponentItem = 'isPrinted'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 704
-    Top = 320
   end
   object JuridicalBasisGuides: TdsdGuides
     KeyField = 'Id'
@@ -832,6 +861,59 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
       end>
     PackSize = 1
     Left = 824
+    Top = 48
+  end
+  object PersonalTradeGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalTrade
+    Key = '0'
+    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMember_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = PersonalTradeGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PersonalTradeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 607
+  end
+  object spGet_PersonalTrade: TdsdStoredProc
+    StoredProcName = 'gpGetMobile_Object_Const'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'MemberId'
+        Value = '0'
+        Component = PersonalTradeGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberName'
+        Value = ''
+        Component = PersonalTradeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 592
     Top = 48
   end
 end

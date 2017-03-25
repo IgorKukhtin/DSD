@@ -5819,6 +5819,9 @@ inherited MainForm: TMainForm
       object N158: TMenuItem
         Action = actTask
       end
+      object N159: TMenuItem
+        Action = actStoreReal
+      end
       object N123: TMenuItem
         Caption = '-'
       end

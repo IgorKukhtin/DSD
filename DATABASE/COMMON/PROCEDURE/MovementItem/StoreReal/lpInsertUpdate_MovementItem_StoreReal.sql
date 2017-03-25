@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_StoreReal(
     IN inGoodsId     Integer   , -- Товары
     IN inAmount      TFloat    , -- Количество
     IN inGoodsKindId Integer   , -- Виды товаров
-    IN inUserId      Integer   , -- пользователь
+    IN inUserId      Integer     -- пользователь
 )
 RETURNS Integer AS
 $BODY$

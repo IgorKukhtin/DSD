@@ -33,8 +33,6 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    spSavePrintState: TdsdStoredProc;
-    actSPSavePrintState: TdsdExecStoredProc;
     mactPrint_Order: TMultiAction;
     actPrintSilent: TdsdPrintAction;
     mactSilentList: TMultiAction;
@@ -48,6 +46,10 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    cxLabel3: TcxLabel;
+    edPersonalTrade: TcxButtonEdit;
+    PersonalTradeGuides: TdsdGuides;
+    spGet_PersonalTrade: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -1,18 +1,20 @@
 -- Function: gpSelect_Movement_StoreReal()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_StoreReal(TDateTime, TDateTime, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_StoreReal(TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_StoreReal (
     IN inStartDate        TDateTime , --
     IN inEndDate          TDateTime , --
     IN inIsErased         Boolean   ,
     IN inJuridicalBasisId Integer   ,
+    IN inMemberId         Integer   ,
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
              , InvNumber TVarChar
              , OperDate TDateTime
-             , StatusName TVarChar
+             , StatusCode Integer, StatusName TVarChar
              , InsertDate TDateTime
              , InsertMobileDate TDateTime
              , InsertName TVarChar
@@ -23,10 +25,22 @@ RETURNS TABLE (Id Integer
 AS
 $BODY$
    DECLARE vbUserId      Integer;
+
+   DECLARE vbMemberId Integer;
+   DECLARE vbPersonalId Integer;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_StoreReal());
       vbUserId := lpGetUserBySession(inSession);
+
+     SELECT tmp.MemberId, tmp.PersonalId
+     INTO vbMemberId, vbPersonalId     
+     FROM gpGetMobile_Object_Const (inSession) AS tmp;
+
+     IF (COALESCE(inMemberId,0) <> 0 AND COALESCE(vbMemberId,0) <> inMemberId)
+        THEN
+            RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.'; 
+     END IF;
 
       -- Результат
       RETURN QUERY
@@ -36,9 +50,16 @@ BEGIN
                            UNION 
                            SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                           )
+        , tmpPartner AS (SELECT ObjectLink_Partner_PersonalTrade.ObjectId AS PartnerId
+                         FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
+                         WHERE ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                           AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId --301468 --
+                         )
+
         SELECT Movement.Id
              , Movement.InvNumber    
              , Movement.OperDate       
+             , Object_Status.ObjectCode               AS StatusCode
              , Object_Status.ValueData                AS StatusName
              , MovementDate_Insert.ValueData          AS InsertDate
              , MovementDate_InsertMobile.ValueData    AS InsertMobileDate
@@ -72,13 +93,15 @@ BEGIN
                                           ON MovementLinkObject_Partner.MovementId = Movement.Id
                                          AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
              LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
-             
+             LEFT JOIN tmpPartner ON tmpPartner.PartnerId = Object_Partner.Id
+
              LEFT JOIN MovementString AS MovementString_Comment
                                       ON MovementString_Comment.MovementId = Movement.Id
                                      AND MovementString_Comment.DescId = zc_MovementString_Comment()
              LEFT JOIN MovementString AS MovementString_GUID
                                       ON MovementString_GUID.MovementId = Movement.Id
                                      AND MovementString_GUID.DescId = zc_MovementString_GUID()
+        WHERE (tmpPartner.PartnerId IS NOT NULL AND COALESCE(inMemberId,0) <> 0) OR COALESCE(inMemberId,0) = 0 
 ;
 
 END;

@@ -1,28 +1,28 @@
 inherited StoreRealForm: TStoreRealForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1060#1072#1082#1090#1080#1095#1077#1089#1082#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1058#1058'>'
-  ClientHeight = 430
-  ClientWidth = 977
-  ExplicitWidth = 993
-  ExplicitHeight = 469
+  ClientHeight = 397
+  ClientWidth = 937
+  ExplicitWidth = 953
+  ExplicitHeight = 435
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 91
-    Width = 977
-    Height = 339
-    ExplicitTop = 91
-    ExplicitWidth = 977
-    ExplicitHeight = 339
-    ClientRectBottom = 339
-    ClientRectRight = 977
+    Top = 76
+    Width = 937
+    Height = 321
+    ExplicitTop = 76
+    ExplicitWidth = 937
+    ExplicitHeight = 321
+    ClientRectBottom = 321
+    ClientRectRight = 937
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 977
-      ExplicitHeight = 315
+      ExplicitWidth = 937
+      ExplicitHeight = 297
       inherited cxGrid: TcxGrid
-        Width = 977
-        Height = 315
-        ExplicitWidth = 977
-        ExplicitHeight = 315
+        Width = 937
+        Height = 297
+        ExplicitWidth = 937
+        ExplicitHeight = 297
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -191,16 +191,23 @@ inherited StoreRealForm: TStoreRealForm
             Options.Editing = False
             Width = 100
           end
+          object colGUID: TcxGridDBColumn [11]
+            DataBinding.FieldName = 'GUID'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 977
-    Height = 65
+    Width = 937
+    Height = 50
     TabOrder = 3
-    ExplicitWidth = 977
-    ExplicitHeight = 65
+    ExplicitWidth = 937
+    ExplicitHeight = 50
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
@@ -233,7 +240,19 @@ inherited StoreRealForm: TStoreRealForm
       Left = 179
       ExplicitLeft = 179
       ExplicitWidth = 168
+      ExplicitHeight = 22
       Width = 168
+    end
+    object cxLabel22: TcxLabel
+      Left = 643
+      Top = 5
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object ceComment: TcxTextEdit
+      Left = 643
+      Top = 23
+      TabOrder = 7
+      Width = 222
     end
   end
   object cxLabel21: TcxLabel [2]
@@ -252,7 +271,19 @@ inherited StoreRealForm: TStoreRealForm
     Properties.ReadOnly = True
     TabOrder = 7
     Text = ' '
-    Width = 168
+    Width = 284
+  end
+  object cxLabel3: TcxLabel [4]
+    Left = 871
+    Top = 5
+    Caption = 'GUID'
+  end
+  object edGUID: TcxTextEdit [5]
+    Left = 871
+    Top = 23
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 133
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -462,14 +493,6 @@ inherited StoreRealForm: TStoreRealForm
         end
         item
           Visible = True
-          ItemName = 'bbAddMask'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -515,6 +538,7 @@ inherited StoreRealForm: TStoreRealForm
     end
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Order
+      Visible = ivNever
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -702,148 +726,6 @@ inherited StoreRealForm: TStoreRealForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'OperDatePartner'
-        Value = 0d
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperDatePartner_sale'
-        Value = 'NULL'
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperDateMark'
-        Value = 0d
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumberPartner'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'FromId'
-        Value = ''
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'FromName'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ToId'
-        Value = ''
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ToName'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalId'
-        Value = ''
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalName'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'RouteId'
-        Value = ''
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'RouteName'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'RouteSortingId'
-        Value = ''
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'RouteSortingName'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ContractId'
-        Value = ''
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ContractName'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ContractTagName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PriceListId'
-        Value = ''
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PriceListName'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PriceWithVAT'
-        Value = 'False'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'VATPercent'
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ChangePercent'
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isPrinted'
-        Value = Null
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'PartnerId'
         Value = Null
         Component = PartnerGuides
@@ -861,13 +743,15 @@ inherited StoreRealForm: TStoreRealForm
       item
         Name = 'Comment'
         Value = Null
+        Component = ceComment
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isPromo'
+        Name = 'GUID'
         Value = Null
-        DataType = ftBoolean
+        Component = edGUID
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -893,116 +777,11 @@ inherited StoreRealForm: TStoreRealForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inInvNumberPartner'
-        Value = ''
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inOperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outOperDatePartner'
-        Value = 0d
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outOperDatePartner_sale'
-        Value = 'NULL'
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDateMark'
-        Value = 0d
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outPriceWithVAT'
-        Value = 'False'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outVATPercent'
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inChangePercent'
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inFromId'
-        Value = ''
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inToId'
-        Value = ''
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPaidKindId'
-        Value = ''
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inContractId'
-        Value = ''
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inRouteId'
-        Value = ''
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inRouteSortingId'
-        Value = ''
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioPersonalId'
-        Value = ''
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outPersonalName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioPriceListId'
-        Value = ''
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outPriceListName'
-        Value = ''
-        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -1014,8 +793,17 @@ inherited StoreRealForm: TStoreRealForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outPartnerName'
+        Value = Null
+        Component = PartnerGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
+        Component = ceComment
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1038,44 +826,13 @@ inherited StoreRealForm: TStoreRealForm
         Control = edInvNumber
       end
       item
-      end
-      item
-        Control = edOperDate
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
         Control = edPartner
       end
       item
+        Control = ceComment
+      end
+      item
+        Control = edOperDate
       end>
     Left = 232
     Top = 193
@@ -1131,62 +888,11 @@ inherited StoreRealForm: TStoreRealForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountSecond'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountSecond'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inGoodsKindId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Price'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioCountForPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CountForPrice'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAmountSumm'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountSumm'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outMovementPromo'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MovementPromo'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outPricePromo'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PricePromo'
-        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 160
