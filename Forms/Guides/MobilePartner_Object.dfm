@@ -24,6 +24,8 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
     Height = 438
     Align = alClient
     TabOrder = 0
+    ExplicitLeft = 64
+    ExplicitTop = 34
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
