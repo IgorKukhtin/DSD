@@ -27,7 +27,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TStoreRealJournalForm = class(TAncestorJournalForm)
+  TVisitJournalForm = class(TAncestorJournalForm)
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
@@ -60,5 +60,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TStoreRealJournalForm);
+  RegisterClass(TVisitJournalForm);
 end.

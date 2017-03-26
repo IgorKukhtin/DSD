@@ -9,7 +9,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Task(
     IN inDescription         TVarChar  , -- Описание задания
     IN inSession             TVarChar    -- сессия пользователя
 )
-AS
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;

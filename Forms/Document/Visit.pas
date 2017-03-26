@@ -16,12 +16,10 @@ uses
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter;
 
 type
-  TStoreRealForm = class(TAncestorDocumentForm)
-    GoodsCode: TcxGridDBColumn;
+  TVisitForm = class(TAncestorDocumentForm)
     GoodsName: TcxGridDBColumn;
-    GoodsKindName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
-    actGoodsKindChoice: TOpenChoiceForm;
+    actPhotoMobileChoice: TOpenChoiceForm;
     N2: TMenuItem;
     N3: TMenuItem;
     RefreshDispatcher: TRefreshDispatcher;
@@ -29,25 +27,21 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     PrintItemsSverkaCDS: TClientDataSet;
-    MeasureName: TcxGridDBColumn;
-    InfoMoneyCode: TcxGridDBColumn;
-    InfoMoneyGroupName: TcxGridDBColumn;
-    InfoMoneyDestinationName: TcxGridDBColumn;
-    InfoMoneyName: TcxGridDBColumn;
-    spSavePrintState: TdsdStoredProc;
     actSPSavePrintState: TdsdExecStoredProc;
     mactPrint_Order: TMultiAction;
-    GoodsGroupNameFull: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
     cxLabel21: TcxLabel;
     edPartner: TcxButtonEdit;
     PartnerGuides: TdsdGuides;
-    LineNum: TcxGridDBColumn;
     actShowMessage: TShowMessageAction;
     cxLabel22: TcxLabel;
     ceComment: TcxTextEdit;
     cxLabel3: TcxLabel;
     edGUID: TcxTextEdit;
     colGUID: TcxGridDBColumn;
+    InsertMobile: TcxGridDBColumn;
+    InsertRecord: TInsertRecord;
+    bbInsertRecord: TdxBarButton;
   private
     { Private declarations }
   public
@@ -59,6 +53,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TStoreRealForm);
+  RegisterClass(TVisitForm);
 
 end.

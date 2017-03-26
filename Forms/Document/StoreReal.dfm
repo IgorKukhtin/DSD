@@ -433,12 +433,6 @@ inherited StoreRealForm: TStoreRealForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPriceListId'
-        Value = ''
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inOperDate'
         Value = 0d
         DataType = ftDateTime

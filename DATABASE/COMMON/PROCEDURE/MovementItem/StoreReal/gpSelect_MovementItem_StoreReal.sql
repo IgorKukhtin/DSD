@@ -5,7 +5,6 @@ DROP FUNCTION IF EXISTS gpSelect_MovementItem_StoreReal (Integer, TDateTime, Boo
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_StoreReal(
     IN inMovementId  Integer      , -- ключ Документа
-    IN inPriceListId Integer      ,
     IN inOperDate    TDateTime    , -- Дата документа
     IN inShowAll     Boolean      , --
     IN inIsErased    Boolean      , --

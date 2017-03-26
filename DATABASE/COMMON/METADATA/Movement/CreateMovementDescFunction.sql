@@ -260,9 +260,14 @@ CREATE OR REPLACE FUNCTION zc_Movement_Task() RETURNS Integer AS $BODY$BEGIN RET
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_Task', 'Задание Торговому агенту' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_Task');
 
+CREATE OR REPLACE FUNCTION zc_Movement_Visit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_Visit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_Visit', 'Визит на торговую точку' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_Visit');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 26.03.17         * zc_Movement_Visit
  24.03.17         * zc_Movement_Task
  20.10.16         * zc_Movement_Reestr
  27.09.16         * zc_Movement_MobileBills

@@ -1,18 +1,14 @@
 -- Function: gpSelect_MovementItem_Visit()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_Visit (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_Visit (Integer, TDateTime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_Visit (Integer, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Visit(
     IN inMovementId  Integer      , -- ключ Документа
-    IN inPriceListId Integer      ,
     IN inOperDate    TDateTime    , -- Дата документа
-    IN inShowAll     Boolean      , --
     IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id                       Integer
-             , LineNum                  Integer
              , PhotoMobileId            Integer
              , PhotoMobileName          TVarChar
              , Amount                   TFloat
@@ -30,8 +26,8 @@ BEGIN
       vbUserId:= lpGetUserBySession (inSession);
 
      RETURN QUERY
-        SELECT tmpMI.MovementItemId    AS Id
-             , tmpMI.PhotoMobileId
+        SELECT MovementItem.Id               AS Id
+             , Object_PhotoMobile.Id         AS PhotoMobileId
              , Object_PhotoMobile.ValueData  AS PhotoMobileName
              , MovementItem.Amount
              , MIString_GUID.ValueData       AS GUID
@@ -43,7 +39,7 @@ BEGIN
                              AND MovementItem.DescId = zc_MI_Master()
                              AND MovementItem.isErased = tmpIsErased.isErased
 
-            LEFT JOIN Object AS Object_PhotoMobile ON Object_PhotoMobile.Id = tmpMI.PhotoMobileId
+            LEFT JOIN Object AS Object_PhotoMobile ON Object_PhotoMobile.Id = MovementItem.ObjectId
 
             LEFT JOIN MovementItemString AS MIString_GUID
                                          ON MIString_GUID.MovementItemId = MovementItem.Id
@@ -71,4 +67,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_Visit (inMovementId:= 5285619, inPriceListId:= 0, inOperDate:= CURRENT_DATE, inShowAll:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- 
+--select * from gpSelect_MovementItem_Visit(inMovementId := 0 ,  inOperDate := ('30.12.1899')::TDateTime ,  inIsErased := 'False' ,  inSession := '5');

@@ -1,5 +1,5 @@
-inherited StoreRealForm: TStoreRealForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1060#1072#1082#1090#1080#1095#1077#1089#1082#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1058#1058'>'
+inherited VisitForm: TVisitForm
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1080#1079#1080#1090' '#1085#1072' '#1090#1086#1088#1075#1086#1074#1091#1102' '#1090#1086#1095#1082#1091'>'
   ClientHeight = 397
   ClientWidth = 937
   ExplicitWidth = 953
@@ -90,62 +90,22 @@ inherited StoreRealForm: TStoreRealForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object LineNum: TcxGridDBColumn [0]
-            Caption = #8470' '#1087'/'#1087
-            DataBinding.FieldName = 'LineNum'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 40
-          end
-          object GoodsGroupNameFull: TcxGridDBColumn [1]
-            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
-            DataBinding.FieldName = 'GoodsGroupNameFull'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 126
-          end
-          object GoodsCode: TcxGridDBColumn [2]
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'GoodsCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
-          end
-          object GoodsName: TcxGridDBColumn [3]
-            Caption = #1058#1086#1074#1072#1088
-            DataBinding.FieldName = 'GoodsName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 250
-          end
-          object GoodsKindName: TcxGridDBColumn [4]
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsKindName'
+          object GoodsName: TcxGridDBColumn [0]
+            Caption = #1060#1086#1090#1086
+            DataBinding.FieldName = 'PhotoMobileName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actGoodsKindChoice
+                Action = actPhotoMobileChoice
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object MeasureName: TcxGridDBColumn [5]
-            Caption = #1045#1076'. '#1080#1079#1084'.'
-            DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 45
+            Width = 143
           end
-          object Amount: TcxGridDBColumn [6]
+          object Amount: TcxGridDBColumn [1]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -155,48 +115,28 @@ inherited StoreRealForm: TStoreRealForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object InfoMoneyCode: TcxGridDBColumn [7]
-            Caption = #1050#1086#1076' '#1059#1055
-            DataBinding.FieldName = 'InfoMoneyCode'
-            Visible = False
+          object Comment: TcxGridDBColumn [2]
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
+            Width = 126
           end
-          object InfoMoneyGroupName: TcxGridDBColumn [8]
-            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyGroupName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object InfoMoneyDestinationName: TcxGridDBColumn [9]
-            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
-            DataBinding.FieldName = 'InfoMoneyDestinationName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object InfoMoneyName: TcxGridDBColumn [10]
-            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
-          end
-          object colGUID: TcxGridDBColumn [11]
+          object colGUID: TcxGridDBColumn [3]
             DataBinding.FieldName = 'GUID'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 195
+          end
+          object InsertMobile: TcxGridDBColumn [4]
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076'. '#1092#1086#1090#1086
+            DataBinding.FieldName = 'InsertMobile'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103' '#1092#1086#1090#1086
+            Options.Editing = False
+            Width = 161
           end
         end
       end
@@ -343,13 +283,13 @@ inherited StoreRealForm: TStoreRealForm
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False
     end
-    object actGoodsKindChoice: TOpenChoiceForm [13]
+    object actPhotoMobileChoice: TOpenChoiceForm [13]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'GoodsKindForm'
-      FormName = 'TGoodsKindForm'
-      FormNameParam.Value = ''
+      Caption = 'PhotoMobileForm'
+      FormName = 'TPhotoMobileForm'
+      FormNameParam.Value = 'TPhotoMobileForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -357,14 +297,14 @@ inherited StoreRealForm: TStoreRealForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsKindId'
+          ComponentItem = 'PhotoMobileId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsKindName'
+          ComponentItem = 'PhotoMobileName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -387,10 +327,8 @@ inherited StoreRealForm: TStoreRealForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spSavePrintState
       StoredProcList = <
         item
-          StoredProc = spSavePrintState
         end>
       Caption = 'actSPSavePrintState'
     end
@@ -412,6 +350,18 @@ inherited StoreRealForm: TStoreRealForm
       Category = 'DSDLib'
       MoveParams = <>
     end
+    object InsertRecord: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView
+      Action = actPhotoMobileChoice
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1060#1086#1090#1086'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1060#1086#1090#1086'>'
+      ShortCut = 45
+      ImageIndex = 0
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -422,7 +372,7 @@ inherited StoreRealForm: TStoreRealForm
     Top = 328
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_StoreReal'
+    StoredProcName = 'gpSelect_MovementItem_Visit'
     Params = <
       item
         Name = 'inMovementId'
@@ -433,23 +383,9 @@ inherited StoreRealForm: TStoreRealForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPriceListId'
-        Value = ''
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inOperDate'
         Value = 0d
         DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inShowAll'
-        Value = False
-        Component = actShowAll
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -483,13 +419,13 @@ inherited StoreRealForm: TStoreRealForm
           ItemName = 'bbShowErased'
         end
         item
-          Visible = True
-          ItemName = 'bbShowAll'
-        end
-        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecord'
         end
         item
           Visible = True
@@ -540,19 +476,21 @@ inherited StoreRealForm: TStoreRealForm
       Action = mactPrint_Order
       Visible = ivNever
     end
+    object bbInsertRecord: TdxBarButton
+      Action = InsertRecord
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnlyEditingCellOnEnter = True
     ColumnAddOnList = <
       item
-        Column = GoodsCode
         FindByFullValue = True
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end>
     ColumnEnterList = <
       item
-        Column = GoodsCode
       end
       item
         Column = GoodsName
@@ -641,7 +579,7 @@ inherited StoreRealForm: TStoreRealForm
     Top = 12
   end
   inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_StoreReal'
+    StoredProcName = 'gpUpdate_Status_Visit'
     Params = <
       item
         Name = 'inMovementId'
@@ -677,7 +615,7 @@ inherited StoreRealForm: TStoreRealForm
     Top = 12
   end
   inherited spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_StoreReal'
+    StoredProcName = 'gpGet_Movement_Visit'
     Params = <
       item
         Name = 'inMovementId'
@@ -758,7 +696,7 @@ inherited StoreRealForm: TStoreRealForm
     Top = 248
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_StoreReal'
+    StoredProcName = 'gpInsertUpdate_Movement_Visit'
     Params = <
       item
         Name = 'ioId'
@@ -814,6 +752,7 @@ inherited StoreRealForm: TStoreRealForm
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
       item
+        Guides = PartnerGuides
       end
       item
       end>
@@ -842,17 +781,17 @@ inherited StoreRealForm: TStoreRealForm
     Left = 648
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_StoreReal_SetErased'
+    StoredProcName = 'gpMovementItem_Visit_SetErased'
     Left = 518
     Top = 324
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_StoreReal_SetUnErased'
+    StoredProcName = 'gpMovementItem_Visit_SetUnErased'
     Left = 582
     Top = 304
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_StoreReal'
+    StoredProcName = 'gpInsertUpdate_MovementItem_Visit'
     Params = <
       item
         Name = 'ioId'
@@ -871,10 +810,10 @@ inherited StoreRealForm: TStoreRealForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsId'
+        Name = 'inPhotoMobileId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'GoodsId'
+        ComponentItem = 'PhotoMobileId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -888,10 +827,11 @@ inherited StoreRealForm: TStoreRealForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsKindId'
+        Name = 'inComment'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'GoodsKindId'
+        ComponentItem = 'Comment'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -899,7 +839,7 @@ inherited StoreRealForm: TStoreRealForm
     Top = 344
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_StoreReal'
+    StoredProcName = 'gpInsertUpdate_MovementItem_Visit'
     Params = <
       item
         Name = 'ioId'
@@ -999,40 +939,8 @@ inherited StoreRealForm: TStoreRealForm
   object PrintItemsSverkaCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 452
-    Top = 270
-  end
-  object spSavePrintState: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_OrderExternal_Print'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inNewPrinted'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'isPrinted'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outPrinted'
-        Value = True
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 304
-    Top = 312
+    Left = 564
+    Top = 222
   end
   object PartnerGuides: TdsdGuides
     KeyField = 'Id'

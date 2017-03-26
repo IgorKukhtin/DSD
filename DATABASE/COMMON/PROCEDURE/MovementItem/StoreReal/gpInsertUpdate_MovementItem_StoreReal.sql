@@ -10,7 +10,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_StoreReal(
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inSession             TVarChar    -- сессия пользователя
 )
-AS
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;

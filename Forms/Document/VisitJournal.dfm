@@ -1,5 +1,5 @@
-inherited StoreRealJournalForm: TStoreRealJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1060#1072#1082#1090#1080#1095#1077#1089#1082#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1058#1058'>'
+inherited VisitJournalForm: TVisitJournalForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1080#1079#1080#1090' '#1085#1072' '#1090#1086#1088#1075#1086#1074#1091#1102' '#1090#1086#1095#1082#1091'>'
   ClientHeight = 396
   ClientWidth = 953
   AddOnFormData.RefreshAction = actRefreshStart
@@ -12,17 +12,17 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
     Width = 953
     Height = 339
     TabOrder = 3
-    ExplicitWidth = 1050
+    ExplicitWidth = 953
     ExplicitHeight = 339
     ClientRectBottom = 339
     ClientRectRight = 953
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1050
+      ExplicitWidth = 953
       ExplicitHeight = 339
       inherited cxGrid: TcxGrid
         Width = 953
         Height = 339
-        ExplicitWidth = 1050
+        ExplicitWidth = 953
         ExplicitHeight = 339
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -175,7 +175,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
   end
   inherited Panel: TPanel
     Width = 953
-    ExplicitWidth = 1050
+    ExplicitWidth = 953
     inherited deStart: TcxDateEdit
       EditValue = 42370d
     end
@@ -324,8 +324,8 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
       ImageIndex = 3
     end
     inherited actUpdate: TdsdInsertUpdateAction [5]
-      FormName = 'TStoreRealForm'
-      FormNameParam.Value = 'TStoreRealForm'
+      FormName = 'TVisitForm'
+      FormNameParam.Value = 'TVisitForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -350,8 +350,8 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
         end>
     end
     inherited actInsert: TdsdInsertUpdateAction [6]
-      FormName = 'TStoreRealForm'
-      FormNameParam.Value = 'TStoreRealForm'
+      FormName = 'TVisitForm'
+      FormNameParam.Value = 'TVisitForm'
     end
     inherited actInsertMask: TdsdInsertUpdateAction [7]
     end
@@ -493,7 +493,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_StoreReal'
+    StoredProcName = 'gpSelect_Movement_Visit'
     Params = <
       item
         Name = 'instartdate'
@@ -651,7 +651,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
     Top = 304
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_StoreReal'
+    StoredProcName = 'gpComplete_Movement_Visit'
     Params = <
       item
         Name = 'inmovementid'
@@ -681,7 +681,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
     Top = 296
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_StoreReal'
+    StoredProcName = 'gpUnComplete_Movement_Visit'
     Params = <
       item
         Name = 'inmovementid'
@@ -703,7 +703,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
     Top = 312
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_StoreReal'
+    StoredProcName = 'gpSetErased_Movement_Visit'
     Params = <
       item
         Name = 'inmovementid'
@@ -787,7 +787,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_StoreReal_Print'
+    StoredProcName = 'gpSelect_Movement_Visit_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

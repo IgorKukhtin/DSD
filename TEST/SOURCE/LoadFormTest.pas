@@ -164,9 +164,10 @@ type
     procedure LoadTransferDebtOutFormTest;
     procedure LoadTransferDebtInFormTest;
     procedure LoadTradeMarkFormTest;
+    procedure LoadToolsWeighingFormTest;
+    procedure LoadVisitFormTest;
     procedure LoadUnionFormTest;
     procedure LoadUnitFormTest;
-    procedure LoadToolsWeighingFormTest;
     procedure LoadWorkTimeKindFormTest;
     procedure LoadWeighingPartnerFormTest;
     procedure LoadWeighingProductionFormTest;
@@ -1842,6 +1843,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_PromoForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PromoDialogForm');
+end;
+
+procedure TLoadFormTest.LoadVisitFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TVisitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TVisitForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TVisitJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TVisitJournalForm');
 end;
 
 procedure TLoadFormTest.LoadUnionFormTest;

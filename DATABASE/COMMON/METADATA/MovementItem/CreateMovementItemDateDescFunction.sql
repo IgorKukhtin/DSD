@@ -42,6 +42,11 @@ CREATE OR REPLACE FUNCTION zc_MIDate_UpdateMobile() RETURNS Integer AS $BODY$BEG
 INSERT INTO MovementItemDateDesc (Code, ItemName)
   SELECT 'zc_MIDate_UpdateMobile', 'когда торговый отметил заданиe' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_UpdateMobile');
 
+CREATE OR REPLACE FUNCTION zc_MIDate_InsertMobile() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_InsertMobile'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_InsertMobile', 'Дата/время создания фото' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_InsertMobile');
+
+
 ------!!!!!!!!!! Farmacy
 CREATE OR REPLACE FUNCTION zc_MIDate_SertificatStart() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_SertificatStart'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemDateDesc (Code, ItemName)
@@ -65,6 +70,7 @@ INSERT INTO MovementItemDateDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 26.03.17         * zc_MIDate_InsertMobile
  24.03.17         * zc_MIDate_UpdateMobile
  01.10.15                                                          * zc_MIDate_SertificatStart, zc_MIDate_SertificatEnd
  17.02.14                        *

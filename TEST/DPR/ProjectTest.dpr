@@ -920,7 +920,9 @@ uses
   MobileOrderExternalJournal in '..\..\Forms\Document\MobileOrderExternalJournal.pas' {MobileOrderExternalJournalForm: TParentForm},
   MobileOrderExternal in '..\..\Forms\Document\MobileOrderExternal.pas' {MobileOrderExternalForm: TParentForm},
   TaskJournal in '..\..\Forms\Document\TaskJournal.pas' {TaskJournalForm: TParentForm},
-  Task in '..\..\Forms\Document\Task.pas' {TaskForm: TParentForm};
+  Task in '..\..\Forms\Document\Task.pas' {TaskForm: TParentForm},
+  VisitJournal in '..\..\Forms\Document\VisitJournal.pas' {VisitJournalForm: TParentForm},
+  Visit in '..\..\Forms\Document\Visit.pas' {VisitForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
