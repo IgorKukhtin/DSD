@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Movement_ReturnIn (TVarChar, TVarChar, TDateTime, Integer, Boolean, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Movement_ReturnIn (TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Integer, Boolean, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Movement_ReturnIn (TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Integer, Boolean, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_Movement_ReturnIn (
     IN inGUID             TVarChar  , -- Глобальный уникальный идентификатор для синхронизации с Главной БД
@@ -17,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_Movement_ReturnIn (
     IN inChangePercent    TFloat    , -- (-)% Скидки (+)% Наценки
     IN inPaidKindId       Integer   , -- Вид формы оплаты
     IN inPartnerId        Integer   , -- Контрагент
+    IN inUnitId           Integer   , -- Подразделение
     IN inContractId       Integer   , -- Договор
     IN inComment          TVarChar  , -- Примечание
     IN inSession          TVarChar    -- сессия пользователя
@@ -26,15 +28,12 @@ AS
 $BODY$
    DECLARE vbId Integer;
    DECLARE vbUserId Integer;
-   DECLARE vbUnitId Integer;
    DECLARE vbCurrencyId Integer;
    DECLARE vbIsInsert Boolean;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
-
-      SELECT UnitId_ret INTO vbUnitId FROM gpGetMobile_Object_Const (inSession);
 
       -- получаем Id документа по GUID
       SELECT MovementString_GUID.MovementId 
@@ -70,7 +69,7 @@ BEGIN
                                              , inVATPercent         := inVATPercent    -- % НДС
                                              , inChangePercent      := inChangePercent -- (-)% Скидки (+)% Наценки
                                              , inFromId             := inPartnerId     -- От кого (в документе)
-                                             , inToId               := vbUnitId        -- Кому (в документе)
+                                             , inToId               := inUnitId        -- Кому (в документе)
                                              , inPaidKindId         := inPaidKindId    -- Виды форм оплаты
                                              , inContractId         := inContractId    -- Договора
                                              , inCurrencyDocumentId := vbCurrencyId    -- Валюта (документа)
@@ -119,6 +118,7 @@ $BODY$
                                                     , inChangePercent := -5.0                         -- (-)% Скидки (+)% Наценки
                                                     , inPaidKindId    := zc_Enum_PaidKind_FirstForm() -- Вид формы оплаты
                                                     , inPartnerId     := 0                            -- Контрагент
+                                                    , inUnitId        := 0                            -- Подразделение
                                                     , inContractId    := 0                            -- Договор
                                                     , inComment       := 'Test'                       -- Примечание
                                                     , inSession       := zfCalc_UserAdmin()
