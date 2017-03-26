@@ -26,11 +26,13 @@ BEGIN
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
 
+      -- определяем идентификатор торгового агента
       vbPersonalId:= (SELECT PersonalId FROM gpGetMobile_Object_Const (inSession));
 
-      -- Результат
+      -- если торговый агент не определен, то возвращать нечего
       IF vbPersonalId IS NOT NULL 
       THEN
+           -- создаем множество идентификаторов прайс-листов, что доступны торговому агенту 
            CREATE TEMP TABLE tmpPriceList ON COMMIT DROP
            AS (SELECT DISTINCT COALESCE(ObjectLink_Partner_PriceList.ChildObjectId
                                       , ObjectLink_Contract_PriceList.ChildObjectId
@@ -67,6 +69,7 @@ BEGIN
                 
            IF inSyncDateIn > zc_DateStart()
            THEN
+                -- Результат
                 RETURN QUERY
                   WITH tmpProtocol AS (SELECT ObjectProtocol.ObjectId AS PriceListItemId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
                                        FROM ObjectProtocol                                                                               
@@ -113,6 +116,7 @@ BEGIN
                                                    AND ObjectHistoryFloat_PriceListItem_Value_Sale.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
                   WHERE Object_PriceListItem.DescId = zc_Object_PriceListItem();
            ELSE
+                -- Результат
                 RETURN QUERY
                   SELECT Object_PriceListItem.Id
                        , ObjectLink_PriceListItem_Goods.ChildObjectId           AS GoodsId
