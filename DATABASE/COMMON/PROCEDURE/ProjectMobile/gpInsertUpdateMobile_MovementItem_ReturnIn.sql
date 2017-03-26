@@ -66,6 +66,7 @@ BEGIN
                                                , inUserId             := vbUserId
                                                 );
 
+      -- сохранили свойство <Глобальный уникальный идентификатор>
       PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), vbId, inGUID);
 
       RETURN vbId;

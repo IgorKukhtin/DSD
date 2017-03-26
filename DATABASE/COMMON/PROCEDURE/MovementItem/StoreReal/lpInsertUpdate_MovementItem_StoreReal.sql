@@ -45,4 +45,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_MovementItem_StoreReal (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inGoodsKindId:= 0, inUserId:= 1, inGUID:= NULL)
+-- SELECT * FROM lpInsertUpdate_MovementItem_StoreReal (ioId:= 0, inMovementId:= 5285611, inGoodsId:= 1, inAmount:= 0, inGoodsKindId:= 0, inUserId:= 1)

@@ -38,12 +38,14 @@ BEGIN
                                               , inOperDate:= inOperDate
                                               , inUserId:= vbUserId
                                               , inPartnerId:= inPartnerId
-                                              , inGUID:= inGUID
                                               , inComment:= inComment 
                                                );
 
       -- сохранили свойство <ƒата/врем€ создани€ на мобильном устройстве>
       PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_InsertMobile(), vbId, inInsertDate);
+
+      -- сохранили свойство <√лобальный уникальный идентификатор>
+      PERFORM lpInsertUpdate_MovementString (zc_MovementString_GUID(), vbId, inGUID);
 
       RETURN vbId;
 END;

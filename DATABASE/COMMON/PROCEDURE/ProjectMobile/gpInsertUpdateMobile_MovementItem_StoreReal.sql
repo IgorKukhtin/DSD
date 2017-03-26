@@ -52,8 +52,10 @@ BEGIN
                                                    , inAmount:= inAmount
                                                    , inGoodsKindId:= inGoodsKindId
                                                    , inUserId:= vbUserId
-                                                   , inGUID:= inGUID
                                                     );
+
+      -- сохранили свойство <Глобальный уникальный идентификатор>
+      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), vbId, inGUID);
 
       RETURN vbId;
 END;
