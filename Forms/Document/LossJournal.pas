@@ -49,6 +49,9 @@ type
     actPrint_Sale: TdsdPrintAction;
     bbPrint_Sale: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
+    spChecked: TdsdStoredProc;
+    actChecked: TdsdExecStoredProc;
+    bbChecked: TdxBarButton;
   private
     { Private declarations }
   public

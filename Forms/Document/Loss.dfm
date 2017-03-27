@@ -7,18 +7,19 @@ inherited LossForm: TLossForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 113
     Width = 984
-    Height = 582
+    Height = 555
     ExplicitWidth = 984
     ExplicitHeight = 582
-    ClientRectBottom = 582
+    ClientRectBottom = 555
     ClientRectRight = 984
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 984
       ExplicitHeight = 558
       inherited cxGrid: TcxGrid
         Width = 984
-        Height = 558
+        Height = 531
         ExplicitWidth = 984
         ExplicitHeight = 558
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -277,42 +278,50 @@ inherited LossForm: TLossForm
   end
   inherited DataPanel: TPanel
     Width = 984
+    Height = 87
     TabOrder = 3
     ExplicitWidth = 984
+    ExplicitHeight = 87
     inherited edInvNumber: TcxTextEdit
-      Left = 182
-      ExplicitLeft = 182
+      Left = 8
+      ExplicitLeft = 8
       ExplicitWidth = 74
       Width = 74
     end
     inherited cxLabel1: TcxLabel
-      Left = 182
-      ExplicitLeft = 182
+      Left = 8
+      ExplicitLeft = 8
     end
     inherited edOperDate: TcxDateEdit
-      Left = 266
+      Left = 92
       Properties.SaveTime = False
       Properties.ShowTime = False
-      ExplicitLeft = 266
+      ExplicitLeft = 92
       ExplicitWidth = 86
       Width = 86
     end
     inherited cxLabel2: TcxLabel
-      Left = 266
-      ExplicitLeft = 266
+      Left = 92
+      ExplicitLeft = 92
+    end
+    inherited cxLabel15: TcxLabel
+      Top = 45
+      ExplicitTop = 45
     end
     inherited ceStatus: TcxButtonEdit
-      ExplicitWidth = 166
+      Top = 61
+      ExplicitTop = 61
+      ExplicitWidth = 170
       ExplicitHeight = 22
-      Width = 166
+      Width = 170
     end
     object cxLabel3: TcxLabel
-      Left = 361
+      Left = 188
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object edFrom: TcxButtonEdit
-      Left = 361
+      Left = 188
       Top = 23
       Properties.Buttons = <
         item
@@ -321,10 +330,10 @@ inherited LossForm: TLossForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 200
+      Width = 220
     end
     object edTo: TcxButtonEdit
-      Left = 570
+      Left = 418
       Top = 23
       Properties.Buttons = <
         item
@@ -333,20 +342,20 @@ inherited LossForm: TLossForm
         end>
       Properties.ReadOnly = True
       TabOrder = 8
-      Width = 200
+      Width = 220
     end
     object cxLabel4: TcxLabel
-      Left = 570
+      Left = 418
       Top = 5
       Caption = #1050#1086#1084#1091
     end
     object cxLabel5: TcxLabel
-      Left = 781
+      Left = 647
       Top = 5
       Caption = #1057#1090#1072#1090#1100#1103' '#1089#1087#1080#1089#1072#1085#1080#1103
     end
     object edArticleLoss: TcxButtonEdit
-      Left = 781
+      Left = 647
       Top = 23
       Properties.Buttons = <
         item
@@ -355,7 +364,26 @@ inherited LossForm: TLossForm
         end>
       Properties.ReadOnly = True
       TabOrder = 11
-      Width = 200
+      Width = 226
+    end
+    object edIsChecked: TcxCheckBox
+      Left = 290
+      Top = 61
+      Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
+      TabOrder = 12
+      Width = 118
+    end
+    object cxLabel22: TcxLabel
+      Left = 418
+      Top = 45
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object ceComment: TcxTextEdit
+      Left = 418
+      Top = 61
+      TabOrder = 14
+      Width = 455
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -641,6 +669,19 @@ inherited LossForm: TLossForm
         end>
       isShowModal = True
     end
+    object actChecked: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spChecked
+      StoredProcList = <
+        item
+          StoredProc = spChecked
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 58
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -749,6 +790,14 @@ inherited LossForm: TLossForm
         end
         item
           Visible = True
+          ItemName = 'bbChecked'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -790,6 +839,10 @@ inherited LossForm: TLossForm
     end
     object bbPrint_Sale: TdxBarButton
       Action = actPrint_Sale
+      Category = 0
+    end
+    object bbChecked: TdxBarButton
+      Action = actChecked
       Category = 0
     end
   end
@@ -865,12 +918,12 @@ inherited LossForm: TLossForm
   end
   inherited StatusGuides: TdsdGuides
     Left = 56
-    Top = 24
+    Top = 48
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Loss'
     Left = 120
-    Top = 16
+    Top = 48
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Loss'
@@ -967,15 +1020,17 @@ inherited LossForm: TLossForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'Comment'
         Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
+        Component = ceComment
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
+        Name = 'Checked'
         Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
+        Component = edIsChecked
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
@@ -1497,7 +1552,7 @@ inherited LossForm: TLossForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 440
+    Left = 320
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1525,7 +1580,7 @@ inherited LossForm: TLossForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 648
+    Left = 488
     Top = 8
   end
   object GuidesArticleLoss: TdsdGuides
@@ -1554,8 +1609,8 @@ inherited LossForm: TLossForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 840
-    Top = 24
+    Left = 744
+    Top = 8
   end
   object spSelectPrint_Sale: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Print'
@@ -1583,5 +1638,30 @@ inherited LossForm: TLossForm
     PackSize = 1
     Left = 319
     Top = 152
+  end
+  object spChecked: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChecked'
+        Value = Null
+        Component = edIsChecked
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 360
+    Top = 369
   end
 end

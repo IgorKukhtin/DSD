@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_Loss()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Loss (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Loss (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Loss(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Loss(
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inArticleLossId       Integer   , -- Статьи списания
+    IN inComment             TVarChar   , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -26,6 +28,7 @@ BEGIN
                                          , inFromId           := inFromId
                                          , inToId             := inToId
                                          , inArticleLossId    := inArticleLossId
+                                         , inComment          := inComment
                                          , inUserId           := vbUserId
                                           );
 
@@ -36,6 +39,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.03.17         * add inComment
  06.09.14                                        * add lpInsertUpdate_Movement_Loss
  02.09.14                                                        *
  26.05.14                                                        *

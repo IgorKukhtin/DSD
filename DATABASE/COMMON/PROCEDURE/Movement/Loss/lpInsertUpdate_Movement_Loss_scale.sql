@@ -26,6 +26,7 @@ BEGIN
                                          , inFromId           := inFromId
                                          , inToId             := inToId
                                          , inArticleLossId    := inArticleLossId
+                                         , inComment          := '' ::TVarChar
                                          , inUserId           := inUserId
                                           );
 
@@ -44,6 +45,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.03.17         *
  29.05.15                                        *
 */
 
