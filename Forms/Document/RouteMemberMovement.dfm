@@ -92,6 +92,7 @@
     Left = 152
     Top = 128
     EditValue = 42821d
+    Properties.DateButtons = [btnClear, btnToday]
     Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
     Properties.EditFormat = 'dd.mm.yyyy hh:mm'
     Properties.InputKind = ikMask

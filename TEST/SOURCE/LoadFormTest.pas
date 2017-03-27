@@ -91,7 +91,6 @@ type
     procedure LoadOrderIncomeFormTest;
     procedure LoadOrderInternalFormTest;
     procedure LoadOrderExternalFormTest;
-    procedure LoadStoreRealFormTest;
     procedure LoadOrderTypeFormTest;
     procedure LoadPartnerFormTest;
     procedure LoadPartnerTagFormTest;
@@ -157,6 +156,7 @@ type
     procedure LoadSheetWorkTimeFormTest;
     procedure LoadStaffListFormTest;
     procedure LoadStorage_ObjectFormTest;
+    procedure LoadStoreRealFormTest;
     procedure LoadTaskTest;
     procedure LoadTaxFormTest;
     procedure LoadTaxCorrectiveTest;

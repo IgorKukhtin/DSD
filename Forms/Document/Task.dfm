@@ -11,18 +11,18 @@ inherited TaskForm: TTaskForm
     Width = 873
     Height = 299
     ExplicitTop = 127
-    ExplicitWidth = 891
-    ExplicitHeight = 267
+    ExplicitWidth = 873
+    ExplicitHeight = 299
     ClientRectBottom = 299
     ClientRectRight = 873
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 891
-      ExplicitHeight = 243
+      ExplicitWidth = 873
+      ExplicitHeight = 275
       inherited cxGrid: TcxGrid
         Width = 873
         Height = 275
-        ExplicitWidth = 891
-        ExplicitHeight = 243
+        ExplicitWidth = 873
+        ExplicitHeight = 275
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -183,7 +183,7 @@ inherited TaskForm: TTaskForm
     Width = 873
     Height = 101
     TabOrder = 3
-    ExplicitWidth = 891
+    ExplicitWidth = 873
     ExplicitHeight = 101
     inherited edInvNumber: TcxTextEdit
       Left = 9
@@ -777,10 +777,8 @@ inherited TaskForm: TTaskForm
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
       item
-        Guides = GuidesPersonalTrade
       end
       item
-        Guides = GuidesPosition
       end>
     Left = 152
     Top = 152

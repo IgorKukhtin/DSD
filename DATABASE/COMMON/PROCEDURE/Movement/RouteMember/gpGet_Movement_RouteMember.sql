@@ -41,7 +41,7 @@ BEGIN
                   , Null ::TFloat                               AS GPSN
                   , Null ::TFloat                               AS GPSE
                   , CURRENT_TIMESTAMP::TDateTime                AS InsertDate
-                  , Null ::TDateTime                            AS InsertMobileDate
+                  , CURRENT_TIMESTAMP ::TDateTime               AS InsertMobileDate
                   , vbUserName                                  AS InserName 
              FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
       ELSE
