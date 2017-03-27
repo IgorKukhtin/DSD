@@ -137,6 +137,13 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             Width = 42
           end
+          object InvNumber_Invoice_Full: TcxGridDBColumn
+            Caption = #1057#1095#1077#1090' ('#1087#1086#1089#1090'.1303)'
+            DataBinding.FieldName = 'InvNumber_Invoice_Full'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
           object clOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'OperDate'
