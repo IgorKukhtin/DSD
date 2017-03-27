@@ -407,12 +407,38 @@ type
     lwPriceList: TListView;
     bsPriceList: TBindSourceDB;
     LinkListControlToField1: TLinkListControlToField;
-    BindSourceDB1: TBindSourceDB;
+    bsPromoList: TBindSourceDB;
     LinkListControlToField4: TLinkListControlToField;
-    BindSourceDB2: TBindSourceDB;
+    bsPromoPartners: TBindSourceDB;
     LinkFillControlToField3: TLinkFillControlToField;
-    BindSourceDB3: TBindSourceDB;
+    bsPromoGoods: TBindSourceDB;
     LinkFillControlToField4: TLinkFillControlToField;
+    tiInformation: TTabItem;
+    VertScrollBox6: TVertScrollBox;
+    lUnitRet: TLayout;
+    Label36: TLabel;
+    UnitNameRet: TEdit;
+    lMember: TLayout;
+    Label37: TLabel;
+    eMemberName: TEdit;
+    lSyncDateIn: TLayout;
+    Label38: TLabel;
+    eSyncDateIn: TEdit;
+    lWebService: TLayout;
+    Label39: TLabel;
+    eWebService: TEdit;
+    lCash: TLayout;
+    Label40: TLabel;
+    eCashName: TEdit;
+    lUnit: TLayout;
+    Label22: TLabel;
+    eUnitName: TEdit;
+    Layout8: TLayout;
+    Label31: TLabel;
+    eMobileVersion: TEdit;
+    Layout9: TLayout;
+    Label32: TLabel;
+    SyncDateOut: TEdit;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bReloginClick(Sender: TObject);
@@ -528,6 +554,12 @@ type
     procedure bRefreshMapScreenClick(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
     procedure bPromoClick(Sender: TObject);
+    procedure lwPromoListItemClick(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure lwPromoGoodsFilter(Sender: TObject; const AFilter, AValue: string;
+      var Accept: Boolean);
+    procedure lwPromoPartnersUpdateObjects(const Sender: TObject;
+      const AItem: TListViewItem);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -590,6 +622,7 @@ type
     procedure ShowPathOnmap;
     procedure ShowPhotos;
     procedure ShowPhoto;
+    procedure ShowInformation;
     procedure AddedNewStoreRealItems;
     procedure AddedNewOrderItems;
     procedure AddedNewReturnInItems;
@@ -607,6 +640,8 @@ type
     procedure CameraComponentSampleBufferReady(Sender: TObject; const ATime: TMediaTime);
 
     procedure GetCurrentCoordinates;
+
+    procedure UpdateApplication;
   public
     { Public declarations }
   end;
@@ -1033,6 +1068,28 @@ procedure TfrmMain.lwPriceListItemClick(const Sender: TObject;
   const AItem: TListViewItem);
 begin
   ShowPriceListItems;
+end;
+
+procedure TfrmMain.lwPromoGoodsFilter(Sender: TObject; const AFilter,
+  AValue: string; var Accept: Boolean);
+begin
+  if Trim(AFilter) <> '' then
+    Accept :=  AValue.ToUpper.Contains(AFilter.ToUpper)
+  else
+    Accept := true;
+end;
+
+procedure TfrmMain.lwPromoListItemClick(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  ShowPromoItems;
+end;
+
+procedure TfrmMain.lwPromoPartnersUpdateObjects(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  TListItemImage(AItem.Objects.FindDrawable('imAddress')).ImageIndex := 2;
+  TListItemImage(AItem.Objects.FindDrawable('imContact')).ImageIndex := 3;
 end;
 
 procedure TfrmMain.lwReturnInListItemClickEx(const Sender: TObject;
@@ -1485,7 +1542,7 @@ begin
 end;
 {$ELSE}
 begin
-  //
+  ShowInformation;
 end;
 {$ENDIF}
 
@@ -2200,6 +2257,9 @@ begin
       lCaption.Text := DM.qryPartnerName.AsString;
     end
     else
+    if tcMain.ActiveTab = tiMain then
+      lCaption.Text := 'Alan Mobile'
+    else
     if tcMain.ActiveTab = tiRoutes then
       lCaption.Text := 'Маршруты'
     else
@@ -2217,6 +2277,9 @@ begin
     else
     if tcMain.ActiveTab = tiSync then
       lCaption.Text := 'Синхронизация'
+    else
+    if tcMain.ActiveTab = tiInformation then
+      lCaption.Text := 'Информация'
     else
     if tcMain.ActiveTab = tiOrderExternal then
       lCaption.Text := 'Заявки (' + DM.qryPartnerName.AsString + ')'
@@ -2568,6 +2631,20 @@ begin
   SwitchToForm(tiPhotoEdit, nil);
 end;
 
+procedure TfrmMain.ShowInformation;
+begin
+  eMobileVersion.Text := DM.tblObject_ConstMobileVersion.AsString;
+  eUnitName.Text := DM.tblObject_ConstUnitName.AsString;
+  UnitNameRet.Text := DM.tblObject_ConstUnitName_ret.AsString;
+  eCashName.Text := DM.tblObject_ConstCashName.AsString;
+  eMemberName.Text := DM.tblObject_ConstMemberName.AsString;
+  eWebService.Text := DM.tblObject_ConstWebService.AsString;
+  eSyncDateIn.Text := FormatDateTime('DD.MM.YYYY', DM.tblObject_ConstSyncDateIn.AsDateTime);
+  SyncDateOut.Text := FormatDateTime('DD.MM.YYYY', DM.tblObject_ConstSyncDateOut.AsDateTime);
+
+  SwitchToForm(tiInformation, nil);
+end;
+
 procedure TfrmMain.AddedNewStoreRealItems;
 var
   i: integer;
@@ -2908,6 +2985,26 @@ begin
   end;
   {$ENDIF}
 end;
+
+procedure TfrmMain.UpdateApplication;
+{$IFDEF ANDROID}
+var
+  intent: JIntent;
+  uri: Jnet_Uri;
+begin
+  Intent := TJIntent.Create;
+  Intent.setAction(TJIntent.JavaClass.ACTION_VIEW);
+
+  uri := TJnet_Uri.JavaClass.fromFile(TJFile.JavaClass.init(StringToJString(TPath.Combine(TPath.GetSharedDownloadsPath, 'TestStyles.apk'))));
+  Intent.setDataAndType(uri, StringToJString('application/vnd.android.package-archive'));
+  Intent.setFlags(TJIntent.JavaClass.FLAG_ACTIVITY_NEW_TASK);
+  SharedActivity.startActivity(Intent);
+end;
+{$ELSE}
+begin
+  //
+end;
+{$ENDIF}
 
 end.
 
