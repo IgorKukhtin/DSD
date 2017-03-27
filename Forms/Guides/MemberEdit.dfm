@@ -27,16 +27,14 @@
     Height = 409
     Align = alTop
     TabOrder = 0
-    Properties.ActivePage = tsCommon
+    Properties.ActivePage = tsContact
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 287
     ClientRectBottom = 409
     ClientRectRight = 294
     ClientRectTop = 24
     object tsCommon: TcxTabSheet
       Caption = #1054#1073#1097#1080#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
-      ExplicitWidth = 313
       object edMeasureName: TcxTextEdit
         Left = 7
         Top = 60
@@ -209,7 +207,6 @@
     object tsContact: TcxTabSheet
       Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 1
-      ExplicitWidth = 287
       object cxLabel5: TcxLabel
         Left = 7
         Top = 4

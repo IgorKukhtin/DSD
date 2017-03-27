@@ -101,6 +101,10 @@ type
     procedure LoadPersonalReportFormTest;
     procedure LoadPersonalAccountFormTest;
     procedure LoadPersonalSendCashFormTest;
+    procedure LoadPersonalFormTest;
+    procedure LoadPersonalServiceFormTest;
+    procedure LoadPersonalServiceListFormTest;
+    procedure LoadPhotoMobileFormTest;
     procedure LoadPriceListFormTest;
     procedure LoadPriceCorrectiveFormTest;
     procedure LoadProductionUnionFormTest;
@@ -108,9 +112,6 @@ type
     procedure LoadProfitLossFormTest;
     procedure LoadProfitLossServiceFormTest;
     procedure LoadPositionFormTest;
-    procedure LoadPersonalFormTest;
-    procedure LoadPersonalServiceFormTest;
-    procedure LoadPersonalServiceListFormTest;
     procedure LoadPromoKindFormTest;
     procedure LoadPromoFormTest;
     procedure LoadQualityFormTest;
@@ -608,6 +609,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceListEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceListEditForm');
+end;
+
+procedure TLoadFormTest.LoadPhotoMobileFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPhotoMobileForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPhotoMobileForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPhotoMobileEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPhotoMobileEditForm');
 end;
 
 procedure TLoadFormTest.LoadImportSettingsFormTest;
