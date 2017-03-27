@@ -108,4 +108,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_RouteMember(inStartDate:= '01.01.2017', inEndDate:= CURRENT_DATE, inIsErased:= FALSE, inJuridicalBasisId:= 0, inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_RouteMember(inStartDate:= '01.01.2017'::TDateTime, inEndDate:= CURRENT_DATE::TDateTime, inIsErased:= FALSE, inJuridicalBasisId:= 0, inMemberId:=0, inSession := zfCalc_UserAdmin())
