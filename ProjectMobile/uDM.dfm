@@ -1,8 +1,8 @@
 object DM: TDM
   OldCreateOrder = False
   OnCreate = DataModuleCreate
-  Height = 516
-  Width = 1059
+  Height = 607
+  Width = 1084
   object FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink
     Left = 40
     Top = 97
@@ -1073,8 +1073,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Movement_Promo'
     TableName = 'Movement_Promo'
-    Left = 960
-    Top = 264
+    Left = 416
+    Top = 480
     object tblMovement_PromoId: TIntegerField
       FieldName = 'Id'
     end
@@ -1106,8 +1106,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'MovementItem_PromoPartner'
     TableName = 'MovementItem_PromoPartner'
-    Left = 960
-    Top = 336
+    Left = 528
+    Top = 480
     object tblMovementItem_PromoPartnerId: TIntegerField
       FieldName = 'Id'
     end
@@ -1125,8 +1125,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'MovementItem_PromoGoods'
     TableName = 'MovementItem_PromoGoods'
-    Left = 960
-    Top = 408
+    Left = 648
+    Top = 480
     object tblMovementItem_PromoGoodsId: TIntegerField
       FieldName = 'Id'
     end
@@ -1153,8 +1153,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Movement_ReturnIn'
     TableName = 'Movement_ReturnIn'
-    Left = 800
-    Top = 368
+    Left = 960
+    Top = 240
     object tblMovement_ReturnInId: TAutoIncField
       FieldName = 'Id'
       ProviderFlags = [pfInWhere]
@@ -1216,8 +1216,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'MovementItem_ReturnIn'
     TableName = 'MovementItem_ReturnIn'
-    Left = 800
-    Top = 424
+    Left = 960
+    Top = 304
     object tblMovementItem_ReturnInId: TAutoIncField
       FieldName = 'Id'
       ProviderFlags = [pfInWhere]
@@ -1316,8 +1316,8 @@ object DM: TDM
   end
   object qryPromoList: TFDQuery
     Connection = conMain
-    Left = 232
-    Top = 448
+    Left = 40
+    Top = 512
     object qryPromoListId: TIntegerField
       FieldName = 'Id'
     end
@@ -1346,8 +1346,8 @@ object DM: TDM
   end
   object qryPromoPartners: TFDQuery
     Connection = conMain
-    Left = 312
-    Top = 448
+    Left = 120
+    Top = 512
     object qryPromoPartnersName: TStringField
       FieldName = 'Name'
       Size = 255
@@ -1363,8 +1363,8 @@ object DM: TDM
   end
   object qryPromoGoods: TFDQuery
     Connection = conMain
-    Left = 400
-    Top = 448
+    Left = 208
+    Top = 512
     object qryPromoGoodsGoodsName: TStringField
       FieldName = 'GoodsName'
       Size = 255
@@ -1380,6 +1380,59 @@ object DM: TDM
     object qryPromoGoodsPrice: TWideStringField
       FieldName = 'Price'
       Size = 250
+    end
+  end
+  object tblMovement_Task: TFDTable
+    Connection = conMain
+    UpdateOptions.UpdateTableName = 'Movement_Task'
+    TableName = 'Movement_Task'
+    Left = 416
+    Top = 544
+    object tblMovement_TaskId: TIntegerField
+      FieldName = 'Id'
+    end
+    object tblMovement_TaskInvNumber: TStringField
+      FieldName = 'InvNumber'
+      Size = 255
+    end
+    object tblMovement_TaskOperDate: TDateTimeField
+      FieldName = 'OperDate'
+    end
+    object tblMovement_TaskStatusId: TIntegerField
+      FieldName = 'StatusId'
+    end
+    object tblMovement_TaskPersonalId: TIntegerField
+      FieldName = 'PersonalId'
+    end
+  end
+  object tblMovementItem_Task: TFDTable
+    Connection = conMain
+    UpdateOptions.UpdateTableName = 'MovementItem_Task'
+    TableName = 'MovementItem_Task'
+    Left = 528
+    Top = 544
+    object tblMovementItem_TaskId: TIntegerField
+      FieldName = 'Id'
+    end
+    object tblMovementItem_TaskMovementId: TIntegerField
+      FieldName = 'MovementId'
+    end
+    object tblMovementItem_TaskPartnerId: TIntegerField
+      FieldName = 'PartnerId'
+    end
+    object tblMovementItem_TaskClosed: TBooleanField
+      FieldName = 'Closed'
+    end
+    object tblMovementItem_TaskDescription: TStringField
+      FieldName = 'Description'
+      Size = 500
+    end
+    object tblMovementItem_TaskComment: TStringField
+      FieldName = 'Comment'
+      Size = 500
+    end
+    object tblMovementItem_TaskisSync: TBooleanField
+      FieldName = 'isSync'
     end
   end
 end
