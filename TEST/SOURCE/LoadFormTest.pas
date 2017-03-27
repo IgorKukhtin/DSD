@@ -144,6 +144,7 @@ type
     procedure LoadRouteFormTest;
     procedure LoadRouteGroupFormTest;
     procedure LoadRouteSortingFormTest;
+    procedure LoadRouteMemberMovementFormTest;
     procedure LoadRateFuelKindFormTest;
     procedure LoadNameBeforeFormTest;
     procedure LoadSaleFormTest;
@@ -2225,6 +2226,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TRouteKindForm');
 end;
 
+procedure TLoadFormTest.LoadRouteMemberMovementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteMemberJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRouteMemberJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteMemberMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRouteMemberMovementForm');
+end;
+
 procedure TLoadFormTest.LoadMemberFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalPosition_ObjectForm'));
@@ -2387,8 +2396,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMovementJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementGoodsJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementGoodsJournalForm');
-
-
 end;
 
 procedure TLoadFormTest.LoadPositionFormTest;

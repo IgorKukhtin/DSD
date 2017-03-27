@@ -62,14 +62,17 @@ BEGIN
              , MovementDate_Insert.ValueData       AS InsertDate
              , MovementDate_InsertMobile.ValueData AS InsertMobileDate
              , Object_User.ValueData               AS InsertName
-        FROM (SELECT Movement.Id
-              FROM tmpStatus
-                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
+        FROM tmpStatus
+             INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
                                 AND Movement.DescId = zc_Movement_RouteMember() 
                                 AND Movement.StatusId = tmpStatus.StatusId
-             ) AS tmpMovement
-             LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
 
+             INNER JOIN MovementLinkObject AS MovementLinkObject_Insert 
+                                           ON MovementLinkObject_Insert.MovementId = Movement.Id
+                                          AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
+                                          AND (MovementLinkObject_Insert.ObjectId = vbUserId OR inMemberId = 0)
+             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_Insert.ObjectId
+            
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
              LEFT JOIN MovementDate AS MovementDate_Insert 
@@ -78,11 +81,6 @@ BEGIN
              LEFT JOIN MovementDate AS MovementDate_InsertMobile 
                                     ON MovementDate_InsertMobile.MovementId = Movement.Id
                                    AND MovementDate_InsertMobile.DescId = zc_MovementDate_InsertMobile()
-
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert 
-                                          ON MovementLinkObject_Insert.MovementId = Movement.Id
-                                         AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
-             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_Insert.ObjectId
 
              LEFT JOIN MovementFloat AS MovementFloat_GPSN
                                      ON MovementFloat_GPSN.MovementId = Movement.Id

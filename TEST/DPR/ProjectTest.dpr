@@ -924,7 +924,9 @@ uses
   VisitJournal in '..\..\Forms\Document\VisitJournal.pas' {VisitJournalForm: TParentForm},
   Visit in '..\..\Forms\Document\Visit.pas' {VisitForm: TParentForm},
   PhotoMobileEdit in '..\..\Forms\Guides\PhotoMobileEdit.pas' {PhotoMobileEditForm: TParentForm},
-  PhotoMobile in '..\..\Forms\Guides\PhotoMobile.pas' {PhotoMobileForm: TParentForm};
+  PhotoMobile in '..\..\Forms\Guides\PhotoMobile.pas' {PhotoMobileForm: TParentForm},
+  RouteMemberJournal in '..\..\Forms\Document\RouteMemberJournal.pas' {RouteMemberJournalForm: TParentForm},
+  RouteMemberMovement in '..\..\Forms\Document\RouteMemberMovement.pas' {RouteMemberMovementForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

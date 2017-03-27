@@ -12,17 +12,17 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
     Width = 953
     Height = 339
     TabOrder = 3
-    ExplicitWidth = 1050
+    ExplicitWidth = 953
     ExplicitHeight = 339
     ClientRectBottom = 339
     ClientRectRight = 953
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1050
+      ExplicitWidth = 953
       ExplicitHeight = 339
       inherited cxGrid: TcxGrid
         Width = 953
         Height = 339
-        ExplicitWidth = 1050
+        ExplicitWidth = 953
         ExplicitHeight = 339
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -119,7 +119,6 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
             Width = 64
           end
           inherited colOperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1079#1072#1103#1074#1082#1080
             HeaderAlignmentHorz = taCenter
             Width = 85
           end
@@ -175,7 +174,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
   end
   inherited Panel: TPanel
     Width = 953
-    ExplicitWidth = 1050
+    ExplicitWidth = 953
     inherited deStart: TcxDateEdit
       EditValue = 42370d
     end

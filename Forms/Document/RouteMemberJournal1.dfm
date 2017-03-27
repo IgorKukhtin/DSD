@@ -1,5 +1,5 @@
-inherited VisitJournalForm: TVisitJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1080#1079#1080#1090' '#1085#1072' '#1090#1086#1088#1075#1086#1074#1091#1102' '#1090#1086#1095#1082#1091'>'
+inherited RouteMemberJournalForm: TRouteMemberJournalForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1052#1072#1088#1096#1088#1091#1090' '#1090#1086#1088#1075#1086#1074#1086#1075#1086' '#1072#1075#1077#1085#1090#1072'>'
   ClientHeight = 396
   ClientWidth = 953
   AddOnFormData.RefreshAction = actRefreshStart
@@ -122,28 +122,6 @@ inherited VisitJournalForm: TVisitJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 85
           end
-          object PartnerName: TcxGridDBColumn
-            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
-            DataBinding.FieldName = 'PartnerName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 212
-          end
-          object clComment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-            DataBinding.FieldName = 'Comment'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 166
-          end
-          object clGUID: TcxGridDBColumn
-            DataBinding.FieldName = 'GUID'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 82
-          end
           object clInsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
@@ -168,6 +146,28 @@ inherited VisitJournalForm: TVisitJournalForm
             Options.Editing = False
             Width = 90
           end
+          object clGPSN: TcxGridDBColumn
+            Caption = 'GPS '#1082#1086#1086#1088#1076#1080#1085#1072#1090#1099' ('#1096#1080#1088#1086#1090#1072')'
+            DataBinding.FieldName = 'GPSN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object clGPSE: TcxGridDBColumn
+            Caption = 'GPS '#1082#1086#1086#1088#1076#1080#1085#1072#1090#1099' ('#1076#1086#1083#1075#1086#1090#1072')'
+            DataBinding.FieldName = 'GPSE'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object clGUID: TcxGridDBColumn
+            DataBinding.FieldName = 'GUID'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 165
+          end
         end
       end
     end
@@ -176,10 +176,11 @@ inherited VisitJournalForm: TVisitJournalForm
     Width = 953
     ExplicitWidth = 953
     inherited deStart: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 42736d
+      Properties.OnChange = deStartPropertiesChange
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 42736d
     end
     object cxLabel3: TcxLabel
       Left = 475
@@ -323,8 +324,8 @@ inherited VisitJournalForm: TVisitJournalForm
       ImageIndex = 3
     end
     inherited actUpdate: TdsdInsertUpdateAction [5]
-      FormName = 'TVisitForm'
-      FormNameParam.Value = 'TVisitForm'
+      FormName = 'TRouteMemberMovementForm'
+      FormNameParam.Value = 'TRouteMemberMovementForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -349,8 +350,8 @@ inherited VisitJournalForm: TVisitJournalForm
         end>
     end
     inherited actInsert: TdsdInsertUpdateAction [6]
-      FormName = 'TVisitForm'
-      FormNameParam.Value = 'TVisitForm'
+      FormName = 'TRouteMemberMovementForm'
+      FormNameParam.Value = 'TRouteMemberMovementForm'
     end
     inherited actInsertMask: TdsdInsertUpdateAction [7]
     end
@@ -492,7 +493,7 @@ inherited VisitJournalForm: TVisitJournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Visit'
+    StoredProcName = 'gpSelect_Movement_RouteMember'
     Params = <
       item
         Name = 'instartdate'
@@ -650,7 +651,7 @@ inherited VisitJournalForm: TVisitJournalForm
     Top = 304
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Visit'
+    StoredProcName = 'gpComplete_Movement_RouteMember'
     Params = <
       item
         Name = 'inmovementid'
@@ -680,7 +681,7 @@ inherited VisitJournalForm: TVisitJournalForm
     Top = 296
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_Visit'
+    StoredProcName = 'gpUnComplete_Movement_RouteMember'
     Params = <
       item
         Name = 'inmovementid'
@@ -702,7 +703,7 @@ inherited VisitJournalForm: TVisitJournalForm
     Top = 312
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_Visit'
+    StoredProcName = 'gpSetErased_Movement_RouteMember'
     Params = <
       item
         Name = 'inmovementid'
@@ -786,7 +787,7 @@ inherited VisitJournalForm: TVisitJournalForm
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Visit_Print'
+    StoredProcName = 'gpSelect_Movement_RouteMember_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

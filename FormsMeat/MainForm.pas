@@ -836,6 +836,9 @@ type
     N160: TMenuItem;
     actPhotoMobile: TdsdOpenForm;
     N161: TMenuItem;
+    actRouteMemberJournal: TdsdOpenForm;
+    N162: TMenuItem;
+    N163: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
