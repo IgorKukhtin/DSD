@@ -52,6 +52,18 @@ BEGIN
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                                    ON MILinkObject_Contract.MovementItemId = MI_PromoPartner.Id
                                                   AND MILinkObject_Contract.DescId         = zc_MILinkObject_Contract()
+                  JOIN Movement AS Movement_Promo
+                                ON Movement_Promo.Id = Movement_PromoPartner.ParentId
+                               -- AND Movement_Promo.DescId = zc_Movement_Promo()
+                               AND Movement_Promo.StatusId = zc_Enum_Status_Complete()
+                  JOIN MovementDate AS MovementDate_StartSale
+                                    ON MovementDate_StartSale.MovementId = Movement_PromoPartner.ParentId
+                                   AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
+                                   AND MovementDate_StartSale.ValueData <= CURRENT_DATE
+                  JOIN MovementDate AS MovementDate_EndSale
+                                    ON MovementDate_EndSale.MovementId = Movement_PromoPartner.ParentId
+                                   AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
+                                   AND MovementDate_EndSale.ValueData >= CURRENT_DATE
              WHERE Movement_PromoPartner.DescId = zc_Movement_PromoPartner()
                -- AND Movement_PromoPartner.ParentId IS NOT NULL
                AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
