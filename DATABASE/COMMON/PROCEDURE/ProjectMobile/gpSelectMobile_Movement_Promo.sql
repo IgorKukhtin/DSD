@@ -34,15 +34,19 @@ BEGIN
            RETURN QUERY
              WITH tmpPromoPartner AS (SELECT DISTINCT Movement_PromoPartner.ParentId AS ParentId
                                       FROM Movement AS Movement_PromoPartner
-                                           JOIN MovementLinkObject AS MovementLinkObject_Partner
-                                                                   ON MovementLinkObject_Partner.MovementId = Movement_PromoPartner.Id
-                                                                  AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner() 
+                                           -- JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                           --                         ON MovementLinkObject_Partner.MovementId = Movement_PromoPartner.Id
+                                           --                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner() 
+                                           INNER JOIN MovementItem AS MI_PromoPartner
+                                                                   ON MI_PromoPartner.MovementId = Movement_PromoPartner.ID
+                                                                  AND MI_PromoPartner.DescId     = zc_MI_Master()
+                                                                  AND MI_PromoPartner.IsErased   = FALSE
                                            JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                                           ON ObjectLink_Partner_PersonalTrade.ObjectId = MovementLinkObject_Partner.ObjectId 
-                                                          AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                                           ON ObjectLink_Partner_PersonalTrade.ObjectId      = MI_PromoPartner.ObjectId -- MovementLinkObject_Partner.ObjectId 
+                                                          AND ObjectLink_Partner_PersonalTrade.DescId        = zc_ObjectLink_Partner_PersonalTrade()
                                                           AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
                                       WHERE Movement_PromoPartner.DescId = zc_Movement_PromoPartner()
-                                        AND Movement_PromoPartner.ParentId IS NOT NULL 
+                                        -- AND Movement_PromoPartner.ParentId IS NOT NULL 
                                         AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
                                      )
              SELECT Movement_Promo.Id
@@ -54,8 +58,10 @@ BEGIN
                   , (MI_Child.ObjectId IS NULL)          AS isChangePercent
                   , MovementString_CommentMain.ValueData AS CommentMain
                   , true::Boolean                        AS isSync  
-             FROM Movement AS Movement_Promo
-                  JOIN tmpPromoPartner ON tmpPromoPartner.ParentId = Movement_Promo.Id
+             FROM tmpPromoPartner
+                  JOIN Movement AS Movement_Promo ON Movement_Promo.Id       = tmpPromoPartner.ParentId
+                                                 -- AND Movement_Promo.DescId   = zc_Movement_Promo()
+                                                 AND Movement_Promo.StatusId = zc_Enum_Status_Complete()
                   JOIN MovementDate AS MovementDate_StartSale
                                     ON MovementDate_StartSale.MovementId = Movement_Promo.Id
                                    AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
@@ -72,8 +78,7 @@ BEGIN
                   LEFT JOIN MovementString AS MovementString_CommentMain
                                            ON MovementString_CommentMain.MovementId = Movement_Promo.Id
                                           AND MovementString_CommentMain.DescId = zc_MovementString_CommentMain() 
-             WHERE Movement_Promo.DescId = zc_Movement_Promo()
-               AND Movement_Promo.StatusId = zc_Enum_Status_Complete();
+             ;
       END IF;
 END;
 $BODY$

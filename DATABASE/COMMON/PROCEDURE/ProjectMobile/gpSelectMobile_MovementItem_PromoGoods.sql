@@ -33,16 +33,20 @@ BEGIN
            RETURN QUERY
              WITH tmpPromoPartner AS (SELECT DISTINCT Movement_PromoPartner.ParentId AS ParentId
                                       FROM Movement AS Movement_PromoPartner
-                                           JOIN MovementLinkObject AS MovementLinkObject_Partner
-                                                                   ON MovementLinkObject_Partner.MovementId = Movement_PromoPartner.Id
-                                                                  AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner() 
+                                           -- JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                           --                         ON MovementLinkObject_Partner.MovementId = Movement_PromoPartner.Id
+                                           --                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner() 
+                                           INNER JOIN MovementItem AS MI_PromoPartner
+                                                                   ON MI_PromoPartner.MovementId = Movement_PromoPartner.ID
+                                                                  AND MI_PromoPartner.DescId     = zc_MI_Master()
+                                                                  AND MI_PromoPartner.IsErased   = FALSE
                                            JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                                           ON ObjectLink_Partner_PersonalTrade.ObjectId = MovementLinkObject_Partner.ObjectId 
+                                                           ON ObjectLink_Partner_PersonalTrade.ObjectId = MI_PromoPartner.ObjectId -- MovementLinkObject_Partner.ObjectId 
                                                           AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
                                                           AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
                                            JOIN Movement AS Movement_Promo
-                                                         ON Movement_Promo.Id = Movement_PromoPartner.ParentId
-                                                        AND Movement_Promo.DescId = zc_Movement_Promo()
+                                                         ON Movement_Promo.Id       = Movement_PromoPartner.ParentId
+                                                        -- AND Movement_Promo.DescId   = zc_Movement_Promo()
                                                         AND Movement_Promo.StatusId = zc_Enum_Status_Complete()
                                            JOIN MovementDate AS MovementDate_StartSale
                                                              ON MovementDate_StartSale.MovementId = Movement_Promo.Id
@@ -53,7 +57,7 @@ BEGIN
                                                             AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
                                                             AND MovementDate_EndSale.ValueData >= CURRENT_DATE
                                       WHERE Movement_PromoPartner.DescId = zc_Movement_PromoPartner()
-                                        AND Movement_PromoPartner.ParentId IS NOT NULL
+                                        -- AND Movement_PromoPartner.ParentId IS NOT NULL
                                         AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
                                      )
              SELECT MovementItem_PromoGoods.Id
@@ -64,8 +68,10 @@ BEGIN
                   , COALESCE (MIFloat_PriceWithVAT.ValueData, 0.0)::TFloat    AS PriceWithVAT
                   , COALESCE (MovementItem_PromoGoods.Amount, 0.0)::TFloat    AS TaxPromo
                   , (NOT MovementItem_PromoGoods.isErased)                    AS isSync
-             FROM MovementItem AS MovementItem_PromoGoods
-                  JOIN tmpPromoPartner ON tmpPromoPartner.ParentId = MovementItem_PromoGoods.MovementId
+             FROM tmpPromoPartner
+                  JOIN MovementItem AS MovementItem_PromoGoods ON MovementItem_PromoGoods.MovementId = tmpPromoPartner.ParentId
+                                                              AND MovementItem_PromoGoods.DescId     = zc_MI_Master()
+                                                              AND MovementItem_PromoGoods.IsErased   = FALSE
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem_PromoGoods.Id
                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind() 
@@ -75,7 +81,8 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
                                               ON MIFloat_PriceWithVAT.MovementItemId = MovementItem_PromoGoods.Id
                                              AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT() 
-             WHERE MovementItem_PromoGoods.DescId = zc_MI_Master();
+             ;
+            
       END IF;
 END;
 $BODY$

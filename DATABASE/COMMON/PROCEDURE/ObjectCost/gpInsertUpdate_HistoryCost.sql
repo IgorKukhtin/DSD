@@ -225,6 +225,8 @@ if inBranchId = 0 then
 end if;
 */
 
+inEndDate:= '27.03.2017';
+
      -- таблица - —писок сущностей которые €вл€ютс€ элементами с/с.
      CREATE TEMP TABLE _tmpMaster (ContainerId Integer, UnitId Integer, isInfoMoney_80401 Boolean, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, calcCount TFloat, calcSumm TFloat, calcCount_external TFloat, calcSumm_external TFloat, OutCount TFloat, OutSumm TFloat) ON COMMIT DROP;
      -- таблица - расходы дл€ Master
