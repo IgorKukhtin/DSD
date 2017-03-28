@@ -111,6 +111,8 @@ uses
   GoodsItem in '..\..\FormsBoutique\Guides\GoodsItem.pas' {GoodsItemForm: TParentForm},
   GoodsItemEdit in '..\..\FormsBoutique\Guides\GoodsItemEdit.pas' {GoodsItemEditForm: TParentForm},
   PartionGoods in '..\..\FormsBoutique\Guides\PartionGoods.pas' {PartionGoodsForm: TParentForm},
+  Position in '..\..\FormsBoutique\Guides\Position.pas' {PositionForm: TParentForm},
+  PositionEdit in '..\..\FormsBoutique\Guides\PositionEdit.pas' {PositionEditForm: TParentForm},
 
   ImportExportLinkType in '..\..\Forms\Kind\ImportExportLinkType.pas' {ImportExportLinkTypeForm: TParentForm},
   AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
