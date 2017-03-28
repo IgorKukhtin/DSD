@@ -452,6 +452,20 @@ type
     qryPromoListTermin: TWideStringField;
     tblObject_ConstMobileVersion: TStringField;
     tblObject_ConstMobileAPKFileName: TStringField;
+    tblMovement_Task: TFDTable;
+    tblMovementItem_Task: TFDTable;
+    tblMovement_TaskId: TIntegerField;
+    tblMovement_TaskInvNumber: TStringField;
+    tblMovement_TaskOperDate: TDateTimeField;
+    tblMovement_TaskStatusId: TIntegerField;
+    tblMovement_TaskPersonalId: TIntegerField;
+    tblMovementItem_TaskId: TIntegerField;
+    tblMovementItem_TaskMovementId: TIntegerField;
+    tblMovementItem_TaskPartnerId: TIntegerField;
+    tblMovementItem_TaskClosed: TBooleanField;
+    tblMovementItem_TaskDescription: TStringField;
+    tblMovementItem_TaskComment: TStringField;
+    tblMovementItem_TaskisSync: TBooleanField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -738,6 +752,18 @@ begin
       GetStoredProc.StoredProcName := 'gpSelectMobile_MovementItem_PromoGoods';
       CurDictTable.TableName := 'MovementItem_PromoGoods';
       DM.conMain.ExecSQL('delete from MovementItem_PromoGoods');
+    end
+    else
+    if AName = 'MovementTask' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Movement_Task';
+      CurDictTable.TableName := 'Movement_Task';
+    end
+    else
+    if AName = 'MovementItemTask' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_MovementItem_Task';
+      CurDictTable.TableName := 'MovementItem_Task';
     end;
 
     if GetStoredProc.StoredProcName = '' then
@@ -797,7 +823,8 @@ begin
               CurDictTable.Fields[ Mapping[x][1] ].Value := GetStoredProc.DataSet.Fields[ Mapping[x][2] ].Value;
           end
           else
-            if (AName <> 'PromoMain') and (AName <> 'PromoPartner') and (AName <> 'PromoGoods') then
+            if (AName <> 'PromoMain') and (AName <> 'PromoPartner') and (AName <> 'PromoGoods')  and
+               (AName <> 'MovementTask') and (AName <> 'MovementItemTask')  then
               CurDictTable.FieldByName('isErased').AsBoolean := true;
 
           CurDictTable.Post;
@@ -1154,6 +1181,10 @@ begin
         SetNewProgressTask('Загрузка справочника акционных товаров');
         GetDictionaries('PromoGoods');
 
+        SetNewProgressTask('Загрузка заданий');
+        GetDictionaries('MovementTask');
+        GetDictionaries('MovementItemTask');
+
         DM.conMain.Commit;
         DM.conMain.TxOptions.AutoCommit := true;
       except
@@ -1178,6 +1209,10 @@ begin
 
         SetNewProgressTask('Сохранение возвратов');
         UploadReturnIn;
+
+        DM.tblObject_Const.Edit;
+        DM.tblObject_ConstSyncDateOut.AsDateTime := Date();
+        DM.tblObject_Const.Post;
       except
         on E : Exception do
         begin

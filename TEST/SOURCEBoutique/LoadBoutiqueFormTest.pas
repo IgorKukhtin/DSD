@@ -85,6 +85,10 @@ type
     procedure LoadDiscountKindFormTest;
     procedure LoadGoodsItemFormTest;
     procedure LoadPartionGoodsFormTest;
+    procedure LoadPositionFormTest;
+    procedure LoadPersonalFormTest;
+
+
 
 
 
@@ -640,6 +644,22 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPeriodForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPeriodEditForm');
+end;
+
+procedure TLoadFormTest.LoadPersonalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalEditForm');
+end;
+
+procedure TLoadFormTest.LoadPositionFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPositionForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPositionEditForm');
 end;
 
 //procedure TLoadFormTest.LoadKindFormTest;

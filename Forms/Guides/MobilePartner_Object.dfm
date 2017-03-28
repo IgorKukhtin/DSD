@@ -24,8 +24,6 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
     Height = 438
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 64
-    ExplicitTop = 34
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -255,6 +253,70 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         DataBinding.FieldName = 'Value7'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 25
+      end
+      object clDelivery: TcxGridDBColumn
+        Caption = #1043#1088#1072#1092#1080#1082' '#1079#1072#1074#1086#1079#1072
+        DataBinding.FieldName = 'Delivery'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 94
+      end
+      object colDelivery1: TcxGridDBColumn
+        Caption = #1055#1085' '#1079'-'#1079
+        DataBinding.FieldName = 'Delivery1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1085' '#1079#1072#1074#1086#1079
+        Width = 25
+      end
+      object colDelivery2: TcxGridDBColumn
+        Caption = #1042#1090' '#1079'-'#1079
+        DataBinding.FieldName = 'Delivery2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1090' '#1079#1072#1074#1086#1079
+        Width = 25
+      end
+      object colDelivery3: TcxGridDBColumn
+        Caption = #1057#1088' '#1079'-'#1079
+        DataBinding.FieldName = 'Delivery3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1088' '#1079#1072#1074#1086#1079
+        Width = 25
+      end
+      object colDelivery4: TcxGridDBColumn
+        Caption = #1063#1090' '#1079'-'#1079
+        DataBinding.FieldName = 'Delivery4'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1063#1090' '#1079#1072#1074#1086#1079
+        Width = 25
+      end
+      object colDelivery5: TcxGridDBColumn
+        Caption = #1055#1090' '#1079'-'#1079
+        DataBinding.FieldName = 'Delivery5'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1090' '#1079#1072#1074#1086#1079
+        Width = 25
+      end
+      object colDelivery6: TcxGridDBColumn
+        Caption = #1057#1073' '#1079'-'#1079
+        DataBinding.FieldName = 'Delivery6'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1073' '#1079#1072#1074#1086#1079
+        Width = 25
+      end
+      object colDelivery7: TcxGridDBColumn
+        Caption = #1042#1089' '#1079'-'#1079
+        DataBinding.FieldName = 'Delivery7'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1089' '#1079#1072#1074#1086#1079
         Width = 25
       end
       object ceisErased: TcxGridDBColumn
@@ -574,6 +636,9 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       StoredProcList = <
         item
           StoredProc = spUpdate_Partner_Schedule
+        end
+        item
+          StoredProc = spUpdate_Partner_Delivery
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
@@ -715,8 +780,8 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 784
-    Top = 176
+    Left = 824
+    Top = 168
   end
   object spUpdate_Partner_Schedule: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_Partner_Schedule'
@@ -795,7 +860,87 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 656
-    Top = 275
+    Left = 776
+    Top = 235
+  end
+  object spUpdate_Partner_Delivery: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Partner_Delivery'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Delivery1'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Delivery2'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue3'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Delivery3'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue4'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Delivery4'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue5'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Delivery5'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue6'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Delivery6'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue7'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Delivery7'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 776
+    Top = 281
   end
 end

@@ -13,6 +13,7 @@ RETURNS TABLE (Id               Integer
              , GPSN             TFloat   -- GPS координаты точки доставки (широта)
              , GPSE             TFloat   -- GPS координаты точки доставки (долгота)
              , Schedule         TVarChar -- График посещения ТТ - по каким дням недели - в строчке 7 символов разделенных ";" t значит true и f значит false
+             , Delivery         TVarChar -- График завоза на ТТ - по каким дням недели - в строчке 7 символов разделенных ";" t значит true и f значит false
              , DebtSum          TFloat   -- Сумма долга (нам) - НАЛ - т.к НАЛ долг формируется только в разрезе Контрагентов + договоров + для некоторых по № накладных
              , OverSum          TFloat   -- Сумма просроченного долга (нам) - НАЛ - Просрочка наступает спустя определенное кол-во дней
              , OverDays         Integer  -- Кол-во дней просрочки (нам)
@@ -153,6 +154,7 @@ BEGIN
                   , ObjectFloat_Partner_GPSN.ValueData      AS GPSN
                   , ObjectFloat_Partner_GPSE.ValueData      AS GPSE
                   , REPLACE (REPLACE (LOWER (COALESCE (ObjectString_Partner_Schedule.ValueData, 't;t;t;t;t;t;t')), 'true', 't'), 'false', 'f')::TVarChar AS Schedule
+                  , REPLACE (REPLACE (LOWER (COALESCE (ObjectString_Partner_Delivery.ValueData, 't;t;t;t;t;t;t')), 'true', 't'), 'false', 'f')::TVarChar AS Delivery
                   , COALESCE (tmpDebt.DebtSum, 0.0)::TFloat AS DebtSum
                   , COALESCE (tmpDebt.OverSum, 0.0)::TFloat AS OverSum
                   , COALESCE (tmpDebt.OverDays, 0)::Integer AS OverDays
@@ -200,6 +202,9 @@ BEGIN
                   LEFT JOIN ObjectString AS ObjectString_Partner_Schedule
                                          ON ObjectString_Partner_Schedule.ObjectId = Object_Partner.Id
                                         AND ObjectString_Partner_Schedule.DescId = zc_ObjectString_Partner_Schedule() 
+                  LEFT JOIN ObjectString AS ObjectString_Partner_Delivery
+                                         ON ObjectString_Partner_Delivery.ObjectId = Object_Partner.Id
+                                        AND ObjectString_Partner_Delivery.DescId = zc_ObjectString_Partner_Delivery() 
                   LEFT JOIN ObjectFloat AS ObjectFloat_Partner_GPSN
                                         ON ObjectFloat_Partner_GPSN.ObjectId = Object_Partner.Id
                                        AND ObjectFloat_Partner_GPSN.DescId = zc_ObjectFloat_Partner_GPSN() 
@@ -222,6 +227,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Ярошенко Р.Ф.
+ 28.03.17         * add Delivery
  17.02.17                                                         *
 */
 

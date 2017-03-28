@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Movement_Loss()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Loss (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Loss (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Loss(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Loss(
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inArticleLossId       Integer   , -- Статьи списания
+    IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -52,6 +54,9 @@ BEGIN
      -- сохранили связь с <Статьи списания>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ArticleLoss(), ioId, inArticleLossId);
 
+     -- Комментарий
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
@@ -65,6 +70,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.03.17         *
  06.09.14                                        *
 */
 

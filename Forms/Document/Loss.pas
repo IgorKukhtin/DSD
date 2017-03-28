@@ -57,6 +57,12 @@ type
     actPrint_Sale: TdsdPrintAction;
     bbPrint_Sale: TdxBarButton;
     actAssetChoiceForm: TOpenChoiceForm;
+    edIsChecked: TcxCheckBox;
+    cxLabel22: TcxLabel;
+    ceComment: TcxTextEdit;
+    spChecked: TdsdStoredProc;
+    actChecked: TdsdExecStoredProc;
+    bbChecked: TdxBarButton;
   private
     { Private declarations }
   public

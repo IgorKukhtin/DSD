@@ -119,7 +119,6 @@ inherited VisitJournalForm: TVisitJournalForm
             Width = 64
           end
           inherited colOperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1079#1072#1103#1074#1082#1080
             HeaderAlignmentHorz = taCenter
             Width = 85
           end

@@ -15,6 +15,7 @@ RETURNS TABLE (Id              Integer
              , GPSN            TFloat   -- GPS координаты точки доставки (широта)
              , GPSE            TFloat   -- GPS координаты точки доставки (долгота)
              , Schedule        TVarChar -- График посещения ТТ - по каким дням недели - в строчке 7 символов разделенных ";" t значит true и f значит false
+             , Delivery        TVarChar -- График завоза на ТТ - по каким дням недели - в строчке 7 символов разделенных ";" t значит true и f значит false
              , DebtSum         TFloat   -- Сумма долга (нам) - НАЛ - т.к НАЛ долг формируется только в разрезе Контрагентов + договоров + для некоторых по № накладных
              , OverSum         TFloat   -- Сумма просроченного долга (нам) - НАЛ - Просрочка наступает спустя определенное кол-во дней
              , OverDays        Integer  -- Кол-во дней просрочки (нам)
@@ -35,6 +36,9 @@ RETURNS TABLE (Id              Integer
 
              , Value1 Boolean, Value2 Boolean, Value3 Boolean, Value4 Boolean
              , Value5 Boolean, Value6 Boolean, Value7 Boolean
+
+             , Delivery1 Boolean, Delivery2 Boolean, Delivery3 Boolean, Delivery4 Boolean
+             , Delivery5 Boolean, Delivery6 Boolean, Delivery7 Boolean
               )
 AS 
 $BODY$
@@ -65,6 +69,7 @@ BEGIN
                , tmpMobilePartner.GPSN
                , tmpMobilePartner.GPSE
                , tmpMobilePartner.Schedule
+               , tmpMobilePartner.Delivery
                , tmpMobilePartner.DebtSum
                , tmpMobilePartner.OverSum
                , tmpMobilePartner.OverDays
@@ -91,6 +96,14 @@ BEGIN
                , CASE WHEN COALESCE(tmpMobilePartner.Schedule,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Schedule, inSep:= ';', inIndex:= 5) ::Boolean END ::Boolean    AS Value5
                , CASE WHEN COALESCE(tmpMobilePartner.Schedule,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Schedule, inSep:= ';', inIndex:= 6) ::Boolean END ::Boolean    AS Value6
                , CASE WHEN COALESCE(tmpMobilePartner.Schedule,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Schedule, inSep:= ';', inIndex:= 7) ::Boolean END ::Boolean    AS Value7
+
+               , CASE WHEN COALESCE(tmpMobilePartner.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Delivery, inSep:= ';', inIndex:= 1) ::Boolean END ::Boolean    AS Delivery1
+               , CASE WHEN COALESCE(tmpMobilePartner.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Delivery, inSep:= ';', inIndex:= 2) ::Boolean END ::Boolean    AS Delivery2
+               , CASE WHEN COALESCE(tmpMobilePartner.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Delivery, inSep:= ';', inIndex:= 3) ::Boolean END ::Boolean    AS Delivery3
+               , CASE WHEN COALESCE(tmpMobilePartner.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Delivery, inSep:= ';', inIndex:= 4) ::Boolean END ::Boolean    AS Delivery4
+               , CASE WHEN COALESCE(tmpMobilePartner.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Delivery, inSep:= ';', inIndex:= 5) ::Boolean END ::Boolean    AS Delivery5
+               , CASE WHEN COALESCE(tmpMobilePartner.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Delivery, inSep:= ';', inIndex:= 6) ::Boolean END ::Boolean    AS Delivery6
+               , CASE WHEN COALESCE(tmpMobilePartner.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Delivery, inSep:= ';', inIndex:= 7) ::Boolean END ::Boolean    AS Delivery7
 
           FROM gpSelectMobile_Object_Partner (zc_DateStart(), calcSession) AS tmpMobilePartner
                LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpMobilePartner.JuridicalId 

@@ -1,29 +1,29 @@
 inherited LossJournalForm: TLossJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1087#1080#1089#1072#1085#1080#1077'>'
-  ClientHeight = 412
+  ClientHeight = 419
   ClientWidth = 919
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 935
-  ExplicitHeight = 450
+  ExplicitHeight = 457
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 919
-    Height = 355
+    Height = 362
     TabOrder = 3
     ExplicitWidth = 919
-    ExplicitHeight = 355
-    ClientRectBottom = 355
+    ExplicitHeight = 362
+    ClientRectBottom = 362
     ClientRectRight = 919
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 919
-      ExplicitHeight = 355
+      ExplicitHeight = 362
       inherited cxGrid: TcxGrid
         Width = 919
-        Height = 355
+        Height = 362
         ExplicitWidth = 919
-        ExplicitHeight = 355
+        ExplicitHeight = 362
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -112,6 +112,21 @@ inherited LossJournalForm: TLossJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
+          end
+          object colChecked: TcxGridDBColumn
+            Caption = #1055#1088#1086#1074#1077#1088#1077#1085
+            DataBinding.FieldName = 'Checked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 46
+          end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
           end
         end
       end
@@ -314,6 +329,19 @@ inherited LossJournalForm: TLossJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actChecked: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spChecked
+      StoredProcList = <
+        item
+          StoredProc = spChecked
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 58
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -414,6 +442,14 @@ inherited LossJournalForm: TLossJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbChecked'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -459,6 +495,10 @@ inherited LossJournalForm: TLossJournalForm
     end
     object bbPrint_Sale: TdxBarButton
       Action = actPrint_Sale
+      Category = 0
+    end
+    object bbChecked: TdxBarButton
+      Action = actChecked
       Category = 0
     end
   end
@@ -698,5 +738,31 @@ inherited LossJournalForm: TLossJournalForm
     Params = <>
     Left = 812
     Top = 214
+  end
+  object spChecked: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChecked'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Checked'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 320
+    Top = 291
   end
 end

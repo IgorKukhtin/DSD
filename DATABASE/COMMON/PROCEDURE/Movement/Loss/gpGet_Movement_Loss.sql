@@ -12,7 +12,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , ArticleLossId Integer, ArticleLossName TVarChar
-
+             , Comment TVarChar
+             , Checked Boolean
               )
 AS
 $BODY$
@@ -33,13 +34,14 @@ BEGIN
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
              , CAST (0 AS TFloat)                               AS TotalCount
-             , 0                     				            AS FromId
-             , CAST ('' AS TVarChar) 				            AS FromName
-             , 0                     				            AS ToId
-             , CAST ('' AS TVarChar) 				            AS ToName
-             , 0                     				            AS ArticleLossId
-             , CAST ('' AS TVarChar) 				            AS ArticleLossName
-
+             , 0                     		                AS FromId
+             , CAST ('' AS TVarChar) 	                        AS FromName
+             , 0                     	 	                AS ToId
+             , CAST ('' AS TVarChar) 	 	                AS ToName
+             , 0                     		                AS ArticleLossId
+             , CAST ('' AS TVarChar) 		                AS ArticleLossName
+             , CAST ('' as TVarChar) 		                AS Comment
+             , CAST (FALSE AS Boolean)         		        AS Checked
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -58,13 +60,22 @@ BEGIN
            , Object_To.ValueData                                AS ToName
            , Object_ArticleLoss.Id                              AS ArticleLossId
            , Object_ArticleLoss.ValueData                       AS ArticleLossName
-
+           , MovementString_Comment.ValueData                   AS Comment
+           , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalCount.MovementId = Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Checked
+                                      ON MovementBoolean_Checked.MovementId = Movement.Id
+                                     AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
+
+            LEFT JOIN MovementString AS MovementString_Comment 
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -81,7 +92,7 @@ BEGIN
                                         AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
             LEFT JOIN Object AS Object_ArticleLoss ON Object_ArticleLoss.Id = MovementLinkObject_ArticleLoss.ObjectId
 
-       WHERE Movement.Id =  inMovementId
+       WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_Loss();
 
        END IF;
@@ -95,6 +106,7 @@ ALTER FUNCTION gpGet_Movement_Loss (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 27.02.17         *
  02.09.14                                                        *
  26.05.14                                                        *
 */

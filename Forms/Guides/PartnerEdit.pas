@@ -111,6 +111,14 @@ type
     edGPSN: TcxTextEdit;
     cxLabel35: TcxLabel;
     edGPSE: TcxTextEdit;
+    cxLabel36: TcxLabel;
+    cbDelivery1: TcxCheckBox;
+    cbDelivery2: TcxCheckBox;
+    cbDelivery3: TcxCheckBox;
+    cbDelivery4: TcxCheckBox;
+    cbDelivery5: TcxCheckBox;
+    cbDelivery6: TcxCheckBox;
+    cbDelivery7: TcxCheckBox;
 
   private
     { Private declarations }

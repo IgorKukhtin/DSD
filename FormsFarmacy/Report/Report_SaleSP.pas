@@ -68,6 +68,7 @@ type
     spSavePrintMovement: TdsdStoredProc;
     actSaveMovement: TdsdExecStoredProc;
     macPrintInvoice: TMultiAction;
+    InvNumber_Invoice_Full: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -2047,9 +2047,6 @@ inherited MainForm: TMainForm
       object N72: TMenuItem
         Action = actRepriceJournal
       end
-      object N70: TMenuItem
-        Action = actInvoice
-      end
       object N33: TMenuItem
         Caption = '-'
       end
@@ -2097,6 +2094,9 @@ inherited MainForm: TMainForm
       end
       object N67: TMenuItem
         Action = actPaymentJournal
+      end
+      object N70: TMenuItem
+        Action = actInvoice
       end
       object N38: TMenuItem
         Caption = '-'

@@ -15,6 +15,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar, ItemName_from TVarChar
              , ToId Integer, ToName TVarChar, ItemName_to TVarChar
              , ArticleLossId Integer, ArticleLossName TVarChar
+             , Comment TVarChar
+             , Checked Boolean
               )
 
 AS
@@ -52,6 +54,9 @@ BEGIN
            , Object_ArticleLoss.Id              AS ArticleLossId
            , Object_ArticleLoss.ValueData       AS ArticleLossName
 
+           , MovementString_Comment.ValueData   AS Comment
+           , COALESCE (MovementBoolean_Checked.ValueData, FALSE) AS Checked
+
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Loss() AND Movement.StatusId = tmpStatus.StatusId
@@ -65,6 +70,14 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Checked
+                                      ON MovementBoolean_Checked.MovementId = Movement.Id
+                                     AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
+
+            LEFT JOIN MovementString AS MovementString_Comment 
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -93,6 +106,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 27.03.17         * 
  05.10.16         * add inJuridicalBasisId
  02.09.14                                                        *
  26.05.14                                                        *

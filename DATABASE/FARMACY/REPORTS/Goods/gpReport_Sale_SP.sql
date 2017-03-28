@@ -78,6 +78,7 @@ RETURNS TABLE (MovementId     Integer
              , ContractId         Integer
              , ContractName       TVarChar
              , Contract_StartDate TDateTime
+             , InvNumber_Invoice_Full TVarChar
              )
 AS
 $BODY$
@@ -130,6 +131,7 @@ BEGIN
                               , MovementLinkObject_MemberSP.ObjectId         AS MemberSPId
                               , COALESCE (MovementDate_OperDateSP.ValueData,Null) AS OperDateSP
                               , MovementLinkObject_GroupMemberSP.ObjectId         AS GroupMemberSPId
+                              , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full 
                          FROM Movement AS Movement_Sale
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                       ON MovementLinkObject_Unit.MovementId = Movement_Sale.Id
@@ -158,6 +160,12 @@ BEGIN
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_GroupMemberSP
                                      ON MovementLinkObject_GroupMemberSP.MovementId = Movement_Sale.Id
                                     AND MovementLinkObject_GroupMemberSP.DescId = zc_MovementLinkObject_GroupMemberSP()
+
+                              LEFT JOIN MovementLinkMovement AS MLM_Child
+                                     ON MLM_Child.MovementId = Movement_Sale.Id
+                                    AND MLM_Child.descId = zc_MovementLinkMovement_Child()
+                              LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Child.MovementChildId
+
      
                          WHERE Movement_Sale.DescId = zc_Movement_Sale()
                            AND Movement_Sale.OperDate >= inStartDate AND Movement_Sale.OperDate < inEndDate + INTERVAL '1 DAY'
@@ -187,6 +195,7 @@ BEGIN
                               , Movement_Sale.MemberSPId
                               , Movement_Sale.OperDateSP
                               , Movement_Sale.GroupMemberSPId
+                              , Movement_Sale.InvNumber_Invoice_Full
                               , MI_Sale.ObjectId                                          AS GoodsId         --tmpGoods.GoodsMainId                                      AS GoodsMainId
                               , MIFloat_ChangePercent.ValueData                           AS ChangePercent
                               , SUM (COALESCE (-1 * MIContainer.Amount, MI_Sale.Amount))  AS Amount
@@ -225,6 +234,7 @@ BEGIN
                                 , Movement_Sale.MemberSPId
                                 , Movement_Sale.OperDateSP
                                 , Movement_Sale.GroupMemberSPId
+                                , Movement_Sale.InvNumber_Invoice_Full
                                 , MI_Sale.ObjectId 
                                 , MIFloat_ChangePercent.ValueData
                                 , Movement_Sale.OperDate
@@ -432,6 +442,7 @@ BEGIN
            , Object_Contract.Id           AS ContractId
            , Object_Contract.ValueData    AS ContractName
            , ObjectDate_Start.ValueData   AS Contract_StartDate 
+           , tmpData.InvNumber_Invoice_Full
 
         FROM tmpMI AS tmpData
              LEFT JOIN tmpMovDetails ON tmpData.MovementId = tmpMovDetails.MovementId

@@ -91,7 +91,6 @@ type
     procedure LoadOrderIncomeFormTest;
     procedure LoadOrderInternalFormTest;
     procedure LoadOrderExternalFormTest;
-    procedure LoadStoreRealFormTest;
     procedure LoadOrderTypeFormTest;
     procedure LoadPartnerFormTest;
     procedure LoadPartnerTagFormTest;
@@ -101,6 +100,10 @@ type
     procedure LoadPersonalReportFormTest;
     procedure LoadPersonalAccountFormTest;
     procedure LoadPersonalSendCashFormTest;
+    procedure LoadPersonalFormTest;
+    procedure LoadPersonalServiceFormTest;
+    procedure LoadPersonalServiceListFormTest;
+    procedure LoadPhotoMobileFormTest;
     procedure LoadPriceListFormTest;
     procedure LoadPriceCorrectiveFormTest;
     procedure LoadProductionUnionFormTest;
@@ -108,9 +111,6 @@ type
     procedure LoadProfitLossFormTest;
     procedure LoadProfitLossServiceFormTest;
     procedure LoadPositionFormTest;
-    procedure LoadPersonalFormTest;
-    procedure LoadPersonalServiceFormTest;
-    procedure LoadPersonalServiceListFormTest;
     procedure LoadPromoKindFormTest;
     procedure LoadPromoFormTest;
     procedure LoadQualityFormTest;
@@ -143,6 +143,7 @@ type
     procedure LoadRouteFormTest;
     procedure LoadRouteGroupFormTest;
     procedure LoadRouteSortingFormTest;
+    procedure LoadRouteMemberMovementFormTest;
     procedure LoadRateFuelKindFormTest;
     procedure LoadNameBeforeFormTest;
     procedure LoadSaleFormTest;
@@ -155,6 +156,7 @@ type
     procedure LoadSheetWorkTimeFormTest;
     procedure LoadStaffListFormTest;
     procedure LoadStorage_ObjectFormTest;
+    procedure LoadStoreRealFormTest;
     procedure LoadTaskTest;
     procedure LoadTaxFormTest;
     procedure LoadTaxCorrectiveTest;
@@ -608,6 +610,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceListEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceListEditForm');
+end;
+
+procedure TLoadFormTest.LoadPhotoMobileFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPhotoMobileForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPhotoMobileForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPhotoMobileEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPhotoMobileEditForm');
 end;
 
 procedure TLoadFormTest.LoadImportSettingsFormTest;
@@ -2216,6 +2226,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TRouteKindForm');
 end;
 
+procedure TLoadFormTest.LoadRouteMemberMovementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteMemberJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRouteMemberJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteMemberMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRouteMemberMovementForm');
+end;
+
 procedure TLoadFormTest.LoadMemberFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalPosition_ObjectForm'));
@@ -2378,8 +2396,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMovementJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementGoodsJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementGoodsJournalForm');
-
-
 end;
 
 procedure TLoadFormTest.LoadPositionFormTest;

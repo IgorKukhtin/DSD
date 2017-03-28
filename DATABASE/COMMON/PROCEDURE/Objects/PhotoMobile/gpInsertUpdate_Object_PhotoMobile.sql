@@ -32,7 +32,7 @@ BEGIN
    ioId := lpInsertUpdate_Object (ioId, zc_Object_PhotoMobile(), vbCode_calc, inName);
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectBlob( zc_ObjectBlob_PhotoMobile_Data(), inId, inPhotoData);
+   PERFORM lpInsertUpdate_ObjectBlob( zc_ObjectBlob_PhotoMobile_Data(), ioId, inPhotoData);
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

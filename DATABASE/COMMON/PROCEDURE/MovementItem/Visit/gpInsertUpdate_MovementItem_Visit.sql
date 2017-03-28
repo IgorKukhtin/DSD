@@ -10,7 +10,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Visit(
     IN inComment             TVarChar  , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
-AS
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
