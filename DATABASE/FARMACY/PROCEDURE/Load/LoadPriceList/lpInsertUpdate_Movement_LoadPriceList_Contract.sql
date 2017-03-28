@@ -55,14 +55,16 @@ BEGIN
     WHERE JuridicalId = inJuridicalId AND OperDate = CURRENT_DATE AND COALESCE (ContractId, 0) = inContractId;
 
     -- если нет "шапки" - создадим
-    IF COALESCE (vbLoadPriceListId, 0) = 0 THEN
-            INSERT INTO LoadPriceList (JuridicalId, ContractId, OperDate, NDSinPrice/*, UserId_Insert*/, Date_Insert)
-                               VALUES (inJuridicalId, inContractId, CURRENT_DATE, inNDSinPrice/*, inUserId*/, CURRENT_TIMESTAMP);
+    IF COALESCE (vbLoadPriceListId, 0) = 0 
+    THEN
+         INSERT INTO LoadPriceList (JuridicalId, ContractId, OperDate, NDSinPrice/*, UserId_Insert*/, Date_Insert)
+         VALUES (inJuridicalId, inContractId, CURRENT_DATE, inNDSinPrice/*, inUserId*/, CURRENT_TIMESTAMP)
+         RETURNING Id INTO vbLoadPriceListId;
     ELSE
-        -- иначе запишем что его надо перенести
-        UPDATE LoadPriceList SET isMoved = FALSE WHERE Id = vbLoadPriceListId;
-        /*-- иначе в протокол запишем что типа Insert
-        UPDATE LoadPriceList SET UserId_Insert = inUserId, Date_Insert = CURRENT_TIMESTAMP WHERE Id = vbLoadPriceListId;*/
+         -- иначе запишем что его надо перенести
+         UPDATE LoadPriceList SET isMoved = FALSE WHERE Id = vbLoadPriceListId;
+         /*-- иначе в протокол запишем что типа Insert
+         UPDATE LoadPriceList SET UserId_Insert = inUserId, Date_Insert = CURRENT_TIMESTAMP WHERE Id = vbLoadPriceListId;*/
     END IF;
 
     -- Поиск "элемента"
@@ -211,6 +213,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Ярошенко Р.Ф.   Воробкало А.А.
+ 28.03.2017                                                       *
  10.12.2016                                      *
 */
