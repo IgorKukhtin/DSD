@@ -1,23 +1,23 @@
 ﻿inherited PartnerEditForm: TPartnerEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
-  ClientHeight = 487
+  ClientHeight = 509
   ClientWidth = 727
   ExplicitWidth = 733
-  ExplicitHeight = 515
+  ExplicitHeight = 537
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 439
-    Top = 457
+    Top = 472
     TabOrder = 2
     ExplicitLeft = 439
-    ExplicitTop = 457
+    ExplicitTop = 472
   end
   inherited bbCancel: TcxButton
     Left = 590
-    Top = 457
+    Top = 472
     ExplicitLeft = 590
-    ExplicitTop = 457
+    ExplicitTop = 472
   end
   object edAddress: TcxTextEdit [2]
     Left = 158
@@ -332,12 +332,12 @@
   end
   object cxLabel21: TcxLabel [44]
     Left = 15
-    Top = 429
+    Top = 433
     Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1088#1075#1086#1074#1086#1081' '#1090#1086#1095#1082#1080
   end
   object cePartnerTag: TcxButtonEdit [45]
     Left = 158
-    Top = 428
+    Top = 432
     Properties.Buttons = <
       item
         Default = True
@@ -579,7 +579,7 @@
     ParentCustomHint = False
     Caption = #1042#1089'.'
     TabOrder = 77
-    Width = 40
+    Width = 37
   end
   object cxLabel33: TcxLabel [78]
     Left = 366
@@ -588,27 +588,89 @@
   end
   object cxLabel34: TcxLabel [79]
     Left = 15
-    Top = 456
+    Top = 466
     Caption = 'GPS ('#1096#1080#1088#1086#1090#1072')'
   end
   object edGPSN: TcxTextEdit [80]
     Left = 89
-    Top = 455
+    Top = 465
     Properties.ReadOnly = True
     TabOrder = 80
     Width = 92
   end
   object cxLabel35: TcxLabel [81]
     Left = 187
-    Top = 456
+    Top = 466
     Caption = 'GPS ('#1076#1086#1083#1075#1086#1090#1072')'
   end
   object edGPSE: TcxTextEdit [82]
     Left = 261
-    Top = 455
+    Top = 465
     Properties.ReadOnly = True
     TabOrder = 82
     Width = 92
+  end
+  object cxLabel36: TcxLabel [83]
+    Left = 366
+    Top = 440
+    Caption = #1043#1088#1072#1092#1080#1082' '#1079#1072#1074#1086#1079#1072':'
+  end
+  object cbDelivery1: TcxCheckBox [84]
+    Left = 473
+    Top = 440
+    Caption = #1055#1085'.'
+    Properties.ReadOnly = True
+    TabOrder = 84
+    Width = 39
+  end
+  object cbDelivery2: TcxCheckBox [85]
+    Left = 509
+    Top = 440
+    Caption = #1042#1090'.'
+    Properties.ReadOnly = True
+    TabOrder = 85
+    Width = 38
+  end
+  object cbDelivery3: TcxCheckBox [86]
+    Left = 544
+    Top = 440
+    Caption = #1057#1088'.'
+    Properties.ReadOnly = True
+    TabOrder = 86
+    Width = 39
+  end
+  object cbDelivery4: TcxCheckBox [87]
+    Left = 580
+    Top = 440
+    Caption = #1063#1090'.'
+    Properties.ReadOnly = True
+    TabOrder = 87
+    Width = 40
+  end
+  object cbDelivery5: TcxCheckBox [88]
+    Left = 615
+    Top = 440
+    Caption = #1055#1090'.'
+    Properties.ReadOnly = True
+    TabOrder = 88
+    Width = 39
+  end
+  object cbDelivery6: TcxCheckBox [89]
+    Left = 650
+    Top = 440
+    Caption = #1057#1073'.'
+    Properties.ReadOnly = True
+    TabOrder = 89
+    Width = 39
+  end
+  object cbDelivery7: TcxCheckBox [90]
+    Left = 687
+    Top = 440
+    ParentCustomHint = False
+    Caption = #1042#1089'.'
+    Properties.ReadOnly = True
+    TabOrder = 90
+    Width = 37
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 419
@@ -1495,6 +1557,55 @@
         Value = Null
         Component = edGPSN
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Delivery1'
+        Value = Null
+        Component = cbDelivery1
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Delivery2'
+        Value = Null
+        Component = cbDelivery2
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Delivery3'
+        Value = Null
+        Component = cbDelivery3
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Delivery5'
+        Value = Null
+        Component = cbDelivery5
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Delivery4'
+        Value = Null
+        Component = cbDelivery4
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Delivery6'
+        Value = Null
+        Component = cbDelivery6
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Delivery7'
+        Value = Null
+        Component = cbDelivery7
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 520

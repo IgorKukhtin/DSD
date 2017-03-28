@@ -78,6 +78,7 @@ type
     ContractCode: TcxGridDBColumn;
     spUpdate_Partner_Schedule: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    spUpdate_Partner_Delivery: TdsdStoredProc;
   private
     { Private declarations }
   public
