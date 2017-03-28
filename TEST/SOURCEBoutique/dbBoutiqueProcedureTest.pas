@@ -78,6 +78,7 @@ type
     procedure CreateGoodsItem;
     procedure CreatePartionGoods;
     procedure CreatePosition;
+    procedure CreatePersonal;
 
   end;
 
@@ -296,6 +297,11 @@ end;
 procedure TdbObjectProcedureTest.CreatePeriod;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Period\');
+end;
+
+procedure TdbObjectProcedureTest.CreatePersonal;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Personal\');
 end;
 
 procedure TdbObjectProcedureTest.CreatePosition;
