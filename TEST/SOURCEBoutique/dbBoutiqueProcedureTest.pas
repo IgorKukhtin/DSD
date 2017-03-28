@@ -77,6 +77,7 @@ type
     procedure CreateDiscountKind;
     procedure CreateGoodsItem;
     procedure CreatePartionGoods;
+    procedure CreatePosition;
 
   end;
 
@@ -295,6 +296,11 @@ end;
 procedure TdbObjectProcedureTest.CreatePeriod;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Period\');
+end;
+
+procedure TdbObjectProcedureTest.CreatePosition;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Position\');
 end;
 
 procedure TdbObjectProcedureTest.CreateUnit;
