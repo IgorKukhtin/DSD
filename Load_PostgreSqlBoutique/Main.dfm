@@ -37,7 +37,6 @@ object MainForm: TMainForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 379
     object Gauge: TGauge
       Left = 0
       Top = 0
@@ -109,7 +108,6 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitHeight = 379
     object cbAllGuide: TCheckBox
       Tag = 1
       Left = 15
@@ -504,7 +502,6 @@ object MainForm: TMainForm
     BevelOuter = bvNone
     TabOrder = 3
     OnClick = DocumentPanelClick
-    ExplicitHeight = 379
     object Label1: TLabel
       Left = 6
       Top = 22
@@ -546,6 +543,21 @@ object MainForm: TMainForm
       Top = 18
       TabOrder = 2
       Width = 90
+    end
+    object cbIncome: TCheckBox
+      Tag = 20
+      Left = 6
+      Top = 45
+      Width = 235
+      Height = 17
+      Caption = '1.1. '#1055#1088#1080#1093#1086#1076
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 3
     end
   end
   object DataSource: TDataSource
