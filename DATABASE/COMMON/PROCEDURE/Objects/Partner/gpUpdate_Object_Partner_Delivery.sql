@@ -20,7 +20,8 @@ $BODY$
    DECLARE vbDelivery TVarChar;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Partner_Schedule());
+   --vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Partner_Schedule());
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- !!!надо так криво обработать когда добавляют несколько пользователей!!!)
    IF COALESCE (inId, 0) = 0
