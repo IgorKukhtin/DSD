@@ -2348,6 +2348,11 @@ end;
 
 procedure TLoadFormTest.LoadMobileProjectFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePromoJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobilePromoJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePromoForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobilePromoForm');
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileOrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileOrderExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileOrderExternalJournalForm'));
