@@ -88,6 +88,8 @@ type
     N41: TMenuItem;
     actPosition: TdsdOpenForm;
     N42: TMenuItem;
+    actPersonal: TdsdOpenForm;
+    N43: TMenuItem;
   private
     { Private declarations }
   public

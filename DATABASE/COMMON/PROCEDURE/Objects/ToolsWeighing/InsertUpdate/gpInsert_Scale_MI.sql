@@ -87,8 +87,22 @@ BEGIN
      WHERE Movement.Id = inMovementId;
 
 
-     -- если надо - меняем Значение
-     IF inChangePercentAmount = 0
+     -- если Тара - меняем Значение на 0
+     IF inChangePercentAmount <> 0
+        AND EXISTS (SELECT 1
+                    FROM ObjectLink AS ObjectLink_Goods_InfoMoney
+                         JOIN Object_InfoMoney_View AS View_InfoMoney
+                                                    ON View_InfoMoney.InfoMoneyId            = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                   AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
+                                                                                               , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
+                                                                                                )
+                    WHERE ObjectLink_Goods_InfoMoney.ObjectId = inGoodsId
+                      AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                   )
+     THEN
+         inChangePercentAmount:= 0;
+     -- если надо - меняем Значение                 \
+     ELSEIF inChangePercentAmount = 0
         AND vbMovementDescId = zc_Movement_Sale()
         AND EXISTS (SELECT 1
                     FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods

@@ -52,7 +52,7 @@ BEGIN
                             FROM (SELECT 1) AS tmp
                                  LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                                       ON -- !!!¬–≈Ã≈ÕÕŒ - ƒÀﬂ “≈—“¿!!! - ¬ÓÎÓ¯ËÌ‡ ≈.¿.
-                                                         ObjectLink_User_Member.ObjectId = CASE WHEN inSession = '5' THEN 140094 ELSE vbUserId END
+                                                         ObjectLink_User_Member.ObjectId = CASE WHEN inSession = '5' THEN 893469 /*140094*/ ELSE vbUserId END
                                                      AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                                  LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
                                  LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.MemberId = ObjectLink_User_Member.ChildObjectId

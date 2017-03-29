@@ -317,7 +317,7 @@ BEGIN
 
             , tmpMI.MovementId_Promo :: Integer AS MovementId_Promo
             , CASE WHEN tmpMI.MovementId_Promo > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPromo
-            , tmpMI.isTare
+            , CASE WHEN tmpMI.isTare_calc = 1 THEN TRUE ELSE FALSE END :: Boolean AS isTare
 
        FROM (SELECT tmpMI.GoodsId
                   , tmpMI.GoodsKindId
@@ -325,14 +325,14 @@ BEGIN
                   , SUM (tmpMI.Amount_Weighing)  AS Amount_Weighing
                   , MAX (tmpMI.MovementId_Promo) AS MovementId_Promo
                   , MAX (tmpMI.Price)            AS Price
-                  , tmpMI.CountForPrice
-                  , tmpMI.isTare
+                  , 1 AS CountForPrice -- tmpMI.CountForPrice
+                  , MAX (CASE WHEN tmpMI.isTare = TRUE THEN 1 ELSE 0 END) AS isTare_calc
              FROM tmpMI
              GROUP BY tmpMI.GoodsId
                     , tmpMI.GoodsKindId
                     -- , tmpMI.Price
-                    , tmpMI.CountForPrice
-                    , tmpMI.isTare
+                    -- , tmpMI.CountForPrice
+                    -- , tmpMI.isTare
             ) AS tmpMI
 
             LEFT JOIN tmpChangePercentAmount ON tmpChangePercentAmount.GoodsId     = tmpMI.GoodsId
