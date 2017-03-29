@@ -555,8 +555,15 @@ object DM: TDM
       FieldName = 'ValueData'
       Size = 255
     end
+    object qryPriceListPriceWithVAT: TBooleanField
+      FieldName = 'PriceWithVAT'
+    end
+    object qryPriceListVATPercent: TFloatField
+      FieldName = 'VATPercent'
+    end
   end
   object qryGoodsForPriceList: TFDQuery
+    OnCalcFields = qryGoodsForPriceListCalcFields
     Connection = conMain
     Left = 128
     Top = 448
@@ -574,9 +581,18 @@ object DM: TDM
       FieldName = 'KindName'
       Size = 255
     end
-    object qryGoodsForPriceListPrice: TWideStringField
+    object qryGoodsForPriceListPrice: TFloatField
       FieldName = 'Price'
+    end
+    object qryGoodsForPriceListMeasure: TStringField
+      FieldName = 'Measure'
+      Size = 100
+    end
+    object qryGoodsForPriceListFullPrice: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'FullPrice'
       Size = 200
+      Calculated = True
     end
   end
   object tblMovement_OrderExternal: TFDTable
@@ -751,11 +767,11 @@ object DM: TDM
       FieldName = 'KindID'
     end
     object qryGoodsItemsName: TStringField
-      FieldName = 'Name'
+      FieldName = 'GoodsName'
       Size = 255
     end
     object qryGoodsItemsKind: TStringField
-      FieldName = 'Kind'
+      FieldName = 'KindName'
       Size = 255
     end
     object qryGoodsItemsMeasure: TStringField
@@ -853,12 +869,12 @@ object DM: TDM
     object cdsOrderItemsId: TIntegerField
       FieldName = 'Id'
     end
-    object cdsOrderItemsName: TStringField
-      FieldName = 'Name'
+    object cdsOrderItemsGoodsName: TStringField
+      FieldName = 'GoodsName'
       Size = 250
     end
-    object cdsOrderItemsType: TStringField
-      FieldName = 'Type'
+    object cdsOrderItemsKindName: TStringField
+      FieldName = 'KindName'
       Size = 255
     end
     object cdsOrderItemsPrice: TFloatField
@@ -928,8 +944,8 @@ object DM: TDM
     FetchOptions.AssignedValues = [evDetailCascade]
     UpdateOptions.UpdateTableName = 'Movement_RouteMember'
     TableName = 'Movement_RouteMember'
-    Left = 888
-    Top = 32
+    Left = 800
+    Top = 384
     object AutoIncField1: TAutoIncField
       FieldName = 'Id'
       ProviderFlags = [pfInWhere]
@@ -1047,12 +1063,12 @@ object DM: TDM
     object cdsStoreRealItemsId: TIntegerField
       FieldName = 'Id'
     end
-    object cdsStoreRealItemsName: TStringField
-      FieldName = 'Name'
+    object cdsStoreRealItemsGoodsName: TStringField
+      FieldName = 'GoodsName'
       Size = 255
     end
-    object cdsStoreRealItemsType: TStringField
-      FieldName = 'Type'
+    object cdsStoreRealItemsKindName: TStringField
+      FieldName = 'KindName'
       Size = 255
     end
     object cdsStoreRealItemsCount: TFloatField
@@ -1286,12 +1302,12 @@ object DM: TDM
     object cdsReturnInItemsId: TIntegerField
       FieldName = 'Id'
     end
-    object cdsReturnInItemsName: TStringField
-      FieldName = 'Name'
+    object cdsReturnInItemsGoodsName: TStringField
+      FieldName = 'GoodsName'
       Size = 255
     end
-    object cdsReturnInItemsType: TStringField
-      FieldName = 'Type'
+    object cdsReturnInItemsKindName: TStringField
+      FieldName = 'KindName'
       Size = 255
     end
     object cdsReturnInItemsPrice: TFloatField
@@ -1314,62 +1330,41 @@ object DM: TDM
       FieldName = 'KindId'
     end
   end
-  object qryPromoList: TFDQuery
-    Connection = conMain
-    Left = 40
-    Top = 512
-    object qryPromoListId: TIntegerField
-      FieldName = 'Id'
-    end
-    object qryPromoListInvNumber: TStringField
-      FieldName = 'InvNumber'
-      Size = 255
-    end
-    object qryPromoListStartSale: TDateTimeField
-      FieldName = 'StartSale'
-    end
-    object qryPromoListEndSale: TDateTimeField
-      FieldName = 'EndSale'
-    end
-    object qryPromoListChangePercent: TWideStringField
-      FieldName = 'ChangePercent'
-      Size = 300
-    end
-    object qryPromoListCommentMain: TStringField
-      FieldName = 'CommentMain'
-      Size = 255
-    end
-    object qryPromoListTermin: TWideStringField
-      FieldName = 'Termin'
-      Size = 200
-    end
-  end
   object qryPromoPartners: TFDQuery
     Connection = conMain
-    Left = 120
-    Top = 512
-    object qryPromoPartnersName: TStringField
-      FieldName = 'Name'
+    Left = 216
+    Top = 448
+    object qryPromoPartnersPartnerName: TStringField
+      FieldName = 'PartnerName'
       Size = 255
     end
     object qryPromoPartnersContractName: TWideStringField
       FieldName = 'ContractName'
-      Size = 300
+      Size = 255
     end
     object qryPromoPartnersAddress: TStringField
       FieldName = 'Address'
       Size = 255
     end
+    object qryPromoPartnersPartnerId: TIntegerField
+      FieldName = 'PartnerId'
+    end
+    object qryPromoPartnersContractId: TIntegerField
+      FieldName = 'ContractId'
+    end
+    object qryPromoPartnersPromoIds: TWideStringField
+      FieldName = 'PromoIds'
+    end
   end
   object qryPromoGoods: TFDQuery
     Connection = conMain
-    Left = 208
-    Top = 512
+    Left = 304
+    Top = 448
     object qryPromoGoodsGoodsName: TStringField
       FieldName = 'GoodsName'
       Size = 255
     end
-    object qryPromoGoodsKindName: TStringField
+    object qryPromoGoodsKindName: TWideStringField
       FieldName = 'KindName'
       Size = 255
     end
@@ -1380,6 +1375,13 @@ object DM: TDM
     object qryPromoGoodsPrice: TWideStringField
       FieldName = 'Price'
       Size = 250
+    end
+    object qryPromoGoodsTermin: TWideStringField
+      FieldName = 'Termin'
+      Size = 200
+    end
+    object qryPromoGoodsPromoId: TIntegerField
+      FieldName = 'PromoId'
     end
   end
   object tblMovement_Task: TFDTable
@@ -1433,6 +1435,49 @@ object DM: TDM
     end
     object tblMovementItem_TaskisSync: TBooleanField
       FieldName = 'isSync'
+    end
+  end
+  object qrySelect: TFDQuery
+    Connection = conMain
+    Left = 128
+    Top = 176
+  end
+  object cdsJuridicalCollation: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 40
+    Top = 536
+    object cdsJuridicalCollationDocNum: TStringField
+      FieldName = 'DocNum'
+      Size = 200
+    end
+    object cdsJuridicalCollationDocType: TStringField
+      FieldName = 'DocType'
+      Size = 200
+    end
+    object cdsJuridicalCollationDocDate: TDateField
+      FieldName = 'DocDate'
+    end
+    object cdsJuridicalCollationPaidKind: TStringField
+      FieldName = 'PaidKind'
+      Size = 100
+    end
+    object cdsJuridicalCollationDebet: TFloatField
+      FieldName = 'Debet'
+    end
+    object cdsJuridicalCollationKredit: TFloatField
+      FieldName = 'Kredit'
+    end
+    object cdsJuridicalCollationDocNumDate: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'DocNumDate'
+      Calculated = True
+    end
+    object cdsJuridicalCollationPayment: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'Payment'
+      Size = 200
+      Calculated = True
     end
   end
 end

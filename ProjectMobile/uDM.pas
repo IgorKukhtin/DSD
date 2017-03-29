@@ -225,7 +225,6 @@ type
     qryGoodsForPriceListGoodsName: TStringField;
     qryGoodsForPriceListOBJECTCODE: TIntegerField;
     qryGoodsForPriceListKindName: TStringField;
-    qryGoodsForPriceListPrice: TWideStringField;
     tblMovement_OrderExternal: TFDTable;
     tblMovement_OrderExternalGUID: TStringField;
     tblMovement_OrderExternalInvNumber: TStringField;
@@ -289,8 +288,8 @@ type
     tblObject_GoodsListSaleAmountCalc: TFloatField;
     cdsOrderItems: TClientDataSet;
     cdsOrderItemsId: TIntegerField;
-    cdsOrderItemsName: TStringField;
-    cdsOrderItemsType: TStringField;
+    cdsOrderItemsGoodsName: TStringField;
+    cdsOrderItemsKindName: TStringField;
     cdsOrderItemsPrice: TFloatField;
     cdsOrderItemsRemains: TFloatField;
     cdsOrderItemsRecommend: TStringField;
@@ -342,8 +341,8 @@ type
     cdsStoreRealsStatus: TStringField;
     cdsStoreRealItems: TClientDataSet;
     cdsStoreRealItemsId: TIntegerField;
-    cdsStoreRealItemsName: TStringField;
-    cdsStoreRealItemsType: TStringField;
+    cdsStoreRealItemsGoodsName: TStringField;
+    cdsStoreRealItemsKindName: TStringField;
     cdsStoreRealItemsCount: TFloatField;
     cdsStoreRealItemsMeasure: TStringField;
     cdsStoreRealItemsGoodsId: TIntegerField;
@@ -424,8 +423,8 @@ type
     cdsReturnInWeigth: TStringField;
     cdsReturnInStatus: TStringField;
     cdsReturnInItemsId: TIntegerField;
-    cdsReturnInItemsName: TStringField;
-    cdsReturnInItemsType: TStringField;
+    cdsReturnInItemsGoodsName: TStringField;
+    cdsReturnInItemsKindName: TStringField;
     cdsReturnInItemsPrice: TFloatField;
     cdsReturnInItemsWeight: TFloatField;
     cdsReturnInItemsMeasure: TStringField;
@@ -433,23 +432,13 @@ type
     cdsReturnInItemsGoodsId: TIntegerField;
     cdsReturnInItemsKindId: TIntegerField;
     cdsReturnInComment: TStringField;
-    qryPromoList: TFDQuery;
     qryPromoPartners: TFDQuery;
     qryPromoGoods: TFDQuery;
-    qryPromoListId: TIntegerField;
-    qryPromoListInvNumber: TStringField;
-    qryPromoListStartSale: TDateTimeField;
-    qryPromoListEndSale: TDateTimeField;
-    qryPromoListChangePercent: TWideStringField;
-    qryPromoListCommentMain: TStringField;
-    qryPromoPartnersName: TStringField;
-    qryPromoPartnersContractName: TWideStringField;
+    qryPromoPartnersPartnerName: TStringField;
     qryPromoPartnersAddress: TStringField;
     qryPromoGoodsGoodsName: TStringField;
-    qryPromoGoodsKindName: TStringField;
     qryPromoGoodsTax: TWideStringField;
     qryPromoGoodsPrice: TWideStringField;
-    qryPromoListTermin: TWideStringField;
     tblObject_ConstMobileVersion: TStringField;
     tblObject_ConstMobileAPKFileName: TStringField;
     tblMovement_Task: TFDTable;
@@ -466,7 +455,30 @@ type
     tblMovementItem_TaskDescription: TStringField;
     tblMovementItem_TaskComment: TStringField;
     tblMovementItem_TaskisSync: TBooleanField;
+    qryPromoPartnersContractName: TWideStringField;
+    qryPromoGoodsKindName: TWideStringField;
+    qryGoodsForPriceListFullPrice: TStringField;
+    qryPriceListPriceWithVAT: TBooleanField;
+    qryPriceListVATPercent: TFloatField;
+    qryGoodsForPriceListMeasure: TStringField;
+    qryGoodsForPriceListPrice: TFloatField;
+    qryPromoPartnersPartnerId: TIntegerField;
+    qryPromoPartnersContractId: TIntegerField;
+    qryPromoGoodsTermin: TWideStringField;
+    qryPromoPartnersPromoIds: TWideStringField;
+    qryPromoGoodsPromoId: TIntegerField;
+    qrySelect: TFDQuery;
+    cdsJuridicalCollation: TClientDataSet;
+    cdsJuridicalCollationDocNum: TStringField;
+    cdsJuridicalCollationDocType: TStringField;
+    cdsJuridicalCollationDocDate: TDateField;
+    cdsJuridicalCollationPaidKind: TStringField;
+    cdsJuridicalCollationDocNumDate: TStringField;
+    cdsJuridicalCollationPayment: TStringField;
+    cdsJuridicalCollationDebet: TFloatField;
+    cdsJuridicalCollationKredit: TFloatField;
     procedure DataModuleCreate(Sender: TObject);
+    procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
     FConnected: Boolean;
@@ -509,6 +521,8 @@ type
 
     procedure SavePhotoGroup(AGroupName: string);
     procedure LoadPhotoGroups;
+
+    function GenerateJuridicalCollation(DateStart, DateEnd: TDate; JuridicalId, ContractId: integer): boolean;
 
     property Connected: Boolean read FConnected;
   end;
@@ -1180,11 +1194,11 @@ begin
 
         SetNewProgressTask('Загрузка справочника акционных товаров');
         GetDictionaries('PromoGoods');
-
+        {
         SetNewProgressTask('Загрузка заданий');
         GetDictionaries('MovementTask');
         GetDictionaries('MovementItemTask');
-
+        }
         DM.conMain.Commit;
         DM.conMain.TxOptions.AutoCommit := true;
       except
@@ -1613,12 +1627,13 @@ begin
   InitStructure;
   FConnected := Connect;
 
-  cdsStoreRealItems.CreateDataSet;
   cdsStoreReals.CreateDataSet;
-  cdsOrderItems.CreateDataSet;
+  cdsStoreRealItems.CreateDataSet;
   cdsOrderExternal.CreateDataSet;
-  cdsReturnInItems.CreateDataSet;
+  cdsOrderItems.CreateDataSet;
   cdsReturnIn.CreateDataSet;
+  cdsReturnInItems.CreateDataSet;
+  cdsJuridicalCollation.CreateDataSet;
 end;
 
 
@@ -1717,7 +1732,7 @@ begin
           CreateGUID(GlobalId);
           tblMovementItem_StoreRealGUID.AsString := GUIDToString(GlobalId);
           tblMovementItem_StoreRealGoodsId.AsInteger := FieldbyName('GoodsId').AsInteger;
-          tblMovementItem_StoreRealGoodsKindId.AsInteger := FieldbyName('KindId').AsInteger;
+          tblMovementItem_StoreRealGoodsKindId.AsInteger := FieldbyName('KindID').AsInteger;
           tblMovementItem_StoreRealAmount.AsFloat := FieldbyName('Count').AsFloat;
 
           tblMovementItem_StoreReal.Post;
@@ -1824,14 +1839,14 @@ procedure TDM.AddedGoodsToStoreReal(AGoods : string);
 var
   ArrValue : TArray<string>;
 begin
-  ArrValue := AGoods.Split([';']);  //Id;GoodsId;KindId;название товара;вид товара;единица измерения;количество по умолчанию
+  ArrValue := AGoods.Split([';']);  //Id;GoodsId;GoodsKindID;название товара;вид товара;единица измерения;количество по умолчанию
 
   cdsStoreRealItems.Append;
   cdsStoreRealItemsId.AsString := ArrValue[0];
   cdsStoreRealItemsGoodsId.AsString := ArrValue[1];       // GoodsId
-  cdsStoreRealItemsKindId.AsString := ArrValue[2];        // KindId
-  cdsStoreRealItemsName.AsString := ArrValue[3];          // название товара
-  cdsStoreRealItemsType.AsString := ArrValue[4];          // вид товара
+  cdsStoreRealItemsKindID.AsString := ArrValue[2];        // GoodsKindID
+  cdsStoreRealItemsGoodsName.AsString := ArrValue[3];     // название товара
+  cdsStoreRealItemsKindName.AsString := ArrValue[4];      // вид товара
   cdsStoreRealItemsMeasure.AsString := ' ' + ArrValue[5]; // единица измерения
   cdsStoreRealItemsCount.AsString := ArrValue[6];         // количество по умолчанию
 
@@ -1906,9 +1921,28 @@ begin
   end;
 end;
 
+procedure TDM.qryGoodsForPriceListCalcFields(DataSet: TDataSet);
+var
+  PriceWithoutVat, PriceWithVat : string;
+begin
+  if qryPriceListPriceWithVAT.AsBoolean then
+  begin
+    PriceWithoutVat := FormatFloat('0.00', DataSet.FieldByName('Price').AsFloat * 100 / (100 + qryPriceListVATPercent.AsFloat));
+    PriceWithVat := FormatFloat('0.00', DataSet.FieldByName('Price').AsFloat);
+  end
+  else
+  begin
+    PriceWithoutVat := FormatFloat('0.00', DataSet.FieldByName('Price').AsFloat);
+    PriceWithVat := FormatFloat('0.00', DataSet.FieldByName('Price').AsFloat * (100 + qryPriceListVATPercent.AsFloat) / 100);
+  end;
+
+  DataSet.FieldByName('FullPrice').AsString := 'Цена: ' + PriceWithoutVat +' (с НДС ' + PriceWithVat +
+    ') за ' + DataSet.FieldByName('Measure').AsString;
+end;
+
 procedure TDM.GenerateStoreRealItemsList;
 begin
-  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA Name, GK.VALUEDATA Kind, ''-'' PromoPrice, ' +
+  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID GoodsKindID, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ''-'' PromoPrice, ' +
     'GLK.REMAINS, PI.ORDERPRICE PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
     'GK.VALUEDATA || '';'' || M.VALUEDATA || '';0'' FullInfo, G.VALUEDATA || '';0'' SearchName ' +
     'from OBJECT_GOODS G ' +
@@ -2019,7 +2053,7 @@ begin
           CreateGUID(GlobalId);
           tblMovementItem_OrderExternalGUID.AsString := GUIDToString(GlobalId);
           tblMovementItem_OrderExternalGoodsId.AsInteger := FieldbyName('GoodsId').AsInteger;
-          tblMovementItem_OrderExternalGoodsKindId.AsInteger := FieldbyName('KindId').AsInteger;
+          tblMovementItem_OrderExternalGoodsKindId.AsInteger := FieldbyName('KindID').AsInteger;
           tblMovementItem_OrderExternalAmount.AsFloat := FieldbyName('Count').AsFloat;
           tblMovementItem_OrderExternalPrice.AsFloat := FieldbyName('Price').AsFloat;
           tblMovementItem_OrderExternalChangePercent.AsFloat := DM.qryPartnerChangePercent.AsFloat;
@@ -2135,16 +2169,16 @@ var
   ArrValue : TArray<string>;
   Recommend : Extended;
 begin
-  ArrValue := AGoods.Split([';']); //Id;GoodsId;KindId;название товара;вид товара;рекомендуемое количество;
+  ArrValue := AGoods.Split([';']); //Id;GoodsId;GoodsKindID;название товара;вид товара;рекомендуемое количество;
                                    //остаток товара;цена;единица измерения;вес;цена по акции;учитывать ли скидку при акции;
                                    //количество по умолчанию
 
   cdsOrderItems.Append;
   cdsOrderItemsId.AsString := ArrValue[0];
   cdsOrderItemsGoodsId.AsString := ArrValue[1];   // GoodsId
-  cdsOrderItemsKindId.AsString := ArrValue[2];    // KindId
-  cdsOrderItemsName.AsString := ArrValue[3];      // название товара
-  cdsOrderItemsType.AsString := ArrValue[4];      // вид товара
+  cdsOrderItemsKindID.AsString := ArrValue[2];    // GoodsKindID
+  cdsOrderItemsGoodsName.AsString := ArrValue[3];      // название товара
+  cdsOrderItemsKindName.AsString := ArrValue[4];  // вид товара
 
   if (ArrValue[5] = '0') or (qryPartnerCalcDayCount.AsFloat = 0) then // рекомендуемое количество
     cdsOrderItemsRecommend.AsString := '-'
@@ -2319,7 +2353,7 @@ begin
   else
     PromoPriceField := 'PriceWithOutVAT';
 
-  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA Name, GK.VALUEDATA Kind, IFNULL(' + PromoPriceField + ', ''-'') PromoPrice, ' +
+  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID GoodsKindID, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, IFNULL(' + PromoPriceField + ', ''-'') PromoPrice, ' +
     'GLK.REMAINS, PI.' + PriceField + ' PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
     'GK.VALUEDATA || '';'' || 0 || '';'' || 0 || '';'' || PI.' + PriceField + ' || '';'' || ' +
     'M.VALUEDATA || '';'' || G.WEIGHT || '';'' || IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 1) || '';0'' FullInfo, ' +
@@ -2438,7 +2472,7 @@ begin
           CreateGUID(GlobalId);
           tblMovementItem_ReturnInGUID.AsString := GUIDToString(GlobalId);
           tblMovementItem_ReturnInGoodsId.AsInteger := FieldbyName('GoodsId').AsInteger;
-          tblMovementItem_ReturnInGoodsKindId.AsInteger := FieldbyName('KindId').AsInteger;
+          tblMovementItem_ReturnInGoodsKindId.AsInteger := FieldbyName('KindID').AsInteger;
           tblMovementItem_ReturnInAmount.AsFloat := FieldbyName('Count').AsFloat;
           tblMovementItem_ReturnInPrice.AsFloat := FieldbyName('Price').AsFloat;
           tblMovementItem_ReturnInChangePercent.AsFloat := DM.qryPartnerChangePercent.AsFloat;
@@ -2556,14 +2590,14 @@ var
   ArrValue : TArray<string>;
   Recommend : Extended;
 begin
-  ArrValue := AGoods.Split([';']); //Id;GoodsId;KindId;название товара;вид товара;цена;единица измерения;вес;количество по умолчанию
+  ArrValue := AGoods.Split([';']); //Id;GoodsId;GoodsKindID;название товара;вид товара;цена;единица измерения;вес;количество по умолчанию
 
   cdsReturnInItems.Append;
   cdsReturnInItemsId.AsString := ArrValue[0];
   cdsReturnInItemsGoodsId.AsString := ArrValue[1];       // GoodsId
-  cdsReturnInItemsKindId.AsString := ArrValue[2];        // KindId
-  cdsReturnInItemsName.AsString := ArrValue[3];          // название товара
-  cdsReturnInItemsType.AsString := ArrValue[4];          // вид товара
+  cdsReturnInItemsKindID.AsString := ArrValue[2];        // GoodsKindID
+  cdsReturnInItemsGoodsName.AsString := ArrValue[3];     // название товара
+  cdsReturnInItemsKindName.AsString := ArrValue[4];      // вид товара
   cdsReturnInItemsPrice.AsString := ArrValue[5];         // цена
   cdsReturnInItemsMeasure.AsString := ' ' + ArrValue[6]; // единица измерения
   cdsReturnInItemsWeight.AsString := ArrValue[7];        // вес
@@ -2651,7 +2685,7 @@ end;
 
 procedure TDM.GenerateReturnInItemsList;
 begin
-  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA Name, GK.VALUEDATA Kind, ''-'' PromoPrice, ' +
+  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID GoodsKindID, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ''-'' PromoPrice, ' +
     'GLK.REMAINS, PI.OrderPrice PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
     'GK.VALUEDATA || '';'' || PI.OrderPrice || '';'' || ' + 'M.VALUEDATA || '';'' || G.WEIGHT || '';0'' FullInfo, ' +
     'G.VALUEDATA || '';0'' SearchName ' +
@@ -2717,6 +2751,68 @@ procedure TDM.LoadPhotoGroups;
 begin
   qryPhotoGroups.Open('select Id, Comment, StatusId from Movement_Visit where PartnerId = ' + qryPartnerId.AsString +
     ' and StatusId <> ' + tblObject_ConstStatusId_Erased.AsString);
+end;
+
+
+function TDM.GenerateJuridicalCollation(DateStart, DateEnd: TDate; JuridicalId, ContractId: integer): boolean;
+var
+  x : integer;
+  FieldName : string;
+  GetStoredProc : TdsdStoredProc;
+begin
+  GetStoredProc := TdsdStoredProc.Create(nil);
+  try
+    GetStoredProc.StoredProcName := 'gpReport_JuridicalCollation';
+    GetStoredProc.OutputType := otDataSet;
+    GetStoredProc.DataSet := TClientDataSet.Create(nil);
+
+    GetStoredProc.Params.AddParam('inStartDate', ftDateTime, ptInput, DateStart);
+    GetStoredProc.Params.AddParam('inEndDate', ftDateTime, ptInput, DateEnd);
+    GetStoredProc.Params.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
+    GetStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, 0);
+    GetStoredProc.Params.AddParam('inContractId', ftInteger, ptInput, ContractId);
+    GetStoredProc.Params.AddParam('inAccountId', ftInteger, ptInput, 0);
+    GetStoredProc.Params.AddParam('inPaidKindId', ftInteger, ptInput, 0);
+    GetStoredProc.Params.AddParam('inInfoMoneyId', ftInteger, ptInput, 0);
+    GetStoredProc.Params.AddParam('inCurrencyId', ftInteger, ptInput, 0);
+    GetStoredProc.Params.AddParam('inMovementId_Partion', ftInteger, ptInput, 0);
+
+    try
+      GetStoredProc.Execute(false, false, true);
+
+
+      with GetStoredProc.DataSet do
+      begin
+        First;
+
+        while not Eof do
+        begin
+          cdsJuridicalCollation.Append;
+
+          cdsJuridicalCollationDocNum.AsString := FieldByName('InvNumber').AsString;
+          cdsJuridicalCollationDocType.AsString := FieldByName('ItemName').AsString;
+          cdsJuridicalCollationDocDate.AsDateTime := FieldByName('OperDate').AsDateTime;
+          cdsJuridicalCollationPaidKind.AsString := FieldByName('PaidKindName').AsString;
+          cdsJuridicalCollationDebet.AsString := FieldByName('Debet').AsString;
+          cdsJuridicalCollationKredit.AsFloat := FieldByName('Kredit').AsFloat;
+
+          cdsJuridicalCollation.Post;
+
+          Next;
+        end;
+      end;
+      ShowMessage(IntToStr(GetStoredProc.DataSet.RecordCount));
+
+
+    except
+      on E : Exception do
+      begin
+        raise Exception.Create(E.Message);
+      end;
+    end;
+  finally
+    FreeAndNil(GetStoredProc);
+  end;
 end;
 
 initialization
