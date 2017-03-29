@@ -14,6 +14,9 @@ RETURNS TABLE (Id Integer
              , StatusCode Integer
              , StatusName TVarChar
              , TotalSumm TFloat
+             , TotalSummWithOutVAT TFloat
+             , TotalSummVAT TFloat
+
              , JuridicalId Integer
              , JuridicalName TVarChar
              , PartnerMedicalId Integer
@@ -26,6 +29,12 @@ RETURNS TABLE (Id Integer
 
              , DateRegistered TDateTime
              , InvNumberRegistered TVarChar
+
+             , BankAccount TVarChar
+             , BankName    TVarChar
+             , PartnerMedical_BankAccount TVarChar
+             , PartnerMedical_BankName    TVarChar
+
               )
 
 AS
@@ -56,6 +65,20 @@ BEGIN
                      UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
 
+      , tmpBankAccount AS (SELECT ObjectLink_Juridical.ChildObjectId AS JuridicalId
+                                , Object_BankAccount.ValueData       AS BankAccount
+                                , Object_Bank.ValueData              AS BankName
+                           FROM Object AS Object_BankAccount
+                              LEFT JOIN ObjectLink AS ObjectLink_Juridical
+                                                   ON ObjectLink_Juridical.ObjectId = Object_BankAccount.Id
+                                                  AND ObjectLink_Juridical.DescId = zc_ObjectLink_BankAccount_Juridical()
+                              LEFT JOIN ObjectLink AS ObjectLink_Bank
+                                                   ON ObjectLink_Bank.ObjectId = Object_BankAccount.Id
+                                                  AND ObjectLink_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
+                              LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_Bank.ChildObjectId
+                           WHERE Object_BankAccount.DescId = zc_object_BankAccount()
+                           )
+
         -- Результат
     SELECT     
         Movement.Id
@@ -63,7 +86,10 @@ BEGIN
       , Movement.OperDate
       , Object_Status.ObjectCode                               AS StatusCode
       , Object_Status.ValueData                                AS StatusName
-      , COALESCE(MovementFloat_TotalSumm.ValueData,0)::TFloat  AS TotalSumm
+      , COALESCE (MovementFloat_TotalSumm.ValueData,0)::TFloat  AS TotalSumm
+      , COALESCE (CAST (MovementFloat_TotalSumm.ValueData/(1.07) AS NUMERIC (16,2)),0) ::TFloat  AS TotalSummWithOutVAT
+      , COALESCE (CAST (MovementFloat_TotalSumm.ValueData - (MovementFloat_TotalSumm.ValueData/(1.07))  AS NUMERIC (16,2)),0) ::TFloat  AS TotalSummVAT
+
       , MovementLinkObject_Juridical.ObjectId                  AS JuridicalId
       , Object_Juridical.ValueData                             AS JuridicalName
       , Object_PartnerMedical.Id                               AS PartnerMedicalId  
@@ -75,6 +101,13 @@ BEGIN
 
       , MovementDate_DateRegistered.ValueData                  AS DateRegistered
       , MovementString_InvNumberRegistered.ValueData           AS InvNumberRegistered
+
+      , ObjectHistory_JuridicalDetails.BankAccount
+      , tmpBankAccount.BankName ::TVarChar
+
+      , ObjectHistory_PartnerMedicalDetails.BankAccount       AS PartnerMedical_BankAccount
+      , tmpPartnerMedicalBankAccount.BankName                 AS PartnerMedical_BankName
+
     FROM tmpStatus
         INNER JOIN Movement ON Movement.StatusId = tmpStatus.StatusId
                            AND Movement.DescId = zc_Movement_Invoice()
@@ -114,6 +147,22 @@ BEGIN
                                      ON MovementLinkObject_Contract.MovementId = Movement.Id
                                     AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
         LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_PartnerMedical_Juridical 
+                             ON ObjectLink_PartnerMedical_Juridical.ObjectId = Object_PartnerMedical.Id
+                            AND ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical()
+
+        LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := Object_Juridical.Id, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_JuridicalDetails ON 1=1
+        LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := ObjectLink_PartnerMedical_Juridical.ChildObjectId , inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_PartnerMedicalDetails ON 1=1
+ 
+        LEFT JOIN tmpBankAccount ON tmpBankAccount.JuridicalId = Object_Juridical.Id
+                                AND tmpBankAccount.BankAccount = ObjectHistory_JuridicalDetails.BankAccount
+
+        LEFT JOIN tmpBankAccount AS tmpPartnerMedicalBankAccount 
+                                 ON tmpPartnerMedicalBankAccount.JuridicalId = ObjectLink_PartnerMedical_Juridical.ChildObjectId  --ObjectLink_PartnerMedical_Juridical.ChildObjectId
+                                AND tmpPartnerMedicalBankAccount.BankAccount = ObjectHistory_PartnerMedicalDetails.BankAccount
+
+
 ;
 
 END;

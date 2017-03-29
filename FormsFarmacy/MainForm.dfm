@@ -165,7 +165,7 @@ inherited MainForm: TMainForm
     object actInvoice: TdsdOpenForm [13]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1057#1095#1077#1090#1072
+      Caption = #1046#1091#1088#1085#1072#1083' '#1089#1095#1077#1090#1086#1074' '#1087#1086' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072#1084
       FormName = 'TInvoiceJournalForm'
       FormNameParam.Value = 'TInvoiceJournalForm'
       FormNameParam.DataType = ftString
@@ -1901,6 +1901,12 @@ inherited MainForm: TMainForm
         object N13031: TMenuItem
           Action = actReport_SaleSP
         end
+        object N134: TMenuItem
+          Caption = '-'
+        end
+        object N70: TMenuItem
+          Action = actInvoice
+        end
       end
       object N103: TMenuItem
         Caption = '-'
@@ -2094,9 +2100,6 @@ inherited MainForm: TMainForm
       end
       object N67: TMenuItem
         Action = actPaymentJournal
-      end
-      object N70: TMenuItem
-        Action = actInvoice
       end
       object N38: TMenuItem
         Caption = '-'

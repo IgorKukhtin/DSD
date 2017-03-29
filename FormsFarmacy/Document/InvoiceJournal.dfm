@@ -52,6 +52,16 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = clPartnerMedicalName
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSummVAT
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSummWithOutVAT
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -90,6 +100,24 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 98
           end
+          object BankAccount: TcxGridDBColumn
+            Caption = #1056'/'#1089' ('#1085#1072#1096')'
+            DataBinding.FieldName = 'BankAccount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056'/'#1089' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103' ('#1085#1072#1096')'
+            Options.Editing = False
+            Width = 155
+          end
+          object BankName: TcxGridDBColumn
+            Caption = #1041#1072#1085#1082' ('#1085#1072#1096')'
+            DataBinding.FieldName = 'BankName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1072#1085#1082' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103' ('#1085#1072#1096')'
+            Options.Editing = False
+            Width = 110
+          end
           object clPartnerMedicalName: TcxGridDBColumn
             Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077
             DataBinding.FieldName = 'PartnerMedicalName'
@@ -97,6 +125,23 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 119
+          end
+          object PartnerMedical_BankAccount: TcxGridDBColumn
+            Caption = #1056'/'#1089' ('#1084#1077#1076'.'#1091#1095#1088#1077#1078#1076'.)'
+            DataBinding.FieldName = 'PartnerMedical_BankAccount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 155
+          end
+          object PartnerMedical_BankName: TcxGridDBColumn
+            Caption = #1041#1072#1085#1082'  ('#1084#1077#1076'.'#1091#1095#1088#1077#1078#1076'.)'
+            DataBinding.FieldName = 'PartnerMedical_BankName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1072#1085#1082' ('#1047#1054#1047')'
+            Options.Editing = False
+            Width = 155
           end
           object colContractName: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088
@@ -106,14 +151,35 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 108
           end
+          object colTotalSummVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
+            DataBinding.FieldName = 'TotalSummWithOutVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 71
+          end
+          object colTotalSummWithOutVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
+            DataBinding.FieldName = 'TotalSummWithOutVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 71
+          end
           object colTotalSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 69
           end
           object clOperDateStart: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1087#1077#1088#1080#1086#1076#1072' '#1086#1090#1095#1077#1090#1072

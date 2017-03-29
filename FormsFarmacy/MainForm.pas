@@ -348,6 +348,7 @@ type
     N133: TMenuItem;
     actInvoice: TdsdOpenForm;
     N70: TMenuItem;
+    N134: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
