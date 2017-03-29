@@ -186,7 +186,6 @@ type
     bClosePhoto: TButton;
     lwPartnerPhotoGroups: TListView;
     lwOrderExternalItems: TListView;
-    bsSelectedOrderItems: TBindSourceDB;
     LinkListControlToField3: TLinkListControlToField;
     Panel14: TPanel;
     lOrderPrice: TLabel;
@@ -236,7 +235,6 @@ type
     Label24: TLabel;
     Label25: TLabel;
     Label27: TLabel;
-    bsOrderItems: TBindSourceDB;
     LinkFillControlToField1: TLinkFillControlToField;
     bMinusAmount: TButton;
     VertScrollBox4: TVertScrollBox;
@@ -302,10 +300,8 @@ type
     LinkListControlToField8: TLinkListControlToField;
     bAddStoreRealItem: TButton;
     Image14: TImage;
-    bsStoreRealItems: TBindSourceDB;
     LinkListControlToField9: TLinkListControlToField;
     lPriceWithPercent: TLabel;
-    bsGoodsForPriceList: TBindSourceDB;
     pPhotoComment: TPanel;
     bSavePhoto: TButton;
     bCancelPhoto: TButton;
@@ -337,7 +333,6 @@ type
     Panel26: TPanel;
     Label20: TLabel;
     eReturnComment: TEdit;
-    bsReturnInItems: TBindSourceDB;
     LinkListControlToField10: TLinkListControlToField;
     bsReturnIn: TBindSourceDB;
     LinkListControlToField11: TLinkListControlToField;
@@ -357,7 +352,7 @@ type
     tErrorMap: TTimer;
     bRefreshMapScreen: TButton;
     Image15: TImage;
-    lwGoods: TListView;
+    lwPriceListGoods: TListView;
     Popup2: TPopup;
     Panel28: TPanel;
     Label10: TLabel;
@@ -376,43 +371,12 @@ type
     Button27: TButton;
     Button28: TButton;
     Label13: TLabel;
-    LinkFillControlToField2: TLinkFillControlToField;
-    bPromo: TButton;
-    tiPromoList: TTabItem;
-    tiPromoDetail: TTabItem;
-    tcPromo: TTabControl;
-    tiPromoPartner: TTabItem;
+    bPromoPartners: TButton;
+    tiPromoPartners: TTabItem;
     tiPromoGoods: TTabItem;
-    lwPromoGoods: TListView;
-    Popup3: TPopup;
-    Panel29: TPanel;
-    Label17: TLabel;
-    Button29: TButton;
-    Button30: TButton;
-    Button31: TButton;
-    Button32: TButton;
-    Button33: TButton;
-    Button34: TButton;
-    Button35: TButton;
-    Button36: TButton;
-    Button37: TButton;
-    Button38: TButton;
-    Button39: TButton;
-    Button40: TButton;
-    Button41: TButton;
-    Button42: TButton;
-    Label18: TLabel;
-    lwPromoPartners: TListView;
-    lwPromoList: TListView;
     lwPriceList: TListView;
     bsPriceList: TBindSourceDB;
     LinkListControlToField1: TLinkListControlToField;
-    bsPromoList: TBindSourceDB;
-    LinkListControlToField4: TLinkListControlToField;
-    bsPromoPartners: TBindSourceDB;
-    LinkFillControlToField3: TLinkFillControlToField;
-    bsPromoGoods: TBindSourceDB;
-    LinkFillControlToField4: TLinkFillControlToField;
     tiInformation: TTabItem;
     VertScrollBox6: TVertScrollBox;
     lUnitRet: TLayout;
@@ -439,6 +403,65 @@ type
     Layout9: TLayout;
     Label32: TLabel;
     SyncDateOut: TEdit;
+    bsStoreRealItems: TBindSourceDB;
+    bsOrderExternalItems: TBindSourceDB;
+    bsReturnInItems: TBindSourceDB;
+    bsGoodsItems: TBindSourceDB;
+    bsPriceListGoods: TBindSourceDB;
+    LinkListControlToField12: TLinkListControlToField;
+    lwPromoGoods: TListView;
+    Popup3: TPopup;
+    Panel29: TPanel;
+    Label17: TLabel;
+    Button29: TButton;
+    Button30: TButton;
+    Button31: TButton;
+    Button32: TButton;
+    Button33: TButton;
+    Button34: TButton;
+    Button35: TButton;
+    Button36: TButton;
+    Button37: TButton;
+    Button38: TButton;
+    Button39: TButton;
+    Button40: TButton;
+    Button41: TButton;
+    Button42: TButton;
+    Label18: TLabel;
+    bPromoGoods: TButton;
+    lwPromoPartners: TListView;
+    pPromoPartnerDate: TPanel;
+    Label41: TLabel;
+    dePromoPartnerDate: TDateEdit;
+    pPromoGoodsDate: TPanel;
+    Label42: TLabel;
+    dePromoGoodsDate: TDateEdit;
+    bsPromoPartners: TBindSourceDB;
+    LinkListControlToField4: TLinkListControlToField;
+    bsPromoGoods: TBindSourceDB;
+    LinkListControlToField13: TLinkListControlToField;
+    tiReports: TTabItem;
+    bReportJuridicalCollation: TButton;
+    tiReportJuridicalCollation: TTabItem;
+    VertScrollBox7: TVertScrollBox;
+    Layout7: TLayout;
+    Label43: TLabel;
+    deStartRJC: TDateEdit;
+    Layout10: TLayout;
+    Layout11: TLayout;
+    Label44: TLabel;
+    deEndRJC: TDateEdit;
+    Layout12: TLayout;
+    Layout13: TLayout;
+    Label45: TLabel;
+    cbJuridicals: TComboBox;
+    Layout14: TLayout;
+    Label46: TLabel;
+    cbContracts: TComboBox;
+    Panel30: TPanel;
+    bPrintJuridicalCollation: TButton;
+    tiPrintJuridicalCollation: TTabItem;
+    lwJuridicalCollation: TListView;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bReloginClick(Sender: TObject);
@@ -535,7 +558,7 @@ type
       const AItem: TListViewItem);
     procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
-    procedure lwGoodsFilter(Sender: TObject; const AFilter, AValue: string;
+    procedure lwPriceListGoodsFilter(Sender: TObject; const AFilter, AValue: string;
       var Accept: Boolean);
     procedure bSavePhotoClick(Sender: TObject);
     procedure bCancelPhotoClick(Sender: TObject);
@@ -553,20 +576,29 @@ type
     procedure tErrorMapTimer(Sender: TObject);
     procedure bRefreshMapScreenClick(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
-    procedure bPromoClick(Sender: TObject);
-    procedure lwPromoListItemClick(const Sender: TObject;
-      const AItem: TListViewItem);
+    procedure bPromoPartnersClick(Sender: TObject);
     procedure lwPromoGoodsFilter(Sender: TObject; const AFilter, AValue: string;
       var Accept: Boolean);
     procedure lwPromoPartnersUpdateObjects(const Sender: TObject;
       const AItem: TListViewItem);
+    procedure dePromoPartnerDateChange(Sender: TObject);
+    procedure lwPromoPartnersItemClick(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure bPromoGoodsClick(Sender: TObject);
+    procedure dePromoGoodsDateChange(Sender: TObject);
+    procedure lwPromoGoodsUpdateObjects(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure lwPromoGoodsItemClick(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure bReportClick(Sender: TObject);
+    procedure bReportJuridicalCollationClick(Sender: TObject);
+    procedure cbJuridicalsChange(Sender: TObject);
+    procedure bPrintJuridicalCollationClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
 
     FCanEditPartner : boolean;
-
-    FOldGoodsItemIndex : integer;
 
     FCurCoordinatesSet: boolean;
     FCurCoordinates: TLocationCoord2D;
@@ -617,8 +649,10 @@ type
     procedure ShowPartnerInfo;
     procedure ShowPriceLists;
     procedure ShowPriceListItems;
-    procedure ShowPromoList;
-    procedure ShowPromoItems;
+    procedure ShowPromoPartners;
+    procedure ShowPromoGoodsByPartner;
+    procedure ShowPromoGoods;
+    procedure ShowPromoPartnersByGoods;
     procedure ShowPathOnmap;
     procedure ShowPhotos;
     procedure ShowPhoto;
@@ -871,7 +905,7 @@ begin
   SwitchToForm(tiMain, nil);
 end;
 
-procedure TfrmMain.lwGoodsFilter(Sender: TObject; const AFilter, AValue: string;
+procedure TfrmMain.lwPriceListGoodsFilter(Sender: TObject; const AFilter, AValue: string;
   var Accept: Boolean);
 begin
   if Trim(AFilter) <> '' then
@@ -1079,15 +1113,31 @@ begin
     Accept := true;
 end;
 
-procedure TfrmMain.lwPromoListItemClick(const Sender: TObject;
+procedure TfrmMain.lwPromoGoodsItemClick(const Sender: TObject;
   const AItem: TListViewItem);
 begin
-  ShowPromoItems;
+  if pPromoGoodsDate.Visible then
+    ShowPromoPartnersByGoods;
+end;
+
+procedure TfrmMain.lwPromoGoodsUpdateObjects(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  AItem.Objects.FindDrawable('Details').Visible := pPromoGoodsDate.Visible;
+end;
+
+procedure TfrmMain.lwPromoPartnersItemClick(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  if pPromoPartnerDate.Visible then
+    ShowPromoGoodsByPartner;
 end;
 
 procedure TfrmMain.lwPromoPartnersUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
+  AItem.Objects.FindDrawable('Details').Visible := pPromoPartnerDate.Visible;
+
   TListItemImage(AItem.Objects.FindDrawable('imAddress')).ImageIndex := 2;
   TListItemImage(AItem.Objects.FindDrawable('imContact')).ImageIndex := 3;
 end;
@@ -1253,6 +1303,45 @@ begin
 
     DM.cdsStoreReals.Delete;
   end;
+end;
+
+procedure TfrmMain.dePromoGoodsDateChange(Sender: TObject);
+begin
+  DM.qryPromoGoods.Close;
+  DM.qryPromoGoods.SQL.Text := 'select G.VALUEDATA GoodsName, ' +
+    'CASE WHEN PG.GOODSKINDID = 0 THEN ''все виды'' ELSE GK.VALUEDATA END KindName, ' +
+    '''Скидка '' || PG.TAXPROMO || ''%'' Tax, ' +
+    '''Акционная цена: '' || PG.PRICEWITHOUTVAT || '' (с НДС '' || PG.PRICEWITHVAT || '') за '' || M.VALUEDATA Price, ' +
+    '''Акция заканчивается '' || strftime(''%d.%m.%Y'',P.ENDSALE) Termin, P.ID PromoId ' +
+    'from MOVEMENTITEM_PROMOGOODS PG ' +
+    'JOIN MOVEMENT_PROMO P ON P.ID = PG.MOVEMENTID AND :PROMODATE BETWEEN P.STARTSALE AND P.ENDSALE ' +
+    'JOIN OBJECT_GOODS G ON G.ID = PG.GOODSID ' +
+    'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = PG.GOODSKINDID AND GK.ISERASED = 0 ' +
+    'ORDER BY G.VALUEDATA, P.ENDSALE';
+  DM.qryPromoGoods.ParamByName('PROMODATE').AsDate := dePromoGoodsDate.Date;
+  DM.qryPromoGoods.Open;
+
+  lwPromoGoods.ScrollViewPos := 0;
+end;
+
+procedure TfrmMain.dePromoPartnerDateChange(Sender: TObject);
+begin
+  DM.qryPromoPartners.Close;
+  DM.qryPromoPartners.SQL.Text := 'select J.VALUEDATA PartnerName, OP.ADDRESS, ' +
+    'CASE WHEN PP.CONTRACTID = 0 THEN ''все договора'' ELSE C.CONTRACTTAGNAME || '' '' || C.VALUEDATA END ContractName, ' +
+    'PP.PARTNERID, PP.CONTRACTID, group_concat(distinct PP.MOVEMENTID) PromoIds ' +
+    'from MOVEMENTITEM_PROMOPARTNER PP ' +
+    'JOIN MOVEMENT_PROMO P ON P.ID = PP.MOVEMENTID AND :PROMODATE BETWEEN P.STARTSALE AND P.ENDSALE ' +
+    'JOIN OBJECT_PARTNER OP ON OP.ID = PP.PARTNERID AND (OP.CONTRACTID = PP.CONTRACTID OR PP.CONTRACTID = 0) ' +
+    'JOIN OBJECT_JURIDICAL J ON J.ID = OP.JURIDICALID ' +
+    'LEFT JOIN OBJECT_CONTRACT C ON C.ID = PP.CONTRACTID ' +
+    'GROUP BY PP.PARTNERID, PP.CONTRACTID ' +
+    'ORDER BY J.VALUEDATA, OP.ADDRESS';
+  DM.qryPromoPartners.ParamByName('PROMODATE').AsDate := dePromoPartnerDate.Date;
+  DM.qryPromoPartners.Open;
+
+  lwPromoPartners.ScrollViewPos := 0;
 end;
 
 procedure TfrmMain.DeleteReturnIn(const AResult: TModalResult);
@@ -1599,9 +1688,21 @@ begin
   ShowPriceLists;
 end;
 
-procedure TfrmMain.bPromoClick(Sender: TObject);
+procedure TfrmMain.bPrintJuridicalCollationClick(Sender: TObject);
 begin
-  ShowPromoList;
+  DM.GenerateJuridicalCollation(deStartRJC.Date, deEndRJC.Date,
+    Integer(cbJuridicals.Items.Objects[cbJuridicals.ItemIndex]),
+    Integer(cbContracts.Items.Objects[cbContracts.ItemIndex]));
+end;
+
+procedure TfrmMain.bPromoGoodsClick(Sender: TObject);
+begin
+  ShowPromoGoods;
+end;
+
+procedure TfrmMain.bPromoPartnersClick(Sender: TObject);
+begin
+  ShowPromoPartners;
 end;
 
 procedure TfrmMain.bRefreshMapScreenClick(Sender: TObject);
@@ -1660,6 +1761,35 @@ end;
 procedure TfrmMain.bReloginClick(Sender: TObject);
 begin
   ReturnPriorForm;
+end;
+
+procedure TfrmMain.bReportClick(Sender: TObject);
+begin
+  bReportJuridicalCollation.Enabled := not gc_User.Local;
+
+  SwitchToForm(tiReports, nil);
+end;
+
+procedure TfrmMain.bReportJuridicalCollationClick(Sender: TObject);
+begin
+  cbJuridicals.Items.Clear;
+  with DM.qrySelect do
+  begin
+    Open('select * from OBJECT_JURIDICAL where ISERASED = 0 order by ValueData');
+    First;
+
+    while not Eof do
+    begin
+      cbJuridicals.Items.AddObject(FieldByName('ValueData').AsString, TObject(FieldByName('Id').AsInteger));
+
+      Next;
+    end;
+
+    Close;
+  end;
+  cbJuridicals.ItemIndex := 0;
+
+  SwitchToForm(tiReportJuridicalCollation, nil);
 end;
 
 procedure TfrmMain.bRouteClick(Sender: TObject);
@@ -2272,6 +2402,12 @@ begin
     if tcMain.ActiveTab = tiPriceList then
       lCaption.Text := 'Прайс-лист'
     else
+    if (tcMain.ActiveTab = tiPromoPartners) and (pPromoPartnerDate.Visible) then
+      lCaption.Text := 'Торговые точки, участвующие в акциях'
+    else
+    if (tcMain.ActiveTab = tiPromoGoods) and (pPromoGoodsDate.Visible) then
+      lCaption.Text := 'Акционные товары'
+    else
     if tcMain.ActiveTab = tiPathOnMap then
       lCaption.Text := 'Маршрут контрагента'
     else
@@ -2320,12 +2456,6 @@ begin
     end;
 
     lwGoodsItems.ScrollViewPos := 0;
-  end;
-
-  if tcMain.ActiveTab = tiPromoList then
-  begin
-    DM.qryPromoPartners.Close;
-    DM.qryPromoGoods.Close;
   end;
 end;
 
@@ -2540,7 +2670,7 @@ end;
 
 procedure TfrmMain.ShowPriceLists;
 begin
-  DM.qryPriceList.Open('select ID, VALUEDATA from OBJECT_PRICELIST where ISERASED = 0');
+  DM.qryPriceList.Open('select ID, VALUEDATA, PRICEWITHVAT, VATPERCENT from OBJECT_PRICELIST where ISERASED = 0');
 
   lwPriceList.ScrollViewPos := 0;
   SwitchToForm(tiPriceList, DM.qryPriceList);
@@ -2548,10 +2678,8 @@ end;
 
 procedure TfrmMain.ShowPriceListItems;
 begin
-  FOldGoodsItemIndex := -1;
-
   DM.qryGoodsForPriceList.Open('select G.ID, G.OBJECTCODE, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ' +
-    '''Цена: '' || PLI.ORDERPRICE || '' за '' || M.VALUEDATA Price ' +
+    'PLI.ORDERPRICE Price, M.VALUEDATA Measure ' +
     'FROM OBJECT_PRICELISTITEMS PLI ' +
     'JOIN OBJECT_GOODS G ON G.ID = PLI.GOODSID AND G.ISERASED = 0 ' +
     'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID AND GLK.ISERASED = 0 ' +
@@ -2559,44 +2687,71 @@ begin
     'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
     'WHERE PLI.PRICELISTID = ' + DM.qryPriceListId.AsString);
 
-  lwGoods.ScrollViewPos := 0;
+  lwPriceListGoods.ScrollViewPos := 0;
   SwitchToForm(tiPriceListItems, DM.qryGoodsForPriceList);
 end;
 
-procedure TfrmMain.ShowPromoList;
+procedure TfrmMain.ShowPromoPartners;
 begin
-  DM.qryPromoList.Open('select Id, InvNumber, StartSale, EndSale, CommentMain, ' +
-    '''Действует с '' || DATE(StartSale) || '' по '' || DATE(EndSale) Termin, ' +
-    'CASE WHEN isChangePercent = 0 THEN ''Скидка по договору не предоставляется'' ELSE '''' END ChangePercent ' +
-    'from MOVEMENT_PROMO');
+  pPromoPartnerDate.Visible := true;
+  dePromoPartnerDate.Date := Date();
+  dePromoPartnerDateChange(dePromoPartnerDate);
 
-  lwPromoList.ScrollViewPos := 0;
-  SwitchToForm(tiPromoList, DM.qryPromoList);
+  SwitchToForm(tiPromoPartners, DM.qryPromoPartners);
 end;
 
-procedure TfrmMain.ShowPromoItems;
+procedure TfrmMain.ShowPromoGoodsByPartner;
 begin
-  FOldGoodsItemIndex := -1;
+  lCaption.Text := 'Акционные товары для ' + DM.qryPromoPartnersPartnerName.AsString;
+  pPromoGoodsDate.Visible := false;
 
-  DM.qryPromoPartners.Open('select J.VALUEDATA Name, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, P.ADDRESS ' +
-    'from MOVEMENTITEM_PROMOPARTNER PP ' +
-    'JOIN OBJECT_PARTNER P ON P.ID = PP.PARTNERID AND P.CONTRACTID = PP.CONTRACTID' +
-    'JOIN OBJECT_CONTRACT C ON C.ID = PP.CONTRACTID ' +
-    'JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID ' +
-    'where PP.MOVEMENTID = ' + DM.qryPromoListId.AsString);
-
-  DM.qryPromoGoods.Open('select G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ' +
+  DM.qryPromoGoods.SQL.Text := 'select G.VALUEDATA GoodsName, ' +
+    'CASE WHEN PG.GOODSKINDID = 0 THEN ''все виды'' ELSE GK.VALUEDATA END KindName, ' +
     '''Скидка '' || PG.TAXPROMO || ''%'' Tax, ' +
-    '''Акционная цена: '' || PG.PRICEWITHOUTVAT || '' (с НДС '' || PG.PRICEWITHVAT || '') за '' || M.VALUEDATA Price ' +
-    'FROM MOVEMENTITEM_PROMOGOODS PG ' +
+    '''Акционная цена: '' || PG.PRICEWITHOUTVAT || '' (с НДС '' || PG.PRICEWITHVAT || '') за '' || M.VALUEDATA Price, ' +
+    '''Акция заканчивается '' || strftime(''%d.%m.%Y'',P.ENDSALE) Termin, P.ID PromoId ' +
+    'from MOVEMENTITEM_PROMOGOODS PG ' +
+    'JOIN MOVEMENT_PROMO P ON P.ID = PG.MOVEMENTID ' +
     'JOIN OBJECT_GOODS G ON G.ID = PG.GOODSID ' +
-    'JOIN OBJECT_GOODSKIND GK ON GK.ID = PG.GOODSKINDID AND GK.ISERASED = 0 ' +
-    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-    'WHERE PG.MOVEMENTID = ' + DM.qryPromoListId.AsString);
+    'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = PG.GOODSKINDID AND GK.ISERASED = 0 ' +
+    'WHERE PG.MOVEMENTID IN (' + DM.qryPromoPartnersPromoIds.AsString + ') ' +
+    'ORDER BY G.VALUEDATA, P.ENDSALE';
+  DM.qryPromoGoods.Open;
+
+  lwPromoGoods.ScrollViewPos := 0;
+  SwitchToForm(tiPromoGoods, DM.qryPromoGoods);
+end;
+
+procedure TfrmMain.ShowPromoGoods;
+begin
+  pPromoGoodsDate.Visible := true;
+  dePromoGoodsDate.Date := Date();
+  dePromoGoodsDateChange(dePromoGoodsDate);
+
+  SwitchToForm(tiPromoGoods, DM.qryPromoGoods);
+end;
+
+procedure TfrmMain.ShowPromoPartnersByGoods;
+begin
+  lCaption.Text := 'ТТ с акционными "' + DM.qryPromoGoodsGoodsName.AsString + '"';
+  pPromoPartnerDate.Visible := false;
+
+  DM.qryPromoPartners.SQL.Text := 'select J.VALUEDATA PartnerName, OP.ADDRESS, ' +
+    'CASE WHEN PP.CONTRACTID = 0 THEN ''все договора'' ELSE C.CONTRACTTAGNAME || '' '' || C.VALUEDATA END ContractName, ' +
+    'PP.PARTNERID, PP.CONTRACTID, group_concat(distinct PP.MOVEMENTID) PromoIds ' +
+    'from MOVEMENTITEM_PROMOPARTNER PP ' +
+    'JOIN OBJECT_PARTNER OP ON OP.ID = PP.PARTNERID AND (OP.CONTRACTID = PP.CONTRACTID OR PP.CONTRACTID = 0) ' +
+    'JOIN OBJECT_JURIDICAL J ON J.ID = OP.JURIDICALID ' +
+    'LEFT JOIN OBJECT_CONTRACT C ON C.ID = PP.CONTRACTID ' +
+    'WHERE PP.MOVEMENTID = :PROMOID ' +
+    'GROUP BY PP.PARTNERID, PP.CONTRACTID ' +
+    'ORDER BY J.VALUEDATA, OP.ADDRESS';
+  DM.qryPromoPartners.ParamByName('PROMOID').AsInteger := DM.qryPromoGoodsPromoId.AsInteger;
+  DM.qryPromoPartners.Open;
 
   lwPromoPartners.ScrollViewPos := 0;
-  lwPromoGoods.ScrollViewPos := 0;
-  SwitchToForm(tiPriceListItems, nil);
+  SwitchToForm(tiPromoPartners, DM.qryPromoPartners);
 end;
 
 procedure TfrmMain.ShowPathOnmap;
@@ -2878,6 +3033,31 @@ begin
     On E: Exception do
       Showmessage(E.Message);
   end;
+end;
+
+procedure TfrmMain.cbJuridicalsChange(Sender: TObject);
+begin
+  cbContracts.Items.Clear;
+  cbContracts.Items.AddObject('', TObject(0));
+
+  with DM.qrySelect do
+  begin
+    Open('select C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, C.ID from OBJECT_CONTRACT C ' +
+         'join OBJECT_PARTNER P ON P.JURIDICALID = ' + IntToStr(Integer(cbJuridicals.Items.Objects[cbJuridicals.ItemIndex])) +
+         ' AND P.CONTRACTID = C.ID AND P.ISERASED = 0 ' +
+         'where C.ISERASED = 0 group by C.ID order by ContractName');
+    First;
+
+    while not Eof do
+    begin
+      cbContracts.Items.AddObject(FieldByName('ContractName').AsString, TObject(FieldByName('Id').AsInteger));
+
+      Next;
+    end;
+
+    Close;
+  end;
+  cbContracts.ItemIndex := 0;
 end;
 
 procedure TfrmMain.cbOnlyPromoChange(Sender: TObject);
