@@ -239,11 +239,17 @@ object frmMain: TfrmMain
       Size.Height = 521.000000000000000000
       Size.PlatformDefault = False
       TabHeight = 49.000000000000000000
-      TabIndex = 16
+      TabIndex = 23
       TabOrder = 1
       TabPosition = None
       OnChange = ChangeMainPageUpdate
       Sizes = (
+        352s
+        521s
+        352s
+        521s
+        352s
+        521s
         352s
         521s
         352s
@@ -663,7 +669,7 @@ object frmMain: TfrmMain
           end
           object lButton2: TLayout
             Align = FitRight
-            Position.X = 176.999938964843700000
+            Position.X = 176.999938964843800000
             Size.Width = 175.000061035156300000
             Size.Height = 130.000000000000000000
             Size.PlatformDefault = False
@@ -1163,6 +1169,7 @@ object frmMain: TfrmMain
               Size.Height = 130.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
+              OnClick = bReportClick
               object Image6: TImage
                 MultiResBitmap = <
                   item
@@ -1579,7 +1586,7 @@ object frmMain: TfrmMain
           Size.Height = 521.000000000000000000
           Size.PlatformDefault = False
           TabHeight = 49.000000000000000000
-          TabIndex = 0
+          TabIndex = 2
           TabOrder = 2
           TabPosition = PlatformDefault
           Sizes = (
@@ -1599,7 +1606,7 @@ object frmMain: TfrmMain
               end>
             TextSettings.Font.Size = 10.000000000000000000
             StyledSettings = [Family, Style, FontColor]
-            IsSelected = True
+            IsSelected = False
             Size.Width = 70.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
@@ -1947,72 +1954,72 @@ object frmMain: TfrmMain
                       PNG = {
                         89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
                         F4000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
-                        0816494441545847CD577B7054D5193FF7BDBB775F77B3792790A48418684834
-                        40318EDAA2E8F4A55305958CB5A54A51CA4C1DFA60DADAFA47A783D61967321D
-                        281DA923512A8F5A9B41C1493B49A0823104086A62434280047613F695DD645F
-                        F7D9EFDCDCBBD92581D8BFDA5FF6DBB3F73BDF39DFEF7CE73BDF3D41FF6B1046
-                        BB20966D38C43A3CD2624D552B2996F1C86925A2116A584574F8EC6B1B2F1A66
-                        FF351624D0F4A3BF9414BADDBF76F1D4BAD242A78776D9ECA53CC72453220A07
-                        C5E494120F5FF14FC7E229F1586C4A7AF3D4EEC7FA8CA1F34023566D3D5C5811
-                        4081C3871F53B0E696041EFDCD911D15C5C24F9AEACBF29DBC05A9AA86544D43
-                        F0410AFE9AF9E89384A2093434361EFD7428782112555EFED7AEF5EFE89364E1
-                        9EE70FEF5125B5FEC35D8FDF69A86E4EE0BBBF3BFA87A69245CFD6347A69F08B
-                        14153B0302F0809D6BF08CC964049E29924424D8F48D8EC67BCF874E05E3F11F
-                        7EDCB2F1329E6FEDF6777E595E54F00BDF78A0FB1FAF3EB24E77029897C0FA17
-                        DFDF7E7F65E5CB4B1BF368CD985CC5EEF5DF049051333A332AFA33B4D8862409
-                        9858431DE78603172E477702E378FDF2B297969408C27BC707FFF9C1EF1FCA10
-                        A08C3683555BDF6AB86B4571CBAAC67201E642F1A48C7A7C61C53F124CF4FBC6
-                        E5802F258B8A5FA3689E62681211B06A9D048CC5DB81C7A42515F92753A820CF
-                        CD9384FCB5E212A1A950707971042F8D8546864F1E78537706A08D368352C1FD
-                        644D7951395E655BC78568FFD05532E1473C1294A88C880982A2BAC1DD98E00A
-                        0A456EFBCA8A02A1A6FA4BDE529B8D43534036169751242E22199302292B2E64
-                        15552B084DA5518960412401CA2CCC214052EA03792E2B6A79FB643C9E265C0E
-                        C18D282ED1178C893BCFEE6D3E649865B07A4B6BFD89CFAE3E5955ECF8464D35
-                        7B9B8A0A49732B7034A27109B60CAF1DF61B365C23891C02A4D1EA58F374EB92
-                        42B7D376A8BD3F46333C5F922FC4280A4DA425A56D3EE7183D7F7AEA7C57CBFA
-                        9F9DF9DC77D7F1EEC93F86C3816B02CFEAFBA11331FE4C68DA2D088824698D46
-                        63DEB1605414DCF6E3562BDB8554A23F9E92162C34E7F76D9A3CFACA77B67D78
-                        6EACB9BBEFCA708193D3531C47010B06A40B841C9F9F59E410A03575FA7A709A
-                        74BB9C5DBC85EDB4716C17CD50A7288D18304C1604CF5A1FAEA970968713A29E
-                        03A6730C429B7BE87208A83223A7109974DAAD4778CED265B3583B3D7996C390
-                        4E1386C92D71DFF6BF6D6FBAA3623367757229110EA9BEFA59067A0E20222702
-                        3949480B64504CC8BE3AB2F0E08F9F5E9A36D45F08F73E7FE899DA32C70B455E
-                        BB4394356465200F30C029764CE22F88485C92B262A277E7A271CBFED584A655
-                        422A93044951903404C12814D4385253A1C450A087DF9694F26EC79F9BF5C8D4
-                        3DB75FF0729617481A55DB585AAF2DD95EE0E4E97E9269194E04F9D7CE96475E
-                        D73B0039041A361DCCCFCFE34EAF5F7BDB623D727AC21A265801AB48490A3A7A
-                        72F05A605AFAEAB9DD8F0FCF747E31DCB1B9F52B14C53C707ACFC6DF1AAADC1C
-                        C05854E050F23D3C622C2C62580ED12C0BC2E8AD00F5E1923F323E352D362FE8
-                        1C42D7F369A8BCB757630C0D2C85688035DD673CEA9843009B498A8624598556
-                        45B22E1AE2180A0D0C87A3E73EF7FFEAA3DD4F9C308C6F8A17DFE8E28642C986
-                        847DA2B6F762D885751CCB96912CE9D50D0CCC21A0178DEC0D04D09001695146
-                        9D67878F9D68D990D9BF5B61386665A1FCD6910A599B4CABB5C707AE17B31C77
-                        AFAA20D130D131878004925DB9304459410C44E0E17B6ABFFDCD1DEFB6377C7F
-                        7FB5D175538849BB1B22B7025276194928B5FBDE1FF839676397B20C15304C74
-                        CC21800F4F76F19839CB084DC38BC6CA73FC83772F5FB77C597EFBDDDB0EECBE
-                        FD077B578209CE7A3C0F964C52CB5AA2A57189BD0AF6BCF6688F6FC39540E409
-                        D6622D84C9728A5ACE2958F16C6BC1CAAA928FEEBFB3BA2A96909005569D80A3
-                        8309C8F076F447D2280615CECA41F9506574F5DAF5D16038361C0E85DA53D393
-                        83ACA39C679C8EE252AFF7EB0FAD2959357A3DC0F65D8A46A65249CAEB29C88F
-                        842693D1C8E4B77AF63477182E6F42604D7515EE193C1B5296DEEEA1C2D3221A
-                        9988EBEF79FD520284F04096814543694F8E8D6A31C40723926C97E3220189A6
-                        49842C31169E705A38070DA7098F99F0F97BAF47236B075F7F666AC663EE8584
-                        B4972E1316952EDEB47C4981D0D77F3974ACFBF4CE117FAC3ADFE37249504B44
-                        A80178229384082705573DC5E6202C762BEF72F28CDBE3A4ED2E07E3B03B380B
-                        C77150CC74DBC950782A3A31FAD3CFF63D3704BECCFB4B8600DE3FCE53542794
-                        2FA9F95E9A26B9F68EDE96DED66D07864EFEFD60DA53EF6519A5ACD89B67C109
-                        8A9DCEBCF36767C277467C099911B8B2E13E6C037DA3E18BE9746072CF9937B6
-                        BE0D8F183880B84B3509E07702ED2AAD7323F7E2A786872EBFD7BD77CB2ED041
-                        4EAACCD899233DA1A8FC494CE68B099970B85C168E66F010B8F9E168807393D0
-                        ECCB4743E9B4844213C170CA77ED95DE7DDB5ED395B39CB1282601DC527C65BD
-                        9DB3E5D93EDEBBF9255367CA946F2032DADBD6199E8C7D124BD2283A9D701032
-                        7823088E803C80F70798A9289594D0C448428DA522BEE8B8FFCC584FDB8E7F7F
-                        F02A2E5CF8FF00D968336226A19E53F3082EA358B27FEBD1024E54F9EA47BF6C
-                        F52C2AE18582328AB1B814B86E69E9D44422ECEF9F1ABF38E23FDF86F71B9716
-                        5C7CCC365B32044C988EE671A8FFCE8E8A594332FB6988B93ABC5AECD46CB305
-                        3BC7B6FAE01B8175A643D339966CC766D1C91E7F3312B8CD26A23B36311F811B
-                        613AC6246E746E8EC7CE31F0E47A72DD2066FFFF1B10FA0FEDA3F2325FAB93B2
-                        0000000049454E44AE426082}
+                        0818494441545847CD577B5054D7193FF7BDBB775F7759165840D182042D42E3
+                        A3864C1E35319DBE9269A24974D2B436B126D69966ECC3699B367F743A26CD4C
+                        66988ED64E6C269ADAF8689A3A269AA11D401B0C222A2681144154D05D605FEC
+                        C2BEEEB3DFB9DCBBEC0A6AFA57FB63BF3D7BBFF39DF3FDCE77BEF3DD03FA5F83
+                        30DADB62F1BA43ACC323CDD7547501C5321E39ABC434428DAA888E9E7B7DFD25
+                        C3ECBFC66D0934FDF02FFE12B7FB572E9E5A535EE2F4D02E9BBD9CE798744644
+                        D1B0989E5492D1ABC1A94432231E4F4C4A6F9DDAF5788F31740E68C48A2D874B
+                        AA422874F8F0E30AD6DC92C063BF3EBABDAA4CF871534345B193B72055D590AA
+                        69083E48C15FD31F7D92483C85064646E39F0C842FC6E2CA2BFFDAB9F61D7D92
+                        3CDCFBC2E1DDAAA4367CB8F389BB0CD5CD097CE7B7C77EDFE49FF75CED322F0D
+                        7E91A2626740001EB0730D9E31999CC033459288049B9EE1E164F785C8A97032
+                        F983D3CDEBAFE0F9566F7BE71795A5BE9F0746439DFF78EDD135BA13C09C04D6
+                        BEF4FEB607AB16BCB2687911AD1993ABD8BDFE9B00326A4E6746457F8616DB90
+                        2401136BA8F5FC60E8E295F80E609C6C5852F172B55F10DE3BD1FFCF0F7EF770
+                        8E0065B439ACD8F2E7C6BB979635AF585E29C05C289996D1E94054090E8553BD
+                        81513914C8C8A212D4289AA7189A4404AC5A270163F176E031594945C1890CF2
+                        15B9799290BF52E6179A4A04971747F0F2486468B0E3C05BBA33006DB439940B
+                        EEA76A2B4B2BF12A8FB45E8CF70E5C23534388477E252E23628CA0A84E703722
+                        B8C242A9DBBEBCCA27D4D67CC15B6EB3716812C82692328A2545246352201565
+                        25ACA26ABEC86416F9050B220950E661160192521F2A725951F3DB1DC9649670
+                        390437A2EA523DE184B8E3DC9E0D870CB31C566EDED770F2D36B4F2D2C737CBD
+                        B686BD434525A4B915381AF1A4045B86D70EFB0D1BAE91440101D26875AC7A66
+                        5F7589DB693BD4D29BA0199EF7170B098A42635949393297738CAE3F3E7DA1BD
+                        79ED4FCF7E16B8FB44E7C41FA2D1D0758167F5FDD089187F2634ED16044492B4
+                        C6E309EF48382E0A6EFB09AB956D472AD19BCC48B72D3417F66E9C38F6EAB7B7
+                        7E787E644367CFD5419F93D3531C47010B06A40B841C9F9F191410A035756A3C
+                        3C45BA5DCE76DEC2B6D938B69D66A8539446F41926B705CF5A1FA9AD72564653
+                        A29E03A6730C429B7DE80A08A8322367109976DAAD4779CED26EB358DB3C4596
+                        C3904E6386C92DF1C0B6BF6D6BBAB36A1367757219110EA9BEFA19067A0E20A2
+                        20020549480B64584CC9817AB2E4E08F9E599435D49F0BF7BD70E8D9BA0AC78B
+                        A55EBB4394356465200F30C029764CE22F88485292F262A2771762D9E6FD2B09
+                        4D5B00A94C12244541D21004A35050E3484D851243811E7E5B32CABBAD7FDAA0
+                        47A6FEF9FD8297B3BC48D2A8C6C6D27A6DC9F702274FF793CECA7022C8BFB635
+                        3FFA86DE012820D0B8F1607171117766EDEA3BE6EB91D313D630C10A58454652
+                        D0B18EFEEBA129E9FEF3BB9E189CEEFC7CB873D3BE2F5314F3D099DDEB7F63A8
+                        0A7300639ECFA1147B78C45858C4B01CA2591684D15B01EAC3E5606C74724ADC
+                        705BE710BAAE4F2295DDDD1A636860294423ACE901E351C72C02D84C523424C9
+                        2AB42A9275D110C750A86F301A3FFF59F0971FED7AF2A4617C53BCF4663B3710
+                        4937A6EC6375DD97A22EACE358B6826449AF6E60601601BD68E46F2080860CC8
+                        8A326A3B3778FC64F3BADCFEDD0A83092B0BE5B79E54C8BA7456AD3BD1375EC6
+                        72DC7DAA8244C344C72C0212487EE5C210650531108147EEADFBD637B6BFDBD2
+                        F8BDFD3546D74D21A6ED6E88DC5248D9C524A1D4ED7DBFEF679C8D5DC43254C8
+                        30D1318B003E3CF9C563FA2C2334052F1A2BCFF15FBD67C99A258B8B5BEED97A
+                        60D797BEBF673998E0ACC7F360C925B5ACA59A9755DB17C29ED71DEB0AACBB1A
+                        8A3DC95AAC25305941512B38054B9FDBE75BBED0FFD18377D52C4CA424648155
+                        A7E0E8600232BC1D83B12C4A4085B372503E54195DBB3E3E1C8E2606A391484B
+                        666AA29F7554F28CD35156EEF57EEDE155FE15C3E321B6E7723C369949535E8F
+                        AF38169948C76313DFECDABDA1D570791302AB6A16E29EFE8E88B2A8C94345A7
+                        44343496D4DFF3FAA50408E1812C038B86D29E1EE9D712C81B8E49B25D4E8A04
+                        249A2611B2C45878C269E11C349C263C662C10EC1E8FC756F7BFF1ECE4B4C7C2
+                        0B09692F5F2CCC2B9FBF7149B54FE8E9BD1239DE7D66C750305153EC71B924A8
+                        2522D4003C914942849382AB9E62F31016BB95773979C6ED71D276978371D81D
+                        9C85E3382866BAED44243A191F1BFEC9A77B9F1F005FE6FD254700EF1FE729AD
+                        172AAB6BBF9BA549AEA5B5BBB97BDFD603031D7F3F98F534785946A928F31659
+                        708262A7D3EFFC9999F09D115F42A605AE6CB80FDB40DF70F452361B9AD87DF6
+                        CD2D6FC323060E20EE524D02F89D40BBCAEBDDC83DFFE9C1812BEF75EED9BC13
+                        7490932A3372F66857242E7F9C90F93242261C2E9785A3193C046E7E381AE0DC
+                        2434F3F2D150362BA1C858389A095C7FB57BEFD6D775E50C672C8A4900B714BF
+                        A0C1CED98A6CA7F76C7AD9D4993219E88B0D771F698B4E243E4EA469149F4A39
+                        0819BC110447401EC0FB03CC5494494B68AC37A5269458203E1A3C3BD27564FB
+                        BF3F780D172EFC7F806CB439319350CFA9390497512CF9BFF5680127AA72E563
+                        5FB47AE6F979C1574131169702D72D2D9B194B4583BD93A3978682178EE0FDC6
+                        A505171FB3CD971C0113A6A3391CEABFF3A362D690DC7E1A62AE0EAF163B35DB
+                        7CC1CEB1AD3EF846609DE9D0748E25DFB15974F2C7DF8C046EF389E88E4DCC45
+                        E046988E31891B9D9BE3B1730C3CB99E5C3788D9FFFF0684FE039FA2F259A4CA
+                        D5340000000049454E44AE426082}
                     end>
                   Align = Client
                   HitTest = False
@@ -2130,7 +2137,7 @@ object frmMain: TfrmMain
               end>
             TextSettings.Font.Size = 10.000000000000000000
             StyledSettings = [Family, Style, FontColor]
-            IsSelected = False
+            IsSelected = True
             Size.Width = 70.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
@@ -2479,7 +2486,7 @@ object frmMain: TfrmMain
             ItemAppearance.ItemHeight = 80
             ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
               item
-                AppearanceObjectName = 'Name'
+                AppearanceObjectName = 'GoodsName'
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.Font.StyleExt = {00070000000000000004000000}
@@ -2488,7 +2495,7 @@ object frmMain: TfrmMain
                 Appearance.Height = 25.000000000000000000
               end
               item
-                AppearanceObjectName = 'Type'
+                AppearanceObjectName = 'KindName'
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
@@ -2795,7 +2802,7 @@ object frmMain: TfrmMain
             ItemAppearance.ItemHeight = 80
             ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
               item
-                AppearanceObjectName = 'Name'
+                AppearanceObjectName = 'GoodsName'
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.Font.StyleExt = {00070000000000000004000000}
@@ -2804,7 +2811,7 @@ object frmMain: TfrmMain
                 Appearance.Height = 25.000000000000000000
               end
               item
-                AppearanceObjectName = 'Type'
+                AppearanceObjectName = 'KindName'
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
@@ -3060,7 +3067,7 @@ object frmMain: TfrmMain
           ItemAppearance.ItemHeight = 80
           ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
             item
-              AppearanceObjectName = 'Name'
+              AppearanceObjectName = 'GoodsName'
               AppearanceClassName = 'TTextObjectAppearance'
               Appearance.Font.Size = 11.000000000000000000
               Appearance.Font.StyleExt = {00070000000000000004000000}
@@ -3069,7 +3076,7 @@ object frmMain: TfrmMain
               Appearance.Height = 25.000000000000000000
             end
             item
-              AppearanceObjectName = 'Type'
+              AppearanceObjectName = 'KindName'
               AppearanceClassName = 'TTextObjectAppearance'
               Appearance.Font.Size = 11.000000000000000000
               Appearance.TextAlign = Leading
@@ -3431,7 +3438,7 @@ object frmMain: TfrmMain
             ItemAppearance.ItemHeight = 80
             ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
               item
-                AppearanceObjectName = 'Name'
+                AppearanceObjectName = 'GoodsName'
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.Font.StyleExt = {00070000000000000004000000}
@@ -3440,7 +3447,7 @@ object frmMain: TfrmMain
                 Appearance.Height = 25.000000000000000000
               end
               item
-                AppearanceObjectName = 'Type'
+                AppearanceObjectName = 'KindName'
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
@@ -4017,53 +4024,64 @@ object frmMain: TfrmMain
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = 'bPriceListStyle1'
-            TabOrder = 1
+            TabOrder = 2
             Text = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1099
             OnClick = bPriceListClick
           end
           object bRoute: TButton
             Align = Top
-            Position.Y = 120.000000000000000000
+            Position.Y = 180.000000000000000000
             Size.Width = 352.000000000000000000
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = 'bRouteStyle1'
-            TabOrder = 2
+            TabOrder = 3
             Text = #1052#1072#1088#1096#1088#1091#1090#1099
             OnClick = bRouteClick
           end
           object bPartners: TButton
             Align = Top
-            Position.Y = 180.000000000000000000
+            Position.Y = 240.000000000000000000
             Size.Width = 352.000000000000000000
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = 'bPartnersStyle1'
-            TabOrder = 4
+            TabOrder = 5
             Text = #1058#1086#1088#1075#1086#1074#1099#1077' '#1090#1086#1095#1082#1080
             OnClick = bPartnersClick
           end
           object bPathonMap: TButton
             Align = Top
-            Position.Y = 240.000000000000000000
+            Position.Y = 300.000000000000000000
             Size.Width = 352.000000000000000000
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = 'bPathonMapStyle1'
-            TabOrder = 3
+            TabOrder = 4
             Text = #1052#1072#1088#1096#1088#1091#1090' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
             OnClick = bPathonMapClick
           end
-          object bPromo: TButton
+          object bPromoPartners: TButton
             Align = Top
             Position.Y = 60.000000000000000000
             Size.Width = 352.000000000000000000
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = 'bPromoStyle1'
+            TabOrder = 1
+            Text = #1058#1086#1088#1075#1086#1074#1099#1077' '#1090#1086#1095#1082#1080', '#1091#1095#1072#1089#1090#1074#1091#1102#1097#1080#1077' '#1074' '#1072#1082#1094#1080#1103#1093
+            OnClick = bPromoPartnersClick
+          end
+          object bPromoGoods: TButton
+            Align = Top
+            Position.Y = 120.000000000000000000
+            Size.Width = 352.000000000000000000
+            Size.Height = 60.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'bPromoStyle1'
             TabOrder = 0
-            Text = #1040#1082#1094#1080#1080
-            OnClick = bPromoClick
+            Text = #1040#1082#1094#1080#1086#1085#1085#1099#1077' '#1090#1086#1074#1072#1088#1099
+            OnClick = bPromoGoodsClick
           end
         end
       end
@@ -4117,7 +4135,7 @@ object frmMain: TfrmMain
         Text = 'tiPriceListItems'
         ExplicitSize.cx = 8.000000000000000000
         ExplicitSize.cy = 8.000000000000000000
-        object lwGoods: TListView
+        object lwPriceListGoods: TListView
           ItemAppearanceClassName = 'TDynamicAppearance'
           ItemEditAppearanceClassName = 'TDynamicAppearance'
           HeaderAppearanceClassName = 'TListHeaderObjects'
@@ -4130,7 +4148,7 @@ object frmMain: TfrmMain
           ItemAppearance.ItemHeight = 80
           ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
             item
-              AppearanceObjectName = 'Name'
+              AppearanceObjectName = 'GoodsName'
               AppearanceClassName = 'TTextObjectAppearance'
               Appearance.Font.Size = 11.000000000000000000
               Appearance.Font.StyleExt = {00070000000000000004000000}
@@ -4139,7 +4157,7 @@ object frmMain: TfrmMain
               Appearance.Height = 25.000000000000000000
             end
             item
-              AppearanceObjectName = 'Type'
+              AppearanceObjectName = 'KindName'
               AppearanceClassName = 'TTextObjectAppearance'
               Appearance.Font.Size = 11.000000000000000000
               Appearance.TextAlign = Leading
@@ -4168,7 +4186,7 @@ object frmMain: TfrmMain
           ItemAppearanceObjects.HeaderObjects.Text.Visible = False
           ItemAppearanceObjects.FooterObjects.Text.Visible = False
           CanSwipeDelete = False
-          OnFilter = lwGoodsFilter
+          OnFilter = lwPriceListGoodsFilter
           SearchVisible = True
           object Popup2: TPopup
             Placement = Center
@@ -4342,7 +4360,7 @@ object frmMain: TfrmMain
           end
         end
       end
-      object tiPromoList: TTabItem
+      object tiPromoPartners: TTabItem
         CustomIcon = <
           item
           end>
@@ -4352,22 +4370,22 @@ object frmMain: TfrmMain
         Size.PlatformDefault = False
         StyleLookup = ''
         TabOrder = 0
-        Text = 'tiPromoList'
+        Text = 'tiPromoPartners'
         ExplicitSize.cx = 8.000000000000000000
         ExplicitSize.cy = 8.000000000000000000
-        object lwPromoList: TListView
+        object lwPromoPartners: TListView
           ItemAppearanceClassName = 'TDynamicAppearance'
           ItemEditAppearanceClassName = 'TDynamicAppearance'
           HeaderAppearanceClassName = 'TListHeaderObjects'
           FooterAppearanceClassName = 'TListHeaderObjects'
+          OnUpdateObjects = lwPromoPartnersUpdateObjects
+          Images = ilPartners
           Align = Client
           Size.Width = 352.000000000000000000
-          Size.Height = 521.000000000000000000
+          Size.Height = 481.000000000000000000
           Size.PlatformDefault = False
-          TabOrder = 0
+          TabOrder = 1
           ItemAppearance.ItemHeight = 80
-          ItemAppearance.HeaderHeight = 1
-          ItemAppearance.FooterHeight = 1
           ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
             item
               AppearanceObjectName = 'Name'
@@ -4375,28 +4393,51 @@ object frmMain: TfrmMain
               Appearance.Font.Size = 11.000000000000000000
               Appearance.Font.StyleExt = {00070000000000000004000000}
               Appearance.TextAlign = Leading
+              Appearance.Width = 300.000000000000000000
               Appearance.Height = 25.000000000000000000
             end
             item
-              AppearanceObjectName = 'Termin'
+              AppearanceObjectName = 'Address'
               AppearanceClassName = 'TTextObjectAppearance'
               Appearance.Font.Size = 11.000000000000000000
               Appearance.TextAlign = Leading
-              Appearance.Width = 300.000000000000000000
+              Appearance.Width = 280.000000000000000000
               Appearance.Height = 25.000000000000000000
-              Appearance.PlaceOffset.X = 10.000000000000000000
-              Appearance.PlaceOffset.Y = 27.000000000000000000
+              Appearance.PlaceOffset.X = 30.000000000000000000
+              Appearance.PlaceOffset.Y = 25.000000000000000000
             end
             item
-              AppearanceObjectName = 'ChangePercent'
+              AppearanceObjectName = 'Contact'
               AppearanceClassName = 'TTextObjectAppearance'
               Appearance.Font.Size = 11.000000000000000000
-              Appearance.TextAlign = Trailing
-              Appearance.Width = 283.000000000000000000
+              Appearance.TextAlign = Leading
+              Appearance.Width = 280.000000000000000000
               Appearance.Height = 25.000000000000000000
+              Appearance.PlaceOffset.X = 30.000000000000000000
+              Appearance.PlaceOffset.Y = 50.000000000000000000
+            end
+            item
+              AppearanceObjectName = 'imAddress'
+              AppearanceClassName = 'TImageObjectAppearance'
+              Appearance.ScalingMode = Stretch
+              Appearance.Width = 20.000000000000000000
+              Appearance.Height = 20.000000000000000000
+              Appearance.PlaceOffset.Y = 53.000000000000000000
+            end
+            item
+              AppearanceObjectName = 'imContact'
+              AppearanceClassName = 'TImageObjectAppearance'
+              Appearance.ScalingMode = Stretch
+              Appearance.Width = 20.000000000000000000
+              Appearance.Height = 20.000000000000000000
+              Appearance.PlaceOffset.Y = 28.000000000000000000
+            end
+            item
+              AppearanceObjectName = 'Details'
+              AppearanceClassName = 'TAccessoryObjectAppearance'
+              Appearance.Width = 20.000000000000000000
+              Appearance.Height = 80.000000000000000000
               Appearance.Align = Trailing
-              Appearance.PlaceOffset.X = -10.000000000000000000
-              Appearance.PlaceOffset.Y = 54.000000000000000000
             end>
           ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
             item
@@ -4404,369 +4445,331 @@ object frmMain: TfrmMain
               AppearanceClassName = 'TTextObjectAppearance'
             end>
           ItemAppearanceObjects.HeaderObjects.Text.Visible = False
-          ItemAppearanceObjects.FooterObjects.Text.Width = 327.000000000000000000
-          ItemAppearanceObjects.FooterObjects.Text.Height = 48.000000000000000000
-          ItemAppearanceObjects.FooterObjects.Text.Visible = False
-          StyleLookup = 'lwPriceListStyle1'
+          ItemAppearanceObjects.FooterObjects.Text.Width = 315.000000000000000000
+          ItemAppearanceObjects.FooterObjects.Text.Height = 10.000000000000000000
           CanSwipeDelete = False
-          OnItemClick = lwPromoListItemClick
+          OnItemClick = lwPromoPartnersItemClick
+        end
+        object pPromoPartnerDate: TPanel
+          Align = Top
+          Size.Width = 352.000000000000000000
+          Size.Height = 40.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          object Label41: TLabel
+            Align = Left
+            StyledSettings = [Family, Style, FontColor]
+            Size.Width = 121.000000000000000000
+            Size.Height = 40.000000000000000000
+            Size.PlatformDefault = False
+            Text = '    '#1040#1082#1094#1080#1080' '#1085#1072' '#1076#1072#1090#1091
+          end
+          object dePromoPartnerDate: TDateEdit
+            Date = 42795.000000000000000000
+            OnChange = dePromoPartnerDateChange
+            Align = Left
+            Margins.Top = 3.000000000000000000
+            Margins.Bottom = 3.000000000000000000
+            Position.X = 121.000000000000000000
+            Position.Y = 4.000000000000000000
+            Size.Width = 115.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            StyledSettings = [Family, Style, FontColor]
+            TabOrder = 1
+          end
         end
       end
-      object tiPromoDetail: TTabItem
+      object tiPromoGoods: TTabItem
         CustomIcon = <
           item
           end>
-        IsSelected = True
+        IsSelected = False
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
         StyleLookup = ''
         TabOrder = 0
-        Text = 'tiPromoDetail'
+        Text = 'tiPromoGoods'
         ExplicitSize.cx = 8.000000000000000000
         ExplicitSize.cy = 8.000000000000000000
-        object tcPromo: TTabControl
+        object lwPromoGoods: TListView
+          ItemAppearanceClassName = 'TDynamicAppearance'
+          ItemEditAppearanceClassName = 'TDynamicAppearance'
+          HeaderAppearanceClassName = 'TListHeaderObjects'
+          FooterAppearanceClassName = 'TListHeaderObjects'
+          OnUpdateObjects = lwPromoGoodsUpdateObjects
           Align = Client
           Size.Width = 352.000000000000000000
-          Size.Height = 521.000000000000000000
+          Size.Height = 481.000000000000000000
           Size.PlatformDefault = False
-          TabHeight = 49.000000000000000000
-          TabIndex = 0
-          TabOrder = 0
-          TabPosition = PlatformDefault
-          Sizes = (
-            352s
-            472s
-            352s
-            472s)
-          object tiPromoPartner: TTabItem
-            CustomIcon = <
-              item
-              end>
-            IsSelected = True
-            Size.Width = 176.000000000000000000
-            Size.Height = 49.000000000000000000
-            Size.PlatformDefault = False
-            StyleLookup = ''
-            TabOrder = 0
-            Text = #1059#1095#1072#1089#1090#1085#1080#1082#1080
-            ExplicitSize.cx = 176.000000000000000000
-            ExplicitSize.cy = 49.000000000000000000
-            object lwPromoPartners: TListView
-              ItemAppearanceClassName = 'TDynamicAppearance'
-              ItemEditAppearanceClassName = 'TDynamicAppearance'
-              HeaderAppearanceClassName = 'TListHeaderObjects'
-              FooterAppearanceClassName = 'TListHeaderObjects'
-              OnUpdateObjects = lwPromoPartnersUpdateObjects
-              Images = ilPartners
-              Align = Client
-              Size.Width = 352.000000000000000000
-              Size.Height = 472.000000000000000000
-              Size.PlatformDefault = False
-              TabOrder = 1
-              ItemAppearance.ItemHeight = 80
-              ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
-                item
-                  AppearanceObjectName = 'Name'
-                  AppearanceClassName = 'TTextObjectAppearance'
-                  Appearance.Font.Size = 11.000000000000000000
-                  Appearance.Font.StyleExt = {00070000000000000004000000}
-                  Appearance.TextAlign = Leading
-                  Appearance.Width = 300.000000000000000000
-                  Appearance.Height = 25.000000000000000000
-                end
-                item
-                  AppearanceObjectName = 'Address'
-                  AppearanceClassName = 'TTextObjectAppearance'
-                  Appearance.Font.Size = 11.000000000000000000
-                  Appearance.TextAlign = Leading
-                  Appearance.Width = 300.000000000000000000
-                  Appearance.Height = 25.000000000000000000
-                  Appearance.PlaceOffset.X = 30.000000000000000000
-                  Appearance.PlaceOffset.Y = 25.000000000000000000
-                end
-                item
-                  AppearanceObjectName = 'Contact'
-                  AppearanceClassName = 'TTextObjectAppearance'
-                  Appearance.Font.Size = 11.000000000000000000
-                  Appearance.TextAlign = Leading
-                  Appearance.Width = 300.000000000000000000
-                  Appearance.Height = 25.000000000000000000
-                  Appearance.PlaceOffset.X = 30.000000000000000000
-                  Appearance.PlaceOffset.Y = 50.000000000000000000
-                end
-                item
-                  AppearanceObjectName = 'imAddress'
-                  AppearanceClassName = 'TImageObjectAppearance'
-                  Appearance.ScalingMode = Stretch
-                  Appearance.Width = 20.000000000000000000
-                  Appearance.Height = 20.000000000000000000
-                  Appearance.PlaceOffset.Y = 53.000000000000000000
-                end
-                item
-                  AppearanceObjectName = 'imContact'
-                  AppearanceClassName = 'TImageObjectAppearance'
-                  Appearance.ScalingMode = Stretch
-                  Appearance.Width = 20.000000000000000000
-                  Appearance.Height = 20.000000000000000000
-                  Appearance.PlaceOffset.Y = 28.000000000000000000
-                end>
-              ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
-                item
-                  AppearanceObjectName = 'Text1'
-                  AppearanceClassName = 'TTextObjectAppearance'
-                end>
-              ItemAppearanceObjects.HeaderObjects.Text.Visible = False
-              ItemAppearanceObjects.FooterObjects.Text.Width = 315.000000000000000000
-              ItemAppearanceObjects.FooterObjects.Text.Height = 10.000000000000000000
-              CanSwipeDelete = False
+          TabOrder = 3
+          ItemAppearance.ItemHeight = 100
+          ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
+            item
+              AppearanceObjectName = 'GoodsName'
+              AppearanceClassName = 'TTextObjectAppearance'
+              Appearance.Font.Size = 11.000000000000000000
+              Appearance.Font.StyleExt = {00070000000000000004000000}
+              Appearance.TextAlign = Leading
+              Appearance.Width = 300.000000000000000000
+              Appearance.Height = 25.000000000000000000
             end
-          end
-          object tiPromoGoods: TTabItem
-            CustomIcon = <
-              item
-              end>
-            IsSelected = False
-            Size.Width = 176.000000000000000000
-            Size.Height = 49.000000000000000000
+            item
+              AppearanceObjectName = 'KindName'
+              AppearanceClassName = 'TTextObjectAppearance'
+              Appearance.Font.Size = 11.000000000000000000
+              Appearance.TextAlign = Leading
+              Appearance.Width = 290.000000000000000000
+              Appearance.Height = 20.000000000000000000
+              Appearance.PlaceOffset.X = 10.000000000000000000
+              Appearance.PlaceOffset.Y = 25.000000000000000000
+            end
+            item
+              AppearanceObjectName = 'Price'
+              AppearanceClassName = 'TTextObjectAppearance'
+              Appearance.Font.Size = 11.000000000000000000
+              Appearance.TextAlign = Trailing
+              Appearance.Width = 250.000000000000000000
+              Appearance.Height = 25.000000000000000000
+              Appearance.Align = Trailing
+              Appearance.PlaceOffset.X = -5.000000000000000000
+              Appearance.PlaceOffset.Y = 50.000000000000000000
+            end
+            item
+              AppearanceObjectName = 'Tax'
+              AppearanceClassName = 'TTextObjectAppearance'
+              Appearance.Font.Size = 11.000000000000000000
+              Appearance.TextAlign = Leading
+              Appearance.Width = 75.000000000000000000
+              Appearance.Height = 25.000000000000000000
+              Appearance.PlaceOffset.Y = 50.000000000000000000
+            end
+            item
+              AppearanceObjectName = 'Termin'
+              AppearanceClassName = 'TTextObjectAppearance'
+              Appearance.Font.Size = 11.000000000000000000
+              Appearance.TextAlign = Leading
+              Appearance.Height = 25.000000000000000000
+              Appearance.PlaceOffset.Y = 75.000000000000000000
+            end
+            item
+              AppearanceObjectName = 'Details'
+              AppearanceClassName = 'TAccessoryObjectAppearance'
+              Appearance.AccessoryType = Detail
+              Appearance.Width = 30.000000000000000000
+              Appearance.Height = 30.000000000000000000
+              Appearance.Align = Trailing
+            end>
+          ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
+            item
+              AppearanceObjectName = 'Text1'
+              AppearanceClassName = 'TTextObjectAppearance'
+            end>
+          ItemAppearanceObjects.HeaderObjects.Text.Visible = False
+          ItemAppearanceObjects.FooterObjects.Text.Visible = False
+          CanSwipeDelete = False
+          OnItemClick = lwPromoGoodsItemClick
+          OnFilter = lwPromoGoodsFilter
+          SearchVisible = True
+          object Popup3: TPopup
+            Placement = Center
+            Position.X = 100.000000000000000000
+            Position.Y = 100.000000000000000000
+            Size.Width = 160.000000000000000000
+            Size.Height = 185.000000000000000000
             Size.PlatformDefault = False
-            StyleLookup = ''
             TabOrder = 0
-            Text = #1058#1086#1074#1072#1088#1099
-            ExplicitSize.cx = 176.000000000000000000
-            ExplicitSize.cy = 49.000000000000000000
-            object lwPromoGoods: TListView
-              ItemAppearanceClassName = 'TDynamicAppearance'
-              ItemEditAppearanceClassName = 'TDynamicAppearance'
-              HeaderAppearanceClassName = 'TListHeaderObjects'
-              FooterAppearanceClassName = 'TListHeaderObjects'
+            object Panel29: TPanel
               Align = Client
-              Size.Width = 352.000000000000000000
-              Size.Height = 472.000000000000000000
+              Size.Width = 160.000000000000000000
+              Size.Height = 185.000000000000000000
               Size.PlatformDefault = False
-              TabOrder = 2
-              ItemAppearance.ItemHeight = 80
-              ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
-                item
-                  AppearanceObjectName = 'Name'
-                  AppearanceClassName = 'TTextObjectAppearance'
-                  Appearance.Font.Size = 11.000000000000000000
-                  Appearance.Font.StyleExt = {00070000000000000004000000}
-                  Appearance.TextAlign = Leading
-                  Appearance.Width = 300.000000000000000000
-                  Appearance.Height = 25.000000000000000000
-                end
-                item
-                  AppearanceObjectName = 'Type'
-                  AppearanceClassName = 'TTextObjectAppearance'
-                  Appearance.Font.Size = 11.000000000000000000
-                  Appearance.TextAlign = Leading
-                  Appearance.Width = 290.000000000000000000
-                  Appearance.Height = 20.000000000000000000
-                  Appearance.PlaceOffset.X = 10.000000000000000000
-                  Appearance.PlaceOffset.Y = 25.000000000000000000
-                end
-                item
-                  AppearanceObjectName = 'Price'
-                  AppearanceClassName = 'TTextObjectAppearance'
-                  Appearance.Font.Size = 11.000000000000000000
-                  Appearance.TextAlign = Trailing
-                  Appearance.Width = 210.000000000000000000
-                  Appearance.Height = 25.000000000000000000
-                  Appearance.Align = Trailing
-                  Appearance.PlaceOffset.X = -10.000000000000000000
-                  Appearance.PlaceOffset.Y = 50.000000000000000000
-                end
-                item
-                  AppearanceObjectName = 'Tax'
-                  AppearanceClassName = 'TTextObjectAppearance'
-                  Appearance.Font.Size = 11.000000000000000000
-                  Appearance.TextAlign = Leading
-                  Appearance.Width = 100.000000000000000000
-                  Appearance.Height = 25.000000000000000000
-                  Appearance.PlaceOffset.Y = 50.000000000000000000
-                end>
-              ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
-                item
-                  AppearanceObjectName = 'Text1'
-                  AppearanceClassName = 'TTextObjectAppearance'
-                end>
-              ItemAppearanceObjects.HeaderObjects.Text.Visible = False
-              ItemAppearanceObjects.FooterObjects.Text.Visible = False
-              CanSwipeDelete = False
-              OnFilter = lwPromoGoodsFilter
-              SearchVisible = True
-              object Popup3: TPopup
-                Placement = Center
-                Position.X = 100.000000000000000000
-                Position.Y = 100.000000000000000000
-                Size.Width = 160.000000000000000000
-                Size.Height = 185.000000000000000000
+              TabOrder = 0
+              object Label17: TLabel
+                StyledSettings = [Family, Style, FontColor]
+                Margins.Left = 10.000000000000000000
+                Position.X = 10.000000000000000000
+                Size.Width = 80.000000000000000000
+                Size.Height = 25.000000000000000000
                 Size.PlatformDefault = False
-                TabOrder = 0
-                object Panel29: TPanel
-                  Align = Client
-                  Size.Width = 160.000000000000000000
-                  Size.Height = 185.000000000000000000
-                  Size.PlatformDefault = False
-                  TabOrder = 0
-                  object Label17: TLabel
-                    StyledSettings = [Family, Style, FontColor]
-                    Margins.Left = 10.000000000000000000
-                    Position.X = 10.000000000000000000
-                    Size.Width = 80.000000000000000000
-                    Size.Height = 25.000000000000000000
-                    Size.PlatformDefault = False
-                    Text = '0'
-                  end
-                  object Button29: TButton
-                    Position.Y = 25.000000000000000000
-                    Size.Width = 40.000000000000000000
-                    Size.Height = 40.000000000000000000
-                    Size.PlatformDefault = False
-                    TabOrder = 14
-                    Text = '7'
-                    OnClick = b0Click
-                  end
-                  object Button30: TButton
-                    Position.X = 40.000000000000000000
-                    Position.Y = 25.000000000000000000
-                    Size.Width = 40.000000000000000000
-                    Size.Height = 40.000000000000000000
-                    Size.PlatformDefault = False
-                    TabOrder = 13
-                    Text = '8'
-                    OnClick = b0Click
-                  end
-                  object Button31: TButton
-                    Position.X = 80.000000000000000000
-                    Position.Y = 25.000000000000000000
-                    Size.Width = 40.000000000000000000
-                    Size.Height = 40.000000000000000000
-                    Size.PlatformDefault = False
-                    TabOrder = 12
-                    Text = '9'
-                    OnClick = b0Click
-                  end
-                  object Button32: TButton
-                    Position.Y = 65.000000000000000000
-                    Size.Width = 40.000000000000000000
-                    Size.Height = 40.000000000000000000
-                    Size.PlatformDefault = False
-                    TabOrder = 11
-                    Text = '4'
-                    OnClick = b0Click
-                  end
-                  object Button33: TButton
-                    Position.X = 40.000000000000000000
-                    Position.Y = 65.000000000000000000
-                    Size.Width = 40.000000000000000000
-                    Size.Height = 40.000000000000000000
-                    Size.PlatformDefault = False
-                    TabOrder = 10
-                    Text = '5'
-                    OnClick = b0Click
-                  end
-                  object Button34: TButton
-                    Position.X = 80.000000000000000000
-                    Position.Y = 65.000000000000000000
-                    Size.Width = 40.000000000000000000
-                    Size.Height = 40.000000000000000000
-                    Size.PlatformDefault = False
-                    TabOrder = 9
-                    Text = '6'
-                    OnClick = b0Click
-                  end
-                  object Button35: TButton
-                    Position.Y = 105.000000000000000000
-                    Size.Width = 40.000000000000000000
-                    Size.Height = 40.000000000000000000
-                    Size.PlatformDefault = False
-                    TabOrder = 8
-                    Text = '1'
-                    OnClick = b0Click
-                  end
-                  object Button36: TButton
-                    Position.X = 40.000000000000000000
-                    Position.Y = 105.000000000000000000
-                    Size.Width = 40.000000000000000000
-                    Size.Height = 40.000000000000000000
-                    Size.PlatformDefault = False
-                    TabOrder = 7
-                    Text = '2'
-                    OnClick = b0Click
-                  end
-                  object Button37: TButton
-                    Position.X = 80.000000000000000000
-                    Position.Y = 105.000000000000000000
-                    Size.Width = 40.000000000000000000
-                    Size.Height = 40.000000000000000000
-                    Size.PlatformDefault = False
-                    TabOrder = 6
-                    Text = '3'
-                    OnClick = b0Click
-                  end
-                  object Button38: TButton
-                    Position.Y = 145.000000000000000000
-                    Size.Width = 80.000000000000000000
-                    Size.Height = 40.000000000000000000
-                    Size.PlatformDefault = False
-                    TabOrder = 5
-                    Text = '0'
-                    OnClick = b0Click
-                  end
-                  object Button39: TButton
-                    Position.X = 80.000000000000000000
-                    Position.Y = 145.000000000000000000
-                    Size.Width = 40.000000000000000000
-                    Size.Height = 40.000000000000000000
-                    Size.PlatformDefault = False
-                    TabOrder = 4
-                    Text = '.'
-                    OnClick = b0Click
-                  end
-                  object Button40: TButton
-                    Position.X = 120.000000000000000000
-                    Position.Y = 145.000000000000000000
-                    Size.Width = 40.000000000000000000
-                    Size.Height = 40.000000000000000000
-                    Size.PlatformDefault = False
-                    TabOrder = 3
-                    Text = '='
-                    OnClick = bEnterAmountClick
-                  end
-                  object Button41: TButton
-                    Position.X = 120.000000000000000000
-                    Position.Y = 105.000000000000000000
-                    Size.Width = 40.000000000000000000
-                    Size.Height = 40.000000000000000000
-                    Size.PlatformDefault = False
-                    TabOrder = 2
-                    Text = '+'
-                    OnClick = bAddAmountClick
-                  end
-                  object Button42: TButton
-                    Position.X = 120.000000000000000000
-                    Position.Y = 25.000000000000000000
-                    Size.Width = 40.000000000000000000
-                    Size.Height = 80.000000000000000000
-                    Size.PlatformDefault = False
-                    TabOrder = 1
-                    Text = 'C'
-                    OnClick = bClearAmountClick
-                  end
-                  object Label18: TLabel
-                    StyledSettings = [Family, Style, FontColor]
-                    Margins.Left = 10.000000000000000000
-                    Position.X = 90.000000000000000000
-                    Size.Width = 70.000000000000000000
-                    Size.Height = 25.000000000000000000
-                    Size.PlatformDefault = False
-                    Text = #1082#1075
-                  end
-                end
+                Text = '0'
+              end
+              object Button29: TButton
+                Position.Y = 25.000000000000000000
+                Size.Width = 40.000000000000000000
+                Size.Height = 40.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 14
+                Text = '7'
+                OnClick = b0Click
+              end
+              object Button30: TButton
+                Position.X = 40.000000000000000000
+                Position.Y = 25.000000000000000000
+                Size.Width = 40.000000000000000000
+                Size.Height = 40.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 13
+                Text = '8'
+                OnClick = b0Click
+              end
+              object Button31: TButton
+                Position.X = 80.000000000000000000
+                Position.Y = 25.000000000000000000
+                Size.Width = 40.000000000000000000
+                Size.Height = 40.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 12
+                Text = '9'
+                OnClick = b0Click
+              end
+              object Button32: TButton
+                Position.Y = 65.000000000000000000
+                Size.Width = 40.000000000000000000
+                Size.Height = 40.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 11
+                Text = '4'
+                OnClick = b0Click
+              end
+              object Button33: TButton
+                Position.X = 40.000000000000000000
+                Position.Y = 65.000000000000000000
+                Size.Width = 40.000000000000000000
+                Size.Height = 40.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 10
+                Text = '5'
+                OnClick = b0Click
+              end
+              object Button34: TButton
+                Position.X = 80.000000000000000000
+                Position.Y = 65.000000000000000000
+                Size.Width = 40.000000000000000000
+                Size.Height = 40.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 9
+                Text = '6'
+                OnClick = b0Click
+              end
+              object Button35: TButton
+                Position.Y = 105.000000000000000000
+                Size.Width = 40.000000000000000000
+                Size.Height = 40.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 8
+                Text = '1'
+                OnClick = b0Click
+              end
+              object Button36: TButton
+                Position.X = 40.000000000000000000
+                Position.Y = 105.000000000000000000
+                Size.Width = 40.000000000000000000
+                Size.Height = 40.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 7
+                Text = '2'
+                OnClick = b0Click
+              end
+              object Button37: TButton
+                Position.X = 80.000000000000000000
+                Position.Y = 105.000000000000000000
+                Size.Width = 40.000000000000000000
+                Size.Height = 40.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 6
+                Text = '3'
+                OnClick = b0Click
+              end
+              object Button38: TButton
+                Position.Y = 145.000000000000000000
+                Size.Width = 80.000000000000000000
+                Size.Height = 40.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 5
+                Text = '0'
+                OnClick = b0Click
+              end
+              object Button39: TButton
+                Position.X = 80.000000000000000000
+                Position.Y = 145.000000000000000000
+                Size.Width = 40.000000000000000000
+                Size.Height = 40.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 4
+                Text = '.'
+                OnClick = b0Click
+              end
+              object Button40: TButton
+                Position.X = 120.000000000000000000
+                Position.Y = 145.000000000000000000
+                Size.Width = 40.000000000000000000
+                Size.Height = 40.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 3
+                Text = '='
+                OnClick = bEnterAmountClick
+              end
+              object Button41: TButton
+                Position.X = 120.000000000000000000
+                Position.Y = 105.000000000000000000
+                Size.Width = 40.000000000000000000
+                Size.Height = 40.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 2
+                Text = '+'
+                OnClick = bAddAmountClick
+              end
+              object Button42: TButton
+                Position.X = 120.000000000000000000
+                Position.Y = 25.000000000000000000
+                Size.Width = 40.000000000000000000
+                Size.Height = 80.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 1
+                Text = 'C'
+                OnClick = bClearAmountClick
+              end
+              object Label18: TLabel
+                StyledSettings = [Family, Style, FontColor]
+                Margins.Left = 10.000000000000000000
+                Position.X = 90.000000000000000000
+                Size.Width = 70.000000000000000000
+                Size.Height = 25.000000000000000000
+                Size.PlatformDefault = False
+                Text = #1082#1075
               end
             end
+          end
+        end
+        object pPromoGoodsDate: TPanel
+          Align = Top
+          Size.Width = 352.000000000000000000
+          Size.Height = 40.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          object Label42: TLabel
+            Align = Left
+            StyledSettings = [Family, Style, FontColor]
+            Size.Width = 121.000000000000000000
+            Size.Height = 40.000000000000000000
+            Size.PlatformDefault = False
+            Text = '    '#1040#1082#1094#1080#1080' '#1085#1072' '#1076#1072#1090#1091
+          end
+          object dePromoGoodsDate: TDateEdit
+            Date = 42795.000000000000000000
+            OnChange = dePromoGoodsDateChange
+            Align = Left
+            Margins.Top = 3.000000000000000000
+            Margins.Bottom = 3.000000000000000000
+            Position.X = 121.000000000000000000
+            Position.Y = 4.000000000000000000
+            Size.Width = 115.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            StyledSettings = [Family, Style, FontColor]
+            TabOrder = 1
           end
         end
       end
@@ -5301,6 +5304,276 @@ object frmMain: TfrmMain
               StyledSettings = [Family, Style, FontColor]
             end
           end
+        end
+      end
+      object tiReports: TTabItem
+        CustomIcon = <
+          item
+          end>
+        IsSelected = False
+        Size.Width = 8.000000000000000000
+        Size.Height = 8.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = ''
+        TabOrder = 0
+        Text = 'tiReports'
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        object bReportJuridicalCollation: TButton
+          Align = Top
+          Size.Width = 352.000000000000000000
+          Size.Height = 60.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'bPriceListStyle1'
+          TabOrder = 2
+          Text = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080
+          OnClick = bReportJuridicalCollationClick
+        end
+      end
+      object tiReportJuridicalCollation: TTabItem
+        CustomIcon = <
+          item
+          end>
+        IsSelected = False
+        Size.Width = 8.000000000000000000
+        Size.Height = 8.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = ''
+        TabOrder = 0
+        Text = 'tiReportJuridicalCollation'
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        object VertScrollBox7: TVertScrollBox
+          Align = Client
+          Size.Width = 352.000000000000000000
+          Size.Height = 461.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          Viewport.Width = 352.000000000000000000
+          Viewport.Height = 461.000000000000000000
+          object Layout7: TLayout
+            Align = Top
+            Size.Width = 352.000000000000000000
+            Size.Height = 40.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            object Label43: TLabel
+              Align = Left
+              StyledSettings = [Family, Style, FontColor]
+              Size.Width = 150.000000000000000000
+              Size.Height = 40.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 13.000000000000000000
+              TextSettings.HorzAlign = Trailing
+              Text = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072
+            end
+            object deStartRJC: TDateEdit
+              Date = 42823.000000000000000000
+              Align = Left
+              Position.X = 160.000000000000000000
+              Position.Y = 4.000000000000000000
+              Size.Width = 100.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = [Family, Style, FontColor]
+              TabOrder = 1
+              TextSettings.Font.Size = 13.000000000000000000
+            end
+            object Layout10: TLayout
+              Align = Left
+              Position.X = 150.000000000000000000
+              Size.Width = 10.000000000000000000
+              Size.Height = 40.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 2
+            end
+          end
+          object Layout11: TLayout
+            Align = Top
+            Position.Y = 40.000000000000000000
+            Size.Width = 352.000000000000000000
+            Size.Height = 40.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            object Label44: TLabel
+              Align = Left
+              StyledSettings = [Family, Style, FontColor]
+              Size.Width = 150.000000000000000000
+              Size.Height = 40.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 13.000000000000000000
+              TextSettings.HorzAlign = Trailing
+              Text = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072
+            end
+            object deEndRJC: TDateEdit
+              Date = 42823.000000000000000000
+              Align = Left
+              Position.X = 160.000000000000000000
+              Position.Y = 4.000000000000000000
+              Size.Width = 100.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = [Family, Style, FontColor]
+              TabOrder = 1
+              TextSettings.Font.Size = 13.000000000000000000
+            end
+            object Layout12: TLayout
+              Align = Left
+              Position.X = 150.000000000000000000
+              Size.Width = 10.000000000000000000
+              Size.Height = 40.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 2
+            end
+          end
+          object Layout13: TLayout
+            Align = Top
+            Position.Y = 80.000000000000000000
+            Size.Width = 352.000000000000000000
+            Size.Height = 40.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 4
+            object Label45: TLabel
+              Align = Client
+              StyledSettings = [Family, Style, FontColor]
+              Margins.Left = 10.000000000000000000
+              Size.Width = 342.000000000000000000
+              Size.Height = 40.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 13.000000000000000000
+              TextSettings.VertAlign = Trailing
+              Text = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+            end
+          end
+          object cbJuridicals: TComboBox
+            Align = Top
+            Margins.Left = 10.000000000000000000
+            Margins.Top = 5.000000000000000000
+            Margins.Right = 10.000000000000000000
+            Position.X = 10.000000000000000000
+            Position.Y = 125.000000000000000000
+            Size.Width = 332.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 5
+            OnChange = cbJuridicalsChange
+          end
+          object Layout14: TLayout
+            Align = Top
+            Position.Y = 157.000000000000000000
+            Size.Width = 352.000000000000000000
+            Size.Height = 40.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 2
+            object Label46: TLabel
+              Align = Client
+              StyledSettings = [Family, Style, FontColor]
+              Margins.Left = 10.000000000000000000
+              Size.Width = 342.000000000000000000
+              Size.Height = 40.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 13.000000000000000000
+              TextSettings.VertAlign = Trailing
+              Text = #1044#1086#1075#1086#1074#1086#1088
+            end
+          end
+          object cbContracts: TComboBox
+            Align = Top
+            Margins.Left = 10.000000000000000000
+            Margins.Top = 5.000000000000000000
+            Margins.Right = 10.000000000000000000
+            Position.X = 10.000000000000000000
+            Position.Y = 202.000000000000000000
+            Size.Width = 332.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 3
+          end
+        end
+        object Panel30: TPanel
+          Align = MostBottom
+          Position.Y = 461.000000000000000000
+          Size.Width = 352.000000000000000000
+          Size.Height = 60.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          object bPrintJuridicalCollation: TButton
+            Align = Center
+            StyledSettings = [Family, Style, FontColor]
+            Size.Width = 160.000000000000000000
+            Size.Height = 50.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            Text = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1072#1082#1090' '#1089#1074#1077#1088#1082#1080
+            TextSettings.Font.Size = 11.000000000000000000
+            OnClick = bPrintJuridicalCollationClick
+          end
+        end
+      end
+      object tiPrintJuridicalCollation: TTabItem
+        CustomIcon = <
+          item
+          end>
+        IsSelected = True
+        Size.Width = 8.000000000000000000
+        Size.Height = 8.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = ''
+        TabOrder = 0
+        Text = 'tiPrintJuridicalCollation'
+        object lwJuridicalCollation: TListView
+          ItemAppearanceClassName = 'TDynamicAppearance'
+          ItemEditAppearanceClassName = 'TDynamicAppearance'
+          HeaderAppearanceClassName = 'TListHeaderObjects'
+          FooterAppearanceClassName = 'TListHeaderObjects'
+          Align = Client
+          Size.Width = 352.000000000000000000
+          Size.Height = 521.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          ItemAppearance.ItemHeight = 75
+          ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
+            item
+              AppearanceObjectName = 'DocNumDate'
+              AppearanceClassName = 'TTextObjectAppearance'
+              Appearance.Font.Size = 11.000000000000000000
+              Appearance.TextAlign = Leading
+              Appearance.Height = 25.000000000000000000
+            end
+            item
+              AppearanceObjectName = 'DocType'
+              AppearanceClassName = 'TTextObjectAppearance'
+              Appearance.Font.Size = 11.000000000000000000
+              Appearance.TextAlign = Leading
+              Appearance.Height = 25.000000000000000000
+              Appearance.Align = Trailing
+              Appearance.PlaceOffset.X = 5.000000000000000000
+              Appearance.PlaceOffset.Y = 25.000000000000000000
+            end
+            item
+              AppearanceObjectName = 'PaidKind'
+              AppearanceClassName = 'TTextObjectAppearance'
+              Appearance.Font.Size = 11.000000000000000000
+              Appearance.TextAlign = Leading
+              Appearance.Width = 100.000000000000000000
+              Appearance.Height = 25.000000000000000000
+              Appearance.PlaceOffset.Y = 50.000000000000000000
+            end
+            item
+              AppearanceObjectName = 'Payment'
+              AppearanceClassName = 'TTextObjectAppearance'
+              Appearance.Font.Size = 11.000000000000000000
+              Appearance.TextAlign = Trailing
+              Appearance.Width = 200.000000000000000000
+              Appearance.Height = 25.000000000000000000
+              Appearance.Align = Trailing
+              Appearance.PlaceOffset.Y = 50.000000000000000000
+            end>
+          ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
+            item
+              AppearanceObjectName = 'Text1'
+              AppearanceClassName = 'TTextObjectAppearance'
+            end>
         end
       end
     end
@@ -8650,18 +8923,10 @@ object frmMain: TfrmMain
     end
     object LinkListControlToField3: TLinkListControlToField
       Category = 'Quick Bindings'
-      DataSource = bsSelectedOrderItems
-      FieldName = 'Name'
+      DataSource = bsOrderExternalItems
+      FieldName = 'GoodsName'
       Control = lwOrderExternalItems
       FillExpressions = <
-        item
-          SourceMemberName = 'Name'
-          ControlMemberName = 'Name'
-        end
-        item
-          SourceMemberName = 'Type'
-          ControlMemberName = 'Type'
-        end
         item
           SourceMemberName = 'Price'
           ControlMemberName = 'Price'
@@ -8685,6 +8950,14 @@ object frmMain: TfrmMain
         item
           SourceMemberName = 'IsPromo'
           ControlMemberName = 'isPromo'
+        end
+        item
+          SourceMemberName = 'KindName'
+          ControlMemberName = 'KindName'
+        end
+        item
+          SourceMemberName = 'GoodsName'
+          ControlMemberName = 'GoodsName'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
@@ -8693,18 +8966,10 @@ object frmMain: TfrmMain
       Category = 'Quick Bindings'
       Control = lwGoodsItems
       Track = True
-      FillDataSource = bsOrderItems
+      FillDataSource = bsGoodsItems
       FillDisplayFieldName = 'SearchName'
       AutoFill = True
       FillExpressions = <
-        item
-          SourceMemberName = 'Name'
-          ControlMemberName = 'Name'
-        end
-        item
-          SourceMemberName = 'Kind'
-          ControlMemberName = 'Type'
-        end
         item
           SourceMemberName = 'Measure'
           ControlMemberName = 'Measure'
@@ -8724,6 +8989,14 @@ object frmMain: TfrmMain
         item
           SourceMemberName = 'PromoPrice'
           ControlMemberName = 'PromoPrice'
+        end
+        item
+          SourceMemberName = 'GoodsName'
+          ControlMemberName = 'GoodsName'
+        end
+        item
+          SourceMemberName = 'KindName'
+          ControlMemberName = 'KindName'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
@@ -8796,17 +9069,9 @@ object frmMain: TfrmMain
     object LinkListControlToField9: TLinkListControlToField
       Category = 'Quick Bindings'
       DataSource = bsStoreRealItems
-      FieldName = 'Name'
+      FieldName = 'GoodsName'
       Control = lwStoreRealItems
       FillExpressions = <
-        item
-          SourceMemberName = 'Name'
-          ControlMemberName = 'Name'
-        end
-        item
-          SourceMemberName = 'Type'
-          ControlMemberName = 'Type'
-        end
         item
           SourceMemberName = 'Measure'
           ControlMemberName = 'Measure'
@@ -8814,6 +9079,14 @@ object frmMain: TfrmMain
         item
           SourceMemberName = 'Count'
           ControlMemberName = 'Count'
+        end
+        item
+          SourceMemberName = 'GoodsName'
+          ControlMemberName = 'GoodsName'
+        end
+        item
+          SourceMemberName = 'KindName'
+          ControlMemberName = 'KindName'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
@@ -8821,17 +9094,9 @@ object frmMain: TfrmMain
     object LinkListControlToField10: TLinkListControlToField
       Category = 'Quick Bindings'
       DataSource = bsReturnInItems
-      FieldName = 'Name'
+      FieldName = 'GoodsName'
       Control = lwReturnInItems
       FillExpressions = <
-        item
-          SourceMemberName = 'Name'
-          ControlMemberName = 'Name'
-        end
-        item
-          SourceMemberName = 'Type'
-          ControlMemberName = 'Type'
-        end
         item
           SourceMemberName = 'Price'
           ControlMemberName = 'Price'
@@ -8843,6 +9108,14 @@ object frmMain: TfrmMain
         item
           SourceMemberName = 'Count'
           ControlMemberName = 'Count'
+        end
+        item
+          SourceMemberName = 'GoodsName'
+          ControlMemberName = 'GoodsName'
+        end
+        item
+          SourceMemberName = 'KindName'
+          ControlMemberName = 'KindName'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
@@ -8871,29 +9144,6 @@ object frmMain: TfrmMain
       FillHeaderExpressions = <>
       FillBreakGroups = <>
     end
-    object LinkFillControlToField2: TLinkFillControlToField
-      Category = 'Quick Bindings'
-      Control = lwGoods
-      Track = True
-      FillDataSource = bsGoodsForPriceList
-      FillDisplayFieldName = 'GoodsName'
-      AutoFill = True
-      FillExpressions = <
-        item
-          SourceMemberName = 'GoodsName'
-          ControlMemberName = 'Name'
-        end
-        item
-          SourceMemberName = 'KindName'
-          ControlMemberName = 'Type'
-        end
-        item
-          SourceMemberName = 'Price'
-          ControlMemberName = 'Price'
-        end>
-      FillHeaderExpressions = <>
-      FillBreakGroups = <>
-    end
     object LinkListControlToField1: TLinkListControlToField
       Category = 'Quick Bindings'
       DataSource = bsPriceList
@@ -8903,35 +9153,34 @@ object frmMain: TfrmMain
       FillHeaderExpressions = <>
       FillBreakGroups = <>
     end
-    object LinkListControlToField4: TLinkListControlToField
+    object LinkListControlToField12: TLinkListControlToField
       Category = 'Quick Bindings'
-      DataSource = bsPromoList
-      Control = lwPromoList
+      DataSource = bsPriceListGoods
+      FieldName = 'GoodsName'
+      Control = lwPriceListGoods
       FillExpressions = <
         item
-          SourceMemberName = 'CommentMain'
-          ControlMemberName = 'Name'
+          SourceMemberName = 'GoodsName'
+          ControlMemberName = 'GoodsName'
         end
         item
-          SourceMemberName = 'Termin'
-          ControlMemberName = 'Termin'
+          SourceMemberName = 'FullPrice'
+          ControlMemberName = 'Price'
         end
         item
-          SourceMemberName = 'ChangePercent'
-          ControlMemberName = 'ChangePercent'
+          SourceMemberName = 'KindName'
+          ControlMemberName = 'KindName'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
     end
-    object LinkFillControlToField3: TLinkFillControlToField
+    object LinkListControlToField4: TLinkListControlToField
       Category = 'Quick Bindings'
+      DataSource = bsPromoPartners
       Control = lwPromoPartners
-      Track = True
-      FillDataSource = bsPromoPartners
-      AutoFill = True
       FillExpressions = <
         item
-          SourceMemberName = 'Name'
+          SourceMemberName = 'PartnerName'
           ControlMemberName = 'Name'
         end
         item
@@ -8945,21 +9194,15 @@ object frmMain: TfrmMain
       FillHeaderExpressions = <>
       FillBreakGroups = <>
     end
-    object LinkFillControlToField4: TLinkFillControlToField
+    object LinkListControlToField13: TLinkListControlToField
       Category = 'Quick Bindings'
+      DataSource = bsPromoGoods
+      FieldName = 'GoodsName'
       Control = lwPromoGoods
-      Track = True
-      FillDataSource = bsPromoGoods
-      FillDisplayFieldName = 'GoodsName'
-      AutoFill = True
       FillExpressions = <
         item
-          SourceMemberName = 'GoodsName'
-          ControlMemberName = 'Name'
-        end
-        item
           SourceMemberName = 'KindName'
-          ControlMemberName = 'Type'
+          ControlMemberName = 'KindName'
         end
         item
           SourceMemberName = 'Tax'
@@ -8968,6 +9211,14 @@ object frmMain: TfrmMain
         item
           SourceMemberName = 'Price'
           ControlMemberName = 'Price'
+        end
+        item
+          SourceMemberName = 'GoodsName'
+          ControlMemberName = 'GoodsName'
+        end
+        item
+          SourceMemberName = 'Termin'
+          ControlMemberName = 'Termin'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
@@ -9288,18 +9539,6 @@ object frmMain: TfrmMain
     Left = 280
     Top = 323
   end
-  object bsSelectedOrderItems: TBindSourceDB
-    DataSet = DM.cdsOrderItems
-    ScopeMappings = <>
-    Left = 288
-    Top = 480
-  end
-  object bsOrderItems: TBindSourceDB
-    DataSet = DM.qryGoodsItems
-    ScopeMappings = <>
-    Left = 152
-    Top = 432
-  end
   object bsPhotoGroups: TBindSourceDB
     DataSet = DM.qryPhotoGroups
     ScopeMappings = <>
@@ -9324,24 +9563,6 @@ object frmMain: TfrmMain
     Left = 216
     Top = 432
   end
-  object bsStoreRealItems: TBindSourceDB
-    DataSet = DM.cdsStoreRealItems
-    ScopeMappings = <>
-    Left = 288
-    Top = 432
-  end
-  object bsGoodsForPriceList: TBindSourceDB
-    DataSet = DM.qryGoodsForPriceList
-    ScopeMappings = <>
-    Left = 216
-    Top = 480
-  end
-  object bsReturnInItems: TBindSourceDB
-    DataSet = DM.cdsReturnInItems
-    ScopeMappings = <>
-    Left = 288
-    Top = 384
-  end
   object bsReturnIn: TBindSourceDB
     DataSet = DM.cdsReturnIn
     ScopeMappings = <>
@@ -9354,22 +9575,46 @@ object frmMain: TfrmMain
     Left = 152
     Top = 480
   end
-  object bsPromoList: TBindSourceDB
-    DataSet = DM.qryPromoList
+  object bsStoreRealItems: TBindSourceDB
+    DataSet = DM.cdsStoreRealItems
     ScopeMappings = <>
-    Left = 24
-    Top = 336
+    Left = 288
+    Top = 432
+  end
+  object bsOrderExternalItems: TBindSourceDB
+    DataSet = DM.cdsOrderItems
+    ScopeMappings = <>
+    Left = 152
+    Top = 432
+  end
+  object bsReturnInItems: TBindSourceDB
+    DataSet = DM.cdsReturnInItems
+    ScopeMappings = <>
+    Left = 288
+    Top = 384
+  end
+  object bsGoodsItems: TBindSourceDB
+    DataSet = DM.qryGoodsItems
+    ScopeMappings = <>
+    Left = 288
+    Top = 480
+  end
+  object bsPriceListGoods: TBindSourceDB
+    DataSet = DM.qryGoodsForPriceList
+    ScopeMappings = <>
+    Left = 216
+    Top = 480
   end
   object bsPromoPartners: TBindSourceDB
     DataSet = DM.qryPromoPartners
     ScopeMappings = <>
-    Left = 88
-    Top = 336
+    Left = 24
+    Top = 328
   end
   object bsPromoGoods: TBindSourceDB
     DataSet = DM.qryPromoGoods
     ScopeMappings = <>
-    Left = 152
-    Top = 336
+    Left = 88
+    Top = 328
   end
 end
