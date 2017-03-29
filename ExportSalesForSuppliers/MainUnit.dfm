@@ -19,7 +19,7 @@ object Form1: TForm1
     Top = 0
     Width = 909
     Height = 543
-    ActivePage = tsBaDM
+    ActivePage = tsOptima
     Align = alClient
     TabOrder = 0
     object tsOptima: TTabSheet
@@ -1040,10 +1040,144 @@ object Form1: TForm1
         end
       end
     end
+    object tsTeva: TTabSheet
+      Caption = #1058#1077#1074#1072
+      ImageIndex = 2
+      object Panel2: TPanel
+        Left = 0
+        Top = 0
+        Width = 901
+        Height = 31
+        Align = alTop
+        TabOrder = 0
+        object btnTevaSendMail: TButton
+          Left = 782
+          Top = 0
+          Width = 113
+          Height = 25
+          Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' Email'
+          TabOrder = 0
+        end
+        object edtTevaEMail: TEdit
+          Left = 583
+          Top = 4
+          Width = 193
+          Height = 21
+          TabOrder = 1
+          Text = 'teva.reports@proximaresearch.com'
+        end
+        object btnTevaExport: TButton
+          Left = 519
+          Top = 0
+          Width = 58
+          Height = 25
+          Caption = #1069#1082#1089#1087#1086#1088#1090
+          TabOrder = 2
+          OnClick = btnTevaExportClick
+        end
+        object btnTevaExecute: TButton
+          Left = 423
+          Top = 0
+          Width = 90
+          Height = 25
+          Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100
+          TabOrder = 3
+          OnClick = btnTevaExecuteClick
+        end
+        object btnTevaAll: TButton
+          Left = 359
+          Top = 0
+          Width = 58
+          Height = 25
+          Caption = #1042#1089#1105'!'
+          TabOrder = 4
+        end
+        object TevaID: TcxSpinEdit
+          Left = 272
+          Top = 4
+          Properties.SpinButtons.Visible = False
+          TabOrder = 5
+          Value = 59610
+          Width = 81
+        end
+        object cxLabel5: TcxLabel
+          Left = 182
+          Top = 8
+          Caption = 'ID '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072':'
+        end
+        object TevaDate: TcxDateEdit
+          Left = 85
+          Top = 4
+          EditValue = 42339d
+          Properties.ShowTime = False
+          TabOrder = 7
+          Width = 85
+        end
+        object cxLabel6: TcxLabel
+          Left = 6
+          Top = 8
+          Caption = #1044#1072#1090#1072' '#1086#1090#1095#1077#1090#1072':'
+        end
+      end
+      object grTeva: TcxGrid
+        Left = 0
+        Top = 31
+        Width = 901
+        Height = 484
+        Align = alClient
+        TabOrder = 1
+        object grtvTeva: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = dsReport_Upload_Teva
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          object grtvTevaoperdate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'operdate'
+            Width = 80
+          end
+          object grtvTevaokpo: TcxGridDBColumn
+            Caption = #1045#1044#1056#1055#1054#1059
+            DataBinding.FieldName = 'okpo'
+            Width = 100
+          end
+          object grtvTevaunitname: TcxGridDBColumn
+            Caption = #1040#1087#1090#1077#1082#1072
+            DataBinding.FieldName = 'unitname'
+            Width = 200
+          end
+          object grtvTevaunitaddress: TcxGridDBColumn
+            Caption = #1040#1076#1088#1077#1089
+            DataBinding.FieldName = 'unitaddress'
+            Width = 200
+          end
+          object grtvTevagoodsname: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088
+            DataBinding.FieldName = 'goodsname'
+            Width = 200
+          end
+          object grtvTevaamount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'amount'
+          end
+          object grtvTevasumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'summ'
+          end
+          object grtvTevaprice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'price'
+          end
+        end
+        object grTevaLevel1: TcxGridLevel
+          GridView = grtvTeva
+        end
+      end
+    end
   end
   object ZConnection1: TZConnection
     ControlsCodePage = cCP_UTF16
-    UTF8StringsAsWideField = True
     Port = 5432
     Protocol = 'postgresql-9'
     Left = 120
@@ -1244,5 +1378,81 @@ object Form1: TForm1
     Params = <>
     Left = 408
     Top = 248
+  end
+  object qryReport_Upload_Teva: TZQuery
+    Connection = ZConnection1
+    SQL.Strings = (
+      
+        'SELECT * FROM gpReport_Upload_Teva (:inDate, :inObjectId, zfCalc' +
+        '_UserAdmin())')
+    Params = <
+      item
+        DataType = ftDateTime
+        Name = 'inDate'
+        ParamType = ptInput
+        Value = 42773d
+      end
+      item
+        DataType = ftInteger
+        Name = 'inObjectId'
+        ParamType = ptInput
+        Value = 59610
+      end>
+    Left = 620
+    Top = 336
+    ParamData = <
+      item
+        DataType = ftDateTime
+        Name = 'inDate'
+        ParamType = ptInput
+        Value = 42773d
+      end
+      item
+        DataType = ftInteger
+        Name = 'inObjectId'
+        ParamType = ptInput
+        Value = 59610
+      end>
+    object qryReport_Upload_Tevaoperdate: TDateTimeField
+      FieldName = 'operdate'
+      ReadOnly = True
+    end
+    object qryReport_Upload_Tevaokpo: TWideStringField
+      FieldName = 'okpo'
+      ReadOnly = True
+      Size = 510
+    end
+    object qryReport_Upload_Tevaunitname: TWideStringField
+      FieldName = 'unitname'
+      ReadOnly = True
+      Size = 510
+    end
+    object qryReport_Upload_Tevaunitaddress: TWideStringField
+      FieldName = 'unitaddress'
+      ReadOnly = True
+      Size = 510
+    end
+    object qryReport_Upload_Tevagoodsname: TWideStringField
+      FieldName = 'goodsname'
+      ReadOnly = True
+      Size = 510
+    end
+    object qryReport_Upload_Tevaamount: TFloatField
+      FieldName = 'amount'
+      ReadOnly = True
+    end
+    object qryReport_Upload_Tevasumm: TFloatField
+      FieldName = 'summ'
+      ReadOnly = True
+    end
+    object qryReport_Upload_Tevaprice: TFloatField
+      FieldName = 'price'
+      ReadOnly = True
+    end
+  end
+  object dsReport_Upload_Teva: TDataSource
+    DataSet = qryReport_Upload_Teva
+    Left = 720
+    Top = 336
   end
 end
