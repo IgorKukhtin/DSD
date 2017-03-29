@@ -86,6 +86,38 @@ type
     qryReport_Upload_BaDM_byUnit: TZQuery;
     dsReport_Upload_BaDM_byUnit: TDataSource;
     qryBadm_byUnit: TZQuery;
+    tsTeva: TTabSheet;
+    Panel2: TPanel;
+    btnTevaSendMail: TButton;
+    edtTevaEMail: TEdit;
+    btnTevaExport: TButton;
+    btnTevaExecute: TButton;
+    btnTevaAll: TButton;
+    TevaID: TcxSpinEdit;
+    cxLabel5: TcxLabel;
+    TevaDate: TcxDateEdit;
+    cxLabel6: TcxLabel;
+    grtvTeva: TcxGridDBTableView;
+    grTevaLevel1: TcxGridLevel;
+    grTeva: TcxGrid;
+    qryReport_Upload_Teva: TZQuery;
+    qryReport_Upload_Tevaoperdate: TDateTimeField;
+    qryReport_Upload_Tevaokpo: TWideStringField;
+    qryReport_Upload_Tevaunitname: TWideStringField;
+    qryReport_Upload_Tevaunitaddress: TWideStringField;
+    qryReport_Upload_Tevagoodsname: TWideStringField;
+    qryReport_Upload_Tevaamount: TFloatField;
+    qryReport_Upload_Tevasumm: TFloatField;
+    qryReport_Upload_Tevaprice: TFloatField;
+    dsReport_Upload_Teva: TDataSource;
+    grtvTevaoperdate: TcxGridDBColumn;
+    grtvTevaokpo: TcxGridDBColumn;
+    grtvTevaunitname: TcxGridDBColumn;
+    grtvTevaunitaddress: TcxGridDBColumn;
+    grtvTevagoodsname: TcxGridDBColumn;
+    grtvTevaamount: TcxGridDBColumn;
+    grtvTevasumm: TcxGridDBColumn;
+    grtvTevaprice: TcxGridDBColumn;
     procedure btnBaDMExecuteClick(Sender: TObject);
     procedure btnBaDMExportClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -95,6 +127,8 @@ type
     procedure btnOptimaAllClick(Sender: TObject);
     procedure btnOptimaSendMailClick(Sender: TObject);
     procedure btnBaDMSendFTPClick(Sender: TObject);
+    procedure btnTevaExecuteClick(Sender: TObject);
+    procedure btnTevaExportClick(Sender: TObject);
   private
     { Private declarations }
     FileNameBaDM_byUnit: String;
@@ -102,10 +136,13 @@ type
     SavePathBaDM: String;
     FileNameOptima: String;
     SavePathOptima: String;
+    FileNameTeva: String;
+    SavePathTeva: String;
     IntervalCount: Integer;
     IntervalMin: Integer;  // в минутах
 
     glSubject: String;
+    glSubjectTeva: String;
 
     glFTPHost,
     glFTPPath,
@@ -374,6 +411,63 @@ begin
   End;
 end;
 
+procedure TForm1.btnTevaExecuteClick(Sender: TObject);
+begin
+  Add_Log('Начало Формирования отчета Тева');
+
+  qryReport_Upload_Teva.Close;
+  qryReport_Upload_Teva.Params.ParamByName('inDate').Value := TevaDate.Date;
+  qryReport_Upload_Teva.Params.ParamByName('inObjectId').Value := TevaID.Value;
+
+  try
+    qryReport_Upload_Teva.Open;
+  except
+    on E:Exception do
+    begin
+      Add_Log(E.Message);
+      Exit;
+    end;
+  end;
+
+  FileNameTeva := 'Teva_' + FormatDateTime('DD_MM_YYYY', TevaDate.Date) + '.csv';
+end;
+
+procedure TForm1.btnTevaExportClick(Sender: TObject);
+var
+  sl: TStringList;
+begin
+  Add_Log('Начало выгрузки отчета Тева');
+  if not ForceDirectories(SavePathTeva) then
+  Begin
+    Add_Log('Не могу создать директорию выгрузки');
+    exit;
+  end;
+  //
+  // обычный отчет
+  grtvTeva.OptionsView.Header := False;
+
+  try
+    try
+      ExportGridToText(SavePathTeva + FileNameTeva, grTeva, True, True, ';', '', '', 'csv');
+      sl := TStringList.Create;
+      try
+        sl.LoadFromFile(SavePathTeva + FileNameTeva);
+        sl.SaveToFile(SavePathTeva + FileNameTeva, TEncoding.ANSI);
+      finally
+        sl.Free;
+      end;
+    except
+      on E: Exception do
+      begin
+        Add_Log(E.Message);
+        exit;
+      end;
+    end;
+  finally
+    grtvTeva.OptionsView.Header := True;
+  end;
+end;
+
 procedure TForm1.btnOptimaAllClick(Sender: TObject);
 var lCount: Integer;
 begin
@@ -412,89 +506,107 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 var
-  ini: TIniFile;
+  Ini: TIniFile;
   function GetCorrectNameFile(AName: String): String;
   var
     j: Integer;
-  Begin
+  begin
     for j := 1 to length(AName) do
       if CharInSet(AName[j],[' ','\','/',':','*','?','''','"','<','>','|']) then
         AName[j] := '_';
     Result := AName;
-  End;
-Begin
-  ini := TIniFile.Create(ChangeFileExt(Application.ExeName,'.ini'));
+  end;
+begin
+  Ini := TIniFile.Create(ChangeFileExt(Application.ExeName,'.ini'));
+
   try
-    SavePathBaDM := ini.readString('Options','PathBaDM',ExtractFilePath(Application.ExeName));
+    SavePathBaDM := Ini.readString('Options','PathBaDM',ExtractFilePath(Application.ExeName));
     if SavePathBaDM[length(SavePathBaDM)]<> '\' then
       SavePathBaDM := SavePathBaDM+'\';
-    ini.WriteString('Options','PathBaDM',SavePathBaDM);
+    Ini.WriteString('Options','PathBaDM',SavePathBaDM);
 
-    SavePathOptima := ini.readString('Options','PathOptima',ExtractFilePath(Application.ExeName));
+    SavePathOptima := Ini.readString('Options','PathOptima',ExtractFilePath(Application.ExeName));
     if SavePathOptima[length(SavePathOptima)]<> '\' then
       SavePathOptima := SavePathOptima+'\';
-    ini.WriteString('Options','PathOptima',SavePathOptima);
+    Ini.WriteString('Options','PathOptima',SavePathOptima);
 
-    BaDMID.Value := ini.ReadInteger('Options','BaDM_ID',59610);
-    ini.WriteInteger('Options','BaDM_ID',BaDMID.Value);
+    SavePathTeva := Trim(Ini.ReadString('Options', 'PathTeva', ExtractFilePath(Application.ExeName)));
+    if SavePathTeva[Length(SavePathTeva)] <> '\' then
+      SavePathTeva := SavePathTeva + '\';
+    Ini.WriteString('Options', 'PathTeva', SavePathTeva);
 
-    OptimaID.Value := ini.ReadInteger('Options','Optima_ID',59611);
-    ini.WriteInteger('Options','Optima_ID',OptimaID.Value);
+    BaDMID.Value := Ini.ReadInteger('Options','BaDM_ID',59610);
+    Ini.WriteInteger('Options','BaDM_ID',BaDMID.Value);
 
-    IntervalCount := ini.ReadInteger('Options','IntervalCount',15);
-    ini.WriteInteger('Options','IntervalCount',IntervalCount);
+    OptimaID.Value := Ini.ReadInteger('Options','Optima_ID',59611);
+    Ini.WriteInteger('Options','Optima_ID',OptimaID.Value);
 
-    IntervalMin := ini.ReadInteger('Options','IntervalMin',60);
-    ini.WriteInteger('Options','IntervalMin',IntervalMin);
+    TevaID.Value := Ini.ReadInteger('Options', 'Teva_ID', 59610);
+    Ini.WriteInteger('Options', 'Teva_ID', TevaID.Value);
 
-    ZConnection1.Database := ini.ReadString('Connect','DataBase','farmacy');
-    ini.WriteString('Connect','DataBase',ZConnection1.Database);
+    IntervalCount := Ini.ReadInteger('Options','IntervalCount',15);
+    Ini.WriteInteger('Options','IntervalCount',IntervalCount);
 
-    ZConnection1.HostName := ini.ReadString('Connect','HostName','91.210.37.210');
-    ini.WriteString('Connect','HostName',ZConnection1.HostName);
+    IntervalMin := Ini.ReadInteger('Options','IntervalMin',60);
+    Ini.WriteInteger('Options','IntervalMin',IntervalMin);
 
-    ZConnection1.User := ini.ReadString('Connect','User','postgres');
-    ini.WriteString('Connect','User',ZConnection1.User);
+    ZConnection1.Database := Ini.ReadString('Connect', 'DataBase', 'farmacy');
+    Ini.WriteString('Connect', 'DataBase', ZConnection1.Database);
 
-    ZConnection1.Password := ini.ReadString('Connect','Password','postgres');
-    ini.WriteString('Connect','Password',ZConnection1.Password);
+    ZConnection1.HostName := Ini.ReadString('Connect', 'HostName', '91.210.37.210');
+    Ini.WriteString('Connect', 'HostName', ZConnection1.HostName);
 
-    edtOptimaEMail.Text := ini.ReadString('Mail','Recipient','sqlmail2@optimapharm.ua');
-    ini.WriteString('Mail','Recipient',edtOptimaEMail.Text);
+    ZConnection1.User := Ini.ReadString('Connect', 'User', 'postgres');
+    Ini.WriteString('Connect', 'User', ZConnection1.User);
 
-    glSubject := ini.ReadString('Mail','Subject','Report for Optima');
-    ini.WriteString('Mail','Subject',glSubject);
+    ZConnection1.Password := Ini.ReadString('Connect', 'Password', 'postgres');
+    Ini.WriteString('Connect', 'Password', ZConnection1.Password);
 
-    glFTPHost := ini.ReadString('FTP','Host','ooobadm.dp.ua');
-    ini.WriteString('FTP','Host',glFTPHost);
+    edtOptimaEMail.Text := Ini.ReadString('Mail','Recipient','sqlmail2@optimapharm.ua');
+    Ini.WriteString('Mail','Recipient',edtOptimaEMail.Text);
 
-    glFTPPath := ini.ReadString('FTP','Path','OD_UTZ\K_shapiro');
-    ini.WriteString('FTP','Path',glFTPPath);
+    edtTevaEMail.Text := Ini.ReadString('Mail', 'RecipientTeva', 'teva.reports@proximaresearch.com');
+    Ini.WriteString('Mail', 'RecipientTeva', edtTevaEMail.Text);
 
-    glFTPUser := ini.ReadString('FTP','User','K_shapiro');
-    ini.WriteString('FTP','User',glFTPUser);
+    glSubject := Ini.ReadString('Mail','Subject','Report for Optima');
+    Ini.WriteString('Mail','Subject',glSubject);
 
-    glFTPPassword := ini.ReadString('FTP','Password','FsT3469Dv');
-    ini.WriteString('FTP','Password',glFTPPassword);
+    glSubjectTeva := Ini.ReadString('Mail', 'SubjectTeva', 'Report for Teva');
+    Ini.WriteString('Mail', 'SubjectTeva', glSubjectTeva);
 
+    glFTPHost := Ini.ReadString('FTP','Host','ooobadm.dp.ua');
+    Ini.WriteString('FTP','Host',glFTPHost);
+
+    glFTPPath := Ini.ReadString('FTP','Path','OD_UTZ\K_shapiro');
+    Ini.WriteString('FTP','Path',glFTPPath);
+
+    glFTPUser := Ini.ReadString('FTP','User','K_shapiro');
+    Ini.WriteString('FTP','User',glFTPUser);
+
+    glFTPPassword := Ini.ReadString('FTP','Password','FsT3469Dv');
+    Ini.WriteString('FTP','Password',glFTPPassword);
   finally
-    ini.free;
+    Ini.free;
   end;
+
   BaDMDate.Date := Date - 1;
   OptimaDate.Date := Date - 1;
-  ZConnection1.LibraryLocation := ExtractFilePath(Application.ExeName)+'libpq.dll';
+  TevaDate.Date := Date - 1;
+  ZConnection1.LibraryLocation := ExtractFilePath(Application.ExeName) + 'libpq.dll';
 
   try
     ZConnection1.Connect;
-  Except ON E:Exception do
-    Begin
+  except
+    on E:Exception do
+    begin
       Add_Log(E.Message);
       Close;
       Exit;
-    End;
+    end;
   end;
+
   if ZConnection1.Connected then
-  Begin
+  begin
     qryUnit.Close;
     qryUnit.Params.ParamByName('inObjectId').Value := OptimaId.Value;
     qryUnit.Params.ParamByName('inSelectAll').Value := True;
@@ -528,11 +640,18 @@ Begin
       btnBaDMExecute.Enabled := false;
       btnBaDMExport.Enabled := false;
       btnBaDMSendFTP.Enabled := false;
+      btnTevaAll.Enabled := false;
+      btnTevaExecute.Enabled := false;
+      btnTevaExport.Enabled := false;
+      btnTevaSendMail.Enabled := false;
       OptimaDate.Enabled := False;
       OptimaId.Enabled := False;
       BaDMDate.Enabled := False;
       BaDMID.Enabled := False;
+      TevaDate.Enabled := False;
+      TevaID.Enabled := False;
       edtOptimaEMail.Enabled := False;
+      edtTevaEMail.Enabled := False;
       grUnit.Enabled := false;
       Timer1.Enabled := true;
     end;
