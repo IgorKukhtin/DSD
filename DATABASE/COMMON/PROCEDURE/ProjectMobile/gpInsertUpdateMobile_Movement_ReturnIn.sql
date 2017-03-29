@@ -60,7 +60,7 @@ BEGIN
                                              , inInvNumberMark      := ''              -- Номер "перекресленої зеленої марки зi складу"
                                              , inParentId           := NULL
                                              , inOperDate           := inOperDate      -- Дата(склад)
-                                             , inOperDatePartner    := NULL            -- Дата документа у покупателя
+                                             , inOperDatePartner    := inOperDate      -- Дата документа у покупателя
                                              , inChecked            := inChecked       -- Проверен
                                              , inIsPartner          := false           -- основание - Акт недовоза
                                              , inPriceWithVAT       := inPriceWithVAT  -- Цена с НДС (да/нет)
@@ -105,8 +105,8 @@ $BODY$
 
 -- тест
 /* SELECT * FROM gpInsertUpdateMobile_Movement_ReturnIn (inGUID          := '{D2399D25-513D-4F68-A1ED-FCD21C63A0B7}'
-                                                    , inInvNumber        := '-10'
-                                                    , inOperDate         := CURRENT_DATE
+                                                    , inInvNumber     := '-10'
+                                                    , inOperDate      := CURRENT_DATE
                                                     , inStatusId      := zc_Enum_Status_UnComplete()  -- Виды статусов
                                                     , inChecked       := false                        -- Проверен
                                                     , inPriceWithVAT  := false                        -- Цена с НДС (да/нет)
