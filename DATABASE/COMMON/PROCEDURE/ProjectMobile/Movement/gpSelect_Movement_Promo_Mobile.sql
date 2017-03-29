@@ -74,6 +74,7 @@ BEGIN
                                       AND ObjectLink_Contract_ContractTag.DescId = zc_ObjectLink_Contract_ContractTag()
                   LEFT JOIN Object AS Object_ContractTag ON Object_ContractTag.Id = ObjectLink_Contract_ContractTag.ChildObjectId
             WHERE tmpPromo.isSync = TRUE
+            ORDER BY tmpPromo.Id
              ;
 END;
 $BODY$
