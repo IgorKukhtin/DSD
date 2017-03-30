@@ -1,26 +1,27 @@
 ﻿inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
   Caption = #1050#1086#1076#1099' '#1087#1088#1086#1076#1072#1074#1094#1086#1074
-  ClientHeight = 558
+  ClientHeight = 529
   ClientWidth = 1000
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
+  ExplicitTop = 7
   ExplicitWidth = 1016
-  ExplicitHeight = 596
+  ExplicitHeight = 568
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1000
-    Height = 532
+    Height = 503
     ExplicitWidth = 1000
     ExplicitHeight = 532
-    ClientRectBottom = 532
+    ClientRectBottom = 503
     ClientRectRight = 1000
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1000
       ExplicitHeight = 532
       inherited cxGrid: TcxGrid
         Width = 1000
-        Height = 532
+        Height = 503
         ExplicitWidth = 1000
         ExplicitHeight = 532
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -144,6 +145,14 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1099#1075#1088#1091#1078#1072#1090#1100' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1041#1040#1044#1052
+            Width = 89
+          end
+          object colisUploadTeva: TcxGridDBColumn
+            Caption = #1042#1099#1075#1088#1091#1078#1072#1090#1100' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090'. '#1058#1077#1074#1072
+            DataBinding.FieldName = 'isUploadTeva'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1075#1088#1091#1078#1072#1090#1100' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090'. '#1058#1077#1074#1072
             Width = 89
           end
           object colUpdateDate: TcxGridDBColumn
@@ -547,6 +556,9 @@
         end
         item
           StoredProc = spUpdate_Goods_isUploadBadm
+        end
+        item
+          StoredProc = spUpdate_Goods_isUploadTeva
         end>
       Caption = 'dsdUpdateDataSet'
       DataSource = MasterDS
@@ -1514,6 +1526,40 @@
       end>
     PackSize = 1
     Left = 616
-    Top = 91
+    Top = 87
+  end
+  object spUpdate_Goods_isUploadTeva: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_isUploadTeva'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisUploadTeva'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isUploadTeva'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisUploadTeva'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isUploadTeva'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 616
+    Top = 135
   end
 end

@@ -67,6 +67,10 @@ BEGIN
                JOIN Object AS Object_Retail
                            ON Object_Retail.Id = LinkGoods_Main_Retail.ObjectId
                           AND Object_Retail.DescId = zc_Object_Retail() 
+               JOIN ObjectBoolean AS ObjectBoolean_Goods_UploadTeva 
+                                  ON ObjectBoolean_Goods_UploadTeva.ObjectId = Object_Goods_View.id
+                                 AND ObjectBoolean_Goods_UploadTeva.DescId = zc_ObjectBoolean_Goods_UploadTeva()
+                                 AND ObjectBoolean_Goods_UploadTeva.ValueData
           WHERE Object_Goods_View.ObjectId = inObjectId
          ); 
 
