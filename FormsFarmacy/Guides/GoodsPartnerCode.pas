@@ -89,6 +89,8 @@ type
     bbisUpdate: TdxBarControlContainerItem;
     cbUpdate: TcxCheckBox;
     spUpdate_Goods_isUploadBadm: TdsdStoredProc;
+    colisUploadTeva: TcxGridDBColumn;
+    spUpdate_Goods_isUploadTeva: TdsdStoredProc;
   private
     { Private declarations }
   public

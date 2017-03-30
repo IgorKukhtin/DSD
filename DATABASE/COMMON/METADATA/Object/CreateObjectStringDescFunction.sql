@@ -469,6 +469,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsListSale_GoodsKind() RETURNS Int
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_GoodsListSale_GoodsKind', zc_Object_GoodsListSale(), 'Список всех вид товара' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsListSale_GoodsKind');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsListIncome_GoodsKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsListIncome_GoodsKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_GoodsListIncome_GoodsKind', zc_Object_GoodsListIncome(), 'Список всех вид товара' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsListIncome_GoodsKind');
+
 CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsGroup_UKTZED() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsGroup_UKTZED'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_GoodsGroup_UKTZED', zc_Object_GoodsGroup(), 'Код товару згідно з УКТ ЗЕД' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsGroup_UKTZED');
@@ -567,6 +571,7 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 30.03.17         * zc_ObjectString_GoodsListIncome_GoodsKind
  28.03.17         * zc_ObjectString_Partner_Delivery
  06.03.17         * zc_ObjectString_Unit_Address
  16.02.17         * zc_ObjectString_PartnerMedical_FIO

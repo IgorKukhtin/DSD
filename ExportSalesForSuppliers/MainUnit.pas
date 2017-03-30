@@ -129,6 +129,8 @@ type
     procedure btnBaDMSendFTPClick(Sender: TObject);
     procedure btnTevaExecuteClick(Sender: TObject);
     procedure btnTevaExportClick(Sender: TObject);
+    procedure btnTevaSendMailClick(Sender: TObject);
+    procedure btnTevaAllClick(Sender: TObject);
   private
     { Private declarations }
     FileNameBaDM_byUnit: String;
@@ -411,6 +413,21 @@ begin
   End;
 end;
 
+procedure TForm1.btnTevaAllClick(Sender: TObject);
+begin
+  try
+    btnTevaExecuteClick(nil);
+    Application.ProcessMessages;
+    btnTevaExportClick(nil);
+    Application.ProcessMessages;
+    btnTevaSendMailClick(nil);
+    Application.ProcessMessages;
+  except
+    on E: Exception do
+      Add_Log(E.Message);
+  end;
+end;
+
 procedure TForm1.btnTevaExecuteClick(Sender: TObject);
 begin
   Add_Log('Начало Формирования отчета Тева');
@@ -468,6 +485,43 @@ begin
   end;
 end;
 
+procedure TForm1.btnTevaSendMailClick(Sender: TObject);
+var
+  addr: array of string;
+  S, S1: string;
+begin
+  S := Trim(edtTevaEMail.Text);
+
+  if S[Length(S)] <> ',' then
+    S := S + ',';
+
+  while S <> '' do
+  begin
+    S1 := Copy(S, 1, Pos(',', S) - 1);
+    Delete(S, 1, Pos(',', S));
+    SetLength(addr, Length(addr) + 1);
+    addr[Length(addr) - 1] := S1;
+  end;
+
+  if SendMail(qryMailParam.FieldByName('Mail_Host').AsString,
+       qryMailParam.FieldByName('Mail_Port').AsInteger,
+       qryMailParam.FieldByName('Mail_Password').AsString,
+       qryMailParam.FieldByName('Mail_User').AsString,
+       addr,
+       qryMailParam.FieldByName('Mail_From').AsString,
+       glSubjectTeva,
+       '',
+       [SavePathTeva + FileNameTeva]) then
+  begin
+    try
+      DeleteFile(SavePathTeva + FileNameTeva);
+    except
+      on E: Exception do
+        Add_Log(E.Message);
+    end;
+  end;
+end;
+
 procedure TForm1.btnOptimaAllClick(Sender: TObject);
 var lCount: Integer;
 begin
@@ -517,7 +571,7 @@ var
     Result := AName;
   end;
 begin
-  Ini := TIniFile.Create(ChangeFileExt(Application.ExeName,'.ini'));
+  Ini := TIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
 
   try
     SavePathBaDM := Ini.readString('Options','PathBaDM',ExtractFilePath(Application.ExeName));
@@ -612,27 +666,29 @@ begin
     qryUnit.Params.ParamByName('inSelectAll').Value := True;
     try
       qryUnit.Open;
-    except ON E: Exception DO
-      Begin
+    except
+      on E: Exception do
+      begin
         Add_Log(E.Message);
         Close;
         Exit;
-      End;
+      end;
     end;
 
     qryMailParam.Close;
     try
       qryMailParam.Open;
-    except ON E: Exception DO
-      Begin
+    except
+      on E: Exception do
+      begin
         Add_Log(E.Message);
         Close;
         Exit;
-      End;
+      end;
     end;
 
-    if not((ParamCount>=1) AND (CompareText(ParamStr(1),'manual')=0)) then
-    Begin
+    if not ((ParamCount >= 1) and (CompareText(ParamStr(1), 'manual') = 0)) then
+    begin
       btnOptimaAll.Enabled := false;
       btnOptimaExecute.Enabled := false;
       btnOptimaExport.Enabled := false;
@@ -668,6 +724,8 @@ begin
     btnBaDMExecuteClick(nil);
     btnBaDMExportClick(nil);
     btnBaDMSendFTPClick(nil);
+
+    btnTevaAllClick(nil);
   finally
     Close;
   end;
