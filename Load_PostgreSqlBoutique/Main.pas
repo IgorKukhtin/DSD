@@ -78,6 +78,17 @@ type
     cbClient: TCheckBox;
     cbCity: TCheckBox;
     cbIncome: TCheckBox;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
+    Panel1: TPanel;
+    CreateTableButton: TButton;
+    cbChado: TCheckBox;
+    Button1: TButton;
+    PathDatFiles: TEdit;
+    Label3: TLabel;
+    Label4: TLabel;
+    cbEsc: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -90,8 +101,9 @@ type
     procedure cbUnCompleteClick(Sender: TObject);
     procedure OKCompleteDocumentButtonClick(Sender: TObject);
     procedure cbTaxIntClick(Sender: TObject);
-    procedure DocumentPanelClick(Sender: TObject);
     procedure toZConnectionAfterConnect(Sender: TObject);
+    procedure CreateTableButtonClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
   private
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
@@ -157,7 +169,8 @@ type
 // Documents
     function pLoadDocument_Income:Integer;
     procedure pLoadDocumentItem_Income(SaveCount:Integer);
-
+// Load from files *.dat
+    procedure pLoad_Chado;
 
     procedure myEnabledCB (cb:TCheckBox);
     procedure myDisabledCB (cb:TCheckBox);
@@ -195,10 +208,65 @@ begin
      //
      if fStop then Close;
 end;
-procedure TMainForm.DocumentPanelClick(Sender: TObject);
+procedure TMainForm.CreateTableButtonClick(Sender: TObject);
 begin
+ if cbChado.Checked then
+     fExecSqFromQuery(
+       ' 	CREATE TABLE chado (	 ' +
+       ' 	Code INTEGER ,	 ' +
+       ' 	Goodsgroup CHAR( 80 ) ,	 ' +
+       ' 	Name CHAR( 80 ) ,	 ' +
+       ' 	Incoming INTEGER,	 ' +
+       ' 	Remain INTEGER,	 ' +
+       ' 	col1  CHAR( 80 ) ,	 ' +
+       ' 	col2  CHAR( 80 ) ,	 ' +
+       ' 	col3  CHAR( 80 ) ,	 ' +
+       ' 	col4  CHAR( 80 ) ,	 ' +
+       ' 	col5  CHAR( 80 ) ,	 ' +
+       ' 	col6  CHAR( 80 ) ,	 ' +
+       ' 	Prise float,	 ' +
+       ' 	Partner  CHAR( 80 ), 	 ' +
+       ' 	Markup float,	 ' +
+       ' 	PeriodYear INTEGER,	 ' +
+       ' 	GoodsInfo CHAR( 80 ) ,	 ' +
+       ' 	BillItemsIncomeID INTEGER,	 ' +
+       ' 	GoodsPropertyID INTEGER,	 ' +
+       ' 	GoodsID INTEGER,	 ' +
+       ' 	LineFabrica CHAR( 80 ) ,	 ' +
+       ' 	Composition  CHAR( 80 ) 	 ' +
+       ' 	)	 '
+     );
+
+ if cbEsc.Checked then
+     fExecSqFromQuery(
+       ' 	CREATE TABLE Esc (	 ' +
+       ' 	Code INTEGER ,	 ' +
+       ' 	Goodsgroup CHAR( 80 ) ,	 ' +
+       ' 	Name CHAR( 80 ) ,	 ' +
+       ' 	Incoming INTEGER,	 ' +
+       ' 	Remain INTEGER,	 ' +
+       ' 	col1  CHAR( 80 ) ,	 ' +
+       ' 	col2  CHAR( 80 ) ,	 ' +
+       ' 	col3  CHAR( 80 ) ,	 ' +
+       ' 	col4  CHAR( 80 ) ,	 ' +
+       ' 	col5  CHAR( 80 ) ,	 ' +
+       ' 	col6  CHAR( 80 ) ,	 ' +
+       ' 	Prise float,	 ' +
+       ' 	Partner  CHAR( 80 ), 	 ' +
+       ' 	Markup float,	 ' +
+       ' 	PeriodYear INTEGER,	 ' +
+       ' 	GoodsInfo CHAR( 80 ) ,	 ' +
+       ' 	BillItemsIncomeID INTEGER,	 ' +
+       ' 	GoodsPropertyID INTEGER,	 ' +
+       ' 	GoodsID INTEGER,	 ' +
+       ' 	LineFabrica CHAR( 80 ) ,	 ' +
+       ' 	Composition  CHAR( 80 ) 	 ' +
+       ' 	)	 '
+     );
 
 end;
+
+
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fGetSession:String;
@@ -454,6 +522,26 @@ begin
           then TCheckBox(Components[i]).Checked:=cbAllGuide.Checked;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.Button1Click(Sender: TObject);
+begin
+if cbChado.Checked then
+ fExecSqFromQuery(
+     ' 	LOAD TABLE "DBA"."chado"	 ' +
+     ' 	 FROM '''+pathdatfiles.Text+'\chado.dat''	 ' +
+     ' 	 QUOTES ON ESCAPES ON STRIP OFF	 ' +
+     ' 	 DELIMITED BY '';''	 '
+     );
+if cbEsc.Checked then
+ fExecSqFromQuery(
+     ' 	LOAD TABLE "DBA"."Esc"	 ' +
+     ' 	 FROM '''+pathdatfiles.Text+'\Esc.dat''	 ' +
+     ' 	 QUOTES ON ESCAPES ON STRIP OFF	 ' +
+     ' 	 DELIMITED BY '';''	 '
+     );
+
+
+end;
+
 procedure TMainForm.cbAllCompleteDocumentClick(Sender: TObject);
 var i:Integer;
 begin
@@ -663,14 +751,6 @@ begin
      if System.Pos('auto',ParamStr(2))<=0
      then
      if MessageDlg('Действительно загрузить выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
-     {if not cbBeforeSave.Checked
-     then begin
-               if MessageDlg('Сохранение отключено.Продолжить?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
-          end
-     else fExecSqToQuery (' select * from _lpSaveData_beforeLoad('+StartDateEdit.Text+','+EndDateEdit.Text+')');}
-
-
-//     if cbShowContract.Checked then cbOnlyOpen.Checked:=true;
 
      fStop:=false;
      DBGrid.Enabled:=false;
@@ -788,10 +868,16 @@ begin
 //     fExecSqFromQuery('update dba.BillItemsReceipt set Id_Postgres = null where Id_Postgres is not null');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadDocumentItem_Income(SaveCount: Integer);
+begin
+
+end;
+
 function TMainForm.pLoadDocument_Income: Integer;
 var JuridicalId_pg,PartnerId_pg,ContractId_pg,PersonalPackerId_pg:Integer;
     isDocBEGIN:Boolean;
 begin
+{
  Result:=0;
      if (not cbIncome.Checked)or(not cbIncome.Enabled) then exit;
      //
@@ -1075,12 +1161,10 @@ begin
      end;
      //
      myDisabledCB(cbIncome);
+     }
 end;
 
-procedure TMainForm.pLoadDocumentItem_Income(SaveCount: Integer);
-begin
 
-end;
 
 
 procedure TMainForm.pLoadGuide_Brand;
@@ -2645,6 +2729,11 @@ begin
      myDisabledCB(cbValuta);
 end;
 
+
+procedure TMainForm.pLoad_Chado;
+begin
+
+end;
 
 end.
 
