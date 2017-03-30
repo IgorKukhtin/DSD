@@ -928,7 +928,10 @@ uses
   RouteMemberJournal in '..\..\Forms\Document\RouteMemberJournal.pas' {RouteMemberJournalForm: TParentForm},
   RouteMemberMovement in '..\..\Forms\Document\RouteMemberMovement.pas' {RouteMemberMovementForm: TParentForm},
   MobilePromoJournal in '..\..\Forms\Document\MobilePromoJournal.pas' {MobilePromoJournalForm: TParentForm},
-  MobilePromo in '..\..\Forms\Document\MobilePromo.pas' {MobilePromoForm: TParentForm};
+  MobilePromo in '..\..\Forms\Document\MobilePromo.pas' {MobilePromoForm: TParentForm},
+  GoodsListIncome in '..\..\Forms\Guides\GoodsListIncome.pas' {GoodsListIncomeForm: TParentForm},
+  GoodsListIncomeEdit in '..\..\Forms\Guides\GoodsListIncomeEdit.pas' {GoodsListIncomeEditForm: TParentForm},
+  GoodsListIncome_byReportEdit in '..\..\Forms\Guides\GoodsListIncome_byReportEdit.pas' {GoodsListIncome_byReportEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

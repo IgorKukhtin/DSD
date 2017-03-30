@@ -63,6 +63,7 @@ type
     clMakerName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    clComment: TcxGridDBColumn;
   private
     { Private declarations }
   public
