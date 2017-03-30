@@ -580,8 +580,6 @@ object MainForm: TMainForm
         Height = 381
         Align = alLeft
         TabOrder = 0
-        ExplicitLeft = 24
-        ExplicitTop = -2
         object Label3: TLabel
           Left = 8
           Top = 280
@@ -598,7 +596,7 @@ object MainForm: TMainForm
         end
         object CreateTableButton: TButton
           Left = 75
-          Top = 103
+          Top = 227
           Width = 142
           Height = 25
           Caption = #1057#1086#1079#1076#1072#1090#1100' '#1090#1072#1073#1083#1080#1094#1099
@@ -610,7 +608,7 @@ object MainForm: TMainForm
           Top = 8
           Width = 97
           Height = 17
-          Caption = 'Chado'
+          Caption = 'Chado.dat'
           TabOrder = 1
         end
         object Button1: TButton
@@ -635,8 +633,64 @@ object MainForm: TMainForm
           Top = 31
           Width = 97
           Height = 17
-          Caption = 'Esc'
+          Caption = 'Esc.dat'
           TabOrder = 4
+        end
+        object cbMM: TCheckBox
+          Left = 2
+          Top = 54
+          Width = 97
+          Height = 17
+          Caption = 'MM.dat'
+          TabOrder = 5
+        end
+        object cbSAV: TCheckBox
+          Left = 2
+          Top = 77
+          Width = 97
+          Height = 17
+          Caption = 'SAV.dat'
+          TabOrder = 6
+        end
+        object cbSav_out: TCheckBox
+          Left = 2
+          Top = 100
+          Width = 97
+          Height = 17
+          Caption = 'Sav_out.dat'
+          TabOrder = 7
+        end
+        object cbTer_Out: TCheckBox
+          Left = 2
+          Top = 123
+          Width = 97
+          Height = 17
+          Caption = 'Ter_Out.dat'
+          TabOrder = 8
+        end
+        object cbTL: TCheckBox
+          Left = 2
+          Top = 146
+          Width = 97
+          Height = 17
+          Caption = 'TL.dat'
+          TabOrder = 9
+        end
+        object cbVint: TCheckBox
+          Left = 2
+          Top = 169
+          Width = 97
+          Height = 17
+          Caption = 'Vint.dat'
+          TabOrder = 10
+        end
+        object cbSop: TCheckBox
+          Left = 2
+          Top = 192
+          Width = 97
+          Height = 17
+          Caption = #1057#1086#1087'.dat'
+          TabOrder = 11
         end
       end
     end

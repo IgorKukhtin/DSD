@@ -89,6 +89,13 @@ type
     Label3: TLabel;
     Label4: TLabel;
     cbEsc: TCheckBox;
+    cbMM: TCheckBox;
+    cbSAV: TCheckBox;
+    cbSav_out: TCheckBox;
+    cbTer_Out: TCheckBox;
+    cbTL: TCheckBox;
+    cbVint: TCheckBox;
+    cbSop: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -252,6 +259,172 @@ begin
        ' 	col5  CHAR( 80 ) ,	 ' +
        ' 	col6  CHAR( 80 ) ,	 ' +
        ' 	Prise float,	 ' +
+       ' 	Partner  CHAR( 80 ), 	 ' +
+       ' 	Markup float,	 ' +
+       ' 	PeriodYear INTEGER,	 ' +
+       ' 	GoodsInfo CHAR( 80 ) ,	 ' +
+       ' 	BillItemsIncomeID INTEGER,	 ' +
+       ' 	GoodsPropertyID INTEGER,	 ' +
+       ' 	GoodsID INTEGER,	 ' +
+       ' 	LineFabrica CHAR( 80 ) ,	 ' +
+       ' 	Composition  CHAR( 80 ) 	 ' +
+       ' 	)	 '
+     );
+
+ if cbMM.Checked then
+     fExecSqFromQuery(
+       ' 	CREATE TABLE MM (	 ' +
+       ' 	Code INTEGER ,	 ' +
+       ' 	Goodsgroup CHAR( 80 ) ,	 ' +
+       ' 	Name CHAR( 80 ) ,	 ' +
+       ' 	Incoming INTEGER,	 ' +
+       ' 	Remain INTEGER,	 ' +
+       ' 	col1  CHAR( 80 ) ,	 ' +
+       ' 	col2  CHAR( 80 ) ,	 ' +
+       ' 	col3  CHAR( 80 ) ,	 ' +
+       ' 	col4  CHAR( 80 ) ,	 ' +
+       ' 	col5  CHAR( 80 ) ,	 ' +
+       ' 	col6  CHAR( 80 ) ,	 ' +
+       ' 	Prise float,	 ' +
+       ' 	Partner  CHAR( 80 ), 	 ' +
+       ' 	Markup float,	 ' +
+       ' 	PeriodYear INTEGER,	 ' +
+       ' 	GoodsInfo CHAR( 80 ) ,	 ' +
+       ' 	BillItemsIncomeID INTEGER	 ' +
+       ' 	)	 '
+     );
+
+
+ if cbSAV.Checked then
+     fExecSqFromQuery(
+       ' 	CREATE TABLE SAV (	 ' +
+       ' 	Code INTEGER ,	 ' +
+       ' 	Goodsgroup CHAR( 80 ) ,	 ' +
+       ' 	Name CHAR( 80 ) ,	 ' +
+       ' 	Incoming INTEGER,	 ' +
+       ' 	Remain INTEGER,	 ' +
+       ' 	col3  CHAR( 80 ) ,	 ' +
+       ' 	col1  CHAR( 80 ) ,	 ' +
+       ' 	col2  CHAR( 80 ) ,	 ' +
+       ' 	col4  CHAR( 80 ) ,	 ' +
+       ' 	col5  CHAR( 80 ) ,	 ' +
+       ' 	col6  CHAR( 80 ) ,	 ' +
+       ' 	IntoPrise float,	   ' +
+       ' 	IntoPriseRate float,	 ' +
+       ' 	IntoPriseRate2 float,	 ' +
+       ' 	PerDiscount float,  	 ' +
+       '  Profit float,          ' +
+       ' 	Valuta  CHAR( 80 ), 	 ' +
+       ' 	Prise float,	         ' +
+       ' 	Partner  CHAR( 80 ), 	 ' +
+       ' 	Markup float,	         ' +
+       ' 	PeriodYear INTEGER,	   ' +
+       ' 	GoodsInfo CHAR( 80 ) 	 ' +
+       ' 	)	 '
+     );
+
+ if cbSav_out.Checked then
+     fExecSqFromQuery(
+       ' 	CREATE TABLE Sav_out (	 ' +
+       ' 	Code INTEGER ,	 ' +
+       ' 	Goodsgroup CHAR( 80 ) ,	 ' +
+       ' 	Name CHAR( 80 ) ,	 ' +
+       ' 	Incoming INTEGER,	 ' +
+       ' 	Remain INTEGER,	 ' +
+       ' 	col1  CHAR( 80 ) ,	 ' +
+       ' 	col2  CHAR( 80 ) ,	 ' +
+       ' 	col3  CHAR( 80 ) ,	 ' +
+       ' 	col4  CHAR( 80 ) ,	 ' +
+       ' 	col5  CHAR( 80 ) ,	 ' +
+       ' 	col6  CHAR( 80 ) ,	 ' +
+       ' 	Prise float,	 ' +
+       ' 	Partner  CHAR( 80 ), 	 ' +
+       ' 	Markup float,	 ' +
+       ' 	PeriodYear INTEGER,	 ' +
+       ' 	GoodsInfo CHAR( 80 ) ,	 ' +
+       ' 	BillItemsIncomeID INTEGER,	 ' +
+       ' 	GoodsPropertyID INTEGER,	 ' +
+       ' 	GoodsID INTEGER,	 ' +
+       ' 	LineFabrica CHAR( 80 ) ,	 ' +
+       ' 	Composition  CHAR( 80 ) 	 ' +
+       ' 	)	 '
+     );
+ if cbTer_Out.Checked then
+     fExecSqFromQuery(
+       ' 	CREATE TABLE Ter_Out (	 ' +
+       ' 	Code INTEGER ,	 ' +
+       ' 	Goodsgroup CHAR( 80 ) ,	 ' +
+       ' 	Name CHAR( 80 ) ,	 ' +
+       ' 	Remain INTEGER,	 ' +
+       ' 	col12  CHAR( 80 ) ,	 ' +
+       ' 	col123  CHAR( 80 ) ,	 ' +
+       ' 	col23  CHAR( 80 ) ,	 ' +
+       ' 	col124  CHAR( 80 ) ,	 ' +
+       ' 	col24  CHAR( 80 ) ,	 ' +
+       ' 	col234  CHAR( 80 ) ,	 ' +
+       ' 	Prise float,	 ' +
+       ' 	Partner  CHAR( 80 ), 	 ' +
+       ' 	GoodsInfo CHAR( 80 ) 	 ' +
+       ' 	)	 '
+     );
+
+ if cbTL.Checked then
+     fExecSqFromQuery(
+       ' 	CREATE TABLE TL (	 ' +
+       ' 	Code INTEGER ,	 ' +
+       ' 	Goodsgroup CHAR( 80 ) ,	 ' +
+       ' 	Name CHAR( 80 ) ,	 ' +
+       ' 	Incoming INTEGER,	 ' +
+       ' 	Remain INTEGER,	 ' +
+       ' 	col3  CHAR( 80 ) ,	 ' +
+       ' 	col1  CHAR( 80 ) ,	 ' +
+       ' 	col2  CHAR( 80 ) ,	 ' +
+       ' 	col4  CHAR( 80 ) ,	 ' +
+       ' 	col5  CHAR( 80 ) ,	 ' +
+       ' 	col6  CHAR( 80 ) ,	 ' +
+       ' 	Prise float,	 ' +
+       ' 	Partner  CHAR( 80 ), 	 ' +
+       ' 	Markup float,	 ' +
+       ' 	PeriodYear INTEGER,	 ' +
+       ' 	GoodsInfo CHAR( 80 ) ,	 ' +
+       ' 	Composition  CHAR( 80 ) 	 ' +
+       ' 	)	 '
+     );
+
+ if cbVint.Checked then
+     fExecSqFromQuery(
+       ' 	CREATE TABLE Vint (	 ' +
+       ' 	Code INTEGER ,	 ' +
+       ' 	Goodsgroup CHAR( 80 ) ,	 ' +
+       ' 	Name CHAR( 80 ) ,	 ' +
+       ' 	Remain INTEGER,	 ' +
+       ' 	col1  CHAR( 80 ) ,	 ' +
+       ' 	col2  CHAR( 80 ) ,	 ' +
+       ' 	col3  CHAR( 80 ) ,	 ' +
+       ' 	col4  CHAR( 80 ) ,	 ' +
+       ' 	col5  CHAR( 80 ) ,	 ' +
+       ' 	col6  CHAR( 80 ) ,	 ' +
+       ' 	Prise float,	 ' +
+       ' 	Partner  CHAR( 80 ), 	 ' +
+       ' 	Markup float,	 ' +
+       ' 	PeriodYear INTEGER,	 ' +
+       ' 	GoodsInfo CHAR( 80 ) 	 ' +
+       ' 	)	 '
+     );
+ if cbSop.Checked then
+     fExecSqFromQuery(
+       ' 	CREATE TABLE Sop (	 ' +
+       ' 	Code INTEGER ,	 ' +
+       ' 	Goodsgroup CHAR( 80 ) ,	 ' +
+       ' 	Name CHAR( 80 ) ,	 ' +
+       ' 	Remain INTEGER,	 ' +
+       ' 	col1  CHAR( 80 ) ,	 ' +
+       ' 	col2  CHAR( 80 ) ,	 ' +
+       ' 	col3  CHAR( 80 ) ,	 ' +
+       ' 	col4  CHAR( 80 ) ,	 ' +
+       ' 	col5  CHAR( 80 ) ,	 ' +
+       ' 	col6  CHAR( 80 ) ,	 ' +
+       ' 	col7  INTEGER ,	         ' +
        ' 	Partner  CHAR( 80 ), 	 ' +
        ' 	Markup float,	 ' +
        ' 	PeriodYear INTEGER,	 ' +
@@ -535,6 +708,55 @@ if cbEsc.Checked then
  fExecSqFromQuery(
      ' 	LOAD TABLE "DBA"."Esc"	 ' +
      ' 	 FROM '''+pathdatfiles.Text+'\Esc.dat''	 ' +
+     ' 	 QUOTES ON ESCAPES ON STRIP OFF	 ' +
+     ' 	 DELIMITED BY '';''	 '
+     );
+if cbMM.Checked then
+ fExecSqFromQuery(
+     ' 	LOAD TABLE "DBA"."MM"	 ' +
+     ' 	 FROM '''+pathdatfiles.Text+'\MM.dat''	 ' +
+     ' 	 QUOTES ON ESCAPES ON STRIP OFF	 ' +
+     ' 	 DELIMITED BY '';''	 '
+     );
+if cbSav.Checked then
+ fExecSqFromQuery(
+     ' 	LOAD TABLE "DBA"."Sav"	 ' +
+     ' 	 FROM '''+pathdatfiles.Text+'\Sav.dat''	 ' +
+     ' 	 QUOTES ON ESCAPES ON STRIP OFF	 ' +
+     ' 	 DELIMITED BY '';''	 '
+     );
+if cbSav_out.Checked then
+ fExecSqFromQuery(
+     ' 	LOAD TABLE "DBA"."Sav_out"	 ' +
+     ' 	 FROM '''+pathdatfiles.Text+'\Sav_out.dat''	 ' +
+     ' 	 QUOTES ON ESCAPES ON STRIP OFF	 ' +
+     ' 	 DELIMITED BY '';''	 '
+     );
+if cbTer_Out.Checked then
+ fExecSqFromQuery(
+     ' 	LOAD TABLE "DBA"."Ter_Out"	 ' +
+     ' 	 FROM '''+pathdatfiles.Text+'\Ter_Out.dat''	 ' +
+     ' 	 QUOTES ON ESCAPES ON STRIP OFF	 ' +
+     ' 	 DELIMITED BY '';''	 '
+     );
+if cbTL.Checked then
+ fExecSqFromQuery(
+     ' 	LOAD TABLE "DBA"."TL"	 ' +
+     ' 	 FROM '''+pathdatfiles.Text+'\TL.dat''	 ' +
+     ' 	 QUOTES ON ESCAPES ON STRIP OFF	 ' +
+     ' 	 DELIMITED BY '';''	 '
+     );
+if cbVint.Checked then
+ fExecSqFromQuery(
+     ' 	LOAD TABLE "DBA"."Vint"	 ' +
+     ' 	 FROM '''+pathdatfiles.Text+'\Vint.dat''	 ' +
+     ' 	 QUOTES ON ESCAPES ON STRIP OFF	 ' +
+     ' 	 DELIMITED BY '';''	 '
+     );
+if cbSop.Checked then
+ fExecSqFromQuery(
+     ' 	LOAD TABLE "DBA"."Sop"	 ' +
+     ' 	 FROM '''+pathdatfiles.Text+'\Соп.dat''	 ' +
      ' 	 QUOTES ON ESCAPES ON STRIP OFF	 ' +
      ' 	 DELIMITED BY '';''	 '
      );
