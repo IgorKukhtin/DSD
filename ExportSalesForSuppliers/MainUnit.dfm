@@ -1057,6 +1057,7 @@ object Form1: TForm1
           Height = 25
           Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' Email'
           TabOrder = 0
+          OnClick = btnTevaSendMailClick
         end
         object edtTevaEMail: TEdit
           Left = 583
@@ -1091,6 +1092,7 @@ object Form1: TForm1
           Height = 25
           Caption = #1042#1089#1105'!'
           TabOrder = 4
+          OnClick = btnTevaAllClick
         end
         object TevaID: TcxSpinEdit
           Left = 272
