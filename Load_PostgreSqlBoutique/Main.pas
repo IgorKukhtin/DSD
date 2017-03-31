@@ -228,9 +228,9 @@ begin
        ' 	Name CHAR( 80 ) ,	 ' +
        ' 	Incoming INTEGER,	 ' +
        ' 	Remain INTEGER,	 ' +
+       ' 	col3  CHAR( 80 ) ,	 ' +
        ' 	col1  CHAR( 80 ) ,	 ' +
        ' 	col2  CHAR( 80 ) ,	 ' +
-       ' 	col3  CHAR( 80 ) ,	 ' +
        ' 	col4  CHAR( 80 ) ,	 ' +
        ' 	col5  CHAR( 80 ) ,	 ' +
        ' 	col6  CHAR( 80 ) ,	 ' +
@@ -334,9 +334,9 @@ begin
        ' 	Name CHAR( 80 ) ,	 ' +
        ' 	Incoming INTEGER,	 ' +
        ' 	Remain INTEGER,	 ' +
+       ' 	col3  CHAR( 80 ) ,	 ' +
        ' 	col1  CHAR( 80 ) ,	 ' +
        ' 	col2  CHAR( 80 ) ,	 ' +
-       ' 	col3  CHAR( 80 ) ,	 ' +
        ' 	col4  CHAR( 80 ) ,	 ' +
        ' 	col5  CHAR( 80 ) ,	 ' +
        ' 	col6  CHAR( 80 ) ,	 ' +
@@ -359,9 +359,9 @@ begin
        ' 	Goodsgroup CHAR( 80 ) ,	 ' +
        ' 	Name CHAR( 80 ) ,	 ' +
        ' 	Remain INTEGER,	 ' +
+       ' 	col3  CHAR( 80 ) ,	 ' +
        ' 	col1  CHAR( 80 ) ,	 ' +
        ' 	col2  CHAR( 80 ) ,	 ' +
-       ' 	col3  CHAR( 80 ) ,	 ' +
        ' 	col4  CHAR( 80 ) ,	 ' +
        ' 	col5  CHAR( 80 ) ,	 ' +
        ' 	col6  CHAR( 80 ) ,	 ' +
@@ -401,9 +401,9 @@ begin
        ' 	Goodsgroup CHAR( 80 ) ,	 ' +
        ' 	Name CHAR( 80 ) ,	 ' +
        ' 	Remain INTEGER,	 ' +
+       ' 	col3  CHAR( 80 ) ,	 ' +
        ' 	col1  CHAR( 80 ) ,	 ' +
        ' 	col2  CHAR( 80 ) ,	 ' +
-       ' 	col3  CHAR( 80 ) ,	 ' +
        ' 	col4  CHAR( 80 ) ,	 ' +
        ' 	col5  CHAR( 80 ) ,	 ' +
        ' 	col6  CHAR( 80 ) ,	 ' +
@@ -421,9 +421,9 @@ begin
        ' 	Goodsgroup CHAR( 80 ) ,	 ' +
        ' 	Name CHAR( 80 ) ,	 ' +
        ' 	Remain INTEGER,	 ' +
+       ' 	col3  CHAR( 80 ) ,	 ' +
        ' 	col1  CHAR( 80 ) ,	 ' +
        ' 	col2  CHAR( 80 ) ,	 ' +
-       ' 	col3  CHAR( 80 ) ,	 ' +
        ' 	col4  CHAR( 80 ) ,	 ' +
        ' 	col5  CHAR( 80 ) ,	 ' +
        ' 	col6  CHAR( 80 ) ,	 ' +
