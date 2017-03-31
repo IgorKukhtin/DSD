@@ -1,5 +1,5 @@
-inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
-  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1076#1083#1103' '#1089#1085#1072#1073#1078#1077#1085#1080#1103'>'
+inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
+  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1076#1074#1080#1078#1077#1085#1080#1102' '#1087#1086' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080'>'
   ClientHeight = 534
   ClientWidth = 1390
   AddOnFormData.isSingle = False
