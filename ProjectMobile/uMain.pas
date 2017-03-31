@@ -21,7 +21,8 @@ uses
   FMX.TMSWebGMapsCommon, FMX.TMSWebGMapsReverseGeocoding, FMX.ListBox,
   FMX.DateTimeCtrls, FMX.Controls3D, FMX.Layers3D, FMX.Menus, Generics.Collections,
   FMX.Gestures, System.Actions, FMX.ActnList, System.ImageList, FMX.ImgList,
-  FMX.Grid.Style, FMX.Media, FMX.Surfaces, FMX.VirtualKeyboard, FMX.SearchBox, IniFiles
+  FMX.Grid.Style, FMX.Media, FMX.Surfaces, FMX.VirtualKeyboard, FMX.SearchBox, IniFiles,
+  FMX.Ani
   {$IFDEF ANDROID}
   ,FMX.Helpers.Android, Androidapi.Helpers,
   Androidapi.JNI.Location, Androidapi.JNIBridge,
@@ -66,15 +67,6 @@ type
     WebServerEdit: TEdit;
     SyncLayout: TLayout;
     SyncCheckBox: TCheckBox;
-    Layout21: TLayout;
-    lButton1: TLayout;
-    lButton2: TLayout;
-    Layout23: TLayout;
-    lButton5: TLayout;
-    Layout22: TLayout;
-    lButton3: TLayout;
-    lButton4: TLayout;
-    lButton6: TLayout;
     tiRoutes: TTabItem;
     VertScrollBox1: TVertScrollBox;
     tiPartners: TTabItem;
@@ -88,24 +80,6 @@ type
     pPartnerInfo: TPanel;
     tiSync: TTabItem;
     imLogo: TImage;
-    bSync: TButton;
-    Image3: TImage;
-    Label8: TLabel;
-    bRelogin: TButton;
-    Image4: TImage;
-    Label9: TLabel;
-    bReport: TButton;
-    Image6: TImage;
-    Label7: TLabel;
-    bInfo: TButton;
-    Image5: TImage;
-    Label6: TLabel;
-    bHandBook: TButton;
-    Image1: TImage;
-    Label1: TLabel;
-    bVisit: TButton;
-    Image2: TImage;
-    Label5: TLabel;
     pMapScreen: TPanel;
     WebGMapsReverseGeocoder: TTMSFMXWebGMapsReverseGeocoding;
     WebGMapsGeocoder: TTMSFMXWebGMapsGeocoding;
@@ -462,9 +436,69 @@ type
     bPrintJuridicalCollation: TButton;
     tiPrintJuridicalCollation: TTabItem;
     lwJuridicalCollation: TListView;
+    bsJuridicalCollation: TBindSourceDB;
+    LinkListControlToField14: TLinkListControlToField;
+    Panel31: TPanel;
+    Layout15: TLayout;
+    Label47: TLabel;
+    cbPaidKind: TComboBox;
+    Panel32: TPanel;
+    lStartRemains: TLabel;
+    lEndRemains: TLabel;
+    lTotalDebit: TLabel;
+    lTotalKredit: TLabel;
+    VertScrollBox8: TVertScrollBox;
+    Layout21: TLayout;
+    lButton1: TLayout;
+    bHandBook: TButton;
+    Image1: TImage;
+    Label1: TLabel;
+    lButton2: TLayout;
+    bVisit: TButton;
+    Image2: TImage;
+    Label5: TLabel;
+    Layout22: TLayout;
+    lButton3: TLayout;
+    bTasks: TButton;
+    Image5: TImage;
+    Label6: TLabel;
+    lButton4: TLayout;
+    bReport: TButton;
+    Image6: TImage;
+    Label7: TLabel;
+    Layout23: TLayout;
+    lButton5: TLayout;
+    bSync: TButton;
+    Image3: TImage;
+    Label8: TLabel;
+    lButton6: TLayout;
+    bInfo: TButton;
+    Image4: TImage;
+    lTasks: TLabel;
+    bRelogin: TButton;
+    Image16: TImage;
+    tiPartnerTasks: TTabItem;
+    tTasks: TTimer;
+    tiTasks: TTabItem;
+    lwTasks: TListView;
+    Panel33: TPanel;
+    bsTasks: TBindSourceDB;
+    LinkListControlToField15: TLinkListControlToField;
+    pTaskComment: TPanel;
+    bSaveTask: TButton;
+    bCancelTask: TButton;
+    eTaskComment: TEdit;
+    Label9: TLabel;
+    rbAllTask: TRadioButton;
+    rbOpenTask: TRadioButton;
+    rbCloseTask: TRadioButton;
+    bRefreshTasks: TButton;
+    Image17: TImage;
+    cbUseDateTask: TCheckBox;
+    deDateTask: TDateEdit;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure bReloginClick(Sender: TObject);
+    procedure bInfoClick(Sender: TObject);
     procedure bVisitClick(Sender: TObject);
     procedure sbBackClick(Sender: TObject);
     procedure lwPartnerItemClick(const Sender: TObject;
@@ -575,7 +609,7 @@ type
     procedure bSyncClick(Sender: TObject);
     procedure tErrorMapTimer(Sender: TObject);
     procedure bRefreshMapScreenClick(Sender: TObject);
-    procedure bInfoClick(Sender: TObject);
+    procedure bTasksClick(Sender: TObject);
     procedure bPromoPartnersClick(Sender: TObject);
     procedure lwPromoGoodsFilter(Sender: TObject; const AFilter, AValue: string;
       var Accept: Boolean);
@@ -594,9 +628,22 @@ type
     procedure bReportJuridicalCollationClick(Sender: TObject);
     procedure cbJuridicalsChange(Sender: TObject);
     procedure bPrintJuridicalCollationClick(Sender: TObject);
+    procedure bReloginClick(Sender: TObject);
+    procedure tTasksTimer(Sender: TObject);
+    procedure bCancelTaskClick(Sender: TObject);
+    procedure bSaveTaskClick(Sender: TObject);
+    procedure lwTasksItemClickEx(const Sender: TObject; ItemIndex: Integer;
+      const LocalClickPos: TPointF; const ItemObject: TListItemDrawable);
+    procedure LinkListControlToField15FilledListItem(Sender: TObject;
+      const AEditor: IBindListEditorItem);
+    procedure cbUseDateTaskChange(Sender: TObject);
+    procedure bRefreshTasksClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
+    FJuridicalIdList: TList<integer>;
+    FContractIdList: TList<integer>;
+    FPaidKindIdList: TList<integer>;
 
     FCanEditPartner : boolean;
 
@@ -657,6 +704,7 @@ type
     procedure ShowPhotos;
     procedure ShowPhoto;
     procedure ShowInformation;
+    procedure ShowTasks(ShowAll: boolean = true);
     procedure AddedNewStoreRealItems;
     procedure AddedNewOrderItems;
     procedure AddedNewReturnInItems;
@@ -739,6 +787,10 @@ begin
   FDeletedRI := TList<Integer>.Create;
   FCurCoordinatesSet := false;
 
+  FJuridicalIdList := TList<integer>.Create;
+  FContractIdList := TList<integer>.Create;
+  FPaidKindIdList := TList<integer>.Create;
+
   SwitchToForm(tiStart, nil);
   ChangeMainPageUpdate(tcMain);
 end;
@@ -759,6 +811,10 @@ begin
   FDeletedSRI.Free;
   FDeletedRI.Free;
   FDeletedOI.Free;
+
+  FJuridicalIdList.Free;
+  FContractIdList.Free;
+  FPaidKindIdList.Free;
 end;
 
 procedure TfrmMain.FormFocusChanged(Sender: TObject);
@@ -786,6 +842,9 @@ begin
       else
       if pPhotoComment.Visible then
         bCancelPhotoClick(bCancelPhoto)
+      else
+      if pTaskComment.Visible then
+        bCancelTaskClick(bCancelTask)
       else
       if tcMain.ActiveTab = tiStart then
         MessageDlg('Закрыть программу?', TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbOK, TMsgDlgBtn.mbCancel], -1, OnCloseDialog)
@@ -838,6 +897,30 @@ begin
   lButton4.Width := frmMain.Width div 2;
   lButton5.Width := frmMain.Width div 2;
   lButton6.Width := frmMain.Width div 2;
+end;
+
+procedure TfrmMain.LinkListControlToField15FilledListItem(Sender: TObject;
+  const AEditor: IBindListEditorItem);
+var
+  CurItem: TListViewItem;
+begin
+  CurItem := lwTasks.Items[AEditor.CurrentIndex];
+
+  if SameText(TListItemText(CurItem.Objects.FindDrawable('Closed')).Text, 'False') then
+    TListItemImage(CurItem.Objects.FindDrawable('CloseButton')).ImageIndex := 4
+  else
+    TListItemImage(CurItem.Objects.FindDrawable('CloseButton')).ImageIndex := 1;
+
+  if TListItemText(CurItem.Objects.FindDrawable('PartnerName')).Text = '' then
+  begin
+    CurItem.Height := 100;
+    CurItem.Objects.FindDrawable('CloseButton').PlaceOffset.Y := 20;
+  end
+  else
+  begin
+    CurItem.Height := 140;
+    CurItem.Objects.FindDrawable('CloseButton').PlaceOffset.Y := 40;
+  end;
 end;
 
 procedure TfrmMain.LogInButtonClick(Sender: TObject);
@@ -1253,6 +1336,21 @@ begin
   TListItemImage(AItem.Objects.FindDrawable('EditButton')).ImageIndex := 1;
 end;
 
+procedure TfrmMain.lwTasksItemClickEx(const Sender: TObject; ItemIndex: Integer;
+  const LocalClickPos: TPointF; const ItemObject: TListItemDrawable);
+begin
+  if ItemObject = nil then
+    exit;
+
+  if ItemObject.Name = 'CloseButton' then
+  begin
+    eTaskComment.Text := DM.cdsTasksComment.AsString;
+
+    vsbMain.Enabled := false;
+    pTaskComment.Visible := true;
+  end;
+end;
+
 procedure TfrmMain.lwStoreRealItemsUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
@@ -1498,6 +1596,12 @@ begin
   pPhotoComment.Visible := false;
 end;
 
+procedure TfrmMain.bCancelTaskClick(Sender: TObject);
+begin
+  vsbMain.Enabled := true;
+  pTaskComment.Visible := false;
+end;
+
 procedure TfrmMain.bCanclePGClick(Sender: TObject);
 begin
   vsbMain.Enabled := true;
@@ -1615,25 +1719,13 @@ begin
   SwitchToForm(tiHandbook, nil);
 end;
 
-procedure TfrmMain.bInfoClick(Sender: TObject);
-{$IFDEF ANDROID}
-var
-  intent: JIntent;
-  uri: Jnet_Uri;
+procedure TfrmMain.bTasksClick(Sender: TObject);
 begin
-  Intent := TJIntent.Create;
-  Intent.setAction(TJIntent.JavaClass.ACTION_VIEW);
-
-  uri := TJnet_Uri.JavaClass.fromFile(TJFile.JavaClass.init(StringToJString(TPath.Combine(TPath.GetSharedDownloadsPath, 'TestStyles.apk'))));
-  Intent.setDataAndType(uri, StringToJString('application/vnd.android.package-archive'));
-  Intent.setFlags(TJIntent.JavaClass.FLAG_ACTIVITY_NEW_TASK);
-  SharedActivity.startActivity(Intent);
+  if pos('(', lTasks.Text) > 0 then
+    ShowTasks(false)
+  else
+    ShowTasks(true);
 end;
-{$ELSE}
-begin
-  ShowInformation;
-end;
-{$ENDIF}
 
 procedure TfrmMain.bMondayClick(Sender: TObject);
 begin
@@ -1689,10 +1781,33 @@ begin
 end;
 
 procedure TfrmMain.bPrintJuridicalCollationClick(Sender: TObject);
+var
+  Res : integer;
+  StartRemains, EndRemains, TotalDebit, TotalKredit: Currency;
 begin
-  DM.GenerateJuridicalCollation(deStartRJC.Date, deEndRJC.Date,
-    Integer(cbJuridicals.Items.Objects[cbJuridicals.ItemIndex]),
-    Integer(cbContracts.Items.Objects[cbContracts.ItemIndex]));
+  Res := DM.GenerateJuridicalCollation(deStartRJC.Date, deEndRJC.Date,
+           FJuridicalIdList.Items[cbJuridicals.ItemIndex],
+           FContractIdList.Items[cbContracts.ItemIndex],
+           FPaidKindIdList.Items[cbPaidKind.ItemIndex],
+           StartRemains, EndRemains, TotalDebit, TotalKredit);
+
+  if Res > 0 then
+  begin
+    lStartRemains.Text := 'Сальдо на начало периода: ' + FormatFloat('0.00', StartRemains);
+    lEndRemains.Text := 'Сальдо на конец периода: ' + FormatFloat('0.00', EndRemains);
+    lTotalDebit.Text := 'Суммарный дебет: ' + FormatFloat('0.00', TotalDebit);
+    lTotalKredit.Text := 'Суммарный кредит: ' + FormatFloat('0.00', TotalKredit);
+
+    lwJuridicalCollation.ScrollViewPos := 0;
+
+
+    lCaption.Text := 'Акт сверки для "' + cbJuridicals.Items[cbJuridicals.ItemIndex] + '" за период с ' +
+      FormatDateTime('DD.MM.YYYY', deStartRJC.Date) +  ' по ' + FormatDateTime('DD.MM.YYYY', deEndRJC.Date);
+    SwitchToForm(tiPrintJuridicalCollation, nil);
+  end
+  else
+  if Res = 0 then
+    ShowMessage('По заданым критериям данные не найдены');
 end;
 
 procedure TfrmMain.bPromoGoodsClick(Sender: TObject);
@@ -1758,10 +1873,50 @@ begin
   end;
 end;
 
+procedure TfrmMain.bRefreshTasksClick(Sender: TObject);
+var
+  Mode: TActiveMode;
+begin
+  if rbAllTask.IsChecked then
+    Mode := amAll
+  else
+  if rbOpenTask.IsChecked then
+    Mode := amOpen
+  else
+    Mode := amClose;
+
+  if cbUseDateTask.IsChecked then
+    DM.LoadTasks(Mode, true, deDateTask.Date)
+  else
+    DM.LoadTasks(Mode, true);
+
+  lwTasks.ScrollViewPos := 0;
+end;
+
 procedure TfrmMain.bReloginClick(Sender: TObject);
 begin
   ReturnPriorForm;
 end;
+
+procedure TfrmMain.bInfoClick(Sender: TObject);
+{$IFDEF ANDROID}
+var
+  intent: JIntent;
+  uri: Jnet_Uri;
+begin
+  Intent := TJIntent.Create;
+  Intent.setAction(TJIntent.JavaClass.ACTION_VIEW);
+
+  uri := TJnet_Uri.JavaClass.fromFile(TJFile.JavaClass.init(StringToJString(TPath.Combine(TPath.GetSharedDownloadsPath, 'TestStyles.apk'))));
+  Intent.setDataAndType(uri, StringToJString('application/vnd.android.package-archive'));
+  Intent.setFlags(TJIntent.JavaClass.FLAG_ACTIVITY_NEW_TASK);
+  SharedActivity.startActivity(Intent);
+end;
+{$ELSE}
+begin
+  ShowInformation;
+end;
+{$ENDIF}
 
 procedure TfrmMain.bReportClick(Sender: TObject);
 begin
@@ -1772,7 +1927,10 @@ end;
 
 procedure TfrmMain.bReportJuridicalCollationClick(Sender: TObject);
 begin
+  // заполнение списка юридических лиц
   cbJuridicals.Items.Clear;
+  FJuridicalIdList.Clear;
+
   with DM.qrySelect do
   begin
     Open('select * from OBJECT_JURIDICAL where ISERASED = 0 order by ValueData');
@@ -1780,7 +1938,8 @@ begin
 
     while not Eof do
     begin
-      cbJuridicals.Items.AddObject(FieldByName('ValueData').AsString, TObject(FieldByName('Id').AsInteger));
+      cbJuridicals.Items.Add(FieldByName('ValueData').AsString);
+      FJuridicalIdList.Add(FieldByName('Id').AsInteger);
 
       Next;
     end;
@@ -1788,6 +1947,15 @@ begin
     Close;
   end;
   cbJuridicals.ItemIndex := 0;
+
+  // заполнение списка форм оплаты
+  cbPaidKind.Items.Clear;
+  FPaidKindIdList.Clear;
+  cbPaidKind.Items.Add(DM.tblObject_ConstPaidKindName_First.AsString);
+  FPaidKindIdList.Add(DM.tblObject_ConstPaidKindId_First.AsInteger);
+  cbPaidKind.Items.Add(DM.tblObject_ConstPaidKindName_Second.AsString);
+  FPaidKindIdList.Add(DM.tblObject_ConstPaidKindId_Second.AsInteger);
+  cbPaidKind.ItemIndex := 0;
 
   SwitchToForm(tiReportJuridicalCollation, nil);
 end;
@@ -1979,6 +2147,19 @@ begin
      ShowMessage(ErrMes);
 end;
 
+procedure TfrmMain.bSaveTaskClick(Sender: TObject);
+begin
+  if DM.CloseTask(DM.cdsTasksId.AsInteger, eTaskComment.Text) then
+  begin
+    DM.cdsTasks.Edit;
+    DM.cdsTasksClosed.AsBoolean := true;
+    DM.cdsTasks.Post;
+  end;
+
+  vsbMain.Enabled := true;
+  pTaskComment.Visible := false;
+end;
+
 procedure TfrmMain.bSetPartnerCoordinateClick(Sender: TObject);
 var
   Mes : string;
@@ -2120,6 +2301,23 @@ begin
   finally
     tSavePath.Enabled := true;
   end;
+end;
+
+procedure TfrmMain.tTasksTimer(Sender: TObject);
+begin
+  tTasks.Enabled := false;
+
+  if tiPartnerTasks.Visible and (tcPartnerInfo.ActiveTab <> tiPartnerTasks) then
+  begin
+    if tiPartnerTasks.TextSettings.FontColor = TAlphaColors.Black then
+      tiPartnerTasks.TextSettings.FontColor := TAlphaColors.Red
+    else
+      tiPartnerTasks.TextSettings.FontColor := TAlphaColors.Black;
+  end
+  else
+    tiPartnerTasks.TextSettings.FontColor := TAlphaColors.Black;
+
+  tTasks.Enabled := true;
 end;
 
 procedure TfrmMain.FormVirtualKeyboardHidden(Sender: TObject;
@@ -2355,7 +2553,7 @@ end;
 
 procedure TfrmMain.ChangeMainPageUpdate(Sender: TObject);
 var
-  i : integer;
+  i, TaskCount : integer;
 begin
   if Assigned(FWebGMap) then
   try
@@ -2417,6 +2615,9 @@ begin
     if tcMain.ActiveTab = tiInformation then
       lCaption.Text := 'Информация'
     else
+    if tcMain.ActiveTab = tiReportJuridicalCollation then
+      lCaption.Text := 'Акт сверки'
+    else
     if tcMain.ActiveTab = tiOrderExternal then
       lCaption.Text := 'Заявки (' + DM.qryPartnerName.AsString + ')'
     else
@@ -2427,10 +2628,24 @@ begin
       lCaption.Text := 'Возврат (' + DM.qryPartnerName.AsString + ')';
   end;
 
+  if tcMain.ActiveTab = tiMain then
+  begin
+    TaskCount := DM.LoadTasks(amOpen, false);
+    if TaskCount > 0 then
+      lTasks.Text := 'Задания (' + IntToStr(TaskCount) + ')'
+    else
+      lTasks.Text := 'Задания';
+  end;
+
   if tcMain.ActiveTab = tiPartners then
     sbPartnerMenu.Visible := true
   else
     sbPartnerMenu.Visible := false;
+
+  if tcMain.ActiveTab = tiPartnerInfo then
+    tTasks.Enabled := true
+  else
+    tTasks.Enabled := false;
 
   if tcMain.ActiveTab = tiStart then
     CheckDataBase;
@@ -2800,6 +3015,20 @@ begin
   SwitchToForm(tiInformation, nil);
 end;
 
+procedure TfrmMain.ShowTasks(ShowAll: boolean = true);
+begin
+  if ShowAll then
+    rbAllTask.IsChecked := true
+  else
+    rbOpenTask.IsChecked := true;
+  cbUseDateTask.IsChecked := false;
+  deDateTask.Enabled := false;
+
+  bRefreshTasksClick(bRefreshTasks);
+
+  SwitchToForm(tiTasks, nil);
+end;
+
 procedure TfrmMain.AddedNewStoreRealItems;
 var
   i: integer;
@@ -3038,7 +3267,10 @@ end;
 procedure TfrmMain.cbJuridicalsChange(Sender: TObject);
 begin
   cbContracts.Items.Clear;
-  cbContracts.Items.AddObject('', TObject(0));
+  FContractIdList.Clear;
+
+  cbContracts.Items.Add('');
+  FContractIdList.Add(0);
 
   with DM.qrySelect do
   begin
@@ -3050,7 +3282,8 @@ begin
 
     while not Eof do
     begin
-      cbContracts.Items.AddObject(FieldByName('ContractName').AsString, TObject(FieldByName('Id').AsInteger));
+      cbContracts.Items.Add(FieldByName('ContractName').AsString);
+      FContractIdList.Add(FieldByName('Id').AsInteger);
 
       Next;
     end;
@@ -3077,6 +3310,11 @@ end;
 procedure TfrmMain.cbShowAllPathChange(Sender: TObject);
 begin
   deDatePath.Enabled := not cbShowAllPath.IsChecked;
+end;
+
+procedure TfrmMain.cbUseDateTaskChange(Sender: TObject);
+begin
+  deDateTask.Enabled := cbUseDateTask.IsChecked;
 end;
 
 procedure TfrmMain.GetImage;
