@@ -689,8 +689,25 @@ object MainForm: TMainForm
           Top = 192
           Width = 97
           Height = 17
-          Caption = #1057#1086#1087'.dat'
+          Caption = 'Sop.dat'
           TabOrder = 11
+        end
+        object cbGoods2: TCheckBox
+          Left = 114
+          Top = 8
+          Width = 97
+          Height = 17
+          Caption = 'Goods2'
+          TabOrder = 12
+        end
+        object InsertGoods2Button: TButton
+          Left = 120
+          Top = 31
+          Width = 95
+          Height = 25
+          Caption = 'insert into Goods2'
+          TabOrder = 13
+          OnClick = InsertGoods2ButtonClick
         end
       end
     end
