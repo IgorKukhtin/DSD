@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpReport_SupplyBalance (TDateTime, TDateTime, Integer, I
 CREATE OR REPLACE FUNCTION gpReport_SupplyBalance(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
-    IN inLocationId         Integer,    -- подразделение склад
+    IN inUnitId             Integer,    -- подразделение склад
     IN inGoodsGroupId       Integer,    -- группа товара
     IN inSession            TVarChar    -- сессия пользователя
 )
@@ -13,20 +13,20 @@ RETURNS TABLE (GoodsCode Integer, GoodsName TVarChar
              , GoodsKindName  TVarChar
              , MeasureName TVarChar
              , GoodsGroupNameFull TVarChar
-
-             , CountDays TFloat
+             , GoodsGroupName TVarChar
+             , CountDays Integer
              , RemainsStart TFloat
              , RemainsEnd TFloat
              , CountIncome TFloat
              , CountProductionOut TFloat
              , CountSendIn  TFloat
              , CountSendOut TFloat
-             , CountOnDay Float 
-             , RemainsDays Float 
-             , ReserveDays Float 
-             , PlanOrder Float 
-             , CountOrder Float 
-             , RemainsDaysWithOrder Float 
+             , CountOnDay TFloat 
+             , RemainsDays TFloat 
+             , ReserveDays TFloat 
+             , PlanOrder TFloat 
+             , CountOrder TFloat 
+             , RemainsDaysWithOrder TFloat 
              , Color_RemainsDays Integer
               )
 AS
@@ -53,8 +53,8 @@ BEGIN
     tmpContainer AS (SELECT tmp.GoodsId, tmp.goodskindid
                           , SUM (tmp.StartAmount)        AS RemainsStart 
                           , SUM (tmp.EndAmount)          AS RemainsEnd 
-                          , SUM (tmp.CountIncome)        AS CountIncome
-                          , SUM (tmp.CountProductionOut) AS CountProductionOut
+                          , SUM (tmp.CountIncome + tmp.CountSendIn)         AS CountIncome
+                          , SUM (tmp.CountProductionOut + tmp.CountSendOut) AS CountProductionOut
                           , SUM (tmp.CountSendIn)        AS CountSendIn
                           , SUM (tmp.CountSendOut)       AS CountSendOut
                      FROM (SELECT Container.ObjectId                     AS GoodsId
@@ -86,13 +86,14 @@ BEGIN
                                        END) AS CountSendOut
                            FROM ContainerLinkObject AS CLO_Unit
                                 INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId AND Container.DescId = zc_Container_Count() 
+                                INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = Container.ObjectId
                                 LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                               ON CLO_GoodsKind.ContainerId = CLO_Unit.ContainerId
                                                              AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
                                 LEFT JOIN MovementItemContainer AS MIContainer 
                                                                 ON MIContainer.Containerid = Container.Id
                                                                AND MIContainer.OperDate >= inStartDate
-                           WHERE CLO_Unit.ObjectId = inLocationId
+                           WHERE CLO_Unit.ObjectId = inUnitId
                              AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                             -- AND Container.ObjectId = 625267
                            GROUP BY Container.ObjectId, GoodsKindId, Container.Amount
@@ -107,6 +108,7 @@ BEGIN
            , Object_GoodsKind.ValueData                 AS GoodsKindName
            , Object_Measure.ValueData                   AS MeasureName
            , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
+           , Object_GoodsGroup.ValueData                AS GoodsGroupName
            , vbCountDays                 AS CountDays
 
            , tmpContainer.RemainsStart   :: TFloat
@@ -116,7 +118,7 @@ BEGIN
            , tmpContainer.CountSendIn         :: TFloat
            , tmpContainer.CountSendOut        :: TFloat
 
-           , CASE WHEN vbCountDays <> 0 THEN tmpContainer.CountProductionOut/vbCountDays ELSE 0 END  :: TFloat AS CountOnDay
+           , (CASE WHEN vbCountDays <> 0 THEN tmpContainer.CountProductionOut/vbCountDays ELSE 0 END)  :: TFloat AS CountOnDay
            , CASE WHEN tmpContainer.RemainsEnd <> 0 AND (tmpContainer.CountProductionOut/vbCountDays) <> 0
                   THEN tmpContainer.RemainsEnd / (tmpContainer.CountProductionOut/vbCountDays) 
                   ELSE 0
@@ -131,9 +133,9 @@ BEGIN
 
            , CASE WHEN (CASE WHEN tmpContainer.RemainsEnd <> 0 AND (tmpContainer.CountProductionOut/vbCountDays) <> 0
                         THEN tmpContainer.RemainsEnd / (tmpContainer.CountProductionOut/vbCountDays) 
-                        ELSE 0 END) < 30
-                  THEN zc_Color_Red() 
-                  ELSE zc_Color_Black()
+                        ELSE 0 END) > 29.9
+                  THEN zc_Color_Black()
+                  ELSE zc_Color_Red() 
              END  :: integer AS Color_RemainsDays
 
        FROM tmpContainer
@@ -147,6 +149,11 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                               ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+          LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
           ;
 
 END;
@@ -159,4 +166,4 @@ $BODY$
 */
 
 -- тест
--- 
+-- select * from gpReport_SupplyBalance(inStartDate := ('01.12.2016')::TDateTime , inEndDate := ('21.12.2016')::TDateTime , inUnitId := 8455 , inGoodsGroupId := 1917 ,  inSession := '5');
