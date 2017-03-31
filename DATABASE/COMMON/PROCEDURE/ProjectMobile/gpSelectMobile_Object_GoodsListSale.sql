@@ -47,6 +47,7 @@ BEGIN
                                                  JOIN tmpPartner ON tmpPartner.PartnerId = MovementLinkObject_Partner.ObjectId
                                             WHERE Movement_StoreReal.DescId = zc_Movement_StoreReal()
                                               AND Movement_StoreReal.StatusId = zc_Enum_Status_Complete()
+                                              AND Movement_StoreReal.OperDate < CURRENT_DATE
                                            ) AS SR
                                       WHERE SR.RowNum = 1
                                      )
@@ -55,15 +56,16 @@ BEGIN
                                             , MI_StoreReal.ObjectId                             AS GoodsId
                                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)     AS GoodsKindId
                                             , SUM (COALESCE (MI_StoreReal.Amount, 0.0))::TFloat AS AmountStoreReal
-                                       FROM MovementItem AS MI_StoreReal
-                                            JOIN tmpStoreRealDoc ON tmpStoreRealDoc.StoreRealId = MI_StoreReal.MovementId
+                                       FROM tmpStoreRealDoc 
+                                            JOIN MovementItem AS MI_StoreReal
+                                                              ON MI_StoreReal.MovementId = tmpStoreRealDoc.StoreRealId
+                                                             AND MI_StoreReal.DescId = zc_MI_Master()
+                                                             AND NOT MI_StoreReal.isErased
+                                                             AND MI_StoreReal.ObjectId > 0 
+                                                             AND COALESCE (MI_StoreReal.Amount, 0.0) > 0.0
                                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                              ON MILinkObject_GoodsKind.MovementItemId = MI_StoreReal.Id
                                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind() 
-                                       WHERE MI_StoreReal.DescId = zc_MI_Master()
-                                         AND NOT MI_StoreReal.isErased
-                                         AND MI_StoreReal.ObjectId > 0 
-                                         AND COALESCE (MI_StoreReal.Amount, 0.0) > 0.0
                                        GROUP BY tmpStoreRealDoc.PartnerId
                                               , tmpStoreRealDoc.OperDate
                                               , MI_StoreReal.ObjectId
@@ -73,16 +75,16 @@ BEGIN
                                        , MI_Sale.ObjectId                                              AS GoodsId
                                        , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                 AS GoodsKindId
                                        , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0.0))::TFloat AS AmountSale
-                                  FROM MovementItem AS MI_Sale
+                                  FROM Movement AS Movement_Sale
+                                       JOIN MovementItem AS MI_Sale
+                                                         ON MI_Sale.MovementId = Movement_Sale.Id
+                                                        AND MI_Sale.DescId = zc_MI_Master()
+                                                        AND NOT MI_Sale.isErased
                                        LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                         ON MILinkObject_GoodsKind.MovementItemId = MI_Sale.Id
                                                                        AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind() 
                                        JOIN tmpStoreRealItem ON tmpStoreRealItem.GoodsId = MI_Sale.ObjectId
                                                             AND tmpStoreRealItem.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0) 
-                                       JOIN Movement AS Movement_Sale
-                                                     ON Movement_Sale.Id = MI_Sale.MovementId
-                                                    AND Movement_Sale.DescId = zc_Movement_Sale()
-                                                    AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
                                        JOIN MovementDate AS MovementDate_OperDatePartner
                                                          ON MovementDate_OperDatePartner.MovementId = Movement_Sale.Id
                                                         AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
@@ -99,8 +101,8 @@ BEGIN
                                        LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                                    ON MIFloat_AmountPartner.MovementItemId = MI_Sale.Id
                                                                   AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()                                                
-                                  WHERE MI_Sale.DescId = zc_MI_Master()
-                                    AND NOT MI_Sale.isErased
+                                  WHERE Movement_Sale.DescId = zc_Movement_Sale()
+                                    AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
                                   GROUP BY tmpStoreRealItem.PartnerId
                                          , MI_Sale.ObjectId
                                          , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  
@@ -109,16 +111,16 @@ BEGIN
                                            , MI_ReturnIn.ObjectId                                          AS GoodsId
                                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                 AS GoodsKindId
                                            , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0.0))::TFloat AS AmountReturnIn
-                                      FROM MovementItem AS MI_ReturnIn
+                                      FROM Movement AS Movement_ReturnIn
+                                           JOIN MovementItem AS MI_ReturnIn
+                                                             ON MI_ReturnIn.MovementId = Movement_ReturnIn.Id
+                                                            AND MI_ReturnIn.DescId = zc_MI_Master()
+                                                            AND NOT MI_ReturnIn.isErased
                                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                             ON MILinkObject_GoodsKind.MovementItemId = MI_ReturnIn.Id
                                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind() 
                                            JOIN tmpStoreRealItem ON tmpStoreRealItem.GoodsId = MI_ReturnIn.ObjectId
                                                                 AND tmpStoreRealItem.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0) 
-                                           JOIN Movement AS Movement_ReturnIn
-                                                     ON Movement_ReturnIn.Id = MI_ReturnIn.MovementId
-                                                    AND Movement_ReturnIn.DescId = zc_Movement_ReturnIn()
-                                                    AND Movement_ReturnIn.StatusId = zc_Enum_Status_Complete()
                                            JOIN MovementDate AS MovementDate_OperDatePartner
                                                              ON MovementDate_OperDatePartner.MovementId = Movement_ReturnIn.Id
                                                             AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
@@ -135,8 +137,8 @@ BEGIN
                                            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                                        ON MIFloat_AmountPartner.MovementItemId = MI_ReturnIn.Id
                                                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()                                                
-                                      WHERE MI_ReturnIn.DescId = zc_MI_Master()
-                                        AND NOT MI_ReturnIn.isErased
+                                      WHERE Movement_ReturnIn.DescId = zc_Movement_ReturnIn()
+                                        AND Movement_ReturnIn.StatusId = zc_Enum_Status_Complete()
                                       GROUP BY tmpStoreRealItem.PartnerId
                                              , MI_ReturnIn.ObjectId
                                              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  
