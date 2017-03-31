@@ -894,6 +894,19 @@ end;
 procedure TMainForm.InsertGoods2ButtonClick(Sender: TObject);
 begin
  if not cbGoods2.Checked then Exit;
+// Правки полей
+fExecSqFromQuery(
+ ' update sop set col1=''Детское'' where col1=''Детск''; ' +
+ ' update sav_out  set col1=''Муж'' where col1=''муж''; ' +
+ ' update sav_out  set col1=''Жен'' where col1=''жен''; ' +
+ ' update ter_out  set col1=''Муж'' where col1=''муж''; ' +
+ ' update ter_out  set col1=''Жен'' where col1=''жен''; ' +
+ ' update tl  set col1=''Муж'' where col1=''муж''; ' +
+ ' update tl  set col1=''Жен'' where col1=''жен''; '
+
+
+);
+
 
 // Уровень 1
 fExecSqFromQuery(
