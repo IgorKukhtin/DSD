@@ -1444,7 +1444,9 @@ object DM: TDM
   end
   object cdsJuridicalCollation: TClientDataSet
     Aggregates = <>
+    IndexFieldNames = 'DocType;DocDate'
     Params = <>
+    OnCalcFields = cdsJuridicalCollationCalcFields
     Left = 40
     Top = 536
     object cdsJuridicalCollationDocNum: TStringField
@@ -1468,9 +1470,18 @@ object DM: TDM
     object cdsJuridicalCollationKredit: TFloatField
       FieldName = 'Kredit'
     end
+    object cdsJuridicalCollationFromName: TStringField
+      FieldName = 'FromName'
+      Size = 255
+    end
+    object cdsJuridicalCollationToName: TStringField
+      FieldName = 'ToName'
+      Size = 255
+    end
     object cdsJuridicalCollationDocNumDate: TStringField
       FieldKind = fkCalculated
       FieldName = 'DocNumDate'
+      Size = 200
       Calculated = True
     end
     object cdsJuridicalCollationPayment: TStringField
@@ -1478,6 +1489,67 @@ object DM: TDM
       FieldName = 'Payment'
       Size = 200
       Calculated = True
+    end
+    object cdsJuridicalCollationDocTypeShow: TStringField
+      DisplayWidth = 300
+      FieldKind = fkCalculated
+      FieldName = 'DocTypeShow'
+      Size = 300
+      Calculated = True
+    end
+    object cdsJuridicalCollationPaidKindShow: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'PaidKindShow'
+      Size = 200
+      Calculated = True
+    end
+    object cdsJuridicalCollationFromToName: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'FromToName'
+      Size = 300
+      Calculated = True
+    end
+  end
+  object cdsTasks: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 128
+    Top = 536
+    object cdsTasksId: TIntegerField
+      FieldName = 'Id'
+    end
+    object cdsTasksInvNumber: TStringField
+      FieldName = 'InvNumber'
+      Size = 255
+    end
+    object cdsTasksOperDate: TDateTimeField
+      FieldName = 'OperDate'
+    end
+    object cdsTasksPartnerId: TIntegerField
+      FieldName = 'PartnerId'
+    end
+    object cdsTasksClosed: TBooleanField
+      FieldName = 'Closed'
+    end
+    object cdsTasksDescription: TStringField
+      FieldName = 'Description'
+      Size = 1000
+    end
+    object cdsTasksComment: TStringField
+      FieldName = 'Comment'
+      Size = 1000
+    end
+    object cdsTasksPartnerName: TStringField
+      FieldName = 'PartnerName'
+      Size = 300
+    end
+    object cdsTasksTaskDate: TStringField
+      FieldName = 'TaskDate'
+      Size = 200
+    end
+    object cdsTasksTaskDescription: TStringField
+      FieldName = 'TaskDescription'
+      Size = 1100
     end
   end
 end

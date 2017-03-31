@@ -931,7 +931,9 @@ uses
   MobilePromo in '..\..\Forms\Document\MobilePromo.pas' {MobilePromoForm: TParentForm},
   GoodsListIncome in '..\..\Forms\Guides\GoodsListIncome.pas' {GoodsListIncomeForm: TParentForm},
   GoodsListIncomeEdit in '..\..\Forms\Guides\GoodsListIncomeEdit.pas' {GoodsListIncomeEditForm: TParentForm},
-  GoodsListIncome_byReportEdit in '..\..\Forms\Guides\GoodsListIncome_byReportEdit.pas' {GoodsListIncome_byReportEditForm: TParentForm};
+  GoodsListIncome_byReportEdit in '..\..\Forms\Guides\GoodsListIncome_byReportEdit.pas' {GoodsListIncome_byReportEditForm: TParentForm},
+  Report_SupplyBalance in '..\..\Forms\Report\Report_SupplyBalance.pas' {Report_SupplyBalanceForm: TParentForm},
+  Report_SupplyBalanceDialog in '..\..\Forms\Report\Report_SupplyBalanceDialog.pas' {Report_SupplyBalanceDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

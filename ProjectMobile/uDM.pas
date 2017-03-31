@@ -24,6 +24,8 @@ CONST
     'JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID and C.ISERASED = 0 where P.ISERASED = 0 ';
 
 type
+  TActiveMode = (amAll, amOpen, amClose);
+
   TProgressThread = class(TThread)
   private
     { Private declarations }
@@ -477,8 +479,25 @@ type
     cdsJuridicalCollationPayment: TStringField;
     cdsJuridicalCollationDebet: TFloatField;
     cdsJuridicalCollationKredit: TFloatField;
+    cdsJuridicalCollationDocTypeShow: TStringField;
+    cdsJuridicalCollationPaidKindShow: TStringField;
+    cdsJuridicalCollationFromName: TStringField;
+    cdsJuridicalCollationToName: TStringField;
+    cdsJuridicalCollationFromToName: TStringField;
+    cdsTasks: TClientDataSet;
+    cdsTasksInvNumber: TStringField;
+    cdsTasksOperDate: TDateTimeField;
+    cdsTasksPartnerId: TIntegerField;
+    cdsTasksClosed: TBooleanField;
+    cdsTasksDescription: TStringField;
+    cdsTasksComment: TStringField;
+    cdsTasksId: TIntegerField;
+    cdsTasksPartnerName: TStringField;
+    cdsTasksTaskDate: TStringField;
+    cdsTasksTaskDescription: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
+    procedure cdsJuridicalCollationCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
     FConnected: Boolean;
@@ -522,7 +541,11 @@ type
     procedure SavePhotoGroup(AGroupName: string);
     procedure LoadPhotoGroups;
 
-    function GenerateJuridicalCollation(DateStart, DateEnd: TDate; JuridicalId, ContractId: integer): boolean;
+    function GenerateJuridicalCollation(DateStart, DateEnd: TDate; JuridicalId, ContractId, PaidKindId: integer;
+      var StartRemains, EndRemains, TotalDebit, TotalKredit: Currency): integer;
+
+    function LoadTasks(Active: TActiveMode; SaveData: boolean = true; ADate: TDate = 0): integer;
+    function CloseTask(ATasksId: integer; ATaskComment: string): boolean;
 
     property Connected: Boolean read FConnected;
   end;
@@ -1634,6 +1657,7 @@ begin
   cdsReturnIn.CreateDataSet;
   cdsReturnInItems.CreateDataSet;
   cdsJuridicalCollation.CreateDataSet;
+  cdsTasks.CreateDataSet;
 end;
 
 
@@ -1851,6 +1875,25 @@ begin
   cdsStoreRealItemsCount.AsString := ArrValue[6];         // количество по умолчанию
 
   cdsStoreRealItems.Post;
+end;
+
+procedure TDM.cdsJuridicalCollationCalcFields(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('DocNumDate').AsString := 'Документ №' + DataSet.FieldByName('DocNum').AsString +
+    ' от ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('DocDate').AsDateTime);
+  DataSet.FieldByName('DocTypeShow').AsString := 'Вид: ' + DataSet.FieldByName('DocType').AsString;
+  DataSet.FieldByName('PaidKindShow').AsString := 'Форма оплаты: ' + DataSet.FieldByName('PaidKind').AsString;
+
+  if DataSet.FieldByName('Debet').AsFloat = 0 then
+  begin
+    DataSet.FieldByName('Payment').AsString := 'Кредит: ' + FormatFloat('0.00', DataSet.FieldByName('Kredit').AsFloat);
+    DataSet.FieldByName('FromToName').AsString := 'Кому: ' + DataSet.FieldByName('ToName').AsString;
+  end
+  else
+  begin
+    DataSet.FieldByName('Payment').AsString := 'Дебет: ' + FormatFloat('0.00', DataSet.FieldByName('Debet').AsFloat);
+    DataSet.FieldByName('FromToName').AsString := 'От кого: ' + DataSet.FieldByName('FromName').AsString;
+  end;
 end;
 
 procedure TDM.DefaultStoreRealItems;
@@ -2754,12 +2797,19 @@ begin
 end;
 
 
-function TDM.GenerateJuridicalCollation(DateStart, DateEnd: TDate; JuridicalId, ContractId: integer): boolean;
+function TDM.GenerateJuridicalCollation(DateStart, DateEnd: TDate; JuridicalId, ContractId, PaidKindId: integer;
+  var StartRemains, EndRemains, TotalDebit, TotalKredit: Currency): integer;
 var
   x : integer;
   FieldName : string;
   GetStoredProc : TdsdStoredProc;
 begin
+  cdsJuridicalCollation.EmptyDataSet;
+  StartRemains := 0;
+  EndRemains := 0;
+  TotalDebit := 0;
+  TotalKredit := 0;
+
   GetStoredProc := TdsdStoredProc.Create(nil);
   try
     GetStoredProc.StoredProcName := 'gpReport_JuridicalCollation';
@@ -2772,7 +2822,7 @@ begin
     GetStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, 0);
     GetStoredProc.Params.AddParam('inContractId', ftInteger, ptInput, ContractId);
     GetStoredProc.Params.AddParam('inAccountId', ftInteger, ptInput, 0);
-    GetStoredProc.Params.AddParam('inPaidKindId', ftInteger, ptInput, 0);
+    GetStoredProc.Params.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
     GetStoredProc.Params.AddParam('inInfoMoneyId', ftInteger, ptInput, 0);
     GetStoredProc.Params.AddParam('inCurrencyId', ftInteger, ptInput, 0);
     GetStoredProc.Params.AddParam('inMovementId_Partion', ftInteger, ptInput, 0);
@@ -2780,6 +2830,7 @@ begin
     try
       GetStoredProc.Execute(false, false, true);
 
+      Result := GetStoredProc.DataSet.RecordCount;
 
       with GetStoredProc.DataSet do
       begin
@@ -2787,31 +2838,123 @@ begin
 
         while not Eof do
         begin
-          cdsJuridicalCollation.Append;
+          StartRemains := StartRemains + FieldByName('StartRemains').AsFloat;
+          EndRemains := StartRemains + FieldByName('EndRemains').AsFloat;
 
-          cdsJuridicalCollationDocNum.AsString := FieldByName('InvNumber').AsString;
-          cdsJuridicalCollationDocType.AsString := FieldByName('ItemName').AsString;
-          cdsJuridicalCollationDocDate.AsDateTime := FieldByName('OperDate').AsDateTime;
-          cdsJuridicalCollationPaidKind.AsString := FieldByName('PaidKindName').AsString;
-          cdsJuridicalCollationDebet.AsString := FieldByName('Debet').AsString;
-          cdsJuridicalCollationKredit.AsFloat := FieldByName('Kredit').AsFloat;
+          if FieldByName('InvNumber').AsString <> '' then
+          begin
+            cdsJuridicalCollation.Append;
 
-          cdsJuridicalCollation.Post;
+            cdsJuridicalCollationDocNum.AsString := FieldByName('InvNumber').AsString;
+            cdsJuridicalCollationDocType.AsString := FieldByName('ItemName').AsString;
+            cdsJuridicalCollationDocDate.AsDateTime := FieldByName('OperDate').AsDateTime;
+            cdsJuridicalCollationPaidKind.AsString := FieldByName('PaidKindName').AsString;
+            cdsJuridicalCollationDebet.AsFloat := FieldByName('Debet').AsFloat;
+            cdsJuridicalCollationKredit.AsFloat := FieldByName('Kredit').AsFloat;
+            cdsJuridicalCollationFromName.AsString := FieldByName('FromName').AsString;
+            cdsJuridicalCollationToName.AsString := FieldByName('ToName').AsString;
+
+            cdsJuridicalCollation.Post;
+
+            TotalDebit := TotalDebit + FieldByName('Debet').AsFloat;
+            TotalKredit := TotalKredit + FieldByName('Kredit').AsFloat;
+          end;
 
           Next;
         end;
+
+        cdsJuridicalCollation.First;
       end;
-      ShowMessage(IntToStr(GetStoredProc.DataSet.RecordCount));
-
-
     except
       on E : Exception do
       begin
-        raise Exception.Create(E.Message);
+        ShowMessage(E.Message);
+        Result := -1;
       end;
     end;
   finally
     FreeAndNil(GetStoredProc);
+  end;
+end;
+
+function TDM.LoadTasks(Active: TActiveMode; SaveData: boolean = true; ADate: TDate = 0): integer;
+var
+  DateSql, ActiveSql : string;
+begin
+  if ADate = 0 then
+    DateSql := 'JOIN MOVEMENT_TASK TM ON TM.ID = TI.MOVEMENTID '
+  else
+    DateSql := 'JOIN MOVEMENT_TASK TM ON TM.ID = TI.MOVEMENTID AND DATE(TM.OPERDATE) = :TASKDATE ';
+
+  if Active <> amAll then
+    ActiveSQL := 'WHERE TI.CLOSED = :CLOSED '
+  else
+    ActiveSQL := '';
+
+  qrySelect.SQL.Text := 'SELECT TI.ID, TI.PARTNERID, TI.CLOSED, TI.DESCRIPTION, TI.COMMENT, ' +
+    'TM.OPERDATE, TM.INVNUMBER, P.VALUEDATA PartnerName ' +
+    'FROM MOVEMENTITEM_TASK TI ' +
+    DateSql +
+    'LEFT JOIN OBJECT_PARTNER P ON P.ID = TI.PARTNERID ' +
+    ActiveSQL+
+    'GROUP BY TI.ID ORDER BY TM.OPERDATE DESC';
+
+  if ADate <> 0 then
+    qrySelect.ParamByName('TASKDATE').AsDate := ADate;
+
+  if Active = amOpen then
+    qrySelect.ParamByName('CLOSED').AsBoolean := false
+  else
+  if Active = amClose then
+    qrySelect.ParamByName('CLOSED').AsBoolean := true;
+
+  cdsTasks.EmptyDataSet;
+  qrySelect.Open;
+  try
+    Result := qrySelect.RecordCount;
+
+    if SaveData then
+    begin
+      qrySelect.First;
+
+      while not qrySelect.Eof do
+      begin
+        cdsTasks.Append;
+
+        cdsTasksId.AsInteger := qrySelect.FieldByName('Id').AsInteger;
+        cdsTasksInvNumber.AsString := qrySelect.FieldByName('InvNumber').AsString;
+        cdsTasksOperDate.AsDateTime := qrySelect.FieldByName('OperDate').AsDateTime;
+        cdsTasksPartnerId.AsInteger := qrySelect.FieldByName('PartnerId').AsInteger;
+        cdsTasksClosed.AsBoolean := qrySelect.FieldByName('Closed').AsBoolean;
+        cdsTasksDescription.AsString := qrySelect.FieldByName('Description').AsString;
+        cdsTasksComment.AsString := qrySelect.FieldByName('Comment').AsString;
+        if qrySelect.FieldByName('PartnerName').AsString <> '' then
+          cdsTasksPartnerName.AsString := 'ТТ: ' + qrySelect.FieldByName('PartnerName').AsString;
+        cdsTasksTaskDate.AsString := 'Задание от ' + FormatDateTime('DD.MM.YYYY', cdsTasksOperDate.AsDateTime);
+        cdsTasksTaskDescription.AsString := 'Описание: ' + cdsTasksDescription.AsString;
+
+        cdsTasks.Post;
+
+        qrySelect.Next;
+      end;
+
+      cdsTasks.First;
+    end;
+  finally
+    qrySelect.Close;
+  end;
+end;
+
+function TDM.CloseTask(ATasksId: integer; ATaskComment: string): boolean;
+begin
+  try
+    conMain.ExecSQL('update MovementItem_Task set Closed = 1, Comment = ' + QuotedStr(ATaskComment) +
+      ' where Id = ' + IntToStr(ATasksId));
+    ShowMessage('Задание отмечно закрытым');
+    Result := true;
+  except
+    ShowMessage('Ошибка при попытке закрыть задание');
+    Result := false;
   end;
 end;
 
