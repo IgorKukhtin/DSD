@@ -24,14 +24,12 @@ type
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
     FormParams: TdsdFormParams;
-    CountIncome: TcxGridDBColumn;
     clGoodsKindName: TcxGridDBColumn;
     RemainsEnd: TcxGridDBColumn;
     clMeasureName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     UnitGuides: TdsdGuides;
     edUnit: TcxButtonEdit;
-    CountProductionOut: TcxGridDBColumn;
     actPrint_Real: TdsdPrintAction;
     bbPrint_Real: TdxBarButton;
     bbPrint: TdxBarButton;

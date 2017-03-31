@@ -32,7 +32,6 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Color_RemainsDays
             end
             item
               Format = ',0.####'
@@ -42,12 +41,10 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountSendOut
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountIncome
             end
             item
               Format = ',0.####'
@@ -61,27 +58,6 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountOnDay
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = CountProductionOut
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = CountSendIn
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = PlanOrder
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = CountOrder
             end
             item
               Format = ',0.####'
@@ -274,7 +250,6 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountDays
             end
             item
               Format = ',0.####'
@@ -311,12 +286,97 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountIn1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountIn2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountIn3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountIn4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountIn5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountIn6
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountIn7
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountOut1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountOut2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountOut3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountOut4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountOut5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountOut6
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountOut7
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Color_RemainsDays
             end
             item
               Format = ',0.####'
@@ -326,12 +386,10 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountSendOut
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountIncome
             end
             item
               Format = ',0.####'
@@ -345,27 +403,6 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountOnDay
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = CountProductionOut
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = CountSendIn
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = PlanOrder
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = CountOrder
             end
             item
               Format = ',0.####'
@@ -558,7 +595,22 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountDays
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -600,6 +652,76 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = clGoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountIn1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountIn2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountIn3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountIn4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountIn5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountIn6
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountIn7
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountOut1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountOut2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountOut3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountOut4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountOut5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountOut6
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountOut7
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -657,16 +779,6 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
             HeaderAlignmentVert = vaCenter
             Width = 35
           end
-          object CountDays: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081
-            DataBinding.FieldName = 'CountDays'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object RemainsStart: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072#1095'.'
             DataBinding.FieldName = 'RemainsStart'
@@ -687,115 +799,145 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object CountIncome: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093#1086#1076'-'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090'.'
-            DataBinding.FieldName = 'CountIncome'
+          object CountIn1: TcxGridDBColumn
+            Caption = #1055#1085'. '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'CountIn1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 60
           end
-          object CountProductionOut: TcxGridDBColumn
-            Caption = #1056#1072#1089#1093#1086#1076' '#1085#1072' '#1087#1088'-'#1074#1086
-            DataBinding.FieldName = 'CountProductionOut'
+          object CountIn2: TcxGridDBColumn
+            Caption = #1042#1090'. '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'CountIn2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 60
           end
-          object CountSendIn: TcxGridDBColumn
-            Caption = #1055#1077#1088#1077#1084#1077#1097'. '#1087#1088#1080#1093#1086#1076
-            DataBinding.FieldName = 'CountSendIn'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object CountSendOut: TcxGridDBColumn
-            Caption = #1055#1077#1088#1077#1084#1077#1097'. '#1088#1072#1089#1093#1086#1076
-            DataBinding.FieldName = 'CountSendOut'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object CountOnDay: TcxGridDBColumn
-            Caption = #1057#1088#1077#1076#1085#1080#1081' '#1088#1072#1089#1093#1086#1076' '#1074' '#1076#1077#1085#1100
-            DataBinding.FieldName = 'CountOnDay'
+          object CountIn3: TcxGridDBColumn
+            Caption = #1057#1088'. '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'CountIn3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 60
           end
-          object RemainsDays: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1086#1089#1090#1072#1090#1082#1072
-            DataBinding.FieldName = 'RemainsDays'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object ReserveDays: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1079#1072#1087#1072#1089#1072
-            DataBinding.FieldName = 'ReserveDays'
+          object CountIn4: TcxGridDBColumn
+            Caption = #1063#1090'. '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'CountIn4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 60
           end
-          object PlanOrder: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085'. '#1047#1072#1082#1072#1079' '#1085#1072' '#1084#1077#1089#1103#1094
-            DataBinding.FieldName = 'PlanOrder'
+          object CountIn5: TcxGridDBColumn
+            Caption = #1055#1090'. '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'CountIn5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 60
           end
-          object CountOrder: TcxGridDBColumn
-            Caption = #1047#1072#1082#1072#1079' '#1074' '#1087#1091#1090#1080
-            DataBinding.FieldName = 'CountOrder'
+          object CountIn6: TcxGridDBColumn
+            Caption = #1057#1073'. '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'CountIn6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 60
           end
-          object RemainsDaysWithOrder: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1086#1089#1090#1072#1090#1082#1072' '#1089' '#1091#1095#1077#1090#1086#1084' '#1079#1072#1082#1072#1079#1072
-            DataBinding.FieldName = 'RemainsDaysWithOrder'
+          object CountIn7: TcxGridDBColumn
+            Caption = #1042#1089'. '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'CountIn7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 60
           end
-          object Color_RemainsDays: TcxGridDBColumn
-            DataBinding.FieldName = 'Color_RemainsDays'
-            Visible = False
+          object CountOut1: TcxGridDBColumn
+            Caption = #1055#1085'. '#1088#1072#1089#1093#1086#1076
+            DataBinding.FieldName = 'CountOut1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
-            Width = 70
+            Width = 60
+          end
+          object CountOut2: TcxGridDBColumn
+            Caption = #1042#1090'. '#1088#1072#1089#1093#1086#1076
+            DataBinding.FieldName = 'CountOut2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object CountOut3: TcxGridDBColumn
+            Caption = #1057#1088'. '#1088#1072#1089#1093#1086#1076
+            DataBinding.FieldName = 'CountOut3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object CountOut4: TcxGridDBColumn
+            Caption = #1063#1090'. '#1088#1072#1089#1093#1086#1076
+            DataBinding.FieldName = 'CountOut4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object CountOut5: TcxGridDBColumn
+            Caption = #1055#1090'. '#1088#1072#1089#1093#1086#1076
+            DataBinding.FieldName = 'CountOut5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object CountOut6: TcxGridDBColumn
+            Caption = #1057#1073'. '#1088#1072#1089#1093#1086#1076
+            DataBinding.FieldName = 'CountOut6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object CountOut7: TcxGridDBColumn
+            Caption = #1042#1089'. '#1088#1072#1089#1093#1086#1076
+            DataBinding.FieldName = 'CountOut7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
         end
       end
@@ -808,31 +950,37 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 118
-      EditValue = 42005d
+      EditValue = 42826d
       Properties.SaveTime = False
       ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit
-      Left = 320
-      EditValue = 42005d
+      Left = 6
+      Top = 15
+      EditValue = 42826d
       Properties.SaveTime = False
-      ExplicitLeft = 320
+      Visible = False
+      ExplicitLeft = 6
+      ExplicitTop = 15
     end
     inherited cxLabel1: TcxLabel
       Left = 25
       ExplicitLeft = 25
     end
     inherited cxLabel2: TcxLabel
-      Left = 208
-      ExplicitLeft = 208
+      Left = 2
+      Top = 8
+      Visible = False
+      ExplicitLeft = 2
+      ExplicitTop = 8
     end
     object cxLabel4: TcxLabel
-      Left = 720
+      Left = 515
       Top = 6
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 811
+      Left = 606
       Top = 5
       Properties.Buttons = <
         item
@@ -844,12 +992,12 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
       Width = 180
     end
     object cxLabel3: TcxLabel
-      Left = 417
+      Left = 212
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnit: TcxButtonEdit
-      Left = 507
+      Left = 302
       Top = 4
       Properties.Buttons = <
         item
@@ -968,8 +1116,8 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1076#1083#1103' '#1089#1085#1072#1073#1078#1077#1085#1080#1103
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1076#1083#1103' '#1089#1085#1072#1073#1078#1077#1085#1080#1103
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1076#1074#1080#1078#1077#1085#1080#1102' '#1087#1086' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1076#1074#1080#1078#1077#1085#1080#1102' '#1087#1086' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1116,8 +1264,8 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_SupplyBalanceDialogForm'
-      FormNameParam.Value = 'TReport_SupplyBalanceDialogForm'
+      FormName = 'TReport_MotionGoodsWeekDialogForm'
+      FormNameParam.Value = 'TReport_MotionGoodsWeekDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1125,14 +1273,6 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 41640d
-          Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1185,7 +1325,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_SupplyBalance'
+    StoredProcName = 'gpReport_MotionGoodsWeek'
     Params = <
       item
         Name = 'inStartDate'
@@ -1200,7 +1340,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -1315,8 +1455,6 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
       item
-        ColorColumn = RemainsDays
-        ValueColumn = Color_RemainsDays
         ColorValueList = <>
       end>
     Left = 320
@@ -1333,6 +1471,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
         Component = PeriodChoice
       end
       item
+        Component = deStart
       end
       item
         Component = UnitGuides

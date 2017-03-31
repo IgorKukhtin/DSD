@@ -846,6 +846,8 @@ type
     actReport_SupplyBalance: TdsdOpenForm;
     N166: TMenuItem;
     N167: TMenuItem;
+    actReport_MotionGoodsWeek: TdsdOpenForm;
+    N168: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
