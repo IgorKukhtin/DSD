@@ -32,6 +32,8 @@ RETURNS TABLE (PaidKindId_First      Integer   -- Форма оплаты - БН
              -- , SyncDateOut        TDateTime -- Дата/время последней синхронизации - когда "успешно" выгружалась иходящая информация - заказы, возвраты и т.д
              , MobileVersion         TVarChar  -- Версия мобильного приложения. Пример: "1.0.3.625"
              , MobileAPKFileName     TVarChar  -- Название ".apk" файла мобильного приложения. Пример: "ProjectMobile.apk"
+             , PriceListId_def       Integer   -- Прайс-лист для "безликих" ТТ, т.е. добавленных на мобильном устройстве
+             , PriceListName_def     TVarChar  -- Прайс-лист для "безликих" ТТ, т.е. добавленных на мобильном устройстве
 )
 AS
 $BODY$
@@ -95,6 +97,9 @@ BEGIN
             , '1.0.0.0'::TVarChar           AS MobileVersion
             , 'ProjectMobile.apk'::TVarChar AS MobileAPKFileName
 
+            , Object_PriceList_def.Id        AS PriceListId_def
+            , Object_PriceList_def.ValueData AS PriceListName_def
+
        FROM tmpPersonal
             LEFT JOIN Object AS Object_PaidKind_FirstForm  ON Object_PaidKind_FirstForm.Id = zc_Enum_PaidKind_FirstForm()
             LEFT JOIN Object AS Object_PaidKind_SecondForm ON Object_PaidKind_SecondForm.Id = zc_Enum_PaidKind_SecondForm()
@@ -113,6 +118,8 @@ BEGIN
                                   AND ObjectString_User_.DescId = zc_ObjectString_User_Password()
 
             LEFT JOIN Object AS Object_ConnectParam ON Object_ConnectParam.Id = zc_Enum_GlobalConst_ConnectParam ()
+
+            LEFT JOIN Object AS Object_PriceList_def ON Object_PriceList_def.Id = zc_PriceList_Basis()
       ;
 
 
