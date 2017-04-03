@@ -1095,6 +1095,7 @@ begin
        Params.AddParam('inPriceListId', ftInteger, ptInput, 0);
        Params.AddParam('inGoodsCode', ftInteger, ptInput, 0);
        Params.AddParam('inDayPrior_PriceReturn', ftInteger, ptInput,GetArrayList_Value_byName(Default_Array,'DayPrior_PriceReturn'));
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        Execute;
   end;
   //

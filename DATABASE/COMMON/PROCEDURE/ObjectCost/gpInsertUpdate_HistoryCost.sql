@@ -22,182 +22,6 @@ $BODY$
 
    DECLARE vbItearation Integer;
    DECLARE vbCountDiff Integer;
-
-   DECLARE vb11 TFloat;
-   DECLARE vb12 TFloat;
-   DECLARE vb13 TFloat;
-   DECLARE vb14 TFloat;
-
-   DECLARE vb21 TFloat;
-   DECLARE vb22 TFloat;
-   DECLARE vb23 TFloat;
-   DECLARE vb24 TFloat;
-
-   DECLARE vb31 TFloat;
-   DECLARE vb32 TFloat;
-   DECLARE vb33 TFloat;
-   DECLARE vb34 TFloat;
-
-   DECLARE vb41 TFloat;
-   DECLARE vb42 TFloat;
-   DECLARE vb43 TFloat;
-   DECLARE vb44 TFloat;
-
-   DECLARE vb51 TFloat;
-   DECLARE vb52 TFloat;
-   DECLARE vb53 TFloat;
-   DECLARE vb54 TFloat;
-
-   DECLARE vb61 TFloat;
-   DECLARE vb62 TFloat;
-   DECLARE vb63 TFloat;
-   DECLARE vb64 TFloat;
-
-   DECLARE vb71 TFloat;
-   DECLARE vb72 TFloat;
-   DECLARE vb73 TFloat;
-   DECLARE vb74 TFloat;
-
-   DECLARE vb81 TFloat;
-   DECLARE vb82 TFloat;
-   DECLARE vb83 TFloat;
-   DECLARE vb84 TFloat;
-
-   DECLARE vb91 TFloat;
-   DECLARE vb92 TFloat;
-   DECLARE vb93 TFloat;
-   DECLARE vb94 TFloat;
-
-   DECLARE vb101 TFloat;
-   DECLARE vb102 TFloat;
-   DECLARE vb103 TFloat;
-   DECLARE vb104 TFloat;
-
-   DECLARE vb111 TFloat;
-   DECLARE vb112 TFloat;
-   DECLARE vb113 TFloat;
-   DECLARE vb114 TFloat;
-
-   DECLARE vb121 TFloat;
-   DECLARE vb122 TFloat;
-   DECLARE vb123 TFloat;
-   DECLARE vb124 TFloat;
-
-   DECLARE vb131 TFloat;
-   DECLARE vb132 TFloat;
-   DECLARE vb133 TFloat;
-   DECLARE vb134 TFloat;
-
-   DECLARE vb141 TFloat;
-   DECLARE vb142 TFloat;
-   DECLARE vb143 TFloat;
-   DECLARE vb144 TFloat;
-
-   DECLARE vb151 TFloat;
-   DECLARE vb152 TFloat;
-   DECLARE vb153 TFloat;
-   DECLARE vb154 TFloat;
-
-   DECLARE vb161 TFloat;
-   DECLARE vb162 TFloat;
-   DECLARE vb163 TFloat;
-   DECLARE vb164 TFloat;
-
-   DECLARE vb171 TFloat;
-   DECLARE vb172 TFloat;
-   DECLARE vb173 TFloat;
-   DECLARE vb174 TFloat;
-
-   DECLARE vb181 TFloat;
-   DECLARE vb182 TFloat;
-   DECLARE vb183 TFloat;
-   DECLARE vb184 TFloat;
-
-   DECLARE vb191 TFloat;
-   DECLARE vb192 TFloat;
-   DECLARE vb193 TFloat;
-   DECLARE vb194 TFloat;
-
-   DECLARE vb201 TFloat;
-   DECLARE vb202 TFloat;
-   DECLARE vb203 TFloat;
-   DECLARE vb204 TFloat;
-
-   DECLARE vb211 TFloat;
-   DECLARE vb212 TFloat;
-   DECLARE vb213 TFloat;
-   DECLARE vb214 TFloat;
-
-   DECLARE vb221 TFloat;
-   DECLARE vb222 TFloat;
-   DECLARE vb223 TFloat;
-   DECLARE vb224 TFloat;
-
-   DECLARE vb231 TFloat;
-   DECLARE vb232 TFloat;
-   DECLARE vb233 TFloat;
-   DECLARE vb234 TFloat;
-
-   DECLARE vb241 TFloat;
-   DECLARE vb242 TFloat;
-   DECLARE vb243 TFloat;
-   DECLARE vb244 TFloat;
-
-   DECLARE vb251 TFloat;
-   DECLARE vb252 TFloat;
-   DECLARE vb253 TFloat;
-   DECLARE vb254 TFloat;
-
-   DECLARE vb261 TFloat;
-   DECLARE vb262 TFloat;
-   DECLARE vb263 TFloat;
-   DECLARE vb264 TFloat;
-
-   DECLARE vb271 TFloat;
-   DECLARE vb272 TFloat;
-   DECLARE vb273 TFloat;
-   DECLARE vb274 TFloat;
-
-   DECLARE vb281 TFloat;
-   DECLARE vb282 TFloat;
-   DECLARE vb283 TFloat;
-   DECLARE vb284 TFloat;
-
-   DECLARE vb291 TFloat;
-   DECLARE vb292 TFloat;
-   DECLARE vb293 TFloat;
-   DECLARE vb294 TFloat;
-
-   DECLARE vb301 TFloat;
-   DECLARE vb302 TFloat;
-   DECLARE vb303 TFloat;
-   DECLARE vb304 TFloat;
-
-   DECLARE vb311 TFloat;
-   DECLARE vb312 TFloat;
-   DECLARE vb313 TFloat;
-   DECLARE vb314 TFloat;
-
-   DECLARE vb321 TFloat;
-   DECLARE vb322 TFloat;
-   DECLARE vb323 TFloat;
-   DECLARE vb324 TFloat;
-
-   DECLARE vb331 TFloat;
-   DECLARE vb332 TFloat;
-   DECLARE vb333 TFloat;
-   DECLARE vb334 TFloat;
-
-   DECLARE vb341 TFloat;
-   DECLARE vb342 TFloat;
-   DECLARE vb343 TFloat;
-   DECLARE vb344 TFloat;
-
-   DECLARE vb351 TFloat;
-   DECLARE vb352 TFloat;
-   DECLARE vb353 TFloat;
-   DECLARE vb354 TFloat;
-
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_InsertUpdate_HistoryCost());
@@ -225,7 +49,7 @@ if inBranchId = 0 then
 end if;
 */
 
-inEndDate:= '27.03.2017';
+-- inEndDate:= '27.03.2017';
 
      -- таблица - Список сущностей которые являются элементами с/с.
      CREATE TEMP TABLE _tmpMaster (ContainerId Integer, UnitId Integer, isInfoMoney_80401 Boolean, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, calcCount TFloat, calcSumm TFloat, calcCount_external TFloat, calcSumm_external TFloat, OutCount TFloat, OutSumm TFloat) ON COMMIT DROP;
@@ -583,6 +407,13 @@ inEndDate:= '27.03.2017';
                  END
        ;
 
+
+     -- тест***
+     IF inBranchId = 0 THEN DELETE FROM HistoryCost_test; END IF;
+     INSERT INTO HistoryCost_test (InsertDate, Itearation, CountDiff, ContainerId, UnitId, isInfoMoney_80401, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, calcCount_external, calcSumm_external, OutCount, OutSumm)
+        SELECT CURRENT_TIMESTAMP, -1, 0, _tmpMaster.ContainerId, _tmpMaster.UnitId, _tmpMaster.isInfoMoney_80401, _tmpMaster.StartCount, _tmpMaster.StartSumm, _tmpMaster.IncomeCount, _tmpMaster.IncomeSumm, _tmpMaster.calcCount, _tmpMaster.calcSumm, _tmpMaster.calcCount_external, _tmpMaster.calcSumm_external, _tmpMaster.OutCount, _tmpMaster.OutSumm FROM _tmpMaster;
+
+
 -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (1270241, 1275307, 1270242, 1270239, 1270240);
 -- select CLO2.ObjectId from ContainerLinkObject AS CLO2 where CLO2.ContainerId IN (1270241, 1275307, 1270242, 1270239, 1270240) and CLO2.DescId = zc_ContainerLinkObject_Goods()
 -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (select Container.Id from Container where Container.ObjectId IN (select CLO2.ObjectId from ContainerLinkObject AS CLO2 where CLO2.ContainerId IN (1270241, 1275307, 1270242, 1270239, 1270240) and CLO2.DescId = zc_ContainerLinkObject_Goods()) union select CLO.ContainerId from ContainerLinkObject AS CLO where CLO.ObjectId IN (select CLO2.ObjectId from ContainerLinkObject AS CLO2 where CLO2.ContainerId IN (1270241, 1275307, 1270242, 1270239, 1270240) and CLO2.DescId = zc_ContainerLinkObject_Goods()) and CLO.DescId = zc_ContainerLinkObject_Goods());
@@ -594,7 +425,8 @@ inEndDate:= '27.03.2017';
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (955225, 147523  -- 09.2016
      --                                                       , 955228, 189406, 955227, 147524, 955226, 147525, 955221, 147522, 1088976, 699999, 955223, 955224, 393568, 149497);
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (647643, 663076, 639413, 633042, 633033); -- 11.2016
-       DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (923943, 922627); -- 03.2017
+     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (923943, 922627); -- 03.2017
+     DELETE FROM _tmpMaster WHERE _tmpMaster.calcSumm > 16193225344.2053;
 --     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (SELECT CLO.ContainerId FROM ContainerLinkObject as CLO WHERE CLO.DescId = zc_ContainerLinkObject_Member()
 --                                                                                                                      AND CLO.ObjectId = 12573); -- Однокопила Ірина Борисівна
 
@@ -741,10 +573,6 @@ inEndDate:= '27.03.2017';
      END IF;
 
 
-     -- тест***
-     -- SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb11, vb12, vb13, vb14 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889;
-
-
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
      -- !!! Ну а теперь - итерации для с/с !!!
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -791,8 +619,10 @@ inEndDate:= '27.03.2017';
          WHERE _tmpMaster.ContainerId = _tmpSumm.ContainerId;
 
 
+
      -- тест***
-     -- SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb21, vb22, vb23, vb24 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889;
+     INSERT INTO HistoryCost_test (InsertDate, Itearation, CountDiff, ContainerId, UnitId, isInfoMoney_80401, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, calcCount_external, calcSumm_external, OutCount, OutSumm)
+        SELECT CURRENT_TIMESTAMP, 0, 0, _tmpMaster.ContainerId, _tmpMaster.UnitId, _tmpMaster.isInfoMoney_80401, _tmpMaster.StartCount, _tmpMaster.StartSumm, _tmpMaster.IncomeCount, _tmpMaster.IncomeSumm, _tmpMaster.calcCount, _tmpMaster.calcSumm, _tmpMaster.calcCount_external, _tmpMaster.calcSumm_external, _tmpMaster.OutCount, _tmpMaster.OutSumm FROM _tmpMaster;
 
 
      -- !!! остальные итерации без Упаковки !!!
@@ -800,6 +630,10 @@ inEndDate:= '27.03.2017';
      vbCountDiff:= 100000;
      WHILE vbItearation < inItearationCount AND vbCountDiff > 0
      LOOP
+         -- !!!ВРЕМЕННО!!!
+         DELETE FROM _tmpMaster WHERE _tmpMaster.calcSumm > 16193225344.2053;
+
+         -- расчет с/с
          UPDATE _tmpMaster SET CalcSumm          = _tmpSumm.CalcSumm
                              , CalcSumm_external = _tmpSumm.CalcSumm_external
                -- Расчет суммы всех составляющих
@@ -843,43 +677,6 @@ inEndDate:= '27.03.2017';
            -- AND COALESCE (_tmpMaster.UnitId, 0) <> CASE WHEN vbItearation < 2 THEN -1 ELSE 8440 END -- Дефростер
         ;
 
-        /*-- тест***
-          IF vbItearation = 0  THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb31, vb32, vb33, vb34 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 1  THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb41, vb42, vb43, vb44 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 2  THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb51, vb52, vb53, vb54 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 3  THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb61, vb62, vb63, vb64 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 4  THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb71, vb72, vb73, vb74 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 5  THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb81, vb82, vb83, vb84 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 6  THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb91, vb92, vb93, vb94 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 7  THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb101, vb102, vb103, vb104 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 8  THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb111, vb112, vb113, vb114 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 9  THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb121, vb122, vb123, vb124 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 10 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb131, vb132, vb133, vb134 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 11 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb141, vb142, vb143, vb144 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 12 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb151, vb152, vb153, vb154 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 13 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb161, vb162, vb163, vb164 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 14 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb171, vb172, vb173, vb174 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 15 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb181, vb182, vb183, vb184 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 16 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb191, vb192, vb193, vb194 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-
-          IF vbItearation = 17 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb201, vb202, vb203, vb204 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 18 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb211, vb212, vb213, vb214 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 19 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb221, vb222, vb223, vb224 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 20 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb231, vb232, vb233, vb234 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 21 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb241, vb242, vb243, vb244 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 22 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb251, vb252, vb253, vb254 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 23 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb261, vb262, vb263, vb264 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 24 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb271, vb272, vb273, vb274 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 25 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb281, vb282, vb283, vb284 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 26 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb291, vb292, vb293, vb294 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-
-          IF vbItearation = 27 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb301, vb302, vb303, vb304 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 28 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb311, vb312, vb313, vb314 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 29 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb321, vb322, vb323, vb324 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 30 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb331, vb332, vb333, vb334 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 31 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb341, vb342, vb343, vb344 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;
-          IF vbItearation = 32 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external, _tmpMaster.calcCount, _tmpMaster.calcCount_external INTO vb351, vb352, vb353, vb354 FROM _tmpMaster WHERE _tmpMaster.ContainerId = 251889; END IF;*/
-
          -- сколько записей с еще неправильной с/с
          SELECT Count(*) INTO vbCountDiff
          FROM _tmpMaster
@@ -915,51 +712,12 @@ inEndDate:= '27.03.2017';
          -- увеличивам итерации
          vbItearation:= vbItearation + 1;
 
+         -- тест***
+         INSERT INTO HistoryCost_test (InsertDate, Itearation, CountDiff, ContainerId, UnitId, isInfoMoney_80401, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, calcCount_external, calcSumm_external, OutCount, OutSumm)
+            SELECT CURRENT_TIMESTAMP, vbItearation, vbCountDiff, _tmpMaster.ContainerId, _tmpMaster.UnitId, _tmpMaster.isInfoMoney_80401, _tmpMaster.StartCount, _tmpMaster.StartSumm, _tmpMaster.IncomeCount, _tmpMaster.IncomeSumm, _tmpMaster.calcCount, _tmpMaster.calcSumm, _tmpMaster.calcCount_external, _tmpMaster.calcSumm_external, _tmpMaster.OutCount, _tmpMaster.OutSumm FROM _tmpMaster;
+
      END LOOP;
 
-
-     -- тест***
-     /*RAISE EXCEPTION '%   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ;
-                      %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ;
-                      %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ;
-                      %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ; %   %   %   % ;
-                     '
-                                                                                       , vb11, vb12, vb13, vb14
-                                                                                       , vb21, vb22, vb23, vb24
-                                                                                       , vb31, vb32, vb33, vb34
-                                                                                       , vb41, vb42, vb43, vb44
-                                                                                       , vb51, vb52, vb53, vb54
-                                                                                       , vb61, vb62, vb63, vb64
-                                                                                       , vb71, vb72, vb73, vb74
-                                                                                       , vb81, vb82, vb83, vb84
-                                                                                       , vb91, vb92, vb93, vb94
-                                                                                       , vb101, vb102, vb103, vb104
-                                                                                       , vb111, vb112, vb113, vb114
-                                                                                       , vb121, vb122, vb123, vb124
-                                                                                       , vb131, vb132, vb133, vb134
-                                                                                       , vb141, vb142, vb143, vb144
-                                                                                       , vb151, vb152, vb153, vb154
-                                                                                       , vb161, vb162, vb163, vb164
-                                                                                       , vb171, vb172, vb173, vb174
-                                                                                       , vb181, vb182, vb183, vb184
-                                                                                       , vb191, vb192, vb193, vb194
-                                                                                       , vb201, vb202, vb203, vb204
-                                                                                       , vb211, vb212, vb213, vb214
-                                                                                       , vb221, vb222, vb223, vb224
-                                                                                       , vb231, vb232, vb233, vb234
-                                                                                       , vb241, vb242, vb243, vb244
-                                                                                       , vb251, vb252, vb253, vb254
-                                                                                       , vb261, vb262, vb263, vb264
-                                                                                       , vb271, vb272, vb273, vb274
-                                                                                       , vb281, vb282, vb283, vb284
-                                                                                       , vb291, vb292, vb293, vb294
-                                                                                       , vb301, vb302, vb303, vb304
-                                                                                       , vb311, vb312, vb313, vb314
-                                                                                       , vb321, vb322, vb323, vb324
-                                                                                       , vb331, vb332, vb333, vb334
-                                                                                       , vb341, vb342, vb343, vb344
-                                                                                       , vb351, vb352, vb353, vb354
-                                                                                        ;*/
 
 
      IF inInsert > 0 THEN
@@ -1311,9 +1069,14 @@ order by 3, 5
 SELECT * FROM HistoryCost WHERE ('01.12.2016' BETWEEN StartDate AND EndDate) and abs (Price) = 1.1234 order by Price desc -- and CalcSumm > 1000000
 */
 
+-- тест***
+-- CREATE TABLE HistoryCost_test (InsertDate TDateTime, Itearation Integer, CountDiff Integer, ContainerId Integer, UnitId Integer, isInfoMoney_80401 Boolean, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, calcCount TFloat, calcSumm TFloat, calcCount_external TFloat, calcSumm_external TFloat, OutCount TFloat, OutSumm TFloat); CREATE INDEX idx_HistoryCost_test_ContainerId ON HistoryCost_test(ContainerId);
+
+-- SELECT * FROM HistoryCost_test WHERE ContainerId = 1260491 ORDER BY InsertDate;
+
 -- филиал Киев
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inBranchId:= 8379, inItearationCount:= 1000, inInsert:= 12345, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
 
 -- тест
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.02.2017', inEndDate:= '28.02.2017', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.02.2017', inEndDate:= '28.02.2017', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') ORDER BY ABS (Price) DESC -- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.03.2017', inEndDate:= '31.03.2017', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.03.2017', inEndDate:= '31.03.2017', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') ORDER BY ABS (Price) DESC -- WHERE CalcSummCurrent <> CalcSummNext

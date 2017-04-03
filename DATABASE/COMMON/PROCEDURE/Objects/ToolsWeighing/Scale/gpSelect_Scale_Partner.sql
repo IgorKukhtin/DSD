@@ -1,10 +1,12 @@
 -- Function: gpSelect_Scale_Partner()
 
 DROP FUNCTION IF EXISTS gpSelect_Scale_Partner (Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Scale_Partner (Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Scale_Partner (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Scale_Partner (Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Scale_Partner(
     IN inIsGoodsComplete Boolean  , -- склад ГП/производство/упаковка or обвалка
+    IN inBranchCode      Integer  , --
     IN inSession         TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (PartnerId     Integer
@@ -64,6 +66,7 @@ BEGIN
                              FROM Object_InfoMoney_View AS View_InfoMoney_find
                              WHERE View_InfoMoney_find.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
                                AND inIsGoodsComplete = FALSE
+                               AND inBranchCode     <> 301
                             UNION
                              -- 1.1.
                              SELECT View_InfoMoney_find.InfoMoneyId
@@ -86,6 +89,7 @@ BEGIN
                                                                                 , zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
                                                                                  )
                                AND inIsGoodsComplete = FALSE
+                               AND inBranchCode     <> 301
                             UNION
                              -- 2.1.
                              SELECT View_InfoMoney_find.InfoMoneyId
@@ -108,6 +112,15 @@ BEGIN
                                                                                  )
                                AND inIsGoodsComplete = TRUE
                             */
+                            UNION
+                             -- 3.1.
+                             SELECT View_InfoMoney_find.InfoMoneyId
+                                  , View_InfoMoney_find.InfoMoneyGroupId
+                                  , zc_Movement_Income() AS MovementDescId
+                             FROM Object_InfoMoney_View AS View_InfoMoney_find
+                             WHERE View_InfoMoney_find.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
+                               AND inIsGoodsComplete = FALSE
+                               AND inBranchCode      = 301
                             )
          , tmpContractPartner AS (SELECT ObjectLink_ContractPartner_Contract.ChildObjectId AS ContractId
                                        , ObjectLink_ContractPartner_Partner.ChildObjectId  AS PartnerId
@@ -420,7 +433,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Scale_Partner (Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -430,5 +442,5 @@ ALTER FUNCTION gpSelect_Scale_Partner (Boolean, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Scale_Partner (FALSE, zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_Scale_Partner (TRUE, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Scale_Partner (inIsGoodsComplete:= FALSE, inBranchCode:= 301, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Scale_Partner (inIsGoodsComplete:= TRUE, inBranchCode:= 1, inSession:= zfCalc_UserAdmin())

@@ -436,6 +436,7 @@ begin
   begin
        StoredProcName:='gpSelect_Scale_Partner';
        Params.AddParam('inIsGoodsComplete', ftBoolean, ptInput, SettingMain.isGoodsComplete);
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        OutputType:=otDataSet;
        Execute;
   end;
