@@ -703,7 +703,7 @@ object MainForm: TMainForm
         object InsertGoods2Button: TButton
           Left = 120
           Top = 31
-          Width = 95
+          Width = 97
           Height = 25
           Caption = 'insert into Goods2'
           TabOrder = 13
@@ -717,6 +717,16 @@ object MainForm: TMainForm
           Caption = 'Drop table Goods2'
           TabOrder = 14
           OnClick = Button2Click
+        end
+        object Button3: TButton
+          Left = 120
+          Top = 93
+          Width = 97
+          Height = 25
+          Caption = 'Button3'
+          TabOrder = 15
+          Visible = False
+          OnClick = Button3Click
         end
       end
     end

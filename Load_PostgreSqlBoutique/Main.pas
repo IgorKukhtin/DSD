@@ -99,6 +99,7 @@ type
     cbGoods2: TCheckBox;
     InsertGoods2Button: TButton;
     Button2: TButton;
+    Button3: TButton;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -116,6 +117,7 @@ type
     procedure Button1Click(Sender: TObject);
     procedure InsertGoods2ButtonClick(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
   private
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
@@ -257,9 +259,9 @@ begin
        ' 	Name CHAR( 80 ) ,	 ' +
        ' 	Incoming INTEGER,	 ' +
        ' 	Remain INTEGER,	 ' +
+       ' 	col2  CHAR( 80 ) ,	 ' +
        ' 	col3  CHAR( 80 ) ,	 ' +
        ' 	col1  CHAR( 80 ) ,	 ' +
-       ' 	col2  CHAR( 80 ) ,	 ' +
        ' 	col4  CHAR( 80 ) ,	 ' +
        ' 	col5  CHAR( 80 ) ,	 ' +
        ' 	col6  CHAR( 80 ) ,	 ' +
@@ -284,9 +286,9 @@ begin
        ' 	Name CHAR( 80 ) ,	 ' +
        ' 	Incoming INTEGER,	 ' +
        ' 	Remain INTEGER,	 ' +
+       ' 	col2  CHAR( 80 ) ,	 ' +
        ' 	col3  CHAR( 80 ) ,	 ' +
        ' 	col1  CHAR( 80 ) ,	 ' +
-       ' 	col2  CHAR( 80 ) ,	 ' +
        ' 	col4  CHAR( 80 ) ,	 ' +
        ' 	col5  CHAR( 80 ) ,	 ' +
        ' 	col6  CHAR( 80 ) ,	 ' +
@@ -793,6 +795,65 @@ fExecSqFromQuery(
 );
 end;
 
+procedure TMainForm.Button3Click(Sender: TObject);
+var  inGoodsName,  inParentID, inHasChildren : string;
+begin
+    myEnabledCB(cbGoods2);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select * from goods where HasChildren = -1');
+
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+          with fromQuery_two,Sql do begin  // первая колонка col1
+            Close;
+            Clear;
+            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col1').AsString+'''');
+            Open;
+            if fromQuery_two.RecordCount = 0 then
+             begin
+                inGoodsName:= fromQuery.FieldByName('Col1').AsString;
+                inParentID:='null';
+                inHasChildren:='2';
+               //
+                if inGoodsName<>'' then
+                fExecSqFromQuery(
+                  ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
+                  ' select distinct '''+inGoodsName+''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
+                  );
+             end;
+            //
+          end;  // конец первая колонка col1
+
+
+             //
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbGoods2);
+
+
+end;
+
 procedure TMainForm.cbAllCompleteDocumentClick(Sender: TObject);
 var i:Integer;
 begin
@@ -953,10 +1014,13 @@ fExecSqFromQuery(
          //!!!
          if fStop then begin exit;end;
          //
+           inParentID:='null';
+           inHasChildren:='2';
+
           with fromQuery_two,Sql do begin  // первая колонка col1
             Close;
             Clear;
-            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col1').AsString+'''');
+            Add('select id from goods2 where  goodsname = lower(trim('''+lowercase(fromQuery.FieldByName('Col1').AsString)+'''))');
             Open;
             if fromQuery_two.RecordCount = 0 then
              begin
@@ -967,7 +1031,7 @@ fExecSqFromQuery(
                 if inGoodsName<>'' then
                 fExecSqFromQuery(
                   ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
-                  ' select distinct '''+inGoodsName+''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
+                  ' select distinct '''+lowercase(inGoodsName)+''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
                   );
              end;
             //
@@ -976,14 +1040,14 @@ fExecSqFromQuery(
           with fromQuery_two,Sql do begin    // вторая колонка col2
             Close;
             Clear;
-            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col1').AsString+'''');
+            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col1').AsString+''')');
             Open;
             if fromQuery_two.RecordCount > 0 then
               inParentID := fromQuery_two.FieldByName('Id').AsString;
 
             Close;
             Clear;
-            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col2').AsString+'''');
+            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col2').AsString+''')');
             Open;
 
              if fromQuery_two.RecordCount = 0 then
@@ -1007,18 +1071,21 @@ fExecSqFromQuery(
             Clear;
             if inParentID <> '' then
             begin
-            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col2').AsString+'''');
+            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col2').AsString+''')');
             Add('and ParentId = ' + inParentID);
             end
             else
-            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col2').AsString+'''');
+            begin
+            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col2').AsString+''')');
+            ShowMessage('Ошибка col3');
+            end;
             Open;
             if fromQuery_two.RecordCount > 0 then
               inParentID := fromQuery_two.FieldByName('Id').AsString;
 
             Close;
             Clear;
-            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col3').AsString+'''');
+            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col3').AsString+''')');
             Open;
 
              if fromQuery_two.RecordCount = 0 then
@@ -1042,18 +1109,21 @@ fExecSqFromQuery(
             Clear;
             if inParentID <> '' then
             begin
-            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col3').AsString+'''');
+            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col3').AsString+''')');
             Add('and ParentId = ' + inParentID);
             end
             else
-            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col3').AsString+'''');
+            begin
+            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col3').AsString+''')');
+            ShowMessage('Ошибка col4');
+            end;
             Open;
             if fromQuery_two.RecordCount > 0 then
               inParentID := fromQuery_two.FieldByName('Id').AsString;
 
             Close;
             Clear;
-            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col4').AsString+'''');
+            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col4').AsString+''')');
             Open;
 
              if fromQuery_two.RecordCount = 0 then
@@ -1077,18 +1147,21 @@ fExecSqFromQuery(
             Clear;
             if inParentID <> '' then
             begin
-            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col4').AsString+'''');
+            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col4').AsString+''')');
             Add('and ParentId = ' + inParentID);
             end
             else
-            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col4').AsString+'''');
+            begin
+            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col4').AsString+''')');
+            ShowMessage('Ошибка col5');
+            end;
             Open;
             if fromQuery_two.RecordCount > 0 then
               inParentID := fromQuery_two.FieldByName('Id').AsString;
 
             Close;
             Clear;
-            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col5').AsString+'''');
+            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col5').AsString+''')');
             Open;
 
              if fromQuery_two.RecordCount = 0 then
@@ -1112,18 +1185,21 @@ fExecSqFromQuery(
             Clear;
             if inParentID <> '' then
             begin
-            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col5').AsString+'''');
+            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col5').AsString+''')');
             Add('and ParentId = ' + inParentID);
             end
             else
-            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col5').AsString+'''');
+            begin
+            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col5').AsString+''')');
+            ShowMessage('Ошибка col6');
+            end;
             Open;
             if fromQuery_two.RecordCount > 0 then
               inParentID := fromQuery_two.FieldByName('Id').AsString;
 
             Close;
             Clear;
-            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col6').AsString+'''');
+            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col6').AsString+''')');
             Open;
 
              if fromQuery_two.RecordCount = 0 then

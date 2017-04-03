@@ -10,7 +10,11 @@ uses
   FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys,
   FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs,
   FireDAC.Comp.UI, Variants, FireDAC.FMXUI.Wait, dsdDB, Datasnap.DBClient,
-  FMX.Dialogs;
+  FMX.Dialogs, FMX.DialogService, System.UITypes
+  {$IFDEF ANDROID}
+  , Androidapi.JNI.GraphicsContentViewText, Androidapi.Helpers,
+  Androidapi.JNI.Net, Androidapi.JNI.JavaTypes, Androidapi.JNI.App
+  {$ENDIF};
 
 CONST
   DataBaseFileName = 'aMobile.sdb';
@@ -59,6 +63,21 @@ type
     procedure UploadStoreReal;
     procedure UploadOrderExternal;
     procedure UploadReturnIn;
+    procedure UploadTasks;
+  protected
+    procedure Execute; override;
+  end;
+
+  TWaitThread = class(TThread)
+  private
+    TaskName : string;
+
+    DateStart, DateEnd: TDate;
+    JuridicalId, ContractId, PaidKindId: integer;
+
+    procedure SetTaskName(AName : string);
+
+    function LoadJuridicalCollation: string;
   protected
     procedure Execute; override;
   end;
@@ -512,6 +531,11 @@ type
     procedure CreateIndexes;
     function CreateDataBase: Boolean;
 
+    function GetCurrentVersion: string;
+    function CompareVersion(ACurVersion, AServerVersion: string): integer;
+    procedure CheckUpdate;
+    procedure UpdateProgram(const AResult: TModalResult);
+
     procedure SynchronizeWithMainDatabase(LoadData: boolean = true; UploadData: boolean = true);
 
     function SaveStoreReal(OldStoreRealId : string; Comment: string;
@@ -541,10 +565,9 @@ type
     procedure SavePhotoGroup(AGroupName: string);
     procedure LoadPhotoGroups;
 
-    function GenerateJuridicalCollation(DateStart, DateEnd: TDate; JuridicalId, ContractId, PaidKindId: integer;
-      var StartRemains, EndRemains, TotalDebit, TotalKredit: Currency): integer;
+    procedure GenerateJuridicalCollation(ADateStart, ADateEnd: TDate; AJuridicalId, AContractId, APaidKindId: integer);
 
-    function LoadTasks(Active: TActiveMode; SaveData: boolean = true; ADate: TDate = 0): integer;
+    function LoadTasks(Active: TActiveMode; SaveData: boolean = true; ADate: TDate = 0; APartnerId: integer = 0): integer;
     function CloseTask(ATasksId: integer; ATaskComment: string): boolean;
 
     property Connected: Boolean read FConnected;
@@ -555,6 +578,7 @@ var
   Structure: TStructure;
   ProgressThread : TProgressThread;
   SyncThread : TSyncThread;
+  WaitThread : TWaitThread;
 
 implementation
 
@@ -613,6 +637,7 @@ begin
   Synchronize(Update);
 end;
 
+{ получение дат последней синхронизации }
 procedure TSyncThread.GetSyncDates;
 begin
   if DM.tblObject_Const.Active then
@@ -631,11 +656,11 @@ begin
   end;
 end;
 
+{ Загрузка с сервера констант и системной информации }
 procedure TSyncThread.GetConfigurationInfo;
 var
   x, y : integer;
   GetStoredProc : TdsdStoredProc;
-  str, str1 : string;
   Mapping : array of array[1..2] of integer;
 begin
   GetStoredProc := TdsdStoredProc.Create(nil);
@@ -682,6 +707,7 @@ begin
   end;
 end;
 
+{ Загрузка с сервера справочников }
 procedure TSyncThread.GetDictionaries(AName : string);
 var
   x, y : integer;
@@ -835,14 +861,21 @@ begin
 
         while not Eof do
         begin
-          FindRec := false;
           if AName = 'Partner' then
             FindRec := CurDictTable.Locate('Id;ContractId', VarArrayOf([FieldByName('Id').AsInteger, FieldByName('ContractId').AsInteger]))
           else
             FindRec := CurDictTable.Locate('Id', FieldByName('Id').AsInteger);
 
           if FindRec then
-            CurDictTable.Edit
+          begin
+            if AName = 'MovementItemTask' then
+            begin
+              Next;
+              continue;
+            end
+            else
+              CurDictTable.Edit;
+          end
           else
           begin
             if not FieldByName('isSync').AsBoolean then
@@ -885,6 +918,7 @@ begin
   end;
 end;
 
+{ Сохранение на сервер введенной информации по остаткам }
 procedure TSyncThread.UploadStoreReal;
 var
   UploadStoredProc : TdsdStoredProc;
@@ -963,13 +997,14 @@ begin
   end;
 end;
 
+{ Сохранение на сервер введенных заявок }
 procedure TSyncThread.UploadOrderExternal;
 var
   UploadStoredProc : TdsdStoredProc;
 begin
   UploadStoredProc := TdsdStoredProc.Create(nil);
   try
-    // Загружаем шапки остатков
+    // Загружаем шапки заявок
     UploadStoredProc.OutputType := otResult;
 
     with DM.tblMovement_OrderExternal do
@@ -1048,6 +1083,7 @@ begin
   end;
 end;
 
+{ Сохранение на сервер введенной информации по возврату товара }
 procedure TSyncThread.UploadReturnIn;
 var
   UploadStoredProc : TdsdStoredProc;
@@ -1137,6 +1173,59 @@ begin
   end;
 end;
 
+{ сохранение на сервер закрытых заданий }
+procedure TSyncThread.UploadTasks;
+var
+  UploadStoredProc : TdsdStoredProc;
+begin
+  UploadStoredProc := TdsdStoredProc.Create(nil);
+  try
+    UploadStoredProc.OutputType := otResult;
+
+    with DM.tblMovementItem_Task do
+    begin
+      Filter := 'isSync = 0 and Closed = 1';
+      Filtered := true;
+      Open;
+
+      try
+        First;
+        while not Eof do
+        begin
+          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_MovementItem_Task';
+          UploadStoredProc.Params.Clear;
+          UploadStoredProc.Params.AddParam('inId', ftInteger, ptInput, FieldByName('ID').AsInteger);
+          UploadStoredProc.Params.AddParam('inMovementId', ftInteger, ptInput, FieldByName('MOVEMENTID').AsInteger);
+          UploadStoredProc.Params.AddParam('inClosed', ftBoolean, ptInput, FieldByName('CLOSED').AsBoolean);
+          UploadStoredProc.Params.AddParam('inComment', ftString, ptInput, FieldByName('COMMENT').AsString);
+          UploadStoredProc.Params.AddParam('inUpdateDate', ftDateTime, ptInput, Now());
+
+          try
+            UploadStoredProc.Execute(false, false, false);
+
+            Edit;
+            FieldByName('IsSync').AsBoolean := true;
+            Post;
+          except
+            on E : Exception do
+            begin
+              raise Exception.Create(E.Message);
+            end;
+          end;
+
+          Next;
+        end;
+      finally
+        Close;
+        Filter := '';
+        Filtered := false;
+      end;
+    end;
+  finally
+    FreeAndNil(UploadStoredProc);
+  end;
+end;
+
 procedure TSyncThread.Execute;
 var
   Res : string;
@@ -1147,10 +1236,10 @@ begin
   FAllMax := 0;
 
   if LoadData then
-    FAllMax := FAllMax + 16;  // Количесто операций при загрузке данных из центра
+    FAllMax := FAllMax + 17;  // Количесто операций при загрузке данных из центра
 
   if UploadData then
-    FAllMax := FAllMax + 3;  // Количесто операций при сохранении данных в центр
+    FAllMax := FAllMax + 4;  // Количесто операций при сохранении данных в центр
 
   Synchronize(procedure
               begin
@@ -1217,11 +1306,11 @@ begin
 
         SetNewProgressTask('Загрузка справочника акционных товаров');
         GetDictionaries('PromoGoods');
-        {
+
         SetNewProgressTask('Загрузка заданий');
         GetDictionaries('MovementTask');
         GetDictionaries('MovementItemTask');
-        }
+
         DM.conMain.Commit;
         DM.conMain.TxOptions.AutoCommit := true;
       except
@@ -1247,6 +1336,9 @@ begin
         SetNewProgressTask('Сохранение возвратов');
         UploadReturnIn;
 
+        SetNewProgressTask('Сохранение заданий');
+        UploadTasks;
+
         DM.tblObject_Const.Edit;
         DM.tblObject_ConstSyncDateOut.AsDateTime := Date();
         DM.tblObject_Const.Post;
@@ -1269,6 +1361,7 @@ begin
                   begin
                     frmMain.pProgress.Visible := false;
                     frmMain.vsbMain.Enabled := true;
+                    DM.CheckUpdate;
                   end);
     end
     else
@@ -1278,6 +1371,154 @@ begin
                     frmMain.pProgress.Visible := false;
                     frmMain.vsbMain.Enabled := true;
                     ShowMessage('Ошибка синхронизации (' + Res + ')');
+                  end);
+    end;
+  end;
+end;
+
+{ TWaitThread }
+
+procedure TWaitThread.SetTaskName(AName : string);
+begin
+  Synchronize(procedure
+              begin
+                frmMain.lProgressName.Text := AName;
+              end);
+end;
+
+function TWaitThread.LoadJuridicalCollation: string;
+var
+  GetStoredProc : TdsdStoredProc;
+  StartRemains, EndRemains, TotalDebit, TotalKredit: Currency;
+begin
+  Result := '';
+
+  DM.cdsJuridicalCollation.DisableControls;
+  StartRemains := 0;
+  EndRemains := 0;
+  TotalDebit := 0;
+  TotalKredit := 0;
+
+  GetStoredProc := TdsdStoredProc.Create(nil);
+  try
+    GetStoredProc.StoredProcName := 'gpReport_JuridicalCollation';
+    GetStoredProc.OutputType := otDataSet;
+    GetStoredProc.DataSet := TClientDataSet.Create(nil);
+
+    GetStoredProc.Params.AddParam('inStartDate', ftDateTime, ptInput, DateStart);
+    GetStoredProc.Params.AddParam('inEndDate', ftDateTime, ptInput, DateEnd);
+    GetStoredProc.Params.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
+    GetStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, 0);
+    GetStoredProc.Params.AddParam('inContractId', ftInteger, ptInput, ContractId);
+    GetStoredProc.Params.AddParam('inAccountId', ftInteger, ptInput, 0);
+    GetStoredProc.Params.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
+    GetStoredProc.Params.AddParam('inInfoMoneyId', ftInteger, ptInput, 0);
+    GetStoredProc.Params.AddParam('inCurrencyId', ftInteger, ptInput, 0);
+    GetStoredProc.Params.AddParam('inMovementId_Partion', ftInteger, ptInput, 0);
+
+    try
+      GetStoredProc.Execute(false, false, true);
+
+      with GetStoredProc.DataSet do
+      begin
+        First;
+
+        while not Eof do
+        begin
+          StartRemains := StartRemains + FieldByName('StartRemains').AsFloat;
+          EndRemains := StartRemains + FieldByName('EndRemains').AsFloat;
+
+          if FieldByName('InvNumber').AsString <> '' then
+          begin
+            DM.cdsJuridicalCollation.Append;
+
+            DM.cdsJuridicalCollationDocNum.AsString := FieldByName('InvNumber').AsString;
+            DM.cdsJuridicalCollationDocType.AsString := FieldByName('ItemName').AsString;
+            DM.cdsJuridicalCollationDocDate.AsDateTime := FieldByName('OperDate').AsDateTime;
+            DM.cdsJuridicalCollationPaidKind.AsString := FieldByName('PaidKindName').AsString;
+            DM.cdsJuridicalCollationDebet.AsFloat := FieldByName('Debet').AsFloat;
+            DM.cdsJuridicalCollationKredit.AsFloat := FieldByName('Kredit').AsFloat;
+            DM.cdsJuridicalCollationFromName.AsString := FieldByName('FromName').AsString;
+            DM.cdsJuridicalCollationToName.AsString := FieldByName('ToName').AsString;
+
+            DM.cdsJuridicalCollation.Post;
+
+            TotalDebit := TotalDebit + FieldByName('Debet').AsFloat;
+            TotalKredit := TotalKredit + FieldByName('Kredit').AsFloat;
+          end;
+
+          Next;
+        end;
+
+        DM.cdsJuridicalCollation.First;
+      end;
+
+      if DM.cdsJuridicalCollation.RecordCount > 0 then
+      begin
+        Synchronize(procedure
+          begin
+            frmMain.lStartRemains.Text := 'Сальдо на начало периода: ' + FormatFloat('0.00', StartRemains);
+            frmMain.lEndRemains.Text := 'Сальдо на конец периода: ' + FormatFloat('0.00', EndRemains);
+            frmMain.lTotalDebit.Text := 'Суммарный дебет: ' + FormatFloat('0.00', TotalDebit);
+            frmMain.lTotalKredit.Text := 'Суммарный кредит: ' + FormatFloat('0.00', TotalKredit);
+
+            frmMain.lwJuridicalCollation.ScrollViewPos := 0;
+          end);
+      end
+      else
+        Result := 'По заданым критериям данные не найдены';
+    except
+      on E : Exception do
+      begin
+        Result := E.Message;
+      end;
+    end;
+  finally
+    FreeAndNil(GetStoredProc);
+    DM.cdsJuridicalCollation.EnableControls;
+  end;
+end;
+
+procedure TWaitThread.Execute;
+var
+  Res : string;
+begin
+  Res := '';
+
+  Synchronize(procedure
+              begin
+                frmMain.lProgress.Visible := false;
+                frmMain.pieAllProgress.Visible := false;
+                frmMain.pProgress.Visible := true;
+                frmMain.vsbMain.Enabled := false;
+              end);
+
+  ProgressThread := TProgressThread.Create(true);
+  try
+    ProgressThread.FreeOnTerminate := true;
+    ProgressThread.Start;
+
+    if TaskName = 'JuridicalCollation' then
+    begin
+      SetTaskName('Генерация акта сверки');
+      Res := LoadJuridicalCollation;
+    end;
+  finally
+    ProgressThread.Terminate;
+
+    Synchronize(procedure
+                begin
+                  frmMain.pProgress.Visible := false;
+                  frmMain.pieAllProgress.Visible := true;
+                  frmMain.lProgress.Visible := true;
+                  frmMain.vsbMain.Enabled := true;
+                end);
+
+    if Res <> '' then
+    begin
+      Synchronize(procedure
+                  begin
+                    ShowMessage(Res);
                   end);
     end;
   end;
@@ -1365,8 +1606,6 @@ begin
 end;
 
 procedure TStructure.MakeDopIndex(ATable: TFDTable);
-var
-  IndexName: String;
 begin
   {if SameText(ATable.TableName, 'Words_Table') then
   begin
@@ -1661,6 +1900,139 @@ begin
 end;
 
 
+function TDM.GetCurrentVersion: string;
+{$IFDEF ANDROID}
+var
+  PackageManager: JPackageManager;
+  PackageInfo : JPackageInfo;
+{$ENDIF}
+begin
+  {$IFDEF ANDROID}
+  PackageManager := TAndroidHelper.Activity.getPackageManager;
+  PackageInfo := PackageManager.getPackageInfo(TAndroidHelper.Context.getPackageName(), TJPackageManager.JavaClass.GET_ACTIVITIES);
+  Result := JStringToString(PackageInfo.versionName);
+  {$ELSE}
+  Result := '1.0.0.0';
+  {$ENDIF}
+end;
+
+function TDM.CompareVersion(ACurVersion, AServerVersion: string): integer;
+var
+  ArrValueC, ArrValueS : TArray<string>;
+  MajorC, MinorC, ReleaseC, BuildC,
+  MajorS, MinorS, ReleaseS, BuildS : integer;
+begin
+  ArrValueC := ACurVersion.Split(['.']);
+  ArrValueS := AServerVersion.Split(['.']);
+  //major
+  if Length(ArrValueC) > 0 then
+    MajorC := StrToIntDef(ArrValueC[0], 0)
+  else
+    MajorC := 0;
+  if Length(ArrValueS) > 0 then
+    MajorS := StrToIntDef(ArrValueS[0], 0)
+  else
+    MajorS := 0;
+  //minor
+  if Length(ArrValueC) > 1 then
+    MinorC := StrToIntDef(ArrValueC[1], 0)
+  else
+    MinorC := 0;
+  if Length(ArrValueS) > 1 then
+    MinorS := StrToIntDef(ArrValueS[1], 0)
+  else
+    MinorS := 0;
+  //release
+  if Length(ArrValueC) > 2 then
+    ReleaseC := StrToIntDef(ArrValueC[2], 0)
+  else
+    ReleaseC := 0;
+  if Length(ArrValueS) > 2 then
+    ReleaseS := StrToIntDef(ArrValueS[2], 0)
+  else
+    ReleaseS := 0;
+  //build
+  if Length(ArrValueC) > 3 then
+    BuildC := StrToIntDef(ArrValueC[3], 0)
+  else
+    BuildC := 0;
+  if Length(ArrValueS) > 3 then
+    BuildS := StrToIntDef(ArrValueS[3], 0)
+  else
+    BuildS := 0;
+
+  if (MajorC = MajorS) and (MinorC = MinorS) and (ReleaseC = ReleaseS) and (BuildC = BuildS) then
+    Result := 0
+  else
+  if (MajorC > MajorS) or ((MajorC = MajorS) and (MinorC > MinorS)) or
+     ((MajorC = MajorS) and (MinorC = MinorS) and (ReleaseC > ReleaseS)) or
+     ((MajorC = MajorS) and (MinorC = MinorS) and (ReleaseC = ReleaseS) and (BuildC > BuildS))
+  then
+    Result := -1
+  else
+    Result := 1;
+end;
+
+procedure TDM.CheckUpdate;
+begin
+  if CompareVersion(GetCurrentVersion, tblObject_ConstMobileVersion.AsString) > 0 then
+    TDialogService.MessageDialog('Обнаружена новая версия программы! Обновить?',
+      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbYes, 0, UpdateProgram);
+end;
+
+procedure TDM.UpdateProgram(const AResult: TModalResult);
+
+var
+  GetStoredProc : TdsdStoredProc;
+  ApplicationName: string;
+  StringStream : TStringStream;
+  {$IFDEF ANDROID}
+  intent: JIntent;
+  uri: Jnet_Uri;
+  {$ENDIF}
+begin
+  if AResult = mrYes then
+  begin
+    ApplicationName := tblObject_ConstMobileAPKFileName.AsString;
+
+    GetStoredProc := TdsdStoredProc.Create(nil);
+    StringStream := TStringStream.Create;
+    try
+      GetStoredProc.StoredProcName := 'gpGet_Object_Program';
+      GetStoredProc.OutputType := otBlob;
+      GetStoredProc.Params.AddParam('inProgramName', ftString, ptInput, ApplicationName);
+      try
+        StringStream.WriteString(GetStoredProc.Execute(false, false, false));
+
+        if StringStream.Size = 0 then
+           raise Exception.Create('Новая версия программы не загружена из базы данных');
+
+        StringStream.Position := 0;
+        StringStream.SaveToFile(TPath.Combine(TPath.GetSharedDownloadsPath, ApplicationName));
+      except
+        on E : Exception do
+        begin
+          raise Exception.Create(E.Message);
+        end;
+      end;
+    finally
+      FreeAndNil(GetStoredProc);
+      FreeAndNil(StringStream);
+    end;
+
+    // Update programm
+    {$IFDEF ANDROID}
+    Intent := TJIntent.Create;
+    Intent.setAction(TJIntent.JavaClass.ACTION_VIEW);
+
+    uri := TJnet_Uri.JavaClass.fromFile(TJFile.JavaClass.init(StringToJString(TPath.Combine(TPath.GetSharedDownloadsPath, ApplicationName))));
+    Intent.setDataAndType(uri, StringToJString('application/vnd.android.package-archive'));
+    Intent.setFlags(TJIntent.JavaClass.FLAG_ACTIVITY_NEW_TASK);
+    TAndroidHelper.Activity.startActivity(Intent);
+  {$ENDIF}
+  end;
+end;
+
 procedure TDM.SynchronizeWithMainDatabase(LoadData: boolean = true; UploadData: boolean = true);
 begin
   if gc_User.Local or (not LoadData and not UploadData) then
@@ -1677,15 +2049,14 @@ function TDM.SaveStoreReal(OldStoreRealId : string; Comment: string;
   DelItems : string; var ErrorMessage : string) : boolean;
 var
   GlobalId : TGUID;
-  i, MovementId, NewInvNumber : integer;
+  MovementId, NewInvNumber : integer;
   qryMaxInvNumber : TFDQuery;
 begin
   Result := false;
 
+  NewInvNumber := 1;
   if OldStoreRealId = '' then
   begin
-    NewInvNumber := 1;
-
     qryMaxInvNumber := TFDQuery.Create(nil);
     try
       qryMaxInvNumber.Connection := conMain;
@@ -2004,15 +2375,14 @@ function TDM.SaveOrderExternal(OldOrderExternalId : string; OperDate: TDate;
   ToralPrice, TotalWeight: Currency; DelItems : string; var ErrorMessage : string) : boolean;
 var
   GlobalId : TGUID;
-  i, MovementId, NewInvNumber : integer;
+  MovementId, NewInvNumber : integer;
   qryMaxInvNumber : TFDQuery;
 begin
   Result := false;
 
+  NewInvNumber := 1;
   if OldOrderExternalId = '' then
   begin
-    NewInvNumber := 1;
-
     qryMaxInvNumber := TFDQuery.Create(nil);
     try
       qryMaxInvNumber.Connection := conMain;
@@ -2422,15 +2792,14 @@ function TDM.SaveReturnIn(OldReturnInId : string; OperDate: TDate; Comment : str
   ToralPrice, TotalWeight: Currency; DelItems : string; var ErrorMessage : string) : boolean;
 var
   GlobalId : TGUID;
-  i, MovementId, NewInvNumber : integer;
+  MovementId, NewInvNumber : integer;
   qryMaxInvNumber : TFDQuery;
 begin
   Result := false;
 
+  NewInvNumber := 1;
   if OldReturnInId = '' then
   begin
-    NewInvNumber := 1;
-
     qryMaxInvNumber := TFDQuery.Create(nil);
     try
       qryMaxInvNumber.Connection := conMain;
@@ -2631,7 +3000,6 @@ end;
 procedure TDM.AddedGoodsToReturnIn(AGoods : string);
 var
   ArrValue : TArray<string>;
-  Recommend : Extended;
 begin
   ArrValue := AGoods.Split([';']); //Id;GoodsId;GoodsKindID;название товара;вид товара;цена;единица измерения;вес;количество по умолчанию
 
@@ -2747,7 +3115,7 @@ end;
 procedure TDM.SavePhotoGroup(AGroupName: string);
 var
   GlobalId : TGUID;
-  i, MovementId, NewInvNumber : integer;
+  NewInvNumber : integer;
   qryMaxInvNumber : TFDQuery;
 begin
   NewInvNumber := 1;
@@ -2797,89 +3165,24 @@ begin
 end;
 
 
-function TDM.GenerateJuridicalCollation(DateStart, DateEnd: TDate; JuridicalId, ContractId, PaidKindId: integer;
-  var StartRemains, EndRemains, TotalDebit, TotalKredit: Currency): integer;
-var
-  x : integer;
-  FieldName : string;
-  GetStoredProc : TdsdStoredProc;
+procedure TDM.GenerateJuridicalCollation(ADateStart, ADateEnd: TDate; AJuridicalId, AContractId, APaidKindId: integer);
 begin
-  cdsJuridicalCollation.EmptyDataSet;
-  StartRemains := 0;
-  EndRemains := 0;
-  TotalDebit := 0;
-  TotalKredit := 0;
+  DM.cdsJuridicalCollation.EmptyDataSet;
 
-  GetStoredProc := TdsdStoredProc.Create(nil);
-  try
-    GetStoredProc.StoredProcName := 'gpReport_JuridicalCollation';
-    GetStoredProc.OutputType := otDataSet;
-    GetStoredProc.DataSet := TClientDataSet.Create(nil);
-
-    GetStoredProc.Params.AddParam('inStartDate', ftDateTime, ptInput, DateStart);
-    GetStoredProc.Params.AddParam('inEndDate', ftDateTime, ptInput, DateEnd);
-    GetStoredProc.Params.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
-    GetStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, 0);
-    GetStoredProc.Params.AddParam('inContractId', ftInteger, ptInput, ContractId);
-    GetStoredProc.Params.AddParam('inAccountId', ftInteger, ptInput, 0);
-    GetStoredProc.Params.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
-    GetStoredProc.Params.AddParam('inInfoMoneyId', ftInteger, ptInput, 0);
-    GetStoredProc.Params.AddParam('inCurrencyId', ftInteger, ptInput, 0);
-    GetStoredProc.Params.AddParam('inMovementId_Partion', ftInteger, ptInput, 0);
-
-    try
-      GetStoredProc.Execute(false, false, true);
-
-      Result := GetStoredProc.DataSet.RecordCount;
-
-      with GetStoredProc.DataSet do
-      begin
-        First;
-
-        while not Eof do
-        begin
-          StartRemains := StartRemains + FieldByName('StartRemains').AsFloat;
-          EndRemains := StartRemains + FieldByName('EndRemains').AsFloat;
-
-          if FieldByName('InvNumber').AsString <> '' then
-          begin
-            cdsJuridicalCollation.Append;
-
-            cdsJuridicalCollationDocNum.AsString := FieldByName('InvNumber').AsString;
-            cdsJuridicalCollationDocType.AsString := FieldByName('ItemName').AsString;
-            cdsJuridicalCollationDocDate.AsDateTime := FieldByName('OperDate').AsDateTime;
-            cdsJuridicalCollationPaidKind.AsString := FieldByName('PaidKindName').AsString;
-            cdsJuridicalCollationDebet.AsFloat := FieldByName('Debet').AsFloat;
-            cdsJuridicalCollationKredit.AsFloat := FieldByName('Kredit').AsFloat;
-            cdsJuridicalCollationFromName.AsString := FieldByName('FromName').AsString;
-            cdsJuridicalCollationToName.AsString := FieldByName('ToName').AsString;
-
-            cdsJuridicalCollation.Post;
-
-            TotalDebit := TotalDebit + FieldByName('Debet').AsFloat;
-            TotalKredit := TotalKredit + FieldByName('Kredit').AsFloat;
-          end;
-
-          Next;
-        end;
-
-        cdsJuridicalCollation.First;
-      end;
-    except
-      on E : Exception do
-      begin
-        ShowMessage(E.Message);
-        Result := -1;
-      end;
-    end;
-  finally
-    FreeAndNil(GetStoredProc);
-  end;
+  WaitThread := TWaitThread.Create(true);
+  WaitThread.FreeOnTerminate := true;
+  WaitThread.TaskName := 'JuridicalCollation';
+  WaitThread.DateStart := ADateStart;
+  WaitThread.DateEnd := ADateEnd;
+  WaitThread.JuridicalId := AJuridicalId;
+  WaitThread.ContractId := AContractId;
+  WaitThread.PaidKindId := APaidKindId;
+  WaitThread.Start;
 end;
 
-function TDM.LoadTasks(Active: TActiveMode; SaveData: boolean = true; ADate: TDate = 0): integer;
+function TDM.LoadTasks(Active: TActiveMode; SaveData: boolean = true; ADate: TDate = 0; APartnerId: integer = 0): integer;
 var
-  DateSql, ActiveSql : string;
+  DateSql, WhereSql : string;
 begin
   if ADate = 0 then
     DateSql := 'JOIN MOVEMENT_TASK TM ON TM.ID = TI.MOVEMENTID '
@@ -2887,16 +3190,19 @@ begin
     DateSql := 'JOIN MOVEMENT_TASK TM ON TM.ID = TI.MOVEMENTID AND DATE(TM.OPERDATE) = :TASKDATE ';
 
   if Active <> amAll then
-    ActiveSQL := 'WHERE TI.CLOSED = :CLOSED '
+    WhereSql := 'WHERE TI.CLOSED = :CLOSED '
   else
-    ActiveSQL := '';
+    WhereSql := 'WHERE 1 = 1 ';
+
+  if APartnerId <> 0 then
+    WhereSql := WhereSql + 'AND TI.PARTNERID = ' + IntToStr(APartnerId) + ' ';
 
   qrySelect.SQL.Text := 'SELECT TI.ID, TI.PARTNERID, TI.CLOSED, TI.DESCRIPTION, TI.COMMENT, ' +
     'TM.OPERDATE, TM.INVNUMBER, P.VALUEDATA PartnerName ' +
     'FROM MOVEMENTITEM_TASK TI ' +
     DateSql +
     'LEFT JOIN OBJECT_PARTNER P ON P.ID = TI.PARTNERID ' +
-    ActiveSQL+
+    WhereSql+
     'GROUP BY TI.ID ORDER BY TM.OPERDATE DESC';
 
   if ADate <> 0 then
@@ -2949,8 +3255,8 @@ function TDM.CloseTask(ATasksId: integer; ATaskComment: string): boolean;
 begin
   try
     conMain.ExecSQL('update MovementItem_Task set Closed = 1, Comment = ' + QuotedStr(ATaskComment) +
-      ' where Id = ' + IntToStr(ATasksId));
-    ShowMessage('Задание отмечно закрытым');
+      ', ISSYNC = 0 where Id = ' + IntToStr(ATasksId));
+    ShowMessage('Задание отмечено закрытым');
     Result := true;
   except
     ShowMessage('Ошибка при попытке закрыть задание');
