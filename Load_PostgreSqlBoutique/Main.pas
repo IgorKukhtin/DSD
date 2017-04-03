@@ -905,6 +905,8 @@ procedure TMainForm.InsertGoods2ButtonClick(Sender: TObject);
 var  inGoodsName,  inParentID, inHasChildren : string;
 begin
  if not cbGoods2.Checked then Exit;
+ Gauge.Visible:=true;
+ myEnabledCB(cbGoods2);
 // Правки полей
 fExecSqFromQuery(
  ' update sop set col1=''Детское'' where col1=''Детск''; ' +
@@ -919,23 +921,23 @@ fExecSqFromQuery(
   with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select distinct col1, col2, col3, col4, col5, col6 from Tl');
+        Add('select distinct col1, col2, col3, col4, col5, col6 from Sop');
         Add('union');
-        Add('select distinct col1, col2, col3, col4, col5, col6 from Sav');
+        Add('select distinct col1, col2, col3, col4, col5, col6 from Vint');
+        Add('union');
+        Add('select distinct col1, col2, col3, col4, col5, col6 from Tl');
         Add('union');
         Add('select distinct col1, col2, col3, col4, col5, col6 from Esc');
         Add('union');
-        Add('select distinct col1, col2, col3, col4, col5, col6 from MM');
-        Add('union');
-        Add('select distinct col1, col2, col3, col4, col5, col6 from Chado');
+        Add('select distinct col1, col2, col3, col4, col5, col6 from Mm');
         Add('union');
         Add('select distinct col1, col2, col3, col4, col5, col6 from Sav_out');
         Add('union');
         Add('select distinct col1, col2, col3, col4, col5, col6 from Ter_out');
         Add('union');
-        Add('select distinct col1, col2, col3, col4, col5, col6 from Vint');
+        Add('select distinct col1, col2, col3, col4, col5, col6 from Sav');
         Add('union');
-        Add('select distinct col1, col2, col3, col4, col5, col6 from Sop');
+        Add('select distinct col1, col2, col3, col4, col5, col6 from Chado');
 
         Open;
         //
@@ -959,8 +961,8 @@ fExecSqFromQuery(
             if fromQuery_two.RecordCount = 0 then
              begin
                 inGoodsName:= fromQuery.FieldByName('Col1').AsString;
-                inParentID:='0';
-                inHasChildren:='0';
+                inParentID:='null';
+                inHasChildren:='2';
                //
                 if inGoodsName<>'' then
                 fExecSqFromQuery(
@@ -988,7 +990,7 @@ fExecSqFromQuery(
              begin
 
               inGoodsName := fromQuery.FieldByName('Col2').AsString;
-              inHasChildren := '0';
+              inHasChildren := '2';
                //
                 if inGoodsName <> '' then
                 fExecSqFromQuery(
@@ -1023,7 +1025,7 @@ fExecSqFromQuery(
              begin
 
               inGoodsName := fromQuery.FieldByName('Col3').AsString;
-              inHasChildren := '0';
+              inHasChildren := '2';
                //
                 if inGoodsName <> '' then
                 fExecSqFromQuery(
@@ -1058,7 +1060,7 @@ fExecSqFromQuery(
              begin
 
               inGoodsName := fromQuery.FieldByName('Col4').AsString;
-              inHasChildren := '0';
+              inHasChildren := '2';
                //
                 if inGoodsName <> '' then
                 fExecSqFromQuery(
@@ -1093,7 +1095,7 @@ fExecSqFromQuery(
              begin
 
               inGoodsName := fromQuery.FieldByName('Col5').AsString;
-              inHasChildren := '0';
+              inHasChildren := '2';
                //
                 if inGoodsName <> '' then
                 fExecSqFromQuery(
@@ -1128,7 +1130,7 @@ fExecSqFromQuery(
              begin
 
               inGoodsName := fromQuery.FieldByName('Col6').AsString;
-              inHasChildren := '0';
+              inHasChildren := '1';
                //
                 if inGoodsName <> '' then
                 fExecSqFromQuery(
@@ -1149,6 +1151,8 @@ fExecSqFromQuery(
              Application.ProcessMessages;
 
         end;
+        myDisabledCB(cbGoods2);
+         Gauge.Visible:=False;
      end;
 
 end;
