@@ -204,7 +204,7 @@ function GetConnectivityManager: JConnectivityManager;
 var
   ConnectivityServiceNative: JObject;
 begin
-  ConnectivityServiceNative := SharedActivityContext.getSystemService(TJContext.JavaClass.CONNECTIVITY_SERVICE);
+  ConnectivityServiceNative := TAndroidHelper.Context.getSystemService(TJContext.JavaClass.CONNECTIVITY_SERVICE);
 
   if not Assigned(ConnectivityServiceNative) then
     raise Exception.Create('Could not locate Connectivity Service');
