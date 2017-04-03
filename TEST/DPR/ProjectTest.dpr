@@ -935,7 +935,9 @@ uses
   Report_SupplyBalance in '..\..\Forms\Report\Report_SupplyBalance.pas' {Report_SupplyBalanceForm: TParentForm},
   Report_SupplyBalanceDialog in '..\..\Forms\Report\Report_SupplyBalanceDialog.pas' {Report_SupplyBalanceDialogForm: TParentForm},
   Report_MotionGoodsWeek in '..\..\Forms\Report\Report_MotionGoodsWeek.pas' {Report_MotionGoodsWeekForm: TParentForm},
-  Report_MotionGoodsWeekDialog in '..\..\Forms\Report\Report_MotionGoodsWeekDialog.pas' {Report_MotionGoodsWeekDialogForm: TParentForm};
+  Report_MotionGoodsWeekDialog in '..\..\Forms\Report\Report_MotionGoodsWeekDialog.pas' {Report_MotionGoodsWeekDialogForm: TParentForm},
+  Report_Check_OrderInternalBySendDialog in '..\..\Forms\Report\Report_Check_OrderInternalBySendDialog.pas' {Report_Check_OrderInternalBySendDialogForm: TParentForm},
+  Report_Check_OrderInternalBySend in '..\..\Forms\Report\Report_Check_OrderInternalBySend.pas' {Report_Check_OrderInternalBySendForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
