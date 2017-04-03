@@ -278,6 +278,35 @@ inherited Report_Check_OrderInternalBySendForm: TReport_Check_OrderInternalBySen
     Top = 320
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = GuidesFrom
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesTo
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesGoodsGroup
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
     Left = 48
   end
   inherited ActionList: TActionList
@@ -614,48 +643,53 @@ inherited Report_Check_OrderInternalBySendForm: TReport_Check_OrderInternalBySen
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPartnerId'
+        Name = 'inFromId'
         Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPartnerName'
+        Name = 'inFromName'
         Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inJuridicalId'
+        Name = 'inToId'
         Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inJuridicalName'
+        Name = 'inToName'
         Value = Null
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMovementId'
+        Name = 'inGoodsGroupId'
         Value = '0'
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inInvNumber'
+        Name = 'inGoodsGroupName'
         Value = Null
+        Component = GuidesGoodsGroup
+        ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = 'NULL'
-        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

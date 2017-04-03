@@ -205,7 +205,40 @@ inherited MainForm: TMainForm
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'inGoodsGroupId'
+          Value = '1917'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsGroupName'
+          Value = #1057#1044'-'#1057#1067#1056#1068#1045
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inFromId'
+          Value = '8455'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inFromName'
+          Value = #1057#1082#1083#1072#1076' '#1089#1087#1077#1094#1080#1081
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inToId'
+          Value = '8447'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inToName'
+          Value = #1062#1045#1061' '#1082#1086#1083#1073#1072#1089#1085#1099#1081
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
     object actMobileContract: TdsdOpenForm [8]
