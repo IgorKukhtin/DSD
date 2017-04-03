@@ -17,8 +17,7 @@ uses
 
 type
   TVisitForm = class(TAncestorDocumentForm)
-    GoodsName: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
+    PhotoMobileName: TcxGridDBColumn;
     actPhotoMobileChoice: TOpenChoiceForm;
     N2: TMenuItem;
     N3: TMenuItem;
@@ -42,6 +41,7 @@ type
     InsertMobile: TcxGridDBColumn;
     InsertRecord: TInsertRecord;
     bbInsertRecord: TdxBarButton;
+    PhotoData: TcxGridDBColumn;
   private
     { Private declarations }
   public
