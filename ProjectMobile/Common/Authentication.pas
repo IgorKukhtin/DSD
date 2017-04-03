@@ -127,20 +127,8 @@ begin
 end;
 
 procedure TUser.SetLocal(const Value: Boolean);
-var
-  I : Integer;
-  //F: TForm;
 begin
   FLocal := Value;
-  {for I := 0 to Screen.FormCount - 1 do
-  Begin
-    try
-      F := Screen.Forms[I];
-      if assigned(F) AND (F.Handle <> 0) AND (F.ClassNameIs('TMainCashForm')) then
-        PostMessage(F.Handle, UM_LOCAL_CONNECTION,0,0);
-    Except
-    end;
-  End; }
 end;
 
 end.

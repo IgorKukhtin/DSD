@@ -22,14 +22,13 @@ uses
   FMX.DateTimeCtrls, FMX.Controls3D, FMX.Layers3D, FMX.Menus, Generics.Collections,
   FMX.Gestures, System.Actions, FMX.ActnList, System.ImageList, FMX.ImgList,
   FMX.Grid.Style, FMX.Media, FMX.Surfaces, FMX.VirtualKeyboard, FMX.SearchBox, IniFiles,
-  FMX.Ani
+  FMX.Ani, FMX.DialogService, FMX.Utils
   {$IFDEF ANDROID}
   ,FMX.Helpers.Android, Androidapi.Helpers,
   Androidapi.JNI.Location, Androidapi.JNIBridge,
   Androidapi.JNI.GraphicsContentViewText,
   Androidapi.JNI.JavaTypes,
-  AndroidApi.JNI.WebKit,
-  Androidapi.JNI.Net
+  AndroidApi.JNI.WebKit
   {$ENDIF};
 
 const
@@ -40,6 +39,14 @@ type
   TFormStackItem = record
     PageIndex: Integer;
     Data: TObject;
+  end;
+
+  TLocationData = record
+    Latitude: TLocationDegrees;
+    Longitude: TLocationDegrees;
+    VisitTime: TDateTime;
+
+    constructor Create(ALatitude, ALongitude: TLocationDegrees; AVisitTime: TDateTime);
   end;
 
   TfrmMain = class(TForm)
@@ -496,6 +503,12 @@ type
     Image17: TImage;
     cbUseDateTask: TCheckBox;
     deDateTask: TDateEdit;
+    lwPartnerTasks: TListView;
+    LinkListControlToField16: TLinkListControlToField;
+    layServerVersion: TLayout;
+    Label48: TLabel;
+    eServerVersion: TEdit;
+    bUpdateProgram: TButton;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -503,15 +516,10 @@ type
     procedure sbBackClick(Sender: TObject);
     procedure lwPartnerItemClick(const Sender: TObject;
       const AItem: TListViewItem);
-    procedure FormVirtualKeyboardShown(Sender: TObject;
-      KeyboardVisible: Boolean; const Bounds: TRect);
-    procedure FormVirtualKeyboardHidden(Sender: TObject;
-      KeyboardVisible: Boolean; const Bounds: TRect);
     procedure bMondayClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure sbPartnerMenuClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure FormFocusChanged(Sender: TObject);
     procedure lbiShowAllOnMapClick(Sender: TObject);
     procedure ChangePartnerInfoLeftUpdate(Sender: TObject);
     procedure ChangePartnerInfoRightUpdate(Sender: TObject);
@@ -638,6 +646,12 @@ type
       const AEditor: IBindListEditorItem);
     procedure cbUseDateTaskChange(Sender: TObject);
     procedure bRefreshTasksClick(Sender: TObject);
+    procedure lwPartnerTasksUpdateObjects(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure lwPartnerTasksItemClickEx(const Sender: TObject;
+      ItemIndex: Integer; const LocalClickPos: TPointF;
+      const ItemObject: TListItemDrawable);
+    procedure bUpdateProgramClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -650,11 +664,8 @@ type
     FCurCoordinatesSet: boolean;
     FCurCoordinates: TLocationCoord2D;
     FMapLoaded: Boolean;
-    FMarkerList: TList<TLocationCoord2D>;
+    FMarkerList: TList<TLocationData>;
     FWebGMap: TTMSFMXWebGMaps;
-
-    FKBBounds: TRectF;
-    FNeedOffset: Boolean;
 
     FCheckedGooodsItems: TList<String>;
     OldOrderExternalId : string;
@@ -671,6 +682,10 @@ type
     FCameraZoomDistance: Integer;
     CameraComponent : TCameraComponent;
 
+    StartRJC: string;
+    EndRJC: string;
+    JuridicalRJC: integer;
+
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure BackResult(const AResult: TModalResult);
     procedure DeleteOrderExtrernal(const AResult: TModalResult);
@@ -679,8 +694,6 @@ type
     procedure EditStoreReal(const AResult: TModalResult);
     procedure SetPartnerCoordinates(const AResult: TModalResult);
 
-    procedure UpdateKBBounds;
-    procedure RestorePosition;
     function PrependIfNotEmpty(const Prefix, Subject: string): string;
 
     function GetAddress(const Latitude, Longitude: Double): string;
@@ -722,8 +735,6 @@ type
     procedure CameraComponentSampleBufferReady(Sender: TObject; const ATime: TMediaTime);
 
     procedure GetCurrentCoordinates;
-
-    procedure UpdateApplication;
   public
     { Public declarations }
   end;
@@ -743,11 +754,22 @@ resourcestring
   rstCapture = 'Capture';
   rstReturn = 'Return';
 
+{ TLocationData }
+
+constructor TLocationData.Create(ALatitude, ALongitude: TLocationDegrees; AVisitTime: TDateTime);
+begin
+  Latitude := ALatitude;
+  Longitude := ALongitude;
+  VisitTime := AVisitTime;
+end;
+
+{ TfrmMain }
 procedure TfrmMain.FormCreate(Sender: TObject);
 var
+  {$IFDEF ANDROID}
   ScreenService: IFMXScreenService;
   OrientSet: TScreenOrientations;
-  r : integer;
+  {$ENDIF}
   SettingsFile : TIniFile;
 begin
   FormatSettings.DecimalSeparator := '.';
@@ -759,6 +781,11 @@ begin
   {$ENDIF}
   try
     LoginEdit.Text := SettingsFile.ReadString('LOGIN', 'USERNAME', '');
+
+    // for reports
+    StartRJC := SettingsFile.ReadString('REPORT', 'StartRJC', '');
+    EndRJC := SettingsFile.ReadString('REPORT', 'EndRJC', '');
+    JuridicalRJC := SettingsFile.ReadInteger('REPORT', 'JuridicalRJC', -1);
   finally
     FreeAndNil(SettingsFile);
   end;
@@ -780,7 +807,7 @@ begin
   {$ENDIF}
 
   FFormsStack := TStack<TFormStackItem>.Create;
-  FMarkerList := TList<TLocationCoord2D>.Create;
+  FMarkerList := TList<TLocationData>.Create;
   FCheckedGooodsItems := TList<String>.Create;
   FDeletedOI := TList<Integer>.Create;
   FDeletedSRI := TList<Integer>.Create;
@@ -817,11 +844,6 @@ begin
   FPaidKindIdList.Free;
 end;
 
-procedure TfrmMain.FormFocusChanged(Sender: TObject);
-begin
-  UpdateKBBounds;
-end;
-
 procedure TfrmMain.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
   Shift: TShiftState);
 var
@@ -847,7 +869,7 @@ begin
         bCancelTaskClick(bCancelTask)
       else
       if tcMain.ActiveTab = tiStart then
-        MessageDlg('Закрыть программу?', TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbOK, TMsgDlgBtn.mbCancel], -1, OnCloseDialog)
+        TDialogService.MessageDialog('Закрыть программу?', TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbOK, TMsgDlgBtn.mbCancel], TMsgDlgBtn.mbCancel, -1, OnCloseDialog)
       else
       if tcMain.ActiveTab = tiGoodsItems then
         bCancelOIClick(bCancelOI)
@@ -875,7 +897,7 @@ begin
     while not EOF do
     begin
        if (DM.qryPartnerGPSN.AsFloat <> 0) and (DM.qryPartnerGPSE.AsFloat <> 0) then
-         FMarkerList.Add(TLocationCoord2D.Create(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat));
+         FMarkerList.Add(TLocationData.Create(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat, 0));
 
       Next;
     end;
@@ -970,7 +992,9 @@ begin
   if (not gc_User.Local) and NeedSync then
   begin
     DM.SynchronizeWithMainDatabase;
-  end;
+  end
+  else
+    DM.CheckUpdate;
 
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
   SettingsFile := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'settings.ini'));
@@ -1046,9 +1070,8 @@ begin
 
   if ItemObject.Name = 'DeleteButton' then
   begin
-    MessageDlg('Удалить заявку на ' + FormatDateTime('DD.MM.YYYY', DM.cdsOrderExternalOperDate.AsDateTime) + '?',
-               System.UITypes.TMsgDlgType.mtWarning, [System.UITypes.TMsgDlgBtn.mbYes, System.UITypes.TMsgDlgBtn.mbNo], 0,
-               DeleteOrderExtrernal);
+    TDialogService.MessageDialog('Удалить заявку на ' + FormatDateTime('DD.MM.YYYY', DM.cdsOrderExternalOperDate.AsDateTime) + '?',
+      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteOrderExtrernal);
   end
   else
   if ItemObject.Name = 'EditButton' then
@@ -1153,6 +1176,28 @@ begin
   AItem.ImageIndex := 0;
 end;
 
+procedure TfrmMain.lwPartnerTasksItemClickEx(const Sender: TObject;
+  ItemIndex: Integer; const LocalClickPos: TPointF;
+  const ItemObject: TListItemDrawable);
+begin
+  if ItemObject = nil then
+    exit;
+
+  if ItemObject.Name = 'CloseButton' then
+  begin
+    eTaskComment.Text := DM.cdsTasksComment.AsString;
+
+    vsbMain.Enabled := false;
+    pTaskComment.Visible := true;
+  end;
+end;
+
+procedure TfrmMain.lwPartnerTasksUpdateObjects(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  TListItemImage(AItem.Objects.FindDrawable('CloseButton')).ImageIndex := 4;
+end;
+
 procedure TfrmMain.lwPartnerUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
@@ -1234,9 +1279,8 @@ begin
 
   if ItemObject.Name = 'DeleteButton' then
   begin
-    MessageDlg('Удалить возврат на ' + FormatDateTime('DD.MM.YYYY', DM.cdsReturnInOperDate.AsDateTime) + '?',
-               System.UITypes.TMsgDlgType.mtWarning, [System.UITypes.TMsgDlgBtn.mbYes, System.UITypes.TMsgDlgBtn.mbNo], 0,
-               DeleteReturnIn);
+    TDialogService.MessageDialog('Удалить возврат на ' + FormatDateTime('DD.MM.YYYY', DM.cdsReturnInOperDate.AsDateTime) + '?',
+      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteReturnIn);
   end
   else
   if ItemObject.Name = 'EditButton' then
@@ -1310,9 +1354,8 @@ begin
 
   if ItemObject.Name = 'DeleteButton' then
   begin
-    MessageDlg('Удалить остатки на ' + FormatDateTime('DD.MM.YYYY', DM.cdsStoreRealsOperDate.AsDateTime) + '?',
-               System.UITypes.TMsgDlgType.mtWarning, [System.UITypes.TMsgDlgBtn.mbYes, System.UITypes.TMsgDlgBtn.mbNo], 0,
-               DeleteStoreReal);
+    TDialogService.MessageDialog('Удалить остатки на ' + FormatDateTime('DD.MM.YYYY', DM.cdsStoreRealsOperDate.AsDateTime) + '?',
+      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteStoreReal);
   end
   else
   if ItemObject.Name = 'EditButton' then
@@ -1362,9 +1405,6 @@ procedure TfrmMain.b0Click(Sender: TObject);
 begin
   if lAmount.Text = '0' then
     lAmount.Text := '';
-
-  if lAmount.Text = '-0' then
-    lAmount.Text := '-';
 
   lAmount.Text := lAmount.Text + TButton(Sender).Text;
 end;
@@ -1516,9 +1556,8 @@ begin
     else
       Mes := 'Выйти из редактирования без сохранения?';
 
-    MessageDlg(Mes,
-               System.UITypes.TMsgDlgType.mtWarning, [System.UITypes.TMsgDlgBtn.mbYes, System.UITypes.TMsgDlgBtn.mbNo], 0,
-               BackResult);
+    TDialogService.MessageDialog(Mes, TMsgDlgType.mtWarning,
+      [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, BackResult);
   end
   else
   if tcMain.ActiveTab = tiStoreReal then
@@ -1528,9 +1567,8 @@ begin
     else
       Mes := 'Выйти из редактирования без сохранения?';
 
-    MessageDlg(Mes,
-               System.UITypes.TMsgDlgType.mtWarning, [System.UITypes.TMsgDlgBtn.mbYes, System.UITypes.TMsgDlgBtn.mbNo], 0,
-               BackResult);
+    TDialogService.MessageDialog(Mes, TMsgDlgType.mtWarning,
+      [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, BackResult);
   end
   else
     ReturnPriorForm;
@@ -1727,6 +1765,11 @@ begin
     ShowTasks(true);
 end;
 
+procedure TfrmMain.bUpdateProgramClick(Sender: TObject);
+begin
+  DM.UpdateProgram(mrYes);
+end;
+
 procedure TfrmMain.bMondayClick(Sender: TObject);
 begin
   ShowPartners(TButton(Sender).Tag, TButton(Sender).Text);
@@ -1758,9 +1801,8 @@ begin
     FindRec := true;
 
   if FindRec then
-    MessageDlg('Остатки на сегодняшнее число уже введены. Перейти к их редактированию?',
-               System.UITypes.TMsgDlgType.mtWarning, [System.UITypes.TMsgDlgBtn.mbYes, System.UITypes.TMsgDlgBtn.mbNo], 0,
-               EditStoreReal)
+    TDialogService.MessageDialog('Остатки на сегодняшнее число уже введены. Перейти к их редактированию?',
+      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbYes, 0, EditStoreReal)
   else
     EditStoreReal(mrNone);
 end;
@@ -1782,32 +1824,29 @@ end;
 
 procedure TfrmMain.bPrintJuridicalCollationClick(Sender: TObject);
 var
-  Res : integer;
-  StartRemains, EndRemains, TotalDebit, TotalKredit: Currency;
+  SettingsFile : TIniFile;
 begin
-  Res := DM.GenerateJuridicalCollation(deStartRJC.Date, deEndRJC.Date,
+  DM.GenerateJuridicalCollation(deStartRJC.Date, deEndRJC.Date,
            FJuridicalIdList.Items[cbJuridicals.ItemIndex],
            FContractIdList.Items[cbContracts.ItemIndex],
-           FPaidKindIdList.Items[cbPaidKind.ItemIndex],
-           StartRemains, EndRemains, TotalDebit, TotalKredit);
+           FPaidKindIdList.Items[cbPaidKind.ItemIndex]);
 
-  if Res > 0 then
-  begin
-    lStartRemains.Text := 'Сальдо на начало периода: ' + FormatFloat('0.00', StartRemains);
-    lEndRemains.Text := 'Сальдо на конец периода: ' + FormatFloat('0.00', EndRemains);
-    lTotalDebit.Text := 'Суммарный дебет: ' + FormatFloat('0.00', TotalDebit);
-    lTotalKredit.Text := 'Суммарный кредит: ' + FormatFloat('0.00', TotalKredit);
+  lCaption.Text := 'Акт сверки для "' + cbJuridicals.Items[cbJuridicals.ItemIndex] + '" за период с ' +
+    FormatDateTime('DD.MM.YYYY', deStartRJC.Date) +  ' по ' + FormatDateTime('DD.MM.YYYY', deEndRJC.Date);
+  SwitchToForm(tiPrintJuridicalCollation, nil);
 
-    lwJuridicalCollation.ScrollViewPos := 0;
-
-
-    lCaption.Text := 'Акт сверки для "' + cbJuridicals.Items[cbJuridicals.ItemIndex] + '" за период с ' +
-      FormatDateTime('DD.MM.YYYY', deStartRJC.Date) +  ' по ' + FormatDateTime('DD.MM.YYYY', deEndRJC.Date);
-    SwitchToForm(tiPrintJuridicalCollation, nil);
-  end
-  else
-  if Res = 0 then
-    ShowMessage('По заданым критериям данные не найдены');
+  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+  SettingsFile := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'settings.ini'));
+  {$ELSE}
+  SettingsFile := TIniFile.Create('settings.ini');
+  {$ENDIF}
+  try
+    SettingsFile.WriteString('REPORT', 'StartRJC', FormatDateTime('DD.MM.YYYY', deStartRJC.Date));
+    SettingsFile.WriteString('REPORT', 'EndRJC', FormatDateTime('DD.MM.YYYY', deEndRJC.Date));
+    SettingsFile.WriteInteger('REPORT', 'JuridicalRJC', FJuridicalIdList.Items[cbJuridicals.ItemIndex]);
+  finally
+    FreeAndNil(SettingsFile);
+  end;
 end;
 
 procedure TfrmMain.bPromoGoodsClick(Sender: TObject);
@@ -1827,8 +1866,7 @@ end;
 
 procedure TfrmMain.bRefreshPathOnMapClick(Sender: TObject);
 var
- i: integer;
- RouteQuery: TFDQuery;
+  RouteQuery: TFDQuery;
 begin
   FMarkerList.Clear;
 
@@ -1836,7 +1874,7 @@ begin
   try
     RouteQuery.Connection := DM.conMain;
     try
-      if not cbShowAllPath.IsChecked then
+      if cbShowAllPath.IsChecked then
         RouteQuery.Open('select * from Movement_RouteMember')
       else
         RouteQuery.Open('select * from Movement_RouteMember where date(InsertDate) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', deDatePath.Date)));
@@ -1848,7 +1886,8 @@ begin
     RouteQuery.First;
     while not RouteQuery.EOF do
     begin
-      FMarkerList.Add(TLocationCoord2D.Create(RouteQuery.FieldByName('GPSN').AsFloat, RouteQuery.FieldByName('GPSE').AsFloat));
+      FMarkerList.Add(TLocationData.Create(RouteQuery.FieldByName('GPSN').AsFloat,
+        RouteQuery.FieldByName('GPSE').AsFloat, RouteQuery.FieldByName('INSERTDATE').AsDateTime));
 
       RouteQuery.Next;
     end;
@@ -1899,24 +1938,9 @@ begin
 end;
 
 procedure TfrmMain.bInfoClick(Sender: TObject);
-{$IFDEF ANDROID}
-var
-  intent: JIntent;
-  uri: Jnet_Uri;
-begin
-  Intent := TJIntent.Create;
-  Intent.setAction(TJIntent.JavaClass.ACTION_VIEW);
-
-  uri := TJnet_Uri.JavaClass.fromFile(TJFile.JavaClass.init(StringToJString(TPath.Combine(TPath.GetSharedDownloadsPath, 'TestStyles.apk'))));
-  Intent.setDataAndType(uri, StringToJString('application/vnd.android.package-archive'));
-  Intent.setFlags(TJIntent.JavaClass.FLAG_ACTIVITY_NEW_TASK);
-  SharedActivity.startActivity(Intent);
-end;
-{$ELSE}
 begin
   ShowInformation;
 end;
-{$ENDIF}
 
 procedure TfrmMain.bReportClick(Sender: TObject);
 begin
@@ -1946,7 +1970,20 @@ begin
 
     Close;
   end;
-  cbJuridicals.ItemIndex := 0;
+
+  cbJuridicals.ItemIndex := FJuridicalIdList.IndexOf(JuridicalRJC);
+  if cbJuridicals.ItemIndex < 0 then
+    cbJuridicals.ItemIndex := 0;
+
+  if StartRJC = '' then
+    deStartRJC.Date := Date()
+  else
+    deStartRJC.Date := StrToDate(StartRJC);
+  
+  if EndRJC = '' then
+    deEndRJC.Date := Date()
+  else
+    deEndRJC.Date := StrToDate(EndRJC);
 
   // заполнение списка форм оплаты
   cbPaidKind.Items.Clear;
@@ -2151,9 +2188,22 @@ procedure TfrmMain.bSaveTaskClick(Sender: TObject);
 begin
   if DM.CloseTask(DM.cdsTasksId.AsInteger, eTaskComment.Text) then
   begin
-    DM.cdsTasks.Edit;
-    DM.cdsTasksClosed.AsBoolean := true;
-    DM.cdsTasks.Post;
+    if tcMain.ActiveTab = tiTasks then
+    begin
+      DM.cdsTasks.Edit;
+      DM.cdsTasksClosed.AsBoolean := true;
+      DM.cdsTasks.Post;
+    end
+    else
+    if tcMain.ActiveTab = tiPartnerInfo then
+    begin
+      DM.cdsTasks.Delete;
+      if DM.cdsTasks.RecordCount = 0 then
+      begin
+        tiPartnerTasks.Visible := false;
+        tcPartnerInfo.ActiveTab := tiInfo;
+      end;
+    end;
   end;
 
   vsbMain.Enabled := true;
@@ -2169,8 +2219,8 @@ begin
   else
     Mes := 'Назназить ТТ текущие координаты?';
 
-  MessageDlg(Mes, System.UITypes.TMsgDlgType.mtWarning,
-    [System.UITypes.TMsgDlgBtn.mbYes, System.UITypes.TMsgDlgBtn.mbNo], 0, SetPartnerCoordinates);
+  TDialogService.MessageDialog(Mes, TMsgDlgType.mtWarning,
+    [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, SetPartnerCoordinates);
 end;
 
 procedure TfrmMain.bShowBigMapClick(Sender: TObject);
@@ -2320,57 +2370,6 @@ begin
   tTasks.Enabled := true;
 end;
 
-procedure TfrmMain.FormVirtualKeyboardHidden(Sender: TObject;
-  KeyboardVisible: Boolean; const Bounds: TRect);
-begin
-  {FKBBounds.Create(0, 0, 0, 0);
-  FNeedOffset := False;
-  RestorePosition;}
-end;
-
-procedure TfrmMain.FormVirtualKeyboardShown(Sender: TObject;
-  KeyboardVisible: Boolean; const Bounds: TRect);
-begin
-  {FKBBounds := TRectF.Create(Bounds);
-  FKBBounds.TopLeft := ScreenToClient(FKBBounds.TopLeft);
-  FKBBounds.BottomRight := ScreenToClient(FKBBounds.BottomRight);
-  UpdateKBBounds;}
-end;
-
-procedure TfrmMain.UpdateKBBounds;
-var
-  LFocused : TControl;
-  LFocusRect: TRectF;
-begin
-  {FNeedOffset := False;
-  if Assigned(Focused) then
-  begin
-    LFocused := TControl(Focused.GetObject);
-    LFocusRect := LFocused.AbsoluteRect;
-    LFocusRect.Offset(vsbMain.ViewportPosition);
-    if (LFocusRect.IntersectsWith(TRectF.Create(FKBBounds))) and
-       (LFocusRect.Bottom > FKBBounds.Top) then
-    begin
-      FNeedOffset := True;
-      tcMain.Align := TAlignLayout.Horizontal;
-      vsbMain.RealignContent;
-      Application.ProcessMessages;
-      vsbMain.ViewportPosition :=
-        PointF(vsbMain.ViewportPosition.X,
-               LFocusRect.Bottom - FKBBounds.Top);
-    end;
-  end;
-  if not FNeedOffset then
-    RestorePosition;}
-end;
-
-procedure TfrmMain.RestorePosition;
-begin
-  {vsbMain.ViewportPosition := PointF(vsbMain.ViewportPosition.X, 0);
-  tcMain.Align := TAlignLayout.Client;
-  vsbMain.RealignContent;}
-end;
-
 function TfrmMain.PrependIfNotEmpty(const Prefix, Subject: string): string;
 begin
   if Subject.IsEmpty then
@@ -2386,11 +2385,11 @@ begin
     WebGMapsReverseGeocoder.Longitude := Longitude;
     if WebGMapsReverseGeocoder.LaunchReverseGeocoding = erOk then
       begin
-        Result := UTF8ToString({BytesOf}(WebGMapsReverseGeocoder.ResultAddress.Street+
-                                       PrependIfNotEmpty(', ', WebGMapsReverseGeocoder.ResultAddress.StreetNumber)+
-                                       PrependIfNotEmpty(', ', WebGMapsReverseGeocoder.ResultAddress.City)+
-                                       PrependIfNotEmpty(', ', WebGMapsReverseGeocoder.ResultAddress.Region)+
-                                       PrependIfNotEmpty(', ', WebGMapsReverseGeocoder.ResultAddress.Country)));
+        Result := WebGMapsReverseGeocoder.ResultAddress.Street +
+                  PrependIfNotEmpty(', ', WebGMapsReverseGeocoder.ResultAddress.StreetNumber) +
+                  PrependIfNotEmpty(', ', WebGMapsReverseGeocoder.ResultAddress.City) +
+                  PrependIfNotEmpty(', ', WebGMapsReverseGeocoder.ResultAddress.Region) +
+                  PrependIfNotEmpty(', ', WebGMapsReverseGeocoder.ResultAddress.Country);
       end
     else
       Result :=  FormatFloat('0.000000', Latitude)+'N '+FormatFloat('0.000000', Longitude)+'E';
@@ -2433,7 +2432,7 @@ begin
       begin
         with FWebGMap.Markers.Add(FMarkerList[i].Latitude, FMarkerList[i].Longitude, GetAddress(FMarkerList[i].Latitude, FMarkerList[i].Longitude), '', True, True, False, True, False, 0, TMarkerIconColor.icDefault, -1, -1, -1, -1) do
           if tcMain.ActiveTab = tiPathOnMap then
-            MapLabel.Text := IntToStr(i + 1)
+            MapLabel.Text := IntToStr(i + 1) + ') ' + FormatDateTime('DD.MM.YYYY hh:mm:ss', FMarkerList[i].VisitTime)
           else
             MapLabel.Text := Title;
       end;
@@ -2461,7 +2460,9 @@ end;
 
 procedure TfrmMain.GetMapPartnerScreenshot(GPSN, GPSE: Double);
 var
+  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
   MobileNetworkStatus : TMobileNetworkStatus;
+  {$ENDIF}
   isConnected : boolean;
   SetCordinate: boolean;
   Coordinates: TLocationCoord2D;
@@ -2485,7 +2486,7 @@ begin
     if (GPSN <> 0) and (GPSE <> 0) then
     begin
       Coordinates := TLocationCoord2D.Create(GPSN, GPSE);
-      FMarkerList.Add(Coordinates);
+      FMarkerList.Add(TLocationData.Create(GPSN, GPSE, 0));
     end
     else
     begin
@@ -2614,6 +2615,9 @@ begin
     else
     if tcMain.ActiveTab = tiInformation then
       lCaption.Text := 'Информация'
+    else
+    if tcMain.ActiveTab = tiTasks then
+      lCaption.Text := 'Задания'
     else
     if tcMain.ActiveTab = tiReportJuridicalCollation then
       lCaption.Text := 'Акт сверки'
@@ -2865,6 +2869,11 @@ end;
 
 procedure TfrmMain.ShowPartnerInfo;
 begin
+  if DM.LoadTasks(amOpen, true, 0, DM.qryPartnerId.AsInteger) > 0 then
+    tiPartnerTasks.Visible := true
+  else
+    tiPartnerTasks.Visible := false;
+
   SwitchToForm(tiPartnerInfo, nil);
   tcPartnerInfo.ActiveTab := tiInfo;
 
@@ -3002,8 +3011,29 @@ begin
 end;
 
 procedure TfrmMain.ShowInformation;
+var
+  Res : integer;
 begin
-  eMobileVersion.Text := DM.tblObject_ConstMobileVersion.AsString;
+  eMobileVersion.Text := DM.GetCurrentVersion;
+
+  Res := DM.CompareVersion(eMobileVersion.Text, DM.tblObject_ConstMobileVersion.AsString);
+  if Res <> 0 then
+  begin
+    layServerVersion.Visible := true;
+    eServerVersion.Text := DM.tblObject_ConstMobileVersion.AsString;
+
+    {$IFDEF ANDROID}
+    if Res > 0 then
+      bUpdateProgram.Visible := true
+    else
+      bUpdateProgram.Visible := false;
+    {$ELSE}
+    bUpdateProgram.Visible := false;
+    {$ENDIF}
+  end
+  else
+    layServerVersion.Visible := false;
+
   eUnitName.Text := DM.tblObject_ConstUnitName.AsString;
   UnitNameRet.Text := DM.tblObject_ConstUnitName_ret.AsString;
   eCashName.Text := DM.tblObject_ConstCashName.AsString;
@@ -3023,6 +3053,7 @@ begin
     rbOpenTask.IsChecked := true;
   cbUseDateTask.IsChecked := false;
   deDateTask.Enabled := false;
+  deDateTask.Date := Date();
 
   bRefreshTasksClick(bRefreshTasks);
 
@@ -3065,7 +3096,6 @@ end;
 
 procedure TfrmMain.RecalculateTotalPriceAndWeight;
 var
- i : integer;
  TotalPriceWithPercent, PriceWithPercent : Currency;
  b : TBookmark;
 begin
@@ -3129,7 +3159,6 @@ end;
 
 procedure TfrmMain.RecalculateReturnInTotalPriceAndWeight;
 var
- i : integer;
  TotalPriceWithPercent, PriceWithPercent : Currency;
  b : TBookmark;
 begin
@@ -3269,7 +3298,7 @@ begin
   cbContracts.Items.Clear;
   FContractIdList.Clear;
 
-  cbContracts.Items.Add('');
+  cbContracts.Items.Add('все');
   FContractIdList.Add(0);
 
   with DM.qrySelect do
@@ -3335,26 +3364,23 @@ var
   MediaPlayer: TMediaPlayer;
   TmpFile: string;
 begin
- { MediaPlayer := TMediaPlayer.Create(nil);
-  try
-    TmpFile := TPath.Combine(TPath.GetDocumentsPath, 'CameraClick.3gp');
-    MediaPlayer.FileName := TmpFile;
+  MediaPlayer := TMediaPlayer.Create(nil);
 
+  TmpFile := TPath.Combine(TPath.GetDocumentsPath, 'CameraClick.3gp');
+  MediaPlayer.FileName := TmpFile;
+
+  if MediaPlayer.Media <> nil then
+    MediaPlayer.Play
+  else
+  begin
+    TmpFile := TPath.Combine(TPath.GetDocumentsPath, 'CameraClick.mp3');
+    MediaPlayer.FileName := TmpFile;
     if MediaPlayer.Media <> nil then
       MediaPlayer.Play
-    else
-    begin
-      TmpFile := TPath.Combine(TPath.GetDocumentsPath, 'CameraClick.mp3');
-      MediaPlayer.FileName := TmpFile;
-      if MediaPlayer.Media <> nil then
-        MediaPlayer.Play
-    end;
-    sleep(1000);
-    MediaPlayer.Stop;
-    MediaPlayer.Clear;
-  finally
-    FreeAndNil(MediaPlayer);
-  end; }
+  end;
+  sleep(1000);
+  MediaPlayer.Stop;
+  MediaPlayer.Clear;
 end;
 
 procedure TfrmMain.CameraComponentSampleBufferReady
@@ -3403,26 +3429,6 @@ begin
   end;
   {$ENDIF}
 end;
-
-procedure TfrmMain.UpdateApplication;
-{$IFDEF ANDROID}
-var
-  intent: JIntent;
-  uri: Jnet_Uri;
-begin
-  Intent := TJIntent.Create;
-  Intent.setAction(TJIntent.JavaClass.ACTION_VIEW);
-
-  uri := TJnet_Uri.JavaClass.fromFile(TJFile.JavaClass.init(StringToJString(TPath.Combine(TPath.GetSharedDownloadsPath, 'TestStyles.apk'))));
-  Intent.setDataAndType(uri, StringToJString('application/vnd.android.package-archive'));
-  Intent.setFlags(TJIntent.JavaClass.FLAG_ACTIVITY_NEW_TASK);
-  SharedActivity.startActivity(Intent);
-end;
-{$ELSE}
-begin
-  //
-end;
-{$ENDIF}
 
 end.
 

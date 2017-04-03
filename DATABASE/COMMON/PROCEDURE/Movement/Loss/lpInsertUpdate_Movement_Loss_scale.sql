@@ -1,6 +1,5 @@
 -- Function: lpInsertUpdate_Movement_Loss_scale() - !!!сделана т.к. для печати из scale нужны цены и суммы!!!
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Loss_scale (Integer, TVarChar, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Loss_scale (Integer, TVarChar, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Loss_scale(

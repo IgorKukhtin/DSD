@@ -30,7 +30,7 @@ END;$BODY$
 ALTER FUNCTION gpGet_Object_Program(TVarChar, TVarChar)
   OWNER TO postgres;
 
--- SELECT length(gpGet_Object_Form) FROM gpGet_Object_Form('Form1', '')
+-- SELECT length(gpGet_Object_Program) FROM gpGet_Object_Program('ProjectMobile.apk', '')
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

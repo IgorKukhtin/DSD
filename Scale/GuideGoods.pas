@@ -181,6 +181,28 @@ begin
        Params.ParamByName('inOrderExternalId').Value:= -1 * execParamsMovement.ParamByName('ContractId').AsInteger;
        Execute;
      end
+     else
+     if (execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+     and(SettingMain.BranchCode = 301)
+     then
+     with spSelect do
+     begin
+       Self.Caption:='Параметры продукции для поставщика <('+execParamsMovement.ParamByName('FromCode').asString + ')' + execParamsMovement.ParamByName('FromName').asString + '>';
+       Params.ParamByName('inMovementId').Value:= -1 * execParamsMovement.ParamByName('FromId').AsInteger;
+       Params.ParamByName('inOrderExternalId').Value:= -1 * execParamsMovement.ParamByName('ContractId').AsInteger;
+       Execute;
+     end
+     else
+     if (execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
+     and(SettingMain.BranchCode = 301)
+     then
+     with spSelect do
+     begin
+       Self.Caption:='Параметры продукции по заявке на <('+execParamsMovement.ParamByName('FromCode').asString + ')' + execParamsMovement.ParamByName('FromName').asString + '>';
+       Params.ParamByName('inMovementId').Value:= 0;
+       Params.ParamByName('inOrderExternalId').Value:= 0;
+       Execute;
+     end
      ;
 
   PanelGoodsWieghtValue.Caption:=FloatToStr(ParamsMI.ParamByName('RealWeight_Get').AsFloat);
