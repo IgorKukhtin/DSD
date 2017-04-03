@@ -2110,6 +2110,14 @@ inherited MainForm: TMainForm
       object N73: TMenuItem
         Action = actChangeIncomePaymentJournal
       end
+      object N135: TMenuItem
+        Caption = '-'
+      end
+      object N105: TMenuItem
+        Action = actReport_Payment_Plan
+        Caption = #1043#1088#1072#1092#1080#1082' '#1087#1088#1086#1075#1085#1086#1079#1080#1088#1091#1077#1084#1099#1093' '#1087#1083#1072#1090#1077#1078#1077#1081
+        Hint = ' '#1043#1088#1072#1092#1080#1082' '#1087#1088#1086#1075#1085#1086#1079#1080#1088#1091#1077#1084#1099#1093' '#1087#1083#1072#1090#1077#1078#1077#1081
+      end
     end
     object miReports: TMenuItem [5]
       Caption = #1054#1090#1095#1077#1090#1099
@@ -2137,9 +2145,6 @@ inherited MainForm: TMainForm
       end
       object miReport_JuridicalCollation: TMenuItem
         Action = actReport_JuridicalCollation
-      end
-      object N105: TMenuItem
-        Action = actReport_Payment_Plan
       end
       object miReport_GoodRemains: TMenuItem
         Action = actReport_GoodRemains

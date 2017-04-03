@@ -26,7 +26,7 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
         Width = 797
         Height = 288
         ExplicitWidth = 797
-        ExplicitHeight = 267
+        ExplicitHeight = 288
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -102,10 +102,10 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 249
+            Width = 204
           end
           object TotalSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            Caption = #1055#1083#1072#1085'. '#1082' '#1086#1087#1083#1072#1090#1077' '#1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -114,22 +114,38 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
             Width = 127
           end
           object PaySumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1082' '#1086#1087#1083#1072#1090#1077
+            Caption = #1060#1072#1082#1090'. '#1086#1087#1083#1072#1095'. '#1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'PaySumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 140
+            Width = 107
           end
           object SummaSale: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
+            Caption = #1055#1083#1072#1085'. '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078
             DataBinding.FieldName = 'SummaSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 159
+          end
+          object colPlanAmount: TcxGridDBColumn
+            Caption = #1055#1083#1072#1085
+            DataBinding.FieldName = 'PlanAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
+          object FactAmount: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090
+            DataBinding.FieldName = 'FactAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
           end
         end
       end
@@ -141,7 +157,6 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = grChart
-        ExplicitTop = 267
       end
       object grChart: TcxGrid
         Left = 0
@@ -165,15 +180,15 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
           end
           object serTotalSumm: TcxGridDBChartSeries
             DataBinding.FieldName = 'TotalSumm'
-            DisplayText = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            DisplayText = #1055#1083#1072#1085'. '#1082' '#1086#1087#1083#1072#1090#1077' '#1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057
           end
           object serPaySumm: TcxGridDBChartSeries
             DataBinding.FieldName = 'PaySumm'
-            DisplayText = #1057#1091#1084#1084#1072' '#1082' '#1086#1087#1083#1072#1090#1077
+            DisplayText = #1060#1072#1082#1090'. '#1086#1087#1083#1072#1095'. '#1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057
           end
           object serSummaSale: TcxGridDBChartSeries
             DataBinding.FieldName = 'SummaSale'
-            DisplayText = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
+            DisplayText = #1055#1083#1072#1085'. '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078
           end
         end
         object grChartLevel1: TcxGridLevel
