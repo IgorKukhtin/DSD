@@ -48,6 +48,8 @@ type
     Protocol3OpenForm: TdsdOpenForm;
     bbProtocol2OpenForm: TdxBarButton;
     bbProtocol3OpenForm: TdxBarButton;
+    isUploadBadm_1: TcxGridDBColumn;
+    isUploadTeva_1: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -5,7 +5,7 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 1095
-  ExplicitHeight = 530
+  ExplicitHeight = 527
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -218,6 +218,16 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
             DataBinding.FieldName = 'isUpload'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object isUploadBadm_1: TcxGridDBColumn
+            DataBinding.FieldName = 'isUploadBadm'
+            Options.Editing = False
+            Width = 55
+          end
+          object isUploadTeva_1: TcxGridDBColumn
+            DataBinding.FieldName = 'isUploadTeva'
             Options.Editing = False
             Width = 55
           end

@@ -44,6 +44,7 @@ $BODY$
 
     DECLARE vbRetailId    Integer;
     DECLARE vbFromId      Integer;
+    DECLARE vbToId        Integer;
     DECLARE vbGoodsId     Integer;
     DECLARE vbOperDate_price TDateTime;
     DECLARE vbPriceListId Integer;
@@ -394,6 +395,7 @@ BEGIN
                             WHERE Object_GoodsListSale.DescId   = zc_Object_GoodsListSale()
                               AND Object_GoodsListSale.isErased = FALSE
                            UNION ALL
+                            -- Поставщики - Склад Специй
                             SELECT DISTINCT ObjectLink_GoodsListIncome_Goods.ChildObjectId AS GoodsId
                                  , 0   AS GoodsKindId_max
                                  , ''  AS WordList
@@ -414,6 +416,35 @@ BEGIN
                             WHERE Object_GoodsListIncome.DescId   = zc_Object_GoodsListIncome()
                               AND Object_GoodsListIncome.isErased = FALSE
                               AND inBranchCode                  = 301
+                           UNION ALL
+                            -- Перемещение - Склад Специй
+                            SELECT DISTINCT MovementItem.ObjectId AS GoodsId
+                                 , 0   AS GoodsKindId_max
+                                 , ''  AS WordList
+                            FROM Movement
+                                 INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                               ON MovementLinkObject_From.MovementId = Movement.Id
+                                                              AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                                              AND MovementLinkObject_From.ObjectId   = 8447 -- ЦЕХ колбасный
+                                 INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                               ON MovementLinkObject_To.MovementId = Movement.Id
+                                                              AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                              AND MovementLinkObject_To.ObjectId   = 8447 -- ЦЕХ колбасный
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                        AND MovementItem.DescId     = zc_MI_Master()
+                                                        AND MovementItem.isErased   = FALSE
+                                 INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                       ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                                                      AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                                 INNER JOIN Object_InfoMoney_View AS View_InfoMoney
+                                                                  ON View_InfoMoney.InfoMoneyId            = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                                 AND View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
+
+                            WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '1 DAY' AND CURRENT_DATE
+                              AND Movement.DescId = zc_Movement_OrderInternal()
+                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                              AND inBranchCode                  = 301
+                              AND inMovementId                  = 0
                             ;
     -- 
     INSERT INTO _tmpWord_Split_from (WordList) 
@@ -509,6 +540,7 @@ BEGIN
                             WHERE ObjectBoolean_ScaleCeh.DescId    IN (zc_ObjectBoolean_GoodsByGoodsKind_ScaleCeh(), zc_ObjectBoolean_GoodsByGoodsKind_Order())
                               AND ObjectBoolean_ScaleCeh.ValueData = TRUE
                               AND inMovementId >= 0
+                              AND inBranchCode <> 301
                            ) AS tmp
                             GROUP BY tmp.GoodsId
                            )
@@ -530,7 +562,8 @@ BEGIN
                           LEFT JOIN tmpGoods_ScaleCeh ON tmpGoods_ScaleCeh.GoodsId = Object_Goods.Id
                           LEFT JOIN tmpGoods_Return ON tmpGoods_Return.GoodsId = Object_Goods.Id
                           LEFT JOIN Object AS Object_GoodsKind_Main ON Object_GoodsKind_Main.Id = zc_Enum_GoodsKind_Main()
-                     WHERE tmpGoods_Return.GoodsId > 0 OR inMovementId >= 0 OR tmpInfoMoney.isTare = TRUE
+                     WHERE (tmpGoods_Return.GoodsId > 0 OR inMovementId >= 0 OR tmpInfoMoney.isTare = TRUE)
+                       AND inBranchCode <> 301
                      
                     )
       , tmpPrice1 AS (SELECT tmpGoods.GoodsId
