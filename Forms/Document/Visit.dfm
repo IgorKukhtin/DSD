@@ -28,7 +28,6 @@ inherited VisitForm: TVisitForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount
             end
             item
               Format = ',0.####'
@@ -54,7 +53,6 @@ inherited VisitForm: TVisitForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount
             end
             item
               Format = ',0.####'
@@ -90,8 +88,8 @@ inherited VisitForm: TVisitForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object GoodsName: TcxGridDBColumn [0]
-            Caption = #1060#1086#1090#1086
+          object PhotoMobileName: TcxGridDBColumn [0]
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1092#1072#1081#1083#1072' '#1092#1086#1090#1086
             DataBinding.FieldName = 'PhotoMobileName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -103,17 +101,15 @@ inherited VisitForm: TVisitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 143
+            Width = 150
           end
-          object Amount: TcxGridDBColumn [1]
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object PhotoData: TcxGridDBColumn [1]
+            Caption = #1060#1086#1090#1086
+            DataBinding.FieldName = 'PhotoData'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Options.Editing = False
+            Width = 160
           end
           object Comment: TcxGridDBColumn [2]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -493,10 +489,10 @@ inherited VisitForm: TVisitForm
       item
       end
       item
-        Column = GoodsName
+        Column = PhotoMobileName
       end
       item
-        Column = Amount
+        Column = PhotoData
       end>
     SummaryItemList = <
       item
@@ -810,19 +806,20 @@ inherited VisitForm: TVisitForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPhotoMobileId'
+        Name = 'inPhotoMobileName'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'PhotoMobileId'
+        ComponentItem = 'PhotoMobileName'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmount'
+        Name = 'inPhotoData'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Amount'
-        DataType = ftFloat
+        ComponentItem = 'PhotoData'
+        DataType = ftWideString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

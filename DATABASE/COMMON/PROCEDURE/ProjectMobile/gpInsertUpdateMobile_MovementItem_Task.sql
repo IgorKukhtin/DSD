@@ -1,0 +1,74 @@
+-- Function: gpInsertUpdateMobile_MovementItem_Task()
+
+DROP FUNCTION IF EXISTS gpInsertUpdateMobile_MovementItem_Task (Integer, Integer, Boolean, TVarChar, TDateTime, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_MovementItem_Task(
+    IN inId         Integer   , -- Уникальный идентификатор формируется в Главной БД, и используется при синхронизации
+    IN inMovementId Integer   , -- Уникальный идентификатор документа
+    IN inClosed     Boolean   , -- Выполнено (да/нет)
+    IN inComment    TVarChar  , -- Примечание. Заполняет Торговый, после выполнения/не выполнения задания
+    IN inUpdateDate TDateTime , -- Дата/время когда торговый отметил выполнение/не выполнение задания
+    IN inSession    TVarChar    -- сессия пользователя
+)
+RETURNS Integer AS
+$BODY$
+   DECLARE vbUserId Integer;
+   DECLARE vbId Integer;
+   DECLARE vbPartnerId Integer;
+   DECLARE vbDescription TVarChar;
+BEGIN
+      -- проверка прав пользователя на вызов процедуры
+      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
+      vbUserId:= lpGetUserBySession (inSession);
+
+      SELECT MI_Task.Id
+           , MI_Task.ObjectId AS PartnerId
+           , MIString_Description.ValueData AS Description
+      INTO vbId
+         , vbPartnerId
+         , vbDescription
+      FROM Movement AS Movement_Task
+           JOIN MovementItem AS MI_Task 
+                             ON MI_Task.MovementId = Movement_Task.Id
+                            AND MI_Task.DescId = zc_MI_Master() 
+                            AND MI_Task.Id = inId
+           LEFT JOIN MovementItemString AS MIString_Description
+                                        ON MIString_Description.MovementItemId = MI_Task.Id
+                                       AND MIString_Description.DescId = zc_MIString_Description() 
+      WHERE Movement_Task.DescId = zc_Movement_Task()
+        AND Movement_Task.Id = inMovementId;
+
+      IF COALESCE (vbId, 0) = 0 
+      THEN
+           RAISE EXCEPTION 'Ошибка. Задание не заведено.';
+      END IF; 
+
+      vbId := lpInsertUpdate_MovementItem_Task (ioId:= inId
+                                              , inMovementId:= inMovementId
+                                              , inPartnerId:= vbPartnerId
+                                              , inDescription:= vbDescription
+                                              , inUserId:= vbUserId
+                                               );
+
+      -- сохранили свойство <Выполнено (да/нет)>
+      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Close(), vbId, inClosed);
+
+      -- сохранили свойство <Примечание>
+      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbId, inComment);
+
+      -- сохранили свойство <Дата/время выполнения задания>
+      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_UpdateMobile(), vbId, inUpdateDate);
+
+      RETURN vbId;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Ярошенко Р.Ф.
+ 03.04.17                                                         *
+*/
+
+-- тест
+-- SELECT * FROM gpInsertUpdateMobile_MovementItem_Task (inId:= 71885005, inMovementId:= 5285630, inClosed:= true, inComment:= 'с трудом, но сделал', inUpdateDate:= CURRENT_TIMESTAMP, inSession:= zfCalc_UserAdmin())

@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Visit(
 RETURNS TABLE (Id                       Integer
              , PhotoMobileId            Integer
              , PhotoMobileName          TVarChar
-             , Amount                   TFloat
+             , PhotoData                TBlob
              , GUID                     TVarChar
              , Comment                  TVarChar
              , InsertMobileDate         TDateTime
@@ -29,7 +29,7 @@ BEGIN
         SELECT MovementItem.Id               AS Id
              , Object_PhotoMobile.Id         AS PhotoMobileId
              , Object_PhotoMobile.ValueData  AS PhotoMobileName
-             , MovementItem.Amount
+             , ObjectBlob_Photo.ValueData    AS PhotoData
              , MIString_GUID.ValueData       AS GUID
              , MIString_Comment.ValueData    AS Comment
              , MIDate_InsertMobile.ValueData AS InsertMobileDate
@@ -40,6 +40,9 @@ BEGIN
                              AND MovementItem.isErased = tmpIsErased.isErased
 
             LEFT JOIN Object AS Object_PhotoMobile ON Object_PhotoMobile.Id = MovementItem.ObjectId
+            LEFT JOIN ObjectBlob AS ObjectBlob_Photo
+                                 ON ObjectBlob_Photo.ObjectId = Object_PhotoMobile.Id
+                                AND ObjectBlob_Photo.DescId = zc_ObjectBlob_PhotoMobile_Data()
 
             LEFT JOIN MovementItemString AS MIString_GUID
                                          ON MIString_GUID.MovementItemId = MovementItem.Id
