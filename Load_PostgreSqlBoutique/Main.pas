@@ -447,11 +447,11 @@ begin
      fExecSqFromQuery(
        ' 	CREATE TABLE Goods2 (	 ' +
        ' 	ID INTEGER  DEFAULT  autoincrement ,	 ' +
-       ' 	GoodsName CHAR( 80 ) ,	 ' +
-       ' 	Erased INTEGER ,	 ' +
+       ' 	GoodsName TVarCharMedium,	 ' +
+       ' 	Erased smallint ,	 ' +
        ' 	ParentID INTEGER,	 ' +
-       ' 	HasChildren INTEGER,	 ' +
-       ' 	isPrinted  INTEGER ,	 ' +
+       ' 	HasChildren smallint,	 ' +
+       ' 	isPrinted  smallint ,	 ' +
        ' 	CashCode  INTEGER ,	 ' +
        ' 	UserID  INTEGER ,	 ' +
        ' 	ProtocolDate  datetime ,	 ' +
@@ -982,23 +982,23 @@ fExecSqFromQuery(
   with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select distinct col1, col2, col3, col4, col5, col6 from Sop');
+        Add('select distinct col1, col2, col3, col4, col5, col6, '+'''Sop'' as Name'+' from Sop');
         Add('union');
-        Add('select distinct col1, col2, col3, col4, col5, col6 from Vint');
+        Add('select distinct col1, col2, col3, col4, col5, col6, '+'''Vint'' as Name'+' from Vint');
         Add('union');
-        Add('select distinct col1, col2, col3, col4, col5, col6 from Tl');
+        Add('select distinct col1, col2, col3, col4, col5, col6, '+'''Tl'' as Name'+' from Tl');
         Add('union');
-        Add('select distinct col1, col2, col3, col4, col5, col6 from Esc');
+        Add('select distinct col1, col2, col3, col4, col5, col6, '+'''Esc'' as Name'+' from Esc');
         Add('union');
-        Add('select distinct col1, col2, col3, col4, col5, col6 from Mm');
+        Add('select distinct col1, col2, col3, col4, col5, col6, '+'''Mm'' as Name'+' from Mm');
         Add('union');
-        Add('select distinct col1, col2, col3, col4, col5, col6 from Sav_out');
+        Add('select distinct col1, col2, col3, col4, col5, col6, '+'''Sav_out'' as Name'+' from Sav_out');
         Add('union');
-        Add('select distinct col1, col2, col3, col4, col5, col6 from Ter_out');
+        Add('select distinct col1, col2, col3, col4, col5, col6, '+'''Ter_out'' as Name'+' from Ter_out');
         Add('union');
-        Add('select distinct col1, col2, col3, col4, col5, col6 from Sav');
+        Add('select distinct col1, col2, col3, col4, col5, col6, '+'''Sav'' as Name'+' from Sav');
         Add('union');
-        Add('select distinct col1, col2, col3, col4, col5, col6 from Chado');
+        Add('select distinct col1, col2, col3, col4, col5, col6, '+'''Chado'' as Name'+' from Chado');
 
         Open;
         //
@@ -1017,205 +1017,224 @@ fExecSqFromQuery(
            inParentID:='null';
            inHasChildren:='2';
 
-          with fromQuery_two,Sql do begin  // перва€ колонка col1
+          // 1-ый уровень - col1
+          with fromQuery_two,Sql do
+          begin
+            //проверка Ёлемента-1 - !!!должен быть!!!
+            if trim (fromQuery.FieldByName('Col1').AsString) = '' then ShowMessage('ќшибка - col1 - ѕ”—“ќ… :'
+                                                                                 + ' <' + fromQuery.FieldByName('Col1').AsString +  '>'
+                                                                                 + ' <' + fromQuery.FieldByName('Col2').AsString +  '>'
+                                                                                 + ' <' + fromQuery.FieldByName('Col3').AsString +  '>'
+                                                                                 + ' <' + fromQuery.FieldByName('Col4').AsString +  '>'
+                                                                                 + ' <' + fromQuery.FieldByName('Col5').AsString +  '>'
+                                                                                 + ' <' + fromQuery.FieldByName('Col6').AsString +  '>'
+                                                                                 + ' <' + fromQuery.FieldByName('Name').AsString +  '>'
+                                                                                 + ' <' + inParentID +  '>'
+                                                                                  );
+
             Close;
             Clear;
-            Add('select id from goods2 where  goodsname = lower(trim('''+lowercase(fromQuery.FieldByName('Col1').AsString)+'''))');
+            //поиск Ёлемента-1
+            Add('select id from goods2 where lower(goodsname) = lower(trim('''+lowercase(fromQuery.FieldByName('Col1').AsString)+'''))');
+            Add('   and isnull(ParentId,0) = 0');
             Open;
-            if fromQuery_two.RecordCount = 0 then
-             begin
+            //если не нашли Ёлемент-1 - тогда Insert
+            if fromQuery_two.RecordCount <> 1 then
+            begin
                 inGoodsName:= fromQuery.FieldByName('Col1').AsString;
                 inParentID:='null';
                 inHasChildren:='2';
-               //
+                //
                 if inGoodsName<>'' then
                 fExecSqFromQuery(
                   ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
-                  ' select distinct '''+lowercase(inGoodsName)+''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
+                  ' select distinct ''' + trim(inGoodsName) + ''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
                   );
-             end;
-            //
+                //потом нашли ParentID дл€ !!!следующего!!! уровн€
+                Close;
+                Open;
+                if fromQuery_two.RecordCount <> 1
+                then ShowMessage('ќшибка - не найден Id - col1')
+                else inParentID:=fromQuery_two.FieldByName('Id').AsString;
+            end
+            //иначе сразу получили ParentID дл€ !!!следующего!!! уровн€
+            else inParentID:=fromQuery_two.FieldByName('Id').AsString;
+
           end;  // конец перва€ колонка col1
-         //
-          with fromQuery_two,Sql do begin    // втора€ колонка col2
+
+          //
+          // 2-ой уровень - col2
+          with fromQuery_two,Sql do
+           if trim (fromQuery.FieldByName('Col2').AsString) <> '' then
+           begin
             Close;
             Clear;
-            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col1').AsString+''')');
-            Open;
-            if fromQuery_two.RecordCount > 0 then
-              inParentID := fromQuery_two.FieldByName('Id').AsString;
-
-            Close;
-            Clear;
-            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col2').AsString+''')');
+            //поиск Ёлемента-2
+            Add('select id from goods2 where lower(goodsname) = lower(trim('''+lowercase(fromQuery.FieldByName('Col2').AsString)+'''))');
+            Add('   and ParentId = ' + inParentID);
             Open;
 
-             if fromQuery_two.RecordCount = 0 then
-             begin
-
-              inGoodsName := fromQuery.FieldByName('Col2').AsString;
-              inHasChildren := '2';
-               //
-                if inGoodsName <> '' then
+            //если не нашли Ёлемент-2 - тогда Insert
+            if fromQuery_two.RecordCount <> 1 then
+            begin
+                inGoodsName := fromQuery.FieldByName('Col2').AsString;
+                inHasChildren := '2';
+                //
                 fExecSqFromQuery(
                   ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
-                  ' select distinct '''+inGoodsName+''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
+                  ' select distinct ''' + trim(inGoodsName) + ''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
                   );
+                //потом нашли ParentID дл€ !!!следующего!!! уровн€
+                Close;
+                Open;
+                if fromQuery_two.RecordCount <> 1
+                then ShowMessage('ќшибка - не найден Id - col2')
+                else inParentID:=fromQuery_two.FieldByName('Id').AsString;
+            end
+            //иначе сразу получили ParentID дл€ !!!следующего!!! уровн€
+            else inParentID:=fromQuery_two.FieldByName('Id').AsString;
 
-             end;
-            //
           end;  // конец втора€ колонка col2
 
-          with fromQuery_two,Sql do begin    // треть€ колонка col3
+          //
+          // 3-ий уровень - col3
+          with fromQuery_two,Sql do
+           if trim (fromQuery.FieldByName('Col3').AsString) <> '' then
+           begin
             Close;
             Clear;
-            if inParentID <> '' then
-            begin
-            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col2').AsString+''')');
-            Add('and ParentId = ' + inParentID);
-            end
-            else
-            begin
-            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col2').AsString+''')');
-            ShowMessage('ќшибка col3');
-            end;
-            Open;
-            if fromQuery_two.RecordCount > 0 then
-              inParentID := fromQuery_two.FieldByName('Id').AsString;
-
-            Close;
-            Clear;
-            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col3').AsString+''')');
+            Add('select id from goods2 where  lower(goodsname) = lower(trim('''+lowercase(fromQuery.FieldByName('Col3').AsString)+'''))');
+            Add('   and ParentId = ' + inParentID);
             Open;
 
-             if fromQuery_two.RecordCount = 0 then
-             begin
-
-              inGoodsName := fromQuery.FieldByName('Col3').AsString;
-              inHasChildren := '2';
-               //
-                if inGoodsName <> '' then
+            //если не нашли Ёлемент-3 - тогда Insert
+            if fromQuery_two.RecordCount <> 1 then
+            begin
+                inGoodsName := fromQuery.FieldByName('Col3').AsString;
+                inHasChildren := '2';
+                //
                 fExecSqFromQuery(
                   ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
-                  ' select distinct '''+inGoodsName+''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
+                  ' select distinct '''+ trim(inGoodsName) +''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
                   );
+                //потом нашли ParentID дл€ !!!следующего!!! уровн€
+                Close;
+                Open;
+                if fromQuery_two.RecordCount <> 1
+                then ShowMessage('ќшибка - не найден Id - col3')
+                else inParentID:=fromQuery_two.FieldByName('Id').AsString;
+            end
+            //иначе сразу получили ParentID дл€ !!!следующего!!! уровн€
+            else inParentID:=fromQuery_two.FieldByName('Id').AsString;
 
-             end;
-            //
           end;  // конец треть€ колонка col3
 
-          with fromQuery_two,Sql do begin    // четверта€ колонка col4
+          //
+          // 4-ый уровень - col4
+          with fromQuery_two,Sql do
+           if trim (fromQuery.FieldByName('Col4').AsString) <> '' then
+           begin
             Close;
             Clear;
-            if inParentID <> '' then
-            begin
-            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col3').AsString+''')');
-            Add('and ParentId = ' + inParentID);
-            end
-            else
-            begin
-            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col3').AsString+''')');
-            ShowMessage('ќшибка col4');
-            end;
-            Open;
-            if fromQuery_two.RecordCount > 0 then
-              inParentID := fromQuery_two.FieldByName('Id').AsString;
-
-            Close;
-            Clear;
-            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col4').AsString+''')');
+            Add('select id from goods2 where  lower(goodsname) = lower(trim('''+lowercase(fromQuery.FieldByName('Col4').AsString)+'''))');
+            Add('   and ParentId = ' + inParentID);
             Open;
 
-             if fromQuery_two.RecordCount = 0 then
+            //если не нашли Ёлемент-4 - тогда Insert
+             if fromQuery_two.RecordCount <> 1 then
              begin
-
-              inGoodsName := fromQuery.FieldByName('Col4').AsString;
-              inHasChildren := '2';
-               //
-                if inGoodsName <> '' then
+                inGoodsName := fromQuery.FieldByName('Col4').AsString;
+                inHasChildren := '2';
+                //
                 fExecSqFromQuery(
                   ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
-                  ' select distinct '''+inGoodsName+''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
+                  ' select distinct '''+ trim(inGoodsName) +''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
                   );
+                //потом нашли ParentID дл€ !!!следующего!!! уровн€
+                Close;
+                Open;
+                if fromQuery_two.RecordCount <> 1
+                then ShowMessage('ќшибка - не найден Id - col4')
+                else inParentID:=fromQuery_two.FieldByName('Id').AsString;
+            end
+            //иначе сразу получили ParentID дл€ !!!следующего!!! уровн€
+            else inParentID:=fromQuery_two.FieldByName('Id').AsString;
 
-             end;
-            //
           end;  // конец червертой колонки col4
 
-          with fromQuery_two,Sql do begin    // п€та€ колонка col5
+          //
+          // 5-ый уровень - col5
+          with fromQuery_two,Sql do
+           if trim (fromQuery.FieldByName('Col5').AsString) <> '' then
+           begin
             Close;
             Clear;
-            if inParentID <> '' then
-            begin
-            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col4').AsString+''')');
-            Add('and ParentId = ' + inParentID);
-            end
-            else
-            begin
-            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col4').AsString+''')');
-            ShowMessage('ќшибка col5');
-            end;
-            Open;
-            if fromQuery_two.RecordCount > 0 then
-              inParentID := fromQuery_two.FieldByName('Id').AsString;
-
-            Close;
-            Clear;
-            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col5').AsString+''')');
+            Add('select id from goods2 where lower(goodsname) = lower(trim('''+lowercase(fromQuery.FieldByName('Col5').AsString)+'''))');
+            Add('   and ParentId = ' + inParentID);
             Open;
 
-             if fromQuery_two.RecordCount = 0 then
-             begin
-
-              inGoodsName := fromQuery.FieldByName('Col5').AsString;
-              inHasChildren := '2';
-               //
-                if inGoodsName <> '' then
+            //если не нашли Ёлемент-5 - тогда Insert
+            if fromQuery_two.RecordCount <> 1 then
+            begin
+                inGoodsName := fromQuery.FieldByName('Col5').AsString;
+                inHasChildren := '2';
+                //
                 fExecSqFromQuery(
                   ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
-                  ' select distinct '''+inGoodsName+''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
+                  ' select distinct '''+ trim(inGoodsName) +''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
                   );
-
-             end;
-            //
-          end;  // конец п€той колонки col5
-
-          with fromQuery_two,Sql do begin    // шеста€ колонка col6
-            Close;
-            Clear;
-            if inParentID <> '' then
-            begin
-            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col5').AsString+''')');
-            Add('and ParentId = ' + inParentID);
+                //потом нашли ParentID дл€ !!!следующего!!! уровн€
+                Close;
+                Open;
+                if fromQuery_two.RecordCount <> 1
+                then ShowMessage('ќшибка - не найден Id - col5')
+                else inParentID:=fromQuery_two.FieldByName('Id').AsString;
             end
-            else
-            begin
-            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col5').AsString+''')');
-            ShowMessage('ќшибка col6');
-            end;
-            Open;
-            if fromQuery_two.RecordCount > 0 then
-              inParentID := fromQuery_two.FieldByName('Id').AsString;
+            //иначе сразу получили ParentID дл€ !!!следующего!!! уровн€
+            else inParentID:=fromQuery_two.FieldByName('Id').AsString;
 
+          end;  // конец колонка col5
+
+          //
+          // 6-ой уровень - col6
+          with fromQuery_two,Sql do
+           if trim (fromQuery.FieldByName('Col6').AsString) <> '' then
+           begin
             Close;
             Clear;
-            Add('select id from goods2 where  goodsname = trim('''+fromQuery.FieldByName('Col6').AsString+''')');
+            Add('select id from goods2 where lower(goodsname) = lower(trim('''+lowercase(fromQuery.FieldByName('Col6').AsString)+'''))');
+            Add('   and ParentId = ' + inParentID);
             Open;
 
-             if fromQuery_two.RecordCount = 0 then
-             begin
-
-              inGoodsName := fromQuery.FieldByName('Col6').AsString;
-              inHasChildren := '1';
-               //
-                if inGoodsName <> '' then
+            //если не нашли Ёлемент-6 - тогда Insert
+            if fromQuery_two.RecordCount <> 1 then
+            begin
+                inGoodsName := fromQuery.FieldByName('Col6').AsString;
+                inHasChildren := '1';
+                //
                 fExecSqFromQuery(
                   ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
-                  ' select distinct '''+inGoodsName+''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
+                  ' select distinct '''+ trim(inGoodsName) +''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
                   );
+                //потом нашли ParentID дл€ !!!следующего!!! уровн€
+                Close;
+                Open;
+                if fromQuery_two.RecordCount <> 1
+                then ShowMessage('ќшибка - не найден Id - col6'
+                               + ' <' + fromQuery.FieldByName('Col1').AsString +  '>'
+                               + ' <' + fromQuery.FieldByName('Col2').AsString +  '>'
+                               + ' <' + fromQuery.FieldByName('Col3').AsString +  '>'
+                               + ' <' + fromQuery.FieldByName('Col4').AsString +  '>'
+                               + ' <' + fromQuery.FieldByName('Col5').AsString +  '>'
+                               + ' <' + fromQuery.FieldByName('Col6').AsString +  '>'
+                               + ' <' + fromQuery.FieldByName('Name').AsString +  '>'
+                               + ' <' + inParentID +  '>'
+                                )
+                else inParentID:=fromQuery_two.FieldByName('Id').AsString;
+            end
+            //иначе сразу получили ParentID дл€ !!!следующего!!! уровн€
+            else inParentID:=fromQuery_two.FieldByName('Id').AsString;
 
-             end;
-            //
           end;  // конец шестой колонки col6
 
 
