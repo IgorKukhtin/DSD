@@ -5,6 +5,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -287
   ExplicitWidth = 1406
   ExplicitHeight = 572
   PixelsPerInch = 96
@@ -939,6 +940,12 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object clEndDate: TcxGridDBColumn
+            DataBinding.FieldName = 'EndDate'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 60
+          end
         end
       end
     end
@@ -1093,7 +1100,8 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
         item
           Name = 'EndDate'
           Value = 42005d
-          Component = deEnd
+          Component = MasterCDS
+          ComponentItem = 'EndDate'
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','

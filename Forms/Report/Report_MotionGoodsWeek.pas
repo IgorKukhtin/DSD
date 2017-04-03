@@ -42,6 +42,7 @@ type
     bbPartionGoods: TdxBarControlContainerItem;
     actPrint: TdsdPrintAction;
     GoodsGroupName: TcxGridDBColumn;
+    clEndDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

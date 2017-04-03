@@ -29,6 +29,7 @@ RETURNS TABLE (GoodsCode Integer, GoodsName TVarChar
              , CountOut5 TFloat
              , CountOut6 TFloat
              , CountOut7 TFloat
+             , EndDate TDateTime
              --, Color_RemainsDays Integer
               )
 AS
@@ -173,6 +174,7 @@ BEGIN
            , tmpData.CountOut5  :: TFloat
            , tmpData.CountOut6  :: TFloat
            , tmpData.CountOut7  :: TFloat
+           , vbEndDate          AS EndDate
        FROM tmpGoods
           LEFT JOIN tmpData ON tmpData.GoodsId = tmpGoods.GoodsId 
                            AND tmpData.GoodsKindId = tmpGoods.GoodsKindId 
