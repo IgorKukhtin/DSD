@@ -68,7 +68,7 @@ inherited MainForm: TMainForm
     Left = 136
     Top = 32
     object actReport_MotionGoodsWeek: TdsdOpenForm [0]
-      Category = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1076#1074#1080#1078#1077#1085#1080#1102' '#1087#1086' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080
       FormName = 'TReport_MotionGoodsWeekForm'
@@ -135,7 +135,7 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actReport_SupplyBalance: TdsdOpenForm [4]
-      Category = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1076#1083#1103' '#1089#1085#1072#1073#1078#1077#1085#1080#1103
       FormName = 'TReport_SupplyBalanceForm'
@@ -6038,15 +6038,6 @@ inherited MainForm: TMainForm
       object miReport_WeighingPartner: TMenuItem
         Action = actReport_PersonalComplete
       end
-      object N167: TMenuItem
-        Caption = '-'
-      end
-      object N166: TMenuItem
-        Action = actReport_SupplyBalance
-      end
-      object N168: TMenuItem
-        Action = actReport_MotionGoodsWeek
-      end
     end
     object miReportsGoods: TMenuItem [10]
       Caption = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
@@ -6085,6 +6076,15 @@ inherited MainForm: TMainForm
       end
       object N75: TMenuItem
         Action = actReport_GoodsMI_SendonPrice
+      end
+      object N167: TMenuItem
+        Caption = '-'
+      end
+      object N166: TMenuItem
+        Action = actReport_SupplyBalance
+      end
+      object N168: TMenuItem
+        Action = actReport_MotionGoodsWeek
       end
       object N23: TMenuItem
         Caption = '-'
