@@ -848,6 +848,9 @@ type
     N167: TMenuItem;
     actReport_MotionGoodsWeek: TdsdOpenForm;
     N168: TMenuItem;
+    actReport_Check_OrderInternalBySend: TdsdOpenForm;
+    N169: TMenuItem;
+    N170: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
