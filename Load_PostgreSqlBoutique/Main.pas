@@ -98,6 +98,7 @@ type
     cbSop: TCheckBox;
     cbGoods2: TCheckBox;
     InsertGoods2Button: TButton;
+    Button2: TButton;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -114,6 +115,7 @@ type
     procedure CreateTableButtonClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure InsertGoods2ButtonClick(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
   private
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
@@ -783,6 +785,14 @@ if cbSop.Checked then
 
 end;
 
+procedure TMainForm.Button2Click(Sender: TObject);
+begin
+fExecSqFromQuery(
+ ' drop table goods2;  '
+
+);
+end;
+
 procedure TMainForm.cbAllCompleteDocumentClick(Sender: TObject);
 var i:Integer;
 begin
@@ -892,6 +902,7 @@ end;
 
 
 procedure TMainForm.InsertGoods2ButtonClick(Sender: TObject);
+var  inGoodsName,  inParentID, inHasChildren : string;
 begin
  if not cbGoods2.Checked then Exit;
 // Правки полей
@@ -903,195 +914,242 @@ fExecSqFromQuery(
  ' update ter_out  set col1=''Жен'' where col1=''жен''; ' +
  ' update tl  set col1=''Муж'' where col1=''муж''; ' +
  ' update tl  set col1=''Жен'' where col1=''жен''; '
-
-
 );
 
+  with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select distinct col1, col2, col3, col4, col5, col6 from Tl');
+        Add('union');
+        Add('select distinct col1, col2, col3, col4, col5, col6 from Sav');
+        Add('union');
+        Add('select distinct col1, col2, col3, col4, col5, col6 from Esc');
+        Add('union');
+        Add('select distinct col1, col2, col3, col4, col5, col6 from MM');
+        Add('union');
+        Add('select distinct col1, col2, col3, col4, col5, col6 from Chado');
+        Add('union');
+        Add('select distinct col1, col2, col3, col4, col5, col6 from Sav_out');
+        Add('union');
+        Add('select distinct col1, col2, col3, col4, col5, col6 from Ter_out');
+        Add('union');
+        Add('select distinct col1, col2, col3, col4, col5, col6 from Vint');
+        Add('union');
+        Add('select distinct col1, col2, col3, col4, col5, col6 from Sop');
 
-// Уровень 1
-fExecSqFromQuery(
-  ' 	Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID)	 ' +
-  ' 	select distinct col1 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Chado where  col1  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col1 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Esc where  col1  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col1 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from MM where  col1  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col1 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Sav where  col1  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col1 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Sav_out where  col1  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col1 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Sop where  col1  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col1 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Ter_Out where  col1  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col1 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from TL where  col1  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col1 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Vint where  col1  is not null	 '
-     );
- // Уровень 2
-fExecSqFromQuery(
-  ' 	Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID)	 ' +
-  ' 	select distinct col2 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Chado where  col2  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col2 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Esc where  col2  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col2 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from MM where  col2  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col2 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Sav where  col2  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col2 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Sav_out where  col2  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col2 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Sop where  col2  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col2 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Ter_Out where  col2  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col2 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from TL where  col2  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col2 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Vint where  col2  is not null	 '
-     );
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        //
+        while not EOF do   // идем по всем строкам
+        begin
+         //!!!
+         if fStop then begin exit;end;
+         //
+          with fromQuery_two,Sql do begin  // первая колонка col1
+            Close;
+            Clear;
+            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col1').AsString+'''');
+            Open;
+            if fromQuery_two.RecordCount = 0 then
+             begin
+                inGoodsName:= fromQuery.FieldByName('Col1').AsString;
+                inParentID:='0';
+                inHasChildren:='0';
+               //
+                if inGoodsName<>'' then
+                fExecSqFromQuery(
+                  ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
+                  ' select distinct '''+inGoodsName+''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
+                  );
+             end;
+            //
+          end;  // конец первая колонка col1
+         //
+          with fromQuery_two,Sql do begin    // вторая колонка col2
+            Close;
+            Clear;
+            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col1').AsString+'''');
+            Open;
+            if fromQuery_two.RecordCount > 0 then
+              inParentID := fromQuery_two.FieldByName('Id').AsString;
 
-// Уровень 3
-fExecSqFromQuery(
-  ' 	Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID)	 ' +
-  ' 	select distinct col3 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Chado where  col3  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col3 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Esc where  col3  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col3 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from MM where  col3  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col3 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Sav where  col3  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col3 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Sav_out where  col3  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col3 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Sop where  col3  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col3 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Ter_Out where  col3  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col3 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from TL where  col3  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col3 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Vint where  col3  is not null	 '
-     );
+            Close;
+            Clear;
+            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col2').AsString+'''');
+            Open;
 
-// Уровень 4
-fExecSqFromQuery(
-  ' 	Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID)	 ' +
-  ' 	select distinct col4 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Chado where  col4  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col4 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Esc where  col4  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col4 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from MM where  col4  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col4 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Sav where  col4  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col4 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Sav_out where  col4  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col4 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Sop where  col4  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col4 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Ter_Out where  col4  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col4 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from TL where  col4  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col4 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Vint where  col4  is not null	 '
-     );
+             if fromQuery_two.RecordCount = 0 then
+             begin
 
-// Уровень 5
-fExecSqFromQuery(
-  ' 	Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID)	 ' +
-  ' 	select distinct col5 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Chado where  col5  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col5 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Esc where  col5  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col5 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from MM where  col5  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col5 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Sav where  col5  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col5 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Sav_out where  col5  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col5 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Sop where  col5  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col5 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Ter_Out where  col5  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col5 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from TL where  col5  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col5 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Vint where  col5  is not null	 '
-     );
+              inGoodsName := fromQuery.FieldByName('Col2').AsString;
+              inHasChildren := '0';
+               //
+                if inGoodsName <> '' then
+                fExecSqFromQuery(
+                  ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
+                  ' select distinct '''+inGoodsName+''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
+                  );
 
-// Уровень 6
-fExecSqFromQuery(
-  ' 	Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID)	 ' +
-  ' 	select distinct col6 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Chado where  col6  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col6 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Esc where  col6  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col6 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from MM where  col6  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col6 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Sav where  col6  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col6 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Sav_out where  col6  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col6 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Sop where  col6  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col6 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Ter_Out where  col6  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col6 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from TL where  col6  is not null	 ' +
-  ' 	union 	 ' +
-  ' 	select distinct col6 as GoodsName , 0 as Erased, null as ParentID,  2 as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand  	 ' +
-  ' 	 from Vint where  col6  is not null	 '
-     );
+             end;
+            //
+          end;  // конец вторая колонка col2
+
+          with fromQuery_two,Sql do begin    // третья колонка col3
+            Close;
+            Clear;
+            if inParentID <> '' then
+            begin
+            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col2').AsString+'''');
+            Add('and ParentId = ' + inParentID);
+            end
+            else
+            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col2').AsString+'''');
+            Open;
+            if fromQuery_two.RecordCount > 0 then
+              inParentID := fromQuery_two.FieldByName('Id').AsString;
+
+            Close;
+            Clear;
+            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col3').AsString+'''');
+            Open;
+
+             if fromQuery_two.RecordCount = 0 then
+             begin
+
+              inGoodsName := fromQuery.FieldByName('Col3').AsString;
+              inHasChildren := '0';
+               //
+                if inGoodsName <> '' then
+                fExecSqFromQuery(
+                  ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
+                  ' select distinct '''+inGoodsName+''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
+                  );
+
+             end;
+            //
+          end;  // конец третья колонка col3
+
+          with fromQuery_two,Sql do begin    // четвертая колонка col4
+            Close;
+            Clear;
+            if inParentID <> '' then
+            begin
+            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col3').AsString+'''');
+            Add('and ParentId = ' + inParentID);
+            end
+            else
+            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col3').AsString+'''');
+            Open;
+            if fromQuery_two.RecordCount > 0 then
+              inParentID := fromQuery_two.FieldByName('Id').AsString;
+
+            Close;
+            Clear;
+            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col4').AsString+'''');
+            Open;
+
+             if fromQuery_two.RecordCount = 0 then
+             begin
+
+              inGoodsName := fromQuery.FieldByName('Col4').AsString;
+              inHasChildren := '0';
+               //
+                if inGoodsName <> '' then
+                fExecSqFromQuery(
+                  ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
+                  ' select distinct '''+inGoodsName+''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
+                  );
+
+             end;
+            //
+          end;  // конец червертой колонки col4
+
+          with fromQuery_two,Sql do begin    // пятая колонка col5
+            Close;
+            Clear;
+            if inParentID <> '' then
+            begin
+            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col4').AsString+'''');
+            Add('and ParentId = ' + inParentID);
+            end
+            else
+            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col4').AsString+'''');
+            Open;
+            if fromQuery_two.RecordCount > 0 then
+              inParentID := fromQuery_two.FieldByName('Id').AsString;
+
+            Close;
+            Clear;
+            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col5').AsString+'''');
+            Open;
+
+             if fromQuery_two.RecordCount = 0 then
+             begin
+
+              inGoodsName := fromQuery.FieldByName('Col5').AsString;
+              inHasChildren := '0';
+               //
+                if inGoodsName <> '' then
+                fExecSqFromQuery(
+                  ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
+                  ' select distinct '''+inGoodsName+''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
+                  );
+
+             end;
+            //
+          end;  // конец пятой колонки col5
+
+          with fromQuery_two,Sql do begin    // шестая колонка col6
+            Close;
+            Clear;
+            if inParentID <> '' then
+            begin
+            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col5').AsString+'''');
+            Add('and ParentId = ' + inParentID);
+            end
+            else
+            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col5').AsString+'''');
+            Open;
+            if fromQuery_two.RecordCount > 0 then
+              inParentID := fromQuery_two.FieldByName('Id').AsString;
+
+            Close;
+            Clear;
+            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col6').AsString+'''');
+            Open;
+
+             if fromQuery_two.RecordCount = 0 then
+             begin
+
+              inGoodsName := fromQuery.FieldByName('Col6').AsString;
+              inHasChildren := '0';
+               //
+                if inGoodsName <> '' then
+                fExecSqFromQuery(
+                  ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
+                  ' select distinct '''+inGoodsName+''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
+                  );
+
+             end;
+            //
+          end;  // конец шестой колонки col6
+
+
+             //
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+
+        end;
+     end;
 
 end;
 

@@ -709,6 +709,15 @@ object MainForm: TMainForm
           TabOrder = 13
           OnClick = InsertGoods2ButtonClick
         end
+        object Button2: TButton
+          Left = 120
+          Top = 62
+          Width = 97
+          Height = 25
+          Caption = 'Drop table Goods2'
+          TabOrder = 14
+          OnClick = Button2Click
+        end
       end
     end
   end
