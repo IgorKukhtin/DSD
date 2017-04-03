@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, CodeStr TVarChar, Name TVarChar, isEras
                NDSKindId Integer, NDSKindName TVarChar,
                NDS TFloat, MinimumLot TFloat,
                isClose Boolean, isTOP Boolean, isPromo Boolean, isFirst Boolean, isSecond Boolean, isPublished Boolean,
-               isUpload Boolean, isSpecCondition Boolean,
+               isUpload Boolean, isUploadBadm Boolean, isUploadTeva Boolean, isSpecCondition Boolean,
                PercentMarkup TFloat, Price TFloat,
                ReferCode TFloat, ReferPrice TFloat,
                ObjectDescName TVarChar, ObjectName TVarChar,
@@ -56,6 +56,8 @@ BEGIN
            , ObjectBoolean_Second.ValueData         AS isSecond
            , ObjectBoolean_Published.ValueData      AS isPublished
            , ObjectBoolean_Goods_IsUpload.ValueData       AS IsUpload
+           , ObjectBoolean_Goods_IsUploadBadm.ValueData   AS isUploadBadm
+           , ObjectBoolean_Goods_IsUploadTeva.ValueData   AS isUploadTeva
            , ObjectBoolean_Goods_SpecCondition.ValueData  AS IsSpecCondition
 
            , ObjectFloat_Goods_PercentMarkup.ValueData AS PercentMarkup  
@@ -160,6 +162,13 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_IsUpload
                                   ON ObjectBoolean_Goods_IsUpload.ObjectId = Object_Goods.Id
                                  AND ObjectBoolean_Goods_IsUpload.DescId = zc_ObjectBoolean_Goods_IsUpload()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_IsUploadBadm
+                                  ON ObjectBoolean_Goods_IsUploadBadm.ObjectId = Object_Goods.Id
+                                 AND ObjectBoolean_Goods_IsUploadBadm.DescId = zc_ObjectBoolean_Goods_UploadBadm()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_IsUploadTeva
+                                  ON ObjectBoolean_Goods_IsUploadTeva.ObjectId = Object_Goods.Id
+                                 AND ObjectBoolean_Goods_IsUploadTeva.DescId = zc_ObjectBoolean_Goods_UploadTeva()
+                                 
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SpecCondition
                                   ON ObjectBoolean_Goods_SpecCondition.ObjectId = Object_Goods.Id
                                  AND ObjectBoolean_Goods_SpecCondition.DescId = zc_ObjectBoolean_Goods_SpecCondition()

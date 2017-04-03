@@ -425,11 +425,11 @@ BEGIN
                                  INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                                ON MovementLinkObject_From.MovementId = Movement.Id
                                                               AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
-                                                              AND MovementLinkObject_From.ObjectId   = 8447 -- ЦЕХ колбасный
+                                                              AND MovementLinkObject_From.ObjectId   IN (8447, 8448) -- ЦЕХ колбасный + ЦЕХ деликатесов
                                  INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                ON MovementLinkObject_To.MovementId = Movement.Id
                                                               AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                                                              AND MovementLinkObject_To.ObjectId   = 8447 -- ЦЕХ колбасный
+                                                              AND MovementLinkObject_To.ObjectId   IN (8447, 8448) -- ЦЕХ колбасный + ЦЕХ деликатесов
                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                         AND MovementItem.DescId     = zc_MI_Master()
                                                         AND MovementItem.isErased   = FALSE
@@ -440,7 +440,7 @@ BEGIN
                                                                   ON View_InfoMoney.InfoMoneyId            = ObjectLink_Goods_InfoMoney.ChildObjectId
                                                                  AND View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
 
-                            WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '1 DAY' AND CURRENT_DATE
+                            WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '1 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
                               AND Movement.DescId = zc_Movement_OrderInternal()
                               AND Movement.StatusId = zc_Enum_Status_Complete()
                               AND inBranchCode                  = 301
