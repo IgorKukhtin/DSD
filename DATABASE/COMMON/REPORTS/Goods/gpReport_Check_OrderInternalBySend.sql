@@ -62,6 +62,7 @@ BEGIN
                                                    ON MI_Master.MovementId = tmpMovOrder.Id
                                                   AND MI_Master.DescId     = zc_MI_Master()
                                                   AND MI_Master.isErased   = FALSE
+                           INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MI_Master.ObjectId
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                             ON MILinkObject_GoodsKind.MovementItemId = MI_Master.Id
                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -115,12 +116,14 @@ BEGIN
                             , (tmpMI_Order.Amount)  AS OrderAmount
                             , 0            ::TFloat AS SendAmount
                        FROM tmpMI_Order
+                       WHERE tmpMI_Order.Amount <> 0
                      UNION 
                        SELECT tmpMI_Send.GoodsId
                             , tmpMI_Send.GoodsKindId
                             , 0           ::TFloat AS OrderAmount
                             , (tmpMI_Send.Amount)  AS SendAmount
                        FROM tmpMI_Send
+                       WHERE tmpMI_Send.Amount <> 0
                        ) AS tmp
                   GROUP BY tmp.GoodsId
                       , tmp.GoodsKindId

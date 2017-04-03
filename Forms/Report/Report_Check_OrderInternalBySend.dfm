@@ -202,14 +202,15 @@ inherited Report_Check_OrderInternalBySendForm: TReport_Check_OrderInternalBySen
     ExplicitHeight = 65
     inherited deStart: TcxDateEdit
       Left = 118
-      EditValue = 42522d
+      EditValue = 42826d
       Properties.SaveTime = False
+      Properties.OnChange = deStartPropertiesChange
       ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 34
-      EditValue = 42522d
+      EditValue = 42826d
       Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 34
@@ -610,10 +611,13 @@ inherited Report_Check_OrderInternalBySendForm: TReport_Check_OrderInternalBySen
         Component = deEnd
       end
       item
+        Component = GuidesFrom
       end
       item
+        Component = GuidesTo
       end
       item
+        Component = GuidesGoodsGroup
       end
       item
       end
