@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelectMobile_Object_Partner (
 RETURNS TABLE (Id               Integer
              , ObjectCode       Integer  -- Код
              , ValueData        TVarChar -- Название
+             , GUID             TVarChar -- Глобальный уникальный идентификатор. Для синхронизации с Главной БД
              , Address          TVarChar -- Адрес точки доставки
              , GPSN             TFloat   -- GPS координаты точки доставки (широта)
              , GPSE             TFloat   -- GPS координаты точки доставки (долгота)
@@ -150,6 +151,7 @@ BEGIN
              SELECT Object_Partner.Id
                   , Object_Partner.ObjectCode
                   , Object_Partner.ValueData
+                  , ObjectString_Partner_GUID.ValueData     AS GUID
                   , ObjectString_Partner_Address.ValueData  AS Address
                   , ObjectFloat_Partner_GPSN.ValueData      AS GPSN
                   , ObjectFloat_Partner_GPSE.ValueData      AS GPSE
@@ -217,7 +219,11 @@ BEGIN
                   LEFT JOIN ObjectBoolean AS ObjectBoolean_Retail_OperDateOrder
                                           ON ObjectBoolean_Retail_OperDateOrder.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
                                          AND ObjectBoolean_Retail_OperDateOrder.DescId = zc_ObjectBoolean_Retail_OperDateOrder()                      
-             WHERE Object_Partner.DescId = zc_Object_Partner();
+                  LEFT JOIN ObjectString AS ObjectString_Partner_GUID
+                                         ON ObjectString_Partner_GUID.ObjectId = Object_Partner.Id
+                                        AND ObjectString_Partner_GUID.DescId = zc_ObjectString_Partner_GUID() 
+             WHERE Object_Partner.DescId = zc_Object_Partner()
+               AND NOT Object_Partner.isErased;
       END IF;
 
 END; 
