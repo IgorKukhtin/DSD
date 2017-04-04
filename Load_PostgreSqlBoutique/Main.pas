@@ -1248,17 +1248,17 @@ fExecSqFromQuery(
 
           // Обновление ParentId2 для целевой таблыцы
 
-          upWhere:=' update  '+fromQuery.FieldByName('Name').AsString +'  set ParentId2 = '+ inParentID +' where col1 = '''+ fromQuery.FieldByName('Col1').AsString +''' ';
+          upWhere:=' update  '+fromQuery.FieldByName('Name').AsString +'  set ParentId2 = '+ inParentID +' where lower(col1)  = lower(trim('''+ fromQuery.FieldByName('Col1').AsString +''')) ';
           if fromQuery.FieldByName('Col2').AsString<>'' then
-            upWhere:=upWhere + ' and col2 = '''+fromQuery.FieldByName('Col2').AsString+''' ';
+            upWhere:=upWhere + ' and lower(col2) = lower(trim('''+fromQuery.FieldByName('Col2').AsString+''')) ';
           if fromQuery.FieldByName('Col3').AsString<>'' then
-            upWhere:=upWhere + ' and col3 = '''+fromQuery.FieldByName('Col3').AsString+''' ';
+            upWhere:=upWhere + ' and lower(col3) = lower(trim('''+fromQuery.FieldByName('Col3').AsString+''')) ';
           if fromQuery.FieldByName('Col4').AsString<>'' then
-            upWhere:=upWhere + ' and col4 = '''+fromQuery.FieldByName('Col4').AsString+''' ';
+            upWhere:=upWhere + ' and lower(col4) = lower(trim('''+fromQuery.FieldByName('Col4').AsString+''')) ';
           if fromQuery.FieldByName('Col5').AsString<>'' then
-            upWhere:=upWhere + ' and col5 = '''+fromQuery.FieldByName('Col5').AsString+''' ';
+            upWhere:=upWhere + ' and lower(col5) = lower(trim('''+fromQuery.FieldByName('Col5').AsString+''')) ';
           if fromQuery.FieldByName('Col6').AsString<>'' then
-            upWhere:=upWhere + ' and col6 = '''+fromQuery.FieldByName('Col6').AsString+''' ';
+            upWhere:=upWhere + ' and lower(col6) = lower(trim('''+fromQuery.FieldByName('Col6').AsString+''')) ';
 //            ShowMessage(upWhere);
 //            Memo1.Lines.Add(upWhere);
             fExecSqFromQuery(
