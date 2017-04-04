@@ -807,13 +807,13 @@ end;
 procedure TMainForm.Button3Click(Sender: TObject);
 var  inGoodsName,  inParentID, inHasChildren : string;
 begin
+ Gauge.Visible:=true;
     myEnabledCB(cbGoods2);
      //
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select * from goods where HasChildren = -1');
-
+        Add('select GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID from goods where HasChildren = -1');
         Open;
         //
         fStop:=cbOnlyOpen.Checked;
@@ -828,25 +828,44 @@ begin
              //!!!
              if fStop then begin exit;end;
              //
-          with fromQuery_two,Sql do begin  // первая колонка col1
+          with fromQuery_two,Sql do begin
             Close;
             Clear;
-            Add('select id from goods2 where  goodsname = '''+fromQuery.FieldByName('Col1').AsString+'''');
+            Add('select parentid2 as ParentId from  ');
+            Add('( ');
+            Add('select distinct code, ParentId2, ''Sop'' as Name from Sop ');
+            Add('union ');
+            Add('select distinct code, ParentId2, ''Vint'' as Name from Vint ');
+            Add('union ');
+            Add('select distinct code, ParentId2, ''Tl'' as Name from Tl ');
+            Add('union ');
+            Add('select distinct code, ParentId2, ''Esc'' as Name from Esc ');
+            Add('union ');
+            Add('select distinct code, ParentId2, ''Mm'' as Name from Mm ');
+            Add('union ');
+            Add('select distinct code, ParentId2, ''Sav_out'' as Name from Sav_out ');
+            Add('union ');
+            Add('select distinct code, ParentId2, ''Ter_out'' as Name from Ter_out ');
+            Add('union ');
+            Add('select distinct code, ParentId2, ''Sav'' as Name from Sav ');
+            Add('union ');
+            Add('select distinct code, ParentId2, ''Chado'' as Name from Chado ');
+            Add(') a  ');
+            Add('where a.code = '+fromQuery.FieldByName('cashcode').AsString+'');
             Open;
-            if fromQuery_two.RecordCount = 0 then
+            if fromQuery_two.RecordCount > 0 then
              begin
-                inGoodsName:= fromQuery.FieldByName('Col1').AsString;
-                inParentID:='null';
-                inHasChildren:='2';
+                inParentID:=fromQuery_two.FieldByName('ParentId').AsString;
+                inHasChildren:='-1';
                //
-                if inGoodsName<>'' then
+                if inParentID<>'' then
                 fExecSqFromQuery(
                   ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
-                  ' select distinct '''+inGoodsName+''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
+                  ' select distinct '''+fromQuery.FieldByName('GoodsName').AsString+''' as GoodsName , '+fromQuery.FieldByName('Erased').AsString+' as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, '+fromQuery.FieldByName('isPrinted').AsString+' as isPrinted, '+fromQuery.FieldByName('CashCode').AsString+' as CashCode  , Null as CountryBrandID '
                   );
              end;
             //
-          end;  // конец первая колонка col1
+          end;
 
 
              //
@@ -859,7 +878,7 @@ begin
      end;
      //
      myDisabledCB(cbGoods2);
-
+ Gauge.Visible:=False;
 
 end;
 
