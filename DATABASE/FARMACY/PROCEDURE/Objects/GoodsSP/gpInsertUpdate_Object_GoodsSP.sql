@@ -5,11 +5,15 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP (Integer, Boolean, TFloat,
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP (Integer, Boolean, TFloat, TFloat, TFloat,  TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                      , TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP (Integer, Boolean, TFloat, TFloat,  TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsSP(
     IN inId                  Integer   ,    -- ключ объекта <Товар> MainID
     IN inisSP                Boolean   ,    -- участвует в Соц. проекте
     IN inPriceSP             TFloat    ,    -- Референтна ціна за уп, грн (Соц. проект)
-    IN inGroupSP             TFloat    ,    -- Групи відшкоду-вання – І або ІІ
+   -- IN inGroupSP             TFloat    ,    -- Групи відшкоду-вання – І або ІІ
     IN inCountSP             TFloat    ,    -- Кількість одиниць лікарського засобу у споживчій упаковці (Соц. проект) 
 
     IN inColSP               TFloat    ,    --
@@ -124,7 +128,7 @@ BEGIN
     -- сохранили свойство <>
     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_PriceSP(), inId, inPriceSP);
     -- сохранили свойство <>
-    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_GroupSP(), inId, inGroupSP);
+    --PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_GroupSP(), inId, inGroupSP);
     -- сохранили свойство <>
     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_CountSP(), inId, inCountSP);
     -- сохранили свойство <>

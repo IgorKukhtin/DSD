@@ -2,17 +2,34 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP_Load (Integer, TVarChar, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP_From_Excel (Integer, TVarChar, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP_From_Excel (Integer, TVarChar, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP_From_Excel (Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
+                                                                  TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsSP_From_Excel(
     IN inCode                Integer   ,    -- код объекта <Товар> MainID
     IN inName                TVarChar  ,    -- Наименование
     IN inPriceSP             TFloat    ,    -- Референтна ціна за уп, грн (Соц. проект)
-    IN inGroupSP             TFloat    ,    -- Групи відшкоду-вання – І або ІІ
+  --  IN inGroupSP             TFloat    ,    -- Групи відшкоду-вання – І або ІІ
     IN inCountSP             TFloat    ,    -- Кількість одиниць лікарського засобу у споживчій упаковці (Соц. проект) 
+
+    IN inColSP               TFloat    ,    --
+    IN inPriceOptSP          TFloat    ,    -- 
+    IN inPriceRetSP          TFloat    ,    -- 
+    IN inDailyNormSP         TFloat    ,    -- 
+    IN inDailyСompensationSP TFloat    ,    -- 
+    IN inPaymentSP           TFloat    ,    -- 
+    IN inDateReestrSP        TDateTime ,    -- 
+
     IN inPack                TVarChar  ,    -- дозування
     IN inIntenalSPName       TVarChar  ,    -- Міжнародна непатентована назва (Соц. проект)
     IN inBrandSPName         TVarChar  ,    -- Торговельна назва лікарського засобу (Соц. проект)
     IN inKindOutSPName       TVarChar  ,    -- Форма випуску (Соц. проект)
+
+    IN inCodeATX             TVarChar  ,    --
+    IN inMakerSP             TVarChar  ,    --
+    IN inReestrSP            TVarChar  ,    --  
+
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS Void
@@ -45,12 +62,25 @@ BEGIN
      PERFORM gpInsertUpdate_Object_GoodsSP (inId              := vbId
                                           , inisSP            := TRUE
                                           , inPriceSP         := inPriceSP
-                                          , inGroupSP         := inGroupSP
+                                          --, inGroupSP         := inGroupSP
                                           , inCountSP         := inCountSP
+
+                                          , inColSP           := inColSP
+                                          , inPriceOptSP      := inPriceOptSP
+                                          , inPriceRetSP      := inPriceRetSP
+                                          , inDailyNormSP     := inDailyNormSP
+                                          , inDailyСompensationSP := inDailyСompensationSP
+                                          , inPaymentSP       := inPaymentSP
+                                          , inDateReestrSP    := inDateReestrSP
+
                                           , inPack            := TRIM(inPack)          ::TVarChar
                                           , inIntenalSPName   := TRIM(inIntenalSPName) ::TVarChar
                                           , inBrandSPName     := TRIM(inBrandSPName)   ::TVarChar
                                           , inKindOutSPName   := TRIM(inKindOutSPName) ::TVarChar
+                                          , inCodeATX         := TRIM(inCodeATX)       ::TVarChar
+                                          , inMakerSP         := TRIM(inMakerSP)       ::TVarChar
+                                          , inReestrSP        := TRIM(inReestrSP)      ::TVarChar
+
                                           , inSession         := inSession
                                           );
    
