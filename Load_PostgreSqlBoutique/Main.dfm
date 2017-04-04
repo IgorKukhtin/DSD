@@ -604,6 +604,7 @@ object MainForm: TMainForm
           OnClick = CreateTableButtonClick
         end
         object cbChado: TCheckBox
+          Tag = 11
           Left = 2
           Top = 8
           Width = 97
@@ -629,6 +630,7 @@ object MainForm: TMainForm
           Text = 'd:\DatFiles'
         end
         object cbEsc: TCheckBox
+          Tag = 11
           Left = 2
           Top = 31
           Width = 97
@@ -637,6 +639,7 @@ object MainForm: TMainForm
           TabOrder = 4
         end
         object cbMM: TCheckBox
+          Tag = 11
           Left = 2
           Top = 54
           Width = 97
@@ -645,6 +648,7 @@ object MainForm: TMainForm
           TabOrder = 5
         end
         object cbSAV: TCheckBox
+          Tag = 11
           Left = 2
           Top = 77
           Width = 97
@@ -653,6 +657,7 @@ object MainForm: TMainForm
           TabOrder = 6
         end
         object cbSav_out: TCheckBox
+          Tag = 11
           Left = 2
           Top = 100
           Width = 97
@@ -661,6 +666,7 @@ object MainForm: TMainForm
           TabOrder = 7
         end
         object cbTer_Out: TCheckBox
+          Tag = 11
           Left = 2
           Top = 123
           Width = 97
@@ -669,6 +675,7 @@ object MainForm: TMainForm
           TabOrder = 8
         end
         object cbTL: TCheckBox
+          Tag = 11
           Left = 2
           Top = 146
           Width = 97
@@ -677,6 +684,7 @@ object MainForm: TMainForm
           TabOrder = 9
         end
         object cbVint: TCheckBox
+          Tag = 11
           Left = 2
           Top = 169
           Width = 97
@@ -685,6 +693,7 @@ object MainForm: TMainForm
           TabOrder = 10
         end
         object cbSop: TCheckBox
+          Tag = 11
           Left = 2
           Top = 192
           Width = 97
@@ -693,6 +702,7 @@ object MainForm: TMainForm
           TabOrder = 11
         end
         object cbGoods2: TCheckBox
+          Tag = 11
           Left = 114
           Top = 8
           Width = 97
@@ -726,6 +736,21 @@ object MainForm: TMainForm
           Caption = 'Insert HasChildren = -1'
           TabOrder = 15
           OnClick = Button3Click
+        end
+        object cbAllTables: TCheckBox
+          Left = 98
+          Top = 192
+          Width = 97
+          Height = 17
+          Caption = #1042#1089#1077' '#1090#1072#1073#1083#1080#1094#1099
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 16
+          OnClick = cbAllTablesClick
         end
       end
     end

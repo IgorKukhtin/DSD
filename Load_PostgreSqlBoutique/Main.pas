@@ -100,6 +100,7 @@ type
     InsertGoods2Button: TButton;
     Button2: TButton;
     Button3: TButton;
+    cbAllTables: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -118,6 +119,7 @@ type
     procedure InsertGoods2ButtonClick(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure cbAllTablesClick(Sender: TObject);
   private
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
@@ -215,6 +217,15 @@ begin
 end;
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.cbAllTablesClick(Sender: TObject);
+var i : integer;
+begin
+  for i:=0 to ComponentCount-1 do
+        if (Components[i] is TCheckBox) then
+          if Components[i].Tag=11
+          then TCheckBox(Components[i]).Checked:=cbAllTables.Checked;
+end;
+
 procedure TMainForm.CloseButtonClick(Sender: TObject);
 begin
      if not fStop then
