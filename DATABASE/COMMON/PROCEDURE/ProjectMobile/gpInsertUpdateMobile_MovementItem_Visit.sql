@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdateMobile_MovementItem_Visit()
 
-DROP FUNCTION IF EXISTS gpInsertUpdateMobile_MovementItem_Visit (TVarChar, TVarChar, Integer, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdateMobile_MovementItem_Visit (TVarChar, TVarChar, TBlob, TVarChar, TVarChar, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_MovementItem_Visit(
     IN inGUID         TVarChar  , -- Глобальный уникальный идентификатор для синхронизации с мобильными устройствами
