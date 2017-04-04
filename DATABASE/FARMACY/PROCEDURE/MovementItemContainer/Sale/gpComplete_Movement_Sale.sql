@@ -16,16 +16,24 @@ $BODY$
   DECLARE vbSaldo     TFloat;
   DECLARE vbUnitId    Integer;
   DECLARE vbOperDate  TDateTime;
-  
+  DECLARE vbInvNumberSP TVarChar;
+  DECLARE vbOperDateSP TDateTime;
+  DECLARE vbPartnerMedicalId Integer;
 BEGIN
     vbUserId:= inSession;
     vbGoodsName := '';
 
     -- Проверить, что бы не было переучета позже даты документа
     SELECT Movement_Sale.OperDate,
-           Movement_Sale.UnitId
+           Movement_Sale.UnitId,
+           Movement_Sale.InvNumberSP,
+           Movement_Sale.OperDateSP 
+           Movement_Sale.PartnerMedicalId
     INTO vbOperDate,
-         vbUnitId
+         vbUnitId,
+         vbInvNumberSP,
+         vbOperDateSP,
+         vbPartnerMedicalId
     FROM Movement_Sale_View AS Movement_Sale
     WHERE Movement_Sale.Id = inMovementId;
 
@@ -35,6 +43,30 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка. ПОМЕНЯЙТЕ ДАТУ НАКЛАДНОЙ НА ТЕКУЩУЮ.';
     END IF;
+
+    IF COALESCE (vbInvNumberSP,'')<>''
+       THEN 
+           IF EXISTS(SELECT Movement.Id
+                     FROM Movement 
+                      INNER JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
+                              ON MovementLinkObject_PartnerMedical.MovementId = Movement.Id
+                             AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
+                             AND MovementLinkObject_PartnerMedical.ObjectId = vbPartnerMedicalId
+                      INNER JOIN MovementString AS MovementString_InvNumberSP
+                              ON MovementString_InvNumberSP.MovementId = Movement.Id
+                             AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
+                             AND MovementString_InvNumberSP.ValueData = vbInvNumberSP
+                      INNER JOIN MovementDate AS MovementDate_OperDateSP
+                              ON MovementDate_OperDateSP.MovementId = Movement.Id
+                             AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
+                             AND MovementDate_OperDateSP.ValueData = vbOperDateSP
+                 WHERE Movement.DescId = zc_Movement_Sale()
+                   AND Movement.StatusId = zc_Enum_Status_Complete())
+          THEN
+              RAISE EXCEPTION 'Ошибка. Номер рецепта врача <%> уже существует', vbInvNumberSP;
+          END IF;
+    END IF;
+
 
 
     --Проверка на то что бы не продали больше чем есть на остатке
@@ -112,5 +144,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+ 03.04.17         *
  13.10.15                                                         *
  */

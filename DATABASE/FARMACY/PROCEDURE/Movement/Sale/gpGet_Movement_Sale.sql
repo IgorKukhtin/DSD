@@ -61,7 +61,7 @@ BEGIN
           , NULL::TVarChar                                   AS PaidKindName
           , NULL::TVarChar                                   AS Comment
 
-          , NULL::TDateTime                                  AS OperDateSP
+          , CURRENT_DATE::TDateTime                          AS OperDateSP
           , NULL::Integer                                    AS PartnerMedicalId
           , NULL::TVarChar                                   AS PartnerMedicalName
           , NULL::TVarChar                                   AS InvNumberSP
@@ -93,7 +93,7 @@ BEGIN
           , Movement_Sale.PaidKindName
           , Movement_Sale.Comment
 
-          , COALESCE(Movement_Sale.OperDateSP, NULL) :: TDateTime AS OperDateSP
+          , COALESCE(Movement_Sale.OperDateSP, Movement_Sale.OperDate) :: TDateTime AS OperDateSP
           , Movement_Sale.PartnerMedicalId
           , Movement_Sale.PartnerMedicalName
           , Movement_Sale.InvNumberSP
