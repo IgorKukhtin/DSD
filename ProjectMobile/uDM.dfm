@@ -134,6 +134,13 @@ object DM: TDM
       FieldName = 'MobileAPKFileName'
       Size = 255
     end
+    object tblObject_ConstPriceListId_def: TIntegerField
+      FieldName = 'PriceListId_def'
+    end
+    object tblObject_ConstPriceListName_def: TStringField
+      FieldName = 'PriceListName_def'
+      Size = 255
+    end
   end
   object tblObject_Partner: TFDTable
     Connection = conMain
@@ -1446,7 +1453,6 @@ object DM: TDM
     Aggregates = <>
     IndexFieldNames = 'DocType;DocDate'
     Params = <>
-    OnCalcFields = cdsJuridicalCollationCalcFields
     Left = 40
     Top = 536
     object cdsJuridicalCollationDocNum: TStringField
@@ -1464,12 +1470,6 @@ object DM: TDM
       FieldName = 'PaidKind'
       Size = 100
     end
-    object cdsJuridicalCollationDebet: TFloatField
-      FieldName = 'Debet'
-    end
-    object cdsJuridicalCollationKredit: TFloatField
-      FieldName = 'Kredit'
-    end
     object cdsJuridicalCollationFromName: TStringField
       FieldName = 'FromName'
       Size = 255
@@ -1478,36 +1478,24 @@ object DM: TDM
       FieldName = 'ToName'
       Size = 255
     end
+    object cdsJuridicalCollationDebet: TStringField
+      FieldName = 'Debet'
+    end
+    object cdsJuridicalCollationKredit: TStringField
+      FieldName = 'Kredit'
+    end
     object cdsJuridicalCollationDocNumDate: TStringField
-      FieldKind = fkCalculated
       FieldName = 'DocNumDate'
       Size = 200
-      Calculated = True
-    end
-    object cdsJuridicalCollationPayment: TStringField
-      FieldKind = fkCalculated
-      FieldName = 'Payment'
-      Size = 200
-      Calculated = True
     end
     object cdsJuridicalCollationDocTypeShow: TStringField
       DisplayWidth = 300
-      FieldKind = fkCalculated
       FieldName = 'DocTypeShow'
       Size = 300
-      Calculated = True
-    end
-    object cdsJuridicalCollationPaidKindShow: TStringField
-      FieldKind = fkCalculated
-      FieldName = 'PaidKindShow'
-      Size = 200
-      Calculated = True
     end
     object cdsJuridicalCollationFromToName: TStringField
-      FieldKind = fkCalculated
       FieldName = 'FromToName'
       Size = 300
-      Calculated = True
     end
   end
   object cdsTasks: TClientDataSet
