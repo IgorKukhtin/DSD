@@ -228,26 +228,27 @@ begin
      fExecSqFromQuery(
        ' 	CREATE TABLE chado (	 ' +
        ' 	Code INTEGER ,	 ' +
-       ' 	Goodsgroup CHAR( 80 ) ,	 ' +
-       ' 	Name CHAR( 80 ) ,	 ' +
+       ' 	Goodsgroup TVarCharMedium ,	 ' +
+       ' 	Name TVarCharMedium ,	 ' +
        ' 	Incoming INTEGER,	 ' +
        ' 	Remain INTEGER,	 ' +
-       ' 	col1  CHAR( 80 ) ,	 ' +
-       ' 	col2  CHAR( 80 ) ,	 ' +
-       ' 	col3  CHAR( 80 ) ,	 ' +
-       ' 	col4  CHAR( 80 ) ,	 ' +
-       ' 	col5  CHAR( 80 ) ,	 ' +
-       ' 	col6  CHAR( 80 ) ,	 ' +
+       ' 	col1  TVarCharMedium ,	 ' +
+       ' 	col2  TVarCharMedium ,	 ' +
+       ' 	col3  TVarCharMedium ,	 ' +
+       ' 	col4  TVarCharMedium ,	 ' +
+       ' 	col5  TVarCharMedium ,	 ' +
+       ' 	col6  TVarCharMedium ,	 ' +
        ' 	Prise float,	 ' +
-       ' 	Partner  CHAR( 80 ), 	 ' +
+       ' 	Partner  TVarCharMedium, 	 ' +
        ' 	Markup float,	 ' +
        ' 	PeriodYear INTEGER,	 ' +
-       ' 	GoodsInfo CHAR( 80 ) ,	 ' +
+       ' 	GoodsInfo TVarCharMedium ,	 ' +
        ' 	BillItemsIncomeID INTEGER,	 ' +
        ' 	GoodsPropertyID INTEGER,	 ' +
        ' 	GoodsID INTEGER,	 ' +
-       ' 	LineFabrica CHAR( 80 ) ,	 ' +
-       ' 	Composition  CHAR( 80 ) 	 ' +
+       ' 	LineFabrica TVarCharMedium ,	 ' +
+       ' 	Composition  TVarCharMedium, 	 ' +
+       ' 	ParentId2  Integer 	 ' +
        ' 	)	 '
      );
 
@@ -255,26 +256,27 @@ begin
      fExecSqFromQuery(
        ' 	CREATE TABLE Esc (	 ' +
        ' 	Code INTEGER ,	 ' +
-       ' 	Goodsgroup CHAR( 80 ) ,	 ' +
-       ' 	Name CHAR( 80 ) ,	 ' +
+       ' 	Goodsgroup TVarCharMedium ,	 ' +
+       ' 	Name TVarCharMedium ,	 ' +
        ' 	Incoming INTEGER,	 ' +
        ' 	Remain INTEGER,	 ' +
-       ' 	col2  CHAR( 80 ) ,	 ' +
-       ' 	col3  CHAR( 80 ) ,	 ' +
-       ' 	col1  CHAR( 80 ) ,	 ' +
-       ' 	col4  CHAR( 80 ) ,	 ' +
-       ' 	col5  CHAR( 80 ) ,	 ' +
-       ' 	col6  CHAR( 80 ) ,	 ' +
+       ' 	col2  TVarCharMedium ,	 ' +
+       ' 	col3  TVarCharMedium ,	 ' +
+       ' 	col1  TVarCharMedium ,	 ' +
+       ' 	col4  TVarCharMedium ,	 ' +
+       ' 	col5  TVarCharMedium ,	 ' +
+       ' 	col6  TVarCharMedium ,	 ' +
        ' 	Prise float,	 ' +
-       ' 	Partner  CHAR( 80 ), 	 ' +
+       ' 	Partner  TVarCharMedium, 	 ' +
        ' 	Markup float,	 ' +
        ' 	PeriodYear INTEGER,	 ' +
-       ' 	GoodsInfo CHAR( 80 ) ,	 ' +
+       ' 	GoodsInfo TVarCharMedium ,	 ' +
        ' 	BillItemsIncomeID INTEGER,	 ' +
        ' 	GoodsPropertyID INTEGER,	 ' +
        ' 	GoodsID INTEGER,	 ' +
-       ' 	LineFabrica CHAR( 80 ) ,	 ' +
-       ' 	Composition  CHAR( 80 ) 	 ' +
+       ' 	LineFabrica TVarCharMedium ,	 ' +
+       ' 	Composition  TVarCharMedium, 	 ' +
+       ' 	ParentId2  Integer 	 ' +
        ' 	)	 '
      );
 
@@ -282,22 +284,23 @@ begin
      fExecSqFromQuery(
        ' 	CREATE TABLE MM (	 ' +
        ' 	Code INTEGER ,	 ' +
-       ' 	Goodsgroup CHAR( 80 ) ,	 ' +
-       ' 	Name CHAR( 80 ) ,	 ' +
+       ' 	Goodsgroup TVarCharMedium ,	 ' +
+       ' 	Name TVarCharMedium ,	 ' +
        ' 	Incoming INTEGER,	 ' +
        ' 	Remain INTEGER,	 ' +
-       ' 	col2  CHAR( 80 ) ,	 ' +
-       ' 	col3  CHAR( 80 ) ,	 ' +
-       ' 	col1  CHAR( 80 ) ,	 ' +
-       ' 	col4  CHAR( 80 ) ,	 ' +
-       ' 	col5  CHAR( 80 ) ,	 ' +
-       ' 	col6  CHAR( 80 ) ,	 ' +
+       ' 	col2  TVarCharMedium ,	 ' +
+       ' 	col3  TVarCharMedium ,	 ' +
+       ' 	col1  TVarCharMedium ,	 ' +
+       ' 	col4  TVarCharMedium ,	 ' +
+       ' 	col5  TVarCharMedium ,	 ' +
+       ' 	col6  TVarCharMedium ,	 ' +
        ' 	Prise float,	 ' +
-       ' 	Partner  CHAR( 80 ), 	 ' +
+       ' 	Partner  TVarCharMedium, 	 ' +
        ' 	Markup float,	 ' +
        ' 	PeriodYear INTEGER,	 ' +
-       ' 	GoodsInfo CHAR( 80 ) ,	 ' +
-       ' 	BillItemsIncomeID INTEGER	 ' +
+       ' 	GoodsInfo TVarCharMedium ,	 ' +
+       ' 	BillItemsIncomeID INTEGER,	 ' +
+       ' 	ParentId2  Integer 	 ' +
        ' 	)	 '
      );
 
@@ -306,27 +309,28 @@ begin
      fExecSqFromQuery(
        ' 	CREATE TABLE SAV (	 ' +
        ' 	Code INTEGER ,	 ' +
-       ' 	Goodsgroup CHAR( 80 ) ,	 ' +
-       ' 	Name CHAR( 80 ) ,	 ' +
+       ' 	Goodsgroup TVarCharMedium ,	 ' +
+       ' 	Name TVarCharMedium ,	 ' +
        ' 	Incoming INTEGER,	 ' +
        ' 	Remain INTEGER,	 ' +
-       ' 	col1  CHAR( 80 ) ,	 ' +
-       ' 	col2  CHAR( 80 ) ,	 ' +
-       ' 	col3  CHAR( 80 ) ,	 ' +
-       ' 	col4  CHAR( 80 ) ,	 ' +
-       ' 	col5  CHAR( 80 ) ,	 ' +
-       ' 	col6  CHAR( 80 ) ,	 ' +
+       ' 	col1  TVarCharMedium ,	 ' +
+       ' 	col2  TVarCharMedium ,	 ' +
+       ' 	col3  TVarCharMedium ,	 ' +
+       ' 	col4  TVarCharMedium ,	 ' +
+       ' 	col5  TVarCharMedium ,	 ' +
+       ' 	col6  TVarCharMedium ,	 ' +
        ' 	IntoPrise float,	   ' +
        ' 	IntoPriseRate float,	 ' +
        ' 	IntoPriseRate2 float,	 ' +
        ' 	PerDiscount float,  	 ' +
        '  Profit float,          ' +
-       ' 	Valuta  CHAR( 80 ), 	 ' +
+       ' 	Valuta  TVarCharMedium, 	 ' +
        ' 	Prise float,	         ' +
-       ' 	Partner  CHAR( 80 ), 	 ' +
+       ' 	Partner  TVarCharMedium, 	 ' +
        ' 	Markup float,	         ' +
        ' 	PeriodYear INTEGER,	   ' +
-       ' 	GoodsInfo CHAR( 80 ) 	 ' +
+       ' 	GoodsInfo TVarCharMedium, 	 ' +
+       ' 	ParentId2  Integer 	 ' +
        ' 	)	 '
      );
 
@@ -334,44 +338,46 @@ begin
      fExecSqFromQuery(
        ' 	CREATE TABLE Sav_out (	 ' +
        ' 	Code INTEGER ,	 ' +
-       ' 	Goodsgroup CHAR( 80 ) ,	 ' +
-       ' 	Name CHAR( 80 ) ,	 ' +
+       ' 	Goodsgroup TVarCharMedium ,	 ' +
+       ' 	Name TVarCharMedium ,	 ' +
        ' 	Incoming INTEGER,	 ' +
        ' 	Remain INTEGER,	 ' +
-       ' 	col1  CHAR( 80 ) ,	 ' +
-       ' 	col2  CHAR( 80 ) ,	 ' +
-       ' 	col3  CHAR( 80 ) ,	 ' +
-       ' 	col4  CHAR( 80 ) ,	 ' +
-       ' 	col5  CHAR( 80 ) ,	 ' +
-       ' 	col6  CHAR( 80 ) ,	 ' +
+       ' 	col1  TVarCharMedium ,	 ' +
+       ' 	col2  TVarCharMedium ,	 ' +
+       ' 	col3  TVarCharMedium ,	 ' +
+       ' 	col4  TVarCharMedium ,	 ' +
+       ' 	col5  TVarCharMedium ,	 ' +
+       ' 	col6  TVarCharMedium ,	 ' +
        ' 	Prise float,	 ' +
-       ' 	Partner  CHAR( 80 ), 	 ' +
+       ' 	Partner  TVarCharMedium, 	 ' +
        ' 	Markup float,	 ' +
        ' 	PeriodYear INTEGER,	 ' +
-       ' 	GoodsInfo CHAR( 80 ) ,	 ' +
+       ' 	GoodsInfo TVarCharMedium ,	 ' +
        ' 	BillItemsIncomeID INTEGER,	 ' +
        ' 	GoodsPropertyID INTEGER,	 ' +
        ' 	GoodsID INTEGER,	 ' +
-       ' 	LineFabrica CHAR( 80 ) ,	 ' +
-       ' 	Composition  CHAR( 80 ) 	 ' +
+       ' 	LineFabrica TVarCharMedium ,	 ' +
+       ' 	Composition  TVarCharMedium, 	 ' +
+       ' 	ParentId2  Integer 	 ' +
        ' 	)	 '
      );
  if cbTer_Out.Checked then
      fExecSqFromQuery(
        ' 	CREATE TABLE Ter_Out (	 ' +
        ' 	Code INTEGER ,	 ' +
-       ' 	Goodsgroup CHAR( 80 ) ,	 ' +
-       ' 	Name CHAR( 80 ) ,	 ' +
+       ' 	Goodsgroup TVarCharMedium ,	 ' +
+       ' 	Name TVarCharMedium ,	 ' +
        ' 	Remain INTEGER,	 ' +
-       ' 	col1  CHAR( 80 ) ,	 ' +
-       ' 	col2  CHAR( 80 ) ,	 ' +
-       ' 	col3  CHAR( 80 ) ,	 ' +
-       ' 	col4  CHAR( 80 ) ,	 ' +
-       ' 	col5  CHAR( 80 ) ,	 ' +
-       ' 	col6  CHAR( 80 ) ,	 ' +
+       ' 	col1  TVarCharMedium ,	 ' +
+       ' 	col2  TVarCharMedium ,	 ' +
+       ' 	col3  TVarCharMedium ,	 ' +
+       ' 	col4  TVarCharMedium ,	 ' +
+       ' 	col5  TVarCharMedium ,	 ' +
+       ' 	col6  TVarCharMedium ,	 ' +
        ' 	Prise float,	 ' +
-       ' 	Partner  CHAR( 80 ), 	 ' +
-       ' 	GoodsInfo CHAR( 80 ) 	 ' +
+       ' 	Partner  TVarCharMedium, 	 ' +
+       ' 	GoodsInfo TVarCharMedium, 	 ' +
+       ' 	ParentId2  Integer 	 ' +
        ' 	)	 '
      );
 
@@ -379,22 +385,23 @@ begin
      fExecSqFromQuery(
        ' 	CREATE TABLE TL (	 ' +
        ' 	Code INTEGER ,	 ' +
-       ' 	Goodsgroup CHAR( 80 ) ,	 ' +
-       ' 	Name CHAR( 80 ) ,	 ' +
+       ' 	Goodsgroup TVarCharMedium ,	 ' +
+       ' 	Name TVarCharMedium ,	 ' +
        ' 	Incoming INTEGER,	 ' +
        ' 	Remain INTEGER,	 ' +
-       ' 	col1  CHAR( 80 ) ,	 ' +
-       ' 	col2  CHAR( 80 ) ,	 ' +
-       ' 	col3  CHAR( 80 ) ,	 ' +
-       ' 	col4  CHAR( 80 ) ,	 ' +
-       ' 	col5  CHAR( 80 ) ,	 ' +
-       ' 	col6  CHAR( 80 ) ,	 ' +
+       ' 	col1  TVarCharMedium ,	 ' +
+       ' 	col2  TVarCharMedium ,	 ' +
+       ' 	col3  TVarCharMedium ,	 ' +
+       ' 	col4  TVarCharMedium ,	 ' +
+       ' 	col5  TVarCharMedium ,	 ' +
+       ' 	col6  TVarCharMedium ,	 ' +
        ' 	Prise float,	 ' +
-       ' 	Partner  CHAR( 80 ), 	 ' +
+       ' 	Partner  TVarCharMedium, 	 ' +
        ' 	Markup float,	 ' +
        ' 	PeriodYear INTEGER,	 ' +
-       ' 	GoodsInfo CHAR( 80 ) ,	 ' +
-       ' 	Composition  CHAR( 80 ) 	 ' +
+       ' 	GoodsInfo TVarCharMedium ,	 ' +
+       ' 	Composition  TVarCharMedium, 	 ' +
+       ' 	ParentId2  Integer 	 ' +
        ' 	)	 '
      );
 
@@ -402,45 +409,47 @@ begin
      fExecSqFromQuery(
        ' 	CREATE TABLE Vint (	 ' +
        ' 	Code INTEGER ,	 ' +
-       ' 	Goodsgroup CHAR( 80 ) ,	 ' +
-       ' 	Name CHAR( 80 ) ,	 ' +
+       ' 	Goodsgroup TVarCharMedium ,	 ' +
+       ' 	Name TVarCharMedium ,	 ' +
        ' 	Remain INTEGER,	 ' +
-       ' 	col1  CHAR( 80 ) ,	 ' +
-       ' 	col2  CHAR( 80 ) ,	 ' +
-       ' 	col3  CHAR( 80 ) ,	 ' +
-       ' 	col4  CHAR( 80 ) ,	 ' +
-       ' 	col5  CHAR( 80 ) ,	 ' +
-       ' 	col6  CHAR( 80 ) ,	 ' +
+       ' 	col1  TVarCharMedium ,	 ' +
+       ' 	col2  TVarCharMedium ,	 ' +
+       ' 	col3  TVarCharMedium ,	 ' +
+       ' 	col4  TVarCharMedium ,	 ' +
+       ' 	col5  TVarCharMedium ,	 ' +
+       ' 	col6  TVarCharMedium ,	 ' +
        ' 	Prise float,	 ' +
-       ' 	Partner  CHAR( 80 ), 	 ' +
+       ' 	Partner  TVarCharMedium, 	 ' +
        ' 	Markup float,	 ' +
        ' 	PeriodYear INTEGER,	 ' +
-       ' 	GoodsInfo CHAR( 80 ) 	 ' +
+       ' 	GoodsInfo TVarCharMedium, 	 ' +
+       ' 	ParentId2  Integer 	 ' +
        ' 	)	 '
      );
  if cbSop.Checked then
      fExecSqFromQuery(
        ' 	CREATE TABLE Sop (	 ' +
        ' 	Code INTEGER ,	 ' +
-       ' 	Goodsgroup CHAR( 80 ) ,	 ' +
-       ' 	Name CHAR( 80 ) ,	 ' +
+       ' 	Goodsgroup TVarCharMedium ,	 ' +
+       ' 	Name TVarCharMedium ,	 ' +
        ' 	Remain INTEGER,	 ' +
-       ' 	col1  CHAR( 80 ) ,	 ' +
-       ' 	col2  CHAR( 80 ) ,	 ' +
-       ' 	col3  CHAR( 80 ) ,	 ' +
-       ' 	col4  CHAR( 80 ) ,	 ' +
-       ' 	col5  CHAR( 80 ) ,	 ' +
-       ' 	col6  CHAR( 80 ) ,	 ' +
+       ' 	col1  TVarCharMedium ,	 ' +
+       ' 	col2  TVarCharMedium ,	 ' +
+       ' 	col3  TVarCharMedium ,	 ' +
+       ' 	col4  TVarCharMedium ,	 ' +
+       ' 	col5  TVarCharMedium ,	 ' +
+       ' 	col6  TVarCharMedium ,	 ' +
        ' 	col7  INTEGER ,	         ' +
-       ' 	Partner  CHAR( 80 ), 	 ' +
+       ' 	Partner  TVarCharMedium, 	 ' +
        ' 	Markup float,	 ' +
        ' 	PeriodYear INTEGER,	 ' +
-       ' 	GoodsInfo CHAR( 80 ) ,	 ' +
+       ' 	GoodsInfo TVarCharMedium ,	 ' +
        ' 	BillItemsIncomeID INTEGER,	 ' +
        ' 	GoodsPropertyID INTEGER,	 ' +
        ' 	GoodsID INTEGER,	 ' +
-       ' 	LineFabrica CHAR( 80 ) ,	 ' +
-       ' 	Composition  CHAR( 80 ) 	 ' +
+       ' 	LineFabrica TVarCharMedium ,	 ' +
+       ' 	Composition  TVarCharMedium, 	 ' +
+       ' 	ParentId2  Integer 	 ' +
        ' 	)	 '
      );
  if cbGoods2.Checked then
@@ -963,7 +972,7 @@ end;
 
 
 procedure TMainForm.InsertGoods2ButtonClick(Sender: TObject);
-var  inGoodsName,  inParentID, inHasChildren : string;
+var  inGoodsName,  inParentID, inHasChildren , upWhere : string;
 begin
  if not cbGoods2.Checked then Exit;
  Gauge.Visible:=true;
@@ -1237,7 +1246,26 @@ fExecSqFromQuery(
 
           end;  // конец шестой колонки col6
 
+          // Обновление ParentId2 для целевой таблыцы
 
+          upWhere:=' update  '+fromQuery.FieldByName('Name').AsString +'  set ParentId2 = '+ inParentID +' where col1 = '''+ fromQuery.FieldByName('Col1').AsString +''' ';
+          if fromQuery.FieldByName('Col2').AsString<>'' then
+            upWhere:=upWhere + ' and col2 = '''+fromQuery.FieldByName('Col2').AsString+''' ';
+          if fromQuery.FieldByName('Col3').AsString<>'' then
+            upWhere:=upWhere + ' and col3 = '''+fromQuery.FieldByName('Col3').AsString+''' ';
+          if fromQuery.FieldByName('Col4').AsString<>'' then
+            upWhere:=upWhere + ' and col4 = '''+fromQuery.FieldByName('Col4').AsString+''' ';
+          if fromQuery.FieldByName('Col5').AsString<>'' then
+            upWhere:=upWhere + ' and col5 = '''+fromQuery.FieldByName('Col5').AsString+''' ';
+          if fromQuery.FieldByName('Col6').AsString<>'' then
+            upWhere:=upWhere + ' and col6 = '''+fromQuery.FieldByName('Col6').AsString+''' ';
+//            ShowMessage(upWhere);
+//            Memo1.Lines.Add(upWhere);
+            fExecSqFromQuery(
+            upWhere
+            );
+
+          // Конец Обновления ParentId2 для целевой таблыцы
              //
              //
              Next;
