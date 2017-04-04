@@ -1248,19 +1248,13 @@ fExecSqFromQuery(
 
           // Обновление ParentId2 для целевой таблыцы
 
-          upWhere:=' update  '+fromQuery.FieldByName('Name').AsString +'  set ParentId2 = '+ inParentID +' where lower(col1)  = lower(trim('''+ fromQuery.FieldByName('Col1').AsString +''')) ';
-          if fromQuery.FieldByName('Col2').AsString<>'' then
-            upWhere:=upWhere + ' and lower(col2) = lower(trim('''+fromQuery.FieldByName('Col2').AsString+''')) ';
-          if fromQuery.FieldByName('Col3').AsString<>'' then
-            upWhere:=upWhere + ' and lower(col3) = lower(trim('''+fromQuery.FieldByName('Col3').AsString+''')) ';
-          if fromQuery.FieldByName('Col4').AsString<>'' then
-            upWhere:=upWhere + ' and lower(col4) = lower(trim('''+fromQuery.FieldByName('Col4').AsString+''')) ';
-          if fromQuery.FieldByName('Col5').AsString<>'' then
-            upWhere:=upWhere + ' and lower(col5) = lower(trim('''+fromQuery.FieldByName('Col5').AsString+''')) ';
-          if fromQuery.FieldByName('Col6').AsString<>'' then
-            upWhere:=upWhere + ' and lower(col6) = lower(trim('''+fromQuery.FieldByName('Col6').AsString+''')) ';
-//            ShowMessage(upWhere);
-//            Memo1.Lines.Add(upWhere);
+          upWhere:=' update  '+fromQuery.FieldByName('Name').AsString +'  set ParentId2 = '+ inParentID +' where ';
+          upWhere:=upWhere + '     lower(trim(isnull (col1, ''''))) = lower(trim('''+fromQuery.FieldByName('Col1').AsString+''')) ';
+          upWhere:=upWhere + ' and lower(trim(isnull (col2, ''''))) = lower(trim('''+fromQuery.FieldByName('Col2').AsString+''')) ';
+          upWhere:=upWhere + ' and lower(trim(isnull (col3, ''''))) = lower(trim('''+fromQuery.FieldByName('Col3').AsString+''')) ';
+          upWhere:=upWhere + ' and lower(trim(isnull (col4, ''''))) = lower(trim('''+fromQuery.FieldByName('Col4').AsString+''')) ';
+          upWhere:=upWhere + ' and lower(trim(isnull (col5, ''''))) = lower(trim('''+fromQuery.FieldByName('Col5').AsString+''')) ';
+          upWhere:=upWhere + ' and lower(trim(isnull (col6, ''''))) = lower(trim('''+fromQuery.FieldByName('Col6').AsString+''')) ';
             fExecSqFromQuery(
             upWhere
             );
