@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelectMobile_Object_Juridical (
 RETURNS TABLE (Id         Integer
              , ObjectCode Integer  -- Код
              , ValueData  TVarChar -- Название
+             , GUID       TVarChar -- Глобальный уникальный идентификатор. Для синхронизации с Главной БД
              , DebtSum    TFloat   -- Сумма долга (нам) - БН - т.к. БН долг формируется только в разрезе Юр Лиц + договоров
              , OverSum    TFloat   -- Сумма просроченного долга (нам) - БН - Просрочка наступает спустя определенное кол-во дней
              , OverDays   Integer  -- Кол-во дней просрочки (нам)
@@ -120,6 +121,7 @@ BEGIN
              SELECT Object_Juridical.Id
                   , Object_Juridical.ObjectCode
                   , Object_Juridical.ValueData
+                  , ObjectString_Juridical_GUID.ValueData   AS GUID
                   , COALESCE (tmpDebt.DebtSum, 0.0)::TFloat AS DebtSum
                   , COALESCE (tmpDebt.OverSum, 0.0)::TFloat AS OverSum
                   , COALESCE (tmpDebt.OverDays, 0)::Integer AS OverDays
@@ -133,7 +135,11 @@ BEGIN
                                  AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
                   LEFT JOIN tmpDebt ON tmpDebt.JuridicalId = Object_Juridical.Id
                                    AND tmpDebt.ContractId = ObjectLink_Contract_Juridical.ObjectId
-             WHERE Object_Juridical.DescId = zc_Object_Juridical();
+                  LEFT JOIN ObjectString AS ObjectString_Juridical_GUID
+                                         ON ObjectString_Juridical_GUID.ObjectId = Object_Juridical.Id
+                                        AND ObjectString_Juridical_GUID.DescId = zc_ObjectString_Juridical_GUID()
+             WHERE Object_Juridical.DescId = zc_Object_Juridical()
+               AND NOT Object_Juridical.isErased;
       END IF;
 
 END; 

@@ -22,7 +22,7 @@ uses
   FMX.DateTimeCtrls, FMX.Controls3D, FMX.Layers3D, FMX.Menus, Generics.Collections,
   FMX.Gestures, System.Actions, FMX.ActnList, System.ImageList, FMX.ImgList,
   FMX.Grid.Style, FMX.Media, FMX.Surfaces, FMX.VirtualKeyboard, FMX.SearchBox, IniFiles,
-  FMX.Ani, FMX.DialogService, FMX.Utils
+  FMX.Ani, FMX.DialogService, FMX.Utils, FMX.Styles
   {$IFDEF ANDROID}
   ,FMX.Helpers.Android, Androidapi.Helpers,
   Androidapi.JNI.Location, Androidapi.JNIBridge,
@@ -34,11 +34,26 @@ uses
 const
   LatitudeRatio = '111.194926645';
   LongitudeRatio = '70.158308514';
+  DefaultSize = 11;
 
 type
   TFormStackItem = record
     PageIndex: Integer;
     Data: TObject;
+  end;
+
+  TContractItem = record
+    Id: Integer;
+    Name: string;
+
+    constructor Create(AId: Integer; AName: string);
+  end;
+
+  TPartnerItem = record
+    Id: Integer;
+    ContractIds: string;
+
+    constructor Create(AId: integer; AContractIds: string);
   end;
 
   TLocationData = record
@@ -325,7 +340,6 @@ type
     Pie3: TPie;
     lProgress: TLabel;
     lProgressName: TLabel;
-    Pie1: TPie;
     Panel25: TPanel;
     Panel27: TPanel;
     cbLoadData: TCheckBox;
@@ -443,7 +457,6 @@ type
     bPrintJuridicalCollation: TButton;
     tiPrintJuridicalCollation: TTabItem;
     lwJuridicalCollation: TListView;
-    bsJuridicalCollation: TBindSourceDB;
     LinkListControlToField14: TLinkListControlToField;
     Panel31: TPanel;
     Layout15: TLayout;
@@ -455,30 +468,21 @@ type
     lTotalDebit: TLabel;
     lTotalKredit: TLabel;
     VertScrollBox8: TVertScrollBox;
-    Layout21: TLayout;
-    lButton1: TLayout;
     bHandBook: TButton;
     Image1: TImage;
     Label1: TLabel;
-    lButton2: TLayout;
     bVisit: TButton;
     Image2: TImage;
     Label5: TLabel;
-    Layout22: TLayout;
-    lButton3: TLayout;
     bTasks: TButton;
     Image5: TImage;
     Label6: TLabel;
-    lButton4: TLayout;
     bReport: TButton;
     Image6: TImage;
     Label7: TLabel;
-    Layout23: TLayout;
-    lButton5: TLayout;
     bSync: TButton;
     Image3: TImage;
     Label8: TLabel;
-    lButton6: TLayout;
     bInfo: TButton;
     Image4: TImage;
     lTasks: TLabel;
@@ -509,6 +513,48 @@ type
     Label48: TLabel;
     eServerVersion: TEdit;
     bUpdateProgram: TButton;
+    Circle1: TCircle;
+    layStyle: TLayout;
+    ComboBoxStyle: TComboBox;
+    Label49: TLabel;
+    Layout16: TLayout;
+    Layout17: TLayout;
+    Layout18: TLayout;
+    Layout19: TLayout;
+    cbPartners: TComboBox;
+    Layout20: TLayout;
+    Label50: TLabel;
+    GridPanelLayout1: TGridPanelLayout;
+    Label51: TLabel;
+    Label52: TLabel;
+    bsJuridicalCollation: TBindSourceDB;
+    GridPanelLayout2: TGridPanelLayout;
+    GridPanelLayout3: TGridPanelLayout;
+    tiNewPartner: TTabItem;
+    VertScrollBox9: TVertScrollBox;
+    Panel34: TPanel;
+    bSaveNewPartner: TButton;
+    Layout21: TLayout;
+    Layout22: TLayout;
+    Label53: TLabel;
+    cNewJuridical: TCheckBox;
+    cbNewPartnerJuridical: TComboBox;
+    eNewPartnerJuridical: TEdit;
+    Layout23: TLayout;
+    Layout24: TLayout;
+    Label54: TLabel;
+    Layout25: TLayout;
+    Layout26: TLayout;
+    Label55: TLabel;
+    Edit1: TEdit;
+    Layout27: TLayout;
+    GridPanelLayout4: TGridPanelLayout;
+    Label56: TLabel;
+    Label57: TLabel;
+    GridPanelLayout5: TGridPanelLayout;
+    eNewPartnerGPSN: TEdit;
+    eNewPartnerGPSE: TEdit;
+    bNewPartnerGPS: TButton;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -517,7 +563,6 @@ type
     procedure lwPartnerItemClick(const Sender: TObject;
       const AItem: TListViewItem);
     procedure bMondayClick(Sender: TObject);
-    procedure FormResize(Sender: TObject);
     procedure sbPartnerMenuClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure lbiShowAllOnMapClick(Sender: TObject);
@@ -652,10 +697,17 @@ type
       ItemIndex: Integer; const LocalClickPos: TPointF;
       const ItemObject: TListItemDrawable);
     procedure bUpdateProgramClick(Sender: TObject);
+    procedure ComboBoxStyleChange(Sender: TObject);
+    procedure cbPartnersChange(Sender: TObject);
+    procedure cNewJuridicalChange(Sender: TObject);
+    procedure ibiNewPartnerClick(Sender: TObject);
+    procedure bNewPartnerGPSClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
     FJuridicalIdList: TList<integer>;
+    FPartnerList: TList<TPartnerItem>;
+    FAllContractList: TList<TContractItem>;
     FContractIdList: TList<integer>;
     FPaidKindIdList: TList<integer>;
 
@@ -682,9 +734,15 @@ type
     FCameraZoomDistance: Integer;
     CameraComponent : TCameraComponent;
 
-    StartRJC: string;
-    EndRJC: string;
-    JuridicalRJC: integer;
+    FFirstSet: boolean;
+    FStartRJC: string;
+    FEndRJC: string;
+    FJuridicalRJC: integer;
+    FPartnerRJC: integer;
+    FContractRJC: integer;
+    FPaidKindRJC: integer;
+
+    FDeafultStyleName: string;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure BackResult(const AResult: TModalResult);
@@ -705,6 +763,7 @@ type
     procedure Wait(AWait: Boolean);
     procedure CheckDataBase;
     procedure GetVistDays;
+    procedure EnterNewPartner;
     procedure ShowPartners(Day : integer; Caption : string);
     procedure ShowPartnerInfo;
     procedure ShowPriceLists;
@@ -735,6 +794,8 @@ type
     procedure CameraComponentSampleBufferReady(Sender: TObject; const ATime: TMediaTime);
 
     procedure GetCurrentCoordinates;
+
+    procedure AddComboItem(AComboBox: TComboBox; AText: string);
   public
     { Public declarations }
   end;
@@ -751,11 +812,24 @@ uses
 {$R *.fmx}
 
 resourcestring
-  rstCapture = 'Capture';
-  rstReturn = 'Return';
+  rstCapture = 'Снимок';
+  rstReturn = 'Отмена';
+
+{ TContractItem }
+constructor TContractItem.Create(AId: Integer; AName: string);
+begin
+  Id := AId;
+  Name := AName;
+end;
+
+{ TPartnerItem }
+constructor TPartnerItem.Create(AId: integer; AContractIds: string);
+begin
+  Id := AId;
+  ContractIds := AContractIds;
+end;
 
 { TLocationData }
-
 constructor TLocationData.Create(ALatitude, ALongitude: TLocationDegrees; AVisitTime: TDateTime);
 begin
   Latitude := ALatitude;
@@ -783,11 +857,37 @@ begin
     LoginEdit.Text := SettingsFile.ReadString('LOGIN', 'USERNAME', '');
 
     // for reports
-    StartRJC := SettingsFile.ReadString('REPORT', 'StartRJC', '');
-    EndRJC := SettingsFile.ReadString('REPORT', 'EndRJC', '');
-    JuridicalRJC := SettingsFile.ReadInteger('REPORT', 'JuridicalRJC', -1);
+    FStartRJC := SettingsFile.ReadString('REPORT', 'StartRJC', '');
+    FEndRJC := SettingsFile.ReadString('REPORT', 'EndRJC', '');
+    FJuridicalRJC := SettingsFile.ReadInteger('REPORT', 'JuridicalRJC', -1);
+    FPartnerRJC := SettingsFile.ReadInteger('REPORT', 'PartnerRJC', -1);
+    FContractRJC := SettingsFile.ReadInteger('REPORT', 'ContractRJC', -1);
+    FPaidKindRJC := SettingsFile.ReadInteger('REPORT', 'PaidKindRJC', -1);
+
+    FDeafultStyleName := SettingsFile.ReadString('STYLES', 'GLOBAL', 'Default');
   finally
     FreeAndNil(SettingsFile);
+  end;
+
+  // Styles
+  if TOSVersion.Platform = pfAndroid then
+  begin
+    ComboBoxStyle.Items.Add('Default');
+    ComboBoxStyle.Items.Add('AndroidLight');
+    ComboBoxStyle.Items.Add('AndroidLLight');
+    ComboBoxStyle.Items.Add('AndroidWear');
+    ComboBoxStyle.Items.Add('AndroidDark');
+    ComboBoxStyle.Items.Add('AndroidLDark');
+    ComboBoxStyle.Items.Add('AndroidLDarkBlue');
+    ComboBoxStyle.Items.Add('GoogleGlass');
+
+    ComboBoxStyle.ItemIndex := ComboBoxStyle.Items.IndexOf(FDeafultStyleName);
+    if ComboBoxStyle.ItemIndex < 0 then
+      ComboBoxStyle.ItemIndex := 0; // make sure "default" style is selected at start-up
+  end
+  else
+  begin
+    layStyle.Visible := false;
   end;
 
   {$IFDEF ANDROID}
@@ -815,6 +915,8 @@ begin
   FCurCoordinatesSet := false;
 
   FJuridicalIdList := TList<integer>.Create;
+  FPartnerList := TList<TPartnerItem>.Create;
+  FAllContractList := TList<TContractItem>.Create;
   FContractIdList := TList<integer>.Create;
   FPaidKindIdList := TList<integer>.Create;
 
@@ -840,6 +942,8 @@ begin
   FDeletedOI.Free;
 
   FJuridicalIdList.Free;
+  FPartnerList.Free;
+  FAllContractList.Free;
   FContractIdList.Free;
   FPaidKindIdList.Free;
 end;
@@ -909,16 +1013,6 @@ begin
   ShowBigMap;
 
   ppPartner.IsOpen := False;
-end;
-
-procedure TfrmMain.FormResize(Sender: TObject);
-begin
-  lButton1.Width := frmMain.Width div 2;
-  lButton2.Width := frmMain.Width div 2;
-  lButton3.Width := frmMain.Width div 2;
-  lButton4.Width := frmMain.Width div 2;
-  lButton5.Width := frmMain.Width div 2;
-  lButton6.Width := frmMain.Width div 2;
 end;
 
 procedure TfrmMain.LinkListControlToField15FilledListItem(Sender: TObject;
@@ -1792,6 +1886,18 @@ begin
   SwitchToForm(tiOrderExternal, nil);
 end;
 
+procedure TfrmMain.bNewPartnerGPSClick(Sender: TObject);
+begin
+  GetCurrentCoordinates;
+  if FCurCoordinatesSet then
+  begin
+    eNewPartnerGPSN.Text := FormatFloat('0.#####', FCurCoordinates.Latitude);
+    eNewPartnerGPSE.Text := FormatFloat('0.#####', FCurCoordinates.Longitude);
+  end
+  else
+    ShowMessage('Не удалось получить текущие координаты');
+end;
+
 procedure TfrmMain.bNewStoreRealClick(Sender: TObject);
 var
   FindRec : boolean;
@@ -1827,12 +1933,14 @@ var
   SettingsFile : TIniFile;
 begin
   DM.GenerateJuridicalCollation(deStartRJC.Date, deEndRJC.Date,
-           FJuridicalIdList.Items[cbJuridicals.ItemIndex],
-           FContractIdList.Items[cbContracts.ItemIndex],
-           FPaidKindIdList.Items[cbPaidKind.ItemIndex]);
+           FJuridicalIdList[cbJuridicals.ItemIndex],
+           FPartnerList[cbPartners.ItemIndex].Id,
+           FContractIdList[cbContracts.ItemIndex],
+           FPaidKindIdList[cbPaidKind.ItemIndex]);
 
   lCaption.Text := 'Акт сверки для "' + cbJuridicals.Items[cbJuridicals.ItemIndex] + '" за период с ' +
-    FormatDateTime('DD.MM.YYYY', deStartRJC.Date) +  ' по ' + FormatDateTime('DD.MM.YYYY', deEndRJC.Date);
+    FormatDateTime('DD.MM.YYYY', deStartRJC.Date) +  ' по ' + FormatDateTime('DD.MM.YYYY', deEndRJC.Date) +
+    '. Форма оплаты: ' + cbPaidKind.Items[cbPaidKind.ItemIndex];
   SwitchToForm(tiPrintJuridicalCollation, nil);
 
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -1843,7 +1951,10 @@ begin
   try
     SettingsFile.WriteString('REPORT', 'StartRJC', FormatDateTime('DD.MM.YYYY', deStartRJC.Date));
     SettingsFile.WriteString('REPORT', 'EndRJC', FormatDateTime('DD.MM.YYYY', deEndRJC.Date));
-    SettingsFile.WriteInteger('REPORT', 'JuridicalRJC', FJuridicalIdList.Items[cbJuridicals.ItemIndex]);
+    SettingsFile.WriteInteger('REPORT', 'JuridicalRJC', FJuridicalIdList[cbJuridicals.ItemIndex]);
+    SettingsFile.WriteInteger('REPORT', 'PartnerRJC', FPartnerList[cbPartners.ItemIndex].Id);
+    SettingsFile.WriteInteger('REPORT', 'ContractRJC', FContractIdList[cbContracts.ItemIndex]);
+    SettingsFile.WriteInteger('REPORT', 'PaidKindRJC', FPaidKindIdList[cbPaidKind.ItemIndex]);
   finally
     FreeAndNil(SettingsFile);
   end;
@@ -1939,6 +2050,8 @@ end;
 
 procedure TfrmMain.bInfoClick(Sender: TObject);
 begin
+  //DM.UpdateProgram(mrYes);
+
   ShowInformation;
 end;
 
@@ -1951,6 +2064,8 @@ end;
 
 procedure TfrmMain.bReportJuridicalCollationClick(Sender: TObject);
 begin
+  FFirstSet := true; // для востановления сохраненных значений ТТ и договоров при первом открытии
+
   // заполнение списка юридических лиц
   cbJuridicals.Items.Clear;
   FJuridicalIdList.Clear;
@@ -1962,7 +2077,7 @@ begin
 
     while not Eof do
     begin
-      cbJuridicals.Items.Add(FieldByName('ValueData').AsString);
+      AddComboItem(cbJuridicals, FieldByName('ValueData').AsString);
       FJuridicalIdList.Add(FieldByName('Id').AsInteger);
 
       Next;
@@ -1971,28 +2086,33 @@ begin
     Close;
   end;
 
-  cbJuridicals.ItemIndex := FJuridicalIdList.IndexOf(JuridicalRJC);
+  cbJuridicals.ItemIndex := FJuridicalIdList.IndexOf(FJuridicalRJC);
   if cbJuridicals.ItemIndex < 0 then
     cbJuridicals.ItemIndex := 0;
 
-  if StartRJC = '' then
+  if FStartRJC = '' then
     deStartRJC.Date := Date()
   else
-    deStartRJC.Date := StrToDate(StartRJC);
+    deStartRJC.Date := StrToDate(FStartRJC);
   
-  if EndRJC = '' then
+  if FEndRJC = '' then
     deEndRJC.Date := Date()
   else
-    deEndRJC.Date := StrToDate(EndRJC);
+    deEndRJC.Date := StrToDate(FEndRJC);
 
   // заполнение списка форм оплаты
   cbPaidKind.Items.Clear;
   FPaidKindIdList.Clear;
-  cbPaidKind.Items.Add(DM.tblObject_ConstPaidKindName_First.AsString);
+  AddComboItem(cbPaidKind, DM.tblObject_ConstPaidKindName_First.AsString);
   FPaidKindIdList.Add(DM.tblObject_ConstPaidKindId_First.AsInteger);
-  cbPaidKind.Items.Add(DM.tblObject_ConstPaidKindName_Second.AsString);
+  AddComboItem(cbPaidKind, DM.tblObject_ConstPaidKindName_Second.AsString);
   FPaidKindIdList.Add(DM.tblObject_ConstPaidKindId_Second.AsInteger);
-  cbPaidKind.ItemIndex := 0;
+
+  cbPaidKind.ItemIndex := FPaidKindIdList.IndexOf(FPaidKindRJC);
+  if cbPaidKind.ItemIndex < 0 then
+    cbPaidKind.ItemIndex := 0;
+
+  FFirstSet := false;
 
   SwitchToForm(tiReportJuridicalCollation, nil);
 end;
@@ -2727,6 +2847,44 @@ begin
   end;
 end;
 
+procedure TfrmMain.ComboBoxStyleChange(Sender: TObject);
+var
+  resname: string;
+  style: TFMXObject;
+  SettingsFile : TIniFile;
+begin
+  if ComboBoxStyle.ItemIndex > 0 then  // first item is "default" style
+  begin
+    if TOSVersion.Platform = pfAndroid then
+    begin
+      resname := ComboBoxStyle.Selected.Text + '.fsf';
+    end;
+
+    {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+    style := TStyleStreaming.LoadFromFile(TPath.Combine(TPath.GetDocumentsPath, resname));
+    {$ELSE}
+    style := TStyleStreaming.LoadFromFile(resname);
+    {$ENDIF}
+
+    if style <> nil then
+      TStyleManager.SetStyle(style);
+  end
+  else
+    TStyleManager.SetStyle(nil);  // set the "default" style
+
+  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+  SettingsFile := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'settings.ini'));
+  {$ELSE}
+  SettingsFile := TIniFile.Create('settings.ini');
+  {$ENDIF}
+  try
+    FDeafultStyleName := ComboBoxStyle.Selected.Text;
+    SettingsFile.WriteString('STYLES', 'GLOBAL', FDeafultStyleName);
+  finally
+    FreeAndNil(SettingsFile);
+  end;
+end;
+
 procedure TfrmMain.GetVistDays;
 var
   i, Num : integer;
@@ -2738,7 +2896,9 @@ begin
 
   with DM.qryPartner do
   begin
-    Open(BasePartnerQuery);
+    SQL.Text := BasePartnerQuery;
+    ParamByName('DefaultPriceList').AsInteger := DM.tblObject_ConstPriceListId_def.AsInteger;
+    Open;
 
     First;
     while not EOF do
@@ -2835,6 +2995,43 @@ begin
   lAllDaysCount.Text := IntToStr(DaysCount[8]);
 end;
 
+procedure TfrmMain.ibiNewPartnerClick(Sender: TObject);
+begin
+  ppPartner.IsOpen := False;
+
+  EnterNewPartner;
+end;
+
+procedure TfrmMain.EnterNewPartner;
+var
+  Item: TListBoxItem;
+begin
+  cNewJuridical.IsChecked := false;
+  cNewJuridicalChange(cNewJuridical);
+
+  // заполнение списка юридических лиц
+  cbNewPartnerJuridical.Items.Clear;
+  FJuridicalIdList.Clear;
+
+  with DM.qrySelect do
+  begin
+    Open('select * from OBJECT_JURIDICAL where ISERASED = 0 order by ValueData');
+    First;
+
+    while not Eof do
+    begin
+      AddComboItem(cbNewPartnerJuridical, FieldByName('ValueData').AsString);
+      FJuridicalIdList.Add(FieldByName('Id').AsInteger);
+
+      Next;
+    end;
+
+    Close;
+  end;
+
+  SwitchToForm(tiNewPartner, nil);
+end;
+
 procedure TfrmMain.ShowPartners(Day : integer; Caption : string);
 var
   sQuery, CurGPSN, CurGPSE : string;
@@ -2862,7 +3059,9 @@ begin
       '((IFNULL(P.GPSE, 0) - ' + CurGPSE + ') * ' + LongitudeRatio + ')';
   end;
 
-  DM.qryPartner.Open(sQuery);
+  DM.qryPartner.SQL.Text := sQuery;
+  DM.qryPartner.ParamByName('DefaultPriceList').AsInteger := DM.tblObject_ConstPriceListId_def.AsInteger;
+  DM.qryPartner.Open;
 
   SwitchToForm(tiPartners, DM.qryPartner);
 end;
@@ -2902,6 +3101,8 @@ end;
 
 procedure TfrmMain.ShowPriceListItems;
 begin
+  lCaption.Text := 'Прайс-лист "' + DM.qryPriceListValueData.AsString + '"';
+
   DM.qryGoodsForPriceList.Open('select G.ID, G.OBJECTCODE, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ' +
     'PLI.ORDERPRICE Price, M.VALUEDATA Measure ' +
     'FROM OBJECT_PRICELISTITEMS PLI ' +
@@ -3294,32 +3495,70 @@ begin
 end;
 
 procedure TfrmMain.cbJuridicalsChange(Sender: TObject);
+var
+  i: integer;
 begin
-  cbContracts.Items.Clear;
-  FContractIdList.Clear;
+  cbPartners.Items.Clear;
+  FPartnerList.Clear;
 
-  cbContracts.Items.Add('все');
-  FContractIdList.Add(0);
+  FAllContractList.Clear;
+
+  AddComboItem(cbPartners, 'все');
+  FPartnerList.Add(TPartnerItem.Create(0, ''));
 
   with DM.qrySelect do
   begin
-    Open('select C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, C.ID from OBJECT_CONTRACT C ' +
-         'join OBJECT_PARTNER P ON P.JURIDICALID = ' + IntToStr(Integer(cbJuridicals.Items.Objects[cbJuridicals.ItemIndex])) +
-         ' AND P.CONTRACTID = C.ID AND P.ISERASED = 0 ' +
-         'where C.ISERASED = 0 group by C.ID order by ContractName');
-    First;
+    Open('select P.ID, P.ADDRESS, group_concat(distinct C.ID) ContractIds from OBJECT_PARTNER P ' +
+         'LEFT JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID ' +
+         'WHERE P.JURIDICALID = ' + IntToStr(FJuridicalIdList[cbJuridicals.ItemIndex]) +
+         ' AND P.ISERASED = 0 GROUP BY ADDRESS');
 
+    First;
     while not Eof do
     begin
-      cbContracts.Items.Add(FieldByName('ContractName').AsString);
-      FContractIdList.Add(FieldByName('Id').AsInteger);
+      AddComboItem(cbPartners, FieldByName('ADDRESS').AsString);
+      FPartnerList.Add(TPartnerItem.Create(FieldByName('Id').AsInteger, FieldByName('ContractIds').AsString));
+
+      Next;
+    end;
+
+    Open('select distinct C.ID, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName from OBJECT_PARTNER P ' +
+         'JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID ' +
+         'WHERE P.JURIDICALID = ' + IntToStr(FJuridicalIdList[cbJuridicals.ItemIndex]) +
+         ' AND P.ISERASED = 0');
+
+    First;
+    while not Eof do
+    begin
+      FAllContractList.Add(TContractItem.Create(FieldByName('Id').AsInteger, FieldByName('ContractName').AsString));
 
       Next;
     end;
 
     Close;
   end;
-  cbContracts.ItemIndex := 0;
+  if FFirstSet then
+    for i := 0 to FPartnerList.Count - 1 do
+      if FPartnerList[i].Id = FPartnerRJC then
+      begin
+        cbPartners.ItemIndex := i;
+      end;
+  if cbPartners.ItemIndex < 0 then
+    cbPartners.ItemIndex := 0;
+end;
+
+procedure TfrmMain.cNewJuridicalChange(Sender: TObject);
+begin
+  if cNewJuridical.IsChecked then
+  begin
+    cbNewPartnerJuridical.Visible := false;
+    eNewPartnerJuridical.Visible := true;
+  end
+  else
+  begin
+    eNewPartnerJuridical.Visible := false;
+    cbNewPartnerJuridical.Visible := true;
+  end;
 end;
 
 procedure TfrmMain.cbOnlyPromoChange(Sender: TObject);
@@ -3334,6 +3573,42 @@ begin
       TSearchBox(lwGoodsItems.Controls[I]).Text := '!';
       TSearchBox(lwGoodsItems.Controls[I]).Text := oldValue;
     end;
+end;
+
+procedure TfrmMain.cbPartnersChange(Sender: TObject);
+var
+  i: integer;
+  OldContractId, DefIndex: integer;
+begin
+  DefIndex := 0;
+  OldContractId := -1;
+  if cbContracts.ItemIndex > 0 then
+    OldContractId := FContractIdList[cbContracts.ItemIndex];
+
+  cbContracts.Items.Clear;
+  FContractIdList.Clear;
+
+  AddComboItem(cbContracts, 'все');
+  FContractIdList.Add(0);
+
+  for i := 0 to FAllContractList.Count - 1 do
+  begin
+    if (cbPartners.ItemIndex <= 0) or
+       (pos(IntToStr(FAllContractList[i].Id) + ',', FPartnerList[cbPartners.ItemIndex].ContractIds) > 0) or
+       (pos(',' + IntToStr(FAllContractList[i].Id), FPartnerList[cbPartners.ItemIndex].ContractIds) > 0) then
+    begin
+      AddComboItem(cbContracts, FAllContractList[i].Name);
+      FContractIdList.Add(FAllContractList[i].Id);
+      if FAllContractList[i].Id = OldContractId then
+        DefIndex := FContractIdList.Count - 1;
+    end;
+  end;
+
+  if FFirstSet then
+    cbContracts.ItemIndex := FContractIdList.IndexOf(FContractRJC);
+
+  if cbContracts.ItemIndex < 0 then
+    cbContracts.ItemIndex := DefIndex;
 end;
 
 procedure TfrmMain.cbShowAllPathChange(Sender: TObject);
@@ -3364,23 +3639,26 @@ var
   MediaPlayer: TMediaPlayer;
   TmpFile: string;
 begin
-  MediaPlayer := TMediaPlayer.Create(nil);
-
-  TmpFile := TPath.Combine(TPath.GetDocumentsPath, 'CameraClick.3gp');
-  MediaPlayer.FileName := TmpFile;
-
-  if MediaPlayer.Media <> nil then
-    MediaPlayer.Play
-  else
-  begin
-    TmpFile := TPath.Combine(TPath.GetDocumentsPath, 'CameraClick.mp3');
+  {MediaPlayer := TMediaPlayer.Create(nil);
+  try
+    TmpFile := TPath.Combine(TPath.GetDocumentsPath, 'CameraClick.3gp');
     MediaPlayer.FileName := TmpFile;
+
     if MediaPlayer.Media <> nil then
       MediaPlayer.Play
-  end;
-  sleep(1000);
-  MediaPlayer.Stop;
-  MediaPlayer.Clear;
+    else
+    begin
+      TmpFile := TPath.Combine(TPath.GetDocumentsPath, 'CameraClick.mp3');
+      MediaPlayer.FileName := TmpFile;
+      if MediaPlayer.Media <> nil then
+        MediaPlayer.Play
+    end;
+    sleep(1000);
+    MediaPlayer.Stop;
+    MediaPlayer.Clear;
+  finally
+    MediaPlayer.Free;
+  end;}
 end;
 
 procedure TfrmMain.CameraComponentSampleBufferReady
@@ -3428,6 +3706,19 @@ begin
     //raise Exception.Create('Could not locate Location Service');
   end;
   {$ENDIF}
+end;
+
+procedure TfrmMain.AddComboItem(AComboBox: TComboBox; AText: string);
+var
+  lbi: TListBoxItem;
+begin
+  lbi := TListBoxItem.Create(AComboBox);
+  lbi.Parent := AComboBox;
+  lbi.Text := AText;
+  lbi.Font.Size := DefaultSize;
+  lbi.StyledSettings := lbi.StyledSettings - [TStyledSetting.Size];
+
+  AComboBox.AddObject(lbi);
 end;
 
 end.

@@ -20,12 +20,12 @@ CONST
   DataBaseFileName = 'aMobile.sdb';
 
   BasePartnerQuery = 'select P.Id, P.CONTRACTID, J.VALUEDATA Name, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, ' +
-    'P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE, P.PRICELISTID, C.PAIDKINDID, C.CHANGEPERCENT, PL.PRICEWITHVAT, PL.VATPERCENT, ' +
+    'P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE, PL.ID PRICELISTID, C.PAIDKINDID, C.CHANGEPERCENT, PL.PRICEWITHVAT, PL.VATPERCENT, ' +
     'P.CalcDayCount, P.OrderDayCount, P.isOperDateOrder ' +
     'from OBJECT_PARTNER P ' +
-    'JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID and J.ISERASED = 0 ' +
-    'JOIN Object_PriceList PL ON PL.ID = P.PRICELISTID and PL.ISERASED = 0 ' +
-    'JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID and C.ISERASED = 0 where P.ISERASED = 0 ';
+    'JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID ' +
+    'JOIN Object_PriceList PL ON PL.ID = IFNULL(P.PRICELISTID, :DefaultPriceList) ' +
+    'LEFT JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID and C.ISERASED = 0 where P.ISERASED = 0 ';
 
 type
   TActiveMode = (amAll, amOpen, amClose);
@@ -73,7 +73,7 @@ type
     TaskName : string;
 
     DateStart, DateEnd: TDate;
-    JuridicalId, ContractId, PaidKindId: integer;
+    JuridicalId, PartnerId, ContractId, PaidKindId: integer;
 
     procedure SetTaskName(AName : string);
 
@@ -229,7 +229,6 @@ type
     qryPartnerId: TIntegerField;
     qryPartnerCONTRACTID: TIntegerField;
     qryPartnerContractName: TWideStringField;
-    qryPartnerPRICELISTID: TIntegerField;
     qryPartnerGPSN: TFloatField;
     qryPartnerGPSE: TFloatField;
     qryPartnerPaidKindId: TIntegerField;
@@ -495,11 +494,7 @@ type
     cdsJuridicalCollationDocDate: TDateField;
     cdsJuridicalCollationPaidKind: TStringField;
     cdsJuridicalCollationDocNumDate: TStringField;
-    cdsJuridicalCollationPayment: TStringField;
-    cdsJuridicalCollationDebet: TFloatField;
-    cdsJuridicalCollationKredit: TFloatField;
     cdsJuridicalCollationDocTypeShow: TStringField;
-    cdsJuridicalCollationPaidKindShow: TStringField;
     cdsJuridicalCollationFromName: TStringField;
     cdsJuridicalCollationToName: TStringField;
     cdsJuridicalCollationFromToName: TStringField;
@@ -514,9 +509,13 @@ type
     cdsTasksPartnerName: TStringField;
     cdsTasksTaskDate: TStringField;
     cdsTasksTaskDescription: TStringField;
+    cdsJuridicalCollationDebet: TStringField;
+    cdsJuridicalCollationKredit: TStringField;
+    tblObject_ConstPriceListId_def: TIntegerField;
+    tblObject_ConstPriceListName_def: TStringField;
+    qryPartnerPRICELISTID: TIntegerField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
-    procedure cdsJuridicalCollationCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
     FConnected: Boolean;
@@ -565,7 +564,8 @@ type
     procedure SavePhotoGroup(AGroupName: string);
     procedure LoadPhotoGroups;
 
-    procedure GenerateJuridicalCollation(ADateStart, ADateEnd: TDate; AJuridicalId, AContractId, APaidKindId: integer);
+    procedure GenerateJuridicalCollation(ADateStart, ADateEnd: TDate;
+      AJuridicalId, APartnerId, AContractId, APaidKindId: integer);
 
     function LoadTasks(Active: TActiveMode; SaveData: boolean = true; ADate: TDate = 0; APartnerId: integer = 0): integer;
     function CloseTask(ATasksId: integer; ATaskComment: string): boolean;
@@ -1408,7 +1408,7 @@ begin
     GetStoredProc.Params.AddParam('inStartDate', ftDateTime, ptInput, DateStart);
     GetStoredProc.Params.AddParam('inEndDate', ftDateTime, ptInput, DateEnd);
     GetStoredProc.Params.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
-    GetStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, 0);
+    GetStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, PartnerId);
     GetStoredProc.Params.AddParam('inContractId', ftInteger, ptInput, ContractId);
     GetStoredProc.Params.AddParam('inAccountId', ftInteger, ptInput, 0);
     GetStoredProc.Params.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
@@ -1436,10 +1436,27 @@ begin
             DM.cdsJuridicalCollationDocType.AsString := FieldByName('ItemName').AsString;
             DM.cdsJuridicalCollationDocDate.AsDateTime := FieldByName('OperDate').AsDateTime;
             DM.cdsJuridicalCollationPaidKind.AsString := FieldByName('PaidKindName').AsString;
-            DM.cdsJuridicalCollationDebet.AsFloat := FieldByName('Debet').AsFloat;
-            DM.cdsJuridicalCollationKredit.AsFloat := FieldByName('Kredit').AsFloat;
             DM.cdsJuridicalCollationFromName.AsString := FieldByName('FromName').AsString;
             DM.cdsJuridicalCollationToName.AsString := FieldByName('ToName').AsString;
+
+            if FieldByName('Debet').AsFloat <> 0 then
+            begin
+              DM.cdsJuridicalCollationDebet.AsString := FormatFloat('0.##', FieldByName('Debet').AsFloat);
+              DM.cdsJuridicalCollationFromToName.AsString := 'От кого: ' + DM.cdsJuridicalCollationFromName.AsString;
+            end
+            else
+              DM.cdsJuridicalCollationDebet.AsString := '';
+            if FieldByName('Kredit').AsFloat <> 0 then
+            begin
+              DM.cdsJuridicalCollationKredit.AsString := FormatFloat('0.##', FieldByName('Kredit').AsFloat);
+              DM.cdsJuridicalCollationFromToName.AsString := 'Кому: ' + DM.cdsJuridicalCollationToName.AsString;
+            end
+            else
+              DM.cdsJuridicalCollationKredit.AsString := '';
+
+            DM.cdsJuridicalCollationDocNumDate.AsString := 'Документ №' + DM.cdsJuridicalCollationDocNum.AsString +
+              ' от ' + FormatDateTime('DD.MM.YYYY', DM.cdsJuridicalCollationDocDate.AsDateTime);
+            DM.cdsJuridicalCollationDocTypeShow.AsString := 'Вид: ' + DM.cdsJuridicalCollationDocType.AsString;
 
             DM.cdsJuridicalCollation.Post;
 
@@ -1459,8 +1476,8 @@ begin
           begin
             frmMain.lStartRemains.Text := 'Сальдо на начало периода: ' + FormatFloat('0.00', StartRemains);
             frmMain.lEndRemains.Text := 'Сальдо на конец периода: ' + FormatFloat('0.00', EndRemains);
-            frmMain.lTotalDebit.Text := 'Суммарный дебет: ' + FormatFloat('0.00', TotalDebit);
-            frmMain.lTotalKredit.Text := 'Суммарный кредит: ' + FormatFloat('0.00', TotalKredit);
+            frmMain.lTotalDebit.Text := FormatFloat('0.00', TotalDebit);
+            frmMain.lTotalKredit.Text := FormatFloat('0.00', TotalKredit);
 
             frmMain.lwJuridicalCollation.ScrollViewPos := 0;
           end);
@@ -2005,10 +2022,15 @@ begin
         StringStream.WriteString(GetStoredProc.Execute(false, false, false));
 
         if StringStream.Size = 0 then
-           raise Exception.Create('Новая версия программы не загружена из базы данных');
+          raise Exception.Create('Новая версия программы не загружена из базы данных');
 
         StringStream.Position := 0;
+        {$IFDEF ANDROID}
         StringStream.SaveToFile(TPath.Combine(TPath.GetSharedDownloadsPath, ApplicationName));
+        {$ELSE}
+        StringStream.SaveToFile(ApplicationName);
+        {$ENDIF}
+
       except
         on E : Exception do
         begin
@@ -2029,7 +2051,7 @@ begin
     Intent.setDataAndType(uri, StringToJString('application/vnd.android.package-archive'));
     Intent.setFlags(TJIntent.JavaClass.FLAG_ACTIVITY_NEW_TASK);
     TAndroidHelper.Activity.startActivity(Intent);
-  {$ENDIF}
+    {$ENDIF}
   end;
 end;
 
@@ -2248,25 +2270,6 @@ begin
   cdsStoreRealItems.Post;
 end;
 
-procedure TDM.cdsJuridicalCollationCalcFields(DataSet: TDataSet);
-begin
-  DataSet.FieldByName('DocNumDate').AsString := 'Документ №' + DataSet.FieldByName('DocNum').AsString +
-    ' от ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('DocDate').AsDateTime);
-  DataSet.FieldByName('DocTypeShow').AsString := 'Вид: ' + DataSet.FieldByName('DocType').AsString;
-  DataSet.FieldByName('PaidKindShow').AsString := 'Форма оплаты: ' + DataSet.FieldByName('PaidKind').AsString;
-
-  if DataSet.FieldByName('Debet').AsFloat = 0 then
-  begin
-    DataSet.FieldByName('Payment').AsString := 'Кредит: ' + FormatFloat('0.00', DataSet.FieldByName('Kredit').AsFloat);
-    DataSet.FieldByName('FromToName').AsString := 'Кому: ' + DataSet.FieldByName('ToName').AsString;
-  end
-  else
-  begin
-    DataSet.FieldByName('Payment').AsString := 'Дебет: ' + FormatFloat('0.00', DataSet.FieldByName('Debet').AsFloat);
-    DataSet.FieldByName('FromToName').AsString := 'От кого: ' + DataSet.FieldByName('FromName').AsString;
-  end;
-end;
-
 procedure TDM.DefaultStoreRealItems;
 var
   qryGoodsListSale : TFDQuery;
@@ -2356,7 +2359,7 @@ end;
 
 procedure TDM.GenerateStoreRealItemsList;
 begin
-  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID GoodsKindID, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ''-'' PromoPrice, ' +
+  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ''-'' PromoPrice, ' +
     'GLK.REMAINS, PI.ORDERPRICE PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
     'GK.VALUEDATA || '';'' || M.VALUEDATA || '';0'' FullInfo, G.VALUEDATA || '';0'' SearchName ' +
     'from OBJECT_GOODS G ' +
@@ -2364,7 +2367,7 @@ begin
     'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERASED = 0 ' +
     'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
     'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
-    'WHERE G.ISERASED = 0 order by Name';
+    'WHERE G.ISERASED = 0 order by GoodsName';
 
   qryGoodsItems.ParamByName('PRICELISTID').AsInteger := DM.qryPartnerPRICELISTID.AsInteger;
   qryGoodsItems.Open;
@@ -2766,7 +2769,7 @@ begin
   else
     PromoPriceField := 'PriceWithOutVAT';
 
-  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID GoodsKindID, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, IFNULL(' + PromoPriceField + ', ''-'') PromoPrice, ' +
+  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, IFNULL(' + PromoPriceField + ', ''-'') PromoPrice, ' +
     'GLK.REMAINS, PI.' + PriceField + ' PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
     'GK.VALUEDATA || '';'' || 0 || '';'' || 0 || '';'' || PI.' + PriceField + ' || '';'' || ' +
     'M.VALUEDATA || '';'' || G.WEIGHT || '';'' || IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 1) || '';0'' FullInfo, ' +
@@ -2779,7 +2782,7 @@ begin
     'LEFT JOIN MOVEMENTITEM_PROMOGOODS PG ON PG.MOVEMENTID = PP.MOVEMENTID and PG.GOODSID = G.ID and (PG.GOODSKINDID = GK.ID or PG.GOODSKINDID = 0) ' +
     'LEFT JOIN MOVEMENTITEM_PROMOPARTNER PP ON PP.PARTNERID = :PARTNERID  and (PP.CONTRACTID = :CONTRACTID or PP.CONTRACTID = 0) ' +
     'LEFT JOIN MOVEMENT_PROMO P ON P.ID = PP.MOVEMENTID ' +
-    'WHERE G.ISERASED = 0 order by Name';
+    'WHERE G.ISERASED = 0 order by GoodsName';
 
   qryGoodsItems.ParamByName('PARTNERID').AsInteger := qryPartnerId.AsInteger;
   qryGoodsItems.ParamByName('CONTRACTID').AsInteger := qryPartnerCONTRACTID.AsInteger;
@@ -3096,7 +3099,7 @@ end;
 
 procedure TDM.GenerateReturnInItemsList;
 begin
-  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID GoodsKindID, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ''-'' PromoPrice, ' +
+  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ''-'' PromoPrice, ' +
     'GLK.REMAINS, PI.OrderPrice PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
     'GK.VALUEDATA || '';'' || PI.OrderPrice || '';'' || ' + 'M.VALUEDATA || '';'' || G.WEIGHT || '';0'' FullInfo, ' +
     'G.VALUEDATA || '';0'' SearchName ' +
@@ -3105,7 +3108,7 @@ begin
     'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERASED = 0 ' +
     'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
     'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
-    'WHERE G.ISERASED = 0 order by Name';
+    'WHERE G.ISERASED = 0 order by GoodsName';
 
   qryGoodsItems.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID.AsInteger;
   qryGoodsItems.Open;
@@ -3165,7 +3168,8 @@ begin
 end;
 
 
-procedure TDM.GenerateJuridicalCollation(ADateStart, ADateEnd: TDate; AJuridicalId, AContractId, APaidKindId: integer);
+procedure TDM.GenerateJuridicalCollation(ADateStart, ADateEnd: TDate;
+  AJuridicalId, APartnerId, AContractId, APaidKindId: integer);
 begin
   DM.cdsJuridicalCollation.EmptyDataSet;
 
@@ -3175,6 +3179,7 @@ begin
   WaitThread.DateStart := ADateStart;
   WaitThread.DateEnd := ADateEnd;
   WaitThread.JuridicalId := AJuridicalId;
+  WaitThread.PartnerId := APartnerId;
   WaitThread.ContractId := AContractId;
   WaitThread.PaidKindId := APaidKindId;
   WaitThread.Start;
