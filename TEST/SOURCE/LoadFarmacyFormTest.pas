@@ -1171,7 +1171,7 @@ end;
 
 procedure TLoadFormTest.LoadSPObjectFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMedicSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSPEditForm'));
@@ -1208,7 +1208,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TIntenalSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIntenalSPEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIntenalSPEditForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSPForm');
   // отчет по продажам товара соц. проекта
