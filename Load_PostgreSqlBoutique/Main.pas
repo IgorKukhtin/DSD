@@ -813,7 +813,7 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID from goods where HasChildren = -1');
+        Add('select id, GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID from goods where HasChildren = -1');
         Open;
         //
         fStop:=cbOnlyOpen.Checked;
@@ -859,10 +859,16 @@ begin
                 inHasChildren:='-1';
                //
                 if inParentID<>'' then
+//                fExecSqFromQuery(
+//                  ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
+//                  ' select distinct '''+fromQuery.FieldByName('GoodsName').AsString+''' as GoodsName , '+fromQuery.FieldByName('Erased').AsString+' as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, '+fromQuery.FieldByName('isPrinted').AsString+' as isPrinted, '+fromQuery.FieldByName('CashCode').AsString+' as CashCode  , Null as CountryBrandID '
+//                  );
                 fExecSqFromQuery(
-                  ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
-                  ' select distinct '''+fromQuery.FieldByName('GoodsName').AsString+''' as GoodsName , '+fromQuery.FieldByName('Erased').AsString+' as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, '+fromQuery.FieldByName('isPrinted').AsString+' as isPrinted, '+fromQuery.FieldByName('CashCode').AsString+' as CashCode  , Null as CountryBrandID '
+                  ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  UserId, ProtocolDate, isReplication, CountryBrandID) ' +
+                  ' select GoodsName, Erased, '+inParentID+' as ParentID, HasChildren, isPrinted, CashCode,  UserId, ProtocolDate, isReplication, CountryBrandID from goods where  ' +
+                  ' id =  '+fromQuery.FieldByName('ID').AsString
                   );
+
              end;
             //
           end;
