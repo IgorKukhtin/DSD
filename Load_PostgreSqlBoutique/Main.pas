@@ -452,7 +452,7 @@ begin
        ' 	ParentId2  Integer 	 ' +
        ' 	)	 '
      );
- if cbGoods2.Checked then
+ if cbGoods2.Checked then begin
      fExecSqFromQuery(
        ' 	CREATE TABLE Goods2 (	 ' +
        ' 	ID INTEGER  DEFAULT  autoincrement ,	 ' +
@@ -468,6 +468,13 @@ begin
        ' 	CountryBrandID  INTEGER    ' +
        ' 	)	 '
      );
+     //
+     // !!!не ошибка - так надо!!!
+     fExecSqFromQuery(' insert into Goods2 (id, GoodsName, Erased, ParentID, HasChildren)'
+                    + '   select 500000, ''ј–’»¬'',zc_erasedVis(), 0, 1');
+     // !!!не ошибка - так надо!!!
+     // fExecSqFromQuery(' 	delete from Goods2 where id = 500000');
+ end;
 
 end;
 
@@ -798,10 +805,16 @@ end;
 
 procedure TMainForm.Button2Click(Sender: TObject);
 begin
-fExecSqFromQuery(
- ' drop table goods2;  '
-
-);
+ if cbChado.Checked then fExecSqFromQuery(' drop table chado');
+ if cbEsc.Checked then fExecSqFromQuery(' drop table Esc');
+ if cbMM.Checked then fExecSqFromQuery(' drop table MM');
+ if cbSAV.Checked then fExecSqFromQuery(' drop table SAV');
+ if cbSav_out.Checked then fExecSqFromQuery(' drop table Sav_out');
+ if cbTer_Out.Checked then fExecSqFromQuery(' drop table Ter_Out');
+ if cbTL.Checked then fExecSqFromQuery(' drop table TL');
+ if cbVint.Checked then fExecSqFromQuery(' drop table Vint');
+ if cbSop.Checked   then fExecSqFromQuery(' drop table Sop');
+ if cbGoods2.Checked then fExecSqFromQuery(' drop table goods2');
 end;
 
 procedure TMainForm.Button3Click(Sender: TObject);
@@ -853,21 +866,27 @@ begin
             Add(') a  ');
             Add('where a.code = '+fromQuery.FieldByName('cashcode').AsString+'');
             Open;
-            if fromQuery_two.RecordCount > 0 then
+            //if fromQuery_two.RecordCount > 0 then
              begin
                 inParentID:=fromQuery_two.FieldByName('ParentId').AsString;
                 inHasChildren:='-1';
                //
                 if inParentID<>'' then
-//                fExecSqFromQuery(
-//                  ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
-//                  ' select distinct '''+fromQuery.FieldByName('GoodsName').AsString+''' as GoodsName , '+fromQuery.FieldByName('Erased').AsString+' as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, '+fromQuery.FieldByName('isPrinted').AsString+' as isPrinted, '+fromQuery.FieldByName('CashCode').AsString+' as CashCode  , Null as CountryBrandID '
-//                  );
+                 // сохраним в группу что нашли
                 fExecSqFromQuery(
-                  ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  UserId, ProtocolDate, isReplication, CountryBrandID) ' +
-                  ' select GoodsName, Erased, '+inParentID+' as ParentID, HasChildren, isPrinted, CashCode,  UserId, ProtocolDate, isReplication, CountryBrandID from goods where  ' +
+                  ' Insert into goods2 (Id , GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  UserId, ProtocolDate, isReplication, CountryBrandID) ' +
+                    // !!!не ошибка - надо сохранить Id!!!
+                  ' select Id, GoodsName, Erased, '+inParentID+' as ParentID, HasChildren, isPrinted, CashCode,  UserId, ProtocolDate, isReplication, CountryBrandID from goods where  ' +
                   ' id =  '+fromQuery.FieldByName('ID').AsString
-                  );
+                  )
+                 else
+                 // все равно сохраним в группу - ј–’»¬
+                fExecSqFromQuery(
+                  ' Insert into goods2 (Id , GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  UserId, ProtocolDate, isReplication, CountryBrandID) ' +
+                    // !!!не ошибка - надо сохранить Id!!!
+                  ' select Id, GoodsName, Erased, 500000 as ParentID, HasChildren, isPrinted, CashCode,  UserId, ProtocolDate, isReplication, CountryBrandID from goods where  ' +
+                  ' id =  '+fromQuery.FieldByName('ID').AsString
+                  )
 
              end;
             //
@@ -881,7 +900,18 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+
+
+
      end;
+
+     //
+     // сохраним .............
+     {fExecSqFromQuery(' update goods2'
+                     +' from goodsProperty'
+                     +' where goods2.ParentId = 500000'
+                     +'   and goods2.Id = goodsProperty.GoodsId'
+                     );}
      //
      myDisabledCB(cbGoods2);
  Gauge.Visible:=False;
