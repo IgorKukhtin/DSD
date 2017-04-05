@@ -954,6 +954,7 @@ begin
         Add(', BillItemsIncome.PriceListPrice as PriceListPrice  ');
         Add(', Partner.UnitName as Partner  ');
         Add(', Shop.UnitName as Shop  ');
+        Add(', BillItemsIncome.DateIn as DateIn  ');
         Add('from  ');
         Add('goods2  ');
         Add('left join (select  ');
@@ -965,6 +966,7 @@ begin
         Add('            , max(BillItemsIncome.UnitID) as UnitID ');
         Add('            , max(BillItemsIncome.clientid)  as  clientid ');
         Add('            , max(BillItemsIncome.ValutaID)  as  ValutaID ');
+        Add('            , max(BillItemsIncome.DateIn)    as  DateIn ');
         Add('            from  ');
         Add('              BillItemsIncome  ');
         Add('            group by goodsid)  BillItemsIncome on BillItemsIncome.goodsid = goods2.id ');
@@ -985,10 +987,10 @@ begin
         //
         AssignFile(csvFile, pathdatfiles.Text+'\Goods2.csv');
         ReWrite(csvFile);
-        WriteLn(csvFile, ';;;;;од/об;детс;дев;Верхняя;дл, сост,шор;ценник;;;;;');
-        WriteLn(csvFile, ';;;;;асс/инв;ж/м;мальч;Трикотаж;осн.призн.;;;;;;');
-        WriteLn(csvFile, ';;;;;;;;;;;;;;;');
-        WriteLn(csvFile, 'Код;Группа;Названия;Прих.;Ост.;1;2;3;4;5;6;Вх цена;Вал.;Цена~по п-л;Поставщик;Магазин');
+        WriteLn(csvFile, ';;;;;од/об;детс;дев;Верхняя;дл, сост,шор;ценник;;;;;;');
+        WriteLn(csvFile, ';;;;;асс/инв;ж/м;мальч;Трикотаж;осн.призн.;;;;;;;');
+        WriteLn(csvFile, ';;;;;;;;;;;;;;;;');
+        WriteLn(csvFile, 'Код;Группа;Названия;Прих.;Ост.;1;2;3;4;5;6;Вх цена;Вал.;Цена~по п-л;Поставщик;Магазин;Дата прохода');
         while not EOF do
         begin
              //!!!
@@ -1004,6 +1006,7 @@ begin
                strCSV := strCSV +';'+ fromQuery.FieldByName('PriceListPrice').AsString;
                strCSV := strCSV +';'+ fromQuery.FieldByName('Partner').AsString;
                strCSV := strCSV +';'+ fromQuery.FieldByName('Shop').AsString;
+               strCSV := strCSV +';'+ fromQuery.FieldByName('DateIn').AsString;
              //
                WriteLn(csvFile, strCSV);
              //

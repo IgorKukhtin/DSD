@@ -215,58 +215,58 @@ COPY sopra
 -- выгрузка
 
 COPY (
-SELECT Users.dbid
-, Users.replid
+SELECT Users.dbid       as DatabaseId
+, Users.replid          as ReplId
 
-, mm.Name          as mmName
-, mm.Coment        as mmComent
-, mm.Date          as mmDate
-, mm.Suma          as mmSuma
+, mm.Name               as mmName
+, mm.Coment             as mmComent
+, mm.Date::date         as mmDate
+, mm.Suma               as mmSuma
 
-, TL.Name          as TLName
-, TL.Coment        as TLComent
-, TL.Date          as TLDate
-, TL.Suma          as TLSuma
+, TL.Name               as TLName
+, TL.Coment             as TLComent
+, TL.Date::date         as TLDate
+, TL.Suma               as TLSuma
 
-, Elem.Name        as ElemName
-, Elem.Coment      as ElemComent
-, Elem.Date        as ElemDate
-, Elem.Suma        as ElemSuma
+, Elem.Name             as ElemName
+, Elem.Coment           as ElemComent
+, Elem.Date::date       as ElemDate
+, Elem.Suma             as ElemSuma
 
-, chado.Name       as chadoName
-, chado.Coment     as chadoComent
-, chado.Date       as chadoDate
-, chado.Suma       as chadoSuma
+, chado.Name            as chadoName
+, chado.Coment          as chadoComent
+, chado.Date::date      as chadoDate
+, chado.Suma            as chadoSuma
 
-, sav.Name         as savName
-, sav.Coment       as savComent
-, sav.Date         as savDate
-, sav.Suma         as savSuma
+, sav.Name              as savName
+, sav.Coment            as savComent
+, sav.Date::date        as savDate
+, sav.Suma              as savSuma
 
-, ter_Vin.Name     as ter_VinName
-, ter_Vin.Coment   as ter_VinComent
-, ter_Vin.Date     as ter_VinDate
-, ter_Vin.Suma     as ter_VinSuma
+, ter_Vin.Name          as ter_VinName
+, ter_Vin.Coment        as ter_VinComent
+, ter_Vin.Date::date    as ter_VinDate
+, ter_Vin.Suma          as ter_VinSuma
 
-, Vintag.Name      as VintagName
-, Vintag.Coment    as VintagComent
-, Vintag.Date      as VintagDate
-, Vintag.Suma      as VintagSuma
+, Vintag.Name           as VintagName
+, Vintag.Coment         as VintagComent
+, Vintag.Date::date     as VintagDate
+, Vintag.Suma           as VintagSuma
 
-, escada.Name      as escadaName
-, escada.Coment    as escadaComent
-, escada.Date      as escadaDate
-, escada.Suma      as escadaSuma
+, escada.Name           as escadaName
+, escada.Coment         as escadaComent
+, escada.Date::date     as escadaDate
+, escada.Suma           as escadaSuma
 
-, sv_vintag.Name   as sv_vintagName
-, sv_vintag.Coment as sv_vintagComent
-, sv_vintag.Date   as sv_vintagDate
-, sv_vintag.Suma   as sv_vintagSuma
+, sv_vintag.Name        as sv_vintagName
+, sv_vintag.Coment      as sv_vintagComent
+, sv_vintag.Date::date  as sv_vintagDate
+, sv_vintag.Suma        as sv_vintagSuma
 
-, sopra.Name       as sopraName
-, sopra.Coment     as sopraComent
-, sopra.Date       as sopraDate
-, sopra.Suma       as sopraSuma
+, sopra.Name            as sopraName
+, sopra.Coment          as sopraComent
+, sopra.Date::date      as sopraDate
+, sopra.Suma            as sopraSuma
 
 
 from
