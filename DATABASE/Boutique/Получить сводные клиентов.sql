@@ -308,18 +308,21 @@ left join (SELECT * FROM Vintag) as  Vintag on Vintag.replid = users.replid and 
 left join (SELECT * FROM Elem) as  Elem on Elem.replid = users.replid and Elem.dbid = users.dbid
 
 
-ORDER BY  case when trim (mm.name) <> '' then mm.name
+ORDER BY 
+    Users.dbid, Users.replid,
+          case when trim (mm.name) <> '' then mm.name
                when trim (TL.name) <> '' then TL.name
-               when trim (ter_Vin.name) <> '' then ter_Vin.name
+               when trim (Elem.name) <> '' then Elem.name
                when trim (chado.name) <> '' then chado.name
                when trim (sav.name) <> '' then sav.name
-               when trim (sv_vintag.name) <> '' then sv_vintag.name
+               when trim (ter_Vin.name) <> '' then ter_Vin.name
                when trim (Vintag.name) <> '' then Vintag.name
                when trim (escada.name) <> '' then escada.name
+               when trim (sv_vintag.name) <> '' then sv_vintag.name
                when trim (sopra.name) <> '' then sopra.name
-               when trim (Elem.name) <> '' then Elem.name
+
            else '' end
-       , Users.dbid, Users.replid
+       
 
 )
     To  'd:\Profimanager\Result.csv'
