@@ -101,6 +101,7 @@ type
     Button2: TButton;
     Button3: TButton;
     cbAllTables: TCheckBox;
+    intoCSVButton: TButton;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -120,6 +121,7 @@ type
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure cbAllTablesClick(Sender: TObject);
+    procedure intoCSVButtonClick(Sender: TObject);
   private
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
@@ -927,6 +929,94 @@ begin
      myDisabledCB(cbGoods2);
  Gauge.Visible:=False;
 
+end;
+
+procedure TMainForm.intoCSVButtonClick(Sender: TObject);
+var strCSV: string;
+    csvFile: TextFile;
+begin
+  if (not cbGoods2.Checked)or(not cbGoods2.Enabled) then exit;
+    Gauge.Visible:=true;
+     //
+     myEnabledCB(cbGoods2);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select  ');
+        Add('goods2.id as id ');
+        Add(', grgoods.GroupsName as GroupsName ');
+        Add(', goods2.GoodsName as Name ');
+        Add(', BillItemsIncome.OperCount as OperCount ');
+        Add(', BillItemsIncome.RemainsCount as RemainsCount ');
+        Add(', BillItemsIncome.OperPrice as OperPrice ');
+        Add(', valuta.ValutaName as Valuta  ');
+        Add(', BillItemsIncome.PriceListPrice as PriceListPrice  ');
+        Add(', Partner.UnitName as Partner  ');
+        Add(', Shop.UnitName as Shop  ');
+        Add('from  ');
+        Add('goods2  ');
+        Add('left join (select  ');
+        Add('              BillItemsIncome.goodsid ');
+        Add('            , sum(BillItemsIncome.OperCount) as OperCount ');
+        Add('            , sum(BillItemsIncome.RemainsCount) as RemainsCount ');
+        Add('            , sum(BillItemsIncome.OperPrice) as OperPrice ');
+        Add('            , sum(BillItemsIncome.PriceListPrice) as PriceListPrice  ');
+        Add('            , max(BillItemsIncome.UnitID) as UnitID ');
+        Add('            , max(BillItemsIncome.clientid)  as  clientid ');
+        Add('            , max(BillItemsIncome.ValutaID)  as  ValutaID ');
+        Add('            from  ');
+        Add('              BillItemsIncome  ');
+        Add('            group by goodsid)  BillItemsIncome on BillItemsIncome.goodsid = goods2.id ');
+        Add('left join (select goodsid, GroupsName   from goodsproperty group by goodsid, GroupsName) as grGoods on grGoods.goodsid = goods2.id  ');
+        Add('left join  Unit as Shop on shop.id = BillItemsIncome.UnitID ');
+        Add('left join  Unit as Partner on Partner.id = BillItemsIncome.clientid ');
+        Add('left join valuta on valuta.id = BillItemsIncome.ValutaID ');
+        Add(' where goods2.ParentId = 500000 ');
+        Add('order by id  ');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        //
+        AssignFile(csvFile, pathdatfiles.Text+'\Goods2.csv');
+        ReWrite(csvFile);
+        WriteLn(csvFile, ';;;;;од/об;детс;дев;Верхняя;дл, сост,шор;ценник;;;;;');
+        WriteLn(csvFile, ';;;;;асс/инв;ж/м;мальч;Трикотаж;осн.призн.;;;;;;');
+        WriteLn(csvFile, ';;;;;;;;;;;;;;;');
+        WriteLn(csvFile, 'Код;Группа;Названия;Прих.;Ост.;1;2;3;4;5;6;Вх цена;Вал.;Цена~по п-л;Поставщик;Магазин');
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+               strCSV := fromQuery.FieldByName('Id').AsString;
+               strCSV := strCSV +';'+ fromQuery.FieldByName('GroupsName').AsString;
+               strCSV := strCSV +';'+ myReplaceStr(fromQuery.FieldByName('Name').AsString,';',',');
+               strCSV := strCSV +';'+ fromQuery.FieldByName('OperCount').AsString;
+               strCSV := strCSV +';'+ fromQuery.FieldByName('RemainsCount').AsString;
+               strCSV := strCSV +';;;;;;;'+ fromQuery.FieldByName('OperPrice').AsString;
+               strCSV := strCSV +';'+ fromQuery.FieldByName('Valuta').AsString;
+               strCSV := strCSV +';'+ fromQuery.FieldByName('PriceListPrice').AsString;
+               strCSV := strCSV +';'+ fromQuery.FieldByName('Partner').AsString;
+               strCSV := strCSV +';'+ fromQuery.FieldByName('Shop').AsString;
+             //
+               WriteLn(csvFile, strCSV);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        CloseFile(csvFile);
+     end;
+     //
+     myDisabledCB(cbGoods2);
+     Gauge.Visible:=False;
 end;
 
 procedure TMainForm.cbAllCompleteDocumentClick(Sender: TObject);

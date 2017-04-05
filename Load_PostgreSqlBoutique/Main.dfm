@@ -752,6 +752,15 @@ object MainForm: TMainForm
           TabOrder = 16
           OnClick = cbAllTablesClick
         end
+        object intoCSVButton: TButton
+          Left = 96
+          Top = 124
+          Width = 121
+          Height = 25
+          Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1089' 50000'
+          TabOrder = 17
+          OnClick = intoCSVButtonClick
+        end
       end
     end
   end
@@ -785,7 +794,6 @@ object MainForm: TMainForm
   end
   object toZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
-    UTF8StringsAsWideField = True
     Catalog = 'public'
     DesignConnection = True
     AfterConnect = toZConnectionAfterConnect
