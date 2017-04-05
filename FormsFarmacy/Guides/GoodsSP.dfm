@@ -226,7 +226,7 @@
         Width = 103
       end
       object PaymentSP: TcxGridDBColumn
-        Caption = #1057#1091#1084#1072' '#1076#1086#1087#1083#1072#1090#1080' '#1079#1072' '#1091#1087#1072#1082#1086#1074#1082#1091', '#1075#1088#1085' (17)'
+        Caption = #1057#1091#1084#1072' '#1076#1086#1087#1083#1072#1090#1080' '#1079#1072' '#1091#1087#1072#1082#1086#1074#1082#1091', '#1075#1088#1085' (16)'
         DataBinding.FieldName = 'PaymentSP'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
