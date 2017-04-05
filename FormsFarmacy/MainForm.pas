@@ -350,6 +350,8 @@ type
     N70: TMenuItem;
     N134: TMenuItem;
     N135: TMenuItem;
+    actReport_CheckPromoFarm: TdsdOpenForm;
+    N136: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
