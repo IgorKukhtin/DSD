@@ -220,8 +220,17 @@ left join (SELECT * FROM ter_Vin) as  ter_Vin on ter_Vin.replid = users.replid a
 left join (SELECT * FROM TL) as  TL on TL.replid = users.replid and TL.dbid = users.dbid
 left join (SELECT * FROM Vintag) as  Vintag on Vintag.replid = users.replid and Vintag.dbid = users.dbid
 
-
-ORDER BY  Users.dbid, Users.replid
+ORDER BY  case when trim (mm.name) <> '' then mm.name
+               when trim (TL.name) <> '' then TL.name
+               when trim (ter_Vin.name) <> '' then ter_Vin.name
+               when trim (chado.name) <> '' then chado.name
+               when trim (sav.name) <> '' then sav.name
+               when trim (sv_vintag.name) <> '' then sv_vintag.name
+               when trim (Vintag.name) <> '' then Vintag.name
+               when trim (escada.name) <> '' then escada.name
+               when trim (sopra.name) <> '' then sopra.name
+           else '' end
+       , Users.dbid, Users.replid
 
 )
     To  'd:\Profimanager\Result.csv'
