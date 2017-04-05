@@ -38,6 +38,7 @@ type
     cxSplitter1: TcxSplitter;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

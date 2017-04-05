@@ -1,10 +1,13 @@
 -- Function: gpSelect_Movement_PriceList()
 
 DROP FUNCTION IF EXISTS gpReport_Check_Promo (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Check_Promo (TDateTime, TDateTime, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpReport_Check_Promo(
     IN inStartDate     TDateTime ,
     IN inEndDate       TDateTime ,
+    IN inIsFarm           Boolean,    -- 
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
@@ -24,11 +27,16 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbTmpDate TDateTime;
-   DECLARE vbisFarm Boolean;
+   --DECLARE vbisFarm Boolean;
    DECLARE vbUnitId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
+
+
+    -- !!!меняем параметр!!!
+    IF inIsFarm = TRUE THEN vbUnitId:= zfConvert_StringToNumber (COALESCE (lpGet_DefaultValue ('zc_Object_Unit', vbUserId), ''));
+    END IF;
 
     --inStartDate := date_trunc('month', inStartDate);
     --inEndDate := date_trunc('month', inEndDate) + Interval '1 MONTH';
@@ -44,6 +52,7 @@ BEGIN
         vbTmpDate := vbTmpDate + INTERVAL '1 DAY';
     END LOOP;
 
+/*
     -- если долность Фармацевт, показываем только его подразделение
     SELECT CASE WHEN ObjectLink_Personal_Position.ChildObjectId = 1672498 THEN TRUE ELSE FALSE END AS isFarm
          , ObjectLink_Personal_Unit.ChildObjectId AS UnitId
@@ -60,9 +69,10 @@ BEGIN
                             AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
     WHERE ObjectLink_User_Member.ObjectId = vbUserId --3354092
       AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member();
+*/
 
     CREATE TEMP TABLE _tmpUnit(UnitId Integer) ON COMMIT DROP;
-    IF vbisFarm = TRUE THEN
+    IF inisFarm = TRUE THEN
        INSERT INTO _tmpUnit(UnitId)
              SELECT vbUnitId AS UnitId;
     ELSE 
@@ -128,6 +138,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 05.04.17         * add inIsFarm
  26.01.17         * ограничение для фармацевта
  09.01.17         * на проводках
  12.12.16         *
