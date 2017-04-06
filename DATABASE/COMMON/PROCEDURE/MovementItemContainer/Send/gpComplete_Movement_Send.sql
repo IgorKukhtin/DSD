@@ -444,11 +444,11 @@ BEGIN
             , Container_Summ.Id AS ContainerId_From
             , Container_Summ.ObjectId AS AccountId_From
             , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail_From
-            , SUM (ABS (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4)))
-                 + CASE WHEN _tmpItem.MovementItemId = HistoryCost.MovementItemId_diff AND ABS (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))) >= -1 * HistoryCost.Summ_diff
+            , SUM ( CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4)) -- ABS
+                 /*+ CASE WHEN _tmpItem.MovementItemId = HistoryCost.MovementItemId_diff AND ABS (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))) >= -1 * HistoryCost.Summ_diff
                              THEN HistoryCost.Summ_diff -- !!!если есть "погрешность" при округлении, добавили сумму!!!
                         ELSE 0
-                   END) AS OperSumm
+                   END*/) AS OperSumm
         FROM _tmpItem
              JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_GoodsFrom
                                              AND Container_Summ.DescId = zc_Container_Summ()
@@ -479,9 +479,11 @@ BEGIN
 
 
      -- 1.3.1. определяется Счет для проводок по суммовому учету - Кому
-     UPDATE _tmpItemSumm SET AccountId_To = CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+     UPDATE _tmpItemSumm SET AccountId_To = CASE WHEN _tmpItemSumm.AccountId_From IN (SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE Object_Account_View.AccountGroupId = zc_Enum_AccountGroup_60000()) -- Прибыль будущих периодов
                                                      THEN _tmpItemSumm.AccountId_From -- !!!т.е. счет не меняется!!!
-                                                  ELSE _tmpItem_byAccount.AccountId
+                                                 WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                                     THEN _tmpItemSumm.AccountId_From -- !!!т.е. счет не меняется!!!
+                                                 ELSE _tmpItem_byAccount.AccountId
                                             END
      FROM _tmpItem
           JOIN (SELECT CASE WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции

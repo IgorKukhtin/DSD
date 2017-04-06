@@ -28,9 +28,12 @@ $BODY$
    DECLARE vbRemains TFloat;
    DECLARE vbIsInsert Boolean;
 BEGIN
-    if coalesce(inUserSession, '') <> '' then 
-     inSession := inUserSession;
-    end if;
+    -- !!!заменили!!!
+    IF COALESCE (inUserSession, '') <> '' AND inUserSession <> '5'
+    THEN
+        inSession := inUserSession;
+    END IF;
+
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
     vbUserId := lpGetUserBySession (inSession);
@@ -88,7 +91,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

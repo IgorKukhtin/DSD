@@ -33,9 +33,12 @@ $BODY$
    DECLARE vbCashRegisterId Integer;
    DECLARE vbPaidTypeId Integer;
 BEGIN
-    if coalesce(inUserSession, '') <> '' then 
-     inSession := inUserSession;
-    end if;
+    -- !!!заменили!!!
+    IF COALESCE (inUserSession, '') <> '' AND inUserSession <> '5'
+    THEN
+        inSession := inUserSession;
+    END IF;
+
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_...());
     vbUserId := lpGetUserBySession (inSession);
