@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, IdBarCode TVarChar, Name TVarChar, isEr
              , NDSKindId Integer, NDSKindName TVarChar
              , NDS TFloat, MinimumLot TFloat, isClose Boolean
              , isTOP Boolean, isFirst Boolean, isSecond Boolean, isPublished Boolean
+             , isSP Boolean
              , PercentMarkup TFloat, Price TFloat
              , Color_calc Integer
              , RetailCode Integer, RetailName TVarChar
@@ -82,7 +83,8 @@ BEGIN
            , Object_Goods_View.isTOP          
            , Object_Goods_View.isFirst 
            , Object_Goods_View.isSecond
-           , Object_Goods_View.isPublished
+           , COALESCE (Object_Goods_View.isPublished,False) :: Boolean  AS isPublished
+           , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
            -- , CASE WHEN Object_Goods_View.isPublished = FALSE THEN NULL ELSE Object_Goods_View.isPublished END :: Boolean AS isPublished
            , Object_Goods_View.PercentMarkup  
            , Object_Goods_View.Price
@@ -123,6 +125,10 @@ BEGIN
                                                  AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
         LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+
+        LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
+                                 ON ObjectBoolean_Goods_SP.ObjectId =ObjectLink_Main.ChildObjectId 
+                                AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
         -- условия хранения
         LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
                              ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
@@ -181,7 +187,8 @@ BEGIN
            , Object_Goods_View.isTOP          
            , Object_Goods_View.isFirst
            , Object_Goods_View.isSecond
-           , Object_Goods_View.isPublished
+           , COALESCE (Object_Goods_View.isPublished,False) :: Boolean  AS isPublished
+           , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
            -- , CASE WHEN Object_Goods_View.isPublished = FALSE THEN NULL ELSE Object_Goods_View.isPublished END :: Boolean AS isPublished
            , Object_Goods_View.PercentMarkup  
            , Object_Goods_View.Price
@@ -223,6 +230,10 @@ BEGIN
         LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
 
+        LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
+                                 ON ObjectBoolean_Goods_SP.ObjectId =ObjectLink_Main.ChildObjectId 
+                                AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+
         -- условия хранения
         LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
                              ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
@@ -243,6 +254,7 @@ ALTER FUNCTION gpSelect_Object_Goods_Retail(TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.04.17         *
  21.03.17         *
  13.12.16         *
  13.07.16         * protocol

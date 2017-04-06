@@ -49,6 +49,7 @@ type
     actPublishedList: TMultiAction;
     bbPublished: TdxBarButton;
     clisMarketToday: TcxGridDBColumn;
+    clisSp: TcxGridDBColumn;
   private
     { Private declarations }
   public

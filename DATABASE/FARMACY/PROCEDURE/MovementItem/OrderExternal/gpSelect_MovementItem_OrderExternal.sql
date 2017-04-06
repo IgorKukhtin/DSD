@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderExternal(
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , PartnerGoodsId Integer, PartnerGoodsCode TVarChar
              , Amount TFloat, Price TFloat, Summ TFloat, PartionGoodsDate TDateTime
-             ,Comment TVarChar, isErased Boolean
+             , Comment TVarChar, isErased Boolean
+             , isSP Boolean
               )
 AS
 $BODY$
@@ -36,6 +37,7 @@ BEGIN
            , tmpMI.PartionGoodsDate     AS PartionGoodsDate
            , tmpMI.Comment              AS Comment
            , FALSE                      AS isErased
+           , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
                   , Object_Goods.ObjectCode                                           AS GoodsCode
@@ -62,7 +64,20 @@ BEGIN
                             JOIN MovementItem_OrderExternal_View AS MovementItem 
                                               ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.isErased   = tmpIsErased.isErased
-                      ) AS tmpMI ON tmpMI.GoodsId  = tmpGoods.GoodsId;
+                      ) AS tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId
+
+                -- получаем GoodsMainId
+                LEFT JOIN  ObjectLink AS ObjectLink_Child 
+                                      ON ObjectLink_Child.ChildObjectId = COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)
+                                     AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+                LEFT JOIN  ObjectLink AS ObjectLink_Main 
+                                      ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                     AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+
+                LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
+                                         ON ObjectBoolean_Goods_SP.ObjectId =ObjectLink_Main.ChildObjectId 
+                                        AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()  
+;
 
 END;
 $BODY$
@@ -73,6 +88,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderExternal (Integer, Boolean, Boolean, T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.04.17         * add isSp
  12.12.14                         *
  06.11.14                         *
  20.10.14                         *

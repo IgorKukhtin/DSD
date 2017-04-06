@@ -10,19 +10,19 @@ inherited OrderExternalForm: TOrderExternalForm
     Top = 151
     Width = 844
     Height = 517
-    ExplicitTop = 121
+    ExplicitTop = 151
     ExplicitWidth = 844
-    ExplicitHeight = 547
+    ExplicitHeight = 517
     ClientRectBottom = 517
     ClientRectRight = 844
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 844
-      ExplicitHeight = 523
+      ExplicitHeight = 493
       inherited cxGrid: TcxGrid
         Width = 844
         Height = 493
         ExplicitWidth = 844
-        ExplicitHeight = 523
+        ExplicitHeight = 493
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -160,6 +160,15 @@ inherited OrderExternalForm: TOrderExternalForm
             DataBinding.FieldName = 'PartionGoodsDate'
             HeaderAlignmentVert = vaCenter
             Width = 87
+          end
+          object clisSp: TcxGridDBColumn
+            Caption = #1057#1086#1094'. '#1087#1088#1086#1077#1082#1090
+            DataBinding.FieldName = 'isSp'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042' '#1089#1087#1080#1089#1082#1077' '#1087#1088#1086#1077#1082#1090#1072' '#171#1044#1086#1089#1090#1091#1087#1085#1099#1077' '#1083#1077#1082#1072#1088#1089#1090#1074#1072#187
+            Options.Editing = False
+            Width = 60
           end
           object colComment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
@@ -1252,7 +1261,7 @@ inherited OrderExternalForm: TOrderExternalForm
   end
   inherited spGetTotalSumm: TdsdStoredProc
     Left = 420
-    Top = 188
+    Top = 236
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null

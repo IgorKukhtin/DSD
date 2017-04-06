@@ -43,8 +43,9 @@ RETURNS TABLE (Id Integer, /*IdBarCode TVarChar,*/ GoodsId Integer, GoodsCode In
              , PersentDiff Tfloat
              , isAmountDiff Boolean
              , isSummDiff Boolean
-
              , isTop  Boolean
+             , isSP Boolean
+
              , PercentMarkup TFloat
              , Fix_Price TFloat
              , Color_calc Integer
@@ -128,12 +129,25 @@ BEGIN
                           , Object_Goods.GoodsCodeInt AS GoodsCode
                           , Object_Goods.GoodsName    AS GoodsName
                           , Object_Goods.isTop            AS Goods_isTop
+                          , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
                           , Object_Goods.PercentMarkup    AS Goods_PercentMarkup
                           , Object_Goods.Price            AS Goods_Price
                      FROM Object_Goods_View AS Object_Goods
+                          -- получаем GoodsMainId
+                          LEFT JOIN  ObjectLink AS ObjectLink_Child 
+                                                ON ObjectLink_Child.ChildObjectId = Object_Goods.Id
+                                               AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+                          LEFT JOIN  ObjectLink AS ObjectLink_Main 
+                                                ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                               AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+
+                         LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
+                                                  ON ObjectBoolean_Goods_SP.ObjectId =ObjectLink_Main.ChildObjectId 
+                                                 AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
                      WHERE Object_Goods.isErased = FALSE 
                        AND Object_Goods.ObjectId = vbObjectId
                      )
+
        , tmpMI AS   (SELECT MovementItem.ObjectId   AS GoodsId
                           , MovementItem.Amount
                           , MIFloat_Price.ValueData AS Price
@@ -359,7 +373,8 @@ BEGIN
               , FALSE                      AS isAmountDiff
               , FALSE                      AS isSummDiff
 
-              , COALESCE (tmpPrice.isTop,FALSE)          ::Boolean  AS isTop 
+              , COALESCE (tmpPrice.isTop,FALSE) ::Boolean  AS isTop 
+              , tmpGoods.isSP                      AS isSP
               , tmpPrice.PercentMarkup  ::TFloat   AS PercentMarkup
               , CASE WHEN COALESCE(tmpPrice.Fix,False) = TRUE THEN COALESCE(tmpPrice.Price,0) ELSE 0 END  ::TFloat AS Fix_Price
 
@@ -444,6 +459,8 @@ BEGIN
                 END  AS isSummDiff
 
               , COALESCE (tmpPrice.isTop,FALSE)          ::Boolean AS isTop 
+              , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
+
               , tmpPrice.PercentMarkup  ::TFloat  AS PercentMarkup
               , CASE WHEN COALESCE(tmpPrice.Fix,False) = TRUE THEN COALESCE(tmpPrice.Price,0) ELSE 0 END  ::TFloat  AS Fix_Price
 
@@ -487,6 +504,19 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Goods_Price
                                   ON ObjectFloat_Goods_Price.ObjectId = MovementItem.GoodsId
                                  AND ObjectFloat_Goods_Price.DescId = zc_ObjectFloat_Goods_Price() 
+
+            -- получаем GoodsMainId
+            LEFT JOIN  ObjectLink AS ObjectLink_Child 
+                                  ON ObjectLink_Child.ChildObjectId = Object_Goods.Id
+                                 AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+            LEFT JOIN  ObjectLink AS ObjectLink_Main 
+                                  ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+
+            LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
+                                     ON ObjectBoolean_Goods_SP.ObjectId =ObjectLink_Main.ChildObjectId 
+                                    AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+
             ;
     ELSE
        RETURN QUERY
@@ -729,6 +759,7 @@ BEGIN
                 END  AS isSummDiff
 
               , COALESCE (tmpPrice.isTop,FALSE)   ::Boolean AS isTop 
+              , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
               , tmpPrice.PercentMarkup                     ::TFloat  AS PercentMarkup
               , CASE WHEN COALESCE(tmpPrice.Fix,False) = TRUE THEN COALESCE(tmpPrice.Price,0) ELSE 0 END ::TFloat AS Fix_Price
 
@@ -775,7 +806,19 @@ BEGIN
                                      AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup()   
                 LEFT JOIN ObjectFloat AS ObjectFloat_Goods_Price
                                       ON ObjectFloat_Goods_Price.ObjectId = MovementItem.GoodsId
-                                     AND ObjectFloat_Goods_Price.DescId = zc_ObjectFloat_Goods_Price()     
+                                     AND ObjectFloat_Goods_Price.DescId = zc_ObjectFloat_Goods_Price() 
+
+                -- получаем GoodsMainId
+                LEFT JOIN  ObjectLink AS ObjectLink_Child 
+                                      ON ObjectLink_Child.ChildObjectId = Object_Goods.Id
+                                     AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+                LEFT JOIN  ObjectLink AS ObjectLink_Main 
+                                      ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                     AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+
+                LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
+                                         ON ObjectBoolean_Goods_SP.ObjectId =ObjectLink_Main.ChildObjectId 
+                                        AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()    
                 ;
     END IF;
 END;
@@ -787,6 +830,7 @@ ALTER FUNCTION gpSelect_MovementItem_Income (Integer, Boolean, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 06.04.17         *
  01.02.17         * немножко оптимизировала
  27.01.17         *
  12.12.16         * add IdBarCode

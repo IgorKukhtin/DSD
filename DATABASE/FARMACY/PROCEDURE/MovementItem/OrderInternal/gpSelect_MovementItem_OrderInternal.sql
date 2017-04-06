@@ -219,6 +219,7 @@ BEGIN
            , tmpMI.isClose
            , tmpMI.isFirst
            , tmpMI.isSecond
+           , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
 
            , CASE WHEN tmpMI.isTOP = TRUE
                     OR tmpMI.isUnitTOP = TRUE
@@ -330,6 +331,17 @@ BEGIN
                                  ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
             LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId         
+
+            -- получаем GoodsMainId
+            LEFT JOIN  ObjectLink AS ObjectLink_Child 
+                                  ON ObjectLink_Child.ChildObjectId = Object_Goods.Id
+                                 AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+            LEFT JOIN  ObjectLink AS ObjectLink_Main 
+                                  ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+            LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
+                                     ON ObjectBoolean_Goods_SP.ObjectId =ObjectLink_Main.ChildObjectId 
+                                    AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()  
            ;
 
      RETURN NEXT Cursor1;
@@ -664,6 +676,38 @@ BEGIN
                      AND Object_Price_View.isTop  = TRUE
                   )
 
+      , tmpRemains AS (SELECT Container.ObjectId
+                            , SUM (Container.Amount) AS Amount
+                       FROM Container
+                            INNER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
+                                                           ON ContainerLinkObject_Unit.ContainerId = Container.Id
+                                                          AND ContainerLinkObject_Unit.ObjectId = vbUnitId
+                       WHERE Container.DescId = zc_Container_Count()
+                         AND Container.Amount<>0
+                       GROUP BY Container.ObjectId
+                      )
+
+       , tmpIncome AS (SELECT MovementItem_Income.ObjectId               AS Income_GoodsId
+                            , SUM (MovementItem_Income.Amount) :: TFloat AS Income_Amount
+                       FROM Movement AS Movement_Income
+                            INNER JOIN MovementItem AS MovementItem_Income
+                                                    ON Movement_Income.Id = MovementItem_Income.MovementId
+                                                   AND MovementItem_Income.DescId = zc_MI_Master()
+                                                   AND MovementItem_Income.isErased = FALSE
+                                                   AND MovementItem_Income.Amount > 0
+                            INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                          ON MovementLinkObject_To.MovementId = Movement_Income.Id
+                                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                         AND MovementLinkObject_To.ObjectId = vbUnitId
+                            INNER JOIN MovementDate AS MovementDate_Branch
+                                                    ON MovementDate_Branch.MovementId = Movement_Income.Id
+                                                   AND MovementDate_Branch.DescId = zc_MovementDate_Branch() 
+                        WHERE Movement_Income.DescId = zc_Movement_Income()
+                          AND MovementDate_Branch.ValueData >= CURRENT_DATE
+                          AND Movement_Income.StatusId = zc_Enum_Status_UnComplete()
+                        GROUP BY MovementItem_Income.ObjectId
+                      ) 
+
        -- Результат 1
        SELECT
              tmpMI.Id                                                AS Id
@@ -681,6 +725,7 @@ BEGIN
            , COALESCE(tmpMI.isClose, tmpGoods.isClose)               AS isClose
            , COALESCE(tmpMI.isFirst, tmpGoods.isFirst)               AS isFirst
            , COALESCE(tmpMI.isSecond, tmpGoods.isSecond)             AS isSecond
+           , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
            , CASE WHEN COALESCE (tmpMI.Goods_isTOP, tmpGoods.Goods_isTOP) = TRUE
                     OR COALESCE (Object_Price_View.isTOP, False) = TRUE
                   THEN 16440317         --12615935                                                      --16440317  - розовый как в приходе ELSE zc_Color_White()
@@ -861,37 +906,9 @@ BEGIN
                       ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
             LEFT JOIN Object_Price_View ON COALESCE(tmpMI.GoodsId,tmpGoods.GoodsId) = Object_Price_View.GoodsId
                                        AND Object_Price_View.UnitId = vbUnitId
-            LEFT JOIN (SELECT Container.ObjectId
-                            , SUM (Container.Amount) AS Amount
-                       FROM Container
-                            INNER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
-                                                           ON ContainerLinkObject_Unit.ContainerId = Container.Id
-                                                          AND ContainerLinkObject_Unit.ObjectId = vbUnitId
-                       WHERE Container.DescId = zc_Container_Count()
-                         AND Container.Amount<>0
-                       GROUP BY Container.ObjectId
-                      ) AS Remains ON Remains.ObjectId = COALESCE (tmpMI.GoodsId, tmpGoods.GoodsId)
+            LEFT JOIN tmpRemains AS Remains ON Remains.ObjectId = COALESCE (tmpMI.GoodsId, tmpGoods.GoodsId)
 
-            LEFT JOIN (SELECT MovementItem_Income.ObjectId               AS Income_GoodsId
-                            , SUM (MovementItem_Income.Amount) :: TFloat AS Income_Amount
-                       FROM Movement AS Movement_Income
-                            INNER JOIN MovementItem AS MovementItem_Income
-                                                    ON Movement_Income.Id = MovementItem_Income.MovementId
-                                                   AND MovementItem_Income.DescId = zc_MI_Master()
-                                                   AND MovementItem_Income.isErased = FALSE
-                                                   AND MovementItem_Income.Amount > 0
-                            INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                          ON MovementLinkObject_To.MovementId = Movement_Income.Id
-                                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                         AND MovementLinkObject_To.ObjectId = vbUnitId
-                            INNER JOIN MovementDate AS MovementDate_Branch
-                                                    ON MovementDate_Branch.MovementId = Movement_Income.Id
-                                                   AND MovementDate_Branch.DescId = zc_MovementDate_Branch() 
-                        WHERE Movement_Income.DescId = zc_Movement_Income()
-                          AND MovementDate_Branch.ValueData >= CURRENT_DATE
-                          AND Movement_Income.StatusId = zc_Enum_Status_UnComplete()
-                        GROUP BY MovementItem_Income.ObjectId
-                      ) AS Income ON Income.Income_GoodsId = COALESCE (tmpMI.GoodsId, tmpGoods.GoodsId)
+            LEFT JOIN tmpIncome AS Income ON Income.Income_GoodsId = COALESCE (tmpMI.GoodsId, tmpGoods.GoodsId)
                       
              LEFT JOIN tmpCheck ON tmpCheck.GoodsId = COALESCE (tmpMI.GoodsId, tmpGoods.GoodsId)
              LEFT JOIN tmpSend ON tmpSend.GoodsId = COALESCE (tmpMI.GoodsId, tmpGoods.GoodsId)
@@ -913,6 +930,17 @@ BEGIN
                                  ON ObjectLink_Goods_ConditionsKeep.ObjectId = COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)
                                 AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
             LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
+
+            -- получаем GoodsMainId
+            LEFT JOIN  ObjectLink AS ObjectLink_Child 
+                                  ON ObjectLink_Child.ChildObjectId = COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)
+                                 AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+            LEFT JOIN  ObjectLink AS ObjectLink_Main 
+                                  ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+            LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
+                                     ON ObjectBoolean_Goods_SP.ObjectId =ObjectLink_Main.ChildObjectId 
+                                    AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()  
            ;
      RETURN NEXT Cursor1;
 
@@ -969,6 +997,7 @@ BEGIN
                                   ON ObjectLink_Goods_ConditionsKeep.ObjectId = _tmpMI.GoodsId 
                                  AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
              LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
+
 ;
    RETURN NEXT Cursor2;
 
@@ -982,7 +1011,8 @@ ALTER FUNCTION gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 12.11.17         * 
+ 06.04.17         *
+ 12.11.16         * 
  09.09.16         *
  31.08.16         *
  04.08.16         *

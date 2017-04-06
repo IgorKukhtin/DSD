@@ -329,6 +329,15 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Options.Editing = False
             Width = 60
           end
+          object clisSp: TcxGridDBColumn
+            Caption = #1057#1086#1094'. '#1087#1088#1086#1077#1082#1090
+            DataBinding.FieldName = 'isSp'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042' '#1089#1087#1080#1089#1082#1077' '#1087#1088#1086#1077#1082#1090#1072' '#171#1044#1086#1089#1090#1091#1087#1085#1099#1077' '#1083#1077#1082#1072#1088#1089#1090#1074#1072#187
+            Options.Editing = False
+            Width = 60
+          end
         end
       end
       object cxSplitter1: TcxSplitter
