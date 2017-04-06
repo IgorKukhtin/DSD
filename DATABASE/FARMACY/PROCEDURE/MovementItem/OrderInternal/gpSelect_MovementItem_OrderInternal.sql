@@ -235,6 +235,8 @@ BEGIN
            , COALESCE (MIFloat_Price.ValueData,0) ::TFloat          AS Price            -- !!!на самом деле здесь zc_MIFloat_PriceFrom!!!
            , COALESCE (MIFloat_JuridicalPrice.ValueData,0) ::TFloat AS SuperFinalPrice
 
+           , COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) ::TFloat AS PriceOptSP
+
            , tmpMI.MinimumLot            
            , tmpMI.PartionGoodsDate
            , MIString_Comment.ValueData                             AS Comment
@@ -249,7 +251,8 @@ BEGIN
            , tmpMI.MakerName                                        AS MakerName
            
            , COALESCE(MIBoolean_Calculated.ValueData , FALSE)       AS isCalculated--
-           , CASE WHEN tmpMI.PartionGoodsDate < vbDate180 THEN zc_Color_Blue() --456
+           , CASE WHEN Object_Goods.isSP = TRUE THEN 25088 --zc_Color_GreenL()   --товар соц.проекта
+                  WHEN tmpMI.PartionGoodsDate < vbDate180 THEN zc_Color_Blue() --456
                   WHEN tmpMI.isTOP = TRUE OR tmpMI.isUnitTOP = TRUE  THEN 15993821 -- 16440317    -- для топ розовый шрифт
                      ELSE 0
                 END                                                 AS PartionGoodsDateColor   
@@ -334,6 +337,9 @@ BEGIN
                                 AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
             LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId         
 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
+                                  ON ObjectFloat_Goods_PriceOptSP.ObjectId = Object_Goods.GoodsMainId
+                                 AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP() 
         /*    -- получаем GoodsMainId
             LEFT JOIN  ObjectLink AS ObjectLink_Child 
                                   ON ObjectLink_Child.ChildObjectId = Object_Goods.Id
@@ -753,8 +759,11 @@ BEGIN
            , tmpMI.ContractName
            , tmpMI.MakerName 
            , tmpMI.SuperFinalPrice 
-           , COALESCE(tmpMI.isCalculated, FALSE)                    AS isCalculated
-           , CASE WHEN tmpMI.PartionGoodsDate < vbDate180 THEN zc_Color_Blue() --456
+           , COALESCE (tmpMI.PriceOptSP,tmpGoods.PriceOptSP) ::TFloat AS PriceOptSP
+          -- , CASE WHEN COALESCE (tmpMI.PriceOptSP,tmpGoods.PriceOptSP)
+           , COALESCE(tmpMI.isCalculated, FALSE)                      AS isCalculated
+           , CASE WHEN COALESCE(tmpMI.isSP, tmpGoods.isSp) = TRUE THEN 25088 --zc_Color_GreenL()   --товар соц.проекта
+                  WHEN tmpMI.PartionGoodsDate < vbDate180 THEN zc_Color_Blue() --456
                   WHEN (COALESCE (tmpMI.Goods_isTOP, tmpGoods.Goods_isTOP)= TRUE OR COALESCE (Object_Price_View.isTOP, False)= TRUE) THEN 15993821 -- 16440317    -- для топ розовый шрифт
                      ELSE 0
                 END AS PartionGoodsDateColor   
@@ -784,7 +793,7 @@ BEGIN
            , OrderSheduleList.OperDate_Dostavka ::TVarChar AS OperDate_Dostavka
 
            , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
-
+           
 --, (select count (*) from OrderSheduleList) ::TVarChar AS OperDate_Dostavka
            
        FROM (SELECT Object_Goods.Id                              AS GoodsId
@@ -802,8 +811,13 @@ BEGIN
                   , Object_Goods.isFirst                         AS isFirst
                   , Object_Goods.isSecond                        AS isSecond
                   , Object_Goods.isSP
+                  , COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) ::TFloat AS PriceOptSP
              FROM Object_Goods_View AS Object_Goods
                   LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = Object_Goods.Id
+
+                  LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
+                                        ON ObjectFloat_Goods_PriceOptSP.ObjectId = Object_Goods.GoodsMainId
+                                       AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP() 
              WHERE inShowAll = TRUE
                AND Object_Goods.ObjectId = vbObjectId
                AND Object_Goods.isErased = FALSE
@@ -851,7 +865,7 @@ BEGIN
                             , MIFloat_AmountManual.ValueData                                   AS AmountManual
                             , MovementItem.isErased
                             , Object_Goods.isSP
-                               
+                            , COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0)     ::TFloat AS PriceOptSP
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.DescId     = zc_MI_Master()
@@ -908,7 +922,12 @@ BEGIN
                                                         AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()  
                        LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountManual
                                                          ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()  
+                                                        AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual() 
+                      --
+                      LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
+                                            ON ObjectFloat_Goods_PriceOptSP.ObjectId = Object_Goods.GoodsMainId
+                                           AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP() 
+ 
                       ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
             LEFT JOIN Object_Price_View ON COALESCE(tmpMI.GoodsId,tmpGoods.GoodsId) = Object_Price_View.GoodsId
                                        AND Object_Price_View.UnitId = vbUnitId

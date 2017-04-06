@@ -390,6 +390,17 @@ inherited OrderInternalForm: TOrderInternalForm
           inherited colIsErased: TcxGridDBColumn
             VisibleForCustomization = False
           end
+          object PriceOptSP: TcxGridDBColumn
+            Caption = #1054#1087#1090#1086#1074#1086'- '#1074#1110#1076#1087#1091#1089#1082#1085#1072' '#1094#1110#1085#1072' '#1079#1072' '#1091#1087#1072#1082#1086#1074#1082#1091', '#1075#1088#1085' (11)'
+            DataBinding.FieldName = 'PriceOptSP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
           object colisSp: TcxGridDBColumn
             Caption = #1057#1086#1094'. '#1087#1088#1086#1077#1082#1090
             DataBinding.FieldName = 'isSp'
