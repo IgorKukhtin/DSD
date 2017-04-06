@@ -6,16 +6,17 @@ CREATE OR REPLACE FUNCTION gpSelectMobile_Object_Juridical (
     IN inSyncDateIn TDateTime, -- Дата/время последней синхронизации - когда "успешно" загружалась входящая информация - актуальные справочники, цены, акции, долги, остатки и т.д
     IN inSession    TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id         Integer
-             , ObjectCode Integer  -- Код
-             , ValueData  TVarChar -- Название
-             , GUID       TVarChar -- Глобальный уникальный идентификатор. Для синхронизации с Главной БД
-             , DebtSum    TFloat   -- Сумма долга (нам) - БН - т.к. БН долг формируется только в разрезе Юр Лиц + договоров
-             , OverSum    TFloat   -- Сумма просроченного долга (нам) - БН - Просрочка наступает спустя определенное кол-во дней
-             , OverDays   Integer  -- Кол-во дней просрочки (нам)
-             , ContractId Integer  -- Договор - все возможные договора...
-             , isErased   Boolean  -- Удаленный ли элемент
-             , isSync     Boolean  -- Синхронизируется (да/нет)
+RETURNS TABLE (Id               Integer
+             , ObjectCode       Integer  -- Код
+             , ValueData        TVarChar -- Название
+             , GUID             TVarChar -- Глобальный уникальный идентификатор. Для синхронизации с Главной БД
+             , DebtSum          TFloat   -- Сумма долга (нам) - БН - т.к. БН долг формируется только в разрезе Юр Лиц + договоров
+             , OverSum          TFloat   -- Сумма просроченного долга (нам) - БН - Просрочка наступает спустя определенное кол-во дней
+             , OverDays         Integer  -- Кол-во дней просрочки (нам)
+             , ContractId       Integer  -- Договор - все возможные договора...
+             , JuridicalGroupId Integer  -- Группы юридических лиц
+             , isErased         Boolean  -- Удаленный ли элемент
+             , isSync           Boolean  -- Синхронизируется (да/нет)
               )
 AS 
 $BODY$
@@ -126,6 +127,7 @@ BEGIN
                   , COALESCE (tmpDebt.OverSum, 0.0)::TFloat AS OverSum
                   , COALESCE (tmpDebt.OverDays, 0)::Integer AS OverDays
                   , ObjectLink_Contract_Juridical.ObjectId  AS ContractId
+                  , ObjectLink_Juridical_JuridicalGroup.ChildObjectId AS JuridicalGroupId
                   , Object_Juridical.isErased
                   , CAST(true AS Boolean) AS isSync
              FROM Object AS Object_Juridical
@@ -138,6 +140,9 @@ BEGIN
                   LEFT JOIN ObjectString AS ObjectString_Juridical_GUID
                                          ON ObjectString_Juridical_GUID.ObjectId = Object_Juridical.Id
                                         AND ObjectString_Juridical_GUID.DescId = zc_ObjectString_Juridical_GUID()
+                  LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                                       ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
+                                      AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
              WHERE Object_Juridical.DescId = zc_Object_Juridical()
                AND NOT Object_Juridical.isErased;
       END IF;
