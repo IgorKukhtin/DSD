@@ -1,19 +1,20 @@
 -- Function: gpInsertUpdateMobile_Object_Juridical
 
 DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Object_Juridical (Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Object_Juridical (Integer, TVarChar, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_Object_Juridical (
- INOUT ioId      Integer  , -- ключ объекта <Юридическое лицо>
-    IN inGUID    TVarChar , -- Глобальный уникальный идентификатор
-    IN inName    TVarChar , -- Название объекта <Юридическое лицо>
-    IN inSession TVarChar   -- сессия пользователя
+ INOUT ioId               Integer  , -- ключ объекта <Юридическое лицо>
+    IN inGUID             TVarChar , -- Глобальный уникальный идентификатор
+    IN inName             TVarChar , -- Название объекта <Юридическое лицо>
+    -- IN inJuridicalGroupId Integer  , -- Группа юридических лиц
+    IN inSession          TVarChar   -- сессия пользователя
 )
 RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbId Integer;
-   DECLARE vbPriceListId_def Integer;
 BEGIN
       
       -- проверка прав пользователя на вызов процедуры
@@ -25,8 +26,6 @@ BEGIN
            RAISE EXCEPTION 'Ошибка. Не задан глобальный уникальный идентификатор';
       END IF;
    
-      vbPriceListId_def:= (SELECT PriceListId_def FROM gpGetMobile_Object_Const (inSession));
-
       -- ищем юр. лицо по значению глобального уникального идентификатора
       SELECT ObjectString_Juridical_GUID.ObjectId
       INTO vbId
@@ -38,25 +37,25 @@ BEGIN
         AND ObjectString_Juridical_GUID.ValueData = inGUID;
 
       -- сохраняем юр. лицо
-      ioId:= gpInsertUpdate_Object_Juridical (ioId               := COALESCE (vbId, 0) -- ключ объекта <Юридическое лицо>
-                                            , inCode             := 0                  -- свойство <Код Юридического лица>
-                                            , inName             := inName             -- Название объекта <Юридическое лицо>
-                                            , inGLNCode          := NULL               -- Код GLN
-                                            , inisCorporate      := false              -- Признак наша ли собственность это юридическое лицо
-                                            , inisTaxSummary     := false              -- Признак сводная налоговая
-                                            , inisDiscountPrice  := false              -- Печать в накладной цену со скидкой
-                                            , inisPriceWithVAT   := false              -- Печать в накладной цену с НДС (да/нет)
-                                            , inDayTaxSummary    := 0                  -- Кол-во дней для сводной налоговой
-                                            , inJuridicalGroupId := 8362               -- Группы юридических лиц (03-ПОКУПАТЕЛИ)
-                                            , inGoodsPropertyId  := 0                  -- Классификаторы свойств товаров
-                                            , inRetailId         := 0                  -- Торговая сеть
-                                            , inRetailReportId   := 0                  -- Торговая сеть(отчет)
-                                            , inInfoMoneyId      := 30502              -- Статьи назначения (Прочие товары)
-                                            , inPriceListId      := vbPriceListId_def  -- Прайс-лист
-                                            , inPriceListPromoId := 0                  -- Прайс-лист(Акционный)
-                                            , inStartPromo       := NULL               -- Дата начала акции
-                                            , inEndPromo         := NULL               -- Дата окончания акции
-                                            , inSession          := inSession          -- текущий пользователь
+      ioId:= gpInsertUpdate_Object_Juridical (ioId               := COALESCE (vbId, 0)        -- ключ объекта <Юридическое лицо>
+                                            , inCode             := 0                         -- свойство <Код Юридического лица>
+                                            , inName             := inName                    -- Название объекта <Юридическое лицо>
+                                            , inGLNCode          := NULL                      -- Код GLN
+                                            , inisCorporate      := false                     -- Признак наша ли собственность это юридическое лицо
+                                            , inisTaxSummary     := false                     -- Признак сводная налоговая
+                                            , inisDiscountPrice  := false                     -- Печать в накладной цену со скидкой
+                                            , inisPriceWithVAT   := false                     -- Печать в накладной цену с НДС (да/нет)
+                                            , inDayTaxSummary    := 0                         -- Кол-во дней для сводной налоговой
+                                            , inJuridicalGroupId := 8362                      -- Группы юридических лиц (03-ПОКУПАТЕЛИ)
+                                            , inGoodsPropertyId  := 0                         -- Классификаторы свойств товаров
+                                            , inRetailId         := 0                         -- Торговая сеть
+                                            , inRetailReportId   := 0                         -- Торговая сеть(отчет)
+                                            , inInfoMoneyId      := zc_Enum_InfoMoney_30101() -- Статьи назначения (Готовая продукция)
+                                            , inPriceListId      := 0                         -- Прайс-лист
+                                            , inPriceListPromoId := 0                         -- Прайс-лист(Акционный)
+                                            , inStartPromo       := NULL                      -- Дата начала акции
+                                            , inEndPromo         := NULL                      -- Дата окончания акции
+                                            , inSession          := inSession                 -- текущий пользователь
                                              );
 
       -- сохранили свойство <Глобальный уникальный идентификатор>
