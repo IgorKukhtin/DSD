@@ -208,7 +208,8 @@ BEGIN
                , Object_Price_View.PercentMarkup           AS PercentMarkup
                , Object_Price_View.PercentMarkupDateChange AS PercentMarkupDateChange
                
-               , CASE WHEN Object_Remains.MinExpirationDate < CURRENT_DATE  + zc_Interval_ExpirationDate() THEN zc_Color_Blue() 
+               , CASE WHEN Object_Goods.isSP = TRUE THEN 25088 --zc_Color_GreenL()
+                      WHEN Object_Remains.MinExpirationDate < CURRENT_DATE  + zc_Interval_ExpirationDate() THEN zc_Color_Blue() 
                       WHEN (Object_Price_View.isTop = TRUE OR Object_Goods_View.isTop = TRUE) THEN 15993821 -- розовый
                       ELSE zc_Color_Black() 
                  END     AS Color_ExpirationDate                --vbAVGDateEnd
@@ -358,7 +359,8 @@ BEGIN
                , Object_Price_View.PercentMarkup           AS PercentMarkup
                , Object_Price_View.PercentMarkupDateChange AS PercentMarkupDateChange
 
-               , CASE WHEN Object_Remains.MinExpirationDate < CURRENT_DATE  + zc_Interval_ExpirationDate() THEN zc_Color_Blue() 
+               , CASE WHEN Object_Goods_View.isSP = TRUE THEN 25088 --zc_Color_GreenL()
+                      WHEN Object_Remains.MinExpirationDate < CURRENT_DATE  + zc_Interval_ExpirationDate() THEN zc_Color_Blue() 
                       WHEN (Object_Price_View.isTop = TRUE OR Object_Goods_View.isTop = TRUE) THEN 15993821 -- розовый
                       ELSE zc_Color_Black() 
                  END      AS Color_ExpirationDate                --vbAVGDateEnd

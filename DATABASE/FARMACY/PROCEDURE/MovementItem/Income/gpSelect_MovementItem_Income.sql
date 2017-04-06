@@ -129,11 +129,11 @@ BEGIN
                           , Object_Goods.GoodsCodeInt AS GoodsCode
                           , Object_Goods.GoodsName    AS GoodsName
                           , Object_Goods.isTop            AS Goods_isTop
-                          , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
+                          , Object_Goods.isSP             AS isSP
                           , Object_Goods.PercentMarkup    AS Goods_PercentMarkup
                           , Object_Goods.Price            AS Goods_Price
                      FROM Object_Goods_View AS Object_Goods
-                          -- получаем GoodsMainId
+                     /*     -- получаем GoodsMainId
                           LEFT JOIN  ObjectLink AS ObjectLink_Child 
                                                 ON ObjectLink_Child.ChildObjectId = Object_Goods.Id
                                                AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
@@ -143,7 +143,7 @@ BEGIN
 
                          LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
                                                   ON ObjectBoolean_Goods_SP.ObjectId =ObjectLink_Main.ChildObjectId 
-                                                 AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+                                                 AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()*/
                      WHERE Object_Goods.isErased = FALSE 
                        AND Object_Goods.ObjectId = vbObjectId
                      )
@@ -383,7 +383,8 @@ BEGIN
               , tmpGoods.Goods_isTop          ::Boolean
               , tmpGoods.Goods_PercentMarkup  ::TFloat 
               , tmpGoods.Goods_Price          ::TFloat 
-              , CASE WHEN (tmpPrice.isTop = TRUE OR tmpGoods.Goods_isTop = TRUE) THEN 15993821 -- розовый 16440317 
+              , CASE WHEN tmpGoods.isSP = TRUE THEN 25088
+                     WHEN (tmpPrice.isTop = TRUE OR tmpGoods.Goods_isTop = TRUE) THEN 15993821 -- розовый 16440317 
                      ELSE zc_Color_Black()
                 END        AS Color_ExpirationDate               --zc_Color_Blue 
 
@@ -470,7 +471,8 @@ BEGIN
               , ObjectFloat_Goods_PercentMarkup.ValueData          ::TFloat  AS Goods_PercentMarkup  
               , ObjectFloat_Goods_Price.ValueData                  ::TFloat  AS Goods_Price          
 
-              , CASE WHEN (tmpPrice.isTop = TRUE OR ObjectBoolean_Goods_TOP.ValueData = TRUE) THEN 15993821 -- розовый 16440317
+              , CASE WHEN tmpGoods.isSP = TRUE THEN 25088  -- зеленый green выделяем товары соц проекта
+                     WHEN (tmpPrice.isTop = TRUE OR ObjectBoolean_Goods_TOP.ValueData = TRUE) THEN 15993821 -- розовый 16440317
                      WHEN MovementItem.ExpirationDate < CURRENT_DATE + zc_Interval_ExpirationDate() THEN zc_Color_Blue() 
                      WHEN MovementItem.GoodsId Is Null THEN zc_Color_Warning_Red()                -- перенесла результат WarningColor , т.к. две колонки с цветом фона быть не может
                      WHEN Object_PartnerGoods.GoodsCode IS NULL THEN zc_Color_Warning_Navy()      -- перенесла результат WarningColor , т.к. две колонки с цветом фона быть не может
@@ -768,7 +770,8 @@ BEGIN
               , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false) ::Boolean AS Goods_isTop          
               , ObjectFloat_Goods_PercentMarkup.ValueData          ::TFloat  AS Goods_PercentMarkup  
               , ObjectFloat_Goods_Price.ValueData                  ::TFloat  AS Goods_Price   
-              , CASE WHEN (tmpPrice.isTop = TRUE OR ObjectBoolean_Goods_TOP.ValueData = TRUE) THEN 15993821 -- розовый 16440317
+              , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE THEN 25088  -- зеленый green выделяем товары соц проекта
+                     WHEN (tmpPrice.isTop = TRUE OR ObjectBoolean_Goods_TOP.ValueData = TRUE) THEN 15993821 -- розовый 16440317
                      WHEN MovementItem.ExpirationDate < CURRENT_DATE + zc_Interval_ExpirationDate() THEN zc_Color_Blue() 
                      WHEN MovementItem.GoodsId Is Null THEN zc_Color_Warning_Red()                -- перенесла результат WarningColor , т.к. две колонки с цветом фона быть не может
                      WHEN ObjectString_Code.ValueData IS NULL THEN zc_Color_Warning_Navy()      -- перенесла результат WarningColor , т.к. две колонки с цветом фона быть не может

@@ -650,6 +650,7 @@ inherited OrderInternalForm: TOrderInternalForm
       Top = 22
       Properties.SaveTime = False
       Properties.ShowTime = False
+      Style.TextColor = 25088
       ExplicitLeft = 238
       ExplicitTop = 22
     end

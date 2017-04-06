@@ -1,10 +1,11 @@
 -- View: Object_Goods_View
 
-DROP VIEW IF EXISTS Object_Goods_View CASCADE;
+--DROP VIEW IF EXISTS Object_Goods_View CASCADE;
 
 CREATE OR REPLACE VIEW Object_Goods_View AS
          SELECT 
              ObjectLink_Goods_Object.ObjectId                 AS Id
+           , ObjectLink_Main.ChildObjectId                    AS GoodsMainId
            , Object_Goods.ObjectCode                          AS GoodsCodeInt
            , ObjectString.ValueData                           AS GoodsCode
            , Object_Goods.ValueData                           AS GoodsName
@@ -27,6 +28,7 @@ CREATE OR REPLACE VIEW Object_Goods_View AS
            , ObjectFloat_Goods_PercentMarkup.ValueData        AS PercentMarkup
            , ObjectFloat_Goods_Price.ValueData                AS Price
            , COALESCE(ObjectBoolean_Goods_IsUpload.ValueData,FALSE) AS IsUpload 
+           , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
        FROM ObjectLink AS ObjectLink_Goods_Object
 
             LEFT JOIN Object AS Object_Goods 
@@ -92,6 +94,17 @@ CREATE OR REPLACE VIEW Object_Goods_View AS
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_IsUpload
                                 ON ObjectBoolean_Goods_IsUpload.ObjectId = ObjectLink_Goods_Object.ObjectId 
                                AND ObjectBoolean_Goods_IsUpload.DescId = zc_ObjectBoolean_Goods_IsUpload()   
+
+        -- получаем GoodsMainId
+        LEFT JOIN  ObjectLink AS ObjectLink_Child 
+                              ON ObjectLink_Child.ChildObjectId = ObjectLink_Goods_Object.ObjectId
+                             AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+        LEFT JOIN  ObjectLink AS ObjectLink_Main 
+                              ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                             AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+        LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
+                                 ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP() 
 
     WHERE ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object();
 

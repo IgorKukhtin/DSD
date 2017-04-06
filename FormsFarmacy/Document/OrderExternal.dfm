@@ -177,6 +177,12 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 92
           end
+          object clCalc_Color: TcxGridDBColumn
+            DataBinding.FieldName = 'Calc_Color'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 60
+          end
         end
       end
       object cxGridExport: TcxGrid
@@ -785,6 +791,11 @@ inherited OrderExternalForm: TOrderExternalForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        ValueColumn = clCalc_Color
+        ColorValueList = <>
+      end>
     SummaryItemList = <
       item
         Param.Value = Null

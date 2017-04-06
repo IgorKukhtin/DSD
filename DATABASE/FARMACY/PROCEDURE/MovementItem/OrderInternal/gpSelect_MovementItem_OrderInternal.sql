@@ -219,9 +219,11 @@ BEGIN
            , tmpMI.isClose
            , tmpMI.isFirst
            , tmpMI.isSecond
-           , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
+           , Object_Goods.isSP                           :: Boolean  AS isSP
 
-           , CASE WHEN tmpMI.isTOP = TRUE
+           , CASE WHEN Object_Goods.isSP = TRUE 
+                   THEN 25088 --zc_Color_GreenL()
+                  WHEN tmpMI.isTOP = TRUE
                     OR tmpMI.isUnitTOP = TRUE
                   THEN 16440317         --12615935                                          ---16440317  - розовый как в приходе ELSE zc_Color_White()
                   ELSE zc_Color_White() --0
@@ -332,7 +334,7 @@ BEGIN
                                 AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
             LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId         
 
-            -- получаем GoodsMainId
+        /*    -- получаем GoodsMainId
             LEFT JOIN  ObjectLink AS ObjectLink_Child 
                                   ON ObjectLink_Child.ChildObjectId = Object_Goods.Id
                                  AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
@@ -341,7 +343,7 @@ BEGIN
                                  AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
             LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
                                      ON ObjectBoolean_Goods_SP.ObjectId =ObjectLink_Main.ChildObjectId 
-                                    AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()  
+                                    AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()  */
            ;
 
      RETURN NEXT Cursor1;
@@ -725,10 +727,12 @@ BEGIN
            , COALESCE(tmpMI.isClose, tmpGoods.isClose)               AS isClose
            , COALESCE(tmpMI.isFirst, tmpGoods.isFirst)               AS isFirst
            , COALESCE(tmpMI.isSecond, tmpGoods.isSecond)             AS isSecond
-           , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
-           , CASE WHEN COALESCE (tmpMI.Goods_isTOP, tmpGoods.Goods_isTOP) = TRUE
+           , COALESCE(tmpMI.isSP, tmpGoods.isSp)         :: Boolean  AS isSP
+           , CASE WHEN COALESCE(tmpMI.isSP, tmpGoods.isSp) = TRUE 
+                   THEN 25088 --zc_Color_GreenL()
+                  WHEN COALESCE (tmpMI.Goods_isTOP, tmpGoods.Goods_isTOP) = TRUE
                     OR COALESCE (Object_Price_View.isTOP, False) = TRUE
-                  THEN 16440317         --12615935                                                      --16440317  - розовый как в приходе ELSE zc_Color_White()
+                   THEN 16440317         --12615935                                                      --16440317  - розовый как в приходе ELSE zc_Color_White()
                   ELSE zc_Color_White() --0
              END                                                    AS isTopColor
            , COALESCE(tmpMI.Multiplicity, tmpGoods.Multiplicity)    AS Multiplicity
@@ -797,6 +801,7 @@ BEGIN
                   , Object_Goods.isClose                         AS isClose
                   , Object_Goods.isFirst                         AS isFirst
                   , Object_Goods.isSecond                        AS isSecond
+                  , Object_Goods.isSP
              FROM Object_Goods_View AS Object_Goods
                   LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = Object_Goods.Id
              WHERE inShowAll = TRUE
@@ -845,6 +850,7 @@ BEGIN
                                * COALESCE(Object_Goods.MinimumLot, 1)                          AS CalcAmountAll
                             , MIFloat_AmountManual.ValueData                                   AS AmountManual
                             , MovementItem.isErased
+                            , Object_Goods.isSP
                                
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -931,7 +937,7 @@ BEGIN
                                 AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
             LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
-            -- получаем GoodsMainId
+            /*-- получаем GoodsMainId
             LEFT JOIN  ObjectLink AS ObjectLink_Child 
                                   ON ObjectLink_Child.ChildObjectId = COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)
                                  AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
@@ -940,7 +946,7 @@ BEGIN
                                  AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
             LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
                                      ON ObjectBoolean_Goods_SP.ObjectId =ObjectLink_Main.ChildObjectId 
-                                    AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()  
+                                    AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()  */
            ;
      RETURN NEXT Cursor1;
 
