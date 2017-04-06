@@ -34,7 +34,7 @@ BEGIN
 
    -- поиск <Торговой сети>
    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
-
+/*
    -- !!!для Админа!!!
    IF (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
    THEN
@@ -120,15 +120,6 @@ BEGIN
                              AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
          LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId 
 
-        -- получается GoodsMainId
-       /* LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods_View.Id --Object_Goods.Id
-                                                 AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
-        LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-
-        LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
-                                 ON ObjectBoolean_Goods_SP.ObjectId =ObjectLink_Main.ChildObjectId 
-                                AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()*/
         -- условия хранения
         LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
                              ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
@@ -142,6 +133,7 @@ BEGIN
    ELSE
 
    -- для остальных...
+*/
 
    RETURN QUERY 
   -- Маркетинговый контракт
@@ -244,7 +236,7 @@ BEGIN
         LEFT JOIN tmpLoadPriceList ON tmpLoadPriceList.MainGoodsId = Object_Goods_View.GoodsMainId --ObjectLink_Main.ChildObjectId
     WHERE Object_Goods_View.ObjectId = vbObjectId;
 
-   END IF;
+  -- END IF;
   
 END;
 $BODY$
