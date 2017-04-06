@@ -8,6 +8,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP (Integer, Boolean, TFloat,
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP (Integer, Boolean, TFloat, TFloat,  TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                      , TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP (Integer, Boolean, TFloat, TFloat,  TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsSP(
     IN inId                  Integer   ,    -- ключ объекта <Товар> MainID
@@ -20,10 +22,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsSP(
     IN inPriceOptSP          TFloat    ,    -- 
     IN inPriceRetSP          TFloat    ,    -- 
     IN inDailyNormSP         TFloat    ,    -- 
-    IN inDailyСompensationSP TFloat    ,    -- 
+    IN inDailyCompensationSP TFloat    ,    -- 
     IN inPaymentSP           TFloat    ,    -- 
-    IN inDateReestrSP        TDateTime ,    -- 
 
+    IN inDateReestrSP        TVarChar  ,    -- 
     IN inPack                TVarChar  ,    -- дозування
     IN inIntenalSPName       TVarChar  ,    -- Міжнародна непатентована назва (Соц. проект)
     IN inBrandSPName         TVarChar  ,    -- Торговельна назва лікарського засобу (Соц. проект)
@@ -141,7 +143,7 @@ BEGIN
     -- сохранили свойство <>
     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_DailyNormSP(), inId, inDailyNormSP);
     -- сохранили свойство <>
-    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_DailyСompensationSP(), inId, inDailyСompensationSP);
+    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_DailyCompensationSP(), inId, inDailyCompensationSP);
     -- сохранили свойство <>
     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_PaymentSP(), inId, inPaymentSP);
     -- сохранили свойство <>
@@ -155,7 +157,7 @@ BEGIN
     PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_MakerSP(), inId, inMakerSP); 
 
     -- сохранили свойство <>
-    PERFORM lpInsertUpdate_ObjectDate(zc_ObjectDate_Goods_ReestrSP(), inId, inDateReestrSP);
+    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_ReestrDateSP(), inId, inDateReestrSP);
 
 
     -- сохранили протокол

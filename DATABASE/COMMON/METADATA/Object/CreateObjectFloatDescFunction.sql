@@ -649,7 +649,7 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_DailyNormSP() RETURNS Integer AS
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_object_Goods(),'zc_ObjectFloat_Goods_DailyNormSP', 'Добова доза лікарського засобу, рекомендована ВООЗ(Соц. проект)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_DailyNormSP');
 
-CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_DailyСompensationSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_DailyСompensationSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_DailyCompensationSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_DailyСompensationSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_object_Goods(),'zc_ObjectFloat_Goods_DailyСompensationSP', 'Розмір відшкодування добової дози лікарського засобу, грн(Соц. проект)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_DailyСompensationSP');
 

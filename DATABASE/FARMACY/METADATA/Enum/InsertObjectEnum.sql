@@ -1346,6 +1346,7 @@ BEGIN
 END $$;
 
 
+
 --Загрузчик Данные по Соц.проекту
 DO $$
 DECLARE vbImportTypeId Integer;
@@ -1378,7 +1379,7 @@ BEGIN
                                                               inImportTypeId := vbImportTypeId,
                                                               inEmailId      := (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_Email()),
                                                               inContactPersonId:= (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_ContactPerson()),
-                                                              inStartRow     := 2,
+                                                              inStartRow     := 3,
                                                               inHDR          := False,
                                                               inDirectory    := NULL::TVarChar,
                                                               inQuery        := NULL::TVarChar,
@@ -1407,7 +1408,7 @@ BEGIN
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := vbUserId::TVarChar);
-    vbImportTypeItemId := 0;
+   /* vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inName';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
                                                                 inParamNumber   := 2, 
@@ -1424,11 +1425,12 @@ BEGIN
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := vbUserId::TVarChar);    
+*/
 
 vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inPriceSP';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 3, 
+                                                                inParamNumber   := 2, 
                                                                 inName          := 'inPriceSP', 
                                                                 inParamType     := 'ftFloat', 
                                                                 inUserParamName := 'Розмір відшкодування за упаковку(15)', 
@@ -1464,7 +1466,7 @@ vbImportTypeItemId := 0;
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inCountSP';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 4, 
+                                                                inParamNumber   := 3, 
                                                                 inName          := 'inCountSP', 
                                                                 inParamType     := 'ftFloat', 
                                                                 inUserParamName := 'Кількість одиниць лікарського засобу(6)', 
@@ -1482,7 +1484,7 @@ vbImportTypeItemId := 0;
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inColSP';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 5, 
+                                                                inParamNumber   := 4, 
                                                                 inName          := 'inColSP', 
                                                                 inParamType     := 'ftFloat', 
                                                                 inUserParamName := '№ п.п.(1)', 
@@ -1499,7 +1501,7 @@ vbImportTypeItemId := 0;
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inPriceOptSP';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 6, 
+                                                                inParamNumber   := 5, 
                                                                 inName          := 'inPriceOptSP', 
                                                                 inParamType     := 'ftFloat', 
                                                                 inUserParamName := 'Оптово-відпускна ціна за упаковку(11)', 
@@ -1516,7 +1518,7 @@ vbImportTypeItemId := 0;
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inPriceRetSP';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 7, 
+                                                                inParamNumber   := 6, 
                                                                 inName          := 'inPriceRetSP', 
                                                                 inParamType     := 'ftFloat', 
                                                                 inUserParamName := 'Роздрібна ціна за упаковку (12)', 
@@ -1533,7 +1535,7 @@ vbImportTypeItemId := 0;
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inDailyNormSP';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 8, 
+                                                                inParamNumber   := 7, 
                                                                 inName          := 'inDailyNormSP', 
                                                                 inParamType     := 'ftFloat', 
                                                                 inUserParamName := 'Добова доза лікарського засобу, рекомендована ВООЗ(13)', 
@@ -1548,10 +1550,10 @@ vbImportTypeItemId := 0;
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := vbUserId::TVarChar);
     vbImportTypeItemId := 0;
-    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inDailyСompensationSP';
+    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inDailyCompensationSP';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 9, 
-                                                                inName          := 'inDailyСompensationSP', 
+                                                                inParamNumber   := 8, 
+                                                                inName          := 'inDailyCompensationSP', 
                                                                 inParamType     := 'ftFloat', 
                                                                 inUserParamName := 'Розмір відшкодування добової дози лікарського засобу, грн(14)', 
                                                                 inImportTypeId  := vbImportTypeId, 
@@ -1567,7 +1569,7 @@ vbImportTypeItemId := 0;
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inPaymentSP';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 10, 
+                                                                inParamNumber   := 9, 
                                                                 inName          := 'inPaymentSP', 
                                                                 inParamType     := 'ftFloat', 
                                                                 inUserParamName := 'Сума доплати за упаковку, грн(16)', 
@@ -1584,9 +1586,9 @@ vbImportTypeItemId := 0;
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inDateReestrSP';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 11, 
+                                                                inParamNumber   := 10, 
                                                                 inName          := 'inDateReestrSP', 
-                                                                inParamType     := 'ftDateTime', 
+                                                                inParamType     := 'ftString', 
                                                                 inUserParamName := 'Дата закінчення строку дії реєстраційного посвідчення на лікарський засіб(10)', 
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := vbUserId::TVarChar);
@@ -1602,7 +1604,7 @@ vbImportTypeItemId := 0;
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inPack';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 12, 
+                                                                inParamNumber   := 11, 
                                                                 inName          := 'inPack', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Сила дії (дозування)(5)', 
@@ -1620,7 +1622,7 @@ vbImportTypeItemId := 0;
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inIntenalSPName';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 13, 
+                                                                inParamNumber   := 12, 
                                                                 inName          := 'inIntenalSPName', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Міжнародна непатентована назва(2)', 
@@ -1637,7 +1639,7 @@ vbImportTypeItemId := 0;
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inBrandSPName';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 14, 
+                                                                inParamNumber   := 13, 
                                                                 inName          := 'inBrandSPName', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Торг. назва лікарського засобу(3)', 
@@ -1654,7 +1656,7 @@ vbImportTypeItemId := 0;
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inKindOutSPName';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 15, 
+                                                                inParamNumber   := 14, 
                                                                 inName          := 'inKindOutSPName', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Форма випуску(4)', 
@@ -1674,7 +1676,7 @@ vbImportTypeItemId := 0;
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inCodeATX';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 16, 
+                                                                inParamNumber   := 15, 
                                                                 inName          := 'inCodeATX', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Код АТХ(7)', 
@@ -1691,7 +1693,7 @@ vbImportTypeItemId := 0;
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inMakerSP';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 17, 
+                                                                inParamNumber   := 16, 
                                                                 inName          := 'inMakerSP', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Найменування виробника, країна(8)', 
@@ -1708,7 +1710,7 @@ vbImportTypeItemId := 0;
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inReestrSP';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 18, 
+                                                                inParamNumber   := 17, 
                                                                 inName          := 'inReestrSP', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Номер реєстраційного посвідчення на лікарський засіб(9)', 

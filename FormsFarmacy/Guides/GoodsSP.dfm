@@ -1,4 +1,4 @@
-﻿object GoodsSPForm: TGoodsSPForm
+object GoodsSPForm: TGoodsSPForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1058#1086#1074#1072#1088#1099' '#1057#1086#1094'. '#1055#1088#1086#1077#1082#1090#1072
@@ -209,9 +209,12 @@
         HeaderAlignmentVert = vaCenter
         Width = 135
       end
-      object DailyСompensationSP: TcxGridDBColumn
+      object DailyCompensationSP: TcxGridDBColumn
         Caption = #1056#1086#1079#1084#1110#1088' '#1074#1110#1076#1096#1082#1086#1076#1091#1074#1072#1085#1085#1103' '#1076#1086#1073#1086#1074#1086#1111' '#1076#1086#1079#1080' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091', '#1075#1088#1085' (14)'
-        DataBinding.FieldName = 'Daily'#1057'ompensationSP'
+        DataBinding.FieldName = 'DailyCompensationSP'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####; ; '
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 111
@@ -220,7 +223,8 @@
         Caption = #1056#1086#1079#1084#1110#1088' '#1074#1110#1076#1096#1082#1086#1076#1091#1074#1072#1085#1085#1103' '#1079#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091', '#1075#1088#1085' (15)'
         DataBinding.FieldName = 'PriceSP'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.##; ; '
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####; ; '
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 103
@@ -228,6 +232,9 @@
       object PaymentSP: TcxGridDBColumn
         Caption = #1057#1091#1084#1072' '#1076#1086#1087#1083#1072#1090#1080' '#1079#1072' '#1091#1087#1072#1082#1086#1074#1082#1091', '#1075#1088#1085' (16)'
         DataBinding.FieldName = 'PaymentSP'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####; ; '
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -914,10 +921,10 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDaily'#1057'ompensationSP'
+        Name = 'inDailyCompensationSP'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'Daily'#1057'ompensationSP'
+        ComponentItem = 'DailyCompensationSP'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -936,7 +943,7 @@
         Value = 'NULL'
         Component = ClientDataSet
         ComponentItem = 'DateReestrSP'
-        DataType = ftDateTime
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
