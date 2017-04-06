@@ -2,7 +2,7 @@ inherited MainCashForm2: TMainCashForm2
   ActiveControl = lcName
   Caption = #1055#1088#1086#1076#1072#1078#1072
   ClientHeight = 415
-  ClientWidth = 1024
+  ClientWidth = 867
   PopupMenu = PopupMenu
   OnCloseQuery = ParentFormCloseQuery
   OnCreate = FormCreate
@@ -11,14 +11,14 @@ inherited MainCashForm2: TMainCashForm2
   OnShow = ParentFormShow
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
-  ExplicitWidth = 1040
-  ExplicitHeight = 453
+  ExplicitWidth = 883
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
     Left = 0
     Top = 219
-    Width = 1024
+    Width = 867
     Height = 196
     Align = alBottom
     BevelOuter = bvNone
@@ -26,7 +26,7 @@ inherited MainCashForm2: TMainCashForm2
     object CheckGrid: TcxGrid
       Left = 0
       Top = 0
-      Width = 770
+      Width = 613
       Height = 196
       Align = alClient
       TabOrder = 0
@@ -118,7 +118,7 @@ inherited MainCashForm2: TMainCashForm2
       end
     end
     object AlternativeGrid: TcxGrid
-      Left = 773
+      Left = 616
       Top = 0
       Width = 251
       Height = 196
@@ -192,7 +192,7 @@ inherited MainCashForm2: TMainCashForm2
       end
     end
     object cxSplitter1: TcxSplitter
-      Left = 770
+      Left = 613
       Top = 0
       Width = 3
       Height = 196
@@ -203,24 +203,24 @@ inherited MainCashForm2: TMainCashForm2
   object cxSplitter2: TcxSplitter [1]
     Left = 0
     Top = 216
-    Width = 1024
+    Width = 867
     Height = 3
     AlignSplitter = salBottom
     Control = BottomPanel
   end
   object MainPanel: TPanel [2]
     Left = 0
-    Top = 35
-    Width = 1024
-    Height = 181
+    Top = 56
+    Width = 867
+    Height = 160
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
     object MainGrid: TcxGrid
       Left = 0
       Top = 0
-      Width = 1024
-      Height = 148
+      Width = 867
+      Height = 127
       Align = alClient
       TabOrder = 0
       object MainGridDBTableView: TcxGridDBTableView
@@ -537,12 +537,6 @@ inherited MainCashForm2: TMainCashForm2
           HeaderHint = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072
           Width = 100
         end
-        object MainColor_ExpirationDate: TcxGridDBColumn
-          DataBinding.FieldName = 'Color_ExpirationDate'
-          Visible = False
-          VisibleForCustomization = False
-          Width = 30
-        end
         object MainConditionsKeepName: TcxGridDBColumn
           Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
           DataBinding.FieldName = 'ConditionsKeepName'
@@ -550,6 +544,19 @@ inherited MainCashForm2: TMainCashForm2
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
           Width = 120
+        end
+        object MainColor_ExpirationDate: TcxGridDBColumn
+          DataBinding.FieldName = 'Color_ExpirationDate'
+          Visible = False
+          VisibleForCustomization = False
+          Width = 30
+        end
+        object MainGoodsGroupName: TcxGridDBColumn
+          Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+          DataBinding.FieldName = 'GoodsGroupName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 95
         end
         object MainAmountIncome: TcxGridDBColumn
           Caption = #1058#1086#1074#1072#1088' '#1074' '#1087#1091#1090#1080
@@ -571,19 +578,17 @@ inherited MainCashForm2: TMainCashForm2
           HeaderHint = #1062#1077#1085#1072' ('#1090#1086#1074#1072#1088' '#1074' '#1087#1091#1090#1080')'
           Width = 80
         end
-        object MainGoodsGroupName: TcxGridDBColumn
-          Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
-          DataBinding.FieldName = 'GoodsGroupName'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 95
-        end
         object MainNDS: TcxGridDBColumn
           Caption = #1053#1044#1057
           DataBinding.FieldName = 'NDS'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 40
+        end
+        object GoodsId_main: TcxGridDBColumn
+          DataBinding.FieldName = 'GoodsId_main'
+          Visible = False
+          Width = 76
         end
       end
       object MainGridLevel: TcxGridLevel
@@ -592,8 +597,8 @@ inherited MainCashForm2: TMainCashForm2
     end
     object SearchPanel: TPanel
       Left = 0
-      Top = 148
-      Width = 1024
+      Top = 127
+      Width = 867
       Height = 33
       Align = alBottom
       TabOrder = 1
@@ -811,8 +816,8 @@ inherited MainCashForm2: TMainCashForm2
   end
   object pnlVIP: TPanel [3]
     Left = 0
-    Top = 0
-    Width = 1024
+    Top = 21
+    Width = 867
     Height = 17
     Align = alTop
     Color = 15656679
@@ -837,7 +842,7 @@ inherited MainCashForm2: TMainCashForm2
     object lblCashMember: TLabel
       Left = 72
       Top = 1
-      Width = 619
+      Width = 462
       Height = 15
       Align = alClient
       Caption = '...'
@@ -851,7 +856,7 @@ inherited MainCashForm2: TMainCashForm2
       ExplicitHeight = 13
     end
     object Label2: TLabel
-      Left = 691
+      Left = 534
       Top = 1
       Width = 64
       Height = 15
@@ -866,7 +871,7 @@ inherited MainCashForm2: TMainCashForm2
       ExplicitHeight = 13
     end
     object lblBayer: TLabel
-      Left = 755
+      Left = 598
       Top = 1
       Width = 268
       Height = 15
@@ -884,8 +889,8 @@ inherited MainCashForm2: TMainCashForm2
   end
   object pnlDiscount: TPanel [4]
     Left = 0
-    Top = 17
-    Width = 1024
+    Top = 38
+    Width = 867
     Height = 18
     Align = alTop
     Color = 15656679
@@ -910,7 +915,7 @@ inherited MainCashForm2: TMainCashForm2
     object lblDiscountExternalName: TLabel
       Left = 56
       Top = 1
-      Width = 635
+      Width = 478
       Height = 16
       Align = alClient
       Caption = '...'
@@ -924,7 +929,7 @@ inherited MainCashForm2: TMainCashForm2
       ExplicitHeight = 14
     end
     object Label5: TLabel
-      Left = 691
+      Left = 534
       Top = 1
       Width = 114
       Height = 16
@@ -939,7 +944,7 @@ inherited MainCashForm2: TMainCashForm2
       ExplicitHeight = 13
     end
     object lblDiscountCardNumber: TLabel
-      Left = 805
+      Left = 648
       Top = 1
       Width = 218
       Height = 16
@@ -953,6 +958,36 @@ inherited MainCashForm2: TMainCashForm2
       Font.Style = [fsBold]
       ParentFont = False
       ExplicitLeft = 545
+    end
+  end
+  object Panel1: TPanel [5]
+    Left = 0
+    Top = 0
+    Width = 867
+    Height = 21
+    Align = alTop
+    TabOrder = 5
+    object lbScaner: TLabel
+      Left = 185
+      Top = 2
+      Width = 68
+      Height = 13
+      Caption = #1087#1086#1080#1089#1082' '#1087#1086' '#1064'/'#1050
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object ceScaner: TcxCurrencyEdit
+      Left = 7
+      Top = 0
+      Properties.DisplayFormat = '0'
+      Properties.MaxLength = 13
+      TabOrder = 0
+      OnKeyPress = ceScanerKeyPress
+      Width = 172
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1515,13 +1550,19 @@ inherited MainCashForm2: TMainCashForm2
         ColorValueList = <>
       end
       item
-        ColorColumn = MainAmountIncome
+        ColorColumn = MainConditionsKeepName
         ValueColumn = MainColor_ExpirationDate
         BackGroundValueColumn = mainColor_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = MainConditionsKeepName
+        ColorColumn = MainPriceSaleIncome
+        ValueColumn = MainColor_ExpirationDate
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MainAmountIncome
         ValueColumn = MainColor_ExpirationDate
         BackGroundValueColumn = mainColor_calc
         ColorValueList = <>
@@ -1537,19 +1578,13 @@ inherited MainCashForm2: TMainCashForm2
         ValueColumn = MainColor_ExpirationDate
         BackGroundValueColumn = mainColor_calc
         ColorValueList = <>
-      end
-      item
-        ColorColumn = MainPriceSaleIncome
-        ValueColumn = MainColor_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
-        ColorValueList = <>
       end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
-    Left = 672
-    Top = 72
+    Left = 736
+    Top = 88
   end
   object spSelectRemains: TdsdStoredProc
     StoredProcName = 'gpSelect_CashRemains_ver2'
@@ -1578,8 +1613,8 @@ inherited MainCashForm2: TMainCashForm2
       end>
     PackSize = 1
     AutoWidth = True
-    Left = 152
-    Top = 24
+    Left = 112
+    Top = 64
   end
   object RemainsDS: TDataSource
     DataSet = RemainsCDS
@@ -2032,8 +2067,8 @@ inherited MainCashForm2: TMainCashForm2
     IndexFieldNames = 'Id'
     Params = <>
     StoreDefs = True
-    Left = 232
-    Top = 72
+    Left = 280
+    Top = 96
   end
   object spSelect_CashRemains_Diff: TdsdStoredProc
     StoredProcName = 'gpSelect_CashRemains_Diff_ver2'
@@ -2062,15 +2097,15 @@ inherited MainCashForm2: TMainCashForm2
       end>
     PackSize = 1
     AutoWidth = True
-    Left = 152
-    Top = 72
+    Left = 184
+    Top = 88
   end
   object TimerSaveAll: TTimer
     Enabled = False
     Interval = 360000
     OnTimer = TimerSaveAllTimer
-    Left = 32
-    Top = 40
+    Left = 80
+    Top = 24
   end
   object TimerMoneyInCash: TTimer
     Enabled = False
