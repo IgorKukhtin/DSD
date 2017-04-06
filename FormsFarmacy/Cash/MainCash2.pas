@@ -208,6 +208,15 @@ type
     actOpenCheckVIPError1: TMenuItem;
     spCheck_RemainsError: TdsdStoredProc;
     actShowMessage: TShowMessageAction;
+    MainConditionsKeepName: TcxGridDBColumn;
+    MainGoodsGroupName: TcxGridDBColumn;
+    MainAmountIncome: TcxGridDBColumn;
+    MainPriceSaleIncome: TcxGridDBColumn;
+    MainNDS: TcxGridDBColumn;
+    Panel1: TPanel;
+    ceScaner: TcxCurrencyEdit;
+    lbScaner: TLabel;
+    GoodsId_main: TcxGridDBColumn;    
     MemData: TdxMemData;
     MemDataID: TIntegerField;
     MemDataGOODSCODE: TIntegerField;
@@ -270,6 +279,7 @@ type
     procedure actSetConfirmedKind_UnCompleteExecute(Sender: TObject);
     procedure btnCheckClick(Sender: TObject);
     procedure ParentFormDestroy(Sender: TObject);
+    procedure ceScanerKeyPress(Sender: TObject; var Key: Char); //***10.08.16   
     procedure actAddDiffMemdataExecute(Sender: TObject);
     procedure actSetRimainsFromMemdataExecute(Sender: TObject);
     procedure actSaveCashSesionIdToFileExecute(Sender: TObject);
@@ -277,6 +287,7 @@ type
     procedure actSetMemdataFromDBFExecute(Sender: TObject);
     procedure actSetUpdateFromMemdataExecute(Sender: TObject); //***10.08.16
   private
+    isScaner: Boolean;
     FSoldRegim: boolean;
     fShift: Boolean;
     FTotalSumm: Currency;
@@ -312,6 +323,8 @@ type
 
     // Обновляет сумму по чеку
     procedure CalcTotalSumm;
+    // что б отловить ошибки - запишим в лог чек - во время пробития чека через ЭККА
+    procedure Add_Log_XML(AMessage: String);
     // Пробивает чек через ЭККА
     function PutCheckToCash(SalerCash: Currency; PaidType: TPaidType;
       out AFiscalNumber, ACheckNumber: String): boolean;
@@ -362,13 +375,12 @@ var
   function GetSumm(Amount,Price:currency): currency;
   function GenerateGUID: String;
 
-
 implementation
 
 {$R *.dfm}
 
 uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, CashWork, MessagesUnit,
-     LocalWorkUnit, Splash, DiscountService, MainCash;
+     LocalWorkUnit, Splash, DiscountService, MainCash, UnilWin;
 
 const
   StatusUnCompleteCode = 1;
@@ -672,7 +684,9 @@ begin
     InsertUpdateBillCheckItems;
   end;
   SoldRegim := true;
-  ActiveControl := lcName;
+  if isScaner = true
+  then ActiveControl := ceScaner
+  else ActiveControl := lcName;
 end;
 
 //проверили что есть остаток
@@ -729,6 +743,7 @@ var
   UID,CheckNumber: String;
   lMsg: String;
   fErr: Boolean;
+  dsdSave: TdsdStoredProc;
 begin
   if CheckCDS.RecordCount = 0 then exit;
   PaidType:=ptMoney;
@@ -751,6 +766,25 @@ begin
 
   //проверили что есть остаток
   if fCheck_RemainsError = false then exit;
+
+ //проверили что этот чек Не был проведен другой кассой - 04.02.2017
+  dsdSave := TdsdStoredProc.Create(nil);
+  try
+     //Проверить в каком состоянии документ.
+     dsdSave.StoredProcName := 'gpGet_Movement_CheckState';
+     dsdSave.OutputType := otResult;
+     dsdSave.Params.Clear;
+     dsdSave.Params.AddParam('inId',ftInteger,ptInput,FormParams.ParamByName('CheckId').Value);
+     dsdSave.Params.AddParam('outState',ftInteger,ptOutput,Null);
+     dsdSave.Execute(False,False);
+     if VarToStr(dsdSave.Params.ParamByName('outState').Value) = '2' then //проведен
+     Begin
+          ShowMessage ('Ошибка.Данный чек уже сохранен другой кассой.Для продолжения - необходимо обнулить чек и набрать позиции заново.');
+          exit;
+     End;
+  finally
+     freeAndNil(dsdSave);
+  end;
 
   //послали на печать
   try
@@ -1032,7 +1066,9 @@ end;
 
 procedure TMainCashForm2.actSetFocusExecute(Sender: TObject);
 begin
-  ActiveControl := lcName;
+  if isScaner = true
+  then ActiveControl := ceScaner
+  else ActiveControl := lcName;
 end;
 
 procedure TMainCashForm2.actSetMemdataFromDBFExecute(Sender: TObject);
@@ -1492,7 +1528,9 @@ begin
   SoldRegim:= not SoldRegim;
   ceAmount.Enabled := false;
   lcName.Text := '';
-  Activecontrol := lcName;
+  if isScaner = true
+  then ActiveControl := ceScaner
+  else ActiveControl := lcName;
 end;
 
 procedure TMainCashForm2.actSpecExecute(Sender: TObject);
@@ -1525,6 +1563,49 @@ procedure TMainCashForm2.ceAmountKeyDown(Sender: TObject; var Key: Word;
 begin
   if Key=VK_Return then
      actInsertUpdateCheckItems.Execute
+end;
+
+procedure TMainCashForm2.ceScanerKeyPress(Sender: TObject; var Key: Char);
+var isFind : Boolean;
+    Key2 : Word;
+begin
+   isFind:= false;
+   isScaner:= true;
+   //
+   if Key = #13 then
+   begin
+       try
+           StrToInt(Copy(ceScaner.Text,4, 9));
+           //
+           RemainsCDS.AfterScroll := nil;
+           RemainsCDS.DisableConstraints;
+           //нашли
+           isFind:= RemainsCDS.Locate('GoodsId_main', StrToInt(Copy(ceScaner.Text,4, 9)), []);
+           //еще проверили что равно...
+           isFind:= (isFind) and (RemainsCDS.FieldByName('GoodsId_main').AsInteger = StrToInt(Copy(ceScaner.Text,4, 9)));
+           //
+           if isFind
+           then lbScaner.Caption:='найдено ' + ceScaner.Text
+           else lbScaner.Caption:='не найдено ' + ceScaner.Text;
+           //
+           ceScaner.Text:='';
+       except
+            lbScaner.Caption:='Ошибка в Ш/К';
+       end;
+       //
+       RemainsCDS.EnableConstraints;
+       RemainsCDS.AfterScroll := RemainsCDSAfterScroll;
+   end;
+
+   if isFind = true then
+   begin
+        isScaner:=true;
+        //
+        lcName.Text:= RemainsCDS.FieldByName('GoodsName').AsString;
+        Key2:= VK_Return;
+        lcNameKeyDown(Self, Key2, []);
+    end;
+
 end;
 
 procedure TMainCashForm2.actCheckConnectionExecute(Sender: TObject);
@@ -1561,7 +1642,8 @@ begin
   inherited;
 
   Application.OnMessage := AppMsgHandler;
-
+  isScaner:= false;
+  //для
   // создаем мутексы если не созданы
   MutexDBF := CreateMutex(nil, false, 'farmacycashMutexDBF');
   LastErr := GetLastError;
@@ -1570,8 +1652,6 @@ begin
   MutexVip := CreateMutex(nil, false, 'farmacycashMutexVip');
   LastErr := GetLastError;
   MutexRemains := CreateMutex(nil, false, 'farmacycashMutexRemains');
-  LastErr := GetLastError;
-  MutexAlternative := CreateMutex(nil, false, 'farmacycashMutexAlternative');
   LastErr := GetLastError;
   MutexAlternative := CreateMutex(nil, false, 'farmacycashMutexAlternative');
   LastErr := GetLastError;
@@ -1813,7 +1893,7 @@ begin
                with fields18.Add as TVKDBFFieldDef do
                begin
                     Name := 'USERSESION';
-                    field_type := 'С';
+                    field_type := 'C';
                     len := 50;
                end;
                FLocalDataBaseHead.AddFields(fields18,1000);
@@ -2268,6 +2348,7 @@ procedure TMainCashForm2.lcNameEnter(Sender: TObject);
 begin
   inherited;
   SourceClientDataSet := nil;
+  isScaner:= false;
 end;
 
 procedure TMainCashForm2.lcNameExit(Sender: TObject);
@@ -2382,6 +2463,7 @@ begin
    End;
   CalcTotalSumm;
   ceAmount.Value := 0;
+  isScaner:=false;
   ActiveControl := lcName;
 end;
 
@@ -2403,8 +2485,9 @@ begin
     try
       if not gc_User.Local then
       Begin
-        spDelete_CashSession.Execute;
         actRefreshAllExecute(nil);
+        spDelete_CashSession.Execute;
+        
       End
       else
       begin
@@ -2434,7 +2517,10 @@ end;
 procedure TMainCashForm2.ParentFormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  if (Key=VK_Tab) and (CheckGrid.IsFocused) then ActiveControl:=lcName;
+  if (Key=VK_Tab) and (CheckGrid.IsFocused) 
+   then if isScaner = true
+       then ActiveControl := ceScaner
+       else ActiveControl := lcName;
   if (Key = VK_ADD) or ((Key = VK_Return) AND (ssShift in Shift)) then
   Begin
     Key := 0;
@@ -2485,8 +2571,31 @@ begin
   End;
 end;
 
+// что б отловить ошибки - запишим в лог чек - во время пробития чека через ЭККА
+procedure TMainCashForm2.Add_Log_XML(AMessage: String);
+var F: TextFile;
+begin
+  try
+    AssignFile(F,ChangeFileExt(Application.ExeName,'_log.xml'));
+    if not fileExists(ChangeFileExt(Application.ExeName,'_log.xml')) then
+    begin
+      Rewrite(F);
+      Writeln(F,'<?xml version="1.0" encoding="Windows-1251"?>');
+    end
+    else
+      Append(F);
+    //
+    try  Writeln(F,AMessage);
+    finally CloseFile(F);
+    end;
+  except
+  end;
+end;
+
 function TMainCashForm2.PutCheckToCash(SalerCash: Currency;
   PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String): boolean;
+var str_log_xml : String;
+    i : Integer;
 {------------------------------------------------------------------------------}
   function PutOneRecordToCash: boolean; //Продажа одного наименования
   begin
@@ -2512,6 +2621,7 @@ begin
       AFiscalNumber := Cash.FiscalNumber
     else
       AFiscalNumber := '';
+    str_log_xml:=''; i:=0;
     result := not Assigned(Cash) or Cash.AlwaysSold or Cash.OpenReceipt;
     with CheckCDS do
     begin
@@ -2521,7 +2631,30 @@ begin
         if result then
            begin
              if CheckCDS.FieldByName('Amount').asCurrency >= 0.001 then
-                result := PutOneRecordToCash;//послали строку в кассу
+              begin
+                  //послали строку в кассу
+                  result := PutOneRecordToCash;
+                  //сохранили строку в лог
+                  i:= i + 1;
+                  if str_log_xml<>'' then str_log_xml:=str_log_xml + #10 + #13;
+                  try
+                  str_log_xml:= str_log_xml
+                              + '<Items num="' +IntToStr(i)+ '">'
+                              + '<GoodsCode>"' + FieldByName('GoodsCode').asString + '"</GoodsCode>'
+                              + '<GoodsName>"' + AnsiUpperCase(FieldByName('GoodsName').Text) + '"</GoodsName>'
+                              + '<Amount>"' + FloatToStr(FieldByName('Amount').asCurrency) + '"</Amount>'
+                              + '<Price>"' + FloatToStr(FieldByName('Price').asCurrency) + '"</Price>'
+                              + '<List_UID>"' + FieldByName('List_UID').AsString + '"</List_UID>'
+                              + '</Items>';
+                  except
+                  str_log_xml:= str_log_xml
+                              + '<Items="' +IntToStr(i)+ '">'
+                              + '<GoodsCode>"' + FieldByName('GoodsCode').asString + '"</GoodsCode>'
+                              + '<GoodsName>"???"</GoodsName>'
+                              + '<List_UID>"' + FieldByName('List_UID').AsString + '"</List_UID>'
+                              + '</Items>';
+                  end;
+              end;
            end;
         Next;
       end;
@@ -2536,6 +2669,15 @@ begin
     result := false;
     raise;
   end;
+  //
+  // что б отловить ошибки - запишим в лог чек - во время пробития чека через ЭККА
+  Add_Log_XML('<Head now="'+FormatDateTime('YYYY.MM.DD hh:mm:ss',now)+'">'
+     +#10+#13+'<CheckNumber>"'  + ACheckNumber  + '"</CheckNumber>'
+             +'<FiscalNumber>"' + AFiscalNumber + '"</FiscalNumber>'
+             +'<Summa>"' + FloatToStr(SalerCash) + '"</Summa>'
+     +#10+#13+str_log_xml
+     +#10+#13+'</Head>'
+             );
 end;
 
 procedure TMainCashForm2.RemainsCDSAfterScroll(DataSet: TDataSet);
@@ -2737,6 +2879,8 @@ function TMainCashForm2.SaveLocal(ADS: TClientDataSet; AManagerId: integer; AMan
 var
   NextVIPId: integer;
   myVIPCDS, myVIPListCDS: TClientDataSet;
+  str_log_xml : String;
+  i : Integer;
 begin
   //Если чек виповский и ещё не проведен - то сохраняем в таблицу випов
   if gc_User.Local And not NeedComplete AND ((AManagerId <> 0) or (ABayerName <> '')) then
@@ -2899,6 +3043,8 @@ begin
       End;
     except ON E:Exception do
       Begin
+        // что б отловить ошибки - запишим в лог
+        Add_Log_XML('<Head err="'+E.Message+'">');
         Application.OnException(Application.MainForm,E);
 //        ShowMessage('Ошибка локального сохранения чека: '+E.Message);
         result := False;
@@ -2920,6 +3066,7 @@ begin
           FLocalDataBaseBody.Next;
         End;
         FLocalDataBaseBody.Pack;
+        str_log_xml:=''; i:=0;
         while not ADS.Eof do
         Begin
           FLocalDataBaseBody.AppendRecord([ADS.FieldByName('Id').AsInteger,         //id записи
@@ -2939,11 +3086,33 @@ begin
                                            //***10.08.16
                                            ADS.FieldByName('List_UID').AsString // UID строки продажи
                                            ]);
+                  //сохранили строку в лог
+                  i:= i + 1;
+                  if str_log_xml<>'' then str_log_xml:=str_log_xml + #10 + #13;
+                  try
+                  str_log_xml:= str_log_xml
+                              + '<Items num="' +IntToStr(i)+ '">'
+                              + '<GoodsCode>"' + ADS.FieldByName('GoodsCode').asString + '"</GoodsCode>'
+                              + '<GoodsName>"' + AnsiUpperCase(ADS.FieldByName('GoodsName').Text) + '"</GoodsName>'
+                              + '<Amount>"' + FloatToStr(ADS.FieldByName('Amount').asCurrency) + '"</Amount>'
+                              + '<Price>"' + FloatToStr(ADS.FieldByName('Price').asCurrency) + '"</Price>'
+                              + '<List_UID>"' + ADS.FieldByName('List_UID').AsString + '"</List_UID>'
+                              + '</Items>';
+                  except
+                  str_log_xml:= str_log_xml
+                              + '<Items num="' +IntToStr(i)+ '">'
+                              + '<GoodsCode>"' + ADS.FieldByName('GoodsCode').asString + '"</GoodsCode>'
+                              + '<GoodsName>"???"</GoodsName>'
+                              + '<List_UID>"' + ADS.FieldByName('List_UID').AsString + '"</List_UID>'
+                              + '</Items>';
+                  end;
         ADS.Next;
         End;
 
       Except ON E:Exception do
         Begin
+      // что б отловить ошибки - запишим в лог
+        Add_Log_XML('<Body err="'+E.Message+'">');
         Application.OnException(Application.MainForm,E);
 //          ShowMessage('Ошибка локального сохранения содержимого чека: '+E.Message);
           result := False;
@@ -2962,10 +3131,18 @@ begin
     ReleaseMutex(MutexDBF);
     PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 3);
   end;
+  // что б отловить ошибки - запишим в лог чек - во время СОХРАНЕНИЯ чека, т.е. ПОСЛЕ пробития через ЭККА
+  Add_Log_XML('<Save now="'+FormatDateTime('YYYY.MM.DD hh:mm:ss',now)+'">'
+     +#10+#13+'<AUID>"'  + AUID  + '"</AUID>'
+             +'<CheckNumber>"'  + FiscalCheckNumber  + '"</CheckNumber>'
+             +'<FiscalNumber>"' + FiscalNumber + '"</FiscalNumber>'
+     +#10+#13+str_log_xml
+     +#10+#13+'</Save>'
+             );
 
   // update VIP
-  if ((AManagerId <> 0) or (ABayerName <> '')) and  (gc_User.Local) { TODO -oUfomaster -cИзменить : возможно потом нужно будет убрать (gc_User.Local) }
-      and NeedComplete then
+  if ((AManagerId <> 0) or (ABayerName <> '')) and
+     (gc_User.Local) and NeedComplete then
   Begin
     WaitForSingleObject(MutexVip, INFINITE);
     LoadLocalData(VipCDS, Vip_lcl);
@@ -3146,7 +3323,7 @@ begin
       fBlinkVIP:= lMovementId_BlinkVIP <> '';
 
       // если сюда дошли, значит ON-line режим режим для VIP-чеков
-      Self.Caption := 'Продажа' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>';
+      Self.Caption := 'Продажа ('+GetFileVersionString(ParamStr(0))+')' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>';
 
       //если список изменился ИЛИ надо "по любому обновить" - запустим "не самое долгое" обновление грида
       if (lMovementId_BlinkVIP <> MovementId_BlinkVIP) or(isRefresh = true)
@@ -3158,7 +3335,7 @@ begin
       end;
 
   except
-        Self.Caption := 'Продажа - OFF-line режим для VIP-чеков' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>'
+        Self.Caption := 'Продажа ('+GetFileVersionString(ParamStr(0))+') - OFF-line режим для VIP-чеков' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>'
   end;
 end;
 
@@ -3183,11 +3360,11 @@ begin
 
       // если сюда дошли, значит ON-line режим режим для проверки "ошибка - расч/факт остаток"
       if fBlinkCheck = True
-      then Self.Caption := 'Продажа : есть ошибки - расч/факт остаток' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>'
-      else Self.Caption := 'Продажа' + ' <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>';
+      then Self.Caption := 'Продажа ('+GetFileVersionString(ParamStr(0))+') : есть ошибки - расч/факт остаток' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>'
+      else Self.Caption := 'Продажа ('+GetFileVersionString(ParamStr(0))+')' + ' <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>';
 
   except
-        Self.Caption := 'Продажа - OFF-line режим для чеков с ошибкой' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>'
+        Self.Caption := 'Продажа ('+GetFileVersionString(ParamStr(0))+') - OFF-line режим для чеков с ошибкой' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>'
   end;
 end;
 
@@ -3203,7 +3380,7 @@ begin
   //
   if not FLocalDataBaseHead.IsEmpty then
     SaveRealAll;
-    ShowMessage('TMainCashForm2.TimerSaveAllTimer');
+  //  ShowMessage('TMainCashForm2.TimerSaveAllTimer');
  finally
   TimerSaveAll.Enabled:=True;
  end;
