@@ -10,7 +10,7 @@ uses
   FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys,
   FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs,
   FireDAC.Comp.UI, Variants, FireDAC.FMXUI.Wait, dsdDB, Datasnap.DBClient,
-  FMX.Dialogs, FMX.DialogService, System.UITypes
+  FMX.Dialogs, FMX.DialogService, System.UITypes, EncdDecd
   {$IFDEF ANDROID}
   , Androidapi.JNI.GraphicsContentViewText, Androidapi.Helpers,
   Androidapi.JNI.Net, Androidapi.JNI.JavaTypes, Androidapi.JNI.App
@@ -20,12 +20,17 @@ CONST
   DataBaseFileName = 'aMobile.sdb';
 
   BasePartnerQuery = 'select P.Id, P.CONTRACTID, J.VALUEDATA Name, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, ' +
-    'P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE, PL.ID PRICELISTID, C.PAIDKINDID, C.CHANGEPERCENT, PL.PRICEWITHVAT, PL.VATPERCENT, ' +
+    'P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE, C.PAIDKINDID, C.CHANGEPERCENT, ' +
+    'P.DEBTSUM, P.OVERSUM, P.OVERDAYS, J.DEBTSUM DEBTSUMJ, J.OVERSUM OVERSUMJ, J.OVERDAYS OVERDAYSJ, ' +
+    'PL.ID PRICELISTID, PL.PRICEWITHVAT, PL.VATPERCENT, ' +
+    'PLR.ID PRICELISTID_RET, PLR.PRICEWITHVAT PRICEWITHVAT_RET, PLR.VATPERCENT VATPERCENT_RET, ' +
     'P.CalcDayCount, P.OrderDayCount, P.isOperDateOrder ' +
     'from OBJECT_PARTNER P ' +
-    'JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID ' +
-    'JOIN Object_PriceList PL ON PL.ID = IFNULL(P.PRICELISTID, :DefaultPriceList) ' +
-    'LEFT JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID and C.ISERASED = 0 where P.ISERASED = 0 ';
+    'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID AND J.CONTRACTID = P.CONTRACTID ' +
+    'LEFT JOIN Object_PriceList PL ON PL.ID = IFNULL(P.PRICELISTID, :DefaultPriceList) ' +
+    'LEFT JOIN Object_PriceList PLR ON PLR.ID = IFNULL(P.PRICELISTID_RET, :DefaultPriceList) ' +
+    'LEFT JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID ' +
+    'where P.ISERASED = 0 ';
 
 type
   TActiveMode = (amAll, amOpen, amClose);
@@ -64,6 +69,11 @@ type
     procedure UploadOrderExternal;
     procedure UploadReturnIn;
     procedure UploadTasks;
+    function UploadNewJuridicals(var AId: integer): boolean;
+    procedure UploadNewPartners;
+    procedure UploadPartnerGPS;
+    procedure UploadRouteMember;
+    procedure UploadPhotos;
   protected
     procedure Execute; override;
   end;
@@ -336,7 +346,6 @@ type
     tblMovement_VisitGUID: TStringField;
     tblMovement_VisitInvNumber: TStringField;
     tblMovement_VisitOperDate: TDateTimeField;
-    tblMovement_VisitStatusId: TIntegerField;
     tblMovement_VisitisSync: TBooleanField;
     tblMovementItem_Visit: TFDTable;
     tblMovementItem_VisitMovementId: TIntegerField;
@@ -514,6 +523,22 @@ type
     tblObject_ConstPriceListId_def: TIntegerField;
     tblObject_ConstPriceListName_def: TStringField;
     qryPartnerPRICELISTID: TIntegerField;
+    qryPartnerPRICELISTID_RET: TIntegerField;
+    qryPartnerPriceWithVAT_RET: TBooleanField;
+    qryPartnerVATPercent_RET: TFloatField;
+    tblObject_PartnerGUID: TStringField;
+    tblObject_JuridicalGUID: TStringField;
+    tblObject_JuridicalisSync: TBooleanField;
+    qryPartnerDebtSum: TFloatField;
+    qryPartnerDebtSumJ: TFloatField;
+    qryPartnerOverSum: TFloatField;
+    qryPartnerOverSumJ: TFloatField;
+    qryPartnerOverDays: TIntegerField;
+    qryPartnerOverDaysJ: TIntegerField;
+    tblMovement_StoreRealInsertDate: TDateTimeField;
+    tblObject_Partnertest: TStringField;
+    tblMovement_VisitInsertDate: TDateTimeField;
+    tblMovementItem_VisitPhotoName: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
   private
@@ -569,6 +594,9 @@ type
 
     function LoadTasks(Active: TActiveMode; SaveData: boolean = true; ADate: TDate = 0; APartnerId: integer = 0): integer;
     function CloseTask(ATasksId: integer; ATaskComment: string): boolean;
+
+    function CreateNewPartner(JuridicalId: integer; JuridicalName, Address: string;
+      GPSN, GPSE: Double; var ErrorMessage : string): boolean;
 
     property Connected: Boolean read FConnected;
   end;
@@ -861,7 +889,7 @@ begin
 
         while not Eof do
         begin
-          if AName = 'Partner' then
+          if (AName = 'Partner') or (AName = 'Juridical') then
             FindRec := CurDictTable.Locate('Id;ContractId', VarArrayOf([FieldByName('Id').AsInteger, FieldByName('ContractId').AsInteger]))
           else
             FindRec := CurDictTable.Locate('Id', FieldByName('Id').AsInteger);
@@ -944,6 +972,7 @@ begin
           UploadStoredProc.Params.AddParam('inInvNumber', ftString, ptInput, FieldByName('INVNUMBER').AsString);
           UploadStoredProc.Params.AddParam('inOperDate', ftDateTime, ptInput, FieldByName('OPERDATE').AsDateTime);
           UploadStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, FieldByName('PARTNERID').AsInteger);
+          UploadStoredProc.Params.AddParam('inInsertDate', ftDateTime, ptInput, FieldByName('INSERTDATE').AsDateTime);
 
           try
             UploadStoredProc.Execute(false, false, false);
@@ -977,10 +1006,9 @@ begin
             on E : Exception do
             begin
               raise Exception.Create(E.Message);
+              exit;
             end;
           end;
-
-          Next;
         end;
       finally
         DM.tblMovementItem_StoreReal.Close;
@@ -1064,10 +1092,9 @@ begin
             on E : Exception do
             begin
               raise Exception.Create(E.Message);
+              exit;
             end;
           end;
-
-          Next;
         end;
       finally
         DM.tblMovementItem_OrderExternal.Close;
@@ -1153,10 +1180,9 @@ begin
             on E : Exception do
             begin
               raise Exception.Create(E.Message);
+              exit;
             end;
           end;
-
-          Next;
         end;
       finally
         DM.tblMovementItem_ReturnIn.Close;
@@ -1210,12 +1236,332 @@ begin
             on E : Exception do
             begin
               raise Exception.Create(E.Message);
+              exit;
+            end;
+          end;
+        end;
+      finally
+        Close;
+        Filter := '';
+        Filtered := false;
+      end;
+    end;
+  finally
+    FreeAndNil(UploadStoredProc);
+  end;
+end;
+
+{ сохранение на сервер новых юридических лиц }
+function TSyncThread.UploadNewJuridicals(var AId: integer): boolean;
+var
+  UploadStoredProc : TdsdStoredProc;
+begin
+  Result := false;
+
+  UploadStoredProc := TdsdStoredProc.Create(nil);
+  try
+    UploadStoredProc.OutputType := otResult;
+
+    with DM.tblObject_Juridical do
+    begin
+      Filter := 'Id = ' + IntToStr(AId);
+      Filtered := true;
+      Open;
+
+      try
+        First;
+
+        UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Object_Juridical';
+        UploadStoredProc.Params.Clear;
+        UploadStoredProc.Params.AddParam('ioId', ftInteger, ptInputOutput, 0);
+        UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
+        UploadStoredProc.Params.AddParam('inName', ftString, ptInput, FieldByName('VALUEDATA').AsString);
+
+        try
+          UploadStoredProc.Execute(false, false, false);
+
+          AId := StrToInt(UploadStoredProc.ParamByName('ioId').AsString);
+
+          Edit;
+          FieldByName('ID').AsInteger := AId;
+          FieldByName('GUID').AsString := '';
+          FieldByName('IsSync').AsBoolean := true;
+          Post;
+
+          Result := true;
+        except
+          on E : Exception do
+          begin
+            raise Exception.Create(E.Message);
+            exit;
+          end;
+        end;
+      finally
+        Close;
+        Filter := '';
+        Filtered := false;
+      end;
+    end;
+  finally
+    FreeAndNil(UploadStoredProc);
+  end;
+end;
+
+{ сохранение на сервер новых ТТ }
+procedure TSyncThread.UploadNewPartners;
+var
+  UploadStoredProc: TdsdStoredProc;
+  NewPartnerId, JuridicalId: integer;
+begin
+  UploadStoredProc := TdsdStoredProc.Create(nil);
+  try
+    UploadStoredProc.OutputType := otResult;
+
+    with DM.tblObject_Partner do
+    begin
+      Filter := 'isSync = 0 and isErased = 0 and Id < 0';
+      Filtered := true;
+      Open;
+
+      try
+        First;
+        while not Eof do
+        begin
+          JuridicalId := FieldByName('JURIDICALID').AsInteger;
+
+          if JuridicalId < 0 then // сохраняем новое юридическое лицо
+          begin
+            if not UploadNewJuridicals(JuridicalId) then
+            begin
+              raise Exception.Create('Не найдено новое юридическое лицо для новой ТТ. Обратитесь к разработчику');
+              exit;
             end;
           end;
 
-          Next;
+          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Object_Partner';
+
+          UploadStoredProc.Params.Clear;
+          UploadStoredProc.Params.AddParam('ioId', ftInteger, ptInputOutput, 0);
+          UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
+          UploadStoredProc.Params.AddParam('inName', ftString, ptInput, FieldByName('VALUEDATA').AsString);
+          UploadStoredProc.Params.AddParam('inAddress', ftString, ptInput, FieldByName('ADDRESS').AsString);
+          UploadStoredProc.Params.AddParam('inPrepareDayCount', ftInteger, ptInput, 1);
+          UploadStoredProc.Params.AddParam('inDocumentDayCount', ftInteger, ptInput, 1);
+          UploadStoredProc.Params.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
+
+          try
+            UploadStoredProc.Execute(false, false, false);
+
+            NewPartnerId := StrToInt(UploadStoredProc.ParamByName('ioId').AsString);
+
+            Edit;
+            FieldByName('ID').AsInteger := NewPartnerId;
+            FieldByName('GUID').AsString := '';
+            FieldByName('IsSync').AsBoolean := true;
+            Post;
+          except
+            on E : Exception do
+            begin
+              raise Exception.Create(E.Message);
+              exit;
+            end;
+          end;
         end;
       finally
+        Close;
+        Filter := '';
+        Filtered := false;
+      end;
+    end;
+  finally
+    FreeAndNil(UploadStoredProc);
+  end;
+end;
+
+{ сохранение на сервер координат ТТ }
+procedure TSyncThread.UploadPartnerGPS;
+var
+  UploadStoredProc : TdsdStoredProc;
+begin
+  UploadStoredProc := TdsdStoredProc.Create(nil);
+  try
+    UploadStoredProc.OutputType := otResult;
+
+    with DM.tblObject_Partner do
+    begin
+      Filter := 'isSync = 0 and Id > 0';
+      Filtered := true;
+      Open;
+
+      try
+        First;
+        while not Eof do
+        begin
+          UploadStoredProc.StoredProcName := 'gpUpdateMobile_Object_Partner_GPS';
+          UploadStoredProc.Params.Clear;
+          UploadStoredProc.Params.AddParam('inId', ftInteger, ptInput, FieldByName('ID').AsInteger);
+          UploadStoredProc.Params.AddParam('inGPSN', ftFloat, ptInput, FieldByName('GPSN').AsFloat);
+          UploadStoredProc.Params.AddParam('inGPSE', ftFloat, ptInput, FieldByName('GPSE').AsFloat);
+
+          try
+            UploadStoredProc.Execute(false, false, false);
+
+            Edit;
+            FieldByName('IsSync').AsBoolean := true;
+            Post;
+          except
+            on E : Exception do
+            begin
+              raise Exception.Create(E.Message);
+              exit;
+            end;
+          end;
+        end;
+      finally
+        Close;
+        Filter := '';
+        Filtered := false;
+      end;
+    end;
+  finally
+    FreeAndNil(UploadStoredProc);
+  end;
+end;
+
+{ сохранение на сервер маршрута контрагента }
+procedure TSyncThread.UploadRouteMember;
+var
+  UploadStoredProc : TdsdStoredProc;
+begin
+  UploadStoredProc := TdsdStoredProc.Create(nil);
+  try
+    UploadStoredProc.OutputType := otResult;
+
+    with DM.tblMovement_RouteMember do
+    begin
+      Filter := 'isSync = 0';
+      Filtered := true;
+      Open;
+
+      try
+        First;
+        while not Eof do
+        begin
+          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Movement_RouteMember';
+          UploadStoredProc.Params.Clear;
+          UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
+          UploadStoredProc.Params.AddParam('inInvNumber', ftString, ptInput, FieldByName('ID').AsString);
+          UploadStoredProc.Params.AddParam('inInsertDate', ftDateTime, ptInput, FieldByName('INSERTDATE').AsDateTime);
+          UploadStoredProc.Params.AddParam('inGPSN', ftFloat, ptInput, FieldByName('GPSN').AsFloat);
+          UploadStoredProc.Params.AddParam('inGPSE', ftFloat, ptInput, FieldByName('GPSE').AsFloat);
+
+          try
+            UploadStoredProc.Execute(false, false, false);
+
+            Edit;
+            FieldByName('IsSync').AsBoolean := true;
+            Post;
+          except
+            on E : Exception do
+            begin
+              raise Exception.Create(E.Message);
+              exit;
+            end;
+          end;
+        end;
+      finally
+        Close;
+        Filter := '';
+        Filtered := false;
+      end;
+    end;
+  finally
+    FreeAndNil(UploadStoredProc);
+  end;
+end;
+
+{ Сохранение на сервер фотографий }
+procedure TSyncThread.UploadPhotos;
+var
+  UploadStoredProc: TdsdStoredProc;
+  PhotoStream: TStream;
+  DopPhotoStream: TStringStream;
+  str : string;
+begin
+  UploadStoredProc := TdsdStoredProc.Create(nil);
+  try
+    // Загружаем шапки фотографий (группы)
+    UploadStoredProc.OutputType := otResult;
+
+    with DM.tblMovement_Visit do
+    begin
+      Filter := 'isSync = 0';
+      Filtered := true;
+      Open;
+
+      try
+        First;
+        while not Eof do
+        begin
+          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Movement_Visit';
+          UploadStoredProc.Params.Clear;
+          UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
+          UploadStoredProc.Params.AddParam('inInvNumber', ftString, ptInput, FieldByName('INVNUMBER').AsString);
+          UploadStoredProc.Params.AddParam('inOperDate', ftDateTime, ptInput, FieldByName('OPERDATE').AsDateTime);
+          UploadStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, FieldByName('PARTNERID').AsInteger);
+          UploadStoredProc.Params.AddParam('inComment', ftString, ptInput, FieldByName('COMMENT').AsString);
+          UploadStoredProc.Params.AddParam('inInsertDate', ftDateTime, ptInput, FieldByName('INSERTDATE').AsDateTime);
+
+          try
+            UploadStoredProc.Execute(false, false, false);
+
+            // Загружаем товары остатков
+            DM.tblMovementItem_Visit.Close;
+            DM.tblMovementItem_Visit.Filter := 'MovementId = ' + FieldByName('ID').AsString;
+            DM.tblMovementItem_Visit.Filtered := true;
+            DM.tblMovementItem_Visit.Open;
+
+            DM.tblMovementItem_Visit.First;
+            while not DM.tblMovementItem_Visit.Eof do
+            begin
+              UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_MovementItem_Visit';
+              UploadStoredProc.Params.Clear;
+              UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, DM.tblMovementItem_Visit.FieldByName('GUID').AsString);
+              UploadStoredProc.Params.AddParam('inMovementGUID', ftString, ptInput, FieldByName('GUID').AsString);
+
+              DopPhotoStream := TStringStream.Create;
+              PhotoStream := DM.tblMovementItem_Visit.CreateBlobStream(DM.tblMovementItem_Visit.FieldByName('PHOTO'), bmRead);
+              try
+                DopPhotoStream.LoadFromStream(PhotoStream);
+                UploadStoredProc.Params.AddParam('inPhoto', ftBlob, ptInput, DopPhotoStream.DataString);
+              finally
+                FreeAndNil(PhotoStream);
+                FreeAndNil(DopPhotoStream);
+              end;
+              UploadStoredProc.Params.AddParam('inPhotoName', ftString, ptInput, DM.tblMovementItem_Visit.FieldByName('PHOTONAME').AsString);
+              UploadStoredProc.Params.AddParam('inComment', ftString, ptInput, DM.tblMovementItem_Visit.FieldByName('COMMENT').AsString);
+
+              UploadStoredProc.Execute(false, false, false);
+
+              DM.tblMovementItem_Visit.Next;
+            end;
+
+            Edit;
+            FieldByName('IsSync').AsBoolean := true;
+            Post;
+          except
+            on E : Exception do
+            begin
+              raise Exception.Create(E.Message);
+              exit;
+            end;
+          end;
+        end;
+      finally
+        DM.tblMovementItem_Visit.Close;
+        DM.tblMovementItem_Visit.Filter := '';
+        DM.tblMovementItem_Visit.Filtered := false;
+
         Close;
         Filter := '';
         Filtered := false;
@@ -1229,6 +1575,7 @@ end;
 procedure TSyncThread.Execute;
 var
   Res : string;
+  TaskCount: integer;
 begin
   Res := '';
 
@@ -1239,7 +1586,7 @@ begin
     FAllMax := FAllMax + 17;  // Количесто операций при загрузке данных из центра
 
   if UploadData then
-    FAllMax := FAllMax + 4;  // Количесто операций при сохранении данных в центр
+    FAllMax := FAllMax + 7;  // Количесто операций при сохранении данных в центр
 
   Synchronize(procedure
               begin
@@ -1339,6 +1686,20 @@ begin
         SetNewProgressTask('Сохранение заданий');
         UploadTasks;
 
+        SetNewProgressTask('Сохранение новых ТТ');
+        UploadNewPartners;
+
+        SetNewProgressTask('Сохранение координат ТТ');
+        UploadPartnerGPS;
+
+        SetNewProgressTask('Сохранение маршрута');
+        UploadRouteMember;
+
+        {
+        SetNewProgressTask('Сохранение фотографий');
+        UploadPhotos;
+        }
+
         DM.tblObject_Const.Edit;
         DM.tblObject_ConstSyncDateOut.AsDateTime := Date();
         DM.tblObject_Const.Post;
@@ -1361,6 +1722,15 @@ begin
                   begin
                     frmMain.pProgress.Visible := false;
                     frmMain.vsbMain.Enabled := true;
+
+                    if LoadData then
+                    begin
+                      TaskCount := DM.LoadTasks(amOpen, false);
+                      if TaskCount > 0 then
+                        frmMain.lTasks.Text := 'Задания (' + IntToStr(TaskCount) + ')'
+                      else
+                        frmMain.lTasks.Text := 'Задания';
+                    end;
                     DM.CheckUpdate;
                   end);
     end
@@ -1610,20 +1980,28 @@ procedure TStructure.MakeIndex(ATable: TFDTable);
 var
   IndexName: String;
 begin
-  if (ATable.IndexDefs.Count = 0) then
+  {if (ATable.IndexDefs.Count = 0) then
   Begin
     IndexName := 'PK_' + ATable.TableName;
 
-    if SameText(ATable.TableName, 'Object_Partner') then
+    if (SameText(ATable.TableName, 'Object_Partner')) or (SameText(ATable.TableName, 'Object_Juridical') ) then
       FIndexes.Add('CREATE UNIQUE INDEX IF NOT EXISTS `' + IndexName + '` ON `' + ATable.TableName + '` (`Id`,`ContractId`)')
     else
     if SameText(ATable.Fields[0].FieldName, 'Id') and (ATable.Fields[0].DataType <> ftAutoInc) then
       FIndexes.Add('CREATE UNIQUE INDEX IF NOT EXISTS `' + IndexName + '` ON `' + ATable.TableName + '` (`Id`)');
-  End;
+  End; }
 end;
 
 procedure TStructure.MakeDopIndex(ATable: TFDTable);
 begin
+  {if SameText(ATable.TableName, 'Object_GoodsListSale') then
+  begin
+    FIndexes.Add('CREATE INDEX IF NOT EXISTS `idx_GoodsListSale_GoodsId` ON `' + ATable.TableName + '` (`GoodsId`)');
+    FIndexes.Add('CREATE INDEX IF NOT EXISTS `idx_GoodsListSale_GoodsKindId` ON `' + ATable.TableName + '` (`GoodsKindId`)');
+    FIndexes.Add('CREATE INDEX IF NOT EXISTS `idx_GoodsListSale_PartnerId` ON `' + ATable.TableName + '` (`PartnerId`)');
+  end
+  }
+
   {if SameText(ATable.TableName, 'Words_Table') then
   begin
     IndexName := 'idx_Words_Table_TextWord';
@@ -1720,6 +2098,9 @@ var
   DestSize: LongWord;
   DestPrec, DestScale: Integer;
   DestAttrs: TFDDataAttributes;
+
+  TempTableName: string;
+  Error: boolean;
 begin
   // Check Tables
   qryMeta.Active := False;
@@ -1805,13 +2186,19 @@ begin
       if ChangeStructure then
       Begin
         TempTable := TFDTable.Create(nil);
+        T.DisableConstraints;
+        Error := false;
         try
+          TempTableName := T.TableName + '_temp_for_recreate';
+          conMain.ExecSQL('DROP TABLE IF EXISTS ' + TempTableName);
+          conMain.ExecSQL('ALTER TABLE ' + T.TableName + ' RENAME TO ' + TempTableName);
+
           TempTable.Connection := conMain;
-          TempTable.TableName := T.TableName;
+          TempTable.TableName := TempTableName;
           TempTable.Open;
           conMain.StartTransaction;
           try
-            T.CreateTable(True);
+            T.CreateTable(False);
             Structure.OpenDS(T);
             TempTable.First;
             while not TempTable.Eof do
@@ -1829,12 +2216,22 @@ begin
             on E: Exception do
             Begin
               //WriteLogE(E.Message);
+              Error := true;
               conMain.Rollback;
               Exit(False);
             End;
           end;
         finally
+          T.EnableConstraints;
           freeAndNil(TempTable);
+
+          if Error then
+          begin
+            conMain.ExecSQL('DROP TABLE IF EXISTS ' + T.TableName);
+            conMain.ExecSQL('ALTER TABLE ' + TempTableName + ' RENAME TO ' + T.TableName);
+          end
+          else
+            conMain.ExecSQL('DROP TABLE IF EXISTS ' + TempTableName);
         end;
       End;
     end;
@@ -2105,6 +2502,7 @@ begin
       tblMovement_StoreRealStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
       tblMovement_StoreRealPartnerId.AsInteger := qryPartnerId.AsInteger;
       tblMovement_StoreRealComment.AsString := Comment;
+      tblMovement_StoreRealInsertDate.AsDateTime := Now();
       tblMovement_StoreRealisSync.AsBoolean := false;
 
       tblMovement_StoreReal.Post;
@@ -2280,12 +2678,13 @@ begin
   qryGoodsListSale := TFDQuery.Create(nil);
   try
     qryGoodsListSale.Connection := conMain;
-    qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || GK.VALUEDATA || '';'' || ' +
-      'M.VALUEDATA || '';0'' ' +
+    qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || ' +
+      'G.VALUEDATA || '';'' || IFNULL(GK.VALUEDATA, ''-'') || '';'' || ' +
+      'IFNULL(M.VALUEDATA, ''-'') || '';0'' ' +
       'from OBJECT_GOODSLISTSALE GLS ' +
       'JOIN OBJECT_GOODS G ON GLS.GOODSID = G.ID ' +
-      'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID AND GK.ISERASED = 0 ' +
-      'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
+      'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID ' +
+      'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
       'WHERE GLS.PARTNERID = ' + qryPartnerId.AsString + ' and GLS.ISERASED = 0 order by G.VALUEDATA ';
 
     qryGoodsListSale.Open;
@@ -2301,6 +2700,7 @@ begin
     qryGoodsListSale.Close;
   finally
     qryGoodsListSale.Free;
+    cdsStoreRealItems.First;
   end;
 end;
 
@@ -2314,12 +2714,13 @@ begin
   qryGoodsListSale := TFDQuery.Create(nil);
   try
     qryGoodsListSale.Connection := conMain;
-    qryGoodsListSale.SQL.Text := 'select ISR.ID || '';'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || GK.VALUEDATA || '';'' || ' +
-      'M.VALUEDATA || '';'' || ISR.AMOUNT ' +
+    qryGoodsListSale.SQL.Text := 'select ISR.ID || '';'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || ' +
+      'G.VALUEDATA || '';'' || IFNULL(GK.VALUEDATA, ''-'') || '';'' || ' +
+      'IFNULL(M.VALUEDATA, ''-'') || '';'' || ISR.AMOUNT ' +
       'from MOVEMENTITEM_STOREREAL ISR ' +
       'JOIN OBJECT_GOODS G ON ISR.GOODSID = G.ID ' +
-      'JOIN OBJECT_GOODSKIND GK ON GK.ID = ISR.GOODSKINDID ' +
-      'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
+      'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = ISR.GOODSKINDID ' +
+      'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
       'WHERE ISR.MOVEMENTID = ' + IntToStr(AId) + ' order by G.VALUEDATA ';
 
     qryGoodsListSale.Open;
@@ -2335,6 +2736,7 @@ begin
     qryGoodsListSale.Close;
   finally
     qryGoodsListSale.Free;
+    cdsStoreRealItems.First;
   end;
 end;
 
@@ -2360,13 +2762,13 @@ end;
 procedure TDM.GenerateStoreRealItemsList;
 begin
   qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ''-'' PromoPrice, ' +
-    'GLK.REMAINS, PI.ORDERPRICE PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
-    'GK.VALUEDATA || '';'' || M.VALUEDATA || '';0'' FullInfo, G.VALUEDATA || '';0'' SearchName ' +
+    'GLK.REMAINS, PI.ORDERPRICE PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || G.VALUEDATA || '';'' || ' +
+    'IFNULL(GK.VALUEDATA, ''-'') || '';'' || IFNULL(M.VALUEDATA, ''-'') || '';0'' FullInfo, G.VALUEDATA || '';0'' SearchName ' +
     'from OBJECT_GOODS G ' +
-    'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID AND GLK.ISERASED = 0 ' +
-    'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERASED = 0 ' +
-    'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
-    'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+    'LEFT JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID ' +
+    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID ' +
+    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+    'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
     'WHERE G.ISERASED = 0 order by GoodsName';
 
   qryGoodsItems.ParamByName('PRICELISTID').AsInteger := DM.qryPartnerPRICELISTID.AsInteger;
@@ -2660,18 +3062,18 @@ begin
     else
       PromoPriceField := 'PriceWithOutVAT';
 
-    qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
-      'GK.VALUEDATA || '';'' || GLS.AMOUNTCALC || '';'' || IFNULL(SRI.AMOUNT, 0) || '';'' || ' +
-      'PI.' + PriceField + ' || '';'' || M.VALUEDATA || '';'' || G.WEIGHT || '';'' || ' +
+    qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || G.VALUEDATA || '';'' || ' +
+      'IFNULL(GK.VALUEDATA, ''-'') || '';'' || GLS.AMOUNTCALC || '';'' || IFNULL(SRI.AMOUNT, 0) || '';'' || ' +
+      'IFNULL(PI.' + PriceField + ', 0) || '';'' || IFNULL(M.VALUEDATA, ''-'') || '';'' || G.WEIGHT || '';'' || ' +
       'IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 1) || '';0''' +
       'from OBJECT_GOODSLISTSALE GLS ' +
       'JOIN OBJECT_GOODS G ON GLS.GOODSID = G.ID ' +
-      'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID AND GK.ISERASED = 0 ' +
+      'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID ' +
       'LEFT JOIN MOVEMENT_STOREREAL SR ON SR.PARTNERID = :PARTNERID ' +
       'AND DATE(SR.OPERDATE) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', Date())) + ' AND SR.STATUSID <> ' + tblObject_ConstStatusId_Erased.AsString + ' ' +
       'LEFT JOIN MOVEMENTITEM_STOREREAL SRI ON SRI.GOODSID = G.ID AND SRI.GOODSKINDID = GK.ID AND SRI.MOVEMENTID = SR.ID ' +
-      'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
-      'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+      'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+      'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
       'LEFT JOIN MOVEMENTITEM_PROMOGOODS PG ON PG.MOVEMENTID = PP.MOVEMENTID and PG.GOODSID = G.ID and (PG.GOODSKINDID = GK.ID or PG.GOODSKINDID = 0) ' +
       'LEFT JOIN MOVEMENTITEM_PROMOPARTNER PP ON PP.PARTNERID = :PARTNERID  and (PP.CONTRACTID = :CONTRACTID or PP.CONTRACTID = 0) ' +
       'LEFT JOIN MOVEMENT_PROMO P ON P.ID = PP.MOVEMENTID ' +
@@ -2693,6 +3095,7 @@ begin
     qryGoodsListSale.Close;
   finally
     qryGoodsListSale.Free;
+    cdsOrderItems.First;
   end;
 end;
 
@@ -2718,18 +3121,18 @@ begin
     else
       PromoPriceField := 'PriceWithOutVAT';
 
-    qryGoodsListOrder.SQL.Text := 'select IEO.ID || '';'' || G.ID || '';'' || GK.ID || '';'' || ' +
-      'G.VALUEDATA || '';'' || GK.VALUEDATA || '';'' || 0 || '';'' || IFNULL(SRI.AMOUNT, 0) || '';'' || ' +
-      'PI.' + PriceField + ' || '';'' || M.VALUEDATA || '';'' || G.WEIGHT || '';'' || ' +
+    qryGoodsListOrder.SQL.Text := 'select IEO.ID || '';'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || ' +
+      'G.VALUEDATA || '';'' || IFNULL(GK.VALUEDATA, ''-'') || '';'' || 0 || '';'' || IFNULL(SRI.AMOUNT, 0) || '';'' || ' +
+      'IFNULL(PI.' + PriceField + ', 0) || '';'' || IFNULL(M.VALUEDATA, ''-'') || '';'' || G.WEIGHT || '';'' || ' +
       'IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 1) || '';'' || IEO.AMOUNT ' +
       'from MOVEMENTITEM_ORDEREXTERNAL IEO ' +
       'JOIN OBJECT_GOODS G ON IEO.GOODSID = G.ID ' +
-      'JOIN OBJECT_GOODSKIND GK ON GK.ID = IEO.GOODSKINDID ' +
+      'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = IEO.GOODSKINDID ' +
       'LEFT JOIN MOVEMENT_STOREREAL SR ON SR.PARTNERID = :PARTNERID' +
       ' AND DATE(SR.OPERDATE) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', Date())) + ' AND SR.STATUSID <> ' + tblObject_ConstStatusId_Erased.AsString + ' ' +
       'LEFT JOIN MOVEMENTITEM_STOREREAL SRI ON SRI.GOODSID = G.ID AND SRI.GOODSKINDID = GK.ID AND SRI.MOVEMENTID = SR.ID ' +
-      'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-      'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+      'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+      'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
       'LEFT JOIN MOVEMENTITEM_PROMOGOODS PG ON PG.MOVEMENTID = PP.MOVEMENTID and PG.GOODSID = G.ID and (PG.GOODSKINDID = GK.ID or PG.GOODSKINDID = 0) ' +
       'LEFT JOIN MOVEMENTITEM_PROMOPARTNER PP ON PP.PARTNERID = :PARTNERID  and (PP.CONTRACTID = :CONTRACTID or PP.CONTRACTID = 0) ' +
       'LEFT JOIN MOVEMENT_PROMO P ON P.ID = PP.MOVEMENTID ' +
@@ -2770,15 +3173,15 @@ begin
     PromoPriceField := 'PriceWithOutVAT';
 
   qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, IFNULL(' + PromoPriceField + ', ''-'') PromoPrice, ' +
-    'GLK.REMAINS, PI.' + PriceField + ' PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
-    'GK.VALUEDATA || '';'' || 0 || '';'' || 0 || '';'' || PI.' + PriceField + ' || '';'' || ' +
-    'M.VALUEDATA || '';'' || G.WEIGHT || '';'' || IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 1) || '';0'' FullInfo, ' +
+    'GLK.REMAINS, PI.' + PriceField + ' PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || G.VALUEDATA || '';'' || ' +
+    'IFNULL(GK.VALUEDATA, ''-'') || '';'' || 0 || '';'' || 0 || '';'' || IFNULL(PI.' + PriceField + ', ''0'') || '';'' || ' +
+    'IFNULL(M.VALUEDATA, ''-'') || '';'' || G.WEIGHT || '';'' || IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 1) || '';0'' FullInfo, ' +
     'G.VALUEDATA || CASE WHEN ' + PromoPriceField + ' IS NULL THEN '';0'' ELSE '';1'' END SearchName ' +
     'from OBJECT_GOODS G ' +
-    'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID AND GLK.ISERASED = 0 ' +
-    'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERASED = 0 ' +
-    'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
-    'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+    'LEFT JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID ' +
+    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID ' +
+    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+    'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
     'LEFT JOIN MOVEMENTITEM_PROMOGOODS PG ON PG.MOVEMENTID = PP.MOVEMENTID and PG.GOODSID = G.ID and (PG.GOODSKINDID = GK.ID or PG.GOODSKINDID = 0) ' +
     'LEFT JOIN MOVEMENTITEM_PROMOPARTNER PP ON PP.PARTNERID = :PARTNERID  and (PP.CONTRACTID = :CONTRACTID or PP.CONTRACTID = 0) ' +
     'LEFT JOIN MOVEMENT_PROMO P ON P.ID = PP.MOVEMENTID ' +
@@ -2831,8 +3234,8 @@ begin
       tblMovement_ReturnInPartnerId.AsInteger := qryPartnerId.AsInteger;
       tblMovement_ReturnInPaidKindId.AsInteger := qryPartnerPaidKindId.AsInteger;
       tblMovement_ReturnInContractId.AsInteger := qryPartnerCONTRACTID.AsInteger;
-      tblMovement_ReturnInPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT.AsBoolean;
-      tblMovement_ReturnInVATPercent.AsFloat := qryPartnerVATPercent.AsFloat;
+      tblMovement_ReturnInPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT_RET.AsBoolean;
+      tblMovement_ReturnInVATPercent.AsFloat := qryPartnerVATPercent_RET.AsFloat;
       tblMovement_ReturnInChangePercent.AsFloat := qryPartnerChangePercent.AsFloat;
       tblMovement_ReturnInTotalCountKg.AsFloat := TotalWeight;
       tblMovement_ReturnInTotalSummPVAT.AsFloat := ToralPrice;
@@ -2855,8 +3258,8 @@ begin
         tblMovement_ReturnInOperDate.AsDateTime := OperDate;
         tblMovement_ReturnInComment.AsString := Comment;
         tblMovement_ReturnInStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
-        tblMovement_ReturnInPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT.AsBoolean;
-        tblMovement_ReturnInVATPercent.AsFloat := qryPartnerVATPercent.AsFloat;
+        tblMovement_ReturnInPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT_RET.AsBoolean;
+        tblMovement_ReturnInVATPercent.AsFloat := qryPartnerVATPercent_RET.AsFloat;
         tblMovement_ReturnInChangePercent.AsFloat := qryPartnerChangePercent.AsFloat;
         tblMovement_ReturnInTotalCountKg.AsFloat := TotalWeight;
         tblMovement_ReturnInTotalSummPVAT.AsFloat := ToralPrice;
@@ -3032,17 +3435,17 @@ begin
   try
     qryGoodsListSale.Connection := conMain;
 
-    qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
-      'GK.VALUEDATA || '';'' || PI.OrderPrice || '';'' || M.VALUEDATA || '';'' || G.WEIGHT || '';0''' +
+    qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || G.VALUEDATA || '';'' || ' +
+      'IFNULL(GK.VALUEDATA, ''-'') || '';'' || IFNULL(PI.OrderPrice, 0) || '';'' || IFNULL(M.VALUEDATA, ''-'') || '';'' || G.WEIGHT || '';0''' +
       'from OBJECT_GOODSLISTSALE GLS ' +
       'JOIN OBJECT_GOODS G ON GLS.GOODSID = G.ID ' +
-      'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID AND GK.ISERASED = 0 ' +
-      'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
-      'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+      'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID ' +
+      'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+      'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
       'WHERE GLS.PARTNERID = :PARTNERID and GLS.ISERASED = 0 order by G.VALUEDATA ';
 
     qryGoodsListSale.ParamByName('PARTNERID').AsInteger := qryPartnerId.AsInteger;
-    qryGoodsListSale.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID.AsInteger;
+    qryGoodsListSale.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID_RET.AsInteger;
     qryGoodsListSale.Open;
 
     qryGoodsListSale.First;
@@ -3056,6 +3459,7 @@ begin
     qryGoodsListSale.Close;
   finally
     qryGoodsListSale.Free;
+    cdsReturnInItems.First;
   end;
 end;
 
@@ -3070,17 +3474,17 @@ begin
   try
     qryGoodsListReturn.Connection := conMain;
 
-    qryGoodsListReturn.SQL.Text := 'select IR.ID || '';'' || G.ID || '';'' || GK.ID || '';'' || ' +
-      'G.VALUEDATA || '';'' || GK.VALUEDATA || '';'' || PI.OrderPrice || '';'' || M.VALUEDATA || '';'' || ' +
-      'G.WEIGHT || '';'' || IR.AMOUNT ' +
+    qryGoodsListReturn.SQL.Text := 'select IR.ID || '';'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || ' +
+      'G.VALUEDATA || '';'' || IFNULL(GK.VALUEDATA, ''-'') || '';'' || IFNULL(PI.OrderPrice, 0) || '';'' || ' +
+      'IFNULL(M.VALUEDATA, ''-'') || '';'' || G.WEIGHT || '';'' || IR.AMOUNT ' +
       'from MOVEMENTITEM_RETURNIN IR ' +
-      'JOIN OBJECT_GOODS G ON IR.GOODSID = G.ID ' +
-      'JOIN OBJECT_GOODSKIND GK ON GK.ID = IR.GOODSKINDID ' +
-      'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-      'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+      'JOIN OBJECT_GOODS G ON G.ID = IR.GOODSID ' +
+      'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = IR.GOODSKINDID ' +
+      'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+      'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
       'WHERE IR.MOVEMENTID = ' + IntToStr(AId) + ' order by G.VALUEDATA ';
 
-    qryGoodsListReturn.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID.AsInteger;
+    qryGoodsListReturn.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID_RET.AsInteger;
     qryGoodsListReturn.Open;
 
     qryGoodsListReturn.First;
@@ -3100,17 +3504,17 @@ end;
 procedure TDM.GenerateReturnInItemsList;
 begin
   qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ''-'' PromoPrice, ' +
-    'GLK.REMAINS, PI.OrderPrice PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
-    'GK.VALUEDATA || '';'' || PI.OrderPrice || '';'' || ' + 'M.VALUEDATA || '';'' || G.WEIGHT || '';0'' FullInfo, ' +
+    'GLK.REMAINS, PI.OrderPrice PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || G.VALUEDATA || '';'' || ' +
+    'IFNULL(GK.VALUEDATA, ''-'') || '';'' || IFNULL(PI.OrderPrice, 0) || '';'' || IFNULL(M.VALUEDATA, ''-'') || '';'' || G.WEIGHT || '';0'' FullInfo, ' +
     'G.VALUEDATA || '';0'' SearchName ' +
     'from OBJECT_GOODS G ' +
-    'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID AND GLK.ISERASED = 0 ' +
-    'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERASED = 0 ' +
-    'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
-    'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+    'LEFT JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID ' +
+    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID ' +
+    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+    'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
     'WHERE G.ISERASED = 0 order by GoodsName';
 
-  qryGoodsItems.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID.AsInteger;
+  qryGoodsItems.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID_RET.AsInteger;
   qryGoodsItems.Open;
 end;
 
@@ -3147,7 +3551,7 @@ begin
       tblMovement_VisitComment.AsString := AGroupName
     else
       tblMovement_VisitComment.AsString := 'Общая';
-    tblMovement_VisitStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
+    tblMovement_VisitInsertDate.AsDateTime := Now();
     tblMovement_VisitisSync.AsBoolean := false;
 
     tblMovement_Visit.Post;
@@ -3268,6 +3672,105 @@ begin
     Result := false;
   end;
 end;
+
+function TDM.CreateNewPartner(JuridicalId: integer; JuridicalName, Address: string;
+  GPSN, GPSE: Double; var ErrorMessage : string): boolean;
+var
+  GlobalId: TGUID;
+  NewJuridicalId, NewPartnerId: integer;
+  qryNewId: TFDQuery;
+begin
+  Result := false;
+
+  // получение Id для новой юридического лица (если не выбрали из существующих)
+  NewJuridicalId := JuridicalId;
+  if NewJuridicalId = -1 then
+  begin
+    qryNewId := TFDQuery.Create(nil);
+    try
+      qryNewId.Connection := conMain;
+
+      qryNewId.Open('select Min(ID) from OBJECT_JURIDICAL');
+      if (qryNewId.RecordCount > 0) and (qryNewId.Fields[0].AsInteger < 0) then
+        NewJuridicalId := qryNewId.Fields[0].AsInteger - 1;
+    finally
+      FreeAndNil(qryNewId);
+    end;
+  end;
+
+  // получение Id для новой ТТ
+  NewPartnerId := -1;
+  qryNewId := TFDQuery.Create(nil);
+  try
+    qryNewId.Connection := conMain;
+
+    qryNewId.Open('select Min(ID) from OBJECT_PARTNER');
+    if (qryNewId.RecordCount > 0) and (qryNewId.Fields[0].AsInteger < 0) then
+      NewPartnerId := qryNewId.Fields[0].AsInteger - 1;
+  finally
+    FreeAndNil(qryNewId);
+  end;
+
+  conMain.StartTransaction;
+  try
+    if NewJuridicalId < 0 then // необходимо сохранить новое юридическое лицо
+    begin
+      tblObject_Juridical.Open;
+
+      tblObject_Juridical.Append;
+
+      CreateGUID(GlobalId);
+      tblObject_JuridicalId.AsInteger := NewJuridicalId;
+      tblObject_JuridicalContractId.AsInteger := 0;
+      tblObject_JuridicalGUID.AsString := GUIDToString(GlobalId);
+      tblObject_JuridicalValueData.AsString := JuridicalName;
+      tblObject_JuridicalisErased.AsBoolean := false;
+      tblObject_JuridicalisSync.AsBoolean := false;
+
+      tblObject_Juridical.Post;
+    end;
+
+    // сохранение новой ТТ
+    tblObject_Partner.Open;
+
+    tblObject_Partner.Append;
+
+    CreateGUID(GlobalId);
+    tblObject_PartnerId.AsInteger := NewPartnerId;
+    tblObject_PartnerJuridicalId.AsInteger := NewJuridicalId;
+    tblObject_PartnerContractId.AsInteger := 0;
+    tblObject_PartnerGUID.AsString := GUIDToString(GlobalId);
+    tblObject_PartnerAddress.AsString := Address;
+    tblObject_PartnerValueData.AsString := JuridicalName + ' ' + Address;
+    tblObject_PartnerGPSN.AsFloat := GPSN;
+    tblObject_PartnerGPSE.AsFloat := GPSE;
+    tblObject_PartnerSchedule.AsString := 't;t;t;t;t;t;t';
+    tblObject_PartnerPriceListId.AsInteger := tblObject_ConstPriceListId_def.AsInteger;
+    tblObject_PartnerPriceListId_ret.AsInteger := tblObject_ConstPriceListId_def.AsInteger;
+    tblObject_PartnerisErased.AsBoolean := false;
+    tblObject_PartnerisSync.AsBoolean := false;
+
+    tblObject_Partner.Post;
+
+    conMain.Commit;
+
+    tblObject_Partner.Close;
+    tblObject_Juridical.Close;
+
+    Result := true;
+  except
+    on E : Exception do
+    begin
+      conMain.Rollback;
+
+      tblObject_Partner.Close;
+      tblObject_Juridical.Close;
+
+      ErrorMessage := E.Message;
+    end;
+  end;
+end;
+
 
 initialization
 
