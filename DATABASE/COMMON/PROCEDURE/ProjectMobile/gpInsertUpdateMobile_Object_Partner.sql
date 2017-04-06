@@ -8,6 +8,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Object_Partner (Integer, TVarChar, 
                                                              TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
                                                              Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Object_Partner (Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Object_Partner (Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_Object_Partner (
  INOUT ioId               Integer  ,  -- ключ объекта <Контрагент>
@@ -16,14 +17,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_Object_Partner (
     IN inAddress          TVarChar ,  -- Адрес точки доставки
     IN inPrepareDayCount  TFloat   ,  -- За сколько дней принимается заказ
     IN inDocumentDayCount TFloat   ,  -- Через сколько дней оформляется документально
-    IN inJuridicalGUID    TVarChar ,  -- Юридическое лицо (Глобальный уникальный идентификатор)
+    IN inJuridicalId      Integer  ,  -- Идентификатор юридического лица
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbJuridicalId Integer;
    DECLARE vbPersonalId Integer;
    DECLARE vbId Integer;
    DECLARE vbIsInsert Boolean;
@@ -33,23 +33,8 @@ BEGIN
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
 
-      IF COALESCE (inJuridicalGUID, '') = ''
-      THEN
-           RAISE EXCEPTION 'Ошибка. Не задан глобальный уникальный идентификатор юр.лица';
-      END IF;
-
-      -- ищем юр.лицо по значению глобального уникального идентификатора
-      SELECT ObjectString_Juridical_GUID.ObjectId
-      INTO vbJuridicalId
-      FROM ObjectString AS ObjectString_Juridical_GUID
-           JOIN Object AS Object_Juridical
-                       ON Object_Juridical.Id = ObjectString_Juridical_GUID.ObjectId
-                      AND Object_Juridical.DescId = zc_Object_Juridical()
-      WHERE ObjectString_Juridical_GUID.DescId = zc_ObjectString_Juridical_GUID()
-        AND ObjectString_Juridical_GUID.ValueData = inJuridicalGUID;
-
-      -- Проверка - нашли ли юр. лицо
-      IF COALESCE (vbJuridicalId, 0) = 0  
+      -- Проверка - установлено ли юр.лицо
+      IF COALESCE (inJuridicalId, 0) = 0  
       THEN
            RAISE EXCEPTION 'Не установлено юридическое лицо!';
       END IF;
@@ -90,7 +75,7 @@ BEGIN
       -- сохранили свойство <Через сколько дней оформляется документально>
       PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Partner_DocumentDayCount(), ioId, inDocumentDayCount);
       -- сохранили связь с <Юридические лица>
-      PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_Juridical(), ioId, vbJuridicalId);
+      PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_Juridical(), ioId, inJuridicalId);
       -- сохранили связь с <Сотрудник (торговый агент)>
       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_PersonalTrade(), ioId, vbPersonalId);
       -- сохранили свойство <Глобальный уникальный идентификатор>
@@ -110,13 +95,4 @@ $BODY$
 */
 
 -- тест
-/* SELECT * FROM gpInsertUpdateMobile_Object_Partner (ioId               := 0
-                                                    , inGUID             := '{FD0D2968-FE5A-49B8-AC9B-29E0FC741E91}'
-                                                    , inName             := 'Контрагент с моб. устройства'
-                                                    , inAddress          := 'г. Полтава, ул. Котляревского, 5'       -- Адрес торговой точки
-                                                    , inPrepareDayCount  := 1                                        -- За сколько дней принимается заказ
-                                                    , inDocumentDayCount := 1                                        -- Через сколько дней оформляется документально
-                                                    , inJuridicalGUID    := '{CCCCEF83-D391-4CDB-A471-AF9DD07AC7D9}' -- Юридическое лицо (Глобальный уникальный идентификатор)
-                                                    , inSession          := zfCalc_UserAdmin()
-                                                     )
-*/
+-- SELECT * FROM gpInsertUpdateMobile_Object_Partner (ioId:= 0, inGUID:= '{FD0D2968-FE5A-49B8-AC9B-29E0FC741E91}', inName:= 'Контрагент с моб. устройства', inAddress:= 'г. Полтава, ул. Котляревского, 5', inPrepareDayCount:= 1, inDocumentDayCount:= 1, inJuridicalId:= 1005442, inSession:= zfCalc_UserAdmin())

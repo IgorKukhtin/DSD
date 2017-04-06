@@ -42,6 +42,13 @@ type
     Data: TObject;
   end;
 
+  TJuridicalItem = record
+    Id: Integer;
+    ContractIds: string;
+
+    constructor Create(AId: Integer; AContractIds: string);
+  end;
+
   TContractItem = record
     Id: Integer;
     Name: string;
@@ -514,9 +521,6 @@ type
     eServerVersion: TEdit;
     bUpdateProgram: TButton;
     Circle1: TCircle;
-    layStyle: TLayout;
-    ComboBoxStyle: TComboBox;
-    Label49: TLabel;
     Layout16: TLayout;
     Layout17: TLayout;
     Layout18: TLayout;
@@ -537,7 +541,7 @@ type
     Layout21: TLayout;
     Layout22: TLayout;
     Label53: TLabel;
-    cNewJuridical: TCheckBox;
+    cSelectJuridical: TCheckBox;
     cbNewPartnerJuridical: TComboBox;
     eNewPartnerJuridical: TEdit;
     Layout23: TLayout;
@@ -546,7 +550,7 @@ type
     Layout25: TLayout;
     Layout26: TLayout;
     Label55: TLabel;
-    Edit1: TEdit;
+    eNewPartnerAddress: TEdit;
     Layout27: TLayout;
     GridPanelLayout4: TGridPanelLayout;
     Label56: TLabel;
@@ -555,6 +559,20 @@ type
     eNewPartnerGPSN: TEdit;
     eNewPartnerGPSE: TEdit;
     bNewPartnerGPS: TButton;
+    Label49: TLabel;
+    lPartnerKind: TLabel;
+    Label59: TLabel;
+    lPartnerDebt: TLabel;
+    Label61: TLabel;
+    lPartnerOver: TLabel;
+    Label63: TLabel;
+    lPartnerOverDay: TLabel;
+    Layout28: TLayout;
+    Layout29: TLayout;
+    Layout30: TLayout;
+    Layout31: TLayout;
+    Layout32: TLayout;
+    Layout33: TLayout;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -697,15 +715,16 @@ type
       ItemIndex: Integer; const LocalClickPos: TPointF;
       const ItemObject: TListItemDrawable);
     procedure bUpdateProgramClick(Sender: TObject);
-    procedure ComboBoxStyleChange(Sender: TObject);
     procedure cbPartnersChange(Sender: TObject);
-    procedure cNewJuridicalChange(Sender: TObject);
+    procedure cSelectJuridicalChange(Sender: TObject);
     procedure ibiNewPartnerClick(Sender: TObject);
     procedure bNewPartnerGPSClick(Sender: TObject);
+    procedure bSaveNewPartnerClick(Sender: TObject);
+    procedure eNewPartnerGPSNValidate(Sender: TObject; var Text: string);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
-    FJuridicalIdList: TList<integer>;
+    FJuridicalList: TList<TJuridicalItem>;
     FPartnerList: TList<TPartnerItem>;
     FAllContractList: TList<TContractItem>;
     FContractIdList: TList<integer>;
@@ -815,6 +834,13 @@ resourcestring
   rstCapture = 'Снимок';
   rstReturn = 'Отмена';
 
+{ TJuridicalItem }
+constructor TJuridicalItem.Create(AId: Integer; AContractIds: string);
+begin
+  Id := AId;
+  ContractIds := AContractIds;
+end;
+
 { TContractItem }
 constructor TContractItem.Create(AId: Integer; AName: string);
 begin
@@ -869,27 +895,6 @@ begin
     FreeAndNil(SettingsFile);
   end;
 
-  // Styles
-  if TOSVersion.Platform = pfAndroid then
-  begin
-    ComboBoxStyle.Items.Add('Default');
-    ComboBoxStyle.Items.Add('AndroidLight');
-    ComboBoxStyle.Items.Add('AndroidLLight');
-    ComboBoxStyle.Items.Add('AndroidWear');
-    ComboBoxStyle.Items.Add('AndroidDark');
-    ComboBoxStyle.Items.Add('AndroidLDark');
-    ComboBoxStyle.Items.Add('AndroidLDarkBlue');
-    ComboBoxStyle.Items.Add('GoogleGlass');
-
-    ComboBoxStyle.ItemIndex := ComboBoxStyle.Items.IndexOf(FDeafultStyleName);
-    if ComboBoxStyle.ItemIndex < 0 then
-      ComboBoxStyle.ItemIndex := 0; // make sure "default" style is selected at start-up
-  end
-  else
-  begin
-    layStyle.Visible := false;
-  end;
-
   {$IFDEF ANDROID}
   if TPlatformServices.Current.SupportsPlatformService(IFMXScreenService, IInterface(ScreenService)) then
   begin
@@ -914,7 +919,7 @@ begin
   FDeletedRI := TList<Integer>.Create;
   FCurCoordinatesSet := false;
 
-  FJuridicalIdList := TList<integer>.Create;
+  FJuridicalList := TList<TJuridicalItem>.Create;
   FPartnerList := TList<TPartnerItem>.Create;
   FAllContractList := TList<TContractItem>.Create;
   FContractIdList := TList<integer>.Create;
@@ -941,7 +946,7 @@ begin
   FDeletedRI.Free;
   FDeletedOI.Free;
 
-  FJuridicalIdList.Free;
+  FJuridicalList.Free;
   FPartnerList.Free;
   FAllContractList.Free;
   FContractIdList.Free;
@@ -1379,7 +1384,7 @@ begin
   else
   if ItemObject.Name = 'EditButton' then
   begin
-    if DM.qryPartnerPriceWithVAT.AsBoolean then
+    if DM.qryPartnerPriceWithVAT_RET.AsBoolean then
       lReturnInPrice.Text := 'Цена (с НДС)'
     else
       lReturnInPrice.Text := 'Цена (без НДС)';
@@ -1547,9 +1552,9 @@ begin
     '''Акция заканчивается '' || strftime(''%d.%m.%Y'',P.ENDSALE) Termin, P.ID PromoId ' +
     'from MOVEMENTITEM_PROMOGOODS PG ' +
     'JOIN MOVEMENT_PROMO P ON P.ID = PG.MOVEMENTID AND :PROMODATE BETWEEN P.STARTSALE AND P.ENDSALE ' +
-    'JOIN OBJECT_GOODS G ON G.ID = PG.GOODSID ' +
-    'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = PG.GOODSKINDID AND GK.ISERASED = 0 ' +
+    'LEFT JOIN OBJECT_GOODS G ON G.ID = PG.GOODSID ' +
+    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = PG.GOODSKINDID ' +
     'ORDER BY G.VALUEDATA, P.ENDSALE';
   DM.qryPromoGoods.ParamByName('PROMODATE').AsDate := dePromoGoodsDate.Date;
   DM.qryPromoGoods.Open;
@@ -1565,8 +1570,8 @@ begin
     'PP.PARTNERID, PP.CONTRACTID, group_concat(distinct PP.MOVEMENTID) PromoIds ' +
     'from MOVEMENTITEM_PROMOPARTNER PP ' +
     'JOIN MOVEMENT_PROMO P ON P.ID = PP.MOVEMENTID AND :PROMODATE BETWEEN P.STARTSALE AND P.ENDSALE ' +
-    'JOIN OBJECT_PARTNER OP ON OP.ID = PP.PARTNERID AND (OP.CONTRACTID = PP.CONTRACTID OR PP.CONTRACTID = 0) ' +
-    'JOIN OBJECT_JURIDICAL J ON J.ID = OP.JURIDICALID ' +
+    'LEFT JOIN OBJECT_PARTNER OP ON OP.ID = PP.PARTNERID AND (OP.CONTRACTID = PP.CONTRACTID OR PP.CONTRACTID = 0) ' +
+    'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = OP.JURIDICALID AND J.CONTRACTID = OP.CONTRACTID ' +
     'LEFT JOIN OBJECT_CONTRACT C ON C.ID = PP.CONTRACTID ' +
     'GROUP BY PP.PARTNERID, PP.CONTRACTID ' +
     'ORDER BY J.VALUEDATA, OP.ADDRESS';
@@ -1598,6 +1603,7 @@ begin
     eStoreRealComment.Text := '';
     DM.DefaultStoreRealItems;
 
+    lwStoreRealItems.ScrollViewPos := 0;
     SwitchToForm(tiStoreReal, nil);
   end
   else
@@ -1611,7 +1617,33 @@ begin
 
     DM.LoadStoreRealItems(DM.cdsStoreRealsId.AsInteger);
 
+    lwStoreRealItems.ScrollViewPos := 0;
     SwitchToForm(tiStoreReal, nil);
+  end;
+end;
+
+procedure TfrmMain.eNewPartnerGPSNValidate(Sender: TObject; var Text: string);
+var
+  str : string;
+begin
+  try
+    Text := Trim(Text);
+    if Text.Length > 0 then
+      StrToFloat(Text);
+  except
+    ShowMessage('Неправильный формат координаты (nn.nnnnnn)');
+
+    // пфытаемся исправить на правильное значение
+    str := StringReplace(Text, ',', '.', [rfReplaceAll]);
+    str := StringReplace(str, '-', '', [rfReplaceAll]);
+    str := StringReplace(str, ' ', '', [rfReplaceAll]);
+    str := StringReplace(str, '.', ';', []);
+    str := StringReplace(str, '.', '', [rfReplaceAll]);
+    str := StringReplace(str, ';', '.', []);
+    if (str.Length > 0) and (str[Low(str)] = '.') then
+      str := '0' + str;
+
+    Text := str;
   end;
 end;
 
@@ -1883,6 +1915,7 @@ begin
   deOperDate.Date := Date();
   DM.DefaultOrderExternalItems;
 
+  lwOrderExternalItems.ScrollViewPos := 0;
   SwitchToForm(tiOrderExternal, nil);
 end;
 
@@ -1891,8 +1924,8 @@ begin
   GetCurrentCoordinates;
   if FCurCoordinatesSet then
   begin
-    eNewPartnerGPSN.Text := FormatFloat('0.#####', FCurCoordinates.Latitude);
-    eNewPartnerGPSE.Text := FormatFloat('0.#####', FCurCoordinates.Longitude);
+    eNewPartnerGPSN.Text := FormatFloat('0.######', FCurCoordinates.Latitude);
+    eNewPartnerGPSE.Text := FormatFloat('0.######', FCurCoordinates.Longitude);
   end
   else
     ShowMessage('Не удалось получить текущие координаты');
@@ -1932,8 +1965,13 @@ procedure TfrmMain.bPrintJuridicalCollationClick(Sender: TObject);
 var
   SettingsFile : TIniFile;
 begin
+  lStartRemains.Text := 'Сальдо на начало периода: 0';
+  lEndRemains.Text := 'Сальдо на конец периода: 0';
+  lTotalDebit.Text := '0';
+  lTotalKredit.Text := '0';
+
   DM.GenerateJuridicalCollation(deStartRJC.Date, deEndRJC.Date,
-           FJuridicalIdList[cbJuridicals.ItemIndex],
+           FJuridicalList[cbJuridicals.ItemIndex].Id,
            FPartnerList[cbPartners.ItemIndex].Id,
            FContractIdList[cbContracts.ItemIndex],
            FPaidKindIdList[cbPaidKind.ItemIndex]);
@@ -1951,7 +1989,7 @@ begin
   try
     SettingsFile.WriteString('REPORT', 'StartRJC', FormatDateTime('DD.MM.YYYY', deStartRJC.Date));
     SettingsFile.WriteString('REPORT', 'EndRJC', FormatDateTime('DD.MM.YYYY', deEndRJC.Date));
-    SettingsFile.WriteInteger('REPORT', 'JuridicalRJC', FJuridicalIdList[cbJuridicals.ItemIndex]);
+    SettingsFile.WriteInteger('REPORT', 'JuridicalRJC', FJuridicalList[cbJuridicals.ItemIndex].Id);
     SettingsFile.WriteInteger('REPORT', 'PartnerRJC', FPartnerList[cbPartners.ItemIndex].Id);
     SettingsFile.WriteInteger('REPORT', 'ContractRJC', FContractIdList[cbContracts.ItemIndex]);
     SettingsFile.WriteInteger('REPORT', 'PaidKindRJC', FPaidKindIdList[cbPaidKind.ItemIndex]);
@@ -2063,22 +2101,25 @@ begin
 end;
 
 procedure TfrmMain.bReportJuridicalCollationClick(Sender: TObject);
+var
+  i: integer;
 begin
   FFirstSet := true; // для востановления сохраненных значений ТТ и договоров при первом открытии
 
   // заполнение списка юридических лиц
   cbJuridicals.Items.Clear;
-  FJuridicalIdList.Clear;
+  FJuridicalList.Clear;
 
   with DM.qrySelect do
   begin
-    Open('select * from OBJECT_JURIDICAL where ISERASED = 0 order by ValueData');
+    Open('select Id, ValueData, group_concat(distinct CONTRACTID) ContractIds from OBJECT_JURIDICAL ' +
+      'where ISERASED = 0 GROUP BY ID order by ValueData');
     First;
 
     while not Eof do
     begin
       AddComboItem(cbJuridicals, FieldByName('ValueData').AsString);
-      FJuridicalIdList.Add(FieldByName('Id').AsInteger);
+      FJuridicalList.Add(TJuridicalItem.Create(FieldByName('Id').AsInteger, FieldByName('ContractIds').AsString));
 
       Next;
     end;
@@ -2086,7 +2127,11 @@ begin
     Close;
   end;
 
-  cbJuridicals.ItemIndex := FJuridicalIdList.IndexOf(FJuridicalRJC);
+  for i := 0 to FPartnerList.Count - 1 do
+    if FJuridicalList[i].Id = FJuridicalRJC then
+    begin
+      cbJuridicals.ItemIndex := i;
+    end;
   if cbJuridicals.ItemIndex < 0 then
     cbJuridicals.ItemIndex := 0;
 
@@ -2122,6 +2167,47 @@ begin
   FCanEditPartner := false;
 
   SwitchToForm(tiRoutes, nil);
+end;
+
+procedure TfrmMain.bSaveNewPartnerClick(Sender: TObject);
+var
+  JuridicalId: integer;
+  JuridicalName: string;
+  ErrMes: string;
+begin
+  if ((cSelectJuridical.IsChecked) and (cbNewPartnerJuridical.ItemIndex < 0)) or
+     ((not cSelectJuridical.IsChecked) and (Trim(eNewPartnerJuridical.Text) = '')) then
+  begin
+    ShowMessage('Необходимо ввести юридическое лицо или выбрать из уже существующих');
+    exit;
+  end;
+
+  if Trim(eNewPartnerAddress.Text) = '' then
+  begin
+    ShowMessage('Необходимо ввести адрес торговой точки');
+    exit;
+  end;
+
+  if cSelectJuridical.IsChecked then
+  begin
+    JuridicalId := FJuridicalList[cbNewPartnerJuridical.ItemIndex].Id;
+    JuridicalName := cbNewPartnerJuridical.Items[cbNewPartnerJuridical.ItemIndex];
+  end
+  else
+  begin
+    JuridicalId := -1;
+    JuridicalName := Trim(eNewPartnerJuridical.Text);
+  end;
+
+  if DM.CreateNewPartner(JuridicalId, JuridicalName, Trim(eNewPartnerAddress.Text),
+    StrToFloatDef(eNewPartnerGPSN.Text, 0), StrToFloatDef(eNewPartnerGPSE.Text, 0), ErrMes) then
+  begin
+     ShowMessage('Сохранение новой торговой точки прошло успешно.');
+     DM.qryPartner.Refresh;
+     ReturnPriorForm;
+   end
+   else
+     ShowMessage('Ошибка при сохранении: ' + ErrMes);
 end;
 
 procedure TfrmMain.bSaveOIClick(Sender: TObject);
@@ -2362,7 +2448,7 @@ end;
 
 procedure TfrmMain.bNewReturnInClick(Sender: TObject);
 begin
-  if DM.qryPartnerPriceWithVAT.AsBoolean then
+  if DM.qryPartnerPriceWithVAT_RET.AsBoolean then
     lReturnInPrice.Text := 'Цена (с НДС)'
   else
     lReturnInPrice.Text := 'Цена (без НДС)';
@@ -2375,6 +2461,7 @@ begin
   eReturnComment.Text := '';
   DM.DefaultReturnInItems;
 
+  lwReturnInItems.ScrollViewPos := 0;
   SwitchToForm(tiReturnIn, nil);
 end;
 
@@ -2742,6 +2829,9 @@ begin
     if tcMain.ActiveTab = tiReportJuridicalCollation then
       lCaption.Text := 'Акт сверки'
     else
+    if tcMain.ActiveTab = tiNewPartner then
+      lCaption.Text := 'Ввод новой ТТ'
+    else
     if tcMain.ActiveTab = tiOrderExternal then
       lCaption.Text := 'Заявки (' + DM.qryPartnerName.AsString + ')'
     else
@@ -2844,44 +2934,6 @@ begin
     WebServerLayout1.Visible := true;
     WebServerLayout2.Visible := true;
     SyncLayout.Visible := false;
-  end;
-end;
-
-procedure TfrmMain.ComboBoxStyleChange(Sender: TObject);
-var
-  resname: string;
-  style: TFMXObject;
-  SettingsFile : TIniFile;
-begin
-  if ComboBoxStyle.ItemIndex > 0 then  // first item is "default" style
-  begin
-    if TOSVersion.Platform = pfAndroid then
-    begin
-      resname := ComboBoxStyle.Selected.Text + '.fsf';
-    end;
-
-    {$IF DEFINED(iOS) or DEFINED(ANDROID)}
-    style := TStyleStreaming.LoadFromFile(TPath.Combine(TPath.GetDocumentsPath, resname));
-    {$ELSE}
-    style := TStyleStreaming.LoadFromFile(resname);
-    {$ENDIF}
-
-    if style <> nil then
-      TStyleManager.SetStyle(style);
-  end
-  else
-    TStyleManager.SetStyle(nil);  // set the "default" style
-
-  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
-  SettingsFile := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'settings.ini'));
-  {$ELSE}
-  SettingsFile := TIniFile.Create('settings.ini');
-  {$ENDIF}
-  try
-    FDeafultStyleName := ComboBoxStyle.Selected.Text;
-    SettingsFile.WriteString('STYLES', 'GLOBAL', FDeafultStyleName);
-  finally
-    FreeAndNil(SettingsFile);
   end;
 end;
 
@@ -3006,22 +3058,29 @@ procedure TfrmMain.EnterNewPartner;
 var
   Item: TListBoxItem;
 begin
-  cNewJuridical.IsChecked := false;
-  cNewJuridicalChange(cNewJuridical);
+  cSelectJuridical.IsChecked := false;
+  cSelectJuridicalChange(cSelectJuridical);
+
+  eNewPartnerJuridical.Text := '';
+  cbNewPartnerJuridical.ItemIndex := -1;
+  eNewPartnerAddress.Text := '';
+  eNewPartnerGPSN.Text := '';
+  eNewPartnerGPSE.Text := '';
 
   // заполнение списка юридических лиц
   cbNewPartnerJuridical.Items.Clear;
-  FJuridicalIdList.Clear;
+  FJuridicalList.Clear;
 
   with DM.qrySelect do
   begin
-    Open('select * from OBJECT_JURIDICAL where ISERASED = 0 order by ValueData');
+    Open('select Id, ValueData, group_concat(distinct CONTRACTID) ContractIds from OBJECT_JURIDICAL ' +
+      'where ISERASED = 0 GROUP BY ID order by ValueData');
     First;
 
     while not Eof do
     begin
       AddComboItem(cbNewPartnerJuridical, FieldByName('ValueData').AsString);
-      FJuridicalIdList.Add(FieldByName('Id').AsInteger);
+      FJuridicalList.Add(TJuridicalItem.Create(FieldByName('Id').AsInteger, FieldByName('ContractIds').AsString));
 
       Next;
     end;
@@ -3056,8 +3115,11 @@ begin
     sQuery := sQuery + ' order by ((IFNULL(P.GPSN, 0) - ' + CurGPSN + ') * ' + LatitudeRatio + ') * ' +
       '((IFNULL(P.GPSN, 0) - ' + CurGPSN + ') * ' + LatitudeRatio + ') + ' +
       '((IFNULL(P.GPSE, 0) - ' + CurGPSE + ') * ' + LongitudeRatio + ') * ' +
-      '((IFNULL(P.GPSE, 0) - ' + CurGPSE + ') * ' + LongitudeRatio + ')';
-  end;
+      '((IFNULL(P.GPSE, 0) - ' + CurGPSE + ') * ' + LongitudeRatio + ')' +
+      ', Name';
+  end
+  else
+    sQuery := sQuery + ' order by Name';
 
   DM.qryPartner.SQL.Text := sQuery;
   DM.qryPartner.ParamByName('DefaultPriceList').AsInteger := DM.tblObject_ConstPriceListId_def.AsInteger;
@@ -3079,6 +3141,37 @@ begin
   lPartnerName.Text := DM.qryPartnerName.AsString;
   lPartnerAddress.Text := DM.qryPartnerAddress.AsString;
 
+  if DM.qryPartnerPaidKindId.AsInteger = DM.tblObject_ConstPaidKindId_First.AsInteger then // БН
+  begin
+    lPartnerKind.Text := DM.tblObject_ConstPaidKindName_First.AsString;
+    if not DM.qryPartnerDebtSumJ.IsNull then
+      lPartnerDebt.Text := FormatFloat('0.##', DM.qryPartnerDebtSumJ.AsFloat)
+    else
+      lPartnerDebt.Text := '-';
+    if not DM.qryPartnerOverSumJ.IsNull then
+      lPartnerOver.Text := FormatFloat('0.##', DM.qryPartnerOverSumJ.AsFloat)
+    else
+      lPartnerOver.Text := '-';
+    if not DM.qryPartnerOverDaysJ.IsNull then
+      lPartnerOverDay.Text := DM.qryPartnerOverDaysJ.AsString
+    else
+      lPartnerOverDay.Text := '-';
+  end
+  else
+  if DM.qryPartnerPaidKindId.AsInteger = DM.tblObject_ConstPaidKindId_Second.AsInteger then // Нал
+  begin
+    lPartnerKind.Text := DM.tblObject_ConstPaidKindName_Second.AsString;
+    lPartnerDebt.Text := FormatFloat('0.##', DM.qryPartnerDebtSum.AsFloat);
+    lPartnerOver.Text := FormatFloat('0.##', DM.qryPartnerOverSum.AsFloat);
+    lPartnerOverDay.Text := DM.qryPartnerOverDays.AsString;
+  end
+  else  // нет договора
+  begin
+    lPartnerKind.Text := '-';
+    lPartnerDebt.Text := '-';
+    lPartnerOver.Text := '-';
+    lPartnerOverDay.Text := '-';
+  end;
 
   GetMapPartnerScreenshot(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat);
 
@@ -3107,8 +3200,8 @@ begin
     'PLI.ORDERPRICE Price, M.VALUEDATA Measure ' +
     'FROM OBJECT_PRICELISTITEMS PLI ' +
     'JOIN OBJECT_GOODS G ON G.ID = PLI.GOODSID AND G.ISERASED = 0 ' +
-    'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID AND GLK.ISERASED = 0 ' +
-    'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERASED = 0 ' +
+    'LEFT JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID ' +
+    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID ' +
     'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
     'WHERE PLI.PRICELISTID = ' + DM.qryPriceListId.AsString);
 
@@ -3137,9 +3230,9 @@ begin
     '''Акция заканчивается '' || strftime(''%d.%m.%Y'',P.ENDSALE) Termin, P.ID PromoId ' +
     'from MOVEMENTITEM_PROMOGOODS PG ' +
     'JOIN MOVEMENT_PROMO P ON P.ID = PG.MOVEMENTID ' +
-    'JOIN OBJECT_GOODS G ON G.ID = PG.GOODSID ' +
-    'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = PG.GOODSKINDID AND GK.ISERASED = 0 ' +
+    'LEFT JOIN OBJECT_GOODS G ON G.ID = PG.GOODSID ' +
+    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = PG.GOODSKINDID ' +
     'WHERE PG.MOVEMENTID IN (' + DM.qryPromoPartnersPromoIds.AsString + ') ' +
     'ORDER BY G.VALUEDATA, P.ENDSALE';
   DM.qryPromoGoods.Open;
@@ -3166,8 +3259,8 @@ begin
     'CASE WHEN PP.CONTRACTID = 0 THEN ''все договора'' ELSE C.CONTRACTTAGNAME || '' '' || C.VALUEDATA END ContractName, ' +
     'PP.PARTNERID, PP.CONTRACTID, group_concat(distinct PP.MOVEMENTID) PromoIds ' +
     'from MOVEMENTITEM_PROMOPARTNER PP ' +
-    'JOIN OBJECT_PARTNER OP ON OP.ID = PP.PARTNERID AND (OP.CONTRACTID = PP.CONTRACTID OR PP.CONTRACTID = 0) ' +
-    'JOIN OBJECT_JURIDICAL J ON J.ID = OP.JURIDICALID ' +
+    'LEFT JOIN OBJECT_PARTNER OP ON OP.ID = PP.PARTNERID AND (OP.CONTRACTID = PP.CONTRACTID OR PP.CONTRACTID = 0) ' +
+    'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = OP.JURIDICALID AND J.CONTRACTID = OP.CONTRACTID ' +
     'LEFT JOIN OBJECT_CONTRACT C ON C.ID = PP.CONTRACTID ' +
     'WHERE PP.MOVEMENTID = :PROMOID ' +
     'GROUP BY PP.PARTNERID, PP.CONTRACTID ' +
@@ -3378,10 +3471,10 @@ begin
 
       TotalPriceWithPercent := TotalPriceWithPercent + PriceWithPercent;
 
-      if DM.qryPartnerPriceWithVAT.AsBoolean then
+      if DM.qryPartnerPriceWithVAT_RET.AsBoolean then
         FReturnInTotalPrice := FReturnInTotalPrice + PriceWithPercent
       else
-        FReturnInTotalPrice := FReturnInTotalPrice + PriceWithPercent * (100 + DM.qryPartnerVATPercent.AsCurrency) / 100;
+        FReturnInTotalPrice := FReturnInTotalPrice + PriceWithPercent * (100 + DM.qryPartnerVATPercent_RET.AsCurrency) / 100;
 
       if FormatFloat('0.##', DM.cdsReturnInItemsWeight.AsFloat) <> '0' then
         FReturnInTotalCountKg := FReturnInTotalCountKg + DM.cdsReturnInItemsWeight.AsFloat * DM.cdsReturnInItemsCount.AsFloat
@@ -3498,19 +3591,17 @@ procedure TfrmMain.cbJuridicalsChange(Sender: TObject);
 var
   i: integer;
 begin
-  cbPartners.Items.Clear;
-  FPartnerList.Clear;
-
-  FAllContractList.Clear;
-
-  AddComboItem(cbPartners, 'все');
-  FPartnerList.Add(TPartnerItem.Create(0, ''));
-
   with DM.qrySelect do
   begin
+    cbPartners.Items.Clear;
+    FPartnerList.Clear;
+
+    AddComboItem(cbPartners, 'все');
+    FPartnerList.Add(TPartnerItem.Create(0, ''));
+
     Open('select P.ID, P.ADDRESS, group_concat(distinct C.ID) ContractIds from OBJECT_PARTNER P ' +
          'LEFT JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID ' +
-         'WHERE P.JURIDICALID = ' + IntToStr(FJuridicalIdList[cbJuridicals.ItemIndex]) +
+         'WHERE P.JURIDICALID = ' + IntToStr(FJuridicalList[cbJuridicals.ItemIndex].Id) +
          ' AND P.ISERASED = 0 GROUP BY ADDRESS');
 
     First;
@@ -3522,10 +3613,11 @@ begin
       Next;
     end;
 
-    Open('select distinct C.ID, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName from OBJECT_PARTNER P ' +
-         'JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID ' +
-         'WHERE P.JURIDICALID = ' + IntToStr(FJuridicalIdList[cbJuridicals.ItemIndex]) +
-         ' AND P.ISERASED = 0');
+    // все договора юридического лица
+    FAllContractList.Clear;
+
+    Open('select distinct ID, CONTRACTTAGNAME || '' '' || VALUEDATA ContractName from OBJECT_CONTRACT ' +
+      'where ID in (' + FJuridicalList[cbJuridicals.ItemIndex].ContractIds + ')');
 
     First;
     while not Eof do
@@ -3537,6 +3629,7 @@ begin
 
     Close;
   end;
+
   if FFirstSet then
     for i := 0 to FPartnerList.Count - 1 do
       if FPartnerList[i].Id = FPartnerRJC then
@@ -3547,17 +3640,17 @@ begin
     cbPartners.ItemIndex := 0;
 end;
 
-procedure TfrmMain.cNewJuridicalChange(Sender: TObject);
+procedure TfrmMain.cSelectJuridicalChange(Sender: TObject);
 begin
-  if cNewJuridical.IsChecked then
-  begin
-    cbNewPartnerJuridical.Visible := false;
-    eNewPartnerJuridical.Visible := true;
-  end
-  else
+  if cSelectJuridical.IsChecked then
   begin
     eNewPartnerJuridical.Visible := false;
     cbNewPartnerJuridical.Visible := true;
+  end
+  else
+  begin
+    cbNewPartnerJuridical.Visible := false;
+    eNewPartnerJuridical.Visible := true;
   end;
 end;
 
