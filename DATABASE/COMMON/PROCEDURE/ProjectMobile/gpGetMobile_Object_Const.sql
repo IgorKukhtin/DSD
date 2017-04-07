@@ -67,10 +67,10 @@ BEGIN
             , Object_PaidKind_SecondForm.Id          AS PaidKindId_Second
             , Object_PaidKind_SecondForm.ValueData   AS PaidKindName_Second
            
-            , Object_Status_Complete.Id              AS StatusId_Complete
-            , Object_Status_Complete.ValueData       AS StatusName_Complete
             , Object_Status_UnComplete.Id            AS StatusId_UnComplete
             , Object_Status_UnComplete.ValueData     AS StatusName_UnComplete
+            , Object_Status_Complete.Id              AS StatusId_Complete
+            , Object_Status_Complete.ValueData       AS StatusName_Complete
             , Object_Status_Erased.Id                AS StatusId_Erased
             , Object_Status_Erased.ValueData         AS StatusName_Erased
 
@@ -104,8 +104,8 @@ BEGIN
             LEFT JOIN Object AS Object_PaidKind_FirstForm  ON Object_PaidKind_FirstForm.Id = zc_Enum_PaidKind_FirstForm()
             LEFT JOIN Object AS Object_PaidKind_SecondForm ON Object_PaidKind_SecondForm.Id = zc_Enum_PaidKind_SecondForm()
 
-            LEFT JOIN Object AS Object_Status_Complete   ON Object_Status_Complete.Id   = zc_Enum_Status_Complete()
             LEFT JOIN Object AS Object_Status_UnComplete ON Object_Status_UnComplete.Id = zc_Enum_Status_UnComplete()
+            LEFT JOIN Object AS Object_Status_Complete   ON Object_Status_Complete.Id   = zc_Enum_Status_Complete()
             LEFT JOIN Object AS Object_Status_Erased     ON Object_Status_Erased.Id     = zc_Enum_Status_Erased()
 
             LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = 8459 -- Склад Реализации
