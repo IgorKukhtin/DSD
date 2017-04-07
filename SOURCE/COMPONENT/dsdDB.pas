@@ -159,8 +159,8 @@ uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit, VCL.Forms,
      XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar,
      Variants, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
      dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document, Controls,
-     cxButtonEdit, EDI, ExternalSave, Medoc,
-     cxMemo, dsdInternetAction, ParentForm, Vcl.ActnList, System.Rtti;
+     cxButtonEdit, EDI, ExternalSave, Medoc, UnilWin, FormStorage,
+     cxMemo, cxImage, dsdInternetAction, ParentForm, Vcl.ActnList, System.Rtti;
 
 procedure Register;
 begin
@@ -960,6 +960,11 @@ begin
         (Component as TcxTextEdit).Text := FValue;
      if Component is TcxMemo then
         (Component as TcxMemo).Text := FValue;
+     if Component is TcxImage then
+     begin
+        FileWriteString(ExtractFilePath(ParamStr(0)) + 'photo.jpeg', ReConvertConvert(VarToStr(FValue)));
+        (Component as TcxImage).Picture.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'photo.jpeg');
+     end;
      if Component is TcxButtonEdit then
         (Component as TcxButtonEdit).Text := FValue;
      if Component is TdsdFormParams then

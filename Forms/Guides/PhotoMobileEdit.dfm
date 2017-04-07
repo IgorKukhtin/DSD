@@ -2,8 +2,8 @@ object PhotoMobileEditForm: TPhotoMobileEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1060#1086#1090#1086#1075#1088#1072#1092#1080#1080' '#1089' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1091#1089#1090#1088#1086#1081#1089#1090#1074#1072'>'
-  ClientHeight = 158
-  ClientWidth = 579
+  ClientHeight = 154
+  ClientWidth = 569
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,6 +14,9 @@ object PhotoMobileEditForm: TPhotoMobileEditForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = dsdDataSetRefresh
   AddOnFormData.Params = dsdFormParams
+  DesignSize = (
+    569
+    154)
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -59,17 +62,20 @@ object PhotoMobileEditForm: TPhotoMobileEditForm
     TabOrder = 5
     Width = 273
   end
-  object edPhotoData: TcxMemo
-    Left = 311
-    Top = 26
-    TabOrder = 6
-    Height = 112
-    Width = 242
-  end
   object cxLabel3: TcxLabel
     Left = 311
     Top = 8
     Caption = #1060#1086#1090#1086#1075#1088#1072#1092#1080#1103
+  end
+  object edPhotoData: TcxImage
+    Left = 311
+    Top = 26
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    Properties.GraphicClassName = 'TJPEGImage'
+    Properties.ReadOnly = False
+    TabOrder = 7
+    Height = 112
+    Width = 242
   end
   object ActionList: TActionList
     Left = 152
@@ -134,7 +140,6 @@ object PhotoMobileEditForm: TPhotoMobileEditForm
       item
         Name = 'inPhotoData'
         Value = Null
-        Component = edPhotoData
         DataType = ftWideString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -207,7 +212,7 @@ object PhotoMobileEditForm: TPhotoMobileEditForm
     Top = 104
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 16
-    Top = 112
+    Left = 52
+    Top = 92
   end
 end
