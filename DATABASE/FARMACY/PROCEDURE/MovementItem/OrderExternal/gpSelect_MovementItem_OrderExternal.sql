@@ -13,7 +13,6 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Amount TFloat, Price TFloat, Summ TFloat, PartionGoodsDate TDateTime
              , Comment TVarChar, isErased Boolean
              , isSP Boolean
-             , Calc_Color Integer
               )
 AS
 $BODY$
@@ -39,7 +38,6 @@ BEGIN
            , tmpMI.Comment              AS Comment
            , FALSE                      AS isErased
            , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
-           , CASE WHEN Object_Goods.isSP = TRUE  THEN 25088 ELSE zc_Color_White() END  AS Calc_Color
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
                   , Object_Goods.ObjectCode                                           AS GoodsCode

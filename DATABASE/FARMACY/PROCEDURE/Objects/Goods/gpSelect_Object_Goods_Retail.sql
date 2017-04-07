@@ -68,7 +68,7 @@ BEGIN
              Object_Goods_View.Id
            , Object_Goods_View.GoodsCodeInt
 --           , ObjectString.ValueData                           AS GoodsCode
-           , zfFormat_BarCode(zc_BarCodePref_Object(), Object_Goods_View.GoodsMainId) AS IdBarCode
+           , zfFormat_BarCode(zc_BarCodePref_Object(), ObjectLink_Main.ChildObjectId) AS IdBarCode
            , Object_Goods_View.GoodsName
            , Object_Goods_View.isErased
            , Object_Goods_View.GoodsGroupId
@@ -88,7 +88,7 @@ BEGIN
            -- , CASE WHEN Object_Goods_View.isPublished = FALSE THEN NULL ELSE Object_Goods_View.isPublished END :: Boolean AS isPublished
            , Object_Goods_View.PercentMarkup  
            , Object_Goods_View.Price
-           , CASE WHEN Object_Goods_View.isSP = TRUE THEN zc_Color_Yelow() WHEN Object_Goods_View.isSecond = TRUE THEN 16440317 WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc  --16380671   10965163 
+           , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE THEN zc_Color_Yelow() WHEN Object_Goods_View.isSecond = TRUE THEN 16440317 WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc  --16380671   10965163 
            , Object_Retail.ObjectCode AS RetailCode
            , Object_Retail.ValueData  AS RetailName
            , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
@@ -126,7 +126,7 @@ BEGIN
                             AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
         LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
-        LEFT JOIN tmpLoadPriceList ON tmpLoadPriceList.MainGoodsId = Object_Goods_View.GoodsMainId--ObjectLink_Main.ChildObjectId
+        LEFT JOIN tmpLoadPriceList ON tmpLoadPriceList.MainGoodsId = ObjectLink_Main.ChildObjectId
     WHERE Object_Retail.DescId = zc_Object_Retail()
 ;
 
@@ -165,7 +165,7 @@ BEGIN
              Object_Goods_View.Id
            , Object_Goods_View.GoodsCodeInt
 --           , ObjectString.ValueData                           AS GoodsCode
-           , zfFormat_BarCode(zc_BarCodePref_Object(), Object_Goods_View.GoodsMainId) AS IdBarCode         --ObjectLink_Main.ChildObjectId
+           , zfFormat_BarCode(zc_BarCodePref_Object(), ObjectLink_Main.ChildObjectId) AS IdBarCode         --ObjectLink_Main.ChildObjectId
            , Object_Goods_View.GoodsName
            , Object_Goods_View.isErased
            , Object_Goods_View.GoodsGroupId
@@ -181,11 +181,11 @@ BEGIN
            , Object_Goods_View.isFirst
            , Object_Goods_View.isSecond
            , COALESCE (Object_Goods_View.isPublished,False) :: Boolean  AS isPublished
-           , Object_Goods_View.isSP
+           , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
            -- , CASE WHEN Object_Goods_View.isPublished = FALSE THEN NULL ELSE Object_Goods_View.isPublished END :: Boolean AS isPublished
            , Object_Goods_View.PercentMarkup  
            , Object_Goods_View.Price
-           , CASE WHEN Object_Goods_View.isSP = TRUE THEN zc_Color_Yelow() WHEN Object_Goods_View.isSecond = TRUE THEN 16440317 WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc   --10965163
+           , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE THEN zc_Color_Yelow() WHEN Object_Goods_View.isSecond = TRUE THEN 16440317 WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc   --10965163
            , Object_Retail.ObjectCode AS RetailCode
            , Object_Retail.ValueData  AS RetailName
            , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
@@ -218,14 +218,14 @@ BEGIN
          LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId 
 
         -- получается GoodsMainId
-       /* LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods_View.Id --Object_Goods.Id
+        LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods_View.Id --Object_Goods.Id
                                                  AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
         LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
 
         LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
                                  ON ObjectBoolean_Goods_SP.ObjectId =ObjectLink_Main.ChildObjectId 
-                                AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()*/
+                                AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
 
         -- условия хранения
         LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
@@ -233,8 +233,9 @@ BEGIN
                             AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
         LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
-        LEFT JOIN tmpLoadPriceList ON tmpLoadPriceList.MainGoodsId = Object_Goods_View.GoodsMainId --ObjectLink_Main.ChildObjectId
-    WHERE Object_Goods_View.ObjectId = vbObjectId;
+        LEFT JOIN tmpLoadPriceList ON tmpLoadPriceList.MainGoodsId = ObjectLink_Main.ChildObjectId
+    WHERE Object_Goods_View.ObjectId = vbObjectId
+;
 
   -- END IF;
   

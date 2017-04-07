@@ -219,9 +219,9 @@ BEGIN
            , tmpMI.isClose
            , tmpMI.isFirst
            , tmpMI.isSecond
-           , Object_Goods.isSP                           :: Boolean  AS isSP
+           , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
 
-           , CASE WHEN Object_Goods.isSP = TRUE 
+           , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE 
                    THEN 25088 --zc_Color_GreenL()
                   WHEN tmpMI.isTOP = TRUE
                     OR tmpMI.isUnitTOP = TRUE
@@ -251,7 +251,7 @@ BEGIN
            , tmpMI.MakerName                                        AS MakerName
            
            , COALESCE(MIBoolean_Calculated.ValueData , FALSE)       AS isCalculated--
-           , CASE WHEN Object_Goods.isSP = TRUE THEN 25088 --zc_Color_GreenL()   --товар соц.проекта
+           , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE THEN 25088 --zc_Color_GreenL()   --товар соц.проекта
                   WHEN tmpMI.PartionGoodsDate < vbDate180 THEN zc_Color_Blue() --456
                   WHEN tmpMI.isTOP = TRUE OR tmpMI.isUnitTOP = TRUE  THEN 15993821 -- 16440317    -- для топ розовый шрифт
                      ELSE 0
@@ -337,10 +337,8 @@ BEGIN
                                 AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
             LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId         
 
-            LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
-                                  ON ObjectFloat_Goods_PriceOptSP.ObjectId = Object_Goods.GoodsMainId
-                                 AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP() 
-        /*    -- получаем GoodsMainId
+
+            -- получаем GoodsMainId
             LEFT JOIN  ObjectLink AS ObjectLink_Child 
                                   ON ObjectLink_Child.ChildObjectId = Object_Goods.Id
                                  AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
@@ -348,8 +346,11 @@ BEGIN
                                   ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                  AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
             LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
-                                     ON ObjectBoolean_Goods_SP.ObjectId =ObjectLink_Main.ChildObjectId 
-                                    AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()  */
+                                     ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                    AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()  
+            LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
+                                  ON ObjectFloat_Goods_PriceOptSP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                 AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP() 
            ;
 
      RETURN NEXT Cursor1;
@@ -733,8 +734,8 @@ BEGIN
            , COALESCE(tmpMI.isClose, tmpGoods.isClose)               AS isClose
            , COALESCE(tmpMI.isFirst, tmpGoods.isFirst)               AS isFirst
            , COALESCE(tmpMI.isSecond, tmpGoods.isSecond)             AS isSecond
-           , COALESCE(tmpMI.isSP, tmpGoods.isSp)         :: Boolean  AS isSP
-           , CASE WHEN COALESCE(tmpMI.isSP, tmpGoods.isSp) = TRUE 
+           , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
+           , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE 
                    THEN 25088 --zc_Color_GreenL()
                   WHEN COALESCE (tmpMI.Goods_isTOP, tmpGoods.Goods_isTOP) = TRUE
                     OR COALESCE (Object_Price_View.isTOP, False) = TRUE
@@ -759,10 +760,11 @@ BEGIN
            , tmpMI.ContractName
            , tmpMI.MakerName 
            , tmpMI.SuperFinalPrice 
-           , COALESCE (tmpMI.PriceOptSP,tmpGoods.PriceOptSP) ::TFloat AS PriceOptSP
+           , COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) ::TFloat AS PriceOptSP
+          -- , COALESCE (tmpMI.PriceOptSP,tmpGoods.PriceOptSP) ::TFloat AS PriceOptSP
           -- , CASE WHEN COALESCE (tmpMI.PriceOptSP,tmpGoods.PriceOptSP)
            , COALESCE(tmpMI.isCalculated, FALSE)                      AS isCalculated
-           , CASE WHEN COALESCE(tmpMI.isSP, tmpGoods.isSp) = TRUE THEN 25088 --zc_Color_GreenL()   --товар соц.проекта
+           , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE THEN 25088 --zc_Color_GreenL()   --товар соц.проекта
                   WHEN tmpMI.PartionGoodsDate < vbDate180 THEN zc_Color_Blue() --456
                   WHEN (COALESCE (tmpMI.Goods_isTOP, tmpGoods.Goods_isTOP)= TRUE OR COALESCE (Object_Price_View.isTOP, False)= TRUE) THEN 15993821 -- 16440317    -- для топ розовый шрифт
                      ELSE 0
@@ -810,14 +812,9 @@ BEGIN
                   , Object_Goods.isClose                         AS isClose
                   , Object_Goods.isFirst                         AS isFirst
                   , Object_Goods.isSecond                        AS isSecond
-                  , Object_Goods.isSP
-                  , COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) ::TFloat AS PriceOptSP
+                  
              FROM Object_Goods_View AS Object_Goods
                   LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = Object_Goods.Id
-
-                  LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
-                                        ON ObjectFloat_Goods_PriceOptSP.ObjectId = Object_Goods.GoodsMainId
-                                       AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP() 
              WHERE inShowAll = TRUE
                AND Object_Goods.ObjectId = vbObjectId
                AND Object_Goods.isErased = FALSE
@@ -864,8 +861,6 @@ BEGIN
                                * COALESCE(Object_Goods.MinimumLot, 1)                          AS CalcAmountAll
                             , MIFloat_AmountManual.ValueData                                   AS AmountManual
                             , MovementItem.isErased
-                            , Object_Goods.isSP
-                            , COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0)     ::TFloat AS PriceOptSP
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.DescId     = zc_MI_Master()
@@ -923,12 +918,8 @@ BEGIN
                        LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountManual
                                                          ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                                                         AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual() 
-                      --
-                      LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
-                                            ON ObjectFloat_Goods_PriceOptSP.ObjectId = Object_Goods.GoodsMainId
-                                           AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP() 
  
-                      ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
+                      ) AS tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId
             LEFT JOIN Object_Price_View ON COALESCE(tmpMI.GoodsId,tmpGoods.GoodsId) = Object_Price_View.GoodsId
                                        AND Object_Price_View.UnitId = vbUnitId
             LEFT JOIN tmpRemains AS Remains ON Remains.ObjectId = COALESCE (tmpMI.GoodsId, tmpGoods.GoodsId)
@@ -956,7 +947,7 @@ BEGIN
                                 AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
             LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
-            /*-- получаем GoodsMainId
+            -- получаем GoodsMainId
             LEFT JOIN  ObjectLink AS ObjectLink_Child 
                                   ON ObjectLink_Child.ChildObjectId = COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)
                                  AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
@@ -964,8 +955,11 @@ BEGIN
                                   ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                  AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
             LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
-                                     ON ObjectBoolean_Goods_SP.ObjectId =ObjectLink_Main.ChildObjectId 
-                                    AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()  */
+                                     ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                    AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()  
+            LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
+                                  ON ObjectFloat_Goods_PriceOptSP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                 AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP() 
            ;
      RETURN NEXT Cursor1;
 
