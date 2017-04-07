@@ -64,7 +64,7 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     FormParams: TdsdFormParams;
     spInsertUpdateLoad: TdsdStoredProc;
-    Daily—ompensationSP: TcxGridDBColumn;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
   private
     { Private declarations }
   public

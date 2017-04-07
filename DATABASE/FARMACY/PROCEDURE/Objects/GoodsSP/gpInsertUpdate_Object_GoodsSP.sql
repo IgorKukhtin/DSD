@@ -11,6 +11,11 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP (Integer, Boolean, TFloat,
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP (Integer, Boolean, TFloat, TFloat,  TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                      , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP (Integer, Boolean, TFloat, TFloat,  TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , TDateTime, TVarChar);
+
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsSP(
     IN inId                  Integer   ,    -- ключ объекта <Товар> MainID
     IN inisSP                Boolean   ,    -- участвует в Соц. проекте
@@ -33,7 +38,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsSP(
     IN inCodeATX             TVarChar  ,    --
     IN inMakerSP             TVarChar  ,    --
     IN inReestrSP            TVarChar  ,    --  
-
+    IN inInsertDateSP        TDateTime ,    -- 
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS Void
@@ -155,9 +160,11 @@ BEGIN
     PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_ReestrSP(), inId, inReestrSP); 
     -- сохранили свойство <>
     PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_MakerSP(), inId, inMakerSP); 
-
     -- сохранили свойство <>
     PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_ReestrDateSP(), inId, inDateReestrSP);
+
+    -- сохранили свойство <Дата создания>
+    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_InsertSP(), inId, inInsertDateSP);
 
 
     -- сохранили протокол
@@ -169,6 +176,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.04.17         *
  04.04.17         *
  19.12.16         *
 */

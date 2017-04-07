@@ -10,6 +10,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP_From_Excel (Integer, TVarC
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP_From_Excel (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
                                                                   TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP_From_Excel (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
+                                                                  TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
+                                                                  TDateTime, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsSP_From_Excel(
     IN inCode                Integer   ,    -- код объекта <Товар> MainID
   --  IN inName                TVarChar  ,    -- Наименование
@@ -33,7 +37,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsSP_From_Excel(
     IN inCodeATX             TVarChar  ,    --
     IN inMakerSP             TVarChar  ,    --
     IN inReestrSP            TVarChar  ,    --  
-
+    IN inInsertDateSP        TDateTime ,    --
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS Void
@@ -84,7 +88,7 @@ BEGIN
                                           , inCodeATX         := TRIM(inCodeATX)       ::TVarChar
                                           , inMakerSP         := TRIM(inMakerSP)       ::TVarChar
                                           , inReestrSP        := TRIM(inReestrSP)      ::TVarChar
-
+                                          , inInsertDateSP    := inInsertDateSP        ::TDateTime
                                           , inSession         := inSession
                                           );
    
