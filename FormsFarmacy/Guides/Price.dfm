@@ -272,6 +272,17 @@ inherited PriceForm: TPriceForm
             HeaderAlignmentVert = vaCenter
             Width = 56
           end
+          object PriceRetSP: TcxGridDBColumn
+            Caption = #1052#1072#1082#1089'. '#1094#1077#1085#1072' '#1088#1077#1072#1083#1080#1079' '#1087#1086' '#1057#1055
+            DataBinding.FieldName = 'PriceRetSP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
           object clMCSDateChange: TcxGridDBColumn
             AlternateCaption = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1085#1077#1089#1085#1080#1078#1072#1077#1084#1086#1075#1086' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
             Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083'. '#1080#1079#1084'. '#1053#1058#1047
