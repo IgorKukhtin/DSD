@@ -1021,7 +1021,7 @@ object MainForm: TMainForm
     object cbReturnInInt: TCheckBox
       Tag = 20
       Left = 3
-      Top = 491
+      Top = 488
       Width = 125
       Height = 17
       Caption = '3.4.'#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'.Int - '#1041#1053
@@ -1037,7 +1037,7 @@ object MainForm: TMainForm
     object cbSaleInt: TCheckBox
       Tag = 20
       Left = 3
-      Top = 476
+      Top = 473
       Width = 126
       Height = 17
       Caption = '3.3.'#1055#1088#1086#1076'.'#1087#1086#1082'.Int - '#1041#1053
@@ -1075,7 +1075,7 @@ object MainForm: TMainForm
     object cbDeleteFl: TCheckBox
       Tag = 20
       Left = 199
-      Top = 552
+      Top = 563
       Width = 235
       Height = 17
       Caption = '3.0.1.'#1059#1076#1072#1083#1077#1085#1080#1077' Fl'
@@ -1092,7 +1092,7 @@ object MainForm: TMainForm
     object cbDeleteInt: TCheckBox
       Tag = 20
       Left = 3
-      Top = 571
+      Top = 578
       Width = 235
       Height = 17
       Caption = '3.0.2.'#1059#1076#1072#1083#1077#1085#1080#1077' Int'
@@ -1108,7 +1108,7 @@ object MainForm: TMainForm
     object cbTaxInt: TCheckBox
       Tag = 20
       Left = 3
-      Top = 506
+      Top = 503
       Width = 125
       Height = 17
       Caption = '8.3. '#1053#1072#1083#1086#1075#1086#1074#1099#1077' Int'
@@ -1124,7 +1124,7 @@ object MainForm: TMainForm
     end
     object cbClearDelete: TCheckBox
       Left = 3
-      Top = 550
+      Top = 561
       Width = 190
       Height = 17
       Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1087#1088#1086#1090#1086#1082#1086#1083' '#1091#1076#1072#1083#1077#1085#1080#1103
@@ -1139,7 +1139,7 @@ object MainForm: TMainForm
     end
     object cbOnlyUpdateInt: TCheckBox
       Left = 3
-      Top = 461
+      Top = 458
       Width = 157
       Height = 17
       Caption = #1058#1086#1083#1100#1082#1086' '#1076#1072#1085#1085#1099#1077' '#1057#1082#1083#1072#1076#1072
@@ -1306,7 +1306,7 @@ object MainForm: TMainForm
     end
     object cbLossDebt: TCheckBox
       Left = 133
-      Top = 570
+      Top = 577
       Width = 107
       Height = 17
       Caption = #1044#1086#1083#1075#1080' Int-'#1053#1040#1051
@@ -1403,9 +1403,9 @@ object MainForm: TMainForm
       Text = '22121'
     end
     object cbFillSoldTable: TCheckBox
-      Left = 130
-      Top = 526
-      Width = 98
+      Left = 3
+      Top = 541
+      Width = 215
       Height = 17
       Caption = 'FillSoldTable'
       Font.Charset = DEFAULT_CHARSET
@@ -1464,11 +1464,11 @@ object MainForm: TMainForm
       WordWrap = True
     end
     object cbGoodsListSale: TCheckBox
-      Left = 4
-      Top = 526
-      Width = 109
+      Left = 3
+      Top = 522
+      Width = 215
       Height = 17
-      Caption = 'GoodsListSale'
+      Caption = 'GoodsListSale + Income'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11

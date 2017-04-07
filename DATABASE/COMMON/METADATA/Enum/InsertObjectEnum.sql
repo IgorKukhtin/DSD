@@ -60,6 +60,8 @@ BEGIN
 
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_CashDate(),  inDescId:= zc_Object_GlobalConst(), inCode:= 3, inName:= 'актуальность данных по кассе', inEnumName:= 'zc_Enum_GlobalConst_CashDate');
 
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_PeriodClosePlan(),  inDescId:= zc_Object_GlobalConst(), inCode:= 4, inName:= 'План закрытия периода :', inEnumName:= 'zc_Enum_GlobalConst_PeriodClosePlan');
+
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_MedocTaxDate(),  inDescId:= zc_Object_GlobalConst(), inCode:= 101, inName:= 'актуальность данных Медок', inEnumName:= 'zc_Enum_GlobalConst_MedocTaxDate');
 
 END $$;

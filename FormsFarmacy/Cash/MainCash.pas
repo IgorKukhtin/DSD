@@ -1620,16 +1620,18 @@ begin
     Exit;
   End;
 
-  LocalDataBaseisBusy := 0;
   Result := FLocalDataBaseHead.Active AND FLocalDataBaseBody.Active;
   if Result then
   begin
     FLocalDataBaseHead.Active:=False;
     FLocalDataBaseBody.Active:=False;
+    ReleaseMutex(MutexDBF);
     SaveRealAll;
-  end;
- ReleaseMutex(MutexDBF);
-end;
+  end
+  else
+      ReleaseMutex(MutexDBF);
+
+ end;
 
 procedure TMainCashForm.InsertUpdateBillCheckItems;
 var lQuantity, lPrice, lPriceSale, lChangePercent, lSummChangePercent : Currency;
@@ -2830,6 +2832,9 @@ procedure TMainCashForm.Thread_Exception(var Msg: TMessage);
 var
   spUserProtocol : TdsdStoredProc;
 begin
+  // Отключено только для MainCash, в форме MainCash2 сохранение ОШИБОК - ОСТАВИТЬ
+  exit;
+
   spUserProtocol := TdsdStoredProc.Create(nil);
   try
     spUserProtocol.StoredProcName := 'gpInsert_UserProtocol';
@@ -2878,7 +2883,7 @@ procedure TMainCashForm.SetBlinkVIP (isRefresh : boolean);
 var lMovementId_BlinkVIP : String;
 begin
   // если прошло > 100 сек - захардкодил
-  if ((now - time_onBlink) > 0.001) or(isRefresh = true) then
+  if ((now - time_onBlink) > 0.002) or(isRefresh = true) then
 
   try
       //сохранили время "последней" обработки ВСЕХ документов - с типом "Не подтвержден"
@@ -2912,7 +2917,7 @@ procedure TMainCashForm.SetBlinkCheck (isRefresh : boolean);
 var lMovementId_BlinkCheck : String;
 begin
   // если прошло > 50 сек - захардкодил
-  if ((now - time_onBlinkCheck) > 0.0005) or(isRefresh = true) then
+  if ((now - time_onBlinkCheck) > 0.003) or(isRefresh = true) then
 
   try
       //сохранили время "последней" обработки ВСЕХ документов - с "ошибка - расч/факт остаток"
@@ -2937,17 +2942,30 @@ end;
 
 
 procedure TMainCashForm.TimerSaveAllTimer(Sender: TObject);
+var fEmpt  : Boolean;
+    RCount : Integer;
 begin
  TimerSaveAll.Enabled:=False;
+ //
+ WaitForSingleObject(MutexDBF, INFINITE);
+ FLocalDataBaseHead.Active:=True;
+ fEmpt:= FLocalDataBaseHead.IsEmpty;
+ RCount:= FLocalDataBaseHead.RecordCount;
+ FLocalDataBaseBody.Active:=False;
+ ReleaseMutex(MutexDBF);
+ //
  try
   //пишем протокол что связь с базой есть + сколько чеков еще не перенеслось
-  try spUpdate_UnitForFarmacyCash.ParamByName('inAmount').Value:=FLocalDataBaseHead.RecordCount;
+  try spUpdate_UnitForFarmacyCash.ParamByName('inAmount').Value:= RCount;
       spUpdate_UnitForFarmacyCash.Execute;
   except end;
   //
-  if not FLocalDataBaseHead.IsEmpty then
+  if not fEmpt then
     SaveRealAll;
  finally
+   FLocalDataBaseBody.Active:=False;
+   ReleaseMutex(MutexDBF);
+   //
    TimerSaveAll.Enabled:=True;
  end;
 end;

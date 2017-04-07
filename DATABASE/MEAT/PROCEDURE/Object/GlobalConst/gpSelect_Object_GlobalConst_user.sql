@@ -15,7 +15,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      RETURN QUERY 
-       WITH tmpRoleAccessKey_all AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND AccessKeyId IN (zc_Enum_GlobalConst_BankAccountDate(), zc_Enum_GlobalConst_CashDate(), zc_Enum_GlobalConst_IntegerDate()))
+       WITH tmpRoleAccessKey_all AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND AccessKeyId IN (zc_Enum_GlobalConst_BankAccountDate(), zc_Enum_GlobalConst_CashDate(), zc_Enum_GlobalConst_IntegerDate(), zc_Enum_GlobalConst_PeriodClosePlan()))
           , tmpUser_Admin AS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId LIMIT 1)
        SELECT Object_GlobalConst.Id
             , COALESCE (ActualBankStatement.ValueData, CURRENT_DATE) :: TDateTime AS OperDate
