@@ -75,7 +75,7 @@ BEGIN
                                           , inDailyNormSP     := inDailyNormSP
                                           , inDailyCompensationSP := inDailyCompensationSP
                                           , inPaymentSP       := inPaymentSP
-                                          , inDateReestrSP    := inDateReestrSP
+                                          , inDateReestrSP    := TRIM(inDateReestrSP)  ::TVarChar
 
                                           , inPack            := TRIM(inPack)          ::TVarChar
                                           , inIntenalSPName   := TRIM(inIntenalSPName) ::TVarChar

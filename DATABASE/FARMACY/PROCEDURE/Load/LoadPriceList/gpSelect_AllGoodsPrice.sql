@@ -130,6 +130,22 @@ BEGIN
                , Container.ObjectId
         HAVING SUM (Container.Amount) > 0
        )
+  , tmpGoodsView AS (SELECT Object_Goods_View.*
+                          , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
+                     FROM Object_Goods_View 
+                         -- получаем GoodsMainId
+                         LEFT JOIN  ObjectLink AS ObjectLink_Child 
+                                               ON ObjectLink_Child.ChildObjectId = Object_Goods_View.Id
+                                              AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+                         LEFT JOIN  ObjectLink AS ObjectLink_Main 
+                                               ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                              AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+
+                         LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
+                                                  ON ObjectBoolean_Goods_SP.ObjectId =ObjectLink_Main.ChildObjectId 
+                                                 AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+                     WHERE Object_Goods_View.ObjectId = vbObjectId
+               )
   , ResultSet AS
     (
         SELECT
@@ -195,10 +211,9 @@ BEGIN
             LEFT OUTER JOIN Object_Price_View AS Object_Price
                                               ON Object_Price.GoodsId = SelectMinPrice_AllGoods.GoodsId_retail
                                              AND Object_Price.UnitId = inUnitId
-            LEFT OUTER JOIN Object_Goods_View AS Object_Goods
-                                              ON Object_Goods.ObjectId = vbObjectId
-                                                 -- !!!берем из сети!!!
-                                             AND Object_Goods.Id = SelectMinPrice_AllGoods.GoodsId_retail -- SelectMinPrice_AllGoods.GoodsId
+            LEFT OUTER JOIN tmpGoodsView AS Object_Goods
+                                         -- !!!берем из сети!!!
+                                         ON Object_Goods.Id = SelectMinPrice_AllGoods.GoodsId_retail -- SelectMinPrice_AllGoods.GoodsId
             LEFT JOIN ObjectFloat AS ObjectFloat_Juridical_Percent
                                   ON ObjectFloat_Juridical_Percent.ObjectId = SelectMinPrice_AllGoods.JuridicalId
                                  AND ObjectFloat_Juridical_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
@@ -227,6 +242,7 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_IsPromo
                                     ON ObjectBoolean_Goods_IsPromo.ObjectId = SelectMinPrice_AllGoods.Partner_GoodsId
                                    AND ObjectBoolean_Goods_IsPromo.DescId = zc_ObjectBoolean_Goods_Promo()  
+
         WHERE Object_Goods.isSp = FALSE
     )
 
