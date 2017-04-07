@@ -14,9 +14,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isSP Boolean
              , Pack TVarChar
              , CodeATX TVarChar, ReestrSP TVarChar, MakerSP TVarChar
-             , DateReestrSP TDateTime
+             , DateReestrSP TVarChar
              , PriceOptSP TFloat, PriceRetSP TFloat
-             , DailyNormSP TFloat, Daily—ompensationSP TFloat
+             , DailyNormSP TFloat, DailyCompensationSP TFloat
              , PaymentSP TFloat, ColSP TFloat
              ) AS
 $BODY$ 
@@ -52,11 +52,11 @@ BEGIN
            , ObjectString_Goods_CodeATX.ValueData         AS CodeATX 
            , ObjectString_Goods_ReestrSP.ValueData        AS ReestrSP
            , ObjectString_Goods_MakerSP.ValueData         AS MakerSP
-           , ObjectDate_Goods_ReestrSP.ValueData          AS DateReestrSP
+           , ObjectString_Goods_ReestrDateSP.ValueData    AS DateReestrSP
            , ObjectFloat_Goods_PriceOptSP.ValueData       AS PriceOptSP
            , ObjectFloat_Goods_PriceRetSP.ValueData       AS PriceRetSP
            , ObjectFloat_Goods_DailyNormSP.ValueData      AS DailyNormSP
-           , ObjectFloat_Goods_Daily—ompensationSP.ValueData  AS Daily—ompensationSP
+           , ObjectFloat_Goods_DailyCompensationSP.ValueData  AS DailyCompensationSP
            , ObjectFloat_Goods_PaymentSP.ValueData        AS PaymentSP
            , ObjectFloat_Goods_ColSP.ValueData            AS ColSP
 
@@ -95,7 +95,6 @@ BEGIN
                                   ON ObjectFloat_Goods_CountSP.ObjectId = Object_Goods.Id 
                                  AND ObjectFloat_Goods_CountSP.DescId = zc_ObjectFloat_Goods_CountSP()
 
-
             LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
                                   ON ObjectFloat_Goods_PriceOptSP.ObjectId = Object_Goods.Id
                                  AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP() 
@@ -105,9 +104,9 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Goods_DailyNormSP
                                   ON ObjectFloat_Goods_DailyNormSP.ObjectId = Object_Goods.Id
                                  AND ObjectFloat_Goods_DailyNormSP.DescId = zc_ObjectFloat_Goods_DailyNormSP() 
-            LEFT JOIN ObjectFloat AS ObjectFloat_Goods_Daily—ompensationSP
-                                  ON ObjectFloat_Goods_Daily—ompensationSP.ObjectId = Object_Goods.Id
-                                 AND ObjectFloat_Goods_Daily—ompensationSP.DescId = zc_ObjectFloat_Goods_Daily—ompensationSP() 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Goods_DailyCompensationSP
+                                  ON ObjectFloat_Goods_DailyCompensationSP.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_Goods_DailyCompensationSP.DescId = zc_ObjectFloat_Goods_DailyCompensationSP() 
             LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PaymentSP
                                   ON ObjectFloat_Goods_PaymentSP.ObjectId = Object_Goods.Id
                                  AND ObjectFloat_Goods_PaymentSP.DescId = zc_ObjectFloat_Goods_PaymentSP() 
@@ -130,11 +129,12 @@ BEGIN
                                    ON ObjectString_Goods_MakerSP.ObjectId = Object_Goods.Id 
                                   AND ObjectString_Goods_MakerSP.DescId = zc_ObjectString_Goods_MakerSP()
 
-            LEFT JOIN ObjectDate AS ObjectDate_Goods_ReestrSP
-                                 ON ObjectDate_Goods_ReestrSP.ObjectId = Object_Goods.Id 
-                                AND ObjectDate_Goods_ReestrSP.DescId = zc_ObjectDate_Goods_ReestrSP()
+            LEFT JOIN ObjectString AS ObjectString_Goods_ReestrDateSP
+                                   ON ObjectString_Goods_ReestrDateSP.ObjectId = Object_Goods.Id 
+                                  AND ObjectString_Goods_ReestrDateSP.DescId = zc_ObjectString_Goods_ReestrDateSP()
      
-   WHERE ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP();
+   WHERE ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+     AND ObjectBoolean_Goods_SP.ValueData;
 
   
 END;

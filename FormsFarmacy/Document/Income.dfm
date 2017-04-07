@@ -3,7 +3,7 @@
   ClientHeight = 516
   ClientWidth = 971
   ExplicitWidth = 987
-  ExplicitHeight = 551
+  ExplicitHeight = 554
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -508,6 +508,15 @@
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1077#1095#1072#1090#1072#1077#1084#1099#1093' '#1089#1090#1080#1082#1077#1088#1086#1074
             Width = 62
+          end
+          object clisSp: TcxGridDBColumn
+            Caption = #1057#1086#1094'. '#1087#1088#1086#1077#1082#1090
+            DataBinding.FieldName = 'isSp'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042' '#1089#1087#1080#1089#1082#1077' '#1087#1088#1086#1077#1082#1090#1072' '#171#1044#1086#1089#1090#1091#1087#1085#1099#1077' '#1083#1077#1082#1072#1088#1089#1090#1074#1072#187
+            Options.Editing = False
+            Width = 60
           end
           object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076#1072#1083
@@ -1370,7 +1379,7 @@
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
-    Left = 160
+    Left = 144
     Top = 248
   end
   inherited BarManager: TdxBarManager
@@ -2081,8 +2090,8 @@
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
-    Left = 216
-    Top = 248
+    Left = 240
+    Top = 280
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Income'

@@ -390,6 +390,26 @@ inherited OrderInternalForm: TOrderInternalForm
           inherited colIsErased: TcxGridDBColumn
             VisibleForCustomization = False
           end
+          object PriceOptSP: TcxGridDBColumn
+            Caption = #1054#1087#1090#1086#1074#1086'- '#1074#1110#1076#1087#1091#1089#1082#1085#1072' '#1094#1110#1085#1072' '#1079#1072' '#1091#1087#1072#1082#1086#1074#1082#1091', '#1075#1088#1085' (11)'
+            DataBinding.FieldName = 'PriceOptSP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object colisSp: TcxGridDBColumn
+            Caption = #1057#1086#1094'. '#1087#1088#1086#1077#1082#1090
+            DataBinding.FieldName = 'isSp'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042' '#1089#1087#1080#1089#1082#1077' '#1087#1088#1086#1077#1082#1090#1072' '#171#1044#1086#1089#1090#1091#1087#1085#1099#1077' '#1083#1077#1082#1072#1088#1089#1090#1074#1072#187
+            Options.Editing = False
+            Width = 47
+          end
           object colisZakazToday: TcxGridDBColumn
             Caption = #1047#1072#1082#1072#1079' '#1089#1077#1075#1086#1076#1085#1103
             DataBinding.FieldName = 'isZakazToday'
@@ -444,8 +464,6 @@ inherited OrderInternalForm: TOrderInternalForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitLeft = 208
-        ExplicitTop = 240
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -643,6 +661,7 @@ inherited OrderInternalForm: TOrderInternalForm
       Top = 22
       Properties.SaveTime = False
       Properties.ShowTime = False
+      Style.TextColor = 25088
       ExplicitLeft = 238
       ExplicitTop = 22
     end

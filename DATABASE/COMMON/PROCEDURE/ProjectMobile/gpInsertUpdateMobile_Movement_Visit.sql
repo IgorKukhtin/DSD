@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdateMobile_Movement_Visit()
 
 DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Movement_Visit (TVarChar, TVarChar, TDateTime, Integer, TVarChar, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Movement_Visit (TVarChar, TVarChar, TDateTime, Integer, Integer, TVarChar, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_Movement_Visit (
     IN inGUID       TVarChar  , -- Глобальный уникальный идентификатор для синхронизации с мобильными устройствами
     IN inInvNumber  TVarChar  , -- Номер документа
     IN inOperDate   TDateTime , -- Дата документа
+    IN inStatusId   Integer   , -- Виды статусов
     IN inPartnerId  Integer   , -- Контрагент
     IN inComment    TVarChar  , -- Примечание
     IN inInsertDate TDateTime , -- Дата/время создания
@@ -16,6 +18,7 @@ AS
 $BODY$
    DECLARE vbId Integer;
    DECLARE vbUserId Integer;
+   DECLARE vbStatusCode Integer;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -45,6 +48,15 @@ BEGIN
       -- сохранили свойство <Глобальный уникальный идентификатор>
       PERFORM lpInsertUpdate_MovementString (zc_MovementString_GUID(), vbId, inGUID);
 
+      vbStatusCode:= CASE inStatusId
+                          WHEN zc_Enum_Status_Complete() THEN zc_Enum_StatusCode_Complete()
+                          WHEN zc_Enum_Status_UnComplete() THEN zc_Enum_StatusCode_UnComplete()
+                          WHEN zc_Enum_Status_Erased() THEN zc_Enum_StatusCode_Erased()
+                     END;
+
+      -- изменили статус документа
+      PERFORM gpUpdate_Status_Visit (vbId, vbStatusCode, inSession);
+
       RETURN vbId;
 END;
 $BODY$
@@ -57,4 +69,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdateMobile_Movement_Visit (inGUID:= '{2F3BD890-0022-45F7-A1E2-9324BC312C76}', inInvNumber:= '-7', inOperDate:= CURRENT_DATE, inPartnerId:= 17819, inComment:= 'Це з мобілки прийшло :)', inInsertDate:= CURRENT_TIMESTAMP, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpInsertUpdateMobile_Movement_Visit (inGUID:= '{2F3BD890-0022-45F7-A1E2-9324BC312C76}', inInvNumber:= '-7', inOperDate:= CURRENT_DATE, inStatusId:= zc_Enum_Status_UnComplete(), inPartnerId:= 17819, inComment:= 'Це з мобілки прийшло :)', inInsertDate:= CURRENT_TIMESTAMP, inSession:= zfCalc_UserAdmin());

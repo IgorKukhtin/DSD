@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, IdBarCode TVarChar, Name TVarChar, isEr
              , NDSKindId Integer, NDSKindName TVarChar
              , NDS TFloat, MinimumLot TFloat, isClose Boolean
              , isTOP Boolean, isFirst Boolean, isSecond Boolean, isPublished Boolean
+             , isSP Boolean
              , PercentMarkup TFloat, Price TFloat
              , Color_calc Integer
              , RetailCode Integer, RetailName TVarChar
@@ -33,7 +34,7 @@ BEGIN
 
    -- поиск <Торговой сети>
    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
-
+/*
    -- !!!для Админа!!!
    IF (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
    THEN
@@ -82,11 +83,12 @@ BEGIN
            , Object_Goods_View.isTOP          
            , Object_Goods_View.isFirst 
            , Object_Goods_View.isSecond
-           , Object_Goods_View.isPublished
+           , COALESCE (Object_Goods_View.isPublished,False) :: Boolean  AS isPublished
+           , Object_Goods_View.isSP
            -- , CASE WHEN Object_Goods_View.isPublished = FALSE THEN NULL ELSE Object_Goods_View.isPublished END :: Boolean AS isPublished
            , Object_Goods_View.PercentMarkup  
            , Object_Goods_View.Price
-           , CASE WHEN Object_Goods_View.isSecond = TRUE THEN 16440317 WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc  --16380671   10965163 
+           , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE THEN zc_Color_Yelow() WHEN Object_Goods_View.isSecond = TRUE THEN 16440317 WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc  --16380671   10965163 
            , Object_Retail.ObjectCode AS RetailCode
            , Object_Retail.ValueData  AS RetailName
            , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
@@ -118,11 +120,6 @@ BEGIN
                              AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
          LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId 
 
-        -- получается GoodsMainId
-        LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods_View.Id --Object_Goods.Id
-                                                 AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
-        LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
         -- условия хранения
         LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
                              ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
@@ -130,11 +127,13 @@ BEGIN
         LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
         LEFT JOIN tmpLoadPriceList ON tmpLoadPriceList.MainGoodsId = ObjectLink_Main.ChildObjectId
-    WHERE Object_Retail.DescId = zc_Object_Retail();
+    WHERE Object_Retail.DescId = zc_Object_Retail()
+;
 
    ELSE
 
    -- для остальных...
+*/
 
    RETURN QUERY 
   -- Маркетинговый контракт
@@ -166,7 +165,7 @@ BEGIN
              Object_Goods_View.Id
            , Object_Goods_View.GoodsCodeInt
 --           , ObjectString.ValueData                           AS GoodsCode
-           , zfFormat_BarCode(zc_BarCodePref_Object(), ObjectLink_Main.ChildObjectId) AS IdBarCode
+           , zfFormat_BarCode(zc_BarCodePref_Object(), ObjectLink_Main.ChildObjectId) AS IdBarCode         --ObjectLink_Main.ChildObjectId
            , Object_Goods_View.GoodsName
            , Object_Goods_View.isErased
            , Object_Goods_View.GoodsGroupId
@@ -181,11 +180,12 @@ BEGIN
            , Object_Goods_View.isTOP          
            , Object_Goods_View.isFirst
            , Object_Goods_View.isSecond
-           , Object_Goods_View.isPublished
+           , COALESCE (Object_Goods_View.isPublished,False) :: Boolean  AS isPublished
+           , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
            -- , CASE WHEN Object_Goods_View.isPublished = FALSE THEN NULL ELSE Object_Goods_View.isPublished END :: Boolean AS isPublished
            , Object_Goods_View.PercentMarkup  
            , Object_Goods_View.Price
-           , CASE WHEN Object_Goods_View.isSecond = TRUE THEN 16440317 WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc   --10965163
+           , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE THEN zc_Color_Yelow() WHEN Object_Goods_View.isSecond = TRUE THEN 16440317 WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc   --10965163
            , Object_Retail.ObjectCode AS RetailCode
            , Object_Retail.ValueData  AS RetailName
            , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
@@ -223,6 +223,10 @@ BEGIN
         LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
 
+        LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
+                                 ON ObjectBoolean_Goods_SP.ObjectId =ObjectLink_Main.ChildObjectId 
+                                AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+
         -- условия хранения
         LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
                              ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
@@ -230,9 +234,10 @@ BEGIN
         LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
         LEFT JOIN tmpLoadPriceList ON tmpLoadPriceList.MainGoodsId = ObjectLink_Main.ChildObjectId
-    WHERE Object_Goods_View.ObjectId = vbObjectId;
+    WHERE Object_Goods_View.ObjectId = vbObjectId
+;
 
-   END IF;
+  -- END IF;
   
 END;
 $BODY$
@@ -243,6 +248,7 @@ ALTER FUNCTION gpSelect_Object_Goods_Retail(TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.04.17         *
  21.03.17         *
  13.12.16         *
  13.07.16         * protocol

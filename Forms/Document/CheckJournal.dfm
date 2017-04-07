@@ -14,17 +14,17 @@ inherited CheckJournalForm: TCheckJournalForm
     Height = 477
     TabOrder = 3
     ExplicitTop = 77
-    ExplicitWidth = 831
+    ExplicitWidth = 896
     ExplicitHeight = 477
     ClientRectBottom = 477
     ClientRectRight = 896
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 831
+      ExplicitWidth = 896
       ExplicitHeight = 477
       inherited cxGrid: TcxGrid
         Width = 896
         Height = 477
-        ExplicitWidth = 831
+        ExplicitWidth = 896
         ExplicitHeight = 477
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -244,6 +244,14 @@ inherited CheckJournalForm: TCheckJournalForm
             Options.Editing = False
             Width = 98
           end
+          object clAmbulance: TcxGridDBColumn
+            Caption = #8470' '#1072#1084#1073#1091#1083#1072#1090#1086#1088#1080#1080' '
+            DataBinding.FieldName = 'Ambulance'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 105
+          end
           object clInsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
@@ -267,7 +275,7 @@ inherited CheckJournalForm: TCheckJournalForm
   inherited Panel: TPanel
     Width = 896
     Height = 51
-    ExplicitWidth = 831
+    ExplicitWidth = 896
     ExplicitHeight = 51
     inherited deStart: TcxDateEdit
       EditValue = 42370d

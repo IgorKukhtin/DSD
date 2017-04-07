@@ -425,7 +425,19 @@ inherited CheckForm: TCheckForm
     Top = 130
     Properties.ReadOnly = True
     TabOrder = 21
-    Width = 324
+    Width = 160
+  end
+  object cxLabel17: TcxLabel [18]
+    Left = 641
+    Top = 114
+    Caption = #8470' '#1072#1084#1073#1091#1083#1072#1090#1086#1088#1080#1080' '
+  end
+  object edAmbulance: TcxTextEdit [19]
+    Left = 641
+    Top = 130
+    Properties.ReadOnly = True
+    TabOrder = 23
+    Width = 160
   end
   inherited ActionList: TActionList
     inherited actMISetErased: TdsdUpdateErased
@@ -1066,6 +1078,13 @@ inherited CheckForm: TCheckForm
         Name = 'MedicSPName'
         Value = Null
         Component = edMedicSP
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Ambulance'
+        Value = Null
+        Component = edAmbulance
         DataType = ftString
         MultiSelectSeparator = ','
       end>

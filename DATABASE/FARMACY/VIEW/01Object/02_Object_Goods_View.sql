@@ -1,6 +1,6 @@
 -- View: Object_Goods_View
 
-DROP VIEW IF EXISTS Object_Goods_View CASCADE;
+--DROP VIEW IF EXISTS Object_Goods_View CASCADE;
 
 CREATE OR REPLACE VIEW Object_Goods_View AS
          SELECT 

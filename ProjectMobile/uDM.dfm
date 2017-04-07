@@ -21,10 +21,8 @@ object DM: TDM
   end
   object conMain: TFDConnection
     Params.Strings = (
-      
-        'Database=C:\POLAK\PROJECT\OUTSORCE\Customers\VisualTax\vtMobile\' +
-        'DataBase\vtMobile.sdb'
-      'DriverID=SQLite')
+      'DriverID=SQLite'
+      'LockingMode=Exclusive')
     LoginPrompt = False
     Left = 40
     Top = 32
@@ -36,6 +34,8 @@ object DM: TDM
   end
   object tblObject_Const: TFDTable
     Connection = conMain
+    FetchOptions.AssignedValues = [evItems]
+    UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate]
     UpdateOptions.UpdateTableName = 'Object_Const'
     TableName = 'Object_Const'
     Left = 416
@@ -151,6 +151,10 @@ object DM: TDM
     object tblObject_PartnerId: TIntegerField
       FieldName = 'Id'
     end
+    object tblObject_PartnerGUID: TStringField
+      FieldName = 'GUID'
+      Size = 255
+    end
     object tblObject_PartnerObjectCode: TIntegerField
       FieldName = 'ObjectCode'
     end
@@ -217,6 +221,10 @@ object DM: TDM
     object tblObject_PartnerisSync: TBooleanField
       FieldName = 'isSync'
     end
+    object tblObject_Partnertest: TStringField
+      FieldName = 'test'
+      Size = 100
+    end
   end
   object tblObject_Juridical: TFDTable
     Connection = conMain
@@ -226,6 +234,10 @@ object DM: TDM
     Top = 328
     object tblObject_JuridicalId: TIntegerField
       FieldName = 'Id'
+    end
+    object tblObject_JuridicalGUID: TStringField
+      FieldName = 'GUID'
+      Size = 255
     end
     object tblObject_JuridicalObjectCode: TIntegerField
       FieldName = 'ObjectCode'
@@ -248,6 +260,9 @@ object DM: TDM
     end
     object tblObject_JuridicalisErased: TBooleanField
       FieldName = 'isErased'
+    end
+    object tblObject_JuridicalisSync: TBooleanField
+      FieldName = 'isSync'
     end
   end
   object tblObject_Route: TFDTable
@@ -524,20 +539,29 @@ object DM: TDM
     object qryPartnerContractName: TWideStringField
       FieldName = 'ContractName'
     end
-    object qryPartnerPRICELISTID: TIntegerField
-      FieldName = 'PRICELISTID'
-    end
     object qryPartnerPaidKindId: TIntegerField
       FieldName = 'PaidKindId'
     end
     object qryPartnerChangePercent: TFloatField
       FieldName = 'ChangePercent'
     end
+    object qryPartnerPRICELISTID: TIntegerField
+      FieldName = 'PRICELISTID'
+    end
     object qryPartnerPriceWithVAT: TBooleanField
       FieldName = 'PriceWithVAT'
     end
     object qryPartnerVATPercent: TFloatField
       FieldName = 'VATPercent'
+    end
+    object qryPartnerPRICELISTID_RET: TIntegerField
+      FieldName = 'PRICELISTID_RET'
+    end
+    object qryPartnerPriceWithVAT_RET: TBooleanField
+      FieldName = 'PriceWithVAT_RET'
+    end
+    object qryPartnerVATPercent_RET: TFloatField
+      FieldName = 'VATPercent_RET'
     end
     object qryPartnerCalcDayCount: TFloatField
       FieldName = 'CalcDayCount'
@@ -547,6 +571,24 @@ object DM: TDM
     end
     object qryPartnerisOperDateOrder: TBooleanField
       FieldName = 'isOperDateOrder'
+    end
+    object qryPartnerDebtSum: TFloatField
+      FieldName = 'DebtSum'
+    end
+    object qryPartnerDebtSumJ: TFloatField
+      FieldName = 'DebtSumJ'
+    end
+    object qryPartnerOverSum: TFloatField
+      FieldName = 'OverSum'
+    end
+    object qryPartnerOverSumJ: TFloatField
+      FieldName = 'OverSumJ'
+    end
+    object qryPartnerOverDays: TIntegerField
+      FieldName = 'OverDays'
+    end
+    object qryPartnerOverDaysJ: TIntegerField
+      FieldName = 'OverDaysJ'
     end
   end
   object qryPriceList: TFDQuery
@@ -728,6 +770,9 @@ object DM: TDM
       FieldName = 'Comment'
       Size = 255
     end
+    object tblMovement_StoreRealInsertDate: TDateTimeField
+      FieldName = 'InsertDate'
+    end
     object tblMovement_StoreRealIsSync: TBooleanField
       FieldName = 'IsSync'
     end
@@ -833,8 +878,8 @@ object DM: TDM
     object tblMovement_VisitOperDate: TDateTimeField
       FieldName = 'OperDate'
     end
-    object tblMovement_VisitStatusId: TIntegerField
-      FieldName = 'StatusId'
+    object tblMovement_VisitInsertDate: TDateTimeField
+      FieldName = 'InsertDate'
     end
     object tblMovement_VisitisSync: TBooleanField
       FieldName = 'isSync'
@@ -998,6 +1043,10 @@ object DM: TDM
     end
     object tblMovementItem_VisitComment: TStringField
       FieldName = 'Comment'
+      Size = 255
+    end
+    object tblMovementItem_VisitPhotoName: TStringField
+      FieldName = 'PhotoName'
       Size = 255
     end
     object tblMovementItem_VisitInsertDate: TDateTimeField

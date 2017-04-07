@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PartnerMedicalName TVarChar
              , InvNumberSP TVarChar
              , MedicSPName TVarChar
+             , Ambulance TVarChar
               )
 AS
 $BODY$
@@ -93,6 +94,7 @@ BEGIN
            , Movement_Check.PartnerMedicalName
            , Movement_Check.InvNumberSP
            , Movement_Check.MedicSPName
+           , Movement_Check.Ambulance
 
         FROM Movement_Check_View AS Movement_Check 
              JOIN tmpStatus ON tmpStatus.StatusId = Movement_Check.StatusId
