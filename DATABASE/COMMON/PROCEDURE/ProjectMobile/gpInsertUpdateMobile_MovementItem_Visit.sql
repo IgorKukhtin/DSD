@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdateMobile_MovementItem_Visit()
 
 DROP FUNCTION IF EXISTS gpInsertUpdateMobile_MovementItem_Visit (TVarChar, TVarChar, TBlob, TVarChar, TVarChar, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdateMobile_MovementItem_Visit (TVarChar, TVarChar, TBlob, TVarChar, TVarChar, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_MovementItem_Visit(
     IN inGUID         TVarChar  , -- Глобальный уникальный идентификатор для синхронизации с мобильными устройствами
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_MovementItem_Visit(
     IN inPhotoName    TVarChar  , -- Фото, имя файла
     IN inComment      TVarChar  , -- Примечание к фото
     IN inInsertDate   TDateTime , -- Дата/время создания элемента
+    IN inIsErased     Boolean   , -- Удаленный ли элемент
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -80,6 +82,13 @@ BEGIN
       -- сохранили свойство <Дата/время создания>
       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_InsertMobile(), vbId, inInsertDate);
 
+      IF inIsErased
+      THEN
+           PERFORM gpMovementItem_Visit_SetErased (vbId, inSession);
+      ELSE
+           PERFORM gpMovementItem_Visit_SetUnErased (vbId, inSession);
+      END IF; 
+
       RETURN vbId;
 END;
 $BODY$
@@ -92,4 +101,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdateMobile_MovementItem_Visit (inGUID:= '{29F0D6D3-006A-4D30-8B30-CECCD7D883C6}', inMovementGUID:= '{2F3BD890-0022-45F7-A1E2-9324BC312C76}', inPhoto:= NULL, inPhotoName:= 'NoPhoto', inComment:= 'simple test', inInsertDate:= CURRENT_TIMESTAMP, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsertUpdateMobile_MovementItem_Visit (inGUID:= '{29F0D6D3-006A-4D30-8B30-CECCD7D883C6}', inMovementGUID:= '{2F3BD890-0022-45F7-A1E2-9324BC312C76}', inPhoto:= NULL, inPhotoName:= 'NoPhoto', inComment:= 'simple test', inInsertDate:= CURRENT_TIMESTAMP, inIsErased:= false, inSession:= zfCalc_UserAdmin())
