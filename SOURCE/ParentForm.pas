@@ -58,7 +58,7 @@ uses
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
   cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView,
   cxDBEdit, dsdAction, dsdGuides, cxDBVGrid,
-  Vcl.DBActns, cxMemo, cxGridDBChartView, ShellAPI, CommonData{, DataModul};
+  Vcl.DBActns, cxMemo, cxGridDBChartView, ShellAPI, CommonData, cxImage{, DataModul};
 
 {$R *.dfm}
 
@@ -403,6 +403,7 @@ initialization
   RegisterClass (TAddOnFormRefresh);
   RegisterClass (TShellExecuteAction);
   RegisterClass (TShowMessageAction);
+  RegisterClass (TcxImage);
 
 // ƒÀﬂ “≈—“¿
 
