@@ -57,7 +57,7 @@ create table Elem
 );
 
 COPY Elem
-    FROM  'd:\Profimanager\3Elem.dat'
+    FROM  'd:\Profimanager\03Elem.dat'
      WITH
            DELIMITER  AS  ','
            CSV
@@ -220,51 +220,53 @@ SELECT Users.dbid       as DatabaseId
 
 , mm.Name               as mmName
 , mm.Coment             as mmComent
+, TL.Name               as TLName
+, TL.Coment             as TLComent
+, Elem.Name             as ElemName
+, Elem.Coment           as ElemComent
+, chado.Name            as chadoName
+, chado.Coment          as chadoComent
+, sav.Name              as savName
+, sav.Coment            as savComent
+, ter_Vin.Name          as ter_VinName
+, ter_Vin.Coment        as ter_VinComent
+, Vintag.Name           as VintagName
+, Vintag.Coment         as VintagComent
+, escada.Name           as escadaName
+, escada.Coment         as escadaComent
+, sv_vintag.Name        as sv_vintagName
+, sv_vintag.Coment      as sv_vintagComent
+, sopra.Name            as sopraName
+, sopra.Coment          as sopraComent
+
+
 , mm.Date::date         as mmDate
 , mm.Suma               as mmSuma
 
-, TL.Name               as TLName
-, TL.Coment             as TLComent
 , TL.Date::date         as TLDate
 , TL.Suma               as TLSuma
 
-, Elem.Name             as ElemName
-, Elem.Coment           as ElemComent
 , Elem.Date::date       as ElemDate
 , Elem.Suma             as ElemSuma
 
-, chado.Name            as chadoName
-, chado.Coment          as chadoComent
 , chado.Date::date      as chadoDate
 , chado.Suma            as chadoSuma
 
-, sav.Name              as savName
-, sav.Coment            as savComent
 , sav.Date::date        as savDate
 , sav.Suma              as savSuma
 
-, ter_Vin.Name          as ter_VinName
-, ter_Vin.Coment        as ter_VinComent
 , ter_Vin.Date::date    as ter_VinDate
 , ter_Vin.Suma          as ter_VinSuma
 
-, Vintag.Name           as VintagName
-, Vintag.Coment         as VintagComent
 , Vintag.Date::date     as VintagDate
 , Vintag.Suma           as VintagSuma
 
-, escada.Name           as escadaName
-, escada.Coment         as escadaComent
 , escada.Date::date     as escadaDate
 , escada.Suma           as escadaSuma
 
-, sv_vintag.Name        as sv_vintagName
-, sv_vintag.Coment      as sv_vintagComent
 , sv_vintag.Date::date  as sv_vintagDate
 , sv_vintag.Suma        as sv_vintagSuma
 
-, sopra.Name            as sopraName
-, sopra.Coment          as sopraComent
 , sopra.Date::date      as sopraDate
 , sopra.Suma            as sopraSuma
 
@@ -309,7 +311,6 @@ left join (SELECT * FROM Elem) as  Elem on Elem.replid = users.replid and Elem.d
 
 
 ORDER BY 
-    Users.dbid, Users.replid,
           case when trim (mm.name) <> '' then mm.name
                when trim (TL.name) <> '' then TL.name
                when trim (Elem.name) <> '' then Elem.name
@@ -322,6 +323,7 @@ ORDER BY
                when trim (sopra.name) <> '' then sopra.name
 
            else '' end
+    , Users.dbid, Users.replid
        
 
 )
