@@ -133,7 +133,8 @@ BEGIN
                                    ON ObjectString_Goods_ReestrDateSP.ObjectId = Object_Goods.Id 
                                   AND ObjectString_Goods_ReestrDateSP.DescId = zc_ObjectString_Goods_ReestrDateSP()
      
-   WHERE ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP();
+   WHERE ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+     AND ObjectBoolean_Goods_SP.ValueData;
 
   
 END;

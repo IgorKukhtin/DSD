@@ -66,6 +66,8 @@ type
     spUpdateMovement_OperDate: TdsdStoredProc;
     macUpdateOperDate: TMultiAction;
     bbUpdateOperDate: TdxBarButton;
+    cxLabel17: TcxLabel;
+    edAmbulance: TcxTextEdit;
   private
     { Private declarations }
   public

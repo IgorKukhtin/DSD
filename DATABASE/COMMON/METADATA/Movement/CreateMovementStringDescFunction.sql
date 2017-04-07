@@ -156,9 +156,14 @@ CREATE OR REPLACE FUNCTION zc_MovementString_InvNumberSP() RETURNS Integer AS $B
 INSERT INTO MovementStringDesc (Code, ItemName)
   SELECT 'zc_MovementString_InvNumberSP', 'Номер рецепта (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberSP');
 
+CREATE OR REPLACE FUNCTION zc_MovementString_Ambulance() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_Ambulance'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_Ambulance', '№ амбулатории ' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_Ambulance');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.04.17         * zc_MovementString_Ambulance
  22.12.16         * zc_MovementString_MedicSP
                     zc_MovementString_InvNumberSP
  04.08.16         *

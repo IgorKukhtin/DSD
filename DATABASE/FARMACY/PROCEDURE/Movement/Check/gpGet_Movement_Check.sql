@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PartnerMedicalName TVarChar
              , InvNumberSP TVarChar
              , MedicSPName TVarChar
+             , Ambulance TVarChar
 )
 AS
 $BODY$
@@ -59,6 +60,7 @@ BEGIN
            , Movement_Check.PartnerMedicalName
            , Movement_Check.InvNumberSP
            , Movement_Check.MedicSPName
+           , Movement_Check.Ambulance
 
         FROM Movement_Check_View AS Movement_Check
              LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
@@ -76,6 +78,7 @@ ALTER FUNCTION gpGet_Movement_Check (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.04.17         *
  21.07.16         *
  23.05.15                         *                 
 */
