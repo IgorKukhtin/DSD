@@ -19,6 +19,7 @@ BEGIN
      -- проверка прав пользователя (конечно кроме пользователя Админа)
      IF NOT EXISTS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND AccessKeyId = ioId)
         AND vbUserId <> zfCalc_UserAdmin() :: Integer
+        AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
      THEN
           RAISE EXCEPTION 'Ошибка.Нет прав изменять параметр <%>.', lfGet_Object_ValueData (ioId);
      END IF;

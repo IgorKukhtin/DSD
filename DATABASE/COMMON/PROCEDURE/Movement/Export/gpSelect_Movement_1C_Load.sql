@@ -10,11 +10,11 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_1C_Load(
     IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (UnitId TVarChar,  VidDoc TVarChar, InvNumber TVarChar, OperDate TVarChar, ClientCode TVarChar, ClientName TVarChar,
-               GoodsCode  TVarChar, GoodsName TVarChar, OperCount TVarChar, OperPrice TVarChar, 
+               GoodsCode  TVarChar, GoodsName TVarChar, OperCount TVarChar, OperPrice TVarChar,
                Tax TVarChar, Suma TVarChar, PDV TVarChar, SumaPDV TVarChar,
-               ClientINN TVarChar, ClientOKPO TVarChar, CLIENTKIND TVarChar, 
-               InvNalog TVarChar, BillId TVarChar, EKSPCODE TVarChar, EXPName TVarChar,            
-               GoodsId TVarChar, PackId TVarChar, PackName TVarChar, 
+               ClientINN TVarChar, ClientOKPO TVarChar, CLIENTKIND TVarChar,
+               InvNalog TVarChar, BillId TVarChar, EKSPCODE TVarChar, EXPName TVarChar,
+               GoodsId TVarChar, PackId TVarChar, PackName TVarChar,
                Doc1Date TVarChar, Doc1Number TVarChar, Doc2Date TVarChar, Doc2Number TVarChar)
 AS
 $BODY$
@@ -27,13 +27,13 @@ BEGIN
      --
      RETURN QUERY
      WITH tmpInfoMoney AS (SELECT Object_InfoMoney_View.InfoMoneyId FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId AND Object_InfoMoney_View.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_10000() -- Основное сырье
-                          UNION 
+                          UNION
                            SELECT Object_InfoMoney_View_find.InfoMoneyId
                            FROM Object_InfoMoney_View
                                 LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View_find ON Object_InfoMoney_View_find.InfoMoneyDestinationId = Object_InfoMoney_View.InfoMoneyDestinationId
                            WHERE Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId
                              AND Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_10000() -- Основное сырье
-                          /*UNION 
+                          /*UNION
                            SELECT Object_InfoMoney_View.InfoMoneyId
                            FROM (SELECT 1 FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId
                                                                        AND Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
@@ -59,10 +59,10 @@ BEGIN
 
   , tmpMovement AS (SELECT Movement.*, Movement.OperDate AS OperDatePartner
                     FROM Movement
-                    WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
+                    WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                       AND Movement.DescId IN (zc_Movement_PriceCorrective(), zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn())
                       AND Movement.StatusId = zc_Enum_Status_Complete()
-                   UNION 
+                   UNION
                     SELECT Movement.*, MovementDate_OperDatePartner.ValueData AS OperDatePartner
                     FROM MovementDate AS MovementDate_OperDatePartner
                          INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
@@ -77,7 +77,7 @@ BEGIN
                     SELECT zc_Movement_ReturnIn() AS MovementDescId, zc_MovementLinkObject_Contract() AS ContractDescId, zc_MovementLinkObject_PaidKind() AS PaidKindDescId
                   UNION
                     SELECT zc_Movement_PriceCorrective() AS MovementDescId, zc_MovementLinkObject_Contract() AS ContractDescId, zc_MovementLinkObject_PaidKind() AS PaidKindDescId
-                  UNION 
+                  UNION
                     SELECT zc_Movement_Income() AS MovementDescId, zc_MovementLinkObject_Contract() AS ContractDescId, zc_MovementLinkObject_PaidKind() AS PaidKindDescId
                   UNION
                     SELECT zc_Movement_ReturnOut() AS MovementDescId, zc_MovementLinkObject_Contract() AS ContractDescId, zc_MovementLinkObject_PaidKind() AS PaidKindDescId
@@ -107,7 +107,7 @@ BEGIN
                                                AND Movement.DescId = tmpLinkDesc.MovementDescId
 
                    INNER JOIN tmpContract ON tmpContract.ContractId = MovementLinkObject_Contract.ObjectId
-            
+
                    INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                                  ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                                 AND MovementLinkObject_PaidKind.DescId = tmpLinkDesc.PaidKindDescId
@@ -166,15 +166,54 @@ BEGIN
                                                                                                THEN MovementLinkObject_From.ObjectId
                                                                                           ELSE ObjectLink_Partner_Juridical.ChildObjectId
                                                                                      END
-                         AND Movement.OperDate >= ObjectHistory_JuridicalDetails_ViewByDate.StartDate AND Movement.OperDate < ObjectHistory_JuridicalDetails_ViewByDate.EndDate  
+                         AND Movement.OperDate >= ObjectHistory_JuridicalDetails_ViewByDate.StartDate AND Movement.OperDate < ObjectHistory_JuridicalDetails_ViewByDate.EndDate
                   )
 
-  , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.Id 
+  , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.Id
                                  , Object_GoodsByGoodsKind_View.GoodsId
-                                 , Object_GoodsByGoodsKind_View.GoodsKindId 
+                                 , Object_GoodsByGoodsKind_View.GoodsKindId
                             FROM Object_GoodsByGoodsKind_View
                             )
 
+                , tmpMI AS (SELECT MIMaster.*
+                            FROM tmpMov AS Movement
+                                 LEFT JOIN MovementItem AS MIMaster ON MIMaster.MovementId = Movement.Id
+                                                                   AND MIMaster.DescId = zc_MI_Master()
+                                                                   AND MIMaster.isErased = FALSE
+                           )
+ , tmpMIF_ChangePercent AS (SELECT MIFloat_ChangePercent.*
+                            FROM tmpMI
+                                 LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                             ON MIFloat_ChangePercent.MovementItemId = tmpMI.Id
+                                                            AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+                           )
+ , tmpMIF_AmountPartner AS (SELECT MIFloat_AmountPartner.*
+                            FROM tmpMI
+                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                             ON MIFloat_AmountPartner.MovementItemId = tmpMI.Id
+                                                            AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                           )
+         , tmpMIF_Price AS (SELECT MIFloat_Price.*
+                            FROM tmpMI
+                                 LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                             ON MIFloat_Price.MovementItemId = tmpMI.Id
+                                                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                           )
+ , tmpMIF_CountForPrice AS (SELECT MIFloat_CountForPrice.*
+                            FROM tmpMI
+                                 LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                             ON MIFloat_CountForPrice.MovementItemId = tmpMI.Id
+                                                            AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                           )
+    , tmpMILO_GoodsKind AS (SELECT MILinkObject_GoodsKind.*
+                            FROM tmpMI
+                                 LEFT JOIN tmpMov ON tmpMov.Id = tmpMI.MovementId
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                  ON MILinkObject_GoodsKind.MovementItemId = tmpMI.Id
+                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                                                 AND tmpMov.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Готовая продукция
+                           )
+     -- Результат
      SELECT '0' :: TVarChar                                           AS UnitId
            , CASE WHEN Movement.DescId IN (zc_Movement_PriceCorrective())
                        THEN 123
@@ -238,7 +277,7 @@ BEGIN
                   WHEN Movement.PriceWithVAT = TRUE
                        -- если цены c НДС
                        THEN 1 / (1 + Movement.VATPercent / 100)
-             END 
+             END
            * CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                        THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                   WHEN Movement.ChangePercent <> 0 AND Movement.DescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
@@ -290,7 +329,7 @@ BEGIN
                   WHEN Movement.PriceWithVAT = TRUE
                        -- если цены c НДС
                        THEN 1 / (1 + Movement.VATPercent / 100)
-             END 
+             END
            * CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                        THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                   WHEN Movement.ChangePercent <> 0 AND Movement.DescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
@@ -348,22 +387,17 @@ BEGIN
            , '' :: TVarChar                                            AS EKSPName
            , Object_Goods.Id :: TVarChar                               AS GoodsId
            , Object_GoodsKind.Id :: TVarChar                           AS PackId
-           , Object_GoodsKind.ValueData                                AS PackName 
+           , Object_GoodsKind.ValueData                                AS PackName
            , '' :: TVarChar                                            AS Doc1Date
            , '' :: TVarChar                                            AS Doc1Number
            , '' :: TVarChar                                            AS Doc2Date
            , '' :: TVarChar                                            AS Doc2Number
 
      FROM tmpMov AS Movement
-            LEFT JOIN MovementItem AS MIMaster ON MIMaster.MovementId = Movement.Id
-                                              AND MIMaster.DescId = zc_MI_Master()
-                                              AND MIMaster.isErased = FALSE
+            LEFT JOIN tmpMI AS MIMaster ON MIMaster.MovementId = Movement.Id
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MIMaster.ObjectId
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                             ON MILinkObject_GoodsKind.MovementItemId = MIMaster.Id
-                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                                            AND Movement.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Готовая продукция
+            LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind ON MILinkObject_GoodsKind.MovementItemId = MIMaster.Id
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
@@ -373,20 +407,10 @@ BEGIN
                                                   AND Object_GoodsByGoodsKind_View.GoodsKindId = Object_GoodsKind.Id --MILinkObject_GoodsKind.ObjectId
                                                   -- AND ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна AND Доходы + Продукция + Готовая продукция AND Доходы + Мясное сырье + Мясное сырье
 
-            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                        ON MIFloat_ChangePercent.MovementItemId = MIMaster.Id
-                                       AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
-                                       AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
-
-            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                        ON MIFloat_AmountPartner.MovementItemId = MIMaster.Id
-                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-            LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                        ON MIFloat_Price.MovementItemId = MIMaster.Id
-                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
-            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                        ON MIFloat_CountForPrice.MovementItemId = MIMaster.Id
-                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+            LEFT JOIN tmpMIF_ChangePercent AS MIFloat_ChangePercent ON MIFloat_ChangePercent.MovementItemId = MIMaster.Id
+            LEFT JOIN tmpMIF_AmountPartner AS MIFloat_AmountPartner ON MIFloat_AmountPartner.MovementItemId = MIMaster.Id
+            LEFT JOIN tmpMIF_Price         AS MIFloat_Price         ON MIFloat_Price.MovementItemId = MIMaster.Id
+            LEFT JOIN tmpMIF_CountForPrice AS MIFloat_CountForPrice ON MIFloat_CountForPrice.MovementItemId = MIMaster.Id
 
       WHERE 0 <> CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
                            THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
@@ -406,11 +430,11 @@ ALTER FUNCTION gpSelect_Movement_1C_Load (TDateTime, TDateTime, Integer, Integer
  05.04.17         *
  20.07.14                                        * add zc_Movement_PriceCorrective
  02.06.14                                        * add isErased = FALSE
- 30.05.14                                        * add 0 <> 
+ 30.05.14                                        * add 0 <>
  19.05.14                                        * all
  14.05.14                         *
 */
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '01.11.2016', inEndDate:= '11.11.2016', inInfoMoneyId:= 8911, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inSession:= zfCalc_UserAdmin())
---SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '01.09.2015', inEndDate:= '10.09.2015', inInfoMoneyId:= 8911, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inSession:= zfCalc_UserAdmin()) AS a WHERE InvNumber = '233695'
+--SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '01.03.2017', inEndDate:= '01.03.2017', inInfoMoneyId:= 8911, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inSession:= zfCalc_UserAdmin()) AS a WHERE InvNumber = '233695'

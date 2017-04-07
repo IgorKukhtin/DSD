@@ -1620,8 +1620,10 @@ procedure TMainForm.StartProcess;
                EndDateCompleteEdit.Text:=DateToStr(Date-1);
 
                UnitCodeSendOnPriceEdit.Text:='autoALL('+IntToStr(Day_ReComplete)+'Day)';
+
                //Привязка Возвраты
                cbReturnIn_Auto.Checked:=true;
+
                //Проводим+Распроводим
                cbComplete.Checked:=true;
                cbUnComplete.Checked:=true;
@@ -1641,7 +1643,7 @@ begin
      // !!!важно!!!
      cbOnlySale.Checked:=  System.Pos('_SALE',ParamStr(2))>0;
 
-     if ParamStr(2)='autoFillSoldTable'
+     if (ParamStr(2)='autoFillSoldTable') or (ParamStr(2)='autoFillGoodsList')
      then begin
                fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-28)+') as RetV');
                StartDateEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
@@ -1659,8 +1661,9 @@ begin
                cbGoodsListSale.Checked:=true;
 
                // !!!за "текущий" - не надо!!! + или надо ...
-               if  (EndDateEdit.Text <> DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime))
-                or (ParamStr(3)='+')
+               if  ((EndDateEdit.Text <> DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime))
+                 or (ParamStr(3)='++'))
+                and (ParamStr(2)='autoFillSoldTable')
                then begin
                     cbFillSoldTable.Checked:=true;
                end
@@ -20466,6 +20469,13 @@ begin
      fOpenSqToQuery (mySql);
      except ShowMessage('Err - ' + mySql);
      end;
+     //
+     //
+     mySql:= 'select * from gpInsertUpdate_Object_GoodsListIncome_byReport (12, 0, zc_Enum_InfoMoneyDestination_10200(), ' + chr(39) + '5' + chr(39) + ')';
+     try
+     fOpenSqToQuery (mySql);
+     except ShowMessage('Err - ' + mySql);
+     end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadFillSoldTable;
@@ -20856,6 +20866,15 @@ var ExecStr1,ExecStr2,ExecStr3,ExecStr4,addStr:String;
     MSec_complete:Integer;
     isSale_str:String;
 begin
+     // "текущий" месяц
+     fOpenSqFromQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-2)+') as RetV');
+     //
+     if  (StrToDate (EndDateCompleteEdit.Text) <= fromSqlQuery.FieldByName('RetV').AsDateTime)
+        and (ParamStr(2) <> '')
+     then cbReturnIn_Auto.Checked:= false // !!!за "предыдущий" - не надо!!!
+     else if ParamStr(2) <> ''
+          then cbReturnIn_Auto.Checked:= true; // !!!надо!!!
+
      if (not cbReturnIn_Auto.Checked)or(not cbReturnIn_Auto.Enabled) then exit;
      //
      myEnabledCB(cbReturnIn_Auto);

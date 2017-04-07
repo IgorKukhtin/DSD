@@ -151,6 +151,14 @@ BEGIN
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 
+
+    -- !!!ВРЕМЕННО для ТЕСТА!!!
+    IF inSession = zfCalc_UserAdmin()
+    THEN
+        RAISE EXCEPTION 'Тест прошел успешно для <%> <%>', inUserSession, inSession;
+    END IF;
+
+    
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
