@@ -15,10 +15,18 @@ object MainForm: TMainForm
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
+  object Splitter1: TSplitter
+    Left = 685
+    Top = 0
+    Height = 409
+    Align = alRight
+    ExplicitLeft = 683
+    ExplicitTop = 32
+  end
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
-    Width = 688
+    Width = 685
     Height = 409
     Align = alClient
     DataSource = DataSource
@@ -576,10 +584,11 @@ object MainForm: TMainForm
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 225
+        Width = 476
         Height = 381
-        Align = alLeft
+        Align = alClient
         TabOrder = 0
+        ExplicitWidth = 353
         object Label3: TLabel
           Left = 8
           Top = 280
@@ -594,14 +603,70 @@ object MainForm: TMainForm
           Height = 13
           Caption = #1060#1072#1081#1083#1099' '#1074' '#1082#1086#1076#1080#1088#1086#1074#1082#1077' EOM 866'
         end
-        object CreateTableButton: TButton
-          Left = 75
-          Top = 227
-          Width = 142
+        object lResultCSV: TLabel
+          Left = 345
+          Top = 130
+          Width = 108
+          Height = 13
+          Caption = 'Result'
+        end
+        object lDropTableDat: TLabel
+          Left = 125
+          Top = 222
+          Width = 30
+          Height = 13
+          Caption = 'Result'
+        end
+        object lInsertGoods2: TLabel
+          Left = 345
+          Top = 38
+          Width = 30
+          Height = 13
+          Caption = 'Result'
+        end
+        object lInsertHasChildGoods2: TLabel
+          Left = 345
+          Top = 68
+          Width = 30
+          Height = 13
+          Caption = 'Result'
+        end
+        object lUpdateGoods2: TLabel
+          Left = 345
+          Top = 100
+          Width = 30
+          Height = 13
+          Caption = 'Result'
+        end
+        object lLoadDat: TLabel
+          Left = 345
+          Top = 354
+          Width = 30
+          Height = 13
+          Caption = 'Result'
+        end
+        object lCreateTableDat: TLabel
+          Left = 345
+          Top = 254
+          Width = 30
+          Height = 13
+          Caption = 'Result'
+        end
+        object lResultGroupCSV: TLabel
+          Left = 345
+          Top = 162
+          Width = 30
+          Height = 13
+          Caption = 'Result'
+        end
+        object btnCreateTableDat: TButton
+          Left = 88
+          Top = 249
+          Width = 255
           Height = 25
-          Caption = #1057#1086#1079#1076#1072#1090#1100' '#1090#1072#1073#1083#1080#1094#1099
+          Caption = '1. '#1057#1086#1079#1076#1072#1090#1100' '#1090#1072#1073#1083#1080#1094#1099' checked'
           TabOrder = 0
-          OnClick = CreateTableButtonClick
+          OnClick = btnCreateTableDatClick
         end
         object cbChado: TCheckBox
           Tag = 11
@@ -610,16 +675,18 @@ object MainForm: TMainForm
           Width = 97
           Height = 17
           Caption = 'Chado.dat'
+          Checked = True
+          State = cbChecked
           TabOrder = 1
         end
-        object Button1: TButton
-          Left = 75
+        object btnLoadDat: TButton
+          Left = 88
           Top = 347
-          Width = 142
+          Width = 255
           Height = 25
-          Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1090#1072#1073#1083#1080#1094#1099
+          Caption = '2. *.dat - '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074' checked'
           TabOrder = 2
-          OnClick = Button1Click
+          OnClick = btnLoadDatClick
         end
         object PathDatFiles: TEdit
           Left = 2
@@ -636,6 +703,8 @@ object MainForm: TMainForm
           Width = 97
           Height = 17
           Caption = 'Esc.dat'
+          Checked = True
+          State = cbChecked
           TabOrder = 4
         end
         object cbMM: TCheckBox
@@ -645,6 +714,8 @@ object MainForm: TMainForm
           Width = 97
           Height = 17
           Caption = 'MM.dat'
+          Checked = True
+          State = cbChecked
           TabOrder = 5
         end
         object cbSAV: TCheckBox
@@ -654,6 +725,8 @@ object MainForm: TMainForm
           Width = 97
           Height = 17
           Caption = 'SAV.dat'
+          Checked = True
+          State = cbChecked
           TabOrder = 6
         end
         object cbSav_out: TCheckBox
@@ -663,6 +736,8 @@ object MainForm: TMainForm
           Width = 97
           Height = 17
           Caption = 'Sav_out.dat'
+          Checked = True
+          State = cbChecked
           TabOrder = 7
         end
         object cbTer_Out: TCheckBox
@@ -672,6 +747,8 @@ object MainForm: TMainForm
           Width = 97
           Height = 17
           Caption = 'Ter_Out.dat'
+          Checked = True
+          State = cbChecked
           TabOrder = 8
         end
         object cbTL: TCheckBox
@@ -681,6 +758,8 @@ object MainForm: TMainForm
           Width = 97
           Height = 17
           Caption = 'TL.dat'
+          Checked = True
+          State = cbChecked
           TabOrder = 9
         end
         object cbVint: TCheckBox
@@ -690,6 +769,8 @@ object MainForm: TMainForm
           Width = 97
           Height = 17
           Caption = 'Vint.dat'
+          Checked = True
+          State = cbChecked
           TabOrder = 10
         end
         object cbSop: TCheckBox
@@ -699,6 +780,8 @@ object MainForm: TMainForm
           Width = 97
           Height = 17
           Caption = 'Sop.dat'
+          Checked = True
+          State = cbChecked
           TabOrder = 11
         end
         object cbGoods2: TCheckBox
@@ -708,34 +791,36 @@ object MainForm: TMainForm
           Width = 97
           Height = 17
           Caption = 'Goods2'
+          Checked = True
+          State = cbChecked
           TabOrder = 12
         end
-        object InsertGoods2Button: TButton
-          Left = 96
+        object btnInsertGoods2: TButton
+          Left = 88
           Top = 31
-          Width = 121
+          Width = 255
           Height = 25
-          Caption = 'insert into Goods2'
+          Caption = '3. insert into Goods2'
           TabOrder = 13
-          OnClick = InsertGoods2ButtonClick
+          OnClick = btnInsertGoods2Click
         end
-        object Button2: TButton
-          Left = 96
-          Top = 93
+        object btnDropTableDat: TButton
+          Left = 2
+          Top = 215
           Width = 121
           Height = 25
-          Caption = 'Drop table Goods2'
+          Caption = '0. Drop table checked'
           TabOrder = 14
-          OnClick = Button2Click
+          OnClick = btnDropTableDatClick
         end
-        object Button3: TButton
-          Left = 96
+        object btnInsertHasChildGoods2: TButton
+          Left = 88
           Top = 62
-          Width = 121
+          Width = 255
           Height = 25
-          Caption = 'Insert HasChildren = -1'
+          Caption = '4. insert into Goods2 HasChildren = -1'
           TabOrder = 15
-          OnClick = Button3Click
+          OnClick = btnInsertHasChildGoods2Click
         end
         object cbAllTables: TCheckBox
           Left = 98
@@ -743,23 +828,43 @@ object MainForm: TMainForm
           Width = 97
           Height = 17
           Caption = #1042#1089#1077' '#1090#1072#1073#1083#1080#1094#1099
+          Checked = True
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
           Font.Name = 'MS Sans Serif'
           Font.Style = [fsBold]
           ParentFont = False
+          State = cbChecked
           TabOrder = 16
           OnClick = cbAllTablesClick
         end
-        object intoCSVButton: TButton
-          Left = 96
+        object btnResultCSV: TButton
+          Left = 88
           Top = 124
-          Width = 121
+          Width = 255
           Height = 25
-          Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1089' 50000'
+          Caption = #1060#1048#1053#1048#1064' - create Goods2.csv '#1089' ParentId = 50000'
           TabOrder = 17
-          OnClick = intoCSVButtonClick
+          OnClick = btnResultCSVClick
+        end
+        object btnUpdateGoods2: TButton
+          Left = 88
+          Top = 93
+          Width = 255
+          Height = 25
+          Caption = '5. Update - find '#1076#1083#1103'  ParentId = 50000'
+          TabOrder = 18
+          OnClick = btnUpdateGoods2Click
+        end
+        object btnResultGroupCSV: TButton
+          Left = 88
+          Top = 157
+          Width = 255
+          Height = 25
+          Caption = #1060#1048#1053#1048#1064' - create GROUP2.csv '#1089' ParentId = 50000'
+          TabOrder = 19
+          OnClick = btnResultGroupCSVClick
         end
       end
     end
@@ -794,6 +899,7 @@ object MainForm: TMainForm
   end
   object toZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
+    UTF8StringsAsWideField = True
     Catalog = 'public'
     DesignConnection = True
     AfterConnect = toZConnectionAfterConnect

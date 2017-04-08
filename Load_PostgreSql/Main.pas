@@ -2282,7 +2282,7 @@ begin
      if not fStop then pInsertHistoryCost(FALSE);
      //
      // ВСЕГДА - Привязка Возвраты
-     if (not fStop) and ((ParamStr(4) <> '-') or (isPeriodTwo = true)) then pCompleteDocument_ReturnIn_Auto;
+     if (not fStop) {and ((ParamStr(4) <> '-') or (isPeriodTwo = true))} then pCompleteDocument_ReturnIn_Auto;
      //
      // перепроведение
      if not fStop then pCompleteDocument_List(FALSE, FALSE, FALSE);
@@ -20867,10 +20867,10 @@ var ExecStr1,ExecStr2,ExecStr3,ExecStr4,addStr:String;
     isSale_str:String;
 begin
      // "текущий" месяц
-     fOpenSqFromQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-2)+') as RetV');
+     fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-2)+') as RetV');
      //
-     if  (StrToDate (EndDateCompleteEdit.Text) <= fromSqlQuery.FieldByName('RetV').AsDateTime)
-        and (ParamStr(2) <> '')
+     if  (StrToDate (EndDateCompleteEdit.Text) < fromSqlQuery.FieldByName('RetV').AsDateTime)
+        and (ParamStr(2) <> '') and (ParamStr(4) <> '+')
      then cbReturnIn_Auto.Checked:= false // !!!за "предыдущий" - не надо!!!
      else if ParamStr(2) <> ''
           then cbReturnIn_Auto.Checked:= true; // !!!надо!!!

@@ -93,7 +93,7 @@ BEGIN
                    ELSE COALESCE (ActualBankStatement.ValueData, CASE WHEN Object_GlobalConst.Id = zc_Enum_GlobalConst_PeriodClosePlan() THEN NULL ELSE CURRENT_DATE END)
               END :: TDateTime AS OperDate
             , CASE WHEN Object_GlobalConst.Id = zc_Enum_GlobalConst_PeriodClosePlan()
-                        THEN 'План закрытия периода за' || zfCalc_MonthName (ActualBankStatement.ValueData - INTERVAL '1 MONTH') || ' :'
+                        THEN 'План закрытия периода за ' || zfCalc_MonthName (ActualBankStatement.ValueData - INTERVAL '1 MONTH') || ' :'
                         
                    WHEN Object_GlobalConst.Id = 418996 -- актуальность данных Integer
                         THEN 'Кол-во АП = <' || COALESCE ((SELECT Res FROM tmpProcess_All), '0') || '> из которых :'

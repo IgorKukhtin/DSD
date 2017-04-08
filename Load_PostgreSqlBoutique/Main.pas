@@ -82,9 +82,9 @@ type
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     Panel1: TPanel;
-    CreateTableButton: TButton;
+    btnCreateTableDat: TButton;
     cbChado: TCheckBox;
-    Button1: TButton;
+    btnLoadDat: TButton;
     PathDatFiles: TEdit;
     Label3: TLabel;
     Label4: TLabel;
@@ -97,11 +97,24 @@ type
     cbVint: TCheckBox;
     cbSop: TCheckBox;
     cbGoods2: TCheckBox;
-    InsertGoods2Button: TButton;
-    Button2: TButton;
-    Button3: TButton;
+    btnInsertGoods2: TButton;
+    btnDropTableDat: TButton;
+    btnInsertHasChildGoods2: TButton;
     cbAllTables: TCheckBox;
-    intoCSVButton: TButton;
+    btnResultCSV: TButton;
+    btnUpdateGoods2: TButton;
+
+    lResultCSV: TLabel;
+    lDropTableDat: TLabel;
+    lInsertGoods2: TLabel;
+    lInsertHasChildGoods2: TLabel;
+    lUpdateGoods2: TLabel;
+    lLoadDat: TLabel;
+    lCreateTableDat: TLabel;
+    Splitter1: TSplitter;
+    btnResultGroupCSV: TButton;
+    lResultGroupCSV: TLabel;
+
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -115,13 +128,15 @@ type
     procedure OKCompleteDocumentButtonClick(Sender: TObject);
     procedure cbTaxIntClick(Sender: TObject);
     procedure toZConnectionAfterConnect(Sender: TObject);
-    procedure CreateTableButtonClick(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
-    procedure InsertGoods2ButtonClick(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
-    procedure Button3Click(Sender: TObject);
+    procedure btnCreateTableDatClick(Sender: TObject);
+    procedure btnLoadDatClick(Sender: TObject);
+    procedure btnInsertGoods2Click(Sender: TObject);
+    procedure btnDropTableDatClick(Sender: TObject);
+    procedure btnInsertHasChildGoods2Click(Sender: TObject);
     procedure cbAllTablesClick(Sender: TObject);
-    procedure intoCSVButtonClick(Sender: TObject);
+    procedure btnUpdateGoods2Click(Sender: TObject);
+    procedure btnResultCSVClick(Sender: TObject);
+    procedure btnResultGroupCSVClick(Sender: TObject);
   private
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
@@ -235,8 +250,11 @@ begin
      //
      if fStop then Close;
 end;
-procedure TMainForm.CreateTableButtonClick(Sender: TObject);
+procedure TMainForm.btnCreateTableDatClick(Sender: TObject);
 begin
+ lCreateTableDat.Caption:= 'FALSE';
+
+
  if cbChado.Checked then
      fExecSqFromQuery(
        ' 	CREATE TABLE chado (	 ' +
@@ -489,10 +507,9 @@ begin
      // fExecSqFromQuery(' 	delete from Goods2 where id = 500000');
  end;
 
+ lCreateTableDat.Caption:= 'TRUE';
+
 end;
-
-
-
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fGetSession:String;
 begin Result:='1005'; end;
@@ -747,9 +764,12 @@ begin
           then TCheckBox(Components[i]).Checked:=cbAllGuide.Checked;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.Button1Click(Sender: TObject);
+procedure TMainForm.btnLoadDatClick(Sender: TObject);
 begin
-if cbChado.Checked then
+ lLoadDat.Caption:= 'FALSE';
+
+
+ if cbChado.Checked then
  fExecSqFromQuery(
      ' 	LOAD TABLE "DBA"."chado"	 ' +
      ' 	 FROM '''+pathdatfiles.Text+'\chado.dat''	 ' +
@@ -814,10 +834,14 @@ if cbSop.Checked then
      );
 
 
+ lLoadDat.Caption:= 'TRUE';
+
 end;
 
-procedure TMainForm.Button2Click(Sender: TObject);
+procedure TMainForm.btnDropTableDatClick(Sender: TObject);
 begin
+ lDropTableDat.Caption:= 'FALSE';
+
  if cbChado.Checked then fExecSqFromQuery(' drop table chado');
  if cbEsc.Checked then fExecSqFromQuery(' drop table Esc');
  if cbMM.Checked then fExecSqFromQuery(' drop table MM');
@@ -828,11 +852,17 @@ begin
  if cbVint.Checked then fExecSqFromQuery(' drop table Vint');
  if cbSop.Checked   then fExecSqFromQuery(' drop table Sop');
  if cbGoods2.Checked then fExecSqFromQuery(' drop table goods2');
+
+ lDropTableDat.Caption:= 'TRUE';
+
 end;
 
-procedure TMainForm.Button3Click(Sender: TObject);
+procedure TMainForm.btnInsertHasChildGoods2Click(Sender: TObject);
 var  inGoodsName,  inParentID, inHasChildren : string;
 begin
+ lInsertHasChildGoods2.Caption:= 'FALSE';
+
+
  Gauge.Visible:=true;
     myEnabledCB(cbGoods2);
      //
@@ -929,13 +959,60 @@ begin
      myDisabledCB(cbGoods2);
  Gauge.Visible:=False;
 
+ lInsertHasChildGoods2.Caption:= 'TRUE';
+
 end;
 
-procedure TMainForm.intoCSVButtonClick(Sender: TObject);
+procedure TMainForm.btnUpdateGoods2Click(Sender: TObject);
+var Res1, Res2 :Integer;
+begin
+  lUpdateGoods2.Caption:= 'FALSE';
+
+  with fromQuery_two,Sql do begin
+    Close;
+    Clear;
+    Add('select count(*) as res from goods2 where ParentId = 500000');
+    Open;
+    Res1:= fromQuery_two.FieldByName('res').AsInteger;
+    Close;
+  end;
+
+  fExecSqFromQuery(
+       ' update goods2 set ParentId =  tmp.ParentId'
+      +' from goodsProperty'
+      +'      inner join'
+      +'     (select  goodsProperty.GroupsName, max (goods2.ParentId) AS ParentId'
+      +'       from goodsProperty'
+      +'            join goods2 on goods2.Id = goodsProperty.GoodsId'
+      +'                       and goods2.ParentId <> 500000'
+      +'      group by goodsProperty.GroupsName'
+      +'      ) as tmp  on tmp.GroupsName = goodsProperty.GroupsName'
+      +' where goods2.ParentId = 500000'
+      +'   and goods2.Id = goodsProperty.GoodsId'
+       );
+
+  with fromQuery_two,Sql do begin
+    Close;
+    Clear;
+    Add('select count(*) as res from goods2 where ParentId = 500000');
+    Open;
+    Res2:= fromQuery_two.FieldByName('res').AsInteger;
+    Close;
+  end;
+
+ lUpdateGoods2.Caption:= 'TRUE ('+IntToStr(Res1)+') - ('+IntToStr(Res2)+')';
+
+end;
+
+procedure TMainForm.btnResultCSVClick(Sender: TObject);
 var strCSV: string;
     csvFile: TextFile;
 begin
-  if (not cbGoods2.Checked)or(not cbGoods2.Enabled) then exit;
+ lResultCSV.Caption:= 'FALSE';
+
+  // ??? зачем ???
+  //if (not cbGoods2.Checked)or(not cbGoods2.Enabled) then exit;
+
     Gauge.Visible:=true;
      //
      myEnabledCB(cbGoods2);
@@ -943,39 +1020,36 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select  ');
-        Add('goods2.id as id ');
-        Add(', grgoods.GroupsName as GroupsName ');
-        Add(', goods2.GoodsName as Name ');
-        Add(', BillItemsIncome.OperCount as OperCount ');
-        Add(', BillItemsIncome.RemainsCount as RemainsCount ');
-        Add(', BillItemsIncome.OperPrice as OperPrice ');
-        Add(', valuta.ValutaName as Valuta  ');
-        Add(', BillItemsIncome.PriceListPrice as PriceListPrice  ');
-        Add(', Partner.UnitName as Partner  ');
-        Add(', Shop.UnitName as Shop  ');
-        Add(', BillItemsIncome.DateIn as DateIn  ');
-        Add('from  ');
-        Add('goods2  ');
-        Add('left join (select  ');
-        Add('              BillItemsIncome.goodsid ');
-        Add('            , sum(BillItemsIncome.OperCount) as OperCount ');
-        Add('            , sum(BillItemsIncome.RemainsCount) as RemainsCount ');
-        Add('            , sum(BillItemsIncome.OperPrice) as OperPrice ');
-        Add('            , sum(BillItemsIncome.PriceListPrice) as PriceListPrice  ');
-        Add('            , max(BillItemsIncome.UnitID) as UnitID ');
-        Add('            , max(BillItemsIncome.clientid)  as  clientid ');
-        Add('            , max(BillItemsIncome.ValutaID)  as  ValutaID ');
-        Add('            , max(BillItemsIncome.DateIn)    as  DateIn ');
-        Add('            from  ');
-        Add('              BillItemsIncome  ');
-        Add('            group by goodsid)  BillItemsIncome on BillItemsIncome.goodsid = goods2.id ');
-        Add('left join (select goodsid, GroupsName   from goodsproperty group by goodsid, GroupsName) as grGoods on grGoods.goodsid = goods2.id  ');
-        Add('left join  Unit as Shop on shop.id = BillItemsIncome.UnitID ');
-        Add('left join  Unit as Partner on Partner.id = BillItemsIncome.clientid ');
-        Add('left join valuta on valuta.id = BillItemsIncome.ValutaID ');
+        Add(' select goods2.CashCode as CashCode');
+        Add('      , grgoods.GroupsName as GroupsName ');
+        Add('      , goods2.GoodsName as Name ');
+        Add('      , BillItemsIncome.OperCount as OperCount ');
+        Add('      , BillItemsIncome.RemainsCount as RemainsCount ');
+        Add('      , BillItemsIncome.OperPrice as OperPrice ');
+        Add('      , valuta.ValutaName as Valuta  ');
+        Add('      , BillItemsIncome.PriceListPrice as PriceListPrice  ');
+        Add('      , Partner.UnitName as Partner  ');
+        Add('      , Shop.UnitName as Shop  ');
+        Add('      , BillItemsIncome.DateIn as DateIn  ');
+        Add(' from goods2  ');
+        Add('     left join (select BillItemsIncome.goodsid ');
+        Add('                     , sum(BillItemsIncome.OperCount) as OperCount ');
+        Add('                     , sum(BillItemsIncome.RemainsCount) as RemainsCount ');
+        Add('                     , max(BillItemsIncome.OperPrice) as OperPrice ');
+        Add('                     , max(BillItemsIncome.PriceListPrice) as PriceListPrice  ');
+        Add('                     , max(BillItemsIncome.UnitID) as UnitID ');
+        Add('                     , max(BillItemsIncome.clientid)  as  clientid ');
+        Add('                     , max(BillItemsIncome.ValutaID)  as  ValutaID ');
+        Add('                     , max(BillItemsIncome.DateIn)    as  DateIn ');
+        Add('                 from BillItemsIncome  ');
+        Add('                 group by goodsid');
+        Add('                ) as BillItemsIncome on BillItemsIncome.goodsid = goods2.id ');
+        Add('     left join (select DISTINCT goodsid, GroupsName from goodsproperty) as grGoods on grGoods.goodsid = goods2.id');
+        Add('     left join  Unit as Shop on shop.id = BillItemsIncome.UnitID ');
+        Add('     left join  Unit as Partner on Partner.id = BillItemsIncome.clientid ');
+        Add('     left join valuta on valuta.id = BillItemsIncome.ValutaID ');
         Add(' where goods2.ParentId = 500000 ');
-        Add('order by id  ');
+        Add(' order by goods2.CashCode');
         Open;
         //
         fStop:=cbOnlyOpen.Checked;
@@ -996,7 +1070,7 @@ begin
              //!!!
              if fStop then begin exit;end;
              //
-               strCSV := fromQuery.FieldByName('Id').AsString;
+               strCSV := fromQuery.FieldByName('CashCode').AsString;
                strCSV := strCSV +';'+ fromQuery.FieldByName('GroupsName').AsString;
                strCSV := strCSV +';'+ myReplaceStr(fromQuery.FieldByName('Name').AsString,';',',');
                strCSV := strCSV +';'+ fromQuery.FieldByName('OperCount').AsString;
@@ -1020,8 +1094,104 @@ begin
      //
      myDisabledCB(cbGoods2);
      Gauge.Visible:=False;
+
+ lResultCSV.Caption:= 'TRUE - ' + pathdatfiles.Text + '\Goods2.csv';
+
 end;
 
+procedure TMainForm.btnResultGroupCSVClick(Sender: TObject);
+var strCSV: string;
+    csvFile: TextFile;
+begin
+ lResultGroupCSV.Caption:= 'FALSE';
+
+    Gauge.Visible:=true;
+     //
+     myEnabledCB(cbGoods2);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add(' select max (goods2.CashCode) as CashCode');
+        Add('      , grgoods.GroupsName as GroupsName ');
+        Add('      , null as Name ');
+        Add('      , sum (BillItemsIncome.OperCount) as OperCount ');
+        Add('      , sum (BillItemsIncome.RemainsCount) as RemainsCount ');
+        Add('      , null as OperPrice ');
+        Add('      , null as Valuta  ');
+        Add('      , null as PriceListPrice  ');
+        Add('      , null as Partner');
+        Add('      , Shop.UnitName as Shop  ');
+        Add('      , max (BillItemsIncome.DateIn) as DateIn');
+        Add(' from goods2');
+        Add('     left join (select BillItemsIncome.goodsid ');
+        Add('                     , sum(BillItemsIncome.OperCount) as OperCount ');
+        Add('                     , sum(BillItemsIncome.RemainsCount) as RemainsCount ');
+        Add('                     , max(BillItemsIncome.OperPrice) as OperPrice ');
+        Add('                     , max(BillItemsIncome.PriceListPrice) as PriceListPrice  ');
+        Add('                     , max(BillItemsIncome.UnitID) as UnitID ');
+        Add('                     , max(BillItemsIncome.clientid)  as  clientid ');
+        Add('                     , max(BillItemsIncome.ValutaID)  as  ValutaID ');
+        Add('                     , max(BillItemsIncome.DateIn)    as  DateIn ');
+        Add('                 from BillItemsIncome  ');
+        Add('                 group by goodsid');
+        Add('                ) as BillItemsIncome on BillItemsIncome.goodsid = goods2.id ');
+        Add('     left join (select DISTINCT goodsid, GroupsName from goodsproperty) as grGoods on grGoods.goodsid = goods2.id');
+        Add('     left join Unit as Shop on shop.id = BillItemsIncome.UnitID ');
+        Add(' where goods2.ParentId = 500000 ');
+        Add(' group by grgoods.GroupsName');
+        Add('        , Shop.UnitName');
+        Add(' order by grgoods.GroupsName');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        //
+        AssignFile(csvFile, pathdatfiles.Text+'\Groups2.csv');
+        ReWrite(csvFile);
+        WriteLn(csvFile, ';;;;;од/об;детс;дев;Верхняя;дл, сост,шор;ценник;;;;;;');
+        WriteLn(csvFile, ';;;;;асс/инв;ж/м;мальч;Трикотаж;осн.призн.;;;;;;;');
+        WriteLn(csvFile, ';;;;;;;;;;;;;;;;');
+        WriteLn(csvFile, 'Код;Группа;Названия;Прих.;Ост.;1;2;3;4;5;6;Вх цена;Вал.;Цена~по п-л;Поставщик;Магазин;Дата прохода');
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+               strCSV := fromQuery.FieldByName('CashCode').AsString;
+               strCSV := strCSV +';'+ fromQuery.FieldByName('GroupsName').AsString;
+               strCSV := strCSV +';'+ myReplaceStr(fromQuery.FieldByName('Name').AsString,';',',');
+               strCSV := strCSV +';'+ fromQuery.FieldByName('OperCount').AsString;
+               strCSV := strCSV +';'+ fromQuery.FieldByName('RemainsCount').AsString;
+               strCSV := strCSV +';;;;;;;'+ fromQuery.FieldByName('OperPrice').AsString;
+               strCSV := strCSV +';'+ fromQuery.FieldByName('Valuta').AsString;
+               strCSV := strCSV +';'+ fromQuery.FieldByName('PriceListPrice').AsString;
+               strCSV := strCSV +';'+ fromQuery.FieldByName('Partner').AsString;
+               strCSV := strCSV +';'+ fromQuery.FieldByName('Shop').AsString;
+               strCSV := strCSV +';'+ fromQuery.FieldByName('DateIn').AsString;
+             //
+               WriteLn(csvFile, strCSV);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        CloseFile(csvFile);
+     end;
+     //
+     myDisabledCB(cbGoods2);
+     Gauge.Visible:=False;
+
+ lResultGroupCSV.Caption:= 'TRUE - ' + pathdatfiles.Text + '\Group2.csv';
+end;
+
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.cbAllCompleteDocumentClick(Sender: TObject);
 var i:Integer;
 begin
@@ -1130,10 +1300,13 @@ end;
 
 
 
-procedure TMainForm.InsertGoods2ButtonClick(Sender: TObject);
+procedure TMainForm.btnInsertGoods2Click(Sender: TObject);
 var  inGoodsName,  inParentID, inHasChildren , upWhere : string;
 begin
- if not cbGoods2.Checked then Exit;
+ lInsertGoods2.Caption:= 'FALSE';
+// if not cbGoods2.Checked then Exit;
+
+
  Gauge.Visible:=true;
  myEnabledCB(cbGoods2);
 // Правки полей
@@ -1430,6 +1603,8 @@ fExecSqFromQuery(
         myDisabledCB(cbGoods2);
          Gauge.Visible:=False;
      end;
+
+ lInsertGoods2.Caption:= 'TRUE';
 
 end;
 
