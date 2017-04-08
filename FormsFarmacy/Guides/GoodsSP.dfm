@@ -3,7 +3,7 @@ object GoodsSPForm: TGoodsSPForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1058#1086#1074#1072#1088#1099' '#1057#1086#1094'. '#1055#1088#1086#1077#1082#1090#1072
   ClientHeight = 411
-  ClientWidth = 885
+  ClientWidth = 970
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object GoodsSPForm: TGoodsSPForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 885
+    Width = 970
     Height = 385
     Align = alClient
     TabOrder = 0
@@ -146,7 +146,7 @@ object GoodsSPForm: TGoodsSPForm
         Properties.DisplayFormat = ',0.##; ; '
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 87
+        Width = 77
       end
       object cbGroupSP: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1080' '#1074#1110#1076#1096#1082#1086#1076#1091'-'#1074#1072#1085#1085#1103' '#8211' '#1030' '#1072#1073#1086' '#1030#1030
@@ -239,6 +239,13 @@ object GoodsSPForm: TGoodsSPForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 84
+      end
+      object cxGridDBTableViewColumn1: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1079#1072#1075#1088#1091#1079#1082#1080
+        DataBinding.FieldName = 'InsertDateSP'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 65
       end
       object clisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -1007,6 +1014,15 @@ object GoodsSPForm: TGoodsSPForm
         Component = ClientDataSet
         ComponentItem = 'ReestrSP'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInsertDateSP'
+        Value = 'NULL'
+        Component = ClientDataSet
+        ComponentItem = 'InsertDateSP'
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

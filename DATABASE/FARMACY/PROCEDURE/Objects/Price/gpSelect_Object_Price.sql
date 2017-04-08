@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , MinExpirationDate TDateTime
              , Remains TFloat, SummaRemains TFloat
              , RemainsNotMCS TFloat, SummaNotMCS TFloat
+             , PriceRetSP TFloat
              , isSP Boolean
              , isErased boolean
              , isClose boolean, isFirst boolean , isSecond boolean
@@ -90,6 +91,7 @@ BEGIN
                ,NULL::TFloat                     AS SummaRemains
                ,NULL::TFloat                     AS RemainsNotMCS
                ,NULL::TFloat                     AS SummaNotMCS
+               ,NULL::TFloat                     AS PriceRetSP
                ,NULL::Boolean                    AS isSP
                ,NULL::Boolean                    AS isErased
                ,NULL::Boolean                    AS isClose 
@@ -193,7 +195,9 @@ BEGIN
                
                , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE (Object_Price_View.MCSValue, 0) THEN COALESCE (Object_Remains.Remains, 0) - COALESCE (Object_Price_View.MCSValue, 0) ELSE 0 END :: TFloat AS RemainsNotMCS
                , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE (Object_Price_View.MCSValue, 0) THEN (COALESCE (Object_Remains.Remains, 0) - COALESCE (Object_Price_View.MCSValue, 0)) * COALESCE (Object_Price_View.Price, 0) ELSE 0 END :: TFloat AS SummaNotMCS
-               
+
+               , COALESCE (ObjectFloat_Goods_PriceRetSP.ValueData,0) ::TFloat  AS PriceRetSP
+
                , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
                , Object_Goods_View.isErased                      AS isErased 
 
@@ -250,8 +254,12 @@ BEGIN
                                                        AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
 
                LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
-                                        ON ObjectBoolean_Goods_SP.ObjectId =ObjectLink_Main.ChildObjectId 
+                                        ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
                                        AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+
+               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceRetSP
+                                     ON ObjectFloat_Goods_PriceRetSP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                    AND ObjectFloat_Goods_PriceRetSP.DescId = zc_ObjectFloat_Goods_PriceRetSP() 
 
             WHERE (inisShowDel = True OR Object_Goods_View.isErased = False)
               AND (Object_Goods_View.Id = inGoodsId OR inGoodsId = 0)
@@ -345,6 +353,8 @@ BEGIN
                , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE (Object_Price_View.MCSValue, 0) THEN COALESCE (Object_Remains.Remains, 0) - COALESCE (Object_Price_View.MCSValue, 0) ELSE 0 END :: TFloat AS RemainsNotMCS
                , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE (Object_Price_View.MCSValue, 0) THEN (COALESCE (Object_Remains.Remains, 0) - COALESCE (Object_Price_View.MCSValue, 0)) * COALESCE (Object_Price_View.Price, 0) ELSE 0 END :: TFloat AS SummaNotMCS
                               
+               , COALESCE (ObjectFloat_Goods_PriceRetSP.ValueData,0) ::TFloat  AS PriceRetSP
+
                , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
                , Object_Goods_View.isErased                AS isErased 
 
@@ -399,6 +409,10 @@ BEGIN
                LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
                                         ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
                                        AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+
+               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceRetSP
+                                     ON ObjectFloat_Goods_PriceRetSP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                    AND ObjectFloat_Goods_PriceRetSP.DescId = zc_ObjectFloat_Goods_PriceRetSP() 
 
             WHERE Object_Price_View.unitid = inUnitId
               AND (inisShowDel = True OR Object_Goods_View.isErased = False)

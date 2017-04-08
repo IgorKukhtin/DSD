@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PriceOptSP TFloat, PriceRetSP TFloat
              , DailyNormSP TFloat, DailyCompensationSP TFloat
              , PaymentSP TFloat, ColSP TFloat
+             , InsertDateSP TDateTime
              ) AS
 $BODY$ 
   DECLARE vbUserId Integer;
@@ -59,6 +60,7 @@ BEGIN
            , ObjectFloat_Goods_DailyCompensationSP.ValueData  AS DailyCompensationSP
            , ObjectFloat_Goods_PaymentSP.ValueData        AS PaymentSP
            , ObjectFloat_Goods_ColSP.ValueData            AS ColSP
+           , ObjectDate_InsertSP.ValueData                AS InsertDateSP
 
        FROM ObjectBoolean AS ObjectBoolean_Goods_SP 
 
@@ -114,7 +116,6 @@ BEGIN
                                   ON ObjectFloat_Goods_ColSP.ObjectId = Object_Goods.Id
                                  AND ObjectFloat_Goods_ColSP.DescId = zc_ObjectFloat_Goods_ColSP() 
 
-
             LEFT JOIN ObjectString AS ObjectString_Goods_Pack
                                    ON ObjectString_Goods_Pack.ObjectId = Object_Goods.Id 
                                   AND ObjectString_Goods_Pack.DescId = zc_ObjectString_Goods_Pack()
@@ -132,6 +133,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_ReestrDateSP
                                    ON ObjectString_Goods_ReestrDateSP.ObjectId = Object_Goods.Id 
                                   AND ObjectString_Goods_ReestrDateSP.DescId = zc_ObjectString_Goods_ReestrDateSP()
+
+            LEFT JOIN ObjectDate AS ObjectDate_InsertSP
+                                 ON ObjectDate_InsertSP.ObjectId = Object_Goods.Id 
+                                AND ObjectDate_InsertSP.DescId = zc_ObjectDate_Protocol_InsertSP()
      
    WHERE ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
      AND ObjectBoolean_Goods_SP.ValueData;
@@ -151,4 +156,4 @@ ALTER FUNCTION gpSelect_Object_GoodsSP(TVarChar) OWNER TO postgres;
 */
 
 -- тест
---SELECT * FROM gpSelect_Object_GoodsSP (zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_GoodsSP (zfCalc_UserAdmin())
