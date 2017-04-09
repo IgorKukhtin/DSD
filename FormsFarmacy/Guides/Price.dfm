@@ -60,6 +60,8 @@ inherited PriceForm: TPriceForm
       inherited cxGrid: TcxGrid
         Width = 846
         Height = 328
+        ExplicitLeft = 288
+        ExplicitTop = 16
         ExplicitWidth = 846
         ExplicitHeight = 328
         inherited cxGridDBTableView: TcxGridDBTableView

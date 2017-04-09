@@ -105,6 +105,7 @@ type
     actGoodsChoiceForm: TOpenChoiceForm;
     bb: TdxBarButton;
     clAmountDeferred: TcxGridDBColumn;
+    clisPriceDiff: TcxGridDBColumn;
   private
     { Private declarations }
   public
