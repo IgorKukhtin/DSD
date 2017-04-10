@@ -1,10 +1,10 @@
 inherited MainForm: TMainForm
   Caption = 'Boutique'
-  ClientHeight = 280
-  ClientWidth = 666
+  ClientHeight = 168
+  ClientWidth = 600
   KeyPreview = True
-  ExplicitWidth = 682
-  ExplicitHeight = 339
+  ExplicitWidth = 616
+  ExplicitHeight = 226
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -13,7 +13,19 @@ inherited MainForm: TMainForm
     inherited actAbout: TAction
       Category = 'but'
     end
-    object actUser: TdsdOpenForm [4]
+    object actIncome: TdsdOpenForm [2]
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Hint = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      FormName = 'TIncomeJournalForm'
+      FormNameParam.Value = 'TIncomeJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actUser: TdsdOpenForm [5]
       Category = 'but'
       MoveParams = <>
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
@@ -24,7 +36,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actForms: TdsdOpenForm [8]
+    object actForms: TdsdOpenForm [9]
       Category = 'but'
       MoveParams = <>
       Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1086#1081' '#1089#1080#1089#1090#1077#1084#1086#1081
@@ -36,7 +48,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actRole: TdsdOpenForm [9]
+    object actRole: TdsdOpenForm [10]
       Category = 'but'
       MoveParams = <>
       Caption = #1056#1086#1083#1080
@@ -516,6 +528,12 @@ inherited MainForm: TMainForm
       end
       object N43: TMenuItem
         Action = actPersonal
+      end
+    end
+    object N44: TMenuItem [1]
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      object N45: TMenuItem
+        Action = actIncome
       end
     end
     inherited miService: TMenuItem
