@@ -765,27 +765,31 @@ begin
   application.ProcessMessages;
 
   //проверили что есть остаток
+  if not gc_User.Local then
   if fCheck_RemainsError = false then exit;
 
- //проверили что этот чек Ќе был проведен другой кассой - 04.02.2017
-  dsdSave := TdsdStoredProc.Create(nil);
-  try
-     //ѕроверить в каком состо€нии документ.
-     dsdSave.StoredProcName := 'gpGet_Movement_CheckState';
-     dsdSave.OutputType := otResult;
-     dsdSave.Params.Clear;
-     dsdSave.Params.AddParam('inId',ftInteger,ptInput,FormParams.ParamByName('CheckId').Value);
-     dsdSave.Params.AddParam('outState',ftInteger,ptOutput,Null);
-     dsdSave.Execute(False,False);
-     if VarToStr(dsdSave.Params.ParamByName('outState').Value) = '2' then //проведен
-     Begin
-          ShowMessage ('ќшибка.ƒанный чек уже сохранен другой кассой.ƒл€ продолжени€ - необходимо обнулить чек и набрать позиции заново.');
-          exit;
-     End;
-  finally
-     freeAndNil(dsdSave);
-  end;
 
+ //проверили что этот чек Ќе был проведен другой кассой - 04.02.2017
+  if not gc_User.Local then
+  begin
+    dsdSave := TdsdStoredProc.Create(nil);
+    try
+       //ѕроверить в каком состо€нии документ.
+       dsdSave.StoredProcName := 'gpGet_Movement_CheckState';
+       dsdSave.OutputType := otResult;
+       dsdSave.Params.Clear;
+       dsdSave.Params.AddParam('inId',ftInteger,ptInput,FormParams.ParamByName('CheckId').Value);
+       dsdSave.Params.AddParam('outState',ftInteger,ptOutput,Null);
+       dsdSave.Execute(False,False);
+       if VarToStr(dsdSave.Params.ParamByName('outState').Value) = '2' then //проведен
+       Begin
+            ShowMessage ('ќшибка.ƒанный чек уже сохранен другой кассой.ƒл€ продолжени€ - необходимо обнулить чек и набрать позиции заново.');
+            exit;
+       End;
+    finally
+       freeAndNil(dsdSave);
+    end;
+  end;
   //послали на печать
   try
     if PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.PaidType, FiscalNumber, CheckNumber) then
@@ -1034,6 +1038,8 @@ SEInfo: TShellExecuteInfo;
 ExitCode: DWORD;
 ExecuteFile, ParamString, StartInString: string;
 begin
+ if gc_User.Local then Exit;
+
   ExecuteFile := 'FarmacyCashServise.exe';
   FillChar(SEInfo, SizeOf(SEInfo), 0);
   SEInfo.cbSize := SizeOf(TShellExecuteInfo);
@@ -3308,6 +3314,7 @@ end;
 procedure TMainCashForm2.SetBlinkVIP (isRefresh : boolean);
 var lMovementId_BlinkVIP : String;
 begin
+  if gc_User.Local then Exit;
   // если прошло > 100 сек - захардкодил
   if ((now - time_onBlink) > 0.002) or(isRefresh = true) then
 
@@ -3343,6 +3350,7 @@ procedure TMainCashForm2.SetBlinkCheck (isRefresh : boolean);
 var lMovementId_BlinkCheck : String;
 
 begin
+ if gc_User.Local then Exit;
   // если прошло > 50 сек - захардкодил
 
   if ((now - time_onBlinkCheck) > 0.0003) or(isRefresh = true) then
@@ -3373,8 +3381,9 @@ procedure TMainCashForm2.TimerSaveAllTimer(Sender: TObject);
 var fEmpt  : Boolean;
     RCount : Integer;
 begin
+  if gc_User.Local then Exit;
    TimerSaveAll.Enabled:=False;
- //
+   //
   try
     WaitForSingleObject(MutexDBF, INFINITE);
 
