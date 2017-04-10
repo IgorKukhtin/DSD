@@ -13,7 +13,7 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter;
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxImage;
 
 type
   TVisitForm = class(TAncestorDocumentForm)
@@ -42,6 +42,7 @@ type
     InsertRecord: TInsertRecord;
     bbInsertRecord: TdxBarButton;
     PhotoData: TcxGridDBColumn;
+    actRefreshEx: TdsdDataSetRefreshEx;
   private
     { Private declarations }
   public

@@ -42,18 +42,21 @@ begin
   IniUtils.gPassValue := edPassword.Text;
 
   if ModalResult <> mrOk then exit;
+  if  not gc_User.Local then
+   begin
+      spChekFarmacyName.ParamByName('inUnitName').Value := edFarmacyName.Text;
+      try spChekFarmacyName.Execute;
+        if spChekFarmacyName.ParamByName('outIsEnter').Value = FALSE
+        then ModalResult := mrCancel
+        else if edFarmacyName.Enabled then iniLocalUnitNameSave(edFarmacyName.Text);
+      except ON E: Exception do
+          Begin
+             Application.OnException(Application.MainForm,E);
+             ModalResult := mrNone;
+          End;
+      end;
 
-  spChekFarmacyName.ParamByName('inUnitName').Value := edFarmacyName.Text;
-  try spChekFarmacyName.Execute;
-    if spChekFarmacyName.ParamByName('outIsEnter').Value = FALSE
-    then ModalResult := mrCancel
-    else if edFarmacyName.Enabled then iniLocalUnitNameSave(edFarmacyName.Text);
-  except ON E: Exception do
-      Begin
-         Application.OnException(Application.MainForm,E);
-         ModalResult := mrNone;
-      End;
-  end;
+   end;
 end;
 
 procedure TLoginForm1.FormShow(Sender: TObject);

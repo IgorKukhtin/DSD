@@ -3,7 +3,7 @@ unit dsdAction;
 interface
 
 uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst,
-  cxControls, dsdGuides, ImgList, cxPC, cxGridTableView,
+  cxControls, dsdGuides, ImgList, cxPC, cxGrid, cxGridTableView,
   cxGridDBTableView, frxClass, frxExportPDF, cxGridCustomView, Dialogs, Controls,
   dsdDataSetDataLink, ExtCtrls;
 
@@ -428,6 +428,19 @@ type
     procedure ChangeDSState; override;
   end;
 
+  TdsdDataSetRefreshEx = class(TdsdDataSetRefresh)
+  private
+    FFieldName: string;
+    FGrid: TcxGrid;
+    procedure SetFieldName(const Value: string);
+    procedure SetGrid(const Value: TcxGrid);
+  protected
+    function LocalExecute: Boolean; override;
+  published
+    property FieldName: string read FFieldName write SetFieldName;
+    property Grid: TcxGrid read FGrid write SetGrid;
+  end;
+
   // ƒанный класс дополн€ет поведение класса TdsdOpenForm по работе со справочниками
   //   сожалению наследование самое удобное пока
   TdsdInsertUpdateAction = class(TdsdOpenForm, IDataSetAction, IFormAction)
@@ -756,7 +769,7 @@ implementation
 uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
   Menus, cxGridExportLink, ShellApi,
   frxDesgn, messages, ParentForm, SimpleGauge, TypInfo,
-  cxExportPivotGridLink, cxGrid, cxCustomPivotGrid, StrUtils, Variants,
+  cxExportPivotGridLink, cxCustomPivotGrid, StrUtils, Variants,
   frxDBSet, Printers,
   cxGridAddOn, cxTextEdit, cxGridDBDataDefinitions, ExternalSave,
   dxmdaset, dxCore, cxCustomData, cxGridLevel;
@@ -770,6 +783,7 @@ begin
     TdsdChangeMovementStatus);
   RegisterActions('DSDLib', [TdsdChoiceGuides], TdsdChoiceGuides);
   RegisterActions('DSDLib', [TdsdDataSetRefresh], TdsdDataSetRefresh);
+  RegisterActions('DSDLib', [TdsdDataSetRefreshEx], TdsdDataSetRefreshEx);
   RegisterActions('DSDLib', [TdsdExecStoredProc], TdsdExecStoredProc);
   RegisterActions('DSDLib', [TdsdFormClose], TdsdFormClose);
   RegisterActions('DSDLib', [TdsdGridToExcel], TdsdGridToExcel);
@@ -3059,6 +3073,83 @@ procedure TdsdStoredProcExportToFile.SetdsdStoredProcName(
   Value: TdsdStoredProc);
 begin
   FdsdStoredProcName := Value;
+end;
+
+{ TdsdDataSetRefreshEx }
+
+function TdsdDataSetRefreshEx.LocalExecute: Boolean;
+var
+  DestBlob: AnsiString;
+  i: Integer;
+  SaveDS: TDataSource;
+begin
+  Result := True;
+
+  if not Assigned(FGrid) then
+    Exit;
+
+  SaveDS := (Grid.Views[0].DataController as TcxGridDBDataController).DataSource;
+  (Grid.Views[0].DataController as TcxGridDBDataController).DataSource := nil;
+
+  for i := 0 to StoredProcList.Count - 1 do
+    if Assigned(StoredProcList[i]) then
+      if Assigned(StoredProcList[i].StoredProc) then
+      begin
+        // ≈сли табшит не установлен, но если установлен, то активен
+        if (not Assigned(StoredProcList[i].TabSheet)) or
+          (Assigned(StoredProcList[i].TabSheet) and
+          (StoredProcList[i].TabSheet.PageControl.ActivePage = StoredProcList[i]
+          .TabSheet)) then
+            if StoredProcList[i].StoredProc.OutputType = otMultiExecute then
+            begin
+              try
+                StoredProcList[i].StoredProc.Execute(fExecPack, true); //12.07.2016 - ѕередали параметр в StoredProc, нужен дл€ otMultiExecute
+              except
+              end;
+            end else
+            begin
+              try
+                StoredProcList[i].StoredProc.Execute;
+              except
+              end;
+            end;
+      end;
+
+  if Assigned(FDataSet) and (FFieldName <> '') then
+  begin
+    DataSet.DisableControls;
+    DataSet.First;
+    try
+      while not DataSet.Eof do
+      begin
+        try
+          DestBlob := ReConvertConvert(DataSet.FieldByName(FieldName).AsString);
+          DataSet.Edit;
+          DataSet.FieldByName(FieldName).AsString := DestBlob;
+          DataSet.Post;
+        except
+          if DataSet.State in dsEditModes then
+            DataSet.Cancel;
+        end;
+        DataSet.Next;
+      end;
+    finally
+      DataSet.First;
+      DataSet.EnableControls;
+    end;
+  end;
+
+  (Grid.Views[0].DataController as TcxGridDBDataController).DataSource := SaveDS;
+end;
+
+procedure TdsdDataSetRefreshEx.SetFieldName(const Value: string);
+begin
+  FFieldName := Value;
+end;
+
+procedure TdsdDataSetRefreshEx.SetGrid(const Value: TcxGrid);
+begin
+  FGrid := Value;
 end;
 
 end.

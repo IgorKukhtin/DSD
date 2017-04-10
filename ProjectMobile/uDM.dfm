@@ -221,10 +221,6 @@ object DM: TDM
     object tblObject_PartnerisSync: TBooleanField
       FieldName = 'isSync'
     end
-    object tblObject_Partnertest: TStringField
-      FieldName = 'test'
-      Size = 100
-    end
   end
   object tblObject_Juridical: TFDTable
     Connection = conMain
@@ -881,6 +877,9 @@ object DM: TDM
     object tblMovement_VisitInsertDate: TDateTimeField
       FieldName = 'InsertDate'
     end
+    object tblMovement_VisitStatusId: TIntegerField
+      FieldName = 'StatusId'
+    end
     object tblMovement_VisitisSync: TBooleanField
       FieldName = 'isSync'
     end
@@ -1045,12 +1044,14 @@ object DM: TDM
       FieldName = 'Comment'
       Size = 255
     end
-    object tblMovementItem_VisitPhotoName: TStringField
-      FieldName = 'PhotoName'
-      Size = 255
-    end
     object tblMovementItem_VisitInsertDate: TDateTimeField
       FieldName = 'InsertDate'
+    end
+    object tblMovementItem_VisitisErased: TBooleanField
+      FieldName = 'isErased'
+    end
+    object tblMovementItem_VisitisSync: TBooleanField
+      FieldName = 'isSync'
     end
   end
   object qryPhotoGroups: TFDQuery
@@ -1085,6 +1086,12 @@ object DM: TDM
     object qryPhotosComment: TStringField
       FieldName = 'Comment'
       Size = 255
+    end
+    object qryPhotosisErased: TBooleanField
+      FieldName = 'isErased'
+    end
+    object qryPhotosisSync: TBooleanField
+      FieldName = 'isSync'
     end
   end
   object cdsStoreReals: TClientDataSet

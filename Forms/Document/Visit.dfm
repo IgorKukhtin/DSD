@@ -1,28 +1,29 @@
 inherited VisitForm: TVisitForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1080#1079#1080#1090' '#1085#1072' '#1090#1086#1088#1075#1086#1074#1091#1102' '#1090#1086#1095#1082#1091'>'
-  ClientHeight = 397
-  ClientWidth = 937
-  ExplicitWidth = 953
-  ExplicitHeight = 435
+  ClientHeight = 449
+  ClientWidth = 1011
+  AddOnFormData.RefreshAction = actRefreshEx
+  ExplicitWidth = 1027
+  ExplicitHeight = 488
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 76
-    Width = 937
-    Height = 321
+    Width = 1011
+    Height = 373
     ExplicitTop = 76
-    ExplicitWidth = 937
-    ExplicitHeight = 321
-    ClientRectBottom = 321
-    ClientRectRight = 937
+    ExplicitWidth = 1011
+    ExplicitHeight = 373
+    ClientRectBottom = 373
+    ClientRectRight = 1011
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 937
-      ExplicitHeight = 297
+      ExplicitWidth = 1011
+      ExplicitHeight = 349
       inherited cxGrid: TcxGrid
-        Width = 937
-        Height = 297
-        ExplicitWidth = 937
-        ExplicitHeight = 297
+        Width = 1011
+        Height = 349
+        ExplicitWidth = 1011
+        ExplicitHeight = 349
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -78,10 +79,10 @@ inherited VisitForm: TVisitForm
               Kind = skSum
             end>
           OptionsBehavior.FocusCellOnCycle = False
-          OptionsCustomize.DataRowSizing = False
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsView.CellAutoHeight = True
           OptionsView.GroupSummaryLayout = gslStandard
           Styles.Content = nil
           Styles.Inactive = nil
@@ -106,6 +107,8 @@ inherited VisitForm: TVisitForm
           object PhotoData: TcxGridDBColumn [1]
             Caption = #1060#1086#1090#1086
             DataBinding.FieldName = 'PhotoData'
+            PropertiesClassName = 'TcxImageProperties'
+            Properties.GraphicClassName = 'TJPEGImage'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -127,7 +130,7 @@ inherited VisitForm: TVisitForm
           end
           object InsertMobile: TcxGridDBColumn [4]
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076'. '#1092#1086#1090#1086
-            DataBinding.FieldName = 'InsertMobile'
+            DataBinding.FieldName = 'InsertMobileDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103' '#1092#1086#1090#1086
@@ -139,10 +142,10 @@ inherited VisitForm: TVisitForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 937
+    Width = 1011
     Height = 50
     TabOrder = 3
-    ExplicitWidth = 937
+    ExplicitWidth = 1011
     ExplicitHeight = 50
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -232,6 +235,7 @@ inherited VisitForm: TVisitForm
   inherited ActionList: TActionList
     Left = 15
     inherited actRefresh: TdsdDataSetRefresh
+      ShortCut = 0
       RefreshOnTabSetChanges = True
     end
     inherited actPrint: TdsdPrintAction
@@ -358,6 +362,28 @@ inherited VisitForm: TVisitForm
       ShortCut = 45
       ImageIndex = 0
     end
+    object actRefreshEx: TdsdDataSetRefreshEx
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+      FieldName = 'PhotoData'
+      Grid = cxGrid
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -467,6 +493,9 @@ inherited VisitForm: TVisitForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited bbRefresh: TdxBarButton
+      Action = actRefreshEx
     end
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Order

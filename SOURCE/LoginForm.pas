@@ -109,8 +109,8 @@ begin
     Properties.Add('Users');
   end;
   cxPropertiesStore.RestoreFrom;
-  AllowLocalConnect := False;
-  FOnlyLocal := False;
+//  AllowLocalConnect := False;   // закоменчено 2 строки после перехода на локал режим
+//  FOnlyLocal := False;
 end;
 
 function TLoginForm.GetUsers: string;
