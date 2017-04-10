@@ -155,7 +155,7 @@ type
 
 implementation
 
-uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit, VCL.Forms,
+uses Storage, CommonData, TypInfo, UtilConvert, System.SysUtils, cxTextEdit, VCL.Forms,
      XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar,
      Variants, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
      dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document, Controls,
@@ -948,6 +948,8 @@ var
   FRttiContext: TRttiContext;
   FRttiProperty: TRttiProperty;
   RttiValue : TValue;
+  PhotoGUID: TGUID;
+  PhotoName: string;
 begin
   FValue := Value;
   // передаем значение параметра дальше по цепочке
@@ -962,8 +964,11 @@ begin
         (Component as TcxMemo).Text := FValue;
      if Component is TcxImage then
      begin
-        FileWriteString(ExtractFilePath(ParamStr(0)) + 'photo.jpeg', ReConvertConvert(VarToStr(FValue)));
-        (Component as TcxImage).Picture.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'photo.jpeg');
+        CreateGUID(PhotoGUID);
+        PhotoName := ExtractFilePath(ParamStr(0)) + GUIDToString(PhotoGUID) + '.jpeg';
+        FileWriteString(PhotoName, ReConvertConvert(VarToStr(FValue)));
+        (Component as TcxImage).Picture.LoadFromFile(PhotoName);
+        System.SysUtils.DeleteFile(PhotoName);
      end;
      if Component is TcxButtonEdit then
         (Component as TcxButtonEdit).Text := FValue;

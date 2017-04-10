@@ -88,6 +88,7 @@ type
     procedure SetTaskName(AName : string);
 
     function LoadJuridicalCollation: string;
+    function UpdateProgram: string;
   protected
     procedure Execute; override;
   end;
@@ -358,7 +359,6 @@ type
     qryPhotos: TFDQuery;
     qryPhotoGroupsId: TIntegerField;
     qryPhotoGroupsComment: TStringField;
-    qryPhotoGroupsStatusId: TIntegerField;
     qryPhotosId: TIntegerField;
     qryPhotosPhoto: TBlobField;
     qryPhotosComment: TStringField;
@@ -536,9 +536,13 @@ type
     qryPartnerOverDays: TIntegerField;
     qryPartnerOverDaysJ: TIntegerField;
     tblMovement_StoreRealInsertDate: TDateTimeField;
-    tblObject_Partnertest: TStringField;
     tblMovement_VisitInsertDate: TDateTimeField;
-    tblMovementItem_VisitPhotoName: TStringField;
+    qryPhotoGroupsStatusId: TIntegerField;
+    tblMovement_VisitStatusId: TIntegerField;
+    tblMovementItem_VisitisErased: TBooleanField;
+    qryPhotosisErased: TBooleanField;
+    tblMovementItem_VisitisSync: TBooleanField;
+    qryPhotosisSync: TBooleanField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
   private
@@ -611,11 +615,43 @@ var
 implementation
 
 uses
-  System.IOUtils, CursorUtils, CommonData, Authentication, Storage, uMain;
+  System.IOUtils, CursorUtils, CommonData, Authentication, Storage, uMain, ZLib;
 
 {%CLASSGROUP 'FMX.Controls.TControl'}
 
 {$R *.dfm}
+
+// Процедура по символьно переводит строку в набор цифр
+function ReConvertConvert(S: string): TBytes;
+var
+  i, l, k: integer;
+  InB: TBytes;
+begin
+  i := Low(S);
+  l := High(S);
+  SetLength(InB, Length(S) div 2);
+  k := 0;
+  while i <= l do
+  begin
+    InB[k] := StrToInt('$' + s[i] + s[i+1]);
+    inc(k);
+    i := i + 2;
+  end;
+  ZDecompress(InB, Result);
+end;
+
+// Процедура по символьно переводит строку в набор цифр
+function ConvertConvert(S: TBytes): String;
+var
+  i, l: integer;
+  ArcS: TBytes;
+begin
+  ZCompress(S, ArcS);
+  result := '';
+  l := Length(ArcS);
+  for I := 0 to l - 1 do
+    result := result + IntToHex(ArcS[i], 2);
+end;
 
 procedure TProgressThread.Update;
 var
@@ -1485,14 +1521,14 @@ procedure TSyncThread.UploadPhotos;
 var
   UploadStoredProc: TdsdStoredProc;
   PhotoStream: TStream;
-  DopPhotoStream: TStringStream;
-  str : string;
+  PhotoBytes: TBytes;
+  MainGUID : string;
 begin
   UploadStoredProc := TdsdStoredProc.Create(nil);
   try
-    // Загружаем шапки фотографий (группы)
     UploadStoredProc.OutputType := otResult;
 
+    // Загружаем шапки фотографий (группы)
     with DM.tblMovement_Visit do
     begin
       Filter := 'isSync = 0';
@@ -1508,43 +1544,13 @@ begin
           UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
           UploadStoredProc.Params.AddParam('inInvNumber', ftString, ptInput, FieldByName('INVNUMBER').AsString);
           UploadStoredProc.Params.AddParam('inOperDate', ftDateTime, ptInput, FieldByName('OPERDATE').AsDateTime);
+          UploadStoredProc.Params.AddParam('inStatusId', ftInteger, ptInput, FieldByName('STATUSID').AsInteger);
           UploadStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, FieldByName('PARTNERID').AsInteger);
           UploadStoredProc.Params.AddParam('inComment', ftString, ptInput, FieldByName('COMMENT').AsString);
           UploadStoredProc.Params.AddParam('inInsertDate', ftDateTime, ptInput, FieldByName('INSERTDATE').AsDateTime);
 
           try
             UploadStoredProc.Execute(false, false, false);
-
-            // Загружаем товары остатков
-            DM.tblMovementItem_Visit.Close;
-            DM.tblMovementItem_Visit.Filter := 'MovementId = ' + FieldByName('ID').AsString;
-            DM.tblMovementItem_Visit.Filtered := true;
-            DM.tblMovementItem_Visit.Open;
-
-            DM.tblMovementItem_Visit.First;
-            while not DM.tblMovementItem_Visit.Eof do
-            begin
-              UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_MovementItem_Visit';
-              UploadStoredProc.Params.Clear;
-              UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, DM.tblMovementItem_Visit.FieldByName('GUID').AsString);
-              UploadStoredProc.Params.AddParam('inMovementGUID', ftString, ptInput, FieldByName('GUID').AsString);
-
-              DopPhotoStream := TStringStream.Create;
-              PhotoStream := DM.tblMovementItem_Visit.CreateBlobStream(DM.tblMovementItem_Visit.FieldByName('PHOTO'), bmRead);
-              try
-                DopPhotoStream.LoadFromStream(PhotoStream);
-                UploadStoredProc.Params.AddParam('inPhoto', ftBlob, ptInput, DopPhotoStream.DataString);
-              finally
-                FreeAndNil(PhotoStream);
-                FreeAndNil(DopPhotoStream);
-              end;
-              UploadStoredProc.Params.AddParam('inPhotoName', ftString, ptInput, DM.tblMovementItem_Visit.FieldByName('PHOTONAME').AsString);
-              UploadStoredProc.Params.AddParam('inComment', ftString, ptInput, DM.tblMovementItem_Visit.FieldByName('COMMENT').AsString);
-
-              UploadStoredProc.Execute(false, false, false);
-
-              DM.tblMovementItem_Visit.Next;
-            end;
 
             Edit;
             FieldByName('IsSync').AsBoolean := true;
@@ -1558,10 +1564,64 @@ begin
           end;
         end;
       finally
-        DM.tblMovementItem_Visit.Close;
-        DM.tblMovementItem_Visit.Filter := '';
-        DM.tblMovementItem_Visit.Filtered := false;
+        Close;
+        Filter := '';
+        Filtered := false;
+      end;
+    end;
 
+    // загружаем фотогорафии
+    with DM.tblMovementItem_Visit do
+    begin
+      Filter := 'isSync = 0';
+      Filtered := true;
+      Open;
+
+      try
+        First;
+        while not Eof do
+        begin
+          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_MovementItem_Visit';
+          UploadStoredProc.Params.Clear;
+          UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
+
+          DM.qrySelect.Open('select GUID from Movement_Visit where Id = ' + FieldByName('MOVEMENTID').AsString);
+          if DM.qrySelect.RecordCount = 1 then
+          begin
+            MainGUID := DM.qrySelect.Fields[0].AsString;
+          end;
+          DM.qrySelect.Close;
+          UploadStoredProc.Params.AddParam('inMovementGUID', ftString, ptInput, MainGUID);
+
+          PhotoStream := CreateBlobStream(FieldByName('PHOTO'), bmRead);
+          try
+             SetLength(PhotoBytes, PhotoStream.Size);
+             PhotoStream.Position := 0;
+             PhotoStream.Read(PhotoBytes, PhotoStream.Size);
+             UploadStoredProc.Params.AddParam('inPhoto', ftBlob, ptInput, ConvertConvert(PhotoBytes));
+          finally
+            FreeAndNil(PhotoStream);
+          end;
+          UploadStoredProc.Params.AddParam('inPhotoName', ftString, ptInput, FieldByName('GUID').AsString);
+          UploadStoredProc.Params.AddParam('inComment', ftString, ptInput, FieldByName('COMMENT').AsString);
+          UploadStoredProc.Params.AddParam('inInsertDate', ftDateTime, ptInput, FieldByName('INSERTDATE').AsDateTime);
+          UploadStoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, FieldByName('ISERASED').AsBoolean);
+
+          try
+            UploadStoredProc.Execute(false, false, false);
+
+            Edit;
+            FieldByName('IsSync').AsBoolean := true;
+            Post;
+          except
+            on E : Exception do
+            begin
+              raise Exception.Create(E.Message);
+              exit;
+            end;
+          end;
+        end;
+      finally
         Close;
         Filter := '';
         Filtered := false;
@@ -1586,7 +1646,7 @@ begin
     FAllMax := FAllMax + 17;  // Количесто операций при загрузке данных из центра
 
   if UploadData then
-    FAllMax := FAllMax + 7;  // Количесто операций при сохранении данных в центр
+    FAllMax := FAllMax + 8;  // Количесто операций при сохранении данных в центр
 
   Synchronize(procedure
               begin
@@ -1695,10 +1755,8 @@ begin
         SetNewProgressTask('Сохранение маршрута');
         UploadRouteMember;
 
-        {
         SetNewProgressTask('Сохранение фотографий');
         UploadPhotos;
-        }
 
         DM.tblObject_Const.Edit;
         DM.tblObject_ConstSyncDateOut.AsDateTime := Date();
@@ -1866,6 +1924,76 @@ begin
   end;
 end;
 
+function TWaitThread.UpdateProgram: string;
+var
+  GetStoredProc : TdsdStoredProc;
+  ApplicationName: string;
+  FileStream : TMemoryStream;
+  FileBytes: TBytes;
+  {$IFDEF ANDROID}
+  intent: JIntent;
+  uri: Jnet_Uri;
+  {$ENDIF}
+begin
+  Result := '';
+
+  ApplicationName := DM.tblObject_ConstMobileAPKFileName.AsString;
+
+  GetStoredProc := TdsdStoredProc.Create(nil);
+  FileStream := TMemoryStream.Create;
+  try
+    GetStoredProc.StoredProcName := 'gpGet_Object_Program';
+    GetStoredProc.OutputType := otBlob;
+    GetStoredProc.Params.AddParam('inProgramName', ftString, ptInput, ApplicationName);
+    try
+      FileBytes := ReConvertConvert(GetStoredProc.Execute(false, false, false));
+      FileStream.Write(FileBytes, Length(FileBytes));
+
+      if FileStream.Size = 0 then
+      begin
+        Result := 'Новая версия программы не загружена из базы данных';
+        exit;
+      end;
+
+      FileStream.Position := 0;
+      {$IFDEF ANDROID}
+      FileStream.SaveToFile(TPath.Combine(TPath.GetSharedDownloadsPath, ApplicationName));
+      {$ELSE}
+      FileStream.SaveToFile(ApplicationName);
+      {$ENDIF}
+
+    except
+      on E : Exception do
+      begin
+        Result := E.Message;
+        exit;
+      end;
+    end;
+  finally
+    FreeAndNil(GetStoredProc);
+    FreeAndNil(FileStream);
+  end;
+
+  // Update programm
+  {$IFDEF ANDROID}
+  try
+    Intent := TJIntent.Create;
+    Intent.setAction(TJIntent.JavaClass.ACTION_VIEW);
+
+    uri := TJnet_Uri.JavaClass.fromFile(TJFile.JavaClass.init(StringToJString(TPath.Combine(TPath.GetSharedDownloadsPath, ApplicationName))));
+    Intent.setDataAndType(uri, StringToJString('application/vnd.android.package-archive'));
+    Intent.setFlags(TJIntent.JavaClass.FLAG_ACTIVITY_NEW_TASK);
+    TAndroidHelper.Activity.startActivity(Intent);
+  except
+    on E : Exception do
+    begin
+      Result := E.Message;
+      exit;
+    end;
+  end;
+  {$ENDIF}
+end;
+
 procedure TWaitThread.Execute;
 var
   Res : string;
@@ -1887,9 +2015,15 @@ begin
 
     if TaskName = 'JuridicalCollation' then
     begin
-      SetTaskName('Генерация акта сверки');
+      SetTaskName('Формирование акта сверки');
       Res := LoadJuridicalCollation;
-    end;
+    end
+    else
+    if TaskName = 'UpdateProgram' then
+    begin
+      SetTaskName('Получение файла обновления');
+      Res := UpdateProgram;
+    end
   finally
     ProgressThread.Terminate;
 
@@ -2100,6 +2234,7 @@ var
   DestAttrs: TFDDataAttributes;
 
   TempTableName: string;
+  InsertSQL: string;
   Error: boolean;
 begin
   // Check Tables
@@ -2201,16 +2336,15 @@ begin
             T.CreateTable(False);
             Structure.OpenDS(T);
             TempTable.First;
-            while not TempTable.Eof do
-            Begin
-              T.Append;
-              for J := 0 to TempTable.FieldCount - 1 do
-                if T.FindField(TempTable.Fields[J].FieldName) <> nil then
-                  T.FieldByName(TempTable.Fields[J].FieldName).Value :=
-                    TempTable.Fields[J].Value;
-              T.Post;
-              TempTable.Next;
-            End;
+
+            InsertSQL := '';
+            for J := 0 to TempTable.FieldCount - 1 do
+              if T.FindField(TempTable.Fields[J].FieldName) <> nil then
+                InsertSQL := InsertSQL + TempTable.Fields[J].FieldName + ',';
+
+            delete(InsertSQL, Length(InsertSQL), 1);
+            InsertSQL := 'insert into ' + T.TableName + ' (' + InsertSQL + ') select ' + InsertSQL + ' from ' + TempTableName;
+            conMain.ExecSQL(InsertSQL);
             conMain.Commit;
           except
             on E: Exception do
@@ -2395,60 +2529,13 @@ begin
 end;
 
 procedure TDM.UpdateProgram(const AResult: TModalResult);
-
-var
-  GetStoredProc : TdsdStoredProc;
-  ApplicationName: string;
-  StringStream : TStringStream;
-  {$IFDEF ANDROID}
-  intent: JIntent;
-  uri: Jnet_Uri;
-  {$ENDIF}
 begin
   if AResult = mrYes then
   begin
-    ApplicationName := tblObject_ConstMobileAPKFileName.AsString;
-
-    GetStoredProc := TdsdStoredProc.Create(nil);
-    StringStream := TStringStream.Create;
-    try
-      GetStoredProc.StoredProcName := 'gpGet_Object_Program';
-      GetStoredProc.OutputType := otBlob;
-      GetStoredProc.Params.AddParam('inProgramName', ftString, ptInput, ApplicationName);
-      try
-        StringStream.WriteString(GetStoredProc.Execute(false, false, false));
-
-        if StringStream.Size = 0 then
-          raise Exception.Create('Новая версия программы не загружена из базы данных');
-
-        StringStream.Position := 0;
-        {$IFDEF ANDROID}
-        StringStream.SaveToFile(TPath.Combine(TPath.GetSharedDownloadsPath, ApplicationName));
-        {$ELSE}
-        StringStream.SaveToFile(ApplicationName);
-        {$ENDIF}
-
-      except
-        on E : Exception do
-        begin
-          raise Exception.Create(E.Message);
-        end;
-      end;
-    finally
-      FreeAndNil(GetStoredProc);
-      FreeAndNil(StringStream);
-    end;
-
-    // Update programm
-    {$IFDEF ANDROID}
-    Intent := TJIntent.Create;
-    Intent.setAction(TJIntent.JavaClass.ACTION_VIEW);
-
-    uri := TJnet_Uri.JavaClass.fromFile(TJFile.JavaClass.init(StringToJString(TPath.Combine(TPath.GetSharedDownloadsPath, ApplicationName))));
-    Intent.setDataAndType(uri, StringToJString('application/vnd.android.package-archive'));
-    Intent.setFlags(TJIntent.JavaClass.FLAG_ACTIVITY_NEW_TASK);
-    TAndroidHelper.Activity.startActivity(Intent);
-    {$ENDIF}
+    WaitThread := TWaitThread.Create(true);
+    WaitThread.FreeOnTerminate := true;
+    WaitThread.TaskName := 'UpdateProgram';
+    WaitThread.Start;
   end;
 end;
 
@@ -2499,7 +2586,7 @@ begin
       tblMovement_StoreRealGUID.AsString := GUIDToString(GlobalId);
       tblMovement_StoreRealInvNumber.AsString := IntToStr(NewInvNumber);
       tblMovement_StoreRealOperDate.AsDateTime := Date();
-      tblMovement_StoreRealStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
+      tblMovement_StoreRealStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
       tblMovement_StoreRealPartnerId.AsInteger := qryPartnerId.AsInteger;
       tblMovement_StoreRealComment.AsString := Comment;
       tblMovement_StoreRealInsertDate.AsDateTime := Now();
@@ -2518,7 +2605,7 @@ begin
       begin
         tblMovement_StoreReal.Edit;
 
-        tblMovement_StoreRealStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
+        tblMovement_StoreRealStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
         tblMovement_StoreRealComment.AsString := Comment;
 
         tblMovement_StoreReal.Post;
@@ -2811,7 +2898,7 @@ begin
       tblMovement_OrderExternalGUID.AsString := GUIDToString(GlobalId);
       tblMovement_OrderExternalInvNumber.AsString := IntToStr(NewInvNumber);
       tblMovement_OrderExternalOperDate.AsDateTime := OperDate;
-      tblMovement_OrderExternalStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
+      tblMovement_OrderExternalStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
       tblMovement_OrderExternalPartnerId.AsInteger := qryPartnerId.AsInteger;
       tblMovement_OrderExternalPaidKindId.AsInteger := qryPartnerPaidKindId.AsInteger;
       tblMovement_OrderExternalContractId.AsInteger := qryPartnerCONTRACTID.AsInteger;
@@ -2838,7 +2925,7 @@ begin
         tblMovement_OrderExternal.Edit;
 
         tblMovement_OrderExternalOperDate.AsDateTime := OperDate;
-        tblMovement_OrderExternalStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
+        tblMovement_OrderExternalStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
         tblMovement_OrderExternalPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT.AsBoolean;
         tblMovement_OrderExternalVATPercent.AsFloat := qryPartnerVATPercent.AsFloat;
         tblMovement_OrderExternalChangePercent.AsFloat := qryPartnerChangePercent.AsFloat;
@@ -3230,7 +3317,7 @@ begin
       tblMovement_ReturnInInvNumber.AsString := IntToStr(NewInvNumber);
       tblMovement_ReturnInOperDate.AsDateTime := OperDate;
       tblMovement_ReturnInComment.AsString := Comment;
-      tblMovement_ReturnInStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
+      tblMovement_ReturnInStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
       tblMovement_ReturnInPartnerId.AsInteger := qryPartnerId.AsInteger;
       tblMovement_ReturnInPaidKindId.AsInteger := qryPartnerPaidKindId.AsInteger;
       tblMovement_ReturnInContractId.AsInteger := qryPartnerCONTRACTID.AsInteger;
@@ -3257,7 +3344,7 @@ begin
 
         tblMovement_ReturnInOperDate.AsDateTime := OperDate;
         tblMovement_ReturnInComment.AsString := Comment;
-        tblMovement_ReturnInStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
+        tblMovement_ReturnInStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
         tblMovement_ReturnInPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT_RET.AsBoolean;
         tblMovement_ReturnInVATPercent.AsFloat := qryPartnerVATPercent_RET.AsFloat;
         tblMovement_ReturnInChangePercent.AsFloat := qryPartnerChangePercent.AsFloat;
@@ -3552,6 +3639,7 @@ begin
     else
       tblMovement_VisitComment.AsString := 'Общая';
     tblMovement_VisitInsertDate.AsDateTime := Now();
+    tblMovement_VisitStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
     tblMovement_VisitisSync.AsBoolean := false;
 
     tblMovement_Visit.Post;
