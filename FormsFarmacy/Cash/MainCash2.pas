@@ -2064,7 +2064,7 @@ begin
     Exit;
   End;
 
-  LocalDataBaseisBusy := 0;
+
   Result := FLocalDataBaseHead.Active AND FLocalDataBaseBody.Active and FLocalDataBaseDiff.Active;
 
   if Result then
@@ -3309,7 +3309,7 @@ procedure TMainCashForm2.SetBlinkVIP (isRefresh : boolean);
 var lMovementId_BlinkVIP : String;
 begin
   // если прошло > 100 сек - захардкодил
-  if ((now - time_onBlink) > 0.001) or(isRefresh = true) then
+  if ((now - time_onBlink) > 0.002) or(isRefresh = true) then
 
   try
       //сохранили время "последней" обработки ВСЕХ документов - с типом "Не подтвержден"
@@ -3345,7 +3345,7 @@ var lMovementId_BlinkCheck : String;
 begin
   // если прошло > 50 сек - захардкодил
 
-  if ((now - time_onBlinkCheck) > 0.0005) or(isRefresh = true) then
+  if ((now - time_onBlinkCheck) > 0.0003) or(isRefresh = true) then
 
   try
       //сохранили время "последней" обработки ВСЕХ документов - с "ошибка - расч/факт остаток"
@@ -3370,21 +3370,37 @@ end;
 
 
 procedure TMainCashForm2.TimerSaveAllTimer(Sender: TObject);
+var fEmpt  : Boolean;
+    RCount : Integer;
 begin
- TimerSaveAll.Enabled:=False;
- try
-  //пишем протокол что связь с базой есть + сколько чеков еще не перенеслось
-  try spUpdate_UnitForFarmacyCash.ParamByName('inAmount').Value:=FLocalDataBaseHead.RecordCount;
-      spUpdate_UnitForFarmacyCash.Execute;
-  except end;
-  //
-  if not FLocalDataBaseHead.IsEmpty then
-    SaveRealAll;
-  //  ShowMessage('TMainCashForm2.TimerSaveAllTimer');
- finally
-  TimerSaveAll.Enabled:=True;
- end;
+   TimerSaveAll.Enabled:=False;
+ //
+  try
+    WaitForSingleObject(MutexDBF, INFINITE);
+
+    try
+      FLocalDataBaseHead.Active:=True;
+      FLocalDataBaseHead.Pack;
+      fEmpt:= FLocalDataBaseHead.IsEmpty;
+      RCount:= FLocalDataBaseHead.RecordCount;
+    finally
+      FLocalDataBaseBody.Active:=False;
+      ReleaseMutex(MutexDBF);
+    end;
+
+    //пишем протокол что связь с базой есть + сколько чеков еще не перенеслось
+    try spUpdate_UnitForFarmacyCash.ParamByName('inAmount').Value:= RCount;
+        spUpdate_UnitForFarmacyCash.Execute;
+    except end;
+    //
+    if not fEmpt then
+      SaveRealAll;
+  finally
+     //
+     TimerSaveAll.Enabled:=True;
+  end;
 end;
+
 
 
 

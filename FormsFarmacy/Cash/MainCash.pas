@@ -2945,29 +2945,32 @@ procedure TMainCashForm.TimerSaveAllTimer(Sender: TObject);
 var fEmpt  : Boolean;
     RCount : Integer;
 begin
- TimerSaveAll.Enabled:=False;
+  TimerSaveAll.Enabled:=False;
  //
- WaitForSingleObject(MutexDBF, INFINITE);
- FLocalDataBaseHead.Active:=True;
- fEmpt:= FLocalDataBaseHead.IsEmpty;
- RCount:= FLocalDataBaseHead.RecordCount;
- FLocalDataBaseBody.Active:=False;
- ReleaseMutex(MutexDBF);
- //
- try
-  //пишем протокол что связь с базой есть + сколько чеков еще не перенеслось
-  try spUpdate_UnitForFarmacyCash.ParamByName('inAmount').Value:= RCount;
-      spUpdate_UnitForFarmacyCash.Execute;
-  except end;
-  //
-  if not fEmpt then
-    SaveRealAll;
- finally
-   FLocalDataBaseBody.Active:=False;
-   ReleaseMutex(MutexDBF);
-   //
-   TimerSaveAll.Enabled:=True;
- end;
+  try
+    WaitForSingleObject(MutexDBF, INFINITE);
+
+    try
+      FLocalDataBaseHead.Active:=True;
+      FLocalDataBaseHead.Pack;
+      fEmpt:= FLocalDataBaseHead.IsEmpty;
+      RCount:= FLocalDataBaseHead.RecordCount;
+    finally
+      FLocalDataBaseBody.Active:=False;
+      ReleaseMutex(MutexDBF);
+    end;
+
+    //пишем протокол что связь с базой есть + сколько чеков еще не перенеслось
+    try spUpdate_UnitForFarmacyCash.ParamByName('inAmount').Value:= RCount;
+        spUpdate_UnitForFarmacyCash.Execute;
+    except end;
+    //
+    if not fEmpt then
+      SaveRealAll;
+  finally
+     //
+     TimerSaveAll.Enabled:=True;
+  end;
 end;
 
 { TSaveRealThread }
