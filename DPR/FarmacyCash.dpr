@@ -94,7 +94,7 @@ begin
   with TLoginForm1.Create(Application) do
   Begin
     //Если все хорошо создаем главную форму Application.CreateForm();
-    AllowLocalConnect := False; //True;
+    AllowLocalConnect := True; //True;
 
     if FindCmdLineSwitch('autologin', true)
     then begin
@@ -104,7 +104,7 @@ begin
      gc_User.Local:=TRUE;// !!!НЕ ЗАГРУЖАЕТСЯ БАЗА!!!
     end
     else
-        if ShowModal <> mrOk then exit;
+      if ShowModal <> mrOk then exit;
 
     //then
     begin
@@ -117,10 +117,11 @@ begin
         gc_isSetDefault := True;
       //
       Application.CreateForm(TdmMain, dmMain);
-  if true then  // выбираем главную форму
+      if True then  // выбираем главную форму
        Application.CreateForm(TMainCashForm, MainCash.MainCashForm) // имя модуля обязательно
       else  // Форма работате в связке с FarmacyCashServise.exe
        Application.CreateForm(TMainCashForm2, MainCash2.MainCashForm); // имя модуля обязательно
+
 
       Application.CreateForm(TfrmSplash, frmSplash);
 

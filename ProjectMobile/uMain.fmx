@@ -2,7 +2,7 @@ object frmMain: TfrmMain
   Left = 0
   Top = 0
   ClientHeight = 571
-  ClientWidth = 352
+  ClientWidth = 321
   Position = ScreenCenter
   StyleBook = sbMain
   FormFactor.Width = 320
@@ -14,15 +14,15 @@ object frmMain: TfrmMain
   DesignerMasterStyle = 3
   object vsbMain: TVertScrollBox
     Align = Client
-    Size.Width = 352.000000000000000000
+    Size.Width = 321.000000000000000000
     Size.Height = 571.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 77
-    Viewport.Width = 352.000000000000000000
+    Viewport.Width = 321.000000000000000000
     Viewport.Height = 571.000000000000000000
     object pBack: TPanel
       Align = MostTop
-      Size.Width = 352.000000000000000000
+      Size.Width = 321.000000000000000000
       Size.Height = 50.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 0
@@ -77,7 +77,7 @@ object frmMain: TfrmMain
         Align = Client
         StyledSettings = [Family, Style, FontColor]
         Margins.Left = 10.000000000000000000
-        Size.Width = 242.000000000000000000
+        Size.Width = 211.000000000000000000
         Size.Height = 50.000000000000000000
         Size.PlatformDefault = False
         TextSettings.Font.Size = 11.000000000000000000
@@ -231,72 +231,72 @@ object frmMain: TfrmMain
     end
     object tcMain: TTabControl
       Align = Client
-      Size.Width = 352.000000000000000000
+      Size.Width = 321.000000000000000000
       Size.Height = 521.000000000000000000
       Size.PlatformDefault = False
       TabHeight = 49.000000000000000000
-      TabIndex = 10
+      TabIndex = 0
       TabOrder = 1
       TabPosition = None
       OnChange = ChangeMainPageUpdate
       Sizes = (
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s
-        352s
+        321s
         521s)
       object tiStart: TTabItem
         CustomIcon = <
           item
           end>
-        IsSelected = False
+        IsSelected = True
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -307,53 +307,58 @@ object frmMain: TfrmMain
         ExplicitSize.cy = 8.000000000000000000
         object LoginPanel: TPanel
           Align = Contents
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 521.000000000000000000
           Size.PlatformDefault = False
           StyleLookup = 'LoginPanelStyle1'
           TabOrder = 0
           object LoginScaledLayout: TScaledLayout
             Align = Contents
-            OriginalWidth = 352.000000000000000000
+            OriginalWidth = 321.000000000000000000
             OriginalHeight = 521.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 521.000000000000000000
             Size.PlatformDefault = False
             object Layout1: TLayout
               Align = Top
               Position.Y = 93.000000000000000000
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 60.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 2
               object LoginEdit: TEdit
                 Touch.InteractiveGestures = [LongTap, DoubleTap]
-                Align = Center
+                Align = VertCenter
                 TabOrder = 0
+                ReturnKeyType = Done
                 Text = #1040#1076#1084#1080#1085
                 TextSettings.Font.Family = 'Times New Roman'
                 TextSettings.Font.Size = 13.000000000000000000
                 TextSettings.FontColor = xFF005078
                 TextSettings.HorzAlign = Center
-                Size.Width = 321.000000000000000000
+                Position.X = 15.000000000000000000
+                Position.Y = 14.000000000000000000
+                Margins.Left = 15.000000000000000000
+                Margins.Right = 15.000000000000000000
+                Size.Width = 291.000000000000000000
                 Size.Height = 32.000000000000000000
                 Size.PlatformDefault = False
                 StyledSettings = []
+                KillFocusByReturn = True
               end
             end
             object Layout2: TLayout
               Align = Top
               Position.Y = 67.000000000000000000
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 26.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 3
               object Label2: TLabel
-                Align = HorzCenter
-                Anchors = [akTop, akRight, akBottom]
+                Align = Client
                 StyledSettings = [Family, Style]
-                Position.X = 20.000000000000000000
-                Size.Width = 312.000000000000000000
+                Margins.Left = 15.000000000000000000
+                Size.Width = 306.000000000000000000
                 Size.Height = 26.000000000000000000
                 Size.PlatformDefault = False
                 TextSettings.Font.Size = 14.000000000000000000
@@ -364,15 +369,15 @@ object frmMain: TfrmMain
             object Layout3: TLayout
               Align = Top
               Position.Y = 153.000000000000000000
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 25.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 7
               object PasswordLabel: TLabel
-                Align = HorzCenter
+                Align = Client
                 StyledSettings = [Family, Style]
-                Position.X = 17.000000000000000000
-                Size.Width = 318.000000000000000000
+                Margins.Left = 15.000000000000000000
+                Size.Width = 306.000000000000000000
                 Size.Height = 25.000000000000000000
                 Size.PlatformDefault = False
                 TextSettings.Font.Size = 14.000000000000000000
@@ -383,30 +388,36 @@ object frmMain: TfrmMain
             object Layout4: TLayout
               Align = Top
               Position.Y = 178.000000000000000000
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 60.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 5
               object PasswordEdit: TEdit
                 Touch.InteractiveGestures = [LongTap, DoubleTap]
-                Align = Center
+                Align = VertCenter
                 TabOrder = 0
+                ReturnKeyType = Done
                 Password = True
-                Text = #1040#1076#1084#1080#1085'1111'
+                Text = 'qsxqsxw1'
                 TextSettings.Font.Family = 'Times New Roman'
                 TextSettings.Font.Size = 13.000000000000000000
                 TextSettings.FontColor = xFF005078
                 TextSettings.HorzAlign = Center
-                Size.Width = 321.000000000000000000
+                Position.X = 15.000000000000000000
+                Position.Y = 14.000000000000000000
+                Margins.Left = 15.000000000000000000
+                Margins.Right = 15.000000000000000000
+                Size.Width = 291.000000000000000000
                 Size.Height = 32.000000000000000000
                 Size.PlatformDefault = False
                 StyledSettings = []
+                KillFocusByReturn = True
               end
             end
             object Layout5: TLayout
               Align = Top
               Position.Y = 323.000000000000000000
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 110.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 8
@@ -425,15 +436,15 @@ object frmMain: TfrmMain
               end
               object SyncLayout: TLayout
                 Align = Top
-                Size.Width = 352.000000000000000000
+                Size.Width = 321.000000000000000000
                 Size.Height = 25.000000000000000000
                 Size.PlatformDefault = False
                 TabOrder = 1
                 object SyncCheckBox: TCheckBox
-                  Align = HorzCenter
+                  Align = Client
                   StyledSettings = [Family, Style]
-                  Position.X = 17.000000000000000000
-                  Size.Width = 318.000000000000000000
+                  Margins.Left = 10.000000000000000000
+                  Size.Width = 311.000000000000000000
                   Size.Height = 25.000000000000000000
                   Size.PlatformDefault = False
                   TabOrder = 0
@@ -445,7 +456,7 @@ object frmMain: TfrmMain
             end
             object Panel1: TPanel
               Align = Top
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 67.000000000000000000
               Size.PlatformDefault = False
               StyleLookup = 'Panel1Style1'
@@ -453,7 +464,7 @@ object frmMain: TfrmMain
               object Label3: TLabel
                 Align = Top
                 StyledSettings = []
-                Size.Width = 352.000000000000000000
+                Size.Width = 321.000000000000000000
                 Size.Height = 42.000000000000000000
                 Size.PlatformDefault = False
                 TextSettings.Font.Family = 'Times New Roman'
@@ -468,7 +479,7 @@ object frmMain: TfrmMain
                 Align = Top
                 StyledSettings = []
                 Position.Y = 42.000000000000000000
-                Size.Width = 352.000000000000000000
+                Size.Width = 321.000000000000000000
                 Size.Height = 20.000000000000000000
                 Size.PlatformDefault = False
                 TextSettings.Font.Family = 'Times New Roman'
@@ -481,15 +492,15 @@ object frmMain: TfrmMain
             object WebServerLayout1: TLayout
               Align = Top
               Position.Y = 238.000000000000000000
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 25.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 6
               object WebServerLabel: TLabel
-                Align = HorzCenter
+                Align = Client
                 StyledSettings = [Family, Style]
-                Position.X = 17.000000000000000000
-                Size.Width = 318.000000000000000000
+                Margins.Left = 15.000000000000000000
+                Size.Width = 306.000000000000000000
                 Size.Height = 25.000000000000000000
                 Size.PlatformDefault = False
                 TextSettings.Font.Size = 14.000000000000000000
@@ -500,23 +511,29 @@ object frmMain: TfrmMain
             object WebServerLayout2: TLayout
               Align = Top
               Position.Y = 263.000000000000000000
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 60.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 4
               object WebServerEdit: TEdit
                 Touch.InteractiveGestures = [LongTap, DoubleTap]
-                Align = Center
+                Align = VertCenter
                 TabOrder = 0
+                ReturnKeyType = Done
                 Text = 'http://project-vds.vds.colocall.com/projectmobile/index.php'
                 TextSettings.Font.Family = 'Times New Roman'
                 TextSettings.Font.Size = 13.000000000000000000
                 TextSettings.FontColor = xFF005078
                 TextSettings.HorzAlign = Center
-                Size.Width = 321.000000000000000000
+                Position.X = 15.000000000000000000
+                Position.Y = 14.000000000000000000
+                Margins.Left = 15.000000000000000000
+                Margins.Right = 15.000000000000000000
+                Size.Width = 291.000000000000000000
                 Size.Height = 32.000000000000000000
                 Size.PlatformDefault = False
                 StyledSettings = []
+                KillFocusByReturn = True
               end
             end
           end
@@ -537,15 +554,15 @@ object frmMain: TfrmMain
         ExplicitSize.cy = 8.000000000000000000
         object VertScrollBox8: TVertScrollBox
           Align = Client
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 461.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 8
-          Viewport.Width = 352.000000000000000000
+          Viewport.Width = 321.000000000000000000
           Viewport.Height = 461.000000000000000000
           object GridPanelLayout3: TGridPanelLayout
             Align = Top
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 390.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 8
@@ -603,7 +620,7 @@ object frmMain: TfrmMain
             object bHandBook: TButton
               Align = Client
               Anchors = []
-              Size.Width = 176.000000000000000000
+              Size.Width = 160.500000000000000000
               Size.Height = 130.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
@@ -705,7 +722,7 @@ object frmMain: TfrmMain
                   end>
                 Align = Client
                 HitTest = False
-                Size.Width = 176.000000000000000000
+                Size.Width = 160.500000000000000000
                 Size.Height = 130.000000000000000000
                 Size.PlatformDefault = False
                 WrapMode = Center
@@ -713,7 +730,7 @@ object frmMain: TfrmMain
                   Align = Bottom
                   StyledSettings = [Family, Style, FontColor]
                   Position.Y = 105.000000000000000000
-                  Size.Width = 176.000000000000000000
+                  Size.Width = 160.500000000000000000
                   Size.Height = 25.000000000000000000
                   Size.PlatformDefault = False
                   TextSettings.Font.Size = 15.000000000000000000
@@ -725,7 +742,7 @@ object frmMain: TfrmMain
             object bVisit: TButton
               Align = Client
               Anchors = []
-              Size.Width = 176.000000000000000000
+              Size.Width = 160.500000000000000000
               Size.Height = 130.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 1
@@ -855,7 +872,7 @@ object frmMain: TfrmMain
                   end>
                 Align = Client
                 HitTest = False
-                Size.Width = 176.000000000000000000
+                Size.Width = 160.500000000000000000
                 Size.Height = 130.000000000000000000
                 Size.PlatformDefault = False
                 WrapMode = Center
@@ -863,7 +880,7 @@ object frmMain: TfrmMain
                   Align = Bottom
                   StyledSettings = [Family, Style, FontColor]
                   Position.Y = 105.000000000000000000
-                  Size.Width = 176.000000000000000000
+                  Size.Width = 160.500000000000000000
                   Size.Height = 25.000000000000000000
                   Size.PlatformDefault = False
                   TextSettings.Font.Size = 15.000000000000000000
@@ -875,7 +892,7 @@ object frmMain: TfrmMain
             object bTasks: TButton
               Align = Client
               Anchors = []
-              Size.Width = 176.000000000000000000
+              Size.Width = 160.500000000000000000
               Size.Height = 130.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 2
@@ -888,103 +905,103 @@ object frmMain: TfrmMain
                     PNG = {
                       89504E470D0A1A0A0000000D4948445200000040000000400806000000AA6971
                       DE000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
-                      0B6E49444154785ED59B0B7094D515C7FFDFF76D36AF2521890A128C45DA9017
-                      9B50434450D1E2A315A97D8CB1CE541D4890AAB4B463C7A2A3225A5F755A2B56
-                      2410AA95A9AD1141542CC3A3A555818435310112028684904078E4C926D9ECEE
-                      F7DDDEF3EDCD86B079ECE38B31BF1926E79CFDD8BDF7ECBDE79E7BEE5D09A3C4
-                      0AC6E42B2AAAFFC01BC0EAADD37EB7529234F1D2D7CA883A607DF9E1E7F927A8
-                      B21AFEC78533A6B409330A6CB630252CEAAF9224FF9C740DEC6DCDD999BF243B
-                      DBA53FC0595D5111170EF36FB9A8E559539EF4588D67C41CB0B6BC7256E3B1DA
-                      3D4953A74A4EB0B63086971D8ABA2AC6ED662ED9BC1190BF2F1EF5C0D856B7AB
-                      3357898E562497F46BC0FD08608A45F3298D254CBC26DF9A6A134F1ACA8838A0
-                      E8E041F379CD54CAC5748FC58313EEB326989A6460BA30F547552B5449495464
-                      24088B8EAA69E5CCDD35F3C21162142139604D65E5E58A4B7A56825C2C43DB67
-                      A94EA9CCCD95D4C2F2AA2724497A563C66088C61797E66CA4B45454C694FA94E
-                      97C1668149D7F009B63CEFBBC967C563011392030A2BAA7E21417A43A84037EC
-                      8880ADBB05B3231360165643E850BB1D1629B2D825233B1C881666EA417EDEF4
-                      94F5420B183E1A834762D28F85E8211216DEA01B8DEE3C11A34446C832E6F6EB
-                      3CA1B1FE6D0890A047C09B65B5E335A587869EC9631925BADA7A586CECA5F9A9
-                      A9E7852520821E016ED9713BFF33BA9D27A2C687C325F55F5102C0AF11C083DA
-                      321ED4E681C1C2A05934487CAD5213F565EA1B81BB5D654AA322313B98DCC97B
-                      65D7A06D5F6C4DFB8B786050FC1A017AE78105FC8D6FE2C9CB4C4592D2BE399D
-                      274CB19E36C939D4466E58203399FE0E8B7F53807FF3421A4BF8D566BF1C40C3
-                      5E8863069E3718E7009AF3421C33F018E0579B870C8205B69A5839CC395F96D4
-                      D546CE79CDED86AC28145C84650470A015E1DAC36E57F8274BB2A7B60BAB0F3E
-                      2DA0F4D6E496EED4931C4F4009F3BC123C8C8FC7C64307516B2B41F3F13AB81C
-                      0EDE771996F87828E1E17074B443E54E098B8840ECC44948CACCE4FF6618E520
-                      BE7FD076F137DBACC1B565B1D57A5AD8757C3E615D7955A12C4979420D196757
-                      27F6BEF3779CA9392A2CFE91907425AEBB7F21CC5106CE3E86357999290F0A4D
-                      C72706D0C6468821E3763AB17BED9A803B4F34D71FC7E76FBFA94733A360603E
-                      7DF37100937C1F0A96D22D9BD07EBA49688173EEF871D4961A570660B2EF97EB
-                      E380D8C3D30EF5009D420D9AB6938D385EFA85D082E7AB3D9F0B2954DCED0D19
-                      C9D542F1E2E300DACF8733EC176AD01C2B3166209123BB5A5B8516029AA964A0
-                      BA633F075025677DC5E127693F2F4C4173FAAB23420A9DB37535420A0147DB0D
-                      EB2A2A1FA37AA4B0E8781D40353C51C67A26D4FDBCEA76C1DEDC2CB4D0696D68
-                      145208F05DA30CF9799312695B57569D23AC1E07F0DDDE0B54C0E462BF1A5EB0
-                      F49CB70BC9183A5B8D732614C52AB79DDCCB47BA5EB2D31DC0777B6EAADE926C
-                      047CB91152685C7BF32D787D5D01649E34194AC2E5F4867A8155EF3455771C8A
-                      A3D60C693CE9A1E27274E383954F090D983BFF0ECCCCE6995D80A44E998AD871
-                      D158F1A7579176C79DC21A3AAA86E6C828F9AA7B93933BBCDF3A9F068FF391F0
-                      9C5043861C408E2072F31621F7F61FE872A0501ABDEC89A730E77EC392537ACF
-                      47F333535F26D93BB6E8D08227AEE7841A3271899384C4638283671641F0C9EE
-                      FFA1E8936D505555580CC085D3AAABF375A1F539804E6C34984F0935642EBDEA
-                      DB4202CE9C0BDCAF9AC6F0F1E60FB0E51FEF207A7CBCB0860E33B17E7DD41D40
-                      6B231D577165E0139B20989CDEF756470F550AC97F76EED987330D27E0EC7620
-                      66C204610D1D3ECDB34C61D145BDF9804CA7B47450C9C5A02BAB03418D8E9F9C
-                      A4CBE77847BEAA3FA1CBFEF2E1E6CD42E241FBCA2B85641092345F36471752DF
-                      3D47D4E294D66892AFBF41483C286EFD9790FA500E944029FD0C725DFF14FDFD
-                      6D3BD05457ABCB11160BE213AFD065239121DD975451FD9237068C0493A75B31
-                      7E52A22E17EFDA85CF4ACB749950F6ED42D8865710F6CFD7615EFD3494B2CF74
-                      7BDDC993D8B861832E13495957D3372634E35166BCF1DACE7167CE4D9120650A
-                      9B61F0F986B849935067B3F1A54743A9ED0B2467A463424202D844FEADF2D7FF
-                      7BD68E22F7385C32FB46D41CABC32BAB5E43679BE72A81ACC8C8B9FB1E982323
-                      75DD60DE5A649DB654A61D125D4EE02DDC2A5E3094F82B9290CE333AC2D9DD85
-                      A24D5B507CE020600A83FBD6BB608B4DC2DEDA066CDCF40136BCFB2E5A9BFAEA
-                      075367CD41749C712BC0057C58DF7C6A31FF8298776CF1A818C5370A7B295716
-                      26C3A06466FF7B45385E66C3FC9FDD83EBAE99898AEAA3C8B16660427C3C7697
-                      9480F174373B230D0FE63F008DAFFBB1132762DE43BF8212167249F2225899C5
-                      1E3DE7EED9497A96E68D017433832E2708D550682AE4DC958BC919D3F1EFAD5B
-                      7179423C7E7ACBF770AEA5059FEEB761F68C2CDC367B1612626290342D05E32E
-                      9B80EB17E68F40E779F7C1127BA25ABCFDEE0B824E2CBBF8668691F47475E2B6
-                      5B6E46EE7DF762039F06C48CD414CCE31DB74445E93A05C938EE9CABEFFC1122
-                      6346E6E44D827C99538A582A54CF66C8732149E6EB8E71B57FD5E5428FDD0E49
-                      96603F7B1693C24DF8C93CCF719DCA772364972F8AEEDD3C658E8C08C7B6BDFB
-                      70F46C0B22E213603287EBAD8CB0C4E841D1101C6875CB6153E8BC406F01DF1B
-                      D326E871924381227D9DAD0435C5C57A298BE67EA4651C162F7D1837CCE4CB59
-                      0090937617EFC75B0505E8B69F876C3261E277927940BDD5BBB48604632BF332
-                      539FEE7529DF209E0AE99E5E4F57177617AC816DD3FB686D6CD03B4F50E357BD
-                      F822963FF31C0E1CF1AF4C66E7EFB5FA6F1BB076D5ABFAFF27E834E964552576
-                      AD5EA507D350A8875B657C0520D93B060B2BAAB2F906A45091E580F3016ADC7F
-                      0ADE404B43BDB00CCEB7D2D2B1E0870B30778011D1DCD181F7B67C844F77EC40
-                      4FE7E085693A55BA71C943B824A8149995498CE52FCA4CA3F25F9F0308DA2098
-                      CC96473AD4EE157427479887E5D0CEEDA8DCB54368FE117BC9A59871EDB5C8E4
-                      4B5F63D3697CC903E0B143077567FA435CE264DCBC7499D0864783BB5B62CA8A
-                      132D4DAFACBCE926EF87F48F4282755F1EDE4D1792843A2454F4F8F885DFEBA7
-                      405F37F31EFC25E2933C1BAEE1E0A37BE7E2AC544F4676013E6195EEE1D15534
-                      A10E4BC381F251E93CD150C9334A3F61923387767F42F5E263A04B883E57D186
-                      A0E948E0E77E46D17262F898D38B2285C74C3E78649A50BD0CE011364B887ED1
-                      CA97BBD1C21E60A549669A4FDF7C1CA05F3F0D80EE8E41EF1E8C38945D06C400
-                      7DF375802A2FE7A151DF1D7637F3047918FC8DDA23815F9FDDD54615D98F78EF
-                      17B95D78C263EC63C055A097C2AAAA71740951827BDD606932D346E5770E5E24
-                      BE5C0D880B2D30B125DD8ABA6D6946C6A04755433AA097B5E555873CF7F0C60E
-                      74C5FE81ACB42CA10ECA20EEEB8F7E03738CE16F9BFD72807EFD74CCA1F8D566
-                      FF1CC077B4421A4B183702E8E2311836F17FDBF98E770FCD2FFD1EDE37051EF0
-                      F43631F5736AA368EB4EF1EA90F8150407627D79E53D3C04BF23D4D185B1BBF8
-                      DE7EA3D002C2BF293000740393FF31FC474C01C3D7795AEA841630413BC073FD
-                      946E608E3251E3B70FB5CE0F47D00EF020F51DE0E9B8DB79C0D821B22F43A1FD
-                      3C6D6955D6D3214C0276511B02232407D0DD5B1E6CD630C616F2374AAD9F9E1E
-                      9F9795722B8B8C7D463C621854CCA0FD7CA3D51A07594EA7D4967F7681DB29F1
-                      343778820E8243419525D96CF9823BA5DF71BBAAA2499659932449836468AC8C
-                      EAF654BA1606012BAB6F6ECAB9B0926314214E8181D17FE1A94AF9F535359ECA
-                      285FA6F8287994A9F6A9AAAB730E6DB4747B7F3EA4131BB3E6BC8ACB8FF52EB3
-                      54C0A41ADE48749E189111D08BB88AE63247C87FA60B491E6BEF08892EA4236A
-                      617A8BCEEA2EEC24FD56C114E6FC0D556FF3AD292B85D97046D4014341E5293A
-                      9F27799175DAA37450A9BFF0B502FC1FA15B587BF3DA27E30000000049454E44
-                      AE426082}
+                      0B6D49444154785ED59B0B7094D515C7FFDFF76D76F3581292A820C158A40D79
+                      B1093544049FC5472B52FB18639DA93A9020556969C78E454745B4BEEAB456AC
+                      4820542B535B2382A85886474BAB02096B620224044442482010F264936C76F7
+                      FB6EEFF9F66643D83CF6F1C598DF0C9373CE7EECDE7BF6DE73CF3DF7AE845162
+                      3963F26595357FE00D6075B669BF5B21499A78E96B65441DB0AEE2D073FC1354
+                      59B5FC71C18C296DC28C42BB3D428988FEAB24C93F275D037B4B7375162CCEC9
+                      71EB0F70565556C65B60FE2D17B57C5BEA135EABF18C9803D65454CD6AD867DF
+                      9D9C9B2BB9C0DA22185E722AEACA588F87B965F30640FEBE78D40B635B3CEECE
+                      3C25264691DCD2AF01CFC380290ECDA7349638F1AA025B9A5D3C692823E280E2
+                      0307CCE73453191733BC162F2E789A4C3035CAC07461EA8FAA56AA9292A4C848
+                      14161D55D32A98A76BE6F923C428C272C0EAAAAA4B15B7F48C04B94486B6D75A
+                      935A959727A94515D58F4B92F48C78CC1018C3B282ACD4178B8B99D29E5A9321
+                      83CD0293AEE2136C59FE77539AC463411396038A2AAB7F21417A5DA840371C88
+                      84BDBB05B3A31261165643E850BB9D5629AAC42D23C702C40833F5A0207F7AEA
+                      3AA1050D1F8DA12331E9C742F412052B6FD00D46779E8855A2226519D7F7EB3C
+                      A1B1FE6D08929047C01BE5C7C66B4A0F0D3D93D7324A74B5F5B0B8B88B0BD2D2
+                      CE094B50843C023CB2F336FE67743B4F448FB7C02DF55F518220A011C083DA52
+                      1ED4E682C1CAA05935487CAD5293F465EA1B81A75D654A8322310798DCC97BE5
+                      D0A06D5B644BFF8B786050021A017AE781F9FC8D6FE4C9CB4C4592D2BF399D27
+                      4C71DE36C9B9D4466E982F3399FE0E4B6053807FF3421A4B04D4E6801C40C35E
+                      8863069E3718E7009AF3421C33F01810509B870C8285F6A37172846B9E2CA9AB
+                      8C9CF39AC703595128B808CB08E0442B2CDA431EB7E5E3C53953DB85D50FBF16
+                      507A6BF24877E8498E37A044785F091DC6C763C3C10338662F45F3F15AB89D4E
+                      DE7719D6840428160B9C1DED50B9532222231137711292B3B2F8BF19463988EF
+                      1FB49DFCCD3669706F5E64B39D16761DBF4F585B515D244B52BE50C3C6D5D589
+                      3D6FFF1D678E1E1196C0484CBE1CD7DCB700E66803671FC3EAFCACD40784A6E3
+                      1703686323C4B0F1B85CD8B56675D09D279AEB8EE3B3B7DED0A399513030BFBE
+                      F9398049FE0F854AD9E68D683FDD28B4E0397BFC388E9519570660B2FF97EBE7
+                      80B843D30EF6009D420D99B6930D385EF6B9D042E7CBDD9F09295C3CEDF59929
+                      3542F1E1E700DACF5B18F6093564BE2A3566209123BB5A5B8516069AA974A0BA
+                      633F075025675DE5A127683F2F4C2173FACBC3420A9FA6DAA3420A0367DB756B
+                      2BAB1EA57AA4B0E8F81C40353C51C67A3ADCFDBCEA71C3D1DC2CB4F069AD6F10
+                      5218F05DA30CF9399312655F5B5E932BAC5E07F0DDDEF354C0E462BF1A5EA8F4
+                      9C7308C9183A5B8D732614C526B79DDCC347BA5EB2D31DC0777B1EAADE926C04
+                      7CB91152785C7DD3CD786D6D21649E34194AE2A5F4867A8155EF3455779C8AF3
+                      9819D278D2C3C5EDECC6FB2B9E141A70FDBCDB3133876776419236652AE2C6C5
+                      60F99F5E41FAED77086BF8A81A9AA3A2E52BEE4949E9F07DEB7C1A3CC647C2B3
+                      420D1B72003982C8CB5F88BCDB7EA0CBC14269F4D2C79FC49CFB0C4B4EE93D1F
+                      29C84A7B8964DFD8A2430B9EB89E156AD8C4274D12128F094E9E5984C0C7BBFE
+                      87E28FB7425555613100374EABEECED784D6E7003AB1D1603E25D4B0B9F88A6F
+                      0B0938733678BF6A1AC3479BDEC7E67FBC8D98F109C21A3ECCC4FAF5517700AD
+                      8D745CC595814F6C42607246DF5B1D395825A4C0D9B17B2FCED49F80ABDB89D8
+                      091384357CF834CF3645C414F7E603329DD2D241251743AEAC0E04353A6172B2
+                      2E9FE51DF9B2EE842E07CA079B36098907EDCB2F17924148D23CD91C53447DF7
+                      1E518B535AA349B9F63A21F1A0B8E55F42EA43D95F0AA5EC53C8B5FD53F4F7B6
+                      6E4763ED315D8EB45A919074992E1B890CE9DEE4CA9A177D316024983CDD86F1
+                      939274B964E74E7C5A56AECB84B2772722D6BF8C887FBE06F3AAA7A0947FAADB
+                      6B4F9EC486F5EB759948CEBE92BE31A1198F32E3F557778C3B73768A04294BD8
+                      0C83CF37C44F9A845ABB9D2F3D1ACAEC9F23253303131213C126F26F95BFFEDF
+                      26078A3DE370D1EC1B70F4AB5ABCBCF25574B679AF12C88A8CDCBBEE86392A4A
+                      D70DE6CD85B6694B64DA21D1E504DEC22DE2054349B82C19193CA3235CDD5D28
+                      DEB81925FB0F00A608786EB913F6B864EC39568F0D1BDFC7FA77DE416B635FFD
+                      60EAAC398889376E05388F0FEA9A4F2DE25F10F38D2D1E15A3F946610FE5CAC2
+                      641894CCEC7BB718C7CBED98F7B3BB71CD553351597304B9B64C4C4848C0AED2
+                      52309EEEE664A6E38182FBA1F1753F6EE244CC7DF0575022C22E495E002BB73A
+                      62E6DC353B59CFD27C31806E66D0E504A11A0A4D85DC3BF33039733AFEBD650B
+                      2E4D4CC04F6FFE1ECEB6B4E0937D76CC9E918D5B67CF42626C2C92A7A562DC25
+                      1370ED828211E83CEF3E58524F748BAFDF7D41D085A517DECC30929EAE4EDC7A
+                      F34DC8BBF71EACE7D3809891968AB9BCE3D6E8685DA72019CF9D73E51D3F4254
+                      ECC89CBC49902F7149914B84EADD0C792F24C97CDD31AEF6AFBADDE8713820C9
+                      121C4D4D986431E12773BDC7752ADF8D905DBE20BA77F394392AD282AD7BF6E2
+                      48530B22131261325BF456465A63F5A068084EB47AE48829745EA0B780EF8D69
+                      13F418C9E14091BED65E8AA325257A298BE67E94751C162D7908D7CDE4CB5910
+                      90937695ECC39B8585E8769C836C3261E277527840BDC5B7B48605632BF2B3D2
+                      9EEA7529DF209E0AEB9E5E4F57177615AE867DE37B686DA8D73B4F50E357BEF0
+                      02963DFD2CF61F0EAC4CE6E0EFB5EA6FEBB166E52BFAFF27E834E964751576AE
+                      5AA907D370A88347657C0520D937068B2AAB73F806A44891E5A0F3016ADC7F0A
+                      5F474B7D9DB00CCEB7D23330FF87F371FD0023A2B9A303EF6EFE109F6CDF8E9E
+                      CEC10BD374AA74C3E20771514829322B97182B5898954EE5BF3E0710B4413099
+                      AD0F77A8DDCBE94E8E300FCBC11DDB50B573BBD00223EEA28B31E3EAAB91C597
+                      BE86C6D3F88207C0AF0E1ED09D1908F1499371D392A5421B1E0D9E6E8929CB4F
+                      B434BEBCE2C61B7D1FD23F0A09D67E7168175D4812EA9050D1E3A3E77FAF9F02
+                      7DDDCC7DE0974848F66EB886838FEE1D8BB2D3BC19D979F88555BA874757D184
+                      3A2CF5FB2B46A5F3447D15CF28038449AE5CDAFD09D5879F812E21FA5D451B82
+                      C6C3C19FFB1945CB89E1634E2F8A64899D7CE0F034A1FA18C0236C961003A295
+                      2F77A38523C84A93CC34BFBEF93940BF7E1A04DD1D83DE3D187128BB0C8A01FA
+                      E6EF00555EC643A3BE3BEC6EE609F230041AB54782803EBBAB8D2AB21FF2DE2F
+                      F4B8F1B8D7D8C780AB402F45D5D5E3E812A204CFDAC1D264A68DCAEF1C7C487C
+                      B91A10375A60628BBB1575EB92CCCC418FAA8674402F6B2AAA0F7AEFE18D1DE8
+                      8AFDFDD9E9D9421D9441DCD71FFD06E61823D03607E400FDFAE9984309A8CD81
+                      3980EF68853496306E04D0C563306CE4FFB6F11DEF6E9A5FFA3DBC6F0A3CE0E9
+                      6D62EA67D446D1D61DE2D5210928080EC4BA8AAABB79087E5BA8A30B6377F2BD
+                      FD06A1054560536000E80626FF63F88F988286AFF3B4D4092D68427680F7FA29
+                      DDC01C65A2C76F1B6A9D1F8E901DE045EA3BC0D3F1B4F380B15D645F8642FB79
+                      DAD2AAACA7439804EC82360447580EA0BBB73CD8AC668C2DE06F9456373D2321
+                      3F3BF5161615F7B478C430A89841FBF9069B2D1EB29C41A92DFFEC428F4BE269
+                      6EE8841C0487822A4BB2D9FA39774ABFE3765545A32CB346499206C9D05839D5
+                      EDA9742D0C02565ED7DC987B7E25C728C29C0203A3FFC253950AEA4A4BBD9551
+                      BE4CF151F208531D535577E71CDA68E9F6FE7C40273666CD7505971FED5D66A9
+                      804935BC91E83C312223A0177115CD6D8E94FF4C1792BCD6DE1112534447D4C2
+                      F4269DD59DDF49FAAD8229C2F51BAADE16D8525708B3E18CA8038682CA53743E
+                      4FF242DBB447E8A0527FE16B05F83F163258555A47E2CB0000000049454E44AE
+                      426082}
                   end>
                 Align = Client
                 HitTest = False
-                Size.Width = 176.000000000000000000
+                Size.Width = 160.500000000000000000
                 Size.Height = 130.000000000000000000
                 Size.PlatformDefault = False
                 WrapMode = Center
@@ -992,7 +1009,7 @@ object frmMain: TfrmMain
                   Align = Bottom
                   StyledSettings = [Family, Style, FontColor]
                   Position.Y = 105.000000000000000000
-                  Size.Width = 176.000000000000000000
+                  Size.Width = 160.500000000000000000
                   Size.Height = 25.000000000000000000
                   Size.PlatformDefault = False
                   TextSettings.Font.Size = 15.000000000000000000
@@ -1004,7 +1021,7 @@ object frmMain: TfrmMain
             object bReport: TButton
               Align = Client
               Anchors = []
-              Size.Width = 176.000000000000000000
+              Size.Width = 160.500000000000000000
               Size.Height = 130.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 3
@@ -1100,7 +1117,7 @@ object frmMain: TfrmMain
                   end>
                 Align = Client
                 HitTest = False
-                Size.Width = 176.000000000000000000
+                Size.Width = 160.500000000000000000
                 Size.Height = 130.000000000000000000
                 Size.PlatformDefault = False
                 WrapMode = Center
@@ -1108,7 +1125,7 @@ object frmMain: TfrmMain
                   Align = Bottom
                   StyledSettings = [Family, Style, FontColor]
                   Position.Y = 105.000000000000000000
-                  Size.Width = 176.000000000000000000
+                  Size.Width = 160.500000000000000000
                   Size.Height = 25.000000000000000000
                   Size.PlatformDefault = False
                   TextSettings.Font.Size = 15.000000000000000000
@@ -1120,7 +1137,7 @@ object frmMain: TfrmMain
             object bSync: TButton
               Align = Client
               Anchors = []
-              Size.Width = 176.000000000000000000
+              Size.Width = 160.500000000000000000
               Size.Height = 130.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 4
@@ -1238,7 +1255,7 @@ object frmMain: TfrmMain
                   end>
                 Align = Client
                 HitTest = False
-                Size.Width = 176.000000000000000000
+                Size.Width = 160.500000000000000000
                 Size.Height = 130.000000000000000000
                 Size.PlatformDefault = False
                 WrapMode = Center
@@ -1246,7 +1263,7 @@ object frmMain: TfrmMain
                   Align = Bottom
                   StyledSettings = [Family, Style, FontColor]
                   Position.Y = 105.000000000000000000
-                  Size.Width = 176.000000000000000000
+                  Size.Width = 160.500000000000000000
                   Size.Height = 25.000000000000000000
                   Size.PlatformDefault = False
                   TextSettings.Font.Size = 15.000000000000000000
@@ -1258,7 +1275,7 @@ object frmMain: TfrmMain
             object bInfo: TButton
               Align = Client
               Anchors = []
-              Size.Width = 176.000000000000000000
+              Size.Width = 160.500000000000000000
               Size.Height = 130.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 5
@@ -1329,7 +1346,7 @@ object frmMain: TfrmMain
                   end>
                 Align = Client
                 HitTest = False
-                Size.Width = 176.000000000000000000
+                Size.Width = 160.500000000000000000
                 Size.Height = 130.000000000000000000
                 Size.PlatformDefault = False
                 WrapMode = Center
@@ -1337,7 +1354,7 @@ object frmMain: TfrmMain
                   Align = Bottom
                   StyledSettings = [Family, Style, FontColor]
                   Position.Y = 105.000000000000000000
-                  Size.Width = 176.000000000000000000
+                  Size.Width = 160.500000000000000000
                   Size.Height = 25.000000000000000000
                   Size.PlatformDefault = False
                   TextSettings.Font.Size = 15.000000000000000000
@@ -1351,7 +1368,7 @@ object frmMain: TfrmMain
         object bRelogin: TButton
           Align = Bottom
           Position.Y = 461.000000000000000000
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 60.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 9
@@ -1428,16 +1445,16 @@ object frmMain: TfrmMain
         ExplicitSize.cy = 8.000000000000000000
         object VertScrollBox2: TVertScrollBox
           Align = Client
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 521.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
-          Viewport.Width = 352.000000000000000000
+          Viewport.Width = 321.000000000000000000
           Viewport.Height = 521.000000000000000000
           object bPriceList: TButton
             Align = Top
             Margins.Bottom = 2.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = 'bPriceListStyle1'
@@ -1449,7 +1466,7 @@ object frmMain: TfrmMain
             Align = Top
             Margins.Bottom = 2.000000000000000000
             Position.Y = 186.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = 'bRouteStyle1'
@@ -1461,7 +1478,7 @@ object frmMain: TfrmMain
             Align = Top
             Margins.Bottom = 2.000000000000000000
             Position.Y = 248.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = 'bPartnersStyle1'
@@ -1473,7 +1490,7 @@ object frmMain: TfrmMain
             Align = Top
             Margins.Bottom = 2.000000000000000000
             Position.Y = 310.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = 'bPathonMapStyle1'
@@ -1485,7 +1502,7 @@ object frmMain: TfrmMain
             Align = Top
             Margins.Bottom = 2.000000000000000000
             Position.Y = 62.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = 'bPromoStyle1'
@@ -1497,7 +1514,7 @@ object frmMain: TfrmMain
             Align = Top
             Margins.Bottom = 2.000000000000000000
             Position.Y = 124.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = 'bPromoStyle1'
@@ -1525,7 +1542,7 @@ object frmMain: TfrmMain
           HeaderAppearanceClassName = 'TListHeaderObjects'
           FooterAppearanceClassName = 'TListHeaderObjects'
           Align = Client
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 521.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
@@ -1563,7 +1580,7 @@ object frmMain: TfrmMain
           HeaderAppearanceClassName = 'TListHeaderObjects'
           FooterAppearanceClassName = 'TListHeaderObjects'
           Align = Client
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 521.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 2
@@ -1803,7 +1820,7 @@ object frmMain: TfrmMain
           OnUpdateObjects = lwPromoPartnersUpdateObjects
           Images = ilPartners
           Align = Client
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 481.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
@@ -1874,7 +1891,7 @@ object frmMain: TfrmMain
         end
         object pPromoPartnerDate: TPanel
           Align = Top
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 40.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 2
@@ -1922,7 +1939,7 @@ object frmMain: TfrmMain
           FooterAppearanceClassName = 'TListHeaderObjects'
           OnUpdateObjects = lwPromoGoodsUpdateObjects
           Align = Client
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 481.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 3
@@ -2167,7 +2184,7 @@ object frmMain: TfrmMain
         end
         object pPromoGoodsDate: TPanel
           Align = Top
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 40.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 2
@@ -2210,7 +2227,7 @@ object frmMain: TfrmMain
         ExplicitSize.cy = 8.000000000000000000
         object Panel18: TPanel
           Align = Top
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 40.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 2
@@ -2250,7 +2267,7 @@ object frmMain: TfrmMain
           end
           object bRefreshPathOnMap: TButton
             Align = Right
-            Position.X = 312.000000000000000000
+            Position.X = 281.000000000000000000
             Size.Width = 40.000000000000000000
             Size.Height = 40.000000000000000000
             Size.PlatformDefault = False
@@ -2345,7 +2362,7 @@ object frmMain: TfrmMain
         end
         object pPathOnMap: TPanel
           Align = Client
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 481.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 3
@@ -2365,16 +2382,16 @@ object frmMain: TfrmMain
         ExplicitSize.cy = 8.000000000000000000
         object VertScrollBox1: TVertScrollBox
           Align = Client
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 521.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
-          Viewport.Width = 352.000000000000000000
+          Viewport.Width = 321.000000000000000000
           Viewport.Height = 521.000000000000000000
           object bMonday: TButton
             Tag = 1
             Align = Top
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 55.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 6
@@ -2383,7 +2400,7 @@ object frmMain: TfrmMain
             OnClick = bMondayClick
             object lMondayCount: TLabel
               Align = Right
-              Position.X = 297.000000000000000000
+              Position.X = 266.000000000000000000
               Size.Width = 55.000000000000000000
               Size.Height = 55.000000000000000000
               Size.PlatformDefault = False
@@ -2395,7 +2412,7 @@ object frmMain: TfrmMain
             Tag = 5
             Align = Top
             Position.Y = 220.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 55.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 5
@@ -2404,7 +2421,7 @@ object frmMain: TfrmMain
             OnClick = bMondayClick
             object lFridayCount: TLabel
               Align = Right
-              Position.X = 297.000000000000000000
+              Position.X = 266.000000000000000000
               Size.Width = 55.000000000000000000
               Size.Height = 55.000000000000000000
               Size.PlatformDefault = False
@@ -2416,7 +2433,7 @@ object frmMain: TfrmMain
             Tag = 4
             Align = Top
             Position.Y = 165.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 55.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 4
@@ -2425,7 +2442,7 @@ object frmMain: TfrmMain
             OnClick = bMondayClick
             object lThursdayCount: TLabel
               Align = Right
-              Position.X = 297.000000000000000000
+              Position.X = 266.000000000000000000
               Size.Width = 55.000000000000000000
               Size.Height = 55.000000000000000000
               Size.PlatformDefault = False
@@ -2437,7 +2454,7 @@ object frmMain: TfrmMain
             Tag = 2
             Align = Top
             Position.Y = 55.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 55.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 3
@@ -2446,7 +2463,7 @@ object frmMain: TfrmMain
             OnClick = bMondayClick
             object lTuesdayCount: TLabel
               Align = Right
-              Position.X = 297.000000000000000000
+              Position.X = 266.000000000000000000
               Size.Width = 55.000000000000000000
               Size.Height = 55.000000000000000000
               Size.PlatformDefault = False
@@ -2458,7 +2475,7 @@ object frmMain: TfrmMain
             Tag = 6
             Align = Top
             Position.Y = 275.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 55.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 2
@@ -2467,7 +2484,7 @@ object frmMain: TfrmMain
             OnClick = bMondayClick
             object lSaturdayCount: TLabel
               Align = Right
-              Position.X = 297.000000000000000000
+              Position.X = 266.000000000000000000
               Size.Width = 55.000000000000000000
               Size.Height = 55.000000000000000000
               Size.PlatformDefault = False
@@ -2479,7 +2496,7 @@ object frmMain: TfrmMain
             Tag = 8
             Align = Top
             Position.Y = 385.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 55.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
@@ -2488,7 +2505,7 @@ object frmMain: TfrmMain
             OnClick = bMondayClick
             object lAllDaysCount: TLabel
               Align = Right
-              Position.X = 297.000000000000000000
+              Position.X = 266.000000000000000000
               Size.Width = 55.000000000000000000
               Size.Height = 55.000000000000000000
               Size.PlatformDefault = False
@@ -2500,7 +2517,7 @@ object frmMain: TfrmMain
             Tag = 7
             Align = Top
             Position.Y = 330.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 55.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
@@ -2509,7 +2526,7 @@ object frmMain: TfrmMain
             OnClick = bMondayClick
             object lSundayCount: TLabel
               Align = Right
-              Position.X = 297.000000000000000000
+              Position.X = 266.000000000000000000
               Size.Width = 55.000000000000000000
               Size.Height = 55.000000000000000000
               Size.PlatformDefault = False
@@ -2521,7 +2538,7 @@ object frmMain: TfrmMain
             Tag = 3
             Align = Top
             Position.Y = 110.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 55.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 7
@@ -2530,7 +2547,7 @@ object frmMain: TfrmMain
             OnClick = bMondayClick
             object lWednesdayCount: TLabel
               Align = Right
-              Position.X = 297.000000000000000000
+              Position.X = 266.000000000000000000
               Size.Width = 55.000000000000000000
               Size.Height = 55.000000000000000000
               Size.PlatformDefault = False
@@ -2554,14 +2571,14 @@ object frmMain: TfrmMain
         ExplicitSize.cy = 8.000000000000000000
         object Panel5: TPanel
           Align = Top
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 25.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
           object lDayInfo: TLabel
             Align = Client
             Margins.Left = 10.000000000000000000
-            Size.Width = 342.000000000000000000
+            Size.Width = 311.000000000000000000
             Size.Height = 25.000000000000000000
             Size.PlatformDefault = False
             Text = #1052#1072#1088#1096#1088#1091#1090
@@ -2575,7 +2592,7 @@ object frmMain: TfrmMain
           OnUpdateObjects = lwPartnerUpdateObjects
           Images = ilPartners
           Align = Client
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 496.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
@@ -2642,7 +2659,7 @@ object frmMain: TfrmMain
         CustomIcon = <
           item
           end>
-        IsSelected = True
+        IsSelected = False
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -2654,25 +2671,25 @@ object frmMain: TfrmMain
         object tcPartnerInfo: TTabControl
           Touch.GestureManager = gmPartnerInfo
           Align = Client
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 521.000000000000000000
           Size.PlatformDefault = False
           TabHeight = 49.000000000000000000
-          TabIndex = 5
+          TabIndex = 4
           TabOrder = 2
           TabPosition = PlatformDefault
           Sizes = (
-            352s
+            321s
             472s
-            352s
+            321s
             472s
-            352s
+            321s
             472s
-            352s
+            321s
             472s
-            352s
+            321s
             472s
-            352s
+            321s
             472s)
           object tiInfo: TTabItem
             CustomIcon = <
@@ -2681,7 +2698,7 @@ object frmMain: TfrmMain
             TextSettings.Font.Size = 10.000000000000000000
             StyledSettings = [Family, Style, FontColor]
             IsSelected = False
-            Size.Width = 58.000000000000000000
+            Size.Width = 53.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = ''
@@ -2940,23 +2957,23 @@ object frmMain: TfrmMain
             end
             object pPartnerInfo: TPanel
               Align = Client
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 272.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 2
               object VertScrollBox4: TVertScrollBox
                 Align = Client
-                Size.Width = 352.000000000000000000
+                Size.Width = 321.000000000000000000
                 Size.Height = 272.000000000000000000
                 Size.PlatformDefault = False
                 TabOrder = 0
-                Viewport.Width = 352.000000000000000000
+                Viewport.Width = 321.000000000000000000
                 Viewport.Height = 272.000000000000000000
                 object Layout28: TLayout
                   Align = Top
                   Margins.Top = 5.000000000000000000
                   Position.Y = 150.000000000000000000
-                  Size.Width = 352.000000000000000000
+                  Size.Width = 321.000000000000000000
                   Size.Height = 30.000000000000000000
                   Size.PlatformDefault = False
                   TabOrder = 2
@@ -2974,7 +2991,7 @@ object frmMain: TfrmMain
                   object lPartnerOver: TLabel
                     Align = Client
                     StyledSettings = [Family, Style, FontColor]
-                    Size.Width = 227.000000000000000000
+                    Size.Width = 196.000000000000000000
                     Size.Height = 30.000000000000000000
                     Size.PlatformDefault = False
                     TextSettings.Font.Size = 11.000000000000000000
@@ -2985,7 +3002,7 @@ object frmMain: TfrmMain
                   Align = Top
                   Margins.Top = 5.000000000000000000
                   Position.Y = 5.000000000000000000
-                  Size.Width = 352.000000000000000000
+                  Size.Width = 321.000000000000000000
                   Size.Height = 30.000000000000000000
                   Size.PlatformDefault = False
                   TabOrder = 0
@@ -3003,7 +3020,7 @@ object frmMain: TfrmMain
                   object lPartnerName: TLabel
                     Align = Client
                     StyledSettings = [Family, Style, FontColor]
-                    Size.Width = 227.000000000000000000
+                    Size.Width = 196.000000000000000000
                     Size.Height = 30.000000000000000000
                     Size.PlatformDefault = False
                     TextSettings.Font.Size = 11.000000000000000000
@@ -3014,7 +3031,7 @@ object frmMain: TfrmMain
                   Align = Top
                   Margins.Top = 5.000000000000000000
                   Position.Y = 115.000000000000000000
-                  Size.Width = 352.000000000000000000
+                  Size.Width = 321.000000000000000000
                   Size.Height = 30.000000000000000000
                   Size.PlatformDefault = False
                   TabOrder = 3
@@ -3032,7 +3049,7 @@ object frmMain: TfrmMain
                   object lPartnerDebt: TLabel
                     Align = Client
                     StyledSettings = [Family, Style, FontColor]
-                    Size.Width = 227.000000000000000000
+                    Size.Width = 196.000000000000000000
                     Size.Height = 30.000000000000000000
                     Size.PlatformDefault = False
                     TextSettings.Font.Size = 11.000000000000000000
@@ -3043,7 +3060,7 @@ object frmMain: TfrmMain
                   Align = Top
                   Margins.Top = 10.000000000000000000
                   Position.Y = 80.000000000000000000
-                  Size.Width = 352.000000000000000000
+                  Size.Width = 321.000000000000000000
                   Size.Height = 30.000000000000000000
                   Size.PlatformDefault = False
                   TabOrder = 4
@@ -3061,7 +3078,7 @@ object frmMain: TfrmMain
                   object lPartnerKind: TLabel
                     Align = Client
                     StyledSettings = [Family, Style, FontColor]
-                    Size.Width = 227.000000000000000000
+                    Size.Width = 196.000000000000000000
                     Size.Height = 30.000000000000000000
                     Size.PlatformDefault = False
                     TextSettings.Font.Size = 11.000000000000000000
@@ -3072,7 +3089,7 @@ object frmMain: TfrmMain
                   Align = Top
                   Margins.Top = 5.000000000000000000
                   Position.Y = 40.000000000000000000
-                  Size.Width = 352.000000000000000000
+                  Size.Width = 321.000000000000000000
                   Size.Height = 30.000000000000000000
                   Size.PlatformDefault = False
                   TabOrder = 5
@@ -3090,7 +3107,7 @@ object frmMain: TfrmMain
                   object lPartnerAddress: TLabel
                     Align = Client
                     StyledSettings = [Family, Style, FontColor]
-                    Size.Width = 227.000000000000000000
+                    Size.Width = 196.000000000000000000
                     Size.Height = 30.000000000000000000
                     Size.PlatformDefault = False
                     TextSettings.Font.Size = 11.000000000000000000
@@ -3101,7 +3118,7 @@ object frmMain: TfrmMain
                   Align = Top
                   Margins.Top = 5.000000000000000000
                   Position.Y = 185.000000000000000000
-                  Size.Width = 352.000000000000000000
+                  Size.Width = 321.000000000000000000
                   Size.Height = 30.000000000000000000
                   Size.PlatformDefault = False
                   TabOrder = 1
@@ -3119,7 +3136,7 @@ object frmMain: TfrmMain
                   object lPartnerOverDay: TLabel
                     Align = Client
                     StyledSettings = [Family, Style, FontColor]
-                    Size.Width = 227.000000000000000000
+                    Size.Width = 196.000000000000000000
                     Size.Height = 30.000000000000000000
                     Size.PlatformDefault = False
                     TextSettings.Font.Size = 11.000000000000000000
@@ -3130,7 +3147,7 @@ object frmMain: TfrmMain
             end
             object pMap: TPanel
               Align = Top
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 200.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
@@ -3147,7 +3164,7 @@ object frmMain: TfrmMain
               end
               object bRefreshMapScreen: TButton
                 Anchors = [akTop, akRight]
-                Position.X = 302.000000000000000000
+                Position.X = 271.000000000000000000
                 Size.Width = 50.000000000000000000
                 Size.Height = 50.000000000000000000
                 Size.PlatformDefault = False
@@ -3162,72 +3179,72 @@ object frmMain: TfrmMain
                       PNG = {
                         89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
                         F4000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
-                        0818494441545847CD577B7054D5193FF7BDBB775F77B379271062420C1442E5
-                        21E2A82D889DBE74AAA092B1B654294A99A9431F4C5B5BFFE874D03AE34CA603
-                        A5237524960AA4D6661070A893042A1842804409362404486037CBBEB29BECEB
-                        3EFB9D9B7B37BB2401FB57FBCB7E7BF67EE73BE7FB9DEF7CE7BB27E87F0DC268
-                        EF8805EB0FB20E8F345753D57914CB78E48C12D50835A2223A72EECD0D970DB3
-                        FF1A7724B0EA477F2D2B76BB7FEDE2A9B5E5C54E0FEDB2D9CB798E49A5451409
-                        89A9712511B9E69F8827D2E2D1F8B8F4CEA95D4FF618436780462CDFD2525C15
-                        44C196962715ACB92D81277E73687B55A9F093550D15854EDE82545543AAA621
-                        F820057F4D7EF449C2B1241A18198D7D3610BA148D29AFFD6BE7BAF7F44972F0
-                        E04B2DBB55496DF878E753F719AAD9097CF77747FEB0AA6CCE0B754BBD34F845
-                        8A8A9D010178C0CE3578C664B202CF144922126C7A868713DDBDE153A144E287
-                        A79B365CC5F3ADDEF6DE2F2B4B8A7EE11B0D76FEF38DC7D7EA4E00331258F7CA
-                        E16D0F57CD7B6DFEB2025A332657B17BFD370164D4ACCE8C8AFE0C2DB6214902
-                        26D650DBF9C1E0A5ABB11DC038D1B0B0E2D59A3241F8E078FF471FFEFED12C01
-                        CA68B358BEE52F4BEE5F5CDAB47C59A50073A1444A46A77D11C53F144AF6F946
-                        E5A02F2D8B8A5FA3689E62681211B06A9D048CC5DB81C7642415F9C7D2A8A8C0
-                        CD9384FCD5D2326155B1E0F2E2085E19090F0D9EDCFF8EEE0C401B6D16E582FB
-                        99BACA924ABCCAD6B64BB1BE81EB64F202E2518D129311112028AA13DC8D08AE
-                        9050E2B62FAB2A12EA6AEFF296DB6C1C1A07B2F1848CA20911C9981448456931
-                        ABA85A51783C83CA040B220950E6601A0192521F29705951D3BB2713890CE172
-                        086E442D4DF684E2E28E737B1A0F1A6659ACD8DCDC70E2C2F567AA4B1DDFA8AB
-                        65EF565131696E058E462C21C196E1B5C37EC3866B24914780345A1D2B9F6BAE
-                        29763B6D078FF5C56986E7CB0A853845A14046525A67728ED1F5A7677B3B9AD6
-                        FDECECE7BEFB8F778EFD311209DE107856DF0F9D88F16742D36E434024496B2C
-                        16F78E8462A2E0B61FB75AD90EA4127D89B474C742D3BB77E3D891D7BFB3F5E3
-                        F3238D9D3DD7068B9C9C9EE2380A5830205D20E4F8FC4C218F00ADA913374313
-                        A4DBE5ECE02D6CBB8D633B68863A4569C445C3E48EE059EB637555CECA4852D4
-                        73C0748E4168D30F5D1E015566E43422534EBBF510CF593A6C166BBBA7C0D202
-                        E914304C6E8B35DBFEBE6DD53D559B38AB934B8B7048F5D54F31D07300117911
-                        C84B425A20436252F62D228B0FFCF8B9F91943FD85F0D04B079FAFAF70BC5CE2
-                        B53B4459435606F200039C62C724FE828824242927267A773E966EDEB782D0B4
-                        7990CA24415214240D41300A05358ED454283114E8E1B725ADBCDFF6E7463D32
-                        8B5EDC277839CBCB248D6A6D2CADD7965C2F70F2743FA98C0C2782FC5B7BD3E3
-                        6FE91D803C024B361E282C2CE0CEAC5B7DF75C3D727AC21A265801AB484B0A3A
-                        72B2FF467042FACAF95D4F0D4E767E31DCB3A9F95E8A621E39B37BC36F0D557E
-                        0E60CC297228851E1E311616312C8768960561F45680FA70C51F1D1D9F101BEF
-                        E81C42D7F559B8B2BB5B630C0D2C8558026B5A633CEA9846009B498A86245985
-                        5645B22E1AE2180A5D1C8CC4CE7FEEFFD527BB9E3E6118CF8A57DEEEE006C2A9
-                        25497BA0BEFB72C485751CCB56902CE9D50D0C4C23A0178DDC0D04D090011951
-                        46EDE7068F9E685A9FDDBFDB61306E65A1FC2E2215B23E9551EB8F5FBC59CA72
-                        DC43AA8244C344C7340212486EE5C2106505311081C71EACFFF637B7BF7F6CC9
-                        F7F7D51A5DB3424CD9DD10B9C590B20B4842A9DF7BF8E2CF391B3B9F65A8A061
-                        A2631A017C78728BC7E4594668025E34569EE3BFF6C0C2B50B17141E7B60EBFE
-                        5D5FFEC19E656082B31ECF83259BD4B2966C5A5A63AF863DAF3FD2E55B7F2D18
-                        7D9AB5588B61B2BCA296770A16BFD05CB4ACBAEC9387EFABAD8E272564815527
-                        E1E8600232BC1DFDD10C8A4385B372503E54195DBF71733814890F46C2E163E9
-                        89B17ED651C9334E4769B9D7FBF54757962D1FBE19647BAEC4A2E3E914E5F514
-                        1546C363A95874EC5B5DBB1BDB0C97B31058595B8D7BFA3F0A2BF3D778A8C884
-                        88860209FD3DAF5F4A80101EC832B06828EDA991235A1CDD1B8A4AB25D4E8804
-                        249A2611B2C45878C269E11C349C263C26E0F377DF8C4557F7BFF5FCF8A4C7FC
-                        0B09692F5F20CC299FBB71614D91D0D377357CB4F7CC8E217FBCB6D0E3724950
-                        4B44A80178229384082705573DC5761761B15B79979367DC1E276D77391887DD
-                        C159388E8362A6DB8E8523E3B1C0F04F2FEC7D71007C99F7972C01BC7F9CA764
-                        91505953F7BD0C4D72C7DABA9BBA9BB7EE1F38F98F03194F839765948A526F81
-                        052728763AF9CE9F9A09DF19F1256452E0CA86FBB00DF40D472E6732C1B1DD67
-                        DFDEF22E3C62E000E22ED52480DF09B4AB7C911BB9E73E3B3870F583CE3D9B77
-                        820E72526546CE1EEA0AC7E44FE3325F4AC884C3E5B270348387C0CD0F47039C
-                        9B84A65E3E1ACA6424140E842269DF8DD7BBF76E7D53574E71C6A29804704BF1
-                        F31AEC9CADC0767ACFA6574D9D29E3BE8BD1E1EED6F6C858FCD3788A46B189A4
-                        8390C11B417004E401BC3FC04C45E994840287936ADC11F5C546FD6747BA5AB7
-                        FFFBC33770E1C2FF07C8469B153309F59C9A417019C592FB5B8F1670A22A573C
-                        F125AB674E192F1455508CC5A5C0754BCBA403C988BF6F7CF4F290BFB715EF37
-                        2E2DB8F8986DAE640998301DCDE050FF9D1B15B38664F7D310737578B5D8A9D9
-                        E60A768E6DF5C1B702EB4C87A6732CB98ECDA2933B7E3612B8CD25A23B363113
-                        815B613AC6246E756E8EC7CE31F0E47A72DD2266FFFF1B10FA0F9D59F1698381
-                        54660000000049454E44AE426082}
+                        0818494441545847CD577B7054D5193FF7BDBB775F77B379271068420C1492CA
+                        A318476D4174FAD2A9824AC6DA52A52865A60E7D306D6DFDA3D341EB8C33990E
+                        948ED411940AA4D66610705227095430840041093624BC12D8CD665FD94DF675
+                        9FFDCECDBD9B5D1288FDABFD65BF3D7BBFF39DF3FDCE77BEF3DD13F4BF0661B4
+                        B362E1BA83ACC323CDD554751EC5321E39A34435428DA8888E9C7D63FD65C3EC
+                        BFC6AC041A7FFCD7B262B7FB372E9E5A535EECF4D02E9BBD9CE798545A449190
+                        981A571291EBFE8978222D1E8D8F4B6F9FDCF944AF31740668C4F2CD2DC55541
+                        146C697942C19A3B1278FCB787B655950A3F6DACAF2874F216A4AA1A52350DC1
+                        0729F86BF2A34F128E25D1C0F048ECB381D0A5684C79F55F3BD6BEA74F9283FB
+                        5F6CD9A54A6AFDC73B9EBCC750DD9EC0F77E7FE48F8D65739EAF5DEAA5C12F52
+                        54EC0C08C00376AEC13326931578A648129160D33B3494E8391F3E194A247E74
+                        AA79FD353CDFAAADEFFDAAB2A4E897BE9160D73F5F7F6C8DEE04302381B52F1F
+                        DEFA60D5BC57172C2BA035637215BBD77F134046CDEACCA8E8CFD0621B922460
+                        620DB59F1B0C5EBA16DB0E8C13F58B2A5EA92E13840F8EF57FF4E11F1EC912A0
+                        8C368BE59BDF69B8774969F3F2659502CC851229199DF24514FF9550B2CF3722
+                        077D695954FC1A45F3144393888055EB24602CDE0E3C2623A9C83F964645056E
+                        9E24E4AF9796098DC582CB8B237875387C65F0C4FEB7756700DA68B32817DC4F
+                        D7569654E255B6B65F8AF50DDC209317108FAA95988C880041515DE06E587085
+                        8412B77D595591505BF3256FB9CDC6A171201B4FC8289A10918C4981549416B3
+                        8AAA1585C733A84CB0209200650EA6112029F5A102971535BF7B2291C8102E87
+                        E046D4D2646F282E6E3FBBBBE9A06196C58A4D7BEB8F5FB8F1F4FC52C7376B6B
+                        D8BB54544C9A5B81A3114B48B06578EDB0DFB0E11A49E411208D56C7CA67F756
+                        17BB9DB6836D7D719AE1F9B242214E5128909194D6999C6374FFF999F39DCD6B
+                        7F7EE673DFBDC7BAC6FE1489046F0A3CABEF874EC4F833A16977202092A43516
+                        8B7B8743315170DB8F59AD6C275289BE445A9AB5D09CDFB361ECC86BDFDDF2F1
+                        B9E1A6AEDEEB83454E4E4F711C052C18902E10727C7EA6904780D6D489D1D004
+                        E976393B790BDB61E3D84E9AA14E521A71D13099153C6B7DB4B6CA5919498A7A
+                        0E98CE31086DFAA1CB23A0CA8C9C4664CA69B71EE2394BA7CD62EDF014585A20
+                        9D0286C91DB17AEBDFB736DE5DB591B33AB9B40887545FFD14033D0710911781
+                        BC24A40532242665DF62B2F8C04F9E5D9031D45F080FBC78F0B9BA0AC74B255E
+                        BB4394356465200F30C029764CE22F884842927262A277E763E9A67D2B084D9B
+                        07A94C12244541D21004A35050E3484D851243811E7E5BD2CAFBED7F69D223B3
+                        F8857D8297B3BC44D2A8C6C6D27A6DC9F502274FF793CAC87022C8BF75343FF6
+                        A6DE01C823D0B0E140616101777AEDAABBE6EA91D313D630C10A58455A52D091
+                        13FD378313D2D7CEED7C7270B2F38BE1EE8D7BBF4A51CC43A777ADFF9DA1CACF
+                        018C39450EA5D0C323C6C22286E510CDB2208CDE0A501FAEFAA323E31362D3AC
+                        CE2174DD9F852B7B7A34C6D0C052880658D36AE351C73402D84C523424C92AB4
+                        2A9275D110C750E8E2602476EE73FFAF3FD9F9D471C3F8B678F9AD4E6E209C6A
+                        48DA03753D97232EACE358B6826449AF6E60601A01BD68E46E2080860CC88832
+                        EA383B78F478F3BAECFEDD0983712B0BE57731A99075A98C5A77ECE26829CB71
+                        0FA80A120D131DD3084820B9950B439415C440041EBDBFEE3BDFDAF67E5BC30F
+                        F6D5185DB78598B2BB21724B206517928452B7E7F0C55F70367601CB5041C344
+                        C73402F8F0E4168FC9B38CD004BC68AC3CC73F7CDFA2358B1616B6DDB765FFCE
+                        AFFC70F73230C1598FE7C1924D6A594B362FADB6CF873DAF3BD2ED5B773D187D
+                        8AB5588B61B2BCA296770A963CBFB768D9FCB24F1EBCA7667E3C29210BAC3A09
+                        47071390E1EDE88F66501C2A9C9583F2A1CAE8C6CDD1A150243E180987DBD213
+                        63FDACA392679C8ED272AFF71B8FAC2C5B3E341A647BAFC6A2E3E914E5F51415
+                        46C363A95874ECDBDDBB9ADA0D97B721B0B2663EEEE9FF28AC2C58EDA1221322
+                        BA1248E8EF79FD520284F04096814543694F0D1FD2E2A831149564BB9C100948
+                        344D226489B1F084D3C23968384D784CC0E7EF198D4557F5BFF9DCF8A4C7FC0B
+                        09692F5F28CC299FBB61517591D0DB772D7CF4FCE9ED57FCF19A428FCB25412D
+                        11A106E0894C12229C145CF5145B0D61B15B79979367DC1E276D77391887DDC1
+                        59388E8362A6DB8E8523E3B1C0D0CF2EEC7961007C99F7972C01BC7F9CA764B1
+                        50595DFBFD0C4D726DED3DCD3D7BB7EC1F38F18F03194FBD9765948A526F8105
+                        2728763AF9CE9F9A09DF19F1256452E0CA86FBB00DF40D452E6732C1B15D67DE
+                        DAFC2E3C62E000E22ED52480DF09B4AB7CB11BB9E73E333870ED83AEDD9B7680
+                        0E72526586CF1CEA0EC7E44FE3325F4AC884C3E5B270348387C0CD0F47039C9B
+                        84A65E3E1ACA6424140E842269DFCDD77AF66C7943574E71C6A29804704BF1F3
+                        EAED9CADC0766AF7C6574C9D29E3BE8BD1A19ED68EC858FCD3788A46B189A483
+                        90C11B417004E401BC3FC04C45E994840287936ADC11F5C546FC6786BB5BB7FD
+                        FBC3D771E1C2FF07C8469B153309F59C9A417019C592FB5B8F1670A22A573CFE
+                        65AB674E192F1455508CC5A5C0754BCBA403C988BF6F7CE4F215FFF956BCDFB8
+                        B4E0E263B6B9922560C274348343FD776E54CC1A92DD4F43CCD5E1D562A7669B
+                        2BD839B6D507DF0AAC331D9ACEB1E43A368B4EEEF8DB91C06D2E11DDB1899908
+                        DC0AD3312671AB73733C768E8127D793EB1631FBFFDF80D07F00A5D1F16B17F7
+                        F1AC0000000049454E44AE426082}
                     end>
                   Align = Client
                   HitTest = False
@@ -3249,7 +3266,7 @@ object frmMain: TfrmMain
             TextSettings.Font.Size = 10.000000000000000000
             StyledSettings = [Family, Style]
             IsSelected = False
-            Size.Width = 58.000000000000000000
+            Size.Width = 53.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = ''
@@ -3265,7 +3282,7 @@ object frmMain: TfrmMain
               OnUpdateObjects = lwPartnerTasksUpdateObjects
               Images = ilPartners
               Align = Client
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 472.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
@@ -3323,7 +3340,7 @@ object frmMain: TfrmMain
             TextSettings.Font.Size = 10.000000000000000000
             StyledSettings = [Family, Style, FontColor]
             IsSelected = False
-            Size.Width = 58.000000000000000000
+            Size.Width = 53.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = ''
@@ -3339,7 +3356,7 @@ object frmMain: TfrmMain
               OnUpdateObjects = lwStoreRealListUpdateObjects
               Images = ilPartners
               Align = Client
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 412.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
@@ -3396,7 +3413,7 @@ object frmMain: TfrmMain
             object Panel21: TPanel
               Align = MostBottom
               Position.Y = 412.000000000000000000
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 60.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 2
@@ -3420,7 +3437,7 @@ object frmMain: TfrmMain
             TextSettings.Font.Size = 10.000000000000000000
             StyledSettings = [Family, Style, FontColor]
             IsSelected = False
-            Size.Width = 58.000000000000000000
+            Size.Width = 53.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = ''
@@ -3436,7 +3453,7 @@ object frmMain: TfrmMain
               OnUpdateObjects = lwOrderExternalListUpdateObjects
               Images = ilPartners
               Align = Client
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 412.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
@@ -3515,7 +3532,7 @@ object frmMain: TfrmMain
             object pNewOrderExternal: TPanel
               Align = MostBottom
               Position.Y = 412.000000000000000000
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 60.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 2
@@ -3538,8 +3555,8 @@ object frmMain: TfrmMain
               end>
             TextSettings.Font.Size = 10.000000000000000000
             StyledSettings = [Family, Style, FontColor]
-            IsSelected = False
-            Size.Width = 58.000000000000000000
+            IsSelected = True
+            Size.Width = 53.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = ''
@@ -3555,7 +3572,7 @@ object frmMain: TfrmMain
               OnUpdateObjects = lwReturnInListUpdateObjects
               Images = ilPartners
               Align = Client
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 412.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
@@ -3634,7 +3651,7 @@ object frmMain: TfrmMain
             object Panel2: TPanel
               Align = MostBottom
               Position.Y = 412.000000000000000000
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 60.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 1
@@ -3657,8 +3674,8 @@ object frmMain: TfrmMain
               end>
             TextSettings.Font.Size = 10.000000000000000000
             StyledSettings = [Family, Style, FontColor]
-            IsSelected = True
-            Size.Width = 62.000000000000000000
+            IsSelected = False
+            Size.Width = 56.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = ''
@@ -3668,7 +3685,7 @@ object frmMain: TfrmMain
             ExplicitSize.cy = 49.000000000000000000
             object Panel12: TPanel
               Align = Client
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 417.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
@@ -3680,7 +3697,7 @@ object frmMain: TfrmMain
                 OnUpdateObjects = lwPartnerPhotoGroupsUpdateObjects
                 Images = ilPartners
                 Align = Client
-                Size.Width = 352.000000000000000000
+                Size.Width = 321.000000000000000000
                 Size.Height = 417.000000000000000000
                 Size.PlatformDefault = False
                 TabOrder = 0
@@ -3697,7 +3714,7 @@ object frmMain: TfrmMain
             object Panel13: TPanel
               Align = MostBottom
               Position.Y = 417.000000000000000000
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 55.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 1
@@ -3730,22 +3747,22 @@ object frmMain: TfrmMain
         ExplicitSize.cy = 8.000000000000000000
         object VertScrollBox5: TVertScrollBox
           Align = Client
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 521.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
-          Viewport.Width = 352.000000000000000000
+          Viewport.Width = 321.000000000000000000
           Viewport.Height = 521.000000000000000000
           object Panel23: TPanel
             Align = MostBottom
             Position.Y = 471.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 50.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
             object bSaveStoreReal: TButton
               Align = Client
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 50.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
@@ -3761,7 +3778,7 @@ object frmMain: TfrmMain
             OnUpdateObjects = lwStoreRealItemsUpdateObjects
             Images = ilPartners
             Align = Client
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 436.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
@@ -3839,7 +3856,7 @@ object frmMain: TfrmMain
           end
           object Panel24: TPanel
             Align = MostTop
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 35.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 3
@@ -3861,14 +3878,14 @@ object frmMain: TfrmMain
               Margins.Top = 2.000000000000000000
               Margins.Right = 5.000000000000000000
               Margins.Bottom = 2.000000000000000000
-              Size.Width = 228.000000000000000000
+              Size.Width = 197.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
               StyledSettings = [Family, Style, FontColor]
             end
             object bAddStoreRealItem: TButton
               Align = Right
-              Position.X = 322.000000000000000000
+              Position.X = 291.000000000000000000
               Size.Width = 30.000000000000000000
               Size.Height = 35.000000000000000000
               Size.PlatformDefault = False
@@ -3975,16 +3992,16 @@ object frmMain: TfrmMain
         ExplicitSize.cy = 8.000000000000000000
         object VertScrollBox3: TVertScrollBox
           Align = Client
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 521.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
-          Viewport.Width = 352.000000000000000000
+          Viewport.Width = 321.000000000000000000
           Viewport.Height = 521.000000000000000000
           object pOrderTotals: TPanel
             Align = Bottom
             Position.Y = 401.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 70.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
@@ -3993,7 +4010,7 @@ object frmMain: TfrmMain
               StyledSettings = [Family, Style, FontColor]
               Margins.Right = 10.000000000000000000
               Position.Y = 23.000000000000000000
-              Size.Width = 342.000000000000000000
+              Size.Width = 311.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 11.000000000000000000
@@ -4005,7 +4022,7 @@ object frmMain: TfrmMain
               StyledSettings = [Family, Style, FontColor]
               Margins.Right = 10.000000000000000000
               Position.Y = 47.000000000000000000
-              Size.Width = 342.000000000000000000
+              Size.Width = 311.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 11.000000000000000000
@@ -4016,7 +4033,7 @@ object frmMain: TfrmMain
               Align = Top
               StyledSettings = [Family, Style, FontColor]
               Margins.Right = 10.000000000000000000
-              Size.Width = 342.000000000000000000
+              Size.Width = 311.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 11.000000000000000000
@@ -4027,13 +4044,13 @@ object frmMain: TfrmMain
           object Panel8: TPanel
             Align = MostBottom
             Position.Y = 471.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 50.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
             object bSaveOrderExternal: TButton
               Align = Client
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 50.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
@@ -4043,7 +4060,7 @@ object frmMain: TfrmMain
           end
           object Panel9: TPanel
             Align = Top
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 40.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 2
@@ -4077,7 +4094,7 @@ object frmMain: TfrmMain
             OnUpdateObjects = lwOrderExternalItemsUpdateObjects
             Images = ilPartners
             Align = Client
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 331.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 3
@@ -4183,7 +4200,7 @@ object frmMain: TfrmMain
           object Panel14: TPanel
             Align = Top
             Position.Y = 40.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 30.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 4
@@ -4229,7 +4246,7 @@ object frmMain: TfrmMain
             end
             object bAddOrderItem: TButton
               Align = Right
-              Position.X = 322.000000000000000000
+              Position.X = 291.000000000000000000
               Size.Width = 30.000000000000000000
               Size.Height = 30.000000000000000000
               Size.PlatformDefault = False
@@ -4342,7 +4359,7 @@ object frmMain: TfrmMain
           OnUpdateObjects = lwOrderExternalItemsUpdateObjects
           Images = ilPartners
           Align = Client
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 296.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 3
@@ -4420,7 +4437,7 @@ object frmMain: TfrmMain
         object Panel6: TPanel
           Align = Top
           Position.Y = 75.000000000000000000
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 30.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 4
@@ -4446,7 +4463,7 @@ object frmMain: TfrmMain
           end
           object bAddReturnInItem: TButton
             Align = Right
-            Position.X = 322.000000000000000000
+            Position.X = 291.000000000000000000
             Size.Width = 30.000000000000000000
             Size.Height = 30.000000000000000000
             Size.PlatformDefault = False
@@ -4539,13 +4556,13 @@ object frmMain: TfrmMain
         object Panel17: TPanel
           Align = MostBottom
           Position.Y = 471.000000000000000000
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 50.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
           object bSaveReturnIn: TButton
             Align = Client
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 50.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
@@ -4555,7 +4572,7 @@ object frmMain: TfrmMain
         end
         object Panel22: TPanel
           Align = Top
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 40.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 2
@@ -4584,7 +4601,7 @@ object frmMain: TfrmMain
         object pReturnInTotals: TPanel
           Align = Bottom
           Position.Y = 401.000000000000000000
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 70.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
@@ -4593,7 +4610,7 @@ object frmMain: TfrmMain
             StyledSettings = [Family, Style, FontColor]
             Margins.Right = 10.000000000000000000
             Position.Y = 23.000000000000000000
-            Size.Width = 342.000000000000000000
+            Size.Width = 311.000000000000000000
             Size.Height = 23.000000000000000000
             Size.PlatformDefault = False
             TextSettings.Font.Size = 11.000000000000000000
@@ -4605,7 +4622,7 @@ object frmMain: TfrmMain
             StyledSettings = [Family, Style, FontColor]
             Margins.Right = 10.000000000000000000
             Position.Y = 47.000000000000000000
-            Size.Width = 342.000000000000000000
+            Size.Width = 311.000000000000000000
             Size.Height = 23.000000000000000000
             Size.PlatformDefault = False
             TextSettings.Font.Size = 11.000000000000000000
@@ -4616,7 +4633,7 @@ object frmMain: TfrmMain
             Align = Top
             StyledSettings = [Family, Style, FontColor]
             Margins.Right = 10.000000000000000000
-            Size.Width = 342.000000000000000000
+            Size.Width = 311.000000000000000000
             Size.Height = 23.000000000000000000
             Size.PlatformDefault = False
             TextSettings.Font.Size = 11.000000000000000000
@@ -4627,7 +4644,7 @@ object frmMain: TfrmMain
         object Panel26: TPanel
           Align = Top
           Position.Y = 40.000000000000000000
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 35.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 5
@@ -4645,14 +4662,16 @@ object frmMain: TfrmMain
             Touch.InteractiveGestures = [LongTap, DoubleTap]
             Align = Client
             TabOrder = 9
+            ReturnKeyType = Done
             TextSettings.Font.Size = 11.000000000000000000
             Margins.Top = 2.000000000000000000
             Margins.Right = 5.000000000000000000
             Margins.Bottom = 2.000000000000000000
-            Size.Width = 258.000000000000000000
+            Size.Width = 227.000000000000000000
             Size.Height = 32.000000000000000000
             Size.PlatformDefault = False
             StyledSettings = [Family, Style, FontColor]
+            KillFocusByReturn = True
           end
         end
       end
@@ -4672,14 +4691,14 @@ object frmMain: TfrmMain
         object Panel3: TPanel
           Align = Bottom
           Position.Y = 461.000000000000000000
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 60.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
           object bCancelOI: TButton
             Anchors = [akTop, akRight]
             StyledSettings = [Family, Style, FontColor]
-            Position.X = 210.000000000000000000
+            Position.X = 179.000000000000000000
             Position.Y = 5.000000000000000000
             Size.Width = 130.000000000000000000
             Size.Height = 50.000000000000000000
@@ -4702,7 +4721,7 @@ object frmMain: TfrmMain
         end
         object Panel4: TPanel
           Align = Client
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 461.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
@@ -4713,7 +4732,7 @@ object frmMain: TfrmMain
             FooterAppearanceClassName = 'TListHeaderObjects'
             OnUpdateObjects = lwGoodsItemsUpdateObjects
             Align = Client
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 406.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 2
@@ -4971,7 +4990,7 @@ object frmMain: TfrmMain
           object Panel16: TPanel
             Align = Top
             Position.Y = 25.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 30.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 3
@@ -5018,7 +5037,7 @@ object frmMain: TfrmMain
           end
           object pShowOnlyPromo: TPanel
             Align = MostTop
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 25.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 4
@@ -5028,7 +5047,7 @@ object frmMain: TfrmMain
               Margins.Left = 10.000000000000000000
               Margins.Top = 4.000000000000000000
               Margins.Bottom = 4.000000000000000000
-              Size.Width = 342.000000000000000000
+              Size.Width = 311.000000000000000000
               Size.Height = 17.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
@@ -5060,7 +5079,7 @@ object frmMain: TfrmMain
           OnUpdateObjects = lwPhotosUpdateObjects
           Images = ilPartners
           Align = Client
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 466.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
@@ -5114,7 +5133,7 @@ object frmMain: TfrmMain
         object Panel7: TPanel
           Align = MostBottom
           Position.Y = 466.000000000000000000
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 55.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
@@ -5147,7 +5166,7 @@ object frmMain: TfrmMain
         object Panel19: TPanel
           Align = MostBottom
           Position.Y = 461.000000000000000000
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 60.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 2
@@ -5164,7 +5183,7 @@ object frmMain: TfrmMain
         end
         object Panel20: TPanel
           Align = Top
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 35.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 5
@@ -5182,12 +5201,14 @@ object frmMain: TfrmMain
             Touch.InteractiveGestures = [LongTap, DoubleTap]
             Align = Client
             TabOrder = 10
+            ReturnKeyType = Done
             TextSettings.Font.Size = 11.000000000000000000
             Margins.Right = 5.000000000000000000
-            Size.Width = 250.000000000000000000
+            Size.Width = 219.000000000000000000
             Size.Height = 32.000000000000000000
             Size.PlatformDefault = False
             StyledSettings = [Family, Style, FontColor]
+            KillFocusByReturn = True
           end
         end
         object imPhoto: TImage
@@ -5195,7 +5216,7 @@ object frmMain: TfrmMain
             item
             end>
           Align = Client
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 426.000000000000000000
           Size.PlatformDefault = False
         end
@@ -5215,7 +5236,7 @@ object frmMain: TfrmMain
         ExplicitSize.cy = 8.000000000000000000
         object Panel10: TPanel
           Align = Client
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 458.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 6
@@ -5229,7 +5250,7 @@ object frmMain: TfrmMain
             Margins.Top = 5.000000000000000000
             Margins.Right = 5.000000000000000000
             Margins.Bottom = 5.000000000000000000
-            Size.Width = 342.000000000000000000
+            Size.Width = 311.000000000000000000
             Size.Height = 448.000000000000000000
             Size.PlatformDefault = False
           end
@@ -5237,7 +5258,7 @@ object frmMain: TfrmMain
         object Panel11: TPanel
           Align = Bottom
           Position.Y = 458.000000000000000000
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 63.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 5
@@ -5269,7 +5290,7 @@ object frmMain: TfrmMain
             Anchors = [akRight, akBottom]
             StyledSettings = [Family, Style, FontColor]
             ModalResult = 1
-            Position.X = 245.000000000000000000
+            Position.X = 214.000000000000000000
             Position.Y = 10.000000000000000000
             Size.Width = 105.000000000000000000
             Size.Height = 44.000000000000000000
@@ -5300,7 +5321,7 @@ object frmMain: TfrmMain
           FooterAppearanceClassName = 'TListHeaderObjects'
           Images = ilPartners
           Align = Client
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 446.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
@@ -5362,7 +5383,7 @@ object frmMain: TfrmMain
         end
         object Panel33: TPanel
           Align = Top
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 75.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
@@ -5401,7 +5422,7 @@ object frmMain: TfrmMain
           end
           object bRefreshTasks: TButton
             Align = Right
-            Position.X = 302.000000000000000000
+            Position.X = 271.000000000000000000
             Size.Width = 50.000000000000000000
             Size.Height = 75.000000000000000000
             Size.PlatformDefault = False
@@ -5533,7 +5554,7 @@ object frmMain: TfrmMain
         ExplicitSize.cy = 8.000000000000000000
         object bReportJuridicalCollation: TButton
           Align = Top
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 60.000000000000000000
           Size.PlatformDefault = False
           StyleLookup = 'bPriceListStyle1'
@@ -5557,15 +5578,15 @@ object frmMain: TfrmMain
         ExplicitSize.cy = 8.000000000000000000
         object VertScrollBox7: TVertScrollBox
           Align = Client
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 461.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
-          Viewport.Width = 352.000000000000000000
+          Viewport.Width = 321.000000000000000000
           Viewport.Height = 461.000000000000000000
           object Layout7: TLayout
             Align = Top
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 40.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
@@ -5603,7 +5624,7 @@ object frmMain: TfrmMain
           object Layout11: TLayout
             Align = Top
             Position.Y = 40.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 40.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
@@ -5641,7 +5662,7 @@ object frmMain: TfrmMain
           object Layout13: TLayout
             Align = Top
             Position.Y = 80.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 40.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 5
@@ -5649,7 +5670,7 @@ object frmMain: TfrmMain
               Align = Client
               StyledSettings = [Family, Style, FontColor]
               Margins.Left = 10.000000000000000000
-              Size.Width = 342.000000000000000000
+              Size.Width = 311.000000000000000000
               Size.Height = 40.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 13.000000000000000000
@@ -5660,7 +5681,7 @@ object frmMain: TfrmMain
           object Layout14: TLayout
             Align = Top
             Position.Y = 240.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 40.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 4
@@ -5668,7 +5689,7 @@ object frmMain: TfrmMain
               Align = Client
               StyledSettings = [Family, Style, FontColor]
               Margins.Left = 10.000000000000000000
-              Size.Width = 342.000000000000000000
+              Size.Width = 311.000000000000000000
               Size.Height = 40.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 13.000000000000000000
@@ -5679,7 +5700,7 @@ object frmMain: TfrmMain
           object Layout15: TLayout
             Align = Top
             Position.Y = 320.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 40.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 2
@@ -5687,7 +5708,7 @@ object frmMain: TfrmMain
               Align = Client
               StyledSettings = [Family, Style, FontColor]
               Margins.Left = 10.000000000000000000
-              Size.Width = 342.000000000000000000
+              Size.Width = 311.000000000000000000
               Size.Height = 40.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 13.000000000000000000
@@ -5698,7 +5719,7 @@ object frmMain: TfrmMain
           object Layout16: TLayout
             Align = Top
             Position.Y = 280.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 40.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 7
@@ -5707,7 +5728,7 @@ object frmMain: TfrmMain
               Margins.Left = 10.000000000000000000
               Margins.Top = 5.000000000000000000
               Margins.Right = 10.000000000000000000
-              Size.Width = 332.000000000000000000
+              Size.Width = 301.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
@@ -5716,7 +5737,7 @@ object frmMain: TfrmMain
           object Layout17: TLayout
             Align = Top
             Position.Y = 120.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 40.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 8
@@ -5725,7 +5746,7 @@ object frmMain: TfrmMain
               Margins.Left = 10.000000000000000000
               Margins.Top = 5.000000000000000000
               Margins.Right = 10.000000000000000000
-              Size.Width = 332.000000000000000000
+              Size.Width = 301.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
@@ -5735,7 +5756,7 @@ object frmMain: TfrmMain
           object Layout18: TLayout
             Align = Top
             Position.Y = 360.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 40.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 9
@@ -5744,7 +5765,7 @@ object frmMain: TfrmMain
               Margins.Left = 10.000000000000000000
               Margins.Top = 5.000000000000000000
               Margins.Right = 10.000000000000000000
-              Size.Width = 332.000000000000000000
+              Size.Width = 301.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
@@ -5753,7 +5774,7 @@ object frmMain: TfrmMain
           object Layout19: TLayout
             Align = Top
             Position.Y = 200.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 40.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 6
@@ -5762,7 +5783,7 @@ object frmMain: TfrmMain
               Margins.Left = 10.000000000000000000
               Margins.Top = 5.000000000000000000
               Margins.Right = 10.000000000000000000
-              Size.Width = 332.000000000000000000
+              Size.Width = 301.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
@@ -5772,7 +5793,7 @@ object frmMain: TfrmMain
           object Layout20: TLayout
             Align = Top
             Position.Y = 160.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 40.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 3
@@ -5780,7 +5801,7 @@ object frmMain: TfrmMain
               Align = Client
               StyledSettings = [Family, Style, FontColor]
               Margins.Left = 10.000000000000000000
-              Size.Width = 342.000000000000000000
+              Size.Width = 311.000000000000000000
               Size.Height = 40.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 13.000000000000000000
@@ -5792,7 +5813,7 @@ object frmMain: TfrmMain
         object Panel30: TPanel
           Align = MostBottom
           Position.Y = 461.000000000000000000
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 60.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
@@ -5828,7 +5849,7 @@ object frmMain: TfrmMain
           HeaderAppearanceClassName = 'TListHeaderObjects'
           FooterAppearanceClassName = 'TListHeaderObjects'
           Align = Client
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 406.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
@@ -5882,7 +5903,7 @@ object frmMain: TfrmMain
         object Panel31: TPanel
           Align = Bottom
           Position.Y = 486.000000000000000000
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 35.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
@@ -5890,7 +5911,7 @@ object frmMain: TfrmMain
             Align = Top
             Margins.Top = 5.000000000000000000
             Position.Y = 5.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 25.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
@@ -5922,7 +5943,7 @@ object frmMain: TfrmMain
             object lTotalDebit: TLabel
               Align = Client
               StyledSettings = [Family, Style, FontColor]
-              Size.Width = 176.000000000000000000
+              Size.Width = 160.500000000000000000
               Size.Height = 25.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 11.000000000000000000
@@ -5932,7 +5953,7 @@ object frmMain: TfrmMain
             object lTotalKredit: TLabel
               Align = Client
               StyledSettings = [Family, Style, FontColor]
-              Size.Width = 176.000000000000000000
+              Size.Width = 160.500000000000000000
               Size.Height = 25.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 11.000000000000000000
@@ -5943,7 +5964,7 @@ object frmMain: TfrmMain
         end
         object Panel32: TPanel
           Align = Top
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 80.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 2
@@ -5970,7 +5991,7 @@ object frmMain: TfrmMain
           object GridPanelLayout1: TGridPanelLayout
             Align = Bottom
             Position.Y = 55.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 25.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
@@ -6002,7 +6023,7 @@ object frmMain: TfrmMain
             object Label51: TLabel
               Align = Client
               StyledSettings = [Family, Style, FontColor]
-              Size.Width = 176.000000000000000000
+              Size.Width = 160.500000000000000000
               Size.Height = 25.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 11.000000000000000000
@@ -6012,7 +6033,7 @@ object frmMain: TfrmMain
             object Label52: TLabel
               Align = Client
               StyledSettings = [Family, Style, FontColor]
-              Size.Width = 176.000000000000000000
+              Size.Width = 160.500000000000000000
               Size.Height = 25.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 11.000000000000000000
@@ -6036,7 +6057,7 @@ object frmMain: TfrmMain
         ExplicitSize.cy = 8.000000000000000000
         object Panel25: TPanel
           Align = Top
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 225.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
@@ -6066,7 +6087,7 @@ object frmMain: TfrmMain
         object Panel27: TPanel
           Align = Top
           Position.Y = 225.000000000000000000
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 120.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
@@ -6098,17 +6119,17 @@ object frmMain: TfrmMain
         ExplicitSize.cy = 8.000000000000000000
         object VertScrollBox6: TVertScrollBox
           Align = Client
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 521.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
-          Viewport.Width = 347.000000000000000000
+          Viewport.Width = 316.000000000000000000
           Viewport.Height = 521.000000000000000000
           object lUnitRet: TLayout
             Align = Top
             Margins.Top = 5.000000000000000000
             Position.Y = 200.000000000000000000
-            Size.Width = 347.000000000000000000
+            Size.Width = 316.000000000000000000
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 4
@@ -6118,7 +6139,7 @@ object frmMain: TfrmMain
               Margins.Left = 5.000000000000000000
               Margins.Right = 5.000000000000000000
               Position.X = 5.000000000000000000
-              Size.Width = 337.000000000000000000
+              Size.Width = 306.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 13.000000000000000000
@@ -6133,7 +6154,7 @@ object frmMain: TfrmMain
               Margins.Left = 5.000000000000000000
               Margins.Top = 5.000000000000000000
               Margins.Right = 5.000000000000000000
-              Size.Width = 337.000000000000000000
+              Size.Width = 306.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
               StyledSettings = [Family, Style, FontColor]
@@ -6143,7 +6164,7 @@ object frmMain: TfrmMain
             Align = Top
             Margins.Top = 5.000000000000000000
             Position.Y = 330.000000000000000000
-            Size.Width = 347.000000000000000000
+            Size.Width = 316.000000000000000000
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 3
@@ -6153,7 +6174,7 @@ object frmMain: TfrmMain
               Margins.Left = 5.000000000000000000
               Margins.Right = 5.000000000000000000
               Position.X = 5.000000000000000000
-              Size.Width = 337.000000000000000000
+              Size.Width = 306.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 13.000000000000000000
@@ -6168,7 +6189,7 @@ object frmMain: TfrmMain
               Margins.Left = 5.000000000000000000
               Margins.Top = 5.000000000000000000
               Margins.Right = 5.000000000000000000
-              Size.Width = 337.000000000000000000
+              Size.Width = 306.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
               StyledSettings = [Family, Style, FontColor]
@@ -6178,7 +6199,7 @@ object frmMain: TfrmMain
             Align = Top
             Margins.Top = 5.000000000000000000
             Position.Y = 460.000000000000000000
-            Size.Width = 347.000000000000000000
+            Size.Width = 316.000000000000000000
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 2
@@ -6188,7 +6209,7 @@ object frmMain: TfrmMain
               Margins.Left = 5.000000000000000000
               Margins.Right = 5.000000000000000000
               Position.X = 5.000000000000000000
-              Size.Width = 337.000000000000000000
+              Size.Width = 306.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 13.000000000000000000
@@ -6203,7 +6224,7 @@ object frmMain: TfrmMain
               Margins.Left = 5.000000000000000000
               Margins.Top = 5.000000000000000000
               Margins.Right = 5.000000000000000000
-              Size.Width = 337.000000000000000000
+              Size.Width = 306.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
               StyledSettings = [Family, Style, FontColor]
@@ -6213,7 +6234,7 @@ object frmMain: TfrmMain
             Align = Top
             Margins.Top = 5.000000000000000000
             Position.Y = 395.000000000000000000
-            Size.Width = 347.000000000000000000
+            Size.Width = 316.000000000000000000
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
@@ -6223,7 +6244,7 @@ object frmMain: TfrmMain
               Margins.Left = 5.000000000000000000
               Margins.Right = 5.000000000000000000
               Position.X = 5.000000000000000000
-              Size.Width = 337.000000000000000000
+              Size.Width = 306.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 13.000000000000000000
@@ -6238,7 +6259,7 @@ object frmMain: TfrmMain
               Margins.Left = 5.000000000000000000
               Margins.Top = 5.000000000000000000
               Margins.Right = 5.000000000000000000
-              Size.Width = 337.000000000000000000
+              Size.Width = 306.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
               StyledSettings = [Family, Style, FontColor]
@@ -6248,7 +6269,7 @@ object frmMain: TfrmMain
             Align = Top
             Margins.Top = 5.000000000000000000
             Position.Y = 265.000000000000000000
-            Size.Width = 347.000000000000000000
+            Size.Width = 316.000000000000000000
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
@@ -6258,7 +6279,7 @@ object frmMain: TfrmMain
               Margins.Left = 5.000000000000000000
               Margins.Right = 5.000000000000000000
               Position.X = 5.000000000000000000
-              Size.Width = 337.000000000000000000
+              Size.Width = 306.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 13.000000000000000000
@@ -6273,7 +6294,7 @@ object frmMain: TfrmMain
               Margins.Left = 5.000000000000000000
               Margins.Top = 5.000000000000000000
               Margins.Right = 5.000000000000000000
-              Size.Width = 337.000000000000000000
+              Size.Width = 306.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
               StyledSettings = [Family, Style, FontColor]
@@ -6283,7 +6304,7 @@ object frmMain: TfrmMain
             Align = Top
             Margins.Top = 5.000000000000000000
             Position.Y = 135.000000000000000000
-            Size.Width = 347.000000000000000000
+            Size.Width = 316.000000000000000000
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 8
@@ -6293,7 +6314,7 @@ object frmMain: TfrmMain
               Margins.Left = 5.000000000000000000
               Margins.Right = 5.000000000000000000
               Position.X = 5.000000000000000000
-              Size.Width = 337.000000000000000000
+              Size.Width = 306.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 13.000000000000000000
@@ -6308,7 +6329,7 @@ object frmMain: TfrmMain
               Margins.Left = 5.000000000000000000
               Margins.Top = 5.000000000000000000
               Margins.Right = 5.000000000000000000
-              Size.Width = 337.000000000000000000
+              Size.Width = 306.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
               StyledSettings = [Family, Style, FontColor]
@@ -6318,7 +6339,7 @@ object frmMain: TfrmMain
             Align = Top
             Margins.Top = 5.000000000000000000
             Position.Y = 5.000000000000000000
-            Size.Width = 347.000000000000000000
+            Size.Width = 316.000000000000000000
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 7
@@ -6328,7 +6349,7 @@ object frmMain: TfrmMain
               Margins.Left = 5.000000000000000000
               Margins.Right = 5.000000000000000000
               Position.X = 5.000000000000000000
-              Size.Width = 337.000000000000000000
+              Size.Width = 306.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 13.000000000000000000
@@ -6343,7 +6364,7 @@ object frmMain: TfrmMain
               Margins.Left = 5.000000000000000000
               Margins.Top = 5.000000000000000000
               Margins.Right = 5.000000000000000000
-              Size.Width = 337.000000000000000000
+              Size.Width = 306.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
               StyledSettings = [Family, Style, FontColor]
@@ -6353,7 +6374,7 @@ object frmMain: TfrmMain
             Align = Top
             Margins.Top = 5.000000000000000000
             Position.Y = 525.000000000000000000
-            Size.Width = 347.000000000000000000
+            Size.Width = 316.000000000000000000
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 5
@@ -6363,7 +6384,7 @@ object frmMain: TfrmMain
               Margins.Left = 5.000000000000000000
               Margins.Right = 5.000000000000000000
               Position.X = 5.000000000000000000
-              Size.Width = 337.000000000000000000
+              Size.Width = 306.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 13.000000000000000000
@@ -6378,7 +6399,7 @@ object frmMain: TfrmMain
               Margins.Left = 5.000000000000000000
               Margins.Top = 5.000000000000000000
               Margins.Right = 5.000000000000000000
-              Size.Width = 337.000000000000000000
+              Size.Width = 306.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
               StyledSettings = [Family, Style, FontColor]
@@ -6388,7 +6409,7 @@ object frmMain: TfrmMain
             Align = Top
             Margins.Top = 5.000000000000000000
             Position.Y = 70.000000000000000000
-            Size.Width = 347.000000000000000000
+            Size.Width = 316.000000000000000000
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 6
@@ -6398,7 +6419,7 @@ object frmMain: TfrmMain
               Margins.Left = 5.000000000000000000
               Margins.Right = 5.000000000000000000
               Position.X = 5.000000000000000000
-              Size.Width = 337.000000000000000000
+              Size.Width = 306.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 13.000000000000000000
@@ -6413,7 +6434,7 @@ object frmMain: TfrmMain
               Margins.Left = 5.000000000000000000
               Margins.Top = 5.000000000000000000
               Margins.Right = 5.000000000000000000
-              Size.Width = 267.000000000000000000
+              Size.Width = 236.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
               StyledSettings = [Family, Style, FontColor]
@@ -6421,7 +6442,7 @@ object frmMain: TfrmMain
             object bUpdateProgram: TButton
               Align = Right
               StyledSettings = [Family, Style, FontColor]
-              Position.X = 277.000000000000000000
+              Position.X = 246.000000000000000000
               Position.Y = 23.000000000000000000
               Size.Width = 70.000000000000000000
               Size.Height = 37.000000000000000000
@@ -6462,21 +6483,21 @@ object frmMain: TfrmMain
         ExplicitSize.cy = 8.000000000000000000
         object VertScrollBox9: TVertScrollBox
           Align = Client
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 471.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
-          Viewport.Width = 352.000000000000000000
+          Viewport.Width = 321.000000000000000000
           Viewport.Height = 471.000000000000000000
           object Layout21: TLayout
             Align = Top
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 55.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 2
             object Layout22: TLayout
               Align = Top
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 25.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
@@ -6495,7 +6516,7 @@ object frmMain: TfrmMain
                 Align = Right
                 StyledSettings = [Family, Style, FontColor]
                 Margins.Right = 5.000000000000000000
-                Position.X = 272.000000000000000000
+                Position.X = 241.000000000000000000
                 Size.Width = 75.000000000000000000
                 Size.Height = 25.000000000000000000
                 Size.PlatformDefault = False
@@ -6513,7 +6534,7 @@ object frmMain: TfrmMain
                 'ghfghfghfghfghfg')
               Margins.Left = 5.000000000000000000
               Margins.Right = 5.000000000000000000
-              Size.Width = 342.000000000000000000
+              Size.Width = 311.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 1
@@ -6522,26 +6543,28 @@ object frmMain: TfrmMain
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               Align = Client
               TabOrder = 2
+              ReturnKeyType = Done
               TextSettings.Font.Size = 11.000000000000000000
               Margins.Left = 5.000000000000000000
               Margins.Right = 5.000000000000000000
-              Size.Width = 342.000000000000000000
+              Size.Width = 311.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
               StyledSettings = [Family, Style, FontColor]
+              KillFocusByReturn = True
             end
           end
           object Layout23: TLayout
             Align = Top
             Margins.Top = 5.000000000000000000
             Position.Y = 120.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 80.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
             object Layout24: TLayout
               Align = Top
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 25.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 2
@@ -6549,7 +6572,7 @@ object frmMain: TfrmMain
                 Align = Client
                 StyledSettings = [Family, Style, FontColor]
                 Margins.Left = 5.000000000000000000
-                Size.Width = 217.000000000000000000
+                Size.Width = 186.000000000000000000
                 Size.Height = 25.000000000000000000
                 Size.PlatformDefault = False
                 TextSettings.Font.Size = 11.000000000000000000
@@ -6558,7 +6581,7 @@ object frmMain: TfrmMain
               object bNewPartnerGPS: TButton
                 Align = Right
                 StyledSettings = [Family, Style, FontColor]
-                Position.X = 222.000000000000000000
+                Position.X = 191.000000000000000000
                 Size.Width = 130.000000000000000000
                 Size.Height = 25.000000000000000000
                 Size.PlatformDefault = False
@@ -6571,13 +6594,13 @@ object frmMain: TfrmMain
             object Layout27: TLayout
               Align = Top
               Position.Y = 25.000000000000000000
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 25.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 1
               object GridPanelLayout4: TGridPanelLayout
                 Align = Client
-                Size.Width = 352.000000000000000000
+                Size.Width = 321.000000000000000000
                 Size.Height = 25.000000000000000000
                 Size.PlatformDefault = False
                 TabOrder = 0
@@ -6609,7 +6632,7 @@ object frmMain: TfrmMain
                 object Label56: TLabel
                   Align = Client
                   StyledSettings = [Family, Style, FontColor]
-                  Size.Width = 176.000000000000000000
+                  Size.Width = 160.500000000000000000
                   Size.Height = 25.000000000000000000
                   Size.PlatformDefault = False
                   TextSettings.Font.Size = 11.000000000000000000
@@ -6619,7 +6642,7 @@ object frmMain: TfrmMain
                 object Label57: TLabel
                   Align = Client
                   StyledSettings = [Family, Style, FontColor]
-                  Size.Width = 176.000000000000000000
+                  Size.Width = 160.500000000000000000
                   Size.Height = 25.000000000000000000
                   Size.PlatformDefault = False
                   TextSettings.Font.Size = 11.000000000000000000
@@ -6630,7 +6653,7 @@ object frmMain: TfrmMain
             end
             object GridPanelLayout5: TGridPanelLayout
               Align = Client
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 30.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
@@ -6664,13 +6687,15 @@ object frmMain: TfrmMain
                 Align = Client
                 TabOrder = 2
                 KeyboardType = NumberPad
+                ReturnKeyType = Done
                 TextSettings.Font.Size = 11.000000000000000000
                 Margins.Left = 5.000000000000000000
                 Margins.Right = 5.000000000000000000
-                Size.Width = 166.000000000000000000
+                Size.Width = 150.500000000000000000
                 Size.Height = 32.000000000000000000
                 Size.PlatformDefault = False
                 StyledSettings = [Family, Style, FontColor]
+                KillFocusByReturn = True
                 OnValidate = eNewPartnerGPSNValidate
               end
               object eNewPartnerGPSE: TEdit
@@ -6678,13 +6703,15 @@ object frmMain: TfrmMain
                 Align = Client
                 TabOrder = 1
                 KeyboardType = NumberPad
+                ReturnKeyType = Done
                 TextSettings.Font.Size = 11.000000000000000000
                 Margins.Left = 5.000000000000000000
                 Margins.Right = 5.000000000000000000
-                Size.Width = 166.000000000000000000
+                Size.Width = 150.500000000000000000
                 Size.Height = 32.000000000000000000
                 Size.PlatformDefault = False
                 StyledSettings = [Family, Style, FontColor]
+                KillFocusByReturn = True
                 OnValidate = eNewPartnerGPSNValidate
               end
             end
@@ -6693,13 +6720,13 @@ object frmMain: TfrmMain
             Align = Top
             Margins.Top = 5.000000000000000000
             Position.Y = 60.000000000000000000
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 55.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
             object Layout26: TLayout
               Align = Top
-              Size.Width = 352.000000000000000000
+              Size.Width = 321.000000000000000000
               Size.Height = 25.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
@@ -6707,7 +6734,7 @@ object frmMain: TfrmMain
                 Align = Client
                 StyledSettings = [Family, Style, FontColor]
                 Margins.Left = 5.000000000000000000
-                Size.Width = 347.000000000000000000
+                Size.Width = 316.000000000000000000
                 Size.Height = 25.000000000000000000
                 Size.PlatformDefault = False
                 TextSettings.Font.Size = 11.000000000000000000
@@ -6718,26 +6745,28 @@ object frmMain: TfrmMain
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               Align = Client
               TabOrder = 1
+              ReturnKeyType = Done
               TextSettings.Font.Size = 11.000000000000000000
               Margins.Left = 5.000000000000000000
               Margins.Right = 5.000000000000000000
-              Size.Width = 342.000000000000000000
+              Size.Width = 311.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
               StyledSettings = [Family, Style, FontColor]
+              KillFocusByReturn = True
             end
           end
         end
         object Panel34: TPanel
           Align = MostBottom
           Position.Y = 471.000000000000000000
-          Size.Width = 352.000000000000000000
+          Size.Width = 321.000000000000000000
           Size.Height = 50.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
           object bSaveNewPartner: TButton
             Align = Client
-            Size.Width = 352.000000000000000000
+            Size.Width = 321.000000000000000000
             Size.Height = 50.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
@@ -6787,11 +6816,12 @@ object frmMain: TfrmMain
         StyleLookup = 'listboxitemnodetail'
         TabOrder = 1
         Text = #1057#1091#1084#1084#1072#1088#1085#1099#1077' '#1074#1077#1083#1080#1095#1080#1085#1099
+        Visible = False
       end
       object lbiShowAllOnMap: TListBoxItem
         TextSettings.Font.Size = 13.000000000000000000
         StyledSettings = [Family, Style, FontColor, Other]
-        Position.Y = 78.000000000000000000
+        Position.Y = 39.000000000000000000
         Size.Width = 180.000000000000000000
         Size.Height = 39.000000000000000000
         Size.PlatformDefault = False
@@ -6810,6 +6840,7 @@ object frmMain: TfrmMain
         StyleLookup = 'listboxitemnodetail'
         TabOrder = 3
         Text = #1054#1090#1095#1077#1090#1099
+        Visible = False
       end
     end
   end
@@ -10447,6 +10478,7 @@ object frmMain: TfrmMain
       Touch.InteractiveGestures = [LongTap, DoubleTap]
       Align = Top
       TabOrder = 2
+      ReturnKeyType = Done
       Position.X = 5.000000000000000000
       Position.Y = 23.000000000000000000
       Margins.Left = 5.000000000000000000
@@ -10454,6 +10486,7 @@ object frmMain: TfrmMain
       Size.Width = 270.000000000000000000
       Size.Height = 32.000000000000000000
       Size.PlatformDefault = False
+      KillFocusByReturn = True
     end
     object Label29: TLabel
       Align = Top
@@ -10501,6 +10534,7 @@ object frmMain: TfrmMain
       Touch.InteractiveGestures = [LongTap, DoubleTap]
       Align = Top
       TabOrder = 2
+      ReturnKeyType = Done
       TextSettings.Font.Size = 11.000000000000000000
       Position.X = 5.000000000000000000
       Position.Y = 23.000000000000000000
@@ -10510,6 +10544,7 @@ object frmMain: TfrmMain
       Size.Height = 32.000000000000000000
       Size.PlatformDefault = False
       StyledSettings = [Family, Style, FontColor]
+      KillFocusByReturn = True
     end
     object Label15: TLabel
       Align = Top
@@ -10653,6 +10688,7 @@ object frmMain: TfrmMain
       Touch.InteractiveGestures = [LongTap, DoubleTap]
       Align = Top
       TabOrder = 2
+      ReturnKeyType = Done
       TextSettings.Font.Size = 11.000000000000000000
       Position.X = 5.000000000000000000
       Position.Y = 23.000000000000000000
@@ -10662,6 +10698,7 @@ object frmMain: TfrmMain
       Size.Height = 32.000000000000000000
       Size.PlatformDefault = False
       StyledSettings = [Family, Style, FontColor]
+      KillFocusByReturn = True
     end
     object Label9: TLabel
       Align = Top
@@ -11075,16 +11112,6 @@ object frmMain: TfrmMain
       FillHeaderExpressions = <>
       FillBreakGroups = <>
     end
-  end
-  object WebGMapsReverseGeocoder: TTMSFMXWebGMapsReverseGeocoding
-    Version = '1.0.2.1'
-    Left = 288
-    Top = 520
-  end
-  object WebGMapsGeocoder: TTMSFMXWebGMapsGeocoding
-    Version = '1.0.0.1'
-    Left = 18
-    Top = 520
   end
   object gmPartnerInfo: TGestureManager
     Sensitivity = 80.000000000000000000
@@ -12259,5 +12286,11 @@ object frmMain: TfrmMain
     ScopeMappings = <>
     Left = 160
     Top = 328
+  end
+  object WebGMapsReverseGeocoder: TTMSFMXWebGMapsReverseGeocoding
+    Language = lnRussian
+    Version = '1.0.3.0'
+    Left = 280
+    Top = 90
   end
 end

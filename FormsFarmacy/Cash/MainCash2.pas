@@ -765,27 +765,31 @@ begin
   application.ProcessMessages;
 
   //проверили что есть остаток
+  if not gc_User.Local then
   if fCheck_RemainsError = false then exit;
 
- //проверили что этот чек Не был проведен другой кассой - 04.02.2017
-  dsdSave := TdsdStoredProc.Create(nil);
-  try
-     //Проверить в каком состоянии документ.
-     dsdSave.StoredProcName := 'gpGet_Movement_CheckState';
-     dsdSave.OutputType := otResult;
-     dsdSave.Params.Clear;
-     dsdSave.Params.AddParam('inId',ftInteger,ptInput,FormParams.ParamByName('CheckId').Value);
-     dsdSave.Params.AddParam('outState',ftInteger,ptOutput,Null);
-     dsdSave.Execute(False,False);
-     if VarToStr(dsdSave.Params.ParamByName('outState').Value) = '2' then //проведен
-     Begin
-          ShowMessage ('Ошибка.Данный чек уже сохранен другой кассой.Для продолжения - необходимо обнулить чек и набрать позиции заново.');
-          exit;
-     End;
-  finally
-     freeAndNil(dsdSave);
-  end;
 
+ //проверили что этот чек Не был проведен другой кассой - 04.02.2017
+  if not gc_User.Local then
+  begin
+    dsdSave := TdsdStoredProc.Create(nil);
+    try
+       //Проверить в каком состоянии документ.
+       dsdSave.StoredProcName := 'gpGet_Movement_CheckState';
+       dsdSave.OutputType := otResult;
+       dsdSave.Params.Clear;
+       dsdSave.Params.AddParam('inId',ftInteger,ptInput,FormParams.ParamByName('CheckId').Value);
+       dsdSave.Params.AddParam('outState',ftInteger,ptOutput,Null);
+       dsdSave.Execute(False,False);
+       if VarToStr(dsdSave.Params.ParamByName('outState').Value) = '2' then //проведен
+       Begin
+            ShowMessage ('Ошибка.Данный чек уже сохранен другой кассой.Для продолжения - необходимо обнулить чек и набрать позиции заново.');
+            exit;
+       End;
+    finally
+       freeAndNil(dsdSave);
+    end;
+  end;
   //послали на печать
   try
     if PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.PaidType, FiscalNumber, CheckNumber) then
@@ -1034,6 +1038,8 @@ SEInfo: TShellExecuteInfo;
 ExitCode: DWORD;
 ExecuteFile, ParamString, StartInString: string;
 begin
+ if gc_User.Local then Exit;
+
   ExecuteFile := 'FarmacyCashServise.exe';
   FillChar(SEInfo, SizeOf(SEInfo), 0);
   SEInfo.cbSize := SizeOf(TShellExecuteInfo);
@@ -2064,7 +2070,7 @@ begin
     Exit;
   End;
 
-  LocalDataBaseisBusy := 0;
+
   Result := FLocalDataBaseHead.Active AND FLocalDataBaseBody.Active and FLocalDataBaseDiff.Active;
 
   if Result then
@@ -3308,8 +3314,9 @@ end;
 procedure TMainCashForm2.SetBlinkVIP (isRefresh : boolean);
 var lMovementId_BlinkVIP : String;
 begin
+  if gc_User.Local then Exit;
   // если прошло > 100 сек - захардкодил
-  if ((now - time_onBlink) > 0.001) or(isRefresh = true) then
+  if ((now - time_onBlink) > 0.002) or(isRefresh = true) then
 
   try
       //сохранили время "последней" обработки ВСЕХ документов - с типом "Не подтвержден"
@@ -3343,9 +3350,10 @@ procedure TMainCashForm2.SetBlinkCheck (isRefresh : boolean);
 var lMovementId_BlinkCheck : String;
 
 begin
+ if gc_User.Local then Exit;
   // если прошло > 50 сек - захардкодил
 
-  if ((now - time_onBlinkCheck) > 0.0005) or(isRefresh = true) then
+  if ((now - time_onBlinkCheck) > 0.0003) or(isRefresh = true) then
 
   try
       //сохранили время "последней" обработки ВСЕХ документов - с "ошибка - расч/факт остаток"
@@ -3370,21 +3378,38 @@ end;
 
 
 procedure TMainCashForm2.TimerSaveAllTimer(Sender: TObject);
+var fEmpt  : Boolean;
+    RCount : Integer;
 begin
- TimerSaveAll.Enabled:=False;
- try
-  //пишем протокол что связь с базой есть + сколько чеков еще не перенеслось
-  try spUpdate_UnitForFarmacyCash.ParamByName('inAmount').Value:=FLocalDataBaseHead.RecordCount;
-      spUpdate_UnitForFarmacyCash.Execute;
-  except end;
-  //
-  if not FLocalDataBaseHead.IsEmpty then
-    SaveRealAll;
-  //  ShowMessage('TMainCashForm2.TimerSaveAllTimer');
- finally
-  TimerSaveAll.Enabled:=True;
- end;
+  if gc_User.Local then Exit;
+   TimerSaveAll.Enabled:=False;
+   //
+  try
+    WaitForSingleObject(MutexDBF, INFINITE);
+
+    try
+      FLocalDataBaseHead.Active:=True;
+      FLocalDataBaseHead.Pack;
+      fEmpt:= FLocalDataBaseHead.IsEmpty;
+      RCount:= FLocalDataBaseHead.RecordCount;
+    finally
+      FLocalDataBaseBody.Active:=False;
+      ReleaseMutex(MutexDBF);
+    end;
+
+    //пишем протокол что связь с базой есть + сколько чеков еще не перенеслось
+    try spUpdate_UnitForFarmacyCash.ParamByName('inAmount').Value:= RCount;
+        spUpdate_UnitForFarmacyCash.Execute;
+    except end;
+    //
+    if not fEmpt then
+      SaveRealAll;
+  finally
+     //
+     TimerSaveAll.Enabled:=True;
+  end;
 end;
+
 
 
 

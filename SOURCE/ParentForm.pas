@@ -404,6 +404,7 @@ initialization
   RegisterClass (TShellExecuteAction);
   RegisterClass (TShowMessageAction);
   RegisterClass (TcxImage);
+  RegisterClass (TdsdDataSetRefreshEx);
 
 // дкъ реярю
 
