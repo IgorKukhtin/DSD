@@ -22,7 +22,7 @@ uses
   FMX.DateTimeCtrls, FMX.Controls3D, FMX.Layers3D, FMX.Menus, Generics.Collections,
   FMX.Gestures, System.Actions, FMX.ActnList, System.ImageList, FMX.ImgList,
   FMX.Grid.Style, FMX.Media, FMX.Surfaces, FMX.VirtualKeyboard, FMX.SearchBox, IniFiles,
-  FMX.Ani, FMX.DialogService, FMX.Utils, FMX.Styles
+  FMX.Ani, FMX.DialogService, FMX.Utils, FMX.Styles, FMX.ComboEdit
   {$IFDEF ANDROID}
   ,FMX.Helpers.Android, Androidapi.Helpers,
   Androidapi.JNI.Location, Androidapi.JNIBridge,
@@ -110,8 +110,6 @@ type
     tiSync: TTabItem;
     imLogo: TImage;
     pMapScreen: TPanel;
-    WebGMapsReverseGeocoder: TTMSFMXWebGMapsReverseGeocoding;
-    WebGMapsGeocoder: TTMSFMXWebGMapsGeocoding;
     vsbMain: TVertScrollBox;
     bMonday: TButton;
     bFriday: TButton;
@@ -573,6 +571,7 @@ type
     Layout31: TLayout;
     Layout32: TLayout;
     Layout33: TLayout;
+    WebGMapsReverseGeocoder: TTMSFMXWebGMapsReverseGeocoding;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -927,6 +926,8 @@ begin
 
   SwitchToForm(tiStart, nil);
   ChangeMainPageUpdate(tcMain);
+
+  tSavePathTimer(tSavePath);
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
@@ -1311,7 +1312,14 @@ begin
   if (ItemObject <> nil) then
   begin
     if ItemObject.Name = 'DeleteButton' then
-      DM.qryPhotos.Delete
+    begin
+      DM.qryPhotos.Edit;
+      DM.qryPhotosisErased.AsBoolean := true;
+      DM.qryPhotosisSync.AsBoolean := false;
+      DM.qryPhotos.Post;
+
+      DM.qryPhotos.Refresh;
+    end
     else
     if ItemObject.Name = 'EditButton' then
       ShowPhoto;
@@ -2088,8 +2096,6 @@ end;
 
 procedure TfrmMain.bInfoClick(Sender: TObject);
 begin
-  //DM.UpdateProgram(mrYes);
-
   ShowInformation;
 end;
 
@@ -2299,7 +2305,7 @@ begin
       try
         qrySavePhoto.Connection := DM.conMain;
 
-        qrySavePhoto.SQL.Text := 'Insert into MovementItem_Visit (MovementId, GUID, Photo, Comment, InsertDate) Values (:MovementId, :GUID, :Photo, :Comment, :InsertDate)';
+        qrySavePhoto.SQL.Text := 'Insert into MovementItem_Visit (MovementId, GUID, Photo, Comment, InsertDate, isErased, isSync) Values (:MovementId, :GUID, :Photo, :Comment, :InsertDate, 0, 0)';
         qrySavePhoto.Params[0].Value := DM.qryPhotoGroupsId.AsInteger;
         CreateGUID(GlobalId);
         qrySavePhoto.Params[1].Value := GUIDToString(GlobalId);
@@ -2338,6 +2344,7 @@ procedure TfrmMain.bSavePhotoCommentClick(Sender: TObject);
 begin
   DM.qryPhotos.Edit;
   DM.qryPhotosComment.AsString := ePhotoCommentEdit.Text;
+  DM.qryPhotosisSync.AsBoolean := false;
   DM.qryPhotos.Post;
 
   ReturnPriorForm;
@@ -2510,27 +2517,40 @@ begin
 
   vsbMain.Enabled := true;
 
-  {$IFDEF ANDROID}
-  fn := TPath.Combine(TPath.GetDocumentsPath, 'mapscreen.jpg');
-  pic := TJWebView.Wrap(FWebGMap.NativeBrowser).capturePicture;
-  bmp := TJBitmap.JavaClass.createBitmap(pic.getWidth, pic.getHeight, TJBitmap_Config.JavaClass.ARGB_8888);
-  c := TJCanvas.JavaClass.init(bmp);
-  pic.draw(c);
-  fos := TJFileOutputStream.JavaClass.init(StringToJString(fn));
-  if Assigned(fos) then
-  begin
-    bmp.compress(TJBitmap_CompressFormat.JavaClass.JPEG, 100, fos);
-    fos.close;
-  end;
-  iPartnerMap.Bitmap.LoadFromFile(fn);
-  {$ELSE}
-  iPartnerMap.Bitmap.Assign(FWebGMap.MakeScreenshot);
-  {$ENDIF}
+  try
+    {$IFDEF ANDROID}
+    fn := TPath.Combine(TPath.GetDocumentsPath, 'mapscreen.jpg');
+    pic := TJWebView.Wrap(FWebGMap.NativeBrowser).capturePicture;
+    bmp := TJBitmap.JavaClass.createBitmap(pic.getWidth, pic.getHeight, TJBitmap_Config.JavaClass.ARGB_8888);
+    c := TJCanvas.JavaClass.init(bmp);
+    pic.draw(c);
+    fos := TJFileOutputStream.JavaClass.init(StringToJString(fn));
+    if Assigned(fos) then
+    begin
+      bmp.compress(TJBitmap_CompressFormat.JavaClass.JPEG, 100, fos);
+      fos.close;
+    end;
+    iPartnerMap.Bitmap.LoadFromFile(fn);
+    {$ELSE}
+    iPartnerMap.Bitmap.Assign(FWebGMap.MakeScreenshot);
+    {$ENDIF}
 
-  pMap.Visible := false;
-  pMapScreen.Visible := true;
-  FWebGMap.Visible := false;
-  FreeAndNil(FWebGMap);
+    pMap.Visible := false;
+    pMapScreen.Visible := true;
+
+    FWebGMap.Visible := false;
+    FreeAndNil(FWebGMap);
+  except
+    FWebGMap.Visible := false;
+    FreeAndNil(FWebGMap);
+
+    bRefreshMapScreen.Visible := true;
+    lNoMap.Visible := true;
+    lNoMap.Text := 'Ќе удалось загрузить карту с расположением ““';
+
+    pMapScreen.Visible := false;
+    pMap.Visible := true;
+  end;
 end;
 
 procedure TfrmMain.tSavePathTimer(Sender: TObject);
@@ -3283,7 +3303,8 @@ end;
 
 procedure TfrmMain.ShowPhotos;
 begin
-  DM.qryPhotos.Open('select Id, Photo, Comment from MovementItem_Visit where MovementId = ' + DM.qryPhotoGroupsId.AsString);
+  DM.qryPhotos.Open('select Id, Photo, Comment, isErased, isSync from MovementItem_Visit where MovementId = ' + DM.qryPhotoGroupsId.AsString +
+    ' and isErased = 0');
 
   SwitchToForm(tiPhotosList, DM.qryPhotos);
 end;
@@ -3311,16 +3332,13 @@ begin
   eMobileVersion.Text := DM.GetCurrentVersion;
 
   Res := DM.CompareVersion(eMobileVersion.Text, DM.tblObject_ConstMobileVersion.AsString);
-  if Res <> 0 then
+  if Res > 0 then
   begin
     layServerVersion.Visible := true;
     eServerVersion.Text := DM.tblObject_ConstMobileVersion.AsString;
 
     {$IFDEF ANDROID}
-    if Res > 0 then
-      bUpdateProgram.Visible := true
-    else
-      bUpdateProgram.Visible := false;
+    bUpdateProgram.Visible := true
     {$ELSE}
     bUpdateProgram.Visible := false;
     {$ENDIF}
@@ -3773,30 +3791,33 @@ begin
   FCurCoordinatesSet := false;
 
   {$IFDEF ANDROID}
-  //запрашиваем сервис Location
-  LocManagerObj := TAndroidHelper.Context.getSystemService(TJContext.JavaClass.LOCATION_SERVICE);
-  if Assigned(LocManagerObj) then
-  begin
-    //получаем LocationManager
-    LocationManager := TJLocationManager.Wrap((LocManagerObj as ILocalObject).GetObjectID);
-    if Assigned(LocationManager) then
+  try
+    //запрашиваем сервис Location
+    LocManagerObj := TAndroidHelper.Context.getSystemService(TJContext.JavaClass.LOCATION_SERVICE);
+    if Assigned(LocManagerObj) then
     begin
-      //получаем последнее местоположение зафиксированное с помощью координат wi-fi и мобильных сетей
-      LastLocation := LocationManager.getLastKnownLocation(TJLocationManager.JavaClass.NETWORK_PROVIDER);
-      if Assigned(LastLocation) then
+      //получаем LocationManager
+      LocationManager := TJLocationManager.Wrap((LocManagerObj as ILocalObject).GetObjectID);
+      if Assigned(LocationManager) then
       begin
-        FCurCoordinates := TLocationCoord2D.Create(LastLocation.getLatitude, LastLocation.getLongitude);
-        FCurCoordinatesSet := true;
+        //получаем последнее местоположение зафиксированное с помощью координат wi-fi и мобильных сетей
+        LastLocation := LocationManager.getLastKnownLocation(TJLocationManager.JavaClass.NETWORK_PROVIDER);
+        if Assigned(LastLocation) then
+        begin
+          FCurCoordinates := TLocationCoord2D.Create(LastLocation.getLatitude, LastLocation.getLongitude);
+          FCurCoordinatesSet := true;
+        end;
+      end
+      else
+      begin
+        //raise Exception.Create('Could not access Location Manager');
       end;
     end
     else
     begin
-      //raise Exception.Create('Could not access Location Manager');
+      //raise Exception.Create('Could not locate Location Service');
     end;
-  end
-  else
-  begin
-    //raise Exception.Create('Could not locate Location Service');
+  except
   end;
   {$ENDIF}
 end;
