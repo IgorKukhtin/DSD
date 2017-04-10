@@ -108,7 +108,7 @@ BEGIN
        WITH tmpMI_Send AS (-- группируется Перемещение
                            SELECT tmpMI.GoodsId                          AS GoodsId
                                 , tmpMI.GoodsKindId                      AS GoodsKindId
-                                , SUM (tmpMI.Amount)                     AS Amount
+                                , SUM (tmpMI.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS Amount
                            FROM (SELECT MIContainer.ObjectId_Analyzer                  AS GoodsId
                                       , CASE -- !!!временно захардкодил!!!
                                              WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
@@ -122,7 +122,7 @@ BEGIN
                                    AND MIContainer.DescId     = zc_MIContainer_Count()
                                    AND MIContainer.MovementDescId = zc_Movement_Send()
                                    AND MIContainer.WhereObjectId_Analyzer = vbFromId
-                                   AND MIContainer.isActive = TRUE
+                                   -- AND MIContainer.isActive = TRUE
                                  GROUP BY MIContainer.ObjectId_Analyzer
                                         , CASE -- !!!временно захардкодил!!!
                                                WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
@@ -131,6 +131,12 @@ BEGIN
                                                ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                           END
                                 ) AS tmpMI
+                                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                     ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
+                                                    AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                                LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                      ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
+                                                     AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                             GROUP BY tmpMI.GoodsId
                                    , tmpMI.GoodsKindId
                           )
@@ -231,5 +237,5 @@ ALTER FUNCTION gpSelect_MI_OrderInternalBasis (Integer, Boolean, Boolean, TVarCh
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_OrderInternalBasis (inMovementId:= 1828419, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
--- SELECT * FROM gpSelect_MI_OrderInternalBasis (inMovementId:= 1828419, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MI_OrderInternalBasis (inMovementId:= 5609806, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
+-- SELECT * FROM gpSelect_MI_OrderInternalBasis (inMovementId:= 5609806, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')

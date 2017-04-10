@@ -72,12 +72,13 @@ uses
   OposFiscalPrinter_1_11_Lib_TLB in '..\FormsFarmacy\Cash\OposFiscalPrinter_1_11_Lib_TLB.pas',
   LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas',
   Splash in '..\FormsFarmacy\Cash\Splash.pas' {frmSplash},
-  DiscountDialog in '..\FormsFarmacy\Cash\DiscountDialog.pas' {DiscountDialogForm: TParentForm},
+  SPDialog in '..\FormsFarmacy\Cash\SPDialog.pas' {SPDialogForm: TParentForm},
   VIPDialog in '..\FormsFarmacy\Cash\VIPDialog.pas' {VIPDialogForm: TParentForm},
   DiscountService in '..\FormsFarmacy\DiscountService\DiscountService.pas' {DiscountServiceForm},
   uCardService in '..\FormsFarmacy\DiscountService\uCardService.pas',
   MainCash2 in '..\FormsFarmacy\Cash\MainCash2.pas' {MainCashForm2: TParentForm},
-  LoginFormInh in '..\FormsFarmacy\Cash\LoginFormInh.pas' {LoginForm1};
+  LoginFormInh in '..\FormsFarmacy\Cash\LoginFormInh.pas' {LoginForm1},
+  DiscountDialog in '..\FormsFarmacy\Cash\DiscountDialog.pas' {DiscountDialogForm: TParentForm};
 
 {$R *.res}
 
@@ -116,8 +117,7 @@ begin
         gc_isSetDefault := True;
       //
       Application.CreateForm(TdmMain, dmMain);
-
-      if true then  // выбираем главную форму
+  if true then  // выбираем главную форму
        Application.CreateForm(TMainCashForm, MainCash.MainCashForm) // имя модуля обязательно
       else  // Форма работате в связке с FarmacyCashServise.exe
        Application.CreateForm(TMainCashForm2, MainCash2.MainCashForm); // имя модуля обязательно

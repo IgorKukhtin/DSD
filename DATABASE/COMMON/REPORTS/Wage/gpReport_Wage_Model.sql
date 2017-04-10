@@ -844,8 +844,8 @@ BEGIN
        , tmpOperDate.OperDate               :: TDateTime  AS OperDate
        , Movement_Sheet_Count_Day.Count_Day :: Integer    AS Count_Day
        , COALESCE (Movement_SheetGroup.Count_Member, Movement_Sheet.Count_MemberInDay) :: Integer
-       , ServiceModelMovement.Gross
-       , (ServiceModelMovement.Gross
+       , (ServiceModelMovement.Gross * Setting.Ratio) :: TFloat AS Gross
+       , (ServiceModelMovement.Gross * Setting.Ratio
         / NULLIF (
           CASE WHEN (Movement_Sheet.AmountInDay = 0 OR Movement_Sheet.Amount = 0) AND Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime () -- по дням табель
                     THEN 0

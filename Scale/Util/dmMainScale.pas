@@ -123,12 +123,12 @@ begin
          ParamByName('MovementDescNumber').AsInteger:= DataSet.FieldByName('MovementDescNumber').asInteger;
 
          ParamByName('MovementDescId').AsInteger:= DataSet.FieldByName('MovementDescId').asInteger;
-         ParamByName('FromId').AsInteger:= DataSet.FieldByName('ToId').asInteger;
-         ParamByName('FromCode').AsInteger:= DataSet.FieldByName('ToCode').asInteger;
-         ParamByName('FromName').asString:= DataSet.FieldByName('ToName').asString;
-         ParamByName('ToId').AsInteger:= DataSet.FieldByName('FromId').asInteger;
-         ParamByName('ToCode').AsInteger:= DataSet.FieldByName('FromCode').asInteger;
-         ParamByName('ToName').asString:= DataSet.FieldByName('FromName').asString;
+         ParamByName('FromId').AsInteger:= DataSet.FieldByName('FromId').asInteger;     // ToId
+         ParamByName('FromCode').AsInteger:= DataSet.FieldByName('FromCode').asInteger; // ToCode
+         ParamByName('FromName').asString:= DataSet.FieldByName('FromName').asString;   // ToName
+         ParamByName('ToId').AsInteger:= DataSet.FieldByName('ToId').asInteger;         // FromId
+         ParamByName('ToCode').AsInteger:= DataSet.FieldByName('ToCode').asInteger;     // FromCode
+         ParamByName('ToName').asString:= DataSet.FieldByName('ToName').asString;       // FromName
          ParamByName('PaidKindId').AsInteger:= DataSet.FieldByName('PaidKindId').asInteger;
          ParamByName('PaidKindName').asString:= DataSet.FieldByName('PaidKindName').asString;
 

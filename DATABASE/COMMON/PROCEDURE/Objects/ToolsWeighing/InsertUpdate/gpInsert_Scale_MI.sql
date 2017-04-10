@@ -52,6 +52,9 @@ $BODY$
    DECLARE vbPricePromo            TFloat;
    DECLARE vbIsChangePercent_Promo Boolean;
    DECLARE vbChangePercent         TFloat;
+            
+   DECLARE vbPrice_301 TFloat; -- !!!цена для Специй!!!
+
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Insert_Scale_MI());
@@ -171,9 +174,18 @@ BEGIN
          inPrice_Return:= vbPricePromo;
 
      ELSE
+     -- определили !!!только для SPEC!!!
+     IF vbMovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut())
+        AND inBranchCode IN (301) -- Dnepr + Dnepr-OBV + иногда Dnepr-SPEC
+        AND inBoxCount > 0
+     THEN
+         -- !!!т.к. Криво - передаем цену через этот параметр!!!
+         vbPrice_301:= inBoxCount;
+         inBoxCount:= 0;
+     ELSE
      -- определили !!!только для Днепра!!!
      IF vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
-        AND inBranchCode IN (1, 201) -- Dnepr + Dnepr-OBV
+        AND inBranchCode IN (1, 201, 301) -- Dnepr + Dnepr-OBV + иногда Dnepr-SPEC
      THEN
          -- !!!замена!!!
          SELECT tmp.PriceListId, tmp.OperDate
@@ -197,6 +209,7 @@ BEGIN
                                                    , inDayPrior_PriceReturn:= inDayPrior_PriceReturn
                                                    , inIsPrior        := FALSE -- !!!отказались от старых цен!!!
                                                     ) AS tmp;
+     END IF;
      END IF;
      END IF;
 
@@ -258,7 +271,10 @@ BEGIN
                                                        , inBoxCount            := inBoxCount
                                                        , inBoxNumber           := CASE WHEN vbMovementDescId <> zc_Movement_Sale() THEN 0 ELSE  1 + COALESCE ((SELECT MAX (MovementItemFloat.ValueData) FROM MovementItem INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id AND MovementItemFloat.DescId = zc_MIFloat_BoxNumber() WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = FALSE), 0) END
                                                        , inLevelNumber         := 0
-                                                       , inPrice               := CASE -- в первую очередь - если Возврат + Акция
+                                                       , inPrice               := CASE -- цена для Специй
+                                                                                       WHEN inBranchCode = 301 AND vbPrice_301 > 0 AND vbMovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut())
+                                                                                            THEN vbPrice_301
+                                                                                       -- в первую очередь - если Возврат + Акция
                                                                                        WHEN vbMovementDescId = zc_Movement_ReturnIn() AND inMovementId_Promo > 0
                                                                                             THEN vbPricePromo
                                                                                        -- ?когда схема для Днепра будет как у филиала? - т.е. при продаже - цена из заявки

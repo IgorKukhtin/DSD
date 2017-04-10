@@ -1,7 +1,8 @@
 inherited CheckForm: TCheckForm
   Caption = #1050#1072#1089#1089#1086#1074#1099#1081' '#1095#1077#1082
   ClientHeight = 406
-  ExplicitHeight = 444
+  ExplicitWidth = 845
+  ExplicitHeight = 441
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -410,7 +411,6 @@ inherited CheckForm: TCheckForm
   object edInvNumberSP: TcxTextEdit [15]
     Left = 347
     Top = 130
-    Hint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1057#1086#1089#1090#1086#1103#1085#1080#1077' VIP-'#1095#1077#1082#1072')'
     Properties.ReadOnly = True
     TabOrder = 19
     Width = 116

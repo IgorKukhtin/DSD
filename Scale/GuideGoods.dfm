@@ -557,12 +557,13 @@ object GuideGoodsForm: TGuideGoodsForm
       end
       object gbGoodsWieghtValue: TGroupBox
         Left = 0
-        Top = 123
+        Top = 164
         Width = 135
         Height = 41
         Align = alTop
         Caption = #1042#1077#1089' '#1085#1072' '#1058#1072#1073#1083#1086
         TabOrder = 2
+        ExplicitTop = 123
         object PanelGoodsWieghtValue: TPanel
           Left = 2
           Top = 16
@@ -588,6 +589,7 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         Caption = #1042#1074#1086#1076' '#1050#1054#1051#1048#1063#1045#1057#1058#1042#1054
         TabOrder = 3
+        OnClick = gbWeightValueClick
         object EditWeightValue: TcxCurrencyEdit
           Left = 5
           Top = 18
@@ -599,6 +601,30 @@ object GuideGoodsForm: TGuideGoodsForm
           OnEnter = EditTareCountEnter
           OnExit = EditWeightValueExit
           OnKeyDown = EditWeightValueKeyDown
+          Width = 125
+        end
+      end
+      object gbPrice: TGroupBox
+        Left = 0
+        Top = 123
+        Width = 135
+        Height = 41
+        Align = alTop
+        Caption = #1042#1074#1086#1076' '#1062#1045#1053#1040
+        TabOrder = 4
+        ExplicitLeft = 5
+        ExplicitTop = 133
+        object EditPrice: TcxCurrencyEdit
+          Left = 5
+          Top = 18
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.AssignedValues.DisplayFormat = True
+          Properties.DecimalPlaces = 0
+          TabOrder = 0
+          OnEnter = EditTareCountEnter
+          OnExit = EditWeightValueExit
+          OnKeyDown = EditPriceKeyDown
           Width = 125
         end
       end

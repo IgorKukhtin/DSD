@@ -147,8 +147,6 @@ BEGIN
                                                                   AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
                                                                   AND ObjectFloat_Value.ValueData <> 0
                                                                  ;
-
-
        -- сохранили
        PERFORM lpUpdate_MI_OrderInternal_Property (ioId                 := tmp.MovementItemId
                                                  , inMovementId         := inMovementId

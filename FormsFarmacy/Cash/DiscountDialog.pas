@@ -65,8 +65,10 @@ end;
 
 function TDiscountDialogForm.DiscountDialogExecute(var ADiscountExternalId: Integer; var ADiscountExternalName, ADiscountCardNumber: String): boolean;
 Begin
-      DiscountExternalGuides.Params.ParamByName('Key').Value      := ADiscountExternalId;
       edCardNumber.Text:= ADiscountCardNumber;
+      //
+      DiscountExternalGuides.Params.ParamByName('Key').Value      := ADiscountExternalId;
+      DiscountExternalGuides.Params.ParamByName('TextValue').Value:='';
       if ADiscountExternalId > 0 then
       begin
           ceDiscountExternal.Text:= ADiscountExternalName;
