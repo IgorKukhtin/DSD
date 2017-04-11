@@ -110,9 +110,8 @@ begin
   end;
   cxPropertiesStore.RestoreFrom;
 
-  // ???Для Off-line режима??? 10.04.2017 - закоменчено 2 строки после перехода на локал режим
-//    AllowLocalConnect := False;
-//    FOnlyLocal := False;
+  AllowLocalConnect := False;
+  FOnlyLocal := False;
 
 end;
 
