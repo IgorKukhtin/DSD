@@ -2,7 +2,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088' '#1087#1088#1080#1093#1086#1076#1072'>'
-  ClientHeight = 322
+  ClientHeight = 365
   ClientWidth = 520
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -23,7 +23,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
   end
   object cxButton1: TcxButton
     Left = 148
-    Top = 285
+    Top = 331
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -32,7 +32,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
   end
   object cxButton2: TcxButton
     Left = 292
-    Top = 285
+    Top = 331
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -67,12 +67,12 @@ object IncomeItemEditForm: TIncomeItemEditForm
   end
   object cxLabel9: TcxLabel
     Left = 10
-    Top = 231
+    Top = 272
     Caption = #1056#1072#1079#1084#1077#1088' '#1090#1086#1074#1072#1088#1072
   end
   object ceGoodsSize: TcxButtonEdit
     Left = 10
-    Top = 247
+    Top = 288
     Properties.Buttons = <
       item
         Default = True
@@ -163,12 +163,12 @@ object IncomeItemEditForm: TIncomeItemEditForm
   end
   object cxLabel2: TcxLabel
     Left = 295
-    Top = 230
+    Top = 271
     Caption = #1042#1093'. '#1094#1077#1085#1072
   end
   object ceOperPrice: TcxCurrencyEdit
     Left = 295
-    Top = 247
+    Top = 288
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 19
@@ -176,12 +176,12 @@ object IncomeItemEditForm: TIncomeItemEditForm
   end
   object cxLabel8: TcxLabel
     Left = 394
-    Top = 230
+    Top = 271
     Caption = #1062#1077#1085#1072' '#1087#1086' '#1087'-'#1083
   end
   object ceOperPriceList: TcxCurrencyEdit
     Left = 394
-    Top = 247
+    Top = 288
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 21
@@ -200,6 +200,22 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Properties.DisplayFormat = ',0.####'
     TabOrder = 23
     Width = 91
+  end
+  object cxLabel11: TcxLabel
+    Left = 10
+    Top = 230
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072
+  end
+  object edLabelName: TcxButtonEdit
+    Left = 10
+    Top = 247
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 25
+    Width = 273
   end
   object ActionList: TActionList
     Left = 344
@@ -298,6 +314,14 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Name = 'inLineFabricaName'
         Value = Null
         Component = edLineFabricaName
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLabelName'
+        Value = Null
+        Component = edLabelName
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -467,13 +491,17 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'LabalId'
+        Name = 'LabelId'
         Value = Null
+        Component = LabelGuides
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'LabelName'
         Value = Null
+        Component = LabelGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -490,6 +518,34 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Component = GoodsItemSizeGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Amount'
+        Value = Null
+        Component = ceAmount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperPrice'
+        Value = Null
+        Component = ceOperPrice
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CountForPrice'
+        Value = Null
+        Component = ceCountForPrice
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperPriceList'
+        Value = Null
+        Component = ceOperPriceList
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -541,8 +597,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 153
-    Top = 230
+    Left = 145
+    Top = 286
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
@@ -641,6 +697,21 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Name = 'LineFabricaName'
         Value = Null
         Component = LineFabricaGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LabelId'
+        Value = Null
+        Component = LabelGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LabelName'
+        Value = Null
+        Component = LabelGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -997,5 +1068,75 @@ object IncomeItemEditForm: TIncomeItemEditForm
       end>
     Left = 425
     Top = 62
+  end
+  object LabelGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edLabelName
+    FormNameParam.Value = 'TLabelForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TLabelForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = LabelGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = LabelGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MeasureName'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CompositionName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsInfoName'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LineFabricaName'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LabelName'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 169
+    Top = 246
   end
 end

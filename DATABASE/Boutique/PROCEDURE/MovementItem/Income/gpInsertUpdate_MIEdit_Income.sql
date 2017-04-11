@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MIEdit_Income()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income (Integer, Integer, TVarChar, TVarChar, TVarChar ,TVarChar,TVarChar,TVarChar,TVarChar,TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income (Integer, Integer, TVarChar, TVarChar, TVarChar ,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MIEdit_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MIEdit_Income(
     IN inGoodsSize           TVarChar   , --
     IN inCompositionName     TVarChar   , --
     IN inLineFabricaName     TVarChar   , --
+    IN inLabelName           TVarChar   , --
     IN inMeasureName         TVarChar   , --
     IN inAmount              TFloat    , -- Количество
     IN inOperPrice           TFloat    , -- Цена
@@ -29,7 +30,8 @@ $BODY$
    DECLARE vbGoodsSizeId Integer;
    DECLARE vbGoodsId Integer;   
    DECLARE vbGoodsInfoId Integer;
-
+   DECLARE vbGoodsItem Integer;
+   DECLARE vblabelid Integer;   
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Income());
@@ -116,6 +118,22 @@ BEGIN
           END IF;
    END IF;
    --6
+   IF COALESCE (inLabelName, '') <> ''
+      THEN
+          inLabelName:= TRIM (COALESCE (inLabelName, ''));
+          -- 
+          vbLabelId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Label() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inLabelName));
+          IF COALESCE (vbLabelId,0) = 0
+             THEN
+                 -- не нашли Сохраняем
+                 vbLabelId := gpInsertUpdate_Object_Label (ioId    := 0
+                                                         , inCode   := lfGet_ObjectCode(0, zc_Object_Label()) 
+                                                         , inName   := inLabelName
+                                                         , inSession:= inSession
+                                                         );
+          END IF;
+   END IF;
+   --7
    IF COALESCE (inGoodsSize, '') <> ''
       THEN
           inGoodsSize:= TRIM (COALESCE (inGoodsSize, ''));
@@ -131,34 +149,47 @@ BEGIN
                                                                     );
           END IF;
    END IF;
---gpInsertUpdate_Object_GoodsItem нужно сохранить связь товар - размер
    --7
    IF COALESCE (inGoodsName, '') <> ''
       THEN
           inGoodsName:= TRIM (COALESCE (inGoodsName, ''));
           -- 
           vbGoodsId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inGoodsName));
-          IF COALESCE (vbGoodsId,0) = 0
-             THEN
+        --  IF COALESCE (vbGoodsId,0) = 0
+          --   THEN
                  -- не нашли Сохраняем
-                 vbGoodsId := gpInsertUpdate_Object_Goods (ioId    := 0
+                 vbGoodsId := gpInsertUpdate_Object_Goods (ioId    := COALESCE (vbGoodsId,0)
                                                          , inCode          := lfGet_ObjectCode(0, zc_Object_Goods()) 
                                                          , inName          := inGoodsName
-                                                         , inGoodsGroupId  := vbGoodsGroupId
-                                                         , inMeasureId     := vbMeasureId
-                                                         , inCompositionId := vbCompositionId
-                                                         , inGoodsInfoId   := vbGoodsInfoId
-                                                         , inLineFabricaId := vbLineFabricaId
-                                                         , inLabelId       := 0
+                                                         , inGoodsGroupId  := COALESCE(vbGoodsGroupId,0)
+                                                         , inMeasureId     := COALESCE(vbMeasureId,0)
+                                                         , inCompositionId := COALESCE(vbCompositionId,0)
+                                                         , inGoodsInfoId   := COALESCE(vbGoodsInfoId,0)
+                                                         , inLineFabricaId := COALESCE(vbLineFabricaId,0)
+                                                         , inLabelId       := COALESCE(vbLabelId,0)
                                                          , inSession       := inSession
                                                          );
+            
+      --    END IF;
+   END IF;
+   ----gpInsertUpdate_Object_GoodsItem нужно сохранить связь товар - размер
+   IF COALESCE (vbGoodsId, 0) <> 0 AND COALESCE (vbGoodsSizeId, 0) <> 0
+      THEN
+          --
+          vbGoodsItem := (SELECT Object_GoodsItem.Id FROM Object_GoodsItem WHERE Object_GoodsItem.GoodsId = vbGoodsId AND Object_GoodsItem.GoodsSizeId = vbGoodsSizeId);
+          IF COALESCE (vbGoodsItem,0) = 0
+             THEN
+                 -- добавили новый элемент справочника и вернули значение <Ключ объекта>
+                 INSERT INTO Object_GoodsItem (GoodsId, GoodsSizeId)
+                        VALUES (vbGoodsId, vbGoodsSizeId); --RETURNING Id INTO vbGoodsItem;
+
           END IF;
    END IF;
 
      -- сохранили
      ioId:= lpInsertUpdate_MovementItem_Income (ioId                 := ioId
                                               , inMovementId         := inMovementId
-                                              , inGoodsId            := vbGoodsId
+                                              , inGoodsId            := COALESCE (vbGoodsId,0)
                                               , inAmount             := inAmount
                                               , inOperPrice          := inOperPrice
                                               , inCountForPrice      := ioCountForPrice
@@ -177,4 +208,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MIEdit_Income (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inAmountPacker:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')
+-- 

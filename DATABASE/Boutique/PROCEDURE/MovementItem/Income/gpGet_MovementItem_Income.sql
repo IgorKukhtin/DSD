@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsName TVarChar
              , CompositionId Integer, CompositionName TVarChar
              , GoodsInfoId Integer, GoodsInfoName TVarChar
              , LineFabricaId Integer, LineFabricaName TVarChar
-             , LabalId Integer, LabelName TVarChar
+             , LabelId Integer, LabelName TVarChar
              , GoodsSizeId Integer, GoodsSizeName TVarChar
              , Amount TFloat
              , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
@@ -44,7 +44,7 @@ BEGIN
            , '' :: TVarChar                            AS GoodsInfoName       
            ,  0 :: Integer                             AS LineFabricaId       
            , '' :: TVarChar                            AS LineFabricaName     
-           ,  0 :: Integer                             AS LabalId             
+           ,  0 :: Integer                             AS LabelId           
            , '' :: TVarChar                            AS LabelName   
            ,  0 :: Integer                             AS GoodsSizeId             
            , '' :: TVarChar                            AS GoodsSizeName   
