@@ -82,7 +82,7 @@ uses
 
 {$R *.res}
 
-
+var MForm:Boolean; //  ака€ форма запускаетс€
 begin
   Application.Initialize;
   Logger.Enabled := FindCmdLineSwitch('log');
@@ -94,7 +94,18 @@ begin
   with TLoginForm1.Create(Application) do
   Begin
     //≈сли все хорошо создаем главную форму Application.CreateForm();
-    AllowLocalConnect := True; //False;  // ???ƒл€ Off-line режима??? 10.04.2017
+
+   //  ¬ыбор формы дл€ запуска
+    case 1 of   // 1 дл€ MainCash;  2 дл€ MainCash2
+     1: begin
+          AllowLocalConnect := False;
+          MForm:=true;
+        end;
+     2: begin
+         AllowLocalConnect := True;
+         MForm:=False;
+        end;
+    end;
 
     if FindCmdLineSwitch('autologin', true)
     then begin
@@ -118,7 +129,7 @@ begin
       //
       Application.CreateForm(TdmMain, dmMain);
 
-      if True then  // выбираем главную форму
+      if MForm then  // выбираем главную форму
        Application.CreateForm(TMainCashForm, MainCash.MainCashForm) // им€ модул€ об€зательно
       else  // ‘орма работате в св€зке с FarmacyCashServise.exe
        Application.CreateForm(TMainCashForm2, MainCash2.MainCashForm); // им€ модул€ об€зательно
