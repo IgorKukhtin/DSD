@@ -136,6 +136,7 @@ type
     tiServise: TTrayIcon;
     N4: TMenuItem;
     ilIcons: TImageList;
+    N5: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -147,6 +148,7 @@ type
     procedure N3Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure N4Click(Sender: TObject);
+    procedure N5Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -156,13 +158,9 @@ type
     { Public declarations }
 
 
-     ThreadErrorMessage:String;
-     SoldParallel: Boolean;
-     // для мигания кнопки
-     fBlinkVIP, fBlinkCheck : Boolean;
-    time_onBlink, time_onBlinkCheck :TDateTime;
-    MovementId_BlinkVIP:String;
-        FiscalNumber: String;
+   ThreadErrorMessage:String;
+   SoldParallel: Boolean;
+   FiscalNumber: String;
 
 
       //Обновить остаток согласно пришедшей разнице
@@ -185,9 +183,6 @@ const
 var
 
   MainCashForm2: TMainCashForm2;
-  CountRRT: Integer = 0;
-  CountSaveThread: Integer = 0;
-  ActualRemainSession: Integer = 0;
   FLocalDataBaseHead : TVKSmartDBF;
   FLocalDataBaseBody : TVKSmartDBF;
   FLocalDataBaseDiff : TVKSmartDBF;
@@ -248,8 +243,24 @@ var
   I: Integer;
   FNeedSaveVIP: Boolean;
 begin
-  if gc_User.Local then Exit;
- // Запускаем поиски чеков
+   try
+    spGet_User_IsAdmin.Execute;
+    if gc_User.Local then
+     begin
+       gc_User.Local := False;
+       tiServise.BalloonHint:='Связь востановлена';
+       tiServise.ShowBalloonHint;
+     end;
+  except
+    Begin
+      gc_User.Local := True;
+      tiServise.BalloonHint:='Локальный режим';
+      tiServise.ShowBalloonHint;
+      Exit;
+    End;
+  end;
+
+ // Запускаем поиски чеков ели разрешено 
   if  AllowedConduct then Exit;
 
   MainCashForm2.tiServise.IconIndex:=1;
@@ -257,8 +268,15 @@ begin
   try
       for J := 0 to 6 do
       Begin
-//       Application.ProcessMessages;   // Нужно потестить отмену
-        if  AllowedConduct then Exit;
+       Application.ProcessMessages;   // Нужно потестить отмену
+       // Выходим из цикла при получении указания постоять или перехода в локальный режим
+       if  AllowedConduct or gc_User.Local then
+       begin
+        tiServise.BalloonHint:='Останавливаем проведение чеков';
+        tiServise.ShowBalloonHint;
+       Exit;
+       end;
+
        WaitForSingleObject(MutexDBF, INFINITE);
        FLocalDataBaseHead.Active:=True;
        FLocalDataBaseBody.Active:=True;
@@ -508,6 +526,12 @@ begin
               End; // обработали чек с товарами
             except ON E: Exception do
               Begin
+                if gc_User.Local then
+                  begin
+                     tiServise.BalloonHint:='Останавливаем проведение чеков';
+                     tiServise.ShowBalloonHint;
+                     Exit;
+                  end;
 // -nw               SendError(E.Message);
               End;
             end;
@@ -537,6 +561,12 @@ begin
               except on E: Exception do
                 Begin
 // -nw                 SendError(E.Message);
+                  if gc_User.Local then
+                   begin
+                    tiServise.BalloonHint:='Останавливаем проведение чеков';
+                    tiServise.ShowBalloonHint;
+                   Exit;
+                   end;
                 End;
               end;
               DiffCDS.First;
@@ -560,17 +590,18 @@ begin
                end;
                FLocalDataBaseDiff.Close;
                ReleaseMutex(MutexDBFDiff);
+               // Отправка сообщения приложению про надобность обновить остатки из файла
+               PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);  
               end;
 
             finally
-              // Отправка сообщения приложению про надобность обновить остатки из файла
-              PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
              //  DiffCDS.SaveToFile('diff.local'); // для тестирования
               DiffCDS.free;
             end;
           finally
             freeAndNil(dsdSave);
           end;
+          Application.ProcessMessages;
           //удаляем проведенный чек
           if Head.COMPL then
           Begin
@@ -605,9 +636,21 @@ begin
           if (Head.MANAGER <> 0) or (Head.BAYER <> '') then
           Begin
             WaitForSingleObject(MutexRemains, INFINITE);
-           //MainCashForm2.spSelect_CashRemains_Diff.ParamByName('inUserSesion').Value:= FUserSesion;
-            MainCashForm2.spSelect_CashRemains_Diff.Execute(False, False, False);
-            ReleaseMutex(MutexRemains);
+            try
+              try
+                MainCashForm2.spSelect_CashRemains_Diff.Execute(False, False, False);
+              except
+                if gc_User.Local then
+                 begin
+                   tiServise.BalloonHint:='Останавливаем проведение чеков';
+                   tiServise.ShowBalloonHint;
+                   Exit;
+                 end;
+              
+              end;
+            finally
+              ReleaseMutex(MutexRemains);
+            end;
             //заменили на   Synchronize(UpdateRemains);
               MainCashForm2.UpdateRemainsFromDiff(DiffCDS);
                WaitForSingleObject(MutexRemains, INFINITE);
@@ -690,11 +733,8 @@ End;
 
 procedure TMainCashForm2.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
-//  CanClose := MessageDlg('Вы действительно хотите выйти?',mtConfirmation,[mbYes,mbCancel], 0) = mrYes;
- CanClose := True;
-
-  while CountRRT>0 do //Ждем пока закроются все потоки
-    Application.ProcessMessages;
+  AllowedConduct := True; // Просим досрочно прекратить проведения чеков 
+  WaitForSingleObject(MutexRefresh, INFINITE);
   if CanClose then
   Begin
     try
@@ -715,6 +755,7 @@ begin
     end;
 
   End;
+  ReleaseMutex(MutexRefresh);
 end;
 
 
@@ -747,8 +788,6 @@ begin   //yes
 
     if true  then
     Begin
-      if Sender <> nil then
-        InterlockedIncrement(ActualRemainSession); //Фиксируем сессию остатков
 
       RemainsCDS.DisableControls;
       AlternativeCDS.DisableControls;
@@ -856,6 +895,22 @@ end;
 procedure TMainCashForm2.N4Click(Sender: TObject);
 begin
  MainCashForm2.Close;
+end;
+
+procedure TMainCashForm2.N5Click(Sender: TObject);
+begin
+  try
+    spGet_User_IsAdmin.Execute;
+    gc_User.Local := False;
+    tiServise.BalloonHint:='Режим работы: В сети';
+    tiServise.ShowBalloonHint;
+  except
+    Begin
+      gc_User.Local := True;
+      tiServise.BalloonHint:='Режим работы: Автономно';
+      tiServise.ShowBalloonHint;
+    End;
+  end;
 end;
 
 procedure TMainCashForm2.NewCheck(ANeedRemainsRefresh: Boolean = True);
@@ -1428,15 +1483,9 @@ initialization
   FLocalDataBaseHead := TVKSmartDBF.Create(nil);
   FLocalDataBaseBody := TVKSmartDBF.Create(nil);
   FLocalDataBaseDiff := TVKSmartDBF.Create(nil);
-  InitializeCriticalSection(csCriticalSection);
-  InitializeCriticalSection(csCriticalSection_Save);
-  InitializeCriticalSection(csCriticalSection_All);
   FM_SERVISE := RegisterWindowMessage('FarmacyCashMessage');
 finalization
   FLocalDataBaseHead.Free;
   FLocalDataBaseBody.Free;
   FLocalDataBaseDiff.Free;
-  DeleteCriticalSection(csCriticalSection);
-  DeleteCriticalSection(csCriticalSection_Save);
-  DeleteCriticalSection(csCriticalSection_All);
 end.

@@ -87,7 +87,6 @@ begin
   Application.Initialize;
   Logger.Enabled := FindCmdLineSwitch('log');
   ConnectionPath := '..\INIT\farmacy_init.php';
-
   StartSplash('Старт');
   TdsdApplication.Create;
 
@@ -99,20 +98,23 @@ begin
     case 1 of   // 1 для MainCash;  2 для MainCash2
      1: begin
           AllowLocalConnect := False;
-          MForm:=true;
+          MForm := True;
         end;
      2: begin
-         AllowLocalConnect := True;
-         MForm:=False;
+          AllowLocalConnect := True;
+          MForm := False;
         end;
     end;
 
-    if FindCmdLineSwitch('autologin', true)
+    if FindCmdLineSwitch('autologin', True)
     then begin
-     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1111', gc_User);
-     //TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1234', gc_User);
-     //if ShowModal <> mrOk then exit;   // для тестирования // НЕ закомменчено
-     gc_User.Local:=TRUE;// !!!НЕ ЗАГРУЖАЕТСЯ БАЗА!!!
+      edUserName.Text := 'Админ';
+      edPassword.Text := 'Админ1111';
+      btnOkClick(btnOk);
+//    TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1111', gc_User); // не работает вмести с AllowLocalConnect := True;
+      //TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1234', gc_User);
+      //if ShowModal <> mrOk then exit;   // для тестирования // НЕ закомменчено
+      gc_User.Local:=TRUE;// !!!НЕ ЗАГРУЖАЕТСЯ БАЗА!!!
     end
     else
       if ShowModal <> mrOk then exit;
@@ -129,7 +131,7 @@ begin
       //
       Application.CreateForm(TdmMain, dmMain);
 
-      if MForm then  // выбираем главную форму
+      if MForm then  // определяет главную форму
        Application.CreateForm(TMainCashForm, MainCash.MainCashForm) // имя модуля обязательно
       else  // Форма работате в связке с FarmacyCashServise.exe
        Application.CreateForm(TMainCashForm2, MainCash2.MainCashForm); // имя модуля обязательно

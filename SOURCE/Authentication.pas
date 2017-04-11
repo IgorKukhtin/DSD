@@ -12,13 +12,16 @@ type
   ///	<remarks>
   ///	</remarks>
   TUser = class
+  strict private
+    class var FLocal: boolean;
+
   private
     FSession: String;
-    FLocal: Boolean;
     procedure SetLocal(const Value: Boolean);
+    function GetLocal: Boolean;
   public
     property Session: String read FSession;
-    Property Local: Boolean read FLocal Write SetLocal;
+    Property Local: Boolean read GetLocal Write SetLocal;
     constructor Create(ASession: String; ALocal: Boolean = false);
   end;
 
@@ -78,17 +81,22 @@ begin
   result := pUser <> nil
 end;
 
+function TUser.GetLocal: Boolean;
+begin
+  Result := TUser.FLocal;
+end;
+
 procedure TUser.SetLocal(const Value: Boolean);
 var
   I : Integer;
   F: TForm;
 begin
-  FLocal := Value;
+  TUser.FLocal := Value;
   for I := 0 to Screen.FormCount - 1 do
   Begin
     try
       F := Screen.Forms[I];
-      if assigned(F) AND (F.Handle <> 0) AND (F.ClassNameIs('TMainCashForm')) then
+      if assigned(F) AND (F.Handle <> 0) AND (F.ClassNameIs('TMainCashForm') or F.ClassNameIs('TMainCashForm2')) then
         PostMessage(F.Handle, UM_LOCAL_CONNECTION,0,0);
     Except
     end;
