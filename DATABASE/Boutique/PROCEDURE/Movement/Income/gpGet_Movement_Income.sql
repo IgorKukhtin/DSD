@@ -1,6 +1,5 @@
 -- Function: gpGet_Movement_Income (Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpGet_Movement_Income (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_Income (Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Income(
@@ -55,7 +54,7 @@ BEGIN
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
               JOIN Object as ObjectCurrency on ObjectCurrency.descid= zc_Object_Currency()
-                                            and ObjectCurrency.id = 14461;	             -- грн
+                                            and ObjectCurrency.id = 202;	             -- грн
      ELSE
        RETURN QUERY 
          SELECT

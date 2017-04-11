@@ -46,7 +46,7 @@ type
 //    procedure LoadGoodsFormTest;
 //    procedure LoadImportSettingsFormTest;
 //    procedure LoadImportTypeFormTest;
-//    procedure LoadIncomeFormTest;
+      procedure LoadIncomeFormTest;
 //    procedure LoadInfoMoneyGroupFormTest;
 //    procedure LoadInfoMoneyDestinationFormTest;
 //    procedure LoadInfoMoneyFormTest;
@@ -1193,14 +1193,14 @@ end;
 //  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyEditForm');
 //end;
 //
-//procedure TLoadFormTest.LoadIncomeFormTest;
-//begin
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyForm');
+procedure TLoadFormTest.LoadIncomeFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeItemEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeItemEditForm');
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyJournalForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyJournalForm');
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalChoiceForm'));
@@ -1209,7 +1209,7 @@ end;
 //  TdsdFormStorageFactory.GetStorage.Load('TIncome_AmountTroubleForm');
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePartnerDataDialogForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TIncomePartnerDataDialogForm');
-//end;
+end;
 //
 //procedure TLoadFormTest.LoadAdditionalGoodsFormTest;
 //begin
@@ -1412,8 +1412,8 @@ begin
 //  TdsdFormStorageFactory.GetStorage.Load('TMovementDescDataForm');
 //
 //
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_PeriodDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TMovement_PeriodDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_PeriodDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovement_PeriodDialogForm');
 //
 //  {
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStatusForm'));

@@ -537,6 +537,22 @@
 				<Form>LookAndFillSettingsForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdXMLTransform.pas"/>
+			<DCCReference Include="..\..\FormsBoutique\Document\IncomeJournal.pas">
+				<Form>IncomeJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Document\Income.pas">
+				<Form>IncomeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Document\Movement_PeriodDialog.pas">
+				<Form>Movement_PeriodDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Document\IncomeItemEdit.pas">
+				<Form>IncomeItemEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

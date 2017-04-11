@@ -115,7 +115,6 @@ uses
   PositionEdit in '..\..\FormsBoutique\Guides\PositionEdit.pas' {PositionEditForm: TParentForm},
   Personal in '..\..\FormsBoutique\Guides\Personal.pas' {PersonalForm: TParentForm},
   PersonalEdit in '..\..\FormsBoutique\Guides\PersonalEdit.pas' {PersonalEditForm: TParentForm},
-
   ImportExportLinkType in '..\..\Forms\Kind\ImportExportLinkType.pas' {ImportExportLinkTypeForm: TParentForm},
   AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
   AncestorData in '..\..\Forms\Ancestor\AncestorData.pas' {AncestorDataForm: TParentForm},
@@ -168,7 +167,11 @@ uses
   StatusXML in '..\..\SOURCE\EDI\StatusXML.pas',
   dsdInternetAction in '..\..\SOURCE\COMPONENT\dsdInternetAction.pas',
   LookAndFillSettings in '..\..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
-  dsdXMLTransform in '..\..\SOURCE\COMPONENT\dsdXMLTransform.pas';
+  dsdXMLTransform in '..\..\SOURCE\COMPONENT\dsdXMLTransform.pas',
+  IncomeJournal in '..\..\FormsBoutique\Document\IncomeJournal.pas' {IncomeJournalForm: TParentForm},
+  Income in '..\..\FormsBoutique\Document\Income.pas' {IncomeForm: TParentForm},
+  Movement_PeriodDialog in '..\..\FormsBoutique\Document\Movement_PeriodDialog.pas' {Movement_PeriodDialogForm: TParentForm},
+  IncomeItemEdit in '..\..\FormsBoutique\Document\IncomeItemEdit.pas' {IncomeItemEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

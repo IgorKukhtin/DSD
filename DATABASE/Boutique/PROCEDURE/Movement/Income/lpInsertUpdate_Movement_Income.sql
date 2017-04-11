@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_Movement_Income()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
     IN inParValue             TFloat    , -- Номинал для перевода в валюту баланса
     IN inCurrencyPartnerValue TFloat    , -- Курс для расчета суммы операции
     IN inParPartnerValue      TFloat    , -- Номинал для расчета суммы операции
+    IN inComment              TVarChar  , -- Примечание
     IN inUserId               Integer     -- пользователь
 )
 RETURNS Integer
