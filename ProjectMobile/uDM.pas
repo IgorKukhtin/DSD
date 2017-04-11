@@ -10,7 +10,7 @@ uses
   FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys,
   FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs,
   FireDAC.Comp.UI, Variants, FireDAC.FMXUI.Wait, dsdDB, Datasnap.DBClient,
-  FMX.Dialogs, FMX.DialogService, System.UITypes, EncdDecd
+  FMX.Dialogs, FMX.DialogService, System.UITypes, DateUtils
   {$IFDEF ANDROID}
   , Androidapi.JNI.GraphicsContentViewText, Androidapi.Helpers,
   Androidapi.JNI.Net, Androidapi.JNI.JavaTypes, Androidapi.JNI.App
@@ -19,6 +19,7 @@ uses
 CONST
   DataBaseFileName = 'aMobile.sdb';
 
+  { базовый запрос на получение информации по ТТ }
   BasePartnerQuery = 'select P.Id, P.CONTRACTID, J.VALUEDATA Name, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, ' +
     'P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE, C.PAIDKINDID, C.CHANGEPERCENT, ' +
     'P.DEBTSUM, P.OVERSUM, P.OVERDAYS, J.DEBTSUM DEBTSUMJ, J.OVERSUM OVERSUMJ, J.OVERDAYS OVERDAYSJ, ' +
@@ -33,8 +34,10 @@ CONST
     'where P.ISERASED = 0 ';
 
 type
+  { состояния задания контрагента }
   TActiveMode = (amAll, amOpen, amClose);
 
+  { отдельный поток для показа бегущего круга }
   TProgressThread = class(TThread)
   private
     { Private declarations }
@@ -45,6 +48,7 @@ type
     procedure Execute; override;
   end;
 
+  { отдельный поток для синхронизации }
   TSyncThread = class(TThread)
   private
     { Private declarations }
@@ -78,6 +82,7 @@ type
     procedure Execute; override;
   end;
 
+  { отдельный поток для выполнения процедур получения данных с сервера }
   TWaitThread = class(TThread)
   private
     TaskName : string;
@@ -93,6 +98,7 @@ type
     procedure Execute; override;
   end;
 
+  { классы для создания БД на основе TFDTable модуля TDM }
   TDataSets = TObjectList<TFDTable>;
 
   TStructure = Class(TObject)
@@ -116,6 +122,7 @@ type
     property IndexCount: integer read GetIndexCount;
   End;
 
+  { основной модуль работы с БД }
   TDM = class(TDataModule)
     FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink;
     qryMeta: TFDMetaInfoQuery;
@@ -621,7 +628,7 @@ uses
 
 {$R *.dfm}
 
-// Процедура по символьно переводит строку в набор цифр
+{ Процедура по символьно переводит строку в набор цифр }
 function ReConvertConvert(S: string): TBytes;
 var
   i, l, k: integer;
@@ -640,7 +647,7 @@ begin
   ZDecompress(InB, Result);
 end;
 
-// Процедура по символьно переводит строку в набор цифр
+{ Процедура по символьно переводит строку в набор цифр }
 function ConvertConvert(S: TBytes): String;
 var
   i, l: integer;
@@ -653,6 +660,7 @@ begin
     result := result + IntToHex(ArcS[i], 2);
 end;
 
+{ обновление бегущего круга }
 procedure TProgressThread.Update;
 var
   d: single;
@@ -681,6 +689,7 @@ begin
   end;
 end;
 
+{ обновление процентов выполнения синхронизации и названия текущей операции }
 procedure TSyncThread.Update;
 var
   d: single;
@@ -693,6 +702,7 @@ begin
   frmMain.lProgressName.Text := FName;
 end;
 
+{ изменение текущей операции }
 procedure TSyncThread.SetNewProgressTask(AName : string);
 begin
   FName := AName;
@@ -1632,6 +1642,7 @@ begin
   end;
 end;
 
+{ синхронизация с центральной БД }
 procedure TSyncThread.Execute;
 var
   Res : string;
@@ -1659,6 +1670,7 @@ begin
     ProgressThread.FreeOnTerminate := true;
     ProgressThread.Start;
 
+    { получение данных из центра }
     if LoadData then
     begin
       Synchronize(GetSyncDates);
@@ -1731,6 +1743,7 @@ begin
       end;
     end;
 
+    { загрузка данных в центр }
     if UploadData then
     begin
       try
@@ -1814,6 +1827,7 @@ begin
               end);
 end;
 
+{ получения данных для акта сверки }
 function TWaitThread.LoadJuridicalCollation: string;
 var
   GetStoredProc : TdsdStoredProc;
@@ -1924,6 +1938,7 @@ begin
   end;
 end;
 
+{ получение новой версии программы }
 function TWaitThread.UpdateProgram: string;
 var
   GetStoredProc : TdsdStoredProc;
@@ -2114,7 +2129,7 @@ procedure TStructure.MakeIndex(ATable: TFDTable);
 var
   IndexName: String;
 begin
-  {if (ATable.IndexDefs.Count = 0) then
+  if (ATable.IndexDefs.Count = 0) then
   Begin
     IndexName := 'PK_' + ATable.TableName;
 
@@ -2123,18 +2138,18 @@ begin
     else
     if SameText(ATable.Fields[0].FieldName, 'Id') and (ATable.Fields[0].DataType <> ftAutoInc) then
       FIndexes.Add('CREATE UNIQUE INDEX IF NOT EXISTS `' + IndexName + '` ON `' + ATable.TableName + '` (`Id`)');
-  End; }
+  End;
 end;
 
 procedure TStructure.MakeDopIndex(ATable: TFDTable);
 begin
-  {if SameText(ATable.TableName, 'Object_GoodsListSale') then
+  if SameText(ATable.TableName, 'Object_GoodsListSale') then
   begin
     FIndexes.Add('CREATE INDEX IF NOT EXISTS `idx_GoodsListSale_GoodsId` ON `' + ATable.TableName + '` (`GoodsId`)');
     FIndexes.Add('CREATE INDEX IF NOT EXISTS `idx_GoodsListSale_GoodsKindId` ON `' + ATable.TableName + '` (`GoodsKindId`)');
     FIndexes.Add('CREATE INDEX IF NOT EXISTS `idx_GoodsListSale_PartnerId` ON `' + ATable.TableName + '` (`PartnerId`)');
   end
-  }
+
 
   {if SameText(ATable.TableName, 'Words_Table') then
   begin
@@ -2220,6 +2235,7 @@ begin
   result := True;
 end;
 
+{ проверка структуры БД }
 function TDM.CheckStructure: Boolean;
 var
   T: TFDTable;
@@ -2375,6 +2391,7 @@ begin
   result := True;
 end;
 
+{ создание индексов }
 procedure TDM.CreateIndexes;
 var
   i : integer;
@@ -2447,7 +2464,27 @@ begin
   cdsTasks.CreateDataSet;
 end;
 
+{ вычисление цены для товаров }
+procedure TDM.qryGoodsForPriceListCalcFields(DataSet: TDataSet);
+var
+  PriceWithoutVat, PriceWithVat : string;
+begin
+  if qryPriceListPriceWithVAT.AsBoolean then
+  begin
+    PriceWithoutVat := FormatFloat('0.00', DataSet.FieldByName('Price').AsFloat * 100 / (100 + qryPriceListVATPercent.AsFloat));
+    PriceWithVat := FormatFloat('0.00', DataSet.FieldByName('Price').AsFloat);
+  end
+  else
+  begin
+    PriceWithoutVat := FormatFloat('0.00', DataSet.FieldByName('Price').AsFloat);
+    PriceWithVat := FormatFloat('0.00', DataSet.FieldByName('Price').AsFloat * (100 + qryPriceListVATPercent.AsFloat) / 100);
+  end;
 
+  DataSet.FieldByName('FullPrice').AsString := 'Цена: ' + PriceWithoutVat +' (с НДС ' + PriceWithVat +
+    ') за ' + DataSet.FieldByName('Measure').AsString;
+end;
+
+{ получение текущей версии программы }
 function TDM.GetCurrentVersion: string;
 {$IFDEF ANDROID}
 var
@@ -2464,6 +2501,7 @@ begin
   {$ENDIF}
 end;
 
+{ сравнение версий }
 function TDM.CompareVersion(ACurVersion, AServerVersion: string): integer;
 var
   ArrValueC, ArrValueS : TArray<string>;
@@ -2521,6 +2559,7 @@ begin
     Result := 1;
 end;
 
+{ проверка необходимо ли обновление программы }
 procedure TDM.CheckUpdate;
 begin
   if CompareVersion(GetCurrentVersion, tblObject_ConstMobileVersion.AsString) > 0 then
@@ -2528,6 +2567,7 @@ begin
       TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbYes, 0, UpdateProgram);
 end;
 
+{ обновление программы }
 procedure TDM.UpdateProgram(const AResult: TModalResult);
 begin
   if AResult = mrYes then
@@ -2539,6 +2579,7 @@ begin
   end;
 end;
 
+{ синхронизация данных с центральной БД }
 procedure TDM.SynchronizeWithMainDatabase(LoadData: boolean = true; UploadData: boolean = true);
 begin
   if gc_User.Local or (not LoadData and not UploadData) then
@@ -2551,6 +2592,7 @@ begin
   SyncThread.Start;
 end;
 
+{ сохранение остатков }
 function TDM.SaveStoreReal(OldStoreRealId : string; Comment: string;
   DelItems : string; var ErrorMessage : string) : boolean;
 var
@@ -2682,6 +2724,7 @@ begin
   end;
 end;
 
+{ загрузка остатков из БД }
 procedure TDM.LoadStoreReal(AId : string = '');
 var
   qryStoreReals : TFDQuery;
@@ -2692,6 +2735,7 @@ begin
     cdsStoreReals.EmptyDataSet;
   end;
 
+  cdsStoreReals.DisableControls;
   qryStoreReals := TFDQuery.Create(nil);
   try
     qryStoreReals.Connection := conMain;
@@ -2734,9 +2778,11 @@ begin
     qryStoreReals.Close;
   finally
     qryStoreReals.Free;
+    cdsStoreReals.EnableControls;
   end;
 end;
 
+{ добавление нового товара в перечень товаров для ввода остатков }
 procedure TDM.AddedGoodsToStoreReal(AGoods : string);
 var
   ArrValue : TArray<string>;
@@ -2755,6 +2801,7 @@ begin
   cdsStoreRealItems.Post;
 end;
 
+{ начитка товаров для ввода остатков из шаблона }
 procedure TDM.DefaultStoreRealItems;
 var
   qryGoodsListSale : TFDQuery;
@@ -2762,6 +2809,7 @@ begin
   cdsStoreRealItems.Open;
   cdsStoreRealItems.EmptyDataSet;
 
+  cdsStoreRealItems.DisableControls;
   qryGoodsListSale := TFDQuery.Create(nil);
   try
     qryGoodsListSale.Connection := conMain;
@@ -2787,10 +2835,12 @@ begin
     qryGoodsListSale.Close;
   finally
     qryGoodsListSale.Free;
+    cdsStoreRealItems.EnableControls;
     cdsStoreRealItems.First;
   end;
 end;
 
+{ начитка товаров для ввода остатков из БД }
 procedure TDM.LoadStoreRealItems(AId : integer);
 var
   qryGoodsListSale : TFDQuery;
@@ -2798,6 +2848,7 @@ begin
   cdsStoreRealItems.Open;
   cdsStoreRealItems.EmptyDataSet;
 
+  cdsStoreRealItems.DisableControls;
   qryGoodsListSale := TFDQuery.Create(nil);
   try
     qryGoodsListSale.Connection := conMain;
@@ -2823,29 +2874,11 @@ begin
     qryGoodsListSale.Close;
   finally
     qryGoodsListSale.Free;
-    cdsStoreRealItems.First;
+    cdsStoreRealItems.EnableControls;
   end;
 end;
 
-procedure TDM.qryGoodsForPriceListCalcFields(DataSet: TDataSet);
-var
-  PriceWithoutVat, PriceWithVat : string;
-begin
-  if qryPriceListPriceWithVAT.AsBoolean then
-  begin
-    PriceWithoutVat := FormatFloat('0.00', DataSet.FieldByName('Price').AsFloat * 100 / (100 + qryPriceListVATPercent.AsFloat));
-    PriceWithVat := FormatFloat('0.00', DataSet.FieldByName('Price').AsFloat);
-  end
-  else
-  begin
-    PriceWithoutVat := FormatFloat('0.00', DataSet.FieldByName('Price').AsFloat);
-    PriceWithVat := FormatFloat('0.00', DataSet.FieldByName('Price').AsFloat * (100 + qryPriceListVATPercent.AsFloat) / 100);
-  end;
-
-  DataSet.FieldByName('FullPrice').AsString := 'Цена: ' + PriceWithoutVat +' (с НДС ' + PriceWithVat +
-    ') за ' + DataSet.FieldByName('Measure').AsString;
-end;
-
+{ начитка новых товаров по которым можно ввести остатки }
 procedure TDM.GenerateStoreRealItemsList;
 begin
   qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ''-'' PromoPrice, ' +
@@ -2862,7 +2895,7 @@ begin
   qryGoodsItems.Open;
 end;
 
-
+{ сохранение заявки на товары в БД }
 function TDM.SaveOrderExternal(OldOrderExternalId : string; OperDate: TDate;
   ToralPrice, TotalWeight: Currency; DelItems : string; var ErrorMessage : string) : boolean;
 var
@@ -3013,6 +3046,7 @@ begin
   end;
 end;
 
+{ начитка заявок на товары из БД }
 procedure TDM.LoadOrderExternal(AId : string = '');
 var
   qryOrderExternal : TFDQuery;
@@ -3023,6 +3057,7 @@ begin
     cdsOrderExternal.EmptyDataSet;
   end;
 
+  cdsOrderExternal.DisableControls;
   qryOrderExternal := TFDQuery.Create(nil);
   try
     qryOrderExternal.Connection := conMain;
@@ -3066,9 +3101,11 @@ begin
     qryOrderExternal.Close;
   finally
     qryOrderExternal.Free;
+    cdsOrderExternal.EnableControls;
   end;
 end;
 
+{ добавление новых товаров в перечень товаров для заявки }
 procedure TDM.AddedGoodsToOrderExternal(AGoods : string);
 var
   ArrValue : TArray<string>;
@@ -3127,6 +3164,7 @@ begin
   cdsOrderItems.Post;
 end;
 
+{ начитка товаров для заявки из шаблона }
 procedure TDM.DefaultOrderExternalItems;
 var
   qryGoodsListSale : TFDQuery;
@@ -3135,6 +3173,7 @@ begin
   cdsOrderItems.Open;
   cdsOrderItems.EmptyDataSet;
 
+  cdsOrderItems.DisableControls;;
   qryGoodsListSale := TFDQuery.Create(nil);
   try
     qryGoodsListSale.Connection := conMain;
@@ -3182,10 +3221,12 @@ begin
     qryGoodsListSale.Close;
   finally
     qryGoodsListSale.Free;
+    cdsOrderItems.EnableControls;
     cdsOrderItems.First;
   end;
 end;
 
+{ начитка товаров для заявки из БД }
 procedure TDM.LoadOrderExtrenalItems(AId : integer);
 var
   qryGoodsListOrder : TFDQuery;
@@ -3194,6 +3235,7 @@ begin
   cdsOrderItems.Open;
   cdsOrderItems.EmptyDataSet;
 
+  cdsOrderItems.DisableControls;
   qryGoodsListOrder := TFDQuery.Create(nil);
   try
     qryGoodsListOrder.Connection := conMain;
@@ -3242,9 +3284,11 @@ begin
     qryGoodsListOrder.Close;
   finally
     qryGoodsListOrder.Free;
+    cdsOrderItems.EnableControls;
   end;
 end;
 
+{ начитка новых товаров, которые можно внести в заявку }
 procedure TDM.GenerateOrderExtrenalItemsList;
 var
   PriceField, PromoPriceField : string;
@@ -3280,7 +3324,7 @@ begin
   qryGoodsItems.Open;
 end;
 
-
+{ сохранение возвратов в БД }
 function TDM.SaveReturnIn(OldReturnInId : string; OperDate: TDate; Comment : string;
   ToralPrice, TotalWeight: Currency; DelItems : string; var ErrorMessage : string) : boolean;
 var
@@ -3433,6 +3477,7 @@ begin
   end;
 end;
 
+{ начитка возвратов из БД }
 procedure TDM.LoadReturnIn(AId : string = '');
 var
   qryReturnIn : TFDQuery;
@@ -3443,6 +3488,7 @@ begin
     cdsReturnIn.EmptyDataSet;
   end;
 
+  cdsReturnIn.DisableControls;
   qryReturnIn := TFDQuery.Create(nil);
   try
     qryReturnIn.Connection := conMain;
@@ -3487,9 +3533,11 @@ begin
     qryReturnIn.Close;
   finally
     qryReturnIn.Free;
+    cdsReturnIn.EnableControls;
   end;
 end;
 
+{ добавление новых товаров в перечень товаров для возврата }
 procedure TDM.AddedGoodsToReturnIn(AGoods : string);
 var
   ArrValue : TArray<string>;
@@ -3511,6 +3559,7 @@ begin
   cdsReturnInItems.Post;
 end;
 
+{ начитка товаров для возврата из шаблона }
 procedure TDM.DefaultReturnInItems;
 var
   qryGoodsListSale : TFDQuery;
@@ -3518,6 +3567,7 @@ begin
   cdsReturnInItems.Open;
   cdsReturnInItems.EmptyDataSet;
 
+  cdsReturnInItems.DisableControls;
   qryGoodsListSale := TFDQuery.Create(nil);
   try
     qryGoodsListSale.Connection := conMain;
@@ -3546,10 +3596,12 @@ begin
     qryGoodsListSale.Close;
   finally
     qryGoodsListSale.Free;
+    cdsReturnInItems.EnableControls;
     cdsReturnInItems.First;
   end;
 end;
 
+{ начитка товаров для возврата из БД }
 procedure TDM.LoadReturnInItems(AId : integer);
 var
   qryGoodsListReturn : TFDQuery;
@@ -3557,6 +3609,7 @@ begin
   cdsReturnInItems.Open;
   cdsReturnInItems.EmptyDataSet;
 
+  cdsReturnInItems.DisableControls;
   qryGoodsListReturn := TFDQuery.Create(nil);
   try
     qryGoodsListReturn.Connection := conMain;
@@ -3585,9 +3638,11 @@ begin
     qryGoodsListReturn.Close;
   finally
     qryGoodsListReturn.Free;
+    cdsReturnInItems.EnableControls;
   end;
 end;
 
+{ начитка новых товаров, которые можно вернуть }
 procedure TDM.GenerateReturnInItemsList;
 begin
   qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ''-'' PromoPrice, ' +
@@ -3605,7 +3660,7 @@ begin
   qryGoodsItems.Open;
 end;
 
-
+{ сохранение группы фотографий в БД }
 procedure TDM.SavePhotoGroup(AGroupName: string);
 var
   GlobalId : TGUID;
@@ -3653,13 +3708,14 @@ begin
   end;
 end;
 
+{ начитка групп фотографий из БД }
 procedure TDM.LoadPhotoGroups;
 begin
   qryPhotoGroups.Open('select Id, Comment, StatusId from Movement_Visit where PartnerId = ' + qryPartnerId.AsString +
     ' and StatusId <> ' + tblObject_ConstStatusId_Erased.AsString);
 end;
 
-
+{ получение данных для акта сверки }
 procedure TDM.GenerateJuridicalCollation(ADateStart, ADateEnd: TDate;
   AJuridicalId, APartnerId, AContractId, APaidKindId: integer);
 begin
@@ -3677,6 +3733,7 @@ begin
   WaitThread.Start;
 end;
 
+{ начитка заданий контрагента из БД }
 function TDM.LoadTasks(Active: TActiveMode; SaveData: boolean = true; ADate: TDate = 0; APartnerId: integer = 0): integer;
 var
   DateSql, WhereSql : string;
@@ -3748,6 +3805,7 @@ begin
   end;
 end;
 
+{ Сохранение в БД отметки о выполнении задания контрагентом }
 function TDM.CloseTask(ATasksId: integer; ATaskComment: string): boolean;
 begin
   try
@@ -3761,6 +3819,7 @@ begin
   end;
 end;
 
+{ сохранение в БД информации о новой ТТ и юр.лице }
 function TDM.CreateNewPartner(JuridicalId: integer; JuridicalName, Address: string;
   GPSN, GPSE: Double; var ErrorMessage : string): boolean;
 var
