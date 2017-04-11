@@ -3,7 +3,7 @@ inherited TaskForm: TTaskForm
   ClientHeight = 426
   ClientWidth = 873
   ExplicitWidth = 889
-  ExplicitHeight = 465
+  ExplicitHeight = 464
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -231,6 +231,7 @@ inherited TaskForm: TTaskForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 7
       Width = 228
     end
@@ -244,6 +245,7 @@ inherited TaskForm: TTaskForm
         Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 6
     Width = 222
   end
@@ -266,6 +268,7 @@ inherited TaskForm: TTaskForm
         Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 9
     Width = 228
   end
@@ -283,6 +286,7 @@ inherited TaskForm: TTaskForm
         Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 11
     Width = 222
   end
@@ -767,6 +771,7 @@ inherited TaskForm: TTaskForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
+    AutoWidth = True
     Left = 258
     Top = 248
   end
@@ -923,9 +928,6 @@ inherited TaskForm: TTaskForm
       end
       item
         Component = edPersonalTrade
-      end
-      item
-        Component = edPosition
       end>
     Left = 336
     Top = 144
@@ -981,10 +983,11 @@ inherited TaskForm: TTaskForm
   object GuidesPersonalTrade: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalTrade
-    FormNameParam.Value = 'TMember_ObjectForm'
+    isShowModal = True
+    FormNameParam.Value = 'TMemberPosition_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMember_ObjectForm'
+    FormName = 'TMemberPosition_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1003,6 +1006,44 @@ inherited TaskForm: TTaskForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = '149831'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Unitname'
+        Value = Null
+        Component = edUnit
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchName'
+        Value = Null
+        Component = edBranch
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 500
     Top = 56
@@ -1010,6 +1051,7 @@ inherited TaskForm: TTaskForm
   object GuidesPosition: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPosition
+    isShowModal = True
     FormNameParam.Value = 'TPositionForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','

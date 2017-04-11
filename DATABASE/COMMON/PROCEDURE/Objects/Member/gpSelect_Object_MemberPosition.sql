@@ -11,6 +11,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, PositionId Integer, Posi
              , INN TVarChar, DriverCertificate TVarChar, Card TVarChar, Comment TVarChar
              , isOfficial Boolean
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , BranchId Integer, BranchName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , isErased boolean) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -64,6 +66,13 @@ BEGIN
          , Object_InfoMoney_View.InfoMoneyName
          , Object_InfoMoney_View.InfoMoneyName_all
 
+         , Object_Branch.Id                         AS BranchId
+         , Object_Branch.ValueData                  AS BranchName
+
+         , COALESCE (ObjectLink_Personal_Unit.ChildObjectId, 0) AS UnitId
+         , Object_Unit.ObjectCode                   AS UnitCode
+         , Object_Unit.ValueData                    AS UnitName
+
          , Object_Member.isErased                   AS isErased
 
      FROM Object AS Object_Member
@@ -89,6 +98,16 @@ BEGIN
                               ON ObjectLink_Member_InfoMoney.ObjectId = Object_Member.Id
                              AND ObjectLink_Member_InfoMoney.DescId = zc_ObjectLink_Member_InfoMoney()
          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Member_InfoMoney.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                              ON ObjectLink_Personal_Unit.ObjectId = tmpPersonal.PersonalId
+                             AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
+ 
+         LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                              ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
+                             AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
 
      WHERE Object_Member.DescId = zc_Object_Member()
        AND (Object_Member.isErased = FALSE OR (Object_Member.isErased = TRUE AND inIsShowAll = TRUE))
