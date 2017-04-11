@@ -12,11 +12,21 @@ RETURNS integer
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbId Integer;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsInfo());
    vbUserId:= lpGetUserBySession (inSession);
+
+   -- проверяем есть ли уже такая связь
+   vbId:= (SELECT Object_GoodsItem.Id 
+           FROM Object_GoodsItem 
+           WHERE Object_GoodsItem.GoodsId = inGoodsId 
+             AND Object_GoodsItem.GoodsSizeId = inGoodsSizeId 
+             AND Object_GoodsItem.Id <> COALESCE (ioId, 0)
+           );
+   IF COALESCE (vbId, 0) <> 0 THEN ioId := vbId; END IF; 
    
    IF COALESCE (ioId, 0) = 0 THEN
       -- добавили новый элемент справочника и вернули значение <Ключ объекта>
@@ -45,8 +55,9 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+11.04.17          *
 10.03.17                                                          *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_GoodsInfo()
+-- 

@@ -61,6 +61,7 @@ BEGIN
      RETURN QUERY
        WITH tmpMI AS (SELECT MovementItem.Id
                            , MovementItem.ObjectId AS GoodsId
+                           , MovementItem.PartionId
                            , MovementItem.Amount 
                            , COALESCE (MIFloat_OperPrice.ValueData, 0)       AS OperPrice
                            , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice 
@@ -106,8 +107,17 @@ BEGIN
 
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
-                                 
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+            LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpMI.PartionId                                 
+
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = Object_PartionGoods.GoodsGroupId
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = Object_PartionGoods.MeasureId
+            LEFT JOIN Object AS Object_Composition ON Object_Composition.Id = Object_PartionGoods.CompositionId
+            LEFT JOIN Object AS Object_GoodsInfo ON Object_GoodsInfo.Id = Object_PartionGoods.GoodsInfoId
+            LEFT JOIN Object AS Object_LineFabrica ON Object_LineFabrica.Id = Object_PartionGoods.LineFabricaId 
+            LEFT JOIN Object AS Object_Label ON Object_Label.Id = Object_PartionGoods.LabelId
+            LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = Object_PartionGoods.GoodsSizeId
+
+    /*        LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
@@ -137,9 +147,10 @@ BEGIN
                                 AND ObjectLink_Goods_Label.DescId = zc_ObjectLink_Goods_Label()
             LEFT JOIN Object AS Object_Label ON Object_Label.Id = ObjectLink_Goods_Label.ChildObjectId
 
-            LEFT JOIN Object_GoodsItem ON Object_GoodsItem.GoodsId = Object_Goods.Id
-            LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = Object_GoodsItem.GoodsSizeId
-      
+      --      LEFT JOIN Object_GoodsItem ON Object_GoodsItem.GoodsId = Object_Goods.Id
+      --                                AND Object_PartionGoods.GoodsItem
+            LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = Object_PartionGoods.GoodsSizeId --Object_GoodsItem.GoodsSizeId
+      */
 ;
     END IF;
 

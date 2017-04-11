@@ -51,8 +51,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Caption = #1045#1076#1080#1085#1080#1094#1072' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
   end
   object cxLabel5: TcxLabel
-    Left = 10
-    Top = 96
+    Left = 8
+    Top = 97
     Caption = #1057#1086#1089#1090#1072#1074' '#1090#1086#1074#1072#1088#1072
   end
   object cxLabel6: TcxLabel
@@ -100,7 +100,6 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Default = True
         Kind = bkEllipsis
       end>
-    Properties.ReadOnly = True
     TabOrder = 11
     Width = 487
   end
