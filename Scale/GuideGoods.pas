@@ -1127,18 +1127,21 @@ procedure TGuideGoodsForm.actChoiceExecute(Sender: TObject);
 begin
      if CDS.FieldByName('GoodsCode').AsString <> '0'
      then begin EditGoodsCode.Text:=CDS.FieldByName('GoodsCode').AsString;
-                fEnterGoodsCode:=true;
-                fEnterGoodsName:=false;
-                EditGoodsCodeChange(EditGoodsCode); // EditGoodsCodeExit(EditGoodsCode);
+                fEnterGoodsCode:= true;
+                fEnterGoodsName:= false;
+                if SettingMain.BranchCode = 301
+                then EditGoodsCodeChange(EditGoodsCode); // EditGoodsCodeExit(EditGoodsCode);
           end
-     else begin EditGoodsName.Text:=CDS.FieldByName('GoodsName').AsString;
-                fEnterGoodsCode:=false;
-                fEnterGoodsName:=true;
+     else if (SettingMain.BranchCode = 301)
+          then begin
+                EditGoodsName.Text:=CDS.FieldByName('GoodsName').AsString;
+                fEnterGoodsCode:= false;
+                fEnterGoodsName:= true;
                 EditGoodsNameChange(EditGoodsName) // EditGoodsNameExit(EditGoodsName);
           end;
 
      if (ParamsMovement.ParamByName('OrderExternalId').asInteger=0)
-     then //EditGoodsCodeChange(EditGoodsCode)
+     then if (SettingMain.BranchCode <> 301) then EditGoodsCodeChange(EditGoodsCode) else
      else begin
                fEnterGoodsKindCode:=true;
                if rgGoodsKind.Items.Count>1

@@ -18,16 +18,16 @@ RETURNS TABLE (Id          Integer   -- Уникальный идентификатор, формируется в 
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbPersonalId Integer;
+   DECLARE vbMemberId Integer;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
 
-      vbPersonalId:= (SELECT tmpConst.PersonalId FROM gpGetMobile_Object_Const (inSession) AS tmpConst);
+      vbMemberId:= (SELECT tmpConst.MemberId FROM gpGetMobile_Object_Const (inSession) AS tmpConst);
 
       -- Результат
-      IF vbPersonalId IS NOT NULL 
+      IF vbMemberId IS NOT NULL 
       THEN
            RETURN QUERY
              SELECT MI_Task.Id
@@ -41,10 +41,11 @@ BEGIN
                   JOIN MovementLinkObject AS MovementLinkObject_PersonalTrade
                                           ON MovementLinkObject_PersonalTrade.MovementId = Movement_Task.Id
                                          AND MovementLinkObject_PersonalTrade.DescId = zc_MovementLinkObject_PersonalTrade()
-                                         AND MovementLinkObject_PersonalTrade.ObjectId = vbPersonalId
+                                         AND MovementLinkObject_PersonalTrade.ObjectId = vbMemberId
                   JOIN MovementItem AS MI_Task
                                     ON MI_Task.MovementId = Movement_Task.Id
                                    AND MI_Task.DescId = zc_MI_Master()
+                                   AND NOT MI_Task.isErased
                   LEFT JOIN MovementItemBoolean AS MIBoolean_Close
                                                 ON MIBoolean_Close.MovementItemId = MI_Task.Id
                                                AND MIBoolean_Close.DescId = zc_MIBoolean_Close()

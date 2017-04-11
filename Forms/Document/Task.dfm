@@ -3,7 +3,7 @@ inherited TaskForm: TTaskForm
   ClientHeight = 426
   ClientWidth = 873
   ExplicitWidth = 889
-  ExplicitHeight = 464
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -152,17 +152,10 @@ inherited TaskForm: TTaskForm
           object colisClose: TcxGridDBColumn [4]
             Caption = #1042#1099#1087#1086#1083#1085#1077#1085#1086' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isClose'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Caption = 'UnitForm'
-                Default = True
-                Kind = bkEllipsis
-              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 104
+            Width = 80
           end
           object colUpdateMobileDate: TcxGridDBColumn [5]
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1099#1087#1086#1083#1085#1077#1085#1086')'
@@ -174,6 +167,9 @@ inherited TaskForm: TTaskForm
               #1080#1103
             Options.Editing = False
             Width = 92
+          end
+          inherited colIsErased: TcxGridDBColumn
+            Width = 80
           end
         end
       end

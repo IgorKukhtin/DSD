@@ -2,11 +2,13 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem (Integer, Integer, Integer, Integer, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem (Integer, Integer, Integer, Integer, TFloat, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem (Integer, Integer, Integer, Integer, Integer, TFloat, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem(
  INOUT ioId           Integer, 
     IN inDescId       Integer, 
     IN inObjectId     Integer, 
+    IN inPartionId    Integer, -- партия
     IN inMovementId   Integer,
     IN inAmount       TFloat,
     IN inParentId     Integer,
@@ -30,6 +32,11 @@ BEGIN
          inObjectId := NULL;
      END IF;
 
+     -- меняем параметр
+     IF inPartionId = 0
+     THEN
+         inPartionId := NULL;
+     END IF;
 
      -- 0. Проверка
      IF COALESCE (inMovementId, 0) = 0
@@ -61,17 +68,17 @@ BEGIN
      IF COALESCE (ioId, 0) = 0
      THEN
          --
-         INSERT INTO MovementItem (DescId, ObjectId, MovementId, Amount, ParentId)
-                           VALUES (inDescId, inObjectId, inMovementId, inAmount, inParentId) RETURNING Id INTO ioId;
+         INSERT INTO MovementItem (DescId, ObjectId, PartionId, MovementId, Amount, ParentId)
+                           VALUES (inDescId, inObjectId, inPartionId, inMovementId, inAmount, inParentId) RETURNING Id INTO ioId;
      ELSE
          --
-         UPDATE MovementItem SET ObjectId = inObjectId, Amount = inAmount, ParentId = inParentId/*, MovementId = inMovementId*/ WHERE Id = ioId
+         UPDATE MovementItem SET ObjectId = inObjectId, PartionId = inPartionId, Amount = inAmount, ParentId = inParentId/*, MovementId = inMovementId*/ WHERE Id = ioId
          RETURNING isErased INTO vbIsErased;
          --
          IF NOT FOUND THEN
             RAISE EXCEPTION 'Ошибка.Элемент <%> в документе № <%> не найдена.', ioId, vbInvNumber;
-            INSERT INTO MovementItem (Id, DescId, ObjectId, MovementId, Amount, ParentId)
-                              VALUES (ioId, inDescId, inObjectId, inMovementId, inAmount, inParentId) RETURNING Id INTO ioId;
+            INSERT INTO MovementItem (Id, DescId, ObjectId, PartionId, MovementId, Amount, ParentId)
+                              VALUES (ioId, inDescId, inObjectId, inPartionId, inMovementId, inAmount, inParentId) RETURNING Id INTO ioId;
          END IF;
          --
          IF vbIsErased = TRUE
@@ -82,12 +89,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_MovementItem (Integer, Integer, Integer, Integer, TFloat, Integer, Integer) OWNER TO postgres; 
+--ALTER FUNCTION lpInsertUpdate_MovementItem (Integer, Integer, Integer, Integer, TFloat, Integer, Integer) OWNER TO postgres; 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.04.17         * add PartionId
  11.07.15                                        * add inUserId
  17.05.14                                        * add проверка - inAmount and inObjectId
  05.04.14                                        * add vbIsErased

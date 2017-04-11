@@ -563,7 +563,6 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         Caption = #1042#1077#1089' '#1085#1072' '#1058#1072#1073#1083#1086
         TabOrder = 2
-        ExplicitTop = 123
         object PanelGoodsWieghtValue: TPanel
           Left = 2
           Top = 16
@@ -612,8 +611,6 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         Caption = #1042#1074#1086#1076' '#1062#1045#1053#1040
         TabOrder = 4
-        ExplicitLeft = 5
-        ExplicitTop = 133
         object EditPrice: TcxCurrencyEdit
           Left = 5
           Top = 18

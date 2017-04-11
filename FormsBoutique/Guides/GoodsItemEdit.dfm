@@ -106,42 +106,42 @@ object GoodsItemEditForm: TGoodsItemEditForm
     Left = 10
     Top = 149
     Properties.ReadOnly = True
-    TabOrder = 11
+    TabOrder = 10
     Width = 273
   end
   object edMeasureName: TcxTextEdit
     Left = 179
     Top = 110
     Properties.ReadOnly = True
-    TabOrder = 12
+    TabOrder = 11
     Width = 78
   end
   object edCompositionName: TcxTextEdit
     Left = 10
     Top = 190
     Properties.ReadOnly = True
-    TabOrder = 13
+    TabOrder = 12
     Width = 273
   end
   object edGoodsInfoName: TcxTextEdit
     Left = 10
     Top = 230
     Properties.ReadOnly = True
-    TabOrder = 14
+    TabOrder = 13
     Width = 273
   end
   object edLineFabricaName: TcxTextEdit
     Left = 10
     Top = 270
     Properties.ReadOnly = True
-    TabOrder = 15
+    TabOrder = 14
     Width = 273
   end
   object edLabelName: TcxTextEdit
     Left = 10
     Top = 310
     Properties.ReadOnly = True
-    TabOrder = 16
+    TabOrder = 15
     Width = 273
   end
   object ceGoodsName: TcxButtonEdit
@@ -261,6 +261,8 @@ object GoodsItemEditForm: TGoodsItemEditForm
       item
         Name = 'GoodsName'
         Value = ''
+        Component = GoodsItemGoodsGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -477,7 +479,7 @@ object GoodsItemEditForm: TGoodsItemEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 241
-    Top = 86
+    Left = 225
+    Top = 70
   end
 end

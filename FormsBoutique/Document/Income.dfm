@@ -256,6 +256,11 @@ object IncomeForm: TIncomeForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountPriceListSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -303,6 +308,16 @@ object IncomeForm: TIncomeForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountPriceListSumm
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colName
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -346,6 +361,7 @@ object IncomeForm: TIncomeForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 200
           end
           object colMeasureName: TcxGridDBColumn
@@ -356,6 +372,50 @@ object IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 47
           end
+          object colCompositionName: TcxGridDBColumn
+            Caption = #1057#1086#1089#1090#1072#1074' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'CompositionName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 72
+          end
+          object colGoodsInfoName: TcxGridDBColumn
+            Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsInfoName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 76
+          end
+          object colLineFabricaName: TcxGridDBColumn
+            Caption = #1051#1080#1085#1080#1103' '#1082#1086#1083#1083#1077#1082#1094#1080#1080
+            DataBinding.FieldName = 'LineFabricaName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colLabelName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072
+            DataBinding.FieldName = 'LabelName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 104
+          end
+          object colGoodsSizeName: TcxGridDBColumn
+            Caption = #1056#1072#1079#1084#1077#1088
+            DataBinding.FieldName = 'GoodsSizeName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 62
+          end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
@@ -364,6 +424,7 @@ object IncomeForm: TIncomeForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 46
           end
           object colPrice: TcxGridDBColumn
@@ -374,6 +435,7 @@ object IncomeForm: TIncomeForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 75
           end
           object colCountForPrice: TcxGridDBColumn
@@ -385,6 +447,7 @@ object IncomeForm: TIncomeForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object colAmountSumm: TcxGridDBColumn
@@ -407,6 +470,7 @@ object IncomeForm: TIncomeForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object colAmountPriceListSumm: TcxGridDBColumn
@@ -429,6 +493,12 @@ object IncomeForm: TIncomeForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object colPartionId: TcxGridDBColumn
+            DataBinding.FieldName = 'PartionId'
+            Visible = False
+            Options.Editing = False
+            Width = 50
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -567,14 +637,6 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'bbAddMask'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbInsertRecord'
         end
         item
@@ -701,20 +763,32 @@ object IncomeForm: TIncomeForm
       Category = 0
     end
     object bbInsertRecord: TdxBarButton
-      Action = actInsertAction1
+      Action = macInsertAction
       Category = 0
     end
     object bbCompleteCost: TdxBarButton
-      Action = actCompleteCost
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
       Category = 0
+      Enabled = False
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
+      Visible = ivAlways
+      ImageIndex = 12
     end
     object bbactUnCompleteCost: TdxBarButton
-      Action = actUnCompleteCost
+      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
       Category = 0
+      Enabled = False
+      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
+      Visible = ivAlways
+      ImageIndex = 11
     end
     object bbactSetErasedCost: TdxBarButton
-      Action = actSetErasedCost
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
       Category = 0
+      Enabled = False
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
+      Visible = ivAlways
+      ImageIndex = 13
     end
     object bbShowErasedCost: TdxBarButton
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -725,8 +799,7 @@ object IncomeForm: TIncomeForm
       ImageIndex = 64
     end
     object bbUpdateRecord1: TdxBarButton
-      Action = actUpdateAction1
-      Caption = 'actUpdateAction1'
+      Action = macUpdateAction
       Category = 0
     end
   end
@@ -817,6 +890,28 @@ object IncomeForm: TIncomeForm
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
+    end
+    object actRefreshMI: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectMI
+      StoredProcList = <
+        item
+          StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelectMI
+        end
+        item
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -1046,59 +1141,6 @@ object IncomeForm: TIncomeForm
         end>
       isShowModal = False
     end
-    object CostJournalChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'CostJournalChoiceForm'
-      FormName = 'TIncomeItemEditForm'
-      FormNameParam.Value = 'TIncomeItemEditForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'key'
-          Value = Null
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OperDate'
-          Value = 'NULL'
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'StatusCode'
-          Value = Null
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MasterUnitId'
-          Value = Null
-          Component = GuidesTo
-          ComponentItem = 'Key'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MasterUnitName'
-          Value = Null
-          Component = GuidesTo
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
     object actAddMask: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1149,72 +1191,6 @@ object IncomeForm: TIncomeForm
         end>
       isShowModal = True
     end
-    object InsertRecord1: TInsertRecord
-      Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      Action = actInsertAction1
-      Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      ShortCut = 45
-      ImageIndex = 0
-    end
-    object UpdateRecord1: TUpdateRecord
-      Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Params = <
-        item
-          Name = 'inId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      Caption = 'UpdateRecord1'
-      ImageIndex = 1
-    end
-    object actCompleteCost: TdsdChangeMovementStatus
-      Category = 'DSDLib'
-      MoveParams = <>
-      Enabled = False
-      StoredProcList = <
-        item
-        end>
-      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      ImageIndex = 12
-      Status = mtComplete
-    end
-    object actSetErasedCost: TdsdChangeMovementStatus
-      Category = 'DSDLib'
-      MoveParams = <>
-      Enabled = False
-      StoredProcList = <
-        item
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      ImageIndex = 13
-      Status = mtDelete
-    end
-    object actUnCompleteCost: TdsdChangeMovementStatus
-      Category = 'DSDLib'
-      MoveParams = <>
-      Enabled = False
-      StoredProcList = <
-        item
-        end>
-      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      ImageIndex = 11
-      Status = mtUncomplete
-    end
     object actUpdateAction1: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1240,13 +1216,28 @@ object IncomeForm: TIncomeForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      isShowModal = False
+      isShowModal = True
       IdFieldName = 'Id'
+    end
+    object macUpdateAction: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateAction1
+        end
+        item
+          Action = actRefreshMI
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      ImageIndex = 1
     end
     object actInsertAction1: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'actInsertAction1'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ImageIndex = 0
       FormName = 'TIncomeItemEditForm'
       FormNameParam.Value = 'TIncomeItemEditForm'
@@ -1267,8 +1258,22 @@ object IncomeForm: TIncomeForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      isShowModal = False
+      isShowModal = True
       IdFieldName = 'Id'
+    end
+    object macInsertAction: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertAction1
+        end
+        item
+          Action = actRefreshMI
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      ImageIndex = 0
     end
   end
   object MasterDS: TDataSource

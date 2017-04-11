@@ -121,12 +121,7 @@ type
     actGoodsChoiceForm: TOpenChoiceForm;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
-    InsertRecord1: TInsertRecord;
-    CostJournalChoiceForm: TOpenChoiceForm;
     bbInsertRecord: TdxBarButton;
-    actCompleteCost: TdsdChangeMovementStatus;
-    actSetErasedCost: TdsdChangeMovementStatus;
-    actUnCompleteCost: TdsdChangeMovementStatus;
     bbCompleteCost: TdxBarButton;
     bbactUnCompleteCost: TdxBarButton;
     bbactSetErasedCost: TdxBarButton;
@@ -137,10 +132,13 @@ type
     ceParPartnerValue: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
     ceParValue: TcxCurrencyEdit;
-    UpdateRecord1: TUpdateRecord;
     bbUpdateRecord1: TdxBarButton;
     actInsertAction1: TdsdInsertUpdateAction;
     actUpdateAction1: TdsdInsertUpdateAction;
+    macInsertAction: TMultiAction;
+    actRefreshMI: TdsdDataSetRefresh;
+    macUpdateAction: TMultiAction;
+    colPartionId: TcxGridDBColumn;
   private
   public
   end;
