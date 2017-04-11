@@ -36,8 +36,8 @@ BEGIN
            , MIString_Comment.ValueData           AS Comment
            , MIDate_UpdateMobile.ValueData        AS UpdateMobileDate
 
-           , MIBoolean_Close.ValueData            AS isClose
-           , MovementItem.isErased                AS isErased
+           , COALESCE (MIBoolean_Close.ValueData, false)::Boolean AS isClose
+           , MovementItem.isErased                                AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
