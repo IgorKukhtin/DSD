@@ -63,6 +63,9 @@ type
     ceOperPriceList: TcxCurrencyEdit;
     cxLabel10: TcxLabel;
     ceCountForPrice: TcxCurrencyEdit;
+    cxLabel11: TcxLabel;
+    edLabelName: TcxButtonEdit;
+    LabelGuides: TdsdGuides;
   private
     { Private declarations }
   public

@@ -211,10 +211,9 @@ type
     procedure OnTimerNotifyEvent(Sender: TObject);
     procedure AfterScrollNotifyEvent(DataSet: TDataSet);
   protected
-    procedure OnPageChanging(Sender: TObject; NewPage: TcxTabSheet;
-      var AllowChange: Boolean); override;
-    procedure Notification(AComponent: TComponent;
-      Operation: TOperation); override;
+    procedure OnPageChanging(Sender: TObject; NewPage: TcxTabSheet; var AllowChange: Boolean); override;
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    property Timer: TTimer read FTimer;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -430,15 +429,14 @@ type
 
   TdsdDataSetRefreshEx = class(TdsdDataSetRefresh)
   private
-    FFieldName: string;
-    FGrid: TcxGrid;
-    procedure SetFieldName(const Value: string);
-    procedure SetGrid(const Value: TcxGrid);
+    FColumn: TcxGridDBColumn;
+    procedure SetColumn(const Value: TcxGridDBColumn);
   protected
-    function LocalExecute: Boolean; override;
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  public
+    function Execute: Boolean; override;
   published
-    property FieldName: string read FFieldName write SetFieldName;
-    property Grid: TcxGrid read FGrid write SetGrid;
+    property Column: TcxGridDBColumn read FColumn write SetColumn;
   end;
 
   // ƒанный класс дополн€ет поведение класса TdsdOpenForm по работе со справочниками
@@ -772,7 +770,7 @@ uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
   cxExportPivotGridLink, cxCustomPivotGrid, StrUtils, Variants,
   frxDBSet, Printers,
   cxGridAddOn, cxTextEdit, cxGridDBDataDefinitions, ExternalSave,
-  dxmdaset, dxCore, cxCustomData, cxGridLevel;
+  dxmdaset, dxCore, cxCustomData, cxGridLevel, cxImage, UnilWin;
 
 procedure Register;
 begin
@@ -3077,79 +3075,73 @@ end;
 
 { TdsdDataSetRefreshEx }
 
-function TdsdDataSetRefreshEx.LocalExecute: Boolean;
+function TdsdDataSetRefreshEx.Execute: Boolean;
 var
   DestBlob: AnsiString;
-  i: Integer;
-  SaveDS: TDataSource;
+  NoPhotoName: string;
 begin
-  Result := True;
-
-  if not Assigned(FGrid) then
-    Exit;
-
-  SaveDS := (Grid.Views[0].DataController as TcxGridDBDataController).DataSource;
-  (Grid.Views[0].DataController as TcxGridDBDataController).DataSource := nil;
-
-  for i := 0 to StoredProcList.Count - 1 do
-    if Assigned(StoredProcList[i]) then
-      if Assigned(StoredProcList[i].StoredProc) then
-      begin
-        // ≈сли табшит не установлен, но если установлен, то активен
-        if (not Assigned(StoredProcList[i].TabSheet)) or
-          (Assigned(StoredProcList[i].TabSheet) and
-          (StoredProcList[i].TabSheet.PageControl.ActivePage = StoredProcList[i]
-          .TabSheet)) then
-            if StoredProcList[i].StoredProc.OutputType = otMultiExecute then
-            begin
-              try
-                StoredProcList[i].StoredProc.Execute(fExecPack, true); //12.07.2016 - ѕередали параметр в StoredProc, нужен дл€ otMultiExecute
-              except
-              end;
-            end else
-            begin
-              try
-                StoredProcList[i].StoredProc.Execute;
-              except
-              end;
-            end;
-      end;
-
-  if Assigned(FDataSet) and (FFieldName <> '') then
-  begin
+  if Assigned(FDataSet) then
     DataSet.DisableControls;
-    DataSet.First;
-    try
-      while not DataSet.Eof do
+
+  if Assigned(FColumn) then
+    Column.PropertiesClassName := '';
+
+  Result := inherited Execute;
+
+  try
+    if Result and Assigned(FColumn) and Assigned(FDataSet) then
+      if DataSet.FindField(Column.DataBinding.FieldName) <> nil then
       begin
-        try
-          DestBlob := ReConvertConvert(DataSet.FieldByName(FieldName).AsString);
+        DataSet.First;
+        while not DataSet.Eof do
+        begin
+          try
+            DestBlob := ReConvertConvert(DataSet.FieldByName(Column.DataBinding.FieldName).AsString);
+          except
+            NoPhotoName := ExtractFilePath(ParamStr(0)) + 'NoPhoto.jpg';
+            if FileExists(NoPhotoName) then
+              DestBlob := FileReadString(NoPhotoName)
+            else
+              DestBlob := '';
+          end;
           DataSet.Edit;
-          DataSet.FieldByName(FieldName).AsString := DestBlob;
+          DataSet.FieldByName(Column.DataBinding.FieldName).AsString := DestBlob;
           DataSet.Post;
-        except
-          if DataSet.State in dsEditModes then
-            DataSet.Cancel;
+          DataSet.Next;
         end;
-        DataSet.Next;
+        DataSet.First;
+        Column.PropertiesClassName := 'TcxImageProperties';
+        if Column.PropertiesClass <> nil then
+        begin
+          (Column.Properties as TcxCustomImageProperties).GraphicClassName := 'TJPEGImage';
+          (Column.Properties as TcxCustomImageProperties).Stretch := True;
+        end;
       end;
-    finally
-      DataSet.First;
+  finally
+    if Assigned(FDataSet) then
+    begin
+      DataSet.AfterScroll := nil;
       DataSet.EnableControls;
     end;
   end;
 
-  (Grid.Views[0].DataController as TcxGridDBDataController).DataSource := SaveDS;
+  if Timer.Enabled then
+    Timer.Enabled := False;
 end;
 
-procedure TdsdDataSetRefreshEx.SetFieldName(const Value: string);
+procedure TdsdDataSetRefreshEx.Notification(AComponent: TComponent; Operation: TOperation);
 begin
-  FFieldName := Value;
+  inherited Notification(AComponent, Operation);
+  if csDestroying in ComponentState then
+    Exit;
+  if (Operation = opRemove) and Assigned(FColumn) then
+    if (AComponent is TcxGridDBColumn) and (AComponent = FColumn) then
+      Column := nil;
 end;
 
-procedure TdsdDataSetRefreshEx.SetGrid(const Value: TcxGrid);
+procedure TdsdDataSetRefreshEx.SetColumn(const Value: TcxGridDBColumn);
 begin
-  FGrid := Value;
+  FColumn := Value;
 end;
 
 end.
