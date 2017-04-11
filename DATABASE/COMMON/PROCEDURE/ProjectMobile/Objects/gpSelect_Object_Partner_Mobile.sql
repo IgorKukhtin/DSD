@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Mobile (Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Mobile (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner_Mobile (
-     IN inMemberId   Integer  , -- физ.лицо
+     IN inMemberId          Integer  , -- физ.лицо
      IN inisShowAll         Boolean  , --
      IN inSession           TVarChar   -- сессия пользователя
 )

@@ -866,10 +866,10 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
     KeyField = 'Id'
     LookupControl = edPersonalTrade
     Key = '0'
-    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.Value = 'TMemberPosition_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMember_ObjectForm'
+    FormName = 'TMemberPosition_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -887,6 +887,11 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = '149831'
         MultiSelectSeparator = ','
       end>
     Left = 607
