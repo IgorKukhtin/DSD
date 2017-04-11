@@ -109,20 +109,22 @@ inherited VisitForm: TVisitForm
             DataBinding.FieldName = 'PhotoData'
             PropertiesClassName = 'TcxImageProperties'
             Properties.GraphicClassName = 'TJPEGImage'
+            Properties.Stretch = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 160
+            Width = 223
           end
           object Comment: TcxGridDBColumn [2]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 126
+            Width = 259
           end
           object colGUID: TcxGridDBColumn [3]
             DataBinding.FieldName = 'GUID'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -237,6 +239,7 @@ inherited VisitForm: TVisitForm
     inherited actRefresh: TdsdDataSetRefresh
       ShortCut = 0
       RefreshOnTabSetChanges = True
+      DataSet = MasterCDS
     end
     inherited actPrint: TdsdPrintAction
       StoredProcList = <
@@ -381,8 +384,8 @@ inherited VisitForm: TVisitForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = True
-      FieldName = 'PhotoData'
-      Grid = cxGrid
+      DataSet = MasterCDS
+      Column = PhotoData
     end
   end
   inherited MasterDS: TDataSource
