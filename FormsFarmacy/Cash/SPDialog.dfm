@@ -3,11 +3,11 @@ inherited SPDialogForm: TSPDialogForm
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = #1042#1099#1073#1086#1088' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074' - '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090
-  ClientHeight = 215
+  ClientHeight = 166
   ClientWidth = 554
   Position = poDesktopCenter
   ExplicitWidth = 560
-  ExplicitHeight = 240
+  ExplicitHeight = 191
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel [0]
@@ -18,25 +18,25 @@ inherited SPDialogForm: TSPDialogForm
     Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077':'
   end
   object Label2: TLabel [1]
-    Left = 295
-    Top = 8
+    Left = 25
+    Top = 58
     Width = 56
     Height = 13
     Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
   end
   inherited bbOk: TcxButton
     Left = 190
-    Top = 171
+    Top = 123
     ModalResult = 0
     OnClick = bbOkClick
     ExplicitLeft = 190
-    ExplicitTop = 171
+    ExplicitTop = 123
   end
   inherited bbCancel: TcxButton
     Left = 311
-    Top = 171
+    Top = 123
     ExplicitLeft = 311
-    ExplicitTop = 171
+    ExplicitTop = 123
   end
   object cePartnerMedical: TcxButtonEdit [4]
     Left = 16
@@ -54,59 +54,58 @@ inherited SPDialogForm: TSPDialogForm
     Width = 265
   end
   object edMedicSP: TcxTextEdit [5]
-    Left = 295
-    Top = 27
+    Left = 16
+    Top = 74
     TabOrder = 3
-    Width = 250
+    Width = 265
   end
   object cxLabel13: TcxLabel [6]
-    Left = 403
-    Top = 58
+    Left = 433
+    Top = 54
     Caption = #1044#1072#1090#1072' '#1088#1077#1094#1077#1087#1090#1072
   end
   object edOperDateSP: TcxDateEdit [7]
-    Left = 411
-    Top = 77
+    Left = 433
+    Top = 74
     EditValue = 42261d
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
+    Properties.SaveTime = False
+    Properties.ShowTime = False
     TabOrder = 5
     Width = 90
   end
   object cxLabel14: TcxLabel [8]
-    Left = 347
-    Top = 114
+    Left = 297
+    Top = 56
     Caption = #1053#1086#1084#1077#1088' '#1088#1077#1094#1077#1087#1090#1072
   end
   object edInvNumberSP: TcxTextEdit [9]
-    Left = 347
-    Top = 130
-    Properties.ReadOnly = True
+    Left = 297
+    Top = 74
+    Properties.ReadOnly = False
     TabOrder = 7
     Width = 116
   end
   object cxLabel17: TcxLabel [10]
-    Left = 137
-    Top = 106
+    Left = 297
+    Top = 8
     Caption = #8470' '#1072#1084#1073#1091#1083#1072#1090#1086#1088#1080#1080' '
   end
   object edAmbulance: TcxTextEdit [11]
-    Left = 137
-    Top = 122
-    Properties.ReadOnly = True
+    Left = 297
+    Top = 27
+    Properties.ReadOnly = False
     TabOrder = 9
-    Width = 89
+    Width = 116
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 51
-    Top = 48
+    Top = 104
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 24
-    Top = 48
+    Top = 104
   end
   inherited ActionList: TActionList
-    Left = 79
-    Top = 47
+    Top = 103
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -145,8 +144,8 @@ inherited SPDialogForm: TSPDialogForm
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
-    Left = 112
-    Top = 48
+    Left = 104
+    Top = 104
   end
   object PartnerMedicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -155,7 +154,7 @@ inherited SPDialogForm: TSPDialogForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPartnerMedicalForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -174,7 +173,7 @@ inherited SPDialogForm: TSPDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 200
-    Top = 48
+    Left = 192
+    Top = 8
   end
 end

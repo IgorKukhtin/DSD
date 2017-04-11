@@ -29,7 +29,7 @@ type
   private
     { Private declarations }
   public
-     function DiscountDialogExecute(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP, AAmbulance, AInvNumberSP: String; var aOperDateSP : TDateTime): boolean;
+     function DiscountDialogExecute(var APartnerMedicalId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP: String; var aOperDateSP : TDateTime): boolean;
   end;
 
 
@@ -78,14 +78,16 @@ begin
           ActiveControl:=cePartnerMedical;
           ShowMessage ('Внимание.Значение <Медицинское учреждение> не установлено.');
           ModalResult:=mrOk; // ??? может не надо закрывать
-    end;
+    end
+    // а здесь уже все ОК
+    else ModalResult:=mrOk;
 
 end;
 
-function TSPDialogForm.DiscountDialogExecute(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP, AAmbulance, AInvNumberSP: String; var aOperDateSP : TDateTime): boolean;
+function TSPDialogForm.DiscountDialogExecute(var APartnerMedicalId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP: String; var aOperDateSP : TDateTime): boolean;
 Begin
-      edMedicSP.Text:= AMedicSP;
       edAmbulance.Text:= AAmbulance;
+      edMedicSP.Text:= AMedicSP;
       edInvNumberSP.Text:= AInvNumberSP;
       edOperDateSP.Text:= DateToStr(aOperDateSP);
       //
@@ -107,16 +109,16 @@ Begin
             PartnerMedicalGuides.Params.ParamByName('Key').Value:= 0;
         end;
         APartnerMedicalName   := PartnerMedicalGuides.Params.ParamByName('TextValue').Value;
-        AMedicSP:= trim (edMedicSP.Text);
         AAmbulance:= trim (edAmbulance.Text);
+        AMedicSP:= trim (edMedicSP.Text);
         AInvNumberSP:= trim (edInvNumberSP.Text);
         AOperDateSP:= StrToDate (edOperDateSP.Text);
       end
       else begin
             APartnerMedicalId   := 0;
             APartnerMedicalName := '';
-            AMedicSP            := '';
             AAmbulance          := '';
+            AMedicSP            := '';
             AInvNumberSP        := '';
            end;
 end;

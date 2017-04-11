@@ -26,6 +26,12 @@ RETURNS TABLE (
   DiscountExternalId Integer,
   DiscountExternalName TVarChar,
   DiscountCardNumber TVarChar,
+  PartnerMedicalId Integer,
+  PartnerMedicalName TVarChar,
+  Ambulance TVarChar,
+  MedicSP TVarChar,
+  InvNumberSP TVarChar,
+  OperDateSP TDateTime,
   Color_CalcDoc Integer
  )
 AS
@@ -116,6 +122,13 @@ BEGIN
 	    , Object_DiscountExternal.ValueData          AS DiscountExternalName
 	    , Object_DiscountCard.ValueData              AS DiscountCardNumber
 
+            , Object_PartnerMedical.Id                   AS PartnerMedicalId
+            , Object_PartnerMedical.ValueData            AS PartnerMedicalName
+            , MovementString_Ambulance.ValueData         AS Ambulance
+            , MovementString_MedicSP.ValueData           AS MedicSP
+            , MovementString_InvNumberSP.ValueData       AS InvNumberSP
+            , MovementDate_OperDateSP.ValueData          AS OperDateSP
+
             , CASE WHEN Object_ConfirmedKind.Id = zc_Enum_ConfirmedKind_UnComplete() AND tmpErr.MovementId > 0 THEN 16440317 -- бледно крассный / розовый
                    WHEN Object_ConfirmedKind.Id = zc_Enum_ConfirmedKind_UnComplete() AND tmpErr.MovementId IS NULL THEN zc_Color_Yelow() -- желтый
                    ELSE zc_Color_White()
@@ -184,6 +197,25 @@ BEGIN
                                           ON MovementLinkObject_ConfirmedKindClient.MovementId = Movement.Id
                                          AND MovementLinkObject_ConfirmedKindClient.DescId = zc_MovementLinkObject_ConfirmedKindClient()
              LEFT JOIN Object AS Object_ConfirmedKindClient ON Object_ConfirmedKindClient.Id = MovementLinkObject_ConfirmedKindClient.ObjectId
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
+                                          ON MovementLinkObject_PartnerMedical.MovementId = Movement.Id
+                                         AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
+             LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = MovementLinkObject_PartnerMedical.ObjectId
+
+             LEFT JOIN MovementString AS MovementString_Ambulance
+                                      ON MovementString_Ambulance.MovementId = Movement.Id
+                                     AND MovementString_Ambulance.DescId = zc_MovementString_Ambulance()
+             LEFT JOIN MovementString AS MovementString_MedicSP
+                                      ON MovementString_MedicSP.MovementId = Movement.Id
+                                     AND MovementString_MedicSP.DescId = zc_MovementString_MedicSP()
+             LEFT JOIN MovementString AS MovementString_InvNumberSP
+                                      ON MovementString_InvNumberSP.MovementId = Movement.Id
+                                     AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
+             LEFT JOIN MovementDate AS MovementDate_OperDateSP
+                                    ON MovementDate_OperDateSP.MovementId = Movement.Id
+                                   AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
+
        ;
 
 END;

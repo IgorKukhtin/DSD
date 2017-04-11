@@ -94,7 +94,7 @@ begin
   with TLoginForm1.Create(Application) do
   Begin
     //≈сли все хорошо создаем главную форму Application.CreateForm();
-    AllowLocalConnect := True; //True;
+    AllowLocalConnect := True; //False;  // ???ƒл€ Off-line режима??? 10.04.2017
 
     if FindCmdLineSwitch('autologin', true)
     then begin
@@ -117,6 +117,7 @@ begin
         gc_isSetDefault := True;
       //
       Application.CreateForm(TdmMain, dmMain);
+
       if True then  // выбираем главную форму
        Application.CreateForm(TMainCashForm, MainCash.MainCashForm) // им€ модул€ об€зательно
       else  // ‘орма работате в св€зке с FarmacyCashServise.exe

@@ -77,6 +77,7 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+			<Debugger_RunParams>/autologin</Debugger_RunParams>
 			<Debugger_HostApplication>D:\Documents\RAD Studio\Projects\DSD.git\BIN\FarmacyCashServise.exe</Debugger_HostApplication>
 			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.12.2;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 			<VerInfo_Release>12</VerInfo_Release>
