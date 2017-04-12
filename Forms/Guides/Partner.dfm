@@ -475,6 +475,69 @@ object PartnerForm: TPartnerForm
         Options.Editing = False
         Width = 25
       end
+      object colDelivery1: TcxGridDBColumn
+        Caption = #1055#1085' '#1079'-'#1079
+        DataBinding.FieldName = 'Delivery1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1085' '#1079#1072#1074#1086#1079
+        Options.Editing = False
+        Width = 25
+      end
+      object colDelivery2: TcxGridDBColumn
+        Caption = #1042#1090' '#1079'-'#1079
+        DataBinding.FieldName = 'Delivery2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1090' '#1079#1072#1074#1086#1079
+        Options.Editing = False
+        Width = 25
+      end
+      object colDelivery3: TcxGridDBColumn
+        Caption = #1057#1088' '#1079'-'#1079
+        DataBinding.FieldName = 'Delivery3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1088' '#1079#1072#1074#1086#1079
+        Options.Editing = False
+        Width = 25
+      end
+      object colDelivery4: TcxGridDBColumn
+        Caption = #1063#1090' '#1079'-'#1079
+        DataBinding.FieldName = 'Delivery4'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1063#1090' '#1079#1072#1074#1086#1079
+        Options.Editing = False
+        Width = 25
+      end
+      object colDelivery5: TcxGridDBColumn
+        Caption = #1055#1090' '#1079'-'#1079
+        DataBinding.FieldName = 'Delivery5'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1090' '#1079#1072#1074#1086#1079
+        Options.Editing = False
+        Width = 25
+      end
+      object colDelivery6: TcxGridDBColumn
+        Caption = #1057#1073' '#1079'-'#1079
+        DataBinding.FieldName = 'Delivery6'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1073' '#1079#1072#1074#1086#1079
+        Options.Editing = False
+        Width = 25
+      end
+      object colDelivery7: TcxGridDBColumn
+        Caption = #1042#1089' '#1079'-'#1079
+        DataBinding.FieldName = 'Delivery7'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1089' '#1079#1072#1074#1086#1079
+        Options.Editing = False
+        Width = 25
+      end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'

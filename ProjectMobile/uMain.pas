@@ -32,8 +32,10 @@ uses
   {$ENDIF};
 
 const
+  // коефициенты для расчета растояния
   LatitudeRatio = '111.194926645';
   LongitudeRatio = '70.158308514';
+  // размер шрифта по умолчанию
   DefaultSize = 11;
 
 type
@@ -770,8 +772,6 @@ type
     procedure EditStoreReal(const AResult: TModalResult);
     procedure SetPartnerCoordinates(const AResult: TModalResult);
 
-    function PrependIfNotEmpty(const Prefix, Subject: string): string;
-
     function GetAddress(const Latitude, Longitude: Double): string;
     //function GetCoordinates(const Address: string; out Coordinates: TLocationCoord2D): Boolean;
     procedure WebGMapDownloadFinish(Sender: TObject);
@@ -873,6 +873,7 @@ var
 begin
   FormatSettings.DecimalSeparator := '.';
 
+  // получение настроек из ini файла
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
   SettingsFile := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'settings.ini'));
   {$ELSE}
@@ -894,6 +895,7 @@ begin
     FreeAndNil(SettingsFile);
   end;
 
+  // установка вертикального положения экрана телефона
   {$IFDEF ANDROID}
   if TPlatformServices.Current.SupportsPlatformService(IFMXScreenService, IInterface(ScreenService)) then
   begin
@@ -926,8 +928,6 @@ begin
 
   SwitchToForm(tiStart, nil);
   ChangeMainPageUpdate(tcMain);
-
-  tSavePathTimer(tSavePath);
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
@@ -959,6 +959,7 @@ procedure TfrmMain.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
 var
   FService : IFMXVirtualKeyboardService;
 begin
+  // возврат на предидущую форму при нажатии "отмены" на телефоне
   if Key = vkHardwareBack then
   begin
     TPlatformServices.Current.SupportsPlatformService(IFMXVirtualKeyboardService, IInterface(FService));
@@ -995,6 +996,7 @@ begin
   end;
 end;
 
+// отображение на карты всех ТТ
 procedure TfrmMain.lbiShowAllOnMapClick(Sender: TObject);
 begin
   FMarkerList.Clear;
@@ -1021,6 +1023,7 @@ begin
   ppPartner.IsOpen := False;
 end;
 
+// изменение елементов списка задач контрагента
 procedure TfrmMain.LinkListControlToField15FilledListItem(Sender: TObject;
   const AEditor: IBindListEditorItem);
 var
@@ -1045,6 +1048,7 @@ begin
   end;
 end;
 
+// проверка логина и пароля
 procedure TfrmMain.LogInButtonClick(Sender: TObject);
 var
   ErrorMessage: String;
@@ -1089,13 +1093,17 @@ begin
     end;
   end;
 
+  // сохранение координат при логине и запуск таймера
+  tSavePathTimer(tSavePath);
+
   if (not gc_User.Local) and NeedSync then
   begin
     DM.SynchronizeWithMainDatabase;
   end
   else
-    DM.CheckUpdate;
+    DM.CheckUpdate; // проверка небходимости обновления
 
+  // сохранение логина в ini файле
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
   SettingsFile := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'settings.ini'));
   {$ELSE}
@@ -1112,6 +1120,7 @@ begin
   SwitchToForm(tiMain, nil);
 end;
 
+// условия фильтра для товаров из прайс листа
 procedure TfrmMain.lwPriceListGoodsFilter(Sender: TObject; const AFilter, AValue: string;
   var Accept: Boolean);
 begin
@@ -1121,6 +1130,7 @@ begin
     Accept := true;
 end;
 
+// условия фильтра для товаров выбраных для заявки на поставку
 procedure TfrmMain.lwOrderExternalItemsFilter(Sender: TObject; const AFilter,
   AValue: string; var Accept: Boolean);
 begin
@@ -1137,7 +1147,7 @@ begin
   if ItemObject = nil then
     exit;
 
-  if ItemObject.Name = 'DeleteButton' then
+  if ItemObject.Name = 'DeleteButton' then // удаление выбранного товара из завки на поставку
   begin
     if DM.cdsOrderItemsId.AsInteger <> -1 then
       FDeletedOI.Add(DM.cdsOrderItemsId.AsInteger);
@@ -1146,6 +1156,7 @@ begin
     RecalculateTotalPriceAndWeight;
   end
   else
+  // вызов формы для редактирования количества выбранного товара
   if (ItemObject.Name = 'Count') or (ItemObject.Name = 'Measure') then
   begin
     lAmount.Text := '0';
@@ -1158,6 +1169,7 @@ end;
 procedure TfrmMain.lwOrderExternalItemsUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
+  // установки иконки для кнопки удаления
   TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
 end;
 
@@ -1168,12 +1180,13 @@ begin
   if ItemObject = nil then
     exit;
 
-  if ItemObject.Name = 'DeleteButton' then
+  if ItemObject.Name = 'DeleteButton' then // удаление заявки на поставку
   begin
     TDialogService.MessageDialog('Удалить заявку на ' + FormatDateTime('DD.MM.YYYY', DM.cdsOrderExternalOperDate.AsDateTime) + '?',
       TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteOrderExtrernal);
   end
   else
+  // вызов формы редакирования выбранной заявки на поставку
   if ItemObject.Name = 'EditButton' then
   begin
     if DM.qryPartnerPriceWithVAT.AsBoolean then
@@ -1196,10 +1209,13 @@ end;
 procedure TfrmMain.lwOrderExternalListUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
+  // установки иконки для кнопки удаления
   TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
+  // установки иконки для кнопки редактирования
   TListItemImage(AItem.Objects.FindDrawable('EditButton')).ImageIndex := 1;
 end;
 
+// условия фильтра для товаров, выбираемых для завок на поставку или возврат или ввода остатков
 procedure TfrmMain.lwGoodsItemsFilter(Sender: TObject; const AFilter,
   AValue: string; var Accept: Boolean);
 var
@@ -1228,11 +1244,13 @@ procedure TfrmMain.lwGoodsItemsItemClick(const Sender: TObject;
 begin
   if (AItem.Objects.FindDrawable('IsSelected') as TListItemDrawable).Visible then
   begin
+    // удаление товара из перечня выбранных
     (AItem.Objects.FindDrawable('IsSelected') as TListItemDrawable).Visible := False;
     FCheckedGooodsItems.Remove((AItem.Objects.FindDrawable('FullInfo') as TListItemDrawable).Data.AsString);
   end
   else
   begin
+    // добавление товара в перечень выбранных
     (AItem.Objects.FindDrawable('IsSelected') as TListItemDrawable).Visible := True;
     FCheckedGooodsItems.Add((AItem.Objects.FindDrawable('FullInfo') as TListItemDrawable).Data.AsString);
   end;
@@ -1241,14 +1259,16 @@ end;
 procedure TfrmMain.lwGoodsItemsUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
+  // отображать акционную цену только когда отображается соответсвующая шапка (только для завки на товары)
   (AItem.Objects.FindDrawable('PromoPrice') as TListItemDrawable).Visible := lPromoPrice.Visible;
-
+  // отобразить "галочку" для выбранных товаров
   (AItem.Objects.FindDrawable('IsSelected') as TListItemDrawable).Visible := FCheckedGooodsItems.Contains((AItem.Objects.FindDrawable('FullInfo') as TListItemDrawable).Data.AsString);
 end;
 
 procedure TfrmMain.lwPartnerItemClick(const Sender: TObject;
   const AItem: TListViewItem);
 begin
+  // начитка и отображение информации о торговой точке
   ShowPartnerInfo;
 end;
 
@@ -1256,7 +1276,7 @@ procedure TfrmMain.lwPartnerPhotoGroupsItemClickEx(const Sender: TObject;
   ItemIndex: Integer; const LocalClickPos: TPointF;
   const ItemObject: TListItemDrawable);
 begin
-  if (ItemObject <> nil) and (ItemObject.Name = 'I') then
+  if (ItemObject <> nil) and (ItemObject.Name = 'I') then // удаление выбранной группы фотографий
   begin
     DM.qryPhotoGroups.Edit;
     DM.qryPhotoGroupsStatusId.AsInteger := DM.tblObject_ConstStatusId_Erased.AsInteger;
@@ -1266,6 +1286,7 @@ begin
   end
   else
   begin
+    // отображение фотографий выбранной группы
     ShowPhotos;
   end;
 end;
@@ -1273,6 +1294,7 @@ end;
 procedure TfrmMain.lwPartnerPhotoGroupsUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
+  // установка иконки для кнопки удаления
   AItem.ImageIndex := 0;
 end;
 
@@ -1280,10 +1302,8 @@ procedure TfrmMain.lwPartnerTasksItemClickEx(const Sender: TObject;
   ItemIndex: Integer; const LocalClickPos: TPointF;
   const ItemObject: TListItemDrawable);
 begin
-  if ItemObject = nil then
-    exit;
-
-  if ItemObject.Name = 'CloseButton' then
+  // отметить задание как выполненное (с вводом коментария)
+  if (ItemObject <> nil) and (ItemObject.Name = 'CloseButton') then
   begin
     eTaskComment.Text := DM.cdsTasksComment.AsString;
 
@@ -1295,13 +1315,16 @@ end;
 procedure TfrmMain.lwPartnerTasksUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
+  // установки иконки для кнопки "закрыть задание"
   TListItemImage(AItem.Objects.FindDrawable('CloseButton')).ImageIndex := 4;
 end;
 
 procedure TfrmMain.lwPartnerUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
+  // установка иконки аддресса
   TListItemImage(AItem.Objects.FindDrawable('imAddress')).ImageIndex := 2;
+  // установка иконки договора
   TListItemImage(AItem.Objects.FindDrawable('imContact')).ImageIndex := 3;
 end;
 
@@ -1311,6 +1334,7 @@ procedure TfrmMain.lwPhotosItemClickEx(const Sender: TObject;
 begin
   if (ItemObject <> nil) then
   begin
+    // удалить фотографию
     if ItemObject.Name = 'DeleteButton' then
     begin
       DM.qryPhotos.Edit;
@@ -1321,6 +1345,7 @@ begin
       DM.qryPhotos.Refresh;
     end
     else
+    // просмотр фотографии с возможностью редактирования комментария
     if ItemObject.Name = 'EditButton' then
       ShowPhoto;
   end;
@@ -1329,16 +1354,20 @@ end;
 procedure TfrmMain.lwPhotosUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
+  // установка иконки кнопки удаления
   TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
+  // установка иконки кнопки редактирования
   TListItemImage(AItem.Objects.FindDrawable('EditButton')).ImageIndex := 1;
 end;
 
 procedure TfrmMain.lwPriceListItemClick(const Sender: TObject;
   const AItem: TListViewItem);
 begin
+  // начитка и отображение товаров выбранного прайс-листа
   ShowPriceListItems;
 end;
 
+// условия фильтра для акционных товаров
 procedure TfrmMain.lwPromoGoodsFilter(Sender: TObject; const AFilter,
   AValue: string; var Accept: Boolean);
 begin
@@ -1348,6 +1377,7 @@ begin
     Accept := true;
 end;
 
+// показать торговые точки на которых продается выбранный акционнный товар
 procedure TfrmMain.lwPromoGoodsItemClick(const Sender: TObject;
   const AItem: TListViewItem);
 begin
@@ -1358,9 +1388,11 @@ end;
 procedure TfrmMain.lwPromoGoodsUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
+  // показать символ "детали" если мы показываем все акионные товары (без привязки к ТТ)
   AItem.Objects.FindDrawable('Details').Visible := pPromoGoodsDate.Visible;
 end;
 
+// показать акционные товары которые продаются на выбраной ТТ
 procedure TfrmMain.lwPromoPartnersItemClick(const Sender: TObject;
   const AItem: TListViewItem);
 begin
@@ -1371,9 +1403,12 @@ end;
 procedure TfrmMain.lwPromoPartnersUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
+  // показать символ "детали" если мы показываем все ТТ(без привязки к товарам)
   AItem.Objects.FindDrawable('Details').Visible := pPromoPartnerDate.Visible;
 
+  // установка иконки адреса
   TListItemImage(AItem.Objects.FindDrawable('imAddress')).ImageIndex := 2;
+  // установка иконки договора
   TListItemImage(AItem.Objects.FindDrawable('imContact')).ImageIndex := 3;
 end;
 
@@ -1384,13 +1419,13 @@ begin
   if ItemObject = nil then
     exit;
 
-  if ItemObject.Name = 'DeleteButton' then
+  if ItemObject.Name = 'DeleteButton' then // удалить выбранную заявку на возврат товаров
   begin
     TDialogService.MessageDialog('Удалить возврат на ' + FormatDateTime('DD.MM.YYYY', DM.cdsReturnInOperDate.AsDateTime) + '?',
       TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteReturnIn);
   end
   else
-  if ItemObject.Name = 'EditButton' then
+  if ItemObject.Name = 'EditButton' then // показать информацию по выбранной заявке на возврат товаор
   begin
     if DM.qryPartnerPriceWithVAT_RET.AsBoolean then
       lReturnInPrice.Text := 'Цена (с НДС)'
@@ -1413,10 +1448,13 @@ end;
 procedure TfrmMain.lwReturnInListUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
+  // установить иконку кнопки удаления
   TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
+  // установить иконку кнопки редактирования
   TListItemImage(AItem.Objects.FindDrawable('EditButton')).ImageIndex := 1;
 end;
 
+// условия фильтра товаров, по которым указывается остаток
 procedure TfrmMain.lwStoreRealItemsFilter(Sender: TObject; const AFilter,
   AValue: string; var Accept: Boolean);
 begin
@@ -1433,7 +1471,7 @@ begin
   if ItemObject = nil then
     exit;
 
-  if ItemObject.Name = 'DeleteButton' then
+  if ItemObject.Name = 'DeleteButton' then // удалить товар из списка остатков
   begin
     if DM.cdsStoreRealItemsId.AsInteger <> -1 then
       FDeletedSRI.Add(DM.cdsStoreRealItemsId.AsInteger);
@@ -1443,6 +1481,7 @@ begin
     RecalculateTotalPriceAndWeight;
   end
   else
+  // вызов формы для редактирования количества остатков выбранного товара
   if (ItemObject.Name = 'Count') or (ItemObject.Name = 'Measure') then
   begin
     lAmount.Text := '0';
@@ -1459,12 +1498,13 @@ begin
   if ItemObject = nil then
     exit;
 
-  if ItemObject.Name = 'DeleteButton' then
+  if ItemObject.Name = 'DeleteButton' then // удалить выбранные "остатки"
   begin
     TDialogService.MessageDialog('Удалить остатки на ' + FormatDateTime('DD.MM.YYYY', DM.cdsStoreRealsOperDate.AsDateTime) + '?',
       TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteStoreReal);
   end
   else
+  // вызывать форму для редактирования "остатков"
   if ItemObject.Name = 'EditButton' then
   begin
     FDeletedSRI.Clear;
@@ -1482,17 +1522,17 @@ end;
 procedure TfrmMain.lwStoreRealListUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
+  // установить иконку кнопки удаления
   TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
+  // установить иконку кнопки редактирования
   TListItemImage(AItem.Objects.FindDrawable('EditButton')).ImageIndex := 1;
 end;
 
 procedure TfrmMain.lwTasksItemClickEx(const Sender: TObject; ItemIndex: Integer;
   const LocalClickPos: TPointF; const ItemObject: TListItemDrawable);
 begin
-  if ItemObject = nil then
-    exit;
-
-  if ItemObject.Name = 'CloseButton' then
+  // отметить задание как выполненное (после ввода коментария)
+  if (ItemObject <> nil) and (ItemObject.Name = 'CloseButton') then
   begin
     eTaskComment.Text := DM.cdsTasksComment.AsString;
 
@@ -1504,10 +1544,12 @@ end;
 procedure TfrmMain.lwStoreRealItemsUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
+  // установить иконку кнопки удаления
   TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
   TListItemText(AItem.Objects.FindDrawable('Lable')).Text := 'Фактический остаток';
 end;
 
+// ввод числа (для редактирования количества товара)
 procedure TfrmMain.b0Click(Sender: TObject);
 begin
   if lAmount.Text = '0' then
@@ -1528,6 +1570,7 @@ begin
     ReturnPriorForm;
 end;
 
+// удаление заявки на товары
 procedure TfrmMain.DeleteOrderExtrernal(const AResult: TModalResult);
 begin
   if AResult = mrYes then
@@ -1539,6 +1582,7 @@ begin
   end;
 end;
 
+// удаление "остатков"
 procedure TfrmMain.DeleteStoreReal(const AResult: TModalResult);
 begin
   if AResult = mrYes then
@@ -1550,6 +1594,19 @@ begin
   end;
 end;
 
+// удаление "возвратов"
+procedure TfrmMain.DeleteReturnIn(const AResult: TModalResult);
+begin
+  if AResult = mrYes then
+  begin
+    DM.conMain.ExecSQL('update Movement_ReturnIn set STATUSID = ' + DM.tblObject_ConstStatusId_Erased.AsString +
+      ' where ID = ' + DM.cdsReturnInId.AsString);
+
+    DM.cdsReturnIn.Delete;
+  end;
+end;
+
+// начитка акционных товаров
 procedure TfrmMain.dePromoGoodsDateChange(Sender: TObject);
 begin
   DM.qryPromoGoods.Close;
@@ -1570,6 +1627,7 @@ begin
   lwPromoGoods.ScrollViewPos := 0;
 end;
 
+// начитка торговых точек, участвующих в акциях
 procedure TfrmMain.dePromoPartnerDateChange(Sender: TObject);
 begin
   DM.qryPromoPartners.Close;
@@ -1589,17 +1647,7 @@ begin
   lwPromoPartners.ScrollViewPos := 0;
 end;
 
-procedure TfrmMain.DeleteReturnIn(const AResult: TModalResult);
-begin
-  if AResult = mrYes then
-  begin
-    DM.conMain.ExecSQL('update Movement_ReturnIn set STATUSID = ' + DM.tblObject_ConstStatusId_Erased.AsString +
-      ' where ID = ' + DM.cdsReturnInId.AsString);
-
-    DM.cdsReturnIn.Delete;
-  end;
-end;
-
+// создание новых или редактирование ранее введенных "остатков"
 procedure TfrmMain.EditStoreReal(const AResult: TModalResult);
 begin
   if AResult = mrNone then
@@ -1630,6 +1678,7 @@ begin
   end;
 end;
 
+// проверка и корректировка введенной координаты GPS
 procedure TfrmMain.eNewPartnerGPSNValidate(Sender: TObject; var Text: string);
 var
   str : string;
@@ -1655,6 +1704,7 @@ begin
   end;
 end;
 
+// присвоение текущих координат выбраной ТТ и сохранение в БД
 procedure TfrmMain.SetPartnerCoordinates(const AResult: TModalResult);
 var
   Id, ContractId : integer;
@@ -1679,6 +1729,7 @@ begin
   end;
 end;
 
+// обработка нажатия кнопки возврата на предидущую форму
 procedure TfrmMain.sbBackClick(Sender: TObject);
 var
   Mes : string;
@@ -1708,23 +1759,27 @@ begin
     ReturnPriorForm;
 end;
 
+// вызов меню для торговых точек
 procedure TfrmMain.sbPartnerMenuClick(Sender: TObject);
 begin
   ppPartner.IsOpen := true;
   lbPartnerMenu.ItemIndex := -1;
 end;
 
+// переход на форму фотографирования
 procedure TfrmMain.bAddedPhotoClick(Sender: TObject);
 begin
   PrepareCamera;
 end;
 
+// ввод названия группы фотографий
 procedure TfrmMain.bAddedPhotoGroupClick(Sender: TObject);
 begin
   vsbMain.Enabled := false;
   pNewPhotoGroup.Visible := true;
 end;
 
+// переход на форму выбора товаров для заявки на товары
 procedure TfrmMain.bAddOrderItemClick(Sender: TObject);
 begin
   DM.GenerateOrderExtrenalItemsList;
@@ -1735,6 +1790,7 @@ begin
   SwitchToForm(tiGoodsItems, DM.qryGoodsItems);
 end;
 
+// переход на форму выбора товаров для возврата
 procedure TfrmMain.bAddReturnInItemClick(Sender: TObject);
 begin
   DM.GenerateReturnInItemsList;
@@ -1745,6 +1801,7 @@ begin
   SwitchToForm(tiGoodsItems, DM.qryGoodsItems);
 end;
 
+// переход на форму выбора товаров для ввода остатков
 procedure TfrmMain.bAddStoreRealItemClick(Sender: TObject);
 begin
   DM.GenerateStoreRealItemsList;
@@ -1755,6 +1812,7 @@ begin
   SwitchToForm(tiGoodsItems, DM.qryGoodsItems);
 end;
 
+// отмена выбора товаров
 procedure TfrmMain.bCancelOIClick(Sender: TObject);
 begin
   FCheckedGooodsItems.Clear;
@@ -1762,29 +1820,34 @@ begin
   ReturnPriorForm;
 end;
 
+// отмена сохранения фотографии
 procedure TfrmMain.bCancelPhotoClick(Sender: TObject);
 begin
   vsbMain.Enabled := true;
   pPhotoComment.Visible := false;
 end;
 
+// отмена "выолнения" задания
 procedure TfrmMain.bCancelTaskClick(Sender: TObject);
 begin
   vsbMain.Enabled := true;
   pTaskComment.Visible := false;
 end;
 
+// отмена сохранения группы фотографий
 procedure TfrmMain.bCanclePGClick(Sender: TObject);
 begin
   vsbMain.Enabled := true;
   pNewPhotoGroup.Visible := false;
 end;
 
+// очистка количества товаров
 procedure TfrmMain.bClearAmountClick(Sender: TObject);
 begin
   lAmount.Text := '0';
 end;
 
+// присвоение количества товаров
 procedure TfrmMain.bEnterAmountClick(Sender: TObject);
 begin
   if tcMain.ActiveTab = tiOrderExternal then
@@ -1815,6 +1878,7 @@ begin
   ppEnterAmount.IsOpen := false;
 end;
 
+// добавление количества товаров к введенным ранее
 procedure TfrmMain.bAddAmountClick(Sender: TObject);
 begin
   if tcMain.ActiveTab = tiOrderExternal then
@@ -1845,6 +1909,7 @@ begin
   ppEnterAmount.IsOpen := false;
 end;
 
+// отнимание количества товаров от введенных ранее
 procedure TfrmMain.bMinusAmountClick(Sender: TObject);
 begin
   if tcMain.ActiveTab = tiOrderExternal then
@@ -1884,6 +1949,7 @@ begin
   ppEnterAmount.IsOpen := false;
 end;
 
+// переход на форму справочников
 procedure TfrmMain.bHandBookClick(Sender: TObject);
 begin
   FCanEditPartner := false;
@@ -1891,6 +1957,7 @@ begin
   SwitchToForm(tiHandbook, nil);
 end;
 
+// переход на форму заданий
 procedure TfrmMain.bTasksClick(Sender: TObject);
 begin
   if pos('(', lTasks.Text) > 0 then
@@ -1899,16 +1966,19 @@ begin
     ShowTasks(true);
 end;
 
+// вызов обновления программы
 procedure TfrmMain.bUpdateProgramClick(Sender: TObject);
 begin
   DM.UpdateProgram(mrYes);
 end;
 
+// отображения ТТ которые необходимо посетить в выбранные день недели
 procedure TfrmMain.bMondayClick(Sender: TObject);
 begin
   ShowPartners(TButton(Sender).Tag, TButton(Sender).Text);
 end;
 
+// переход на форму ввода новой заявки на товары
 procedure TfrmMain.bNewOrderExternalClick(Sender: TObject);
 begin
   if DM.qryPartnerPriceWithVAT.AsBoolean then
@@ -1927,18 +1997,7 @@ begin
   SwitchToForm(tiOrderExternal, nil);
 end;
 
-procedure TfrmMain.bNewPartnerGPSClick(Sender: TObject);
-begin
-  GetCurrentCoordinates;
-  if FCurCoordinatesSet then
-  begin
-    eNewPartnerGPSN.Text := FormatFloat('0.######', FCurCoordinates.Latitude);
-    eNewPartnerGPSE.Text := FormatFloat('0.######', FCurCoordinates.Longitude);
-  end
-  else
-    ShowMessage('Не удалось получить текущие координаты');
-end;
-
+// переход на форму ввода новых "остатков"
 procedure TfrmMain.bNewStoreRealClick(Sender: TObject);
 var
   FindRec : boolean;
@@ -1954,21 +2013,58 @@ begin
     EditStoreReal(mrNone);
 end;
 
+// переход на форму ввода нового возврата товаров
+procedure TfrmMain.bNewReturnInClick(Sender: TObject);
+begin
+  if DM.qryPartnerPriceWithVAT_RET.AsBoolean then
+    lReturnInPrice.Text := 'Цена (с НДС)'
+  else
+    lReturnInPrice.Text := 'Цена (без НДС)';
+
+  OldReturnInId := '';
+  FDeletedRI.Clear;
+  FCheckedGooodsItems.Clear;
+
+  deReturnDate.Date := Date();
+  eReturnComment.Text := '';
+  DM.DefaultReturnInItems;
+
+  lwReturnInItems.ScrollViewPos := 0;
+  SwitchToForm(tiReturnIn, nil);
+end;
+
+// получение текущех координат для новой ТТ
+procedure TfrmMain.bNewPartnerGPSClick(Sender: TObject);
+begin
+  GetCurrentCoordinates;
+  if FCurCoordinatesSet then
+  begin
+    eNewPartnerGPSN.Text := FormatFloat('0.######', FCurCoordinates.Latitude);
+    eNewPartnerGPSE.Text := FormatFloat('0.######', FCurCoordinates.Longitude);
+  end
+  else
+    ShowMessage('Не удалось получить текущие координаты');
+end;
+
+// переход на форму отображения все торговых точек
 procedure TfrmMain.bPartnersClick(Sender: TObject);
 begin
   ShowPartners(8, 'Все ТТ');
 end;
 
+// переход на форму отображения маршрута контрагента
 procedure TfrmMain.bPathonMapClick(Sender: TObject);
 begin
   ShowPathOnMap;
 end;
 
+// переход на форму отображения прайс-листов
 procedure TfrmMain.bPriceListClick(Sender: TObject);
 begin
   ShowPriceLists;
 end;
 
+// формирование и отображение акта сверки
 procedure TfrmMain.bPrintJuridicalCollationClick(Sender: TObject);
 var
   SettingsFile : TIniFile;
@@ -2006,21 +2102,25 @@ begin
   end;
 end;
 
+// переход на форму отображения всех акционных товаров
 procedure TfrmMain.bPromoGoodsClick(Sender: TObject);
 begin
   ShowPromoGoods;
 end;
 
+// переход на форму отображения всех ТТ, участвующих в акции
 procedure TfrmMain.bPromoPartnersClick(Sender: TObject);
 begin
   ShowPromoPartners;
 end;
 
+// обновления координат ТТ
 procedure TfrmMain.bRefreshMapScreenClick(Sender: TObject);
 begin
   GetMapPartnerScreenshot(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat);
 end;
 
+// обновления карты с маршрутом контрагента
 procedure TfrmMain.bRefreshPathOnMapClick(Sender: TObject);
 var
   RouteQuery: TFDQuery;
@@ -2069,6 +2169,7 @@ begin
   end;
 end;
 
+// обновление списка задач контрагента
 procedure TfrmMain.bRefreshTasksClick(Sender: TObject);
 var
   Mode: TActiveMode;
@@ -2089,16 +2190,19 @@ begin
   lwTasks.ScrollViewPos := 0;
 end;
 
+// возврат на форму логина
 procedure TfrmMain.bReloginClick(Sender: TObject);
 begin
   ReturnPriorForm;
 end;
 
+// переход на форму отображения информации
 procedure TfrmMain.bInfoClick(Sender: TObject);
 begin
   ShowInformation;
 end;
 
+// переход на форму отчетов
 procedure TfrmMain.bReportClick(Sender: TObject);
 begin
   bReportJuridicalCollation.Enabled := not gc_User.Local;
@@ -2106,6 +2210,7 @@ begin
   SwitchToForm(tiReports, nil);
 end;
 
+// переход на форму ввода пераметров акта сверки
 procedure TfrmMain.bReportJuridicalCollationClick(Sender: TObject);
 var
   i: integer;
@@ -2168,6 +2273,7 @@ begin
   SwitchToForm(tiReportJuridicalCollation, nil);
 end;
 
+// переход на форму отображение маршрутов
 procedure TfrmMain.bRouteClick(Sender: TObject);
 begin
   FCanEditPartner := false;
@@ -2175,6 +2281,7 @@ begin
   SwitchToForm(tiRoutes, nil);
 end;
 
+// сохранение новой ТТ
 procedure TfrmMain.bSaveNewPartnerClick(Sender: TObject);
 var
   JuridicalId: integer;
@@ -2216,58 +2323,39 @@ begin
      ShowMessage('Ошибка при сохранении: ' + ErrMes);
 end;
 
+// подтверждения выбора товаров для заявки, остатков или возврата
 procedure TfrmMain.bSaveOIClick(Sender: TObject);
 begin
   ReturnPriorForm;
 end;
 
-procedure TfrmMain.bSaveOrderExternalClick(Sender: TObject);
-var
-  i : integer;
-  ErrMes: string;
-  DelItems: string;
-begin
-   DelItems := '';
-   if FDeletedOI.Count > 0 then
-   begin
-     DelItems := IntToStr(FDeletedOI[0]);
-     for i := 1 to FDeletedOI.Count - 1 do
-       DelItems := ',' + IntToStr(FDeletedOI[i]);
-   end;
-
-   if DM.SaveOrderExternal(OldOrderExternalId, deOperDate.Date, FOrderTotalPrice, FOrderTotalCountKg, DelItems, ErrMes) then
-   begin
-     ShowMessage('Сохранение заявки прошло успешно.');
-     ReturnPriorForm;
-   end
-   else
-     ShowMessage(ErrMes);
-end;
-
+// сделать/отменить снимок (фотография)
 procedure TfrmMain.bCaptureClick(Sender: TObject);
 begin
   if CameraComponent.Active then
   begin
     CameraComponent.Active := False;
     PlayAudio;
-    TSpeedButton(Sender).Text := rstReturn;
+    bCapture.Text := rstReturn;
     bSavePartnerPhoto.Enabled := true;
   end
   else
   begin
     ScaleImage(0);
     CameraComponent.Active := True;
-    TSpeedButton(Sender).Text := rstCapture;
+    bCapture.Text := rstCapture;
     bSavePartnerPhoto.Enabled := false;
   end;
 end;
 
+// ввод коментария к фотографии перед сохранением
 procedure TfrmMain.bSavePartnerPhotoClick(Sender: TObject);
 begin
   vsbMain.Enabled := false;
   pPhotoComment.Visible := true;
 end;
 
+// сохранение группы фотографий
 procedure TfrmMain.bSavePGClick(Sender: TObject);
 begin
   DM.SavePhotoGroup(ePhotoGroupName.Text);
@@ -2278,6 +2366,7 @@ begin
   pNewPhotoGroup.Visible := false;
 end;
 
+// сохранить фотографию
 procedure TfrmMain.bSavePhotoClick(Sender: TObject);
 var
   BlobStream : TMemoryStream;
@@ -2285,7 +2374,6 @@ var
   qrySavePhoto : TFDQuery;
   GlobalId : TGUID;
 begin
-  // Save displayed photo
   try
     BlobStream := TMemoryStream.Create;
     aiWait.Visible := true;
@@ -2340,6 +2428,7 @@ begin
   ReturnPriorForm;
 end;
 
+// сохранение изменения коментария к фотографии
 procedure TfrmMain.bSavePhotoCommentClick(Sender: TObject);
 begin
   DM.qryPhotos.Edit;
@@ -2350,6 +2439,31 @@ begin
   ReturnPriorForm;
 end;
 
+// сохранение заявки на товары
+procedure TfrmMain.bSaveOrderExternalClick(Sender: TObject);
+var
+  i : integer;
+  ErrMes: string;
+  DelItems: string;
+begin
+   DelItems := '';
+   if FDeletedOI.Count > 0 then
+   begin
+     DelItems := IntToStr(FDeletedOI[0]);
+     for i := 1 to FDeletedOI.Count - 1 do
+       DelItems := ',' + IntToStr(FDeletedOI[i]);
+   end;
+
+   if DM.SaveOrderExternal(OldOrderExternalId, deOperDate.Date, FOrderTotalPrice, FOrderTotalCountKg, DelItems, ErrMes) then
+   begin
+     ShowMessage('Сохранение заявки прошло успешно.');
+     ReturnPriorForm;
+   end
+   else
+     ShowMessage(ErrMes);
+end;
+
+// сохранение "возврата"
 procedure TfrmMain.bSaveReturnInClick(Sender: TObject);
 var
   i : integer;
@@ -2367,13 +2481,14 @@ begin
    if DM.SaveReturnIn(OldReturnInId, deReturnDate.Date, eReturnComment.Text,
      FReturnInTotalPrice, FReturnInTotalCountKg, DelItems, ErrMes) then
    begin
-     ShowMessage('Сохранение заявки прошло успешно.');
+     ShowMessage('Сохранение возврата прошло успешно.');
      ReturnPriorForm;
    end
    else
      ShowMessage(ErrMes);
 end;
 
+// сохранение "остатков"
 procedure TfrmMain.bSaveStoreRealClick(Sender: TObject);
 var
   i : integer;
@@ -2397,6 +2512,7 @@ begin
      ShowMessage(ErrMes);
 end;
 
+// сохранение отметки про выполнение задания
 procedure TfrmMain.bSaveTaskClick(Sender: TObject);
 begin
   if DM.CloseTask(DM.cdsTasksId.AsInteger, eTaskComment.Text) then
@@ -2423,6 +2539,7 @@ begin
   pTaskComment.Visible := false;
 end;
 
+// запрос на изменение координа ТТ
 procedure TfrmMain.bSetPartnerCoordinateClick(Sender: TObject);
 var
   Mes : string;
@@ -2436,6 +2553,7 @@ begin
     [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, SetPartnerCoordinates);
 end;
 
+// отображение координат ТТ на большой карте
 procedure TfrmMain.bShowBigMapClick(Sender: TObject);
 begin
   lCaption.Text := 'Карта (' + DM.qryPartnerName.AsString + ')';
@@ -2443,41 +2561,26 @@ begin
   ShowBigMap;
 end;
 
+// переход на форму синхронизации
 procedure TfrmMain.bSyncClick(Sender: TObject);
 begin
   SwitchToForm(tiSync, nil);
 end;
 
+// вызов синхронизации с главной БД
 procedure TfrmMain.bSyncDataClick(Sender: TObject);
 begin
   DM.SynchronizeWithMainDatabase(cbLoadData.IsChecked, cbUploadData.IsChecked);
 end;
 
-procedure TfrmMain.bNewReturnInClick(Sender: TObject);
-begin
-  if DM.qryPartnerPriceWithVAT_RET.AsBoolean then
-    lReturnInPrice.Text := 'Цена (с НДС)'
-  else
-    lReturnInPrice.Text := 'Цена (без НДС)';
-
-  OldReturnInId := '';
-  FDeletedRI.Clear;
-  FCheckedGooodsItems.Clear;
-
-  deReturnDate.Date := Date();
-  eReturnComment.Text := '';
-  DM.DefaultReturnInItems;
-
-  lwReturnInItems.ScrollViewPos := 0;
-  SwitchToForm(tiReturnIn, nil);
-end;
-
+// выход с формы фотографирования без сохранения
 procedure TfrmMain.bClosePhotoClick(Sender: TObject);
 begin
   CameraFree;
   ReturnPriorForm;
 end;
 
+// переход на форму визитов (дни недели в которые надо посетить ТТ)
 procedure TfrmMain.bVisitClick(Sender: TObject);
 begin
   FCanEditPartner := true;
@@ -2485,6 +2588,8 @@ begin
   SwitchToForm(tiRoutes, nil);
 end;
 
+// таймер срабатывает если долго не загружается карта с координатами ТТ
+// (запускается при открытии ТТ)
 procedure TfrmMain.tErrorMapTimer(Sender: TObject);
 begin
   tErrorMap.Enabled := false;
@@ -2503,6 +2608,8 @@ begin
   pMap.Visible := true;
 end;
 
+// таймер получения скриншота карты с координатами ТТ (запускается после завершения загруки карты)
+// получить скриншот сразу нельзя - необходимо немного обождать
 procedure TfrmMain.tMapToImageTimer(Sender: TObject);
 {$IFDEF ANDROID}
 var
@@ -2553,6 +2660,7 @@ begin
   end;
 end;
 
+// таймер сохранения маршрута контрагента - сохраняет текущие координаты какждые 5 минут
 procedure TfrmMain.tSavePathTimer(Sender: TObject);
 var
   GlobalId : TGUID;
@@ -2580,6 +2688,7 @@ begin
   end;
 end;
 
+// таймер для мигания вкладки задания ТТ
 procedure TfrmMain.tTasksTimer(Sender: TObject);
 begin
   tTasks.Enabled := false;
@@ -2597,15 +2706,15 @@ begin
   tTasks.Enabled := true;
 end;
 
-function TfrmMain.PrependIfNotEmpty(const Prefix, Subject: string): string;
-begin
-  if Subject.IsEmpty then
-    Result := ''
-  else
-    Result := Prefix+Subject;
-end;
-
+// получения адреса по координатам
 function TfrmMain.GetAddress(const Latitude, Longitude: Double): string;
+  function PrependIfNotEmpty(const Prefix, Subject: string): string;
+  begin
+    if Subject.IsEmpty then
+      Result := ''
+    else
+      Result := Prefix+Subject;
+  end;
 begin
   try
     WebGMapsReverseGeocoder.Latitude := Latitude;
@@ -2642,6 +2751,7 @@ begin
 end;
 }
 
+// завершение загрузки карты (с установкой маркеров при необходимости)
 procedure TfrmMain.WebGMapDownloadFinish(Sender: TObject);
 var
   i : integer;
@@ -2672,6 +2782,7 @@ begin
   end;
 end;
 
+// переход на форму отображения большой карты
 procedure TfrmMain.ShowBigMap;
 begin
   SwitchToForm(tiMap, nil);
@@ -2685,6 +2796,7 @@ begin
   FWebGMap.Parent := tiMap;
 end;
 
+// вызов карты с координатами ТТ и дальнейшем получением скриншота этой карты
 procedure TfrmMain.GetMapPartnerScreenshot(GPSN, GPSE: Double);
 var
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -2695,11 +2807,15 @@ var
   Coordinates: TLocationCoord2D;
 begin
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
-  MobileNetworkStatus := TMobileNetworkStatus.Create;
+  isConnected := false;
   try
-    isConnected := MobileNetworkStatus.isConnected;
-  finally
-    FreeAndNil(MobileNetworkStatus);
+    MobileNetworkStatus := TMobileNetworkStatus.Create;
+    try
+      isConnected := MobileNetworkStatus.isConnected;
+    finally
+      FreeAndNil(MobileNetworkStatus);
+    end;
+  except
   end;
   {$ELSE}
   isConnected := true;
@@ -2763,6 +2879,7 @@ begin
   end;
 end;
 
+// перевод формы в/из режим ожидания
 procedure TfrmMain.Wait(AWait: Boolean);
 begin
   LogInButton.Enabled := not AWait;
@@ -2779,6 +2896,7 @@ begin
   Application.ProcessMessages;
 end;
 
+// обработка изменения закладки (формы)
 procedure TfrmMain.ChangeMainPageUpdate(Sender: TObject);
 var
   i, TaskCount : integer;
@@ -2908,6 +3026,7 @@ begin
   end;
 end;
 
+// реализация перехода между закладками ТТ с помощью движения пальца
 procedure TfrmMain.ChangePartnerInfoLeftUpdate(Sender: TObject);
 begin
   if tcPartnerInfo.TabIndex < tcPartnerInfo.TabCount - 1 then
@@ -2916,6 +3035,7 @@ begin
     ChangePartnerInfoLeft.Tab := nil;
 end;
 
+// реализация перехода между закладками ТТ с помощью движения пальца
 procedure TfrmMain.ChangePartnerInfoRightUpdate(Sender: TObject);
 begin
   if tcPartnerInfo.TabIndex > 0 then
@@ -2924,7 +3044,10 @@ begin
     ChangePartnerInfoRight.Tab := nil;
 end;
 
+// проверка локальной БД (получения настроек конекта с центральной БД)
 procedure TfrmMain.CheckDataBase;
+var
+  Servers: array of string;
 begin
   if not DM.Connected then
   begin
@@ -2940,7 +3063,8 @@ begin
   if (DM.tblObject_Const.RecordCount > 0) and (DM.tblObject_ConstWebService.AsString <> '') then
   begin
     gc_User := TUser.Create(DM.tblObject_ConstUserLogin.AsString, DM.tblObject_ConstUserPassword.AsString);
-    gc_WebService := DM.tblObject_ConstWebService.AsString;
+    Servers := DM.tblObject_ConstWebService.AsString.Split([';']);
+    gc_WebService := Servers[0];
 
     WebServerLayout1.Visible := false;
     WebServerLayout2.Visible := false;
@@ -2957,6 +3081,7 @@ begin
   end;
 end;
 
+// формирования перечня дней на которые запланированы визиты в ТТ (с количеством ТТ)
 procedure TfrmMain.GetVistDays;
 var
   i, Num : integer;
@@ -3067,6 +3192,7 @@ begin
   lAllDaysCount.Text := IntToStr(DaysCount[8]);
 end;
 
+// переход на форму ввода новой ТТ
 procedure TfrmMain.ibiNewPartnerClick(Sender: TObject);
 begin
   ppPartner.IsOpen := False;
@@ -3074,6 +3200,7 @@ begin
   EnterNewPartner;
 end;
 
+// начитка справочников для ввода новой ТТ
 procedure TfrmMain.EnterNewPartner;
 var
   Item: TListBoxItem;
@@ -3111,6 +3238,7 @@ begin
   SwitchToForm(tiNewPartner, nil);
 end;
 
+// переход на форму отображения списка ТТ, которые необходимо посетить в указаный день
 procedure TfrmMain.ShowPartners(Day : integer; Caption : string);
 var
   sQuery, CurGPSN, CurGPSE : string;
@@ -3148,8 +3276,10 @@ begin
   SwitchToForm(tiPartners, DM.qryPartner);
 end;
 
+// переход на форму отображения информации по выбранной ТТ
 procedure TfrmMain.ShowPartnerInfo;
 begin
+  // показывать или нет закладку с заданиями
   if DM.LoadTasks(amOpen, true, 0, DM.qryPartnerId.AsInteger) > 0 then
     tiPartnerTasks.Visible := true
   else
@@ -3158,9 +3288,11 @@ begin
   SwitchToForm(tiPartnerInfo, nil);
   tcPartnerInfo.ActiveTab := tiInfo;
 
+  // общая информация о ТТ
   lPartnerName.Text := DM.qryPartnerName.AsString;
   lPartnerAddress.Text := DM.qryPartnerAddress.AsString;
 
+  // информация о долгах ТТ
   if DM.qryPartnerPaidKindId.AsInteger = DM.tblObject_ConstPaidKindId_First.AsInteger then // БН
   begin
     lPartnerKind.Text := DM.tblObject_ConstPaidKindName_First.AsString;
@@ -3193,17 +3325,23 @@ begin
     lPartnerOverDay.Text := '-';
   end;
 
+  // скриншот карты с координатами ТТ
   GetMapPartnerScreenshot(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat);
 
+  // остатки по ТТ
   DM.LoadStoreReal;
 
+  // заявки на товары по ТТ
   DM.LoadOrderExternal;
 
+  // возвраты по ТТ
   DM.LoadReturnIn;
 
+  // фотографии ТТ
   DM.LoadPhotoGroups;
 end;
 
+// начитка и отображение прайс-листов
 procedure TfrmMain.ShowPriceLists;
 begin
   DM.qryPriceList.Open('select ID, VALUEDATA, PRICEWITHVAT, VATPERCENT from OBJECT_PRICELIST where ISERASED = 0');
@@ -3212,6 +3350,7 @@ begin
   SwitchToForm(tiPriceList, DM.qryPriceList);
 end;
 
+// начитка и отображение товаров по выбраному працс-листу
 procedure TfrmMain.ShowPriceListItems;
 begin
   lCaption.Text := 'Прайс-лист "' + DM.qryPriceListValueData.AsString + '"';
@@ -3229,6 +3368,7 @@ begin
   SwitchToForm(tiPriceListItems, DM.qryGoodsForPriceList);
 end;
 
+// начитка и отображение ТТ, участвующих в акциях
 procedure TfrmMain.ShowPromoPartners;
 begin
   pPromoPartnerDate.Visible := true;
@@ -3238,6 +3378,7 @@ begin
   SwitchToForm(tiPromoPartners, DM.qryPromoPartners);
 end;
 
+// начитка и отображение акционных товаров в выбраной ТТ
 procedure TfrmMain.ShowPromoGoodsByPartner;
 begin
   lCaption.Text := 'Акционные товары для ' + DM.qryPromoPartnersPartnerName.AsString;
@@ -3261,6 +3402,7 @@ begin
   SwitchToForm(tiPromoGoods, DM.qryPromoGoods);
 end;
 
+// начитка и отображение всех акционных товаров
 procedure TfrmMain.ShowPromoGoods;
 begin
   pPromoGoodsDate.Visible := true;
@@ -3270,6 +3412,7 @@ begin
   SwitchToForm(tiPromoGoods, DM.qryPromoGoods);
 end;
 
+// начитка и отображение ТТ, в кторых продается выбранный акционный товар
 procedure TfrmMain.ShowPromoPartnersByGoods;
 begin
   lCaption.Text := 'ТТ с акционными "' + DM.qryPromoGoodsGoodsName.AsString + '"';
@@ -3292,6 +3435,7 @@ begin
   SwitchToForm(tiPromoPartners, DM.qryPromoPartners);
 end;
 
+// отображение маршрута контрагента
 procedure TfrmMain.ShowPathOnmap;
 begin
   deDatePath.Date := Date();
@@ -3301,6 +3445,7 @@ begin
   bRefreshPathOnMapClick(nil);
 end;
 
+// начитка фотографий выбранной группы
 procedure TfrmMain.ShowPhotos;
 begin
   DM.qryPhotos.Open('select Id, Photo, Comment, isErased, isSync from MovementItem_Visit where MovementId = ' + DM.qryPhotoGroupsId.AsString +
@@ -3309,6 +3454,7 @@ begin
   SwitchToForm(tiPhotosList, DM.qryPhotos);
 end;
 
+// отображение выбраной фотографии
 procedure TfrmMain.ShowPhoto;
 var
   BlobStream: TStream;
@@ -3325,6 +3471,7 @@ begin
   SwitchToForm(tiPhotoEdit, nil);
 end;
 
+// начитка информации про программу
 procedure TfrmMain.ShowInformation;
 var
   Res : integer;
@@ -3357,6 +3504,7 @@ begin
   SwitchToForm(tiInformation, nil);
 end;
 
+// начитка и отображение заданий контрагента
 procedure TfrmMain.ShowTasks(ShowAll: boolean = true);
 begin
   if ShowAll then
@@ -3372,6 +3520,7 @@ begin
   SwitchToForm(tiTasks, nil);
 end;
 
+// добавление новых товаров в "остатки"
 procedure TfrmMain.AddedNewStoreRealItems;
 var
   i: integer;
@@ -3382,6 +3531,7 @@ begin
   FCheckedGooodsItems.Clear;
 end;
 
+// добавление новых товаров в завку на товары
 procedure TfrmMain.AddedNewOrderItems;
 var
   i: integer;
@@ -3394,6 +3544,7 @@ begin
   FCheckedGooodsItems.Clear;
 end;
 
+// добавление новых товаров для возврата
 procedure TfrmMain.AddedNewReturnInItems;
 var
   i: integer;
@@ -3406,6 +3557,7 @@ begin
   FCheckedGooodsItems.Clear;
 end;
 
+// пересчет общей цены и веса выбранных товаров для заявки
 procedure TfrmMain.RecalculateTotalPriceAndWeight;
 var
  TotalPriceWithPercent, PriceWithPercent : Currency;
@@ -3469,6 +3621,7 @@ begin
   lTotalWeight.Text := 'Общий вес : ' + FormatFloat('0.00', FOrderTotalCountKg);
 end;
 
+// пересчет общей цены и веса для выбранных товаров для возврата
 procedure TfrmMain.RecalculateReturnInTotalPriceAndWeight;
 var
  TotalPriceWithPercent, PriceWithPercent : Currency;
@@ -3529,6 +3682,7 @@ begin
   lTotalWeightReturn.Text := 'Общий вес : ' + FormatFloat('0.00', FReturnInTotalCountKg);
 end;
 
+// переход на заданную форму с сохранением её в стэк открываемых форм
 procedure TfrmMain.SwitchToForm(const TabItem: TTabItem; const Data: TObject);
 var
   Item: TFormStackItem;
@@ -3539,6 +3693,7 @@ begin
   tcMain.ActiveTab := TabItem;
 end;
 
+// возврат на предидущую форму из стэка открываемых форм, с удалением её из стэка
 procedure TfrmMain.ReturnPriorForm(const OmitOnChange: Boolean);
 var
   Item: TFormStackItem;
@@ -3572,6 +3727,7 @@ begin
     raise Exception.Create('Forms stack underflow');
 end;
 
+// переход на формцу фотографирования с созданием компонента для фотографирования
 procedure TfrmMain.PrepareCamera;
 begin
   SwitchToForm(tiCamera, nil);
@@ -3591,6 +3747,7 @@ begin
   end;
 end;
 
+// освобождение компонента для фотографирования
 procedure TfrmMain.CameraFree;
 begin
   try
@@ -3605,6 +3762,37 @@ begin
   end;
 end;
 
+// показывать только акционные товары
+procedure TfrmMain.cbOnlyPromoChange(Sender: TObject);
+var
+  i : integer;
+  oldValue : string;
+begin
+  for I := 0 to lwGoodsItems.Controls.Count-1 do
+    if lwGoodsItems.Controls[I].ClassType = TSearchBox then
+    begin
+      oldValue := TSearchBox(lwGoodsItems.Controls[I]).Text;
+      TSearchBox(lwGoodsItems.Controls[I]).Text := '!';
+      TSearchBox(lwGoodsItems.Controls[I]).Text := oldValue;
+    end;
+end;
+
+// перключатель между вводом нового юр.лица и выбором из уже существующих
+procedure TfrmMain.cSelectJuridicalChange(Sender: TObject);
+begin
+  if cSelectJuridical.IsChecked then
+  begin
+    eNewPartnerJuridical.Visible := false;
+    cbNewPartnerJuridical.Visible := true;
+  end
+  else
+  begin
+    cbNewPartnerJuridical.Visible := false;
+    eNewPartnerJuridical.Visible := true;
+  end;
+end;
+
+// изменение юридического лица с начиткой ТТ и договор для нового выбраного юр.лица
 procedure TfrmMain.cbJuridicalsChange(Sender: TObject);
 var
   i: integer;
@@ -3658,34 +3846,7 @@ begin
     cbPartners.ItemIndex := 0;
 end;
 
-procedure TfrmMain.cSelectJuridicalChange(Sender: TObject);
-begin
-  if cSelectJuridical.IsChecked then
-  begin
-    eNewPartnerJuridical.Visible := false;
-    cbNewPartnerJuridical.Visible := true;
-  end
-  else
-  begin
-    cbNewPartnerJuridical.Visible := false;
-    eNewPartnerJuridical.Visible := true;
-  end;
-end;
-
-procedure TfrmMain.cbOnlyPromoChange(Sender: TObject);
-var
-  i : integer;
-  oldValue : string;
-begin
-  for I := 0 to lwGoodsItems.Controls.Count-1 do
-    if lwGoodsItems.Controls[I].ClassType = TSearchBox then
-    begin
-      oldValue := TSearchBox(lwGoodsItems.Controls[I]).Text;
-      TSearchBox(lwGoodsItems.Controls[I]).Text := '!';
-      TSearchBox(lwGoodsItems.Controls[I]).Text := oldValue;
-    end;
-end;
-
+// изменение ТТ с фильтрацией договоров юр.лица только выбраной ТТ
 procedure TfrmMain.cbPartnersChange(Sender: TObject);
 var
   i: integer;
@@ -3722,16 +3883,19 @@ begin
     cbContracts.ItemIndex := DefIndex;
 end;
 
+// отображать маршрут контрагента за все время или за конкретную дату
 procedure TfrmMain.cbShowAllPathChange(Sender: TObject);
 begin
   deDatePath.Enabled := not cbShowAllPath.IsChecked;
 end;
 
+// отображать задания контрагента за все время или за конкретную дату
 procedure TfrmMain.cbUseDateTaskChange(Sender: TObject);
 begin
   deDateTask.Enabled := cbUseDateTask.IsChecked;
 end;
 
+// сохранение фотографии из "компонента камеры" в Image
 procedure TfrmMain.GetImage;
 begin
   CameraComponent.SampleBufferToBitmap(imgCameraPreview.Bitmap, True);
@@ -3745,6 +3909,7 @@ begin
   imgCameraPreview.Margins.Bottom := 5 + Margins;
 end;
 
+// звук фотографирования
 procedure TfrmMain.PlayAudio;
 var
   MediaPlayer: TMediaPlayer;
@@ -3780,6 +3945,7 @@ begin
     Showmessage('Image is zero!');
 end;
 
+// получение текущих координат
 procedure TfrmMain.GetCurrentCoordinates;
 {$IFDEF ANDROID}
 var
@@ -3822,6 +3988,7 @@ begin
   {$ENDIF}
 end;
 
+// добавление елемента в combobox
 procedure TfrmMain.AddComboItem(AComboBox: TComboBox; AText: string);
 var
   lbi: TListBoxItem;

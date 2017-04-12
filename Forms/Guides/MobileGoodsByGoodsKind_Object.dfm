@@ -25,8 +25,6 @@ object MobileGoodsByGoodsKind_ObjectForm: TMobileGoodsByGoodsKind_ObjectForm
     Height = 438
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 8
-    ExplicitTop = 42
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -502,10 +500,10 @@ object MobileGoodsByGoodsKind_ObjectForm: TMobileGoodsByGoodsKind_ObjectForm
     KeyField = 'Id'
     LookupControl = edPersonalTrade
     Key = '0'
-    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.Value = 'TMemberPosition_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMember_ObjectForm'
+    FormName = 'TMemberPosition_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -523,6 +521,11 @@ object MobileGoodsByGoodsKind_ObjectForm: TMobileGoodsByGoodsKind_ObjectForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = '149831'
         MultiSelectSeparator = ','
       end>
     Left = 703

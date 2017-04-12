@@ -42,7 +42,11 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                UnitId Integer, UnitCode Integer, UnitName TVarChar,
                isErased Boolean,
                Value1 Boolean, Value2 Boolean, Value3 Boolean, Value4 Boolean, 
-               Value5 Boolean, Value6 Boolean, Value7 Boolean    
+               Value5 Boolean, Value6 Boolean, Value7 Boolean,
+
+               --Delivery TVarChar, -- График завоза на ТТ - по каким дням недели - в строчке 7 символов разделенных ";" t значит true и f значит false
+               Delivery1 Boolean, Delivery2 Boolean, Delivery3 Boolean, Delivery4 Boolean,
+               Delivery5 Boolean, Delivery6 Boolean, Delivery7 Boolean
               )
 AS
 $BODY$
@@ -193,6 +197,14 @@ BEGIN
          , CASE WHEN COALESCE(ObjectString_Schedule.ValueData,'') = '' THEN False ELSE CAST (zfCalc_Word_Split (inValue:= ObjectString_Schedule.ValueData, inSep:= ';', inIndex:= 6) AS Boolean) END  ::Boolean   AS Value6
          , CASE WHEN COALESCE(ObjectString_Schedule.ValueData,'') = '' THEN False ELSE CAST (zfCalc_Word_Split (inValue:= ObjectString_Schedule.ValueData, inSep:= ';', inIndex:= 7) AS Boolean) END  ::Boolean   AS Value7
          
+         , CASE WHEN COALESCE(ObjectString_Delivery.ValueData,'') = '' THEN False ELSE CAST (zfCalc_Word_Split (inValue:= ObjectString_Delivery.ValueData, inSep:= ';', inIndex:= 1) AS Boolean) END  ::Boolean   AS Delivery1
+         , CASE WHEN COALESCE(ObjectString_Delivery.ValueData,'') = '' THEN False ELSE CAST (zfCalc_Word_Split (inValue:= ObjectString_Delivery.ValueData, inSep:= ';', inIndex:= 2) AS Boolean) END  ::Boolean   AS Delivery2
+         , CASE WHEN COALESCE(ObjectString_Delivery.ValueData,'') = '' THEN False ELSE CAST (zfCalc_Word_Split (inValue:= ObjectString_Delivery.ValueData, inSep:= ';', inIndex:= 3) AS Boolean) END  ::Boolean   AS Delivery3
+         , CASE WHEN COALESCE(ObjectString_Delivery.ValueData,'') = '' THEN False ELSE CAST (zfCalc_Word_Split (inValue:= ObjectString_Delivery.ValueData, inSep:= ';', inIndex:= 4) AS Boolean) END  ::Boolean   AS Delivery4
+         , CASE WHEN COALESCE(ObjectString_Delivery.ValueData,'') = '' THEN False ELSE CAST (zfCalc_Word_Split (inValue:= ObjectString_Delivery.ValueData, inSep:= ';', inIndex:= 5) AS Boolean) END  ::Boolean   AS Delivery5
+         , CASE WHEN COALESCE(ObjectString_Delivery.ValueData,'') = '' THEN False ELSE CAST (zfCalc_Word_Split (inValue:= ObjectString_Delivery.ValueData, inSep:= ';', inIndex:= 6) AS Boolean) END  ::Boolean   AS Delivery6
+         , CASE WHEN COALESCE(ObjectString_Delivery.ValueData,'') = '' THEN False ELSE CAST (zfCalc_Word_Split (inValue:= ObjectString_Delivery.ValueData, inSep:= ';', inIndex:= 7) AS Boolean) END  ::Boolean   AS Delivery7
+         
      FROM tmpIsErased
          INNER JOIN Object AS Object_Partner 
                            ON Object_Partner.isErased = tmpIsErased.isErased 
@@ -234,6 +246,9 @@ BEGIN
          LEFT JOIN ObjectString AS ObjectString_Schedule
                                 ON ObjectString_Schedule.ObjectId = Object_Partner.Id
                                AND ObjectString_Schedule.DescId = zc_ObjectString_Partner_Schedule()
+         LEFT JOIN ObjectString AS ObjectString_Delivery
+                                ON ObjectString_Delivery.ObjectId = Object_Partner.Id
+                               AND ObjectString_Delivery.DescId = zc_ObjectString_Partner_Delivery()
 
          LEFT JOIN ObjectFloat AS ObjectFloat_PrepareDayCount
                                ON ObjectFloat_PrepareDayCount.ObjectId = Object_Partner.Id

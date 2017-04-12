@@ -926,6 +926,10 @@ object MainCashForm2: TMainCashForm2
       Caption = #1042#1099#1093#1086#1076
       OnClick = N4Click
     end
+    object N5: TMenuItem
+      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1089#1074#1103#1079#1080
+      OnClick = N5Click
+    end
   end
   object Timer1: TTimer
     Interval = 300000
@@ -934,6 +938,9 @@ object MainCashForm2: TMainCashForm2
     Top = 128
   end
   object tiServise: TTrayIcon
+    AnimateInterval = 500
+    BalloonTimeout = 500
+    BalloonFlags = bfWarning
     Icons = ilIcons
     PopupMenu = pmServise
     Visible = True
@@ -946,7 +953,7 @@ object MainCashForm2: TMainCashForm2
     Left = 432
     Top = 16
     Bitmap = {
-      494C010102003400400080008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102003400480080008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000000200008000000001002000000000000000
       04000000000000000000000000000000000000FF000000FF000000FF000000FF
       000000FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF

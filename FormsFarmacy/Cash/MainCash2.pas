@@ -1038,7 +1038,7 @@ SEInfo: TShellExecuteInfo;
 ExitCode: DWORD;
 ExecuteFile, ParamString, StartInString: string;
 begin
- if gc_User.Local then Exit;
+// if gc_User.Local then Exit;
 
   ExecuteFile := 'FarmacyCashServise.exe';
   FillChar(SEInfo, SizeOf(SEInfo), 0);
@@ -1702,7 +1702,13 @@ begin
                   'Дальнейшая работа программы возможна только в нефискальном режиме!');
     End;
   end;
-
+  //
+  ChangeStatus('Удаление файла остатков');
+  WaitForSingleObject(MutexDBFDiff, INFINITE);
+  if  FileExists(iniLocalDataBaseDiff) then
+    DeleteFile(iniLocalDataBaseDiff);
+  ReleaseMutex(MutexDBFDiff);
+  //
   ChangeStatus('Инициализация локального хранилища');
   if not InitLocalStorage then
   Begin
@@ -1710,7 +1716,7 @@ begin
     exit;
   End;
 
- // SetWorkMode(gc_User.Local);
+  SetWorkMode(gc_User.Local);
 
   SoldParallel:=iniSoldParallel;
   CheckCDS.CreateDataSet;
@@ -1719,13 +1725,12 @@ begin
   OnCLoseQuery := ParentFormCloseQuery;
   OnShow := ParentFormShow;
 
-//   TimerSaveAll.Enabled := true;
+// TimerSaveAll.Enabled := true;
 // временно отключим
 
   SetBlinkVIP (true);
   SetBlinkCheck (true);
   TimerBlinkBtn.Enabled := true;
-
   actServiseRun.Execute; // запуск сервиса
 end;
 

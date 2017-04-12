@@ -2,7 +2,7 @@ inherited CheckForm: TCheckForm
   Caption = #1050#1072#1089#1089#1086#1074#1099#1081' '#1095#1077#1082
   ClientHeight = 406
   ExplicitWidth = 845
-  ExplicitHeight = 441
+  ExplicitHeight = 444
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -144,7 +144,7 @@ inherited CheckForm: TCheckForm
             DataBinding.FieldName = 'SummChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00;-,0.00'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

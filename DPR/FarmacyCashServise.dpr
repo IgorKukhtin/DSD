@@ -85,10 +85,13 @@ begin
    edUserName.Text:=ParamStr(1);
    edPassword.Text:=ParamStr(2);
     //Если все хорошо создаем главную форму Application.CreateForm();
-    AllowLocalConnect := False; //True;
+   AllowLocalConnect := True;  // разрешаем локальный режим
 
-     if ParamStr(1)<>'' then
-       TAuthentication.CheckLogin(TStorageFactory.GetStorage, ParamStr(1), ParamStr(2), gc_User)
+     if ParamStr(2)<>'' then // Если два параметра, то не спрашивать логин и пароль
+       begin
+        btnOkClick(btnOk);  // нажимаем проверку логина  если передали два параметра запуска
+//       TAuthentication.CheckLogin(TStorageFactory.GetStorage, ParamStr(1), ParamStr(2), gc_User); // не работает вместе с AllowLocalConnect := True;
+       end
       else
        if ShowModal <> mrOk then exit;
 

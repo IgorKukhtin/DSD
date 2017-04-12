@@ -913,6 +913,7 @@ object DM: TDM
     Aggregates = <>
     FieldDefs = <>
     IndexDefs = <>
+    IndexFieldNames = 'Id'
     Params = <>
     StoreDefs = True
     Left = 224

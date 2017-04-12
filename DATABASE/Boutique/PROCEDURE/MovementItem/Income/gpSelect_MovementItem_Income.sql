@@ -8,8 +8,13 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Income(
     IN inIsErased         Boolean      , -- 
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (Id Integer, PartionId Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
+             , CompositionName TVarChar
+             , GoodsInfoName TVarChar
+             , LineFabricaName TVarChar
+             , LabelName TVarChar
+             , GoodsSizeName TVarChar
              , Amount TFloat
              , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
              , AmountSumm TFloat, AmountPriceListSumm TFloat
@@ -30,6 +35,7 @@ BEGIN
      RETURN QUERY 
        WITH tmpMI AS (SELECT MovementItem.Id
                            , MovementItem.ObjectId AS GoodsId
+                           , MovementItem.PartionId
                            , MovementItem.Amount 
                            , COALESCE (MIFloat_OperPrice.ValueData, 0)       AS OperPrice
                            , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice 
@@ -53,12 +59,19 @@ BEGIN
        -- результат
        SELECT
              tmpMI.Id
+           , tmpMI.PartionId
            , Object_Goods.Id          AS GoodsId
            , Object_Goods.ObjectCode  AS GoodsCode
            , Object_Goods.ValueData   AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData AS MeasureName
          
+           , Object_Composition.ValueData   AS CompositionName
+           , Object_GoodsInfo.ValueData     AS GoodsInfoName
+           , Object_LineFabrica.ValueData   AS LineFabricaName
+           , Object_Label.ValueData         AS LabelName
+           , Object_GoodsSize.ValueData     AS GoodsSizeName 
+
            , tmpMI.Amount
 
            , tmpMI.OperPrice      ::TFloat
@@ -78,17 +91,21 @@ BEGIN
            , tmpMI.isErased
 
        FROM tmpMI
-            
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
+            LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpMI.PartionId                                 
+
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = Object_PartionGoods.GoodsGroupId
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = Object_PartionGoods.MeasureId
+            LEFT JOIN Object AS Object_Composition ON Object_Composition.Id = Object_PartionGoods.CompositionId
+            LEFT JOIN Object AS Object_GoodsInfo ON Object_GoodsInfo.Id = Object_PartionGoods.GoodsInfoId
+            LEFT JOIN Object AS Object_LineFabrica ON Object_LineFabrica.Id = Object_PartionGoods.LineFabricaId 
+            LEFT JOIN Object AS Object_Label ON Object_Label.Id = Object_PartionGoods.LabelId
+            LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = Object_PartionGoods.GoodsSizeId
            
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
                                   
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId  --Object_Goods.Id 
-                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
        ;
 
 END;

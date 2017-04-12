@@ -152,17 +152,10 @@ inherited TaskForm: TTaskForm
           object colisClose: TcxGridDBColumn [4]
             Caption = #1042#1099#1087#1086#1083#1085#1077#1085#1086' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isClose'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Caption = 'UnitForm'
-                Default = True
-                Kind = bkEllipsis
-              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 104
+            Width = 80
           end
           object colUpdateMobileDate: TcxGridDBColumn [5]
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1099#1087#1086#1083#1085#1077#1085#1086')'
@@ -174,6 +167,9 @@ inherited TaskForm: TTaskForm
               #1080#1103
             Options.Editing = False
             Width = 92
+          end
+          inherited colIsErased: TcxGridDBColumn
+            Width = 80
           end
         end
       end
@@ -235,6 +231,7 @@ inherited TaskForm: TTaskForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 7
       Width = 228
     end
@@ -248,6 +245,7 @@ inherited TaskForm: TTaskForm
         Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 6
     Width = 222
   end
@@ -270,6 +268,7 @@ inherited TaskForm: TTaskForm
         Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 9
     Width = 228
   end
@@ -287,6 +286,7 @@ inherited TaskForm: TTaskForm
         Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 11
     Width = 222
   end
@@ -771,6 +771,7 @@ inherited TaskForm: TTaskForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
+    AutoWidth = True
     Left = 258
     Top = 248
   end
@@ -927,9 +928,6 @@ inherited TaskForm: TTaskForm
       end
       item
         Component = edPersonalTrade
-      end
-      item
-        Component = edPosition
       end>
     Left = 336
     Top = 144
@@ -985,10 +983,11 @@ inherited TaskForm: TTaskForm
   object GuidesPersonalTrade: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalTrade
-    FormNameParam.Value = 'TMember_ObjectForm'
+    isShowModal = True
+    FormNameParam.Value = 'TMemberPosition_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMember_ObjectForm'
+    FormName = 'TMemberPosition_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1007,6 +1006,44 @@ inherited TaskForm: TTaskForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = '149831'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Unitname'
+        Value = Null
+        Component = edUnit
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchName'
+        Value = Null
+        Component = edBranch
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 500
     Top = 56
@@ -1014,6 +1051,7 @@ inherited TaskForm: TTaskForm
   object GuidesPosition: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPosition
+    isShowModal = True
     FormNameParam.Value = 'TPositionForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
