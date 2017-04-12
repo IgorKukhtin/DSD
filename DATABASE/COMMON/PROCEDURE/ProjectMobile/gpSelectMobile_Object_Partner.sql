@@ -155,8 +155,10 @@ BEGIN
                   , ObjectString_Partner_Address.ValueData  AS Address
                   , ObjectFloat_Partner_GPSN.ValueData      AS GPSN
                   , ObjectFloat_Partner_GPSE.ValueData      AS GPSE
-                  , REPLACE (REPLACE (LOWER (COALESCE (ObjectString_Partner_Schedule.ValueData, 't;t;t;t;t;t;t')), 'true', 't'), 'false', 'f')::TVarChar AS Schedule
-                  , REPLACE (REPLACE (LOWER (COALESCE (ObjectString_Partner_Delivery.ValueData, 'f;f;f;f;f;f;f')), 'true', 't'), 'false', 'f')::TVarChar AS Delivery
+                  --, REPLACE (REPLACE (LOWER (COALESCE (ObjectString_Partner_Schedule.ValueData, 't;t;t;t;t;t;t')), 'true', 't'), 'false', 'f')::TVarChar AS Schedule
+                  --, REPLACE (REPLACE (LOWER (COALESCE (ObjectString_Partner_Delivery.ValueData, 'f;f;f;f;f;f;f')), 'true', 't'), 'false', 'f')::TVarChar AS Delivery
+                  , zfReCalc_ScheduleOrDelivery (ObjectString_Partner_Schedule.ValueData, ObjectString_Partner_Delivery.ValueData, false) AS Schedule
+                  , zfReCalc_ScheduleOrDelivery (ObjectString_Partner_Schedule.ValueData, ObjectString_Partner_Delivery.ValueData, true)  AS Delivery
                   , COALESCE (tmpDebt.DebtSum, 0.0)::TFloat AS DebtSum
                   , COALESCE (tmpDebt.OverSum, 0.0)::TFloat AS OverSum
                   , COALESCE (tmpDebt.OverDays, 0)::Integer AS OverDays
