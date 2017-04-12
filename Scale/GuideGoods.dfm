@@ -617,7 +617,7 @@ object GuideGoodsForm: TGuideGoodsForm
           Properties.Alignment.Horz = taRightJustify
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
-          Properties.DecimalPlaces = 0
+          Properties.DecimalPlaces = 4
           TabOrder = 0
           OnEnter = EditTareCountEnter
           OnExit = EditWeightValueExit

@@ -146,23 +146,28 @@ BEGIN
             ,  tmpMI AS (SELECT MovementLinkObject_Unit.ObjectId                          AS UnitId
                               , tmpUnit.JuridicalId
                               , MovementLinkObject_PartnerMedical.ObjectId                AS HospitalId
+                              , MAX (CASE WHEN MIFloat_SummChangePercent.ValueData < 0 THEN Movement_Check.Id ELSE 0 END) AS MovementId_err
                               , tmpGoods.GoodsMainId                                      AS GoodsMainId
-                              , SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) AS Amount
+                              , SUM (MI_Check.Amount) AS Amount
                               , SUM (COALESCE (MIFloat_SummChangePercent.ValueData, 0))   AS SummChangePercent
                          FROM Movement AS Movement_Check
+                              INNER JOIN MovementString AS MovementString_InvNumberSP
+                                                        ON MovementString_InvNumberSP.MovementId = Movement_Check.Id
+                                                       AND MovementString_InvNumberSP.ValueData <> ''
+                                                       AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                             ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                               INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
  
-                              INNER JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
-                                                            ON MovementLinkObject_PartnerMedical.MovementId = Movement_Check.Id
-                                                           AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
-                                                           AND (MovementLinkObject_PartnerMedical.ObjectId = inHospitalId OR inHospitalId = 0)
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
+                                                           ON MovementLinkObject_PartnerMedical.MovementId = Movement_Check.Id
+                                                          AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
                               -- еще нужно добавить ограничение по больнице
                               INNER JOIN MovementItem AS MI_Check
                                                       ON MI_Check.MovementId = Movement_Check.Id
                                                      AND MI_Check.DescId = zc_MI_Master()
+                                                     AND MI_Check.Amount <> 0
                                                      AND MI_Check.isErased = FALSE
 
                               INNER JOIN tmpGoods ON tmpGoods.GoodsId = MI_Check.ObjectId
@@ -170,17 +175,15 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                                           ON MIFloat_SummChangePercent.MovementItemId = MI_Check.Id
                                                          AND MIFloat_SummChangePercent.DescId = zc_MIFloat_SummChangePercent()
-                              LEFT JOIN MovementItemContainer AS MIContainer
-                                                              ON MIContainer.MovementItemId = MI_Check.Id
-                                                             AND MIContainer.DescId = zc_MIContainer_Count() 
                          WHERE Movement_Check.DescId = zc_Movement_Check()
                            AND Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY'
                            AND Movement_Check.StatusId = zc_Enum_Status_Complete()
+                           AND (MovementLinkObject_PartnerMedical.ObjectId = inHospitalId OR inHospitalId = 0)
                          GROUP BY MovementLinkObject_Unit.ObjectId
                                 , tmpUnit.JuridicalId
                                 , tmpGoods.GoodsMainId
                                 , movementlinkobject_partnermedical.objectid
-                         HAVING SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) <> 0
+                         HAVING SUM (MI_Check.Amount) <> 0
                         )
       , tmpData AS (SELECT tmpMI.UnitId
                          , tmpMI.JuridicalId
@@ -188,6 +191,7 @@ BEGIN
                          , tmpMI.GoodsMainId
                          , tmpMI.Amount
                          , tmpMI.SummChangePercent
+                         , tmpMI.MovementId_err
                     FROM tmpMI 
                     )
 
@@ -212,7 +216,8 @@ BEGIN
         -- результат
         SELECT Object_Unit.ValueData               AS UnitName
              , Object_Juridical.ValueData          AS JuridicalName
-             , Object_PartnerMedical.ValueData     AS HospitalName
+             -- , Object_PartnerMedical.ValueData     AS HospitalName
+             , CASE WHEN tmpData.MovementId_err <> 0 THEN COALESCE (Movement_err.InvNumber, '' )  || ' - ' || COALESCE (Object_Unit_err.ValueData, '') ELSE Object_PartnerMedical.ValueData END :: TVarChar AS HospitalName
              , tmpGoodsSP.IntenalSPName
              , tmpGoodsSP.BrandSPName
              , tmpGoodsSP.KindOutSPName
@@ -246,8 +251,14 @@ BEGIN
            , tmpPartnerMedicalBankAccount.BankName                 AS PartnerMedical_BankName
            , tmpPartnerMedicalBankAccount.MFO                      AS PartnerMedical_MFO*/
         FROM tmpData
+             LEFT JOIN Movement AS Movement_err ON Movement_err.Id = tmpData.MovementId_err
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit_err
+                                          ON MovementLinkObject_Unit_err.MovementId = tmpData.MovementId_err
+                                         AND MovementLinkObject_Unit_err.DescId = zc_MovementLinkObject_Unit()
+             LEFT JOIN Object AS Object_Unit_err ON Object_Unit_err.Id = MovementLinkObject_Unit_err.ObjectId
+
              LEFT JOIN tmpGoodsSP AS tmpGoodsSP ON tmpGoodsSP.GoodsMainId = tmpData.GoodsMainId
-          
+             
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId
              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
              
@@ -267,7 +278,7 @@ BEGIN
            
         ORDER BY Object_Unit.ValueData
                , tmpGoodsSP.IntenalSPName
-;
+       ;
 
 END;
 $BODY$
@@ -280,4 +291,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpReport_Check_SP(inStartDate := ('01.12.2016')::TDateTime , inEndDate := ('29.12.2016')::TDateTime,  inSession := '3');
+-- SELECT * FROM gpReport_Check_SP (inStartDate:= '01.04.2017',inEndDate:= '15.04.2017', inJuridicalId:= 0, inUnitId:= 0, inHospitalId:= 0, inSession := '3');
