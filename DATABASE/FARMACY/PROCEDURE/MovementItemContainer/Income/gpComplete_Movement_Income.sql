@@ -17,6 +17,7 @@ $BODY$
   DECLARE vbOperDate    TDateTime;
   DECLARE vbUnit        Integer;
   DECLARE vbOrderId     Integer;
+  DECLARE vbGoodsName     TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
 --     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Income());
@@ -30,6 +31,23 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Документ уже проведен.';
      END IF;
+
+     -- !!!Проверка чтоб была заполнена колонка Факт кол-во!!!
+     vbGoodsName := (SELECT Object_Goods.ValueData 
+                     FROM MovementItem
+                      LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
+                             ON MIFloat_AmountManual.MovementItemId = MovementItem.ID
+                            AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+                      LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+                     WHERE MovementItem.MovementId = inMovementId
+                       AND MovementItem.isErased = FALSE
+                       AND COALESCE(MovementItem.Amount,0) <> COALESCE(MIFloat_AmountManual.ValueData,0)
+                     LIMIT 1);
+     IF COALESCE (vbGoodsName, '') <> ''
+     THEN
+         RAISE EXCEPTION 'Ошибка. Проверьте кол-во факт по одному <%> или более товарам.', vbGoodsName;
+     END IF;
+
 
      -- Проверили что установлены все связи
      PERFORM lpCheckComplete_Movement_Income (inMovementId);

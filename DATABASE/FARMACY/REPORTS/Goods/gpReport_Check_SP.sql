@@ -14,6 +14,8 @@ CREATE OR REPLACE FUNCTION  gpReport_Check_SP(
 RETURNS TABLE (UnitName       TVarChar
              , JuridicalName  TVarChar
              , HospitalName   TVarChar
+             , GoodsCode      Integer
+             , GoodsName      TVarChar
              , IntenalSPName  TVarChar
              , BrandSPName    TVarChar
              , KindOutSPName  TVarChar
@@ -21,6 +23,18 @@ RETURNS TABLE (UnitName       TVarChar
              , CountSP        TFloat
              , PriceSP        TFloat 
              , GroupSP        TFloat 
+             , CodeATX        TVarChar
+             , ReestrSP       TVarChar
+             , MakerSP        TVarChar
+             , DateReestrSP   TVarChar
+             , PriceOptSP     TFloat
+             , PriceRetSP     TFloat
+             , DailyNormSP    TFloat
+             , DailyCompensationSP  TFloat
+             , PaymentSP      TFloat
+             , ColSP          TFloat
+             , InsertDateSP   TDateTime
+
              , Amount         TFloat 
              , SummaSP        TFloat 
              , NumLine        Integer
@@ -92,6 +106,18 @@ BEGIN
                               , ObjectFloat_Goods_CountSP.ValueData          AS CountSP
                               , ObjectString_Goods_Pack.ValueData            AS Pack  --дозировка
 
+                              , ObjectString_Goods_CodeATX.ValueData         AS CodeATX 
+                              , ObjectString_Goods_ReestrSP.ValueData        AS ReestrSP
+                              , ObjectString_Goods_MakerSP.ValueData         AS MakerSP
+                              , ObjectString_Goods_ReestrDateSP.ValueData    AS DateReestrSP
+                              , ObjectFloat_Goods_PriceOptSP.ValueData       AS PriceOptSP
+                              , ObjectFloat_Goods_PriceRetSP.ValueData       AS PriceRetSP
+                              , ObjectFloat_Goods_DailyNormSP.ValueData      AS DailyNormSP
+                              , ObjectFloat_Goods_DailyCompensationSP.ValueData  AS DailyCompensationSP
+                              , ObjectFloat_Goods_PaymentSP.ValueData        AS PaymentSP
+                              , ObjectFloat_Goods_ColSP.ValueData            AS ColSP
+                              , ObjectDate_InsertSP.ValueData                AS InsertDateSP
+
                           FROM ObjectBoolean AS ObjectBoolean_Goods_SP 
                                LEFT JOIN ObjectLink AS ObjectLink_Goods_Object 
                                  ON ObjectLink_Goods_Object.ObjectId = ObjectBoolean_Goods_SP.ObjectId
@@ -127,6 +153,41 @@ BEGIN
                                  ON ObjectString_Goods_Pack.ObjectId = ObjectBoolean_Goods_SP.ObjectId
                                 AND ObjectString_Goods_Pack.DescId = zc_ObjectString_Goods_Pack()
     
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
+                                                     ON ObjectFloat_Goods_PriceOptSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
+                                                    AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP() 
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceRetSP
+                                                     ON ObjectFloat_Goods_PriceRetSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
+                                                    AND ObjectFloat_Goods_PriceRetSP.DescId = zc_ObjectFloat_Goods_PriceRetSP() 
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_DailyNormSP
+                                                     ON ObjectFloat_Goods_DailyNormSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
+                                                    AND ObjectFloat_Goods_DailyNormSP.DescId = zc_ObjectFloat_Goods_DailyNormSP() 
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_DailyCompensationSP
+                                                     ON ObjectFloat_Goods_DailyCompensationSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
+                                                    AND ObjectFloat_Goods_DailyCompensationSP.DescId = zc_ObjectFloat_Goods_DailyCompensationSP() 
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PaymentSP
+                                                     ON ObjectFloat_Goods_PaymentSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
+                                                    AND ObjectFloat_Goods_PaymentSP.DescId = zc_ObjectFloat_Goods_PaymentSP() 
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_ColSP
+                                                     ON ObjectFloat_Goods_ColSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
+                                                    AND ObjectFloat_Goods_ColSP.DescId = zc_ObjectFloat_Goods_ColSP() 
+
+                               LEFT JOIN ObjectString AS ObjectString_Goods_CodeATX
+                                                      ON ObjectString_Goods_CodeATX.ObjectId = ObjectBoolean_Goods_SP.ObjectId
+                                                     AND ObjectString_Goods_CodeATX.DescId = zc_ObjectString_Goods_CodeATX()
+                               LEFT JOIN ObjectString AS ObjectString_Goods_ReestrSP
+                                                      ON ObjectString_Goods_ReestrSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
+                                                     AND ObjectString_Goods_ReestrSP.DescId = zc_ObjectString_Goods_ReestrSP()
+                               LEFT JOIN ObjectString AS ObjectString_Goods_MakerSP
+                                                      ON ObjectString_Goods_MakerSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
+                                                     AND ObjectString_Goods_MakerSP.DescId = zc_ObjectString_Goods_MakerSP()
+                               LEFT JOIN ObjectString AS ObjectString_Goods_ReestrDateSP
+                                                      ON ObjectString_Goods_ReestrDateSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
+                                                     AND ObjectString_Goods_ReestrDateSP.DescId = zc_ObjectString_Goods_ReestrDateSP()
+                               LEFT JOIN ObjectDate AS ObjectDate_InsertSP
+                                                    ON ObjectDate_InsertSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
+                                                   AND ObjectDate_InsertSP.DescId = zc_ObjectDate_Protocol_InsertSP()
+     
                           WHERE ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
                             AND ObjectBoolean_Goods_SP.ValueData = TRUE
                          )
@@ -216,8 +277,12 @@ BEGIN
         -- результат
         SELECT Object_Unit.ValueData               AS UnitName
              , Object_Juridical.ValueData          AS JuridicalName
+
              -- , Object_PartnerMedical.ValueData     AS HospitalName
              , CASE WHEN tmpData.MovementId_err <> 0 THEN COALESCE (Movement_err.InvNumber, '' )  || ' - ' || COALESCE (Object_Unit_err.ValueData, '') ELSE Object_PartnerMedical.ValueData END :: TVarChar AS HospitalName
+             , Object_PartnerMedical.ValueData     AS HospitalName
+             , Object_Goods.ObjectCode             AS GoodsCode
+             , Object_Goods.ValueData              AS GoodsName
              , tmpGoodsSP.IntenalSPName
              , tmpGoodsSP.BrandSPName
              , tmpGoodsSP.KindOutSPName
@@ -225,7 +290,20 @@ BEGIN
              , tmpGoodsSP.CountSP :: TFloat 
              , tmpGoodsSP.PriceSP :: TFloat 
              , tmpGoodsSP.GroupSP :: TFloat 
-             , tmpData.Amount     :: TFloat 
+
+             , tmpGoodsSP.CodeATX         ::TVarChar
+             , tmpGoodsSP.ReestrSP        ::TVarChar
+             , tmpGoodsSP.MakerSP         ::TVarChar
+             , tmpGoodsSP.DateReestrSP    ::TVarChar
+             , tmpGoodsSP.PriceOptSP      :: TFloat
+             , tmpGoodsSP.PriceRetSP      :: TFloat
+             , tmpGoodsSP.DailyNormSP     :: TFloat
+             , tmpGoodsSP.DailyCompensationSP  :: TFloat
+             , tmpGoodsSP.PaymentSP       :: TFloat
+             , tmpGoodsSP.ColSP           :: TFloat
+             , tmpGoodsSP.InsertDateSP    :: TDateTime
+
+             , tmpData.Amount            :: TFloat 
              , tmpData.SummChangePercent :: TFloat  AS SummaSP
              , CAST (ROW_NUMBER() OVER (PARTITION BY Object_Unit.ValueData ORDER BY Object_Unit.ValueData, tmpGoodsSP.IntenalSPName ) AS Integer) AS NumLine
 
@@ -258,7 +336,9 @@ BEGIN
              LEFT JOIN Object AS Object_Unit_err ON Object_Unit_err.Id = MovementLinkObject_Unit_err.ObjectId
 
              LEFT JOIN tmpGoodsSP AS tmpGoodsSP ON tmpGoodsSP.GoodsMainId = tmpData.GoodsMainId
-             
+
+             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsMainId
+
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId
              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
              

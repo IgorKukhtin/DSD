@@ -39,6 +39,11 @@ RETURNS TABLE (Id              Integer
 
              , Delivery1 Boolean, Delivery2 Boolean, Delivery3 Boolean, Delivery4 Boolean
              , Delivery5 Boolean, Delivery6 Boolean, Delivery7 Boolean
+
+             , PersonalName TVarChar
+             , BranchName TVarChar
+             , UnitName TVarChar
+             , PositionName TVarChar
               )
 AS 
 $BODY$
@@ -49,7 +54,8 @@ BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
-
+     
+     --vbMemberId:= inMemberId;
      vbMemberId:= (SELECT tmp.MemberId FROM gpGetMobile_Object_Const (inSession) AS tmp);
      IF (COALESCE(inMemberId,0) <> 0 AND COALESCE(vbMemberId,0) <> inMemberId)
         THEN
@@ -105,14 +111,28 @@ BEGIN
                , CASE WHEN COALESCE(tmpMobilePartner.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Delivery, inSep:= ';', inIndex:= 6) ::Boolean END ::Boolean    AS Delivery6
                , CASE WHEN COALESCE(tmpMobilePartner.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Delivery, inSep:= ';', inIndex:= 7) ::Boolean END ::Boolean    AS Delivery7
 
+               , Object_PersonalTrade.PersonalName
+               , Object_PersonalTrade.BranchName 
+               , Object_PersonalTrade.UnitName     
+               , Object_PersonalTrade.PositionName 
+
           FROM gpSelectMobile_Object_Partner (zc_DateStart(), calcSession) AS tmpMobilePartner
                LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpMobilePartner.JuridicalId 
                LEFT JOIN Object AS Object_Route ON Object_Route.Id = tmpMobilePartner.RouteId 
                LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpMobilePartner.ContractId 
                LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = tmpMobilePartner.PriceListId 
                LEFT JOIN Object AS Object_PriceList_Ret ON Object_PriceList_Ret.Id = tmpMobilePartner.PriceListId_ret 
+
+               LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                    ON ObjectLink_Partner_PersonalTrade.ObjectId = tmpMobilePartner.Id
+                                   AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+               LEFT JOIN Object_Personal_View AS Object_PersonalTrade ON Object_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
+
           WHERE tmpMobilePartner.isSync = TRUE
            AND ( tmpMobilePartner.isErased = inisShowAll OR inisShowAll = True)
+
+ 
+
 ;
 
 END; 
