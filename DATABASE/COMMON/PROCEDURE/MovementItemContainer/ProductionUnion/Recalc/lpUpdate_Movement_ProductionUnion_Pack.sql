@@ -344,7 +344,8 @@ BEGIN
 
 
      -- !!!Выход, т.к. иногда данных нет!!!
-     IF NOT EXISTS (SELECT 1 FROM _tmpResult)
+     IF     NOT EXISTS (SELECT 1 FROM _tmpResult WHERE _tmpResult.isDelete = TRUE)
+        AND NOT EXISTS (SELECT 1 FROM _tmpResult WHERE _tmpResult.DescId_mi = zc_MI_Master())
      THEN
          RETURN;
      END IF;
@@ -883,7 +884,7 @@ END;$BODY$
 
 -- тест
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '24.03.2017', inEndDate:= '24.03.2017', inUnitId:= 8451,   inUserId:= zc_Enum_Process_Auto_Pack()) -- Цех Упаковки
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '02.03.2017', inEndDate:= '02.03.2017', inUnitId:= 951601, inUserId:= zc_Enum_Process_Auto_Pack()) -- ЦЕХ упаковки мясо
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '09.04.2017', inEndDate:= '09.04.2017', inUnitId:= 951601, inUserId:= zc_Enum_Process_Auto_Pack()) -- ЦЕХ упаковки мясо
 
 -- where ContainerId = 568111
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '11.08.2016', inEndDate:= '11.08.2016', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer) -- Цех Упаковки

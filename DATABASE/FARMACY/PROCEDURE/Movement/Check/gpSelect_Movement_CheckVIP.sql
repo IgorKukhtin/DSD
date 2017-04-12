@@ -127,7 +127,7 @@ BEGIN
             , MovementString_Ambulance.ValueData         AS Ambulance
             , MovementString_MedicSP.ValueData           AS MedicSP
             , MovementString_InvNumberSP.ValueData       AS InvNumberSP
-            , MovementDate_OperDateSP.ValueData          AS OperDateSP
+            , COALESCE (MovementDate_OperDateSP.ValueData, zc_DateStart()) :: TDateTime AS OperDateSP
 
             , CASE WHEN Object_ConfirmedKind.Id = zc_Enum_ConfirmedKind_UnComplete() AND tmpErr.MovementId > 0 THEN 16440317 -- бледно крассный / розовый
                    WHEN Object_ConfirmedKind.Id = zc_Enum_ConfirmedKind_UnComplete() AND tmpErr.MovementId IS NULL THEN zc_Color_Yelow() -- желтый

@@ -269,6 +269,26 @@ BEGIN
 
      IF vbMovementDescId = zc_Movement_Sale()
      THEN
+          IF 1 <(SELECT COUNT(*) FROM MovementLinkMovement
+                                     INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                                                     ON MovementLinkMovement_Order.MovementChildId = MovementLinkMovement.MovementChildId
+                                                                    AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                                     INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Order.MovementId
+                                                        AND Movement.DescId = zc_Movement_Sale()
+                                                        AND Movement.OperDate = inOperDate
+                                                        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                                WHERE MovementLinkMovement.MovementId = inMovementId
+                                  AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order())
+          THEN
+              RAISE EXCEPTION 'Ошибка. Найдено несколько документов Продажа для заявки № <%>'
+                             , (SELECT Movement.InvNumber
+                                FROM MovementLinkMovement
+                                     INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId
+                                WHERE MovementLinkMovement.MovementId = inMovementId
+                                  AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
+                                LIMIT 1
+                               );
+          END IF;                        
           -- поиск существующего документа <Продажа покупателю> по Заявке
           vbMovementId_find:= (SELECT Movement.Id
                                 FROM MovementLinkMovement

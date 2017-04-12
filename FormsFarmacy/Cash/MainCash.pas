@@ -266,6 +266,9 @@ type
     MainColPriceSaleSP: TcxGridDBColumn;
     DiffSP1: TcxGridDBColumn;
     DiffSP2: TcxGridDBColumn;
+    MainColIntenalSPName: TcxGridDBColumn;
+    actOpenGoodsSP_UserForm: TdsdOpenForm;
+    miOpenGoodsSP_UserForm: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

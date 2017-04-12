@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                isFirst boolean, isSecond boolean, Color_calc Integer,
                isPromo boolean,
                isSP boolean,
+               IntenalSPName TVarChar,
                MinExpirationDate TDateTime,
                Color_ExpirationDate Integer,
                ConditionsKeepName TVarChar,
@@ -357,6 +358,7 @@ BEGIN
             CASE WHEN COALESCE(ObjectBoolean_Second.ValueData, False) = TRUE THEN 16440317 WHEN COALESCE(ObjectBoolean_First.ValueData, False) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc,
             CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo,
             COALESCE (ObjectBoolean_Goods_SP.ValueData, FALSE) :: Boolean  AS isSP,
+            Object_IntenalSP.ValueData AS IntenalSPName,
             CashSessionSnapShot.MinExpirationDate,
             CASE WHEN CashSessionSnapShot.MinExpirationDate < CURRENT_DATE + zc_Interval_ExpirationDate() THEN zc_Color_Blue() ELSE zc_Color_Black() END AS Color_ExpirationDate,                --vbAVGDateEnd
             COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName,
@@ -394,6 +396,12 @@ BEGIN
             LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP
                                      ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId
                                     AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+            -- Соц Проект
+            LEFT JOIN  ObjectLink AS ObjectLink_Goods_IntenalSP
+                                  ON ObjectLink_Goods_IntenalSP.ObjectId = ObjectLink_Main.ChildObjectId
+                                 AND ObjectLink_Goods_IntenalSP.DescId = zc_ObjectLink_Goods_IntenalSP()
+            LEFT JOIN  Object AS Object_IntenalSP ON Object_IntenalSP.Id = ObjectLink_Goods_IntenalSP.ChildobjectId
+
             -- Розмір відшкодування за упаковку (Соц. проект) - (15)
             LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceSP
                                   ON ObjectFloat_Goods_PriceSP.ObjectId = ObjectLink_Main.ChildObjectId

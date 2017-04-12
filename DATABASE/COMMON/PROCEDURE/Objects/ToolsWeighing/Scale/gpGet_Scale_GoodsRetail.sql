@@ -109,7 +109,9 @@ BEGIN
                                                                  AND ObjectFloat_EndPosFrac.DescId = zc_ObjectFloat_GoodsProperty_EndPosFrac()
                                        WHERE Object_GoodsProperty.Id = inGoodsPropertyId
                                          AND Object_GoodsProperty.DescId = zc_Object_GoodsProperty()
+                                         AND ObjectFloat_StartPosInt.ValueData > 1
                                       ) AS tmp
+                                 WHERE 1 + tmp.EndPosIdent - tmp.StartPosIdent > 0
                                 )
        , tmpGoodsPropertyValue_sht AS (SELECT tmpGoodsProperty.StartPosInt
                                             , tmpGoodsProperty.EndPosInt

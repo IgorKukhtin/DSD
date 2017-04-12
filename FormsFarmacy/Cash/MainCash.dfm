@@ -332,6 +332,13 @@ inherited MainCashForm: TMainCashForm
           HeaderAlignmentVert = vaCenter
           Width = 45
         end
+        object MainColIntenalSPName: TcxGridDBColumn
+          Caption = #1053#1072#1079#1074#1072' ('#1089#1087')'
+          DataBinding.FieldName = 'IntenalSPName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 80
+        end
         object MainColReserved: TcxGridDBColumn
           Caption = 'VIP'
           DataBinding.FieldName = 'Reserved'
@@ -1555,7 +1562,7 @@ inherited MainCashForm: TMainCashForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1053#1058#1047
-      Hint = #1056#1077#1077#1089#1090#1088' '#1085#1077#1089#1085#1080#1078#1072#1077#1086#1075#1086' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
+      Hint = #1056#1077#1077#1089#1090#1088' '#1085#1077#1089#1085#1080#1078#1072#1077#1084#1086#1075#1086' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
       FormName = 'TMCSForm'
       FormNameParam.Value = 'TMCSForm'
       FormNameParam.DataType = ftString
@@ -1630,6 +1637,17 @@ inherited MainCashForm: TMainCashForm
       Hint = #1057#1082#1080#1076#1082#1072' '#1087#1086' '#1057#1055
       ShortCut = 114
       OnExecute = actSetSPExecute
+    end
+    object actOpenGoodsSP_UserForm: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1044#1086#1089#1090#1091#1087#1085#1099#1077' '#1083#1077#1082#1072#1088#1089#1090#1074#1072' - '#1057#1055
+      FormName = 'TGoodsSP_UserForm'
+      FormNameParam.Value = 'TGoodsSP_UserForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
     end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
@@ -1857,6 +1875,9 @@ inherited MainCashForm: TMainCashForm
     end
     object actOpenCheckVIPError1: TMenuItem
       Action = actOpenCheckVIP_Error
+    end
+    object miOpenGoodsSP_UserForm: TMenuItem
+      Action = actOpenGoodsSP_UserForm
     end
   end
   object FormParams: TdsdFormParams
