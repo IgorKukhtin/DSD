@@ -1,9 +1,9 @@
 DROP FUNCTION IF EXISTS zfReCalc_ScheduleOrDelivery (TVarChar, TVarChar, Boolean);
 
 CREATE OR REPLACE FUNCTION zfReCalc_ScheduleOrDelivery (
-    IN inSchedule   TVarChar, 
-    IN inDelivery   TVarChar, 
-    IN inisDelivery Boolean
+    IN inSchedule   TVarChar, -- График посещения ТТ, по каким дням недели - в строчке 7 символов разделенных ";" t значит true и f значит false
+    IN inDelivery   TVarChar, -- График завоза на ТТ, по каким дням недели - в строчке 7 символов разделенных ";" t значит true и f значит false
+    IN inisDelivery Boolean   -- Если true, вернуть пересчитанное значение графика завоза, иначе вернуть значение графика посещения
 )
 RETURNS TVarChar AS
 $BODY$
@@ -14,11 +14,12 @@ BEGIN
       vbisDelivery:= COALESCE (inisDelivery, false)::Boolean;
 
       IF (inSchedule IS NULL) AND (inDelivery IS NULL)
-      THEN
+      THEN -- если оба графика NULL, то возвращаем значения по-умолчанию
            vbSchedule:= 't;t;t;t;t;t;t';
            vbDelivery:= vbSchedule;
       ELSIF (inSchedule IS NOT NULL) AND (inDelivery IS NULL)
-      THEN
+      THEN -- если график посещения задан, а график завоза NULL, тогда рассчитываем график завоза на основании 
+           -- графика посещения со сдвигом вперед по дням
            vbSchedule:= REPLACE (REPLACE (LOWER (inSchedule), 'true', 't'), 'false', 'f')::TVarChar;
            IF CHAR_LENGTH (vbSchedule) > 12
            THEN
@@ -30,14 +31,16 @@ BEGIN
                 vbDelivery:= 'f;f;f;f;f;f;f'; 
            END IF; 
       ELSIF (inSchedule IS NULL) AND (inDelivery IS NOT NULL)
-      THEN
+      THEN -- если график посещения NULL, а график завоза задан, тогда график посещения возвращаем 
+           -- с значением по-умолчанию, а график завоза, если надо, приводим к корректному виду
            vbSchedule:= 't;t;t;t;t;t;t';
            vbDelivery:= REPLACE (REPLACE (LOWER (inDelivery), 'true', 't'), 'false', 'f')::TVarChar;
-      ELSE
+      ELSE -- иначе, если надо, приводим все к корректному виду
            vbSchedule:= REPLACE (REPLACE (LOWER (inSchedule), 'true', 't'), 'false', 'f')::TVarChar;
            vbDelivery:= REPLACE (REPLACE (LOWER (inDelivery), 'true', 't'), 'false', 'f')::TVarChar;
       END IF;
 
+      -- Результат 
       IF vbisDelivery
       THEN
            RETURN vbDelivery;
