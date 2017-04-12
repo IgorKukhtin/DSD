@@ -4,13 +4,13 @@ DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Movement_ReturnIn (TVarChar, TVarCh
 DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Movement_ReturnIn (TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Integer, Boolean, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Movement_ReturnIn (TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Integer, Boolean, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Movement_ReturnIn (TVarChar, TVarChar, TDateTime, Integer, Boolean, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Movement_ReturnIn (TVarChar, TVarChar, TDateTime, Integer, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_Movement_ReturnIn (
     IN inGUID             TVarChar  , -- Глобальный уникальный идентификатор для синхронизации с Главной БД
     IN inInvNumber        TVarChar  , -- Номер документа
     IN inOperDate         TDateTime , -- Дата документа
     IN inStatusId         Integer   , -- Виды статусов
-    IN inChecked          Boolean   , -- Проверен
     IN inPriceWithVAT     Boolean   , -- Цена с НДС (да/нет)
     IN inInsertDate       TDateTime , -- Дата/время создания документа
     IN inVATPercent       TFloat    , -- % НДС
@@ -27,6 +27,11 @@ AS
 $BODY$
    DECLARE vbId Integer;
    DECLARE vbUserId Integer;
+   DECLARE vbInvNumberPartner TVarChar;
+   DECLARE vbInvNumberMark TVarChar;
+   DECLARE vbChecked Boolean;
+   DECLARE vbisPartner Boolean;
+   DECLARE vbisList Boolean;
    DECLARE vbCurrencyId Integer;
    DECLARE vbIsInsert Boolean;
 BEGIN
@@ -36,15 +41,46 @@ BEGIN
 
       -- получаем Id документа по GUID
       SELECT MovementString_GUID.MovementId 
-      INTO vbId 
+           , COALESCE (MovementString_InvNumberPartner.ValueData, '')::TVarChar AS InvNumberPartner
+           , COALESCE (MovementString_InvNumberMark.ValueData, '')::TVarChar    AS InvNumberMark
+           , COALESCE (MovementBoolean_Checked.ValueData, false)::Boolean       AS Checked
+           , COALESCE (MovementBoolean_isPartner.ValueData, false)::Boolean     AS isPartner
+           , COALESCE (MovementBoolean_List.ValueData, false)::Boolean          AS isList
+      INTO vbId
+         , vbInvNumberPartner
+         , vbInvNumberMark   
+         , vbChecked         
+         , vbisPartner       
+         , vbisList          
       FROM MovementString AS MovementString_GUID
-           JOIN Movement AS Movement_StoreReal
-                         ON Movement_StoreReal.Id = MovementString_GUID.MovementId
-                        AND Movement_StoreReal.DescId = zc_Movement_ReturnIn()
+           JOIN Movement AS Movement_ReturnIn
+                         ON Movement_ReturnIn.Id = MovementString_GUID.MovementId
+                        AND Movement_ReturnIn.DescId = zc_Movement_ReturnIn()
+           LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                    ON MovementString_InvNumberPartner.MovementId = Movement_ReturnIn.Id
+                                   AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+           LEFT JOIN MovementString AS MovementString_InvNumberMark
+                                    ON MovementString_InvNumberMark.MovementId = Movement_ReturnIn.Id
+                                   AND MovementString_InvNumberMark.DescId = zc_MovementString_InvNumberMark()
+           LEFT JOIN MovementBoolean AS MovementBoolean_Checked
+                                     ON MovementBoolean_Checked.MovementId = Movement_ReturnIn.Id
+                                    AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
+           LEFT JOIN MovementBoolean AS MovementBoolean_isPartner
+                                     ON MovementBoolean_isPartner.MovementId = Movement_ReturnIn.Id
+                                    AND MovementBoolean_isPartner.DescId = zc_MovementBoolean_isPartner()
+           LEFT JOIN MovementBoolean AS MovementBoolean_List
+                                     ON MovementBoolean_List.MovementId = Movement_ReturnIn.Id
+                                    AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
       WHERE MovementString_GUID.DescId = zc_MovementString_GUID() 
         AND MovementString_GUID.ValueData = inGUID;
 
       vbIsInsert:= (COALESCE (vbId, 0) = 0);
+
+      vbInvNumberPartner := COALESCE (vbInvNumberPartner, '')::TVarChar;
+      vbInvNumberMark    := COALESCE (vbInvNumberMark, '')::TVarChar;
+      vbChecked          := COALESCE (vbChecked, false)::Boolean;
+      vbisPartner        := COALESCE (vbisPartner, false)::Boolean;
+      vbisList           := COALESCE (vbisList, false)::Boolean;
 
       SELECT ObjectLink_Contract_Currency.ChildObjectId
       INTO vbCurrencyId
@@ -54,28 +90,28 @@ BEGIN
 
       vbCurrencyId:= COALESCE (vbCurrencyId, zc_Enum_Currency_Basis());
 
-      vbId:= lpInsertUpdate_Movement_ReturnIn (ioId                 := vbId            -- Ключ объекта <Документ Возврат покупателя>
-                                             , inInvNumber          := inInvNumber     -- Номер документа
-                                             , inInvNumberPartner   := ''              -- Номер накладной у контрагента
-                                             , inInvNumberMark      := ''              -- Номер "перекресленої зеленої марки зi складу"
+      vbId:= lpInsertUpdate_Movement_ReturnIn (ioId                 := vbId               -- Ключ объекта <Документ Возврат покупателя>
+                                             , inInvNumber          := inInvNumber        -- Номер документа
+                                             , inInvNumberPartner   := vbInvNumberPartner -- Номер накладной у контрагента
+                                             , inInvNumberMark      := vbInvNumberMark    -- Номер "перекресленої зеленої марки зi складу"
                                              , inParentId           := NULL
-                                             , inOperDate           := inOperDate      -- Дата(склад)
-                                             , inOperDatePartner    := inOperDate      -- Дата документа у покупателя
-                                             , inChecked            := inChecked       -- Проверен
-                                             , inIsPartner          := false           -- основание - Акт недовоза
-                                             , inPriceWithVAT       := inPriceWithVAT  -- Цена с НДС (да/нет)
-                                             , inisList             := false           -- Только для списка
-                                             , inVATPercent         := inVATPercent    -- % НДС
-                                             , inChangePercent      := inChangePercent -- (-)% Скидки (+)% Наценки
-                                             , inFromId             := inPartnerId     -- От кого (в документе)
-                                             , inToId               := inUnitId        -- Кому (в документе)
-                                             , inPaidKindId         := inPaidKindId    -- Виды форм оплаты
-                                             , inContractId         := inContractId    -- Договора
-                                             , inCurrencyDocumentId := vbCurrencyId    -- Валюта (документа)
-                                             , inCurrencyPartnerId  := vbCurrencyId    -- Валюта (контрагента)
-                                             , inCurrencyValue      := 1.0             -- курс валюты
-                                             , inComment            := inComment       -- примечание
-                                             , inUserId             := vbUserId        -- Пользователь
+                                             , inOperDate           := inOperDate         -- Дата(склад)
+                                             , inOperDatePartner    := inOperDate         -- Дата документа у покупателя
+                                             , inChecked            := vbChecked          -- Проверен
+                                             , inIsPartner          := vbisPartner        -- основание - Акт недовоза
+                                             , inPriceWithVAT       := inPriceWithVAT     -- Цена с НДС (да/нет)
+                                             , inisList             := vbisList           -- Только для списка
+                                             , inVATPercent         := inVATPercent       -- % НДС
+                                             , inChangePercent      := inChangePercent    -- (-)% Скидки (+)% Наценки
+                                             , inFromId             := inPartnerId        -- От кого (в документе)
+                                             , inToId               := inUnitId           -- Кому (в документе)
+                                             , inPaidKindId         := inPaidKindId       -- Виды форм оплаты
+                                             , inContractId         := inContractId       -- Договора
+                                             , inCurrencyDocumentId := vbCurrencyId       -- Валюта (документа)
+                                             , inCurrencyPartnerId  := vbCurrencyId       -- Валюта (контрагента)
+                                             , inCurrencyValue      := 1.0                -- курс валюты
+                                             , inComment            := inComment          -- примечание
+                                             , inUserId             := vbUserId           -- Пользователь
                                               );
 
       -- сохранили свойство <Глобальный уникальный идентификатор>                       
@@ -108,7 +144,6 @@ $BODY$
                                                     , inInvNumber     := '-10'
                                                     , inOperDate      := CURRENT_DATE
                                                     , inStatusId      := zc_Enum_Status_UnComplete()  -- Виды статусов
-                                                    , inChecked       := false                        -- Проверен
                                                     , inPriceWithVAT  := false                        -- Цена с НДС (да/нет)
                                                     , inInsertDate    := CURRENT_TIMESTAMP            -- Дата/время создания документа
                                                     , inVATPercent    := 20.0                         -- % НДС
