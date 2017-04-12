@@ -768,6 +768,8 @@ type
       const ItemObject: TListItemDrawable);
     procedure lwReturnInItemsFilter(Sender: TObject; const AFilter,
       AValue: string; var Accept: Boolean);
+    procedure lwTasksUpdateObjects(const Sender: TObject;
+      const AItem: TListViewItem);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -833,6 +835,7 @@ type
 
     procedure ChangeStatusIcon(ACurItem: TListViewItem);
     procedure DeleteButtonHide(AItem: TListViewItem);
+    procedure ChangeTaskView(AItem: TListViewItem);
 
     procedure Wait(AWait: Boolean);
     procedure CheckDataBase;
@@ -1103,6 +1106,25 @@ begin
     AItem.Objects.FindDrawable('DeleteButton').Visible := false;
 end;
 
+procedure TfrmMain.ChangeTaskView(AItem: TListViewItem);
+begin
+  if SameText(TListItemText(AItem.Objects.FindDrawable('Closed')).Text, 'False') then
+    TListItemImage(AItem.Objects.FindDrawable('CloseButton')).ImageIndex := 4
+  else
+    TListItemImage(AItem.Objects.FindDrawable('CloseButton')).ImageIndex := 1;
+
+  if TListItemText(AItem.Objects.FindDrawable('PartnerName')).Text = '' then
+  begin
+    AItem.Height := 100;
+    AItem.Objects.FindDrawable('CloseButton').PlaceOffset.Y := 20;
+  end
+  else
+  begin
+    AItem.Height := 140;
+    AItem.Objects.FindDrawable('CloseButton').PlaceOffset.Y := 40;
+  end;
+end;
+
 // установить иконку статуса "заявок на товары"
 procedure TfrmMain.LinkListControlToFieldOrderExternalItemsFilledListItem(Sender: TObject;
   const AEditor: IBindListEditorItem);
@@ -1156,26 +1178,8 @@ end;
 
 procedure TfrmMain.LinkListControlToFieldTasksFilledListItem(Sender: TObject;
   const AEditor: IBindListEditorItem);
-var
-  CurItem: TListViewItem;
 begin
-  CurItem := lwTasks.Items[AEditor.CurrentIndex];
-
-  if SameText(TListItemText(CurItem.Objects.FindDrawable('Closed')).Text, 'False') then
-    TListItemImage(CurItem.Objects.FindDrawable('CloseButton')).ImageIndex := 4
-  else
-    TListItemImage(CurItem.Objects.FindDrawable('CloseButton')).ImageIndex := 1;
-
-  if TListItemText(CurItem.Objects.FindDrawable('PartnerName')).Text = '' then
-  begin
-    CurItem.Height := 100;
-    CurItem.Objects.FindDrawable('CloseButton').PlaceOffset.Y := 20;
-  end
-  else
-  begin
-    CurItem.Height := 140;
-    CurItem.Objects.FindDrawable('CloseButton').PlaceOffset.Y := 40;
-  end;
+  ChangeTaskView(lwTasks.Items[AEditor.CurrentIndex])
 end;
 
 // проверка логина и пароля
@@ -1678,6 +1682,12 @@ begin
     vsbMain.Enabled := false;
     pTaskComment.Visible := true;
   end;
+end;
+
+procedure TfrmMain.lwTasksUpdateObjects(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  ChangeTaskView(AItem);
 end;
 
 procedure TfrmMain.lwStoreRealItemsUpdateObjects(const Sender: TObject;
