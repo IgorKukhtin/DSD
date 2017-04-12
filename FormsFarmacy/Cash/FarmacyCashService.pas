@@ -39,8 +39,15 @@ type
     CONFIRMED   : String[50];  //Статус заказа (Состояние VIP-чека) - ConfirmedKind
     NUMORDER    : String[50];  //Номер заказа (с сайта) - InvNumberOrder
     CONFIRMEDC  : String[50];  //Статус заказа (Состояние VIP-чека) - ConfirmedKindClient
-    // Для сервиса передает рельную сесию при которой была продажа
-    USERSESION: string[50]; // индификационная сесия
+    //***24.01.17
+    USERSESION: string[50]; //Для сервиса - реальная сесия при продаже
+    //***08.04.17
+    PMEDICALID  : Integer;       //Id Медицинское учреждение(Соц. проект)
+    PMEDICALN   : String[254];   //Название Медицинское учреждение(Соц. проект)
+    AMBULANCE   : String[50];    //№ амбулатории (Соц. проект)
+    MEDICSP     : String[254];   //ФИО врача (Соц. проект)
+    INVNUMSP    : String[50];    //номер рецепта (Соц. проект)
+    OPERDATESP  : TDateTime;     //дата рецепта (Соц. проект)
   end;
   TBodyRecord = record
     ID: Integer;            //ид записи
@@ -242,6 +249,7 @@ var
   dsdSave: TdsdStoredProc;
   I: Integer;
   FNeedSaveVIP: Boolean;
+  fError_isComplete: Boolean;
 begin
    try
     spGet_User_IsAdmin.Execute;
@@ -334,7 +342,16 @@ begin
               CONFIRMED  := trim(FieldByName('CONFIRMED').AsString);
               NUMORDER   := trim(FieldByName('NUMORDER').AsString);
               CONFIRMEDC := trim(FieldByName('CONFIRMEDC').AsString);
+              //***24.01.17
               USERSESION := trim(FieldByName('USERSESION').AsString);
+              //***08.04.17
+              PMEDICALID := FieldByName('PMEDICALID').AsInteger;
+              PMEDICALN  := trim(FieldByName('PMEDICALN').AsString);
+              AMBULANCE  := trim(FieldByName('AMBULANCE').AsString);
+              MEDICSP    := trim(FieldByName('MEDICSP').AsString);
+              INVNUMSP   := trim(FieldByName('INVNUMSP').AsString);
+              OPERDATESP := FieldByName('OPERDATESP').asCurrency;
+
               FNeedSaveVIP := (MANAGER <> 0);
             end;
             FLocalDataBaseBody.First;
@@ -370,7 +387,11 @@ begin
           FLocalDataBaseHead.Active:=False;
           FLocalDataBaseBody.Active:=False;
           ReleaseMutex(MutexDBF);
-         end; // Загрузили чек в head and body
+
+        end; // Загрузили чек в head and body
+
+        //т.е. чек можно потом удалить из ДБФ
+        fError_isComplete:= FALSE; // 04.02.2017
 
          if Find AND NOT HEAD.SAVE then
          Begin
@@ -388,6 +409,9 @@ begin
               Begin
                 Head.SAVE := True;
                 Head.NEEDCOMPL := False;
+
+                //т.е. чек НЕЛЬЗЯ потом удалить из ДБФ
+                fError_isComplete:= TRUE; // 04.02.2017
               End
               else
               //Если не проведен
@@ -413,14 +437,21 @@ begin
                 dsdSave.Params.AddParam('inFiscalCheckNumber',ftString,ptInput,Head.FISCID);
                 dsdSave.Params.AddParam('inNotMCS',ftBoolean,ptInput,Head.NOTMCS);
                 //***20.07.16
-                dsdSave.Params.AddParam('inDiscountExternalId',ftInteger,ptInputOutput,Head.DISCOUNTID);
+                dsdSave.Params.AddParam('inDiscountExternalId',ftInteger,ptInput,Head.DISCOUNTID);
                 dsdSave.Params.AddParam('inDiscountCardNumber',ftString,ptInput,Head.DISCOUNT);
                 //***16.08.16
                 dsdSave.Params.AddParam('inBayerPhone',       ftString,ptInput,Head.BAYERPHONE);
                 dsdSave.Params.AddParam('inConfirmedKindName',ftString,ptInput,Head.CONFIRMED);
                 dsdSave.Params.AddParam('inInvNumberOrder',   ftString,ptInput,Head.NUMORDER);
-                //
-                dsdSave.Params.AddParam('inUserSesion', ftString, ptInput, Head.USERSESION);
+                //***08.04.17
+                dsdSave.Params.AddParam('inPartnerMedicalId',ftInteger,ptInput,Head.PMEDICALID);
+                dsdSave.Params.AddParam('inAmbulance', ftString, ptInput, Head.AMBULANCE);
+                dsdSave.Params.AddParam('inMedicSP', ftString, ptInput, Head.MEDICSP);
+                dsdSave.Params.AddParam('inInvNumberSP', ftString, ptInput, Head.INVNUMSP);
+                dsdSave.Params.AddParam('inOperDateSP', ftDateTime, ptInput, Head.OPERDATESP);
+                //***24.01.17
+                dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
+
                 dsdSave.Execute(False,False);
                 //сохранили в локальной базе полученный номер
                 if Head.ID <> StrToInt(dsdSave.Params.ParamByName('ioID').AsString) then
@@ -461,7 +492,7 @@ begin
                 //***10.08.16
                 dsdSave.Params.AddParam('inList_UID',ftString,ptInput,Null);
                 //
-                dsdSave.Params.AddParam('inUserSesion', ftString, ptInput, Head.USERSESION);
+                dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 
                 for I := 0 to Length(Body)-1 do
                 Begin
@@ -522,6 +553,7 @@ begin
                 finally
                   FLocalDataBaseHead.Active:=False;
                   ReleaseMutex(MutexDBF);
+
                 end;
               End; // обработали чек с товарами
             except ON E: Exception do
@@ -554,7 +586,7 @@ begin
               dsdSave.Params.AddParam('inPaidType',ftInteger,ptInput,Head.PAIDTYPE);
               dsdSave.Params.AddParam('inCashRegister',ftString,ptInput,Head.CASH);
               dsdSave.Params.AddParam('inCashSessionId',ftString,ptInput,MainCashForm2.FormParams.ParamByName('CashSessionId').Value);
-              dsdSave.Params.AddParam('inUserSesion', ftString,ptInput, Head.USERSESION);
+              dsdSave.Params.AddParam('inUserSession', ftString,ptInput, Head.USERSESION);
               try
                 dsdSave.Execute(False,False);
                 Head.COMPL := True;
@@ -601,10 +633,9 @@ begin
           finally
             freeAndNil(dsdSave);
           end;
-          Application.ProcessMessages;
-          //удаляем проведенный чек
-          if Head.COMPL then
-          Begin
+           //удаляем проведенный чек - если можно ... 04.02.2017
+          if Head.COMPL AND (fError_isComplete = FALSE)
+          then Begin
             WaitForSingleObject(MutexDBF, INFINITE);
             FLocalDataBaseHead.Active:=True;
             FLocalDataBaseBody.Active:=True;
@@ -628,11 +659,11 @@ begin
              ReleaseMutex(MutexDBF);
             end;
           End;
-         end
-        //если проводить не нужно
-         ELSE
-         if find and Head.SAVE then
-         BEGIN
+        end
+        //если проводить не нужно и если можно ... 04.02.2017
+        ELSE
+        if find and Head.SAVE and (fError_isComplete = FALSE)
+        then BEGIN
           if (Head.MANAGER <> 0) or (Head.BAYER <> '') then
           Begin
             WaitForSingleObject(MutexRemains, INFINITE);
@@ -700,6 +731,7 @@ begin
       MainCashForm2.tiServise.IconIndex:=0;
     end;
 end;
+
 
 
 
@@ -942,6 +974,7 @@ end;
 function TMainCashForm2.InitLocalStorage: Boolean;
 var fields11, fields12, fields13, fields14, fields15, fields16, fields17, fields18: TVKDBFFieldDefs;
     fields21, fields22, fields23, fields24, fields25: TVKDBFFieldDefs;
+    fields31, fields32, fields33, fields34, fields35, fields36: TVKDBFFieldDefs;
   procedure InitTable(DS: TVKSmartDBF; AFileName: String);
   Begin
     DS.DBFFileName := AnsiString(AFileName);
@@ -1000,9 +1033,16 @@ begin
     AddStrField(FLocalDataBaseHead,'CONFIRMED',50);  //Статус заказа (Состояние VIP-чека) - ConfirmedKind
     AddStrField(FLocalDataBaseHead,'NUMORDER',50);   //Номер заказа (с сайта) - InvNumberOrder
     AddStrField(FLocalDataBaseHead,'CONFIRMEDC',50); //Статус заказа (Состояние VIP-чека) - ConfirmedKindClient
+    //***24.01.17
+    AddStrField(FLocalDataBaseHead,'USERSESION',50); //Для сервиса - реальная сесия при продаже
+    //***08.04.17
+    AddIntField(FLocalDataBaseHead,'PMEDICALID');    //Id Медицинское учреждение(Соц. проект)
+    AddStrField(FLocalDataBaseHead,'PMEDICALN',254); //Название Медицинское учреждение(Соц. проект)
+    AddStrField(FLocalDataBaseHead,'AMBULANCE',50);  //№ амбулатории (Соц. проект)
+    AddStrField(FLocalDataBaseHead,'MEDICSP',254);   //ФИО врача (Соц. проект)
+    AddStrField(FLocalDataBaseHead,'INVNUMSP',50);   //номер рецепта (Соц. проект)
+    AddDateField(FLocalDataBaseHead,'OPERDATESP');   //дата рецепта (Соц. проект)
 
-      // Для сервиса передает рельную сесию при которой была продажа // Номер индификационной сесии
-    AddStrField(FLocalDataBaseHead,'USERSESION',50);
     try
       FLocalDataBaseHead.CreateTable;
     except ON E: Exception do
@@ -1017,7 +1057,6 @@ begin
   // !!!добавляем НОВЫЕ поля
   else begin
           FLocalDataBaseHead.Open;
-
           //
           if FLocalDataBaseHead.FindField('DISCOUNTID') = nil then
           begin
@@ -1053,7 +1092,8 @@ begin
                     len := 50;
                end;
                FLocalDataBaseHead.AddFields(fields13,1000);
-           end;
+          end;
+
           //***16.08.16
           if FLocalDataBaseHead.FindField('BAYERPHONE') = nil then
           begin
@@ -1078,6 +1118,7 @@ begin
                end;
                FLocalDataBaseHead.AddFields(fields15,1000);
            end;
+
           //***16.08.16
           if FLocalDataBaseHead.FindField('NUMORDER') = nil then
           begin
@@ -1090,6 +1131,7 @@ begin
                end;
                FLocalDataBaseHead.AddFields(fields16,1000);
            end;
+
           //***25.08.16
           if FLocalDataBaseHead.FindField('CONFIRMEDC') = nil then
           begin
@@ -1102,9 +1144,10 @@ begin
                end;
                FLocalDataBaseHead.AddFields(fields17,1000);
            end;
-           //
-              if FLocalDataBaseHead.FindField('USERSESION') = nil then
-          begin
+
+           //***24.01.17
+           if FLocalDataBaseHead.FindField('USERSESION') = nil then
+           begin
                fields18:=TVKDBFFieldDefs.Create(self);
                with fields18.Add as TVKDBFFieldDef do
                begin
@@ -1115,6 +1158,77 @@ begin
                FLocalDataBaseHead.AddFields(fields18,1000);
            end;
 
+           //***08.04.17
+           if FLocalDataBaseHead.FindField('PMEDICALID') = nil then
+           begin
+               fields31:=TVKDBFFieldDefs.Create(self);
+               with fields31.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'PMEDICALID';
+                    field_type := 'N';
+                    len := 10;
+               end;
+               FLocalDataBaseHead.AddFields(fields31,1000);
+           end;
+           //
+           if FLocalDataBaseHead.FindField('PMEDICALN') = nil then
+           begin
+               fields32:=TVKDBFFieldDefs.Create(self);
+               with fields32.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'PMEDICALN';
+                    field_type := 'C';
+                    len := 254;
+               end;
+               FLocalDataBaseHead.AddFields(fields32,1000);
+           end;
+           //
+           if FLocalDataBaseHead.FindField('AMBULANCE') = nil then
+           begin
+               fields33:=TVKDBFFieldDefs.Create(self);
+               with fields33.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'AMBULANCE';
+                    field_type := 'C';
+                    len := 55;
+               end;
+               FLocalDataBaseHead.AddFields(fields33,1000);
+           end;
+           //
+           if FLocalDataBaseHead.FindField('MEDICSP') = nil then
+           begin
+               fields34:=TVKDBFFieldDefs.Create(self);
+               with fields34.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'MEDICSP';
+                    field_type := 'C';
+                    len := 254;
+               end;
+               FLocalDataBaseHead.AddFields(fields34,1000);
+           end;
+           //
+           if FLocalDataBaseHead.FindField('INVNUMSP') = nil then
+           begin
+               fields35:=TVKDBFFieldDefs.Create(self);
+               with fields35.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'INVNUMSP';
+                    field_type := 'C';
+                    len := 55;
+               end;
+               FLocalDataBaseHead.AddFields(fields35,1000);
+           end;
+           //
+           if FLocalDataBaseHead.FindField('OPERDATESP') = nil then
+           begin
+               fields36:=TVKDBFFieldDefs.Create(self);
+               with fields36.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'OPERDATESP';
+                    field_type := 'D';
+               end;
+               FLocalDataBaseHead.AddFields(fields36,1000);
+           end;
 
            FLocalDataBaseHead.Close;
   end;// !!!добавляем НОВЫЕ поля
@@ -1252,7 +1366,15 @@ begin
      (FLocalDataBaseHead.FindField('CONFIRMED') = nil) or
      (FLocalDataBaseHead.FindField('NUMORDER') = nil) or
      (FLocalDataBaseHead.FindField('CONFIRMEDC') = nil) or
-     (FLocalDataBaseHead.FindField('USERSESION') = nil)
+      //***24.01.17
+     (FLocalDataBaseHead.FindField('USERSESION') = nil) or
+      //***08.04.17
+     (FLocalDataBaseHead.FindField('PMEDICALID') = nil) or
+     (FLocalDataBaseHead.FindField('PMEDICALN') = nil) or
+     (FLocalDataBaseHead.FindField('AMBULANCE') = nil) or
+     (FLocalDataBaseHead.FindField('MEDICSP') = nil) or
+     (FLocalDataBaseHead.FindField('INVNUMSP') = nil) or
+     (FLocalDataBaseHead.FindField('OPERDATESP') = nil)
 
   then begin
     ShowMessage('Неверная структура файла локального хранилища ('+FLocalDataBaseHead.DBFFileName+')');
@@ -1280,7 +1402,7 @@ begin
     Exit;
   End;
 
-  LocalDataBaseisBusy := 0;
+
   Result := FLocalDataBaseHead.Active AND FLocalDataBaseBody.Active and FLocalDataBaseDiff.Active;
 
   if Result then
@@ -1336,6 +1458,7 @@ begin
     ADIffCDS.First;
     while not ADIffCDS.eof do
     begin
+     // Кусок кода только для формы  2 
 
       if ADIffCDS.FieldByName('NewRow').AsBoolean then
       Begin
@@ -1406,7 +1529,7 @@ procedure TMainCashForm2.SaveLocalVIP;
 var
   sp : TdsdStoredProc;
   ds : TClientDataSet;
-begin  
+begin  //+
   sp := TdsdStoredProc.Create(nil);
   try
     ds := TClientDataSet.Create(nil);
