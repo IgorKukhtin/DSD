@@ -11,6 +11,7 @@ uses Authentication,
 var
   gc_User: TUser;  // Пользователь, под которым зашли в программу
   gc_ProgramName: String = 'ProjectMobile.exe'; // Название программы
+  gc_WebServers: TArray<string>;
   gc_WebService: String = '';
   gc_allowLocalConnection: Boolean = False;
   gc_StartParams: TStringList;

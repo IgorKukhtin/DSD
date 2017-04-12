@@ -666,8 +666,15 @@ object DM: TDM
     object tblMovement_OrderExternalStatusId: TIntegerField
       FieldName = 'StatusId'
     end
+    object tblMovement_OrderExternalComment: TStringField
+      FieldName = 'Comment'
+      Size = 255
+    end
     object tblMovement_OrderExternalPartnerId: TIntegerField
       FieldName = 'PartnerId'
+    end
+    object tblMovement_OrderExternalUnitId: TIntegerField
+      FieldName = 'UnitId'
     end
     object tblMovement_OrderExternalPaidKindId: TIntegerField
       FieldName = 'PaidKindId'
@@ -913,7 +920,6 @@ object DM: TDM
     Aggregates = <>
     FieldDefs = <>
     IndexDefs = <>
-    IndexFieldNames = 'Id'
     Params = <>
     StoreDefs = True
     Left = 224
@@ -974,6 +980,10 @@ object DM: TDM
     object cdsOrderExternalOperDate: TDateField
       FieldName = 'OperDate'
     end
+    object cdsOrderExternalComment: TStringField
+      FieldName = 'Comment'
+      Size = 255
+    end
     object cdsOrderExternalName: TStringField
       FieldName = 'Name'
       Size = 255
@@ -986,9 +996,15 @@ object DM: TDM
       FieldName = 'Weigth'
       Size = 100
     end
+    object cdsOrderExternalStatusId: TIntegerField
+      FieldName = 'StatusId'
+    end
     object cdsOrderExternalStatus: TStringField
       FieldName = 'Status'
       Size = 200
+    end
+    object cdsOrderExternalisSync: TBooleanField
+      FieldName = 'isSync'
     end
   end
   object tblMovement_RouteMember: TFDTable
@@ -1114,9 +1130,15 @@ object DM: TDM
       FieldName = 'Comment'
       Size = 255
     end
+    object cdsStoreRealsStatusId: TIntegerField
+      FieldName = 'StatusId'
+    end
     object cdsStoreRealsStatus: TStringField
       FieldName = 'Status'
       Size = 255
+    end
+    object cdsStoreRealsisSync: TBooleanField
+      FieldName = 'isSync'
     end
   end
   object cdsStoreRealItems: TClientDataSet
@@ -1254,9 +1276,6 @@ object DM: TDM
     object tblMovement_ReturnInStatusId: TIntegerField
       FieldName = 'StatusId'
     end
-    object tblMovement_ReturnInChecked: TBooleanField
-      FieldName = 'Checked'
-    end
     object tblMovement_ReturnInPriceWithVAT: TBooleanField
       FieldName = 'PriceWithVAT'
     end
@@ -1280,6 +1299,9 @@ object DM: TDM
     end
     object tblMovement_ReturnInPartnerId: TIntegerField
       FieldName = 'PartnerId'
+    end
+    object tblMovement_ReturnInUnitId: TIntegerField
+      FieldName = 'UnitId'
     end
     object tblMovement_ReturnInContractId: TIntegerField
       FieldName = 'ContractId'
@@ -1349,6 +1371,9 @@ object DM: TDM
       FieldName = 'Weigth'
       Size = 100
     end
+    object cdsReturnInStatusId: TIntegerField
+      FieldName = 'StatusId'
+    end
     object cdsReturnInStatus: TStringField
       FieldName = 'Status'
       Size = 200
@@ -1356,6 +1381,9 @@ object DM: TDM
     object cdsReturnInComment: TStringField
       FieldName = 'Comment'
       Size = 255
+    end
+    object cdsReturnInisSync: TBooleanField
+      FieldName = 'isSync'
     end
   end
   object cdsReturnInItems: TClientDataSet

@@ -235,7 +235,7 @@ object frmMain: TfrmMain
       Size.Height = 521.000000000000000000
       Size.PlatformDefault = False
       TabHeight = 49.000000000000000000
-      TabIndex = 0
+      TabIndex = 10
       TabOrder = 1
       TabPosition = None
       OnChange = ChangeMainPageUpdate
@@ -296,7 +296,7 @@ object frmMain: TfrmMain
         CustomIcon = <
           item
           end>
-        IsSelected = True
+        IsSelected = False
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -906,97 +906,97 @@ object frmMain: TfrmMain
                       89504E470D0A1A0A0000000D4948445200000040000000400806000000AA6971
                       DE000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
                       0B6E49444154785ED59B0B7094D515C7FFDFF76D36AF2521890A128C45DA9017
-                      9B50434440D1E2A315A97D8CB1CE541D4890AAB4B463C7A2A3225A5F755A2B56
-                      2410AA95A9AD1141542CC3A3A59557C29A9800090191101208843CD9249BDDFD
-                      BEDB7BBEBDD910368F7D7C31E637C3E49CB31FBBF79EBDF7DC73CFBD2B618458
-                      CE987C5545F51F780358AD75CAEF564892265EFA5A195607AC2B3FF202FF0455
-                      56C3FFB860DAA456614681CD16A68445FD5592E49F93AE81BDA3393BF2176767
-                      BBF40738AB2A2AE2C261FE2D17B53C6BCA531EABF10C9B03D69457CEA8DFB377
-                      6FD2ECD99213AC358CE11587A2AE8C71BB994B366F00E4EF8B473D30B6C5EDEA
-                      C855A2A315C925FD1A703F0A9862D174466309E3AFCBB7A6DAC49386322C0E28
-                      3A74C87C4133957231DD63F1E084BBD10453830C4C15A6BEA86A852A29898A8C
-                      0461D15135AD9CB93BA75F3C428C222407ACAEACBC527149CF49908B6568FB2D
-                      D52995B9B9925A585EF5A42449CF89C70C81312CCBCF4C79B9A888296D29D5E9
-                      32D80C30E93A3EC196E57D37B9513C16302139A0B0A2EA1712A437850A74C18E
-                      08D8BA9A313332016661358476B5CB6191228B5D32B2C3816861A61EE4E74D4D
-                      5927B480E1A331782426FD58881E2261E10DBAC9E8CE13314A64842C634E9FCE
-                      131AEBDB8600097A04BC557662ACA674D3D033792C2344676B378B8DBD3C3F35
-                      F582B00444D023C02D3BEEE07F46B6F344D4D870B8A4BE2B4A00F8350278505B
-                      CA83DA5C305818348B0689AF556AA2BE4C7D2370B7A94CA957246607933B78AF
-                      EC1AB46D8BAC697F110F0C885F2340EF3C309FBFF1CD3C7999AE4852DA37A7F3
-                      8429D6D3263987DAC80DF36526D3DF21F16F0AF06F5E48A309BFDAEC970368D8
-                      0B71D4C0F306E31C40735E88A3061E03FC6AF3A041B0C0763C560E73CE932575
-                      9591735E73BB212B0A05176119061C6841B8F688DB15FEE9E2ECC96DC2EA834F
-                      0B28BD35B9A5BBF424C71350C23CAF040FE3E3B1FEF0219CB095A0E9640D5C0E
-                      07EFBB0C4B7C3C94F07038DADBA072A78445442076FC04246566F27FD38C7210
-                      DF3F683BF99B6DD2E0DABCC86A3D2BEC3A3E9FB0B6BCAA5096A43CA1868CB3B3
-                      03FBDEFD3BCE1D3F262CFE91907435663FB000E62803671FC3EABCCC948784A6
-                      E31303686323C490713B9DD8B56675C09D279A6A4F62CF3B6FE9D1CC2818984F
-                      DF7C1CC024DF8782A574F346B49D6D105AE09C3F7912274A8D2B0330D9F7CBF5
-                      7140EC912987BB810EA1064DEBE97A9C2CFD5C68C1F3E5DE3D420A15775B5D46
-                      72B550BCF83880F6F3E10C07841A345F95183390C8919D2D2D420B01CD54D25F
-                      DDB18F03A892B3AEE2C853B49F17A6A039FBE55121854E63CD71218580A3F5C6
-                      B515958F533D525874BC0EA01A9E28633D1BEA7E5E75BB606F6A125AE8B4D4D5
-                      0B2904F8AE5186FC824989B4AD2DABCE11568F03F86EEF452A6072B14F0D2F58
-                      BA2FD885640C1D2DC639138A62955B4FEFE3235D2FD9E90EE0BB3D37556F4936
-                      02BEDC082934AEBFE556BCB1B600324F9A0C25E14A7A43BDC0AA779AAA3B0EC5
-                      71C20C692CE9A1E27274E1C3154F0B0D9833EF4E4CCFE6995D80A44E9A8CD831
-                      D158FEA7D79076E75DC21A3AAA86A6C828F99AFB9293DBBDDF3A9F064FF091F0
-                      BC5043861C408E2072F31622F78E1FE872A0501ABDF4C9A731EB01C392537ACF
-                      C7F233535F21D93BB6E8D08227AEE7851A3271891384C4638283671641F0E9AE
-                      FFA1E8D3AD505555580CC085B3AAABE30DA1F53A804E6C3498CF0835642EBFE6
-                      DB4202CE9D0FDCAF9AC6F0C9A60FB1F91FEF227A6CBCB0860E33B13E7DD41D40
-                      6B231D5771A5FF139B209898DEFB56C70E570AC97F76ECDD8F7375A7E0EC7220
-                      66DC38610D1D3ECDB34C61D1453DF9804CA7B47450C9C5A02BABFD418D8E9F98
-                      A4CBE77947BEAC3DA5CBFEF2D1A64D42E241FBEAAB85641092344F36471752DF
-                      3D47D4E294D668926FB851483C286EF997907A510E964029DD0DB9A66F8AFEC1
-                      D6ED68A839A1CB11160BE213AFD265239121DD9F5451FDB237060C0713A75A31
-                      7642A22E17EFDC89DDA565BA4C28FB77226CFDAB08FBE71B30AF7A064AD96EDD
-                      5E73FA3436AC5FAFCB4452D6B5F48D09CD7894696FBEBE63CCB9F393244899C2
-                      66187CBE216EC204D4D86C7CE9D1506AFB1CC919E918979000369E7FABFCF5FF
-                      36DA51E41E83CB66DE84E35FD5E0D595AFA3A3D57395405664E4DC732FCC9191
-                      BA6E306F2FB44E5922D30E892E27F0166E112F184AFC554948E7191DE1ECEA44
-                      D1C6CD283E78083085C17DDBDDB0C52661DF893A6CD8F821D6BFF71E5A1A7AEB
-                      079367CC42749C712BC0457C54DB746611FF8298776CF1A818C5370AFB285716
-                      26C3A064E6C0FB45385966C3BC9FDD8BD9D74D4745F531E45833302E3E1EBB4A
-                      4AC078BA9B9D918687F21F84C6D7FDD8F1E331F7E15F41090BB9247909ACCC62
-                      8F9E75CFCC243D4BF3C600BA99419713846A28341572EECEC5C48CA9F8F7962D
-                      B832211E3FBDF57B38DFDC8CCF0ED830735A166E9F3903093131489A92823157
-                      8CC30D0BF287A1F3BCFB6089DD51CDDE7EF7064127965E7A33C348BA3B3B70FB
-                      ADB720F7FEFBB09E4F03625A6A0AE6F28E5BA2A2749D82641C77CEB577FD0891
-                      31C373F22641BEC229452C11AA6733E4B99024F375C7B8DABFEA72A1DB6E8724
-                      4BB037366242B8093F99EB39AE53F96E84ECF225D1BD8BA7CC9111E1D8BA6F3F
-                      8E353623223E012673B8DECA084B8C1E140DC18116B71C3689CE0BF416F0BD31
-                      6D829E20391428D2D7D84A70BCB8582F65D1DC8FB48CC1A2258FE0C6E97C390B
-                      0072D2AEE20378BBA0005DF60B904D268CFF4E320FA8B77997D690606C455E66
-                      EA333D2EE51BC43321DDD3EBEEECC4AE82D5B06DFC002DF5757AE7096AFCCA97
-                      5EC2B2679FC7C1A3FE95C9ECFCBD56FD6D3DD6AC7C4DFFFF049D269DAEAAC4CE
-                      552BF5601A0AB570AB8CAF00247BC76061455536DF80142AB21C703E408DFB4F
-                      C19B68AEAB159681F9565A3AE6FF703EE6F433229ADADBF1FEE68FF1D9F6EDE8
-                      EE18B8304DA74A372D7E1897059522B33289B1FC85996954FEEB7500411B0493
-                      D9F268BBDAB59CEEE408F3901CDEB10D953BB70BCD3F622FBB1CD3AEBF1E997C
-                      E9AB6F388B2F7800FCEAF021DD99FE10973811B72C592AB4A1D1E0EE9298B2FC
-                      5473C3AB2B6EBED9FB217DA39060ED174776D18524A10E0A153D3E79F1F7FA29
-                      D0D7CDDC877E89F824CF866B28F8E8DEB1282BD593915D844F58A57B7874154D
-                      A8435277B07C443A4FD455F28CD24F98E4CCA1DD9F50BDF818E812A2CF55B441
-                      68381AF8B99F51349F1A3AE6F4A048E131130F1D9D22542FFD7884CD10A25FB4
-                      F0E56EA4B00758699299E6D3371F07E8D74F03A0AB7DC0BB07C30E659701D14F
-                      DF7C1DA0CACB7868D477875D4D3C411E027FA3F670E0D76777B65245F663DEFB
-                      856E179EF4187BE97715E8A1B0AA6A0C5D4294E05E3B509ACCB411F99D831789
-                      2F57FDE242334C6C7197A26E5D929131E051D5A00EE8614D79D561CF3DBCD103
-                      5DB17F302B2D4BA8033280FBFAA2DFC01C65F8DB66BF1CA05F3F1D75287EB5D9
-                      3F07F01DAD904613C68D00BA780C868DFCDF36BEE3DD4BF34BBF87F74D81073C
-                      BD4D4CDD436D146DDD215E1D14BF82607FAC2BAFBC9787E077853AB2307637DF
-                      DB6F105A40F83705FA816E60F23F86FF882960F83A4F4B9DD00226680778AE9F
-                      D20DCC11266AECB6C1D6F9A108DA011EA4DE033C1D771B0F18DB45F66528B49F
-                      A72DADCABADB8549C02E69436084E400BA7BCB83CD6AC6D802FE46A9B553D3E3
-                      F3B2526E6391B1CF8A470C838A19B49FAFB75AE320CBE994DAF2CF2E703B259E
-                      E6064FD0417030A8B2249B2D9F73A7F4396E575534C8326B902469800C8D9551
-                      DD9E4AD7C2206065B54D0D391757728C22C429D03FFA2F3C5529BF76F76E4F65
-                      942F537C943CC654FB64D5D5318B365ABABD2F1FD1898D59735EC3E5C77B9659
-                      2A60520D6F383A4F0CCB08E8415C45739923E43FD385248FB567844417D211B5
-                      30BD4D67751777927EAB600A73FE86AAB7F9D69415C26C38C3EA80C1A0F2149D
-                      CF93BCD03AE5313AA8D45FF85A01FE0FEA315849E7D6DD610000000049454E44
+                      9B50434450D1C6472B52FB18639DA93A9020556969C78E454745B4BEEAB456AC
+                      4820542B535B2382A8580688D2AA40C29A98000901911012088F3CD9249BDDFD
+                      BEDB7BBEBDD910368F7D7C31E637C3E49CB31FBBF79EBDF7DC73CFBD2B619458
+                      CE987C5955ED9F780358BD75DA1F564892265EFA46195107ACAB3CF82CFF0455
+                      56C3FFBC60C694366146A1CD16A68445FD5D92E45F92AE81BDA9393B0B166767
+                      BBF40738ABAAAAE2C261FE3D17B57C6BCAE31EABF18C9803D65456CF6AFCF893
+                      5D49B9B99213AC2D8CE14587A2AE8C71BB994B366F00E41F8A473D30B6C5EDEA
+                      CC53A2A315C925FD16703F049862D17C52630913AF2AB0A6DAC4938632220E28
+                      DEBFDF7C4E33957331DD63F1E084FB8C09A62619982E4CFD51D52A5552121519
+                      09C2A2A36A5A257377CD3C7F841845480E585D5D7DA9E2929E962097CAD0F658
+                      6A53AAF3F224B5A8B2E63149929E168F19026358569099F242713153DA536AD3
+                      65B05960D2557C822DCBFF7EF219F158C084E480A2AA9A5F49905E132AD00D3B
+                      2260EB6EC1ECC8049885D5103AD46E87458A2C75C9C80E07A285997A50903F3D
+                      659DD002868FC6E09198F453217A88848537E87AA33B4FC4289111B28CB9FD3A
+                      4F68AC7F1B0224E811F07AC5D1F19AD24343CFE4B18C125D6D3D2C36F6E282D4
+                      D473C21210418F00B7ECB895FF19DDCE1351E3C3E192FAAF2801E0D708E0416D
+                      290F6AB960B03068160D125FABD4447D99FA56E06E5799D2A848CC0E2677F25E
+                      D93568DB1659D3FE261E1814BF4680DE79603E7FE31B78F2325391A4B46F4FE7
+                      0953ACA74D720EB5911BE6CB4CA6BFC3E2DF14E0DFBC90C6127EB5D92F07D0B0
+                      17E29881E70DC63980E6BC10C70C3C06F8D5E6218360A1ED48AC1CE69C274BEA
+                      2A23E7BCE6764356140A2EC2320238D08A70ED41B72BFCA3C5D953DB85D5079F
+                      16507A6B724BB7EB498E27A084795E091EC6C763E381FD386A2B43F3B13AB81C
+                      0EDE771996F87828E1E17074B443E54E098B8840ECC44948CACCE4FF6618E520
+                      BE7FD04AF89B6DD2E0DABCC86A3D25EC3A3E9FB0B6B2A64896A47CA1868CB3AB
+                      13BBDFFA274E1F392C2CFE91907439AEB97701CC5106CE3E86D5F99929F70B4D
+                      C72706D0C6468821E3763AB173CDEA803B4F34D71FC3E76FBEAE4733A360603E
+                      7DF37100937C1F0A96F2CD1BD17EAA49688173F6D8311C2D37AE0CC064DF2FD7
+                      C701B107A71DE8013A851A346D271A71ACFC0BA105CF57BB3E1752A8B8DB1B32
+                      926B85E2C5C701B49F0F67D82BD4A0F9BACC9881448EEC6A6D155A0868A6B281
+                      EA8EFD1C40959C7555071FA7FDBC3005CDA9AF0E092974CED41D11520838DAAE
+                      5B5B55FD08D5238545C7EB00AAE18932D653A1EEE755B70BF6E666A1854E6B43
+                      A3904280EF1A65C8CF9A9448DBDA8ADA1C61F53880EFF69EA3022617FBD5F082
+                      A5E79C5D48C6D0D96A9C33A12856B9EDC46E3ED2F5929DEE00BEDB7353F59664
+                      23E0CB8D9042E3EA1B6FC2AB6B0B21F3A4C950122EA537D40BAC7AA7A9BAE350
+                      1C47CD90C6931E2A2E4737DE5BF184D080B9F36EC3CC6C9ED90548EA94A9881D
+                      178DE57F791969B7DD2EACA1A36A688E8C92AFB83B39B9C3FBADF369F0281F09
+                      CF083564C801E408222F7F21F26EFD912E070AA5D14B1F7B0273EE352C39A5F7
+                      7CB82033F54592BD638B0E2D78E27A56A82113973849483C2638786611041FED
+                      FC1F8A3FDA0A555585C5005C38A5BA3A5F155A9F03E8C44683F9A45043E6E22B
+                      BE2B24E0F4D9C0FDAA690C1F6E7A0F9BFFF516A2C7C70B6BE83013EBD747DD01
+                      B436D2711557063EB10982C9E97D6F75F840B590FC67C7AE3D38DD701CCE6E07
+                      62264C10D6D0E1D33CCB14165DDC9B0FC8744A4B07955C0CBAB23A10D4E8F8C9
+                      49BA7C9677E4ABFAE3BAEC2FEF6FDA24241EB42FBF5C48062149F364737411F5
+                      DD73442D4E698D26F9DAEB84C483E296FF08A90F655F1994F2CF20D7F54FD1DF
+                      DDBA1D4D75477539C262417CE265BA6C2432A47B92AA6A5FF0C6809160F2742B
+                      C64F4AD4E5D292127C565EA1CB84B2A70461EB5F42D8BF5F8579D593502A3ED3
+                      ED75274E60C3FAF5BA4C24655D49DF98D08C4799F1DA2B3BC69D3E3B45829429
+                      6C86C1E71BE2264D429DCDC6971E0DE5B62F909C918E0909096013F9B7CA5FFF
+                      EF193B8ADDE370D1ECEB71E4EB3ABCB4F21574B679AE12C88A8C9C3BEF823932
+                      52D70DE68D85D6694B64DA21D1E504DEC22DE2054389BF2C09E93CA3239CDD5D
+                      28DEB819A5FBF603A630B86FBE03B6D824EC3EDA800D1BDFC3FAB7DF466B535F
+                      FD60EAAC39888E336E05388FF7EB9B4F2EE25F10F38E2D1E15A3F8466137E5CA
+                      C2641894CCEC7DA718C72A6C98F78BBB70CD553351557B1839D60C4C888FC7CE
+                      B232309EEE6667A4E1FE82FBA0F1753F76E244E43EF01B28612197242F805558
+                      ECD173EE9C9DA46769DE18403733E87282500D85A642CE1D79989C311D1F6FD9
+                      824B13E2F1F39B7E80B32D2DF874AF0DB36764E196D9B390101383A469291877
+                      C9045CBBA060043ACFBB0F96D813D5E2ED775F107462E98537338CA4A7AB13B7
+                      DC7423F2EEB91BEBF9342066A4A6209777DC1215A5EB1424E3B873AEBCFD2788
+                      8C1999933709F2254E296289503D9B21CF852499AF3BC6D5FE55970B3D763B24
+                      5982FDCC194C0A37E167B99EE33A95EF46C82E5F10DDBB79CA1C19118EADBBF7
+                      E0F0991644C427C0640ED75B196189D183A22138D0EA96C3A6D07981DE02BE37
+                      A64DD0A324870245FA3A5B198E9496EAA52C9AFB91967158B4E4415C37932F67
+                      01404EDA59BA176F1416A2DB7E0EB2C98489DF4BE601F566EFD21A128CADC8CF
+                      4C7DB2D7A57C837832A47B7A3D5D5DD859B81AB68DEFA2B5B141EF3C418D5FF9
+                      FCF358F6D433D877C8BF32999DBFD7AA7FACC79A952FEBFF9FA0D3A41335D528
+                      59B5520FA6A1500FB7CAF80A40B2770C1655D564F30D489122CB01E703D4B84F
+                      0A5F434B43BDB00CCE77D2D231FFC7F331778011D1DCD18177367F804FB76F47
+                      4FE7E085693A55BA7EF103B828A8149955488C152CCC4CA3F25F9F0308DA2098
+                      CC96873AD4EEE57427479887E5C08E6DA82ED92E34FF88BDE862CCB8FA6A64F2
+                      A5AFB1E914BEE401F0EB03FB7567FA435CE264DCB864A9D0864783BB5B62CAF2
+                      E32D4D2FADB8E106EF87F48F4282B55F1EDC491792843A2454F4F8F0B93FEAA7
+                      40DF34B9F7FF1AF1499E0DD770F0D1BD635156AA27233B0F9FB04AF7F0E82A9A
+                      5087A5615FE5A8749E68A8E619A59F30C99943BB3FA17AF131D025449FAB6843
+                      D07428F0733FA368393E7CCCE94591C26326EF3F344DA85E06F0089B2544BF68
+                      E5CBDD68610FB0D22433CDA76F3E0ED0AF9F064077C7A0770F461CCA2E036280
+                      BEF93A409597F1D0A8EF0EBB9B79823C0CFE46ED91C0AFCFEE6AA38AEC07BCF7
+                      0BDD2E3CE631F631E02AD04B514DCD38BA8428C1BD76B0349969A3F23B072F12
+                      5FAE06C4851698D8E26E45DDBA242363D0A3AA211DD0CB9ACA9A039E7B786307
+                      BA627F5F565A9650076510F7F547BF8139C6F0B7CD7E3940BF7E3AE650FC6AB3
+                      7F0EE03B5A218D258C1B0174F1180C1BF9BF6D7CC7BB8BE6977E0FEFDB020F78
+                      7A9B98FA39B551B47587787548FC0A8203B1AEB2FA2E1E82DF12EAE8C2D81D7C
+                      6FBF416801E1DF141800BA81C9FF18FE23A680E1EB3C2D75420B98A01DE0B97E
+                      4A37304799A8F1DB865AE7872368077890FA0EF074DCED3C606C17D997A1D07E
+                      9EB6B42AEBE9102601BBA00D81119203E8EE2D0F36AB19630BF81BA5D64F4F8F
+                      CFCF4AB99945C63E251E310C2A66D07EBED16A8D832CA7536ACB3FBBD0ED9478
+                      9A1B3C4107C1A1A0CA926CB67CC19DD2EFB85D55D124CBAC4992A44132345641
+                      757B2A5D0B838055D43737E59C5FC9318A10A7C0C0E8BFF054A582FA92124F65
+                      942F537C943CCC54FB54D5D53987365ABABD3FEFD3898D59735EC1E5477A9759
+                      2A60520D6F243A4F8CC808E8455C45739923E4BFD285248FB577844417D111B5
+                      30BD416775E777927EAB600A73FE8EAAB705D69415C26C3823EA80A1A0F2149D
+                      CF93BCD03AED613AA8D45FF84601FE0FB6EC583BEB571A890000000049454E44
                       AE426082}
                   end>
                 Align = Client
@@ -2659,7 +2659,7 @@ object frmMain: TfrmMain
         CustomIcon = <
           item
           end>
-        IsSelected = False
+        IsSelected = True
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -2675,7 +2675,7 @@ object frmMain: TfrmMain
           Size.Height = 521.000000000000000000
           Size.PlatformDefault = False
           TabHeight = 49.000000000000000000
-          TabIndex = 0
+          TabIndex = 3
           TabOrder = 2
           TabPosition = PlatformDefault
           Sizes = (
@@ -2697,7 +2697,7 @@ object frmMain: TfrmMain
               end>
             TextSettings.Font.Size = 10.000000000000000000
             StyledSettings = [Family, Style, FontColor]
-            IsSelected = True
+            IsSelected = False
             Size.Width = 55.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
@@ -3360,7 +3360,7 @@ object frmMain: TfrmMain
               Size.Height = 412.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
-              ItemAppearance.ItemHeight = 50
+              ItemAppearance.ItemHeight = 55
               ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
                 item
                   AppearanceObjectName = 'Name'
@@ -3370,7 +3370,7 @@ object frmMain: TfrmMain
                   Appearance.TextAlign = Leading
                   Appearance.Width = 250.000000000000000000
                   Appearance.Height = 20.000000000000000000
-                  Appearance.PlaceOffset.X = 40.000000000000000000
+                  Appearance.PlaceOffset.X = 10.000000000000000000
                   Appearance.PlaceOffset.Y = 5.000000000000000000
                 end
                 item
@@ -3378,27 +3378,41 @@ object frmMain: TfrmMain
                   AppearanceClassName = 'TTextObjectAppearance'
                   Appearance.Font.Size = 11.000000000000000000
                   Appearance.TextAlign = Leading
-                  Appearance.TextVertAlign = Trailing
-                  Appearance.Width = 250.000000000000000000
+                  Appearance.Width = 200.000000000000000000
                   Appearance.Height = 20.000000000000000000
-                  Appearance.PlaceOffset.X = 40.000000000000000000
-                  Appearance.PlaceOffset.Y = 25.000000000000000000
+                  Appearance.PlaceOffset.X = 35.000000000000000000
+                  Appearance.PlaceOffset.Y = 30.000000000000000000
                 end
                 item
-                  AppearanceObjectName = 'EditButton'
+                  AppearanceObjectName = 'StatusIcon'
                   AppearanceClassName = 'TImageObjectAppearance'
                   Appearance.ScalingMode = Stretch
-                  Appearance.Width = 40.000000000000000000
-                  Appearance.Height = 40.000000000000000000
-                  Appearance.Align = Trailing
-                  Appearance.PlaceOffset.Y = 5.000000000000000000
+                  Appearance.Width = 20.000000000000000000
+                  Appearance.Height = 20.000000000000000000
+                  Appearance.PlaceOffset.X = 10.000000000000000000
+                  Appearance.PlaceOffset.Y = 30.000000000000000000
                 end
                 item
                   AppearanceObjectName = 'DeleteButton'
                   AppearanceClassName = 'TImageObjectAppearance'
                   Appearance.Width = 30.000000000000000000
                   Appearance.Height = 30.000000000000000000
-                  Appearance.PlaceOffset.Y = 10.000000000000000000
+                  Appearance.Align = Trailing
+                  Appearance.PlaceOffset.Y = 5.000000000000000000
+                end
+                item
+                  AppearanceObjectName = 'isSync'
+                  AppearanceClassName = 'TTextObjectAppearance'
+                  Appearance.Width = 20.000000000000000000
+                  Appearance.Height = 20.000000000000000000
+                  Appearance.Visible = False
+                end
+                item
+                  AppearanceObjectName = 'StatusId'
+                  AppearanceClassName = 'TTextObjectAppearance'
+                  Appearance.Width = 20.000000000000000000
+                  Appearance.Height = 20.000000000000000000
+                  Appearance.Visible = False
                 end>
               ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
                 item
@@ -3436,7 +3450,7 @@ object frmMain: TfrmMain
               end>
             TextSettings.Font.Size = 10.000000000000000000
             StyledSettings = [Family, Style, FontColor]
-            IsSelected = False
+            IsSelected = True
             Size.Width = 55.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
@@ -3457,7 +3471,7 @@ object frmMain: TfrmMain
               Size.Height = 412.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
-              ItemAppearance.ItemHeight = 85
+              ItemAppearance.ItemHeight = 90
               ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
                 item
                   AppearanceObjectName = 'Name'
@@ -3465,7 +3479,7 @@ object frmMain: TfrmMain
                   Appearance.Font.Size = 11.000000000000000000
                   Appearance.Font.StyleExt = {00070000000000000004000000}
                   Appearance.TextAlign = Leading
-                  Appearance.Width = 290.000000000000000000
+                  Appearance.Width = 270.000000000000000000
                   Appearance.Height = 20.000000000000000000
                   Appearance.PlaceOffset.X = 10.000000000000000000
                 end
@@ -3475,7 +3489,7 @@ object frmMain: TfrmMain
                   Appearance.Font.Size = 11.000000000000000000
                   Appearance.TextAlign = Leading
                   Appearance.TextVertAlign = Trailing
-                  Appearance.Width = 270.000000000000000000
+                  Appearance.Width = 260.000000000000000000
                   Appearance.Height = 20.000000000000000000
                   Appearance.PlaceOffset.X = 20.000000000000000000
                   Appearance.PlaceOffset.Y = 20.000000000000000000
@@ -3496,21 +3510,19 @@ object frmMain: TfrmMain
                   AppearanceClassName = 'TTextObjectAppearance'
                   Appearance.Font.Size = 11.000000000000000000
                   Appearance.TextAlign = Leading
-                  Appearance.TextVertAlign = Trailing
-                  Appearance.Width = 280.000000000000000000
+                  Appearance.Width = 200.000000000000000000
                   Appearance.Height = 20.000000000000000000
-                  Appearance.PlaceOffset.X = 10.000000000000000000
-                  Appearance.PlaceOffset.Y = 60.000000000000000000
+                  Appearance.PlaceOffset.X = 35.000000000000000000
+                  Appearance.PlaceOffset.Y = 65.000000000000000000
                 end
                 item
-                  AppearanceObjectName = 'EditButton'
+                  AppearanceObjectName = 'StatusIcon'
                   AppearanceClassName = 'TImageObjectAppearance'
                   Appearance.ScalingMode = Stretch
-                  Appearance.Width = 40.000000000000000000
-                  Appearance.Height = 40.000000000000000000
-                  Appearance.Align = Trailing
-                  Appearance.VertAlign = Trailing
-                  Appearance.PlaceOffset.Y = -5.000000000000000000
+                  Appearance.Width = 20.000000000000000000
+                  Appearance.Height = 20.000000000000000000
+                  Appearance.PlaceOffset.X = 10.000000000000000000
+                  Appearance.PlaceOffset.Y = 65.000000000000000000
                 end
                 item
                   AppearanceObjectName = 'DeleteButton'
@@ -3518,6 +3530,21 @@ object frmMain: TfrmMain
                   Appearance.Width = 30.000000000000000000
                   Appearance.Height = 30.000000000000000000
                   Appearance.Align = Trailing
+                  Appearance.PlaceOffset.Y = 5.000000000000000000
+                end
+                item
+                  AppearanceObjectName = 'isSync'
+                  AppearanceClassName = 'TTextObjectAppearance'
+                  Appearance.Width = 20.000000000000000000
+                  Appearance.Height = 20.000000000000000000
+                  Appearance.Visible = False
+                end
+                item
+                  AppearanceObjectName = 'StatusId'
+                  AppearanceClassName = 'TTextObjectAppearance'
+                  Appearance.Width = 20.000000000000000000
+                  Appearance.Height = 20.000000000000000000
+                  Appearance.Visible = False
                 end>
               ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
                 item
@@ -3576,7 +3603,7 @@ object frmMain: TfrmMain
               Size.Height = 412.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
-              ItemAppearance.ItemHeight = 85
+              ItemAppearance.ItemHeight = 90
               ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
                 item
                   AppearanceObjectName = 'Name'
@@ -3584,7 +3611,7 @@ object frmMain: TfrmMain
                   Appearance.Font.Size = 11.000000000000000000
                   Appearance.Font.StyleExt = {00070000000000000004000000}
                   Appearance.TextAlign = Leading
-                  Appearance.Width = 290.000000000000000000
+                  Appearance.Width = 270.000000000000000000
                   Appearance.Height = 20.000000000000000000
                   Appearance.PlaceOffset.X = 10.000000000000000000
                 end
@@ -3594,7 +3621,7 @@ object frmMain: TfrmMain
                   Appearance.Font.Size = 11.000000000000000000
                   Appearance.TextAlign = Leading
                   Appearance.TextVertAlign = Trailing
-                  Appearance.Width = 270.000000000000000000
+                  Appearance.Width = 260.000000000000000000
                   Appearance.Height = 20.000000000000000000
                   Appearance.PlaceOffset.X = 20.000000000000000000
                   Appearance.PlaceOffset.Y = 20.000000000000000000
@@ -3615,21 +3642,19 @@ object frmMain: TfrmMain
                   AppearanceClassName = 'TTextObjectAppearance'
                   Appearance.Font.Size = 11.000000000000000000
                   Appearance.TextAlign = Leading
-                  Appearance.TextVertAlign = Trailing
-                  Appearance.Width = 280.000000000000000000
+                  Appearance.Width = 200.000000000000000000
                   Appearance.Height = 20.000000000000000000
-                  Appearance.PlaceOffset.X = 10.000000000000000000
-                  Appearance.PlaceOffset.Y = 60.000000000000000000
+                  Appearance.PlaceOffset.X = 35.000000000000000000
+                  Appearance.PlaceOffset.Y = 65.000000000000000000
                 end
                 item
-                  AppearanceObjectName = 'EditButton'
+                  AppearanceObjectName = 'StatusIcon'
                   AppearanceClassName = 'TImageObjectAppearance'
                   Appearance.ScalingMode = Stretch
-                  Appearance.Width = 40.000000000000000000
-                  Appearance.Height = 40.000000000000000000
-                  Appearance.Align = Trailing
-                  Appearance.VertAlign = Trailing
-                  Appearance.PlaceOffset.Y = -5.000000000000000000
+                  Appearance.Width = 20.000000000000000000
+                  Appearance.Height = 20.000000000000000000
+                  Appearance.PlaceOffset.X = 10.000000000000000000
+                  Appearance.PlaceOffset.Y = 65.000000000000000000
                 end
                 item
                   AppearanceObjectName = 'DeleteButton'
@@ -3637,6 +3662,21 @@ object frmMain: TfrmMain
                   Appearance.Width = 30.000000000000000000
                   Appearance.Height = 30.000000000000000000
                   Appearance.Align = Trailing
+                  Appearance.PlaceOffset.Y = 5.000000000000000000
+                end
+                item
+                  AppearanceObjectName = 'isSync'
+                  AppearanceClassName = 'TTextObjectAppearance'
+                  Appearance.Width = 20.000000000000000000
+                  Appearance.Height = 20.000000000000000000
+                  Appearance.Visible = False
+                end
+                item
+                  AppearanceObjectName = 'StatusId'
+                  AppearanceClassName = 'TTextObjectAppearance'
+                  Appearance.Width = 20.000000000000000000
+                  Appearance.Height = 20.000000000000000000
+                  Appearance.Visible = False
                 end>
               ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
                 item
@@ -3753,21 +3793,174 @@ object frmMain: TfrmMain
           TabOrder = 0
           Viewport.Width = 333.000000000000000000
           Viewport.Height = 521.000000000000000000
-          object Panel23: TPanel
+          object pSaveStoreReal: TPanel
             Align = MostBottom
             Position.Y = 471.000000000000000000
             Size.Width = 333.000000000000000000
             Size.Height = 50.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
-            object bSaveStoreReal: TButton
+            object GridPanelLayout6: TGridPanelLayout
               Align = Client
               Size.Width = 333.000000000000000000
               Size.Height = 50.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
-              Text = #1057#1086#1093#1088#1072#1085#1080#1090#1100
-              OnClick = bSaveStoreRealClick
+              ColumnCollection = <
+                item
+                  Value = 50.000000000000000000
+                end
+                item
+                  Value = 50.000000000000000000
+                end>
+              ControlCollection = <
+                item
+                  Column = 0
+                  Control = bSaveStoreRealUnComplete
+                  Row = 0
+                end
+                item
+                  Column = 1
+                  Control = bSaveStoreRealComplete
+                  Row = 0
+                end>
+              RowCollection = <
+                item
+                  Value = 100.000000000000000000
+                end
+                item
+                  SizeStyle = Auto
+                end>
+              object bSaveStoreRealUnComplete: TButton
+                Align = Client
+                Anchors = []
+                Size.Width = 166.500000000000000000
+                Size.Height = 50.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 1
+                OnClick = bSaveStoreRealUnCompleteClick
+                object GridPanelLayout7: TGridPanelLayout
+                  Align = Client
+                  HitTest = False
+                  Size.Width = 166.500000000000000000
+                  Size.Height = 50.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 0
+                  ColumnCollection = <
+                    item
+                      Value = 100.000000000000000000
+                    end>
+                  ControlCollection = <
+                    item
+                      Column = 0
+                      Control = Label60
+                      Row = 0
+                    end
+                    item
+                      Column = 0
+                      Control = Label62
+                      Row = 1
+                    end>
+                  RowCollection = <
+                    item
+                      Value = 50.000000000000000000
+                    end
+                    item
+                      Value = 50.000000000000000000
+                    end
+                    item
+                      SizeStyle = Auto
+                    end
+                    item
+                      SizeStyle = Auto
+                    end>
+                  object Label60: TLabel
+                    Align = Client
+                    StyledSettings = [Family, Style, FontColor]
+                    Size.Width = 166.500000000000000000
+                    Size.Height = 25.000000000000000000
+                    Size.PlatformDefault = False
+                    TextSettings.HorzAlign = Center
+                    TextSettings.VertAlign = Trailing
+                    Text = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+                  end
+                  object Label62: TLabel
+                    Align = Client
+                    StyledSettings = [Family, Style, FontColor]
+                    Size.Width = 166.500000000000000000
+                    Size.Height = 25.000000000000000000
+                    Size.PlatformDefault = False
+                    TextSettings.HorzAlign = Center
+                    TextSettings.VertAlign = Leading
+                    Text = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1085#1099#1084
+                  end
+                end
+              end
+              object bSaveStoreRealComplete: TButton
+                Align = Client
+                Anchors = []
+                Size.Width = 166.500000000000000000
+                Size.Height = 50.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 0
+                OnClick = bSaveStoreRealUnCompleteClick
+                object GridPanelLayout8: TGridPanelLayout
+                  Align = Client
+                  HitTest = False
+                  Size.Width = 166.500000000000000000
+                  Size.Height = 50.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 0
+                  ColumnCollection = <
+                    item
+                      Value = 100.000000000000000000
+                    end>
+                  ControlCollection = <
+                    item
+                      Column = 0
+                      Control = Label64
+                      Row = 0
+                    end
+                    item
+                      Column = 0
+                      Control = Label65
+                      Row = 1
+                    end>
+                  RowCollection = <
+                    item
+                      Value = 50.000000000000000000
+                    end
+                    item
+                      Value = 50.000000000000000000
+                    end
+                    item
+                      SizeStyle = Auto
+                    end
+                    item
+                      SizeStyle = Auto
+                    end>
+                  object Label64: TLabel
+                    Align = Client
+                    StyledSettings = [Family, Style, FontColor]
+                    Size.Width = 166.500000000000000000
+                    Size.Height = 25.000000000000000000
+                    Size.PlatformDefault = False
+                    TextSettings.HorzAlign = Center
+                    TextSettings.VertAlign = Trailing
+                    Text = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+                  end
+                  object Label65: TLabel
+                    Align = Client
+                    StyledSettings = [Family, Style, FontColor]
+                    Size.Width = 166.500000000000000000
+                    Size.Height = 25.000000000000000000
+                    Size.PlatformDefault = False
+                    TextSettings.HorzAlign = Center
+                    TextSettings.VertAlign = Leading
+                    Text = #1055#1088#1086#1074#1077#1076#1077#1085#1085#1099#1084
+                  end
+                end
+              end
             end
           end
           object lwStoreRealItems: TListView
@@ -3790,7 +3983,7 @@ object frmMain: TfrmMain
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.Font.StyleExt = {00070000000000000004000000}
                 Appearance.TextAlign = Leading
-                Appearance.Width = 300.000000000000000000
+                Appearance.Width = 280.000000000000000000
                 Appearance.Height = 25.000000000000000000
               end
               item
@@ -3798,7 +3991,7 @@ object frmMain: TfrmMain
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
-                Appearance.Width = 290.000000000000000000
+                Appearance.Width = 270.000000000000000000
                 Appearance.Height = 20.000000000000000000
                 Appearance.PlaceOffset.X = 10.000000000000000000
                 Appearance.PlaceOffset.Y = 25.000000000000000000
@@ -3811,7 +4004,8 @@ object frmMain: TfrmMain
                 Appearance.TextAlign = Trailing
                 Appearance.Width = 50.000000000000000000
                 Appearance.Height = 25.000000000000000000
-                Appearance.PlaceOffset.X = 220.000000000000000000
+                Appearance.Align = Trailing
+                Appearance.PlaceOffset.X = -50.000000000000000000
                 Appearance.PlaceOffset.Y = 50.000000000000000000
               end
               item
@@ -3820,6 +4014,7 @@ object frmMain: TfrmMain
                 Appearance.Width = 30.000000000000000000
                 Appearance.Height = 30.000000000000000000
                 Appearance.Align = Trailing
+                Appearance.PlaceOffset.Y = 5.000000000000000000
               end
               item
                 AppearanceObjectName = 'Measure'
@@ -3829,7 +4024,7 @@ object frmMain: TfrmMain
                 Appearance.TextAlign = Leading
                 Appearance.Width = 50.000000000000000000
                 Appearance.Height = 25.000000000000000000
-                Appearance.PlaceOffset.X = 270.000000000000000000
+                Appearance.Align = Trailing
                 Appearance.PlaceOffset.Y = 50.000000000000000000
               end
               item
@@ -3839,7 +4034,8 @@ object frmMain: TfrmMain
                 Appearance.TextAlign = Trailing
                 Appearance.Width = 150.000000000000000000
                 Appearance.Height = 25.000000000000000000
-                Appearance.PlaceOffset.X = 60.000000000000000000
+                Appearance.Align = Trailing
+                Appearance.PlaceOffset.X = -110.000000000000000000
                 Appearance.PlaceOffset.Y = 50.000000000000000000
               end>
             ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
@@ -4041,21 +4237,174 @@ object frmMain: TfrmMain
               Text = #1057#1090#1086#1080#1084#1086#1089#1090#1100' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080' : 99999.99'
             end
           end
-          object Panel8: TPanel
+          object pSaveOrderExternal: TPanel
             Align = MostBottom
             Position.Y = 471.000000000000000000
             Size.Width = 333.000000000000000000
             Size.Height = 50.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
-            object bSaveOrderExternal: TButton
+            object GridPanelLayout9: TGridPanelLayout
               Align = Client
               Size.Width = 333.000000000000000000
               Size.Height = 50.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
-              Text = #1057#1086#1093#1088#1072#1085#1080#1090#1100
-              OnClick = bSaveOrderExternalClick
+              ColumnCollection = <
+                item
+                  Value = 50.000000000000000000
+                end
+                item
+                  Value = 50.000000000000000000
+                end>
+              ControlCollection = <
+                item
+                  Column = 0
+                  Control = bSaveOrderExternalUnComplete
+                  Row = 0
+                end
+                item
+                  Column = 1
+                  Control = bSaveOrderExternalComplete
+                  Row = 0
+                end>
+              RowCollection = <
+                item
+                  Value = 100.000000000000000000
+                end
+                item
+                  SizeStyle = Auto
+                end>
+              object bSaveOrderExternalUnComplete: TButton
+                Align = Client
+                Anchors = []
+                Size.Width = 166.500000000000000000
+                Size.Height = 50.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 1
+                OnClick = bSaveOrderExternalUnCompleteClick
+                object GridPanelLayout10: TGridPanelLayout
+                  Align = Client
+                  HitTest = False
+                  Size.Width = 166.500000000000000000
+                  Size.Height = 50.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 0
+                  ColumnCollection = <
+                    item
+                      Value = 100.000000000000000000
+                    end>
+                  ControlCollection = <
+                    item
+                      Column = 0
+                      Control = Label66
+                      Row = 0
+                    end
+                    item
+                      Column = 0
+                      Control = Label67
+                      Row = 1
+                    end>
+                  RowCollection = <
+                    item
+                      Value = 50.000000000000000000
+                    end
+                    item
+                      Value = 50.000000000000000000
+                    end
+                    item
+                      SizeStyle = Auto
+                    end
+                    item
+                      SizeStyle = Auto
+                    end>
+                  object Label66: TLabel
+                    Align = Client
+                    StyledSettings = [Family, Style, FontColor]
+                    Size.Width = 166.500000000000000000
+                    Size.Height = 25.000000000000000000
+                    Size.PlatformDefault = False
+                    TextSettings.HorzAlign = Center
+                    TextSettings.VertAlign = Trailing
+                    Text = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+                  end
+                  object Label67: TLabel
+                    Align = Client
+                    StyledSettings = [Family, Style, FontColor]
+                    Size.Width = 166.500000000000000000
+                    Size.Height = 25.000000000000000000
+                    Size.PlatformDefault = False
+                    TextSettings.HorzAlign = Center
+                    TextSettings.VertAlign = Leading
+                    Text = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1085#1099#1084
+                  end
+                end
+              end
+              object bSaveOrderExternalComplete: TButton
+                Align = Client
+                Anchors = []
+                Size.Width = 166.500000000000000000
+                Size.Height = 50.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 0
+                OnClick = bSaveOrderExternalUnCompleteClick
+                object GridPanelLayout11: TGridPanelLayout
+                  Align = Client
+                  HitTest = False
+                  Size.Width = 166.500000000000000000
+                  Size.Height = 50.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 0
+                  ColumnCollection = <
+                    item
+                      Value = 100.000000000000000000
+                    end>
+                  ControlCollection = <
+                    item
+                      Column = 0
+                      Control = Label68
+                      Row = 0
+                    end
+                    item
+                      Column = 0
+                      Control = Label69
+                      Row = 1
+                    end>
+                  RowCollection = <
+                    item
+                      Value = 50.000000000000000000
+                    end
+                    item
+                      Value = 50.000000000000000000
+                    end
+                    item
+                      SizeStyle = Auto
+                    end
+                    item
+                      SizeStyle = Auto
+                    end>
+                  object Label68: TLabel
+                    Align = Client
+                    StyledSettings = [Family, Style, FontColor]
+                    Size.Width = 166.500000000000000000
+                    Size.Height = 25.000000000000000000
+                    Size.PlatformDefault = False
+                    TextSettings.HorzAlign = Center
+                    TextSettings.VertAlign = Trailing
+                    Text = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+                  end
+                  object Label69: TLabel
+                    Align = Client
+                    StyledSettings = [Family, Style, FontColor]
+                    Size.Width = 166.500000000000000000
+                    Size.Height = 25.000000000000000000
+                    Size.PlatformDefault = False
+                    TextSettings.HorzAlign = Center
+                    TextSettings.VertAlign = Leading
+                    Text = #1055#1088#1086#1074#1077#1076#1077#1085#1085#1099#1084
+                  end
+                end
+              end
             end
           end
           object Panel9: TPanel
@@ -4072,7 +4421,7 @@ object frmMain: TfrmMain
               Size.PlatformDefault = False
               Text = '    '#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1076#1072#1090#1091
             end
-            object deOperDate: TDateEdit
+            object deOrderDate: TDateEdit
               Date = 42795.000000000000000000
               Align = Left
               Margins.Top = 3.000000000000000000
@@ -4095,7 +4444,7 @@ object frmMain: TfrmMain
             Images = ilPartners
             Align = Client
             Size.Width = 333.000000000000000000
-            Size.Height = 331.000000000000000000
+            Size.Height = 296.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 3
             ItemAppearance.ItemHeight = 80
@@ -4106,7 +4455,7 @@ object frmMain: TfrmMain
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.Font.StyleExt = {00070000000000000004000000}
                 Appearance.TextAlign = Leading
-                Appearance.Width = 300.000000000000000000
+                Appearance.Width = 280.000000000000000000
                 Appearance.Height = 25.000000000000000000
               end
               item
@@ -4114,7 +4463,7 @@ object frmMain: TfrmMain
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
-                Appearance.Width = 230.000000000000000000
+                Appearance.Width = 220.000000000000000000
                 Appearance.Height = 20.000000000000000000
                 Appearance.PlaceOffset.X = 10.000000000000000000
                 Appearance.PlaceOffset.Y = 25.000000000000000000
@@ -4127,7 +4476,8 @@ object frmMain: TfrmMain
                 Appearance.TextAlign = Trailing
                 Appearance.Width = 50.000000000000000000
                 Appearance.Height = 25.000000000000000000
-                Appearance.PlaceOffset.X = 230.000000000000000000
+                Appearance.Align = Trailing
+                Appearance.PlaceOffset.X = -50.000000000000000000
                 Appearance.PlaceOffset.Y = 55.000000000000000000
               end
               item
@@ -4162,6 +4512,7 @@ object frmMain: TfrmMain
                 Appearance.Width = 30.000000000000000000
                 Appearance.Height = 30.000000000000000000
                 Appearance.Align = Trailing
+                Appearance.PlaceOffset.Y = 5.000000000000000000
               end
               item
                 AppearanceObjectName = 'Measure'
@@ -4171,7 +4522,7 @@ object frmMain: TfrmMain
                 Appearance.TextAlign = Leading
                 Appearance.Width = 50.000000000000000000
                 Appearance.Height = 25.000000000000000000
-                Appearance.PlaceOffset.X = 280.000000000000000000
+                Appearance.Align = Trailing
                 Appearance.PlaceOffset.Y = 55.000000000000000000
               end
               item
@@ -4182,7 +4533,8 @@ object frmMain: TfrmMain
                 Appearance.TextColor = claRed
                 Appearance.Width = 50.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 250.000000000000000000
+                Appearance.Align = Trailing
+                Appearance.PlaceOffset.X = -30.000000000000000000
                 Appearance.PlaceOffset.Y = 25.000000000000000000
               end>
             ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
@@ -4199,7 +4551,7 @@ object frmMain: TfrmMain
           end
           object Panel14: TPanel
             Align = Top
-            Position.Y = 40.000000000000000000
+            Position.Y = 75.000000000000000000
             Size.Width = 333.000000000000000000
             Size.Height = 30.000000000000000000
             Size.PlatformDefault = False
@@ -4337,6 +4689,39 @@ object frmMain: TfrmMain
               end
             end
           end
+          object Panel35: TPanel
+            Align = Top
+            Position.Y = 40.000000000000000000
+            Size.Width = 333.000000000000000000
+            Size.Height = 35.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 5
+            object Label58: TLabel
+              Align = Left
+              StyledSettings = [Family, Style, FontColor]
+              Size.Width = 89.000000000000000000
+              Size.Height = 35.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.WordWrap = False
+              Text = '  '#1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+            end
+            object eOrderComment: TEdit
+              Touch.InteractiveGestures = [LongTap, DoubleTap]
+              Align = Client
+              TabOrder = 9
+              ReturnKeyType = Done
+              TextSettings.Font.Size = 11.000000000000000000
+              Margins.Top = 2.000000000000000000
+              Margins.Right = 5.000000000000000000
+              Margins.Bottom = 2.000000000000000000
+              Size.Width = 239.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = [Family, Style, FontColor]
+              KillFocusByReturn = True
+            end
+          end
         end
       end
       object tiReturnIn: TTabItem
@@ -4357,7 +4742,7 @@ object frmMain: TfrmMain
           ItemEditAppearanceClassName = 'TDynamicAppearance'
           HeaderAppearanceClassName = 'TListHeaderObjects'
           FooterAppearanceClassName = 'TListHeaderObjects'
-          OnUpdateObjects = lwOrderExternalItemsUpdateObjects
+          OnUpdateObjects = lwReturnInItemsUpdateObjects
           Images = ilPartners
           Align = Client
           Size.Width = 333.000000000000000000
@@ -4372,7 +4757,7 @@ object frmMain: TfrmMain
               Appearance.Font.Size = 11.000000000000000000
               Appearance.Font.StyleExt = {00070000000000000004000000}
               Appearance.TextAlign = Leading
-              Appearance.Width = 300.000000000000000000
+              Appearance.Width = 280.000000000000000000
               Appearance.Height = 25.000000000000000000
             end
             item
@@ -4393,7 +4778,8 @@ object frmMain: TfrmMain
               Appearance.TextAlign = Trailing
               Appearance.Width = 50.000000000000000000
               Appearance.Height = 25.000000000000000000
-              Appearance.PlaceOffset.X = 230.000000000000000000
+              Appearance.Align = Trailing
+              Appearance.PlaceOffset.X = -50.000000000000000000
               Appearance.PlaceOffset.Y = 55.000000000000000000
             end
             item
@@ -4411,6 +4797,7 @@ object frmMain: TfrmMain
               Appearance.Width = 30.000000000000000000
               Appearance.Height = 30.000000000000000000
               Appearance.Align = Trailing
+              Appearance.PlaceOffset.Y = 5.000000000000000000
             end
             item
               AppearanceObjectName = 'Measure'
@@ -4420,7 +4807,7 @@ object frmMain: TfrmMain
               Appearance.TextAlign = Leading
               Appearance.Width = 50.000000000000000000
               Appearance.Height = 25.000000000000000000
-              Appearance.PlaceOffset.X = 280.000000000000000000
+              Appearance.Align = Trailing
               Appearance.PlaceOffset.Y = 55.000000000000000000
             end>
           ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
@@ -4431,8 +4818,8 @@ object frmMain: TfrmMain
           ItemAppearanceObjects.HeaderObjects.Text.Visible = False
           ItemAppearanceObjects.FooterObjects.Text.Visible = False
           CanSwipeDelete = False
-          OnItemClickEx = lwOrderExternalItemsItemClickEx
-          OnFilter = lwOrderExternalItemsFilter
+          OnItemClickEx = lwReturnInItemsItemClickEx
+          OnFilter = lwReturnInItemsFilter
           SearchVisible = True
         end
         object Panel6: TPanel
@@ -4555,21 +4942,174 @@ object frmMain: TfrmMain
             end
           end
         end
-        object Panel17: TPanel
+        object pSaveReturnIn: TPanel
           Align = MostBottom
           Position.Y = 471.000000000000000000
           Size.Width = 333.000000000000000000
           Size.Height = 50.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
-          object bSaveReturnIn: TButton
+          object GridPanelLayout12: TGridPanelLayout
             Align = Client
             Size.Width = 333.000000000000000000
             Size.Height = 50.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
-            Text = #1057#1086#1093#1088#1072#1085#1080#1090#1100
-            OnClick = bSaveReturnInClick
+            ColumnCollection = <
+              item
+                Value = 50.000000000000000000
+              end
+              item
+                Value = 50.000000000000000000
+              end>
+            ControlCollection = <
+              item
+                Column = 0
+                Control = bSaveReturnInUnComplete
+                Row = 0
+              end
+              item
+                Column = 1
+                Control = bSaveReturnInComplete
+                Row = 0
+              end>
+            RowCollection = <
+              item
+                Value = 100.000000000000000000
+              end
+              item
+                SizeStyle = Auto
+              end>
+            object bSaveReturnInUnComplete: TButton
+              Align = Client
+              Anchors = []
+              Size.Width = 166.500000000000000000
+              Size.Height = 50.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 1
+              OnClick = bSaveReturnInUnCompleteClick
+              object GridPanelLayout13: TGridPanelLayout
+                Align = Client
+                HitTest = False
+                Size.Width = 166.500000000000000000
+                Size.Height = 50.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 0
+                ColumnCollection = <
+                  item
+                    Value = 100.000000000000000000
+                  end>
+                ControlCollection = <
+                  item
+                    Column = 0
+                    Control = Label70
+                    Row = 0
+                  end
+                  item
+                    Column = 0
+                    Control = Label71
+                    Row = 1
+                  end>
+                RowCollection = <
+                  item
+                    Value = 50.000000000000000000
+                  end
+                  item
+                    Value = 50.000000000000000000
+                  end
+                  item
+                    SizeStyle = Auto
+                  end
+                  item
+                    SizeStyle = Auto
+                  end>
+                object Label70: TLabel
+                  Align = Client
+                  StyledSettings = [Family, Style, FontColor]
+                  Size.Width = 166.500000000000000000
+                  Size.Height = 25.000000000000000000
+                  Size.PlatformDefault = False
+                  TextSettings.HorzAlign = Center
+                  TextSettings.VertAlign = Trailing
+                  Text = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+                end
+                object Label71: TLabel
+                  Align = Client
+                  StyledSettings = [Family, Style, FontColor]
+                  Size.Width = 166.500000000000000000
+                  Size.Height = 25.000000000000000000
+                  Size.PlatformDefault = False
+                  TextSettings.HorzAlign = Center
+                  TextSettings.VertAlign = Leading
+                  Text = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1085#1099#1084
+                end
+              end
+            end
+            object bSaveReturnInComplete: TButton
+              Align = Client
+              Anchors = []
+              Size.Width = 166.500000000000000000
+              Size.Height = 50.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 0
+              OnClick = bSaveReturnInUnCompleteClick
+              object GridPanelLayout14: TGridPanelLayout
+                Align = Client
+                HitTest = False
+                Size.Width = 166.500000000000000000
+                Size.Height = 50.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 0
+                ColumnCollection = <
+                  item
+                    Value = 100.000000000000000000
+                  end>
+                ControlCollection = <
+                  item
+                    Column = 0
+                    Control = Label72
+                    Row = 0
+                  end
+                  item
+                    Column = 0
+                    Control = Label73
+                    Row = 1
+                  end>
+                RowCollection = <
+                  item
+                    Value = 50.000000000000000000
+                  end
+                  item
+                    Value = 50.000000000000000000
+                  end
+                  item
+                    SizeStyle = Auto
+                  end
+                  item
+                    SizeStyle = Auto
+                  end>
+                object Label72: TLabel
+                  Align = Client
+                  StyledSettings = [Family, Style, FontColor]
+                  Size.Width = 166.500000000000000000
+                  Size.Height = 25.000000000000000000
+                  Size.PlatformDefault = False
+                  TextSettings.HorzAlign = Center
+                  TextSettings.VertAlign = Trailing
+                  Text = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+                end
+                object Label73: TLabel
+                  Align = Client
+                  StyledSettings = [Family, Style, FontColor]
+                  Size.Width = 166.500000000000000000
+                  Size.Height = 25.000000000000000000
+                  Size.PlatformDefault = False
+                  TextSettings.HorzAlign = Center
+                  TextSettings.VertAlign = Leading
+                  Text = #1055#1088#1086#1074#1077#1076#1077#1085#1085#1099#1084
+                end
+              end
+            end
           end
         end
         object Panel22: TPanel
@@ -10740,7 +11280,7 @@ object frmMain: TfrmMain
       FillHeaderExpressions = <>
       FillBreakGroups = <>
     end
-    object LinkListControlToField3: TLinkListControlToField
+    object LinkListControlToFieldOrderExternalItems: TLinkListControlToField
       Category = 'Quick Bindings'
       DataSource = bsOrderExternalItems
       FieldName = 'GoodsName'
@@ -10780,6 +11320,7 @@ object frmMain: TfrmMain
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
+      OnFilledListItem = LinkListControlToFieldOrderExternalItemsFilledListItem
     end
     object LinkFillControlToField1: TLinkFillControlToField
       Category = 'Quick Bindings'
@@ -10820,7 +11361,7 @@ object frmMain: TfrmMain
       FillHeaderExpressions = <>
       FillBreakGroups = <>
     end
-    object LinkListControlToField5: TLinkListControlToField
+    object LinkListControlToFieldOrderExternal: TLinkListControlToField
       Category = 'Quick Bindings'
       DataSource = bsOrderExternal
       Control = lwOrderExternalList
@@ -10840,9 +11381,18 @@ object frmMain: TfrmMain
         item
           SourceMemberName = 'Price'
           ControlMemberName = 'Price'
+        end
+        item
+          SourceMemberName = 'isSync'
+          ControlMemberName = 'isSync'
+        end
+        item
+          SourceMemberName = 'StatusId'
+          ControlMemberName = 'StatusId'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
+      OnFilledListItem = LinkListControlToFieldOrderExternalFilledListItem
     end
     object LinkListControlToField6: TLinkListControlToField
       Category = 'Quick Bindings'
@@ -10869,7 +11419,7 @@ object frmMain: TfrmMain
       FillHeaderExpressions = <>
       FillBreakGroups = <>
     end
-    object LinkListControlToField8: TLinkListControlToField
+    object LinkListControlToFieldStoreReal: TLinkListControlToField
       Category = 'Quick Bindings'
       DataSource = bsStoreReals
       Control = lwStoreRealList
@@ -10881,11 +11431,20 @@ object frmMain: TfrmMain
         item
           SourceMemberName = 'Status'
           ControlMemberName = 'Status'
+        end
+        item
+          SourceMemberName = 'isSync'
+          ControlMemberName = 'isSync'
+        end
+        item
+          SourceMemberName = 'StatusId'
+          ControlMemberName = 'StatusId'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
+      OnFilledListItem = LinkListControlToFieldStoreRealFilledListItem
     end
-    object LinkListControlToField9: TLinkListControlToField
+    object LinkListControlToFieldStoreRealItems: TLinkListControlToField
       Category = 'Quick Bindings'
       DataSource = bsStoreRealItems
       FieldName = 'GoodsName'
@@ -10909,8 +11468,9 @@ object frmMain: TfrmMain
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
+      OnFilledListItem = LinkListControlToFieldStoreRealItemsFilledListItem
     end
-    object LinkListControlToField10: TLinkListControlToField
+    object LinkListControlToFieldReturnInItems: TLinkListControlToField
       Category = 'Quick Bindings'
       DataSource = bsReturnInItems
       FieldName = 'GoodsName'
@@ -10938,8 +11498,9 @@ object frmMain: TfrmMain
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
+      OnFilledListItem = LinkListControlToFieldReturnInItemsFilledListItem
     end
-    object LinkListControlToField11: TLinkListControlToField
+    object LinkListControlToFieldReturnIn: TLinkListControlToField
       Category = 'Quick Bindings'
       DataSource = bsReturnIn
       Control = lwReturnInList
@@ -10959,9 +11520,18 @@ object frmMain: TfrmMain
         item
           SourceMemberName = 'Status'
           ControlMemberName = 'Status'
+        end
+        item
+          SourceMemberName = 'isSync'
+          ControlMemberName = 'isSync'
+        end
+        item
+          SourceMemberName = 'StatusId'
+          ControlMemberName = 'StatusId'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
+      OnFilledListItem = LinkListControlToFieldReturnInFilledListItem
     end
     object LinkListControlToField1: TLinkListControlToField
       Category = 'Quick Bindings'
@@ -11070,7 +11640,7 @@ object frmMain: TfrmMain
       FillHeaderExpressions = <>
       FillBreakGroups = <>
     end
-    object LinkListControlToField15: TLinkListControlToField
+    object LinkListControlToFieldTasks: TLinkListControlToField
       Category = 'Quick Bindings'
       DataSource = bsTasks
       Control = lwTasks
@@ -11093,7 +11663,7 @@ object frmMain: TfrmMain
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
-      OnFilledListItem = LinkListControlToField15FilledListItem
+      OnFilledListItem = LinkListControlToFieldTasksFilledListItem
     end
     object LinkListControlToField16: TLinkListControlToField
       Category = 'Quick Bindings'
@@ -11565,6 +12135,72 @@ object frmMain: TfrmMain
             FileName = 'D:\work\Alan\ProjectMobile\img\Check.png'
           end>
         Name = 'Check'
+      end
+      item
+        MultiResBitmap.LoadSize = 2
+        MultiResBitmap.TransparentColor = 536870912
+        MultiResBitmap = <
+          item
+            Width = 16
+            Height = 16
+            PNG = {
+              89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+              61000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+              00DA49444154384FA552410E032108D47ECD67D9637D967ECD32082C58B769D2
+              310477601071733A638AF738E6EE240BE7BCF4630CF6A514F684BB43A19BB3F7
+              3E6BADA860866FF030E13E6062DD535AF4C47F2B12C52B2198F27B810719C770
+              57F89CD715B1678DA482D73C2A02CA8A108F4C22B0F45BD74BBC8BFB2ED08161
+              C5316637E84AD6D656E3FA32001750220845649E10E202EB809ECA4EE03C7772
+              7A2E8738F24EF8F915DC3FC20833C07475DA48F11EFCE9747F2974C11BCCA4B5
+              EBF25E28BCE9F6A9706BBE90C2150C9ABD80820B6DB8CBFD0729BD01ABD6D7C1
+              F32B57210000000049454E44AE426082}
+            FileName = 'D:\work\Alan\ProjectMobile\img\Complete.bmp'
+          end>
+        Name = 'Complete'
+      end
+      item
+        MultiResBitmap.LoadSize = 2
+        MultiResBitmap.TransparentColor = 536870912
+        MultiResBitmap = <
+          item
+            Width = 16
+            Height = 16
+            PNG = {
+              89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+              61000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+              00D749444154384FA551C10D84300C835B8DB1E00963C16A25769AE016389D74
+              96425A3736493B0ECF28352B1E6B7B92C2522EFD711CCCD334311BDE7E0A5D29
+              FBBE97799EE190813D7844E56E4871ACAD892683FF66D28891FB08BE37F858F0
+              0CB3228FA38F88B507B7E4A3CE4C40A589F12C637DECA9B55857E53DF75DA03A
+              859EDB80899ECB2573847C2A7DA16D6BB3E3FE823400CCD5BE34B579B1BFC4CB
+              E219E75E77C7CFAFA0ED03D90180DB8DDB46B966F04F7FD7A1D00517B8934D86
+              5761E553D7DF0A5B53A38018369ADE2090330ADE6AFFC1309C8B1BFDE1834854
+              910000000049454E44AE426082}
+            FileName = 'D:\work\Alan\ProjectMobile\img\UnComplete.bmp'
+          end>
+        Name = 'UnComplete'
+      end
+      item
+        MultiResBitmap.LoadSize = 2
+        MultiResBitmap.TransparentColor = 536870912
+        MultiResBitmap = <
+          item
+            Width = 16
+            Height = 16
+            PNG = {
+              89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+              61000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+              00DB49444154384FA592610E833008857557F358DDCF792CBD5AC74701695797
+              257B0981BEF228A0EB3247359F31CD1D4915D67AE9CFF354BF6D9B7AC1DDA3E8
+              6A3D8EA39652A810C6191E33EE0321F65882CEC37F2BD289F1A3393F167888E9
+              1DB3E2D7B58D48ACA627195C78CF932250514478B9C13752CFC4D82BF3E67317
+              74708114605D8022B6B730EEFDCB002D104412BA28C420DD3BA203F954F10269
+              F9E5A779EE356F829FBF42FA4714DD0ED8AE6FDB54E1E167AFE7A1E8420376B2
+              EFD7F459687CE8C6AD686BB9902315EC34630147CC987097FB0F96E50DB5D8D7
+              C1F3BCAD7C0000000049454E44AE426082}
+            FileName = 'D:\work\Alan\ProjectMobile\img\Erased.bmp'
+          end>
+        Name = 'Erased'
       end>
     Destination = <
       item
@@ -11600,25 +12236,19 @@ object frmMain: TfrmMain
       item
         Layers = <
           item
-            Name = 'Check'
-            SourceRect.Left = 32.000000000000000000
-            SourceRect.Right = 48.000000000000000000
+            Name = 'Complete'
           end>
       end
       item
         Layers = <
           item
-            Name = 'Check'
-            SourceRect.Left = 48.000000000000000000
-            SourceRect.Right = 64.000000000000000000
+            Name = 'UnComplete'
           end>
       end
       item
         Layers = <
           item
-            Name = 'Check'
-            SourceRect.Left = 64.000000000000000000
-            SourceRect.Right = 80.000000000000000000
+            Name = 'Erased'
           end>
       end
       item
@@ -12195,6 +12825,24 @@ object frmMain: TfrmMain
         Layers = <
           item
             Name = 'Check'
+          end>
+      end
+      item
+        Layers = <
+          item
+            Name = 'Complete'
+          end>
+      end
+      item
+        Layers = <
+          item
+            Name = 'UnComplete'
+          end>
+      end
+      item
+        Layers = <
+          item
+            Name = 'Erased'
           end>
       end>
     Left = 280
