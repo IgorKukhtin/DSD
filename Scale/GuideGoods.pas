@@ -165,7 +165,9 @@ begin
      fEnterGoodsName:=false;
      fEnterGoodsKindCode:=false;
 
-     gbPrice.Visible:=GetArrayList_Value_byName(Default_Array,'isEnterPrice') = AnsiUpperCase('TRUE');
+     gbPrice.Visible:=(GetArrayList_Value_byName(Default_Array,'isEnterPrice') = AnsiUpperCase('TRUE'))
+                  and (execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income);
+     if SettingMain.BranchCode = 301 then EditWeightValue.Properties.DecimalPlaces:= 4;
 
      CancelCxFilter;
      fStartWrite:=true;
@@ -741,7 +743,7 @@ begin
                end;
                //
                if StrToFloat(EditPrice.Text) <= 0
-               then ActiveControl:=EditWeightValue
+               then ActiveControl:=EditPrice
      end;
 
 end;

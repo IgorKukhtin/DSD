@@ -79,6 +79,8 @@ var
   tm: JTelephonyManager;
   {$ENDIF}
   IMEI: String;
+  ConnectOk: boolean;
+  ServNum: integer;
 const
   {создаем XML вызова процедуры на сервере}
   pXML =
@@ -105,25 +107,42 @@ begin
   IMEI := '';
   {$ENDIF}
 
-  N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IMEI]), False, 4, ANeedShowException)).DocumentElement;
-
-  if Assigned(N) then
-  begin
-    Result := N.GetAttribute(AnsiLowerCase(gcMessage));
-
-    if Result = '' then
-    begin
-      if Assigned(pUser) then
+  ConnectOk := false;
+  ServNum := -1;
+  repeat
+    try
+      inc(ServNum);
+      if ServNum > 0 then
       begin
-        pUser.Session := N.GetAttribute(AnsiLowerCase(gcSession));
-        pUser.Local := false;
-      end
-      else
-        pUser := TUser.Create(pUserName, pPassword, N.GetAttribute(AnsiLowerCase(gcSession)), false);
+        gc_WebService := gc_WebServers[ServNum];
+        pStorage.Connection := gc_WebService;
+      end;
+
+      N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IMEI]), False, 4, ANeedShowException)).DocumentElement;
+
+      if Assigned(N) then
+      begin
+        Result := N.GetAttribute(AnsiLowerCase(gcMessage));
+
+        ConnectOk := true;
+
+        if Result = '' then
+        begin
+          if Assigned(pUser) then
+          begin
+            pUser.Session := N.GetAttribute(AnsiLowerCase(gcSession));
+            pUser.Local := false;
+          end
+          else
+            pUser := TUser.Create(pUserName, pPassword, N.GetAttribute(AnsiLowerCase(gcSession)), false);
+        end;
+      end;
+    except
     end;
-  end
-  else
-    Result := 'Не удалось установить соединение';
+  until ConnectOk or (ServNum >= Length(gc_WebServers) - 1);
+
+  if not ConnectOk then
+    raise Exception.Create('Не удалось установить соединение');
 end;
 
 procedure TUser.SetLocal(const Value: Boolean);
