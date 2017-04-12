@@ -1642,8 +1642,8 @@ inherited MainCashForm: TMainCashForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1044#1086#1089#1090#1091#1087#1085#1099#1077' '#1083#1077#1082#1072#1088#1089#1090#1074#1072' - '#1057#1055
-      FormName = 'TGoodsSP_UserForm'
-      FormNameParam.Value = 'TGoodsSP_UserForm'
+      FormName = 'TGoodsSP_ObjectForm'
+      FormNameParam.Value = 'TGoodsSP_ObjectForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
