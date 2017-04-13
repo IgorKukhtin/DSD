@@ -15,14 +15,17 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbId Integer;
    DECLARE vbMovementId Integer;
+   DECLARE vbStatusId Integer;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
 
       -- получаем Id документа по GUID
-      SELECT MovementString_GUID.MovementId 
+      SELECT MovementString_GUID.MovementId
+           , Movement_StoreReal.StatusId
       INTO vbMovementId 
+         , vbStatusId
       FROM MovementString AS MovementString_GUID
            JOIN Movement AS Movement_StoreReal
                          ON Movement_StoreReal.Id = MovementString_GUID.MovementId
@@ -34,6 +37,11 @@ BEGIN
       THEN
            RAISE EXCEPTION 'Ошибка. Не заведена шапка документа.';
       END IF; 
+
+      IF vbStatusId = zc_Enum_Status_Complete()
+      THEN -- если фактический остаток проведен, то распроводим    
+           PERFORM gpUnComplete_Movement_StoreReal (inMovementId:= vbMovementId, inSession:= inSession);
+      END IF;
 
       -- получаем Id строки документа по GUID
       SELECT MIString_GUID.MovementItemId 
@@ -56,6 +64,9 @@ BEGIN
 
       -- сохранили свойство <Глобальный уникальный идентификатор>
       PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), vbId, inGUID);
+
+      -- проводим фактический остаток
+      PERFORM gpComplete_Movement_StoreReal (inMovementId:= vbMovementId, inSession:= inSession);
 
       RETURN vbId;
 END;
