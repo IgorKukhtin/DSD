@@ -1463,7 +1463,7 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-
+    {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_OrderInternalBySendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_OrderInternalBySendForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_OrderInternalBySendDialogForm'));
@@ -1473,7 +1473,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsWeekForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsWeekDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsWeekDialogForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SupplyBalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SupplyBalanceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SupplyBalanceDialogForm'));

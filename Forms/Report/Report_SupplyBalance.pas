@@ -54,6 +54,7 @@ type
     actPrint: TdsdPrintAction;
     CountDays: TcxGridDBColumn;
     GoodsGroupName: TcxGridDBColumn;
+    actPrint1: TdsdPrintAction;
   private
     { Private declarations }
   public
