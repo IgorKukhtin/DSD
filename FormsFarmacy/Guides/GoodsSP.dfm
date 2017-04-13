@@ -240,7 +240,7 @@ object GoodsSPForm: TGoodsSPForm
         Options.Editing = False
         Width = 84
       end
-      object cxGridDBTableViewColumn1: TcxGridDBColumn
+      object InsertDateSP: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1079#1072#1075#1088#1091#1079#1082#1080
         DataBinding.FieldName = 'InsertDateSP'
         HeaderAlignmentHorz = taCenter
