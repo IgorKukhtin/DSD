@@ -34,6 +34,7 @@ $BODY$
    DECLARE vbisList Boolean;
    DECLARE vbCurrencyId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbStatusId Integer;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -46,12 +47,14 @@ BEGIN
            , COALESCE (MovementBoolean_Checked.ValueData, false)::Boolean       AS Checked
            , COALESCE (MovementBoolean_isPartner.ValueData, false)::Boolean     AS isPartner
            , COALESCE (MovementBoolean_List.ValueData, false)::Boolean          AS isList
+           , Movement_ReturnIn.StatusId
       INTO vbId
          , vbInvNumberPartner
          , vbInvNumberMark   
          , vbChecked         
          , vbisPartner       
-         , vbisList          
+         , vbisList   
+         , vbStatusId        
       FROM MovementString AS MovementString_GUID
            JOIN Movement AS Movement_ReturnIn
                          ON Movement_ReturnIn.Id = MovementString_GUID.MovementId
@@ -89,43 +92,47 @@ BEGIN
         AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency();
 
       vbCurrencyId:= COALESCE (vbCurrencyId, zc_Enum_Currency_Basis());
+   
+      IF (vbIsInsert = true) OR (vbStatusId = zc_Enum_Status_UnComplete())
+      THEN 
+           -- сохраняем возврат
+           vbId:= lpInsertUpdate_Movement_ReturnIn (ioId                 := vbId               -- Ключ объекта <Документ Возврат покупателя>
+                                                  , inInvNumber          := inInvNumber        -- Номер документа
+                                                  , inInvNumberPartner   := vbInvNumberPartner -- Номер накладной у контрагента
+                                                  , inInvNumberMark      := vbInvNumberMark    -- Номер "перекресленої зеленої марки зi складу"
+                                                  , inParentId           := NULL
+                                                  , inOperDate           := inOperDate         -- Дата(склад)
+                                                  , inOperDatePartner    := inOperDate         -- Дата документа у покупателя
+                                                  , inChecked            := vbChecked          -- Проверен
+                                                  , inIsPartner          := vbisPartner        -- основание - Акт недовоза
+                                                  , inPriceWithVAT       := inPriceWithVAT     -- Цена с НДС (да/нет)
+                                                  , inisList             := vbisList           -- Только для списка
+                                                  , inVATPercent         := inVATPercent       -- % НДС
+                                                  , inChangePercent      := inChangePercent    -- (-)% Скидки (+)% Наценки
+                                                  , inFromId             := inPartnerId        -- От кого (в документе)
+                                                  , inToId               := inUnitId           -- Кому (в документе)
+                                                  , inPaidKindId         := inPaidKindId       -- Виды форм оплаты
+                                                  , inContractId         := inContractId       -- Договора
+                                                  , inCurrencyDocumentId := vbCurrencyId       -- Валюта (документа)
+                                                  , inCurrencyPartnerId  := vbCurrencyId       -- Валюта (контрагента)
+                                                  , inCurrencyValue      := 1.0                -- курс валюты
+                                                  , inComment            := inComment          -- примечание
+                                                  , inUserId             := vbUserId           -- Пользователь
+                                                   );
 
-      vbId:= lpInsertUpdate_Movement_ReturnIn (ioId                 := vbId               -- Ключ объекта <Документ Возврат покупателя>
-                                             , inInvNumber          := inInvNumber        -- Номер документа
-                                             , inInvNumberPartner   := vbInvNumberPartner -- Номер накладной у контрагента
-                                             , inInvNumberMark      := vbInvNumberMark    -- Номер "перекресленої зеленої марки зi складу"
-                                             , inParentId           := NULL
-                                             , inOperDate           := inOperDate         -- Дата(склад)
-                                             , inOperDatePartner    := inOperDate         -- Дата документа у покупателя
-                                             , inChecked            := vbChecked          -- Проверен
-                                             , inIsPartner          := vbisPartner        -- основание - Акт недовоза
-                                             , inPriceWithVAT       := inPriceWithVAT     -- Цена с НДС (да/нет)
-                                             , inisList             := vbisList           -- Только для списка
-                                             , inVATPercent         := inVATPercent       -- % НДС
-                                             , inChangePercent      := inChangePercent    -- (-)% Скидки (+)% Наценки
-                                             , inFromId             := inPartnerId        -- От кого (в документе)
-                                             , inToId               := inUnitId           -- Кому (в документе)
-                                             , inPaidKindId         := inPaidKindId       -- Виды форм оплаты
-                                             , inContractId         := inContractId       -- Договора
-                                             , inCurrencyDocumentId := vbCurrencyId       -- Валюта (документа)
-                                             , inCurrencyPartnerId  := vbCurrencyId       -- Валюта (контрагента)
-                                             , inCurrencyValue      := 1.0                -- курс валюты
-                                             , inComment            := inComment          -- примечание
-                                             , inUserId             := vbUserId           -- Пользователь
-                                              );
+           -- сохранили свойство <Глобальный уникальный идентификатор>                       
+           PERFORM lpInsertUpdate_MovementString (zc_MovementString_GUID(), vbId, inGUID);   
+                                                                                             
+           -- сохранили свойство <Дата/время создания на мобильном устройстве>
+           PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_InsertMobile(), vbId, inInsertDate);
 
-      -- сохранили свойство <Глобальный уникальный идентификатор>                       
-      PERFORM lpInsertUpdate_MovementString (zc_MovementString_GUID(), vbId, inGUID);   
-                                                                                        
-      -- сохранили свойство <Дата/время создания на мобильном устройстве>
-      PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_InsertMobile(), vbId, inInsertDate);
-
-      IF vbIsInsert 
-      THEN
-           -- сохранили связь с <Пользователь>
-           PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_Insert(), vbId, vbUserId);
-           -- сохранили свойство <Дата создания>
-           PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_Insert(), vbId, CURRENT_TIMESTAMP);
+           IF vbIsInsert 
+           THEN
+                -- сохранили связь с <Пользователь>
+                PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_Insert(), vbId, vbUserId);
+                -- сохранили свойство <Дата создания>
+                PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_Insert(), vbId, CURRENT_TIMESTAMP);
+           END IF;
       END IF;
 
       RETURN vbId;
@@ -149,9 +156,9 @@ $BODY$
                                                     , inVATPercent    := 20.0                         -- % НДС
                                                     , inChangePercent := -5.0                         -- (-)% Скидки (+)% Наценки
                                                     , inPaidKindId    := zc_Enum_PaidKind_FirstForm() -- Вид формы оплаты
-                                                    , inPartnerId     := 0                            -- Контрагент
-                                                    , inUnitId        := 0                            -- Подразделение
-                                                    , inContractId    := 0                            -- Договор
+                                                    , inPartnerId     := 889758                       -- Контрагент
+                                                    , inUnitId        := 8461                         -- Подразделение
+                                                    , inContractId    := 889761                       -- Договор
                                                     , inComment       := 'Test'                       -- Примечание
                                                     , inSession       := zfCalc_UserAdmin()
                                                      );
