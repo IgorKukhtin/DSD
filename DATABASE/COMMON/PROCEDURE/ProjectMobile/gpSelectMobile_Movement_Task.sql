@@ -29,7 +29,7 @@ BEGIN
       IF vbMemberId IS NOT NULL 
       THEN
            RETURN QUERY
-             SELECT Movement_Task.Id
+             SELECT DISTINCT Movement_Task.Id
                   , Movement_Task.InvNumber
                   , Movement_Task.Operdate
                   , Movement_Task.StatusId
@@ -40,8 +40,16 @@ BEGIN
                                           ON MovementLinkObject_PersonalTrade.MovementId = Movement_Task.Id
                                          AND MovementLinkObject_PersonalTrade.DescId = zc_MovementLinkObject_PersonalTrade()
                                          AND MovementLinkObject_PersonalTrade.ObjectId = vbMemberId
+                  JOIN MovementItem AS MI_Task
+                                    ON MI_Task.MovementId = Movement_Task.Id
+                                   AND MI_Task.DescId = zc_MI_Master()
+                                   AND MI_Task.isErased = false
+                  LEFT JOIN MovementItemBoolean AS MIBoolean_Close
+                                                ON MIBoolean_Close.MovementItemId = MI_Task.Id
+                                               AND MIBoolean_Close.DescId = zc_MIBoolean_Close() 
              WHERE Movement_Task.DescId = zc_Movement_Task()
-               AND Movement_Task.StatusId = zc_Enum_Status_UnComplete();
+               AND Movement_Task.StatusId = zc_Enum_Status_Complete()
+               AND COALESCE (MIBoolean_Close.ValueData, false) = false;
       END IF;
 END;
 $BODY$

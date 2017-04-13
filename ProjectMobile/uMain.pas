@@ -491,8 +491,6 @@ type
     bInfo: TButton;
     Image4: TImage;
     lTasks: TLabel;
-    bRelogin: TButton;
-    Image16: TImage;
     tiPartnerTasks: TTabItem;
     tTasks: TTimer;
     tiTasks: TTabItem;
@@ -601,6 +599,12 @@ type
     GridPanelLayout14: TGridPanelLayout;
     Label72: TLabel;
     Label73: TLabel;
+    bDocuments: TButton;
+    Image18: TImage;
+    Label74: TLabel;
+    bRelogin: TButton;
+    Image19: TImage;
+    Label75: TLabel;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -1109,9 +1113,9 @@ end;
 procedure TfrmMain.ChangeTaskView(AItem: TListViewItem);
 begin
   if SameText(TListItemText(AItem.Objects.FindDrawable('Closed')).Text, 'False') then
-    TListItemImage(AItem.Objects.FindDrawable('CloseButton')).ImageIndex := 4
+    TListItemImage(AItem.Objects.FindDrawable('CloseButton')).ImageIndex := 1
   else
-    TListItemImage(AItem.Objects.FindDrawable('CloseButton')).ImageIndex := 1;
+    TListItemImage(AItem.Objects.FindDrawable('CloseButton')).ImageIndex := 4;
 
   if TListItemText(AItem.Objects.FindDrawable('PartnerName')).Text = '' then
   begin
@@ -2363,8 +2367,8 @@ begin
   GetCurrentCoordinates;
   if FCurCoordinatesSet then
   begin
-    eNewPartnerGPSN.Text := FormatFloat('0.######', FCurCoordinates.Latitude);
-    eNewPartnerGPSE.Text := FormatFloat('0.######', FCurCoordinates.Longitude);
+    eNewPartnerGPSN.Text := FormatFloat('0.000000', FCurCoordinates.Latitude);
+    eNewPartnerGPSE.Text := FormatFloat('0.000000', FCurCoordinates.Longitude);
   end
   else
     ShowMessage('Не удалось получить текущие координаты');
@@ -2767,7 +2771,7 @@ end;
 procedure TfrmMain.bSaveOrderExternalUnCompleteClick(Sender: TObject);
 begin
   if Sender = bSaveOrderExternalUnComplete then
-    TDialogService.MessageDialog('Заявка будет сохранена, но не передана в центр при синхронизации. Продолжить?',
+    TDialogService.MessageDialog('Документ не проведен и не будет участвовать в синхронизации. Продолжить?',
       TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, SaveOrderExtrernal)
   else
     SaveOrderExtrernal(mrNone);
@@ -2777,7 +2781,7 @@ end;
 procedure TfrmMain.bSaveReturnInUnCompleteClick(Sender: TObject);
 begin
   if Sender = bSaveReturnInUnComplete then
-    TDialogService.MessageDialog('Возврат будет сохранен, но не передан в центр при синхронизации. Продолжить?',
+    TDialogService.MessageDialog('Документ не проведен и не будет участвовать в синхронизации. Продолжить?',
       TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, SaveReturnIn)
   else
     SaveReturnIn(mrNone);
@@ -2787,7 +2791,7 @@ end;
 procedure TfrmMain.bSaveStoreRealUnCompleteClick(Sender: TObject);
 begin
   if Sender = bSaveStoreRealUnComplete then
-    TDialogService.MessageDialog('Остатки будут сохранены, но не переданы в центр при синхронизации. Продолжить?',
+    TDialogService.MessageDialog('Документ не проведен и не будет участвовать в синхронизации. Продолжить?',
       TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, SaveStoreReal)
   else
     SaveStoreReal(mrNone);
@@ -3577,11 +3581,11 @@ begin
   begin
     lPartnerKind.Text := DM.tblObject_ConstPaidKindName_First.AsString;
     if not DM.qryPartnerDebtSumJ.IsNull then
-      lPartnerDebt.Text := FormatFloat('0.##', DM.qryPartnerDebtSumJ.AsFloat)
+      lPartnerDebt.Text := FormatFloat(',0.##', DM.qryPartnerDebtSumJ.AsFloat)
     else
       lPartnerDebt.Text := '-';
     if not DM.qryPartnerOverSumJ.IsNull then
-      lPartnerOver.Text := FormatFloat('0.##', DM.qryPartnerOverSumJ.AsFloat)
+      lPartnerOver.Text := FormatFloat(',0.##', DM.qryPartnerOverSumJ.AsFloat)
     else
       lPartnerOver.Text := '-';
     if not DM.qryPartnerOverDaysJ.IsNull then
@@ -3593,8 +3597,8 @@ begin
   if DM.qryPartnerPaidKindId.AsInteger = DM.tblObject_ConstPaidKindId_Second.AsInteger then // Нал
   begin
     lPartnerKind.Text := DM.tblObject_ConstPaidKindName_Second.AsString;
-    lPartnerDebt.Text := FormatFloat('0.##', DM.qryPartnerDebtSum.AsFloat);
-    lPartnerOver.Text := FormatFloat('0.##', DM.qryPartnerOverSum.AsFloat);
+    lPartnerDebt.Text := FormatFloat(',0.##', DM.qryPartnerDebtSum.AsFloat);
+    lPartnerOver.Text := FormatFloat(',0.##', DM.qryPartnerOverSum.AsFloat);
     lPartnerOverDay.Text := DM.qryPartnerOverDays.AsString;
   end
   else  // нет договора
@@ -3636,7 +3640,7 @@ begin
   lCaption.Text := 'Прайс-лист "' + DM.qryPriceListValueData.AsString + '"';
 
   DM.qryGoodsForPriceList.Open('select G.ID, G.OBJECTCODE, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ' +
-    'PLI.ORDERPRICE Price, M.VALUEDATA Measure ' +
+    'PLI.ORDERPRICE Price, M.VALUEDATA Measure, PLI.ORDERSTARTDATE StartDate ' +
     'FROM OBJECT_PRICELISTITEMS PLI ' +
     'JOIN OBJECT_GOODS G ON G.ID = PLI.GOODSID AND G.ISERASED = 0 ' +
     'LEFT JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID ' +
@@ -3890,15 +3894,15 @@ begin
 
     if DM.qryPartnerChangePercent.AsCurrency > 0 then
       lPriceWithPercent.Text := ' Стоимость с учетом наценки (' +
-        FormatFloat('0.00', DM.qryPartnerChangePercent.AsCurrency) + '%) : ' + FormatFloat('0.00', TotalPriceWithPercent)
+        FormatFloat(',0.00', DM.qryPartnerChangePercent.AsCurrency) + '%) : ' + FormatFloat(',0.00', TotalPriceWithPercent)
     else
       lPriceWithPercent.Text := ' Стоимость с учетом скидки (' +
-        FormatFloat('0.00', -DM.qryPartnerChangePercent.AsCurrency) + '%) : ' + FormatFloat('0.00', TotalPriceWithPercent);
+        FormatFloat(',0.00', -DM.qryPartnerChangePercent.AsCurrency) + '%) : ' + FormatFloat(',0.00', TotalPriceWithPercent);
   end;
 
-  lTotalPrice.Text := 'Общая стоимость (с учетом НДС) : ' + FormatFloat('0.00', FOrderTotalPrice);
+  lTotalPrice.Text := 'Общая стоимость (с учетом НДС) : ' + FormatFloat(',0.00', FOrderTotalPrice);
 
-  lTotalWeight.Text := 'Общий вес : ' + FormatFloat('0.00', FOrderTotalCountKg);
+  lTotalWeight.Text := 'Общий вес : ' + FormatFloat(',0.00', FOrderTotalCountKg);
 end;
 
 // пересчет общей цены и веса для выбранных товаров для возврата
@@ -3951,15 +3955,15 @@ begin
 
     if DM.qryPartnerChangePercent.AsCurrency > 0 then
       lPriceWithPercentReturn.Text := ' Стоимость с учетом наценки (' +
-        FormatFloat('0.00', DM.qryPartnerChangePercent.AsCurrency) + '%) : ' + FormatFloat('0.00', TotalPriceWithPercent)
+        FormatFloat(',0.00', DM.qryPartnerChangePercent.AsCurrency) + '%) : ' + FormatFloat(',0.00', TotalPriceWithPercent)
     else
       lPriceWithPercentReturn.Text := ' Стоимость с учетом скидки (' +
-        FormatFloat('0.00', -DM.qryPartnerChangePercent.AsCurrency) + '%) : ' + FormatFloat('0.00', TotalPriceWithPercent);
+        FormatFloat(',0.00', -DM.qryPartnerChangePercent.AsCurrency) + '%) : ' + FormatFloat(',0.00', TotalPriceWithPercent);
   end;
 
-  lTotalPriceReturn.Text := 'Общая стоимость (с учетом НДС) : ' + FormatFloat('0.00', FReturnInTotalPrice);
+  lTotalPriceReturn.Text := 'Общая стоимость (с учетом НДС) : ' + FormatFloat(',0.00', FReturnInTotalPrice);
 
-  lTotalWeightReturn.Text := 'Общий вес : ' + FormatFloat('0.00', FReturnInTotalCountKg);
+  lTotalWeightReturn.Text := 'Общий вес : ' + FormatFloat(',0.00', FReturnInTotalCountKg);
 end;
 
 // переход на заданную форму с сохранением её в стэк открываемых форм
