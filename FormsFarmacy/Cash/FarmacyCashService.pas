@@ -144,6 +144,8 @@ type
     N4: TMenuItem;
     ilIcons: TImageList;
     N5: TMenuItem;
+    N6: TMenuItem;
+    N7: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -156,6 +158,8 @@ type
     procedure Timer1Timer(Sender: TObject);
     procedure N4Click(Sender: TObject);
     procedure N5Click(Sender: TObject);
+    procedure N6Click(Sender: TObject);
+    procedure N7Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -188,7 +192,7 @@ const
   CMD_SETLABELTEXT = 1;
 
 var
-
+  CountСhecksAtOnce : Integer = 7; // Колличество проводимых чеков за раз.
   MainCashForm2: TMainCashForm2;
   FLocalDataBaseHead : TVKSmartDBF;
   FLocalDataBaseBody : TVKSmartDBF;
@@ -272,9 +276,10 @@ begin
   if  AllowedConduct then Exit;
 
   MainCashForm2.tiServise.IconIndex:=1;
-  WaitForSingleObject(MutexRefresh, INFINITE);
+  WaitForSingleObject(MutexRefresh, INFINITE);   // одновременно проведение и обновление всех остатков запрещено
+  WaitForSingleObject(MutexAllowedConduct, INFINITE); // для отмены проведения из приложения при закрытии
   try
-      for J := 0 to 6 do
+      for J := 1 to CountСhecksAtOnce do
       Begin
        Application.ProcessMessages;   // Нужно потестить отмену
        // Выходим из цикла при получении указания постоять или перехода в локальный режим
@@ -726,10 +731,11 @@ begin
           ReleaseMutex(MutexDBF);
         End;
       End;
-    finally
-      ReleaseMutex(MutexRefresh);
-      MainCashForm2.tiServise.IconIndex:=0;
-    end;
+  finally
+    ReleaseMutex(MutexAllowedConduct);
+    ReleaseMutex(MutexRefresh);
+    MainCashForm2.tiServise.IconIndex:=0;
+  end;
 end;
 
 
@@ -765,7 +771,7 @@ End;
 
 procedure TMainCashForm2.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
-  AllowedConduct := True; // Просим досрочно прекратить проведения чеков 
+  AllowedConduct := True; // Просим досрочно прекратить проведения чеков
   WaitForSingleObject(MutexRefresh, INFINITE);
   if CanClose then
   Begin
@@ -793,61 +799,57 @@ end;
 
 procedure TMainCashForm2.actRefreshAllExecute(Sender: TObject);
 begin   //yes
-  ChangeStatus('Начало обновления данных с сервера');
+  // обновления данных с сервера
+  WaitForSingleObject(MutexRemains, INFINITE);
+  WaitForSingleObject(MutexAlternative, INFINITE);
   try
     if RemainsCDS.IsEmpty then
     begin
       RemainsCDS.DisableControls;
       AlternativeCDS.DisableControls;
       try
-        if not FileExists(Remains_lcl) or
-           not FileExists(Alternative_lcl) then
-        Begin
-          ShowMessage('Нет локального хранилища. Дальнейшая работа невозможна!');
-          Close;
-        End;
-        WaitForSingleObject(MutexRemains, INFINITE);
-        LoadLocalData(RemainsCDS, Remains_lcl);
-        ReleaseMutex(MutexRemains);
-        WaitForSingleObject(MutexAlternative, INFINITE);
-        LoadLocalData(AlternativeCDS, Alternative_lcl);
-        ReleaseMutex(MutexAlternative);
+        if FileExists(Remains_lcl) then
+          LoadLocalData(RemainsCDS, Remains_lcl);
+        if FileExists(Alternative_lcl) then
+          LoadLocalData(AlternativeCDS, Alternative_lcl);
       finally
         RemainsCDS.EnableControls;
         AlternativeCDS.EnableControls;
       end;
     end;
 
-    if true  then
+    if not gc_User.Local  then
     Begin
-
       RemainsCDS.DisableControls;
       AlternativeCDS.DisableControls;
       try
-        ChangeStatus('Получение остатков');
-        actRefresh.Execute;
-
-        ChangeStatus('Сохранение остатков в локальной базе');
-        WaitForSingleObject(MutexRemains, INFINITE);
-        SaveLocalData(RemainsCDS,Remains_lcl);
-        ReleaseMutex(MutexRemains);
-        WaitForSingleObject(MutexAlternative, INFINITE);
-        SaveLocalData(AlternativeCDS,Alternative_lcl);
-        ReleaseMutex(MutexAlternative);
-
-        ChangeStatus('Получение ВИП чеков');
-
-        SaveLocalVIP;
-        ChangeStatus('Сохранение ВИП чеков в локальной базе');
+        try
+          //Получение остатков
+          actRefresh.Execute;
+          //Сохранение остатков в локальной базе
+          SaveLocalData(RemainsCDS,Remains_lcl);
+          SaveLocalData(AlternativeCDS,Alternative_lcl);
+          //Получение ВИП чеков и сохранение в локальной базе
+          SaveLocalVIP;
+          // Вывод уведомления сервиса
+          tiServise.BalloonHint:='Остатки обновлены.';
+          tiServise.ShowBalloonHint;
+        except
+          if gc_User.Local then
+          begin
+            tiServise.BalloonHint:='Обрыв соединения';
+            tiServise.ShowBalloonHint;
+          end;
+        end;
       finally
-        ChangeStatus('Перезагрузка данных в окне программы');
         RemainsCDS.EnableControls;
         AlternativeCDS.EnableControls;
-
       end;
     End;
   finally
-    ChangeStatus(' Сохранили ');
+    ReleaseMutex(MutexRemains);
+    ReleaseMutex(MutexAlternative);
+    ChangeStatus('Сохранили');
   end;
 end;
 
@@ -917,6 +919,7 @@ end;
 procedure TMainCashForm2.N2Click(Sender: TObject);
 begin
 Timer2.Enabled := not Timer2.Enabled;
+N2.Checked := Timer2.Enabled;
 end;
 
 procedure TMainCashForm2.N3Click(Sender: TObject);
@@ -943,6 +946,26 @@ begin
       tiServise.ShowBalloonHint;
     End;
   end;
+end;
+
+procedure TMainCashForm2.N6Click(Sender: TObject);
+begin
+ try
+   CountСhecksAtOnce:= StrToInt(InputBox('Количество проводимых чеков за раз', 'Введите количество не больше 50', '7'));
+   if CountСhecksAtOnce > 50  then CountСhecksAtOnce := 50;
+   tiServise.BalloonHint:='Количество проводимых чеков за раз изменено на ' + inttostr(CountСhecksAtOnce);
+   tiServise.ShowBalloonHint;
+   n6.Caption:= 'Количество проводимых чеков за раз ' + inttostr(CountСhecksAtOnce)
+ except
+   tiServise.BalloonHint:='Неверный ввод';
+   tiServise.ShowBalloonHint;
+ end;
+end;
+
+procedure TMainCashForm2.N7Click(Sender: TObject);
+begin
+Timer1.Enabled := not Timer1.Enabled;
+N7.Checked := Timer2.Enabled;
 end;
 
 procedure TMainCashForm2.NewCheck(ANeedRemainsRefresh: Boolean = True);
@@ -1530,6 +1553,7 @@ var
   sp : TdsdStoredProc;
   ds : TClientDataSet;
 begin  //+
+  // pr вызывается из обновления остатков
   sp := TdsdStoredProc.Create(nil);
   try
     ds := TClientDataSet.Create(nil);
@@ -1541,7 +1565,9 @@ begin  //+
       sp.Params.Clear;
       sp.Params.AddParam('inIsShowAll',ftBoolean,ptInput,False);
       sp.Execute(False,False);
+      WaitForSingleObject(MutexVip, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
       SaveLocalData(ds,Member_lcl);
+      ReleaseMutex(MutexVip);
 
       sp.StoredProcName := 'gpSelect_Movement_CheckVIP';
       sp.Params.Clear;
