@@ -119,6 +119,7 @@ var
   zc_Movement_ProductionSeparate: Integer;
 
   zc_Movement_OrderExternal: Integer;
+  zc_Movement_OrderInternal: Integer;
 
   zc_Enum_InfoMoney_30201: Integer; // Доходы + Мясное сырье + Мясное сырье
 
@@ -180,6 +181,7 @@ begin
      ParamAdd(Params,'Transport_BarCode',ftString);
      ParamAdd(Params,'Transport_InvNumber',ftString);
      ParamAdd(Params,'PersonalDriverId',ftInteger);
+     ParamAdd(Params,'PersonalDriverCode',ftInteger);
      ParamAdd(Params,'PersonalDriverName',ftString);
      ParamAdd(Params,'CarName',ftString);
      ParamAdd(Params,'RouteName',ftString);

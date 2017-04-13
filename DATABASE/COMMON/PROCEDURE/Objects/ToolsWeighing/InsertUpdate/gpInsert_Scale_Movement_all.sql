@@ -561,6 +561,16 @@ BEGIN
              RAISE EXCEPTION 'Ошибка.Нельзя сохранить данный тип документа.';
          END IF;
 
+        -- дописали св-во - Через кого поступил возврат
+        IF vbMovementDescId = zc_Movement_ReturnIn()
+        THEN
+            -- сохранили связь с <Физические лица(Водитель/экспедитор)>
+            PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Member(), vbMovementId_begin, MovementLinkObject_Member.ObjectId)
+            FROM MovementLinkObject AS MovementLinkObject_Member
+            WHERE MovementLinkObject_Member.MovementId = inMovementId
+              AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member();
+        END IF;
+
         -- дописали св-во <Дата/время создания>
         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), vbMovementId_begin, CURRENT_TIMESTAMP);
         -- дописали св-во <Путевой лист>

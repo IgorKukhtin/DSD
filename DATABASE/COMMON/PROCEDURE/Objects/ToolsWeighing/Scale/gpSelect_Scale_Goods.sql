@@ -77,7 +77,7 @@ BEGIN
         WHERE Movement.Id = inOrderExternalId;
 
 
-         IF vbGoodsId <> 0
+         IF vbGoodsId <> 0 AND inBranchCode <> 301
          THEN
               -- определили
               SELECT tmp.PriceListId, tmp.OperDate
@@ -148,6 +148,12 @@ BEGIN
                                  , tmpMI_Order2.MovementId_Promo
                                  , tmpMI_Order2.isTare
                             FROM tmpMI_Order2
+                                 LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                      ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI_Order2.GoodsId
+                                                     AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                                 LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                            WHERE View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
+                               OR inBranchCode <> 301
                            UNION ALL
                             SELECT Object_Goods.Id AS GoodsId
                                  , CASE WHEN inIsGoodsComplete = FALSE THEN zc_Enum_GoodsKind_Main() ELSE zc_Enum_GoodsKind_Main() END  AS GoodsKindId
@@ -212,14 +218,35 @@ BEGIN
                                  , 0            AS Amount_Order
                                  , 0            AS Amount_Weighing
                                  , 0            AS MovementId_Promo
-                                 , (SELECT lpGet.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (vbOperDate_price, vbPriceListId, vbGoodsId) AS lpGet) AS Price
+                                 , tmp.Price
                                  , 1 AS CountForPrice -- плохое решение
                                  , FALSE AS isTare
-                            FROM (SELECT vbGoodsId AS GoodsId, zc_GoodsKind_Basis() AS GoodsKindId WHERE vbGoodsId <> 0
+                            FROM (-- По коду
+                                  SELECT vbGoodsId AS GoodsId, zc_GoodsKind_Basis() AS GoodsKindId
+                                       , (SELECT lpGet.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (vbOperDate_price, vbPriceListId, vbGoodsId) AS lpGet) AS Price
+                                  WHERE vbGoodsId <> 0
                                  UNION ALL
+                                  -- По Названию - Склад Специй
+                                  SELECT Object.Id            AS GoodsId
+                                       , zc_GoodsKind_Basis() AS GoodsKindId
+                                       , 0                    AS Price
+                                  FROM Object
+                                       INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                             ON ObjectLink_Goods_InfoMoney.ObjectId = Object.Id
+                                                            AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                                       INNER JOIN Object_InfoMoney_View AS View_InfoMoney
+                                                                        ON View_InfoMoney.InfoMoneyId            = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                                       AND View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
+                                  WHERE inBranchCode = 301
+                                    AND TRIM (inGoodsName)  <> ''
+                                    AND Object.DescId = zc_Object_Goods() AND Object.isErased = FALSE
+                                    AND UPPER (Object.ValueData) LIKE UPPER ('%' || TRIM (inGoodsName) || '%')
+                                 UNION ALL
+                                  -- По zc_ObjectBoolean_..._ScaleCeh() + zc_ObjectBoolean_..._Order
                                   SELECT DISTINCT
                                          ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     AS GoodsId
                                        , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId AS GoodsKindId
+                                       , 0                                                   AS Price
                                   FROM ObjectBoolean AS ObjectBoolean_ScaleCeh
                                        INNER JOIN Object AS Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.Id = ObjectBoolean_ScaleCeh.ObjectId AND Object_GoodsByGoodsKind.isErased = FALSE
                                        INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
@@ -280,7 +307,9 @@ BEGIN
             , Object_GoodsKind.ValueData  AS GoodsKindName_max
             , Object_Measure.Id           AS MeasureId
             , Object_Measure.ValueData    AS MeasureName
-            , CASE WHEN Object_Measure.Id = zc_Measure_Kg()
+            , CASE WHEN inBranchCode = 301
+                        THEN 0
+                   WHEN Object_Measure.Id = zc_Measure_Kg()
                         THEN CASE WHEN inIsGoodsComplete = FALSE
                                        THEN COALESCE (tmpChangePercentAmount.ChangePercentAmount, 0)
                                   ELSE 1
@@ -288,11 +317,11 @@ BEGIN
                    ELSE 0
               END :: TFloat AS ChangePercentAmount
             , tmpMI.Amount_Order :: TFloat    AS Amount_Order
-            , (tmpMI.Amount_Order * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat    AS Amount_OrderWeight
+            , (tmpMI.Amount_Order * CASE WHEN inBranchCode = 301 THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat    AS Amount_OrderWeight
             , tmpMI.Amount_Weighing :: TFloat AS Amount_Weighing
-            , (tmpMI.Amount_Weighing * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS Amount_WeighingWeight
+            , (tmpMI.Amount_Weighing * CASE WHEN inBranchCode = 301 THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS Amount_WeighingWeight
             , (tmpMI.Amount_Order - tmpMI.Amount_Weighing) :: TFloat AS Amount_diff
-            , ((tmpMI.Amount_Order - tmpMI.Amount_Weighing)  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS Amount_diffWeight
+            , ((tmpMI.Amount_Order - tmpMI.Amount_Weighing)  * CASE WHEN inBranchCode = 301 THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS Amount_diffWeight
             , CASE WHEN tmpMI.Amount_Weighing > tmpMI.Amount_Order
                         THEN CASE WHEN tmpMI.Amount_Order = 0
                                        THEN TRUE

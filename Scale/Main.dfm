@@ -37,7 +37,7 @@ object MainForm: TMainForm
       BevelOuter = bvNone
       TabOrder = 0
       object bbDeleteItem: TSpeedButton
-        Left = 229
+        Left = 286
         Top = 2
         Width = 31
         Height = 29
@@ -87,7 +87,7 @@ object MainForm: TMainForm
         OnClick = bbDeleteItemClick
       end
       object bbExit: TSpeedButton
-        Left = 550
+        Left = 607
         Top = 2
         Width = 31
         Height = 29
@@ -105,7 +105,7 @@ object MainForm: TMainForm
         ShowHint = True
       end
       object bbRefresh: TSpeedButton
-        Left = 409
+        Left = 466
         Top = 2
         Width = 31
         Height = 29
@@ -123,7 +123,7 @@ object MainForm: TMainForm
         ShowHint = True
       end
       object bbRefreshZakaz: TSpeedButton
-        Left = 599
+        Left = 656
         Top = 2
         Width = 31
         Height = 29
@@ -142,7 +142,7 @@ object MainForm: TMainForm
         Visible = False
       end
       object bbChangeNumberTare: TSpeedButton
-        Left = 148
+        Left = 205
         Top = 2
         Width = 31
         Height = 29
@@ -161,7 +161,7 @@ object MainForm: TMainForm
         OnClick = bbChangeNumberTareClick
       end
       object bbChangeLevelNumber: TSpeedButton
-        Left = 179
+        Left = 236
         Top = 2
         Width = 31
         Height = 29
@@ -180,7 +180,7 @@ object MainForm: TMainForm
         OnClick = bbChangeLevelNumberClick
       end
       object bbExportToEDI: TSpeedButton
-        Left = 658
+        Left = 705
         Top = 2
         Width = 31
         Height = 29
@@ -199,7 +199,7 @@ object MainForm: TMainForm
         Visible = False
       end
       object bbChoice_UnComlete: TSpeedButton
-        Left = 327
+        Left = 384
         Top = 2
         Width = 31
         Height = 29
@@ -227,7 +227,7 @@ object MainForm: TMainForm
         OnClick = bbChoice_UnComleteClick
       end
       object bbView_all: TSpeedButton
-        Left = 358
+        Left = 415
         Top = 2
         Width = 31
         Height = 29
@@ -255,7 +255,7 @@ object MainForm: TMainForm
         OnClick = bbView_allClick
       end
       object bbChangeCountPack: TSpeedButton
-        Left = 86
+        Left = 143
         Top = 2
         Width = 31
         Height = 29
@@ -274,7 +274,7 @@ object MainForm: TMainForm
         OnClick = bbChangeCountPackClick
       end
       object bbChangeHeadCount: TSpeedButton
-        Left = 5
+        Left = 62
         Top = 2
         Width = 31
         Height = 29
@@ -293,7 +293,7 @@ object MainForm: TMainForm
         OnClick = bbChangeHeadCountClick
       end
       object bbChangeBoxCount: TSpeedButton
-        Left = 117
+        Left = 174
         Top = 2
         Width = 31
         Height = 29
@@ -312,7 +312,7 @@ object MainForm: TMainForm
         OnClick = bbChangeBoxCountClick
       end
       object bbChangePartionGoods: TSpeedButton
-        Left = 36
+        Left = 93
         Top = 2
         Width = 31
         Height = 29
@@ -331,7 +331,7 @@ object MainForm: TMainForm
         OnClick = bbChangePartionGoodsClick
       end
       object bbSale_Order_all: TSpeedButton
-        Left = 460
+        Left = 517
         Top = 2
         Width = 31
         Height = 29
@@ -355,7 +355,7 @@ object MainForm: TMainForm
         OnClick = bbSale_Order_allClick
       end
       object bbSale_Order_diff: TSpeedButton
-        Left = 497
+        Left = 554
         Top = 2
         Width = 31
         Height = 29
@@ -374,7 +374,7 @@ object MainForm: TMainForm
         OnClick = bbSale_Order_diffClick
       end
       object SpeedButton1: TSpeedButton
-        Left = 279
+        Left = 336
         Top = 2
         Width = 31
         Height = 29
@@ -393,7 +393,7 @@ object MainForm: TMainForm
         OnClick = SpeedButton1Click
       end
       object bbReestrKind_PartnerOut: TSpeedButton
-        Left = 714
+        Left = 748
         Top = 2
         Width = 31
         Height = 29
@@ -437,7 +437,7 @@ object MainForm: TMainForm
         ShowHint = True
       end
       object SpeedButton2: TSpeedButton
-        Left = 756
+        Left = 782
         Top = 2
         Width = 31
         Height = 29
@@ -481,7 +481,7 @@ object MainForm: TMainForm
         ShowHint = True
       end
       object SpeedButton3: TSpeedButton
-        Left = 797
+        Left = 816
         Top = 2
         Width = 31
         Height = 29
@@ -521,6 +521,50 @@ object MainForm: TMainForm
           FF000000FF000000FF00FF00FF000000FF000000FF00FF00FF00FF00FF00FF00
           FF0000000000000000000000000000000000FF00FF00FF00FF00FF00FF00FF00
           FF00FF00FF000000FF000000FF000000FF00FF00FF00FF00FF00}
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object SpeedButton4: TSpeedButton
+        Left = 15
+        Top = 2
+        Width = 31
+        Height = 29
+        Action = actReestrReturnStart
+        Glyph.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000000000000000000000000000000000000FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF0000000000000000000000
+          0000000000000000000000000000000000000000000000000000FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF0000000000FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0000000000FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF0000000000FFFFFF000000
+          000000000000FFFFFF000000000000000000FFFFFF0000000000FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF0000000000FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0000000000FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF0000000000FFFFFF000000
+          000000000000FFFFFF000000000000000000FFFFFF0000000000FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF0000000000FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0000000000FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF0084000000840000008400
+          0000840000008400000084000000840000008400000084000000FF00FF00FF00
+          FF0000000000000000000000000000000000FF00FF0084000000840000008400
+          0000840000008400000084000000840000008400000084000000FF00FF00FF00
+          FF000000000000FFFF0000FFFF0000000000FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000
+          00000000000000FFFF0000FFFF00000000000000000000000000FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF000000000000FF
+          FF0000FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000000000FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF000000000000FF
+          FF0000FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000000000FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00000000000000
+          00000000000000FFFF0000FFFF00000000000000000000000000FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+          FF000000000000FFFF0000FFFF0000000000FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+          FF0000000000000000000000000000000000FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00}
         ParentShowHint = False
         ShowHint = True
       end
@@ -1070,11 +1114,12 @@ object MainForm: TMainForm
       object BarCodeLabel: TLabel
         Left = 1
         Top = 1
-        Width = 59
+        Width = 128
         Height = 14
         Align = alTop
         Alignment = taCenter
         Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
+        ExplicitWidth = 59
       end
       object EditBarCode: TcxCurrencyEdit
         Left = 5
@@ -1111,11 +1156,12 @@ object MainForm: TMainForm
       object ScaleLabel: TLabel
         Left = 1
         Top = 1
-        Width = 91
+        Width = 128
         Height = 14
         Align = alTop
         Alignment = taCenter
         Caption = 'Scale.Active = ???'
+        ExplicitWidth = 91
       end
       object PanelWeight_Scale: TPanel
         Left = 1
@@ -1156,11 +1202,12 @@ object MainForm: TMainForm
       object LabelCountPack: TLabel
         Left = 1
         Top = 1
-        Width = 87
+        Width = 128
         Height = 14
         Align = alTop
         Alignment = taCenter
         Caption = #1050#1086#1083'-'#1074#1086' '#1087#1072#1082#1077#1090#1086#1074
+        ExplicitWidth = 87
       end
       object EditCountPack: TcxCurrencyEdit
         Left = 5
@@ -1184,11 +1231,12 @@ object MainForm: TMainForm
       object HeadCountLabel: TLabel
         Left = 1
         Top = 1
-        Width = 75
+        Width = 128
         Height = 14
         Align = alTop
         Alignment = taCenter
         Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
+        ExplicitWidth = 75
       end
       object EditHeadCount: TcxCurrencyEdit
         Left = 5
@@ -1212,7 +1260,7 @@ object MainForm: TMainForm
       object LabelPartionGoods: TLabel
         Left = 1
         Top = 1
-        Width = 119
+        Width = 128
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -1223,6 +1271,7 @@ object MainForm: TMainForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 119
       end
       object EditPartionGoods: TEdit
         Left = 6
@@ -1250,11 +1299,12 @@ object MainForm: TMainForm
       object Label1: TLabel
         Left = 1
         Top = 1
-        Width = 99
+        Width = 128
         Height = 14
         Align = alTop
         Alignment = taCenter
         Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1072#1103' '#1090#1072#1088#1072
+        ExplicitWidth = 99
       end
       object Panel2: TPanel
         Left = 65
@@ -1267,7 +1317,7 @@ object MainForm: TMainForm
         object Label2: TLabel
           Left = 0
           Top = 0
-          Width = 36
+          Width = 64
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -1278,6 +1328,7 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 36
         end
         object EditBoxCount: TcxCurrencyEdit
           Left = 5
@@ -1302,7 +1353,7 @@ object MainForm: TMainForm
         object Label3: TLabel
           Left = 0
           Top = 0
-          Width = 19
+          Width = 64
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -1313,6 +1364,7 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 19
         end
         object EditBoxCode: TcxCurrencyEdit
           Left = 2
@@ -1339,7 +1391,7 @@ object MainForm: TMainForm
       object Label17: TLabel
         Left = 1
         Top = 1
-        Width = 59
+        Width = 128
         Height = 14
         Align = alTop
         Caption = '   '#1057#1084#1077#1085#1072' '#1079#1072
@@ -1349,6 +1401,7 @@ object MainForm: TMainForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 59
       end
       object OperDateEdit: TcxDateEdit
         Left = 5
@@ -1389,7 +1442,7 @@ object MainForm: TMainForm
         object BarCodeTransportLabel: TLabel
           Left = 0
           Top = 0
-          Width = 113
+          Width = 128
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -1400,6 +1453,7 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 113
         end
         object EditBarCodeTransport: TcxButtonEdit
           Left = 4
@@ -1436,7 +1490,7 @@ object MainForm: TMainForm
         object CarLabel: TLabel
           Left = 0
           Top = 0
-          Width = 65
+          Width = 128
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -1447,6 +1501,7 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 65
         end
         object PanelCar: TPanel
           Left = 0
@@ -1477,7 +1532,7 @@ object MainForm: TMainForm
         object PersonalDriverLabel: TLabel
           Left = 0
           Top = 0
-          Width = 85
+          Width = 128
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -1488,6 +1543,7 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 85
         end
         object PanelPersonalDriver: TPanel
           Left = 0
@@ -1518,7 +1574,7 @@ object MainForm: TMainForm
         object RouteLabel: TLabel
           Left = 0
           Top = 0
-          Width = 46
+          Width = 128
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -1529,6 +1585,7 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 46
         end
         object PanelRoute: TPanel
           Left = 0
@@ -1559,7 +1616,7 @@ object MainForm: TMainForm
         object InvNumberTransportLabel: TLabel
           Left = 0
           Top = 0
-          Width = 71
+          Width = 128
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -1570,6 +1627,7 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 71
         end
         object PanelInvNumberTransport: TPanel
           Left = 0
@@ -1612,7 +1670,7 @@ object MainForm: TMainForm
       object LabelProduction_Goods: TLabel
         Left = 0
         Top = 0
-        Width = 115
+        Width = 0
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -1623,6 +1681,7 @@ object MainForm: TMainForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 115
       end
       object GBProduction_GoodsCode: TGroupBox
         Left = 0
@@ -1719,7 +1778,7 @@ object MainForm: TMainForm
       object LabelTare_Goods: TLabel
         Left = 0
         Top = 0
-        Width = 30
+        Width = 0
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -1730,6 +1789,7 @@ object MainForm: TMainForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 30
       end
       object GBTare_GoodsCode: TGroupBox
         Left = 0
@@ -1988,7 +2048,7 @@ object MainForm: TMainForm
         object LabelPartner: TLabel
           Left = 1
           Top = 1
-          Width = 69
+          Width = 360
           Height = 13
           Align = alTop
           Alignment = taCenter
@@ -1999,6 +2059,7 @@ object MainForm: TMainForm
           Font.Name = 'MS Sans Serif'
           Font.Style = [fsBold]
           ParentFont = False
+          ExplicitWidth = 69
         end
         object PanelPartner: TPanel
           Left = 1
@@ -2030,7 +2091,7 @@ object MainForm: TMainForm
         object PriceListNameLabel: TLabel
           Left = 1
           Top = 1
-          Width = 71
+          Width = 128
           Height = 13
           Align = alTop
           Alignment = taCenter
@@ -2041,6 +2102,7 @@ object MainForm: TMainForm
           Font.Name = 'MS Sans Serif'
           Font.Style = [fsBold]
           ParentFont = False
+          ExplicitWidth = 71
         end
         object PanelPriceList: TPanel
           Left = 1
@@ -2072,7 +2134,7 @@ object MainForm: TMainForm
         object LabelOrderExternal: TLabel
           Left = 1
           Top = 1
-          Width = 66
+          Width = 318
           Height = 13
           Align = alTop
           Alignment = taCenter
@@ -2083,6 +2145,7 @@ object MainForm: TMainForm
           Font.Name = 'MS Sans Serif'
           Font.Style = [fsBold]
           ParentFont = False
+          ExplicitWidth = 66
         end
         object PanelOrderExternal: TPanel
           Left = 1
@@ -2114,7 +2177,7 @@ object MainForm: TMainForm
         object LabelContract: TLabel
           Left = 1
           Top = 1
-          Width = 52
+          Width = 170
           Height = 13
           Align = alTop
           Alignment = taCenter
@@ -2125,6 +2188,7 @@ object MainForm: TMainForm
           Font.Name = 'MS Sans Serif'
           Font.Style = [fsBold]
           ParentFont = False
+          ExplicitWidth = 52
         end
         object PanelContract: TPanel
           Left = 1
@@ -2361,6 +2425,28 @@ object MainForm: TMainForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1080#1079#1091' <'#1055#1086#1083#1091#1095#1077#1085#1086' '#1076#1083#1103' '#1087#1077#1088#1077#1076#1077#1083#1082#1080'>'
       FormName = 'TReestrUpdateMovementForm'
       FormNameParam.Value = 'TReestrUpdateMovementForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inReestrKindId'
+          Value = '640044'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inReestrKindName'
+          Value = #1055#1086#1083#1091#1095#1077#1085#1086' '#1076#1083#1103' '#1087#1077#1088#1077#1076#1077#1083#1082#1080
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actReestrReturnStart: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Hint = #1057#1086#1079#1076#1072#1090#1100' '#1056#1077#1077#1089#1090#1088' '#1074#1086#1079#1074#1088#1072#1090#1086#1074' <('#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072')>'
+      FormName = 'TReestrReturnStartMovementForm'
+      FormNameParam.Value = 'TReestrReturnStartMovementForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

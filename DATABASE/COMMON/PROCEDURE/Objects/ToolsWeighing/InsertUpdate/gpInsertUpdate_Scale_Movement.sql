@@ -18,7 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Scale_Movement(
     IN inPaidKindId           Integer   , -- Форма оплаты
     IN inPriceListId          Integer   , -- 
     IN inMovementId_Order     Integer   , -- ключ Документа заявка
-    IN inMovementId_Transport Integer   , -- ключ Документа
+    IN inMovementId_Transport Integer   , -- ключ Документа ИЛИ - криво - через этот прараметр передаем - Через кого поступил возврат
     IN inChangePercent        TFloat    , -- (-)% Скидки (+)% Наценки
     IN inBranchCode           Integer   , -- 
     IN inSession              TVarChar    -- сессия пользователя
@@ -109,11 +109,19 @@ BEGIN
                                                    , inPriceListId         := CASE WHEN vbPriceListId_Dnepr <> 0 THEN vbPriceListId_Dnepr ELSE inPriceListId END
                                                    , inPaidKindId          := inPaidKindId
                                                    , inMovementId_Order    := inMovementId_Order
-                                                   , inMovementId_Transport:= inMovementId_Transport
+                                                   , inMovementId_Transport:= CASE WHEN inMovementDescId = zc_Movement_ReturnIn() THEN 0 ELSE inMovementId_Transport END
                                                    , inPartionGoods        := '' :: TVarChar
                                                    , inChangePercent       := inChangePercent
                                                    , inSession             := inSession
                                                     );
+
+     -- дописали св-во - Через кого поступил возврат
+     IF inMovementId_Transport <> 0 AND inMovementDescId = zc_Movement_ReturnIn() AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inMovementId_Transport)
+     THEN
+          -- сохранили связь с <Физические лица(Водитель/экспедитор)> 
+          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Member(), inId, (SELECT Object_Personal_View.MemberId FROM Object_Personal_View WHERE Object_Personal_View.PersonalId = inMovementId_Transport));
+     END IF;
+
 
      -- Результат
      RETURN QUERY

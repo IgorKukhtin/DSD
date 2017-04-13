@@ -230,6 +230,17 @@ begin
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName_max').Index].VisibleForCustomization:= (rgGoodsKind.Items.Count > 1) and (execParamsMovement.ParamByName('OrderExternalId').AsInteger = 0);
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindId_list').Index].VisibleForCustomization:= (rgGoodsKind.Items.Count > 1) and (execParamsMovement.ParamByName('OrderExternalId').AsInteger = 0);
 
+  if SettingMain.BranchCode = 301 then
+  begin
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isPromo').Index].Visible:= false;
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price').Index].Visible:= false;
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price_Return').Index].Visible:= false;
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount_Weighing').Index].Caption:= 'Расход';
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount_WeighingWeight').Index].Caption:= 'Расход (кол-во)';
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount_OrderWeight').Index].Caption:= 'Заявка (кол-во)';
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount_diffWeight').Index].Caption:= 'Разница (кол-во)';
+  end;
+
   if ParamsMI.ParamByName('GoodsId').AsInteger<>0
   then begin
             CDS.Filter:='GoodsId = '+ParamsMI.ParamByName('GoodsId').AsString;
