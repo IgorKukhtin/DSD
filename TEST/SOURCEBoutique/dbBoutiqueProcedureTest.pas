@@ -23,6 +23,7 @@ type
   TdbMovementProcedureTest = class(TdbTest)
   published
     procedure CreateCOMMON;
+    procedure CreateIncome;
   end;
 
 type
@@ -127,6 +128,11 @@ begin
   DirectoryLoad(CommonProcedurePath + 'Movement\_COMMON\');
 end;
 
+
+procedure TdbMovementProcedureTest.CreateIncome;
+begin
+  DirectoryLoad(CommonProcedurePath + 'Movement\Income\');
+end;
 
 { TdbObjectProcedureTest }
 procedure TdbObjectProcedureTest.CreateAccountDirection;
