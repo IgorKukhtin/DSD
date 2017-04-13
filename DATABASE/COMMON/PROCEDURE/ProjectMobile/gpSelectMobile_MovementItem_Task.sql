@@ -45,7 +45,7 @@ BEGIN
                   JOIN MovementItem AS MI_Task
                                     ON MI_Task.MovementId = Movement_Task.Id
                                    AND MI_Task.DescId = zc_MI_Master()
-                                   AND NOT MI_Task.isErased
+                                   AND MI_Task.isErased = false
                   LEFT JOIN MovementItemBoolean AS MIBoolean_Close
                                                 ON MIBoolean_Close.MovementItemId = MI_Task.Id
                                                AND MIBoolean_Close.DescId = zc_MIBoolean_Close()

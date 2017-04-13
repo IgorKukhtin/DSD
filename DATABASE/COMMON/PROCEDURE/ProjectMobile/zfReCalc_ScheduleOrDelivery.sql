@@ -12,17 +12,13 @@ $BODY$
    DECLARE vbisDelivery Boolean;
 BEGIN
       vbisDelivery:= COALESCE (inisDelivery, false);
-      vbSchedule:= CASE WHEN COALESCE (inSchedule, '') = '' THEN 't;t;t;t;t;t;t' ELSE inSchedule END;
+      vbSchedule:= CASE WHEN COALESCE (inSchedule, '') = '' THEN 'f;f;f;f;f;f;f' ELSE inSchedule END;
+      vbDelivery:= COALESCE (inDelivery, '');
 
-      IF inDelivery IS NULL
-      THEN -- если график посещения задан, а график завоза NULL, тогда рассчитываем график завоза на основании 
+      IF vbDelivery = ''
+      THEN -- если график посещения задан, а график завоза не задан, тогда рассчитываем график завоза на основании 
            -- графика посещения со сдвигом вперед по дням
-           IF CHAR_LENGTH (vbSchedule) > 12
-           THEN
-                vbDelivery:= SUBSTRING (vbSchedule FROM 13 FOR 1) || ';' || SUBSTRING (vbSchedule FROM 1 FOR 11);
-           ELSE
-                vbDelivery:= 'f;' || SUBSTRING (vbSchedule FROM 1 FOR CHAR_LENGTH (vbSchedule));
-           END IF; 
+           vbDelivery:= CASE WHEN CHAR_LENGTH (vbSchedule) > 12 THEN SUBSTRING (vbSchedule FROM 13 FOR 1) || ';' ELSE 'f;' END || SUBSTRING (vbSchedule FROM 1 FOR 11);
       END IF;
 
       -- Результат 
@@ -45,7 +41,7 @@ $BODY$
    UNION ALL
    SELECT * FROM zfReCalc_ScheduleOrDelivery (inSchedule:= 't;f;t;t;f;t;f', inDelivery:= NULL, inisDelivery:= true)
    UNION ALL
-   SELECT * FROM zfReCalc_ScheduleOrDelivery (inSchedule:= 't;f;t;t;f;t;f;t;f', inDelivery:= NULL, inisDelivery:= true)
+   SELECT * FROM zfReCalc_ScheduleOrDelivery (inSchedule:= 't;f;t;t;f;t;f;t;f', inDelivery:= '', inisDelivery:= true)
    UNION ALL
    SELECT * FROM zfReCalc_ScheduleOrDelivery (inSchedule:= 't;f;t;t;f;t;f;t;f', inDelivery:= NULL, inisDelivery:= false)
 */
