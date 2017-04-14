@@ -646,8 +646,10 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
           object clGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 60
           end
           object clMeasureName: TcxGridDBColumn
