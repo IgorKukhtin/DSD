@@ -206,8 +206,8 @@ BEGIN
                                                , inAmount          := _tmpResult.Amount
                                                , inAmountChoice    := _tmpResult.AmountChoice
                                                , inGoodsKindId_List:= _tmpResult.GoodsKindId_List ::TVarChar
-                                               , inLastDate        := CURRENT_TIMESTAMP
-                                               , inisLast          := False  
+                                               , inLastDate        := _tmpResult.OperDate
+                                               , inisLast          := _tmpResult.isLast
                                                , inisErased        := _tmpList.isErased
                                                , inUserId          := vbUserId
                                                 )
