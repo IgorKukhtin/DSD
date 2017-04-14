@@ -559,6 +559,8 @@ type
     cdsOrderExternalStatusId: TIntegerField;
     cdsStoreRealsStatusId: TIntegerField;
     cdsReturnInStatusId: TIntegerField;
+    qryGoodsForPriceListStartDate: TDateTimeField;
+    qryGoodsForPriceListTermin: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
   private
@@ -1896,14 +1898,14 @@ begin
 
             if FieldByName('Debet').AsFloat <> 0 then
             begin
-              DM.cdsJuridicalCollationDebet.AsString := FormatFloat('0.##', FieldByName('Debet').AsFloat);
+              DM.cdsJuridicalCollationDebet.AsString := FormatFloat(',0.##', FieldByName('Debet').AsFloat);
               DM.cdsJuridicalCollationFromToName.AsString := 'От кого: ' + DM.cdsJuridicalCollationFromName.AsString;
             end
             else
               DM.cdsJuridicalCollationDebet.AsString := '';
             if FieldByName('Kredit').AsFloat <> 0 then
             begin
-              DM.cdsJuridicalCollationKredit.AsString := FormatFloat('0.##', FieldByName('Kredit').AsFloat);
+              DM.cdsJuridicalCollationKredit.AsString := FormatFloat(',0.##', FieldByName('Kredit').AsFloat);
               DM.cdsJuridicalCollationFromToName.AsString := 'Кому: ' + DM.cdsJuridicalCollationToName.AsString;
             end
             else
@@ -1929,10 +1931,10 @@ begin
       begin
         Synchronize(procedure
           begin
-            frmMain.lStartRemains.Text := 'Сальдо на начало периода: ' + FormatFloat('0.00', StartRemains);
-            frmMain.lEndRemains.Text := 'Сальдо на конец периода: ' + FormatFloat('0.00', EndRemains);
-            frmMain.lTotalDebit.Text := FormatFloat('0.00', TotalDebit);
-            frmMain.lTotalKredit.Text := FormatFloat('0.00', TotalKredit);
+            frmMain.lStartRemains.Text := 'Сальдо на начало периода: ' + FormatFloat(',0.00', StartRemains);
+            frmMain.lEndRemains.Text := 'Сальдо на конец периода: ' + FormatFloat(',0.00', EndRemains);
+            frmMain.lTotalDebit.Text := FormatFloat(',0.00', TotalDebit);
+            frmMain.lTotalKredit.Text := FormatFloat(',0.00', TotalKredit);
 
             frmMain.lwJuridicalCollation.ScrollViewPos := 0;
           end);
@@ -2484,17 +2486,19 @@ var
 begin
   if qryPriceListPriceWithVAT.AsBoolean then
   begin
-    PriceWithoutVat := FormatFloat('0.00', DataSet.FieldByName('Price').AsFloat * 100 / (100 + qryPriceListVATPercent.AsFloat));
-    PriceWithVat := FormatFloat('0.00', DataSet.FieldByName('Price').AsFloat);
+    PriceWithoutVat := FormatFloat(',0.00', DataSet.FieldByName('Price').AsFloat * 100 / (100 + qryPriceListVATPercent.AsFloat));
+    PriceWithVat := FormatFloat(',0.00', DataSet.FieldByName('Price').AsFloat);
   end
   else
   begin
-    PriceWithoutVat := FormatFloat('0.00', DataSet.FieldByName('Price').AsFloat);
-    PriceWithVat := FormatFloat('0.00', DataSet.FieldByName('Price').AsFloat * (100 + qryPriceListVATPercent.AsFloat) / 100);
+    PriceWithoutVat := FormatFloat(',0.00', DataSet.FieldByName('Price').AsFloat);
+    PriceWithVat := FormatFloat(',0.00', DataSet.FieldByName('Price').AsFloat * (100 + qryPriceListVATPercent.AsFloat) / 100);
   end;
 
   DataSet.FieldByName('FullPrice').AsString := 'Цена: ' + PriceWithoutVat +' (с НДС ' + PriceWithVat +
     ') за ' + DataSet.FieldByName('Measure').AsString;
+
+  DataSet.FieldByName('Termin').AsString := 'Цена действительна с ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('StartDate').AsDateTime);
 end;
 
 { получение текущей версии программы }
@@ -3072,8 +3076,8 @@ begin
       cdsOrderExternalOperDate.AsDateTime := OperDate;
       cdsOrderExternalComment.AsString := Comment;
       cdsOrderExternalName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', OperDate);
-      cdsOrderExternalPrice.AsString :=  'Стоимость: ' + FormatFloat('0.00', ToralPrice);
-      cdsOrderExternalWeigth.AsString := 'Вес: ' + FormatFloat('0.00', TotalWeight);
+      cdsOrderExternalPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', ToralPrice);
+      cdsOrderExternalWeigth.AsString := 'Вес: ' + FormatFloat(',0.00', TotalWeight);
       if Complete then
       begin
         cdsOrderExternalStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
@@ -3131,8 +3135,8 @@ begin
       cdsOrderExternalOperDate.AsDateTime := qryOrderExternal.FieldByName('OPERDATE').AsDateTime;
       cdsOrderExternalComment.AsString := qryOrderExternal.FieldByName('COMMENT').AsString;
       cdsOrderExternalName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', qryOrderExternal.FieldByName('OPERDATE').AsDateTime);
-      cdsOrderExternalPrice.AsString :=  'Стоимость: ' + FormatFloat('0.00', qryOrderExternal.FieldByName('TOTALSUMM').AsFloat);
-      cdsOrderExternalWeigth.AsString := 'Вес: ' + FormatFloat('0.00', qryOrderExternal.FieldByName('TOTALCOUNTKG').AsFloat);
+      cdsOrderExternalPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', qryOrderExternal.FieldByName('TOTALSUMM').AsFloat);
+      cdsOrderExternalWeigth.AsString := 'Вес: ' + FormatFloat(',0.00', qryOrderExternal.FieldByName('TOTALCOUNTKG').AsFloat);
 
       if qryOrderExternal.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Complete.AsInteger then
         cdsOrderExternalStatus.AsString := tblObject_ConstStatusName_Complete.AsString
@@ -3191,7 +3195,7 @@ begin
       if Recommend <= 0 then
         cdsOrderItemsRecommend.AsString := '0'
       else
-        cdsOrderItemsRecommend.AsString := FormatFloat('0.00', Recommend);
+        cdsOrderItemsRecommend.AsString := FormatFloat(',0.00', Recommend);
     end;
   end;
 
@@ -3525,8 +3529,8 @@ begin
       cdsReturnInOperDate.AsDateTime := OperDate;
       cdsReturnInComment.AsString := Comment;
       cdsReturnInName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', OperDate);
-      cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat('0.00', ToralPrice);
-      cdsReturnInWeigth.AsString := 'Вес: ' + FormatFloat('0.00', TotalWeight);
+      cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', ToralPrice);
+      cdsReturnInWeigth.AsString := 'Вес: ' + FormatFloat(',0.00', TotalWeight);
 
       if Complete then
       begin
@@ -3585,8 +3589,8 @@ begin
       cdsReturnInOperDate.AsDateTime := qryReturnIn.FieldByName('OPERDATE').AsDateTime;
       cdsReturnInComment.AsString := qryReturnIn.FieldByName('COMMENT').AsString;
       cdsReturnInName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', qryReturnIn.FieldByName('OPERDATE').AsDateTime);
-      cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat('0.00', qryReturnIn.FieldByName('TOTALSUMMPVAT').AsFloat);
-      cdsReturnInWeigth.AsString := 'Вес: ' + FormatFloat('0.00', qryReturnIn.FieldByName('TOTALCOUNTKG').AsFloat);
+      cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', qryReturnIn.FieldByName('TOTALSUMMPVAT').AsFloat);
+      cdsReturnInWeigth.AsString := 'Вес: ' + FormatFloat(',0.00', qryReturnIn.FieldByName('TOTALCOUNTKG').AsFloat);
 
       if qryReturnIn.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Complete.AsInteger then
         cdsReturnInStatus.AsString := tblObject_ConstStatusName_Complete.AsString

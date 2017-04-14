@@ -235,10 +235,15 @@ CREATE OR REPLACE FUNCTION zc_Object_Label() RETURNS Integer AS $BODY$BEGIN RETU
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Label', 'Название для ценника' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Label');
 
+CREATE OR REPLACE FUNCTION zc_Object_Status() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Status'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_Status', 'Статусы документов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Status');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.   Воробкало А. А.
+13.04.17                                                          *
 10.03.17                                                          *
 02.03.17                                                          *
 28.02.17                                                          * 

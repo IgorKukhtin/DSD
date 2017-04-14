@@ -657,6 +657,22 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             HeaderAlignmentVert = vaCenter
             Width = 35
           end
+          object PartnerCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'PartnerCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object PartnerName: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'PartnerName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 152
+          end
           object CountDays: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081
             DataBinding.FieldName = 'CountDays'
@@ -1175,6 +1191,93 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actPrint1: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42005d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42005d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
+      ImageIndex = 3
+      DataSets = <
+        item
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'GoodsGroupNameFull;PartnerName;GoodsName;GoodsKindName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = UnitGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1076#1083#1103' '#1089#1085#1072#1073#1078#1077#1085#1080#1103'('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1076#1083#1103' '#1089#1085#1072#1073#1078#1077#1085#1080#1103'('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -1262,6 +1365,14 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Real'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1270,8 +1381,9 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         end>
     end
     object bbPrint_Real: TdxBarButton
-      Action = actPrint_Real
+      Action = actPrint1
       Category = 0
+      ImageIndex = 19
     end
     object bbPrint: TdxBarButton
       Action = actPrint

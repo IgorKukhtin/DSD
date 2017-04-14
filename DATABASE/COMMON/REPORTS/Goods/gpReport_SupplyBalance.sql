@@ -14,6 +14,8 @@ RETURNS TABLE (GoodsCode Integer, GoodsName TVarChar
              , MeasureName TVarChar
              , GoodsGroupNameFull TVarChar
              , GoodsGroupName TVarChar
+             , PartnerCode Integer
+             , PartnerName TVarChar
              , CountDays Integer
              , RemainsStart TFloat
              , RemainsEnd TFloat
@@ -50,7 +52,7 @@ BEGIN
 
      RETURN QUERY
      WITH 
-    tmpContainer AS (SELECT tmp.GoodsId, tmp.goodskindid
+    tmpContainer AS (SELECT tmp.GoodsId, tmp.goodskindid, tmp.PartnerId
                           , SUM (tmp.StartAmount)        AS RemainsStart 
                           , SUM (tmp.EndAmount)          AS RemainsEnd 
                           , SUM (tmp.CountIncome + tmp.CountSendIn)         AS CountIncome
@@ -59,6 +61,7 @@ BEGIN
                           , SUM (tmp.CountSendOut)       AS CountSendOut
                      FROM (SELECT Container.ObjectId                     AS GoodsId
                                 , COALESCE (CLO_GoodsKind.ObjectId, 0)   AS GoodsKindId
+                                , MIContainer.ObjectExtId_Analyzer       AS PartnerId
                                 , Container.Amount 
                                 , Container.Amount - SUM (COALESCE(MIContainer.Amount, 0))  AS StartAmount
                                 , Container.Amount - SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS EndAmount
@@ -97,9 +100,31 @@ BEGIN
                              AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                             -- AND Container.ObjectId = 625267
                            GROUP BY Container.ObjectId, GoodsKindId, Container.Amount
+                                  , MIContainer.ObjectExtId_Analyzer
                            HAVING (Container.Amount - COALESCE(SUM (MIContainer.Amount), 0)) <>0 ) AS tmp
-                     GROUP BY tmp.GoodsId, tmp.goodskindid
+                     GROUP BY tmp.GoodsId, tmp.goodskindid, tmp.PartnerId
                      )
+
+, tmpGoodsListIncome AS (SELECT tmpGoods.GoodsId
+                              , ObjectLink_GoodsListIncome_GoodsKind.ChildObjectId AS GoodsKindId
+                              , ObjectLink_GoodsListIncome_Partner.ChildObjectId AS PartnerId
+                         FROM _tmpGoods AS tmpGoods
+                              INNER JOIN ObjectLink AS ObjectLink_GoodsListIncome_Goods
+                                      ON ObjectLink_GoodsListIncome_Goods.ChildObjectId = tmpGoods.GoodsId
+                                     AND ObjectLink_GoodsListIncome_Goods.DescId = zc_ObjectLink_GoodsListIncome_Goods()
+                              LEFT JOIN Object AS Object_GoodsListIncome
+                                     ON Object_GoodsListIncome.Id = ObjectLink_GoodsListIncome_Goods.ObjectId
+                                    AND Object_GoodsListIncome.DescId = zc_Object_GoodsListIncome()
+                              LEFT JOIN ObjectLink AS ObjectLink_GoodsListIncome_GoodsKind
+                                     ON ObjectLink_GoodsListIncome_GoodsKind.ObjectId = Object_GoodsListIncome.Id
+                                    AND ObjectLink_GoodsListIncome_GoodsKind.DescId = zc_ObjectLink_GoodsListIncome_GoodsKind()
+                    --         LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_GoodsListIncome_GoodsKind.ChildObjectId
+                              LEFT JOIN ObjectLink AS ObjectLink_GoodsListIncome_Partner
+                                     ON ObjectLink_GoodsListIncome_Partner.ObjectId = Object_GoodsListIncome.Id
+                                    AND ObjectLink_GoodsListIncome_Partner.DescId = zc_ObjectLink_GoodsListIncome_Partner()
+                    --          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_GoodsListIncome_Partner.ChildObjectId
+                         )
+
 
        -- Результат
        SELECT
@@ -109,6 +134,10 @@ BEGIN
            , Object_Measure.ValueData                   AS MeasureName
            , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
            , Object_GoodsGroup.ValueData                AS GoodsGroupName
+
+           , Object_Partner.ObjectCode                  AS PartnerCode
+           , Object_Partner.ValueData                   AS PartnerName
+
            , vbCountDays                 AS CountDays
 
            , tmpContainer.RemainsStart   :: TFloat
@@ -139,8 +168,12 @@ BEGIN
              END  :: integer AS Color_RemainsDays
 
        FROM tmpContainer
+
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpContainer.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpContainer.GoodsKindId
+          LEFT JOIN tmpGoodsListIncome ON tmpGoodsListIncome.GoodsId = tmpContainer.GoodsId
+
+          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = COALESCE (tmpContainer.PartnerId, tmpGoodsListIncome.PartnerId)
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                                           AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()

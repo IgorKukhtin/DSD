@@ -360,17 +360,10 @@ type
       APartnerMedicalId: Integer; APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP : String;
       AOperDateSP : TDateTime;
       NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
-    //сохраняет чек в реальную базу
-    procedure SaveReal(AUID: String; ANeedComplete: boolean = False);
-
-    //Перечитывает остаток
-    procedure StartRefreshDiffThread;
 
     //проверили что есть остаток
     function fCheck_RemainsError : Boolean;
 
-    //Находит в локальной базе и досылает всечеки
-    procedure SaveRealAll;
     property SoldRegim: boolean read FSoldRegim write SetSoldRegim;
     procedure Thread_Exception(var Msg: TMessage); message UM_THREAD_EXCEPTION;
     procedure ConnectionModeChange(var Msg: TMessage); message UM_LOCAL_CONNECTION;
@@ -383,9 +376,6 @@ type
 
 var
   MainCashForm: TMainCashForm2;
-  CountRRT: Integer = 0;
-  CountSaveThread: Integer = 0;
-  ActualRemainSession: Integer = 0;
   FLocalDataBaseHead : TVKSmartDBF;
   FLocalDataBaseBody : TVKSmartDBF;
   FLocalDataBaseDiff : TVKSmartDBF;  // только 2 форма
@@ -598,7 +588,7 @@ begin
   chbNotMCS.Checked := False;
   UpdateRemainsFromCheck;
   CheckCDS.EmptyDataSet;
-  StartRefreshDiffThread;
+
 end;
 
 procedure TMainCashForm2.actClearMoneyExecute(Sender: TObject);
@@ -872,7 +862,7 @@ begin
                    UID           // out AUID
                   )
       then Begin
-        SaveReal(UID, True);
+
         NewCheck(false);
       End;
            end; // else if fErr = true
@@ -940,8 +930,6 @@ begin
           end;
       //
 
-      if Sender <> nil then
-        InterlockedIncrement(ActualRemainSession); //Фиксируем сессию остатков
       MainGridDBTableView.BeginUpdate;
       RemainsCDS.DisableControls;
       AlternativeCDS.DisableControls;
@@ -1005,7 +993,7 @@ end;
 
 procedure TMainCashForm2.actRefreshRemainsExecute(Sender: TObject);
 begin
-  StartRefreshDiffThread;
+ // было  StartRefreshDiffThread;
 end;
 
 procedure TMainCashForm2.actSaveCashSesionIdToFileExecute(Sender: TObject);  // только 2 форма
@@ -1452,7 +1440,7 @@ begin
               ,UID           // out AUID
               )
   then begin
-    SaveReal(UID);
+
     //
     NewCheck(False);
     //
@@ -1520,7 +1508,7 @@ begin
               ,UID           // out AUID
               )
   then begin
-    SaveReal(UID);
+
     //
     NewCheck(False);
     //
@@ -1644,7 +1632,7 @@ begin
               )
   then begin
     NewCheck(False);
-    SaveReal(UID);
+
   End;
 end;
 
@@ -2697,14 +2685,11 @@ begin
   if Self.Visible then
    Begin
 //     ShowMessage('При работе');
-    if ANeedRemainsRefresh then
-      StartRefreshDiffThread;
    End
   else
    Begin
 //    ShowMessage('При старте');
     actRefreshAllExecute(nil);
-
    End;
   CalcTotalSumm;
   ceAmount.Value := 0;
@@ -2723,8 +2708,6 @@ begin
   End
   else
     CanClose := MessageDlg('Вы действительно хотите выйти?',mtConfirmation,[mbYes,mbCancel], 0) = mrYes;
-  while CountRRT>0 do //Ждем пока закроются все потоки
-    Application.ProcessMessages;
   if CanClose then
   Begin
     try
@@ -3461,7 +3444,9 @@ begin  //+
       sp.Params.Clear;
       sp.Params.AddParam('inIsShowAll',ftBoolean,ptInput,False);
       sp.Execute(False,False);
+      WaitForSingleObject(MutexVip, INFINITE);  // только для формы2;  защищаем так как есть в приложениее и сервисе
       SaveLocalData(ds,Member_lcl);
+      ReleaseMutex(MutexVip);
 
       sp.StoredProcName := 'gpSelect_Movement_CheckVIP';
       sp.Params.Clear;
@@ -3484,21 +3469,6 @@ begin  //+
     freeAndNil(sp);
   end;
 end;
-
-procedure TMainCashForm2.SaveReal(AUID: String; ANeedComplete: boolean = False);
-Begin
- // пустые заглушки используются для совместимости с кодом формы 1
-End;
-
-procedure TMainCashForm2.SaveRealAll;
-begin
-
-end;
-
-procedure TMainCashForm2.StartRefreshDiffThread;
-Begin
-
-End;
 
 procedure TMainCashForm2.SetSoldRegim(const Value: boolean);
 begin
@@ -3621,7 +3591,7 @@ begin
                 // Сохранили список ВСЕХ документов - с типом "Не подтвержден"
                 MovementId_BlinkVIP:= lMovementId_BlinkVIP;
                 // "не самое долгое" обновление грида
-                StartRefreshDiffThread;
+
       end;
 
   except
@@ -3686,16 +3656,13 @@ begin
         spUpdate_UnitForFarmacyCash.Execute;
     except end;
     //
-    //еще сохраним чеки, если они есть
-    if not fEmpt then
-      SaveRealAll;
   finally
      //
      TimerSaveAll.Enabled:=True;
   end;
 end;
 
-{ TSaveRealThread } 
+{ TSaveRealThread }
 
 
 

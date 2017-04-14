@@ -633,10 +633,19 @@ object DM: TDM
       FieldName = 'Measure'
       Size = 100
     end
+    object qryGoodsForPriceListStartDate: TDateTimeField
+      FieldName = 'StartDate'
+    end
     object qryGoodsForPriceListFullPrice: TStringField
       FieldKind = fkCalculated
       FieldName = 'FullPrice'
       Size = 200
+      Calculated = True
+    end
+    object qryGoodsForPriceListTermin: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'Termin'
+      Size = 255
       Calculated = True
     end
   end

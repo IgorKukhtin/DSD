@@ -12,7 +12,7 @@ inherited MainCashForm2: TMainCashForm2
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
   ExplicitWidth = 883
-  ExplicitHeight = 450
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
@@ -1656,7 +1656,7 @@ inherited MainCashForm2: TMainCashForm2
       Caption = 'actSetUpdateFromMemdata'
       OnExecute = actSetUpdateFromMemdataExecute
     end
-     object actSetSP: TAction
+    object actSetSP: TAction
       Caption = #1057#1082#1080#1076#1082#1072' '#1087#1086' '#1057#1055
       Hint = #1057#1082#1080#1076#1082#1072' '#1087#1086' '#1057#1055
       ShortCut = 114
