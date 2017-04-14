@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Object_GoodsListIncome  (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,TVarChar)
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_GoodsListIncome (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_GoodsListIncome (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TDateTime, Boolean, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_GoodsListIncome(
     IN inId                Integer   ,    -- ид элемента
@@ -12,6 +13,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_GoodsListIncome(
     IN inAmount            TFloat    ,    -- Кол-во 
     IN inAmountChoice      TFloat    ,    -- Кол-во для МАКС
     IN inGoodsKindId_List  TVarChar  ,    -- Список всех вид товара
+    IN inLastDate          TDateTime ,    -- последняя дата
+    IN inisLast            Boolean   ,    -- последний поставщик
     IN inisErased          Boolean   ,    -- элемент удален Да/нет
     IN inUserId            Integer        -- сессия пользователя
 )
@@ -40,6 +43,12 @@ BEGIN
          PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsListIncome_GoodsKind(), inId, inGoodsKindId_List);
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsListIncome_GoodsKind(), inId, inGoodsKindId_max);
+
+         -- сохранили свойство <последний поставщик>
+         PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsListIncome_Last(), inId, inisLast);
+         -- сохранили свойство <Последняя Дата создания/изменений>
+         PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_GoodsListIncome_Last(), inId, inLastDate);
+
 
          -- сохранили свойство <Дата создания/изменений>
          PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), inId, CURRENT_TIMESTAMP);
@@ -89,6 +98,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.04.17         *
  30.03.17         *
 */
 

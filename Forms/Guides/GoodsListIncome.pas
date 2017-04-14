@@ -42,6 +42,8 @@ type
     GoodsKindCode: TcxGridDBColumn;
     GoodsKindId_List: TcxGridDBColumn;
     AmountChoice: TcxGridDBColumn;
+    clLastDate: TcxGridDBColumn;
+    clisLast: TcxGridDBColumn;
   private
     { Private declarations }
   public

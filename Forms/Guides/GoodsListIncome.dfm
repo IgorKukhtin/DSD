@@ -264,27 +264,9 @@ inherited GoodsListIncomeForm: TGoodsListIncomeForm
             Options.Editing = False
             Width = 86
           end
-          object clIsStandart: TcxGridDBColumn
-            Caption = #1058#1080#1087#1086#1074#1086#1081
-            DataBinding.FieldName = 'isStandart'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 40
-          end
           object clIsPersonal: TcxGridDBColumn
             Caption = 'C'#1083#1091#1078'. '#1079#1072#1087'.'
             DataBinding.FieldName = 'isPersonal'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 40
-          end
-          object clIsDefault: TcxGridDBColumn
-            Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
-            DataBinding.FieldName = 'isDefault'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -300,6 +282,24 @@ inherited GoodsListIncomeForm: TGoodsListIncomeForm
             Options.Editing = False
             Width = 40
           end
+          object clIsDefault: TcxGridDBColumn
+            Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+            DataBinding.FieldName = 'isDefault'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 40
+          end
+          object clIsStandart: TcxGridDBColumn
+            Caption = #1058#1080#1087#1086#1074#1086#1081
+            DataBinding.FieldName = 'isStandart'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 40
+          end
           object clUpdateDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateDate'
@@ -307,6 +307,23 @@ inherited GoodsListIncomeForm: TGoodsListIncomeForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object clisLast: TcxGridDBColumn
+            Caption = #1055#1086#1089#1083#1077#1076#1085#1080#1081' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'isLast'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object clLastDate: TcxGridDBColumn
+            Caption = #1055#1086#1089#1083#1077#1076#1085#1103#1103' '#1076#1072#1090#1072' '#1087#1088#1080#1093'.'
+            DataBinding.FieldName = 'LastDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 60
           end
           object clErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085

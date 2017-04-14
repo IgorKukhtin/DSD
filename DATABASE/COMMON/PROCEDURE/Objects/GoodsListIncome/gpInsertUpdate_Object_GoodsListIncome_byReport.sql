@@ -206,6 +206,8 @@ BEGIN
                                                , inAmount          := _tmpResult.Amount
                                                , inAmountChoice    := _tmpResult.AmountChoice
                                                , inGoodsKindId_List:= _tmpResult.GoodsKindId_List ::TVarChar
+                                               , inLastDate        := CURRENT_TIMESTAMP
+                                               , inisLast          := False  
                                                , inisErased        := _tmpList.isErased
                                                , inUserId          := vbUserId
                                                 )
@@ -228,6 +230,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.04.17         *
  30.03.17         *
 */
 

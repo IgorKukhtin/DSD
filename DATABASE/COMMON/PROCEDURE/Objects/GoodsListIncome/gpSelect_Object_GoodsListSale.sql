@@ -28,6 +28,8 @@ RETURNS TABLE (Id Integer
              , OKPO TVarChar
 
              , UpdateDate TDateTime
+             , LastDate TDateTime
+             , isLast Boolean
              , isDefault Boolean
              , isStandart Boolean
              , isPersonal Boolean
@@ -115,6 +117,9 @@ BEGIN
 
            , ObjectDate_Protocol_Update.ValueData AS UpdateDate
 
+           , ObjectDate_GoodsListIncome_Last.ValueData          ::TDateTime AS LastDate 
+           , COALESCE (ObjectBoolean_GoodsListIncome_Last.ValueData, False) AS isLast
+
            , COALESCE (ObjectBoolean_Default.ValueData, False)  AS isDefault
            , COALESCE (ObjectBoolean_Standart.ValueData, False) AS isStandart
 
@@ -171,9 +176,17 @@ BEGIN
                              ON ObjectDate_Protocol_Update.ObjectId = Object_GoodsListIncome.Id
                             AND ObjectDate_Protocol_Update.DescId = zc_ObjectDate_Protocol_Update()
 
+        LEFT JOIN ObjectDate AS ObjectDate_GoodsListIncome_Last
+                             ON ObjectDate_GoodsListIncome_Last.ObjectId = Object_GoodsListIncome.Id
+                            AND ObjectDate_GoodsListIncome_Last.DescId = zc_ObjectDate_GoodsListIncome_Last()
+
         LEFT JOIN ObjectString AS ObjectString_GoodsKind
                                ON ObjectString_GoodsKind.ObjectId = Object_GoodsListIncome.Id
                               AND ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListIncome_GoodsKind()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsListIncome_Last
+                                ON ObjectBoolean_GoodsListIncome_Last.ObjectId = Object_GoodsListIncome.Id
+                               AND ObjectBoolean_GoodsListIncome_Last.DescId = zc_ObjectBoolean_GoodsListIncome_Last()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
                                 ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
