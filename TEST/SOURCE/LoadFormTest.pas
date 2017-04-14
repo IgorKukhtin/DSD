@@ -694,6 +694,11 @@ end;
 
 procedure TLoadFormTest.LoadOrderIncomeFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderIncomeSnabForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderIncomeSnabForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderIncomeSnabJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderIncomeSnabJournalForm');
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderIncomeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderIncomeJournalForm'));

@@ -1,4 +1,4 @@
-unit OrderIncome;
+unit OrderIncomeSnab;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   cxImageComboBox;
 
 type
-  TOrderIncomeForm = class(TParentForm)
+  TOrderIncomeSnabForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -61,7 +61,6 @@ type
     spInsertUpdateMIMaster: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    colCountForPrice: TcxGridDBColumn;
     bbShowAll: TdxBarButton;
     bbStatic: TdxBarStatic;
     MasterViewAddOn: TdsdDBViewAddOn;
@@ -132,16 +131,14 @@ type
     bbactSetErasedCost: TdxBarButton;
     bbShowErasedCost: TdxBarButton;
     Comment: TcxGridDBColumn;
-    actUnitChoiceForm: TOpenChoiceForm;
-    actAssetChoiceForm: TOpenChoiceForm;
-    actNameBeforeChoiceForm: TOpenChoiceForm;
     edParValue: TcxCurrencyEdit;
     cxLabel24: TcxLabel;
-    cxLabel6: TcxLabel;
-    edOperDatePartner: TcxDateEdit;
     cxLabel4: TcxLabel;
     edUnit: TcxButtonEdit;
     UnitGuides: TdsdGuides;
+    edOperDatePartner: TcxDateEdit;
+    cxLabel6: TcxLabel;
+    actShowAll: TBooleanStoredProcAction;
   private
   public
   end;
@@ -151,6 +148,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TOrderIncomeForm);
+  RegisterClass(TOrderIncomeSnabForm);
 
 end.
