@@ -280,6 +280,14 @@ object IncomeJournalForm: TIncomeJournalForm
         Options.Editing = False
         Width = 70
       end
+      object colInvNumberOrder: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1079#1072#1103#1074#1082#1072
+        DataBinding.FieldName = 'InvNumber_Order_Full'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
       object colOKPO_From: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
         DataBinding.FieldName = 'OKPO_From'
