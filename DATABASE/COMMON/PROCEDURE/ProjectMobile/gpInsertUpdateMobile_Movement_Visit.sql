@@ -18,7 +18,8 @@ AS
 $BODY$
    DECLARE vbId Integer;
    DECLARE vbUserId Integer;
-   DECLARE vbStatusCode Integer;
+   DECLARE vbStatusId Integer;
+   DECLARE vbisInsert Boolean;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -26,13 +27,22 @@ BEGIN
 
       -- получаем Id документа по GUID
       SELECT MovementString_GUID.MovementId 
+           , Movement_Visit.StatusId
       INTO vbId 
+         , vbStatusId
       FROM MovementString AS MovementString_GUID
            JOIN Movement AS Movement_Visit
                          ON Movement_Visit.Id = MovementString_GUID.MovementId
                         AND Movement_Visit.DescId = zc_Movement_Visit()
       WHERE MovementString_GUID.DescId = zc_MovementString_GUID() 
         AND MovementString_GUID.ValueData = inGUID;
+
+      vbisInsert:= (COALESCE (vbId, 0) = 0);
+
+      IF (vbisInsert = false) AND (vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased()))
+      THEN -- если визит проведен или удален, то распроводим
+           PERFORM gpUnComplete_Movement_Visit (inMovementId:= vbId, inSession:= inSession);
+      END IF;
 
       vbId:= lpInsertUpdate_Movement_Visit (ioId:= vbId
                                           , inInvNumber:= inInvNumber
@@ -48,14 +58,18 @@ BEGIN
       -- сохранили свойство <Глобальный уникальный идентификатор>
       PERFORM lpInsertUpdate_MovementString (zc_MovementString_GUID(), vbId, inGUID);
 
-      vbStatusCode:= CASE inStatusId
-                          WHEN zc_Enum_Status_Complete() THEN zc_Enum_StatusCode_Complete()
-                          WHEN zc_Enum_Status_UnComplete() THEN zc_Enum_StatusCode_UnComplete()
-                          WHEN zc_Enum_Status_Erased() THEN zc_Enum_StatusCode_Erased()
-                     END;
+      IF COALESCE (inStatusId, 0) NOT IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+      THEN
+           inStatusId:= zc_Enum_Status_Complete();
+      END IF;
 
-      -- изменили статус документа
-      PERFORM gpUpdate_Status_Visit (vbId, vbStatusCode, inSession);
+      IF inStatusId = zc_Enum_Status_Complete()
+      THEN -- проводим визит
+           PERFORM gpComplete_Movement_Visit (inMovementId:= vbId, inSession:= inSession);
+      ELSIF inStatusId = zc_Enum_Status_Erased()
+      THEN -- удаляем визит
+           PERFORM gpSetErased_Movement_Visit (inMovementId:= vbId, inSession:= inSession);
+      END IF;
 
       RETURN vbId;
 END;

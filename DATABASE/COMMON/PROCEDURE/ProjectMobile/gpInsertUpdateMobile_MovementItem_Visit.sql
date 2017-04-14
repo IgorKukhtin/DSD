@@ -19,6 +19,7 @@ $BODY$
    DECLARE vbId Integer;
    DECLARE vbMovementId Integer;
    DECLARE vbPhotoMobileId Integer;
+   DECLARE vbStatusId Integer;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -26,7 +27,9 @@ BEGIN
 
       -- получаем Id документа по GUID
       SELECT MovementString_GUID.MovementId 
+           , Movement_Visit.StatusId 
       INTO vbMovementId 
+         , vbStatusId
       FROM MovementString AS MovementString_GUID
            JOIN Movement AS Movement_Visit
                          ON Movement_Visit.Id = MovementString_GUID.MovementId
@@ -66,6 +69,11 @@ BEGIN
            vbPhotoMobileId:= lpInsertUpdate_Object (0, zc_Object_PhotoMobile(), 0, TRIM (inPhotoName));
       END IF;
 	    
+      IF vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased())
+      THEN -- если визит проведен или удален, то распроводим
+           PERFORM gpUnComplete_Movement_Visit (inMovementId:= vbMovementId, inSession:= inSession);
+      END IF;
+
       vbId:= lpInsertUpdate_MovementItem_Visit (ioId:= vbId
                                               , inMovementId:= vbMovementId
                                               , inPhotoMobileId:= vbPhotoMobileId
@@ -88,6 +96,9 @@ BEGIN
       ELSE
            PERFORM gpMovementItem_Visit_SetUnErased (vbId, inSession);
       END IF; 
+
+      -- проводим визит
+      PERFORM gpComplete_Movement_Visit (inMovementId:= vbMovementId, inSession:= inSession);
 
       RETURN vbId;
 END;
