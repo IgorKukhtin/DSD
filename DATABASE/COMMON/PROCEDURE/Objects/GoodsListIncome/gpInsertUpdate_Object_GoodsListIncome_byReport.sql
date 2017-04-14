@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_Object_GoodsListIncome_byReport
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsListIncome_byReport (TFloat,TFloat,TFloat,Integer,Integer,Integer,Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsListIncome_byReport (TFloat, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsListIncome_byReport(
