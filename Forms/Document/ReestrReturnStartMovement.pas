@@ -52,6 +52,10 @@ type
     cxLabel5: TcxLabel;
     edInsertName: TcxButtonEdit;
     InsertGuides: TdsdGuides;
+    MemberName_driver: TcxGridDBColumn;
+    MemberCode_driver: TcxGridDBColumn;
+    UnitName_driver: TcxGridDBColumn;
+    PositionName_driver: TcxGridDBColumn;
   private
     { Private declarations }
   public

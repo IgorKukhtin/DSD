@@ -277,7 +277,7 @@ object GuideGoodsForm: TGuideGoodsForm
         end
         object Amount_WeighingWeight: TcxGridDBColumn
           Caption = #1054#1090#1075#1088#1091#1079#1082#1072' ('#1074#1077#1089')'
-          DataBinding.FieldName = 'Amount_Weighing'
+          DataBinding.FieldName = 'Amount_WeighingWeight'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -289,7 +289,7 @@ object GuideGoodsForm: TGuideGoodsForm
         end
         object Amount_diffWeight: TcxGridDBColumn
           Caption = #1056#1072#1079#1085#1080#1094#1072' ('#1074#1077#1089')'
-          DataBinding.FieldName = 'Amount_diff'
+          DataBinding.FieldName = 'Amount_diffWeight'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
