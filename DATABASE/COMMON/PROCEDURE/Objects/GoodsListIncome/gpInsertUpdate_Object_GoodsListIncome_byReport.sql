@@ -23,7 +23,7 @@ BEGIN
 
    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
    CREATE TEMP TABLE _tmpMIContainer (ContainerId Integer, GoodsId Integer, GoodsKindId Integer, PartnerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
-   CREATE TEMP TABLE _tmpResult (GoodsId Integer, GoodsKindId_max Integer, GoodsKindId_List TVarChar, Juridical Integer, ContractId Integer, PartnerId Integer, Amount TFloat, AmountChoice TFloat) ON COMMIT DROP;
+   CREATE TEMP TABLE _tmpResult (GoodsId Integer, GoodsKindId_max Integer, GoodsKindId_List TVarChar, Juridical Integer, ContractId Integer, PartnerId Integer, Amount TFloat, AmountChoice TFloat, OperDate TDateTime, isLast Boolean) ON COMMIT DROP;
    CREATE TEMP TABLE _tmpList (Id Integer, GoodsId Integer, GoodsKindId_max Integer, GoodsKindId_List TVarChar, Juridical Integer, ContractId Integer, PartnerId Integer, Amount TFloat, AmountChoice TFloat, isErased Boolean) ON COMMIT DROP;
 
    -- период для выбора продаж
@@ -90,7 +90,7 @@ BEGIN
              , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)  AS GoodsKindId
              , MIContainer.ObjectExtId_analyzer  AS PartnerId
              , SUM (MIContainer.Amount )         AS Amount
-             , SUM (MIContainer.OperDate )       AS OperDate
+             , MAX (MIContainer.OperDate )       AS OperDate
         FROM MovementItemContainer AS MIContainer
             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
         WHERE MIContainer.OperDate BETWEEN vbStartDate AND vbEndDate
@@ -155,14 +155,14 @@ BEGIN
              , CAST (tmpData.Amount AS NUMERIC (16, 2))     :: TFloat AS Amount
              , CAST (tmpData_all.Amount AS NUMERIC (16, 2)) :: TFloat AS AmountChoice
              , tmpData.OperDate
-             , CASE WHEN tmpData_all_last.GoodsId > 0 THEN TRUE ELSE FALSE END) AS isLast
+             , CASE WHEN tmpData_all_last.GoodsId > 0 THEN TRUE ELSE FALSE END AS isLast
         FROM (SELECT tmpData_all.GoodsId
                    , STRING_AGG (tmpData_all.GoodsKindId ::TVarChar, ',') AS GoodsKindId_List
                    , tmpData_all.PartnerId
                    , tmpData_all.Juridical
                    , tmpData_all.ContractId
-                   , SUM (tmpData_all.Amount) AS Amount
-                   , MAX (tmpData_all.Amount) AS Amount
+                   , SUM (tmpData_all.Amount)   AS Amount
+                   , MAX (tmpData_all.OperDate) AS OperDate
               FROM tmpData_all
              GROUP BY  tmpData_all.GoodsId
                      , tmpData_all.PartnerId
