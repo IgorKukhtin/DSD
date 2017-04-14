@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_Object_GoodsListIncome_byReport
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsListIncome_byReport (TFloat,TFloat,TFloat,Integer,Integer,Integer,Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsListIncome_byReport (TFloat, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsListIncome_byReport(
@@ -23,8 +22,8 @@ BEGIN
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsListIncome());
 
    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
-   CREATE TEMP TABLE _tmpMIContainer (ContainerId Integer, GoodsId Integer, GoodsKindId Integer, PartnerId Integer, Amount TFloat) ON COMMIT DROP;
-   CREATE TEMP TABLE _tmpResult (GoodsId Integer, GoodsKindId_max Integer, GoodsKindId_List TVarChar, Juridical Integer, ContractId Integer, PartnerId Integer, Amount TFloat, AmountChoice TFloat) ON COMMIT DROP;
+   CREATE TEMP TABLE _tmpMIContainer (ContainerId Integer, GoodsId Integer, GoodsKindId Integer, PartnerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
+   CREATE TEMP TABLE _tmpResult (GoodsId Integer, GoodsKindId_max Integer, GoodsKindId_List TVarChar, Juridical Integer, ContractId Integer, PartnerId Integer, Amount TFloat, AmountChoice TFloat, OperDate TDateTime, isLast Boolean) ON COMMIT DROP;
    CREATE TEMP TABLE _tmpList (Id Integer, GoodsId Integer, GoodsKindId_max Integer, GoodsKindId_List TVarChar, Juridical Integer, ContractId Integer, PartnerId Integer, Amount TFloat, AmountChoice TFloat, isErased Boolean) ON COMMIT DROP;
 
    -- период для выбора продаж
@@ -85,12 +84,13 @@ BEGIN
    ANALYZE _tmpGoods;
 
    --
-   INSERT INTO _tmpMIContainer (ContainerId, GoodsId, GoodsKindId, PartnerId, Amount)
+   INSERT INTO _tmpMIContainer (ContainerId, GoodsId, GoodsKindId, PartnerId, Amount, OperDate)
         SELECT MIContainer.ContainerId_analyzer  AS ContainerId
              , MIContainer.ObjectId_analyzer     AS GoodsId
              , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)  AS GoodsKindId
              , MIContainer.ObjectExtId_analyzer  AS PartnerId
-             , SUM (MIContainer.Amount )    AS Amount
+             , SUM (MIContainer.Amount )         AS Amount
+             , MAX (MIContainer.OperDate )       AS OperDate
         FROM MovementItemContainer AS MIContainer
             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
         WHERE MIContainer.OperDate BETWEEN vbStartDate AND vbEndDate
@@ -106,7 +106,7 @@ BEGIN
      ANALYZE _tmpMIContainer;
 
 
-     INSERT INTO _tmpResult (GoodsId, GoodsKindId_max, GoodsKindId_List, Juridical, ContractId, PartnerId, Amount, AmountChoice)
+     INSERT INTO _tmpResult (GoodsId, GoodsKindId_max, GoodsKindId_List, Juridical, ContractId, PartnerId, Amount, AmountChoice, OperDate, isLast)
         WITH
         tmpData_all AS (SELECT tmp.GoodsId
                              , tmp.GoodsKindId
@@ -114,7 +114,9 @@ BEGIN
                              , tmp.Juridical
                              , tmp.ContractId
                              , tmp.Amount
+                             , tmp.OperDate
                              , ROW_NUMBER() OVER (PARTITION BY tmp.PartnerId, tmp.GoodsId ORDER BY tmp.Amount DESC) AS Ord
+                             , ROW_NUMBER() OVER (PARTITION BY tmp.GoodsId ORDER BY tmp.OperDate DESC, tmp.Amount DESC) AS Ord_date
                         FROM
                        (SELECT _tmpMIContainer.GoodsId
                              , _tmpMIContainer.GoodsKindId
@@ -122,6 +124,7 @@ BEGIN
                              , ContainerLO_Juridical.ObjectId AS Juridical
                              , ContainerLO_Contract.ObjectId AS ContractId
                              , SUM (_tmpMIContainer.Amount) AS Amount
+                             , MAX (_tmpMIContainer.OperDate) AS OperDate
                         FROM _tmpMIContainer
                             JOIN ContainerLinkObject AS ContainerLO_Juridical
                                                      ON ContainerLO_Juridical.ContainerId = _tmpMIContainer.ContainerId
@@ -151,12 +154,15 @@ BEGIN
              , tmpData.PartnerId
              , CAST (tmpData.Amount AS NUMERIC (16, 2))     :: TFloat AS Amount
              , CAST (tmpData_all.Amount AS NUMERIC (16, 2)) :: TFloat AS AmountChoice
+             , tmpData.OperDate
+             , CASE WHEN tmpData_all_last.GoodsId > 0 THEN TRUE ELSE FALSE END AS isLast
         FROM (SELECT tmpData_all.GoodsId
                    , STRING_AGG (tmpData_all.GoodsKindId ::TVarChar, ',') AS GoodsKindId_List
                    , tmpData_all.PartnerId
                    , tmpData_all.Juridical
                    , tmpData_all.ContractId
-                   , SUM (tmpData_all.Amount) AS Amount
+                   , SUM (tmpData_all.Amount)   AS Amount
+                   , MAX (tmpData_all.OperDate) AS OperDate
               FROM tmpData_all
              GROUP BY  tmpData_all.GoodsId
                      , tmpData_all.PartnerId
@@ -167,6 +173,10 @@ BEGIN
              LEFT JOIN tmpData_all ON tmpData_all.GoodsId   = tmpData.GoodsId
                                   AND tmpData_all.PartnerId = tmpData.PartnerId
                                   AND tmpData_all.Ord       = 1
+             LEFT JOIN tmpData_all AS tmpData_all_last
+                                   ON tmpData_all_last.GoodsId   = tmpData.GoodsId
+                                  AND tmpData_all_last.PartnerId = tmpData.PartnerId
+                                  AND tmpData_all_last.Ord_date  = 1
         WHERE tmpData.Amount <> 0;
 
 
@@ -195,8 +205,8 @@ BEGIN
                                                , inAmount          := _tmpResult.Amount
                                                , inAmountChoice    := _tmpResult.AmountChoice
                                                , inGoodsKindId_List:= _tmpResult.GoodsKindId_List ::TVarChar
-                                               , inLastDate        := CURRENT_TIMESTAMP
-                                               , inisLast          := False  
+                                               , inLastDate        := _tmpResult.OperDate
+                                               , inisLast          := _tmpResult.isLast
                                                , inisErased        := _tmpList.isErased
                                                , inUserId          := vbUserId
                                                 )

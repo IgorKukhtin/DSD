@@ -15,6 +15,8 @@ AS
 $BODY$
    DECLARE vbId Integer;
    DECLARE vbUserId Integer;
+   DECLARE vbStatusId Integer;
+   DECLARE vbisInsert Boolean;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -22,13 +24,22 @@ BEGIN
 
       -- получаем Id документа по GUID
       SELECT MovementString_GUID.MovementId 
+           , Movement_RouteMember.StatusId
       INTO vbId 
+         , vbStatusId
       FROM MovementString AS MovementString_GUID
            JOIN Movement AS Movement_RouteMember
                          ON Movement_RouteMember.Id = MovementString_GUID.MovementId
                         AND Movement_RouteMember.DescId = zc_Movement_RouteMember()
       WHERE MovementString_GUID.DescId = zc_MovementString_GUID() 
         AND MovementString_GUID.ValueData = inGUID;
+
+      vbisInsert:= (COALESCE (vbId, 0) = 0);
+
+      IF (vbisInsert = false) AND (vbStatusId = zc_Enum_Status_Complete())
+      THEN -- если маршрут торгового агента проведен, то распроводим
+           PERFORM gpUnComplete_Movement_RouteMember (inMovementId:= vbId, inSession:= inSession);
+      END IF;
 
       vbId:= lpInsertUpdate_Movement_RouteMember (ioId:= vbId
                                                 , inInvNumber:= inInvNumber
@@ -43,6 +54,9 @@ BEGIN
 
       -- сохранили свойство <Глобальный уникальный идентификатор>
       PERFORM lpInsertUpdate_MovementString (zc_MovementString_GUID(), vbId, inGUID);
+
+      -- проводим маршрут торгового агента
+      PERFORM gpComplete_Movement_RouteMember (inMovementId:= vbId, inSession:= inSession);
 
       RETURN vbId;
 END;
