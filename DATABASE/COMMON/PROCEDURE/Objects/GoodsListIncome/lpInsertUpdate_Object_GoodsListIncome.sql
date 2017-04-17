@@ -82,9 +82,9 @@ BEGIN
            PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsListIncome_GoodsKind(), vbId, inGoodsKindId_List);
      
            -- сохранили свойство <последний поставщик>
-           PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsListIncome_Last(), inId, inisLast);
+           PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsListIncome_Last(), vbId, inisLast);
            -- сохранили свойство <Последняя Дата прихода>
-           PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_GoodsListIncome_Last(), inId, inLastDate);
+           PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_GoodsListIncome_Last(), vbId, inLastDate);
     
            -- сохранили свойство <Дата создания/изменений>
            PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), vbId, CURRENT_TIMESTAMP);

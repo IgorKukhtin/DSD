@@ -15,6 +15,7 @@ $BODY$
 
    DECLARE vbMemberId_user Integer;
    DECLARE vbId_mi Integer;
+   DECLARE vbId_mi_find Integer;
    DECLARE vbMovementId_ReturnIn Integer;
    DECLARE vbMovementId_reestr Integer;
 BEGIN
@@ -50,7 +51,7 @@ BEGIN
           RAISE EXCEPTION 'Ошибка.У пользователя <%> не определно значение <Физ.лицо>.', lfGet_Object_ValueData (vbUserId);
      END IF;
 
-     -- найдем Продажу покупателю
+     -- найдем Возврат от покупателя
      IF CHAR_LENGTH (inBarCode) >= 13
      THEN -- по штрих коду, но для "проверки" ограничение - 4 MONTH
           vbMovementId_ReturnIn:= (SELECT Movement.Id
@@ -61,14 +62,25 @@ BEGIN
                                                           AND Movement.OperDate >= CURRENT_DATE - INTERVAL '4 MONTH'
                                                           AND Movement.StatusId <> zc_Enum_Status_Erased()
                                    );
-     ELSE -- по InvNumber, но для скорости ограничение - 4 MONTH
+     ELSE -- проверка - т.к. InvNumber повторяется
+          IF 1 < (SELECT COUNT(*)
+                  FROM Movement
+                  WHERE Movement.InvNumber = TRIM (inBarCode)
+                    AND Movement.DescId = zc_Movement_ReturnIn()
+                    AND Movement.OperDate >= CURRENT_DATE - INTERVAL '4 MONTH'
+                    AND Movement.StatusId <> zc_Enum_Status_Erased()
+                 )
+          THEN
+              RAISE EXCEPTION 'Ошибка.Нельзя однозначно определить по № <%> , т.к. с таким № несколько документов .', inBarCode;
+          END IF;
+          -- по InvNumber, но для скорости ограничение - 4 MONTH
           vbMovementId_ReturnIn:= (SELECT Movement.Id
                                    FROM Movement
                                    WHERE Movement.InvNumber = TRIM (inBarCode)
                                      AND Movement.DescId = zc_Movement_ReturnIn()
                                      AND Movement.OperDate >= CURRENT_DATE - INTERVAL '4 MONTH'
                                      AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                   );
+                                  );
      END IF;
 
      -- Проверка
@@ -83,6 +95,28 @@ BEGIN
                 WHERE MF_MovementItemId.MovementId = vbMovementId_ReturnIn
                   AND MF_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
                );
+
+     -- !!!ДОБАВИМ!!! элемент - через Parent
+     IF COALESCE (vbId_mi, 0) = 0
+     THEN
+         vbId_mi_find:= (SELECT MF_MovementItemId.ValueData :: Integer AS Id
+                         FROM MovementFloat AS MF_MovementItemId 
+                         WHERE MF_MovementItemId.MovementId = (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = vbMovementId_ReturnIn)
+                           AND MF_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
+                        );
+         -- если Parent существует
+         IF vbId_mi_find > 0
+         THEN
+              -- сохранили <Элемент документа> - <кто сформировал визу "">
+              vbId_mi := lpInsertUpdate_MovementItem (0, zc_MI_Master(), vbMemberId_user, (SELECT MovementItem.MovementId FROM MovementItem WHERE MovementItem.Id = vbId_mi_find), 0, NULL);
+              -- сохранили <когда сформирована виза "">   
+              PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), vbId_mi, CURRENT_TIMESTAMP);
+              -- сохранили свойство у документа возврата <№ строчной части в Реестре накладных>
+              PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementItemId(), vbMovementId_ReturnIn, vbId_mi);
+         END IF;
+
+     END IF;
+
      -- Проверка
      IF COALESCE (vbId_mi, 0) = 0
      THEN

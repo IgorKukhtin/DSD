@@ -24,7 +24,7 @@ BEGIN
    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
    CREATE TEMP TABLE _tmpMIContainer (ContainerId Integer, GoodsId Integer, GoodsKindId Integer, PartnerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
    CREATE TEMP TABLE _tmpResult (GoodsId Integer, GoodsKindId_max Integer, GoodsKindId_List TVarChar, Juridical Integer, ContractId Integer, PartnerId Integer, Amount TFloat, AmountChoice TFloat, OperDate TDateTime, isLast Boolean) ON COMMIT DROP;
-   CREATE TEMP TABLE _tmpList (Id Integer, GoodsId Integer, GoodsKindId_max Integer, GoodsKindId_List TVarChar, Juridical Integer, ContractId Integer, PartnerId Integer, Amount TFloat, AmountChoice TFloat, isErased Boolean) ON COMMIT DROP;
+   CREATE TEMP TABLE _tmpList (Id Integer, GoodsId Integer, GoodsKindId_max Integer, GoodsKindId_List TVarChar, Juridical Integer, ContractId Integer, PartnerId Integer, Amount TFloat, AmountChoice TFloat, OperDate TDateTime, isLast Boolean, isErased Boolean) ON COMMIT DROP;
 
    -- период для выбора продаж
    vbStartDate:= DATE_TRUNC ('MONTH', (SELECT CURRENT_DATE - (TO_CHAR (inPeriod, '999')|| ' MONTH') :: INTERVAL));
@@ -32,18 +32,20 @@ BEGIN
 
 
    -- выборка существующих элементов
-   INSERT INTO _tmpList (Id, GoodsId, GoodsKindId_max, GoodsKindId_List, Juridical, ContractId, PartnerId, Amount, AmountChoice, isErased)
+   INSERT INTO _tmpList (Id, GoodsId, GoodsKindId_max, GoodsKindId_List, Juridical, ContractId, PartnerId, Amount, AmountChoice, OperDate, isLast, isErased)
       SELECT
-             Object_GoodsListIncome.Id                                         AS Id
-           , ObjectLink_GoodsListIncome_Goods.ChildObjectId                    AS GoodsId
-           , COALESCE (ObjectLink_GoodsListIncome_GoodsKind.ChildObjectId, 0)  AS GoodsKindId_max
-           , COALESCE (ObjectString_GoodsKind.ValueData, '')                   AS GoodsKindId_List
-           , ObjectLink_GoodsListIncome_Juridical.ChildObjectId                AS JuridicalId
-           , GoodsListIncome_Contract.ChildObjectId                            AS ContractId
-           , ObjectLink_GoodsListIncome_Partner.ChildObjectId                  AS PartnerId
-           , COALESCE (ObjectFloat_GoodsListIncome_Amount.ValueData, 0)        AS Amount
-           , COALESCE (ObjectFloat_GoodsListIncome_AmountChoice.ValueData, 0)  AS AmountChoice
-           , Object_GoodsListIncome.isErased                                   AS isErased
+             Object_GoodsListIncome.Id                                             AS Id
+           , ObjectLink_GoodsListIncome_Goods.ChildObjectId                        AS GoodsId
+           , COALESCE (ObjectLink_GoodsListIncome_GoodsKind.ChildObjectId, 0)      AS GoodsKindId_max
+           , COALESCE (ObjectString_GoodsKind.ValueData, '')                       AS GoodsKindId_List
+           , ObjectLink_GoodsListIncome_Juridical.ChildObjectId                    AS JuridicalId
+           , GoodsListIncome_Contract.ChildObjectId                                AS ContractId
+           , ObjectLink_GoodsListIncome_Partner.ChildObjectId                      AS PartnerId
+           , COALESCE (ObjectFloat_GoodsListIncome_Amount.ValueData, 0)            AS Amount
+           , COALESCE (ObjectFloat_GoodsListIncome_AmountChoice.ValueData, 0)      AS AmountChoice
+           , COALESCE (ObjectDate_GoodsListIncome_Last.ValueData, zc_DateStart())  AS OperDate
+           , COALESCE (ObjectBoolean_GoodsListIncome_Last.ValueData, FALSE)        AS isLast
+           , Object_GoodsListIncome.isErased                                       AS isErased
       FROM Object AS Object_GoodsListIncome
         LEFT JOIN ObjectFloat AS ObjectFloat_GoodsListIncome_Amount
                               ON ObjectFloat_GoodsListIncome_Amount.ObjectId = Object_GoodsListIncome.Id
@@ -70,6 +72,14 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_GoodsKind
                                ON ObjectString_GoodsKind.ObjectId = Object_GoodsListIncome.Id
                               AND ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListIncome_GoodsKind()
+
+        LEFT JOIN ObjectDate AS ObjectDate_GoodsListIncome_Last
+                             ON ObjectDate_GoodsListIncome_Last.ObjectId = Object_GoodsListIncome.Id
+                            AND ObjectDate_GoodsListIncome_Last.DescId = zc_ObjectDate_GoodsListIncome_Last()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsListIncome_Last
+                                ON ObjectBoolean_GoodsListIncome_Last.ObjectId = Object_GoodsListIncome.Id
+                               AND ObjectBoolean_GoodsListIncome_Last.DescId = zc_ObjectBoolean_GoodsListIncome_Last()
+
       WHERE Object_GoodsListIncome.DescId = zc_Object_GoodsListIncome();
 
    -- выбираем товары согласно статьям
@@ -218,6 +228,7 @@ BEGIN
 
     WHERE _tmpList.Id IS NULL OR _tmpList.isErased = TRUE OR _tmpList.GoodsKindId_List <> COALESCE (_tmpResult.GoodsKindId_List, '') OR _tmpList.GoodsKindId_max <> COALESCE (_tmpResult.GoodsKindId_max, 0)
        OR _tmpList.AmountChoice <> COALESCE (_tmpResult.AmountChoice, 0) OR _tmpList.Amount <> COALESCE (_tmpResult.Amount, 0)
+       OR _tmpList.OperDate <> _tmpResult.OperDate OR _tmpList.isLast <> _tmpResult.isLast
     ;
 
 
