@@ -1,7 +1,7 @@
-object OrderIncomeJournalForm: TOrderIncomeJournalForm
+object OrderIncomeSnabJournalForm: TOrderIncomeSnabJournalForm
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1089#1085#1072#1073#1078#1077#1085#1080'e>'
   ClientHeight = 381
   ClientWidth = 809
   Color = clBtnFace
@@ -325,6 +325,14 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 154
       end
+      object clUnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 156
+      end
       object ContractId: TcxGridDBColumn
         DataBinding.FieldName = 'ContractId'
         Visible = False
@@ -499,8 +507,8 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 80
-    Top = 56
+    Left = 48
+    Top = 64
     DockControlHeights = (
       0
       0
@@ -641,7 +649,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 128
+    Left = 80
     Top = 64
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -716,8 +724,8 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'TOrderIncomeForm'
-      FormNameParam.Value = 'TOrderIncomeForm'
+      FormName = 'TOrderIncomeSnabForm'
+      FormNameParam.Value = 'TOrderIncomeSnabForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -773,8 +781,8 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TOrderIncomeForm'
-      FormNameParam.Value = 'TOrderIncomeForm'
+      FormName = 'TOrderIncomeSnabForm'
+      FormNameParam.Value = 'TOrderIncomeSnabForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1175,7 +1183,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
       end
       item
         Name = 'inisSnab'
-        Value = 'False'
+        Value = 'True'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1211,7 +1219,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 168
+    Left = 112
     Top = 64
     object N3: TMenuItem
       Action = actInsert

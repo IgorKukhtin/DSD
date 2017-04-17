@@ -137,6 +137,11 @@ type
     actNameBeforeChoiceForm: TOpenChoiceForm;
     edParValue: TcxCurrencyEdit;
     cxLabel24: TcxLabel;
+    cxLabel6: TcxLabel;
+    edOperDatePartner: TcxDateEdit;
+    cxLabel4: TcxLabel;
+    edUnit: TcxButtonEdit;
+    UnitGuides: TdsdGuides;
   private
   public
   end;

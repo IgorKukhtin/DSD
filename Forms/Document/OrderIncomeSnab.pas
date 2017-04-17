@@ -1,4 +1,4 @@
-unit Income;
+unit OrderIncomeSnab;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   cxImageComboBox;
 
 type
-  TIncomeForm = class(TParentForm)
+  TOrderIncomeSnabForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -44,10 +44,7 @@ type
     edOperDate: TcxDateEdit;
     cxLabel2: TcxLabel;
     edFrom: TcxButtonEdit;
-    edTo: TcxButtonEdit;
     cxLabel3: TcxLabel;
-    cxLabel4: TcxLabel;
-    GuidesTo: TdsdGuides;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
     cxPageControl: TcxPageControl;
@@ -64,30 +61,17 @@ type
     spInsertUpdateMIMaster: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    colAmountPartner: TcxGridDBColumn;
-    colAmountPacker: TcxGridDBColumn;
-    colCountForPrice: TcxGridDBColumn;
-    colHeadCount: TcxGridDBColumn;
-    colPartionGoods: TcxGridDBColumn;
-    colLiveWeight: TcxGridDBColumn;
-    colGoodsKindName: TcxGridDBColumn;
-    colAssetName: TcxGridDBColumn;
     bbShowAll: TdxBarButton;
     bbStatic: TdxBarStatic;
-    actShowAll: TBooleanStoredProcAction;
     MasterViewAddOn: TdsdDBViewAddOn;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spInsertUpdateMovement: TdsdStoredProc;
-    cxLabel5: TcxLabel;
-    cxLabel6: TcxLabel;
-    edOperDatePartner: TcxDateEdit;
     edPriceWithVAT: TcxCheckBox;
     edVATPercent: TcxCurrencyEdit;
     edChangePercent: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
     cxLabel8: TcxLabel;
     HeaderSaver: THeaderSaver;
-    edInvNumberPartner: TcxTextEdit;
     spGet: TdsdStoredProc;
     RefreshAddOn: TRefreshAddOn;
     GridToExcel: TdsdGridToExcel;
@@ -101,9 +85,6 @@ type
     edPaidKind: TcxButtonEdit;
     ContractGuides: TdsdGuides;
     PaidKindGuides: TdsdGuides;
-    cxLabel13: TcxLabel;
-    edPacker: TcxButtonEdit;
-    PackerGuides: TdsdGuides;
     SetErased: TdsdUpdateErased;
     SetUnErased: TdsdUpdateErased;
     actShowErased: TBooleanStoredProcAction;
@@ -120,10 +101,6 @@ type
     CompleteMovement: TChangeGuidesStatus;
     DeleteMovement: TChangeGuidesStatus;
     ceStatus: TcxButtonEdit;
-    clInfoMoneyCode: TcxGridDBColumn;
-    clInfoMoneyGroupName: TcxGridDBColumn;
-    clInfoMoneyDestinationName: TcxGridDBColumn;
-    clInfoMoneyName: TcxGridDBColumn;
     colMeasureName: TcxGridDBColumn;
     GuidesFrom: TdsdGuides;
     spGetTotalSumm: TdsdStoredProc;
@@ -132,72 +109,36 @@ type
     cxLabel14: TcxLabel;
     edCurrencyDocument: TcxButtonEdit;
     CurrencyDocumentGuides: TdsdGuides;
-    cxLabel15: TcxLabel;
-    edCurrencyPartner: TcxButtonEdit;
-    CurrencyPartnerGuides: TdsdGuides;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
     MovementItemProtocolOpenForm: TdsdOpenForm;
     bbMovementItemProtocol: TdxBarButton;
-    clGoodsGroupNameFull: TcxGridDBColumn;
-    clInfoMoneyName_all: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
-    cbCalcAmountPartner: TcxCheckBox;
     bbCalcAmountPartner: TdxBarControlContainerItem;
-    actGoodsKindChoice: TOpenChoiceForm;
     spInsertMaskMIMaster: TdsdStoredProc;
     actAddMask: TdsdExecStoredProc;
     bbAddMask: TdxBarButton;
     actGoodsChoiceForm: TOpenChoiceForm;
-    colAmountRemains: TcxGridDBColumn;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
-    colAmount_unit: TcxGridDBColumn;
-    colAmount_diff: TcxGridDBColumn;
-    cxLabel25: TcxLabel;
-    edInvNumberTransport: TcxButtonEdit;
-    TransportChoiceGuides: TdsdGuides;
-    HeaderSaver2: THeaderSaver;
-    spInsertUpdateMovement_Params: TdsdStoredProc;
-    cxTabSheet1: TcxTabSheet;
-    cxGrid1: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
-    clComment: TcxGridDBColumn;
-    cxGridLevel1: TcxGridLevel;
-    ClientDataCost: TClientDataSet;
-    DataSourceCost: TDataSource;
-    spSelect_Movement_Cost: TdsdStoredProc;
-    InsertRecord1: TInsertRecord;
-    CostJournalChoiceForm: TOpenChoiceForm;
+    actInsertRecord: TInsertRecord;
+    actMeasureChoiceForm: TOpenChoiceForm;
     bbInsertRecord: TdxBarButton;
-    spInsertUpdate_Movement_Cost: TdsdStoredProc;
-    actUpdateClientDataCost: TdsdUpdateDataSet;
-    ItemName: TcxGridDBColumn;
-    MasterStatusCode: TcxGridDBColumn;
-    MasterComment: TcxGridDBColumn;
-    JuridicalName: TcxGridDBColumn;
-    spMovementUnCompleteCost: TdsdStoredProc;
-    spMovementCompleteCost: TdsdStoredProc;
-    spMovementSetErasedCost: TdsdStoredProc;
-    actCompleteCost: TdsdChangeMovementStatus;
-    actSetErasedCost: TdsdChangeMovementStatus;
-    actUnCompleteCost: TdsdChangeMovementStatus;
     bbCompleteCost: TdxBarButton;
     bbactUnCompleteCost: TdxBarButton;
     bbactSetErasedCost: TdxBarButton;
-    actShowErasedCost: TBooleanStoredProcAction;
     bbShowErasedCost: TdxBarButton;
-    actInvoiceJournalDetailChoiceForm: TOpenChoiceForm;
-    cxLabel19: TcxLabel;
-    edInvNumberInvoice: TcxButtonEdit;
-    InvoiceGuides: TdsdGuides;
-    spUpdateOrder: TdsdStoredProc;
-    HeaderSaver3: THeaderSaver;
-    cxLabel17: TcxLabel;
-    edInvNumberOrder: TcxButtonEdit;
-    OrderGuides: TdsdGuides;
+    Comment: TcxGridDBColumn;
+    edParValue: TcxCurrencyEdit;
+    cxLabel24: TcxLabel;
+    cxLabel4: TcxLabel;
+    edUnit: TcxButtonEdit;
+    UnitGuides: TdsdGuides;
+    edOperDatePartner: TcxDateEdit;
+    cxLabel6: TcxLabel;
+    actShowAll: TBooleanStoredProcAction;
   private
   public
   end;
@@ -207,6 +148,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TIncomeForm);
+  RegisterClass(TOrderIncomeSnabForm);
 
 end.
