@@ -12,7 +12,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , CurrencyValue TFloat
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, ToParentId Integer
+             , FromId Integer, FromName TVarChar
+             , JuridicalId_From Integer, JuridicalName_From TVarChar
+             , ToId Integer, ToName TVarChar, ToParentId Integer
              , PaidKindId Integer, PaidKindName TVarChar, ContractId Integer, ContractName TVarChar
              , PersonalPackerId Integer, PersonalPackerName TVarChar
              , CurrencyDocumentId Integer, CurrencyDocumentName TVarChar
@@ -54,6 +56,9 @@ BEGIN
 
              , 0                     AS FromId
              , CAST ('' as TVarChar) AS FromName
+             , 0                     AS JuridicalId_From
+             , CAST ('' as TVarChar) AS JuridicalName_From
+
              , 0                     AS ToId
              , CAST ('' as TVarChar) AS ToName
              , 0                     AS ToParentId
@@ -123,6 +128,9 @@ BEGIN
 
              , Object_From.Id                        AS FromId
              , Object_From.ValueData                 AS FromName
+             , Object_JuridicalFrom.id               AS JuridicalId_From
+             , Object_JuridicalFrom.ValueData        AS JuridicalName_From
+
              , Object_To.Id                          AS ToId
              , Object_To.ValueData                   AS ToName
              , ObjectLink_Unit_Parent.ChildObjectId  AS ToParentId
@@ -198,6 +206,11 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId = Object_From.Id
+                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN Object AS Object_JuridicalFrom ON Object_JuridicalFrom.Id = ObjectLink_Partner_Juridical.ChildObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id

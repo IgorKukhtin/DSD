@@ -948,7 +948,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
       DataSets = <
         item
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -1236,7 +1236,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
       DataSets = <
         item
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'GoodsGroupNameFull;PartnerName;GoodsName;GoodsKindName'
+          IndexFieldNames = 'GoodsGroupNameFull;PartnerName;GoodsName'
           GridView = cxGridDBTableView
         end>
       Params = <

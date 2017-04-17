@@ -950,6 +950,19 @@ object IncomeForm: TIncomeForm
     TabOrder = 10
     Width = 127
   end
+  object edJuridicalFrom: TcxButtonEdit
+    Left = 272
+    Top = 41
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Visible = False
+    Width = 64
+  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -2519,6 +2532,21 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId_From'
+        Value = Null
+        Component = JuridicalFromGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName_From'
+        Value = Null
+        Component = JuridicalFromGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 200
@@ -2842,7 +2870,7 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     Left = 824
-    Top = 56
+    Top = 32
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
@@ -3452,19 +3480,32 @@ object IncomeForm: TIncomeForm
       item
         Name = 'MasterJuridicalId'
         Value = ''
-        Component = GuidesFrom
+        Component = JuridicalFromGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
         Value = ''
-        Component = GuidesFrom
+        Component = JuridicalFromGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 836
     Top = 96
+  end
+  object JuridicalFromGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalFrom
+    FormNameParam.Name = 'TJuridical_ObjectForm'
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <>
+    Left = 377
+    Top = 24
   end
 end

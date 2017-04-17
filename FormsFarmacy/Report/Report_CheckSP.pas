@@ -44,6 +44,13 @@ type
     cxLabel5: TcxLabel;
     ceHospital: TcxButtonEdit;
     HospitalGuides: TdsdGuides;
+    actPrint1: TdsdPrintAction;
+    bbPrint1: TdxBarButton;
+    clOperDate: TcxGridDBColumn;
+    clInvNumberSP: TcxGridDBColumn;
+    clMedicSPName: TcxGridDBColumn;
+    clPartnerMedical_ContractName: TcxGridDBColumn;
+    clPartnerMedical_Contract_StartDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

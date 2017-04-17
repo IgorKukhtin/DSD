@@ -198,6 +198,8 @@ type
     cxLabel17: TcxLabel;
     edInvNumberOrder: TcxButtonEdit;
     OrderGuides: TdsdGuides;
+    edJuridicalFrom: TcxButtonEdit;
+    JuridicalFromGuides: TdsdGuides;
   private
   public
   end;

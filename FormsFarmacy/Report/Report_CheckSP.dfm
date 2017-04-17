@@ -136,6 +136,28 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             Options.Editing = False
             Width = 155
           end
+          object clMedicSPName: TcxGridDBColumn
+            Caption = #1051#1110#1082#1072#1088', '#1097#1086' '#1074#1080#1087#1080#1089#1072#1074' '#1088#1077#1094#1077#1087#1090
+            DataBinding.FieldName = 'MedicSPName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object clOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1074#1110#1076#1087#1091#1089#1082#1091
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object clInvNumberSP: TcxGridDBColumn
+            Caption = #1053#1086#1084#1077#1088' '#1088#1077#1094#1077#1087#1090#1072
+            DataBinding.FieldName = 'InvNumberSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object clGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -308,7 +330,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             Caption = #1057#1091#1084#1072' '#1074#1110#1076#1096#1082#1086#1076#1091#1074#1072#1085#1085#1103', '#1075#1088#1085
             DataBinding.FieldName = 'SummaSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 103
@@ -440,6 +462,19 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             HeaderHint = #1058#1077#1083#1077#1092#1086#1085' ('#1047#1054#1047')'
             Options.Editing = False
             Width = 155
+          end
+          object clPartnerMedical_ContractName: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'PartnerMedical_ContractName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object clPartnerMedical_Contract_StartDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1075#1086#1074#1086#1088#1091
+            DataBinding.FieldName = 'Contract_StartDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
           end
           object PartnerMedical_OKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054' ('#1047#1054#1047')'
@@ -732,6 +767,39 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actPrint1: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072'('#1087#1086#1089#1090'.152)'
+      ImageIndex = 16
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'UnitName;HospitalName;IntenalSPName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072'('#1087#1086#1089#1090'.152)'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072'('#1087#1086#1089#1090'.152)'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -861,6 +929,14 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -881,6 +957,10 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
     end
     object bbPrint: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbPrint1: TdxBarButton
+      Action = actPrint1
       Category = 0
     end
   end
@@ -966,11 +1046,11 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
   object HospitalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceHospital
-    FormNameParam.Value = 'TJuridicalCorporateForm'
+    FormNameParam.Value = 'TPartnerMedicalForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TJuridicalCorporateForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TPartnerMedicalForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
