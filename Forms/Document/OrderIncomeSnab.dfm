@@ -270,7 +270,6 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         Height = 284
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = -3
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -422,6 +421,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 6
     Width = 181
   end
@@ -1092,7 +1092,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         item
           StoredProc = spSelectMI
         end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1089#1087#1088#1072#1074'.'#1090#1086#1074#1072#1088#1086#1074
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndex = 63
       Value = False
@@ -1362,6 +1362,9 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       end
       item
         Control = edFrom
+      end
+      item
+        Control = edUnit
       end
       item
         Control = edPriceWithVAT
