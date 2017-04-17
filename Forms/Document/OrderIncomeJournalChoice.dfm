@@ -1234,8 +1234,8 @@ object OrderIncomeJournalChoiceForm: TOrderIncomeJournalChoiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 24
-    Top = 176
+    Left = 80
+    Top = 184
   end
   object spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_OrderIncome'
