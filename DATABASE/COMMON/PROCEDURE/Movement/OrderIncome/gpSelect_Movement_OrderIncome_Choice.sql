@@ -27,11 +27,14 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Full TVarChar
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbJuridicalDescId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderIncome());
      vbUserId:= lpGetUserBySession (inSession);
 
+     vbJuridicalDescId := (SELECT Object.DescId FROM Object WHERE Object.Id = inJuridicalId);
+    
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -39,6 +42,19 @@ BEGIN
                        )
         , tmpUserAdmin AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
 
+        , tmpJuridical AS (SELECT DISTINCT Object.Id
+                           FROM Object
+                                LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                     ON ObjectLink_Partner_Juridical.ChildObjectId = Object.ID
+                                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                           WHERE ((vbJuridicalDescId = zc_Object_Juridical() AND Object.Id = inJuridicalId)
+                              OR (vbJuridicalDescId = zc_Object_Partner() AND ObjectLink_Partner_Juridical.ObjectId = inJuridicalId)
+                                 ) AND inJuridicalId <> 0
+                          UNION 
+                           SELECT DISTINCT Object.Id
+                           FROM Object
+                           WHERE Object.DescId = zc_Object_Juridical() AND inJuridicalId = 0
+                           )
 
        SELECT
              Movement.Id                            AS Id
@@ -157,12 +173,14 @@ BEGIN
                                         AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
 
+            INNER JOIN tmpJuridical ON tmpJuridical.Id = Object_Juridical.Id
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
                                          ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
                                         AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
             LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
 
-         WHERE Object_Juridical.Id = inJuridicalId or inJuridicalId=0
+         --WHERE tmpJuridical.Id  = inJuridicalId or inJuridicalId = 0 --Object_Juridical.Id = inJuridicalId or inJuridicalId=0
 
             ;
 
@@ -173,8 +191,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.04.17         *
  18.07.16         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderIncome_Choice (inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inJuridicalId:= 0, inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderIncome_Choice (inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inJuridicalId:= 80639, inIsErased := FALSE, inSession:= '2')
