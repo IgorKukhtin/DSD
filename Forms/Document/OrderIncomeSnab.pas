@@ -139,6 +139,7 @@ type
     edOperDatePartner: TcxDateEdit;
     cxLabel6: TcxLabel;
     actShowAll: TBooleanStoredProcAction;
+    InsertRecordGoods: TInsertRecord;
   private
   public
   end;

@@ -20,10 +20,17 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE Cursor1 refcursor;
+   DECLARE vbJuridicalId_From Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_OrderIncome());
      vbUserId:= lpGetUserBySession (inSession);
+
+     --определяем пост. из документа
+     vbJuridicalId_From := (SELECT MovementLinkObject_From.ObjectId AS JuridicalId_From
+                            FROM MovementLinkObject AS MovementLinkObject_From
+                            WHERE MovementLinkObject_From.MovementId = inMovementId
+                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_Juridical());
 
  
      IF inShowAll THEN
@@ -32,6 +39,10 @@ BEGIN
      WITH 
      tmpGoodsListIncome AS (SELECT DISTINCT ObjectLink_GoodsListIncome_Goods.ChildObjectId AS GoodsId
                             FROM Object AS Object_GoodsListIncome
+                                 INNER JOIN ObjectLink AS ObjectLink_GoodsListIncome_Juridical
+                                         ON ObjectLink_GoodsListIncome_Juridical.ObjectId = Object_GoodsListIncome.Id
+                                        AND ObjectLink_GoodsListIncome_Juridical.DescId = zc_ObjectLink_GoodsListIncome_Juridical()
+                                        AND ObjectLink_GoodsListIncome_Juridical.ChildObjectId = vbJuridicalId_From
                                  INNER JOIN ObjectLink AS ObjectLink_GoodsListIncome_Goods
                                          ON ObjectLink_GoodsListIncome_Goods.ObjectId = Object_GoodsListIncome.Id
                                         AND ObjectLink_GoodsListIncome_Goods.DescId = zc_ObjectLink_GoodsListIncome_Goods()

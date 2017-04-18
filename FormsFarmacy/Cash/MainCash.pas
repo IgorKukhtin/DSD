@@ -269,6 +269,8 @@ type
     MainColIntenalSPName: TcxGridDBColumn;
     actOpenGoodsSP_UserForm: TdsdOpenForm;
     miOpenGoodsSP_UserForm: TMenuItem;
+    Label6: TLabel;
+    edPrice: TcxCurrencyEdit;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -534,6 +536,7 @@ begin
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
+  edPrice.Value := 0.0;
   pnlDiscount.Visible := False;
   pnlSP.Visible := False;
   lblCashMember.Caption := '';
@@ -1334,11 +1337,15 @@ begin
 end;
 
 procedure TMainCashForm.CheckCDSBeforePost(DataSet: TDataSet);
-
 begin
   inherited;
   if DataSet.FieldByName('List_UID').AsString = '' then
     DataSet.FieldByName('List_UID').AsString := GenerateGUID;
+  if (DiscountServiceForm.gCode = 2) and (Abs(edPrice.Value) > 0.0001) then
+  begin
+    DataSet.FieldByName('Price').AsFloat := edPrice.Value;
+    DataSet.FieldByName('Summ').AsFloat := DataSet.FieldByName('Amount').AsFloat * edPrice.Value;
+  end;
 end;
 
 procedure TMainCashForm.ConnectionModeChange(var Msg: TMessage);

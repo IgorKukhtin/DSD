@@ -45,6 +45,7 @@ object MainForm: TMainForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 411
     object Gauge: TGauge
       Left = 0
       Top = 0
@@ -84,7 +85,7 @@ object MainForm: TMainForm
     object cbOnlyOpen: TCheckBox
       Left = 747
       Top = 29
-      Width = 264
+      Width = 262
       Height = 17
       Caption = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1076#1077#1081#1089#1090#1074#1080#1077' ('#1090#1086#1083#1100#1082#1086' '#1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077')'
       TabOrder = 3
@@ -107,13 +108,21 @@ object MainForm: TMainForm
       TabOrder = 5
       OnClick = OKCompleteDocumentButtonClick
     end
+    object cbOnlyOpenMI: TCheckBox
+      Left = 1014
+      Top = 29
+      Width = 137
+      Height = 17
+      Caption = #1090#1086#1083#1100#1082#1086' '#1089#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
+      TabOrder = 6
+    end
   end
   object PageControl1: TPageControl
     Left = 688
     Top = 0
     Width = 484
     Height = 409
-    ActivePage = TabSheet2
+    ActivePage = TabSheet1
     Align = alRight
     TabOrder = 2
     object TabSheet1: TTabSheet
@@ -576,6 +585,21 @@ object MainForm: TMainForm
           ParentFont = False
           TabOrder = 3
         end
+        object cbDocId_Postgres: TCheckBox
+          Tag = 1
+          Left = 110
+          Top = 1
+          Width = 114
+          Height = 17
+          Caption = 'add Id_Postgres'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 4
+        end
       end
     end
     object TabSheet2: TTabSheet
@@ -588,7 +612,6 @@ object MainForm: TMainForm
         Height = 381
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 353
         object Label3: TLabel
           Left = 8
           Top = 280
@@ -606,7 +629,7 @@ object MainForm: TMainForm
         object lResultCSV: TLabel
           Left = 345
           Top = 130
-          Width = 108
+          Width = 30
           Height = 13
           Caption = 'Result'
         end
@@ -899,7 +922,6 @@ object MainForm: TMainForm
   end
   object toZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
-    UTF8StringsAsWideField = True
     Catalog = 'public'
     DesignConnection = True
     AfterConnect = toZConnectionAfterConnect
