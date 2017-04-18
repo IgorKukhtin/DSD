@@ -240,7 +240,7 @@ BEGIN
 
            , CASE WHEN tmpContainer.CountProductionOut <= 0 AND tmpContainer.RemainsEnd <> 0
                   THEN zc_Color_Black()
-                  WHEN tmpContainer.CountProductionOut <= 0 AND tmpContainer.RemainsEnd = 0
+                  WHEN COALESCE (tmpContainer.CountProductionOut, 0) <= 0 AND COALESCE (tmpContainer.RemainsEnd, 0) = 0
                   THEN zc_Color_Black()
                   WHEN (CASE WHEN tmpContainer.RemainsEnd <> 0 AND (tmpContainer.CountProductionOut/vbCountDays) <> 0
                         THEN COALESCE(tmpContainer.RemainsEnd,0) / (tmpContainer.CountProductionOut/vbCountDays)
