@@ -25,7 +25,7 @@ type
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
     FormParams: TdsdFormParams;
-    CountSendOut: TcxGridDBColumn;
+    CountOut_oth: TcxGridDBColumn;
     CountIncome: TcxGridDBColumn;
     RemainsDays: TcxGridDBColumn;
     clGoodsKindName: TcxGridDBColumn;
@@ -37,7 +37,7 @@ type
     edUnit: TcxButtonEdit;
     CountProductionOut: TcxGridDBColumn;
     ReserveDays: TcxGridDBColumn;
-    CountSendIn: TcxGridDBColumn;
+    CountIn_oth: TcxGridDBColumn;
     PlanOrder: TcxGridDBColumn;
     CountOrder: TcxGridDBColumn;
     RemainsDaysWithOrder: TcxGridDBColumn;

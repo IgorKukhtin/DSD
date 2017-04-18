@@ -1,31 +1,32 @@
 inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1076#1083#1103' '#1089#1085#1072#1073#1078#1077#1085#1080#1103'>'
   ClientHeight = 534
-  ClientWidth = 1390
+  ClientWidth = 1366
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1406
-  ExplicitHeight = 572
+  ExplicitTop = -112
+  ExplicitWidth = 1382
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 1390
+    Width = 1366
     Height = 475
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 1390
+    ExplicitWidth = 1366
     ExplicitHeight = 475
     ClientRectBottom = 475
-    ClientRectRight = 1390
+    ClientRectRight = 1366
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1390
+      ExplicitWidth = 1366
       ExplicitHeight = 475
       inherited cxGrid: TcxGrid
-        Width = 1390
+        Width = 1366
         Height = 475
-        ExplicitWidth = 1390
+        ExplicitWidth = 1366
         ExplicitHeight = 475
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -42,7 +43,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountSendOut
+              Column = CountOut_oth
             end
             item
               Format = ',0.####'
@@ -71,7 +72,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountSendIn
+              Column = CountIn_oth
             end
             item
               Format = ',0.####'
@@ -326,7 +327,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountSendOut
+              Column = CountOut_oth
             end
             item
               Format = ',0.####'
@@ -355,7 +356,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountSendIn
+              Column = CountIn_oth
             end
             item
               Format = ',0.####'
@@ -725,9 +726,9 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object CountSendIn: TcxGridDBColumn
-            Caption = #1055#1077#1088#1077#1084#1077#1097'. '#1087#1088#1080#1093#1086#1076
-            DataBinding.FieldName = 'CountSendIn'
+          object CountIn_oth: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093'. '#1076#1088#1091#1075#1086#1081
+            DataBinding.FieldName = 'CountIn_oth'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -736,9 +737,9 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object CountSendOut: TcxGridDBColumn
-            Caption = #1055#1077#1088#1077#1084#1077#1097'. '#1088#1072#1089#1093#1086#1076
-            DataBinding.FieldName = 'CountSendOut'
+          object CountOut_oth: TcxGridDBColumn
+            Caption = #1056#1072#1089#1093'. '#1076#1088#1091#1075#1086#1081
+            DataBinding.FieldName = 'CountOut_oth'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -820,9 +821,9 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
     end
   end
   inherited Panel: TPanel
-    Width = 1390
+    Width = 1366
     Height = 33
-    ExplicitWidth = 1390
+    ExplicitWidth = 1366
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 118
@@ -1430,6 +1431,21 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
     ColorRuleList = <
       item
         ColorColumn = RemainsDays
+        ValueColumn = Color_RemainsDays
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clGoodsName
+        ValueColumn = Color_RemainsDays
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = RemainsStart
+        ValueColumn = Color_RemainsDays
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = RemainsEnd
         ValueColumn = Color_RemainsDays
         ColorValueList = <>
       end>
