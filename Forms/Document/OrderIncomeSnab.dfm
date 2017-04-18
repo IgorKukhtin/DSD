@@ -535,6 +535,10 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertRecord'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -632,7 +636,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       Category = 0
     end
     object bbInsertRecord: TdxBarButton
-      Action = actInsertRecord
+      Action = InsertRecordGoods
       Category = 0
     end
     object bbCompleteCost: TdxBarButton
@@ -1042,21 +1046,6 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'TextValue_two'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'NameBeforeName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Code_two'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'NameBeforeCode'
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'MeasureId'
           Value = Null
           Component = MasterCDS
@@ -1102,6 +1091,19 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object InsertRecordGoods: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      View = cxGridDBTableView
+      Action = actGoodsChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      ShortCut = 45
+      ImageIndex = 0
     end
   end
   object MasterDS: TDataSource
@@ -1781,8 +1783,8 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 188
-    Top = 80
+    Left = 212
+    Top = 48
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
