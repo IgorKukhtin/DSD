@@ -29,6 +29,7 @@ $BODY$
 
   DECLARE vbUnitId Integer;
   DECLARE vbPriceListId Integer;
+  DECLARE vbJuridicalId_From Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_Income());
@@ -43,6 +44,14 @@ BEGIN
      -- определяется - Пав-ны приход
      vbPriceListId:= (SELECT 140208 WHERE EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (80548))); -- Бухгалтер ПАВИЛЬОНЫ
 
+     --определяем пост. из документа
+     vbJuridicalId_From := (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId_From
+                            FROM MovementLinkObject AS MovementLinkObject_From
+                                 LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                        ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                                       AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                            WHERE MovementLinkObject_From.MovementId = inMovementId
+                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From());
      -- Результат
      IF inShowAll THEN 
 
@@ -172,10 +181,21 @@ BEGIN
                    WHERE inShowAll = FALSE
                   )
 
+   , tmpGoodsListIncome AS (SELECT DISTINCT ObjectLink_GoodsListIncome_Goods.ChildObjectId AS GoodsId
+                            FROM Object AS Object_GoodsListIncome
+                                 INNER JOIN ObjectLink AS ObjectLink_GoodsListIncome_Juridical
+                                         ON ObjectLink_GoodsListIncome_Juridical.ObjectId = Object_GoodsListIncome.Id
+                                        AND ObjectLink_GoodsListIncome_Juridical.DescId = zc_ObjectLink_GoodsListIncome_Juridical()
+                                        AND ObjectLink_GoodsListIncome_Juridical.ChildObjectId = vbJuridicalId_From
 
+                                 INNER JOIN ObjectLink AS ObjectLink_GoodsListIncome_Goods
+                                         ON ObjectLink_GoodsListIncome_Goods.ObjectId = Object_GoodsListIncome.Id
+                                        AND ObjectLink_GoodsListIncome_Goods.DescId = zc_ObjectLink_GoodsListIncome_Goods()
+                            WHERE Object_GoodsListIncome.DescId = zc_Object_GoodsListIncome()
+                              AND Object_GoodsListIncome.isErased =False
+                           )
   
-
-  
+ 
        SELECT
              0 AS Id
            , tmpGoods.GoodsId
@@ -225,7 +245,8 @@ BEGIN
                   , Object_Goods.ValueData                                            AS GoodsName
                   , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0)            AS GoodsKindId
                   , ObjectLink_Goods_InfoMoney.ChildObjectId                          AS InfoMoneyId
-             FROM Object AS Object_Goods
+             FROM tmpGoodsListIncome 
+                  LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoodsListIncome.GoodsId
                   LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                        ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
                                       AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
@@ -236,8 +257,8 @@ BEGIN
                                                         AND (ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Доходы Мясное сырье
                                                           -- OR ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
                                                             )
-             WHERE Object_Goods.DescId = zc_Object_Goods()
-               AND Object_Goods.isErased = FALSE
+            -- WHERE Object_Goods.DescId = zc_Object_Goods()
+            --   AND Object_Goods.isErased = FALSE
             ) AS tmpGoods
 
             LEFT JOIN tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
@@ -541,6 +562,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 18.04.17         *
  21.07.16         *
  31.03.15         * add GoodsGroupNameFull, MeasureName
  12.02.14                                        * add Object_InfoMoney_View
