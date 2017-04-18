@@ -16,11 +16,14 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyDocumentId Integer, CurrencyDocumentName TVarChar
 
-             , Unitd Integer, UnitName TVarChar
+             , UnitId Integer, UnitName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , ContractId Integer, ContractName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , Comment TVarChar
+             , OperDateStart TDateTime
+             , OperDateEnd TDateTime
+             , DayCount TFloat
               )
 AS
 $BODY$
@@ -39,6 +42,7 @@ BEGIN
              , CAST (NEXTVAL ('movement_OrderIncome_seq') AS TVarChar) AS InvNumber
              , inOperDate                                 AS OperDate
              , inOperDate		                  AS OperDatePartner
+
              , Object_Status.Code                         AS StatusCode
              , Object_Status.Name                         AS StatusName
              
@@ -54,7 +58,7 @@ BEGIN
              , Object_CurrencyDocument.Id                 AS CurrencyDocumentId	-- грн
              , Object_CurrencyDocument.ValueData          AS CurrencyDocumentName
 
-             , 0                                          AS Unitd
+             , 0                                          AS UnitId
              , CAST ('' as TVarChar)                      AS UnitName
 
              , 0                                          AS JuridicalId
@@ -66,6 +70,9 @@ BEGIN
   
              , CAST ('' as TVarChar) 	                  AS Comment
 
+             , DATE_TRUNC ('MONTH', inOperDate)           AS OperDateStart
+             , DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'  AS OperDateEnd
+             , CAST (30 as TFloat)                        AS DayCount
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
                LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = zc_Enum_Currency_Basis()
@@ -93,7 +100,7 @@ BEGIN
            , Object_CurrencyDocument.Id             AS CurrencyDocumentId
            , Object_CurrencyDocument.ValueData      AS CurrencyDocumentName
 
-           , Object_Unit.Id                         AS Unitd
+           , Object_Unit.Id                         AS UnitId
            , Object_Unit.ValueData                  AS UnitName
 
            , Object_Juridical.Id                    AS JuridicalId
@@ -107,6 +114,10 @@ BEGIN
 
            , MovementString_Comment.ValueData       AS Comment
 
+           , COALESCE (MovementDate_OperDateStart.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate)) ::TDateTime  AS OperDateStart
+           , COALESCE (MovementDate_OperDateEnd.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY') ::TDateTime  AS OperDateEnd
+           , COALESCE (MovementFloat_DayCount.ValueData, 30)  ::TFloat  AS DayCount
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -116,6 +127,13 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
+            LEFT JOIN MovementDate AS MovementDate_OperDateStart
+                                   ON MovementDate_OperDateStart.MovementId = Movement.Id
+                                  AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
+            LEFT JOIN MovementDate AS MovementDate_OperDateEnd
+                                   ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                  AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
 
             LEFT JOIN MovementLinkObject AS MLO_Insert
                                          ON MLO_Insert.MovementId = Movement.Id
@@ -141,6 +159,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ParValue
                                     ON MovementFloat_ParValue.MovementId = Movement.Id
                                    AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
+
+            LEFT JOIN MovementFloat AS MovementFloat_DayCount
+                                    ON MovementFloat_DayCount.MovementId = Movement.Id
+                                   AND MovementFloat_DayCount.DescId = zc_MovementFloat_DayCount()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id

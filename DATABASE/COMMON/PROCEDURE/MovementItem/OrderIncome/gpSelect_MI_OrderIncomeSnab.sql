@@ -12,15 +12,32 @@ RETURNS TABLE (Id Integer, LineNum Integer
              , GoodsGroupNameFull TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , MeasureId Integer, MeasureName TVarChar
-             , Amount TFloat
-             , Comment TVarChar
-             , isErased Boolean
+             , Amount         TFloat
+             , AmountRemains  TFloat
+             , AmountRemainsEnd  TFloat
+             , AmountIncome   TFloat
+             , AmountForecast TFloat
+             , AmountIn       TFloat
+             , AmountOut      TFloat
+             , AmountOrder    TFloat
+             , CountOnDay     TFloat
+             , RemainsDays    TFloat
+             , PlanOrder      TFloat
+             , RemainsDaysWithOrder TFloat
+             , Color_RemainsDays integer
+
+             , Comment        TVarChar 
+             , isErased       Boolean
               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE Cursor1 refcursor;
    DECLARE vbJuridicalId_From Integer;
+   DECLARE vbCountDays Integer;
+   DECLARE vbDayCount  TFloat;
+   DECLARE vbEndDate TDateTime;
+   DECLARE vbStartDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_OrderIncome());
@@ -32,7 +49,25 @@ BEGIN
                             WHERE MovementLinkObject_From.MovementId = inMovementId
                               AND MovementLinkObject_From.DescId = zc_MovementLinkObject_Juridical());
 
- 
+     SELECT  COALESCE (MovementDate_OperDateStart.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate)) ::TDateTime  AS OperDateStart
+           , COALESCE (MovementDate_OperDateEnd.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY') ::TDateTime  AS OperDateEnd
+           , COALESCE (MovementFloat_DayCount.ValueData, 30)  ::TFloat  AS DayCount
+    INTO vbStartDate, vbEndDate, vbDayCount
+     FROM Movement
+            LEFT JOIN MovementDate AS MovementDate_OperDateStart
+                                   ON MovementDate_OperDateStart.MovementId = Movement.Id
+                                  AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
+            LEFT JOIN MovementDate AS MovementDate_OperDateEnd
+                                   ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                  AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
+            LEFT JOIN MovementFloat AS MovementFloat_DayCount
+                                    ON MovementFloat_DayCount.MovementId = Movement.Id
+                                   AND MovementFloat_DayCount.DescId = zc_MovementFloat_DayCount()
+     WHERE Movement.id = inMovementId
+       AND Movement.DescId = zc_Movement_OrderIncome();
+
+     vbCountDays := (SELECT DATE_PART('day', (vbEndDate - vbStartDate )) + 1);
+
      IF inShowAll THEN
 
      RETURN QUERY
@@ -56,6 +91,13 @@ BEGIN
                                   , MovementItem.Amount                           AS Amount
                                   , MIString_Comment.ValueData                    AS Comment
                                   , MovementItem.isErased
+                                  , COALESCE (MIFloat_AmountRemains.ValueData, 0)         AS AmountRemains
+                                  , COALESCE (MIFloat_AmountIncome.ValueData, 0)          AS AmountIncome
+                                  , COALESCE (MIFloat_AmountForecast.ValueData, 0)        AS AmountForecast
+                                  , COALESCE (MIFloat_AmountIn.ValueData, 0)              AS AmountIn
+                                  , COALESCE (MIFloat_AmountOut.ValueData, 0)             AS AmountOut
+                                  , COALESCE (MIFloat_AmountOrder.ValueData, 0)           AS AmountOrder
+
                              FROM (SELECT false AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased) AS tmpIsErased
                                   JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                    AND MovementItem.DescId = zc_MI_Master()
@@ -66,6 +108,25 @@ BEGIN
                                   LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
+                                
+                                  LEFT JOIN MovementItemFloat AS MIFloat_AmountRemains
+                                         ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountRemains.DescId = zc_MIFloat_Remains()
+                                  LEFT JOIN MovementItemFloat AS MIFloat_AmountIncome
+                                         ON MIFloat_AmountIncome.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountIncome.DescId = zc_MIFloat_Income()
+                                  LEFT JOIN MovementItemFloat AS MIFloat_AmountForecast
+                                         ON MIFloat_AmountForecast.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountForecast.DescId = zc_MIFloat_AmountForecast()
+                                  LEFT JOIN MovementItemFloat AS MIFloat_AmountIn
+                                         ON MIFloat_AmountIn.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountIn.DescId = zc_MIFloat_AmountIn()
+                                  LEFT JOIN MovementItemFloat AS MIFloat_AmountOut
+                                         ON MIFloat_AmountOut.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountOut.DescId = zc_MIFloat_AmountOut()
+                                  LEFT JOIN MovementItemFloat AS MIFloat_AmountOrder
+                                         ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
                             )
 
         SELECT 0                          AS Id
@@ -77,6 +138,21 @@ BEGIN
              , Object_Measure.Id          AS MeasureId
              , Object_Measure.ValueData   AS MeasureName
              , CAST (NULL AS TFloat)      AS Amount
+             , CAST (NULL AS TFloat)      AS AmountRemains
+             , CAST (NULL AS TFloat)      AS AmountRemainsEnd
+             , CAST (NULL AS TFloat)      AS AmountIncome
+             , CAST (NULL AS TFloat)      AS AmountForecast
+             , CAST (NULL AS TFloat)      AS AmountIn
+             , CAST (NULL AS TFloat)      AS AmountOut
+             , CAST (NULL AS TFloat)      AS AmountOrder
+
+             , CAST (NULL AS TFloat)      AS CountOnDay
+             , CAST (NULL AS TFloat)      AS RemainsDays
+             , CAST (NULL AS TFloat)      AS PlanOrder
+             , CAST (NULL AS TFloat)      AS RemainsDaysWithOrder
+
+             , zc_Color_Black() :: integer AS Color_RemainsDays
+
              , CAST (NULL AS TVarChar)    AS Comment
              , FALSE                      AS isErased
         FROM tmpGoodsListIncome AS tmpGoods
@@ -105,6 +181,45 @@ BEGIN
              , Object_Measure.Id          AS MeasureId
              , Object_Measure.ValueData   AS MeasureName
              , tmpMI.Amount
+             , tmpMI.AmountRemains  ::TFloat
+             , (tmpMI.AmountRemains + tmpMI.AmountIncome + tmpMI.AmountIn - tmpMI.AmountForecast - tmpMI.AmountOut) :: TFloat AS AmountRemainsEnd
+             , tmpMI.AmountIncome   ::TFloat
+             , tmpMI.AmountForecast ::TFloat
+             , tmpMI.AmountIn       ::TFloat
+             , tmpMI.AmountOut      ::TFloat
+             , tmpMI.AmountOrder    ::TFloat
+
+             , (CASE WHEN vbCountDays <> 0 THEN tmpMI.AmountForecast/vbCountDays ELSE 0 END)  :: TFloat AS CountOnDay
+             , CASE WHEN tmpMI.AmountForecast <=0 AND tmpMI.AmountRemainsEnd <> 0 THEN 365
+                    WHEN tmpMI.AmountRemainsEnd <> 0 AND (tmpMI.AmountForecast/vbCountDays) <> 0
+                    THEN tmpMI.AmountRemainsEnd / (tmpMI.AmountForecast/vbCountDays)
+                    ELSE 0
+               END :: TFloat AS RemainsDays
+
+             , CASE WHEN tmpMI.AmountForecast > 0 AND tmpMI.AmountRemainsEnd <> 0
+                     AND tmpMI.AmountRemainsEnd <> 0 AND tmpMI.AmountRemainsEnd < (tmpMI.AmountForecast/vbCountDays) * vbDayCount
+                    THEN (tmpMI.AmountForecast/vbCountDays) * vbDayCount - tmpMI.AmountRemainsEnd
+                    ELSE 0 
+               END :: TFloat AS PlanOrder
+  
+             , CASE WHEN tmpMI.AmountForecast <= 0 AND tmpMI.AmountRemainsEnd <> 0
+                    THEN 365
+                    WHEN (tmpMI.AmountForecast/vbCountDays) <> 0
+                    THEN (COALESCE(tmpMI.AmountRemainsEnd,0) + COALESCE(tmpMI.AmountIncome,0))/ (tmpMI.AmountForecast/vbCountDays)
+                    ELSE 0
+               END  :: TFloat AS RemainsDaysWithOrder
+
+             , CASE WHEN tmpMI.AmountForecast <= 0 AND tmpMI.AmountRemainsEnd <> 0
+                    THEN zc_Color_Black()
+                    WHEN COALESCE (tmpMI.AmountForecast, 0) <= 0 AND COALESCE (tmpMI.AmountRemainsEnd, 0) = 0
+                    THEN zc_Color_Black()
+                    WHEN (CASE WHEN tmpMI.AmountRemainsEnd <> 0 AND (tmpMI.AmountForecast/vbCountDays) <> 0
+                          THEN COALESCE(tmpMI.AmountRemainsEnd,0) / (tmpMI.AmountForecast/vbCountDays)
+                          ELSE 0 END) > 29.9
+                    THEN zc_Color_Black()
+                    ELSE zc_Color_Red()
+               END  :: integer AS Color_RemainsDays
+
              , tmpMI.Comment
              , tmpMI.isErased
         FROM tmpMI_Goods AS tmpMI
@@ -114,6 +229,7 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                     ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                    AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
 ;
 
      ELSE
@@ -126,6 +242,14 @@ BEGIN
                                   , MovementItem.Amount                           AS Amount
                                   , MIString_Comment.ValueData                    AS Comment
                                   , MovementItem.isErased
+                                  , COALESCE (MIFloat_AmountRemains.ValueData, 0)         AS AmountRemains
+                                  , COALESCE (MIFloat_AmountRemains.ValueData, 0) + COALESCE (MIFloat_AmountIncome.ValueData, 0) + COALESCE (MIFloat_AmountIn.ValueData, 0)
+                                  - COALESCE (MIFloat_AmountForecast.ValueData, 0) - COALESCE (MIFloat_AmountOut.ValueData, 0)  AS AmountRemainsEnd
+                                  , COALESCE (MIFloat_AmountIncome.ValueData, 0)          AS AmountIncome
+                                  , COALESCE (MIFloat_AmountForecast.ValueData, 0)        AS AmountForecast
+                                  , COALESCE (MIFloat_AmountIn.ValueData, 0)              AS AmountIn
+                                  , COALESCE (MIFloat_AmountOut.ValueData, 0)             AS AmountOut
+                                  , COALESCE (MIFloat_AmountOrder.ValueData, 0)           AS AmountOrder
                              FROM (SELECT false AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased) AS tmpIsErased
                                   JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                    AND MovementItem.DescId = zc_MI_Master()
@@ -137,6 +261,25 @@ BEGIN
                                   LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
+
+                                  LEFT JOIN MovementItemFloat AS MIFloat_AmountRemains
+                                         ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountRemains.DescId = zc_MIFloat_Remains()
+                                  LEFT JOIN MovementItemFloat AS MIFloat_AmountIncome
+                                         ON MIFloat_AmountIncome.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountIncome.DescId = zc_MIFloat_Income()
+                                  LEFT JOIN MovementItemFloat AS MIFloat_AmountForecast
+                                         ON MIFloat_AmountForecast.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountForecast.DescId = zc_MIFloat_AmountForecast()
+                                  LEFT JOIN MovementItemFloat AS MIFloat_AmountIn
+                                         ON MIFloat_AmountIn.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountIn.DescId = zc_MIFloat_AmountIn()
+                                  LEFT JOIN MovementItemFloat AS MIFloat_AmountOut
+                                         ON MIFloat_AmountOut.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountOut.DescId = zc_MIFloat_AmountOut()
+                                  LEFT JOIN MovementItemFloat AS MIFloat_AmountOrder
+                                         ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
                             )
 
         SELECT tmpMI.MovementItemId       AS Id
@@ -148,7 +291,46 @@ BEGIN
              , Object_Measure.Id          AS MeasureId
              , Object_Measure.ValueData   AS MeasureName
              , tmpMI.Amount
-             , tmpMI.Comment
+             , tmpMI.AmountRemains    ::TFloat
+             , tmpMI.AmountRemainsEnd ::TFloat
+             , tmpMI.AmountIncome     ::TFloat
+             , tmpMI.AmountForecast   ::TFloat
+             , tmpMI.AmountIn         ::TFloat
+             , tmpMI.AmountOut        ::TFloat
+             , tmpMI.AmountOrder      ::TFloat
+
+             , (CASE WHEN vbCountDays <> 0 THEN tmpMI.AmountForecast/vbCountDays ELSE 0 END)  :: TFloat AS CountOnDay
+             , CASE WHEN tmpMI.AmountForecast <=0 AND tmpMI.AmountRemainsEnd <> 0 THEN 365
+                    WHEN tmpMI.AmountRemainsEnd <> 0 AND (tmpMI.AmountForecast/vbCountDays) <> 0
+                    THEN COALESCE(tmpMI.AmountRemainsEnd,0) / (tmpMI.AmountForecast/vbCountDays)
+                    ELSE 0
+               END :: TFloat AS RemainsDays
+
+             , CASE WHEN tmpMI.AmountForecast > 0 AND tmpMI.AmountRemainsEnd <> 0
+                     AND tmpMI.AmountRemainsEnd <> 0 AND tmpMI.AmountRemainsEnd < (tmpMI.AmountForecast/vbCountDays) * vbDayCount
+                    THEN (tmpMI.AmountForecast/vbCountDays) * vbDayCount - tmpMI.AmountRemainsEnd
+                    ELSE 0 
+               END :: TFloat AS PlanOrder
+  
+             , CASE WHEN tmpMI.AmountForecast <= 0 AND tmpMI.AmountRemainsEnd <> 0
+                    THEN 365
+                    WHEN (tmpMI.AmountForecast/vbCountDays) <> 0
+                    THEN (COALESCE(tmpMI.AmountRemainsEnd,0) + COALESCE(tmpMI.AmountOrder,0))/ (tmpMI.AmountForecast/vbCountDays)
+                    ELSE 0
+               END  :: TFloat AS RemainsDaysWithOrder
+
+             , CASE WHEN tmpMI.AmountForecast <= 0 AND tmpMI.AmountRemainsEnd <> 0
+                    THEN zc_Color_Black()
+                    WHEN COALESCE (tmpMI.AmountForecast, 0) <= 0 AND COALESCE (tmpMI.AmountRemainsEnd, 0) = 0
+                    THEN zc_Color_Black()
+                    WHEN (CASE WHEN tmpMI.AmountRemainsEnd <> 0 AND (tmpMI.AmountForecast/vbCountDays) <> 0
+                          THEN COALESCE(tmpMI.AmountRemainsEnd,0) / (tmpMI.AmountForecast/vbCountDays)
+                          ELSE 0 END) > (vbDayCount - 0.1)
+                    THEN zc_Color_Black()
+                    ELSE zc_Color_Red()
+               END  :: integer AS Color_RemainsDays
+
+             , tmpMI.Comment 
              , tmpMI.isErased
         FROM tmpMI_Goods AS tmpMI
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId

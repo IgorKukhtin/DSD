@@ -140,6 +140,19 @@ type
     cxLabel6: TcxLabel;
     actShowAll: TBooleanStoredProcAction;
     InsertRecordGoods: TInsertRecord;
+    cxLabel18: TcxLabel;
+    edDayCount: TcxCurrencyEdit;
+    cxLabel19: TcxLabel;
+    edOperDateStart: TcxDateEdit;
+    cxLabel20: TcxLabel;
+    edOperDateEnd: TcxDateEdit;
+    spUpdateAmounts: TdsdStoredProc;
+    macUpdateAmountAll: TMultiAction;
+    actUpdateAmountRemains: TdsdExecStoredProc;
+    actRefresh_MI: TdsdDataSetRefresh;
+    bb: TdxBarButton;
+    HeaderSaver1: THeaderSaver;
+    spUpdateMovementByReport: TdsdStoredProc;
   private
   public
   end;
