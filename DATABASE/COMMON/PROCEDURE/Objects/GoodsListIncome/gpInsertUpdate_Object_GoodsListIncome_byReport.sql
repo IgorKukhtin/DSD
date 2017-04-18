@@ -88,7 +88,12 @@ BEGIN
         FROM ObjectLink AS ObjectLink_Goods_InfoMoney
              JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
                                        AND (Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId
-                                         OR Object_InfoMoney_View.InfoMoneyDestinationId = inInfoMoneyDestinationId)
+                                         OR Object_InfoMoney_View.InfoMoneyDestinationId IN (inInfoMoneyDestinationId
+                                                                                           , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
+                                                                                           , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                                                                           , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                                                                                            )
+                                           )
         WHERE ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney();
    -- !!!оптимизация!!!
    ANALYZE _tmpGoods;
