@@ -4,7 +4,7 @@ inherited SaleForm: TSaleForm
   ClientWidth = 740
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
   ExplicitWidth = 756
-  ExplicitHeight = 514
+  ExplicitHeight = 517
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

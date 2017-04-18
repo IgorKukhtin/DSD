@@ -1015,6 +1015,40 @@ object DM: TDM
     object cdsOrderExternalisSync: TBooleanField
       FieldName = 'isSync'
     end
+    object cdsOrderExternalPartnerId: TIntegerField
+      FieldName = 'PartnerId'
+    end
+    object cdsOrderExternalContractId: TIntegerField
+      FieldName = 'ContractId'
+    end
+    object cdsOrderExternalPartnerName: TStringField
+      FieldName = 'PartnerName'
+      Size = 255
+    end
+    object cdsOrderExternalPaidKindId: TIntegerField
+      FieldName = 'PaidKindId'
+    end
+    object cdsOrderExternalPriceListId: TIntegerField
+      FieldName = 'PriceListId'
+    end
+    object cdsOrderExternalPriceWithVAT: TBooleanField
+      FieldName = 'PriceWithVAT'
+    end
+    object cdsOrderExternalVATPercent: TFloatField
+      FieldName = 'VATPercent'
+    end
+    object cdsOrderExternalChangePercent: TFloatField
+      FieldName = 'ChangePercent'
+    end
+    object cdsOrderExternalCalcDayCount: TFloatField
+      FieldName = 'CalcDayCount'
+    end
+    object cdsOrderExternalOrderDayCount: TFloatField
+      FieldName = 'OrderDayCount'
+    end
+    object cdsOrderExternalisOperDateOrder: TBooleanField
+      FieldName = 'isOperDateOrder'
+    end
   end
   object tblMovement_RouteMember: TFDTable
     Connection = conMain
@@ -1148,6 +1182,20 @@ object DM: TDM
     end
     object cdsStoreRealsisSync: TBooleanField
       FieldName = 'isSync'
+    end
+    object cdsStoreRealsPartnerId: TIntegerField
+      FieldName = 'PartnerId'
+    end
+    object cdsStoreRealsPartnerName: TStringField
+      FieldName = 'PartnerName'
+      Size = 255
+    end
+    object cdsStoreRealsPriceListId: TIntegerField
+      FieldName = 'PriceListId'
+    end
+    object cdsStoreRealsAddress: TStringField
+      FieldName = 'Address'
+      Size = 255
     end
   end
   object cdsStoreRealItems: TClientDataSet

@@ -59,6 +59,7 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+  LoadReportFromFile('—чет соц.проект', ReportPath + '\—чет соц.проект.fr3');
   {
   LoadReportFromFile('—чет постановление 1303', ReportPath + '\—чет постановление 1303.fr3');
   LoadReportFromFile('Pеестр по постановлению 1303', ReportPath + '\Pеестр по постановлению 1303.fr3');

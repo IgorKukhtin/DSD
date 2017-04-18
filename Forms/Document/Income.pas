@@ -200,6 +200,8 @@ type
     OrderGuides: TdsdGuides;
     edJuridicalFrom: TcxButtonEdit;
     JuridicalFromGuides: TdsdGuides;
+    InsertRecordGoods: TInsertRecord;
+    bbInsertRecordGoods: TdxBarButton;
   private
   public
   end;

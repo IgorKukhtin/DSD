@@ -40,7 +40,7 @@ type
     UnitGuides: TdsdGuides;
     cxLabel4: TcxLabel;
     edJuridical: TcxButtonEdit;
-    JuridicalGuide: TdsdGuides;
+    JuridicalGuides: TdsdGuides;
     cxLabel5: TcxLabel;
     ceHospital: TcxButtonEdit;
     HospitalGuides: TdsdGuides;
