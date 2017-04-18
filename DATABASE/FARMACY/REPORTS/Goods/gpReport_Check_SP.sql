@@ -316,11 +316,16 @@ BEGIN
                                  AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
                           LEFT JOIN Object AS Object_PartnerMedical_Contract ON Object_PartnerMedical_Contract.Id = ObjectLink_Contract_Juridical.ObjectId
 
+                          INNER JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
+                                  ON ObjectLink_Contract_JuridicalBasis.ObjectId = Object_PartnerMedical_Contract.Id
+                                 AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+                                 AND ObjectLink_Contract_JuridicalBasis.ChildObjectId = tmp.JuridicalId
+
                           LEFT JOIN ObjectLink AS ObjectLink_Contract_GroupMemberSP
                                  ON ObjectLink_Contract_GroupMemberSP.ObjectId = Object_PartnerMedical_Contract.Id
                                 AND ObjectLink_Contract_GroupMemberSP.DescId = zc_ObjectLink_Contract_GroupMemberSP()
                           LEFT JOIN Object AS Object_PartnerMedical_GroupMemberSP ON Object_PartnerMedical_GroupMemberSP.Id = ObjectLink_Contract_GroupMemberSP.ChildObjectId
-
+      
                           LEFT JOIN ObjectDate AS ObjectDate_Start
                                   ON ObjectDate_Start.ObjectId = Object_PartnerMedical_Contract.Id
                                  AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()

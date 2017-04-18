@@ -107,6 +107,7 @@ BEGIN
 
             -- строчная часть реестра
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                  AND MovementItem.isErased = False
             LEFT JOIN Object AS Object_ObjectMember ON Object_ObjectMember.Id = MovementItem.ObjectId
  
             LEFT JOIN MovementItemDate AS MIDate_Insert
