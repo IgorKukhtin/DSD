@@ -11,8 +11,11 @@ CREATE OR REPLACE FUNCTION  gpReport_Check_SP(
     IN inHospitalId       Integer  ,  -- Больница
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (UnitName       TVarChar
+RETURNS TABLE (MovementId     Integer
+             , UnitName       TVarChar
+             , JuridicalId    Integer
              , JuridicalName  TVarChar
+             , HospitalId     Integer
              , HospitalName   TVarChar
              , GoodsCode      Integer
              , GoodsName      TVarChar
@@ -60,7 +63,8 @@ RETURNS TABLE (UnitName       TVarChar
            , PartnerMedical_BankAccount      TVarChar
            , PartnerMedical_BankName         TVarChar
            , PartnerMedical_MFO              TVarChar*/
-           , PartnerMedical_ContractName        TVarChar
+           , ContractId          Integer
+           , ContractName        TVarChar
            , Contract_StartDate                 TDateTime
            , MedicSPName                        TVarChar
            , InvNumberSP                        TVarChar
@@ -209,7 +213,8 @@ BEGIN
                                  AND COALESCE (ObjectLink_Child.ChildObjectId,0)<>0
                           )
             -- выбираем продажи по товарам соц.проекта
-            ,  tmpMI AS (SELECT Movement_Check.OperDate
+            ,  tmpMI AS (SELECT Movement_Check.Id                                         AS MovementId 
+                              , Movement_Check.OperDate
                               , MovementLinkObject_Unit.ObjectId                          AS UnitId
                               , tmpUnit.JuridicalId
                               , MovementLinkObject_PartnerMedical.ObjectId                AS HospitalId
@@ -258,7 +263,7 @@ BEGIN
                                 , movementlinkobject_partnermedical.objectid
                                 , MovementString_InvNumberSP.ValueData
                                 , MovementString_MedicSP.ValueData          
-                                , Movement_Check.OperDate
+                                , Movement_Check.OperDate, Movement_Check.Id
                          HAVING SUM (MI_Check.Amount) <> 0
                         )
 
@@ -299,6 +304,7 @@ BEGIN
                          , ObjectHistory_PartnerMedicalDetails.FullName          AS PartnerMedical_FullName
                          , ObjectHistory_PartnerMedicalDetails.JuridicalAddress  AS PartnerMedical_JuridicalAddress
                          , ObjectHistory_PartnerMedicalDetails.Phone             AS PartnerMedical_Phone
+                         , Object_PartnerMedical_Contract.Id                     AS PartnerMedical_ContractId
                          , Object_PartnerMedical_Contract.ValueData              AS PartnerMedical_ContractName
                          , ObjectDate_Start.ValueData                            AS PartnerMedical_Contract_StartDate 
 
@@ -316,11 +322,16 @@ BEGIN
                                  AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
                           LEFT JOIN Object AS Object_PartnerMedical_Contract ON Object_PartnerMedical_Contract.Id = ObjectLink_Contract_Juridical.ObjectId
 
+                          INNER JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
+                                  ON ObjectLink_Contract_JuridicalBasis.ObjectId = Object_PartnerMedical_Contract.Id
+                                 AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+                                 AND ObjectLink_Contract_JuridicalBasis.ChildObjectId = tmp.JuridicalId
+
                           LEFT JOIN ObjectLink AS ObjectLink_Contract_GroupMemberSP
                                  ON ObjectLink_Contract_GroupMemberSP.ObjectId = Object_PartnerMedical_Contract.Id
                                 AND ObjectLink_Contract_GroupMemberSP.DescId = zc_ObjectLink_Contract_GroupMemberSP()
                           LEFT JOIN Object AS Object_PartnerMedical_GroupMemberSP ON Object_PartnerMedical_GroupMemberSP.Id = ObjectLink_Contract_GroupMemberSP.ChildObjectId
-
+      
                           LEFT JOIN ObjectDate AS ObjectDate_Start
                                   ON ObjectDate_Start.ObjectId = Object_PartnerMedical_Contract.Id
                                  AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
@@ -335,10 +346,12 @@ BEGIN
 
 
         -- результат
-        SELECT Object_Unit.ValueData               AS UnitName
+        SELECT tmpData.MovementId
+             , Object_Unit.ValueData               AS UnitName
+             , Object_Juridical.Id                 AS JuridicalId
              , Object_Juridical.ValueData          AS JuridicalName
 
-             -- , Object_PartnerMedical.ValueData     AS HospitalName
+             , Object_PartnerMedical.Id            AS HospitalId
              , CASE WHEN tmpData.MovementId_err <> 0 THEN COALESCE (Movement_err.InvNumber, '' )  || ' - ' || COALESCE (Object_Unit_err.ValueData, '') ELSE Object_PartnerMedical.ValueData END :: TVarChar AS HospitalName
 
              , Object_Goods.ObjectCode             AS GoodsCode
@@ -367,22 +380,23 @@ BEGIN
              , tmpData.SummChangePercent :: TFloat  AS SummaSP
              , CAST (ROW_NUMBER() OVER (PARTITION BY Object_Unit.ValueData,Object_Juridical.ValueData ORDER BY Object_Unit.ValueData, Object_Juridical.ValueData, tmpGoodsSP.IntenalSPName ) AS Integer) AS NumLine
 
-           , COALESCE (tmpParam.JuridicalFullName, Object_Juridical.ValueData ) :: TVarChar  AS JuridicalFullName
-           , tmpParam.JuridicalAddress
-           , tmpParam.OKPO
-           , tmpParam.AccounterName
-           , tmpParam.INN
-           , tmpParam.NumberVAT
-           , tmpParam.BankAccount
-           , tmpParam.Phone
-           , tmpParam.BankName ::TVarChar
-           , tmpParam.MFO      ::TVarChar
+             , COALESCE (tmpParam.JuridicalFullName, Object_Juridical.ValueData ) :: TVarChar  AS JuridicalFullName
+             , tmpParam.JuridicalAddress
+             , tmpParam.OKPO
+             , tmpParam.AccounterName
+             , tmpParam.INN
+             , tmpParam.NumberVAT
+             , tmpParam.BankAccount
+             , tmpParam.Phone
+             , tmpParam.BankName ::TVarChar
+             , tmpParam.MFO      ::TVarChar
 
-           , COALESCE (tmpParam.PartnerMedical_FullName, Object_PartnerMedical.ValueData) :: TVarChar AS PartnerMedical_FullName
-           , tmpParam.PartnerMedical_JuridicalAddress
-           , tmpParam.PartnerMedical_Phone
-           , tmpParam.PartnerMedical_ContractName
-           , tmpParam.PartnerMedical_Contract_StartDate :: TDateTime AS Contract_StartDate
+             , COALESCE (tmpParam.PartnerMedical_FullName, Object_PartnerMedical.ValueData) :: TVarChar AS PartnerMedical_FullName
+             , tmpParam.PartnerMedical_JuridicalAddress
+             , tmpParam.PartnerMedical_Phone
+             , tmpParam.PartnerMedical_ContractId                      AS ContractId
+             , tmpParam.PartnerMedical_ContractName                    AS ContractName
+             , tmpParam.PartnerMedical_Contract_StartDate :: TDateTime AS Contract_StartDate
 
              , tmpData.MedicSPName
              , tmpData.InvNumberSP

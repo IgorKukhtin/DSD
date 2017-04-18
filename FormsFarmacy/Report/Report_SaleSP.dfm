@@ -847,7 +847,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         item
           Name = 'JuridicalId'
           Value = ''
-          Component = JuridicalGuide
+          Component = JuridicalGuides
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -855,7 +855,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         item
           Name = 'JuridicalName'
           Value = ''
-          Component = JuridicalGuide
+          Component = JuridicalGuides
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1099,7 +1099,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       item
         Name = 'inJuridicalId'
         Value = Null
-        Component = JuridicalGuide
+        Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1253,7 +1253,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         Component = HospitalGuides
       end
       item
-        Component = JuridicalGuide
+        Component = JuridicalGuides
       end
       item
         Component = GroupMemberSPGuides
@@ -1292,7 +1292,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       end>
     Left = 632
   end
-  object JuridicalGuide: TdsdGuides
+  object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridicalCorporateForm'
@@ -1304,7 +1304,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       item
         Name = 'Key'
         Value = ''
-        Component = JuridicalGuide
+        Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1312,7 +1312,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalGuide
+        Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1402,6 +1402,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       item
         Name = 'inJuridicalId'
         Value = ''
+        Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1472,7 +1473,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 704
+    Left = 592
     Top = 192
   end
 end

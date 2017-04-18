@@ -252,6 +252,14 @@ inherited CheckJournalForm: TCheckJournalForm
             Options.Editing = False
             Width = 105
           end
+          object clInvNumber_Invoice_Full: TcxGridDBColumn
+            Caption = #1057#1095#1077#1090' ('#1057#1055')'
+            DataBinding.FieldName = 'InvNumber_Invoice_Full'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 104
+          end
           object clInsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'

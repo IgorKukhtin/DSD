@@ -947,7 +947,7 @@ object IncomeForm: TIncomeForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 10
+    TabOrder = 9
     Width = 127
   end
   object edJuridicalFrom: TcxButtonEdit
@@ -1092,6 +1092,10 @@ object IncomeForm: TIncomeForm
         item
           Visible = True
           ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordGoods'
         end
         item
           Visible = True
@@ -1250,6 +1254,10 @@ object IncomeForm: TIncomeForm
     end
     object bbShowErasedCost: TdxBarButton
       Action = actShowErasedCost
+      Category = 0
+    end
+    object bbInsertRecordGoods: TdxBarButton
+      Action = InsertRecordGoods
       Category = 0
     end
   end
@@ -1743,6 +1751,19 @@ object IncomeForm: TIncomeForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object InsertRecordGoods: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      View = cxGridDBTableView
+      Action = actGoodsChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      ShortCut = 45
+      ImageIndex = 0
     end
     object InsertRecord1: TInsertRecord
       Category = 'DSDLib'
