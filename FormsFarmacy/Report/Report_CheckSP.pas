@@ -40,7 +40,7 @@ type
     UnitGuides: TdsdGuides;
     cxLabel4: TcxLabel;
     edJuridical: TcxButtonEdit;
-    JuridicalGuide: TdsdGuides;
+    JuridicalGuides: TdsdGuides;
     cxLabel5: TcxLabel;
     ceHospital: TcxButtonEdit;
     HospitalGuides: TdsdGuides;
@@ -49,8 +49,19 @@ type
     clOperDate: TcxGridDBColumn;
     clInvNumberSP: TcxGridDBColumn;
     clMedicSPName: TcxGridDBColumn;
-    clPartnerMedical_ContractName: TcxGridDBColumn;
-    clPartnerMedical_Contract_StartDate: TcxGridDBColumn;
+    clContractName: TcxGridDBColumn;
+    clContract_StartDate: TcxGridDBColumn;
+    cbisInsert: TcxCheckBox;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    actPrintInvoice: TdsdPrintAction;
+    spSavePrintMovement: TdsdStoredProc;
+    actSaveMovement: TdsdExecStoredProc;
+    macPrintInvoice: TMultiAction;
+    bbPrintInvoice: TdxBarButton;
+    cxLabel8: TcxLabel;
+    edInvoice: TcxTextEdit;
+    cxLabel7: TcxLabel;
+    edDateInvoice: TcxDateEdit;
   private
     { Private declarations }
   public
