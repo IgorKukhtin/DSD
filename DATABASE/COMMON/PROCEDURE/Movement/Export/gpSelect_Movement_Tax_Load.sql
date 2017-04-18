@@ -129,15 +129,15 @@ BEGIN
                                     AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
 
             LEFT JOIN ObjectHistory AS ObjectHistory_JuridicalDetails 
-                   ON ObjectHistory_JuridicalDetails.ObjectId = MovementLinkObject_To.ObjectId
-                  AND ObjectHistory_JuridicalDetails.DescId = zc_ObjectHistory_JuridicalDetails()
-                  AND Movement.OperDate >= ObjectHistory_JuridicalDetails.StartDate AND Movement.OperDate < ObjectHistory_JuridicalDetails.EndDate  
+                                    ON ObjectHistory_JuridicalDetails.ObjectId = MovementLinkObject_To.ObjectId
+                                   AND ObjectHistory_JuridicalDetails.DescId = zc_ObjectHistory_JuridicalDetails()
+                                   AND COALESCE (Movement_DocumentChild.OperDate, Movement.OperDate) >= ObjectHistory_JuridicalDetails.StartDate AND COALESCE (Movement_DocumentChild.OperDate, Movement.OperDate) < ObjectHistory_JuridicalDetails.EndDate  
             LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_FullName
-                   ON ObjectHistoryString_JuridicalDetails_FullName.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
-                  AND ObjectHistoryString_JuridicalDetails_FullName.DescId = zc_ObjectHistoryString_JuridicalDetails_FullName()
+                                          ON ObjectHistoryString_JuridicalDetails_FullName.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                         AND ObjectHistoryString_JuridicalDetails_FullName.DescId = zc_ObjectHistoryString_JuridicalDetails_FullName()
             LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_INN
-                   ON ObjectHistoryString_JuridicalDetails_INN.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
-                  AND ObjectHistoryString_JuridicalDetails_INN.DescId = zc_ObjectHistoryString_JuridicalDetails_INN()
+                                         ON ObjectHistoryString_JuridicalDetails_INN.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                        AND ObjectHistoryString_JuridicalDetails_INN.DescId = zc_ObjectHistoryString_JuridicalDetails_INN()
             /*LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                         AND MovementLinkObject_PaidKind.DescId = CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
