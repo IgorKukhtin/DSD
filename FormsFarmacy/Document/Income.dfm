@@ -337,6 +337,7 @@
             Caption = #1060#1072#1082#1090'. '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'AmountManual'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 54
           end
           object colAmountDiff: TcxGridDBColumn
@@ -913,7 +914,6 @@
           StoredProc = spGetTotalSumm
         end
         item
-          StoredProc = spUpdate_MovementItem_Income_AmountManual
         end>
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus [8]
