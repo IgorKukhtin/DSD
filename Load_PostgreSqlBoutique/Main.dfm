@@ -45,7 +45,6 @@ object MainForm: TMainForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 411
     object Gauge: TGauge
       Left = 0
       Top = 0

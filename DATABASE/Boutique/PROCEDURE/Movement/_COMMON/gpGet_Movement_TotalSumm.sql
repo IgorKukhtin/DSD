@@ -16,7 +16,8 @@ BEGIN
 
      RETURN QUERY 
        SELECT
-            ('Итого: '||trim (to_char (COALESCE (MovementFloat_TotalSumm.ValueData,0) , '999 999 999 999 999D99')))::TVarChar  AS TotalSumm
+            ('Итого: '||trim (to_char (COALESCE (MovementFloat_TotalSumm.ValueData, 0) , '999 999 999 999 999D99'))
+            )::TVarChar  AS TotalSumm
        FROM Movement
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id

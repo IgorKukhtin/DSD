@@ -319,7 +319,7 @@ end;
 
 procedure TdbObjectProcedureTest.CreateStatus;
 begin
-  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Status\');
+   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Status\');
 end;
 
 procedure TdbObjectProcedureTest.CreateUnit;
@@ -348,6 +348,7 @@ procedure TdbMovementItemProcedureTest.CreateIncome;
 begin
   DirectoryLoad(CommonProcedurePath + 'MovementItem\Income\');
 end;
+
 { TdbMovementItemContainerProcedureTest }
 
 procedure TdbMovementItemContainerProcedureTest.CreateCOMMON;

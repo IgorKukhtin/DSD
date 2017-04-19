@@ -1,8 +1,9 @@
 -- Function: gpUpdate_MI_Reestr_ReestrKindErased()
 
 DROP FUNCTION IF EXISTS gpUpdate_MI_Reestr_ReestrReturnKindErased (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_ReestrReturn_ReestrKindErased (Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_MI_Reestr_ReestrReturnKindErased(
+CREATE OR REPLACE FUNCTION gpUpdate_MI_ReestrReturn_ReestrKindErased(
     IN inId                   Integer   , -- Ид строки реестра
     IN inReestrKindId         Integer   , -- Тип состояния по реестру
     IN inSession              TVarChar    -- сессия пользователя
