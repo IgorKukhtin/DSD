@@ -61,7 +61,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyPartner(), ioId, inCurrencyPartnerId);
 
      -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
+     PERFORM lpInsertUpdate_MovementFloat_TotalSummIncome (ioId);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
