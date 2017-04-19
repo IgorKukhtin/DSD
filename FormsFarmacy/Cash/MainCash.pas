@@ -269,7 +269,7 @@ type
     MainColIntenalSPName: TcxGridDBColumn;
     actOpenGoodsSP_UserForm: TdsdOpenForm;
     miOpenGoodsSP_UserForm: TMenuItem;
-    Label6: TLabel;
+    lblPrice: TLabel;
     edPrice: TcxCurrencyEdit;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
@@ -537,6 +537,8 @@ begin
   FiscalNumber := '';
   pnlVIP.Visible := False;
   edPrice.Value := 0.0;
+  edPrice.Visible := False;
+  lblPrice.Visible := False;
   pnlDiscount.Visible := False;
   pnlSP.Visible := False;
   lblCashMember.Caption := '';
@@ -1149,6 +1151,8 @@ begin
   pnlDiscount.Visible    := DiscountExternalId > 0;
   lblDiscountExternalName.Caption:= '  ' + DiscountExternalName + '  ';
   lblDiscountCardNumber.Caption  := '  ' + DiscountCardNumber + '  ';
+  lblPrice.Visible := (DiscountServiceForm.gCode = 2);
+  edPrice.Visible := lblPrice.Visible;
 end;
 
 //***20.04.17
@@ -1341,11 +1345,6 @@ begin
   inherited;
   if DataSet.FieldByName('List_UID').AsString = '' then
     DataSet.FieldByName('List_UID').AsString := GenerateGUID;
-  if (DiscountServiceForm.gCode = 2) and (Abs(edPrice.Value) > 0.0001) then
-  begin
-    DataSet.FieldByName('Price').AsFloat := edPrice.Value;
-    DataSet.FieldByName('Summ').AsFloat := DataSet.FieldByName('Amount').AsFloat * edPrice.Value;
-  end;
 end;
 
 procedure TMainCashForm.ConnectionModeChange(var Msg: TMessage);
@@ -1889,6 +1888,13 @@ begin
                        lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('PriceSaleSP').asCurrency;
                        // цена СО скидкой
                        lPrice_bySoldRegim := SourceClientDataSet.FieldByName('PriceSP').asCurrency;
+             end else
+             if (DiscountServiceForm.gCode = 2) and (Abs(edPrice.Value) > 0.0001) then
+             begin
+               // цена БЕЗ скидки
+               lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
+               // цена СО скидкой
+               lPrice_bySoldRegim := edPrice.Value;
              end
              else begin
                        // цена БЕЗ скидки
@@ -2639,6 +2645,15 @@ begin
             // и УСТАНОВИМ скидку
             checkCDS.FieldByName('ChangePercent').asCurrency     := 0;
             checkCDS.FieldByName('SummChangePercent').asCurrency := AAmount * (RemainsCDS.FieldByName('PriceSaleSP').asCurrency - RemainsCDS.FieldByName('PriceSP').asCurrency);
+        end else
+        if (DiscountServiceForm.gCode = 2) and (Abs(edPrice.Value) > 0.0001) then
+        begin
+            // на всяк случай - УСТАНОВИМ скидку еще разок
+            checkCDS.FieldByName('PriceSale').asCurrency:= RemainsCDS.FieldByName('Price').asCurrency;
+            checkCDS.FieldByName('Price').asCurrency    := edPrice.Value;
+            // и УСТАНОВИМ скидку
+            checkCDS.FieldByName('ChangePercent').asCurrency     := 0;
+            checkCDS.FieldByName('SummChangePercent').asCurrency := AAmount * (RemainsCDS.FieldByName('Price').asCurrency - edPrice.Value);
         end
         else begin
             // на всяк случай условие - восстановим если Цена БЕЗ скидки была запонена

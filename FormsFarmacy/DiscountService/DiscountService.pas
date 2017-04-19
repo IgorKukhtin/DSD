@@ -807,7 +807,9 @@ begin
       end // if BarCode_find <> ''
 
       // иначе - обнуляем скидку
-      else begin
+      else
+      if (DiscountServiceForm.gCode <> 2) then
+      begin
                // на всяк случай - с условием
                if CheckCDS.FieldByName('PriceSale').asFloat > 0
                then lPriceSale:= CheckCDS.FieldByName('PriceSale').asFloat
