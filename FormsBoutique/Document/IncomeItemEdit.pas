@@ -66,6 +66,9 @@ type
     cxLabel11: TcxLabel;
     edLabelName: TcxButtonEdit;
     LabelGuides: TdsdGuides;
+    cxLabel12: TcxLabel;
+    edCompositionGroupName: TcxButtonEdit;
+    CompositionGroupGuides: TdsdGuides;
   private
     { Private declarations }
   public
