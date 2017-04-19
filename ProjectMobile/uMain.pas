@@ -797,6 +797,15 @@ type
     procedure lwStoreRealDocsUpdateObjects(const Sender: TObject;
       const AItem: TListViewItem);
     procedure bRefreshDocClick(Sender: TObject);
+    procedure lwOrderDocsUpdateObjects(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure lwOrderDocsItemClickEx(const Sender: TObject; ItemIndex: Integer;
+      const LocalClickPos: TPointF; const ItemObject: TListItemDrawable);
+    procedure lwReturnInDocsUpdateObjects(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure lwReturnInDocsItemClickEx(const Sender: TObject;
+      ItemIndex: Integer; const LocalClickPos: TPointF;
+      const ItemObject: TListItemDrawable);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -819,7 +828,6 @@ type
     FOrderTotalCountKg : Currency;
     FOrderTotalPrice : Currency;
     FDeletedSRI: TList<Integer>;
-    OldReturnInId : string;
     FDeletedRI: TList<Integer>;
     FReturnInTotalCountKg : Currency;
     FReturnInTotalPrice : Currency;
@@ -870,8 +878,12 @@ type
     procedure EnterNewPartner;
     procedure ShowPartners(Day : integer; Caption : string);
     procedure ShowPartnerInfo;
-    procedure ChangeDocumentStatus;
+    procedure ChangeStoreRealDocStatus;
     procedure BuildStoreRealDocsList;
+    procedure ChangeOrderExternalDocStatus;
+    procedure BuildOrderExternalDocsList;
+    procedure ChangeReturnInDocStatus;
+    procedure BuildReturnInDocsList;
     procedure ShowDocuments;
     procedure ShowPriceLists;
     procedure ShowPriceListItems;
@@ -1298,6 +1310,31 @@ begin
 end;
 
 // условия фильтра для товаров выбраных для заявки на поставку
+procedure TfrmMain.lwOrderDocsItemClickEx(const Sender: TObject;
+  ItemIndex: Integer; const LocalClickPos: TPointF;
+  const ItemObject: TListItemDrawable);
+begin
+  DM.cdsOrderExternal.Locate('Id', StrToIntDef(TListItemText(lwOrderDocs.Items[ItemIndex].Objects.FindDrawable('Id')).Text, 0), []);
+
+  if (ItemObject <> nil) and (ItemObject.Name = 'DeleteButton') then // удаление заявки на поставку
+  begin
+    TDialogService.MessageDialog('Удалить заявку "' + DM.cdsOrderExternalPartnerName.AsString +
+      '" на ' + FormatDateTime('DD.MM.YYYY', DM.cdsOrderExternalOperDate.AsDateTime) + '?',
+      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteOrderExtrernal);
+  end
+  else
+  // вызов формы редакирования выбранной заявки на поставку
+  begin
+    CreateEditOrderExtrernal(false);
+  end;
+end;
+
+procedure TfrmMain.lwOrderDocsUpdateObjects(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  DeleteButtonHide(AItem);
+end;
+
 procedure TfrmMain.lwOrderExternalItemsFilter(Sender: TObject; const AFilter,
   AValue: string; var Accept: Boolean);
 begin
@@ -1346,10 +1383,7 @@ procedure TfrmMain.lwOrderExternalListItemClickEx(const Sender: TObject;
   ItemIndex: Integer; const LocalClickPos: TPointF;
   const ItemObject: TListItemDrawable);
 begin
-  if ItemObject = nil then
-    exit;
-
-  if ItemObject.Name = 'DeleteButton' then // удаление заявки на поставку
+  if (ItemObject <> nil) and (ItemObject.Name = 'DeleteButton') then // удаление заявки на поставку
   begin
     TDialogService.MessageDialog('Удалить заявку на ' + FormatDateTime('DD.MM.YYYY', DM.cdsOrderExternalOperDate.AsDateTime) + '?',
       TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteOrderExtrernal);
@@ -1567,6 +1601,31 @@ begin
   TListItemImage(AItem.Objects.FindDrawable('imContact')).ImageIndex := 3;
 end;
 
+procedure TfrmMain.lwReturnInDocsItemClickEx(const Sender: TObject;
+  ItemIndex: Integer; const LocalClickPos: TPointF;
+  const ItemObject: TListItemDrawable);
+begin
+  DM.cdsReturnIn.Locate('Id', StrToIntDef(TListItemText(lwReturnInDocs.Items[ItemIndex].Objects.FindDrawable('Id')).Text, 0), []);
+
+  if (ItemObject <> nil) and (ItemObject.Name = 'DeleteButton') then // удалить выбранный возврат товаров
+  begin
+    TDialogService.MessageDialog('Удалить возврат "' + DM.cdsReturnInPartnerName.AsString +
+      '" за ' + FormatDateTime('DD.MM.YYYY', DM.cdsReturnInOperDate.AsDateTime) + '?',
+      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteReturnIn);
+  end
+  else
+  // показать информацию по выбранному возврат товаров
+  begin
+    CreateEditReturnIn(false);
+  end;
+end;
+
+procedure TfrmMain.lwReturnInDocsUpdateObjects(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  DeleteButtonHide(AItem);
+end;
+
 procedure TfrmMain.lwReturnInItemsFilter(Sender: TObject; const AFilter,
   AValue: string; var Accept: Boolean);
 begin
@@ -1615,12 +1674,9 @@ procedure TfrmMain.lwReturnInListItemClickEx(const Sender: TObject;
   ItemIndex: Integer; const LocalClickPos: TPointF;
   const ItemObject: TListItemDrawable);
 begin
-  if ItemObject = nil then
-    exit;
-
-  if ItemObject.Name = 'DeleteButton' then // удалить выбранную заявку на возврат товаров
+  if (ItemObject <> nil) and (ItemObject.Name = 'DeleteButton') then // удалить выбранную заявку на возврат товаров
   begin
-    TDialogService.MessageDialog('Удалить возврат на ' + FormatDateTime('DD.MM.YYYY', DM.cdsReturnInOperDate.AsDateTime) + '?',
+    TDialogService.MessageDialog('Удалить возврат за ' + FormatDateTime('DD.MM.YYYY', DM.cdsReturnInOperDate.AsDateTime) + '?',
       TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteReturnIn);
   end
   else
@@ -1646,10 +1702,7 @@ procedure TfrmMain.lwStoreRealDocsItemClickEx(const Sender: TObject;
 begin
   DM.cdsStoreReals.Locate('Id', StrToIntDef(TListItemText(lwStoreRealDocs.Items[ItemIndex].Objects.FindDrawable('Id')).Text, 0), []);
 
-  if ItemObject = nil then
-    exit;
-
-  if ItemObject.Name = 'DeleteButton' then // удалить выбранные "остатки"
+  if (ItemObject <> nil) and (ItemObject.Name = 'DeleteButton') then // удалить выбранные "остатки"
   begin
     TDialogService.MessageDialog('Удалить остатки "' + DM.cdsStoreRealsPartnerName.AsString +
       '" за ' + FormatDateTime('DD.MM.YYYY', DM.cdsStoreRealsOperDate.AsDateTime) + '?',
@@ -1708,12 +1761,9 @@ procedure TfrmMain.lwStoreRealListItemClickEx(const Sender: TObject;
   ItemIndex: Integer; const LocalClickPos: TPointF;
   const ItemObject: TListItemDrawable);
 begin
-  if ItemObject = nil then
-    exit;
-
-  if ItemObject.Name = 'DeleteButton' then // удалить выбранные "остатки"
+  if (ItemObject <> nil) and (ItemObject.Name = 'DeleteButton') then // удалить выбранные "остатки"
   begin
-    TDialogService.MessageDialog('Удалить остатки на ' + FormatDateTime('DD.MM.YYYY', DM.cdsStoreRealsOperDate.AsDateTime) + '?',
+    TDialogService.MessageDialog('Удалить остатки за ' + FormatDateTime('DD.MM.YYYY', DM.cdsStoreRealsOperDate.AsDateTime) + '?',
       TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteStoreReal);
   end
   else
@@ -1792,6 +1842,12 @@ begin
       DM.cdsOrderExternal.First;
     end;
 
+    if (tcMain.ActiveTab = tiReturnIn) and (DM.cdsReturnInId.AsInteger = -1) then
+    begin
+      DM.cdsReturnIn.Delete;
+      DM.cdsReturnIn.First;
+    end;
+
     ReturnPriorForm;
   end;
 end;
@@ -1816,6 +1872,9 @@ begin
     if DM.SaveOrderExternal(deOrderDate.Date, eOrderComment.Text,
       FOrderTotalPrice, FOrderTotalCountKg, DelItems, AResult = mrNone ,ErrMes) then
     begin
+      if FEditDocuments then
+        ChangeOrderExternalDocStatus;
+
       ShowMessage('Сохранение заявки прошло успешно.');
       ReturnPriorForm;
     end
@@ -1844,7 +1903,7 @@ begin
     if DM.SaveStoreReal(eStoreRealComment.Text, DelItems, AResult = mrNone, ErrMes) then
     begin
       if FEditDocuments then
-        ChangeDocumentStatus;
+        ChangeStoreRealDocStatus;
 
       ShowMessage('Сохранение остатков прошло успешно.');
       ReturnPriorForm;
@@ -1871,9 +1930,12 @@ begin
         DelItems := ',' + IntToStr(FDeletedRI[i]);
     end;
 
-    if DM.SaveReturnIn(OldReturnInId, deReturnDate.Date, eReturnComment.Text,
+    if DM.SaveReturnIn(deReturnDate.Date, eReturnComment.Text,
       FReturnInTotalPrice, FReturnInTotalCountKg, DelItems, AResult = mrNone, ErrMes) then
     begin
+      if FEditDocuments then
+        ChangeReturnInDocStatus;
+
       ShowMessage('Сохранение возврата прошло успешно.');
       ReturnPriorForm;
     end
@@ -1894,6 +1956,9 @@ begin
     DM.cdsOrderExternalStatusId.AsInteger := DM.tblObject_ConstStatusId_Erased.AsInteger;
     DM.cdsOrderExternalStatus.AsString := DM.tblObject_ConstStatusName_Erased.AsString;
     DM.cdsOrderExternal.Post;
+
+    if FEditDocuments then
+      ChangeOrderExternalDocStatus;
   end;
 end;
 
@@ -1913,7 +1978,7 @@ begin
     DM.cdsStoreReals.Post;
 
     if FEditDocuments then
-      ChangeDocumentStatus;
+      ChangeStoreRealDocStatus;
   end;
 end;
 
@@ -1929,6 +1994,9 @@ begin
     DM.cdsReturnInStatusId.AsInteger := DM.tblObject_ConstStatusId_Erased.AsInteger;
     DM.cdsReturnInStatus.AsString := DM.tblObject_ConstStatusName_Erased.AsString;
     DM.cdsReturnIn.Post;
+
+    if FEditDocuments then
+      ChangeReturnInDocStatus;
   end;
 end;
 
@@ -1991,6 +2059,7 @@ begin
     begin
       DM.LoadStoreRealItems(DM.cdsStoreRealsId.AsInteger);
     end;
+
     eStoreRealComment.Text := DM.cdsStoreRealsComment.AsString;
     FCanEditDocument := not DM.cdsStoreRealsisSync.AsBoolean;
 
@@ -2019,6 +2088,7 @@ begin
   begin
     DM.LoadOrderExtrenalItems(DM.cdsOrderExternalId.AsInteger);
   end;
+
   deOrderDate.Date := DM.cdsOrderExternalOperDate.AsDateTime;
   eOrderComment.Text := DM.cdsOrderExternalComment.AsString;
 
@@ -2043,36 +2113,30 @@ end;
 { создание новых или редактирование ранее введенных "остатков" }
 procedure TfrmMain.CreateEditReturnIn(New: boolean);
 begin
-  if DM.qryPartnerPriceWithVAT_RET.AsBoolean then
-    lReturnInPrice.Text := 'Цена (с НДС)'
-  else
-    lReturnInPrice.Text := 'Цена (без НДС)';
-
   FDeletedRI.Clear;
   FCheckedGooodsItems.Clear;
 
   if New then
   begin
-    OldReturnInId := '';
-    deReturnDate.Date := Date();
-    eReturnComment.Text := '';
+    DM.NewReturnIn;
 
     DM.DefaultReturnInItems;
-
-    FCanEditDocument := true;
   end
   else
   begin
-    OldReturnInId := DM.cdsReturnInId.AsString;
-    deReturnDate.Date := DM.cdsReturnInOperDate.AsDateTime;
-    eReturnComment.Text := DM.cdsReturnInComment.AsString;
-
     DM.LoadReturnInItems(DM.cdsReturnInId.AsInteger);
-
-    FCanEditDocument := not DM.cdsReturnInisSync.AsBoolean;
   end;
 
+  deReturnDate.Date := DM.cdsReturnInOperDate.AsDateTime;
+  eReturnComment.Text := DM.cdsReturnInComment.AsString;
+  FCanEditDocument := not DM.cdsReturnInisSync.AsBoolean;
+
   RecalculateReturnInTotalPriceAndWeight;
+
+  if DM.cdsReturnInPriceWithVAT.AsBoolean then
+    lReturnInPrice.Text := 'Цена (с НДС)'
+  else
+    lReturnInPrice.Text := 'Цена (без НДС)';
 
   pSaveReturnIn.Visible := FCanEditDocument;
   bAddReturnInItem.Visible := FCanEditDocument;
@@ -2163,7 +2227,7 @@ begin
   else
   if (tcMain.ActiveTab = tiReturnIn) and FCanEditDocument then
   begin
-    if OldReturnInId = '' then
+    if DM.cdsReturnInId.AsInteger = -1 then
       Mes := 'Выйти без сохранения возврата?'
     else
       Mes := 'Выйти из редактирования без сохранения?';
@@ -2516,14 +2580,15 @@ procedure TfrmMain.bRefreshDocClick(Sender: TObject);
 begin
   // документы по остаткам
   DM.LoadAllStoreReals(deStartDoc.Date, deEndDoc.Date);
-
   BuildStoreRealDocsList;
 
   // документы по заявкам на товары
-  //DM.LoadAllOrderExternal;
+  DM.LoadAllOrderExternal(deStartDoc.Date, deEndDoc.Date);
+  BuildOrderExternalDocsList;
 
   // документы по возвратам
-  //DM.LoadAllReturnIn;
+  DM.LoadAllReturnIn(deStartDoc.Date, deEndDoc.Date);;
+  BuildReturnInDocsList;
 end;
 
 procedure TfrmMain.bRefreshMapScreenClick(Sender: TObject);
@@ -3338,6 +3403,9 @@ begin
     if tcMain.ActiveTab = tiTasks then
       lCaption.Text := 'Задания'
     else
+    if tcMain.ActiveTab = tiDocuments then
+      lCaption.Text := 'Документы'
+    else
     if tcMain.ActiveTab = tiReportJuridicalCollation then
       lCaption.Text := 'Акт сверки'
     else
@@ -3351,7 +3419,7 @@ begin
       lCaption.Text := 'Остатки (' + DM.cdsStoreRealsPartnerName.AsString + ')'
     else
     if tcMain.ActiveTab = tiReturnIn then
-      lCaption.Text := 'Возврат (' + DM.qryPartnerName.AsString + ')';
+      lCaption.Text := 'Возврат (' + DM.cdsReturnInPartnerName.AsString + ')';
   end;
 
   if tcMain.ActiveTab = tiMain then
@@ -3710,7 +3778,7 @@ begin
   DM.LoadPhotoGroups;
 end;
 
-procedure TfrmMain.ChangeDocumentStatus;
+procedure TfrmMain.ChangeStoreRealDocStatus;
 var
   CurItem: TListViewItem;
 begin
@@ -3722,13 +3790,13 @@ begin
   DeleteButtonHide(CurItem);
 end;
 
+{ заполнение списка документов остатков }
 procedure TfrmMain.BuildStoreRealDocsList;
 var
-  OldPartnerName, OldPartnerAddress: string;
+  OldPartnerId: integer;
   NewItem: TListViewItem;
 begin
-  OldPartnerName := '';
-  OldPartnerAddress := '';
+  OldPartnerId := -1;
 
   lwStoreRealDocs.BeginUpdate;
   DM.cdsStoreReals.First;
@@ -3737,16 +3805,14 @@ begin
 
     while not DM.cdsStoreReals.Eof do
     begin
-      if (OldPartnerName <> DM.cdsStoreRealsPartnerName.AsString) or
-         (OldPartnerAddress <> DM.cdsStoreRealsAddress.AsString) then
+      if OldPartnerId <> DM.cdsStoreRealsPartnerId.AsInteger then
       begin
         NewItem := lwStoreRealDocs.Items.Add;
         NewItem.Text := DM.cdsStoreRealsPartnerName.AsString;
         NewItem.Detail := DM.cdsStoreRealsAddress.AsString;
         NewItem.Purpose := TListItemPurpose.Header;
 
-        OldPartnerName := DM.cdsStoreRealsPartnerName.AsString;
-        OldPartnerAddress := DM.cdsStoreRealsAddress.AsString;
+        OldPartnerId := DM.cdsStoreRealsPartnerId.AsInteger;
       end;
 
       NewItem := lwStoreRealDocs.Items.Add;
@@ -3766,6 +3832,132 @@ begin
     end;
   finally
     lwStoreRealDocs.EndUpdate;
+  end;
+end;
+
+procedure TfrmMain.ChangeOrderExternalDocStatus;
+var
+  CurItem: TListViewItem;
+begin
+  CurItem := lwOrderDocs.Items[lwOrderDocs.Selected.Index];
+  TListItemText(CurItem.Objects.FindDrawable('StatusId')).Text := DM.cdsOrderExternalStatusId.AsString;
+  TListItemText(CurItem.Objects.FindDrawable('Status')).Text := DM.cdsOrderExternalStatus.AsString;
+
+  ChangeStatusIcon(CurItem);
+  DeleteButtonHide(CurItem);
+end;
+
+{ заполнение списка документов заявок на товары }
+procedure TfrmMain.BuildOrderExternalDocsList;
+var
+  OldPartnerId, OldContractId: integer;
+  NewItem: TListViewItem;
+begin
+  OldPartnerId := -1;
+  OldContractId := -1;
+
+  lwOrderDocs.BeginUpdate;
+  DM.cdsOrderExternal.First;
+  try
+    lwOrderDocs.Items.Clear;
+
+    while not DM.cdsOrderExternal.Eof do
+    begin
+      if (OldPartnerId <> DM.cdsOrderExternalPartnerId.AsInteger) or
+         (OldContractId <> DM.cdsOrderExternalContractId.AsInteger) then
+      begin
+        NewItem := lwOrderDocs.Items.Add;
+        NewItem.Text := DM.cdsOrderExternalPartnerName.AsString;
+        NewItem.Detail := DM.cdsOrderExternalAddress.AsString + chr(13) + chr(10) +
+          DM.cdsOrderExternalContractName.AsString;
+        NewItem.Purpose := TListItemPurpose.Header;
+
+        OldPartnerId := DM.cdsOrderExternalPartnerId.AsInteger;
+        OldContractId := DM.cdsOrderExternalContractId.AsInteger;
+      end;
+
+      NewItem := lwOrderDocs.Items.Add;
+      NewItem.Text := DM.cdsOrderExternalName.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Name')).Text := DM.cdsOrderExternalName.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Price')).Text := DM.cdsOrderExternalPrice.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Weight')).Text := DM.cdsOrderExternalWeight.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Status')).Text := DM.cdsOrderExternalStatus.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Id')).Text := DM.cdsOrderExternalId.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('StatusId')).Text := DM.cdsOrderExternalStatusId.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('isSync')).Text := DM.cdsOrderExternalisSync.AsString;
+
+      // установить иконку кнопки удаления
+      TListItemImage(NewItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
+      ChangeStatusIcon(NewItem);
+      DeleteButtonHide(NewItem);
+
+      DM.cdsOrderExternal.Next;
+    end;
+  finally
+    lwOrderDocs.EndUpdate;
+  end;
+end;
+
+procedure TfrmMain.ChangeReturnInDocStatus;
+var
+  CurItem: TListViewItem;
+begin
+  CurItem := lwReturnInDocs.Items[lwReturnInDocs.Selected.Index];
+  TListItemText(CurItem.Objects.FindDrawable('StatusId')).Text := DM.cdsReturnInStatusId.AsString;
+  TListItemText(CurItem.Objects.FindDrawable('Status')).Text := DM.cdsReturnInStatus.AsString;
+
+  ChangeStatusIcon(CurItem);
+  DeleteButtonHide(CurItem);
+end;
+
+{ заполнение списка документов возврата товаров }
+procedure TfrmMain.BuildReturnInDocsList;
+var
+  OldPartnerId, OldContractId: integer;
+  NewItem: TListViewItem;
+begin
+  OldPartnerId := -1;
+  OldContractId := -1;
+
+  lwReturnInDocs.BeginUpdate;
+  DM.cdsReturnIn.First;
+  try
+    lwReturnInDocs.Items.Clear;
+
+    while not DM.cdsReturnIn.Eof do
+    begin
+      if (OldPartnerId <> DM.cdsReturnInPartnerId.AsInteger) or
+         (OldContractId <> DM.cdsReturnInContractId.AsInteger) then
+      begin
+        NewItem := lwReturnInDocs.Items.Add;
+        NewItem.Text := DM.cdsReturnInPartnerName.AsString;
+        NewItem.Detail := DM.cdsReturnInAddress.AsString + chr(13) + chr(10) +
+          DM.cdsReturnInContractName.AsString;
+        NewItem.Purpose := TListItemPurpose.Header;
+
+        OldPartnerId := DM.cdsReturnInPartnerId.AsInteger;
+        OldContractId := DM.cdsReturnInContractId.AsInteger;
+      end;
+
+      NewItem := lwReturnInDocs.Items.Add;
+      NewItem.Text := DM.cdsReturnInName.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Id')).Text := DM.cdsReturnInId.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Name')).Text := DM.cdsReturnInName.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Price')).Text := DM.cdsReturnInPrice.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Weight')).Text := DM.cdsReturnInWeight.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Status')).Text := DM.cdsReturnInStatus.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('StatusId')).Text := DM.cdsReturnInStatusId.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('isSync')).Text := DM.cdsReturnInisSync.AsString;
+
+      // установить иконку кнопки удаления
+      TListItemImage(NewItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
+      ChangeStatusIcon(NewItem);
+      DeleteButtonHide(NewItem);
+
+      DM.cdsReturnIn.Next;
+    end;
+  finally
+    lwReturnInDocs.EndUpdate;
   end;
 end;
 
@@ -4080,14 +4272,14 @@ begin
     while not DM.cdsReturnInItems.Eof do
     begin
       PriceWithPercent := DM.cdsReturnInItemsPrice.AsFloat * DM.cdsReturnInItemsCount.AsFloat *
-        (100 + DM.qryPartnerChangePercent.AsCurrency) / 100;
+        (100 + DM.cdsReturnInChangePercent.AsCurrency) / 100;
 
       TotalPriceWithPercent := TotalPriceWithPercent + PriceWithPercent;
 
-      if DM.qryPartnerPriceWithVAT_RET.AsBoolean then
+      if DM.cdsReturnInPriceWithVAT.AsBoolean then
         FReturnInTotalPrice := FReturnInTotalPrice + PriceWithPercent
       else
-        FReturnInTotalPrice := FReturnInTotalPrice + PriceWithPercent * (100 + DM.qryPartnerVATPercent_RET.AsCurrency) / 100;
+        FReturnInTotalPrice := FReturnInTotalPrice + PriceWithPercent * (100 + DM.cdsReturnInVATPercent.AsCurrency) / 100;
 
       if FormatFloat('0.##', DM.cdsReturnInItemsWeight.AsFloat) <> '0' then
         FReturnInTotalCountKg := FReturnInTotalCountKg + DM.cdsReturnInItemsWeight.AsFloat * DM.cdsReturnInItemsCount.AsFloat
@@ -4101,7 +4293,7 @@ begin
     DM.cdsReturnInItems.EnableControls;
   end;
 
-  if DM.qryPartnerChangePercent.AsCurrency = 0 then
+  if DM.cdsReturnInChangePercent.AsCurrency = 0 then
   begin
     lPriceWithPercentReturn.Visible := false;
     pReturnInTotals.Height := 50;
@@ -4111,12 +4303,12 @@ begin
     lPriceWithPercentReturn.Visible := true;
     pReturnInTotals.Height := 70;
 
-    if DM.qryPartnerChangePercent.AsCurrency > 0 then
+    if DM.cdsReturnInChangePercent.AsCurrency > 0 then
       lPriceWithPercentReturn.Text := ' Стоимость с учетом наценки (' +
-        FormatFloat(',0.00', DM.qryPartnerChangePercent.AsCurrency) + '%) : ' + FormatFloat(',0.00', TotalPriceWithPercent)
+        FormatFloat(',0.00', DM.cdsReturnInChangePercent.AsCurrency) + '%) : ' + FormatFloat(',0.00', TotalPriceWithPercent)
     else
       lPriceWithPercentReturn.Text := ' Стоимость с учетом скидки (' +
-        FormatFloat(',0.00', -DM.qryPartnerChangePercent.AsCurrency) + '%) : ' + FormatFloat(',0.00', TotalPriceWithPercent);
+        FormatFloat(',0.00', -DM.cdsReturnInChangePercent.AsCurrency) + '%) : ' + FormatFloat(',0.00', TotalPriceWithPercent);
   end;
 
   lTotalPriceReturn.Text := 'Общая стоимость (с учетом НДС) : ' + FormatFloat(',0.00', FReturnInTotalPrice);
