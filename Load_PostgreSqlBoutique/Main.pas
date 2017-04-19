@@ -1860,9 +1860,9 @@ begin
         Add('     , Bill_From.UnitName as UnitNameFrom ');
         Add('     , Bill_To.Id_Postgres as ToId ');
         Add('     , Bill_To.UnitName as UnitNameTo ');
-        Add('     , Bill_CurrencyDocument.ID as CurrencyDocumentId ');
+        Add('     , Bill_CurrencyDocument.Id_Postgres as CurrencyDocumentId ');
         Add('     , Bill_CurrencyDocument.ValutaName as  CurrencyDocumentName ');
-        Add('     , Bill_CurrencyPartner.ID as CurrencyPartnerId ');
+        Add('     , Bill_CurrencyPartner.Id_Postgres as CurrencyPartnerId ');
         Add('     , Bill_CurrencyPartner.ValutaName as CurrencyPartnerName ');
         Add('     , Valuta.NewKursIn as CurrencyValue ');
         Add('     , Valuta.NominalFromValuta as ParValue ');
@@ -1871,6 +1871,7 @@ begin
         Add('     , '''' as Comments ');
         Add('     , Bill.Id_Postgres ');
         Add(' from DBA.Bill ');
+        Add('     join DBA.BillItemsIncome on  BillItemsIncome.BillID = Bill.ID ');
         Add('     left join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
         Add('     left join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
         Add('     left join DBA.Valuta as Bill_CurrencyDocument on Bill_CurrencyDocument.Id = Bill.ValutaIDIn   ');

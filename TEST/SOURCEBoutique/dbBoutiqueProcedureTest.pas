@@ -30,6 +30,7 @@ type
   TdbMovementItemProcedureTest = class(TdbTest)
   published
     procedure CreateCOMMON;
+    procedure CreateIncome;
   end;
 
 type
@@ -342,6 +343,11 @@ end;
 procedure TdbMovementItemProcedureTest.CreateCOMMON;
 begin
   DirectoryLoad(CommonProcedurePath + 'MovementItem\_COMMON\');
+end;
+
+procedure TdbMovementItemProcedureTest.CreateIncome;
+begin
+  DirectoryLoad(CommonProcedurePath + 'MovementItem\Income\');
 end;
 
 { TdbMovementItemContainerProcedureTest }
