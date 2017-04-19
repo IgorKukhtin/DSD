@@ -1123,6 +1123,7 @@ object DM: TDM
     end
   end
   object qryPhotoGroups: TFDQuery
+    OnCalcFields = qryPhotoGroupsCalcFields
     Connection = conMain
     SQL.Strings = (
       '')
@@ -1137,6 +1138,15 @@ object DM: TDM
     end
     object qryPhotoGroupsStatusId: TIntegerField
       FieldName = 'StatusId'
+    end
+    object qryPhotoGroupsName: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'Name'
+      Size = 255
+      Calculated = True
+    end
+    object qryPhotoGroupsOperDate: TDateTimeField
+      FieldName = 'OperDate'
     end
   end
   object qryPhotos: TFDQuery

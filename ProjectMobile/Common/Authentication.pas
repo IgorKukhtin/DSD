@@ -118,7 +118,7 @@ begin
         pStorage.Connection := gc_WebService;
       end;
 
-      N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IMEI]), False, 4, ANeedShowException)).DocumentElement;
+      N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IMEI]), False, 1, ANeedShowException)).DocumentElement;
 
       if Assigned(N) then
       begin
