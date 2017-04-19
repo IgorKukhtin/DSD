@@ -66,6 +66,7 @@ BEGIN
           ExpirationDate , -- Партия товара
                  Remains , -- остаток
                 vbUserId)
+        , lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_LastPrice(), GoodsId, vbOperDate)              -- дата прайса --CURRENT_TIMESTAMP
        FROM LoadPriceListItem 
                JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
           LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind

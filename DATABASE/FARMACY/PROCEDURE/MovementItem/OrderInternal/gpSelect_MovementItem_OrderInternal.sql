@@ -214,6 +214,8 @@ BEGIN
                     , COALESCE(Object_ConditionsKeep.ValueData, '')      :: TVarChar AS ConditionsKeepName
                     , COALESCE (ObjectBoolean_Goods_SP.ValueData,False)  :: Boolean  AS isSP
                     , (COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) / 1.07 * 1.1) :: TFloat   AS PriceOptSP
+                    , CASE WHEN DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData) = CURRENT_DATE THEN TRUE ELSE FALSE END AS isMarketToday
+                    , DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData)                   ::TDateTime  AS LastPriceDate
                FROM  _tmpOrderInternal_MI AS tmpMI
                     LEFT JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId 
                     -- условия хранения
@@ -235,6 +237,11 @@ BEGIN
                     LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
                                           ON ObjectFloat_Goods_PriceOptSP.ObjectId = ObjectLink_Main.ChildObjectId 
                                          AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP()
+
+                    LEFT JOIN ObjectDate AS ObjectDate_LastPrice
+                                         ON ObjectDate_LastPrice.ObjectId = ObjectLink_Main.ChildObjectId
+                                        AND ObjectDate_LastPrice.DescId = zc_ObjectDate_Goods_LastPrice()
+
                 )
 
     , tmpMIF_Price AS (SELECT MIFloat_Price.*
@@ -287,6 +294,9 @@ BEGIN
            , tmpMI.isFirst
            , tmpMI.isSecond
            , tmpMI.isSP
+
+           , tmpMI.isMarketToday
+           , tmpMI.LastPriceDate  
 
            , CASE WHEN tmpMI.isSP = TRUE THEN 25088 --zc_Color_GreenL()
                   WHEN tmpMI.isTOP = TRUE OR tmpMI.isUnitTOP = TRUE THEN 16440317         --12615935      ---16440317  - розовый как в приходе ELSE zc_Color_White()
@@ -958,6 +968,10 @@ BEGIN
            , tmpMI.isFirst
            , tmpMI.isSecond
            , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
+
+           , CASE WHEN DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData) = CURRENT_DATE THEN TRUE ELSE FALSE END AS isMarketToday
+           , DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData)                   ::TDateTime  AS LastPriceDate
+
            , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE THEN 25088 --zc_Color_GreenL()
                   WHEN tmpMI.isTOP = TRUE
                     OR COALESCE (Object_Price_View.isTOP, False) = TRUE
@@ -1025,17 +1039,17 @@ BEGIN
 
             LEFT JOIN tmpIncome AS Income ON Income.Income_GoodsId = tmpMI.GoodsId
                       
-             LEFT JOIN tmpCheck ON tmpCheck.GoodsId = tmpMI.GoodsId
-             LEFT JOIN tmpSend ON tmpSend.GoodsId = tmpMI.GoodsId
-             LEFT JOIN tmpDeferred ON tmpDeferred.GoodsId = tmpMI.GoodsId
+            LEFT JOIN tmpCheck ON tmpCheck.GoodsId = tmpMI.GoodsId
+            LEFT JOIN tmpSend ON tmpSend.GoodsId = tmpMI.GoodsId
+            LEFT JOIN tmpDeferred ON tmpDeferred.GoodsId = tmpMI.GoodsId
 
-             LEFT JOIN (SELECT _tmpMI.MovementItemId, CASE WHEN COUNT (*) > 1 THEN FALSE ELSE TRUE END AS isOneJuridical
-                        FROM _tmpMI
-                        GROUP BY _tmpMI.MovementItemId
-                       ) AS SelectMinPrice_AllGoods ON SelectMinPrice_AllGoods.MovementItemId = tmpMI.Id
-             LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = tmpMI.JuridicalId
-                                 AND GoodsPromo.GoodsId = tmpMI.GoodsId
-             LEFT JOIN Movement AS MovementPromo ON MovementPromo.Id = GoodsPromo.MovementId
+            LEFT JOIN (SELECT _tmpMI.MovementItemId, CASE WHEN COUNT (*) > 1 THEN FALSE ELSE TRUE END AS isOneJuridical
+                       FROM _tmpMI
+                       GROUP BY _tmpMI.MovementItemId
+                      ) AS SelectMinPrice_AllGoods ON SelectMinPrice_AllGoods.MovementItemId = tmpMI.Id
+            LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = tmpMI.JuridicalId
+                                AND GoodsPromo.GoodsId = tmpMI.GoodsId
+            LEFT JOIN Movement AS MovementPromo ON MovementPromo.Id = GoodsPromo.MovementId
 
             LEFT JOIN OrderSheduleList ON OrderSheduleList.ContractId = tmpMI.ContractId
             LEFT JOIN OrderSheduleListToday ON OrderSheduleListToday.ContractId = tmpMI.ContractId
@@ -1059,6 +1073,10 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
                                   ON ObjectFloat_Goods_PriceOptSP.ObjectId = ObjectLink_Main.ChildObjectId 
                                  AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP() 
+
+            LEFT JOIN ObjectDate AS ObjectDate_LastPrice
+                                 ON ObjectDate_LastPrice.ObjectId = ObjectLink_Main.ChildObjectId
+                                AND ObjectDate_LastPrice.DescId = zc_ObjectDate_Goods_LastPrice()
            ;
 
      RETURN NEXT Cursor1;
