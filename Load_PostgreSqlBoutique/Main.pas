@@ -1872,7 +1872,7 @@ begin
         Add('       , Measure.MeasureName as MeasureName ');
         Add('       , BillItemsIncome.OperCount as Amount ');
         Add('       , BillItemsIncome.OperPrice as OperPrice ');
-        Add('       , BillItemsIncome.SummIn as CountForPrice ');
+        Add('       , 1 as CountForPrice ');
         Add('       , BillItemsIncome.PriceListPrice as OperPriceList ');
         Add('       , BillItemsIncome.Id_Postgres as Id_Postgres ');
         Add('  from  dba.BillItemsIncome ');
