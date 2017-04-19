@@ -1865,6 +1865,7 @@ begin
         Add('       , GoodsName.GoodsName as GoodsName ');
         Add('       , GoodsInfo.GoodsInfoName as GoodsInfoName ');
         Add('       , GoodsSize.GoodsSizeName as GoodsSize ');
+        Add('       , CompositionGroup.CompositionGroupName as CompositionGroupName ');
         Add('       , Composition.CompositionName as CompositionName ');
         Add('       , LineFabrica.LineFabricaName as LineFabricaName ');
         Add('       , label.LabelName as LabelName ');
@@ -1880,6 +1881,7 @@ begin
         Add('   left join dba.Goods as GoodsName  on GoodsName.Id = GoodsProperty.GoodsId ');
         Add('   left join dba.GoodsSize on GoodsSize.Id =  GoodsProperty.GoodsSizeId ');
         Add('   left join dba.Composition on Composition.Id = GoodsProperty.CompositionId ');
+        Add('   left join dba.CompositionGroup on CompositionGroup.id = Composition.CompositionGroupId ');
         Add('   left join dba.GoodsInfo on GoodsInfo.id = GoodsProperty.GoodsInfoId ');
         Add('   left join dba.LineFabrica on LineFabrica.id = GoodsProperty.LineFabricaId ');
         Add('   left join  ');
@@ -1913,6 +1915,7 @@ begin
         toStoredProc.Params.AddParam ('inGoodsName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inGoodsInfoName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inGoodsSize',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inCompositionGroupName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inCompositionName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inLineFabricaName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inLabelName',ftString,ptInput, '');
@@ -1936,6 +1939,7 @@ begin
              toStoredProc.Params.ParamByName('inGoodsName').Value:=FieldByName('GoodsName').AsString;
              toStoredProc.Params.ParamByName('inGoodsInfoName').Value:=FieldByName('GoodsInfoName').AsString;
              toStoredProc.Params.ParamByName('inGoodsSize').Value:=FieldByName('GoodsSize').AsString;
+             toStoredProc.Params.ParamByName('inCompositionGroupName').Value:=FieldByName('CompositionGroupName').AsString;
              toStoredProc.Params.ParamByName('inCompositionName').Value:=FieldByName('CompositionName').AsString;
              toStoredProc.Params.ParamByName('inLineFabricaName').Value:=FieldByName('LineFabricaName').AsString;
              toStoredProc.Params.ParamByName('inLabelName').Value:=FieldByName('LabelName').AsString;
