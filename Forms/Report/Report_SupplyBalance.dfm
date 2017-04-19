@@ -5,7 +5,6 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -253
   ExplicitWidth = 1382
   ExplicitHeight = 572
   PixelsPerInch = 96
@@ -1509,6 +1508,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         Component = PeriodChoice
       end
       item
+        Component = JuridicalGuides
       end
       item
         Component = UnitGuides
