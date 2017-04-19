@@ -61,7 +61,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
           Kind = bkEllipsis
         end>
       TabOrder = 2
-      Width = 206
+      Width = 220
     end
     object cxLabel3: TcxLabel
       Left = 455
@@ -69,7 +69,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 376
+      Left = 352
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       State = cbsChecked
@@ -77,7 +77,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       Width = 130
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 323
+      Left = 307
       Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -87,7 +87,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       Width = 44
     end
     object edChangePercent: TcxCurrencyEdit
-      Left = 517
+      Left = 484
       Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -98,22 +98,22 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       Width = 144
     end
     object cxLabel7: TcxLabel
-      Left = 278
+      Left = 268
       Top = 63
       Caption = '% '#1053#1044#1057
     end
     object cxLabel8: TcxLabel
-      Left = 517
+      Left = 484
       Top = 45
       Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
     end
     object cxLabel9: TcxLabel
-      Left = 665
+      Left = 681
       Top = 5
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object edContract: TcxButtonEdit
-      Left = 665
+      Left = 681
       Top = 23
       Properties.Buttons = <
         item
@@ -122,15 +122,15 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         end>
       Properties.ReadOnly = True
       TabOrder = 3
-      Width = 92
+      Width = 90
     end
     object cxLabel10: TcxLabel
-      Left = 760
+      Left = 776
       Top = 5
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
-      Left = 760
+      Left = 776
       Top = 23
       Properties.Buttons = <
         item
@@ -174,7 +174,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       Caption = #1050#1091#1088#1089' '#1059#1055
     end
     object edCurrencyValue: TcxCurrencyEdit
-      Left = 922
+      Left = 938
       Top = 23
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -185,12 +185,12 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       Width = 45
     end
     object cxLabel14: TcxLabel
-      Left = 840
+      Left = 856
       Top = 5
       Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
     end
     object edCurrencyDocument: TcxButtonEdit
-      Left = 840
+      Left = 856
       Top = 23
       Properties.Buttons = <
         item
@@ -203,18 +203,18 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       Width = 78
     end
     object cxLabel16: TcxLabel
-      Left = 665
+      Left = 865
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 665
+      Left = 865
       Top = 63
       TabOrder = 22
-      Width = 351
+      Width = 167
     end
     object edParValue: TcxCurrencyEdit
-      Left = 972
+      Left = 988
       Top = 23
       EditValue = 1.000000000000000000
       Properties.DecimalPlaces = 4
@@ -224,7 +224,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       Width = 44
     end
     object cxLabel24: TcxLabel
-      Left = 972
+      Left = 988
       Top = 5
       Caption = #1053#1086#1084'. '#1059#1055
     end
@@ -246,6 +246,48 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       Left = 169
       Top = 45
       Caption = #1044#1072#1090#1072' '#1087#1083#1072#1085' '#1087#1088#1080#1093'.'
+    end
+    object cxLabel18: TcxLabel
+      Left = 636
+      Top = 45
+      Caption = #1044#1085#1080
+    end
+    object edDayCount: TcxCurrencyEdit
+      Left = 636
+      Top = 63
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0'
+      TabOrder = 29
+      Width = 39
+    end
+    object cxLabel19: TcxLabel
+      Left = 683
+      Top = 45
+      Caption = #1055#1088#1086#1075#1085#1086#1079' '#1089
+    end
+    object edOperDateStart: TcxDateEdit
+      Left = 683
+      Top = 63
+      EditValue = 42856d
+      Properties.ReadOnly = False
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 31
+      Width = 88
+    end
+    object cxLabel20: TcxLabel
+      Left = 776
+      Top = 45
+      Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086
+    end
+    object edOperDateEnd: TcxDateEdit
+      Left = 776
+      Top = 63
+      EditValue = 42856d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 33
+      Width = 83
     end
   end
   object cxPageControl: TcxPageControl
@@ -285,6 +327,51 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
               Kind = skSum
               Column = colAmountSumm
               Sorted = True
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountRemainsEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountIncome
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountForecast
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountOut
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountOrder
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountOnDay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PlanOrder
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -300,6 +387,51 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountRemainsEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountIncome
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountForecast
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountOut
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountOrder
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountOnDay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PlanOrder
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -363,6 +495,149 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
+          end
+          object colAmountRemains: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072#1095'.'
+            DataBinding.FieldName = 'AmountRemains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object colAmountRemainsEnd: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1082#1086#1085#1077#1095#1085'.'
+            DataBinding.FieldName = 'AmountRemainsEnd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object colAmountIncome: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076'-'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'AmountIncome'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object colAmountForecast: TcxGridDBColumn
+            Caption = #1056#1072#1089#1093#1086#1076' '#1085#1072' '#1087#1088'-'#1074#1086
+            DataBinding.FieldName = 'AmountForecast'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object colAmountIn: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093'. '#1076#1088#1091#1075#1086#1081
+            DataBinding.FieldName = 'AmountIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object colAmountOut: TcxGridDBColumn
+            Caption = #1056#1072#1089#1093'. '#1076#1088#1091#1075#1086#1081
+            DataBinding.FieldName = 'AmountOut'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object colAmountOrder: TcxGridDBColumn
+            Caption = #1047#1072#1082#1072#1079' '#1074' '#1087#1091#1090#1080
+            DataBinding.FieldName = 'AmountOrder'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object CountOnDay: TcxGridDBColumn
+            Caption = #1057#1088#1077#1076#1085#1080#1081' '#1088#1072#1089#1093#1086#1076' '#1074' '#1076#1077#1085#1100
+            DataBinding.FieldName = 'CountOnDay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object RemainsDays: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1086#1089#1090#1072#1090#1082#1072
+            DataBinding.FieldName = 'RemainsDays'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ReserveDays: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1079#1072#1087#1072#1089#1072
+            DataBinding.FieldName = 'ReserveDays'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 70
+          end
+          object PlanOrder: TcxGridDBColumn
+            Caption = #1055#1083#1072#1085'. '#1047#1072#1082#1072#1079' '#1085#1072' '#1084#1077#1089#1103#1094
+            DataBinding.FieldName = 'PlanOrder'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object RemainsDaysWithOrder: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1086#1089#1090#1072#1090#1082#1072' '#1089' '#1091#1095#1077#1090#1086#1084' '#1079#1072#1082#1072#1079#1072
+            DataBinding.FieldName = 'RemainsDaysWithOrder'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Color_RemainsDays: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_RemainsDays'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 70
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -560,6 +835,14 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -671,6 +954,10 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       Visible = ivAlways
       ImageIndex = 64
     end
+    object bb: TdxBarButton
+      Action = macUpdateAmountAll
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -699,6 +986,9 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdateMovement
+        end
+        item
+          StoredProc = spUpdateMovementByReport
         end>
       Caption = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -739,6 +1029,20 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
+    end
+    object actRefresh_MI: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectMI
+      StoredProcList = <
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -1105,6 +1409,38 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       ShortCut = 45
       ImageIndex = 0
     end
+    object macUpdateAmountAll: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdateMovement
+        end
+        item
+          Action = actUpdateAmountRemains
+        end
+        item
+          Action = actRefresh_MI
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077'?'
+      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 50
+    end
+    object actUpdateAmountRemains: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateAmounts
+      StoredProcList = <
+        item
+          StoredProc = spUpdateAmounts
+        end>
+      Caption = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1086#1089#1090#1072#1090#1086#1082
+      Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1086#1089#1090#1072#1090#1086#1082
+      ImageIndex = 47
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1203,7 +1539,11 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ValueColumn = Color_RemainsDays
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <
@@ -1219,8 +1559,8 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
     Top = 337
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 326
-    Top = 287
+    Left = 302
+    Top = 295
   end
   object spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_OrderIncome'
@@ -1569,6 +1909,27 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDateStart'
+        Value = 'NULL'
+        Component = edOperDateStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDateEnd'
+        Value = 'NULL'
+        Component = edOperDateEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DayCount'
+        Value = Null
+        Component = edDayCount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 200
@@ -1697,8 +2058,8 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 792
-    Top = 16
+    Left = 832
+    Top = 8
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
@@ -2054,5 +2415,107 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       end>
     Left = 352
     Top = 16
+  end
+  object spUpdateAmounts: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_OrderIncomeSnab'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate'
+        Value = 42132d
+        Component = edOperDateStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = ''
+        Component = edOperDateEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 674
+    Top = 288
+  end
+  object HeaderSaver1: THeaderSaver
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
+    StoredProc = spUpdateMovementByReport
+    ControlList = <
+      item
+        Control = edDayCount
+      end
+      item
+        Control = edOperDateEnd
+      end
+      item
+        Control = edOperDateStart
+      end>
+    GetStoredProc = spGet
+    Left = 336
+    Top = 201
+  end
+  object spUpdateMovementByReport: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_OrderIncomeSnabByReport'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDateStart'
+        Value = 42160d
+        Component = edOperDateStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDateEnd'
+        Value = ''
+        Component = edOperDateEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDayCount'
+        Value = 0.000000000000000000
+        Component = edDayCount
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 402
+    Top = 264
   end
 end
