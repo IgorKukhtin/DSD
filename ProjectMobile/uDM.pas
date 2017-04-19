@@ -588,8 +588,11 @@ type
     cdsReturnInChangePercent: TFloatField;
     cdsReturnInPriceListId: TIntegerField;
     cdsReturnInAddress: TStringField;
+    qryPhotoGroupsName: TStringField;
+    qryPhotoGroupsOperDate: TDateTimeField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
+    procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
     FConnected: Boolean;
@@ -2534,6 +2537,11 @@ begin
   DataSet.FieldByName('Termin').AsString := 'Цена действительна с ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('StartDate').AsDateTime);
 end;
 
+procedure TDM.qryPhotoGroupsCalcFields(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('Name').AsString := 'Фотографии за ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('OperDate').AsDateTime);
+end;
+
 { получение текущей версии программы }
 function TDM.GetCurrentVersion: string;
 {$IFDEF ANDROID}
@@ -4173,7 +4181,7 @@ begin
     else
       tblMovement_VisitComment.AsString := 'Общая';
     tblMovement_VisitInsertDate.AsDateTime := Now();
-    tblMovement_VisitStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
+    tblMovement_VisitStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
     tblMovement_VisitisSync.AsBoolean := false;
 
     tblMovement_Visit.Post;
@@ -4190,7 +4198,7 @@ end;
 { начитка групп фотографий из БД }
 procedure TDM.LoadPhotoGroups;
 begin
-  qryPhotoGroups.Open('select Id, Comment, StatusId from Movement_Visit where PartnerId = ' + qryPartnerId.AsString +
+  qryPhotoGroups.Open('select Id, Comment, StatusId, OperDate from Movement_Visit where PartnerId = ' + qryPartnerId.AsString +
     ' and StatusId <> ' + tblObject_ConstStatusId_Erased.AsString);
 end;
 

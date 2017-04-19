@@ -111,7 +111,6 @@ type
     pPartnerInfo: TPanel;
     tiSync: TTabItem;
     imLogo: TImage;
-    pMapScreen: TPanel;
     vsbMain: TVertScrollBox;
     bMonday: TButton;
     bFriday: TButton;
@@ -244,17 +243,10 @@ type
     Label28: TLabel;
     lPartnerAddress: TLabel;
     lPartnerName: TLabel;
-    tMapToImage: TTimer;
-    iPartnerMap: TImage;
     lwOrderExternalList: TListView;
     LinkListControlToFieldOrderExternal: TLinkListControlToField;
     pNewOrderExternal: TPanel;
     bNewOrderExternal: TButton;
-    bSetPartnerCoordinate: TButton;
-    Image11: TImage;
-    pMap: TPanel;
-    bShowBigMap: TButton;
-    Image12: TImage;
     tSavePath: TTimer;
     bPathonMap: TButton;
     tiPathOnMap: TTabItem;
@@ -312,7 +304,6 @@ type
     lPromoPrice: TLabel;
     pShowOnlyPromo: TPanel;
     cbOnlyPromo: TCheckBox;
-    lNoMap: TLabel;
     lwReturnInList: TListView;
     Panel2: TPanel;
     bNewReturnIn: TButton;
@@ -350,8 +341,6 @@ type
     cbLoadData: TCheckBox;
     cbUploadData: TCheckBox;
     tErrorMap: TTimer;
-    bRefreshMapScreen: TButton;
-    Image15: TImage;
     lwPriceListGoods: TListView;
     Popup2: TPopup;
     Panel28: TPanel;
@@ -621,6 +610,18 @@ type
     deStartDoc: TDateEdit;
     Label77: TLabel;
     deEndDoc: TDateEdit;
+    tiPartnerMap: TTabItem;
+    pMap: TPanel;
+    lNoMap: TLabel;
+    bRefreshMapScreen: TButton;
+    Image15: TImage;
+    pMapButtons: TPanel;
+    bSetPartnerCoordinate: TButton;
+    Image11: TImage;
+    WebGMapsGeocoder: TTMSFMXWebGMapsGeocoding;
+    Layout35: TLayout;
+    Label78: TLabel;
+    lPartnerAddressGPS: TLabel;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -665,12 +666,10 @@ type
     procedure lwOrderExternalItemsFilter(Sender: TObject; const AFilter,
       AValue: string; var Accept: Boolean);
     procedure bMinusAmountClick(Sender: TObject);
-    procedure tMapToImageTimer(Sender: TObject);
     procedure lwOrderExternalListItemClickEx(const Sender: TObject;
       ItemIndex: Integer; const LocalClickPos: TPointF;
       const ItemObject: TListItemDrawable);
     procedure bSetPartnerCoordinateClick(Sender: TObject);
-    procedure bShowBigMapClick(Sender: TObject);
     procedure tSavePathTimer(Sender: TObject);
     procedure cbShowAllPathChange(Sender: TObject);
     procedure bRefreshPathOnMapClick(Sender: TObject);
@@ -806,6 +805,7 @@ type
     procedure lwReturnInDocsItemClickEx(const Sender: TObject;
       ItemIndex: Integer; const LocalClickPos: TPointF;
       const ItemObject: TListItemDrawable);
+    procedure tcPartnerInfoChange(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -857,16 +857,17 @@ type
     procedure DeleteOrderExtrernal(const AResult: TModalResult);
     procedure DeleteStoreReal(const AResult: TModalResult);
     procedure DeleteReturnIn(const AResult: TModalResult);
+    procedure DeletePhotoGroup(const AResult: TModalResult);
     procedure CreateEditStoreReal(const AResult: TModalResult);
     procedure CreateEditOrderExtrernal(New: boolean);
     procedure CreateEditReturnIn(New: boolean);
     procedure SetPartnerCoordinates(const AResult: TModalResult);
 
     function GetAddress(const Latitude, Longitude: Double): string;
-    //function GetCoordinates(const Address: string; out Coordinates: TLocationCoord2D): Boolean;
+    function GetCoordinates(const Address: string; out Coordinates: TLocationCoord2D): Boolean;
     procedure WebGMapDownloadFinish(Sender: TObject);
     procedure ShowBigMap;
-    procedure GetMapPartnerScreenshot(GPSN, GPSE: Double);
+    procedure GetPartnerMap(GPSN, GPSE: Double);
 
     procedure ChangeStatusIcon(ACurItem: TListViewItem);
     procedure DeleteButtonHide(AItem: TListViewItem);
@@ -1465,13 +1466,11 @@ procedure TfrmMain.lwPartnerPhotoGroupsItemClickEx(const Sender: TObject;
   ItemIndex: Integer; const LocalClickPos: TPointF;
   const ItemObject: TListItemDrawable);
 begin
-  if (ItemObject <> nil) and (ItemObject.Name = 'I') then // удаление выбранной группы фотографий
+  if (ItemObject <> nil) and (ItemObject.Name = 'DeleteButton') then // удаление выбранной группы фотографий
   begin
-    DM.qryPhotoGroups.Edit;
-    DM.qryPhotoGroupsStatusId.AsInteger := DM.tblObject_ConstStatusId_Erased.AsInteger;
-    DM.qryPhotoGroups.Post;
-
-    DM.qryPhotoGroups.Refresh;
+    TDialogService.MessageDialog('Удалить фотографии "' + DM.qryPhotoGroupsComment.AsString +
+      '" за ' + FormatDateTime('DD.MM.YYYY', DM.qryPhotoGroupsOperDate.AsDateTime) + '?',
+      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeletePhotoGroup);
   end
   else
   begin
@@ -1483,8 +1482,8 @@ end;
 procedure TfrmMain.lwPartnerPhotoGroupsUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
-  // установка иконки для кнопки удаления
-  AItem.ImageIndex := 0;
+  // установка иконки кнопки удаления
+  TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
 end;
 
 procedure TfrmMain.lwPartnerTasksItemClickEx(const Sender: TObject;
@@ -2000,6 +1999,19 @@ begin
   end;
 end;
 
+{ удаление группы фотографий }
+procedure TfrmMain.DeletePhotoGroup(const AResult: TModalResult);
+begin
+  if AResult = mrYes then
+  begin
+    DM.qryPhotoGroups.Edit;
+    DM.qryPhotoGroupsStatusId.AsInteger := DM.tblObject_ConstStatusId_Erased.AsInteger;
+    DM.qryPhotoGroups.Post;
+
+    DM.qryPhotoGroups.Refresh;
+  end;
+end;
+
 // начитка акционных товаров
 procedure TfrmMain.dePromoGoodsDateChange(Sender: TObject);
 begin
@@ -2191,7 +2203,7 @@ begin
       DM.qryPartner.Refresh;
       DM.qryPartner.Locate('Id;ContractId', VarArrayOf([Id, ContractId]), []);
 
-      GetMapPartnerScreenshot(FCurCoordinates.Latitude, FCurCoordinates.Longitude);
+      GetPartnerMap(FCurCoordinates.Latitude, FCurCoordinates.Longitude);
     end
     else
       ShowMessage('Не удалось получить текущие координаты');
@@ -2256,6 +2268,7 @@ end;
 procedure TfrmMain.bAddedPhotoGroupClick(Sender: TObject);
 begin
   vsbMain.Enabled := false;
+  ePhotoGroupName.Text := '';
   pNewPhotoGroup.Visible := true;
 end;
 
@@ -2593,7 +2606,7 @@ end;
 
 procedure TfrmMain.bRefreshMapScreenClick(Sender: TObject);
 begin
-  GetMapPartnerScreenshot(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat);
+  tcPartnerInfoChange(tcPartnerInfo);
 end;
 
 // обновления карты с маршрутом контрагента
@@ -2986,14 +2999,6 @@ begin
     [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, SetPartnerCoordinates);
 end;
 
-// отображение координат ТТ на большой карте
-procedure TfrmMain.bShowBigMapClick(Sender: TObject);
-begin
-  lCaption.Text := 'Карта (' + DM.qryPartnerName.AsString + ')';
-
-  ShowBigMap;
-end;
-
 // переход на форму синхронизации
 procedure TfrmMain.bSyncClick(Sender: TObject);
 begin
@@ -3027,76 +3032,58 @@ begin
   SwitchToForm(tiRoutes, nil);
 end;
 
-// таймер срабатывает если долго не загружается карта с координатами ТТ
-// (запускается при открытии ТТ)
+procedure TfrmMain.tcPartnerInfoChange(Sender: TObject);
+var
+  Coordinates: TLocationCoord2D;
+begin
+  // карта с координатами ТТ
+  if tcPartnerInfo.ActiveTab = tiPartnerMap then
+  begin
+    if (DM.qryPartnerGPSN.AsFloat <> 0) and (DM.qryPartnerGPSE.AsFloat <> 0) then
+      GetPartnerMap(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat)
+    else
+    begin
+      if GetCoordinates(DM.qryPartnerAddress.AsString, Coordinates) then
+        GetPartnerMap(Coordinates.Latitude, Coordinates.Longitude)
+      else
+        GetPartnerMap(0, 0);
+    end;
+  end
+  else
+  begin
+    tErrorMap.Enabled := false;
+
+    if Assigned(FWebGMap) then
+    begin
+      try
+        FWebGMap.Visible := false;
+        FreeAndNil(FWebGMap);
+      except
+      end;
+    end;
+  end;
+end;
+
 procedure TfrmMain.tErrorMapTimer(Sender: TObject);
 begin
   tErrorMap.Enabled := false;
 
-  vsbMain.Enabled := true;
   FMapLoaded := true;
 
-  FWebGMap.Visible := false;
-  FreeAndNil(FWebGMap);
+  if Assigned(FWebGMap) then
+  begin
+    try
+      FWebGMap.Visible := false;
+      FreeAndNil(FWebGMap);
+    except
+    end;
+  end;
 
+  pMapButtons.Enabled := true;
   bRefreshMapScreen.Visible := true;
+  bSetPartnerCoordinate.Visible := false;
   lNoMap.Visible := true;
   lNoMap.Text := 'Не удалось загрузить карту с расположением ТТ';
-
-  pMapScreen.Visible := false;
-  pMap.Visible := true;
-end;
-
-// таймер получения скриншота карты с координатами ТТ (запускается после завершения загруки карты)
-// получить скриншот сразу нельзя - необходимо немного обождать
-procedure TfrmMain.tMapToImageTimer(Sender: TObject);
-{$IFDEF ANDROID}
-var
-  pic: JPicture;
-  bmp: JBitmap;
-  c: JCanvas;
-  fos: JFileOutputStream;
-  fn: string;
-{$ENDIF}
-begin
-  tMapToImage.Enabled := false;
-
-  vsbMain.Enabled := true;
-
-  try
-    {$IFDEF ANDROID}
-    fn := TPath.Combine(TPath.GetDocumentsPath, 'mapscreen.jpg');
-    pic := TJWebView.Wrap(FWebGMap.NativeBrowser).capturePicture;
-    bmp := TJBitmap.JavaClass.createBitmap(pic.getWidth, pic.getHeight, TJBitmap_Config.JavaClass.ARGB_8888);
-    c := TJCanvas.JavaClass.init(bmp);
-    pic.draw(c);
-    fos := TJFileOutputStream.JavaClass.init(StringToJString(fn));
-    if Assigned(fos) then
-    begin
-      bmp.compress(TJBitmap_CompressFormat.JavaClass.JPEG, 100, fos);
-      fos.close;
-    end;
-    iPartnerMap.Bitmap.LoadFromFile(fn);
-    {$ELSE}
-    iPartnerMap.Bitmap.Assign(FWebGMap.MakeScreenshot);
-    {$ENDIF}
-
-    pMap.Visible := false;
-    pMapScreen.Visible := true;
-
-    FWebGMap.Visible := false;
-    FreeAndNil(FWebGMap);
-  except
-    FWebGMap.Visible := false;
-    FreeAndNil(FWebGMap);
-
-    bRefreshMapScreen.Visible := true;
-    lNoMap.Visible := true;
-    lNoMap.Text := 'Не удалось загрузить карту с расположением ТТ';
-
-    pMapScreen.Visible := false;
-    pMap.Visible := true;
-  end;
 end;
 
 // таймер сохранения маршрута контрагента - сохраняет текущие координаты какждые 5 минут
@@ -3172,30 +3159,29 @@ begin
     Result :=  FormatFloat('0.000000', Latitude)+'N '+FormatFloat('0.000000', Longitude)+'E';
   end;
 end;
-{
+
 function TfrmMain.GetCoordinates(const Address: string; out Coordinates: TLocationCoord2D): Boolean;
 begin
   try
     WebGMapsGeocoder.Address:= Address;
     if WebGMapsGeocoder.LaunchGeocoding = erOk then
-      begin
-        Coordinates := TLocationCoord2D.Create(WebGMapsGeocoder.ResultLatitude, WebGMapsGeocoder.ResultLongitude);
-        Result := True;
-      end
+    begin
+      Coordinates := TLocationCoord2D.Create(WebGMapsGeocoder.ResultLatitude, WebGMapsGeocoder.ResultLongitude);
+      Result := True;
+    end
     else
       Result := False;
   except
     Result := False;
   end;
 end;
-}
 
 // завершение загрузки карты (с установкой маркеров при необходимости)
 procedure TfrmMain.WebGMapDownloadFinish(Sender: TObject);
 var
   i : integer;
 begin
-  if not FMapLoaded then
+  if Assigned(FWebGMap) and not FMapLoaded then
   begin
     tErrorMap.Enabled := false;
     FMapLoaded := True;
@@ -3216,8 +3202,7 @@ begin
       FWebGMap.MapPanTo(FWebGMap.Markers[0].Latitude, FWebGMap.Markers[0].Longitude);
     end;
 
-    if tcMain.ActiveTab = tiPartnerInfo then
-      tMapToImage.Enabled := true;
+    pMapButtons.Enabled := true;
   end;
 end;
 
@@ -3236,7 +3221,7 @@ begin
 end;
 
 // вызов карты с координатами ТТ и дальнейшем получением скриншота этой карты
-procedure TfrmMain.GetMapPartnerScreenshot(GPSN, GPSE: Double);
+procedure TfrmMain.GetPartnerMap(GPSN, GPSE: Double);
 var
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
   MobileNetworkStatus : TMobileNetworkStatus;
@@ -3279,22 +3264,19 @@ begin
         SetCordinate := false;
     end;
 
-    bRefreshMapScreen.Visible := false;
-    lNoMap.Visible := false;
 
     FMapLoaded := False;
 
-    pMapScreen.Visible := false;
-    pMap.Visible := true;
     FWebGMap := TTMSFMXWebGMaps.Create(Self);
     FWebGMap.Align := TAlignLayout.Client;
-    FWebGMap.ControlsOptions.PanControl.Visible := false;
+    {FWebGMap.ControlsOptions.PanControl.Visible := false;
     FWebGMap.ControlsOptions.ZoomControl.Visible := false;
     FWebGMap.ControlsOptions.MapTypeControl.Visible := false;
     FWebGMap.ControlsOptions.ScaleControl.Visible := false;
     FWebGMap.ControlsOptions.StreetViewControl.Visible := false;
     FWebGMap.ControlsOptions.OverviewMapControl.Visible := false;
     FWebGMap.ControlsOptions.RotateControl.Visible := false;
+    }
     FWebGMap.MapOptions.ZoomMap := 18;
     FWebGMap.Parent := pMap;
     FWebGMap.OnDownloadFinish := WebGMapDownloadFinish;
@@ -3304,17 +3286,20 @@ begin
       FWebGMap.CurrentLocation.Longitude := Coordinates.Longitude;
     end;
 
-    vsbMain.Enabled := false;
+    pMapButtons.Enabled := false;
+    bSetPartnerCoordinate.Visible := true;
+    bRefreshMapScreen.Visible := false;
+    lNoMap.Visible := false;
+
     tErrorMap.Enabled := true;
   end
   else
   begin
+    pMapButtons.Enabled := true;
+    bSetPartnerCoordinate.Visible := false;
     bRefreshMapScreen.Visible := true;
     lNoMap.Visible := true;
     lNoMap.Text := 'Без соединения с интернет нельзя получить карту с расположением ТТ';
-
-    pMapScreen.Visible := false;
-    pMap.Visible := true;
   end;
 end;
 
@@ -3560,72 +3545,77 @@ begin
     Close;
   end;
 
-  bMonday.Visible := false;
-  bTuesday.Visible := false;
-  bWednesday.Visible := false;
-  bThursday.Visible := false;
-  bFriday.Visible := false;
-  bSaturday.Visible := false;
-  bSunday.Visible := false;
-  bAllDays.Visible := false;
-
   Num := 1;
   if DaysCount[1] > 0 then
   begin
-    bMonday.Visible := true;
+    bMonday.Height := 55;
     bMonday.Text := '  ' + IntToStr(Num) + '. Понедельник';
     lMondayCount.Text := IntToStr(DaysCount[1]);
     inc(Num);
-  end;
+  end
+  else
+    bMonday.Height := 0;
+
 
   if DaysCount[2] > 0 then
   begin
-    bTuesday.Visible := true;
+    bTuesday.Height := 55;
     bTuesday.Text := '  ' + IntToStr(Num) + '. Вторник';
     lTuesdayCount.Text := IntToStr(DaysCount[2]);
     inc(Num);
-  end;
+  end
+  else
+    bTuesday.Height := 0;
 
   if DaysCount[3] > 0 then
   begin
-    bWednesday.Visible := true;
+    bWednesday.Height := 55;
     bWednesday.Text := '  ' + IntToStr(Num) + '. Среда';
     lWednesdayCount.Text := IntToStr(DaysCount[3]);
     inc(Num);
-  end;
+  end
+  else
+    bWednesday.Height := 0;
 
   if DaysCount[4] > 0 then
   begin
-    bThursday.Visible := true;
+    bThursday.Height := 55;
     bThursday.Text := '  ' + IntToStr(Num) + '. Четверг';
     lThursdayCount.Text := IntToStr(DaysCount[4]);
     inc(Num);
-  end;
+  end
+  else
+    bThursday.Height := 0;
 
   if DaysCount[5] > 0 then
   begin
-    bFriday.Visible := true;
+    bFriday.Height := 55;
     bFriday.Text := '  ' + IntToStr(Num) + '. Пятница';
     lFridayCount.Text := IntToStr(DaysCount[5]);
     inc(Num);
-  end;
+  end
+  else
+    bFriday.Height := 0;
 
   if DaysCount[6] > 0 then
   begin
-    bSaturday.Visible := true;
+    bSaturday.Height := 55;
     bSaturday.Text := '  ' + IntToStr(Num) + '. Суббота';
     lSaturdayCount.Text := IntToStr(DaysCount[6]);
     inc(Num);
-  end;
+  end
+  else
+    bSaturday.Height := 0;
 
   if DaysCount[7] > 0 then
   begin
-    bSunday.Visible := true;
+    bSunday.Height := 55;
     bSunday.Text := '  ' + IntToStr(Num) + '. Воскресенье';
     lSundayCount.Text := IntToStr(DaysCount[7]);
-  end;
+  end
+  else
+    bSunday.Height := 0;
 
-  bAllDays.Visible := true;
   lAllDaysCount.Text := IntToStr(DaysCount[8]);
 end;
 
@@ -3726,6 +3716,10 @@ begin
   // общая информация о ТТ
   lPartnerName.Text := DM.qryPartnerName.AsString;
   lPartnerAddress.Text := DM.qryPartnerAddress.AsString;
+  if (DM.qryPartnerGPSN.AsFloat <> 0) and (DM.qryPartnerGPSE.AsFloat <> 0) then
+    lPartnerAddressGPS.Text := GetAddress(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat)
+  else
+    lPartnerAddressGPS.Text := '-';
 
   // информация о долгах ТТ
   if DM.qryPartnerPaidKindId.AsInteger = DM.tblObject_ConstPaidKindId_First.AsInteger then // БН
@@ -3759,9 +3753,6 @@ begin
     lPartnerOver.Text := '-';
     lPartnerOverDay.Text := '-';
   end;
-
-  // скриншот карты с координатами ТТ
-  GetMapPartnerScreenshot(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat);
 
   FEditDocuments := false;
 
@@ -4549,7 +4540,7 @@ var
   MediaPlayer: TMediaPlayer;
   TmpFile: string;
 begin
-  {MediaPlayer := TMediaPlayer.Create(nil);
+  MediaPlayer := TMediaPlayer.Create(nil);
   try
     TmpFile := TPath.Combine(TPath.GetDocumentsPath, 'CameraClick.3gp');
     MediaPlayer.FileName := TmpFile;
@@ -4567,8 +4558,8 @@ begin
     MediaPlayer.Stop;
     MediaPlayer.Clear;
   finally
-    MediaPlayer.Free;
-  end;}
+    //MediaPlayer.Free;
+  end;
 end;
 
 procedure TfrmMain.CameraComponentSampleBufferReady
@@ -4637,50 +4628,3 @@ begin
 end;
 
 end.
-
-
-(*
-  {$IFDEF ANDROID}
-    LastLocation: JLocation;
-    LocManagerObj: JObject;
-    LocationManager: JLocationManager;
-    Geocoder: JGeocoder;
-    Address: JAddress;
-    AddressList: JList;
-  {$ENDIF}
-begin
-  {$IFDEF ANDROID}
-  //запрашиваем сервис Location
-  LocManagerObj:=SharedActivityContext.getSystemService(TJContext.JavaClass.LOCATION_SERVICE);
-  if not Assigned(LocManagerObj) then
-    raise Exception.Create('Could not locate Location Service');
-  //получаем LocationManager
-  LocationManager:=TJLocationManager.Wrap((LocManagerObj as ILocalObject).GetObjectID);
-  if not Assigned(LocationManager) then
-    raise Exception.Create('Could not access Location Manager');
-  //получаем последнее местоположение зафиксированное с помощью координат wi-fi и мобильных сетей
-  LastLocation:=LocationManager.getLastKnownLocation(TJLocationManager.JavaClass.NETWORK_PROVIDER);
-  if Assigned(LastLocation) then
-    begin
-      geocoder:= TJGeocoder.JavaClass.init(SharedActivityContext);
-      if not Assigned(geocoder) then
-         raise Exception.Create('Could not access Geocoder');
-      //пробуем определить 1 возможный адрес местоположения
-      AddressList:=geocoder.getFromLocation(LastLocation.getLatitude, LastLocation.getLongitude,1);
-      Coordinates := TLocationCoord2D.Create(LastLocation.getLatitude, LastLocation.getLongitude);
-     if AddressList.size > 0 then
-     begin
-       Address:=TJAddress.Wrap((AddressList.get(0) as ILocalObject).GetObjectID);
-       if not Assigned(Address) then
-         raise Exception.Create('Could not access Address');
-       //выводим данные в memo
-       Memo1.Lines.Add('City: '+JStringToString(Address.getAddressLine(1)));
-       Memo1.Lines.Add('Street: '+JStringToString(Address.getAddressLine(0)));
-       Memo1.Lines.Add('PostalCode: '+JStringToString(Address.getAddressLine(4)));
-       Memo1.Lines.Add(FormatFloat('0.000000', LastLocation.getLatitude)+'N '+FormatFloat('0.000000', LastLocation.getLongitude)+'E');
-     end;
-    end;
-  {$ELSE}
-  Coordinates := TLocationCoord2D.Create(0,0);
-  {$ENDIF}
-*)
