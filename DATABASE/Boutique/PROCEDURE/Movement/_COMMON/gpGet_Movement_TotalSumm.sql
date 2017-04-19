@@ -1,4 +1,4 @@
--- Function: gpGet_Movement_ZakazInternal()
+-- Function: gpGet_Movement_TotalSumm()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_TotalSumm (Integer, TVarChar);
 
@@ -33,9 +33,8 @@ ALTER FUNCTION gpGet_Movement_TotalSumm (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 11.05.14                                        * add zc_MovementFloat_TotalSummPVAT
- 10.04.14                         *
+ 19.04.17         *
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_ZakazInternal (inMovementId:= 1, inSession:= '2')
+-- SELECT * FROM gpGet_Movement_TotalSumm (inMovementId:= 1, inSession:= '2')

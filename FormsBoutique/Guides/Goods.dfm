@@ -75,6 +75,14 @@ object GoodsForm: TGoodsForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 94
       end
+      object colCompositionGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1089#1086#1089#1090#1072#1074#1072' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'CompositionGroupName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 105
+      end
       object CompositionName: TcxGridDBColumn
         Caption = #1057#1086#1089#1090#1072#1074' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'CompositionName'
@@ -518,6 +526,21 @@ object GoodsForm: TGoodsForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GroupNameFull'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CompositionGroupId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CompositionGroupId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CompositionGroupName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CompositionGroupName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

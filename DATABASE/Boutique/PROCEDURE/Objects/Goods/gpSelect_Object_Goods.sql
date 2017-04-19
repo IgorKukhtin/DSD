@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_Goods (Bolean, TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Goods (Bolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Goods (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
     IN inIsShowAll   Boolean,       --  признак показать удаленные да/нет
@@ -14,6 +14,8 @@ RETURNS TABLE (
            , GoodsGroupName       TVarChar
            , MeasureId            Integer
            , MeasureName          TVarChar
+           , CompositionGroupId   Integer
+           , CompositionGroupName TVarChar
            , CompositionId        Integer
            , CompositionName      TVarChar
            , GoodsInfoId          Integer
@@ -45,7 +47,9 @@ BEGIN
            , Object_GoodsGroup.Id           AS GoodsGroupId
            , Object_GoodsGroup.ValueData    AS GoodsGroupName
            , Object_Measure.Id              AS MeasureId    
-           , Object_Measure.ValueData       AS MeasureName    
+           , Object_Measure.ValueData       AS MeasureName  
+           , Object_CompositionGroup.Id          AS CompositionGroupId
+           , Object_CompositionGroup.ValueData   AS CompositionGroupName    
            , Object_Composition.Id          AS CompositionId
            , Object_Composition.ValueData   AS CompositionName
            , Object_GoodsInfo.Id            AS GoodsInfoId
@@ -72,6 +76,11 @@ BEGIN
                                  ON ObjectLink_Goods_Composition.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Composition.DescId = zc_ObjectLink_Goods_Composition()
             LEFT JOIN Object AS Object_Composition ON Object_Composition.Id = ObjectLink_Goods_Composition.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Composition_CompositionGroup
+                                 ON ObjectLink_Composition_CompositionGroup.ObjectId = Object_Composition.Id 
+                                AND ObjectLink_Composition_CompositionGroup.DescId = zc_ObjectLink_Composition_CompositionGroup()
+            LEFT JOIN Object AS Object_CompositionGroup ON Object_CompositionGroup.Id = ObjectLink_Composition_CompositionGroup.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsInfo
                                  ON ObjectLink_Goods_GoodsInfo.ObjectId = Object_Goods.Id
@@ -105,6 +114,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
+19.04.17          * add Object_CompositionGroup
 09.03.17                                                           *
 03.03.17                                                           *
 24.02.17                                                           *

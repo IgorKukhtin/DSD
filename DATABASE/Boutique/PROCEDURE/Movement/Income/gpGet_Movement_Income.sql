@@ -45,16 +45,14 @@ BEGIN
              , CAST ('' as TVarChar) AS ToName
            
 
-             , ObjectCurrency.Id         AS CurrencyDocumentId	-- грн
-             , ObjectCurrency.ValueData  AS CurrencyDocumentName
+             , 0                     AS CurrencyDocumentId	-- грн
+             , CAST ('' as TVarChar) AS CurrencyDocumentName
            
              , 0                     AS CurrencyPartnerId
              , CAST ('' as TVarChar) AS CurrencyPartnerName
              , CAST ('' as TVarChar) AS Comment
 
-          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
-              JOIN Object as ObjectCurrency on ObjectCurrency.descid= zc_Object_Currency()
-                                            and ObjectCurrency.id = 202;	             -- грн
+          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
        RETURN QUERY 
          SELECT
@@ -126,7 +124,7 @@ BEGIN
             LEFT JOIN Object as ObjectCurrencycyDocumentInf on ObjectCurrencycyDocumentInf.descid= zc_Object_Currency()
                                             and ObjectCurrencycyDocumentInf.id = 14461
           
-       WHERE Movement.Id =  inMovementId
+       WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_Income();
      END IF;
 END;
