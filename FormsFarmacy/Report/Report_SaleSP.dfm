@@ -1045,6 +1045,13 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
           Component = cbGroupMemberSP
           DataType = ftBoolean
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Invoice'
+          Value = Null
+          Component = edInvoice
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       ReportName = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303'
       ReportNameParam.Value = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303'

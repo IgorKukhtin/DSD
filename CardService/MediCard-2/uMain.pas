@@ -3,9 +3,9 @@ unit uMain;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
-  IPPeerClient, Vcl.StdCtrls, idHTTP, IdSSLOpenSSL;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,
+  idHTTP, IdSSLOpenSSL, Soap.EncdDecd;
 
 const
   cURL = 'http://www.medicard.com.ua/api/api.php';
@@ -27,30 +27,35 @@ implementation
 
 {$R *.dfm}
 
-function SendXML(SendData : TStream; var Response : TStream; ErrMsg : string) : boolean;
+function SendXML(SendData: TStream; Response: TStream; ErrMsg: string): Boolean;
 var
-  i, j : integer;
-  Res : string;
-
   LHandler : TIdSSLIOHandlerSocketOpenSSL;
   MyHTTP: TidHTTP;
+  ReqBase64, ResBase64: TMemoryStream;
 begin
   Result := true;
+
+  ReqBase64 := TMemoryStream.Create;
+  ResBase64 := TMemoryStream.Create;
 
   LHandler := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
   MyHTTP := TidHTTP.Create(nil);
   try
-    SendData.Position := 0;
-
     MyHTTP.IOHandler:= LHandler;
     MyHTTP.Request.CustomHeaders.AddValue('Content-Type', 'application/xml');
 
     try
-      MyHTTP.Post(cURL, SendData, Response);
+      SendData.Position := 0;
+      EncodeStream(SendData, ReqBase64);
+      ReqBase64.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Req.Base64');
+      ReqBase64.Position := 0;
+      MyHTTP.Post(cURL, ReqBase64, ResBase64);
 
       if MyHTTP.ResponseCode = 200 then
       begin
-        Response.CopyFrom(MyHTTP.Response.ContentStream, MyHTTP.Response.ContentStream.Size);
+        ResBase64.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Res.Base64');
+        ResBase64.Position := 0;
+        DecodeStream(ResBase64, Response);
       end;
     except
       on E: Exception do
@@ -63,6 +68,8 @@ begin
   finally
     FreeAndNil(LHandler);
     FreeAndNil(MyHTTP);
+    ReqBase64.Free;
+    ResBase64.Free;
   end;
 end;
 
@@ -76,7 +83,7 @@ begin
   try
     sData.LoadFromFile(ExtractFilePath(Application.ExeName) + '1.txt');
 
-    if SendXML(sData, TStream(sResp), err) then
+    if SendXML(sData, sResp, err) then
       sResp.SaveToFile(ExtractFilePath(Application.ExeName) + 'resp.txt');
   finally
     FreeAndNil(sData);
