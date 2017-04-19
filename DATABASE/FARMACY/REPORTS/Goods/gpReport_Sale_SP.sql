@@ -78,6 +78,7 @@ RETURNS TABLE (MovementId     Integer
              , ContractId         Integer
              , ContractName       TVarChar
              , Contract_StartDate TDateTime
+             , InvNumber_Invoice  TVarChar
              , InvNumber_Invoice_Full TVarChar
              )
 AS
@@ -131,6 +132,7 @@ BEGIN
                               , MovementLinkObject_MemberSP.ObjectId         AS MemberSPId
                               , COALESCE (MovementDate_OperDateSP.ValueData,Null) AS OperDateSP
                               , MovementLinkObject_GroupMemberSP.ObjectId         AS GroupMemberSPId
+                              , Movement_Invoice.InvNumber  :: TVarChar           AS InvNumber_Invoice 
                               , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full 
                          FROM Movement AS Movement_Sale
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -195,6 +197,7 @@ BEGIN
                               , Movement_Sale.MemberSPId
                               , Movement_Sale.OperDateSP
                               , Movement_Sale.GroupMemberSPId
+                              , Movement_Sale.InvNumber_Invoice
                               , Movement_Sale.InvNumber_Invoice_Full
                               , MI_Sale.ObjectId                                          AS GoodsId         --tmpGoods.GoodsMainId                                      AS GoodsMainId
                               , MIFloat_ChangePercent.ValueData                           AS ChangePercent
@@ -234,6 +237,7 @@ BEGIN
                                 , Movement_Sale.MemberSPId
                                 , Movement_Sale.OperDateSP
                                 , Movement_Sale.GroupMemberSPId
+                                , Movement_Sale.InvNumber_Invoice
                                 , Movement_Sale.InvNumber_Invoice_Full
                                 , MI_Sale.ObjectId 
                                 , MIFloat_ChangePercent.ValueData
@@ -442,6 +446,7 @@ BEGIN
            , Object_Contract.Id           AS ContractId
            , Object_Contract.ValueData    AS ContractName
            , ObjectDate_Start.ValueData   AS Contract_StartDate 
+           , tmpData.InvNumber_Invoice
            , tmpData.InvNumber_Invoice_Full
 
         FROM tmpMI AS tmpData
