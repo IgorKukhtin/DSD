@@ -214,7 +214,7 @@ BEGIN
                     , COALESCE(Object_ConditionsKeep.ValueData, '')      :: TVarChar AS ConditionsKeepName
                     , COALESCE (ObjectBoolean_Goods_SP.ValueData,False)  :: Boolean  AS isSP
                     , (COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) / 1.07 * 1.1) :: TFloat   AS PriceOptSP
-                    , CASE WHEN DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData) = CURRENT_DATE THEN TRUE ELSE FALSE END AS isMarketToday
+                    , CASE WHEN DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData) = vbOperDate THEN TRUE ELSE FALSE END AS isMarketToday       -- CURRENT_DATE
                     , DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData)                   ::TDateTime  AS LastPriceDate
                FROM  _tmpOrderInternal_MI AS tmpMI
                     LEFT JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId 
@@ -969,7 +969,7 @@ BEGIN
            , tmpMI.isSecond
            , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
 
-           , CASE WHEN DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData) = CURRENT_DATE THEN TRUE ELSE FALSE END AS isMarketToday
+           , CASE WHEN DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData) = vbOperDate THEN TRUE ELSE FALSE END AS isMarketToday    --CURRENT_DATE
            , DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData)                   ::TDateTime  AS LastPriceDate
 
            , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE THEN 25088 --zc_Color_GreenL()
