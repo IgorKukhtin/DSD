@@ -2001,7 +2001,7 @@ begin
         Add('     , '''' as Comments ');
         Add('     , Bill.Id_Postgres ');
         Add(' from DBA.Bill ');
-        Add('     join DBA.BillItemsIncome on  BillItemsIncome.BillID = Bill.ID ');
+        Add('     join (select BillItemsIncome.BillID  from  DBA.BillItemsIncome group by BillItemsIncome.BillID ) as BillItemsIncome on  BillItemsIncome.BillID = Bill.ID ');
         Add('     left join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
         Add('     left join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
         Add('     left join DBA.Valuta as Bill_CurrencyDocument on Bill_CurrencyDocument.Id = Bill.ValutaIDIn   ');
