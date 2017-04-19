@@ -1823,20 +1823,100 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pSetNullDocument_Id_Postgres;
 begin
-//     fExecSqFromQuery('update dba.Bill set Id_Postgres = null where Id_Postgres is not null'); //
+     fExecSqFromQuery('update dba.Bill set Id_Postgres = null where Id_Postgres is not null'); //
 //     fExecSqFromQuery('update dba.BillItems set Id_Postgres = null where Id_Postgres is not null');
-//     fExecSqFromQuery('update dba.BillItemsIncome set Id_Postgres = null where Id_Postgres is not null');
+     fExecSqFromQuery('update dba.BillItemsIncome set Id_Postgres = null where Id_Postgres is not null');
 //     fExecSqFromQuery('update dba.BillItemsReceipt set Id_Postgres = null where Id_Postgres is not null');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocumentItem_Income(SaveCount: Integer);
 begin
+   try
+   if cbDocId_Postgres.Checked then
+     fExecSqFromQuery('alter table dba.BillItemsIncome add Id_Postgres integer null;');
+  finally
 
+  end;
+
+     if (not cbIncome.Checked)or(not cbIncome.Enabled) then exit;
+     //
+     myEnabledCB(cbIncome);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        // - Запрос
+
+        //
+        Open;
+
+        cbIncome.Caption:='1.1. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Приход от поставщика';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_MIEdit_Income';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsGroupName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inGoodsName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inGoodsInfoName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inGoodsSize',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inCompositionName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inLineFabricaName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inLabelName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inMeasureName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inOperPrice',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('ioCountForPrice',ftFloat,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inOperPriceList',ftFloat,ptInput, 0);
+
+        //
+        //DisableControls;
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin {EnableControls;}exit;end;
+
+              //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsGroupName').Value:=FieldByName('GoodsGroupName').AsString;
+             toStoredProc.Params.ParamByName('inGoodsName').Value:=FieldByName('GoodsName').AsString;
+             toStoredProc.Params.ParamByName('inGoodsInfoName').Value:=FieldByName('GoodsInfoName').AsString;
+             toStoredProc.Params.ParamByName('inGoodsSize').Value:=FieldByName('GoodsSize').AsString;
+             toStoredProc.Params.ParamByName('inCompositionName').Value:=FieldByName('CompositionName').AsString;
+             toStoredProc.Params.ParamByName('inLineFabricaName').Value:=FieldByName('LineFabricaName').AsString;
+             toStoredProc.Params.ParamByName('inLabelName').Value:=FieldByName('LabelName').AsString;
+             toStoredProc.Params.ParamByName('inMeasureName').Value:=FieldByName('MeasureName').AsString;
+             toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+             toStoredProc.Params.ParamByName('inOperPrice').Value:=FieldByName('OperPrice').AsFloat;
+             toStoredProc.Params.ParamByName('ioCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
+             toStoredProc.Params.ParamByName('inOperPriceList').Value:=FieldByName('inOperPriceList').AsFloat;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             if FieldByName('Id_Postgres').AsInteger=0 then
+               fExecSqFromQuery('update dba.BillItemsIncome set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+
+
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbIncome);
 end;
 
 function TMainForm.pLoadDocument_Income: Integer;
-var JuridicalId_pg,PartnerId_pg,ContractId_pg,PersonalPackerId_pg:Integer;
-    isDocBEGIN:Boolean;
 begin
   try
    if cbDocId_Postgres.Checked then
@@ -1915,11 +1995,6 @@ begin
              //!!!
              if fStop then begin exit;end;
              //
-             PartnerId_pg:=0;
-             JuridicalId_pg:=0;
-             ContractId_pg:=0;
-             //
-             //
 
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -1940,8 +2015,6 @@ begin
              if FieldByName('Id_Postgres').AsInteger=0 then
                fExecSqFromQuery('update dba.Bill set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
-
-
 
              Next;
              Application.ProcessMessages;
