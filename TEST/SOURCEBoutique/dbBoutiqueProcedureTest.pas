@@ -80,6 +80,8 @@ type
     procedure CreatePartionGoods;
     procedure CreatePosition;
     procedure CreatePersonal;
+    procedure CreateStatus;
+
 
   end;
 
@@ -313,6 +315,11 @@ end;
 procedure TdbObjectProcedureTest.CreatePosition;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Position\');
+end;
+
+procedure TdbObjectProcedureTest.CreateStatus;
+begin
+   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Status\');
 end;
 
 procedure TdbObjectProcedureTest.CreateUnit;
