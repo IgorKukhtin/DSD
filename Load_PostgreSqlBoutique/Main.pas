@@ -1845,7 +1845,53 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        // - Запрос
+         // - Запрос  из которогои можно заплнить  Object_PartionGoods и сохранить строчнию часть
+//        Add('      select BillItemsIncome.Id as ObjectId ');
+//        Add('          , Bill.Id_Postgres as MovementId ');
+//        Add('          , GoodsProperty.Id_Pg_GoodsItem as object_GoodsItem ');
+//        Add('          , BillItemsIncome.OperCount as Amount ');
+//        Add('          , BillItemsIncome.OperPrice as OperPrice ');
+//        Add('          , BillItemsIncome. SummIn as CountForPrice ');
+//        Add('          , BillItemsIncome.Id_Postgres as Id_Postgres ');
+//        Add('      from dba.BillItemsIncome  ');
+//        Add('          join dba.Bill on BillItemsIncome.BillID = Bill.Id     ');
+//        Add('          left outer join dba.GoodsProperty on GoodsProperty.Id = BillItemsIncome.GoodsPropertyId ');
+//        Add('          left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId ');
+//        Add('     order by Bill.Id ');
+        //
+        Add('  select BillItemsIncome.ID  as ObjectId ');
+        Add('       , Bill.Id_Postgres as MovementId ');
+        Add('       , GoodsProperty.GroupsName as GoodsGroupName ');
+        Add('       , GoodsName.GoodsName as GoodsName ');
+        Add('       , GoodsInfo.GoodsInfoName as GoodsInfoName ');
+        Add('       , GoodsSize.GoodsSizeName as GoodsSize ');
+        Add('       , Composition.CompositionName as CompositionName ');
+        Add('       , LineFabrica.LineFabricaName as LineFabricaName ');
+        Add('       , label.LabelName as LabelName ');
+        Add('       , Measure.MeasureName as MeasureName ');
+        Add('       , BillItemsIncome.OperCount as Amount ');
+        Add('       , BillItemsIncome.OperPrice as OperPrice ');
+        Add('       , BillItemsIncome.SummIn as CountForPrice ');
+        Add('       , BillItemsIncome.PriceListPrice as OperPriceList ');
+        Add('       , BillItemsIncome.Id_Postgres as Id_Postgres ');
+        Add('  from  dba.BillItemsIncome ');
+        Add('   join dba.Bill on BillItemsIncome.BillID = Bill.Id  ');
+        Add('   left join dba.GoodsProperty on  GoodsProperty.Id = BillItemsIncome.GoodsPropertyId ');
+        Add('   left join dba.Goods as GoodsName  on GoodsName.Id = GoodsProperty.GoodsId ');
+        Add('   left join dba.GoodsSize on GoodsSize.Id =  GoodsProperty.GoodsSizeId ');
+        Add('   left join dba.Composition on Composition.Id = GoodsProperty.CompositionId ');
+        Add('   left join dba.GoodsInfo on GoodsInfo.id = GoodsProperty.GoodsInfoId ');
+        Add('   left join dba.LineFabrica on LineFabrica.id = GoodsProperty.LineFabricaId ');
+        Add('   left join  ');
+        Add('            ( select goods_group.goodsName AS LabelName ');
+        Add('              , GoodsProperty.goodsId ');
+        Add('                from GoodsProperty ');
+        Add('                join goods on goods.Id = GoodsProperty.goodsId ');
+        Add('                join goods as goods_group on goods_group.Id = goods.ParentId ');
+        Add('                group by  GoodsProperty.goodsId, goods_group.goodsName) as Label on label.goodsId = GoodsProperty.goodsId ');
+        Add('   left join DBA.Measure on Measure.id = GoodsProperty. Measureid ');
+        Add('  where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add('  order by ObjectId ');
 
         //
         Open;
@@ -1897,7 +1943,7 @@ begin
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
              toStoredProc.Params.ParamByName('inOperPrice').Value:=FieldByName('OperPrice').AsFloat;
              toStoredProc.Params.ParamByName('ioCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
-             toStoredProc.Params.ParamByName('inOperPriceList').Value:=FieldByName('inOperPriceList').AsFloat;
+             toStoredProc.Params.ParamByName('inOperPriceList').Value:=FieldByName('OperPriceList').AsFloat;
 
              if not myExecToStoredProc then ;//exit;
              //
