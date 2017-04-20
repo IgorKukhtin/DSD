@@ -14,6 +14,8 @@ RETURNS TABLE (Id                       Integer
              , PhotoData                TBlob
              , GUID                     TVarChar
              , Comment                  TVarChar
+             , GPSN                     TFloat
+             , GPSE                     TFloat
              , InsertMobileDate         TDateTime
              , isErased                 Boolean
               )
@@ -25,13 +27,15 @@ BEGIN
       -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_Visit());
       vbUserId:= lpGetUserBySession (inSession);
 
-     RETURN QUERY
+      RETURN QUERY
         SELECT MovementItem.Id               AS Id
              , Object_PhotoMobile.Id         AS PhotoMobileId
              , Object_PhotoMobile.ValueData  AS PhotoMobileName
              , ObjectBlob_Photo.ValueData    AS PhotoData
              , MIString_GUID.ValueData       AS GUID
              , MIString_Comment.ValueData    AS Comment
+             , MIFloat_GPSN.ValueData        AS GPSN
+             , MIFloat_GPSE.ValueData        AS GPSE
              , MIDate_InsertMobile.ValueData AS InsertMobileDate
              , MovementItem.isErased
         FROM (SELECT false AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased) AS tmpIsErased
@@ -52,6 +56,14 @@ BEGIN
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
           
+            LEFT JOIN MovementItemFloat AS MIFloat_GPSN
+                                        ON MIFloat_GPSN.MovementItemId = MovementItem.Id
+                                       AND MIFloat_GPSN.DescId = zc_MIFloat_GPSN()
+          
+            LEFT JOIN MovementItemFloat AS MIFloat_GPSE
+                                        ON MIFloat_GPSE.MovementItemId = MovementItem.Id
+                                       AND MIFloat_GPSE.DescId = zc_MIFloat_GPSE()
+          
             LEFT JOIN MovementItemDate AS MIDate_InsertMobile
                                        ON MIDate_InsertMobile.MovementItemId = MovementItem.Id
                                       AND MIDate_InsertMobile.DescId = zc_MIDate_InsertMobile()
@@ -66,6 +78,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ﬂÓ¯ÂÌÍÓ –.‘.
+ 20.04.17                                                        *
  26.03.17         *
 */
 

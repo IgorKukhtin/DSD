@@ -938,8 +938,8 @@ uses
   Report_MotionGoodsWeekDialog in '..\..\Forms\Report\Report_MotionGoodsWeekDialog.pas' {Report_MotionGoodsWeekDialogForm: TParentForm},
   Report_Check_OrderInternalBySendDialog in '..\..\Forms\Report\Report_Check_OrderInternalBySendDialog.pas' {Report_Check_OrderInternalBySendDialogForm: TParentForm},
   Report_Check_OrderInternalBySend in '..\..\Forms\Report\Report_Check_OrderInternalBySend.pas' {Report_Check_OrderInternalBySendForm: TParentForm},
-  OrderIncomeSnab in '..\..\Forms\Document\OrderIncomeSnab.pas' {OrderIncomeSnabForm: TParentForm},
-  OrderIncomeSnabJournal in '..\..\Forms\Document\OrderIncomeSnabJournal.pas' {OrderIncomeSnabJournalForm: TParentForm};
+  OrderIncomeSnabJournal in '..\..\Forms\Document\OrderIncomeSnabJournal.pas' {OrderIncomeSnabJournalForm: TParentForm},
+  OrderIncomeSnab in '..\..\Forms\Document\OrderIncomeSnab.pas' {OrderIncomeSnabForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -11,14 +11,15 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Visit());
+      -- проверка прав пользователя на вызов процедуры
+      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Visit());
+      vbUserId:= lpGetUserBySession (inSession);
 
-     -- проводим Документ + сохранили протокол
-     PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                , inDescId     := zc_Movement_Visit()
-                                , inUserId     := vbUserId
-                                 );
+      -- проводим Документ + сохранили протокол
+      PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                 , inDescId     := zc_Movement_Visit()
+                                 , inUserId     := vbUserId
+                                  );
 
 END;
 $BODY$

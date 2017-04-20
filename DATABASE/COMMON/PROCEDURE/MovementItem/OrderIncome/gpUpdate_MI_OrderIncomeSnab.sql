@@ -14,14 +14,24 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCountDays Integer;
+   DECLARE vbJuridicalId_From Integer;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderIncome());
 
+    --определяем пост. из документа
+    vbJuridicalId_From := (SELECT MovementLinkObject_From.ObjectId AS JuridicalId_From
+                           FROM MovementLinkObject AS MovementLinkObject_From
+                           WHERE MovementLinkObject_From.MovementId = inMovementId
+                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_Juridical());
+
     -- Ограничения по товарам
+    CREATE TEMP TABLE _tmpGoodsMI (MI_Id Integer, GoodsId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpGoodsListIncome (MI_Id Integer, GoodsId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpGoods (MI_Id Integer, GoodsId Integer) ON COMMIT DROP;
-        INSERT INTO _tmpGoods (MI_Id, GoodsId)
+    --
+       INSERT INTO _tmpGoodsMI (MI_Id, GoodsId)
                     SELECT MovementItem.Id              AS MI_Id
                          , MILinkObject_Goods.ObjectId  AS GoodsId
                     FROM MovementItem
@@ -31,6 +41,26 @@ BEGIN
                     WHERE MovementItem.MovementId = inMovementId
                       AND MovementItem.DescId = zc_MI_Master()
                       AND MovementItem.isErased = False;
+
+       INSERT INTO _tmpGoodsListIncome (MI_Id, GoodsId)
+                    SELECT DISTINCT 0 AS MI_Id, ObjectLink_GoodsListIncome_Goods.ChildObjectId AS GoodsId
+                    FROM Object AS Object_GoodsListIncome
+                         INNER JOIN ObjectLink AS ObjectLink_GoodsListIncome_Juridical
+                                 ON ObjectLink_GoodsListIncome_Juridical.ObjectId = Object_GoodsListIncome.Id
+                                AND ObjectLink_GoodsListIncome_Juridical.DescId = zc_ObjectLink_GoodsListIncome_Juridical()
+                                AND ObjectLink_GoodsListIncome_Juridical.ChildObjectId = vbJuridicalId_From
+                         INNER JOIN ObjectLink AS ObjectLink_GoodsListIncome_Goods
+                                 ON ObjectLink_GoodsListIncome_Goods.ObjectId = Object_GoodsListIncome.Id
+                                AND ObjectLink_GoodsListIncome_Goods.DescId = zc_ObjectLink_GoodsListIncome_Goods()
+                    WHERE Object_GoodsListIncome.DescId = zc_Object_GoodsListIncome()
+                      AND Object_GoodsListIncome.isErased = False;
+
+       INSERT INTO _tmpGoods (MI_Id, GoodsId)
+                   SELECT COALESCE (_tmpGoodsMI.MI_Id,0) AS MI_Id
+                        , COALESCE (_tmpGoodsMI.GoodsId, _tmpGoodsListIncome.GoodsId) AS GoodsId
+                   FROM _tmpGoodsMI
+                       FULL JOIN _tmpGoodsListIncome ON _tmpGoodsListIncome.GoodsId = _tmpGoodsMI.GoodsId;
+
 
     vbCountDays := (SELECT DATE_PART('day', (inEndDate - inStartDate )) + 1);
 
@@ -49,21 +79,7 @@ BEGIN
                            AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                          GROUP BY Container.Id, Container.ObjectId, Container.Amount
                         )
-  -- выбираем поставщиков
-  /*, tmpContainerIncome AS (SELECT DISTINCT tmpContainerAll.GoodsId, MIContainer.ObjectExtId_Analyzer AS PartnerId
-                           FROM tmpContainerAll
-                                INNER JOIN MovementItemContainer AS MIContainer
-                                        ON MIContainer.Containerid = tmpContainerAll.ContainerId
-                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                       AND MIContainer.MovementDescId = zc_Movement_Income()
-                                       AND COALESCE (MIContainer.ObjectExtId_Analyzer,0) <> 0
-                          )
-  , tmpPartnerList AS (SELECT goodsid, STRING_AGG (Object.ValueData :: TVarChar, '; ') AS PartnerName
-                       FROM tmpContainerIncome
-                            LEFT JOIN Object ON Object.Id = tmpContainerIncome.PartnerId
-                       GROUP BY tmpContainerIncome.GoodsId
-                       )*/
-  --
+
   , tmpContainer AS (SELECT tmp.GoodsId 
                           , SUM (tmp.StartAmount)        AS RemainsStart
                           , SUM (tmp.EndAmount)          AS RemainsEnd
@@ -126,40 +142,14 @@ BEGIN
                            ) AS tmp
                      GROUP BY tmp.GoodsId
                      )
-/*
-, tmpGoodsListIncome AS (SELECT tmpGoods.GoodsId
-                              , STRING_AGG (Object.ValueData :: TVarChar, '; ') AS PartnerName
-                         FROM _tmpGoods AS tmpGoods
-                              INNER JOIN ObjectLink AS ObjectLink_GoodsListIncome_Goods
-                                      ON ObjectLink_GoodsListIncome_Goods.ChildObjectId = tmpGoods.GoodsId
-                                     AND ObjectLink_GoodsListIncome_Goods.DescId = zc_ObjectLink_GoodsListIncome_Goods()
-                              LEFT JOIN Object AS Object_GoodsListIncome
-                                     ON Object_GoodsListIncome.Id = ObjectLink_GoodsListIncome_Goods.ObjectId
-                                    AND Object_GoodsListIncome.DescId = zc_Object_GoodsListIncome()
-                              INNER JOIN ObjectBoolean AS ObjectBoolean_GoodsListIncome_Last
-                                      ON ObjectBoolean_GoodsListIncome_Last.ObjectId = Object_GoodsListIncome.Id
-                                     AND ObjectBoolean_GoodsListIncome_Last.DescId = zc_ObjectBoolean_GoodsListIncome_Last()
-                                     AND ObjectBoolean_GoodsListIncome_Last.ValueData = TRUE
-                              LEFT JOIN ObjectLink AS ObjectLink_GoodsListIncome_Partner
-                                     ON ObjectLink_GoodsListIncome_Partner.ObjectId = Object_GoodsListIncome.Id
-                                    AND ObjectLink_GoodsListIncome_Partner.DescId = zc_ObjectLink_GoodsListIncome_Partner()
-                              LEFT JOIN Object ON Object.Id = ObjectLink_GoodsListIncome_Partner.ChildObjectId
-                          GROUP BY tmpGoods.GoodsId
-                         )
-*/
+
   , tmpOrderIncome AS (SELECT MILinkObject_Goods.ObjectId AS GoodsId
-                            --, STRING_AGG (Object.ValueData :: TVarChar, '; ') AS PartnerName
                             , SUM (MovementItem.Amount) AS Amount
                        FROM Movement
                             INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                           ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                          AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                                          AND MovementLinkObject_Unit.ObjectId = inUnitId
-
-                            /*LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
-                                                         ON MovementLinkObject_Juridical.MovementId = Movement.Id
-                                                        AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
-*/
                             LEFT JOIN MovementItem ON MovementItem.MovementId  = Movement.Id
                                                   AND MovementItem.isErased = False
                                                   AND MovementItem.DescId = zc_MI_Master()
@@ -167,9 +157,6 @@ BEGIN
                                                              ON MILinkObject_Goods.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
                             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MILinkObject_Goods.ObjectId
-
-                            --LEFT JOIN Object ON Object.Id = MovementLinkObject_Juridical.ObjectId
-
                        WHERE Movement.DescId = zc_Movement_OrderIncome()
                          AND Movement.StatusId = zc_Enum_Status_Complete()
                        GROUP BY MILinkObject_Goods.ObjectId
@@ -192,10 +179,12 @@ BEGIN
           LEFT JOIN tmpOrderIncome ON tmpOrderIncome.GoodsId = _tmpGoods.GoodsId;
 
       PERFORM lpInsertUpdate_MI_OrderIncomeSnab_Property
-                                                   (inId              := _tmpData.MI_Id
+                                                   (inId              := COALESCE (_tmpData.MI_Id,0)
+                                                  , inMovementId      := inMovementId
                                                   , inGoodsId         := _tmpData.GoodsId
+                                                  , inMeasureId       := ObjectLink_Goods_Measure.ChildObjectId
                                                   , inRemainsStart    := _tmpData.RemainsStart
-                                                  , inRemainsEnd      := _tmpData.RemainsEnd 
+                                                  --, inRemainsEnd      := _tmpData.RemainsEnd 
                                                   , inIncome          := _tmpData.CountIncome
                                                   , inAmountForecast  := _tmpData.CountProductionOut
                                                   , inAmountIn        := _tmpData.CountIn_oth
@@ -203,7 +192,11 @@ BEGIN
                                                   , inAmountOrder     := _tmpData.CountOrder
                                                   , inUserId          := vbUserId
                                                     )
-      FROM _tmpData;
+      FROM _tmpData
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                               ON ObjectLink_Goods_Measure.ObjectId = _tmpData.GoodsId
+                              AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+;
 
 END;
 $BODY$

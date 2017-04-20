@@ -4,7 +4,7 @@
         <ProjectFileVersion>12</ProjectFileVersion>
     </ProjectExtensions>
     <PropertyGroup>
-        <DeviceId Condition="'$(Platform)'=='Android'"/>
+        <DeviceId Condition="'$(Platform)'=='Android'">VSP7GUJN7L6PCMLB</DeviceId>
         <DeviceId Condition="'$(Platform)'=='iOSDevice32'"/>
         <DeviceId Condition="'$(Platform)'=='iOSDevice64'"/>
         <DeviceId Condition="'$(Platform)'=='iOSSimulator'">iPhone5</DeviceId>
@@ -273,18 +273,9 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="Styles\AndroidLDarkBlue.fsf" Condition="'$(Config)'=='Debug'">
+        <DeployFile Include="CameraClick.mp3" Condition="'$(Config)'=='Release'">
             <RemoteDir>ProjectMobile\assets\internal\</RemoteDir>
-            <RemoteName>AndroidLDarkBlue.fsf</RemoteName>
-            <DeployClass>File</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="CameraClick.3gp" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>ProjectMobile\assets\internal\</RemoteDir>
-            <RemoteName>CameraClick.3gp</RemoteName>
+            <RemoteName>CameraClick.mp3</RemoteName>
             <DeployClass>File</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -360,24 +351,6 @@
             <RemoteName>splash_image_def.xml</RemoteName>
             <DeployClass>AndroidSplashImageDef</DeployClass>
             <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="Styles\GoogleGlass.fsf" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>ProjectMobile\assets\internal\</RemoteDir>
-            <RemoteName>GoogleGlass.fsf</RemoteName>
-            <DeployClass>File</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="Android\Debug\init.php" Condition="'$(Config)'=='Release'">
-            <RemoteDir>ProjectMobile\</RemoteDir>
-            <RemoteName>init.php</RemoteName>
-            <DeployClass>File</DeployClass>
-            <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
@@ -472,24 +445,6 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="Styles\AndroidDark.fsf" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>ProjectMobile\assets\internal\</RemoteDir>
-            <RemoteName>AndroidDark.fsf</RemoteName>
-            <DeployClass>File</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="Styles\AndroidLight.fsf" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>ProjectMobile\assets\internal\</RemoteDir>
-            <RemoteName>AndroidLight.fsf</RemoteName>
-            <DeployClass>File</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
         <DeployFile Include="img\sale1.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>ProjectMobile\res\drawable-mdpi\</RemoteDir>
             <RemoteName>ic_launcher.png</RemoteName>
@@ -526,38 +481,11 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="Styles\AndroidWear.fsf" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>ProjectMobile\assets\internal\</RemoteDir>
-            <RemoteName>AndroidWear.fsf</RemoteName>
-            <DeployClass>File</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="Styles\AndroidLDark.fsf" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>ProjectMobile\assets\internal\</RemoteDir>
-            <RemoteName>AndroidLDark.fsf</RemoteName>
-            <DeployClass>File</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
         <DeployFile Include="$(BDS)\bin\Artwork\Android\FM_SplashImage_470x320.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>ProjectMobile\res\drawable-normal\</RemoteDir>
             <RemoteName>splash_image.png</RemoteName>
             <DeployClass>Android_SplashImage470</DeployClass>
             <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="Styles\AndroidLLight.fsf" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>ProjectMobile\assets\internal\</RemoteDir>
-            <RemoteName>AndroidLLight.fsf</RemoteName>
-            <DeployClass>File</DeployClass>
-            <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>

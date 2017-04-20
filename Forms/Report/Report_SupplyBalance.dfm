@@ -311,6 +311,16 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsStart_Oth
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsEnd_Oth
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -600,6 +610,16 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = clGoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsStart_Oth
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsEnd_Oth
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -698,6 +718,26 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
           object RemainsEnd: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082' '#1082#1086#1085#1077#1095#1085'.'
             DataBinding.FieldName = 'RemainsEnd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object RemainsStart_Oth: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072#1095'. '#1074' '#1087#1088#1086#1080#1079#1074
+            DataBinding.FieldName = 'RemainsStart_Oth'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object RemainsEnd_Oth: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1082#1086#1085#1077#1095#1085'. '#1074' '#1087#1088#1086#1080#1079#1074
+            DataBinding.FieldName = 'RemainsEnd_Oth'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'

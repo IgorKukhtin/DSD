@@ -1,12 +1,15 @@
 -- Function: lpInsertUpdate_MI_OrderIncomeSnab()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderIncomeSnab_Property (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderIncomeSnab_Property (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_OrderIncomeSnab_Property(
     IN inId                   Integer   , -- Ключ объекта <Элемент документа>
+    IN MovementId             Integer   , -- 
     IN inGoodsId              Integer   , -- Товары
+    IN inMeasureId            Integer   , -- 
     IN inRemainsStart         TFloat    , -- 
-    IN inRemainsEnd           TFloat    , -- 
+    --IN inRemainsEnd           TFloat    , -- 
     IN inIncome               TFloat    , -- 
     IN inAmountForecast       TFloat    , -- 
     IN inAmountIn             TFloat    , -- 
@@ -19,6 +22,21 @@ AS
 $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
+
+     IF COALESCE (inId, 0) = 0
+     THEN
+         -- замена
+         IF COALESCE (inMeasureId, 0) = 0
+         THEN
+             inMeasureId:= zc_Measure_Sht();
+         END IF;
+           
+         -- сохранили <Элемент документа>
+         inId := lpInsertUpdate_MovementItem (COALESCE (inId, 0), zc_MI_Master(), inMeasureId, inMovementId, 0, NULL);
+
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), inId, inGoodsId);
+     END IF;
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Remains(), inId, inRemainsStart);

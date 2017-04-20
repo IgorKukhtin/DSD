@@ -37,4 +37,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_MovementItem_Visit (ioId:= 0, inMovementId:= 10, inPhotoMobileId:= 1, inAmount:= 0, inPhotoMobileKindId:= 0, inUserId:= 1, inGUID:= NULL)
+-- SELECT * FROM lpInsertUpdate_MovementItem_Visit (ioId:= 0, inMovementId:= 10, inPhotoMobileId:= 1, inComment:= 'dfgdfg', inUserId:= 1)

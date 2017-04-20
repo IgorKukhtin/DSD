@@ -19,16 +19,18 @@ RETURNS TABLE (GoodsCode Integer, GoodsName TVarChar
              , PartnerName TVarChar
              , CountDays Integer
              , RemainsStart TFloat
-             , RemainsEnd TFloat
-             , CountIncome TFloat
+             , RemainsEnd   TFloat
+             , RemainsStart_Oth   TFloat
+             , RemainsEnd_Oth     TFloat
+             , CountIncome        TFloat
              , CountProductionOut TFloat
              , CountIn_oth  TFloat
              , CountOut_oth TFloat
-             , CountOnDay TFloat
-             , RemainsDays TFloat
-             , ReserveDays TFloat
-             , PlanOrder TFloat
-             , CountOrder TFloat
+             , CountOnDay   TFloat
+             , RemainsDays  TFloat
+             , ReserveDays  TFloat
+             , PlanOrder    TFloat
+             , CountOrder   TFloat
              , RemainsDaysWithOrder TFloat
              , Color_RemainsDays Integer
               )
@@ -53,15 +55,32 @@ BEGIN
 
      RETURN QUERY
      WITH
-   tmpContainerAll AS (SELECT Container.Id                           AS ContainerId
-                            , Container.ObjectId                     AS GoodsId
+   --подразделения для "остатки впроизводстве"
+   tmpUnit AS (SELECT inUnitId AS UnitId
+              UNION
+               SELECT 8448 AS UnitId       --цех деликатесов+   
+              UNION
+               SELECT 8447 AS UnitId       -- колбасный+           
+              UNION
+               SELECT 8451 AS UnitId       -- упаковка+            
+              UNION
+               SELECT 951601 AS UnitId     -- упаковка мясо+       
+              UNION
+               SELECT 981821 AS UnitId     -- шприцевание          
+               )
+
+--
+ , tmpContainerAll AS (SELECT Container.Id         AS ContainerId
+                            , CLO_Unit.ObjectId    AS UnitId
+                            , Container.ObjectId   AS GoodsId
                             , Container.Amount
                        FROM ContainerLinkObject AS CLO_Unit
                                 INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId AND Container.DescId = zc_Container_Count()
+                                INNER JOIN tmpUnit ON tmpUnit.UnitId = CLO_Unit.ObjectId
                                 INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = Container.ObjectId
-                       WHERE CLO_Unit.ObjectId = inUnitId
-                         AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-                       GROUP BY Container.Id, Container.ObjectId, Container.Amount
+                       WHERE /*CLO_Unit.ObjectId = inUnitId
+                         AND */CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                       GROUP BY Container.Id, Container.ObjectId, Container.Amount, CLO_Unit.ObjectId 
                       )
   -- выбираем поставщиков
   , tmpContainerIncome AS (SELECT DISTINCT tmpContainerAll.GoodsId, MIContainer.ObjectExtId_Analyzer AS PartnerId
@@ -156,7 +175,7 @@ BEGIN
 
 
   --
-  , tmpContainer AS (SELECT tmp.GoodsId                          --, tmp.goodskindid
+  , tmpContainer AS (SELECT tmp.GoodsId 
                           , SUM (tmp.StartAmount)        AS RemainsStart
                           , SUM (tmp.EndAmount)          AS RemainsEnd
                           , SUM (tmp.CountIncome)        AS CountIncome
@@ -164,7 +183,6 @@ BEGIN
                           , SUM (tmp.CountIn_oth)        AS CountIn_oth
                           , SUM (tmp.CountOut_oth)       AS CountOut_oth
                      FROM (SELECT tmpContainerAll.GoodsId
-                                --, COALESCE (CLO_GoodsKind.ObjectId, 0)   AS GoodsKindId
                                 , tmpContainerAll.Amount
                                 , tmpContainerAll.Amount - SUM (COALESCE(MIContainer.Amount, 0))  AS StartAmount
                                 , tmpContainerAll.Amount - SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS EndAmount
@@ -217,10 +235,28 @@ BEGIN
                                 LEFT JOIN MovementItemContainer AS MIContainer
                                                                 ON MIContainer.Containerid = tmpContainerAll.ContainerId
                                                                AND MIContainer.OperDate >= inStartDate
+                           WHERE tmpContainerAll.UnitId = inUnitId
                            GROUP BY tmpContainerAll.GoodsId, tmpContainerAll.Amount
                            ) AS tmp
                      GROUP BY tmp.GoodsId
                      )
+   --"остатки впроизводстве"
+  , tmpRemains_Oth AS (SELECT tmp.GoodsId
+                            , SUM (tmp.StartAmount)        AS RemainsStart
+                            , SUM (tmp.EndAmount)          AS RemainsEnd
+                       FROM (SELECT tmpContainerAll.GoodsId
+                                  , tmpContainerAll.Amount - SUM (COALESCE(MIContainer.Amount, 0))  AS StartAmount
+                                  , tmpContainerAll.Amount - SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS EndAmount
+                             FROM tmpContainerAll
+                                  INNER JOIN tmpGoodsByReport ON tmpGoodsByReport.GoodsId = tmpContainerAll.GoodsId
+                                  LEFT JOIN MovementItemContainer AS MIContainer
+                                                                  ON MIContainer.Containerid = tmpContainerAll.ContainerId
+                                                                 AND MIContainer.OperDate >= inStartDate
+                             WHERE tmpContainerAll.UnitId <> inUnitId
+                             GROUP BY tmpContainerAll.GoodsId, tmpContainerAll.Amount
+                             ) AS tmp
+                       GROUP BY tmp.GoodsId
+                       )
 
        -- Результат
        SELECT
@@ -237,6 +273,8 @@ BEGIN
 
            , tmpContainer.RemainsStart   :: TFloat
            , tmpContainer.RemainsEnd     :: TFloat
+           , tmpRemains_Oth.RemainsStart      :: TFloat AS RemainsStart_Oth
+           , tmpRemains_Oth.RemainsEnd        :: TFloat AS RemainsEnd_Oth
            , tmpContainer.CountIncome         :: TFloat AS CountIncome
            , tmpContainer.CountProductionOut  :: TFloat AS CountProductionOut
            , tmpContainer.CountIn_oth         :: TFloat AS CountIn_oth
@@ -274,7 +312,7 @@ BEGIN
        FROM tmpGoodsByReport
           LEFT JOIN tmpContainer ON tmpContainer.GoodsId = tmpGoodsByReport.GoodsId
           LEFT JOIN tmpOrderIncome ON tmpOrderIncome.GoodsId = tmpGoodsByReport.GoodsId
-
+          LEFT JOIN tmpRemains_Oth ON tmpRemains_Oth.GoodsId = tmpGoodsByReport.GoodsId
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoodsByReport.GoodsId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id

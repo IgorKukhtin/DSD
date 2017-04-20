@@ -1115,6 +1115,12 @@ object DM: TDM
     object tblMovementItem_VisitInsertDate: TDateTimeField
       FieldName = 'InsertDate'
     end
+    object tblMovementItem_VisitGPSN: TFloatField
+      FieldName = 'GPSN'
+    end
+    object tblMovementItem_VisitGPSE: TFloatField
+      FieldName = 'GPSE'
+    end
     object tblMovementItem_VisitisErased: TBooleanField
       FieldName = 'isErased'
     end
@@ -1148,12 +1154,15 @@ object DM: TDM
     object qryPhotoGroupsOperDate: TDateTimeField
       FieldName = 'OperDate'
     end
+    object qryPhotoGroupsIsSync: TBooleanField
+      FieldName = 'IsSync'
+    end
   end
   object qryPhotos: TFDQuery
     Connection = conMain
     SQL.Strings = (
       '')
-    Left = 128
+    Left = 216
     Top = 392
     object qryPhotosId: TIntegerField
       FieldName = 'Id'
@@ -1731,6 +1740,53 @@ object DM: TDM
     object cdsTasksTaskDescription: TStringField
       FieldName = 'TaskDescription'
       Size = 1100
+    end
+  end
+  object qryPhotoGroupDocs: TFDQuery
+    OnCalcFields = qryPhotoGroupDocsCalcFields
+    Connection = conMain
+    SQL.Strings = (
+      '')
+    Left = 128
+    Top = 392
+    object qryPhotoGroupDocsId: TIntegerField
+      FieldName = 'Id'
+    end
+    object qryPhotoGroupDocsComment: TStringField
+      FieldName = 'Comment'
+      Size = 255
+    end
+    object qryPhotoGroupDocsStatusId: TIntegerField
+      FieldName = 'StatusId'
+    end
+    object qryPhotoGroupDocsName: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'Name'
+      Size = 255
+      Calculated = True
+    end
+    object qryPhotoGroupDocsOperDate: TDateTimeField
+      FieldName = 'OperDate'
+    end
+    object qryPhotoGroupDocsIsSync: TBooleanField
+      FieldName = 'IsSync'
+    end
+    object qryPhotoGroupDocsPartnerId: TIntegerField
+      FieldName = 'PartnerId'
+    end
+    object qryPhotoGroupDocsPartnerName: TStringField
+      FieldName = 'PartnerName'
+      Size = 255
+    end
+    object qryPhotoGroupDocsAddress: TStringField
+      FieldName = 'Address'
+      Size = 255
+    end
+    object qryPhotoGroupDocsGroupName: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'GroupName'
+      Size = 600
+      Calculated = True
     end
   end
 end

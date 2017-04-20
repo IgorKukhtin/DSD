@@ -10,6 +10,7 @@ uses
   Androidapi.JNIBridge,
   Androidapi.JNI.GraphicsContentViewText,
   Androidapi.JNI.JavaTypes,
+  Androidapi.JNI.App,
   FMX.Helpers.Android,
   Androidapi.Helpers,
   {$ENDIF}
@@ -93,7 +94,7 @@ const
   '</xml>';
 begin
   {$IFDEF ANDROID}
-  obj := SharedActivityContext.getSystemService(TJContext.JavaClass.TELEPHONY_SERVICE);
+  obj := TAndroidHelper.Context.getSystemService(TJContext.JavaClass.TELEPHONY_SERVICE);
   if obj <> nil then
   begin
     tm := TJTelephonyManager.Wrap( (obj as ILocalObject).GetObjectID );
@@ -101,7 +102,7 @@ begin
       IMEI := JStringToString(tm.getDeviceId);
   end;
   if IMEI = '' then
-    IMEI := JStringToString(TJSettings_Secure.JavaClass.getString(SharedActivity.getContentResolver,
+    IMEI := JStringToString(TJSettings_Secure.JavaClass.getString(TAndroidHelper.Activity.getContentResolver,
                             TJSettings_Secure.JavaClass.ANDROID_ID));
   {$ELSE}
   IMEI := '';

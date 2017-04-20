@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdateMobile_MovementItem_Visit (TVarChar, TVarChar, TBlob, TVarChar, TVarChar, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdateMobile_MovementItem_Visit (TVarChar, TVarChar, TBlob, TVarChar, TVarChar, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdateMobile_MovementItem_Visit (TVarChar, TVarChar, TBlob, TVarChar, TVarChar, TFloat, TFloat, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_MovementItem_Visit(
     IN inGUID         TVarChar  , -- Глобальный уникальный идентификатор для синхронизации с мобильными устройствами
@@ -9,6 +10,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_MovementItem_Visit(
     IN inPhoto        TBlob     , -- Фото, содержание файла
     IN inPhotoName    TVarChar  , -- Фото, имя файла
     IN inComment      TVarChar  , -- Примечание к фото
+    IN inGPSN         TFloat    , -- GPS координаты фото (широта)
+    IN inGPSE         TFloat    , -- GPS координаты фото (долгота)
     IN inInsertDate   TDateTime , -- Дата/время создания элемента
     IN inIsErased     Boolean   , -- Удаленный ли элемент
     IN inSession      TVarChar    -- сессия пользователя
@@ -87,6 +90,12 @@ BEGIN
       -- обновляем элемент фото
       PERFORM lpInsertUpdate_Object_PhotoMobile (vbPhotoMobileId, vbId, TRIM (inPhotoName), inPhoto, vbUserId);
 
+      -- сохранили свойство <GPS координаты фото (широта)>
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_GPSN(), vbId, inGPSN);
+
+      -- сохранили свойство <GPS координаты фото (долгота)>
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_GPSE(), vbId, inGPSE);
+
       -- сохранили свойство <Дата/время создания>
       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_InsertMobile(), vbId, inInsertDate);
 
@@ -112,4 +121,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdateMobile_MovementItem_Visit (inGUID:= '{29F0D6D3-006A-4D30-8B30-CECCD7D883C6}', inMovementGUID:= '{2F3BD890-0022-45F7-A1E2-9324BC312C76}', inPhoto:= NULL, inPhotoName:= 'NoPhoto', inComment:= 'simple test', inInsertDate:= CURRENT_TIMESTAMP, inIsErased:= false, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsertUpdateMobile_MovementItem_Visit (inGUID:= '{29F0D6D3-006A-4D30-8B30-CECCD7D883C6}', inMovementGUID:= '{2F3BD890-0022-45F7-A1E2-9324BC312C76}', inPhoto:= NULL, inPhotoName:= 'NoPhoto', inComment:= 'simple test', inGPSN:= 56, inGPSE:= 57, inInsertDate:= CURRENT_TIMESTAMP, inIsErased:= false, inSession:= zfCalc_UserAdmin())

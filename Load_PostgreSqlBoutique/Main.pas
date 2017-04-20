@@ -1994,10 +1994,10 @@ begin
         Add('     , Bill_CurrencyDocument.ValutaName as  CurrencyDocumentName ');
         Add('     , Bill_CurrencyPartner.Id_Postgres as CurrencyPartnerId ');
         Add('     , Bill_CurrencyPartner.ValutaName as CurrencyPartnerName ');
-        Add('     , Valuta.NewKursIn as CurrencyValue ');
-        Add('     , Valuta.NominalFromValuta as ParValue ');
-        Add('     , Valuta.NewKursOut as CurrencyPartnerValue ');
-        Add('     , Valuta.NominalFromValuta as ParPartnerValue ');
+        Add('     , ValutaDoc.NewKursIn as CurrencyValue ');
+        Add('     , ValutaDoc.NominalFromValuta as ParValue ');
+        Add('     , ValutaPar.NewKursOut as CurrencyPartnerValue ');
+        Add('     , ValutaPar.NominalFromValuta as ParPartnerValue ');
         Add('     , '''' as Comments ');
         Add('     , Bill.Id_Postgres ');
         Add(' from DBA.Bill ');
@@ -2006,7 +2006,8 @@ begin
         Add('     left join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
         Add('     left join DBA.Valuta as Bill_CurrencyDocument on Bill_CurrencyDocument.Id = Bill.ValutaIDIn   ');
         Add('     left join DBA.Valuta as Bill_CurrencyPartner on Bill_CurrencyPartner.Id = Bill.ValutaID  ');
-        Add('     left join (select * from  DBA.ValutaKursItems order by id desc ) as valuta  on Bill.BillDate  between valuta.startDate and valuta.EndDate and valuta.FromValutaID = Bill.ValutaIDIn  and valuta.ToValutaID = Bill.ValutaID ');
+        Add('     left join (select * from  DBA.ValutaKursItems order by id desc ) as valutaDoc  on Bill.BillDate  between valutaDoc.startDate and valutaDoc.EndDate and valutaDoc.FromValutaID = Bill.ValutaIDIn  and valutaDoc.ToValutaID = Bill.ValutaIDpl ');
+        Add('     left join (select * from  DBA.ValutaKursItems order by id desc ) as valutaPar  on Bill.BillDate  between valutaPar.startDate and valutaPar.EndDate and valutaPar.FromValutaID = Bill.ValutaIDIn  and valutaPar.ToValutaID = Bill.ValutaIDpl ');
         Add(' where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add(' order by ObjectId ');
         Open;
