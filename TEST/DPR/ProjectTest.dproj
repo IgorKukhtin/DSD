@@ -3108,12 +3108,12 @@
 				<Form>Report_Check_OrderInternalBySendForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\OrderIncomeSnab.pas">
-				<Form>OrderIncomeSnabForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\OrderIncomeSnabJournal.pas">
 				<Form>OrderIncomeSnabJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderIncomeSnab.pas">
+				<Form>OrderIncomeSnabForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -153,6 +153,7 @@ type
     bb: TdxBarButton;
     HeaderSaver1: THeaderSaver;
     spUpdateMovementByReport: TdsdStoredProc;
+    actPrintOrder: TdsdPrintAction;
   private
   public
   end;

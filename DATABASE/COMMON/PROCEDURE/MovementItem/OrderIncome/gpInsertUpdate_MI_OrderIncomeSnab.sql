@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MI_OrderIncomeSnab()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_OrderIncomeSnab (Integer, Integer, Integer, TFloat, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_OrderIncomeSnab (Integer, Integer, Integer, TFloat, TFloat, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_OrderIncomeSnab(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,6 +9,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_OrderIncomeSnab(
  INOUT ioMeasureId           Integer   , -- 
    OUT outMeasureName        TVarChar  , -- 
     IN inAmount              TFloat    , -- Количество
+    IN inPrice               TFloat    , -- 
+  OUT outAmountSumm          TFloat    , -- Сумма расчетная
     IN inGoodsId             Integer   , -- Товар
     IN inComment             TVarChar ,   -- 
     IN inSession             TVarChar    -- сессия пользователя
@@ -38,11 +41,17 @@ BEGIN
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), ioMeasureId, inMovementId, inAmount, NULL);
 
      -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
+
+     -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), ioId, inGoodsId);
      
+     -- расчитали сумму по элементу, для грида
+     outAmountSumm := CAST (inAmount * inPrice AS NUMERIC (16, 2));
+
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
