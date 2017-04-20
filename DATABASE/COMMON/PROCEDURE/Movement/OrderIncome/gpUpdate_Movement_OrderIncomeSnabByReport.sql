@@ -29,7 +29,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DayCount(), inId, inDayCount);
      
      -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inId, vbUserId, vbIsInsert);
+     PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
 
 END;
 $BODY$

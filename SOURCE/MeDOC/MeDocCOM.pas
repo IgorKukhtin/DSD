@@ -169,7 +169,7 @@ end;
 
  function TMedocComAction.LocalExecute: boolean;
 var DocumentList: IZDataset;
-    s, SEND_DPA: string;
+    s, s_err, SEND_DPA: string;
     ii, i, MovementId, MedocCode, FormCode: integer;
     MedocDocument: IZDocument;
     HeaderDataSet: IZDataset;
@@ -220,6 +220,8 @@ begin
          + ' *** ' + VarToStr(HeaderDataSet.Fields[ii].Value)
          + #10 + #13;
 end;
+
+s_err:='';
 
 if ParamStr(1) = 'FormCode' then
 begin if (ParamStr(2) <> '')and (ParamStr(2) = HeaderDataSet.Fields['SEND_DPA_RN'].Value) then showMessage('(FormCode = ' + IntToStr(FormCode) + ') ' + HeaderDataSet.Fields['SEND_DPA_RN'].Value + ' : ' + str1)

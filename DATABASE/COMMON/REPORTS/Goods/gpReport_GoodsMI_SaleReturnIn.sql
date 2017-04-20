@@ -79,7 +79,7 @@ BEGIN
     END IF;
 */
 
-    IF inEndDate >= '01.04.2017' AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 15 AND inSession NOT IN ('9463', '106593', '106594')
+    IF inEndDate >= '01.04.2017' AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 15 AND inSession NOT IN ('9463', '106593', '106594', '140094')
          AND (1  < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%')
            OR 10 < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active'))
     THEN
