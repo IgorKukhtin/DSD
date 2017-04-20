@@ -11,15 +11,15 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_StoreReal());
+      -- проверка прав пользователя на вызов процедуры
+      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_StoreReal());
+      vbUserId:= lpGetUserBySession (inSession);
 
-     -- проводим Документ + сохранили протокол
-     PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                , inDescId     := zc_Movement_StoreReal()
-                                , inUserId     := vbUserId
-                                 );
-
+      -- проводим Документ + сохранили протокол
+      PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                 , inDescId     := zc_Movement_StoreReal()
+                                 , inUserId     := vbUserId
+                                  );
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
