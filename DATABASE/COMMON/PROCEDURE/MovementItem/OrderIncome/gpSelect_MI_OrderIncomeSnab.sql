@@ -92,6 +92,8 @@ BEGIN
                                   , MIString_Comment.ValueData                    AS Comment
                                   , MovementItem.isErased
                                   , COALESCE (MIFloat_AmountRemains.ValueData, 0)         AS AmountRemains
+                                  , COALESCE (MIFloat_AmountRemains.ValueData, 0) + COALESCE (MIFloat_AmountIncome.ValueData, 0) + COALESCE (MIFloat_AmountIn.ValueData, 0)
+                                  - COALESCE (MIFloat_AmountForecast.ValueData, 0) - COALESCE (MIFloat_AmountOut.ValueData, 0)  AS AmountRemainsEnd
                                   , COALESCE (MIFloat_AmountIncome.ValueData, 0)          AS AmountIncome
                                   , COALESCE (MIFloat_AmountForecast.ValueData, 0)        AS AmountForecast
                                   , COALESCE (MIFloat_AmountIn.ValueData, 0)              AS AmountIn
@@ -182,7 +184,7 @@ BEGIN
              , Object_Measure.ValueData   AS MeasureName
              , tmpMI.Amount
              , tmpMI.AmountRemains  ::TFloat
-             , (tmpMI.AmountRemains + tmpMI.AmountIncome + tmpMI.AmountIn - tmpMI.AmountForecast - tmpMI.AmountOut) :: TFloat AS AmountRemainsEnd
+             , tmpMI.AmountRemainsEnd ::TFloat
              , tmpMI.AmountIncome   ::TFloat
              , tmpMI.AmountForecast ::TFloat
              , tmpMI.AmountIn       ::TFloat
