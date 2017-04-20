@@ -2,14 +2,17 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderIncomeSnab_Property (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderIncomeSnab_Property (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderIncomeSnab_Property (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_OrderIncomeSnab_Property(
     IN inId                   Integer   , -- Ключ объекта <Элемент документа>
-    IN MovementId             Integer   , -- 
+    IN inMovementId           Integer   , -- 
     IN inGoodsId              Integer   , -- Товары
     IN inMeasureId            Integer   , -- 
     IN inRemainsStart         TFloat    , -- 
     --IN inRemainsEnd           TFloat    , -- 
+    IN inBalanceStart         TFloat    , -- 
+    IN inBalanceEnd           TFloat    , -- 
     IN inIncome               TFloat    , -- 
     IN inAmountForecast       TFloat    , -- 
     IN inAmountIn             TFloat    , -- 
@@ -42,6 +45,11 @@ BEGIN
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Remains(), inId, inRemainsStart);
    -- сохранили свойство <>
    --PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RemainsEnd(), inId, inRemainsEnd);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_BalanceStart(), inId, inBalanceStart);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_BalanceEnd(), inId, inBalanceEnd);
+
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Income(), inId, inIncome);
    -- сохранили свойство <>

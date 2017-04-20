@@ -372,6 +372,16 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
               Format = ',0.####'
               Kind = skSum
               Column = PlanOrder
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = BalanceStart
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = BalanceEnd
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -437,6 +447,16 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = colName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = BalanceStart
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = BalanceEnd
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -555,6 +575,28 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object BalanceStart: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072#1095'. '#1074' '#1087#1088#1086#1080#1079#1074
+            DataBinding.FieldName = 'BalanceStart'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object BalanceEnd: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1082#1086#1085#1077#1095#1085'. '#1074' '#1087#1088#1086#1080#1079#1074
+            DataBinding.FieldName = 'BalanceEnd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object colAmountIncome: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076'-'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090'.'
@@ -1138,6 +1180,107 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
+    object actPrintOrder: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      DataSets = <
+        item
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'OperDate'
+          Value = 42005d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartDate'
+          Value = 'NULL'
+          Component = edOperDateStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = edOperDateEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = UnitGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Comment'
+          Value = Null
+          Component = ceComment
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractName'
+          Value = Null
+          Component = ContractGuides
+          ComponentItem = 'Key'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DayCount'
+          Value = Null
+          Component = edDayCount
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_OrderIncomeSnab'
+      ReportNameParam.Value = 'PrintMovement_OrderIncomeSnab'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+    end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
@@ -1240,131 +1383,6 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       ImageIndex = 13
       Status = mtDelete
       Guides = StatusGuides
-    end
-    object actPrintOrder: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end
-        item
-          FromParam.Value = 42005d
-          FromParam.DataType = ftDateTime
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
-          ToParam.DataType = ftDateTime
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end
-        item
-          FromParam.Value = 42005d
-          FromParam.DataType = ftDateTime
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
-          ToParam.DataType = ftDateTime
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
-      ImageIndex = 3
-      DataSets = <
-        item
-          UserName = 'frxDBDItems'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
-          GridView = cxGridDBTableView
-        end>
-      Params = <
-        item
-          Name = 'OperDate'
-          Value = 42005d
-          Component = edOperDate
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'StartDate'
-          Value = 'NULL'
-          Component = edOperDateStart
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 42005d
-          Component = edOperDateEnd
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitName'
-          Value = ''
-          Component = UnitGuides
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'JuridicalName'
-          Value = ''
-          Component = GuidesFrom
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Comment'
-          Value = Null
-          Component = ceComment
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ContractName'
-          Value = Null
-          Component = ContractGuides
-          ComponentItem = 'Key'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InvNumber'
-          Value = Null
-          Component = edInvNumber
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'DayCount'
-          Value = Null
-          Component = edDayCount
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_OrderIncomeSnab'
-      ReportNameParam.Value = 'PrintMovement_OrderIncomeSnab'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
     end
     object actMIContainer: TdsdOpenForm
       Category = 'DSDLib'
