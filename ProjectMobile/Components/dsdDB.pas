@@ -247,10 +247,8 @@ begin
 end;
 
 function TdsdStoredProc.Execute(ExecPack: boolean = false; AnyExecPack: boolean = false; ACursorHourGlass: Boolean = True): string;
-var TickCount: cardinal;
 begin
   result := '';
-  TickCount := 0;
   if ACursorHourGlass then
     Screen_Cursor_crHourGlass;
   try
@@ -412,7 +410,10 @@ procedure TdsdStoredProc.SetStoredProcName(const Value: String);
     if PostgresType = 'INOUT' then
        result := ptInputOutput;
   end;
-var lDataSet: TClientDataSet;
+{$IFDEF MSWINDOWS}
+var
+  lDataSet: TClientDataSet;
+{$ENDIF}
 const
    pXML =
   '<xml Session = "">' +
@@ -822,7 +823,7 @@ var
   FRttiProperty: TRttiProperty;
   FRttiType: TRttiType;
   RttiValue : TValue;
-  Done: Boolean;
+  //Done: Boolean;
 begin
   { ???
   if Assigned(Component) and
@@ -1051,6 +1052,7 @@ var
 
 begin
   FValue := Value;
+  DateTimeValue := 0;
   { ???
   if Assigned(Component) and
      (Self.GetOwner is TvtCustomForm) and

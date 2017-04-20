@@ -590,9 +590,24 @@ type
     cdsReturnInAddress: TStringField;
     qryPhotoGroupsName: TStringField;
     qryPhotoGroupsOperDate: TDateTimeField;
+    qryPhotoGroupsIsSync: TBooleanField;
+    qryPhotoGroupDocs: TFDQuery;
+    qryPhotoGroupDocsId: TIntegerField;
+    qryPhotoGroupDocsComment: TStringField;
+    qryPhotoGroupDocsStatusId: TIntegerField;
+    qryPhotoGroupDocsName: TStringField;
+    qryPhotoGroupDocsOperDate: TDateTimeField;
+    qryPhotoGroupDocsIsSync: TBooleanField;
+    qryPhotoGroupDocsPartnerId: TIntegerField;
+    qryPhotoGroupDocsPartnerName: TStringField;
+    qryPhotoGroupDocsAddress: TStringField;
+    qryPhotoGroupDocsGroupName: TStringField;
+    tblMovementItem_VisitGPSN: TFloatField;
+    tblMovementItem_VisitGPSE: TFloatField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
+    procedure qryPhotoGroupDocsCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
     FConnected: Boolean;
@@ -646,6 +661,7 @@ type
 
     procedure SavePhotoGroup(AGroupName: string);
     procedure LoadPhotoGroups;
+    procedure LoadAllPhotoGroups(AStartDate, AEndDate: TDate);
 
     procedure GenerateJuridicalCollation(ADateStart, ADateEnd: TDate;
       AJuridicalId, APartnerId, AContractId, APaidKindId: integer);
@@ -1665,6 +1681,8 @@ begin
           end;
           UploadStoredProc.Params.AddParam('inPhotoName', ftString, ptInput, FieldByName('GUID').AsString);
           UploadStoredProc.Params.AddParam('inComment', ftString, ptInput, FieldByName('COMMENT').AsString);
+          UploadStoredProc.Params.AddParam('inGPSN', ftFloat, ptInput, FieldByName('GPSN').AsFloat);
+          UploadStoredProc.Params.AddParam('inGPSE', ftFloat, ptInput, FieldByName('GPSE').AsFloat);
           UploadStoredProc.Params.AddParam('inInsertDate', ftDateTime, ptInput, FieldByName('INSERTDATE').AsDateTime);
           UploadStoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, FieldByName('ISERASED').AsBoolean);
 
@@ -2537,6 +2555,13 @@ begin
   DataSet.FieldByName('Termin').AsString := 'Цена действительна с ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('StartDate').AsDateTime);
 end;
 
+procedure TDM.qryPhotoGroupDocsCalcFields(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('Name').AsString := 'Фотографии за ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('OperDate').AsDateTime);
+  DataSet.FieldByName('GroupName').AsString := DataSet.FieldByName('PartnerName').AsString + chr(13) + chr(10) +
+    DataSet.FieldByName('Address').AsString;
+end;
+
 procedure TDM.qryPhotoGroupsCalcFields(DataSet: TDataSet);
 begin
   DataSet.FieldByName('Name').AsString := 'Фотографии за ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('OperDate').AsDateTime);
@@ -2909,7 +2934,7 @@ begin
       'JOIN OBJECT_PARTNER P ON P.ID = MSR.PARTNERID ' +
       'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID AND J.CONTRACTID = P.CONTRACTID ' +
       'LEFT JOIN Object_PriceList PL ON PL.ID = IFNULL(P.PRICELISTID, :DefaultPriceList) ' +
-      'WHERE MSR.OPERDATE BETWEEN :STARTDATE AND :ENDDATE ' +
+      'WHERE DATE(MSR.OPERDATE) BETWEEN :STARTDATE AND :ENDDATE ' +
       'GROUP BY MSR.ID, MSR.PARTNERID order by PartnerName, Address asc, OPERDATE desc';
     qryStoreReals.ParamByName('STARTDATE').AsDate := AStartDate;
     qryStoreReals.ParamByName('ENDDATE').AsDate := AEndDate;
@@ -3383,7 +3408,7 @@ begin
       'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID AND J.CONTRACTID = P.CONTRACTID ' +
       'LEFT JOIN Object_PriceList PL ON PL.ID = IFNULL(P.PRICELISTID, :DefaultPriceList) ' +
       'LEFT JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID ' +
-      'WHERE MOE.OPERDATE BETWEEN :STARTDATE AND :ENDDATE ' +
+      'WHERE DATE(MOE.OPERDATE) BETWEEN :STARTDATE AND :ENDDATE ' +
       'GROUP BY MOE.ID, MOE.PARTNERID, MOE.CONTRACTID order by PartnerName, P.Address, P.ContractId asc, MOE.OPERDATE desc';
     qryOrderExternal.ParamByName('STARTDATE').AsDate := AStartDate;
     qryOrderExternal.ParamByName('ENDDATE').AsDate := AEndDate;
@@ -3543,7 +3568,7 @@ begin
       'LEFT JOIN MOVEMENT_PROMO P ON P.ID = PP.MOVEMENTID ' +
       'WHERE GLS.PARTNERID = :PARTNERID and GLS.ISERASED = 0 order by G.VALUEDATA ';
 
-    qryGoodsListSale.ParamByName('PARTNERID').AsInteger := cdsOrderExternalId.AsInteger;
+    qryGoodsListSale.ParamByName('PARTNERID').AsInteger := cdsOrderExternalPartnerId.AsInteger;
     qryGoodsListSale.ParamByName('CONTRACTID').AsInteger := cdsOrderExternalCONTRACTID.AsInteger;
     qryGoodsListSale.ParamByName('PRICELISTID').AsInteger := cdsOrderExternalPRICELISTID.AsInteger;
     qryGoodsListSale.Open;
@@ -3606,7 +3631,7 @@ begin
       'WHERE IEO.MOVEMENTID = ' + IntToStr(AId) + ' order by G.VALUEDATA ';
 
 
-    qryGoodsListOrder.ParamByName('PARTNERID').AsInteger := cdsOrderExternalId.AsInteger;
+    qryGoodsListOrder.ParamByName('PARTNERID').AsInteger := cdsOrderExternalPartnerId.AsInteger;
     qryGoodsListOrder.ParamByName('CONTRACTID').AsInteger := cdsOrderExternalCONTRACTID.AsInteger;
     qryGoodsListOrder.ParamByName('PRICELISTID').AsInteger := cdsOrderExternalPRICELISTID.AsInteger;
     qryGoodsListOrder.Open;
@@ -3642,7 +3667,7 @@ begin
   else
     PromoPriceField := 'PriceWithOutVAT';
 
-  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, IFNULL(' + PromoPriceField + ', ''-'') PromoPrice, ' +
+  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, IFNULL(' + PromoPriceField + ' || '''', ''-'') PromoPrice, ' +
     'GLK.REMAINS, PI.' + PriceField + ' PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || G.VALUEDATA || '';'' || ' +
     'IFNULL(GK.VALUEDATA, ''-'') || '';'' || 0 || '';'' || 0 || '';'' || IFNULL(PI.' + PriceField + ', ''0'') || '';'' || ' +
     'IFNULL(M.VALUEDATA, ''-'') || '';'' || G.WEIGHT || '';'' || IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 1) || '';0'' FullInfo, ' +
@@ -3657,7 +3682,7 @@ begin
     'LEFT JOIN MOVEMENT_PROMO P ON P.ID = PP.MOVEMENTID ' +
     'WHERE G.ISERASED = 0 order by GoodsName';
 
-  qryGoodsItems.ParamByName('PARTNERID').AsInteger := cdsOrderExternalId.AsInteger;
+  qryGoodsItems.ParamByName('PARTNERID').AsInteger := cdsOrderExternalPartnerId.AsInteger;
   qryGoodsItems.ParamByName('CONTRACTID').AsInteger := cdsOrderExternalCONTRACTID.AsInteger;
   qryGoodsItems.ParamByName('PRICELISTID').AsInteger := cdsOrderExternalPRICELISTID.AsInteger;
   qryGoodsItems.Open;
@@ -3808,7 +3833,7 @@ begin
 
       cdsReturnInOperDate.AsDateTime := OperDate;
       cdsReturnInComment.AsString := Comment;
-      cdsReturnInName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', OperDate);
+      cdsReturnInName.AsString := 'Возврат от ' + FormatDateTime('DD.MM.YYYY', OperDate);
       cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', ToralPrice);
       cdsReturnInWeight.AsString := 'Вес: ' + FormatFloat(',0.00', TotalWeight);
 
@@ -3967,7 +3992,7 @@ begin
       'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID AND J.CONTRACTID = P.CONTRACTID ' +
       'LEFT JOIN Object_PriceList PL ON PL.ID = IFNULL(P.PRICELISTID_RET, :DefaultPriceList) ' +
       'LEFT JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID ' +
-      'WHERE MRI.OPERDATE BETWEEN :STARTDATE AND :ENDDATE ' +
+      'WHERE DATE(MRI.OPERDATE) BETWEEN :STARTDATE AND :ENDDATE ' +
       'GROUP BY MRI.ID, MRI.PARTNERID, MRI.CONTRACTID order by PartnerName, P.Address, P.ContractId asc, MRI.OPERDATE desc';
     qryReturnIn.ParamByName('STARTDATE').AsDate := AStartDate;
     qryReturnIn.ParamByName('ENDDATE').AsDate := AEndDate;
@@ -4067,7 +4092,7 @@ begin
       'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
       'WHERE GLS.PARTNERID = :PARTNERID and GLS.ISERASED = 0 order by G.VALUEDATA ';
 
-    qryGoodsListSale.ParamByName('PARTNERID').AsInteger := cdsReturnInId.AsInteger;
+    qryGoodsListSale.ParamByName('PARTNERID').AsInteger := cdsReturnInPartnerId.AsInteger;
     qryGoodsListSale.ParamByName('PRICELISTID').AsInteger := cdsReturnInPRICELISTID.AsInteger;
     qryGoodsListSale.Open;
 
@@ -4174,7 +4199,7 @@ begin
     CreateGUID(GlobalId);
     tblMovement_VisitGUID.AsString := GUIDToString(GlobalId);
     tblMovement_VisitInvNumber.AsString := IntToStr(NewInvNumber);
-    tblMovement_VisitOperDate.AsDateTime := Now();
+    tblMovement_VisitOperDate.AsDateTime := Date();
     tblMovement_VisitPartnerId.AsInteger := qryPartnerId.AsInteger;
     if Trim(AGroupName) <> '' then
       tblMovement_VisitComment.AsString := AGroupName
@@ -4198,9 +4223,28 @@ end;
 { начитка групп фотографий из БД }
 procedure TDM.LoadPhotoGroups;
 begin
-  qryPhotoGroups.Open('select Id, Comment, StatusId, OperDate from Movement_Visit where PartnerId = ' + qryPartnerId.AsString +
+  qryPhotoGroups.Close;
+  qryPhotoGroups.Open('select Id, Comment, StatusId, OperDate, isSync ' +
+    ' from Movement_Visit where PartnerId = ' + qryPartnerId.AsString +
     ' and StatusId <> ' + tblObject_ConstStatusId_Erased.AsString);
 end;
+
+{ начитка групп фотографий из БД для всех ТТ }
+procedure TDM.LoadAllPhotoGroups;
+begin
+  qryPhotoGroupDocs.Close;
+  qryPhotoGroupDocs.SQL.Text := 'select MV.Id, MV.Comment, MV.StatusId, MV.OperDate, MV.isSync, ' +
+    'P.Id PartnerId, J.VALUEDATA PartnerName, P.ADDRESS ' +
+    'FROM Movement_Visit MV ' +
+    'JOIN OBJECT_PARTNER P ON P.ID = MV.PARTNERID ' +
+    'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID AND J.CONTRACTID = P.CONTRACTID ' +
+    'WHERE DATE(MV.OPERDATE) BETWEEN :STARTDATE AND :ENDDATE AND MV.StatusId <> ' + tblObject_ConstStatusId_Erased.AsString + ' ' +
+    'GROUP BY MV.ID, MV.PARTNERID order by PartnerName, Address asc, OPERDATE desc';
+  qryPhotoGroupDocs.ParamByName('STARTDATE').AsDate := AStartDate;
+  qryPhotoGroupDocs.ParamByName('ENDDATE').AsDate := AEndDate;
+  qryPhotoGroupDocs.Open;
+end;
+
 
 { получение данных для акта сверки }
 procedure TDM.GenerateJuridicalCollation(ADateStart, ADateEnd: TDate;
@@ -4415,4 +4459,5 @@ finalization
 FreeAndNil(Structure);
 
 end.
+
 
