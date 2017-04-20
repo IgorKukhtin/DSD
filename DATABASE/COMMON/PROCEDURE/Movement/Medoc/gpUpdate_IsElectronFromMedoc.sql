@@ -179,7 +179,7 @@ return;
                                   -- LEFT JOIN ObjectHistory_JuridicalDetails_View AS JuridicalTo ON JuridicalTo.JuridicalId = MovementLinkObject_To.ObjectId
                                   -- LEFT JOIN ObjectHistory_JuridicalDetails_View AS JuridicalFrom ON JuridicalFrom.JuridicalId = MovementLinkObject_From.ObjectId
                                   LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS JuridicalTo
-                                                                                      ON JuridicalTo.JuridicalId = Object_To.Id
+                                                                                      ON JuridicalTo.JuridicalId = MovementLinkObject_To.ObjectId
                                                                                      AND Movement.OperDate >= JuridicalTo.StartDate AND Movement.OperDate < JuridicalTo.EndDate
                                   LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS JuridicalFrom
                                                                                       ON JuridicalFrom.JuridicalId = MovementLinkObject_From.ObjectId
@@ -226,7 +226,7 @@ return;
                                   LEFT JOIN Movement AS Movement_child ON Movement_child.Id = MovementLinkMovement_child.MovementChildId
 
                                   LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS JuridicalTo
-                                                                                      ON JuridicalTo.JuridicalId = Object_To.Id
+                                                                                      ON JuridicalTo.JuridicalId = MovementLinkObject_To.ObjectId
                                                                                      AND COALESCE (Movement_child.OperDate, Movement.OperDate) >= JuridicalTo.StartDate AND COALESCE (Movement_child.OperDate, Movement.OperDate) < JuridicalTo.EndDate
                                   LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS JuridicalFrom
                                                                                       ON JuridicalFrom.JuridicalId = MovementLinkObject_From.ObjectId
