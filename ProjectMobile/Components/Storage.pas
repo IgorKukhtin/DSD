@@ -117,8 +117,6 @@ end;
 class function TStorage.NewInstance: TObject;
 var
   ConnectionString: string;
-  i: Integer;
-  StartPHP: Boolean;
 begin
   if not Assigned(Instance) then begin
     Instance := TStorage(inherited NewInstance);
@@ -277,7 +275,6 @@ var
   AttemptCount: integer;
   ok: Boolean;
   StartActiveConnection: Integer;
-  LastError: integer;
   ResStr : string;
   function NextActiveConnection: Integer;
   Begin

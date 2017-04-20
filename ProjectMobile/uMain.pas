@@ -260,7 +260,7 @@ type
     tiReturnIns: TTabItem;
     tiPhotosList: TTabItem;
     lwPhotos: TListView;
-    Panel7: TPanel;
+    pAddPhoto: TPanel;
     bAddedPhoto: TButton;
     pNewPhotoGroup: TPanel;
     bSavePG: TButton;
@@ -622,6 +622,22 @@ type
     Layout35: TLayout;
     Label78: TLabel;
     lPartnerAddressGPS: TLabel;
+    tiPhotoDocs: TTabItem;
+    lwPhotoDocs: TListView;
+    bshotoGroupDocs: TBindSourceDB;
+    LinkListControlToField3: TLinkListControlToField;
+    imCapture: TImage;
+    imRevert: TImage;
+    Panel7: TPanel;
+    Panel8: TPanel;
+    Panel17: TPanel;
+    Panel23: TPanel;
+    Image12: TImage;
+    Panel36: TPanel;
+    Layout36: TLayout;
+    Label79: TLabel;
+    lContractName: TLabel;
+    Layout37: TLayout;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -806,6 +822,9 @@ type
       ItemIndex: Integer; const LocalClickPos: TPointF;
       const ItemObject: TListItemDrawable);
     procedure tcPartnerInfoChange(Sender: TObject);
+    procedure lwPhotoDocsItemClickEx(const Sender: TObject; ItemIndex: Integer;
+      const LocalClickPos: TPointF; const ItemObject: TListItemDrawable);
+    procedure imCaptureClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -858,6 +877,8 @@ type
     procedure DeleteStoreReal(const AResult: TModalResult);
     procedure DeleteReturnIn(const AResult: TModalResult);
     procedure DeletePhotoGroup(const AResult: TModalResult);
+    procedure DeletePhotoGroupDoc(const AResult: TModalResult);
+    procedure DeletePhoto(const AResult: TModalResult);
     procedure CreateEditStoreReal(const AResult: TModalResult);
     procedure CreateEditOrderExtrernal(New: boolean);
     procedure CreateEditReturnIn(New: boolean);
@@ -893,7 +914,7 @@ type
     procedure ShowPromoGoods;
     procedure ShowPromoPartnersByGoods;
     procedure ShowPathOnmap;
-    procedure ShowPhotos;
+    procedure ShowPhotos(GroupId: integer);
     procedure ShowPhoto;
     procedure ShowInformation;
     procedure ShowTasks(ShowAll: boolean = true);
@@ -930,10 +951,6 @@ uses
   uNetwork;
 
 {$R *.fmx}
-
-resourcestring
-  rstCapture = 'Снимок';
-  rstReturn = 'Отмена';
 
 { TJuridicalItem }
 constructor TJuridicalItem.Create(AId: Integer; AContractIds: string);
@@ -1475,7 +1492,7 @@ begin
   else
   begin
     // отображение фотографий выбранной группы
-    ShowPhotos;
+    ShowPhotos(DM.qryPhotoGroupsId.AsInteger);
   end;
 end;
 
@@ -1483,7 +1500,8 @@ procedure TfrmMain.lwPartnerPhotoGroupsUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
   // установка иконки кнопки удаления
-  TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
+  if Assigned(AItem.Objects.FindDrawable('DeleteButton')) then
+    TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
 end;
 
 procedure TfrmMain.lwPartnerTasksItemClickEx(const Sender: TObject;
@@ -1516,6 +1534,23 @@ begin
   TListItemImage(AItem.Objects.FindDrawable('imContact')).ImageIndex := 3;
 end;
 
+procedure TfrmMain.lwPhotoDocsItemClickEx(const Sender: TObject;
+  ItemIndex: Integer; const LocalClickPos: TPointF;
+  const ItemObject: TListItemDrawable);
+begin
+  if (ItemObject <> nil) and (ItemObject.Name = 'DeleteButton') then // удаление выбранной группы фотографий
+  begin
+    TDialogService.MessageDialog('Удалить фотографии "' + DM.qryPhotoGroupDocsPartnerName.AsString +
+      '" за ' + FormatDateTime('DD.MM.YYYY', DM.qryPhotoGroupDocsOperDate.AsDateTime) + '?',
+      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeletePhotoGroupDoc);
+  end
+  else
+  begin
+    // отображение фотографий выбранной группы
+    ShowPhotos(DM.qryPhotoGroupDocsId.AsInteger);
+  end;
+end;
+
 procedure TfrmMain.lwPhotosItemClickEx(const Sender: TObject;
   ItemIndex: Integer; const LocalClickPos: TPointF;
   const ItemObject: TListItemDrawable);
@@ -1525,12 +1560,9 @@ begin
     // удалить фотографию
     if ItemObject.Name = 'DeleteButton' then
     begin
-      DM.qryPhotos.Edit;
-      DM.qryPhotosisErased.AsBoolean := true;
-      DM.qryPhotosisSync.AsBoolean := false;
-      DM.qryPhotos.Post;
-
-      DM.qryPhotos.Refresh;
+      TDialogService.MessageDialog('Удалить фотографию "' + DM.qryPhotosComment.AsString +
+        '"?',
+        TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeletePhoto);
     end
     else
     // просмотр фотографии с возможностью редактирования комментария
@@ -1963,8 +1995,6 @@ end;
 
 { удаление "остатков" }
 procedure TfrmMain.DeleteStoreReal(const AResult: TModalResult);
-var
-  CurItem: TListViewItem;
 begin
   if AResult = mrYes then
   begin
@@ -2006,9 +2036,38 @@ begin
   begin
     DM.qryPhotoGroups.Edit;
     DM.qryPhotoGroupsStatusId.AsInteger := DM.tblObject_ConstStatusId_Erased.AsInteger;
+    DM.qryPhotoGroupsIsSync.AsBoolean := false;
     DM.qryPhotoGroups.Post;
 
     DM.qryPhotoGroups.Refresh;
+  end;
+end;
+
+{ удаление группы фотографий (документы) }
+procedure TfrmMain.DeletePhotoGroupDoc(const AResult: TModalResult);
+begin
+  if AResult = mrYes then
+  begin
+    DM.qryPhotoGroupDocs.Edit;
+    DM.qryPhotoGroupDocsStatusId.AsInteger := DM.tblObject_ConstStatusId_Erased.AsInteger;
+    DM.qryPhotoGroupDocsIsSync.AsBoolean := false;
+    DM.qryPhotoGroupDocs.Post;
+
+    DM.qryPhotoGroupDocs.Refresh;
+  end;
+end;
+
+{ удаление фотографии }
+procedure TfrmMain.DeletePhoto(const AResult: TModalResult);
+begin
+  if AResult = mrYes then
+  begin
+    DM.qryPhotos.Edit;
+    DM.qryPhotosisErased.AsBoolean := true;
+    DM.qryPhotosisSync.AsBoolean := false;
+    DM.qryPhotos.Post;
+
+    DM.qryPhotos.Refresh;
   end;
 end;
 
@@ -2600,8 +2659,10 @@ begin
   BuildOrderExternalDocsList;
 
   // документы по возвратам
-  DM.LoadAllReturnIn(deStartDoc.Date, deEndDoc.Date);;
+  DM.LoadAllReturnIn(deStartDoc.Date, deEndDoc.Date);
   BuildReturnInDocsList;
+
+  DM.LoadAllPhotoGroups(deStartDoc.Date, deEndDoc.Date);;
 end;
 
 procedure TfrmMain.bRefreshMapScreenClick(Sender: TObject);
@@ -2825,14 +2886,16 @@ begin
   begin
     CameraComponent.Active := False;
     PlayAudio;
-    bCapture.Text := rstReturn;
+    imCapture.Visible := false;
+    imRevert.Visible := true;
     bSavePartnerPhoto.Enabled := true;
   end
   else
   begin
     ScaleImage(0);
     CameraComponent.Active := True;
-    bCapture.Text := rstCapture;
+    imCapture.Visible := true;
+    imRevert.Visible := false;
     bSavePartnerPhoto.Enabled := false;
   end;
 end;
@@ -2882,13 +2945,26 @@ begin
       try
         qrySavePhoto.Connection := DM.conMain;
 
-        qrySavePhoto.SQL.Text := 'Insert into MovementItem_Visit (MovementId, GUID, Photo, Comment, InsertDate, isErased, isSync) Values (:MovementId, :GUID, :Photo, :Comment, :InsertDate, 0, 0)';
+        qrySavePhoto.SQL.Text := 'Insert into MovementItem_Visit (MovementId, GUID, Photo, Comment, InsertDate, GPSN, GPSE, isErased, isSync) ' +
+          'Values (:MovementId, :GUID, :Photo, :Comment, :InsertDate, :GPSN, :GPSE, 0, 0)';
         qrySavePhoto.Params[0].Value := DM.qryPhotoGroupsId.AsInteger;
         CreateGUID(GlobalId);
         qrySavePhoto.Params[1].Value := GUIDToString(GlobalId);
         qrySavePhoto.Params[2].LoadFromStream(BlobStream, ftBlob);
         qrySavePhoto.Params[3].Value := ePhotoComment.Text;
         qrySavePhoto.Params[4].Value := Now();
+
+        GetCurrentCoordinates;
+        if FCurCoordinatesSet then
+        begin
+          qrySavePhoto.Params[5].Value := FCurCoordinates.Latitude;
+          qrySavePhoto.Params[6].Value := FCurCoordinates.Longitude;
+        end
+        else
+        begin
+          qrySavePhoto.Params[5].Value := 0;
+          qrySavePhoto.Params[6].Value := 0;
+        end;
 
         qrySavePhoto.ExecSQL;
 
@@ -3627,6 +3703,11 @@ begin
   EnterNewPartner;
 end;
 
+procedure TfrmMain.imCaptureClick(Sender: TObject);
+begin
+
+end;
+
 // начитка справочников для ввода новой ТТ
 procedure TfrmMain.EnterNewPartner;
 begin
@@ -3710,9 +3791,6 @@ begin
   else
     tiPartnerTasks.Visible := false;
 
-  SwitchToForm(tiPartnerInfo, nil);
-  tcPartnerInfo.ActiveTab := tiInfo;
-
   // общая информация о ТТ
   lPartnerName.Text := DM.qryPartnerName.AsString;
   lPartnerAddress.Text := DM.qryPartnerAddress.AsString;
@@ -3720,6 +3798,8 @@ begin
     lPartnerAddressGPS.Text := GetAddress(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat)
   else
     lPartnerAddressGPS.Text := '-';
+
+  lContractName.Text := DM.qryPartnerContractName.AsString;
 
   // информация о долгах ТТ
   if DM.qryPartnerPaidKindId.AsInteger = DM.tblObject_ConstPaidKindId_First.AsInteger then // БН
@@ -3767,6 +3847,9 @@ begin
 
   // фотографии ТТ
   DM.LoadPhotoGroups;
+
+  SwitchToForm(tiPartnerInfo, nil);
+  tcPartnerInfo.ActiveTab := tiInfo;
 end;
 
 procedure TfrmMain.ChangeStoreRealDocStatus;
@@ -4071,10 +4154,12 @@ begin
 end;
 
 // начитка фотографий выбранной группы
-procedure TfrmMain.ShowPhotos;
+procedure TfrmMain.ShowPhotos(GroupId: integer);
 begin
-  DM.qryPhotos.Open('select Id, Photo, Comment, isErased, isSync from MovementItem_Visit where MovementId = ' + DM.qryPhotoGroupsId.AsString +
+  DM.qryPhotos.Open('select Id, Photo, Comment, isErased, isSync from MovementItem_Visit where MovementId = ' + IntToStr(GroupId) +
     ' and isErased = 0');
+
+  pAddPhoto.Visible := not FEditDocuments;
 
   SwitchToForm(tiPhotosList, DM.qryPhotos);
 end;
@@ -4542,23 +4627,18 @@ var
 begin
   MediaPlayer := TMediaPlayer.Create(nil);
   try
-    TmpFile := TPath.Combine(TPath.GetDocumentsPath, 'CameraClick.3gp');
-    MediaPlayer.FileName := TmpFile;
-
-    if MediaPlayer.Media <> nil then
-      MediaPlayer.Play
-    else
+    TmpFile := TPath.Combine(TPath.GetDocumentsPath, 'CameraClick.mp3');
+    if FileExists(TmpFile) then
     begin
-      TmpFile := TPath.Combine(TPath.GetDocumentsPath, 'CameraClick.mp3');
       MediaPlayer.FileName := TmpFile;
       if MediaPlayer.Media <> nil then
-        MediaPlayer.Play
+      begin
+        MediaPlayer.Play;
+        sleep(1000);
+        MediaPlayer.Stop;
+      end;
     end;
-    sleep(1000);
-    MediaPlayer.Stop;
-    MediaPlayer.Clear;
-  finally
-    //MediaPlayer.Free;
+  except
   end;
 end;
 

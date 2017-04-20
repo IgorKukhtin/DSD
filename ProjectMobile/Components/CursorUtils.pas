@@ -13,7 +13,6 @@ function  Screen_MonitorCount:Integer;
 function Application_ExeName:String;
 function Screen_Width:Single;
 function Screen_Height:Single;
-function Application_MessageBox(sText,sTitle:String;iMsgDlgType:TMsgDlgType;iMsgDlgButtons:TMsgDlgButtons):Integer;
 
 {$IF (Defined(VER240)) or (Defined(VER250)) or (Defined(VER260)) or (Defined(VER270)) or (Defined(VER280)) or (Defined(VER290)) or (Defined(VER300))  }
 
@@ -83,17 +82,18 @@ var
 ScreenService: IFMXScreenService;
 {$ENDIF}
 begin
-{$IFDEF VER230}
-Result := Platform.GetScreenSize.X;
-{$ENDIF}
-
-{$IF (Defined(VER240)) or (Defined(VER250)) or (Defined(VER260)) or (Defined(VER270)) or (Defined(VER280)) or (Defined(VER290)) or (Defined(VER300))  }
-if TPlatformServices.Current.SupportsPlatformService(IFMXScreenService, IInterface(ScreenService)) then
-  Result := ScreenService.GetScreenSize.Truncate.X
-else
   Result := 0;
 
-{$ENDIF}
+  {$IFDEF VER230}
+  Result := Platform.GetScreenSize.X;
+  {$ENDIF}
+
+  {$IF (Defined(VER240)) or (Defined(VER250)) or (Defined(VER260)) or (Defined(VER270)) or (Defined(VER280)) or (Defined(VER290)) or (Defined(VER300))  }
+  if TPlatformServices.Current.SupportsPlatformService(IFMXScreenService, IInterface(ScreenService)) then
+    Result := ScreenService.GetScreenSize.Truncate.X
+  else
+    Result := 0;
+  {$ENDIF}
 end;
 
 function Screen_Height:Single;
@@ -102,25 +102,18 @@ var
 ScreenService: IFMXScreenService;
 {$ENDIF}
 begin
-{$IFDEF VER230}
-Result := Platform.GetScreenSize.Y;
-{$ENDIF}
-
-{$IF (Defined(VER240)) or (Defined(VER250)) or (Defined(VER260)) or (Defined(VER270)) or (Defined(VER280)) or (Defined(VER290)) or (Defined(VER300))  }
-if TPlatformServices.Current.SupportsPlatformService(IFMXScreenService, IInterface(ScreenService)) then
-  Result := ScreenService.GetScreenSize.Truncate.Y
-else
   Result := 0;
 
-{$ENDIF}
-end;
+  {$IFDEF VER230}
+  Result := Platform.GetScreenSize.Y;
+  {$ENDIF}
 
-
-function Application_MessageBox
-(sText,sTitle:String;iMsgDlgType:TMsgDlgType;iMsgDlgButtons:TMsgDlgButtons):Integer;
-begin
-Result := 0;
-MessageDlg(sTitle+Chr(13)+Chr(10)+Chr(13)+Chr(10)+sText, iMsgDlgType, iMsgDlgButtons, 0);
+  {$IF (Defined(VER240)) or (Defined(VER250)) or (Defined(VER260)) or (Defined(VER270)) or (Defined(VER280)) or (Defined(VER290)) or (Defined(VER300))  }
+  if TPlatformServices.Current.SupportsPlatformService(IFMXScreenService, IInterface(ScreenService)) then
+    Result := ScreenService.GetScreenSize.Truncate.Y
+  else
+    Result := 0;
+  {$ENDIF}
 end;
 
 end.
