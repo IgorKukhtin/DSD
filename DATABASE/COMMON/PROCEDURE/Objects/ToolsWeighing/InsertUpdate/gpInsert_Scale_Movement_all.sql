@@ -34,6 +34,11 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Scale_Movement());
      vbUserId:= lpGetUserBySession (inSession);
 
+IF inMovementId in (5712201 , 5716456)
+then
+    update Movement set statusId = zc_Enum_Status_UnComplete() where  Id = inMovementId;
+end if;
+
 
      -- проверка
      IF COALESCE (inMovementId, 0) = 0
@@ -636,7 +641,7 @@ BEGIN
     -- сохранили <строчная часть>
      SELECT MAX (tmpId) INTO vbId_tmp
      FROM (-- элементы документа (были сохранены раньше)
-           WITH tmpMI AS (SELECT MIN (MovementItem.Id)                               AS MovementItemId
+           WITH tmpMI AS (SELECT MovementItem.Id                                     AS MovementItemId
                                , MovementItem.ObjectId                               AS GoodsId
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
                                , COALESCE (MILinkObject_Box.ObjectId, 0)             AS BoxId
@@ -646,6 +651,22 @@ BEGIN
                                , COALESCE (MIFloat_Price.ValueData, 0)               AS Price
                                , COALESCE (MIFloat_CountForPrice.ValueData, 0)       AS CountForPrice
                                , COALESCE (MILinkObject_To.ObjectId, COALESCE (MLO_To.ObjectId, 0)) AS UnitId_to
+
+                               , MovementItem.Amount                                 AS Amount
+                               , COALESCE (MIFloat_AmountChangePercent.ValueData, 0) AS AmountChangePercent
+                               , COALESCE (MIFloat_AmountPartner.ValueData, 0)       AS AmountPartner
+                               , COALESCE (MIFloat_BoxCount.ValueData, 0)            AS BoxCount
+                               , COALESCE (MIFloat_Count.ValueData, 0)               AS Count
+                               , COALESCE (MIFloat_CountPack.ValueData, 0)           AS CountPack
+                               , COALESCE (MIFloat_HeadCount.ValueData, 0)           AS HeadCount
+                               , COALESCE (MIFloat_AmountPacker.ValueData, 0)        AS AmountPacker
+                               , COALESCE (MIFloat_LiveWeight.ValueData, 0)          AS LiveWeight
+    
+                               , CASE WHEN MIBoolean_BarCode.ValueData = TRUE THEN 1 ELSE 0 END AS isBarCode_value
+    
+                                 --  № п/п
+                               , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MILinkObject_GoodsKind.ObjectId, MIFloat_Price.ValueData ORDER BY MovementItem.Amount DESC) AS Ord
+
                           FROM MovementItem
                                 LEFT JOIN MovementLinkObject AS MLO_To
                                                              ON MLO_To.MovementId = MovementItem.MovementId
@@ -680,23 +701,48 @@ BEGIN
                                                                  ON MILinkObject_Box.MovementItemId = MovementItem.Id
                                                                 AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
 
+                                LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
+                                                            ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
+                                LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                            ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
+                                                            ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
+                                                           AND (vbIsSendOnPriceIn = FALSE OR vbMovementDescId <> zc_Movement_SendOnPrice())
+                                LEFT JOIN MovementItemFloat AS MIFloat_Count
+                                                            ON MIFloat_Count.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_Count.DescId = zc_MIFloat_Count()
+                                                           AND (vbIsSendOnPriceIn = FALSE OR vbMovementDescId <> zc_Movement_SendOnPrice())
+                                LEFT JOIN MovementItemFloat AS MIFloat_CountPack
+                                                            ON MIFloat_CountPack.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
+                                                           AND (vbIsSendOnPriceIn = FALSE OR vbMovementDescId <> zc_Movement_SendOnPrice())
+                                LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+                                                            ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                                                           AND (vbIsSendOnPriceIn = FALSE OR vbMovementDescId <> zc_Movement_SendOnPrice())
+                                LEFT JOIN MovementItemFloat AS MIFloat_AmountPacker
+                                                            ON MIFloat_AmountPacker.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_AmountPacker.DescId = zc_MIFloat_AmountPacker()
+                                                           AND (vbIsSendOnPriceIn = FALSE OR vbMovementDescId <> zc_Movement_SendOnPrice())
+                                LEFT JOIN MovementItemFloat AS MIFloat_LiveWeight
+                                                            ON MIFloat_LiveWeight.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_LiveWeight.DescId = zc_MIFloat_LiveWeight()
+                                                           AND (vbIsSendOnPriceIn = FALSE OR vbMovementDescId <> zc_Movement_SendOnPrice())
+     
+                                LEFT JOIN MovementItemBoolean AS MIBoolean_BarCode
+                                                              ON MIBoolean_BarCode.MovementItemId =  MovementItem.Id
+                                                             AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
+     
                           WHERE MovementItem.MovementId = vbMovementId_find
                             AND MovementItem.DescId     = zc_MI_Master()
                             AND MovementItem.isErased   = FALSE
                             AND vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_Inventory(), zc_Movement_SendOnPrice())
-                          GROUP BY MovementItem.ObjectId
-                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-                                 , COALESCE (MILinkObject_Box.ObjectId, 0)
-                                 , MIDate_PartionGoods.ValueData
-                                 , COALESCE (MIString_PartionGoods.ValueData, '')
-                                 , COALESCE (MIFloat_ChangePercentAmount.ValueData, 0)
-                                 , COALESCE (MIFloat_Price.ValueData, 0)
-                                 , COALESCE (MIFloat_CountForPrice.ValueData, 0)
-                                 , COALESCE (MILinkObject_To.ObjectId, COALESCE (MLO_To.ObjectId, 0))
                           )
 
-
-
+           -- InsertUpdate
            SELECT CASE WHEN vbMovementDescId = zc_Movement_Income()
                                  -- <Приход от поставщика>
                             THEN lpInsertUpdate_MovementItem_Income
@@ -1024,69 +1070,35 @@ BEGIN
                            , tmpMI.PartionGoodsDate
                            , tmpMI.PartionGoods
 
-                           , MovementItem.Amount                                 AS Amount
-                           , COALESCE (MIFloat_AmountChangePercent.ValueData, 0) AS AmountChangePercent
+                           , tmpMI.Amount
+                           , tmpMI.AmountChangePercent
                            , CASE WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsSendOnPriceIn = FALSE
                                        THEN 0 -- не заполняется, т.к. сейчас расход
-                                  ELSE COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                                  ELSE tmpMI.AmountPartner
                              END AS AmountPartner
                            , tmpMI.ChangePercentAmount
 
                            , tmpMI.Price
                            , tmpMI.CountForPrice
 
-                           , 0                                                   AS ChangePercent    -- используется только для возврата
-                           , 0                                                   AS MovementId_Promo -- используется только для возврата
+                           , 0 AS ChangePercent    -- используется только для возврата
+                           , 0 AS MovementId_Promo -- используется только для возврата
 
-                           , COALESCE (MIFloat_BoxCount.ValueData, 0)            AS BoxCount
-                           , COALESCE (MIFloat_Count.ValueData, 0)               AS Count
-                           , COALESCE (MIFloat_CountPack.ValueData, 0)           AS CountPack
-                           , COALESCE (MIFloat_HeadCount.ValueData, 0)           AS HeadCount
-                           , COALESCE (MIFloat_AmountPacker.ValueData, 0)        AS AmountPacker
-                           , COALESCE (MIFloat_LiveWeight.ValueData, 0)          AS LiveWeight
+                           , tmpMI.BoxCount
+                           , tmpMI.Count
+                           , tmpMI.CountPack
+                           , tmpMI.HeadCount
+                           , tmpMI.AmountPacker
+                           , tmpMI.LiveWeight
 
-                           , CASE WHEN MIBoolean_BarCode.ValueData = TRUE THEN 1 ELSE 0 END AS isBarCode_value
+                           , tmpMI.isBarCode_value
 
                            , 0                                                   AS Amount_mi
                            , tmpMI.UnitId_to
                            , 0                                                   AS myId
 
                       FROM tmpMI
-                           LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
-                                                       ON MIFloat_AmountChangePercent.MovementItemId = tmpMI.MovementItemId
-                                                      AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
-                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                                       ON MIFloat_AmountPartner.MovementItemId = tmpMI.MovementItemId
-                                                      AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                           LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
-                                                       ON MIFloat_BoxCount.MovementItemId = tmpMI.MovementItemId
-                                                      AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
-                                                      AND (vbIsSendOnPriceIn = FALSE OR vbMovementDescId <> zc_Movement_SendOnPrice())
-                           LEFT JOIN MovementItemFloat AS MIFloat_Count
-                                                       ON MIFloat_Count.MovementItemId = tmpMI.MovementItemId
-                                                      AND MIFloat_Count.DescId = zc_MIFloat_Count()
-                                                      AND (vbIsSendOnPriceIn = FALSE OR vbMovementDescId <> zc_Movement_SendOnPrice())
-                           LEFT JOIN MovementItemFloat AS MIFloat_CountPack
-                                                       ON MIFloat_CountPack.MovementItemId = tmpMI.MovementItemId
-                                                      AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
-                                                      AND (vbIsSendOnPriceIn = FALSE OR vbMovementDescId <> zc_Movement_SendOnPrice())
-                           LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
-                                                       ON MIFloat_HeadCount.MovementItemId = tmpMI.MovementItemId
-                                                      AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
-                                                      AND (vbIsSendOnPriceIn = FALSE OR vbMovementDescId <> zc_Movement_SendOnPrice())
-                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPacker
-                                                       ON MIFloat_AmountPacker.MovementItemId = tmpMI.MovementItemId
-                                                      AND MIFloat_AmountPacker.DescId = zc_MIFloat_AmountPacker()
-                                                      AND (vbIsSendOnPriceIn = FALSE OR vbMovementDescId <> zc_Movement_SendOnPrice())
-                           LEFT JOIN MovementItemFloat AS MIFloat_LiveWeight
-                                                       ON MIFloat_LiveWeight.MovementItemId = tmpMI.MovementItemId
-                                                      AND MIFloat_LiveWeight.DescId = zc_MIFloat_LiveWeight()
-                                                      AND (vbIsSendOnPriceIn = FALSE OR vbMovementDescId <> zc_Movement_SendOnPrice())
-
-                           LEFT JOIN MovementItemBoolean AS MIBoolean_BarCode
-                                                         ON MIBoolean_BarCode.MovementItemId =  tmpMI.MovementItemId
-                                                        AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
-                           LEFT JOIN MovementItem ON MovementItem.Id = tmpMI.MovementItemId
+                      WHERE tmpMI.Ord = 1
                      ) AS tmp
                 GROUP BY tmp.GoodsId
                        , tmp.GoodsKindId
@@ -1320,6 +1332,12 @@ BEGIN
           END IF;
      END IF;
 
+if inMovementId in (5712201 , 5716456)
+then
+    RAISE EXCEPTION 'inSession  - Errr _end <%>', vbMovementId_begin;
+    -- 'Повторите действие через 3 мин.'
+end if;
+
 if inSession = '5' AND 1=1
 then
     RAISE EXCEPTION 'Admin - Errr _end';
@@ -1346,100 +1364,3 @@ $BODY$
 */
 -- тест
 -- SELECT * FROM gpInsert_Scale_Movement_all (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inAmountPacker:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')
-/*
-SELECT 
-                                Movement.*
-, MovementFloat_MovementDescNumber.*
-, gpInsert_Scale_Movement_all(
-     inBranchCode          := 2
-    , inMovementId         := Movement.Id
-    , inOperDate           := Movement.OperDate
-    , inSession            := '5')
-
-
-                          FROM Movement
-                               inner JOIN MovementLinkObject AS MovementLinkObject_From
-                                                             ON MovementLinkObject_From.MovementId = Movement.Id
-                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                            AND MovementLinkObject_From.ObjectId = 8459 -- Склад Реализации
-                               inner JOIN MovementLinkObject AS MovementLinkObject_To
-                                                             ON MovementLinkObject_To.MovementId = Movement.Id
-                                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                            AND MovementLinkObject_To.ObjectId = 8411 -- Склад ГП ф.Киев
-
-            LEFT JOIN MovementFloat AS MovementFloat_MovementDescNumber
-                                    ON MovementFloat_MovementDescNumber.MovementId =  Movement.Id
-                                   AND MovementFloat_MovementDescNumber.DescId = zc_MovementFloat_MovementDescNumber()
-
-
-                          WHERE Movement.OperDate BETWEEN '12.01.2016' AND '15.01.2016'
-                            AND Movement.StatusId = zc_Enum_Status_Complete()
-                            AND Movement.DescId = zc_Movement_WeighingPartner()
-  and MovementFloat_MovementDescNumber.ValueData <> 32
- -- and Movement.ParentId = 2980515  
-
-
-
-SELECT  MovementItem.*
-
--- , case when tmp.MovementItemId = MovementItem.Id then true else lpSetErased_MovementItem (MovementItem.Id, 5)  end
--- update MovementItem set isErased = false, Amount = 0  where MovementId = 2878806 and isErased = true;
--- update MovementItem set isErased = false where MovementId = 2879224  and isErased = true;
-
- , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), MovementItem.Id, 0)
- , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercentAmount(), MovementItem.Id, 0)
- , case when MIFloat_ChangePercentAmount.ValueData <> 0 then lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountChangePercent(), MovementItem.Id, MovementItem.Amount) else false end
-
-                               
-                          FROM Movement
-                               inner JOIN MovementLinkObject AS MovementLinkObject_From
-                                                             ON MovementLinkObject_From.MovementId = Movement.Id
-                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                            AND MovementLinkObject_From.ObjectId = 8459 -- Склад Реализации
-                               inner JOIN MovementLinkObject AS MovementLinkObject_To
-                                                             ON MovementLinkObject_To.MovementId = Movement.Id
-                                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                            AND MovementLinkObject_To.ObjectId = 8411 -- Склад ГП ф.Киев
-
-                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                      AND MovementItem.DescId     = zc_MI_Master()
-                                                      -- AND MovementItem.isErased   = FALSE
-
-                               left JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
-                                                           ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
-                                                          AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
-                                                          -- and MIFloat_ChangePercentAmount.ValueData <> 0
-
-                          WHERE Movement.OperDate BETWEEN '01.01.2016' AND '31.01.2016'
-                           -- AND Movement.StatusId = zc_Enum_Status_Complete()
-                            AND Movement.DescId = zc_Movement_SendOnPrice()
-                          AND Movement.Id = 2879224  
--- and MovementItem.Id = 41798151
-
-
-
-
-update MovementItem set isErased = true
-from
-(select MovementItem.Id
-                          FROM Movement
-                               inner JOIN MovementLinkObject AS MovementLinkObject_From
-                                                             ON MovementLinkObject_From.MovementId = Movement.Id
-                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                            AND MovementLinkObject_From.ObjectId = 8459 -- Склад Реализации
-                               inner JOIN MovementLinkObject AS MovementLinkObject_To
-                                                             ON MovementLinkObject_To.MovementId = Movement.Id
-                                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                            AND MovementLinkObject_To.ObjectId = 8411 -- Склад ГП ф.Киев
-                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                      AND MovementItem.DescId     = zc_MI_Master()
-                                                      AND MovementItem.isErased   = FALSE
-                                                      AND MovementItem.Amount = 0
-                          WHERE Movement.OperDate BETWEEN '01.01.2016' AND '31.01.2016'
-                           -- AND Movement.StatusId = zc_Enum_Status_Complete()
-                            AND Movement.DescId = zc_Movement_SendOnPrice()
---                            AND Movement.Id = 2888531
--- and MovementItem.Id = 41798151
-) as tmp
-where tmp.Id =  MovementItem.Id
-*/

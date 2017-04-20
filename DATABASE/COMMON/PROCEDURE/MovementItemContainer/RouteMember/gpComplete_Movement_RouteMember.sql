@@ -12,7 +12,8 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_RouteMember());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_RouteMember());
+     vbUserId:= lpGetUserBySession (inSession);
 
      -- проводим Документ + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
