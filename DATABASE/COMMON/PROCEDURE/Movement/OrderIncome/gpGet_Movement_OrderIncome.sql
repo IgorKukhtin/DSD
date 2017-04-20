@@ -70,8 +70,8 @@ BEGIN
   
              , CAST ('' as TVarChar) 	                  AS Comment
 
-             , DATE_TRUNC ('MONTH', inOperDate)           AS OperDateStart
-             , DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'  AS OperDateEnd
+             , DATE_TRUNC ('MONTH', inOperDate)   ::TDateTime    AS OperDateStart
+             , (DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')  ::TDateTime AS OperDateEnd
              , CAST (30 as TFloat)                        AS DayCount
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
