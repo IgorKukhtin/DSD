@@ -3,8 +3,8 @@ object Report_SupplyBalanceDialogForm: TReport_SupplyBalanceDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1076#1083#1103' '#1089#1085#1072#1073#1078#1077#1085#1080#1103'>'
-  ClientHeight = 202
-  ClientWidth = 234
+  ClientHeight = 239
+  ClientWidth = 220
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object Report_SupplyBalanceDialogForm: TReport_SupplyBalanceDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 19
-    Top = 162
+    Top = 201
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_SupplyBalanceDialogForm: TReport_SupplyBalanceDialogForm
   end
   object cxButton2: TcxButton
     Left = 125
-    Top = 162
+    Top = 201
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -54,7 +54,7 @@ object Report_SupplyBalanceDialogForm: TReport_SupplyBalanceDialogForm
   end
   object edGoodsGroup: TcxButtonEdit
     Left = 9
-    Top = 120
+    Top = 116
     Properties.Buttons = <
       item
         Default = True
@@ -66,7 +66,7 @@ object Report_SupplyBalanceDialogForm: TReport_SupplyBalanceDialogForm
   end
   object cxLabel1: TcxLabel
     Left = 9
-    Top = 101
+    Top = 97
     Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
   end
   object cxLabel6: TcxLabel
@@ -96,6 +96,23 @@ object Report_SupplyBalanceDialogForm: TReport_SupplyBalanceDialogForm
     TabOrder = 9
     Width = 200
   end
+  object cxLabel2: TcxLabel
+    Left = 8
+    Top = 143
+    Caption = #1070#1088'. '#1083#1080#1094#1086':'
+  end
+  object edJuridical: TcxButtonEdit
+    Left = 8
+    Top = 162
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 200
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -103,8 +120,8 @@ object Report_SupplyBalanceDialogForm: TReport_SupplyBalanceDialogForm
     Top = 16
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 16
-    Top = 103
+    Left = 208
+    Top = 105
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -117,7 +134,7 @@ object Report_SupplyBalanceDialogForm: TReport_SupplyBalanceDialogForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 184
-    Top = 139
+    Top = 181
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -170,9 +187,26 @@ object Report_SupplyBalanceDialogForm: TReport_SupplyBalanceDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 168
-    Top = 95
+    Top = 137
   end
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
@@ -201,8 +235,8 @@ object Report_SupplyBalanceDialogForm: TReport_SupplyBalanceDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 96
-    Top = 118
+    Left = 88
+    Top = 96
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -233,5 +267,34 @@ object Report_SupplyBalanceDialogForm: TReport_SupplyBalanceDialogForm
       end>
     Left = 128
     Top = 56
+  end
+  object JuridicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 56
+    Top = 128
   end
 end

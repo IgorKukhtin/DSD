@@ -69,7 +69,7 @@ BEGIN
                 , LabelId       = inLabelId
                 , CompositionGroupId = inCompositionGroupId
                 , GoodsSizeId   = inGoodsSizeId 
-       WHERE Id = ioMovementItemId ;
+       WHERE MovementItemId = ioMovementItemId ;
 
        -- если такой элемент не был найден
        IF NOT FOUND THEN

@@ -216,8 +216,6 @@ inherited MainCashForm: TMainCashForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 74
-    ExplicitHeight = 142
     object MainGrid: TcxGrid
       Left = 0
       Top = 0
@@ -225,7 +223,6 @@ inherited MainCashForm: TMainCashForm
       Height = 106
       Align = alClient
       TabOrder = 0
-      ExplicitHeight = 109
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = MainGridDBTableViewFocusedRecordChanged
@@ -662,7 +659,6 @@ inherited MainCashForm: TMainCashForm
       Height = 33
       Align = alBottom
       TabOrder = 1
-      ExplicitTop = 109
       object ShapeState: TShape
         Left = 751
         Top = 13
@@ -1002,9 +998,7 @@ inherited MainCashForm: TMainCashForm
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      ExplicitLeft = 484
-      ExplicitTop = 5
-      ExplicitHeight = 16
+      ExplicitHeight = 13
     end
     object lblDiscountCardNumber: TLabel
       Left = 507
@@ -1022,7 +1016,7 @@ inherited MainCashForm: TMainCashForm
       ParentFont = False
       ExplicitHeight = 16
     end
-    object Label6: TLabel
+    object lblPrice: TLabel
       Left = 661
       Top = 1
       Width = 74
@@ -1040,6 +1034,7 @@ inherited MainCashForm: TMainCashForm
     object edPrice: TcxCurrencyEdit
       Left = 741
       Top = 0
+      Properties.DisplayFormat = ',0.00;-,0.00'
       TabOrder = 0
       Width = 121
     end
@@ -1084,7 +1079,6 @@ inherited MainCashForm: TMainCashForm
     ParentBackground = False
     TabOrder = 6
     Visible = False
-    ExplicitTop = 56
     object Label4: TLabel
       Left = 1
       Top = 1

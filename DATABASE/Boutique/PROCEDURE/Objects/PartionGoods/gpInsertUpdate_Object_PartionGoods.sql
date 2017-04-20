@@ -45,7 +45,31 @@ BEGIN
                   VALUES (inMovementId, inSybaseId, inPartnerId, inUnitId, inOperDate, inGoodsId, inGoodsItemId, inCurrencyId, inAmount, inOperPrice, inPriceSale, inBrandId, inPeriodId, inPeriodYear, inFabrikaId, inGoodsGroupId, inMeasureId, inCompositionId, inGoodsInfoId, inLineFabricaId, inLabelId, inCompositionGroupId, inGoodsSizeId) RETURNING Id INTO ioMovementItemId;
    ELSE
        -- изменили элемент справочника по значению <Ключ объекта>
-       UPDATE Object_PartionGoods SET MovementId = inMovementId, SybaseId = inSybaseId, PartnerId = inPartnerId, UnitId = inUnitId, OperDate = inOperDate, GoodsId = inGoodsId, GoodsItemId = inGoodsItemId, CurrencyId = inCurrencyId, Amount = inAmount, OperPrice = inOperPrice, PriceSale = inPriceSale, BrandId = inBrandId, PeriodId = inPeriodId, PeriodYear = inPeriodYear, FabrikaId = inFabrikaId, GoodsGroupId = inGoodsGroupId, MeasureId = inMeasureId, CompositionId = inCompositionId, GoodsInfoId = inGoodsInfoId, LineFabricaId = inLineFabricaId, LabelId = inLabelId, CompositionGroupId = inCompositionGroupId, GoodsSizeId = inGoodsSizeId WHERE Id = ioMovementItemId ;
+       UPDATE Object_PartionGoods 
+          SET MovementId = inMovementId
+            , SybaseId = inSybaseId
+            , PartnerId = inPartnerId
+            , UnitId = inUnitId
+            , OperDate = inOperDate
+            , GoodsId = inGoodsId
+            , GoodsItemId = inGoodsItemId
+            , CurrencyId = inCurrencyId
+            , Amount = inAmount
+            , OperPrice = inOperPrice
+            , PriceSale = inPriceSale
+            , BrandId = inBrandId
+            , PeriodId = inPeriodId
+            , PeriodYear = inPeriodYear
+            , FabrikaId = inFabrikaId
+            , GoodsGroupId = inGoodsGroupId
+            , MeasureId = inMeasureId
+            , CompositionId = inCompositionId
+            , GoodsInfoId = inGoodsInfoId
+            , LineFabricaId = inLineFabricaId
+            , LabelId = inLabelId
+            , CompositionGroupId = inCompositionGroupId
+            , GoodsSizeId = inGoodsSizeId 
+       WHERE MovementItemId = ioMovementItemId ;
 
        -- если такой элемент не был найден
        IF NOT FOUND THEN

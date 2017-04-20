@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Income(
 )
 RETURNS TABLE (Id Integer, PartionId Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
+             , CompositionGroupName TVarChar
              , CompositionName TVarChar
              , GoodsInfoName TVarChar
              , LineFabricaName TVarChar
@@ -65,7 +66,8 @@ BEGIN
            , Object_Goods.ValueData   AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData AS MeasureName
-         
+
+           , Object_CompositionGroup.ValueData   AS CompositionGroupName  
            , Object_Composition.ValueData   AS CompositionName
            , Object_GoodsInfo.ValueData     AS GoodsInfoName
            , Object_LineFabrica.ValueData   AS LineFabricaName
@@ -97,6 +99,12 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = Object_PartionGoods.GoodsGroupId
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = Object_PartionGoods.MeasureId
             LEFT JOIN Object AS Object_Composition ON Object_Composition.Id = Object_PartionGoods.CompositionId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Composition_CompositionGroup
+                                 ON ObjectLink_Composition_CompositionGroup.ObjectId = Object_Composition.Id 
+                                AND ObjectLink_Composition_CompositionGroup.DescId = zc_ObjectLink_Composition_CompositionGroup()
+            LEFT JOIN Object AS Object_CompositionGroup ON Object_CompositionGroup.Id = ObjectLink_Composition_CompositionGroup.ChildObjectId
+
             LEFT JOIN Object AS Object_GoodsInfo ON Object_GoodsInfo.Id = Object_PartionGoods.GoodsInfoId
             LEFT JOIN Object AS Object_LineFabrica ON Object_LineFabrica.Id = Object_PartionGoods.LineFabricaId 
             LEFT JOIN Object AS Object_Label ON Object_Label.Id = Object_PartionGoods.LabelId

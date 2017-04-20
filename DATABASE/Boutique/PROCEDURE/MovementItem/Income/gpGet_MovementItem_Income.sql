@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_MovementItem_Income(
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsName TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , MeasureId Integer, MeasureName TVarChar
+             , CompositionGroupId Integer, CompositionGroupName TVarChar
              , CompositionId Integer, CompositionName TVarChar
              , GoodsInfoId Integer, GoodsInfoName TVarChar
              , LineFabricaId Integer, LineFabricaName TVarChar
@@ -37,7 +38,9 @@ BEGIN
            ,  0 :: Integer                             AS GoodsGroupId        
            , '' :: TVarChar                            AS GoodsGroupName      
            ,  0 :: Integer                             AS MeasureId           
-           , '' :: TVarChar                            AS MeasureName         
+           , '' :: TVarChar                            AS MeasureName  
+           ,  0 :: Integer                             AS CompositionGroupId       
+           , '' :: TVarChar                            AS CompositionGroupName         
            ,  0 :: Integer                             AS CompositionId       
            , '' :: TVarChar                            AS CompositionName     
            ,  0 :: Integer                             AS GoodsInfoId         
@@ -88,7 +91,9 @@ BEGIN
            , Object_GoodsGroup.Id           AS GoodsGroupId
            , Object_GoodsGroup.ValueData    AS GoodsGroupName
            , Object_Measure.Id              AS MeasureId
-           , Object_Measure.ValueData       AS MeasureName    
+           , Object_Measure.ValueData       AS MeasureName  
+           , Object_CompositionGroup.Id          AS CompositionGroupId
+           , Object_CompositionGroup.ValueData   AS CompositionGroupName  
            , Object_Composition.Id          AS CompositionId
            , Object_Composition.ValueData   AS CompositionName
            , Object_GoodsInfo.Id            AS GoodsInfoId
@@ -112,6 +117,12 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = Object_PartionGoods.GoodsGroupId
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = Object_PartionGoods.MeasureId
             LEFT JOIN Object AS Object_Composition ON Object_Composition.Id = Object_PartionGoods.CompositionId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Composition_CompositionGroup
+                                 ON ObjectLink_Composition_CompositionGroup.ObjectId = Object_Composition.Id 
+                                AND ObjectLink_Composition_CompositionGroup.DescId = zc_ObjectLink_Composition_CompositionGroup()
+            LEFT JOIN Object AS Object_CompositionGroup ON Object_CompositionGroup.Id = ObjectLink_Composition_CompositionGroup.ChildObjectId
+
             LEFT JOIN Object AS Object_GoodsInfo ON Object_GoodsInfo.Id = Object_PartionGoods.GoodsInfoId
             LEFT JOIN Object AS Object_LineFabrica ON Object_LineFabrica.Id = Object_PartionGoods.LineFabricaId 
             LEFT JOIN Object AS Object_Label ON Object_Label.Id = Object_PartionGoods.LabelId

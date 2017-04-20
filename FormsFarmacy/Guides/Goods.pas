@@ -50,6 +50,7 @@ type
     bbPublished: TdxBarButton;
     clisMarketToday: TcxGridDBColumn;
     clisSp: TcxGridDBColumn;
+    clLastPriceDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MIEdit_Income()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income (Integer, Integer, TVarChar, TVarChar, TVarChar ,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income (Integer, Integer, TVarChar, TVarChar, TVarChar ,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MIEdit_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MIEdit_Income(
     IN inGoodsName           TVarChar   , -- Товары
     IN inGoodsInfoName       TVarChar   , --
     IN inGoodsSize           TVarChar   , --
+    IN inCompositionGroupName     TVarChar   , --
     IN inCompositionName     TVarChar   , --
     IN inLineFabricaName     TVarChar   , --
     IN inLabelName           TVarChar   , --
@@ -27,6 +29,7 @@ $BODY$
    DECLARE vbMeasureId Integer;
    DECLARE vbLineFabricaId Integer;
    DECLARE vbCompositionId Integer; 
+   DECLARE vbCompositionGroupId Integer; 
    DECLARE vbGoodsSizeId Integer;
    DECLARE vbGoodsId Integer;   
    DECLARE vbGoodsInfoId Integer;
@@ -45,7 +48,10 @@ BEGIN
       THEN
           inGoodsGroupName:= TRIM (COALESCE (inGoodsGroupName, ''));
           -- 
-          vbGoodsGroupId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsGroup() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inGoodsGroupName));
+          vbGoodsGroupId:= (SELECT Object.Id 
+                            FROM Object 
+                            WHERE Object.DescId = zc_Object_GoodsGroup() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inGoodsGroupName)
+                            LIMIT 1);
           IF COALESCE (vbGoodsGroupId,0) = 0
              THEN
                  -- не нашли Сохраняем
@@ -59,7 +65,10 @@ BEGIN
       THEN
           inMeasureName:= TRIM (COALESCE (inMeasureName, ''));
           -- 
-          vbMeasureId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Measure() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inMeasureName));
+          vbMeasureId:= (SELECT Object.Id 
+                         FROM Object
+                         WHERE Object.DescId = zc_Object_Measure() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inMeasureName)
+                         LIMIT 1);
           IF COALESCE (vbMeasureId,0) = 0
              THEN
                  -- не нашли Сохраняем
@@ -73,7 +82,10 @@ BEGIN
       THEN
           inLineFabricaName:= TRIM (COALESCE (inLineFabricaName, ''));
           -- 
-          vbLineFabricaId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_LineFabrica() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inLineFabricaName));
+          vbLineFabricaId:= (SELECT Object.Id 
+                             FROM Object 
+                             WHERE Object.DescId = zc_Object_LineFabrica() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inLineFabricaName)
+                             LIMIT 1);
           IF COALESCE (vbLineFabricaId,0) = 0
              THEN
                  -- не нашли Сохраняем
@@ -85,17 +97,46 @@ BEGIN
           END IF;
    END IF;
    --4
+   IF COALESCE (inCompositionGroupName, '') <> ''
+      THEN
+          inCompositionGroupName:= TRIM (COALESCE (inCompositionGroupName, ''));
+          -- 
+          vbCompositionGroupId:= (SELECT Object.Id
+                                  FROM Object
+                                  WHERE Object.DescId = zc_Object_CompositionGroup() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inCompositionGroupName)
+                                  LIMIT 1);
+          IF COALESCE (vbCompositionGroupId,0) = 0
+             THEN
+                 -- не нашли Сохраняем
+                 vbCompositionGroupId := gpInsertUpdate_Object_CompositionGroup (ioId    := 0
+                                                                               , inCode  := lfGet_ObjectCode(0, zc_Object_CompositionGroup()) 
+                                                                               , inName  := inCompositionGroupName
+                                                                               , inSession:= inSession
+                                                                                );
+          END IF;
+   END IF;
+   --4.1
    IF COALESCE (inCompositionName, '') <> ''
       THEN
           inCompositionName:= TRIM (COALESCE (inCompositionName, ''));
           -- 
-          vbCompositionId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Composition() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inCompositionName));
+          vbCompositionId:= (SELECT Object.Id
+                             FROM Object
+                                  LEFT JOIN ObjectLink AS OL_CompositionGroup
+                                         ON OL_CompositionGroup.ObjectId = Object.Id
+                                        AND OL_CompositionGroup.DescId = zc_ObjectLink_Composition_CompositionGroup()
+                             WHERE Object.DescId = zc_Object_Composition() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inCompositionName)
+                               AND (COALESCE (OL_CompositionGroup.ChildObjectId,0) = COALESCE(vbCompositionGroupId,0))
+                             LIMIT 1);
           IF COALESCE (vbCompositionId,0) = 0
              THEN
                  -- не нашли Сохраняем
-                 vbCompositionId := lpInsertUpdate_Object (0, zc_Object_Composition(), lfGet_ObjectCode(0, zc_Object_Composition()), inCompositionName);
-                 -- сохранили протокол
-                 PERFORM lpInsert_ObjectProtocol (vbCompositionId, vbUserId);
+                 vbCompositionId := gpInsertUpdate_Object_Composition (ioId    := 0
+                                                                     , inCode  := lfGet_ObjectCode(0, zc_Object_Composition()) 
+                                                                     , inName  := inCompositionName
+                                                                     , inCompositionGroupId := vbCompositionGroupId
+                                                                     , inSession:= inSession
+                                                                      );
           END IF;
    END IF;
    --5
@@ -103,7 +144,10 @@ BEGIN
       THEN
           inGoodsInfoName:= TRIM (COALESCE (inGoodsInfoName, ''));
           -- 
-          vbGoodsInfoId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsInfo() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inGoodsInfoName));
+          vbGoodsInfoId:= (SELECT Object.Id
+                           FROM Object
+                           WHERE Object.DescId = zc_Object_GoodsInfo() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inGoodsInfoName)
+                           LIMIT 1);
           IF COALESCE (vbGoodsInfoId,0) = 0
              THEN
                  -- не нашли Сохраняем
@@ -119,7 +163,10 @@ BEGIN
       THEN
           inLabelName:= TRIM (COALESCE (inLabelName, ''));
           -- 
-          vbLabelId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Label() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inLabelName));
+          vbLabelId:= (SELECT Object.Id 
+                       FROM Object 
+                       WHERE Object.DescId = zc_Object_Label() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inLabelName)
+                       LIMIT 1);
           IF COALESCE (vbLabelId,0) = 0
              THEN
                  -- не нашли Сохраняем
@@ -135,7 +182,10 @@ BEGIN
       THEN
           inGoodsSize:= TRIM (COALESCE (inGoodsSize, ''));
           -- 
-          vbGoodsSizeId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsSize() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inGoodsSize));
+          vbGoodsSizeId:= (SELECT Object.Id
+                           FROM Object
+                           WHERE Object.DescId = zc_Object_GoodsSize() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inGoodsSize)
+                           LIMIT 1);
           IF COALESCE (vbGoodsSizeId,0) = 0
              THEN
                  -- не нашли Сохраняем
@@ -151,7 +201,10 @@ BEGIN
       THEN
           inGoodsName:= TRIM (COALESCE (inGoodsName, ''));
           -- 
-          vbGoodsId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inGoodsName));
+          vbGoodsId:= (SELECT Object.Id 
+                       FROM Object 
+                       WHERE Object.DescId = zc_Object_Goods() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inGoodsName)
+                       LIMIT 1);
         --  IF COALESCE (vbGoodsId,0) = 0
           --   THEN
                  -- не нашли Сохраняем
@@ -173,7 +226,9 @@ BEGIN
    IF COALESCE (vbGoodsId, 0) <> 0 AND COALESCE (vbGoodsSizeId, 0) <> 0
       THEN
           --
-          vbGoodsItemId := (SELECT Object_GoodsItem.Id FROM Object_GoodsItem WHERE Object_GoodsItem.GoodsId = vbGoodsId AND Object_GoodsItem.GoodsSizeId = vbGoodsSizeId);
+          vbGoodsItemId := (SELECT Object_GoodsItem.Id 
+                            FROM Object_GoodsItem 
+                            WHERE Object_GoodsItem.GoodsId = vbGoodsId AND Object_GoodsItem.GoodsSizeId = vbGoodsSizeId);
           IF COALESCE (vbGoodsItemId,0) = 0
              THEN
                  -- добавили новый элемент справочника и вернули значение <Ключ объекта>
@@ -264,7 +319,6 @@ BEGIN
                                               , inOperPriceList      := inOperPriceList
                                               , inUserId             := vbUserId
                                                );
-
 
 END;
 $BODY$

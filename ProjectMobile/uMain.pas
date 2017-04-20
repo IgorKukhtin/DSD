@@ -111,7 +111,6 @@ type
     pPartnerInfo: TPanel;
     tiSync: TTabItem;
     imLogo: TImage;
-    pMapScreen: TPanel;
     vsbMain: TVertScrollBox;
     bMonday: TButton;
     bFriday: TButton;
@@ -244,17 +243,10 @@ type
     Label28: TLabel;
     lPartnerAddress: TLabel;
     lPartnerName: TLabel;
-    tMapToImage: TTimer;
-    iPartnerMap: TImage;
     lwOrderExternalList: TListView;
     LinkListControlToFieldOrderExternal: TLinkListControlToField;
     pNewOrderExternal: TPanel;
     bNewOrderExternal: TButton;
-    bSetPartnerCoordinate: TButton;
-    Image11: TImage;
-    pMap: TPanel;
-    bShowBigMap: TButton;
-    Image12: TImage;
     tSavePath: TTimer;
     bPathonMap: TButton;
     tiPathOnMap: TTabItem;
@@ -312,7 +304,6 @@ type
     lPromoPrice: TLabel;
     pShowOnlyPromo: TPanel;
     cbOnlyPromo: TCheckBox;
-    lNoMap: TLabel;
     lwReturnInList: TListView;
     Panel2: TPanel;
     bNewReturnIn: TButton;
@@ -350,8 +341,6 @@ type
     cbLoadData: TCheckBox;
     cbUploadData: TCheckBox;
     tErrorMap: TTimer;
-    bRefreshMapScreen: TButton;
-    Image15: TImage;
     lwPriceListGoods: TListView;
     Popup2: TPopup;
     Panel28: TPanel;
@@ -621,6 +610,18 @@ type
     deStartDoc: TDateEdit;
     Label77: TLabel;
     deEndDoc: TDateEdit;
+    tiPartnerMap: TTabItem;
+    pMap: TPanel;
+    lNoMap: TLabel;
+    bRefreshMapScreen: TButton;
+    Image15: TImage;
+    pMapButtons: TPanel;
+    bSetPartnerCoordinate: TButton;
+    Image11: TImage;
+    WebGMapsGeocoder: TTMSFMXWebGMapsGeocoding;
+    Layout35: TLayout;
+    Label78: TLabel;
+    lPartnerAddressGPS: TLabel;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -665,12 +666,10 @@ type
     procedure lwOrderExternalItemsFilter(Sender: TObject; const AFilter,
       AValue: string; var Accept: Boolean);
     procedure bMinusAmountClick(Sender: TObject);
-    procedure tMapToImageTimer(Sender: TObject);
     procedure lwOrderExternalListItemClickEx(const Sender: TObject;
       ItemIndex: Integer; const LocalClickPos: TPointF;
       const ItemObject: TListItemDrawable);
     procedure bSetPartnerCoordinateClick(Sender: TObject);
-    procedure bShowBigMapClick(Sender: TObject);
     procedure tSavePathTimer(Sender: TObject);
     procedure cbShowAllPathChange(Sender: TObject);
     procedure bRefreshPathOnMapClick(Sender: TObject);
@@ -797,6 +796,16 @@ type
     procedure lwStoreRealDocsUpdateObjects(const Sender: TObject;
       const AItem: TListViewItem);
     procedure bRefreshDocClick(Sender: TObject);
+    procedure lwOrderDocsUpdateObjects(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure lwOrderDocsItemClickEx(const Sender: TObject; ItemIndex: Integer;
+      const LocalClickPos: TPointF; const ItemObject: TListItemDrawable);
+    procedure lwReturnInDocsUpdateObjects(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure lwReturnInDocsItemClickEx(const Sender: TObject;
+      ItemIndex: Integer; const LocalClickPos: TPointF;
+      const ItemObject: TListItemDrawable);
+    procedure tcPartnerInfoChange(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -819,7 +828,6 @@ type
     FOrderTotalCountKg : Currency;
     FOrderTotalPrice : Currency;
     FDeletedSRI: TList<Integer>;
-    OldReturnInId : string;
     FDeletedRI: TList<Integer>;
     FReturnInTotalCountKg : Currency;
     FReturnInTotalPrice : Currency;
@@ -849,16 +857,17 @@ type
     procedure DeleteOrderExtrernal(const AResult: TModalResult);
     procedure DeleteStoreReal(const AResult: TModalResult);
     procedure DeleteReturnIn(const AResult: TModalResult);
+    procedure DeletePhotoGroup(const AResult: TModalResult);
     procedure CreateEditStoreReal(const AResult: TModalResult);
     procedure CreateEditOrderExtrernal(New: boolean);
     procedure CreateEditReturnIn(New: boolean);
     procedure SetPartnerCoordinates(const AResult: TModalResult);
 
     function GetAddress(const Latitude, Longitude: Double): string;
-    //function GetCoordinates(const Address: string; out Coordinates: TLocationCoord2D): Boolean;
+    function GetCoordinates(const Address: string; out Coordinates: TLocationCoord2D): Boolean;
     procedure WebGMapDownloadFinish(Sender: TObject);
     procedure ShowBigMap;
-    procedure GetMapPartnerScreenshot(GPSN, GPSE: Double);
+    procedure GetPartnerMap(GPSN, GPSE: Double);
 
     procedure ChangeStatusIcon(ACurItem: TListViewItem);
     procedure DeleteButtonHide(AItem: TListViewItem);
@@ -870,8 +879,12 @@ type
     procedure EnterNewPartner;
     procedure ShowPartners(Day : integer; Caption : string);
     procedure ShowPartnerInfo;
-    procedure ChangeDocumentStatus;
+    procedure ChangeStoreRealDocStatus;
     procedure BuildStoreRealDocsList;
+    procedure ChangeOrderExternalDocStatus;
+    procedure BuildOrderExternalDocsList;
+    procedure ChangeReturnInDocStatus;
+    procedure BuildReturnInDocsList;
     procedure ShowDocuments;
     procedure ShowPriceLists;
     procedure ShowPriceListItems;
@@ -1298,6 +1311,31 @@ begin
 end;
 
 // условия фильтра для товаров выбраных для заявки на поставку
+procedure TfrmMain.lwOrderDocsItemClickEx(const Sender: TObject;
+  ItemIndex: Integer; const LocalClickPos: TPointF;
+  const ItemObject: TListItemDrawable);
+begin
+  DM.cdsOrderExternal.Locate('Id', StrToIntDef(TListItemText(lwOrderDocs.Items[ItemIndex].Objects.FindDrawable('Id')).Text, 0), []);
+
+  if (ItemObject <> nil) and (ItemObject.Name = 'DeleteButton') then // удаление заявки на поставку
+  begin
+    TDialogService.MessageDialog('Удалить заявку "' + DM.cdsOrderExternalPartnerName.AsString +
+      '" на ' + FormatDateTime('DD.MM.YYYY', DM.cdsOrderExternalOperDate.AsDateTime) + '?',
+      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteOrderExtrernal);
+  end
+  else
+  // вызов формы редакирования выбранной заявки на поставку
+  begin
+    CreateEditOrderExtrernal(false);
+  end;
+end;
+
+procedure TfrmMain.lwOrderDocsUpdateObjects(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  DeleteButtonHide(AItem);
+end;
+
 procedure TfrmMain.lwOrderExternalItemsFilter(Sender: TObject; const AFilter,
   AValue: string; var Accept: Boolean);
 begin
@@ -1346,10 +1384,7 @@ procedure TfrmMain.lwOrderExternalListItemClickEx(const Sender: TObject;
   ItemIndex: Integer; const LocalClickPos: TPointF;
   const ItemObject: TListItemDrawable);
 begin
-  if ItemObject = nil then
-    exit;
-
-  if ItemObject.Name = 'DeleteButton' then // удаление заявки на поставку
+  if (ItemObject <> nil) and (ItemObject.Name = 'DeleteButton') then // удаление заявки на поставку
   begin
     TDialogService.MessageDialog('Удалить заявку на ' + FormatDateTime('DD.MM.YYYY', DM.cdsOrderExternalOperDate.AsDateTime) + '?',
       TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteOrderExtrernal);
@@ -1431,13 +1466,11 @@ procedure TfrmMain.lwPartnerPhotoGroupsItemClickEx(const Sender: TObject;
   ItemIndex: Integer; const LocalClickPos: TPointF;
   const ItemObject: TListItemDrawable);
 begin
-  if (ItemObject <> nil) and (ItemObject.Name = 'I') then // удаление выбранной группы фотографий
+  if (ItemObject <> nil) and (ItemObject.Name = 'DeleteButton') then // удаление выбранной группы фотографий
   begin
-    DM.qryPhotoGroups.Edit;
-    DM.qryPhotoGroupsStatusId.AsInteger := DM.tblObject_ConstStatusId_Erased.AsInteger;
-    DM.qryPhotoGroups.Post;
-
-    DM.qryPhotoGroups.Refresh;
+    TDialogService.MessageDialog('Удалить фотографии "' + DM.qryPhotoGroupsComment.AsString +
+      '" за ' + FormatDateTime('DD.MM.YYYY', DM.qryPhotoGroupsOperDate.AsDateTime) + '?',
+      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeletePhotoGroup);
   end
   else
   begin
@@ -1449,8 +1482,8 @@ end;
 procedure TfrmMain.lwPartnerPhotoGroupsUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
-  // установка иконки для кнопки удаления
-  AItem.ImageIndex := 0;
+  // установка иконки кнопки удаления
+  TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
 end;
 
 procedure TfrmMain.lwPartnerTasksItemClickEx(const Sender: TObject;
@@ -1567,6 +1600,31 @@ begin
   TListItemImage(AItem.Objects.FindDrawable('imContact')).ImageIndex := 3;
 end;
 
+procedure TfrmMain.lwReturnInDocsItemClickEx(const Sender: TObject;
+  ItemIndex: Integer; const LocalClickPos: TPointF;
+  const ItemObject: TListItemDrawable);
+begin
+  DM.cdsReturnIn.Locate('Id', StrToIntDef(TListItemText(lwReturnInDocs.Items[ItemIndex].Objects.FindDrawable('Id')).Text, 0), []);
+
+  if (ItemObject <> nil) and (ItemObject.Name = 'DeleteButton') then // удалить выбранный возврат товаров
+  begin
+    TDialogService.MessageDialog('Удалить возврат "' + DM.cdsReturnInPartnerName.AsString +
+      '" за ' + FormatDateTime('DD.MM.YYYY', DM.cdsReturnInOperDate.AsDateTime) + '?',
+      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteReturnIn);
+  end
+  else
+  // показать информацию по выбранному возврат товаров
+  begin
+    CreateEditReturnIn(false);
+  end;
+end;
+
+procedure TfrmMain.lwReturnInDocsUpdateObjects(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  DeleteButtonHide(AItem);
+end;
+
 procedure TfrmMain.lwReturnInItemsFilter(Sender: TObject; const AFilter,
   AValue: string; var Accept: Boolean);
 begin
@@ -1615,12 +1673,9 @@ procedure TfrmMain.lwReturnInListItemClickEx(const Sender: TObject;
   ItemIndex: Integer; const LocalClickPos: TPointF;
   const ItemObject: TListItemDrawable);
 begin
-  if ItemObject = nil then
-    exit;
-
-  if ItemObject.Name = 'DeleteButton' then // удалить выбранную заявку на возврат товаров
+  if (ItemObject <> nil) and (ItemObject.Name = 'DeleteButton') then // удалить выбранную заявку на возврат товаров
   begin
-    TDialogService.MessageDialog('Удалить возврат на ' + FormatDateTime('DD.MM.YYYY', DM.cdsReturnInOperDate.AsDateTime) + '?',
+    TDialogService.MessageDialog('Удалить возврат за ' + FormatDateTime('DD.MM.YYYY', DM.cdsReturnInOperDate.AsDateTime) + '?',
       TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteReturnIn);
   end
   else
@@ -1646,10 +1701,7 @@ procedure TfrmMain.lwStoreRealDocsItemClickEx(const Sender: TObject;
 begin
   DM.cdsStoreReals.Locate('Id', StrToIntDef(TListItemText(lwStoreRealDocs.Items[ItemIndex].Objects.FindDrawable('Id')).Text, 0), []);
 
-  if ItemObject = nil then
-    exit;
-
-  if ItemObject.Name = 'DeleteButton' then // удалить выбранные "остатки"
+  if (ItemObject <> nil) and (ItemObject.Name = 'DeleteButton') then // удалить выбранные "остатки"
   begin
     TDialogService.MessageDialog('Удалить остатки "' + DM.cdsStoreRealsPartnerName.AsString +
       '" за ' + FormatDateTime('DD.MM.YYYY', DM.cdsStoreRealsOperDate.AsDateTime) + '?',
@@ -1708,12 +1760,9 @@ procedure TfrmMain.lwStoreRealListItemClickEx(const Sender: TObject;
   ItemIndex: Integer; const LocalClickPos: TPointF;
   const ItemObject: TListItemDrawable);
 begin
-  if ItemObject = nil then
-    exit;
-
-  if ItemObject.Name = 'DeleteButton' then // удалить выбранные "остатки"
+  if (ItemObject <> nil) and (ItemObject.Name = 'DeleteButton') then // удалить выбранные "остатки"
   begin
-    TDialogService.MessageDialog('Удалить остатки на ' + FormatDateTime('DD.MM.YYYY', DM.cdsStoreRealsOperDate.AsDateTime) + '?',
+    TDialogService.MessageDialog('Удалить остатки за ' + FormatDateTime('DD.MM.YYYY', DM.cdsStoreRealsOperDate.AsDateTime) + '?',
       TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteStoreReal);
   end
   else
@@ -1792,6 +1841,12 @@ begin
       DM.cdsOrderExternal.First;
     end;
 
+    if (tcMain.ActiveTab = tiReturnIn) and (DM.cdsReturnInId.AsInteger = -1) then
+    begin
+      DM.cdsReturnIn.Delete;
+      DM.cdsReturnIn.First;
+    end;
+
     ReturnPriorForm;
   end;
 end;
@@ -1816,6 +1871,9 @@ begin
     if DM.SaveOrderExternal(deOrderDate.Date, eOrderComment.Text,
       FOrderTotalPrice, FOrderTotalCountKg, DelItems, AResult = mrNone ,ErrMes) then
     begin
+      if FEditDocuments then
+        ChangeOrderExternalDocStatus;
+
       ShowMessage('Сохранение заявки прошло успешно.');
       ReturnPriorForm;
     end
@@ -1844,7 +1902,7 @@ begin
     if DM.SaveStoreReal(eStoreRealComment.Text, DelItems, AResult = mrNone, ErrMes) then
     begin
       if FEditDocuments then
-        ChangeDocumentStatus;
+        ChangeStoreRealDocStatus;
 
       ShowMessage('Сохранение остатков прошло успешно.');
       ReturnPriorForm;
@@ -1871,9 +1929,12 @@ begin
         DelItems := ',' + IntToStr(FDeletedRI[i]);
     end;
 
-    if DM.SaveReturnIn(OldReturnInId, deReturnDate.Date, eReturnComment.Text,
+    if DM.SaveReturnIn(deReturnDate.Date, eReturnComment.Text,
       FReturnInTotalPrice, FReturnInTotalCountKg, DelItems, AResult = mrNone, ErrMes) then
     begin
+      if FEditDocuments then
+        ChangeReturnInDocStatus;
+
       ShowMessage('Сохранение возврата прошло успешно.');
       ReturnPriorForm;
     end
@@ -1894,6 +1955,9 @@ begin
     DM.cdsOrderExternalStatusId.AsInteger := DM.tblObject_ConstStatusId_Erased.AsInteger;
     DM.cdsOrderExternalStatus.AsString := DM.tblObject_ConstStatusName_Erased.AsString;
     DM.cdsOrderExternal.Post;
+
+    if FEditDocuments then
+      ChangeOrderExternalDocStatus;
   end;
 end;
 
@@ -1913,7 +1977,7 @@ begin
     DM.cdsStoreReals.Post;
 
     if FEditDocuments then
-      ChangeDocumentStatus;
+      ChangeStoreRealDocStatus;
   end;
 end;
 
@@ -1929,6 +1993,22 @@ begin
     DM.cdsReturnInStatusId.AsInteger := DM.tblObject_ConstStatusId_Erased.AsInteger;
     DM.cdsReturnInStatus.AsString := DM.tblObject_ConstStatusName_Erased.AsString;
     DM.cdsReturnIn.Post;
+
+    if FEditDocuments then
+      ChangeReturnInDocStatus;
+  end;
+end;
+
+{ удаление группы фотографий }
+procedure TfrmMain.DeletePhotoGroup(const AResult: TModalResult);
+begin
+  if AResult = mrYes then
+  begin
+    DM.qryPhotoGroups.Edit;
+    DM.qryPhotoGroupsStatusId.AsInteger := DM.tblObject_ConstStatusId_Erased.AsInteger;
+    DM.qryPhotoGroups.Post;
+
+    DM.qryPhotoGroups.Refresh;
   end;
 end;
 
@@ -1991,6 +2071,7 @@ begin
     begin
       DM.LoadStoreRealItems(DM.cdsStoreRealsId.AsInteger);
     end;
+
     eStoreRealComment.Text := DM.cdsStoreRealsComment.AsString;
     FCanEditDocument := not DM.cdsStoreRealsisSync.AsBoolean;
 
@@ -2019,6 +2100,7 @@ begin
   begin
     DM.LoadOrderExtrenalItems(DM.cdsOrderExternalId.AsInteger);
   end;
+
   deOrderDate.Date := DM.cdsOrderExternalOperDate.AsDateTime;
   eOrderComment.Text := DM.cdsOrderExternalComment.AsString;
 
@@ -2043,36 +2125,30 @@ end;
 { создание новых или редактирование ранее введенных "остатков" }
 procedure TfrmMain.CreateEditReturnIn(New: boolean);
 begin
-  if DM.qryPartnerPriceWithVAT_RET.AsBoolean then
-    lReturnInPrice.Text := 'Цена (с НДС)'
-  else
-    lReturnInPrice.Text := 'Цена (без НДС)';
-
   FDeletedRI.Clear;
   FCheckedGooodsItems.Clear;
 
   if New then
   begin
-    OldReturnInId := '';
-    deReturnDate.Date := Date();
-    eReturnComment.Text := '';
+    DM.NewReturnIn;
 
     DM.DefaultReturnInItems;
-
-    FCanEditDocument := true;
   end
   else
   begin
-    OldReturnInId := DM.cdsReturnInId.AsString;
-    deReturnDate.Date := DM.cdsReturnInOperDate.AsDateTime;
-    eReturnComment.Text := DM.cdsReturnInComment.AsString;
-
     DM.LoadReturnInItems(DM.cdsReturnInId.AsInteger);
-
-    FCanEditDocument := not DM.cdsReturnInisSync.AsBoolean;
   end;
 
+  deReturnDate.Date := DM.cdsReturnInOperDate.AsDateTime;
+  eReturnComment.Text := DM.cdsReturnInComment.AsString;
+  FCanEditDocument := not DM.cdsReturnInisSync.AsBoolean;
+
   RecalculateReturnInTotalPriceAndWeight;
+
+  if DM.cdsReturnInPriceWithVAT.AsBoolean then
+    lReturnInPrice.Text := 'Цена (с НДС)'
+  else
+    lReturnInPrice.Text := 'Цена (без НДС)';
 
   pSaveReturnIn.Visible := FCanEditDocument;
   bAddReturnInItem.Visible := FCanEditDocument;
@@ -2127,7 +2203,7 @@ begin
       DM.qryPartner.Refresh;
       DM.qryPartner.Locate('Id;ContractId', VarArrayOf([Id, ContractId]), []);
 
-      GetMapPartnerScreenshot(FCurCoordinates.Latitude, FCurCoordinates.Longitude);
+      GetPartnerMap(FCurCoordinates.Latitude, FCurCoordinates.Longitude);
     end
     else
       ShowMessage('Не удалось получить текущие координаты');
@@ -2163,7 +2239,7 @@ begin
   else
   if (tcMain.ActiveTab = tiReturnIn) and FCanEditDocument then
   begin
-    if OldReturnInId = '' then
+    if DM.cdsReturnInId.AsInteger = -1 then
       Mes := 'Выйти без сохранения возврата?'
     else
       Mes := 'Выйти из редактирования без сохранения?';
@@ -2192,6 +2268,7 @@ end;
 procedure TfrmMain.bAddedPhotoGroupClick(Sender: TObject);
 begin
   vsbMain.Enabled := false;
+  ePhotoGroupName.Text := '';
   pNewPhotoGroup.Visible := true;
 end;
 
@@ -2516,19 +2593,20 @@ procedure TfrmMain.bRefreshDocClick(Sender: TObject);
 begin
   // документы по остаткам
   DM.LoadAllStoreReals(deStartDoc.Date, deEndDoc.Date);
-
   BuildStoreRealDocsList;
 
   // документы по заявкам на товары
-  //DM.LoadAllOrderExternal;
+  DM.LoadAllOrderExternal(deStartDoc.Date, deEndDoc.Date);
+  BuildOrderExternalDocsList;
 
   // документы по возвратам
-  //DM.LoadAllReturnIn;
+  DM.LoadAllReturnIn(deStartDoc.Date, deEndDoc.Date);;
+  BuildReturnInDocsList;
 end;
 
 procedure TfrmMain.bRefreshMapScreenClick(Sender: TObject);
 begin
-  GetMapPartnerScreenshot(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat);
+  tcPartnerInfoChange(tcPartnerInfo);
 end;
 
 // обновления карты с маршрутом контрагента
@@ -2921,14 +2999,6 @@ begin
     [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, SetPartnerCoordinates);
 end;
 
-// отображение координат ТТ на большой карте
-procedure TfrmMain.bShowBigMapClick(Sender: TObject);
-begin
-  lCaption.Text := 'Карта (' + DM.qryPartnerName.AsString + ')';
-
-  ShowBigMap;
-end;
-
 // переход на форму синхронизации
 procedure TfrmMain.bSyncClick(Sender: TObject);
 begin
@@ -2962,76 +3032,58 @@ begin
   SwitchToForm(tiRoutes, nil);
 end;
 
-// таймер срабатывает если долго не загружается карта с координатами ТТ
-// (запускается при открытии ТТ)
+procedure TfrmMain.tcPartnerInfoChange(Sender: TObject);
+var
+  Coordinates: TLocationCoord2D;
+begin
+  // карта с координатами ТТ
+  if tcPartnerInfo.ActiveTab = tiPartnerMap then
+  begin
+    if (DM.qryPartnerGPSN.AsFloat <> 0) and (DM.qryPartnerGPSE.AsFloat <> 0) then
+      GetPartnerMap(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat)
+    else
+    begin
+      if GetCoordinates(DM.qryPartnerAddress.AsString, Coordinates) then
+        GetPartnerMap(Coordinates.Latitude, Coordinates.Longitude)
+      else
+        GetPartnerMap(0, 0);
+    end;
+  end
+  else
+  begin
+    tErrorMap.Enabled := false;
+
+    if Assigned(FWebGMap) then
+    begin
+      try
+        FWebGMap.Visible := false;
+        FreeAndNil(FWebGMap);
+      except
+      end;
+    end;
+  end;
+end;
+
 procedure TfrmMain.tErrorMapTimer(Sender: TObject);
 begin
   tErrorMap.Enabled := false;
 
-  vsbMain.Enabled := true;
   FMapLoaded := true;
 
-  FWebGMap.Visible := false;
-  FreeAndNil(FWebGMap);
+  if Assigned(FWebGMap) then
+  begin
+    try
+      FWebGMap.Visible := false;
+      FreeAndNil(FWebGMap);
+    except
+    end;
+  end;
 
+  pMapButtons.Enabled := true;
   bRefreshMapScreen.Visible := true;
+  bSetPartnerCoordinate.Visible := false;
   lNoMap.Visible := true;
   lNoMap.Text := 'Не удалось загрузить карту с расположением ТТ';
-
-  pMapScreen.Visible := false;
-  pMap.Visible := true;
-end;
-
-// таймер получения скриншота карты с координатами ТТ (запускается после завершения загруки карты)
-// получить скриншот сразу нельзя - необходимо немного обождать
-procedure TfrmMain.tMapToImageTimer(Sender: TObject);
-{$IFDEF ANDROID}
-var
-  pic: JPicture;
-  bmp: JBitmap;
-  c: JCanvas;
-  fos: JFileOutputStream;
-  fn: string;
-{$ENDIF}
-begin
-  tMapToImage.Enabled := false;
-
-  vsbMain.Enabled := true;
-
-  try
-    {$IFDEF ANDROID}
-    fn := TPath.Combine(TPath.GetDocumentsPath, 'mapscreen.jpg');
-    pic := TJWebView.Wrap(FWebGMap.NativeBrowser).capturePicture;
-    bmp := TJBitmap.JavaClass.createBitmap(pic.getWidth, pic.getHeight, TJBitmap_Config.JavaClass.ARGB_8888);
-    c := TJCanvas.JavaClass.init(bmp);
-    pic.draw(c);
-    fos := TJFileOutputStream.JavaClass.init(StringToJString(fn));
-    if Assigned(fos) then
-    begin
-      bmp.compress(TJBitmap_CompressFormat.JavaClass.JPEG, 100, fos);
-      fos.close;
-    end;
-    iPartnerMap.Bitmap.LoadFromFile(fn);
-    {$ELSE}
-    iPartnerMap.Bitmap.Assign(FWebGMap.MakeScreenshot);
-    {$ENDIF}
-
-    pMap.Visible := false;
-    pMapScreen.Visible := true;
-
-    FWebGMap.Visible := false;
-    FreeAndNil(FWebGMap);
-  except
-    FWebGMap.Visible := false;
-    FreeAndNil(FWebGMap);
-
-    bRefreshMapScreen.Visible := true;
-    lNoMap.Visible := true;
-    lNoMap.Text := 'Не удалось загрузить карту с расположением ТТ';
-
-    pMapScreen.Visible := false;
-    pMap.Visible := true;
-  end;
 end;
 
 // таймер сохранения маршрута контрагента - сохраняет текущие координаты какждые 5 минут
@@ -3107,30 +3159,29 @@ begin
     Result :=  FormatFloat('0.000000', Latitude)+'N '+FormatFloat('0.000000', Longitude)+'E';
   end;
 end;
-{
+
 function TfrmMain.GetCoordinates(const Address: string; out Coordinates: TLocationCoord2D): Boolean;
 begin
   try
     WebGMapsGeocoder.Address:= Address;
     if WebGMapsGeocoder.LaunchGeocoding = erOk then
-      begin
-        Coordinates := TLocationCoord2D.Create(WebGMapsGeocoder.ResultLatitude, WebGMapsGeocoder.ResultLongitude);
-        Result := True;
-      end
+    begin
+      Coordinates := TLocationCoord2D.Create(WebGMapsGeocoder.ResultLatitude, WebGMapsGeocoder.ResultLongitude);
+      Result := True;
+    end
     else
       Result := False;
   except
     Result := False;
   end;
 end;
-}
 
 // завершение загрузки карты (с установкой маркеров при необходимости)
 procedure TfrmMain.WebGMapDownloadFinish(Sender: TObject);
 var
   i : integer;
 begin
-  if not FMapLoaded then
+  if Assigned(FWebGMap) and not FMapLoaded then
   begin
     tErrorMap.Enabled := false;
     FMapLoaded := True;
@@ -3151,8 +3202,7 @@ begin
       FWebGMap.MapPanTo(FWebGMap.Markers[0].Latitude, FWebGMap.Markers[0].Longitude);
     end;
 
-    if tcMain.ActiveTab = tiPartnerInfo then
-      tMapToImage.Enabled := true;
+    pMapButtons.Enabled := true;
   end;
 end;
 
@@ -3171,7 +3221,7 @@ begin
 end;
 
 // вызов карты с координатами ТТ и дальнейшем получением скриншота этой карты
-procedure TfrmMain.GetMapPartnerScreenshot(GPSN, GPSE: Double);
+procedure TfrmMain.GetPartnerMap(GPSN, GPSE: Double);
 var
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
   MobileNetworkStatus : TMobileNetworkStatus;
@@ -3214,22 +3264,19 @@ begin
         SetCordinate := false;
     end;
 
-    bRefreshMapScreen.Visible := false;
-    lNoMap.Visible := false;
 
     FMapLoaded := False;
 
-    pMapScreen.Visible := false;
-    pMap.Visible := true;
     FWebGMap := TTMSFMXWebGMaps.Create(Self);
     FWebGMap.Align := TAlignLayout.Client;
-    FWebGMap.ControlsOptions.PanControl.Visible := false;
+    {FWebGMap.ControlsOptions.PanControl.Visible := false;
     FWebGMap.ControlsOptions.ZoomControl.Visible := false;
     FWebGMap.ControlsOptions.MapTypeControl.Visible := false;
     FWebGMap.ControlsOptions.ScaleControl.Visible := false;
     FWebGMap.ControlsOptions.StreetViewControl.Visible := false;
     FWebGMap.ControlsOptions.OverviewMapControl.Visible := false;
     FWebGMap.ControlsOptions.RotateControl.Visible := false;
+    }
     FWebGMap.MapOptions.ZoomMap := 18;
     FWebGMap.Parent := pMap;
     FWebGMap.OnDownloadFinish := WebGMapDownloadFinish;
@@ -3239,17 +3286,20 @@ begin
       FWebGMap.CurrentLocation.Longitude := Coordinates.Longitude;
     end;
 
-    vsbMain.Enabled := false;
+    pMapButtons.Enabled := false;
+    bSetPartnerCoordinate.Visible := true;
+    bRefreshMapScreen.Visible := false;
+    lNoMap.Visible := false;
+
     tErrorMap.Enabled := true;
   end
   else
   begin
+    pMapButtons.Enabled := true;
+    bSetPartnerCoordinate.Visible := false;
     bRefreshMapScreen.Visible := true;
     lNoMap.Visible := true;
     lNoMap.Text := 'Без соединения с интернет нельзя получить карту с расположением ТТ';
-
-    pMapScreen.Visible := false;
-    pMap.Visible := true;
   end;
 end;
 
@@ -3338,6 +3388,9 @@ begin
     if tcMain.ActiveTab = tiTasks then
       lCaption.Text := 'Задания'
     else
+    if tcMain.ActiveTab = tiDocuments then
+      lCaption.Text := 'Документы'
+    else
     if tcMain.ActiveTab = tiReportJuridicalCollation then
       lCaption.Text := 'Акт сверки'
     else
@@ -3351,7 +3404,7 @@ begin
       lCaption.Text := 'Остатки (' + DM.cdsStoreRealsPartnerName.AsString + ')'
     else
     if tcMain.ActiveTab = tiReturnIn then
-      lCaption.Text := 'Возврат (' + DM.qryPartnerName.AsString + ')';
+      lCaption.Text := 'Возврат (' + DM.cdsReturnInPartnerName.AsString + ')';
   end;
 
   if tcMain.ActiveTab = tiMain then
@@ -3492,72 +3545,77 @@ begin
     Close;
   end;
 
-  bMonday.Visible := false;
-  bTuesday.Visible := false;
-  bWednesday.Visible := false;
-  bThursday.Visible := false;
-  bFriday.Visible := false;
-  bSaturday.Visible := false;
-  bSunday.Visible := false;
-  bAllDays.Visible := false;
-
   Num := 1;
   if DaysCount[1] > 0 then
   begin
-    bMonday.Visible := true;
+    bMonday.Height := 55;
     bMonday.Text := '  ' + IntToStr(Num) + '. Понедельник';
     lMondayCount.Text := IntToStr(DaysCount[1]);
     inc(Num);
-  end;
+  end
+  else
+    bMonday.Height := 0;
+
 
   if DaysCount[2] > 0 then
   begin
-    bTuesday.Visible := true;
+    bTuesday.Height := 55;
     bTuesday.Text := '  ' + IntToStr(Num) + '. Вторник';
     lTuesdayCount.Text := IntToStr(DaysCount[2]);
     inc(Num);
-  end;
+  end
+  else
+    bTuesday.Height := 0;
 
   if DaysCount[3] > 0 then
   begin
-    bWednesday.Visible := true;
+    bWednesday.Height := 55;
     bWednesday.Text := '  ' + IntToStr(Num) + '. Среда';
     lWednesdayCount.Text := IntToStr(DaysCount[3]);
     inc(Num);
-  end;
+  end
+  else
+    bWednesday.Height := 0;
 
   if DaysCount[4] > 0 then
   begin
-    bThursday.Visible := true;
+    bThursday.Height := 55;
     bThursday.Text := '  ' + IntToStr(Num) + '. Четверг';
     lThursdayCount.Text := IntToStr(DaysCount[4]);
     inc(Num);
-  end;
+  end
+  else
+    bThursday.Height := 0;
 
   if DaysCount[5] > 0 then
   begin
-    bFriday.Visible := true;
+    bFriday.Height := 55;
     bFriday.Text := '  ' + IntToStr(Num) + '. Пятница';
     lFridayCount.Text := IntToStr(DaysCount[5]);
     inc(Num);
-  end;
+  end
+  else
+    bFriday.Height := 0;
 
   if DaysCount[6] > 0 then
   begin
-    bSaturday.Visible := true;
+    bSaturday.Height := 55;
     bSaturday.Text := '  ' + IntToStr(Num) + '. Суббота';
     lSaturdayCount.Text := IntToStr(DaysCount[6]);
     inc(Num);
-  end;
+  end
+  else
+    bSaturday.Height := 0;
 
   if DaysCount[7] > 0 then
   begin
-    bSunday.Visible := true;
+    bSunday.Height := 55;
     bSunday.Text := '  ' + IntToStr(Num) + '. Воскресенье';
     lSundayCount.Text := IntToStr(DaysCount[7]);
-  end;
+  end
+  else
+    bSunday.Height := 0;
 
-  bAllDays.Visible := true;
   lAllDaysCount.Text := IntToStr(DaysCount[8]);
 end;
 
@@ -3658,6 +3716,10 @@ begin
   // общая информация о ТТ
   lPartnerName.Text := DM.qryPartnerName.AsString;
   lPartnerAddress.Text := DM.qryPartnerAddress.AsString;
+  if (DM.qryPartnerGPSN.AsFloat <> 0) and (DM.qryPartnerGPSE.AsFloat <> 0) then
+    lPartnerAddressGPS.Text := GetAddress(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat)
+  else
+    lPartnerAddressGPS.Text := '-';
 
   // информация о долгах ТТ
   if DM.qryPartnerPaidKindId.AsInteger = DM.tblObject_ConstPaidKindId_First.AsInteger then // БН
@@ -3692,9 +3754,6 @@ begin
     lPartnerOverDay.Text := '-';
   end;
 
-  // скриншот карты с координатами ТТ
-  GetMapPartnerScreenshot(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat);
-
   FEditDocuments := false;
 
   // остатки по ТТ
@@ -3710,7 +3769,7 @@ begin
   DM.LoadPhotoGroups;
 end;
 
-procedure TfrmMain.ChangeDocumentStatus;
+procedure TfrmMain.ChangeStoreRealDocStatus;
 var
   CurItem: TListViewItem;
 begin
@@ -3722,13 +3781,13 @@ begin
   DeleteButtonHide(CurItem);
 end;
 
+{ заполнение списка документов остатков }
 procedure TfrmMain.BuildStoreRealDocsList;
 var
-  OldPartnerName, OldPartnerAddress: string;
+  OldPartnerId: integer;
   NewItem: TListViewItem;
 begin
-  OldPartnerName := '';
-  OldPartnerAddress := '';
+  OldPartnerId := -1;
 
   lwStoreRealDocs.BeginUpdate;
   DM.cdsStoreReals.First;
@@ -3737,16 +3796,14 @@ begin
 
     while not DM.cdsStoreReals.Eof do
     begin
-      if (OldPartnerName <> DM.cdsStoreRealsPartnerName.AsString) or
-         (OldPartnerAddress <> DM.cdsStoreRealsAddress.AsString) then
+      if OldPartnerId <> DM.cdsStoreRealsPartnerId.AsInteger then
       begin
         NewItem := lwStoreRealDocs.Items.Add;
         NewItem.Text := DM.cdsStoreRealsPartnerName.AsString;
         NewItem.Detail := DM.cdsStoreRealsAddress.AsString;
         NewItem.Purpose := TListItemPurpose.Header;
 
-        OldPartnerName := DM.cdsStoreRealsPartnerName.AsString;
-        OldPartnerAddress := DM.cdsStoreRealsAddress.AsString;
+        OldPartnerId := DM.cdsStoreRealsPartnerId.AsInteger;
       end;
 
       NewItem := lwStoreRealDocs.Items.Add;
@@ -3766,6 +3823,132 @@ begin
     end;
   finally
     lwStoreRealDocs.EndUpdate;
+  end;
+end;
+
+procedure TfrmMain.ChangeOrderExternalDocStatus;
+var
+  CurItem: TListViewItem;
+begin
+  CurItem := lwOrderDocs.Items[lwOrderDocs.Selected.Index];
+  TListItemText(CurItem.Objects.FindDrawable('StatusId')).Text := DM.cdsOrderExternalStatusId.AsString;
+  TListItemText(CurItem.Objects.FindDrawable('Status')).Text := DM.cdsOrderExternalStatus.AsString;
+
+  ChangeStatusIcon(CurItem);
+  DeleteButtonHide(CurItem);
+end;
+
+{ заполнение списка документов заявок на товары }
+procedure TfrmMain.BuildOrderExternalDocsList;
+var
+  OldPartnerId, OldContractId: integer;
+  NewItem: TListViewItem;
+begin
+  OldPartnerId := -1;
+  OldContractId := -1;
+
+  lwOrderDocs.BeginUpdate;
+  DM.cdsOrderExternal.First;
+  try
+    lwOrderDocs.Items.Clear;
+
+    while not DM.cdsOrderExternal.Eof do
+    begin
+      if (OldPartnerId <> DM.cdsOrderExternalPartnerId.AsInteger) or
+         (OldContractId <> DM.cdsOrderExternalContractId.AsInteger) then
+      begin
+        NewItem := lwOrderDocs.Items.Add;
+        NewItem.Text := DM.cdsOrderExternalPartnerName.AsString;
+        NewItem.Detail := DM.cdsOrderExternalAddress.AsString + chr(13) + chr(10) +
+          DM.cdsOrderExternalContractName.AsString;
+        NewItem.Purpose := TListItemPurpose.Header;
+
+        OldPartnerId := DM.cdsOrderExternalPartnerId.AsInteger;
+        OldContractId := DM.cdsOrderExternalContractId.AsInteger;
+      end;
+
+      NewItem := lwOrderDocs.Items.Add;
+      NewItem.Text := DM.cdsOrderExternalName.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Name')).Text := DM.cdsOrderExternalName.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Price')).Text := DM.cdsOrderExternalPrice.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Weight')).Text := DM.cdsOrderExternalWeight.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Status')).Text := DM.cdsOrderExternalStatus.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Id')).Text := DM.cdsOrderExternalId.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('StatusId')).Text := DM.cdsOrderExternalStatusId.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('isSync')).Text := DM.cdsOrderExternalisSync.AsString;
+
+      // установить иконку кнопки удаления
+      TListItemImage(NewItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
+      ChangeStatusIcon(NewItem);
+      DeleteButtonHide(NewItem);
+
+      DM.cdsOrderExternal.Next;
+    end;
+  finally
+    lwOrderDocs.EndUpdate;
+  end;
+end;
+
+procedure TfrmMain.ChangeReturnInDocStatus;
+var
+  CurItem: TListViewItem;
+begin
+  CurItem := lwReturnInDocs.Items[lwReturnInDocs.Selected.Index];
+  TListItemText(CurItem.Objects.FindDrawable('StatusId')).Text := DM.cdsReturnInStatusId.AsString;
+  TListItemText(CurItem.Objects.FindDrawable('Status')).Text := DM.cdsReturnInStatus.AsString;
+
+  ChangeStatusIcon(CurItem);
+  DeleteButtonHide(CurItem);
+end;
+
+{ заполнение списка документов возврата товаров }
+procedure TfrmMain.BuildReturnInDocsList;
+var
+  OldPartnerId, OldContractId: integer;
+  NewItem: TListViewItem;
+begin
+  OldPartnerId := -1;
+  OldContractId := -1;
+
+  lwReturnInDocs.BeginUpdate;
+  DM.cdsReturnIn.First;
+  try
+    lwReturnInDocs.Items.Clear;
+
+    while not DM.cdsReturnIn.Eof do
+    begin
+      if (OldPartnerId <> DM.cdsReturnInPartnerId.AsInteger) or
+         (OldContractId <> DM.cdsReturnInContractId.AsInteger) then
+      begin
+        NewItem := lwReturnInDocs.Items.Add;
+        NewItem.Text := DM.cdsReturnInPartnerName.AsString;
+        NewItem.Detail := DM.cdsReturnInAddress.AsString + chr(13) + chr(10) +
+          DM.cdsReturnInContractName.AsString;
+        NewItem.Purpose := TListItemPurpose.Header;
+
+        OldPartnerId := DM.cdsReturnInPartnerId.AsInteger;
+        OldContractId := DM.cdsReturnInContractId.AsInteger;
+      end;
+
+      NewItem := lwReturnInDocs.Items.Add;
+      NewItem.Text := DM.cdsReturnInName.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Id')).Text := DM.cdsReturnInId.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Name')).Text := DM.cdsReturnInName.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Price')).Text := DM.cdsReturnInPrice.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Weight')).Text := DM.cdsReturnInWeight.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Status')).Text := DM.cdsReturnInStatus.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('StatusId')).Text := DM.cdsReturnInStatusId.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('isSync')).Text := DM.cdsReturnInisSync.AsString;
+
+      // установить иконку кнопки удаления
+      TListItemImage(NewItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
+      ChangeStatusIcon(NewItem);
+      DeleteButtonHide(NewItem);
+
+      DM.cdsReturnIn.Next;
+    end;
+  finally
+    lwReturnInDocs.EndUpdate;
   end;
 end;
 
@@ -4080,14 +4263,14 @@ begin
     while not DM.cdsReturnInItems.Eof do
     begin
       PriceWithPercent := DM.cdsReturnInItemsPrice.AsFloat * DM.cdsReturnInItemsCount.AsFloat *
-        (100 + DM.qryPartnerChangePercent.AsCurrency) / 100;
+        (100 + DM.cdsReturnInChangePercent.AsCurrency) / 100;
 
       TotalPriceWithPercent := TotalPriceWithPercent + PriceWithPercent;
 
-      if DM.qryPartnerPriceWithVAT_RET.AsBoolean then
+      if DM.cdsReturnInPriceWithVAT.AsBoolean then
         FReturnInTotalPrice := FReturnInTotalPrice + PriceWithPercent
       else
-        FReturnInTotalPrice := FReturnInTotalPrice + PriceWithPercent * (100 + DM.qryPartnerVATPercent_RET.AsCurrency) / 100;
+        FReturnInTotalPrice := FReturnInTotalPrice + PriceWithPercent * (100 + DM.cdsReturnInVATPercent.AsCurrency) / 100;
 
       if FormatFloat('0.##', DM.cdsReturnInItemsWeight.AsFloat) <> '0' then
         FReturnInTotalCountKg := FReturnInTotalCountKg + DM.cdsReturnInItemsWeight.AsFloat * DM.cdsReturnInItemsCount.AsFloat
@@ -4101,7 +4284,7 @@ begin
     DM.cdsReturnInItems.EnableControls;
   end;
 
-  if DM.qryPartnerChangePercent.AsCurrency = 0 then
+  if DM.cdsReturnInChangePercent.AsCurrency = 0 then
   begin
     lPriceWithPercentReturn.Visible := false;
     pReturnInTotals.Height := 50;
@@ -4111,12 +4294,12 @@ begin
     lPriceWithPercentReturn.Visible := true;
     pReturnInTotals.Height := 70;
 
-    if DM.qryPartnerChangePercent.AsCurrency > 0 then
+    if DM.cdsReturnInChangePercent.AsCurrency > 0 then
       lPriceWithPercentReturn.Text := ' Стоимость с учетом наценки (' +
-        FormatFloat(',0.00', DM.qryPartnerChangePercent.AsCurrency) + '%) : ' + FormatFloat(',0.00', TotalPriceWithPercent)
+        FormatFloat(',0.00', DM.cdsReturnInChangePercent.AsCurrency) + '%) : ' + FormatFloat(',0.00', TotalPriceWithPercent)
     else
       lPriceWithPercentReturn.Text := ' Стоимость с учетом скидки (' +
-        FormatFloat(',0.00', -DM.qryPartnerChangePercent.AsCurrency) + '%) : ' + FormatFloat(',0.00', TotalPriceWithPercent);
+        FormatFloat(',0.00', -DM.cdsReturnInChangePercent.AsCurrency) + '%) : ' + FormatFloat(',0.00', TotalPriceWithPercent);
   end;
 
   lTotalPriceReturn.Text := 'Общая стоимость (с учетом НДС) : ' + FormatFloat(',0.00', FReturnInTotalPrice);
@@ -4357,7 +4540,7 @@ var
   MediaPlayer: TMediaPlayer;
   TmpFile: string;
 begin
-  {MediaPlayer := TMediaPlayer.Create(nil);
+  MediaPlayer := TMediaPlayer.Create(nil);
   try
     TmpFile := TPath.Combine(TPath.GetDocumentsPath, 'CameraClick.3gp');
     MediaPlayer.FileName := TmpFile;
@@ -4375,8 +4558,8 @@ begin
     MediaPlayer.Stop;
     MediaPlayer.Clear;
   finally
-    MediaPlayer.Free;
-  end;}
+    //MediaPlayer.Free;
+  end;
 end;
 
 procedure TfrmMain.CameraComponentSampleBufferReady
@@ -4445,50 +4628,3 @@ begin
 end;
 
 end.
-
-
-(*
-  {$IFDEF ANDROID}
-    LastLocation: JLocation;
-    LocManagerObj: JObject;
-    LocationManager: JLocationManager;
-    Geocoder: JGeocoder;
-    Address: JAddress;
-    AddressList: JList;
-  {$ENDIF}
-begin
-  {$IFDEF ANDROID}
-  //запрашиваем сервис Location
-  LocManagerObj:=SharedActivityContext.getSystemService(TJContext.JavaClass.LOCATION_SERVICE);
-  if not Assigned(LocManagerObj) then
-    raise Exception.Create('Could not locate Location Service');
-  //получаем LocationManager
-  LocationManager:=TJLocationManager.Wrap((LocManagerObj as ILocalObject).GetObjectID);
-  if not Assigned(LocationManager) then
-    raise Exception.Create('Could not access Location Manager');
-  //получаем последнее местоположение зафиксированное с помощью координат wi-fi и мобильных сетей
-  LastLocation:=LocationManager.getLastKnownLocation(TJLocationManager.JavaClass.NETWORK_PROVIDER);
-  if Assigned(LastLocation) then
-    begin
-      geocoder:= TJGeocoder.JavaClass.init(SharedActivityContext);
-      if not Assigned(geocoder) then
-         raise Exception.Create('Could not access Geocoder');
-      //пробуем определить 1 возможный адрес местоположения
-      AddressList:=geocoder.getFromLocation(LastLocation.getLatitude, LastLocation.getLongitude,1);
-      Coordinates := TLocationCoord2D.Create(LastLocation.getLatitude, LastLocation.getLongitude);
-     if AddressList.size > 0 then
-     begin
-       Address:=TJAddress.Wrap((AddressList.get(0) as ILocalObject).GetObjectID);
-       if not Assigned(Address) then
-         raise Exception.Create('Could not access Address');
-       //выводим данные в memo
-       Memo1.Lines.Add('City: '+JStringToString(Address.getAddressLine(1)));
-       Memo1.Lines.Add('Street: '+JStringToString(Address.getAddressLine(0)));
-       Memo1.Lines.Add('PostalCode: '+JStringToString(Address.getAddressLine(4)));
-       Memo1.Lines.Add(FormatFloat('0.000000', LastLocation.getLatitude)+'N '+FormatFloat('0.000000', LastLocation.getLongitude)+'E');
-     end;
-    end;
-  {$ELSE}
-  Coordinates := TLocationCoord2D.Create(0,0);
-  {$ENDIF}
-*)

@@ -138,7 +138,6 @@ object IncomeForm: TIncomeForm
       Properties.Buttons = <
         item
           Default = True
-          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -371,6 +370,15 @@ object IncomeForm: TIncomeForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 47
+          end
+          object colCompositionGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1076#1083#1103' '#1089#1086#1089#1090#1072#1074#1072' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'CompositionGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 72
           end
           object colCompositionName: TcxGridDBColumn
             Caption = #1057#1086#1089#1090#1072#1074' '#1090#1086#1074#1072#1088#1072

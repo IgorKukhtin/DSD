@@ -5,9 +5,8 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitTop = -112
   ExplicitWidth = 1382
-  ExplicitHeight = 569
+  ExplicitHeight = 572
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -826,32 +825,36 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
     ExplicitWidth = 1366
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
-      Left = 118
+      Left = 98
       EditValue = 42005d
       Properties.SaveTime = False
-      ExplicitLeft = 118
+      ExplicitLeft = 98
+      ExplicitWidth = 79
+      Width = 79
     end
     inherited deEnd: TcxDateEdit
-      Left = 320
+      Left = 294
       EditValue = 42005d
       Properties.SaveTime = False
-      ExplicitLeft = 320
+      ExplicitLeft = 294
+      ExplicitWidth = 81
+      Width = 81
     end
     inherited cxLabel1: TcxLabel
-      Left = 25
-      ExplicitLeft = 25
+      Left = 5
+      ExplicitLeft = 5
     end
     inherited cxLabel2: TcxLabel
-      Left = 208
-      ExplicitLeft = 208
+      Left = 182
+      ExplicitLeft = 182
     end
     object cxLabel4: TcxLabel
-      Left = 720
+      Left = 691
       Top = 6
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 811
+      Left = 782
       Top = 5
       Properties.Buttons = <
         item
@@ -863,12 +866,12 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
       Width = 180
     end
     object cxLabel3: TcxLabel
-      Left = 417
+      Left = 387
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnit: TcxButtonEdit
-      Left = 507
+      Left = 474
       Top = 4
       Properties.Buttons = <
         item
@@ -877,7 +880,24 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 210
+      Width = 209
+    end
+    object cxLabel5: TcxLabel
+      Left = 969
+      Top = 6
+      Caption = #1070#1088'. '#1083#1080#1094#1086' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082'):'
+    end
+    object edJuridical: TcxButtonEdit
+      Left = 1091
+      Top = 4
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 9
+      Width = 192
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1189,6 +1209,23 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = JuridicalGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = JuridicalGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1321,6 +1358,14 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         Name = 'inGoodsGroupId'
         Value = ''
         Component = GoodsGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1463,6 +1508,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         Component = PeriodChoice
       end
       item
+        Component = JuridicalGuides
       end
       item
         Component = UnitGuides
@@ -1578,5 +1624,33 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
       end>
     Left = 568
     Top = 1
+  end
+  object JuridicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 1152
   end
 end

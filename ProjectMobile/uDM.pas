@@ -340,7 +340,7 @@ type
     cdsOrderExternal: TClientDataSet;
     cdsOrderExternalName: TStringField;
     cdsOrderExternalPrice: TStringField;
-    cdsOrderExternalWeigth: TStringField;
+    cdsOrderExternalWeight: TStringField;
     cdsOrderExternalStatus: TStringField;
     cdsOrderExternalId: TIntegerField;
     cdsOrderExternalOperDate: TDateField;
@@ -455,7 +455,7 @@ type
     cdsReturnInOperDate: TDateField;
     cdsReturnInName: TStringField;
     cdsReturnInPrice: TStringField;
-    cdsReturnInWeigth: TStringField;
+    cdsReturnInWeight: TStringField;
     cdsReturnInStatus: TStringField;
     cdsReturnInItemsId: TIntegerField;
     cdsReturnInItemsGoodsName: TStringField;
@@ -576,8 +576,23 @@ type
     cdsOrderExternalCalcDayCount: TFloatField;
     cdsOrderExternalOrderDayCount: TFloatField;
     cdsOrderExternalisOperDateOrder: TBooleanField;
+    cdsOrderExternalAddress: TStringField;
+    cdsOrderExternalContractName: TStringField;
+    cdsReturnInPartnerId: TIntegerField;
+    cdsReturnInPartnerName: TStringField;
+    cdsReturnInContractId: TIntegerField;
+    cdsReturnInContractName: TStringField;
+    cdsReturnInPaidKindId: TIntegerField;
+    cdsReturnInPriceWithVAT: TBooleanField;
+    cdsReturnInVATPercent: TFloatField;
+    cdsReturnInChangePercent: TFloatField;
+    cdsReturnInPriceListId: TIntegerField;
+    cdsReturnInAddress: TStringField;
+    qryPhotoGroupsName: TStringField;
+    qryPhotoGroupsOperDate: TDateTimeField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
+    procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
     FConnected: Boolean;
@@ -613,14 +628,17 @@ type
       ToralPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
     procedure NewOrderExternal;
     procedure LoadOrderExternal;
+    procedure LoadAllOrderExternal(AStartDate, AEndDate: TDate);
     procedure AddedGoodsToOrderExternal(AGoods : string);
     procedure DefaultOrderExternalItems;
     procedure LoadOrderExtrenalItems(AId: integer);
     procedure GenerateOrderExtrenalItemsList;
 
-    function SaveReturnIn(OldReturnInId : string; OperDate: TDate; Comment : string;
+    function SaveReturnIn(OperDate: TDate; Comment : string;
       ToralPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
-    procedure LoadReturnIn(AId: string = '');
+    procedure NewReturnIn;
+    procedure LoadReturnIn;
+    procedure LoadAllReturnIn(AStartDate, AEndDate: TDate);
     procedure AddedGoodsToReturnIn(AGoods : string);
     procedure DefaultReturnInItems;
     procedure LoadReturnInItems(AId: integer);
@@ -2519,6 +2537,11 @@ begin
   DataSet.FieldByName('Termin').AsString := 'Цена действительна с ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('StartDate').AsDateTime);
 end;
 
+procedure TDM.qryPhotoGroupsCalcFields(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('Name').AsString := 'Фотографии за ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('OperDate').AsDateTime);
+end;
+
 { получение текущей версии программы }
 function TDM.GetCurrentVersion: string;
 {$IFDEF ANDROID}
@@ -2790,6 +2813,7 @@ begin
   try
     cdsStoreReals.First;
     cdsStoreReals.Insert;
+
     cdsStoreRealsId.AsInteger := -1;
     cdsStoreRealsComment.AsString := '';
     cdsStoreRealsOperDate.AsDateTime := Date();
@@ -2885,9 +2909,8 @@ begin
       'JOIN OBJECT_PARTNER P ON P.ID = MSR.PARTNERID ' +
       'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID AND J.CONTRACTID = P.CONTRACTID ' +
       'LEFT JOIN Object_PriceList PL ON PL.ID = IFNULL(P.PRICELISTID, :DefaultPriceList) ' +
-      'LEFT JOIN Object_PriceList PLR ON PLR.ID = IFNULL(P.PRICELISTID_RET, :DefaultPriceList) ' +
       'WHERE MSR.OPERDATE BETWEEN :STARTDATE AND :ENDDATE ' +
-      'GROUP BY MSR.ID, MSR.PARTNERID order by PartnerName asc, OPERDATE desc';
+      'GROUP BY MSR.ID, MSR.PARTNERID order by PartnerName, Address asc, OPERDATE desc';
     qryStoreReals.ParamByName('STARTDATE').AsDate := AStartDate;
     qryStoreReals.ParamByName('ENDDATE').AsDate := AEndDate;
     qryStoreReals.ParamByName('DefaultPriceList').AsInteger := DM.tblObject_ConstPriceListId_def.AsInteger;
@@ -3197,7 +3220,7 @@ begin
       cdsOrderExternalComment.AsString := Comment;
       cdsOrderExternalName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', OperDate);
       cdsOrderExternalPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', ToralPrice);
-      cdsOrderExternalWeigth.AsString := 'Вес: ' + FormatFloat(',0.00', TotalWeight);
+      cdsOrderExternalWeight.AsString := 'Вес: ' + FormatFloat(',0.00', TotalWeight);
       if Complete then
       begin
         cdsOrderExternalStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
@@ -3236,12 +3259,13 @@ begin
   try
     cdsOrderExternal.First;
     cdsOrderExternal.Insert;
+
     cdsOrderExternalId.AsInteger := -1;
     cdsOrderExternalOperDate.AsDateTime := Date();
     cdsOrderExternalComment.AsString := '';
     cdsOrderExternalName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', Date());
     cdsOrderExternalPrice.AsString :=  'Стоимость: 0';
-    cdsOrderExternalWeigth.AsString := 'Вес: 0';
+    cdsOrderExternalWeight.AsString := 'Вес: 0';
     cdsOrderExternalStatus.AsString := tblObject_ConstStatusName_UnComplete.AsString;
     cdsOrderExternalStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
     cdsOrderExternalisSync.AsBoolean := false;
@@ -3256,6 +3280,9 @@ begin
     cdsOrderExternalCalcDayCount.AsFloat := qryPartnerCalcDayCount.AsFloat;
     cdsOrderExternalOrderDayCount.AsFloat := qryPartnerOrderDayCount.AsFloat;
     cdsOrderExternalisOperDateOrder.AsBoolean := qryPartnerisOperDateOrder.AsBoolean;
+    cdsOrderExternalAddress.AsString := qryPartnerAddress.AsString;
+    cdsOrderExternalPartnerName.AsString := qryPartnerName.AsString;
+    cdsOrderExternalContractName.AsString := qryPartnerContractName.AsString;
 
     cdsOrderExternal.Post;
   finally
@@ -3291,7 +3318,7 @@ begin
       cdsOrderExternalComment.AsString := qryOrderExternal.FieldByName('COMMENT').AsString;
       cdsOrderExternalName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', qryOrderExternal.FieldByName('OPERDATE').AsDateTime);
       cdsOrderExternalPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', qryOrderExternal.FieldByName('TOTALSUMM').AsFloat);
-      cdsOrderExternalWeigth.AsString := 'Вес: ' + FormatFloat(',0.00', qryOrderExternal.FieldByName('TOTALCOUNTKG').AsFloat);
+      cdsOrderExternalWeight.AsString := 'Вес: ' + FormatFloat(',0.00', qryOrderExternal.FieldByName('TOTALCOUNTKG').AsFloat);
 
       if qryOrderExternal.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Complete.AsInteger then
         cdsOrderExternalStatus.AsString := tblObject_ConstStatusName_Complete.AsString
@@ -3317,6 +3344,91 @@ begin
       cdsOrderExternalCalcDayCount.AsFloat := qryPartnerCalcDayCount.AsFloat;
       cdsOrderExternalOrderDayCount.AsFloat := qryPartnerOrderDayCount.AsFloat;
       cdsOrderExternalisOperDateOrder.AsBoolean := qryPartnerisOperDateOrder.AsBoolean;
+      cdsOrderExternalAddress.AsString := qryPartnerAddress.AsString;
+      cdsOrderExternalPartnerName.AsString := qryPartnerName.AsString;
+      cdsOrderExternalContractName.AsString := qryPartnerContractName.AsString;
+
+      cdsOrderExternal.Post;
+
+      qryOrderExternal.Next;
+    end;
+
+    qryOrderExternal.Close;
+  finally
+    qryOrderExternal.Free;
+    cdsOrderExternal.EnableControls;
+    cdsOrderExternal.First;
+  end;
+end;
+
+{ загрузка заявок на товары из БД всех ТТ}
+procedure TDM.LoadAllOrderExternal(AStartDate, AEndDate: TDate);
+var
+  qryOrderExternal : TFDQuery;
+begin
+  cdsOrderExternal.Open;
+  cdsOrderExternal.EmptyDataSet;
+
+  cdsOrderExternal.DisableControls;
+  qryOrderExternal := TFDQuery.Create(nil);
+  try
+
+    qryOrderExternal.Connection := conMain;
+    qryOrderExternal.SQL.Text := 'select MOE.ID, MOE.OPERDATE, MOE.COMMENT, MOE.TOTALCOUNTKG, MOE.TOTALSUMM, MOE.ISSYNC, MOE.STATUSID, ' +
+      'P.Id PartnerId, J.VALUEDATA PartnerName, P.ADDRESS, PL.ID PRICELISTID, PL.PRICEWITHVAT, PL.VATPERCENT, ' +
+      'P.CONTRACTID, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, C.PAIDKINDID, C.CHANGEPERCENT, ' +
+      'P.CalcDayCount, P.OrderDayCount, P.isOperDateOrder ' +
+      'from MOVEMENT_ORDEREXTERNAL MOE ' +
+      'JOIN OBJECT_PARTNER P ON P.ID = MOE.PARTNERID AND P.CONTRACTID = MOE.CONTRACTID ' +
+      'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID AND J.CONTRACTID = P.CONTRACTID ' +
+      'LEFT JOIN Object_PriceList PL ON PL.ID = IFNULL(P.PRICELISTID, :DefaultPriceList) ' +
+      'LEFT JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID ' +
+      'WHERE MOE.OPERDATE BETWEEN :STARTDATE AND :ENDDATE ' +
+      'GROUP BY MOE.ID, MOE.PARTNERID, MOE.CONTRACTID order by PartnerName, P.Address, P.ContractId asc, MOE.OPERDATE desc';
+    qryOrderExternal.ParamByName('STARTDATE').AsDate := AStartDate;
+    qryOrderExternal.ParamByName('ENDDATE').AsDate := AEndDate;
+    qryOrderExternal.ParamByName('DefaultPriceList').AsInteger := DM.tblObject_ConstPriceListId_def.AsInteger;
+
+    qryOrderExternal.Open;
+
+    qryOrderExternal.First;
+    while not qryOrderExternal.EOF do
+    begin
+      cdsOrderExternal.Append;
+      cdsOrderExternalid.AsInteger := qryOrderExternal.FieldByName('ID').AsInteger;
+      cdsOrderExternalOperDate.AsDateTime := qryOrderExternal.FieldByName('OPERDATE').AsDateTime;
+      cdsOrderExternalComment.AsString := qryOrderExternal.FieldByName('COMMENT').AsString;
+      cdsOrderExternalName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', qryOrderExternal.FieldByName('OPERDATE').AsDateTime);
+      cdsOrderExternalPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', qryOrderExternal.FieldByName('TOTALSUMM').AsFloat);
+      cdsOrderExternalWeight.AsString := 'Вес: ' + FormatFloat(',0.00', qryOrderExternal.FieldByName('TOTALCOUNTKG').AsFloat);
+
+      if qryOrderExternal.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Complete.AsInteger then
+        cdsOrderExternalStatus.AsString := tblObject_ConstStatusName_Complete.AsString
+      else
+      if qryOrderExternal.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_UnComplete.AsInteger then
+        cdsOrderExternalStatus.AsString := tblObject_ConstStatusName_UnComplete.AsString
+      else
+      if qryOrderExternal.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Erased.AsInteger then
+        cdsOrderExternalStatus.AsString := tblObject_ConstStatusName_Erased.AsString
+      else
+        cdsOrderExternalStatus.AsString := 'Неизвестный';
+
+      cdsOrderExternalStatusId.AsInteger := qryOrderExternal.FieldByName('STATUSID').AsInteger;
+      cdsOrderExternalisSync.AsBoolean := qryOrderExternal.FieldByName('ISSYNC').AsBoolean;
+
+      cdsOrderExternalPartnerId.AsInteger := qryOrderExternal.FieldByName('PartnerId').AsInteger;
+      cdsOrderExternalPaidKindId.AsInteger := qryOrderExternal.FieldByName('PaidKindId').AsInteger;
+      cdsOrderExternalContractId.AsInteger := qryOrderExternal.FieldByName('CONTRACTID').AsInteger;
+      cdsOrderExternalPriceListId.AsInteger := qryOrderExternal.FieldByName('PRICELISTID').AsInteger;
+      cdsOrderExternalPriceWithVAT.AsBoolean := qryOrderExternal.FieldByName('PriceWithVAT').AsBoolean;
+      cdsOrderExternalVATPercent.AsFloat := qryOrderExternal.FieldByName('VATPercent').AsFloat;
+      cdsOrderExternalChangePercent.AsFloat := qryOrderExternal.FieldByName('ChangePercent').AsFloat;
+      cdsOrderExternalCalcDayCount.AsFloat := qryOrderExternal.FieldByName('CalcDayCount').AsFloat;
+      cdsOrderExternalOrderDayCount.AsFloat := qryOrderExternal.FieldByName('OrderDayCount').AsFloat;
+      cdsOrderExternalisOperDateOrder.AsBoolean := qryOrderExternal.FieldByName('isOperDateOrder').AsBoolean;
+      cdsOrderExternalAddress.AsString := qryOrderExternal.FieldByName('Address').AsString;
+      cdsOrderExternalPartnerName.AsString := qryOrderExternal.FieldByName('PartnerName').AsString;
+      cdsOrderExternalContractName.AsString := qryOrderExternal.FieldByName('ContractName').AsString;
 
       cdsOrderExternal.Post;
 
@@ -3552,17 +3664,18 @@ begin
 end;
 
 { сохранение возвратов в БД }
-function TDM.SaveReturnIn(OldReturnInId : string; OperDate: TDate; Comment : string;
+function TDM.SaveReturnIn(OperDate: TDate; Comment : string;
   ToralPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
 var
   GlobalId : TGUID;
   MovementId, NewInvNumber : integer;
   qryMaxInvNumber : TFDQuery;
+  b : TBookmark;
 begin
   Result := false;
 
   NewInvNumber := 1;
-  if OldReturnInId = '' then
+  if cdsReturnInId.AsInteger = -1 then
   begin
     qryMaxInvNumber := TFDQuery.Create(nil);
     try
@@ -3579,7 +3692,7 @@ begin
   try
     tblMovement_ReturnIn.Open;
 
-    if OldReturnInId = '' then
+    if cdsReturnInId.AsInteger = -1 then
     begin
       tblMovement_ReturnIn.Append;
 
@@ -3592,13 +3705,13 @@ begin
         tblMovement_ReturnInStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger
       else
         tblMovement_ReturnInStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
-      tblMovement_ReturnInPartnerId.AsInteger := qryPartnerId.AsInteger;
+      tblMovement_ReturnInPartnerId.AsInteger := cdsReturnInPartnerId.AsInteger;
       tblMovement_ReturnInUnitId.AsInteger := tblObject_ConstUnitId_ret.AsInteger;
-      tblMovement_ReturnInPaidKindId.AsInteger := qryPartnerPaidKindId.AsInteger;
-      tblMovement_ReturnInContractId.AsInteger := qryPartnerCONTRACTID.AsInteger;
-      tblMovement_ReturnInPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT_RET.AsBoolean;
-      tblMovement_ReturnInVATPercent.AsFloat := qryPartnerVATPercent_RET.AsFloat;
-      tblMovement_ReturnInChangePercent.AsFloat := qryPartnerChangePercent.AsFloat;
+      tblMovement_ReturnInPaidKindId.AsInteger := cdsReturnInPaidKindId.AsInteger;
+      tblMovement_ReturnInContractId.AsInteger := cdsReturnInCONTRACTID.AsInteger;
+      tblMovement_ReturnInPriceWithVAT.AsBoolean := cdsReturnInPriceWithVAT.AsBoolean;
+      tblMovement_ReturnInVATPercent.AsFloat := cdsReturnInVATPercent.AsFloat;
+      tblMovement_ReturnInChangePercent.AsFloat := cdsReturnInChangePercent.AsFloat;
       tblMovement_ReturnInTotalCountKg.AsFloat := TotalWeight;
       tblMovement_ReturnInTotalSummPVAT.AsFloat := ToralPrice;
       tblMovement_ReturnInInsertDate.AsDateTime := Now();
@@ -3613,7 +3726,7 @@ begin
     end
     else
     begin
-      if tblMovement_ReturnIn.Locate('Id', OldReturnInId) then
+      if tblMovement_ReturnIn.Locate('Id', cdsReturnInId.AsInteger) then
       begin
         tblMovement_ReturnIn.Edit;
 
@@ -3624,15 +3737,15 @@ begin
         else
           tblMovement_ReturnInStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
         tblMovement_ReturnInUnitId.AsInteger := tblObject_ConstUnitId_ret.AsInteger;
-        tblMovement_ReturnInPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT_RET.AsBoolean;
-        tblMovement_ReturnInVATPercent.AsFloat := qryPartnerVATPercent_RET.AsFloat;
-        tblMovement_ReturnInChangePercent.AsFloat := qryPartnerChangePercent.AsFloat;
+        tblMovement_ReturnInPriceWithVAT.AsBoolean := cdsReturnInPriceWithVAT.AsBoolean;
+        tblMovement_ReturnInVATPercent.AsFloat := cdsReturnInVATPercent.AsFloat;
+        tblMovement_ReturnInChangePercent.AsFloat := cdsReturnInChangePercent.AsFloat;
         tblMovement_ReturnInTotalCountKg.AsFloat := TotalWeight;
         tblMovement_ReturnInTotalSummPVAT.AsFloat := ToralPrice;
 
         tblMovement_ReturnIn.Post;
 
-        MovementId := StrToInt(OldReturnInId);
+        MovementId := cdsReturnInId.AsInteger;
       end
       else
       begin
@@ -3659,7 +3772,7 @@ begin
           tblMovementItem_ReturnInGoodsKindId.AsInteger := FieldbyName('KindID').AsInteger;
           tblMovementItem_ReturnInAmount.AsFloat := FieldbyName('Count').AsFloat;
           tblMovementItem_ReturnInPrice.AsFloat := FieldbyName('Price').AsFloat;
-          tblMovementItem_ReturnInChangePercent.AsFloat := DM.qryPartnerChangePercent.AsFloat;
+          tblMovementItem_ReturnInChangePercent.AsFloat := cdsReturnInChangePercent.AsFloat;
 
           tblMovementItem_ReturnIn.Post;
         end
@@ -3669,7 +3782,7 @@ begin
           begin
             tblMovementItem_ReturnIn.Edit;
 
-            tblMovementItem_ReturnInChangePercent.AsFloat := DM.qryPartnerChangePercent.AsFloat;
+            tblMovementItem_ReturnInChangePercent.AsFloat := cdsReturnInChangePercent.AsFloat;
             tblMovementItem_ReturnInAmount.AsFloat := FieldbyName('Count').AsFloat;
             tblMovementItem_ReturnInPrice.AsFloat := FieldbyName('Price').AsFloat;
 
@@ -3686,17 +3799,18 @@ begin
 
     conMain.Commit;
 
-    if OldReturnInId = '' then
-      LoadReturnIn(IntToStr(MovementId))
-    else
-    begin
+    //обновляем данные в локальном хранилище
+    cdsReturnIn.DisableControls;
+    try
       cdsReturnIn.Edit;
+
+      cdsReturnInId.AsInteger := MovementId;
 
       cdsReturnInOperDate.AsDateTime := OperDate;
       cdsReturnInComment.AsString := Comment;
       cdsReturnInName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', OperDate);
       cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', ToralPrice);
-      cdsReturnInWeigth.AsString := 'Вес: ' + FormatFloat(',0.00', TotalWeight);
+      cdsReturnInWeight.AsString := 'Вес: ' + FormatFloat(',0.00', TotalWeight);
 
       if Complete then
       begin
@@ -3710,7 +3824,14 @@ begin
       end;
 
       cdsReturnIn.Post;
+    finally
+      cdsReturnIn.EnableControls;
+
+      b:= cdsReturnIn.Bookmark;
+      cdsReturnIn.First;
+      cdsReturnIn.GotoBookmark(b);
     end;
+    //=========
 
     Result := true;
   except
@@ -3722,16 +3843,49 @@ begin
   end;
 end;
 
+{ создание нового возврата для выбранной ТТ (болванка) }
+procedure TDM.NewReturnIn;
+begin
+  cdsReturnIn.DisableControls;
+  try
+    cdsReturnIn.First;
+    cdsReturnIn.Insert;
+
+    cdsReturnInId.AsInteger := -1;
+    cdsReturnInOperDate.AsDateTime := Date();
+    cdsReturnInComment.AsString := '';
+    cdsReturnInName.AsString := 'Возврат от ' + FormatDateTime('DD.MM.YYYY', Date());
+    cdsReturnInPrice.AsString :=  'Стоимость: 0';
+    cdsReturnInWeight.AsString := 'Вес: 0';
+    cdsReturnInStatus.AsString := tblObject_ConstStatusName_UnComplete.AsString;
+
+    cdsReturnInStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
+    cdsReturnInisSync.AsBoolean := false;
+
+    cdsReturnInPartnerId.AsInteger := qryPartnerId.AsInteger;
+    cdsReturnInPartnerName.AsString := qryPartnerName.AsString;
+    cdsReturnInAddress.AsString := qryPartnerAddress.AsString;
+    cdsReturnInContractId.AsInteger := qryPartnerCONTRACTID.AsInteger;
+    cdsReturnInContractName.AsString := qryPartnerContractName.AsString;
+    cdsReturnInPaidKindId.AsInteger := qryPartnerPaidKindId.AsInteger;
+    cdsReturnInPriceListId.AsInteger := qryPartnerPRICELISTID_RET.AsInteger;
+    cdsReturnInPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT_RET.AsBoolean;
+    cdsReturnInVATPercent.AsFloat := qryPartnerVATPercent_RET.AsFloat;
+    cdsReturnInChangePercent.AsFloat := qryPartnerChangePercent.AsFloat;
+
+    cdsReturnIn.Post;
+  finally
+    cdsReturnIn.EnableControls;
+  end;
+end;
+
 { начитка возвратов из БД }
-procedure TDM.LoadReturnIn(AId : string = '');
+procedure TDM.LoadReturnIn;
 var
   qryReturnIn : TFDQuery;
 begin
-  if AId = '' then
-  begin
-    cdsReturnIn.Open;
-    cdsReturnIn.EmptyDataSet;
-  end;
+  cdsReturnIn.Open;
+  cdsReturnIn.EmptyDataSet;
 
   cdsReturnIn.DisableControls;
   qryReturnIn := TFDQuery.Create(nil);
@@ -3739,13 +3893,10 @@ begin
     qryReturnIn.Connection := conMain;
     qryReturnIn.SQL.Text := 'select ID, OPERDATE, TOTALCOUNTKG, TOTALSUMMPVAT, ISSYNC, STATUSID, COMMENT' +
       ' from MOVEMENT_RETURNIN' +
-      ' where PARTNERID = ' + qryPartnerId.AsString + ' and CONTRACTID = ' + qryPartnerCONTRACTID.AsString;
-    if AId <> '' then
-      qryReturnIn.SQL.Text := qryReturnIn.SQL.Text + ' and ID = ' + AId;
-    qryReturnIn.SQL.Text := qryReturnIn.SQL.Text + ' order by OPERDATE desc';
+      ' where PARTNERID = ' + qryPartnerId.AsString + ' and CONTRACTID = ' + qryPartnerCONTRACTID.AsString +
+      ' order by OPERDATE desc';
 
     qryReturnIn.Open;
-    cdsReturnIn.Open;
 
     qryReturnIn.First;
     while not qryReturnIn.EOF do
@@ -3754,9 +3905,9 @@ begin
       cdsReturnInId.AsInteger := qryReturnIn.FieldByName('ID').AsInteger;
       cdsReturnInOperDate.AsDateTime := qryReturnIn.FieldByName('OPERDATE').AsDateTime;
       cdsReturnInComment.AsString := qryReturnIn.FieldByName('COMMENT').AsString;
-      cdsReturnInName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', qryReturnIn.FieldByName('OPERDATE').AsDateTime);
+      cdsReturnInName.AsString := 'Возврат от ' + FormatDateTime('DD.MM.YYYY', qryReturnIn.FieldByName('OPERDATE').AsDateTime);
       cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', qryReturnIn.FieldByName('TOTALSUMMPVAT').AsFloat);
-      cdsReturnInWeigth.AsString := 'Вес: ' + FormatFloat(',0.00', qryReturnIn.FieldByName('TOTALCOUNTKG').AsFloat);
+      cdsReturnInWeight.AsString := 'Вес: ' + FormatFloat(',0.00', qryReturnIn.FieldByName('TOTALCOUNTKG').AsFloat);
 
       if qryReturnIn.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Complete.AsInteger then
         cdsReturnInStatus.AsString := tblObject_ConstStatusName_Complete.AsString
@@ -3772,6 +3923,93 @@ begin
       cdsReturnInStatusId.AsInteger := qryReturnIn.FieldByName('STATUSID').AsInteger;
       cdsReturnInisSync.AsBoolean := qryReturnIn.FieldByName('ISSYNC').AsBoolean;
 
+      cdsReturnInPartnerId.AsInteger := qryPartnerId.AsInteger;
+      cdsReturnInPartnerName.AsString := qryPartnerName.AsString;
+      cdsReturnInAddress.AsString := qryPartnerAddress.AsString;
+      cdsReturnInContractId.AsInteger := qryPartnerCONTRACTID.AsInteger;
+      cdsReturnInContractName.AsString := qryPartnerContractName.AsString;
+      cdsReturnInPaidKindId.AsInteger := qryPartnerPaidKindId.AsInteger;
+      cdsReturnInPriceListId.AsInteger := qryPartnerPRICELISTID_RET.AsInteger;
+      cdsReturnInPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT_RET.AsBoolean;
+      cdsReturnInVATPercent.AsFloat := qryPartnerVATPercent_RET.AsFloat;
+      cdsReturnInChangePercent.AsFloat := qryPartnerChangePercent.AsFloat;
+
+      cdsReturnIn.Post;
+
+      qryReturnIn.Next;
+    end;
+
+    qryReturnIn.Close;
+  finally
+    qryReturnIn.Free;
+    cdsReturnIn.EnableControls;
+    cdsReturnIn.First;
+  end;
+end;
+
+{ начитка возвратов из БД всех ТТ }
+procedure TDM.LoadAllReturnIn(AStartDate, AEndDate: TDate);
+var
+  qryReturnIn : TFDQuery;
+begin
+  cdsReturnIn.Open;
+  cdsReturnIn.EmptyDataSet;
+
+  cdsReturnIn.DisableControls;
+  qryReturnIn := TFDQuery.Create(nil);
+  try
+    qryReturnIn.Connection := conMain;
+    qryReturnIn.SQL.Text := 'select MRI.ID, MRI.OPERDATE, MRI.COMMENT, MRI.TOTALCOUNTKG, MRI.TOTALSUMMPVAT, MRI.ISSYNC, MRI.STATUSID, ' +
+      'P.Id PartnerId, J.VALUEDATA PartnerName, P.ADDRESS, PL.ID PRICELISTID, PL.PRICEWITHVAT, PL.VATPERCENT, ' +
+      'P.CONTRACTID, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, C.PAIDKINDID, C.CHANGEPERCENT ' +
+      'from MOVEMENT_RETURNIN MRI ' +
+      'JOIN OBJECT_PARTNER P ON P.ID = MRI.PARTNERID AND P.CONTRACTID = MRI.CONTRACTID ' +
+      'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID AND J.CONTRACTID = P.CONTRACTID ' +
+      'LEFT JOIN Object_PriceList PL ON PL.ID = IFNULL(P.PRICELISTID_RET, :DefaultPriceList) ' +
+      'LEFT JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID ' +
+      'WHERE MRI.OPERDATE BETWEEN :STARTDATE AND :ENDDATE ' +
+      'GROUP BY MRI.ID, MRI.PARTNERID, MRI.CONTRACTID order by PartnerName, P.Address, P.ContractId asc, MRI.OPERDATE desc';
+    qryReturnIn.ParamByName('STARTDATE').AsDate := AStartDate;
+    qryReturnIn.ParamByName('ENDDATE').AsDate := AEndDate;
+    qryReturnIn.ParamByName('DefaultPriceList').AsInteger := DM.tblObject_ConstPriceListId_def.AsInteger;
+
+    qryReturnIn.Open;
+
+    qryReturnIn.First;
+    while not qryReturnIn.EOF do
+    begin
+      cdsReturnIn.Append;
+      cdsReturnInId.AsInteger := qryReturnIn.FieldByName('ID').AsInteger;
+      cdsReturnInOperDate.AsDateTime := qryReturnIn.FieldByName('OPERDATE').AsDateTime;
+      cdsReturnInComment.AsString := qryReturnIn.FieldByName('COMMENT').AsString;
+      cdsReturnInName.AsString := 'Возврат от ' + FormatDateTime('DD.MM.YYYY', qryReturnIn.FieldByName('OPERDATE').AsDateTime);
+      cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', qryReturnIn.FieldByName('TOTALSUMMPVAT').AsFloat);
+      cdsReturnInWeight.AsString := 'Вес: ' + FormatFloat(',0.00', qryReturnIn.FieldByName('TOTALCOUNTKG').AsFloat);
+
+      if qryReturnIn.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Complete.AsInteger then
+        cdsReturnInStatus.AsString := tblObject_ConstStatusName_Complete.AsString
+      else
+      if qryReturnIn.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_UnComplete.AsInteger then
+        cdsReturnInStatus.AsString := tblObject_ConstStatusName_UnComplete.AsString
+      else
+      if qryReturnIn.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Erased.AsInteger then
+        cdsReturnInStatus.AsString := tblObject_ConstStatusName_Erased.AsString
+      else
+        cdsReturnInStatus.AsString := 'Неизвестный';
+
+      cdsReturnInStatusId.AsInteger := qryReturnIn.FieldByName('STATUSID').AsInteger;
+      cdsReturnInisSync.AsBoolean := qryReturnIn.FieldByName('ISSYNC').AsBoolean;
+
+      cdsReturnInPartnerId.AsInteger := qryReturnIn.FieldByName('PartnerId').AsInteger;
+      cdsReturnInPartnerName.AsString := qryReturnIn.FieldByName('PartnerName').AsString;
+      cdsReturnInAddress.AsString := qryReturnIn.FieldByName('Address').AsString;
+      cdsReturnInContractId.AsInteger := qryReturnIn.FieldByName('CONTRACTID').AsInteger;
+      cdsReturnInContractName.AsString := qryReturnIn.FieldByName('ContractName').AsString;
+      cdsReturnInPaidKindId.AsInteger := qryReturnIn.FieldByName('PaidKindId').AsInteger;
+      cdsReturnInPriceListId.AsInteger := qryReturnIn.FieldByName('PRICELISTID').AsInteger;
+      cdsReturnInPriceWithVAT.AsBoolean := qryReturnIn.FieldByName('PriceWithVAT').AsBoolean;
+      cdsReturnInVATPercent.AsFloat := qryReturnIn.FieldByName('VATPercent').AsFloat;
+      cdsReturnInChangePercent.AsFloat := qryReturnIn.FieldByName('ChangePercent').AsFloat;
       cdsReturnIn.Post;
 
       qryReturnIn.Next;
@@ -3829,8 +4067,8 @@ begin
       'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
       'WHERE GLS.PARTNERID = :PARTNERID and GLS.ISERASED = 0 order by G.VALUEDATA ';
 
-    qryGoodsListSale.ParamByName('PARTNERID').AsInteger := qryPartnerId.AsInteger;
-    qryGoodsListSale.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID_RET.AsInteger;
+    qryGoodsListSale.ParamByName('PARTNERID').AsInteger := cdsReturnInId.AsInteger;
+    qryGoodsListSale.ParamByName('PRICELISTID').AsInteger := cdsReturnInPRICELISTID.AsInteger;
     qryGoodsListSale.Open;
 
     qryGoodsListSale.First;
@@ -3872,7 +4110,7 @@ begin
       'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
       'WHERE IR.MOVEMENTID = ' + IntToStr(AId) + ' order by G.VALUEDATA ';
 
-    qryGoodsListReturn.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID_RET.AsInteger;
+    qryGoodsListReturn.ParamByName('PRICELISTID').AsInteger := cdsReturnInPRICELISTID.AsInteger;
     qryGoodsListReturn.Open;
 
     qryGoodsListReturn.First;
@@ -3905,7 +4143,7 @@ begin
     'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
     'WHERE G.ISERASED = 0 order by GoodsName';
 
-  qryGoodsItems.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID_RET.AsInteger;
+  qryGoodsItems.ParamByName('PRICELISTID').AsInteger := cdsReturnInPRICELISTID.AsInteger;
   qryGoodsItems.Open;
 end;
 
@@ -3943,7 +4181,7 @@ begin
     else
       tblMovement_VisitComment.AsString := 'Общая';
     tblMovement_VisitInsertDate.AsDateTime := Now();
-    tblMovement_VisitStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
+    tblMovement_VisitStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
     tblMovement_VisitisSync.AsBoolean := false;
 
     tblMovement_Visit.Post;
@@ -3960,7 +4198,7 @@ end;
 { начитка групп фотографий из БД }
 procedure TDM.LoadPhotoGroups;
 begin
-  qryPhotoGroups.Open('select Id, Comment, StatusId from Movement_Visit where PartnerId = ' + qryPartnerId.AsString +
+  qryPhotoGroups.Open('select Id, Comment, StatusId, OperDate from Movement_Visit where PartnerId = ' + qryPartnerId.AsString +
     ' and StatusId <> ' + tblObject_ConstStatusId_Erased.AsString);
 end;
 

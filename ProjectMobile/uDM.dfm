@@ -1001,8 +1001,8 @@ object DM: TDM
       FieldName = 'Price'
       Size = 100
     end
-    object cdsOrderExternalWeigth: TStringField
-      FieldName = 'Weigth'
+    object cdsOrderExternalWeight: TStringField
+      FieldName = 'Weight'
       Size = 100
     end
     object cdsOrderExternalStatusId: TIntegerField
@@ -1018,11 +1018,19 @@ object DM: TDM
     object cdsOrderExternalPartnerId: TIntegerField
       FieldName = 'PartnerId'
     end
+    object cdsOrderExternalPartnerName: TStringField
+      FieldName = 'PartnerName'
+      Size = 255
+    end
+    object cdsOrderExternalAddress: TStringField
+      FieldName = 'Address'
+      Size = 255
+    end
     object cdsOrderExternalContractId: TIntegerField
       FieldName = 'ContractId'
     end
-    object cdsOrderExternalPartnerName: TStringField
-      FieldName = 'PartnerName'
+    object cdsOrderExternalContractName: TStringField
+      FieldName = 'ContractName'
       Size = 255
     end
     object cdsOrderExternalPaidKindId: TIntegerField
@@ -1115,6 +1123,7 @@ object DM: TDM
     end
   end
   object qryPhotoGroups: TFDQuery
+    OnCalcFields = qryPhotoGroupsCalcFields
     Connection = conMain
     SQL.Strings = (
       '')
@@ -1129,6 +1138,15 @@ object DM: TDM
     end
     object qryPhotoGroupsStatusId: TIntegerField
       FieldName = 'StatusId'
+    end
+    object qryPhotoGroupsName: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'Name'
+      Size = 255
+      Calculated = True
+    end
+    object qryPhotoGroupsOperDate: TDateTimeField
+      FieldName = 'OperDate'
     end
   end
   object qryPhotos: TFDQuery
@@ -1190,12 +1208,12 @@ object DM: TDM
       FieldName = 'PartnerName'
       Size = 255
     end
-    object cdsStoreRealsPriceListId: TIntegerField
-      FieldName = 'PriceListId'
-    end
     object cdsStoreRealsAddress: TStringField
       FieldName = 'Address'
       Size = 255
+    end
+    object cdsStoreRealsPriceListId: TIntegerField
+      FieldName = 'PriceListId'
     end
   end
   object cdsStoreRealItems: TClientDataSet
@@ -1424,8 +1442,8 @@ object DM: TDM
       FieldName = 'Price'
       Size = 100
     end
-    object cdsReturnInWeigth: TStringField
-      FieldName = 'Weigth'
+    object cdsReturnInWeight: TStringField
+      FieldName = 'Weight'
       Size = 100
     end
     object cdsReturnInStatusId: TIntegerField
@@ -1441,6 +1459,39 @@ object DM: TDM
     end
     object cdsReturnInisSync: TBooleanField
       FieldName = 'isSync'
+    end
+    object cdsReturnInPartnerId: TIntegerField
+      FieldName = 'PartnerId'
+    end
+    object cdsReturnInPartnerName: TStringField
+      FieldName = 'PartnerName'
+      Size = 255
+    end
+    object cdsReturnInAddress: TStringField
+      FieldName = 'Address'
+      Size = 255
+    end
+    object cdsReturnInContractId: TIntegerField
+      FieldName = 'ContractId'
+    end
+    object cdsReturnInContractName: TStringField
+      FieldName = 'ContractName'
+      Size = 255
+    end
+    object cdsReturnInPaidKindId: TIntegerField
+      FieldName = 'PaidKindId'
+    end
+    object cdsReturnInPriceListId: TIntegerField
+      FieldName = 'PriceListId'
+    end
+    object cdsReturnInPriceWithVAT: TBooleanField
+      FieldName = 'PriceWithVAT'
+    end
+    object cdsReturnInVATPercent: TFloatField
+      FieldName = 'VATPercent'
+    end
+    object cdsReturnInChangePercent: TFloatField
+      FieldName = 'ChangePercent'
     end
   end
   object cdsReturnInItems: TClientDataSet

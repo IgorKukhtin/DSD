@@ -55,6 +55,9 @@ type
     CountDays: TcxGridDBColumn;
     GoodsGroupName: TcxGridDBColumn;
     actPrint1: TdsdPrintAction;
+    cxLabel5: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    JuridicalGuides: TdsdGuides;
   private
     { Private declarations }
   public

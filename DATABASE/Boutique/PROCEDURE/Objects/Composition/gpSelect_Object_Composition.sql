@@ -1,12 +1,14 @@
 -- Function: gpSelect_Object_Composition (Bolean, TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Composition (Bolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Composition (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Composition(
     IN inIsShowAll   Boolean,       --  признак показать удаленные да / нет 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, CompositionGroupName TVarChar, isErased boolean) 
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , CompositionGroupId Integer, CompositionGroupName TVarChar
+             , isErased boolean) 
   AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -24,6 +26,7 @@ BEGIN
              Object_Composition.Id               AS Id
            , Object_Composition.ObjectCode       AS Code
            , Object_Composition.ValueData        AS Name
+           , Object_CompositionGroup.Id          AS CompositionGroupId
            , Object_CompositionGroup.ValueData   AS CompositionGroupName
            , Object_Composition.isErased         AS isErased
            

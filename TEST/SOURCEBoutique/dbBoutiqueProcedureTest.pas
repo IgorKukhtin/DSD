@@ -30,6 +30,7 @@ type
   TdbMovementItemProcedureTest = class(TdbTest)
   published
     procedure CreateCOMMON;
+    procedure CreateIncome;
   end;
 
 type
@@ -46,40 +47,41 @@ type
     procedure CreateAccountDirection;
     procedure CreateAccountGroup;
     procedure CreateAccountKind;
-    procedure CreateImportSettings;
-    procedure CreateImportSettingsItems;
-    procedure CreateMeasure;
-    procedure CreateInfoMoney;
-    procedure CreateInfoMoneyDestination;
-    procedure CreateInfoMoneyGroup;
+    procedure CreateBrand;
     procedure CreateCompositionGroup;
     procedure CreateComposition;
     procedure CreateCountryBrand;
-    procedure CreateBrand;
+    procedure CreateCurrency;
+    procedure CreateCity;
+    procedure CreateClient;
+    procedure CreateDiscountKind;
+    procedure CreateDiscount;
+    procedure CreateDiscountTools;
     procedure CreateFabrika;
-    procedure CreateLineFabrica;
     procedure CreateGoodsInfo;
     procedure CreateGoodsSize;
     procedure CreateGoodsGroup;
-    procedure CreateKassa;
-    procedure CreateCurrency;
-    procedure CreateMember;
-    procedure CreatePeriod;
-    procedure CreateDiscount;
-    procedure CreateDiscountTools;
-    procedure CreatePartner;
+    procedure CreateGoods;
+    procedure CreateGoodsItem;
+    procedure CreateImportSettings;
+    procedure CreateImportSettingsItems;
+    procedure CreateInfoMoney;
+    procedure CreateInfoMoneyDestination;
+    procedure CreateInfoMoneyGroup;
     procedure CreateJuridicalGroup;
     procedure CreateJuridical;
-    procedure CreateUnit;
-    procedure CreateCity;
-    procedure CreateClient;
+    procedure CreateKassa;
     procedure CreateLabel;
-    procedure CreateGoods;
-    procedure CreateDiscountKind;
-    procedure CreateGoodsItem;
+    procedure CreateLineFabrica;
+    procedure CreateMeasure;
+    procedure CreateMember;
+    procedure CreatePeriod;
+    procedure CreatePartner;
     procedure CreatePartionGoods;
     procedure CreatePosition;
     procedure CreatePersonal;
+    procedure CreateStatus;
+    procedure CreateUnit;
 
   end;
 
@@ -315,6 +317,11 @@ begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Position\');
 end;
 
+procedure TdbObjectProcedureTest.CreateStatus;
+begin
+   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Status\');
+end;
+
 procedure TdbObjectProcedureTest.CreateUnit;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Unit\');
@@ -335,6 +342,11 @@ end;
 procedure TdbMovementItemProcedureTest.CreateCOMMON;
 begin
   DirectoryLoad(CommonProcedurePath + 'MovementItem\_COMMON\');
+end;
+
+procedure TdbMovementItemProcedureTest.CreateIncome;
+begin
+  DirectoryLoad(CommonProcedurePath + 'MovementItem\Income\');
 end;
 
 { TdbMovementItemContainerProcedureTest }
