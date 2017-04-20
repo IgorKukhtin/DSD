@@ -12,8 +12,8 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn (
     IN inRetailId     Integer   , -- ***Торговая сеть (юр лица)
     IN inJuridicalId  Integer   , --
     IN inPaidKindId   Integer   , --
-    IN inTradeMarkId  Integer   , -- *** 
-    IN inGoodsGroupId Integer   , -- 
+    IN inTradeMarkId  Integer   , -- ***
+    IN inGoodsGroupId Integer   , --
     IN inInfoMoneyId  Integer   , -- Управленческая статья
     IN inIsPartner    Boolean   , --
     IN inIsTradeMark  Boolean   , --
@@ -78,6 +78,33 @@ BEGIN
         inStartDate:= inEndDate + (INTERVAL '1 DAY');
     END IF;
 */
+
+    IF inEndDate >= '01.04.2017' AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 15 AND inSession NOT IN ('9463', '106593', '106594')
+         AND (1  < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%')
+           OR 10 < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active'))
+    THEN
+        RAISE EXCEPTION 'Кол-во АП = <%> / <%>.Повторите действие через 30 мин.'
+                      , (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active') - 1
+                      , (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%') - 1
+                       ;
+    ELSEIF inEndDate >= '01.04.2017' AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 15
+         AND (1 < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%')
+           OR 15 < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active'))
+    THEN
+        RAISE EXCEPTION 'Кол-во АП = <%> / <%>.Повторите действие через 5 мин.'
+                      , (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active') - 1
+                      , (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%') - 1
+                       ;
+    ELSEIF inEndDate >= '01.04.2017'
+         AND (2  < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%')
+           OR 15 < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active'))
+    THEN
+        RAISE EXCEPTION 'Кол-во АП = <%> / <%>.Повторите действие через 3 мин.'
+                      , (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active') - 1
+                      , (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%') - 1
+                       ;
+    END IF;
+
 
     IF inEndDate < '01.06.2014' THEN
        RETURN QUERY
@@ -367,7 +394,7 @@ BEGIN
                               , CASE WHEN isSale = TRUE THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END AS MLO_DescId
                          FROM Constant_ProfitLoss_AnalyzerId_View
                          WHERE isCost = FALSE OR (isCost = TRUE AND vbIsCost = TRUE)
-                        ) 
+                        )
        , tmpPartnerAddress AS (SELECT * FROM Object_Partner_Address_View)
        -- , tmpPersonal AS (SELECT * FROM Object_Personal_View)
 
@@ -521,7 +548,7 @@ BEGIN
                                 , tmpOperationGroup2.InfoMoneyId
                                 , tmpOperationGroup2.BranchId
                                 , _tmpGoods.TradeMarkId
-                                , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END    
+                                , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END
                                 , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END
                         )
 
