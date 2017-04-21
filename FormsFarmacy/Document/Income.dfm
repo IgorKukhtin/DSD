@@ -212,6 +212,18 @@
             Options.Editing = False
             Width = 70
           end
+          object PriceOptSP: TcxGridDBColumn
+            Caption = #1052#1072#1082#1089'. '#1094#1077#1085#1072' '#1087#1086#1089#1090'-'#1082#1072' '#1087#1086' '#1057#1055' ('#1073#1077#1079' '#1053#1044#1057')'
+            DataBinding.FieldName = 'PriceOptSP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1087#1090'.-'#1074#1110#1076#1087'. '#1094#1110#1085#1072' '#1079#1072' '#1091#1087'. (11)'
+            Options.Editing = False
+            Width = 91
+          end
           object colSalePrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083'. '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'SalePrice'
