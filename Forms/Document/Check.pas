@@ -68,6 +68,7 @@ type
     bbUpdateOperDate: TdxBarButton;
     cxLabel17: TcxLabel;
     edAmbulance: TcxTextEdit;
+    colisSp: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,7 +1,7 @@
 inherited CheckForm: TCheckForm
   Caption = #1050#1072#1089#1089#1086#1074#1099#1081' '#1095#1077#1082
   ClientHeight = 406
-  ExplicitHeight = 441
+  ExplicitHeight = 444
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -26,6 +26,11 @@ inherited CheckForm: TCheckForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountOrder
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummSale
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -54,6 +59,11 @@ inherited CheckForm: TCheckForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountOrder
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummSale
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -83,7 +93,15 @@ inherited CheckForm: TCheckForm
             Options.Editing = False
             Width = 222
           end
-          object colChangePercent: TcxGridDBColumn [2]
+          object colIntenalSPName: TcxGridDBColumn [2]
+            Caption = #1052#1110#1078#1085#1072#1088#1086#1076#1085#1072' '#1085#1077#1087#1072#1090#1077#1085#1090#1086#1074#1072#1085#1072' '#1085#1072#1079#1074#1072
+            DataBinding.FieldName = 'IntenalSPName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 107
+          end
+          object colChangePercent: TcxGridDBColumn [3]
             Caption = '% c'#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'ChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -94,7 +112,7 @@ inherited CheckForm: TCheckForm
             Options.Editing = False
             Width = 74
           end
-          object colAmount: TcxGridDBColumn [3]
+          object colAmount: TcxGridDBColumn [4]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -105,7 +123,7 @@ inherited CheckForm: TCheckForm
             Options.Editing = False
             Width = 73
           end
-          object colAmountOrder: TcxGridDBColumn [4]
+          object colAmountOrder: TcxGridDBColumn [5]
             Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'AmountOrder'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -116,7 +134,7 @@ inherited CheckForm: TCheckForm
             Options.Editing = False
             Width = 73
           end
-          object colPrice: TcxGridDBColumn [5]
+          object colPrice: TcxGridDBColumn [6]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -127,7 +145,7 @@ inherited CheckForm: TCheckForm
             Options.Editing = False
             Width = 60
           end
-          object colPriceSale: TcxGridDBColumn [6]
+          object colPriceSale: TcxGridDBColumn [7]
             Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'PriceSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -138,7 +156,7 @@ inherited CheckForm: TCheckForm
             Options.Editing = False
             Width = 74
           end
-          object colSummChangePercent: TcxGridDBColumn [7]
+          object colSummChangePercent: TcxGridDBColumn [8]
             Caption = #1057#1091#1084#1084#1072' '#1057#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'SummChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -148,17 +166,6 @@ inherited CheckForm: TCheckForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 65
-          end
-          object colSumm: TcxGridDBColumn [8]
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'Summ'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00;-,0.00'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
           end
           object List_UID: TcxGridDBColumn [9]
             Caption = 'UID '#1101#1083#1077#1084#1077#1085#1090#1072
@@ -174,6 +181,37 @@ inherited CheckForm: TCheckForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object colSumm: TcxGridDBColumn [10]
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colSummSale: TcxGridDBColumn [11]
+            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'SummSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colisSp: TcxGridDBColumn [12]
+            Caption = #1059#1095'. '#1074' '#1057#1055
+            DataBinding.FieldName = 'isSp'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1077
+            Options.Editing = False
+            Width = 50
           end
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
@@ -1141,8 +1179,8 @@ inherited CheckForm: TCheckForm
     Top = 304
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Left = 516
-    Top = 212
+    Left = 508
+    Top = 236
   end
   object spUpdate_Movement_Check: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Check'

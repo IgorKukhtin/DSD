@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, IdBarCode TVarChar, Name TVarChar, isEr
              , isTOP Boolean, isFirst Boolean, isSecond Boolean, isPublished Boolean
              , isSP Boolean
              , PercentMarkup TFloat, Price TFloat
+             , CountPrice TFloat
              , Color_calc Integer
              , RetailCode Integer, RetailName TVarChar
              , isPromo boolean
@@ -187,6 +188,9 @@ BEGIN
            -- , CASE WHEN Object_Goods_View.isPublished = FALSE THEN NULL ELSE Object_Goods_View.isPublished END :: Boolean AS isPublished
            , Object_Goods_View.PercentMarkup  
            , Object_Goods_View.Price
+
+           , COALESCE (ObjectFloat_CountPrice.ValueData,0) ::TFloat AS CountPrice
+
            , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE THEN zc_Color_Yelow() WHEN Object_Goods_View.isSecond = TRUE THEN 16440317 WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc   --10965163
            , Object_Retail.ObjectCode AS RetailCode
            , Object_Retail.ValueData  AS RetailName
@@ -236,6 +240,10 @@ BEGIN
                              ON ObjectDate_LastPrice.ObjectId = ObjectLink_Main.ChildObjectId
                             AND ObjectDate_LastPrice.DescId = zc_ObjectDate_Goods_LastPrice()
 
+        LEFT JOIN ObjectFloat AS ObjectFloat_CountPrice
+                              ON ObjectFloat_CountPrice.ObjectId = ObjectLink_Main.ChildObjectId
+                             AND ObjectFloat_CountPrice.DescId = zc_ObjectFloat_Goods_CountPrice()
+
         -- условия хранения
         LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
                              ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
@@ -257,6 +265,7 @@ ALTER FUNCTION gpSelect_Object_Goods_Retail(TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.04.17         *
  19.04.17         * add zc_ObjectDate_Goods_LastPrice
  06.04.17         *
  21.03.17         *
