@@ -1,21 +1,12 @@
--- Function: gpInsertUpdate_MIEdit_Income()
+-- Function: gpInsertUpdate_MIEdit_Income_sybase()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income (Integer, Integer, TVarChar, TVarChar, TVarChar ,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TFloat, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income (Integer, Integer, TVarChar, TVarChar, TVarChar ,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TFloat, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income (Integer, Integer, Integer, Integer, Integer ,Integer,Integer,Integer,Integer,Integer,Integer,TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income_sybase (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MIEdit_Income(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MIEdit_Income_sybase(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsGroupId        Integer   , --
-    IN inGoodsId             Integer   , -- Товары
-    IN inGoodsInfoId         Integer   , --
-    IN inGoodsSizeId         Integer   , --
-    IN inCompositionGroupId  Integer   , --  Возможно этот параметр лишний 
-    IN inCompositionId       Integer   , --
-    IN inLineFabricaId       Integer   , --
-    IN inLabelId             Integer   , --
-    IN inMeasureId           Integer   , --
+    IN inGoodsItemId         Integer   , --
+    IN inSybaseId            Integer   , -- 
     IN inAmount              TFloat    , -- Количество
     IN inOperPrice           TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
@@ -26,36 +17,21 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbGoodsItemId Integer;
    DECLARE vbPartionId Integer; 
-  
+   DECLARE vbGoodsId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Income());
 
      -- Заменили свойство <Цена за количество>
      IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
-
-   ----gpInsertUpdate_Object_GoodsItem нужно сохранить связь товар - размер
-   IF COALESCE (inGoodsId, 0) <> 0 AND COALESCE (inGoodsSizeId, 0) <> 0
-      THEN
-          --
-          vbGoodsItemId := (SELECT Object_GoodsItem.Id 
-                            FROM Object_GoodsItem 
-                            WHERE Object_GoodsItem.GoodsId = inGoodsId AND Object_GoodsItem.GoodsSizeId = inGoodsSizeId);
-          IF COALESCE (vbGoodsItemId,0) = 0
-             THEN
-                 -- добавили новый элемент справочника и вернули значение <Ключ объекта>
-                 INSERT INTO Object_GoodsItem (GoodsId, GoodsSizeId)
-                        VALUES (inGoodsId, inGoodsSizeId) RETURNING Id INTO vbGoodsItemId;
-
-          END IF;
-   END IF;
+    
+     select GoodsId into vbGoodsId FROM Object_goodsitem WHERE Object_goodsitem.id  = inGoodsItemId; 
 
      -- сохранили
      ioId:= lpInsertUpdate_MovementItem_Income (ioId                 := ioId
                                               , inMovementId         := inMovementId
-                                              , inGoodsId            := COALESCE (inGoodsId,0)
+                                              , inGoodsId            := vbGoodsId
                                               , inPartionId          := Null :: integer
                                               , inAmount             := inAmount
                                               , inOperPrice          := inOperPrice
@@ -64,16 +40,17 @@ BEGIN
                                               , inUserId             := vbUserId
                                                );
 
+
       -- cохраняем Object_PartionGoods
       vbPartionId := lpInsertUpdate_Object_PartionGoods (
                                                   ioMovementItemId := ioId
                                                 , inMovementId     := inMovementId
-                                                , inSybaseId       := Null
+                                                , inSybaseId       := inSybaseId
                                                 , inPartnerId      := MovementLinkObject_From.ObjectId
                                                 , inUnitId         := MovementLinkObject_To.ObjectId
                                                 , inOperDate       := Movement.OperDate
-                                                , inGoodsId        := inGoodsId
-                                                , inGoodsItemId    := vbGoodsItemId
+                                                , inGoodsId        := Object_goodsitem.GoodsId
+                                                , inGoodsItemId    := inGoodsItemId
                                                 , inCurrencyId     := MovementLinkObject_CurrencyDocument.ObjectId
                                                 , inAmount         := inAmount
                                                 , inOperPrice      := inOperPrice
@@ -82,14 +59,14 @@ BEGIN
                                                 , inPeriodId       := ObjectLink_Partner_Period.ChildObjectId
                                                 , inPeriodYear     := ObjectFloat_PeriodYear.ValueData         :: integer
                                                 , inFabrikaId      := ObjectLink_Partner_Fabrika.ChildObjectId
-                                                , inGoodsGroupId   := inGoodsGroupId
-                                                , inMeasureId      := inMeasureId
-                                                , inCompositionId  := inCompositionId
-                                                , inGoodsInfoId    := inGoodsInfoId
-                                                , inLineFabricaId  := inLineFabricaId
-                                                , inLabelId        := inLabelId
-                                                , inCompositionGroupId := ObjectLink_Composition_CompositionGroup.ChildObjectId -- подменяется група состава товара 
-                                                , inGoodsSizeId    := inGoodsSizeId 
+                                                , inGoodsGroupId   := ObjectLink_Goods_GoodsGroup.ChildObjectId
+                                                , inMeasureId      := ObjectLink_Goods_Measure.ChildObjectId
+                                                , inCompositionId  := ObjectLink_Goods_Composition.ChildObjectId
+                                                , inGoodsInfoId    := ObjectLink_Goods_GoodsInfo.ChildObjectId
+                                                , inLineFabricaId  := ObjectLink_Goods_LineFabrica.ChildObjectId
+                                                , inLabelId        := ObjectLink_Goods_Label.ChildObjectId
+                                                , inCompositionGroupId := ObjectLink_Composition_CompositionGroup.ChildObjectId  
+                                                , inGoodsSizeId    := Object_goodsitem.GoodsSizeId 
                                                 , inUserId         := vbUserId
                                                         )
      FROM Movement
@@ -116,16 +93,53 @@ BEGIN
                                   ON ObjectFloat_PeriodYear.ObjectId = MovementLinkObject_From.ObjectId
                                  AND ObjectFloat_PeriodYear.DescId = zc_ObjectFloat_Partner_PeriodYear()
             --
+           
+
+            --
+            left join Object_goodsitem on Object_goodsitem.id  = inGoodsItemId
+
+            -- -- 
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_goodsitem.GoodsId
+                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_goodsitem.GoodsId
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Composition
+                                 ON ObjectLink_Goods_Composition.ObjectId = Object_goodsitem.GoodsId
+                                AND ObjectLink_Goods_Composition.DescId = zc_ObjectLink_Goods_Composition()
+
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsInfo
+                                 ON ObjectLink_Goods_GoodsInfo.ObjectId = Object_goodsitem.GoodsId
+                                AND ObjectLink_Goods_GoodsInfo.DescId = zc_ObjectLink_Goods_GoodsInfo()
+
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_LineFabrica
+                                 ON ObjectLink_Goods_LineFabrica.ObjectId = Object_goodsitem.GoodsId
+                                AND ObjectLink_Goods_LineFabrica.DescId = zc_ObjectLink_Goods_LineFabrica()
+
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Label
+                                 ON ObjectLink_Goods_Label.ObjectId = Object_goodsitem.GoodsId
+                                AND ObjectLink_Goods_Label.DescId = zc_ObjectLink_Goods_Label()
+            LEFT JOIN Object AS Object_Label ON Object_Label.Id = ObjectLink_Goods_Label.ChildObjectId
+
             LEFT JOIN ObjectLink AS ObjectLink_Composition_CompositionGroup
-                                ON ObjectLink_Composition_CompositionGroup.ObjectId = inCompositionId
+                                ON ObjectLink_Composition_CompositionGroup.ObjectId = ObjectLink_Goods_Composition.ChildObjectId
                                AND ObjectLink_Composition_CompositionGroup.DescId = zc_ObjectLink_Composition_CompositionGroup()
+
 
      WHERE Movement.Id = inMovementId;
 
      -- сохранили пересохраняем с партией
      ioId:= lpInsertUpdate_MovementItem_Income (ioId                 := ioId
                                               , inMovementId         := inMovementId
-                                              , inGoodsId            := COALESCE (inGoodsId,0)
+                                              , inGoodsId            := COALESCE (vbGoodsId,0)
                                               , inPartionId          := vbPartionId
                                               , inAmount             := inAmount
                                               , inOperPrice          := inOperPrice
