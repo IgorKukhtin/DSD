@@ -2002,14 +2002,13 @@ begin
         Add('     , '''' as Comments ');
         Add('     , Bill.Id_Postgres ');
         Add(' from DBA.Bill ');
-        Add('     join (select BillItemsIncome.BillID  from  DBA.BillItemsIncome group by BillItemsIncome.BillID ) as BillItemsIncome on  BillItemsIncome.BillID = Bill.ID ');
         Add('     left join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
         Add('     left join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
         Add('     left join DBA.Valuta as Bill_CurrencyDocument on Bill_CurrencyDocument.Id = Bill.ValutaIDIn   ');
         Add('     left join DBA.Valuta as Bill_CurrencyPartner on Bill_CurrencyPartner.Id = Bill.ValutaID  ');
         Add('     left join (select * from  DBA.ValutaKursItems order by id desc ) as valutaDoc  on Bill.BillDate  between valutaDoc.startDate and valutaDoc.EndDate and valutaDoc.FromValutaID = Bill.ValutaIDIn  and valutaDoc.ToValutaID = Bill.ValutaIDpl ');
         Add('     left join (select * from  DBA.ValutaKursItems order by id desc ) as valutaPar  on Bill.BillDate  between valutaPar.startDate and valutaPar.EndDate and valutaPar.FromValutaID = Bill.ValutaIDIn  and valutaPar.ToValutaID = Bill.ValutaID ');
-        Add(' where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add(' where  Bill.BillKind = 2 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add(' order by ObjectId ');
         Open;
 
