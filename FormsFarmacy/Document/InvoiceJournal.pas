@@ -34,6 +34,7 @@ type
     DateRegistered: TcxGridDBColumn;
     InvNumberRegistered: TcxGridDBColumn;
     UpdateDataSet: TdsdUpdateDataSet;
+    clisDocument: TcxGridDBColumn;
   private
     { Private declarations }
   public

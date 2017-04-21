@@ -34,6 +34,7 @@ RETURNS TABLE (Id Integer
              , BankName    TVarChar
              , PartnerMedical_BankAccount TVarChar
              , PartnerMedical_BankName    TVarChar
+             , isDocument  Boolean
 
               )
 
@@ -108,6 +109,8 @@ BEGIN
       , ObjectHistory_PartnerMedicalDetails.BankAccount       AS PartnerMedical_BankAccount
       , tmpPartnerMedicalBankAccount.BankName                 AS PartnerMedical_BankName
 
+      , COALESCE(MovementBoolean_Document.ValueData, False) :: Boolean  AS isDocument
+
     FROM tmpStatus
         INNER JOIN Movement ON Movement.StatusId = tmpStatus.StatusId
                            AND Movement.DescId = zc_Movement_Invoice()
@@ -132,6 +135,10 @@ BEGIN
         LEFT JOIN MovementString AS MovementString_InvNumberRegistered
                                  ON MovementString_InvNumberRegistered.MovementId = Movement.Id
                                 AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
+
+        LEFT JOIN MovementBoolean AS MovementBoolean_Document
+                                  ON MovementBoolean_Document.MovementId = Movement.Id
+                                 AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
 
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                      ON MovementLinkObject_Juridical.MovementId = Movement.Id
@@ -173,6 +180,7 @@ ALTER FUNCTION gpSelect_Movement_Invoice (TDateTime, TDateTime, Boolean, TVarCha
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 21.04.17         *
  22.03.17         *
 */
 
