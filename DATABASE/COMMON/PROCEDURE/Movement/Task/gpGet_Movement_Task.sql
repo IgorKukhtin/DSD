@@ -19,56 +19,36 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbMemberId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Task());
      vbUserId:= lpGetUserBySession (inSession);
 
-     SELECT tmp.MemberId--, tmp.PersonalId
-     INTO vbMemberId--, vbPersonalId     
-     FROM gpGetMobile_Object_Const (inSession) AS tmp;
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
          RETURN QUERY
-         WITH
-           tmpPersonal AS (SELECT lfSelect.MemberId
-                                , lfSelect.PersonalId
-                                , lfSelect.UnitId
-                                , lfSelect.PositionId
-                                , lfSelect.BranchId
-                           FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
-                           WHERE lfSelect.Ord = 1
-                          )
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('movement_Task_seq') AS TVarChar) AS InvNumber
              , inOperDate				AS OperDate
              , Object_Status.Code                       AS StatusCode
              , Object_Status.Name                       AS StatusName
-             , Object_Branch.ObjectCode                 AS BranchCode
-             , Object_Branch.ValueData                  AS BranchName
-             , Object_Unit.ObjectCode                   AS UnitCode
-             , Object_Unit.ValueData                    AS UnitName
-             , Object_Position.ObjectCode               AS PositionCode
-             , Object_Position.ValueData                AS PositionName
-             , Object_PersonalTrade.Id		        AS PersonalTradeId
-             , Object_PersonalTrade.ValueData	        AS PersonalTradeName
+             , 0                     		        AS BranchCode
+             , '' :: TVarChar                           AS BranchName
+             , 0                     		        AS UnitCode
+             , '' :: TVarChar                           AS UnitName
+             , 0                     		        AS PositionCode
+             , '' :: TVarChar                           AS PositionName
+             , 0                     		        AS PersonalTradeId
+             , '' :: TVarChar                           AS PersonalTradeName
              , 0                     		        AS InsertId
-             , CAST ('' as TVarChar) 	                AS InsertName
+             , '' :: TVarChar                           AS InsertName
              , CAST (NULL AS TDateTime)                 AS InsertDate
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
-            LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = vbMemberId
-
-            LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = Object_PersonalTrade.Id -- AND tmpPersonal.Ord = 1
-
-            LEFT JOIN Object AS Object_Branch   ON Object_Branch.Id   = tmpPersonal.BranchId
-            LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = tmpPersonal.UnitId
-            LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
-
          ;
+         
      ELSE
 
      RETURN QUERY
@@ -109,7 +89,7 @@ BEGIN
                                    ON MovementDate_Insert.MovementId = Movement.Id
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
 
-            LEFT JOIN MovementString AS MovementString_Comment 
+            LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 

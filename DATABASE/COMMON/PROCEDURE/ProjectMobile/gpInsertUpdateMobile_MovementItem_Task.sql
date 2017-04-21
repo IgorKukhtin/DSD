@@ -44,6 +44,9 @@ BEGIN
       -- сохранили свойство <Дата/время выполнения задания>
       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_UpdateMobile(), vbId, inUpdateDate);
 
+      -- сохранили свойство < Дата/время когда выполнилась загрузка с моб устр >
+      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), vbId, CURRENT_TIMESTAMP);
+
       RETURN vbId;
 END;
 $BODY$
