@@ -1,11 +1,13 @@
 -- Function: gpUpdate_Movement_Invoice()
 
 DROP FUNCTION IF EXISTS gpUpdate_Movement_Invoice (Integer, TDateTime, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_Invoice (Integer, TDateTime, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_Invoice(
     IN inId                    Integer,    -- Дата начала
     IN inDateRegistered        TDateTime,  -- Дата платежки
     IN inInvNumberRegistered   TVarChar ,  -- Номер платежки
+    IN inisDocument            Boolean ,  -- Есть наш экз.
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS Void AS
@@ -22,6 +24,9 @@ BEGIN
     -- Сохранили свойство <Итого Сумма>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberRegistered(), inId, inInvNumberRegistered);
   
+    -- Сохранили свойство <>
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Document(), inId, inisDocument);
+
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (inId, vbUserId, False);
 
@@ -32,5 +37,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.
+ 21.04.17         * add inisDocument
  22.03.17         *
 */
