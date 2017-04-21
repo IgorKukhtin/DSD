@@ -42,6 +42,15 @@ BEGIN
                                       , inIsExit     := FALSE
                                        );
 
+        -- проверим его устр-во
+        -- не забыть написать код
+        
+        -- зарегистрируем его устр-во - сохранили свойство <Серийный № моб устр-ва >
+        PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_User_ProjectMobile(), vbUserId, inSerialNumber);
+
+        -- теперь этот пользователь - это Торговый агент
+        PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_User_ProjectMobile(), vbUserId, TRUE);
+
     END IF;
 
 END;$BODY$

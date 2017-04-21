@@ -118,7 +118,11 @@ BEGIN
                                   , View_InfoMoney_find.InfoMoneyGroupId
                                   , zc_Movement_Income() AS MovementDescId
                              FROM Object_InfoMoney_View AS View_InfoMoney_find
-                             WHERE View_InfoMoney_find.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
+                             WHERE View_InfoMoney_find.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
+                                                                                , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
+                                                                                , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                                                                , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                                                                                 )
                                AND inIsGoodsComplete = FALSE
                                AND inBranchCode      = 301
                             )

@@ -567,11 +567,11 @@ BEGIN
                              FROM Object_InfoMoney_View AS View_InfoMoney
                              WHERE inIsGoodsComplete = FALSE
                                AND inBranchCode = 301
-                               AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10201() -- Прочее сырье Специи
-                                                                , zc_Enum_InfoMoney_10202() -- Прочее сырье Оболочка
-                                                                , zc_Enum_InfoMoney_10203() -- Прочее сырье Упаковка
-                                                                 )
-
+                               AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
+                                                                           , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
+                                                                           , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                                                           , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                                                                            )
                             )
       , tmpGoods_Return AS (SELECT tmp.GoodsId
                                  , MAX (tmp.GoodsKindId_max) AS GoodsKindId_max
