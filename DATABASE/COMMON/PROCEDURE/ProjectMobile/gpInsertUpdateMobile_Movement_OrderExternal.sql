@@ -32,8 +32,9 @@ $BODY$
    DECLARE vbPrinted Boolean;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
-      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
-
+      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
+      vbUserId:= lpGetUserBySession (inSession);
+      
       -- определение идентификатора заявки по глобальному уникальному идентификатору
       SELECT MovementString_GUID.MovementId 
            , Movement_OrderExternal.StatusId
@@ -85,9 +86,9 @@ BEGIN
                                                         WHEN 0 THEN zc_ObjectLink_Partner_MemberTake7()
                                                    END;
 
-      IF (vbisInsert = false) AND (vbStatusId = zc_Enum_Status_Complete())
+      IF (vbisInsert = FALSE) AND (vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased()))
       THEN -- если заявка проведена, то распроводим
-           SELECT outPrinted INTO vbPrinted FROM gpUnComplete_Movement_OrderExternal (inMovementId:= vbId, inSession:= inSession);
+           SELECT outPrinted INTO vbPrinted FROM lpUnComplete_Movement_OrderExternal (inMovementId:= vbId, inUserId:= vbUserId);
       END IF;
 
       vbId:= lpInsertUpdate_Movement_OrderExternal (ioId:= vbId
@@ -129,8 +130,10 @@ BEGIN
       -- сохранили свойство <Дата/время создания заказа на мобильном устройстве>
       PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_InsertMobile(), vbId, inInsertDate);
 
-      -- проводим заявку
-      SELECT outPrinted INTO vbPrinted FROM gpComplete_Movement_OrderExternal (inMovementId:= vbId, inSession:= inSession);
+      -- !!!ВРЕМЕННО - НЕ проводим заявку!!!
+      -- SELECT outPrinted INTO vbPrinted FROM lpComplete_Movement_OrderExternal (inMovementId:= vbId, inUserId:= vbUserId);
+      -- !!!ВРЕМЕННО - УДАЛЯЕМ заявку!!!
+      PERFORM lpSetErased_Movement (inMovementId:= vbId, inUserId:= vbUserId);
 
       RETURN vbId;                                                                      
 END;                                                                                    

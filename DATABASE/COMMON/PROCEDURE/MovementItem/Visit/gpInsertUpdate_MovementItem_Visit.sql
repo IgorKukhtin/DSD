@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_MovementItem_Visit()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Visit (Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Visit (Integer, Integer, TVarChar, TBlob, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Visit(
