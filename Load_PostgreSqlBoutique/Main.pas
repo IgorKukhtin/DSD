@@ -1926,11 +1926,11 @@ begin
         toStoredProc.Params.AddParam ('inOperPriceList',ftFloat,ptInput, 0);
 
         //
-        //DisableControls;
+        toStoredProc.DataSet.DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin toStoredProc.DataSet.EnableControls;  exit; end;
 
               //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -1961,6 +1961,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        toStoredProc.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbIncome);
@@ -2007,7 +2008,7 @@ begin
         Add('     left join DBA.Valuta as Bill_CurrencyDocument on Bill_CurrencyDocument.Id = Bill.ValutaIDIn   ');
         Add('     left join DBA.Valuta as Bill_CurrencyPartner on Bill_CurrencyPartner.Id = Bill.ValutaID  ');
         Add('     left join (select * from  DBA.ValutaKursItems order by id desc ) as valutaDoc  on Bill.BillDate  between valutaDoc.startDate and valutaDoc.EndDate and valutaDoc.FromValutaID = Bill.ValutaIDIn  and valutaDoc.ToValutaID = Bill.ValutaIDpl ');
-        Add('     left join (select * from  DBA.ValutaKursItems order by id desc ) as valutaPar  on Bill.BillDate  between valutaPar.startDate and valutaPar.EndDate and valutaPar.FromValutaID = Bill.ValutaIDIn  and valutaPar.ToValutaID = Bill.ValutaIDpl ');
+        Add('     left join (select * from  DBA.ValutaKursItems order by id desc ) as valutaPar  on Bill.BillDate  between valutaPar.startDate and valutaPar.EndDate and valutaPar.FromValutaID = Bill.ValutaIDIn  and valutaPar.ToValutaID = Bill.ValutaID ');
         Add(' where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add(' order by ObjectId ');
         Open;
@@ -2041,10 +2042,11 @@ begin
         toStoredProc.Params.AddParam ('inParPartnerValue',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         //
+        toStoredProc.DataSet.DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin exit;end;
+            if fStop then begin toStoredProc.DataSet.EnableControls;  exit; end;
              //
 
              //
@@ -2072,6 +2074,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        toStoredProc.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbIncome);
