@@ -769,6 +769,81 @@ inherited CheckForm: TCheckForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1095#1077#1082#1072
       ImageIndex = 67
     end
+    object actUpdateSpParam: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdate_SpParam
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SpParam
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 26
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
+    object ExecuteDialogSP: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1055
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1055
+      ImageIndex = 26
+      FormName = 'TCheck_SPEditForm'
+      FormNameParam.Value = 'TCheck_SPEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDateSp'
+          Value = 42261d
+          Component = edOperDateSP
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumberSP'
+          Value = Null
+          Component = edInvNumberSP
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMedicSPName'
+          Value = Null
+          Component = edMedicSP
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inAmbulance'
+          Value = Null
+          Component = edAmbulance
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macUpdateSpParam: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogSP
+        end
+        item
+          Action = actUpdateSpParam
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1055
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1055
+      ImageIndex = 26
+    end
   end
   inherited MasterDS: TDataSource
     Top = 221
@@ -852,6 +927,14 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -871,6 +954,10 @@ inherited CheckForm: TCheckForm
     end
     object bbUpdateOperDate: TdxBarButton
       Action = macUpdateOperDate
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = macUpdateSpParam
       Category = 0
     end
   end
@@ -1282,6 +1369,55 @@ inherited CheckForm: TCheckForm
       end>
     PackSize = 1
     Left = 482
+    Top = 336
+  end
+  object spUpdate_SpParam: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_SpParam'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDateSP'
+        Value = 42261d
+        Component = edOperDateSP
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmbulance'
+        Value = 'edInvNumber'
+        Component = edAmbulance
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMedicSP'
+        Value = Null
+        Component = edMedicSP
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumberSP'
+        Value = Null
+        Component = edInvNumberSP
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 554
     Top = 336
   end
 end

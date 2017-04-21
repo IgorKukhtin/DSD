@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
-  ClientHeight = 396
+  ClientHeight = 433
   ClientWidth = 303
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 45
-    Top = 362
+    Top = 403
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 189
-    Top = 362
+    Top = 403
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -124,6 +124,25 @@
     Left = 13
     Top = 299
     Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1099#1081' '#1050#1083#1102#1095
+  end
+  object cxLabel7: TcxLabel
+    Left = 13
+    Top = 346
+    Caption = #1057#1077#1088#1080#1081#1085#1099#1081' '#8470' '#1084#1086#1073' '#1091#1089#1090#1088'-'#1074#1072
+  end
+  object edProjectMobile: TcxTextEdit
+    Left = 13
+    Top = 367
+    Properties.PasswordChar = '*'
+    TabOrder = 17
+    Width = 185
+  end
+  object ceisProjectMobile: TcxCheckBox
+    Left = 204
+    Top = 367
+    Caption = #1058#1086#1088#1075'. '#1072#1075#1077#1085#1090
+    TabOrder = 18
+    Width = 82
   end
   object ActionList: TActionList
     Left = 269
@@ -219,6 +238,22 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inProjectMobile'
+        Value = Null
+        Component = edProjectMobile
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisProjectMobile'
+        Value = Null
+        Component = ceisProjectMobile
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMemberId'
         Value = ''
         Component = MemberGuides
@@ -308,6 +343,20 @@
         Value = Null
         Component = edKey
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProjectMobile'
+        Value = Null
+        Component = edProjectMobile
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isProjectMobile'
+        Value = Null
+        Component = ceisProjectMobile
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

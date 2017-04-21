@@ -259,6 +259,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataTimeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDataTimeDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheck_SPEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheck_SPEditForm');
 end;
 
 procedure TLoadFormTest.LoadConditionsKeepFormTest;

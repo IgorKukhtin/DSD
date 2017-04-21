@@ -501,7 +501,8 @@ uses
   InvoiceJournal in '..\..\FormsFarmacy\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm},
   Report_PromoDialog in '..\..\FormsFarmacy\Report\Report_PromoDialog.pas' {Report_PromoDialogForm: TParentForm},
   GoodsSP in '..\..\FormsFarmacy\Guides\GoodsSP.pas' {GoodsSPForm: TParentForm},
-  GoodsSP_Object in '..\..\FormsFarmacy\Guides\GoodsSP_Object.pas' {GoodsSP_ObjectForm: TParentForm};
+  GoodsSP_Object in '..\..\FormsFarmacy\Guides\GoodsSP_Object.pas' {GoodsSP_ObjectForm: TParentForm},
+  Check_SPEdit in '..\..\FormsFarmacy\Document\Check_SPEdit.pas' {Check_SPEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -238,7 +238,7 @@ inherited CheckJournalForm: TCheckJournalForm
           end
           object clMedicSP: TcxGridDBColumn
             Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
-            DataBinding.FieldName = 'MedicSP'
+            DataBinding.FieldName = 'MedicSPName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
