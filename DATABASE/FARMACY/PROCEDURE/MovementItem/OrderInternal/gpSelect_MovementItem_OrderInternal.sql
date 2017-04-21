@@ -216,6 +216,7 @@ BEGIN
                     , (COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) * 1.1) :: TFloat   AS PriceOptSP
                     , CASE WHEN DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData) = vbOperDate THEN TRUE ELSE FALSE END AS isMarketToday       -- CURRENT_DATE
                     , DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData)                   ::TDateTime  AS LastPriceDate
+                    , COALESCE (ObjectFloat_CountPrice.ValueData,0) ::TFloat AS CountPrice
                FROM  _tmpOrderInternal_MI AS tmpMI
                     LEFT JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId 
                     -- условия хранения
@@ -241,6 +242,9 @@ BEGIN
                     LEFT JOIN ObjectDate AS ObjectDate_LastPrice
                                          ON ObjectDate_LastPrice.ObjectId = ObjectLink_Main.ChildObjectId
                                         AND ObjectDate_LastPrice.DescId = zc_ObjectDate_Goods_LastPrice()
+                    LEFT JOIN ObjectFloat AS ObjectFloat_CountPrice
+                                          ON ObjectFloat_CountPrice.ObjectId = ObjectLink_Main.ChildObjectId
+                                         AND ObjectFloat_CountPrice.DescId = zc_ObjectFloat_Goods_CountPrice()
 
                 )
 
@@ -349,7 +353,7 @@ BEGIN
            , tmpMI.CheckAmount                                      AS CheckAmount
            , tmpMI.SendAmount                                       AS SendAmount
            , tmpMI.AmountDeferred                                   AS AmountDeferred
-
+           , tmpMI.CountPrice
            , COALESCE (tmpOneJuridical.isOneJuridical, TRUE) :: Boolean AS isOneJuridical
            
            , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN False ELSE True END  ::Boolean AS isPromo
@@ -1018,6 +1022,8 @@ BEGIN
 
            , tmpDeferred.AmountDeferred                                      AS AmountDeferred
 
+           , COALESCE (ObjectFloat_CountPrice.ValueData,0) ::TFloat AS CountPrice
+
            , COALESCE (SelectMinPrice_AllGoods.isOneJuridical, TRUE) :: Boolean AS isOneJuridical
            
            , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN False ELSE True END  ::Boolean AS isPromo
@@ -1077,6 +1083,10 @@ BEGIN
             LEFT JOIN ObjectDate AS ObjectDate_LastPrice
                                  ON ObjectDate_LastPrice.ObjectId = ObjectLink_Main.ChildObjectId
                                 AND ObjectDate_LastPrice.DescId = zc_ObjectDate_Goods_LastPrice()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_CountPrice
+                                  ON ObjectFloat_CountPrice.ObjectId = ObjectLink_Main.ChildObjectId
+                                 AND ObjectFloat_CountPrice.DescId = zc_ObjectFloat_Goods_CountPrice()
            ;
 
      RETURN NEXT Cursor1;

@@ -51,6 +51,7 @@ type
     clisMarketToday: TcxGridDBColumn;
     clisSp: TcxGridDBColumn;
     clLastPriceDate: TcxGridDBColumn;
+    clCountPrice: TcxGridDBColumn;
   private
     { Private declarations }
   public
