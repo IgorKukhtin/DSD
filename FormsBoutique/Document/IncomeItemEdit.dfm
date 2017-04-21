@@ -286,74 +286,74 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsGroupName'
+        Name = 'inGoodsGroupId'
         Value = Null
-        Component = edGoodsGroupName
-        DataType = ftString
+        Component = GoodsGroupGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsName'
+        Name = 'inGoodsId'
         Value = Null
-        Component = ceGoodsName
-        DataType = ftString
+        Component = GoodsGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsInfoName'
+        Name = 'inGoodsInfoId'
         Value = Null
-        Component = edGoodsInfoName
-        DataType = ftString
+        Component = GoodsInfoGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsSize'
+        Name = 'inGoodsSizeId'
         Value = Null
-        Component = ceGoodsSize
-        DataType = ftString
+        Component = GoodsSizeGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCompositionGroupName'
+        Name = 'inCompositionGroupId'
         Value = Null
-        Component = edCompositionGroupName
-        DataType = ftString
+        Component = CompositionGroupGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCompositionName'
+        Name = 'inCompositionId'
         Value = Null
-        Component = edCompositionName
-        DataType = ftString
+        Component = CompositionGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inLineFabricaName'
+        Name = 'inLineFabricaId'
         Value = Null
-        Component = edLineFabricaName
-        DataType = ftString
+        Component = LineFabricaGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inLabelName'
+        Name = 'inLabelId'
         Value = Null
-        Component = edLabelName
-        DataType = ftString
+        Component = LabelGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMeasureName'
+        Name = 'inMeasureId'
         Value = Null
-        Component = edMeasure
-        DataType = ftString
+        Component = MeasureGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -531,14 +531,14 @@ object IncomeItemEditForm: TIncomeItemEditForm
       item
         Name = 'GoodsSizeId'
         Value = Null
-        Component = GoodsItemSizeGuides
+        Component = GoodsSizeGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsSizeName'
         Value = Null
-        Component = GoodsItemSizeGuides
+        Component = GoodsSizeGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -609,7 +609,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Left = 304
     Top = 168
   end
-  object GoodsItemSizeGuides: TdsdGuides
+  object GoodsSizeGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceGoodsSize
     FormNameParam.Value = 'TGoodsSizeForm'
@@ -621,7 +621,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
       item
         Name = 'Key'
         Value = ''
-        Component = GoodsItemSizeGuides
+        Component = GoodsSizeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -629,7 +629,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GoodsItemSizeGuides
+        Component = GoodsSizeGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
