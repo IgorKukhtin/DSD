@@ -5,7 +5,7 @@ inherited MainForm: TMainForm
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 260
+  ExplicitHeight = 257
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -277,7 +277,7 @@ inherited MainForm: TMainForm
     object actRouteMemberJournal: TdsdOpenForm [11]
       Category = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
       MoveParams = <>
-      Caption = #1052#1072#1088#1096#1088#1091#1090' '#1090#1086#1088#1075#1086#1074#1086#1075#1086' '#1072#1075#1077#1085#1090#1072
+      Caption = #1052#1072#1088#1096#1088#1091#1090' '#1090#1086#1088#1075#1086#1074#1086#1075#1086' '#1072#1075#1077#1085#1090#1072' (GPS-'#1086#1090#1095#1077#1090')'
       FormName = 'TRouteMemberJournalForm'
       FormNameParam.Value = 'TRouteMemberJournalForm'
       FormNameParam.DataType = ftString
@@ -311,7 +311,7 @@ inherited MainForm: TMainForm
     object actVisit: TdsdOpenForm [14]
       Category = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
       MoveParams = <>
-      Caption = #1042#1080#1079#1080#1090' '#1085#1072' '#1090#1086#1088#1075#1086#1074#1091#1102' '#1090#1086#1095#1082#1091
+      Caption = #1042#1080#1079#1080#1090' '#1085#1072' '#1090#1086#1088#1075#1086#1074#1091#1102' '#1090#1086#1095#1082#1091' ('#1092#1086#1090#1086#1086#1090#1095#1077#1090')'
       FormName = 'TVisitJournalForm'
       FormNameParam.Value = 'TVisitJournalForm'
       FormNameParam.DataType = ftString
@@ -5525,9 +5525,6 @@ inherited MainForm: TMainForm
       object N171: TMenuItem
         Action = actOrderIncomeSnab
       end
-      object miStoreReal: TMenuItem
-        Action = actStoreReal
-      end
       object N41: TMenuItem
         Caption = '-'
       end
@@ -5996,13 +5993,16 @@ inherited MainForm: TMainForm
     end
     object miPersonalTrade: TMenuItem [8]
       Caption = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
-      object N43: TMenuItem
-        Action = actMobileOrderExternal
-      end
       object N158: TMenuItem
         Action = actTask
       end
       object N159: TMenuItem
+        Caption = '-'
+      end
+      object N43: TMenuItem
+        Action = actMobileOrderExternal
+      end
+      object miStoreReal: TMenuItem
         Action = actStoreReal
       end
       object N160: TMenuItem
@@ -6010,9 +6010,6 @@ inherited MainForm: TMainForm
       end
       object N163: TMenuItem
         Action = actRouteMemberJournal
-      end
-      object N164: TMenuItem
-        Action = actMobilePromo
       end
       object N123: TMenuItem
         Caption = '-'
@@ -6040,6 +6037,9 @@ inherited MainForm: TMainForm
       end
       object N162: TMenuItem
         Action = actRouteMember
+      end
+      object N164: TMenuItem
+        Action = actMobilePromo
       end
     end
     object miReportsProduction: TMenuItem [9]

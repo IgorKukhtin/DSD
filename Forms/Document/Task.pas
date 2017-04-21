@@ -43,6 +43,7 @@ type
     InsertRecord: TInsertRecord;
     bbInsertRecord: TdxBarButton;
     GuidesPosition: TdsdGuides;
+    UpdateDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

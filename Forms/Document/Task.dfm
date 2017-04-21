@@ -3,7 +3,7 @@ inherited TaskForm: TTaskForm
   ClientHeight = 426
   ClientWidth = 873
   ExplicitWidth = 889
-  ExplicitHeight = 464
+  ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -167,6 +167,14 @@ inherited TaskForm: TTaskForm
               #1080#1103
             Options.Editing = False
             Width = 92
+          end
+          object UpdateDate: TcxGridDBColumn [6]
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1079#1072#1075#1088#1091#1079#1082#1072' '#1089' '#1084#1086#1073'.'#1091#1089#1090#1088'.)'
+            DataBinding.FieldName = 'UpdateDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
           inherited colIsErased: TcxGridDBColumn
             Width = 80
@@ -778,8 +786,7 @@ inherited TaskForm: TTaskForm
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
       item
-      end
-      item
+        Guides = GuidesPersonalTrade
       end>
     Left = 152
     Top = 152
@@ -795,32 +802,6 @@ inherited TaskForm: TTaskForm
       end
       item
         Control = edPersonalTrade
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
       end>
     Left = 264
     Top = 321

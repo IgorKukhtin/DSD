@@ -5,7 +5,7 @@ inherited TaskJournalForm: TTaskJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 974
-  ExplicitHeight = 434
+  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -182,10 +182,10 @@ inherited TaskJournalForm: TTaskJournalForm
     Width = 958
     ExplicitWidth = 958
     inherited deStart: TcxDateEdit
-      EditValue = 42795d
+      EditValue = 42736d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 42736d
     end
   end
   object cxLabel27: TcxLabel [2]
@@ -490,9 +490,6 @@ inherited TaskJournalForm: TTaskJournalForm
       StoredProcList = <
         item
           StoredProc = spGet_UserJuridicalBasis
-        end
-        item
-          StoredProc = spGet_PersonalTrade
         end
         item
           StoredProc = spSelect
@@ -901,29 +898,5 @@ inherited TaskJournalForm: TTaskJournalForm
         MultiSelectSeparator = ','
       end>
     Left = 607
-  end
-  object spGet_PersonalTrade: TdsdStoredProc
-    StoredProcName = 'gpGetMobile_Object_Const'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'MemberId'
-        Value = '0'
-        Component = PersonalTradeGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MemberName'
-        Value = ''
-        Component = PersonalTradeGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 592
-    Top = 48
   end
 end

@@ -42,14 +42,22 @@ BEGIN
                                       , inIsExit     := FALSE
                                        );
 
-        -- проверим его устр-во
-        -- не забыть написать код
         
-        -- зарегистрируем его устр-во - сохранили свойство <Серийный № моб устр-ва >
-        PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_User_ProjectMobile(), vbUserId, inSerialNumber);
+        IF vbUserId <> zfCalc_UserAdmin() :: Integer
+        THEN
+            -- проверим его устр-во
+            -- не забыть написать код
 
-        -- теперь этот пользователь - это Торговый агент
-        PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_User_ProjectMobile(), vbUserId, TRUE);
+            -- зарегистрируем его устр-во - сохранили свойство <Серийный № моб устр-ва >
+            PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_User_ProjectMobile(), vbUserId, inSerialNumber);
+
+            IF NOT EXISTS (SELECT 1 FROM ObjectBoolean WHERE ObjectBoolean.DescId = zc_ObjectBoolean_User_ProjectMobile() AND ObjectBoolean.ObjectId = vbUserId)
+            THEN
+                -- теперь этот пользователь - это Торговый агент
+                PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_User_ProjectMobile(), vbUserId, TRUE);
+            END IF;
+
+        END IF;
 
     END IF;
 
