@@ -3,18 +3,21 @@
 -- DROP FUNCTION gpInsertUpdate_Object_User();
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_User(
- INOUT ioId          Integer   ,    -- ключ объекта <Пользователь> 
-    IN inCode        Integer   ,    -- 
-    IN inUserName    TVarChar  ,    -- главное Название пользователя объекта <Пользователь> 
-    IN inPassword    TVarChar  ,    -- пароль пользователя 
-    IN inSign        TVarChar  ,    -- Электронная подпись
-    IN inSeal        TVarChar  ,    -- Электронная печать
-    IN inKey         TVarChar  ,    -- Электроный Ключ 
-    IN inMemberId    Integer   ,    -- физ. лицо
-    IN inSession     TVarChar       -- сессия пользователя
+ INOUT ioId               Integer   ,    -- ключ объекта <Пользователь> 
+    IN inCode             Integer   ,    -- 
+    IN inUserName         TVarChar  ,    -- главное Название пользователя объекта <Пользователь> 
+    IN inPassword         TVarChar  ,    -- пароль пользователя 
+    IN inSign             TVarChar  ,    -- Электронная подпись
+    IN inSeal             TVarChar  ,    -- Электронная печать
+    IN inKey              TVarChar  ,    -- Электроный Ключ 
+    IN inProjectMobile    TVarChar  ,    -- Серийный № моб устр-ва
+    IN inisProjectMobile  Boolean   ,    -- признак - это Торговый агент
+    IN inMemberId         Integer   ,    -- физ. лицо
+    IN inSession          TVarChar       -- сессия пользователя
 )
   RETURNS Integer 
 AS
@@ -40,6 +43,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Seal(), ioId, inSeal);
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Key(), ioId, inKey);
 
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_ProjectMobile(), ioId, inProjectMobile);
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_User_ProjectMobile(), ioId, inisProjectMobile);
+
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_User_Member(), ioId, inMemberId);
 
 
@@ -54,6 +60,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.04.17         *
  12.09.16         *
  07.06.13                                        * lpCheckRight
 */

@@ -84,6 +84,8 @@ type
     bbProtocolOpen: TdxBarButton;
     actProtocolRoleForm: TdsdOpenForm;
     bbProtocolRole: TdxBarButton;
+    clProjectMobile: TcxGridDBColumn;
+    clisProjectMobile: TcxGridDBColumn;
   private
     { Private declarations }
   public

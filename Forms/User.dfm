@@ -26,8 +26,6 @@ object UserForm: TUserForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = 144
-    ExplicitTop = 170
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -135,6 +133,21 @@ object UserForm: TUserForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
+      end
+      object clProjectMobile: TcxGridDBColumn
+        Caption = #1057#1077#1088#1080#1081#1085#1099#1081' '#8470' '#1084#1086#1073'. '#1091#1089#1090#1088'-'#1074#1072
+        DataBinding.FieldName = 'ProjectMobile'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 82
+      end
+      object clisProjectMobile: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
+        DataBinding.FieldName = 'isProjectMobile'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090' ('#1044#1072'/'#1053#1077#1090')'
+        Width = 70
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -931,7 +944,7 @@ object UserForm: TUserForm
       end>
     PackSize = 1
     Left = 528
-    Top = 96
+    Top = 120
   end
   object RoleDS: TDataSource
     DataSet = RoleCDS
@@ -1099,6 +1112,24 @@ object UserForm: TUserForm
         Component = ClientDataSet
         ComponentItem = 'UserKey'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProjectMobile'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'ProjectMobile'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisProjectMobile'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isProjectMobile'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
