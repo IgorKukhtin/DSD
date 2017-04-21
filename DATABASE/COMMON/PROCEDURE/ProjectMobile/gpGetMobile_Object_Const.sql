@@ -89,7 +89,7 @@ BEGIN
             , Object_User.ValueData        AS UserLogin
             , ObjectString_User_.ValueData AS UserPassword
 
-            , REPLACE (LOWER (Object_ConnectParam.ValueData), '/project/', '/projectmobile/')::TVarChar AS WebService
+            , REPLACE (REPLACE (LOWER (Object_ConnectParam.ValueData), '/project/', '/projectmobile/'), '//integer-srv.alan.dp.ua', '//project-vds.vds.colocall.com/projectmobile/index.php') :: TVarChar AS WebService
 
             -- AS LastDateIn
             -- AS LastDateOut
