@@ -213,7 +213,7 @@ BEGIN
                     , CEIL(tmpMI.Amount / COALESCE(Object_Goods.MinimumLot, 1)) * COALESCE(Object_Goods.MinimumLot, 1) ::TFloat  AS CalcAmount
                     , COALESCE(Object_ConditionsKeep.ValueData, '')      :: TVarChar AS ConditionsKeepName
                     , COALESCE (ObjectBoolean_Goods_SP.ValueData,False)  :: Boolean  AS isSP
-                    , (COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) / 1.07 * 1.1) :: TFloat   AS PriceOptSP
+                    , (COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) * 1.1) :: TFloat   AS PriceOptSP
                     , CASE WHEN DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData) = vbOperDate THEN TRUE ELSE FALSE END AS isMarketToday       -- CURRENT_DATE
                     , DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData)                   ::TDateTime  AS LastPriceDate
                FROM  _tmpOrderInternal_MI AS tmpMI
@@ -996,8 +996,8 @@ BEGIN
            , tmpMI.ContractName
            , tmpMI.MakerName 
            , tmpMI.SuperFinalPrice 
-           , (COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) / 1.07 * 1.1) ::TFloat AS PriceOptSP
-           , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE AND (tmpMI.Price > (COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) / 1.07 * 1.1)) THEN TRUE ELSE FALSE END isPriceDiff
+           , (COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) * 1.1) ::TFloat AS PriceOptSP
+           , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE AND (tmpMI.Price > (COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) * 1.1)) THEN TRUE ELSE FALSE END isPriceDiff
            , COALESCE(tmpMI.isCalculated, FALSE)                      AS isCalculated
            , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE THEN 25088 --zc_Color_GreenL()   --товар соц.проекта
                   WHEN tmpMI.PartionGoodsDate < vbDate180 THEN zc_Color_Blue() --456

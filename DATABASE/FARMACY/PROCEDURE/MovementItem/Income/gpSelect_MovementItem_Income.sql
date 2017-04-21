@@ -45,7 +45,7 @@ RETURNS TABLE (Id Integer, /*IdBarCode TVarChar,*/ GoodsId Integer, GoodsCode In
              , isSummDiff Boolean
              , isTop  Boolean
              , isSP Boolean
-
+             , PriceOptSP TFloat
              , PercentMarkup TFloat
              , Fix_Price TFloat
              , Color_calc Integer
@@ -132,6 +132,7 @@ BEGIN
                           , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
                           , Object_Goods.PercentMarkup    AS Goods_PercentMarkup
                           , Object_Goods.Price            AS Goods_Price
+                          , (COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) * 1.1) :: TFloat   AS PriceOptSP
                      FROM Object_Goods_View AS Object_Goods
                           -- получаем GoodsMainId
                           LEFT JOIN  ObjectLink AS ObjectLink_Child 
@@ -144,6 +145,10 @@ BEGIN
                          LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
                                                   ON ObjectBoolean_Goods_SP.ObjectId =ObjectLink_Main.ChildObjectId 
                                                  AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+
+                         LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
+                                               ON ObjectFloat_Goods_PriceOptSP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                              AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP()
                      WHERE Object_Goods.isErased = FALSE 
                        AND Object_Goods.ObjectId = vbObjectId
                      )
@@ -375,6 +380,7 @@ BEGIN
 
               , COALESCE (tmpPrice.isTop,FALSE) ::Boolean  AS isTop 
               , tmpGoods.isSP                      AS isSP
+              , tmpGoods.PriceOptSP             ::TFloat
               , tmpPrice.PercentMarkup  ::TFloat   AS PercentMarkup
               , CASE WHEN COALESCE(tmpPrice.Fix,False) = TRUE THEN COALESCE(tmpPrice.Price,0) ELSE 0 END  ::TFloat AS Fix_Price
 
@@ -383,6 +389,7 @@ BEGIN
               , tmpGoods.Goods_isTop          ::Boolean
               , tmpGoods.Goods_PercentMarkup  ::TFloat 
               , tmpGoods.Goods_Price          ::TFloat 
+             
               , CASE WHEN tmpGoods.isSP = TRUE THEN 25088
                      WHEN (tmpPrice.isTop = TRUE OR tmpGoods.Goods_isTop = TRUE) THEN 15993821 -- розовый 16440317 
                      ELSE zc_Color_Black()
@@ -461,6 +468,7 @@ BEGIN
 
               , COALESCE (tmpPrice.isTop,FALSE)          ::Boolean AS isTop 
               , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
+              , (COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) * 1.1) :: TFloat   AS PriceOptSP
 
               , tmpPrice.PercentMarkup  ::TFloat  AS PercentMarkup
               , CASE WHEN COALESCE(tmpPrice.Fix,False) = TRUE THEN COALESCE(tmpPrice.Price,0) ELSE 0 END  ::TFloat  AS Fix_Price
@@ -518,6 +526,10 @@ BEGIN
             LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
                                      ON ObjectBoolean_Goods_SP.ObjectId =ObjectLink_Main.ChildObjectId 
                                     AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
+                                  ON ObjectFloat_Goods_PriceOptSP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                 AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP()
 
             ;
     ELSE
@@ -762,6 +774,7 @@ BEGIN
 
               , COALESCE (tmpPrice.isTop,FALSE)   ::Boolean AS isTop 
               , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
+              , (COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) * 1.1) :: TFloat   AS PriceOptSP
               , tmpPrice.PercentMarkup                     ::TFloat  AS PercentMarkup
               , CASE WHEN COALESCE(tmpPrice.Fix,False) = TRUE THEN COALESCE(tmpPrice.Price,0) ELSE 0 END ::TFloat AS Fix_Price
 
@@ -822,6 +835,10 @@ BEGIN
                 LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
                                          ON ObjectBoolean_Goods_SP.ObjectId =ObjectLink_Main.ChildObjectId 
                                         AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()    
+
+                LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
+                                      ON ObjectFloat_Goods_PriceOptSP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                     AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP()
                 ;
     END IF;
 END;
@@ -833,6 +850,7 @@ ALTER FUNCTION gpSelect_MovementItem_Income (Integer, Boolean, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 21.04.17         * add PriceOptSP
  06.04.17         *
  01.02.17         * немножко оптимизировала
  27.01.17         *

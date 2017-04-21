@@ -30,7 +30,22 @@ BEGIN
     CREATE TEMP TABLE _tmpGoodsMI (MI_Id Integer, GoodsId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpGoodsListIncome (MI_Id Integer, GoodsId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpGoods (MI_Id Integer, GoodsId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
     --
+       INSERT INTO _tmpUnit (UnitId)
+              (SELECT inUnitId AS UnitId
+              UNION
+               SELECT 8448 AS UnitId       --цех деликатесов+   
+              UNION
+               SELECT 8447 AS UnitId       -- колбасный+           
+              UNION
+               SELECT 8451 AS UnitId       -- упаковка+            
+              UNION
+               SELECT 951601 AS UnitId     -- упаковка мясо+       
+              UNION
+               SELECT 981821 AS UnitId     -- шприцевание          
+               );
+
        INSERT INTO _tmpGoodsMI (MI_Id, GoodsId)
                     SELECT MovementItem.Id              AS MI_Id
                          , MILinkObject_Goods.ObjectId  AS GoodsId
@@ -65,19 +80,21 @@ BEGIN
     vbCountDays := (SELECT DATE_PART('day', (inEndDate - inStartDate )) + 1);
 
     -- рассчетные данные
-    CREATE TEMP TABLE _tmpData (MI_Id Integer, GoodsId Integer, RemainsStart TFloat, RemainsEnd TFloat, CountIncome TFloat, CountProductionOut TFloat, CountIn_oth TFloat, CountOut_oth TFloat, CountOrder TFloat) ON COMMIT DROP; 
+    CREATE TEMP TABLE _tmpData (MI_Id Integer, GoodsId Integer, RemainsStart TFloat, RemainsEnd TFloat, RemainsStart_Oth TFloat, RemainsEnd_Oth TFloat, CountIncome TFloat, CountProductionOut TFloat, CountIn_oth TFloat, CountOut_oth TFloat, CountOrder TFloat) ON COMMIT DROP; 
 
-    INSERT INTO _tmpData (MI_Id, GoodsId, RemainsStart, RemainsEnd, CountIncome, CountProductionOut, CountIn_oth, CountOut_oth, CountOrder)
+    INSERT INTO _tmpData (MI_Id, GoodsId, RemainsStart, RemainsEnd, RemainsStart_Oth, RemainsEnd_Oth, CountIncome, CountProductionOut, CountIn_oth, CountOut_oth, CountOrder)
      WITH
-     tmpContainerAll AS (SELECT Container.Id                           AS ContainerId
-                              , Container.ObjectId                     AS GoodsId
+     tmpContainerAll AS (SELECT Container.Id         AS ContainerId
+                              , CLO_Unit.ObjectId    AS UnitId
+                              , Container.ObjectId   AS GoodsId
                               , Container.Amount
                          FROM ContainerLinkObject AS CLO_Unit
                               INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId AND Container.DescId = zc_Container_Count()
+                              INNER JOIN _tmpUnit ON _tmpUnit.UnitId = CLO_Unit.ObjectId
                               INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = Container.ObjectId
-                         WHERE CLO_Unit.ObjectId = inUnitId
-                           AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-                         GROUP BY Container.Id, Container.ObjectId, Container.Amount
+                         WHERE /*CLO_Unit.ObjectId = inUnitId
+                           AND */CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                         GROUP BY Container.Id, Container.ObjectId, Container.Amount, CLO_Unit.ObjectId 
                         )
 
   , tmpContainer AS (SELECT tmp.GoodsId 
@@ -138,6 +155,7 @@ BEGIN
                                 LEFT JOIN MovementItemContainer AS MIContainer
                                                                 ON MIContainer.Containerid = tmpContainerAll.ContainerId
                                                                AND MIContainer.OperDate >= inStartDate
+                           WHERE tmpContainerAll.UnitId = inUnitId
                            GROUP BY tmpContainerAll.GoodsId, tmpContainerAll.Amount
                            ) AS tmp
                      GROUP BY tmp.GoodsId
@@ -162,12 +180,31 @@ BEGIN
                        GROUP BY MILinkObject_Goods.ObjectId
                        )
  
+   --"остатки впроизводстве"
+  , tmpRemains_Oth AS (SELECT tmp.GoodsId
+                            , SUM (tmp.StartAmount)        AS RemainsStart
+                            , SUM (tmp.EndAmount)          AS RemainsEnd
+                       FROM (SELECT tmpContainerAll.GoodsId
+                                  , tmpContainerAll.Amount - SUM (COALESCE(MIContainer.Amount, 0))  AS StartAmount
+                                  , tmpContainerAll.Amount - SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS EndAmount
+                             FROM tmpContainerAll
+                                  LEFT JOIN MovementItemContainer AS MIContainer
+                                                                  ON MIContainer.Containerid = tmpContainerAll.ContainerId
+                                                                 AND MIContainer.OperDate >= inStartDate
+                             WHERE tmpContainerAll.UnitId <> inUnitId
+                             GROUP BY tmpContainerAll.GoodsId, tmpContainerAll.Amount
+                             ) AS tmp
+                       GROUP BY tmp.GoodsId
+                       )
+
        -- Результат
       SELECT 
              _tmpGoods.MI_Id 
            , _tmpGoods.GoodsId
            , COALESCE (tmpContainer.RemainsStart,0)        :: TFloat
            , COALESCE (tmpContainer.RemainsEnd,0)          :: TFloat
+           , COALESCE (tmpRemains_Oth.RemainsStart,0)      :: TFloat
+           , COALESCE (tmpRemains_Oth.RemainsEnd,0)        :: TFloat
            , COALESCE (tmpContainer.CountIncome,0)         :: TFloat 
            , COALESCE (tmpContainer.CountProductionOut,0)  :: TFloat 
            , COALESCE (tmpContainer.CountIn_oth,0)         :: TFloat
@@ -176,7 +213,8 @@ BEGIN
 
        FROM _tmpGoods
           LEFT JOIN tmpContainer ON tmpContainer.GoodsId = _tmpGoods.GoodsId
-          LEFT JOIN tmpOrderIncome ON tmpOrderIncome.GoodsId = _tmpGoods.GoodsId;
+          LEFT JOIN tmpOrderIncome ON tmpOrderIncome.GoodsId = _tmpGoods.GoodsId
+          LEFT JOIN tmpRemains_Oth ON tmpRemains_Oth.GoodsId = _tmpGoods.GoodsId;
 
       PERFORM lpInsertUpdate_MI_OrderIncomeSnab_Property
                                                    (inId              := COALESCE (_tmpData.MI_Id,0)
@@ -185,6 +223,8 @@ BEGIN
                                                   , inMeasureId       := ObjectLink_Goods_Measure.ChildObjectId
                                                   , inRemainsStart    := _tmpData.RemainsStart
                                                   --, inRemainsEnd      := _tmpData.RemainsEnd 
+                                                  , inBalanceStart    := _tmpData.RemainsStart_Oth
+                                                  , inBalanceEnd      := _tmpData.RemainsEnd_Oth 
                                                   , inIncome          := _tmpData.CountIncome
                                                   , inAmountForecast  := _tmpData.CountProductionOut
                                                   , inAmountIn        := _tmpData.CountIn_oth

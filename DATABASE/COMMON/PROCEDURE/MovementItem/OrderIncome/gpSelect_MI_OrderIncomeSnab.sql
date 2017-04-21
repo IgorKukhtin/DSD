@@ -16,7 +16,9 @@ RETURNS TABLE (Id Integer, LineNum Integer
              , AmountSumm     TFloat
              , Amount         TFloat
              , AmountRemains  TFloat
-             , AmountRemainsEnd  TFloat
+             , AmountRemainsEnd   TFloat
+             , BalanceStart TFloat
+             , BalanceEnd   TFloat
              , AmountIncome   TFloat
              , AmountForecast TFloat
              , AmountIn       TFloat
@@ -103,6 +105,8 @@ BEGIN
                                   , COALESCE (MIFloat_AmountIn.ValueData, 0)              AS AmountIn
                                   , COALESCE (MIFloat_AmountOut.ValueData, 0)             AS AmountOut
                                   , COALESCE (MIFloat_AmountOrder.ValueData, 0)           AS AmountOrder
+                                  , COALESCE (MIFloat_BalanceStart.ValueData, 0)          AS BalanceStart
+                                  , COALESCE (MIFloat_BalanceEnd.ValueData, 0)            AS BalanceEnd
 
                              FROM (SELECT false AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased) AS tmpIsErased
                                   JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -137,6 +141,13 @@ BEGIN
                                   LEFT JOIN MovementItemFloat AS MIFloat_AmountOrder
                                          ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
+
+                                  LEFT JOIN MovementItemFloat AS MIFloat_BalanceStart
+                                         ON MIFloat_BalanceStart.MovementItemId = MovementItem.Id
+                                        AND MIFloat_BalanceStart.DescId = zc_MIFloat_BalanceStart()
+                                  LEFT JOIN MovementItemFloat AS MIFloat_BalanceEnd
+                                         ON MIFloat_BalanceEnd.MovementItemId = MovementItem.Id
+                                        AND MIFloat_BalanceEnd.DescId = zc_MIFloat_BalanceEnd()
                             )
 
         SELECT 0                          AS Id
@@ -152,6 +163,8 @@ BEGIN
              , CAST (NULL AS TFloat)      AS Amount
              , CAST (NULL AS TFloat)      AS AmountRemains
              , CAST (NULL AS TFloat)      AS AmountRemainsEnd
+             , CAST (NULL AS TFloat)      AS BalanceStart
+             , CAST (NULL AS TFloat)      AS BalanceEnd
              , CAST (NULL AS TFloat)      AS AmountIncome
              , CAST (NULL AS TFloat)      AS AmountForecast
              , CAST (NULL AS TFloat)      AS AmountIn
@@ -197,6 +210,8 @@ BEGIN
              , tmpMI.Amount
              , tmpMI.AmountRemains  ::TFloat
              , tmpMI.AmountRemainsEnd ::TFloat
+             , tmpMI.BalanceStart   ::TFloat
+             , tmpMI.BalanceEnd     ::TFloat
              , tmpMI.AmountIncome   ::TFloat
              , tmpMI.AmountForecast ::TFloat
              , tmpMI.AmountIn       ::TFloat
@@ -266,6 +281,8 @@ BEGIN
                                   , COALESCE (MIFloat_AmountIn.ValueData, 0)              AS AmountIn
                                   , COALESCE (MIFloat_AmountOut.ValueData, 0)             AS AmountOut
                                   , COALESCE (MIFloat_AmountOrder.ValueData, 0)           AS AmountOrder
+                                  , COALESCE (MIFloat_BalanceStart.ValueData, 0)          AS BalanceStart
+                                  , COALESCE (MIFloat_BalanceEnd.ValueData, 0)            AS BalanceEnd
                              FROM (SELECT false AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased) AS tmpIsErased
                                   JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                    AND MovementItem.DescId = zc_MI_Master()
@@ -300,6 +317,13 @@ BEGIN
                                   LEFT JOIN MovementItemFloat AS MIFloat_AmountOrder
                                          ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
+
+                                  LEFT JOIN MovementItemFloat AS MIFloat_BalanceStart
+                                         ON MIFloat_BalanceStart.MovementItemId = MovementItem.Id
+                                        AND MIFloat_BalanceStart.DescId = zc_MIFloat_BalanceStart()
+                                  LEFT JOIN MovementItemFloat AS MIFloat_BalanceEnd
+                                         ON MIFloat_BalanceEnd.MovementItemId = MovementItem.Id
+                                        AND MIFloat_BalanceEnd.DescId = zc_MIFloat_BalanceEnd()
                             )
 
         SELECT tmpMI.MovementItemId       AS Id
@@ -315,6 +339,8 @@ BEGIN
              , tmpMI.Amount
              , tmpMI.AmountRemains    ::TFloat
              , tmpMI.AmountRemainsEnd ::TFloat
+             , tmpMI.BalanceStart     ::TFloat
+             , tmpMI.BalanceEnd       ::TFloat
              , tmpMI.AmountIncome     ::TFloat
              , tmpMI.AmountForecast   ::TFloat
              , tmpMI.AmountIn         ::TFloat

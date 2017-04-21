@@ -2809,6 +2809,8 @@ begin
   // заполнение списка форм оплаты
   cbPaidKind.Items.Clear;
   FPaidKindIdList.Clear;
+  AddComboItem(cbPaidKind, 'все');
+  FPaidKindIdList.Add(0);
   AddComboItem(cbPaidKind, DM.tblObject_ConstPaidKindName_First.AsString);
   FPaidKindIdList.Add(DM.tblObject_ConstPaidKindId_First.AsInteger);
   AddComboItem(cbPaidKind, DM.tblObject_ConstPaidKindName_Second.AsString);
@@ -3595,7 +3597,7 @@ begin
 
   with DM.qryPartner do
   begin
-    SQL.Text := BasePartnerQuery;
+    SQL.Text := BasePartnerQuery + ' GROUP BY P.Id';
     ParamByName('DefaultPriceList').AsInteger := DM.tblObject_ConstPriceListId_def.AsInteger;
     Open;
 
@@ -4507,53 +4509,57 @@ procedure TfrmMain.cbJuridicalsChange(Sender: TObject);
 var
   i: integer;
 begin
-  with DM.qrySelect do
+  if cbJuridicals.Items.Count > 0 then
   begin
-    cbPartners.Items.Clear;
-    FPartnerList.Clear;
 
-    AddComboItem(cbPartners, 'все');
-    FPartnerList.Add(TPartnerItem.Create(0, ''));
-
-    Open('select P.ID, P.ADDRESS, group_concat(distinct C.ID) ContractIds from OBJECT_PARTNER P ' +
-         'LEFT JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID ' +
-         'WHERE P.JURIDICALID = ' + IntToStr(FJuridicalList[cbJuridicals.ItemIndex].Id) +
-         ' AND P.ISERASED = 0 GROUP BY ADDRESS');
-
-    First;
-    while not Eof do
+    with DM.qrySelect do
     begin
-      AddComboItem(cbPartners, FieldByName('ADDRESS').AsString);
-      FPartnerList.Add(TPartnerItem.Create(FieldByName('Id').AsInteger, FieldByName('ContractIds').AsString));
+      cbPartners.Items.Clear;
+      FPartnerList.Clear;
 
-      Next;
-    end;
+      AddComboItem(cbPartners, 'все');
+      FPartnerList.Add(TPartnerItem.Create(0, ''));
 
-    // все договора юридического лица
-    FAllContractList.Clear;
+      Open('select P.ID, P.ADDRESS, group_concat(distinct C.ID) ContractIds from OBJECT_PARTNER P ' +
+           'LEFT JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID ' +
+           'WHERE P.JURIDICALID = ' + IntToStr(FJuridicalList[cbJuridicals.ItemIndex].Id) +
+           ' AND P.ISERASED = 0 GROUP BY ADDRESS');
 
-    Open('select distinct ID, CONTRACTTAGNAME || '' '' || VALUEDATA ContractName from OBJECT_CONTRACT ' +
-      'where ID in (' + FJuridicalList[cbJuridicals.ItemIndex].ContractIds + ')');
-
-    First;
-    while not Eof do
-    begin
-      FAllContractList.Add(TContractItem.Create(FieldByName('Id').AsInteger, FieldByName('ContractName').AsString));
-
-      Next;
-    end;
-
-    Close;
-  end;
-
-  if FFirstSet then
-    for i := 0 to FPartnerList.Count - 1 do
-      if FPartnerList[i].Id = FPartnerRJC then
+      First;
+      while not Eof do
       begin
-        cbPartners.ItemIndex := i;
+        AddComboItem(cbPartners, FieldByName('ADDRESS').AsString);
+        FPartnerList.Add(TPartnerItem.Create(FieldByName('Id').AsInteger, FieldByName('ContractIds').AsString));
+
+        Next;
       end;
-  if cbPartners.ItemIndex < 0 then
-    cbPartners.ItemIndex := 0;
+
+      // все договора юридического лица
+      FAllContractList.Clear;
+
+      Open('select distinct ID, CONTRACTTAGNAME || '' '' || VALUEDATA ContractName from OBJECT_CONTRACT ' +
+        'where ID in (' + FJuridicalList[cbJuridicals.ItemIndex].ContractIds + ')');
+
+      First;
+      while not Eof do
+      begin
+        FAllContractList.Add(TContractItem.Create(FieldByName('Id').AsInteger, FieldByName('ContractName').AsString));
+
+        Next;
+      end;
+
+      Close;
+    end;
+
+    if FFirstSet then
+      for i := 0 to FPartnerList.Count - 1 do
+        if FPartnerList[i].Id = FPartnerRJC then
+        begin
+          cbPartners.ItemIndex := i;
+        end;
+    if cbPartners.ItemIndex < 0 then
+      cbPartners.ItemIndex := 0;
+  end;
 end;
 
 // изменение ТТ с фильтрацией договоров юр.лица только выбраной ТТ
@@ -4562,35 +4568,38 @@ var
   i: integer;
   OldContractId, DefIndex: integer;
 begin
-  DefIndex := 0;
-  OldContractId := -1;
-  if cbContracts.ItemIndex > 0 then
-    OldContractId := FContractIdList[cbContracts.ItemIndex];
-
-  cbContracts.Items.Clear;
-  FContractIdList.Clear;
-
-  AddComboItem(cbContracts, 'все');
-  FContractIdList.Add(0);
-
-  for i := 0 to FAllContractList.Count - 1 do
+  if cbPartners.Items.Count > 0 then
   begin
-    if (cbPartners.ItemIndex <= 0) or
-       (pos(IntToStr(FAllContractList[i].Id) + ',', FPartnerList[cbPartners.ItemIndex].ContractIds) > 0) or
-       (pos(',' + IntToStr(FAllContractList[i].Id), FPartnerList[cbPartners.ItemIndex].ContractIds) > 0) then
+    DefIndex := 0;
+    OldContractId := -1;
+    if cbContracts.ItemIndex > 0 then
+      OldContractId := FContractIdList[cbContracts.ItemIndex];
+
+    cbContracts.Items.Clear;
+    FContractIdList.Clear;
+
+    AddComboItem(cbContracts, 'все');
+    FContractIdList.Add(0);
+
+    for i := 0 to FAllContractList.Count - 1 do
     begin
-      AddComboItem(cbContracts, FAllContractList[i].Name);
-      FContractIdList.Add(FAllContractList[i].Id);
-      if FAllContractList[i].Id = OldContractId then
-        DefIndex := FContractIdList.Count - 1;
+      if (cbPartners.ItemIndex <= 0) or
+         (pos(IntToStr(FAllContractList[i].Id) + ',', FPartnerList[cbPartners.ItemIndex].ContractIds) > 0) or
+         (pos(',' + IntToStr(FAllContractList[i].Id), FPartnerList[cbPartners.ItemIndex].ContractIds) > 0) then
+      begin
+        AddComboItem(cbContracts, FAllContractList[i].Name);
+        FContractIdList.Add(FAllContractList[i].Id);
+        if FAllContractList[i].Id = OldContractId then
+          DefIndex := FContractIdList.Count - 1;
+      end;
     end;
+
+    if FFirstSet then
+      cbContracts.ItemIndex := FContractIdList.IndexOf(FContractRJC);
+
+    if cbContracts.ItemIndex < 0 then
+      cbContracts.ItemIndex := DefIndex;
   end;
-
-  if FFirstSet then
-    cbContracts.ItemIndex := FContractIdList.IndexOf(FContractRJC);
-
-  if cbContracts.ItemIndex < 0 then
-    cbContracts.ItemIndex := DefIndex;
 end;
 
 // отображать маршрут контрагента за все время или за конкретную дату

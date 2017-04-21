@@ -1926,11 +1926,11 @@ begin
         toStoredProc.Params.AddParam ('inOperPriceList',ftFloat,ptInput, 0);
 
         //
-        //DisableControls;
+        DBGrid.DataSource.DataSet.DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin DBGrid.DataSource.DataSet.EnableControls;  exit; end;
 
               //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -1961,6 +1961,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        DBGrid.DataSource.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbIncome);
@@ -2001,14 +2002,13 @@ begin
         Add('     , '''' as Comments ');
         Add('     , Bill.Id_Postgres ');
         Add(' from DBA.Bill ');
-        Add('     join (select BillItemsIncome.BillID  from  DBA.BillItemsIncome group by BillItemsIncome.BillID ) as BillItemsIncome on  BillItemsIncome.BillID = Bill.ID ');
         Add('     left join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
         Add('     left join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
         Add('     left join DBA.Valuta as Bill_CurrencyDocument on Bill_CurrencyDocument.Id = Bill.ValutaIDIn   ');
         Add('     left join DBA.Valuta as Bill_CurrencyPartner on Bill_CurrencyPartner.Id = Bill.ValutaID  ');
         Add('     left join (select * from  DBA.ValutaKursItems order by id desc ) as valutaDoc  on Bill.BillDate  between valutaDoc.startDate and valutaDoc.EndDate and valutaDoc.FromValutaID = Bill.ValutaIDIn  and valutaDoc.ToValutaID = Bill.ValutaIDpl ');
-        Add('     left join (select * from  DBA.ValutaKursItems order by id desc ) as valutaPar  on Bill.BillDate  between valutaPar.startDate and valutaPar.EndDate and valutaPar.FromValutaID = Bill.ValutaIDIn  and valutaPar.ToValutaID = Bill.ValutaIDpl ');
-        Add(' where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add('     left join (select * from  DBA.ValutaKursItems order by id desc ) as valutaPar  on Bill.BillDate  between valutaPar.startDate and valutaPar.EndDate and valutaPar.FromValutaID = Bill.ValutaIDIn  and valutaPar.ToValutaID = Bill.ValutaID ');
+        Add(' where  Bill.BillKind = 2 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add(' order by ObjectId ');
         Open;
 
@@ -2041,10 +2041,11 @@ begin
         toStoredProc.Params.AddParam ('inParPartnerValue',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         //
+        DBGrid.DataSource.DataSet.DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin exit;end;
+            if fStop then begin DBGrid.DataSource.DataSet.EnableControls;  exit; end;
              //
 
              //
@@ -2072,6 +2073,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        DBGrid.DataSource.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbIncome);
@@ -2097,7 +2099,7 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-         Add('select Brand.Id as ObjectId');
+        Add('select Brand.Id as ObjectId');
         Add('     , 0 as ObjectCode');
         Add('     , Brand.BrandName as ObjectName');
         Add('     , zc_erasedDel() as zc_erasedDel');
@@ -2122,12 +2124,12 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inCountryBrandId',ftInteger,ptInput, 0);
-
         //
+        DBGrid.DataSource.DataSet.DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -2144,6 +2146,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        DBGrid.DataSource.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbBrand);
@@ -2377,10 +2380,11 @@ begin
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inCompositionGroupId',ftInteger,ptInput, 0);
         //
+        DBGrid.DataSource.DataSet.DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -2398,6 +2402,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        DBGrid.DataSource.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbComposition);
@@ -2441,12 +2446,12 @@ begin
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
-//        toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
         //
+        DBGrid.DataSource.DataSet.DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -2462,6 +2467,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        DBGrid.DataSource.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbCompositionGroup);
@@ -2506,10 +2512,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
+        DBGrid.DataSource.DataSet.DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -2525,6 +2532,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        DBGrid.DataSource.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbCountryBrand);
@@ -2570,12 +2578,12 @@ if (not cbDiscount.Checked)or(not cbDiscount.Enabled) then exit;
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inDiscountKindId',ftInteger,ptInput, 0);
-
         //
+        DBGrid.DataSource.DataSet.DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin exit;end;
+             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
              //
 
              fOpenSqToQuery (' SELECT ID  FROM Object WHERE Object.DescId = zc_Object_DiscountKind()  '
@@ -2599,6 +2607,7 @@ if (not cbDiscount.Checked)or(not cbDiscount.Enabled) then exit;
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        DBGrid.DataSource.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbDiscount);
@@ -2652,11 +2661,12 @@ begin
         toStoredProc.Params.AddParam ('inDiscountTax',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inDiscountId',ftInteger,ptInput, 0);
         //
+        DBGrid.DataSource.DataSet.DisableControls;
         while not EOF do
         begin
 
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
              //
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -2677,6 +2687,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        DBGrid.DataSource.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbDiscountTools);
@@ -2721,10 +2732,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
+        DBGrid.DataSource.DataSet.DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -2740,6 +2752,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        DBGrid.DataSource.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbFabrika);
@@ -2808,11 +2821,12 @@ if (not cbGoods.Checked)or(not cbGoods.Enabled) then exit;
         toStoredProc.Params.AddParam ('inLabelId',ftInteger,ptInput, 0);
 
         //
+        DBGrid.DataSource.DataSet.DisableControls;
         while not EOF do
         begin
 
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin DBGrid.DataSource.DataSet.EnableControls; exit;end;
              //
                           fOpenSqToQuery (' SELECT ID  FROM Object WHERE Object.DescId = zc_Object_Label()  '
                            +' and ValueData = '''+FieldByName('LabelName').AsString+'''');
@@ -2838,6 +2852,7 @@ if (not cbGoods.Checked)or(not cbGoods.Enabled) then exit;
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        DBGrid.DataSource.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbGoods);
@@ -2887,10 +2902,11 @@ begin
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
         //
+        DBGrid.DataSource.DataSet.DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -2907,6 +2923,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        DBGrid.DataSource.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbGoodsGroup);
@@ -2951,10 +2968,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
+        DBGrid.DataSource.DataSet.DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -2970,6 +2988,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        DBGrid.DataSource.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbGoodsInfo);
@@ -3017,11 +3036,12 @@ if (not cbGoodsItem.Checked)or(not cbGoodsItem.Enabled) then exit;
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsSizeId',ftInteger,ptInput, 0);
         //
+        DBGrid.DataSource.DataSet.DisableControls;
         while not EOF do
         begin
 
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin DBGrid.DataSource.DataSet.EnableControls; exit;end;
              //
 
              //
@@ -3042,6 +3062,7 @@ if (not cbGoodsItem.Checked)or(not cbGoodsItem.Enabled) then exit;
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        DBGrid.DataSource.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbGoodsItem);
@@ -3087,10 +3108,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
+        DBGrid.DataSource.DataSet.DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -3106,6 +3128,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        DBGrid.DataSource.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbGoodsSize);
@@ -3150,10 +3173,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
+        DBGrid.DataSource.DataSet.DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -3169,6 +3193,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        DBGrid.DataSource.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbKassa);
@@ -3203,10 +3228,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
+        DBGrid.DataSource.DataSet.DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=0;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
@@ -3218,6 +3244,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        DBGrid.DataSource.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbLabel);
@@ -3261,10 +3288,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
+        DBGrid.DataSource.DataSet.DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -3280,6 +3308,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        DBGrid.DataSource.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbLineFabrica);
@@ -3329,10 +3358,11 @@ begin
         toStoredProc.Params.AddParam ('inInternalCode',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inInternalName',ftString,ptInput, '');
         //
+        DBGrid.DataSource.DataSet.DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin exit;end;
+             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
              //
 
              fOpenSqToQuery (' select OS_Measure_InternalCode.ValueData  AS InternalCode'
@@ -3369,6 +3399,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        DBGrid.DataSource.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbMeasure);
@@ -3424,11 +3455,12 @@ if (not cbPartner.Checked)or(not cbPartner.Enabled) then exit;
         toStoredProc.Params.AddParam ('inPeriodId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPeriodYear',ftFloat,ptInput, 0);
         //
+        DBGrid.DataSource.DataSet.DisableControls;
         while not EOF do
         begin
 
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
              //
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -3447,6 +3479,7 @@ if (not cbPartner.Checked)or(not cbPartner.Enabled) then exit;
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        DBGrid.DataSource.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbPartner);
@@ -3491,10 +3524,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
+        DBGrid.DataSource.DataSet.DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -3510,6 +3544,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        DBGrid.DataSource.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbPeriod);
@@ -3517,7 +3552,7 @@ end;
 
 procedure TMainForm.pLoadGuide_Unit;
 begin
-if (not cbUnit.Checked)or(not cbUnit.Enabled) then exit;
+    if (not cbUnit.Checked)or(not cbUnit.Enabled) then exit;
      try
      if cbId_Postgres.Checked then
       fExecSqFromQuery('alter table dba.Unit add Id_Postgres integer null;');
@@ -3554,11 +3589,12 @@ if (not cbUnit.Checked)or(not cbUnit.Enabled) then exit;
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
         //
+        DBGrid.DataSource.DataSet.DisableControls;
         while not EOF do
         begin
 
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
              //
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -3575,6 +3611,7 @@ if (not cbUnit.Checked)or(not cbUnit.Enabled) then exit;
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        DBGrid.DataSource.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbUnit);
@@ -3619,10 +3656,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
+        DBGrid.DataSource.DataSet.DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -3638,6 +3676,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        DBGrid.DataSource.DataSet.EnableControls;
      end;
      //
      myDisabledCB(cbValuta);
