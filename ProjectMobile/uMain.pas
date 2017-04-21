@@ -2809,6 +2809,8 @@ begin
   // заполнение списка форм оплаты
   cbPaidKind.Items.Clear;
   FPaidKindIdList.Clear;
+  AddComboItem(cbPaidKind, 'все');
+  FPaidKindIdList.Add(0);
   AddComboItem(cbPaidKind, DM.tblObject_ConstPaidKindName_First.AsString);
   FPaidKindIdList.Add(DM.tblObject_ConstPaidKindId_First.AsInteger);
   AddComboItem(cbPaidKind, DM.tblObject_ConstPaidKindName_Second.AsString);
@@ -3595,7 +3597,7 @@ begin
 
   with DM.qryPartner do
   begin
-    SQL.Text := BasePartnerQuery;
+    SQL.Text := BasePartnerQuery + ' GROUP BY P.Id';
     ParamByName('DefaultPriceList').AsInteger := DM.tblObject_ConstPriceListId_def.AsInteger;
     Open;
 

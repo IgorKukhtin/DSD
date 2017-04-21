@@ -604,10 +604,13 @@ type
     qryPhotoGroupDocsGroupName: TStringField;
     tblMovementItem_VisitGPSN: TFloatField;
     tblMovementItem_VisitGPSE: TFloatField;
+    qryPartnerContractInfo: TStringField;
+    cdsJuridicalCollationPaidKindShow: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupDocsCalcFields(DataSet: TDataSet);
+    procedure qryPartnerCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
     FConnected: Boolean;
@@ -1968,6 +1971,7 @@ begin
             DM.cdsJuridicalCollationDocNumDate.AsString := 'Документ №' + DM.cdsJuridicalCollationDocNum.AsString +
               ' от ' + FormatDateTime('DD.MM.YYYY', DM.cdsJuridicalCollationDocDate.AsDateTime);
             DM.cdsJuridicalCollationDocTypeShow.AsString := 'Вид: ' + DM.cdsJuridicalCollationDocType.AsString;
+            DM.cdsJuridicalCollationPaidKindShow.AsString := 'Форма оплаты: ' + DM.cdsJuridicalCollationPaidKind.AsString;
 
             DM.cdsJuridicalCollation.Post;
 
@@ -1992,9 +1996,9 @@ begin
 
             frmMain.lwJuridicalCollation.ScrollViewPos := 0;
           end);
-      end
+      end //По заданым критериям данные не найдены
       else
-        Result := 'По заданым критериям данные не найдены';
+        Result := '';
     except
       on E : Exception do
       begin
@@ -2553,6 +2557,30 @@ begin
     ') за ' + DataSet.FieldByName('Measure').AsString;
 
   DataSet.FieldByName('Termin').AsString := 'Цена действительна с ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('StartDate').AsDateTime);
+end;
+
+procedure TDM.qryPartnerCalcFields(DataSet: TDataSet);
+begin
+  // информация о долгах ТТ
+  if DataSet.FieldByName('PaidKindId').AsInteger = DM.tblObject_ConstPaidKindId_First.AsInteger then // БН
+  begin
+    DataSet.FieldByName('ContractInfo').AsString := DM.tblObject_ConstPaidKindName_First.AsString + ' : ' + DataSet.FieldByName('ContractName').AsString +
+      '  долг : ' + FormatFloat(',0.##', DM.qryPartnerDebtSumJ.AsFloat) +
+      ' : ' + FormatFloat(',0.##', DM.qryPartnerOverSumJ.AsFloat) +
+      ' : ' + DM.qryPartnerOverDaysJ.AsString + ' дн';
+  end
+  else
+  if DM.qryPartnerPaidKindId.AsInteger = DM.tblObject_ConstPaidKindId_Second.AsInteger then // Нал
+  begin
+    DataSet.FieldByName('ContractInfo').AsString := DM.tblObject_ConstPaidKindName_Second.AsString + ' : ' + DataSet.FieldByName('ContractName').AsString +
+      '  долг : ' + FormatFloat(',0.##', DM.qryPartnerDebtSum.AsFloat) +
+      ' : ' + FormatFloat(',0.##', DM.qryPartnerOverSum.AsFloat) +
+      ' : ' + DM.qryPartnerOverDays.AsString + ' дн';
+  end
+  else  // нет договора
+  begin
+    DataSet.FieldByName('ContractInfo').AsString := DataSet.FieldByName('ContractName').AsString;
+  end;
 end;
 
 procedure TDM.qryPhotoGroupDocsCalcFields(DataSet: TDataSet);

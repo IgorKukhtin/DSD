@@ -506,6 +506,7 @@ object DM: TDM
     end
   end
   object qryPartner: TFDQuery
+    OnCalcFields = qryPartnerCalcFields
     Connection = conMain
     Left = 40
     Top = 176
@@ -585,6 +586,12 @@ object DM: TDM
     end
     object qryPartnerOverDaysJ: TIntegerField
       FieldName = 'OverDaysJ'
+    end
+    object qryPartnerContractInfo: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'ContractInfo'
+      Size = 400
+      Calculated = True
     end
   end
   object qryPriceList: TFDQuery
@@ -1698,6 +1705,10 @@ object DM: TDM
     object cdsJuridicalCollationFromToName: TStringField
       FieldName = 'FromToName'
       Size = 300
+    end
+    object cdsJuridicalCollationPaidKindShow: TStringField
+      FieldName = 'PaidKindShow'
+      Size = 255
     end
   end
   object cdsTasks: TClientDataSet
