@@ -408,4 +408,4 @@ $BODY$
  22.04.17         *
 */
 -- тест
--- SELECT * FROM gpSelect_Movement_ReturnIn_Mobile (inStartDate:= '01.12.2015', inEndDate:= '01.12.2015', inIsPartnerDate:=FALSE, inIsErased :=TRUE, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
+--select * from gpSelect_Movement_ReturnIn_Mobile(instartdate := ('01.02.2017')::TDateTime , inenddate := ('28.02.2017')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 , inMemberId := 274610 ,  inSession := '5');
