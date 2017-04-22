@@ -5992,7 +5992,7 @@ inherited MainForm: TMainForm
       end
     end
     object miPersonalTrade: TMenuItem [8]
-      Caption = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
+      Caption = #1052#1086#1073#1080#1083#1100#1085#1099#1081' '#1072#1075#1077#1085#1090
       object N158: TMenuItem
         Action = actTask
       end

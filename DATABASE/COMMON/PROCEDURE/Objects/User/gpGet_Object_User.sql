@@ -104,4 +104,4 @@ ALTER FUNCTION gpGet_Object_User (Integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_User('2')
+-- SELECT * FROM gpGet_Object_User (1, '5')

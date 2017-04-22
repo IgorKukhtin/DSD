@@ -1,10 +1,6 @@
 -- Function: gpInsertUpdate_Object_User()
 
--- DROP FUNCTION gpInsertUpdate_Object_User();
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Integer, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_User(
  INOUT ioId               Integer   ,    -- ключ объекта <Пользователь> 
@@ -25,7 +21,6 @@ $BODY$
   DECLARE vbUserId Integer;
   DECLARE Code_max Integer;  
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_User());
 
