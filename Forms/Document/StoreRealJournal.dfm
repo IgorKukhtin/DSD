@@ -1,26 +1,26 @@
 inherited StoreRealJournalForm: TStoreRealJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1060#1072#1082#1090#1080#1095#1077#1089#1082#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1058#1058'>'
   ClientHeight = 396
-  ClientWidth = 953
+  ClientWidth = 978
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 969
+  ExplicitWidth = 994
   ExplicitHeight = 434
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 953
+    Width = 978
     Height = 339
     TabOrder = 3
     ExplicitWidth = 953
     ExplicitHeight = 339
     ClientRectBottom = 339
-    ClientRectRight = 953
+    ClientRectRight = 978
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 953
       ExplicitHeight = 339
       inherited cxGrid: TcxGrid
-        Width = 953
+        Width = 978
         Height = 339
         ExplicitWidth = 953
         ExplicitHeight = 339
@@ -144,14 +144,6 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
             Options.Editing = False
             Width = 82
           end
-          object clInsertName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
-            DataBinding.FieldName = 'InsertName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 101
-          end
           object clInsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
@@ -168,12 +160,52 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
             Options.Editing = False
             Width = 90
           end
+          object clInsertName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
+          end
+          object clMemberName: TcxGridDBColumn
+            Caption = #1060#1048#1054
+            DataBinding.FieldName = 'MemberName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object UnitCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087'.'
+            DataBinding.FieldName = 'UnitCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 35
+          end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 130
+          end
+          object PositionName: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'PositionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 953
+    Width = 978
     ExplicitWidth = 953
     inherited deStart: TcxDateEdit
       EditValue = 42370d

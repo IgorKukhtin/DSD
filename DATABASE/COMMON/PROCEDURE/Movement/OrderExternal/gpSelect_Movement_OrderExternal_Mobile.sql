@@ -28,6 +28,12 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , MovementPromo TVarChar
              , Comment TVarChar
              , InsertName TVarChar
+             , InsertDate TDateTime
+             , InsertMobileDate TDateTime
+             , MemberName TVarChar
+             , UnitCode Integer
+             , UnitName TVarChar
+             , PositionName TVarChar
               )
 AS
 $BODY$
@@ -107,6 +113,14 @@ BEGIN
                           WHERE MovementLinkObject_Insert.ObjectId = vbUserId_Member
                              OR vbUserId_Member = 0
                           )
+         , tmpPersonal AS (SELECT lfSelect.MemberId
+                                , lfSelect.PersonalId
+                                , lfSelect.UnitId
+                                , lfSelect.PositionId
+                                , lfSelect.BranchId
+                           FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                           WHERE lfSelect.Ord = 1
+                          )
 
        SELECT
              Movement.Id                                    AS Id
@@ -160,6 +174,12 @@ BEGIN
 
            , MovementString_Comment.ValueData       AS Comment
            , Object_User.ValueData                  AS InsertName
+           , MovementDate_Insert.ValueData          AS InsertDate
+           , MovementDate_InsertMobile.ValueData    AS InsertMobileDate
+           , Object_Member.ValueData   AS MemberName
+           , Object_Unit.ObjectCode    AS UnitCode
+           , Object_Unit.ValueData     AS UnitName
+           , Object_Position.ValueData AS PositionName
 
        FROM tmpMovement AS Movement
 
@@ -171,8 +191,15 @@ BEGIN
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN MovementDate AS MovementDate_OperDateMark
-                                   ON MovementDate_OperDateMark.MovementId =  Movement.Id
+                                   ON MovementDate_OperDateMark.MovementId = Movement.Id
                                   AND MovementDate_OperDateMark.DescId = zc_MovementDate_OperDateMark()
+
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = Movement.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+            LEFT JOIN MovementDate AS MovementDate_InsertMobile
+                                   ON MovementDate_InsertMobile.MovementId = Movement.Id
+                                  AND MovementDate_InsertMobile.DescId = zc_MovementDate_InsertMobile()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
@@ -271,7 +298,6 @@ BEGIN
                                            ON MovementLinkMovement_Order.MovementId = Movement.Id
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
          
-
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Promo
                                            ON MovementLinkMovement_Promo.MovementId = Movement.Id
                                           AND MovementLinkMovement_Promo.DescId = zc_MovementLinkMovement_Promo()
@@ -282,6 +308,15 @@ BEGIN
             LEFT JOIN MovementDate AS MD_EndSale
                                    ON MD_EndSale.MovementId =  Movement_Promo.Id
                                   AND MD_EndSale.DescId = zc_MovementDate_EndSale()
+
+             LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                  ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                                 AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+             LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+
+             LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
+             LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
+             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
            ;
 
 END;
@@ -291,8 +326,9 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 22.04.17         *
  07.03.17         * add inMemberId
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_OrderExternal_Mobile (inStartDate:= '01.04.2017', inEndDate:= CURRENT_DATE, inIsErased:= FALSE, inJuridicalBasisId:=0, inMemberId:=0, inSession:= zfCalc_UserAdmin())
+-- select * from gpSelect_Movement_OrderExternal_Mobile(instartdate := ('26.12.2016')::TDateTime , inenddate := ('22.04.2017')::TDateTime , inIsErased := 'False' , inJuridicalBasisId := 9399 , inMemberId := 0 ,  inSession := '5');
