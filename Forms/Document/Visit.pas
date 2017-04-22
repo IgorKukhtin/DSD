@@ -43,6 +43,8 @@ type
     bbInsertRecord: TdxBarButton;
     PhotoData: TcxGridDBColumn;
     actRefreshEx: TdsdDataSetRefreshEx;
+    clGPSN: TcxGridDBColumn;
+    clGPSE: TcxGridDBColumn;
   private
     { Private declarations }
   public

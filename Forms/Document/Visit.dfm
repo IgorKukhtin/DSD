@@ -4,7 +4,7 @@ inherited VisitForm: TVisitForm
   ClientWidth = 1011
   AddOnFormData.RefreshAction = actRefreshEx
   ExplicitWidth = 1027
-  ExplicitHeight = 488
+  ExplicitHeight = 487
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -22,6 +22,7 @@ inherited VisitForm: TVisitForm
       inherited cxGrid: TcxGrid
         Width = 1011
         Height = 349
+        ExplicitLeft = 8
         ExplicitWidth = 1011
         ExplicitHeight = 349
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -138,6 +139,22 @@ inherited VisitForm: TVisitForm
             HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103' '#1092#1086#1090#1086
             Options.Editing = False
             Width = 161
+          end
+          object clGPSN: TcxGridDBColumn [5]
+            Caption = 'GPS '#1082#1086#1086#1088#1076#1080#1085#1072#1090#1099' '#1092#1086#1090#1086' ('#1096#1080#1088#1086#1090#1072')'
+            DataBinding.FieldName = 'GPSN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
+          end
+          object clGPSE: TcxGridDBColumn [6]
+            Caption = 'GPS '#1082#1086#1086#1088#1076#1080#1085#1072#1090#1099' '#1092#1086#1090#1086' ('#1076#1086#1083#1075#1086#1090#1072')'
+            DataBinding.FieldName = 'GPSE'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
           end
         end
       end
