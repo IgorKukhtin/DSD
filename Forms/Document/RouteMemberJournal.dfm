@@ -103,7 +103,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
-          OptionsView.HeaderHeight = 40
+          OptionsView.HeaderHeight = 50
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -163,7 +163,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
             Width = 84
           end
           object clInsertDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1080#1085#1093#1088'. '#1089' '#1084#1086#1073'.'#1091#1089#1090#1088')'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -171,7 +171,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
             Width = 78
           end
           object clInsertMobileDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.) '#1085#1072' '#1084#1086#1073'. '#1091#1089#1090#1088'.'
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1084#1086#1073'.'#1091#1089#1090#1088')'
             DataBinding.FieldName = 'InsertMobileDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

@@ -147,7 +147,7 @@ inherited TaskForm: TTaskForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 172
+            Width = 163
           end
           object colisClose: TcxGridDBColumn [4]
             Caption = #1042#1099#1087#1086#1083#1085#1077#1085#1086' ('#1076#1072'/'#1085#1077#1090')'
@@ -625,8 +625,8 @@ inherited TaskForm: TTaskForm
     Top = 225
   end
   inherited PopupMenu: TPopupMenu
-    Left = 792
-    Top = 184
+    Left = 808
+    Top = 224
     object N2: TMenuItem
       Action = actMISetErased
     end
@@ -859,13 +859,13 @@ inherited TaskForm: TTaskForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Task_SetErased'
-    Left = 790
-    Top = 128
+    Left = 702
+    Top = 192
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Task_SetUnErased'
-    Left = 654
-    Top = 152
+    Left = 638
+    Top = 208
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Task'
