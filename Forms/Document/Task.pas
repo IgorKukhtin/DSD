@@ -44,6 +44,10 @@ type
     bbInsertRecord: TdxBarButton;
     GuidesPosition: TdsdGuides;
     UpdateDate: TcxGridDBColumn;
+    edInsertName: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    cxLabel8: TcxLabel;
+    edInsertDate: TcxDateEdit;
   private
     { Private declarations }
   public
