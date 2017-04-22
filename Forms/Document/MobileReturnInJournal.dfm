@@ -1,4 +1,4 @@
-inherited ReturnInJournalForm: TReturnInJournalForm
+inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 535
   ClientWidth = 1114
@@ -589,10 +589,22 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     ExplicitWidth = 1114
     ExplicitHeight = 50
     inherited deStart: TcxDateEdit
-      EditValue = 42370d
+      Left = 99
+      EditValue = 42736d
+      ExplicitLeft = 99
+      ExplicitWidth = 78
+      Width = 78
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42370d
+      Left = 289
+      EditValue = 42736d
+      ExplicitLeft = 289
+      ExplicitWidth = 79
+      Width = 79
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 181
+      ExplicitLeft = 181
     end
     object edIsPartnerDate: TcxCheckBox
       Left = 10
@@ -603,28 +615,30 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Width = 270
     end
     object edDocumentTaxKind: TcxButtonEdit
-      Left = 591
-      Top = 5
+      Left = 419
+      Top = 31
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 200
+      Visible = False
+      Width = 145
     end
     object cxLabel14: TcxLabel
-      Left = 406
-      Top = 6
-      Caption = #1058#1080#1087' '#1076#1083#1103'  '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1103' '#1085#1072#1083#1086#1075'.'#1076#1086#1082'.'
+      Left = 286
+      Top = 32
+      Caption = #1058#1080#1087' '#1076#1083#1103' '#1092#1086#1088#1084'. '#1085#1072#1083#1086#1075'.'#1076#1086#1082'.'
+      Visible = False
     end
     object cxLabel27: TcxLabel
-      Left = 822
+      Left = 885
       Top = 6
       Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
     end
     object edJuridicalBasis: TcxButtonEdit
-      Left = 900
+      Left = 963
       Top = 5
       Properties.Buttons = <
         item
@@ -634,6 +648,23 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Properties.ReadOnly = True
       TabOrder = 8
       Width = 150
+    end
+    object edPersonalTrade: TcxButtonEdit
+      Left = 666
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 9
+      Width = 207
+    end
+    object cxLabel3: TcxLabel
+      Left = 577
+      Top = 6
+      Caption = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090':'
     end
   end
   object ExportXmlGrid: TcxGrid [2]
@@ -1321,6 +1352,9 @@ inherited ReturnInJournalForm: TReturnInJournalForm
           StoredProc = spGet_UserJuridicalBasis
         end
         item
+          StoredProc = spGet_PersonalTrade
+        end
+        item
           StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
@@ -1338,7 +1372,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     Top = 179
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ReturnIn'
+    StoredProcName = 'gpSelect_Movement_ReturnIn_Mobile'
     Params = <
       item
         Name = 'instartdate'
@@ -1376,6 +1410,14 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         Name = 'inJuridicalBasisId'
         Value = Null
         Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberId'
+        Value = Null
+        Component = PersonalTradeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1420,22 +1462,6 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         end
         item
           BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbTaxCorrective'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbCorrective'
-        end
-        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -1590,6 +1616,9 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       end
       item
         Component = JuridicalBasisGuides
+      end
+      item
+        Component = PersonalTradeGuides
       end>
     Left = 408
     Top = 344
@@ -1760,7 +1789,8 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 608
+    Left = 496
+    Top = 184
   end
   object spTaxCorrective: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'
@@ -2279,7 +2309,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 943
+    Left = 1037
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'
@@ -2304,5 +2334,63 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     PackSize = 1
     Left = 824
     Top = 48
+  end
+  object PersonalTradeGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalTrade
+    Key = '0'
+    FormNameParam.Value = 'TMemberPosition_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMemberPosition_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = PersonalTradeGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PersonalTradeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = '149831'
+        MultiSelectSeparator = ','
+      end>
+    Left = 687
+  end
+  object spGet_PersonalTrade: TdsdStoredProc
+    StoredProcName = 'gpGetMobile_Object_Const'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'MemberId'
+        Value = '0'
+        Component = PersonalTradeGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberName'
+        Value = ''
+        Component = PersonalTradeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 904
+    Top = 40
   end
 end

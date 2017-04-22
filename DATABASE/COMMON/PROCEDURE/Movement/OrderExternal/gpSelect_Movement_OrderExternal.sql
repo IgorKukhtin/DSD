@@ -276,15 +276,14 @@ BEGIN
                                         AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_Insert.ObjectId
 
-             LEFT JOIN ObjectLink AS ObjectLink_User_Member
-                                  ON ObjectLink_User_Member.ObjectId = Object_User.Id
-                                 AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-             LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                 ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                                AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
 
-             LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
-             LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
-             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
-
+            LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
+            LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Promo
                                            ON MovementLinkMovement_Promo.MovementId = Movement.Id
