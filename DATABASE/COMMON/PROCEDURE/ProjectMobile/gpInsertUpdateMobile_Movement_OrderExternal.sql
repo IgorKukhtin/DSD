@@ -91,24 +91,24 @@ BEGIN
            SELECT outPrinted INTO vbPrinted FROM lpUnComplete_Movement_OrderExternal (inMovementId:= vbId, inUserId:= vbUserId);
       END IF;
 
-      vbId:= lpInsertUpdate_Movement_OrderExternal (ioId:= vbId
-                                                  , inInvNumber:= inInvNumber
+      vbId:= lpInsertUpdate_Movement_OrderExternal (ioId              := vbId
+                                                  , inInvNumber       := inInvNumber
                                                   , inInvNumberPartner:= inInvNumber
-                                                  , inOperDate:= inOperDate
-                                                  , inOperDatePartner:= vbOperDatePartner
-                                                  , inOperDateMark:= inOperDate
-                                                  , inPriceWithVAT:= inPriceWithVAT
-                                                  , inVATPercent:= inVATPercent
-                                                  , inChangePercent:= inChangePercent    
-                                                  , inFromId:= inPartnerId
-                                                  , inToId:= inUnitId
-                                                  , inPaidKindId:= inPaidKindId
-                                                  , inContractId:= inContractId
-                                                  , inRouteId:= vbRouteId
-                                                  , inRouteSortingId:= NULL
-                                                  , inPersonalId:= vbPersonalId
-                                                  , inPriceListId:= inPriceListId
-                                                  , inPartnerId:= inPartnerId
+                                                  , inOperDate        := inOperDate
+                                                  , inOperDatePartner := vbOperDatePartner
+                                                  , inOperDateMark    := inOperDate
+                                                  , inPriceWithVAT    := inPriceWithVAT
+                                                  , inVATPercent      := inVATPercent
+                                                  , inChangePercent   := inChangePercent    
+                                                  , inFromId          := inPartnerId
+                                                  , inToId            := inUnitId
+                                                  , inPaidKindId      := inPaidKindId
+                                                  , inContractId      := inContractId
+                                                  , inRouteId         := vbRouteId
+                                                  , inRouteSortingId  := NULL
+                                                  , inPersonalId      := vbPersonalId
+                                                  , inPriceListId     := inPriceListId
+                                                  , inPartnerId       := NULL
                                                   , inUserId:= vbUserId
                                                    );
 

@@ -103,7 +103,7 @@ BEGIN
         , tmpMovement AS (SELECT tmp.*, MovementLinkObject_Insert.ObjectId AS UserId_insert
                           FROM (SELECT Movement.*
                                 FROM tmpStatus
-                                     JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.StatusId = tmpStatus.StatusId
+                                     JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.StatusId = tmpStatus.StatusId
                                      JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
                                 ) AS tmp
                                 INNER JOIN MovementLinkObject AS MovementLinkObject_Insert
@@ -331,4 +331,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Movement_OrderExternal_Mobile(instartdate := ('26.12.2016')::TDateTime , inenddate := ('22.04.2017')::TDateTime , inIsErased := 'False' , inJuridicalBasisId := 9399 , inMemberId := 0 ,  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_OrderExternal_Mobile(instartdate := ('26.12.2016')::TDateTime , inenddate := ('22.04.2017')::TDateTime , inIsErased := 'False' , inJuridicalBasisId := 9399 , inMemberId := 0 ,  inSession := '5');

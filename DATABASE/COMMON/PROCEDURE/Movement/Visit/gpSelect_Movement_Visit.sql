@@ -156,4 +156,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Movement_Visit(instartdate := ('01.01.2017')::TDateTime , inenddate := ('31.12.2017')::TDateTime , inIsErased := 'False' , inJuridicalBasisId := 9399 , inMemberId := 274610 ,  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_Visit(instartdate := ('01.01.2017')::TDateTime , inenddate := ('31.12.2017')::TDateTime , inIsErased := 'False' , inJuridicalBasisId := 9399 , inMemberId := 274610 ,  inSession := '5');

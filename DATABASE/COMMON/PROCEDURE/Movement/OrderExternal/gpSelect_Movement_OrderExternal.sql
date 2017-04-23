@@ -316,4 +316,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Movement_OrderExternal(instartdate := ('20.04.2017')::TDateTime , inenddate := ('22.04.2017')::TDateTime , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_OrderExternal(instartdate := ('20.04.2017')::TDateTime , inenddate := ('22.04.2017')::TDateTime , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inSession := '5');

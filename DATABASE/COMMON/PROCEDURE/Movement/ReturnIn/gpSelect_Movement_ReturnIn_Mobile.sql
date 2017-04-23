@@ -408,4 +408,4 @@ $BODY$
  22.04.17         *
 */
 -- тест
---select * from gpSelect_Movement_ReturnIn_Mobile(instartdate := ('01.02.2017')::TDateTime , inenddate := ('28.02.2017')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 , inMemberId := 274610 ,  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_ReturnIn_Mobile(instartdate := ('01.02.2017')::TDateTime , inenddate := ('28.02.2017')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 , inMemberId := 274610 ,  inSession := '5');

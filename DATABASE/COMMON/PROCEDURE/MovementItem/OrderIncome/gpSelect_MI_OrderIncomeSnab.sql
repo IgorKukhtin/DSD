@@ -406,4 +406,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_OrderIncomeSnab (0, FALSE, zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_MI_OrderIncomeSnab (0, FALSE, FALSE, zfCalc_UserAdmin());
