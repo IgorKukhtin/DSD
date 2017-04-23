@@ -1,14 +1,14 @@
--- Function: gpSelect_Movement_ReturnIn()
+-- Function: gpSelect_Movement_ReturnIn_Mobile()
 
--- DROP FUNCTION IF EXISTS gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ReturnIn_Mobile (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_ReturnIn(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_ReturnIn_Mobile(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
     IN inIsPartnerDate      Boolean ,
     IN inIsErased           Boolean ,
     IN inJuridicalBasisId   Integer   ,
+    IN inMemberId           Integer   , -- торговый агент
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -52,12 +52,48 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
 AS
 $BODY$
    DECLARE vbUserId Integer;
-
    DECLARE vbIsXleb Boolean;
+   DECLARE vbIsProjectMobile Boolean;
+   DECLARE vbUserId_Member   Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ReturnIn());
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- Только так определяется что пользователь inSession - Торговый агент - т.е. у него есть моб телефон, может потом для этого заведем спец роль и захардкодим
+     vbIsProjectMobile:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = vbUserId AND ObjectBoolean.DescId = zc_ObjectBoolean_User_ProjectMobile());
+
+     IF inMemberId > 0
+     THEN
+         -- Определяется для <Физическое лицо> - его UserId
+         vbUserId_Member:= (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_User_Member() AND OL.ChildObjectId = inMemberId);
+         -- Проверка
+         IF COALESCE (vbUserId_Member, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Для ФИО <%> не определно значение <Пользователь>.', lfGet_Object_ValueData (inMemberId);
+         END IF;
+
+     ELSEIF vbIsProjectMobile = TRUE
+     THEN
+         -- в этом случае - видит только себя
+         vbUserId_Member:= vbUserId;
+         -- !!!меняем значение!!! - Определяется для UserId - его <Физическое лицо>
+         inMemberId:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_User_Member() AND OL.ObjectId = vbUserId);
+     ELSE
+         -- в этом случае - видит ВСЕ
+         vbUserId_Member:= 0;
+         -- !!!меняем значение!!!
+         inMemberId:= 0;
+     END IF;
+
+
+     -- Проверка - Торговый агент видит только себя
+     IF vbIsProjectMobile = TRUE AND vbUserId_Member <> vbUserId
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.';
+     END IF;
+
 
 
      -- !!!Хлеб!!!
@@ -79,6 +115,33 @@ BEGIN
                          UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
                          UNION SELECT zc_Enum_Process_AccessKey_DocumentDnepr() AS AccessKeyId WHERE vbIsXleb = TRUE
                               )
+
+        , tmpMovement AS (SELECT tmp.*, MovementLinkObject_Insert.ObjectId AS UserId_insert
+                          FROM (SELECT Movement.id
+                                FROM tmpStatus
+                                     JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                                  AND Movement.DescId = zc_Movement_ReturnIn() 
+                                                  AND Movement.StatusId = tmpStatus.StatusId
+                                     JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
+                                WHERE inIsPartnerDate = FALSE
+                               UNION ALL
+                                SELECT MovementDate_OperDatePartner.MovementId  AS Id
+                                FROM MovementDate AS MovementDate_OperDatePartner
+                                     JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId = zc_Movement_ReturnIn()
+                                     JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+                                     JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
+                                WHERE inIsPartnerDate = TRUE
+                                  AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
+                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                ) AS tmp
+                                INNER JOIN MovementLinkObject AS MovementLinkObject_Insert
+                                                              ON MovementLinkObject_Insert.MovementId = tmp.Id
+                                                             AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
+                                                             AND MovementLinkObject_Insert.ObjectId > 0
+                          WHERE MovementLinkObject_Insert.ObjectId = vbUserId_Member
+                             OR vbUserId_Member = 0
+                          )
+
          , tmpPersonal AS (SELECT lfSelect.MemberId
                                 , lfSelect.PersonalId
                                 , lfSelect.UnitId
@@ -157,25 +220,12 @@ BEGIN
            , Object_Unit.ValueData                  AS UnitName
            , Object_Position.ValueData              AS PositionName
 
-       FROM (SELECT Movement.id
-             FROM tmpStatus
-                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ReturnIn() AND Movement.StatusId = tmpStatus.StatusId
-                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
-             WHERE inIsPartnerDate = FALSE
-            UNION ALL
-             SELECT MovementDate_OperDatePartner.MovementId  AS Id
-             FROM MovementDate AS MovementDate_OperDatePartner
-                  JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId = zc_Movement_ReturnIn()
-                  JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
-                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
-             WHERE inIsPartnerDate = TRUE
-               AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
-               AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-            ) AS tmpMovement
+       FROM tmpMovement
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.id = Movement.ParentId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+            LEFT JOIN Object AS Object_User ON Object_User.Id = tmpMovement.UserId_insert
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Error
                                       ON MovementBoolean_Error.MovementId =  Movement.Id
@@ -333,12 +383,7 @@ BEGIN
                                    ON MD_EndReturn.MovementId =  Movement_Promo.Id
                                   AND MD_EndReturn.DescId = zc_MovementDate_EndReturn()
 
-           --
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
-                                         ON MovementLinkObject_Insert.MovementId = Movement.Id
-                                        AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
-            LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_Insert.ObjectId
-
+            --
             LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                  ON ObjectLink_User_Member.ObjectId = Object_User.Id
                                 AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
@@ -355,158 +400,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Movement_ReturnIn_Mobile (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  22.04.17         *
- 05.10.16         * add inJuridicalBasisId
- 14.05.16         *
- 21.08.15         * add isPartner
- 26.06.15         * add Comment, Parent
- 13.11.14                                        * add zc_Enum_Process_AccessKey_DocumentAll
- 12.08.14                                        * add isEDI
- 24.07.14         * add zc_MovementFloat_CurrencyValue
-                        zc_MovementLinkObject_CurrencyDocument
-                        zc_MovementLinkObject_CurrencyPartner
- 03.05.14                                        * add ContractTagName
- 23.04.14                                        * add InvNumberMark
- 31.03.14                                        * add TotalCount...
- 28.03.14                                        * add TotalSummVAT
- 26.03.14                                        * add InvNumberPartner
- 16.03.14                                        * add JuridicalName_From and OKPO_From
- 13.02.14                                                            * add PriceList
- 10.02.14                                        * add Object_RoleAccessKey_View
- 10.02.14                                                       * add TaxKind
- 05.02.14                                        * add Object_InfoMoney_View
- 30.01.14                                                       * add inIsPartnerDate, inIsErased
- 14.01.14                                        * add Object_Contract_InvNumber_View
- 11.01.14                                        * add Checked, TotalCountPartner
- 17.07.13         *
-*/
-/*
-!!!!!!!!!!!!!!!!!удаление задвоенных накл по филиалам
-DO $$
-BEGIN
- perform lpSetErased_Movement (a.Id, 5)
-  from (
-       SELECT Movement.InvNumber, Movement.OperDate, Min (Movement.Id) as Id
-       FROM Movement 
-            JOIN MovementLinkObject AS MovementLinkObject_To
-                                    ON MovementLinkObject_To.MovementId = Movement.Id
-                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                   AND MovementLinkObject_To.ObjectId in (select 18341 as id -- ;22100;"ф. Никополь"
-                                                                union all select 8425 as id -- ;22090;"ф. Харьков"
-                                                                union all select 8423 as id -- ;22080;"ф. Одесса"
-                                                                union all select 8421 as id -- ;22070;"ф. Донецк"
-                                                                union all select 8419 as id -- ;22060;"ф. Крым"
-                                                                union all select 8417 as id -- ;22050;"ф. Николаев (Херсон)"
-                                                                union all select 8415 as id -- ;22040;"ф. Черкассы ( Кировоград)"
-                                                                union all select 8413 as id -- ;22030;"ф. Кр.Рог"
-                                                                union all select 8411 as id -- ;22021;"Склад гп ф.Киев"
-                                                                         )
-       where Movement.OperDate BETWEEN '01.04.2014' AND '30.04.2014'
-         AND Movement.DescId = zc_Movement_ReturnIn()
-         AND Movement.StatusId <> zc_Enum_Status_Erased()
-       group by Movement.InvNumber, Movement.OperDate
-       having count(*) > 1
-) as a ;
-END $$;
-*/
-
-/*
-!!!!!!!!!!!!!!!!!проверка суммы по строкам
-
-              -- данные <Продажа покупателю> и <Возврат от покупателя>
-              SELECT 1, sum (MovementFloat_TotalSumm.ValueData)
-              FROM MovementDate AS MovementDate_OperDatePartner
-                   INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                                 ON MovementLinkObject_Contract.MovementId = MovementDate_OperDatePartner.MovementId
-                                                AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                                                AND MovementLinkObject_Contract.ObjectId = 882691 
-                   INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
-                                      AND Movement.StatusId = zc_Enum_Status_Complete()
-                                      AND Movement.DescId   = zc_Movement_ReturnIn()
-
-                   INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = MovementDate_OperDatePartner.MovementId
-                                                AND MovementLinkObject.DescId = zc_MovementLinkObject_From()
-                                                -- AND MovementLinkObject.ObjectId = vbPartnerId
-
-                   INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                         ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject.ObjectId
-                                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                        AND ObjectLink_Partner_Juridical.ChildObjectId = 862910
-
-	    LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-
-              WHERE MovementDate_OperDatePartner.ValueData BETWEEN '01.11.2016' AND '30.11.2016'
-                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-
-union all
-              SELECT 2 -- , sum (MovementFloat_TotalSumm.ValueData)
---  , (coalesce (MIFloat_AmountPartner.ValueData, 0) * coalesce (MIFloat_Price.ValueData, 0)) * 1.2
- , SUM (coalesce (MovementItem_Child.Amount, 0) * coalesce (MIFloat_Price.ValueData, 0)) * 1.2
-/ *, Movement.Id, MovementItem.ObjectId as GoodsId, MIFloat_Price.ValueData AS Price, Movement.InvNumber, MovementString.ValueData, Movement.OperDate
-, MIFloat_AmountPartner.ValueData AS AmountPartner
-, MIFloat_Price.ValueData AS Price_add
-, SUM (coalesce (MovementItem_Child.Amount, 0) * coalesce (MIFloat_Price.ValueData, 0)) * 1.2 AS summ * /
-              FROM MovementDate AS MovementDate_OperDatePartner
-                   INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                                 ON MovementLinkObject_Contract.MovementId = MovementDate_OperDatePartner.MovementId
-                                                AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                                                AND MovementLinkObject_Contract.ObjectId = 882691 
-                   INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
-                                      AND Movement.StatusId = zc_Enum_Status_Complete()
-                                      AND Movement.DescId   = zc_Movement_ReturnIn()
-
-                   INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = MovementDate_OperDatePartner.MovementId
-                                                AND MovementLinkObject.DescId = zc_MovementLinkObject_From()
-                                                -- AND MovementLinkObject.ObjectId = vbPartnerId
-                   LEFT JOIN MovementString ON MovementString.MovementId = MovementDate_OperDatePartner.MovementId
-                                           AND MovementString.DescId = zc_MovementString_InvNumberPartner()
-
-                   INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                         ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject.ObjectId
-                                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                        AND ObjectLink_Partner_Juridical.ChildObjectId = 862910
-
-	    LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-
-                          INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                 AND MovementItem.DescId   = zc_MI_Master()
-                                                 AND MovementItem.isErased = FALSE
-                          INNER JOIN MovementItemFloat AS MIFloat_Price
-                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price() 
-                                                      AND MIFloat_Price.ValueData <> 0  
-
-                          inner JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                                      ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                                     AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-
-                          LEFT JOIN MovementItem AS MovementItem_Child ON MovementItem_Child.MovementId = Movement.Id
-                                                                      AND MovementItem_Child.isErased = FALSE
-                                                                      AND MovementItem_Child.DescId   = zc_MI_Child()
-                                                                      AND MovementItem_Child.ParentId = MovementItem.Id
-                                                                      AND MovementItem_Child.Amount   <> 0
-
-
-
-              WHERE MovementDate_OperDatePartner.ValueData BETWEEN '01.11.2016' AND '30.11.2016'
-                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-/ *group by  Movement.Id, MovementItem.ObjectId, MIFloat_Price.ValueData
-, MIFloat_AmountPartner.ValueData
-, Movement.InvNumber, MovementString.ValueData, Movement.OperDate
-, MIFloat_Price.ValueData
-having  MIFloat_AmountPartner.ValueData <>  SUM (coalesce (MovementItem_Child.Amount, 0))
-* /
-
--- select lpCheck_Movement_ReturnIn_Auto (4832777, 1);
 */
 -- тест
--- SELECT * FROM gpSelect_Movement_ReturnIn (inStartDate:= '01.12.2015', inEndDate:= '01.12.2015', inIsPartnerDate:=FALSE, inIsErased :=TRUE, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
+--select * from gpSelect_Movement_ReturnIn_Mobile(instartdate := ('01.02.2017')::TDateTime , inenddate := ('28.02.2017')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 , inMemberId := 274610 ,  inSession := '5');

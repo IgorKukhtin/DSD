@@ -853,6 +853,8 @@ type
     actOrderIncomeSnab: TdsdOpenForm;
     N171: TMenuItem;
     N159: TMenuItem;
+    actMobileReturnIn: TdsdOpenForm;
+    N172: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

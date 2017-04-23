@@ -939,7 +939,8 @@ uses
   Report_Check_OrderInternalBySendDialog in '..\..\Forms\Report\Report_Check_OrderInternalBySendDialog.pas' {Report_Check_OrderInternalBySendDialogForm: TParentForm},
   Report_Check_OrderInternalBySend in '..\..\Forms\Report\Report_Check_OrderInternalBySend.pas' {Report_Check_OrderInternalBySendForm: TParentForm},
   OrderIncomeSnabJournal in '..\..\Forms\Document\OrderIncomeSnabJournal.pas' {OrderIncomeSnabJournalForm: TParentForm},
-  OrderIncomeSnab in '..\..\Forms\Document\OrderIncomeSnab.pas' {OrderIncomeSnabForm: TParentForm};
+  OrderIncomeSnab in '..\..\Forms\Document\OrderIncomeSnab.pas' {OrderIncomeSnabForm: TParentForm},
+  MobileReturnInJournal in '..\..\Forms\Document\MobileReturnInJournal.pas' {MobileReturnInJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

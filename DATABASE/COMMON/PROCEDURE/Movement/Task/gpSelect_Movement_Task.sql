@@ -18,6 +18,13 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PersonalTradeId Integer, PersonalTradeCode Integer, PersonalTradeName TVarChar
              , InsertId Integer, InsertCode Integer, InsertName TVarChar
              , InsertDate TDateTime
+
+             , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
+             , Description TVarChar
+             , Comment TVarChar
+             , UpdateMobileDate TDateTime
+             , UpdateDate TDateTime
+             , isClose Boolean
               )
 AS
 $BODY$
@@ -104,6 +111,15 @@ BEGIN
            , Object_Insert.ObjectCode                  AS InsertCode
            , Object_Insert.ValueData                   AS InsertName
            , MovementDate_Insert.ValueData             AS InsertDate
+           --
+           , Object_Partner.Id                         AS PartnerId
+           , Object_Partner.ObjectCode                 AS PartnerCode
+           , Object_Partner.ValueData                  AS PartnerName
+           , MIString_Description.ValueData            AS Description
+           , MIString_Comment.ValueData                AS Comment
+           , MIDate_UpdateMobile.ValueData             AS UpdateMobileDate
+           , MIDate_Update.ValueData                   AS UpdateDate
+           , COALESCE (MIBoolean_Close.ValueData, false)::Boolean AS isClose
            
         FROM tmpStatus
              INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -133,6 +149,31 @@ BEGIN
                                           ON MovementLinkObject_Insert.MovementId = Movement.Id
                                          AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
              LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MovementLinkObject_Insert.ObjectId
+
+            -- строчная часть
+            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                   AND MovementItem.DescId     = zc_MI_Master()
+                                   AND MovementItem.isErased   = FALSE
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementItem.ObjectId
+           
+            LEFT JOIN MovementItemDate AS MIDate_UpdateMobile
+                                       ON MIDate_UpdateMobile.MovementItemId = MovementItem.Id
+                                      AND MIDate_UpdateMobile.DescId = zc_MIDate_UpdateMobile()
+            LEFT JOIN MovementItemDate AS MIDate_Update
+                                       ON MIDate_Update.MovementItemId = MovementItem.Id
+                                      AND MIDate_Update.DescId = zc_MIDate_Update()
+
+            LEFT JOIN MovementItemString AS MIString_Description
+                                         ON MIString_Description.MovementItemId = MovementItem.Id
+                                        AND MIString_Description.DescId = zc_MIString_Description()
+
+            LEFT JOIN MovementItemString AS MIString_Comment
+                                         ON MIString_Comment.MovementItemId = MovementItem.Id
+                                        AND MIString_Comment.DescId = zc_MIString_Comment()
+
+            LEFT JOIN MovementItemBoolean AS MIBoolean_Close
+                                          ON MIBoolean_Close.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_Close.DescId = zc_MIBoolean_Close()
 
         WHERE MovementLinkObject_PersonalTrade.ObjectId = inMemberId
            OR vbUserId_Member = 0

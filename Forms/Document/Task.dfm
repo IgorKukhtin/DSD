@@ -3,7 +3,7 @@ inherited TaskForm: TTaskForm
   ClientHeight = 426
   ClientWidth = 873
   ExplicitWidth = 889
-  ExplicitHeight = 461
+  ExplicitHeight = 464
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -147,7 +147,7 @@ inherited TaskForm: TTaskForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 172
+            Width = 163
           end
           object colisClose: TcxGridDBColumn [4]
             Caption = #1042#1099#1087#1086#1083#1085#1077#1085#1086' ('#1076#1072'/'#1085#1077#1090')'
@@ -297,6 +297,39 @@ inherited TaskForm: TTaskForm
     Properties.ReadOnly = True
     TabOrder = 11
     Width = 222
+  end
+  object edInsertName: TcxButtonEdit [8]
+    Left = 746
+    Top = 23
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 12
+    Width = 114
+  end
+  object cxLabel7: TcxLabel [9]
+    Left = 746
+    Top = 5
+    Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+  end
+  object cxLabel8: TcxLabel [10]
+    Left = 660
+    Top = 5
+    Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
+  end
+  object edInsertDate: TcxDateEdit [11]
+    Left = 660
+    Top = 23
+    EditValue = 42132d
+    Properties.ReadOnly = True
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 15
+    Width = 80
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 779
@@ -592,8 +625,8 @@ inherited TaskForm: TTaskForm
     Top = 225
   end
   inherited PopupMenu: TPopupMenu
-    Left = 792
-    Top = 184
+    Left = 808
+    Top = 224
     object N2: TMenuItem
       Action = actMISetErased
     end
@@ -740,6 +773,20 @@ inherited TaskForm: TTaskForm
         Value = Null
         Component = edPosition
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsertName'
+        Value = Null
+        Component = edInsertName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsertDate'
+        Value = 'NULL'
+        Component = edInsertDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 200
     Top = 208
@@ -812,13 +859,13 @@ inherited TaskForm: TTaskForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Task_SetErased'
-    Left = 790
-    Top = 128
+    Left = 702
+    Top = 192
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Task_SetUnErased'
-    Left = 654
-    Top = 152
+    Left = 638
+    Top = 208
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Task'

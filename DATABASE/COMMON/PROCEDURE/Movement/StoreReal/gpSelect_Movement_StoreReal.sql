@@ -21,6 +21,10 @@ RETURNS TABLE (Id Integer
              , PartnerName TVarChar
              , GUID TVarChar
              , Comment TVarChar
+             , MemberName TVarChar
+             , UnitCode Integer
+             , UnitName TVarChar
+             , PositionName TVarChar
               )
 AS
 $BODY$
@@ -70,6 +74,15 @@ BEGIN
                      UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                      UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                           )
+         , tmpPersonal AS (SELECT lfSelect.MemberId
+                                , lfSelect.PersonalId
+                                , lfSelect.UnitId
+                                , lfSelect.PositionId
+                                , lfSelect.BranchId
+                           FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                           WHERE lfSelect.Ord = 1
+                          )
+
         -- Результат
         SELECT Movement.Id
              , Movement.InvNumber
@@ -82,6 +95,10 @@ BEGIN
              , Object_Partner.ValueData               AS PartnerName
              , MovementString_GUID.ValueData          AS GUID
              , MovementString_Comment.ValueData       AS Comment
+             , Object_Member.ValueData   AS MemberName
+             , Object_Unit.ObjectCode    AS UnitCode
+             , Object_Unit.ValueData     AS UnitName
+             , Object_Position.ValueData AS PositionName
         FROM tmpStatus
              JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
                           AND Movement.DescId = zc_Movement_StoreReal()
@@ -113,6 +130,15 @@ BEGIN
                                       ON MovementString_GUID.MovementId = Movement.Id
                                      AND MovementString_GUID.DescId = zc_MovementString_GUID()
 
+             LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                  ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                                 AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+             LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+
+             LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
+             LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
+             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
+
         WHERE MovementLinkObject_Insert.ObjectId = vbUserId_Member
            OR vbUserId_Member = 0
        ;
@@ -124,9 +150,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Ярошенко Р.Ф.
+ 22.04.17         *
  25.03.17         *
  16.02.17                                                        *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_StoreReal (inStartDate:= '01.01.2017', inEndDate:= CURRENT_DATE, inIsErased:= FALSE, inJuridicalBasisId:= 0, inMemberId:= 0, inSession:= zfCalc_UserAdmin())
+--select * from gpSelect_Movement_StoreReal(instartdate := ('01.01.2017')::TDateTime , inenddate := ('31.12.2017')::TDateTime , inIsErased := 'False' , inJuridicalBasisId := 9399 , inMemberId := 0 ,  inSession := '5');

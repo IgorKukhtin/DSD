@@ -2383,6 +2383,9 @@ end;
 
 procedure TLoadFormTest.LoadMobileProjectFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileReturnInJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobileReturnInJournalForm');
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePromoJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobilePromoJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePromoForm'));
