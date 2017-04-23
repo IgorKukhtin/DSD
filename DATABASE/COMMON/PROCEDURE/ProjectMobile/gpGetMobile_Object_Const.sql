@@ -39,12 +39,17 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-      -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!! - Волошина Е.А.
-      -- IF inSession = '5' THEN inSession:= '140094'; END IF;
-
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- Если пользователь inSession - НЕ Торговый агент - !!!ВЫХОД!!!
+     IF NOT EXISTS (SELECT 1 FROM ObjectBoolean WHERE ObjectBoolean.DescId = zc_ObjectBoolean_User_ProjectMobile() AND ObjectBoolean.ObjectId = vbUserId AND ObjectBoolean.ValueData = TRUE)
+       AND inSession <> zfCalc_UserAdmin()
+     THEN
+         RETURN;
+     END IF;
 
      -- Результат
      RETURN QUERY

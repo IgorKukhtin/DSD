@@ -18,33 +18,42 @@ BEGIN
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Composition());
    vbUserId:= lpGetUserBySession (inSession);
 
-   -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_Composition_seq'); END IF; 
+
+   -- !!!ВРЕМЕННО!!! - пытаемся найти Id  для Загрузки из Sybase - !!!но если в Sybase нет уникальности - НАДО УБРАТЬ!!!
+   IF COALESCE (ioId, 0) = 0
+   THEN ioId := (SELECT Id FROM Object WHERE Valuedata = inName AND DescId = zc_Object_Composition());
+        -- пытаемся найти код
+        inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId);
+   END IF;
+   -- !!!ВРЕМЕННО!!! - для загрузки из Sybase т.к. там код = 0 
+   IF COALESCE (inCode, 0) = 0 THEN  inCode := NEXTVAL ('Object_Composition_seq'); END IF; 
 
    
-   -- проверка прав уникальности для свойства <Наименование >
-   --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Composition(), inName);
+   -- проверка - свойства должно быть установлено
+   -- IF COALESCE (inCompositionGroupId, 0) = 0 THEN
+   --    RAISE EXCEPTION 'Ошибка.Не установлено значение <Группа для состава товара>.';
+   -- END IF;
 
-   -- проверка уникальность <Наименование> для !!!одной!! <Группа для состава товара>
+   -- проверка уникальности свойства <Код>
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Composition(), inCode);
+   -- проверка уникальности свойства <Название> для !!!одной!! <Группа для состава товара>
    IF TRIM (inName) <> '' AND COALESCE (inCompositionGroupId, 0) <> 0 
    THEN
-       IF EXISTS (SELECT Object.Id
+       IF EXISTS (SELECT 1
                   FROM Object
                        JOIN ObjectLink AS ObjectLink_Composition_CompositionGroup
-                                       ON ObjectLink_Composition_CompositionGroup.ObjectId = Object.Id
-                                      AND ObjectLink_Composition_CompositionGroup.DescId = zc_ObjectLink_Composition_CompositionGroup()
+                                       ON ObjectLink_Composition_CompositionGroup.ObjectId      = Object.Id
+                                      AND ObjectLink_Composition_CompositionGroup.DescId        = zc_ObjectLink_Composition_CompositionGroup()
                                       AND ObjectLink_Composition_CompositionGroup.ChildObjectId = inCompositionGroupId
                                    
-                  WHERE TRIM (Object.ValueData) = TRIM (inName)
-                   AND Object.Id <> COALESCE (ioId, 0))
+                  WHERE Object.Descid           = zc_Object_Composition()
+                    AND TRIM (Object.ValueData) = TRIM (inName)
+                    AND Object.Id               <> COALESCE (ioId, 0))
        THEN
-           RAISE EXCEPTION 'Ошибка. Группа для состава товара <%> уже установлена у <%>.', TRIM (inName), lfGet_Object_ValueData (inCompositionGroupId);
+           RAISE EXCEPTION 'Ошибка. Состав товара <%> в группе <%> уже существует.', TRIM (inName), lfGet_Object_ValueData (inCompositionGroupId);
        END IF;
    END IF;
 
-
-   -- проверка прав уникальности для свойства <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Composition(), inCode);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Composition(), inCode, inName);
@@ -59,14 +68,12 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
-
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятикин А.А.
 06.03.17                                                           *
 20.02.17                                                           *
-
 */
 
 -- тест

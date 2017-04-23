@@ -49,7 +49,7 @@ type
     toStoredProc_three: TdsdStoredProc;
     toSqlQuery_two: TZQuery;
     cbCompositionGroup: TCheckBox;
-    cbId_Postgres: TCheckBox;
+    cbCreateId_Postgres: TCheckBox;
     cbNullId_Postgres: TCheckBox;
     cbComposition: TCheckBox;
     cbCountryBrand: TCheckBox;
@@ -114,7 +114,7 @@ type
     Splitter1: TSplitter;
     btnResultGroupCSV: TButton;
     lResultGroupCSV: TLabel;
-    cbDocId_Postgres: TCheckBox;
+    cbCreateDocId_Postgres: TCheckBox;
     cbOnlyOpenMI: TCheckBox;
 
     procedure OKGuideButtonClick(Sender: TObject);
@@ -129,7 +129,6 @@ type
     procedure cbUnCompleteClick(Sender: TObject);
     procedure OKCompleteDocumentButtonClick(Sender: TObject);
     procedure cbTaxIntClick(Sender: TObject);
-    procedure toZConnectionAfterConnect(Sender: TObject);
     procedure btnCreateTableDatClick(Sender: TObject);
     procedure btnLoadDatClick(Sender: TObject);
     procedure btnInsertGoods2Click(Sender: TObject);
@@ -163,7 +162,7 @@ type
 
     function fOpenSqFromQuery (mySql:String):Boolean;
     function fExecSqFromQuery (mySql:String):Boolean;
-
+    function fExecSqFromQuery_noErr (mySql:String):Boolean;
 
     function fGetSession:String;
     function fOpenSqToQuery (mySql:String):Boolean;
@@ -171,6 +170,8 @@ type
     function fOpenSqToQuery_two (mySql:String):Boolean;
     function fExecSqToQuery_two (mySql:String):Boolean;
 
+    procedure pCreateGuide_Id_Postgres;
+    procedure pCreateDocument_Id_Postgres;
 
     procedure pSetNullGuide_Id_Postgres;
     procedure pSetNullDocument_Id_Postgres;
@@ -226,15 +227,10 @@ begin
      if MessageDlg('Действительно остановить загрузку?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
      fStop:=true;
      DBGrid.Enabled:=true;
-     //OKGuideButton.Enabled:=true;
+     OKGuideButton.Enabled:=true;
      OKDocumentButton.Enabled:=true;
      OKCompleteDocumentButton.Enabled:=true;
 end;
-procedure TMainForm.toZConnectionAfterConnect(Sender: TObject);
-begin
-
-end;
-
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.cbAllTablesClick(Sender: TObject);
 var i : integer;
@@ -244,7 +240,7 @@ begin
           if Components[i].Tag=11
           then TCheckBox(Components[i]).Checked:=cbAllTables.Checked;
 end;
-
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.CloseButtonClick(Sender: TObject);
 begin
      if not fStop then
@@ -498,13 +494,14 @@ begin
        ' 	UserID  INTEGER ,	 ' +
        ' 	ProtocolDate  datetime ,	 ' +
        ' 	isReplication  INTEGER ,	 ' +
-       ' 	CountryBrandID  INTEGER    ' +
+       ' 	CountryBrandID  INTEGER ,  ' +
+       ' 	PRIMARY KEY (ID)         ' +
        ' 	)	 '
      );
      //
      // !!!не ошибка - так надо!!!
-     fExecSqFromQuery(' insert into Goods2 (id, GoodsName, Erased, ParentID, HasChildren)'
-                    + '   select 500000, ''АРХИВ'',zc_erasedVis(), 0, 1');
+     fExecSqFromQuery(' insert into Goods2 (id, GoodsName, Erased, ParentID, HasChildren, isPrinted)'
+                    + '   select 500000, ''АРХИВ'',zc_erasedVis(), null, 2, zc_rvYes()');
      // !!!не ошибка - так надо!!!
      // fExecSqFromQuery(' 	delete from Goods2 where id = 500000');
  end;
@@ -536,6 +533,19 @@ begin
         Clear;
         Add(mySql);
         try ExecSql except ShowMessage('fExecSqFromQuery'+#10+#13+mySql);Result:=false;exit;end;
+     end;
+     Result:=true;
+end;
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fExecSqFromQuery_noErr(mySql:String):Boolean;
+begin
+     //fromADOConnection.Connected:=false;
+     //
+     with fromSqlQuery,Sql do begin
+        Clear;
+        Add(mySql);
+        try ExecSql; except Result:=false;exit;end;
      end;
      Result:=true;
 end;
@@ -1002,6 +1012,34 @@ begin
     Close;
   end;
 
+  //остальным товарам их группу затянем в 1 поле
+{
+Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID)
+   select distinct cast (goodsProperty.GroupsName as TVarCharMedium) as GoodsName, 0 as Erased, 500000 as ParentID, 2 as HasChildren, zc_rvYes() as isPrinted, 0 as CashCode, null as CountryBrandID
+   from goodsProperty
+        join goods2 on goods2.Id = goodsProperty.GoodsId
+                   and goods2.ParentId = 500000
+                   and goods2.HasChildren = -1;
+
+update goods2 set ParentId = tmp.Id
+from goodsProperty
+    join (select goods2.Id, goods2.GoodsName as GroupsName
+          from goods2
+           where goods2.ParentId = 500000 and goods2.HasChildren <> -1
+         ) as tmp on tmp.GroupsName = cast (goodsProperty.GroupsName as TVarCharMedium)
+where goods2.ParentId = 500000
+  and goods2.HasChildren = -1
+  and goods2.Id = goodsProperty.GoodsId;
+
+select *  from goods2 where ParentId = 500000 and HasChildren = -1 -- 14384
+
+
+select count(*) from goods2 where ParentId = 500000 and HasChildren = -1 -- 14384
+select count(*) from goods2 where ParentId = 500000 and HasChildren <> -1 -- 2425
+commit
+rollback
+}
+
  lUpdateGoods2.Caption:= 'TRUE ('+IntToStr(Res1)+') - ('+IntToStr(Res2)+')';
 
 end;
@@ -1051,6 +1089,7 @@ begin
         Add('     left join  Unit as Partner on Partner.id = BillItemsIncome.clientid ');
         Add('     left join valuta on valuta.id = BillItemsIncome.ValutaID ');
         Add(' where goods2.ParentId = 500000 ');
+        Add('   and goods2.HasChildren = -1  ');
         Add(' order by goods2.CashCode');
         Open;
         //
@@ -1141,6 +1180,7 @@ begin
         Add('     left join (select DISTINCT goodsid, GroupsName from goodsproperty) as grGoods on grGoods.goodsid = goods2.id');
         Add('     left join Unit as Shop on shop.id = BillItemsIncome.UnitID ');
         Add(' where goods2.ParentId = 500000 ');
+        Add('   and goods2.HasChildren = -1  ');
         Add(' group by grgoods.GroupsName');
         Add('        , Shop.UnitName');
         Add(' order by grgoods.GroupsName');
@@ -1628,6 +1668,11 @@ begin
      //
      Gauge.Visible:=true;
      //
+     if cbCreateId_Postgres.Checked then begin if MessageDlg('Действительно Create СПРАВОЧНИКИ+ДОКУМЕНТЫ.Sybase.ВСЕМ.Id_Postgres ?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
+                                                 pCreateGuide_Id_Postgres;
+                                                 pCreateDocument_Id_Postgres;
+                                           end;
+     //
      if cbNullId_Postgres.Checked then begin if MessageDlg('Действительно set СПРАВОЧНИКИ+ДОКУМЕНТЫ.Sybase.ВСЕМ.Id_Postgres = null?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
                                                  pSetNullGuide_Id_Postgres;
                                                  pSetNullDocument_Id_Postgres;
@@ -1659,9 +1704,7 @@ begin
      if not fStop then
      Begin
       pLoadGuide_GoodsGroup;
-      cbId_Postgres.Enabled:=False;
       pLoadGuide_GoodsGroup;
-      cbId_Postgres.Enabled:=True;
      End;
      if not fStop then pLoadGuide_Discount;
      if not fStop then pLoadGuide_DiscountTools;
@@ -1775,6 +1818,43 @@ begin
 
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCreateGuide_Id_Postgres;
+begin
+     if cbCreateId_Postgres.Checked then
+     begin
+        try fExecSqFromQuery_noErr('alter table dba.Unit add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.Valuta add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.Unit add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.Period add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.Measure add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.LineFabrica add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.Kassa add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.GoodsSize add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.GoodsProperty add Id_Pg_goodsItem integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.GoodsInfo add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.Goods add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.GoodsProperty add Id_Pg_goods integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.Fabrika add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.DiscountTools add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.Discount add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.CountryBrand add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.CompositionGroup add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.Composition add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.Unit add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.Brand add Id_Postgres integer null;'); except end;
+     end;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCreateDocument_Id_Postgres;
+begin
+     if cbCreateDocId_Postgres.Checked then
+     begin
+        try fExecSqFromQuery_noErr('alter table dba.Bill add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.BillItems add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.BillItemsIncome add Id_Postgres integer null;'); except end;
+     end;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pSetNullGuide_Id_Postgres;
 begin
       if cbMeasure.Checked then
@@ -1831,13 +1911,6 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocumentItem_Income(SaveCount: Integer);
 begin
-   try
-   if cbDocId_Postgres.Checked then
-     fExecSqFromQuery('alter table dba.BillItemsIncome add Id_Postgres integer null;');
-  finally
-
-  end;
-
      if (not cbIncome.Checked)or(not cbIncome.Enabled) then exit;
      //
      myEnabledCB(cbIncome);
@@ -1919,14 +1992,8 @@ end;
 
 function TMainForm.pLoadDocument_Income: Integer;
 begin
-  try
-   if cbDocId_Postgres.Checked then
-     fExecSqFromQuery('alter table dba.Bill add Id_Postgres integer null;');
-  finally
-
-  end;
-
- Result:=0;
+     Result:=0;
+     //
      if (not cbIncome.Checked)or(not cbIncome.Enabled) then exit;
      //
      myEnabledCB(cbIncome);
@@ -2035,14 +2102,7 @@ end;
 
 procedure TMainForm.pLoadGuide_Brand;
 begin
-    if (not cbBrand.Checked)or(not cbBrand.Enabled) then exit;
-    try
-     if cbId_Postgres.Checked then
-      fExecSqFromQuery('alter table dba.Brand add Id_Postgres integer null;');
-    finally
-
-    end;
-
+     if (not cbBrand.Checked)or(not cbBrand.Enabled) then exit;
      //
      myEnabledCB(cbBrand);
      //
@@ -2149,13 +2209,7 @@ end;
 
 procedure TMainForm.pLoadGuide_Client;
 begin
-if (not cbClient.Checked)or(not cbClient.Enabled) then exit;
-     try
-     if cbId_Postgres.Checked then
-      fExecSqFromQuery('alter table dba.Unit add Id_Postgres integer null;');
-    finally
-
-    end;
+     if (not cbClient.Checked)or(not cbClient.Enabled) then exit;
      //
      myEnabledCB(cbClient);
      //
@@ -2291,13 +2345,6 @@ end;
 procedure TMainForm.pLoadGuide_Composition;
 begin
      if (not cbComposition.Checked)or(not cbComposition.Enabled) then exit;
-     try
-     if cbId_Postgres.Checked then
-      fExecSqFromQuery('alter table dba.Composition add Id_Postgres integer null;');
-    finally
-
-    end;
-
      //
      myEnabledCB(cbComposition);
      //
@@ -2360,14 +2407,7 @@ end;
 
 procedure TMainForm.pLoadGuide_CompositionGroup;
 begin
-    if (not cbCompositionGroup.Checked)or(not cbCompositionGroup.Enabled) then exit;
-    try
-     if cbId_Postgres.Checked then
-      fExecSqFromQuery('alter table dba.CompositionGroup add Id_Postgres integer null;');
-    finally
-
-    end;
-
+     if (not cbCompositionGroup.Checked)or(not cbCompositionGroup.Enabled) then exit;
      //
      myEnabledCB(cbCompositionGroup);
      //
@@ -2425,14 +2465,7 @@ end;
 
 procedure TMainForm.pLoadGuide_CountryBrand;
 begin
-   if (not cbCountryBrand.Checked)or(not cbCountryBrand.Enabled) then exit;
-    try
-     if cbId_Postgres.Checked then
-      fExecSqFromQuery('alter table dba.CountryBrand add Id_Postgres integer null;');
-    finally
-
-    end;
-    if (not cbCountryBrand.Checked)or(not cbCountryBrand.Enabled) then exit;
+     if (not cbCountryBrand.Checked)or(not cbCountryBrand.Enabled) then exit;
      //
      myEnabledCB(cbCountryBrand);
      //
@@ -2490,14 +2523,7 @@ end;
 
 procedure TMainForm.pLoadGuide_Discount;
 begin
-if (not cbDiscount.Checked)or(not cbDiscount.Enabled) then exit;
-
-  try
-   if cbId_Postgres.Checked then
-     fExecSqFromQuery('alter table dba.Discount add Id_Postgres integer null;');
-  finally
-
-  end;
+     if (not cbDiscount.Checked)or(not cbDiscount.Enabled) then exit;
      //
      myEnabledCB(cbDiscount);
      //
@@ -2566,12 +2592,6 @@ end;
 procedure TMainForm.pLoadGuide_DiscountTools;
 begin
      if (not cbDiscountTools.Checked)or(not cbDiscountTools.Enabled) then exit;
-     try
-     if cbId_Postgres.Checked then
-      fExecSqFromQuery('alter table dba.DiscountTools add Id_Postgres integer null;');
-    finally
-
-    end;
      //
      myEnabledCB(cbDiscountTools);
      //
@@ -2645,14 +2665,7 @@ end;
 
 procedure TMainForm.pLoadGuide_Fabrika;
 begin
-    if (not cbFabrika.Checked)or(not cbFabrika.Enabled) then exit;
-    try
-     if cbId_Postgres.Checked then
-      fExecSqFromQuery('alter table dba.Fabrika add Id_Postgres integer null;');
-    finally
-
-    end;
-
+     if (not cbFabrika.Checked)or(not cbFabrika.Enabled) then exit;
      //
      myEnabledCB(cbFabrika);
      //
@@ -2710,13 +2723,7 @@ end;
 
 procedure TMainForm.pLoadGuide_Goods;
 begin
-if (not cbGoods.Checked)or(not cbGoods.Enabled) then exit;
-     try
-     if cbId_Postgres.Checked then
-      fExecSqFromQuery('alter table dba.GoodsProperty add Id_Pg_goods integer null;');
-    finally
-
-    end;
+     if (not cbGoods.Checked)or(not cbGoods.Enabled) then exit;
      //
      myEnabledCB(cbGoods);
      //
@@ -2811,14 +2818,7 @@ end;
 
 procedure TMainForm.pLoadGuide_GoodsGroup;
 begin
-    if (not cbGoodsGroup.Checked)or(not cbGoodsGroup.Enabled) then exit;
-    try
-     if cbId_Postgres.Checked and cbId_Postgres.Enabled then
-      fExecSqFromQuery('alter table dba.Goods add Id_Postgres integer null;');
-    finally
-
-    end;
-
+     if (not cbGoodsGroup.Checked)or(not cbGoodsGroup.Enabled) then exit;
      //
      myEnabledCB(cbGoodsGroup);
      //
@@ -2881,14 +2881,7 @@ end;
 
 procedure TMainForm.pLoadGuide_GoodsInfo;
 begin
-    if (not cbGoodsInfo.Checked)or(not cbGoodsInfo.Enabled) then exit;
-    try
-     if cbId_Postgres.Checked then
-      fExecSqFromQuery('alter table dba.GoodsInfo add Id_Postgres integer null;');
-    finally
-
-    end;
-
+     if (not cbGoodsInfo.Checked)or(not cbGoodsInfo.Enabled) then exit;
      //
      myEnabledCB(cbGoodsInfo);
      //
@@ -2946,13 +2939,7 @@ end;
 
 procedure TMainForm.pLoadGuide_GoodsItem;
 begin
-if (not cbGoodsItem.Checked)or(not cbGoodsItem.Enabled) then exit;
-     try
-     if cbId_Postgres.Checked then
-      fExecSqFromQuery('alter table dba.GoodsProperty add Id_Pg_goodsItem integer null;');
-    finally
-
-    end;
+     if (not cbGoodsItem.Checked)or(not cbGoodsItem.Enabled) then exit;
      //
      myEnabledCB(cbGoodsItem);
      //
@@ -3021,14 +3008,7 @@ end;
 
 procedure TMainForm.pLoadGuide_GoodsSize;
 begin
-    if (not cbGoodsSize.Checked)or(not cbGoodsSize.Enabled) then exit;
-    try
-     if cbId_Postgres.Checked then
-      fExecSqFromQuery('alter table dba.GoodsSize add Id_Postgres integer null;');
-    finally
-
-    end;
-
+     if (not cbGoodsSize.Checked)or(not cbGoodsSize.Enabled) then exit;
      //
      myEnabledCB(cbGoodsSize);
      //
@@ -3086,14 +3066,7 @@ end;
 
 procedure TMainForm.pLoadGuide_Kassa;
 begin
-    if (not cbKassa.Checked)or(not cbKassa.Enabled) then exit;
-    try
-     if cbId_Postgres.Checked then
-      fExecSqFromQuery('alter table dba.Kassa add Id_Postgres integer null;');
-    finally
-
-    end;
-
+     if (not cbKassa.Checked)or(not cbKassa.Enabled) then exit;
      //
      myEnabledCB(cbKassa);
      //
@@ -3202,13 +3175,7 @@ end;
 
 procedure TMainForm.pLoadGuide_LineFabrica;
 begin
-    if (not cbLineFabrica.Checked)or(not cbLineFabrica.Enabled) then exit;
-    try
-     if cbId_Postgres.Checked then
-      fExecSqFromQuery('alter table dba.LineFabrica add Id_Postgres integer null;');
-    finally
-
-    end;
+     if (not cbLineFabrica.Checked)or(not cbLineFabrica.Enabled) then exit;
      //
      myEnabledCB(cbLineFabrica);
      //
@@ -3269,14 +3236,10 @@ var
     InternalCode_pg:String;
     InternalName_pg:String;
 begin
-  if (not cbMeasure.Checked)or(not cbMeasure.Enabled) then exit;
-
-  try
-   if cbId_Postgres.Checked then
-     fExecSqFromQuery('alter table dba.Measure add Id_Postgres integer null;');
-  finally
-
-  end;
+     if (not cbMeasure.Checked)or(not cbMeasure.Enabled) then exit;
+     //
+      fExecSqFromQuery('update dba.LineFabrica set Id_Postgres = null');
+      if cbGoodsInfo.Checked then
      //
      myEnabledCB(cbMeasure);
      //
@@ -3356,13 +3319,7 @@ begin
 end;
 procedure TMainForm.pLoadGuide_Partner;
 begin
-if (not cbPartner.Checked)or(not cbPartner.Enabled) then exit;
-     try
-     if cbId_Postgres.Checked then
-      fExecSqFromQuery('alter table dba.Unit add Id_Postgres integer null;');
-    finally
-
-    end;
+     if (not cbPartner.Checked)or(not cbPartner.Enabled) then exit;
      //
      myEnabledCB(cbPartner);
      //
@@ -3437,14 +3394,7 @@ end;
 
 procedure TMainForm.pLoadGuide_Period;
 begin
-    if (not cbPeriod.Checked)or(not cbPeriod.Enabled) then exit;
-    try
-     if cbId_Postgres.Checked then
-      fExecSqFromQuery('alter table dba.Period add Id_Postgres integer null;');
-    finally
-
-    end;
-
+     if (not cbPeriod.Checked)or(not cbPeriod.Enabled) then exit;
      //
      myEnabledCB(cbPeriod);
      //
@@ -3502,13 +3452,7 @@ end;
 
 procedure TMainForm.pLoadGuide_Unit;
 begin
-    if (not cbUnit.Checked)or(not cbUnit.Enabled) then exit;
-     try
-     if cbId_Postgres.Checked then
-      fExecSqFromQuery('alter table dba.Unit add Id_Postgres integer null;');
-    finally
-
-    end;
+     if (not cbUnit.Checked)or(not cbUnit.Enabled) then exit;
      //
      myEnabledCB(cbUnit);
      //
@@ -3569,14 +3513,7 @@ end;
 
 procedure TMainForm.pLoadGuide_Valuta;
 begin
-    if (not cbValuta.Checked)or(not cbValuta.Enabled) then exit;
-    try
-     if cbId_Postgres.Checked then
-      fExecSqFromQuery('alter table dba.Valuta add Id_Postgres integer null;');
-    finally
-
-    end;
-
+     if (not cbValuta.Checked)or(not cbValuta.Enabled) then exit;
      //
      myEnabledCB(cbValuta);
      //

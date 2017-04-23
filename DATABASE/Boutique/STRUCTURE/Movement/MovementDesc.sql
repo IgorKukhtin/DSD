@@ -15,15 +15,14 @@ CREATE TABLE MovementDesc
 (
    Id                    SERIAL NOT NULL PRIMARY KEY, 
    Code                  TVarChar NOT NULL UNIQUE,
-   ItemName              TVarChar
+   ItemName              TVarChar,
+   FormId                Integer
 )
 WITH (
   OIDS=FALSE
 );
 ALTER TABLE MovementDesc
   OWNER TO postgres;
-
-
 
 /*-------------------------------------------------------------------------------*/
 

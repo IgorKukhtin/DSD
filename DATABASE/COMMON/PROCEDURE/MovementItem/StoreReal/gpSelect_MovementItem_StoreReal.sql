@@ -241,4 +241,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_StoreReal (inMovementId:= 5285619, inPriceListId:= 0, inOperDate:= CURRENT_DATE, inShowAll:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MovementItem_StoreReal (inMovementId:= 5285619, inOperDate:= CURRENT_DATE, inShowAll:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())

@@ -180,7 +180,7 @@ object MainForm: TMainForm
           ParentFont = False
           TabOrder = 2
         end
-        object cbId_Postgres: TCheckBox
+        object cbCreateId_Postgres: TCheckBox
           Tag = 1
           Left = 142
           Top = 1
@@ -584,7 +584,7 @@ object MainForm: TMainForm
           ParentFont = False
           TabOrder = 3
         end
-        object cbDocId_Postgres: TCheckBox
+        object cbCreateDocId_Postgres: TCheckBox
           Tag = 1
           Left = 110
           Top = 1
@@ -921,9 +921,9 @@ object MainForm: TMainForm
   end
   object toZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
+    UTF8StringsAsWideField = True
     Catalog = 'public'
     DesignConnection = True
-    AfterConnect = toZConnectionAfterConnect
     HostName = 'localhost'
     Port = 0
     Database = 'boutique'
