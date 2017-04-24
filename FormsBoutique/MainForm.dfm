@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 600
   KeyPreview = True
   ExplicitWidth = 616
-  ExplicitHeight = 226
+  ExplicitHeight = 223
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -453,6 +453,15 @@ inherited MainForm: TMainForm
   inherited MainMenu: TMainMenu
     Left = 272
     Top = 8
+    object N44: TMenuItem [0]
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      object N45: TMenuItem
+        Action = actIncome
+      end
+      object N46: TMenuItem
+        Action = actReturnOut
+      end
+    end
     inherited miGuides: TMenuItem
       object N12: TMenuItem
         Action = actGoodsGroup
@@ -540,15 +549,6 @@ inherited MainForm: TMainForm
       end
       object N43: TMenuItem
         Action = actPersonal
-      end
-    end
-    object N44: TMenuItem [1]
-      Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      object N45: TMenuItem
-        Action = actIncome
-      end
-      object N46: TMenuItem
-        Action = actReturnOut
       end
     end
     inherited miService: TMenuItem

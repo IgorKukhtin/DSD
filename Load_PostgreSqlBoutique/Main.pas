@@ -1957,7 +1957,7 @@ begin
         Add('     , Composition.CompositionName as CompositionName ');
         Add('     , LineFabrica.LineFabricaName as LineFabricaName ');
         Add('     , Label.LabelName as LabelName ');
-        Add('     , GoodsProperty.MeasureId as MeasureId ');
+        Add('     , Measure.Id_Postgres as MeasureId ');
         Add('     , BillItemsIncome.OperCount as Amount  ');
         Add('     , BillItemsIncome.OperPrice as OperPrice  ');
         Add('     , 1 as CountForPrice  ');
@@ -1967,6 +1967,7 @@ begin
         Add('     join dba.Bill on BillItemsIncome.BillID = Bill.Id ');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItemsIncome.GoodsPropertyId  ');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId  ');
+        Add('     left outer join dba.Measure on Measure.Id = GoodsProperty.MeasureId  ');
         Add('     left join DBA.GoodsInfo  on GoodsInfo.Id = GoodsProperty.GoodsInfoId ');
         Add('     left join DBA.GoodsSize on  GoodsSize.Id = GoodsProperty.GoodsSizeId ');
         Add('     left join DBA.Composition on Composition.Id = GoodsProperty.CompositionId ');
