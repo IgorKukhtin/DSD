@@ -116,6 +116,7 @@ type
     lResultGroupCSV: TLabel;
     cbCreateDocId_Postgres: TCheckBox;
     cbOnlyOpenMI: TCheckBox;
+    ñbNotVisibleCursor: TCheckBox;
 
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
@@ -210,6 +211,7 @@ type
 
     procedure myEnabledCB (cb:TCheckBox);
     procedure myDisabledCB (cb:TCheckBox);
+    procedure HideCurGrid(AVisible: BOOL);
   public
   end;
 
@@ -1342,6 +1344,16 @@ end;
 
 
 
+procedure TMainForm.HideCurGrid(AVisible: BOOL);
+begin
+ if MainForm.ñbNotVisibleCursor.Checked then
+ if AVisible then
+  DBGrid.DataSource.DataSet.DisableControls
+  else
+  DBGrid.DataSource.DataSet.EnableControls;
+
+end;
+
 procedure TMainForm.btnInsertGoods2Click(Sender: TObject);
 var  inGoodsName,  inParentID, inHasChildren , upWhere : string;
 begin
@@ -1921,7 +1933,7 @@ begin
         Add('      select BillItemsIncome.Id as ObjectId ');
         Add('          , Bill.Id_Postgres as MovementId ');
         Add('          , GoodsProperty.Id_Pg_GoodsItem as GoodsItemId ');
-        Add('          , GoodsProperty.Id as SybaseId ');
+        Add('          , BillItemsIncome.Id as SybaseId ');
         Add('          , BillItemsIncome.OperCount as Amount ');
         Add('          , BillItemsIncome.OperPrice as OperPrice ');
         Add('          , 1 as CountForPrice ');
@@ -1956,11 +1968,11 @@ begin
         toStoredProc.Params.AddParam ('inOperPriceList',ftFloat,ptInput, 0);
 
         //
-        DBGrid.DataSource.DataSet.DisableControls;
+        HideCurGrid(True);
         while not EOF do
         begin
              //!!!
-             if fStop then begin DBGrid.DataSource.DataSet.EnableControls;  exit; end;
+             if fStop then begin HideCurGrid(False);  exit; end;
 
               //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -1984,7 +1996,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        DBGrid.DataSource.DataSet.EnableControls;
+        HideCurGrid(False);
      end;
      //
      myDisabledCB(cbIncome);
@@ -2058,11 +2070,11 @@ begin
         toStoredProc.Params.AddParam ('inParPartnerValue',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         //
-        DBGrid.DataSource.DataSet.DisableControls;
+        HideCurGrid(True);
         while not EOF do
         begin
              //!!!
-            if fStop then begin DBGrid.DataSource.DataSet.EnableControls;  exit; end;
+            if fStop then begin HideCurGrid(False);  exit; end;
              //
 
              //
@@ -2090,7 +2102,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        DBGrid.DataSource.DataSet.EnableControls;
+        HideCurGrid(False);
      end;
      //
      myDisabledCB(cbIncome);
@@ -2135,11 +2147,11 @@ begin
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inCountryBrandId',ftInteger,ptInput, 0);
         //
-        DBGrid.DataSource.DataSet.DisableControls;
+        HideCurGrid(True);
         while not EOF do
         begin
              //!!!
-             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
+             if fStop then begin  HideCurGrid(False); exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -2156,7 +2168,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        DBGrid.DataSource.DataSet.EnableControls;
+        HideCurGrid(False);
      end;
      //
      myDisabledCB(cbBrand);
@@ -2377,11 +2389,11 @@ begin
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inCompositionGroupId',ftInteger,ptInput, 0);
         //
-        DBGrid.DataSource.DataSet.DisableControls;
+        HideCurGrid(True);
         while not EOF do
         begin
              //!!!
-             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
+             if fStop then begin  HideCurGrid(False); exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -2399,7 +2411,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        DBGrid.DataSource.DataSet.EnableControls;
+        HideCurGrid(False);
      end;
      //
      myDisabledCB(cbComposition);
@@ -2437,11 +2449,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
-        DBGrid.DataSource.DataSet.DisableControls;
+        HideCurGrid(True);
         while not EOF do
         begin
              //!!!
-             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
+             if fStop then begin  HideCurGrid(False); exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -2457,7 +2469,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        DBGrid.DataSource.DataSet.EnableControls;
+        HideCurGrid(False);
      end;
      //
      myDisabledCB(cbCompositionGroup);
@@ -2495,11 +2507,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
-        DBGrid.DataSource.DataSet.DisableControls;
+        HideCurGrid(True);
         while not EOF do
         begin
              //!!!
-             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
+             if fStop then begin  HideCurGrid(False); exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -2515,7 +2527,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        DBGrid.DataSource.DataSet.EnableControls;
+        HideCurGrid(False);
      end;
      //
      myDisabledCB(cbCountryBrand);
@@ -2555,11 +2567,11 @@ begin
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inDiscountKindId',ftInteger,ptInput, 0);
         //
-        DBGrid.DataSource.DataSet.DisableControls;
+        HideCurGrid(True);
         while not EOF do
         begin
              //!!!
-             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
+             if fStop then begin  HideCurGrid(False); exit; end;
              //
 
              fOpenSqToQuery (' SELECT ID  FROM Object WHERE Object.DescId = zc_Object_DiscountKind()  '
@@ -2583,7 +2595,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        DBGrid.DataSource.DataSet.EnableControls;
+        HideCurGrid(False);
      end;
      //
      myDisabledCB(cbDiscount);
@@ -2631,12 +2643,12 @@ begin
         toStoredProc.Params.AddParam ('inDiscountTax',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inDiscountId',ftInteger,ptInput, 0);
         //
-        DBGrid.DataSource.DataSet.DisableControls;
+        HideCurGrid(True);
         while not EOF do
         begin
 
              //!!!
-             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
+             if fStop then begin  HideCurGrid(False); exit; end;
              //
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -2657,7 +2669,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        DBGrid.DataSource.DataSet.EnableControls;
+        HideCurGrid(False);
      end;
      //
      myDisabledCB(cbDiscountTools);
@@ -2695,11 +2707,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
-        DBGrid.DataSource.DataSet.DisableControls;
+        HideCurGrid(True);
         while not EOF do
         begin
              //!!!
-             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
+             if fStop then begin  HideCurGrid(False); exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -2715,7 +2727,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        DBGrid.DataSource.DataSet.EnableControls;
+        HideCurGrid(False);
      end;
      //
      myDisabledCB(cbFabrika);
@@ -2778,12 +2790,12 @@ begin
         toStoredProc.Params.AddParam ('inLabelId',ftInteger,ptInput, 0);
 
         //
-        DBGrid.DataSource.DataSet.DisableControls;
+        HideCurGrid(True);
         while not EOF do
         begin
 
              //!!!
-             if fStop then begin DBGrid.DataSource.DataSet.EnableControls; exit;end;
+             if fStop then begin HideCurGrid(False); exit;end;
              //
                           fOpenSqToQuery (' SELECT ID  FROM Object WHERE Object.DescId = zc_Object_Label()  '
                            +' and ValueData = '''+FieldByName('LabelName').AsString+'''');
@@ -2809,7 +2821,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        DBGrid.DataSource.DataSet.EnableControls;
+        HideCurGrid(False);
      end;
      //
      myDisabledCB(cbGoods);
@@ -2852,11 +2864,11 @@ begin
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
         //
-        DBGrid.DataSource.DataSet.DisableControls;
+        HideCurGrid(True);
         while not EOF do
         begin
              //!!!
-             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
+             if fStop then begin  HideCurGrid(False); exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -2873,7 +2885,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        DBGrid.DataSource.DataSet.EnableControls;
+        HideCurGrid(False);
      end;
      //
      myDisabledCB(cbGoodsGroup);
@@ -2911,11 +2923,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
-        DBGrid.DataSource.DataSet.DisableControls;
+        HideCurGrid(True);
         while not EOF do
         begin
              //!!!
-             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
+             if fStop then begin  HideCurGrid(False); exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -2931,7 +2943,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        DBGrid.DataSource.DataSet.EnableControls;
+        HideCurGrid(False);
      end;
      //
      myDisabledCB(cbGoodsInfo);
@@ -2973,12 +2985,12 @@ begin
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsSizeId',ftInteger,ptInput, 0);
         //
-        DBGrid.DataSource.DataSet.DisableControls;
+        HideCurGrid(True);
         while not EOF do
         begin
 
              //!!!
-             if fStop then begin DBGrid.DataSource.DataSet.EnableControls; exit;end;
+             if fStop then begin HideCurGrid(False); exit;end;
              //
 
              //
@@ -2999,7 +3011,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        DBGrid.DataSource.DataSet.EnableControls;
+        HideCurGrid(False);
      end;
      //
      myDisabledCB(cbGoodsItem);
@@ -3038,11 +3050,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
-        DBGrid.DataSource.DataSet.DisableControls;
+        HideCurGrid(True);
         while not EOF do
         begin
              //!!!
-             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
+             if fStop then begin  HideCurGrid(False); exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -3058,7 +3070,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        DBGrid.DataSource.DataSet.EnableControls;
+        HideCurGrid(False);
      end;
      //
      myDisabledCB(cbGoodsSize);
@@ -3096,11 +3108,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
-        DBGrid.DataSource.DataSet.DisableControls;
+        HideCurGrid(True);
         while not EOF do
         begin
              //!!!
-             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
+             if fStop then begin  HideCurGrid(False); exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -3116,7 +3128,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        DBGrid.DataSource.DataSet.EnableControls;
+        HideCurGrid(False);
      end;
      //
      myDisabledCB(cbKassa);
@@ -3151,11 +3163,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
-        DBGrid.DataSource.DataSet.DisableControls;
+        HideCurGrid(True);
         while not EOF do
         begin
              //!!!
-             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
+             if fStop then begin  HideCurGrid(False); exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=0;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
@@ -3167,7 +3179,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        DBGrid.DataSource.DataSet.EnableControls;
+        HideCurGrid(False);
      end;
      //
      myDisabledCB(cbLabel);
@@ -3205,11 +3217,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
-        DBGrid.DataSource.DataSet.DisableControls;
+        HideCurGrid(True);
         while not EOF do
         begin
              //!!!
-             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
+             if fStop then begin  HideCurGrid(False); exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -3225,7 +3237,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        DBGrid.DataSource.DataSet.EnableControls;
+        HideCurGrid(False);
      end;
      //
      myDisabledCB(cbLineFabrica);
@@ -3271,11 +3283,11 @@ begin
         toStoredProc.Params.AddParam ('inInternalCode',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inInternalName',ftString,ptInput, '');
         //
-        DBGrid.DataSource.DataSet.DisableControls;
+        HideCurGrid(True);
         while not EOF do
         begin
              //!!!
-             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
+             if fStop then begin  HideCurGrid(False); exit; end;
              //
 
              fOpenSqToQuery (' select OS_Measure_InternalCode.ValueData  AS InternalCode'
@@ -3312,7 +3324,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        DBGrid.DataSource.DataSet.EnableControls;
+        HideCurGrid(False);
      end;
      //
      myDisabledCB(cbMeasure);
@@ -3362,12 +3374,12 @@ begin
         toStoredProc.Params.AddParam ('inPeriodId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPeriodYear',ftFloat,ptInput, 0);
         //
-        DBGrid.DataSource.DataSet.DisableControls;
+        HideCurGrid(True);
         while not EOF do
         begin
 
              //!!!
-             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
+             if fStop then begin  HideCurGrid(False); exit; end;
              //
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -3386,7 +3398,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        DBGrid.DataSource.DataSet.EnableControls;
+        HideCurGrid(False);
      end;
      //
      myDisabledCB(cbPartner);
@@ -3424,11 +3436,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
-        DBGrid.DataSource.DataSet.DisableControls;
+        HideCurGrid(True);
         while not EOF do
         begin
              //!!!
-             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
+             if fStop then begin  HideCurGrid(False); exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -3444,7 +3456,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        DBGrid.DataSource.DataSet.EnableControls;
+        HideCurGrid(False);
      end;
      //
      myDisabledCB(cbPeriod);
@@ -3483,12 +3495,12 @@ begin
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
         //
-        DBGrid.DataSource.DataSet.DisableControls;
+        HideCurGrid(True);
         while not EOF do
         begin
 
              //!!!
-             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
+             if fStop then begin  HideCurGrid(False); exit; end;
              //
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -3505,7 +3517,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        DBGrid.DataSource.DataSet.EnableControls;
+        HideCurGrid(False);
      end;
      //
      myDisabledCB(cbUnit);
@@ -3543,11 +3555,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
-        DBGrid.DataSource.DataSet.DisableControls;
+        HideCurGrid(True);
         while not EOF do
         begin
              //!!!
-             if fStop then begin  DBGrid.DataSource.DataSet.EnableControls; exit; end;
+             if fStop then begin  HideCurGrid(False); exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -3563,7 +3575,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        DBGrid.DataSource.DataSet.EnableControls;
+        HideCurGrid(False);
      end;
      //
      myDisabledCB(cbValuta);
