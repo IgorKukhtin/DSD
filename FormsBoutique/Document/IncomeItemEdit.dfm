@@ -57,22 +57,22 @@ object IncomeItemEditForm: TIncomeItemEditForm
   end
   object cxLabel6: TcxLabel
     Left = 10
-    Top = 182
+    Top = 141
     Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
   end
   object cxLabel7: TcxLabel
     Left = 10
-    Top = 227
+    Top = 186
     Caption = #1051#1080#1085#1080#1103' '#1082#1086#1083#1083#1077#1082#1094#1080#1080
   end
   object cxLabel9: TcxLabel
     Left = 10
-    Top = 312
+    Top = 271
     Caption = #1056#1072#1079#1084#1077#1088' '#1090#1086#1074#1072#1088#1072
   end
   object ceGoodsSize: TcxButtonEdit
     Left = 10
-    Top = 328
+    Top = 287
     Properties.Buttons = <
       item
         Default = True
@@ -116,7 +116,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
   end
   object edGoodsInfoName: TcxButtonEdit
     Left = 10
-    Top = 199
+    Top = 158
     Properties.Buttons = <
       item
         Default = True
@@ -127,7 +127,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
   end
   object edLineFabricaName: TcxButtonEdit
     Left = 10
-    Top = 245
+    Top = 204
     Properties.Buttons = <
       item
         Default = True
@@ -202,12 +202,12 @@ object IncomeItemEditForm: TIncomeItemEditForm
   end
   object cxLabel11: TcxLabel
     Left = 10
-    Top = 270
+    Top = 229
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072
   end
   object edLabelName: TcxButtonEdit
     Left = 10
-    Top = 287
+    Top = 246
     Properties.Buttons = <
       item
         Default = True
@@ -218,12 +218,12 @@ object IncomeItemEditForm: TIncomeItemEditForm
   end
   object cxLabel12: TcxLabel
     Left = 10
-    Top = 140
-    Caption = #1043#1088#1091#1087#1087#1072' '#1076#1083#1103' '#1089#1086#1089#1090#1072#1074#1072' '#1090#1086#1074#1072#1088#1072
+    Top = 314
+    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
-  object edCompositionGroupName: TcxButtonEdit
+  object ceJuridicalBasis: TcxButtonEdit
     Left = 10
-    Top = 157
+    Top = 328
     Properties.Buttons = <
       item
         Default = True
@@ -286,15 +286,25 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inSybaseId'
+        Name = 'inGoodsGroupId'
         Value = Null
+        Component = GoodsGroupGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsGroupId'
+        Name = 'inMeasureId'
         Value = Null
-        Component = GoodsGroupGuides
+        Component = MeasureGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = JuridicalBasisGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -316,17 +326,9 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsSize'
+        Name = 'inGoodsSizeName'
         Value = Null
         Component = ceGoodsSize
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCompositionGroupName'
-        Value = Null
-        Component = edCompositionGroupName
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -352,14 +354,6 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Value = Null
         Component = edLabelName
         DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMeasureId'
-        Value = Null
-        Component = MeasureGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -580,15 +574,11 @@ object IncomeItemEditForm: TIncomeItemEditForm
       item
         Name = 'CompositionGroupId'
         Value = Null
-        Component = CompositionGroupGuides
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CompositionGroupName'
         Value = Null
-        Component = CompositionGroupGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -642,7 +632,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end>
     Left = 145
-    Top = 326
+    Top = 285
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
@@ -763,15 +753,11 @@ object IncomeItemEditForm: TIncomeItemEditForm
       item
         Name = 'CompositionGroupId'
         Value = Null
-        Component = CompositionGroupGuides
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CompositionGroupName'
         Value = Null
-        Component = CompositionGroupGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -877,16 +863,12 @@ object IncomeItemEditForm: TIncomeItemEditForm
       item
         Name = 'CompositionGroupId'
         Value = ''
-        Component = CompositionGroupGuides
-        ComponentItem = 'Key'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'CompositionGroupName'
         Value = ''
-        Component = CompositionGroupGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -961,7 +943,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end>
     Left = 153
-    Top = 182
+    Top = 141
   end
   object LineFabricaGuides: TdsdGuides
     KeyField = 'Id'
@@ -1031,7 +1013,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end>
     Left = 145
-    Top = 238
+    Top = 197
   end
   object MeasureGuides: TdsdGuides
     KeyField = 'Id'
@@ -1171,21 +1153,21 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end>
     Left = 169
-    Top = 286
+    Top = 245
   end
-  object CompositionGroupGuides: TdsdGuides
+  object JuridicalBasisGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edCompositionGroupName
-    FormNameParam.Value = 'TCompositionGroupForm'
+    LookupControl = ceJuridicalBasis
+    FormNameParam.Value = 'TJuridicalBasisForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TCompositionGroupForm'
+    FormName = 'TJuridicalBasisForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = CompositionGroupGuides
+        Component = JuridicalBasisGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1193,54 +1175,13 @@ object IncomeItemEditForm: TIncomeItemEditForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = CompositionGroupGuides
+        Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Code'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsGroupName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MeasureName'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CompositionName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsInfoName'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'LineFabricaName'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'LabelName'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
       end>
-    Left = 169
-    Top = 142
+    Left = 351
+    Top = 262
   end
 end

@@ -67,8 +67,8 @@ type
     edLabelName: TcxButtonEdit;
     LabelGuides: TdsdGuides;
     cxLabel12: TcxLabel;
-    edCompositionGroupName: TcxButtonEdit;
-    CompositionGroupGuides: TdsdGuides;
+    ceJuridicalBasis: TcxButtonEdit;
+    JuridicalBasisGuides: TdsdGuides;
   private
     { Private declarations }
   public
