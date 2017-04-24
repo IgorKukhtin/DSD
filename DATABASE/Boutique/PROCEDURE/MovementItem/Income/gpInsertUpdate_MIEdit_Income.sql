@@ -66,7 +66,7 @@ BEGIN
      IF inLineFabricaName <> ''
      THEN
          -- Поиск
-         vbLineFabricaId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_LineFabrica() AND UPPER (Object.ValueData) LIKE UPPER (inLineFabricaName) LIMIT 1);
+         vbLineFabricaId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_LineFabrica() AND UPPER (Object.ValueData) LIKE UPPER (inLineFabricaName));
          --
          IF COALESCE (vbLineFabricaId, 0) = 0
          THEN
@@ -84,7 +84,7 @@ BEGIN
      IF inCompositionName <> ''
      THEN
          -- Поиск !!!без Группы!!!
-         vbCompositionId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Composition() AND UPPER (Object.ValueData) LIKE UPPER (inCompositionName) LIMIT 1);
+         vbCompositionId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Composition() AND UPPER (Object.ValueData) LIKE UPPER (inCompositionName));
          --
          IF COALESCE (vbCompositionId,0) = 0
          THEN
@@ -103,7 +103,7 @@ BEGIN
      IF COALESCE (TRIM (inGoodsInfoName), '') <> ''
      THEN
          -- Поиск !!!без Группы!!!
-         vbGoodsInfoId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsInfo() AND UPPER (Object.ValueData) LIKE UPPER (inGoodsInfoName) LIMIT 1);
+         vbGoodsInfoId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsInfo() AND UPPER (Object.ValueData) LIKE UPPER (inGoodsInfoName));
          --
          IF COALESCE (vbGoodsInfoId, 0) = 0
          THEN
@@ -121,7 +121,7 @@ BEGIN
      IF inLabelName <> ''
      THEN
          -- Поиск
-         vbLabelId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Label() AND UPPER (Object.ValueData) LIKE UPPER (inLabelName) LIMIT 1);
+         vbLabelId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Label() AND UPPER (Object.ValueData) LIKE UPPER (inLabelName));
          --
          IF COALESCE (vbLabelId, 0) = 0
          THEN
@@ -142,7 +142,7 @@ BEGIN
      -- END IF;
      --
      -- Поиск - ВСЕГДА
-     vbGoodsSizeId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsSize() AND UPPER (Object.ValueData) LIKE UPPER (inGoodsSizeName) LIMIT 1);
+     vbGoodsSizeId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsSize() AND UPPER (Object.ValueData) LIKE UPPER (inGoodsSizeName));
      --
      IF COALESCE (vbGoodsSizeId, 0) = 0
      THEN
