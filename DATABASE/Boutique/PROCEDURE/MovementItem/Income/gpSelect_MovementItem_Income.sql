@@ -10,10 +10,10 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Income(
 )
 RETURNS TABLE (Id Integer, PartionId Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
+             , JuridicalName TVarChar
              , CompositionGroupName TVarChar
              , CompositionName TVarChar
              , GoodsInfoName TVarChar
-             , JuridicalName TVarChar
              , LineFabricaName TVarChar
              , LabelName TVarChar
              , GoodsSizeName TVarChar
@@ -60,6 +60,8 @@ BEGIN
 
        -- результат
        SELECT
+
+
              tmpMI.Id
            , tmpMI.PartionId
            , Object_Goods.Id          AS GoodsId
