@@ -131,4 +131,4 @@ $BODY$
 */
 
 -- тест
- --SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 25173, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 1, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
