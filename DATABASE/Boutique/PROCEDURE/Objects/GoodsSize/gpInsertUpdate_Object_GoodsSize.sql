@@ -13,7 +13,6 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsSize());
    vbUserId:= lpGetUserBySession (inSession);
@@ -22,12 +21,12 @@ BEGIN
    IF inCode = 0 THEN  inCode := NEXTVAL ('Object_Measure_seq'); END IF; 
 
    -- проверка уникальности для свойства <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_GoodsSize(), inName); 
+   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_GoodsSize(), TRIM (inName)); 
    -- проверка уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_GoodsSize(), inCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_GoodsSize(), inCode, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_GoodsSize(), inCode, TRIM (inName));
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

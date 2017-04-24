@@ -64,7 +64,7 @@ BEGIN
                 , CompositionGroupId   = zfConvert_IntToNull (inCompositionGroupId)
                 , GoodsSizeId          = inGoodsSizeId
                 , JuridicalId          = zfConvert_IntToNull (inJuridicalId)
-       WHERE MovementItemId = inMovementItemId ;
+       WHERE Object_PartionGoods.MovementItemId = inMovementItemId ;
                                      
                                      
        -- если такой элемент небыл найден
@@ -79,6 +79,20 @@ BEGIN
        END IF; -- if NOT FOUND       
 
        -- !!!меняем у остальных партий - все св-ва!!!
+       UPDATE Object_PartionGoods SET FabrikaId              = zfConvert_IntToNull (inFabrikaId)
+                                    , GoodsGroupId           = inGoodsGroupId
+                                    , MeasureId              = inMeasureId
+                                    , CompositionId          = zfConvert_IntToNull (inCompositionId)
+                                    , GoodsInfoId            = zfConvert_IntToNull (inGoodsInfoId)
+                                    , inLineFabricaId        = zfConvert_IntToNull (inLineFabricaId)
+                                    , inLabelId              = inLabelId
+                                    , inCompositionGroupId   = zfConvert_IntToNull (inCompositionGroupId)
+                                      -- только для документа inMovementId
+                                    , inJuridicalId          = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN zfConvert_IntToNull (inJuridicalId) ELSE Object_PartionGoods.JuridicalId END
+                                    , OperPrice              = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inOperPrice                         ELSE Object_PartionGoods.OperPrice   END
+                                    , PriceSale              = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inPriceSale                         ELSE Object_PartionGoods.PriceSale   END
+       WHERE Object_PartionGoods.MovementItemId <> inMovementItemId
+         AND Object_PartionGoods.GoodsId        = inGoodsId;
                                      
                                      
 END;                                 

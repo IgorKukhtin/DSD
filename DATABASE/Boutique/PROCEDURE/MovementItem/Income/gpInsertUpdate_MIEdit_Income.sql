@@ -19,19 +19,19 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MIEdit_Income(
     IN inCountForPrice         TFloat    , -- Цена за количество
     IN inOperPriceList         TFloat    , -- Цена по прайсу
     IN inSession               TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
 
    DECLARE vbLineFabricaId Integer;
-   DECLARE vbCompositionId Integer; 
+   DECLARE vbCompositionId Integer;
    DECLARE vbGoodsSizeId   Integer;
-   DECLARE vbGoodsId       Integer;   
+   DECLARE vbGoodsId       Integer;
    DECLARE vbGoodsInfoId   Integer;
    DECLARE vbGoodsItemId   Integer;
-   DECLARE vblabelid       Integer;   
+   DECLARE vblabelid       Integer;
 
    DECLARE vbOperDate  TDateTime;
    DECLARE vbPartnerId Integer;
@@ -61,13 +61,13 @@ BEGIN
      END IF;
 
 
-     -- Линия коллекции 
+     -- Линия коллекции
      inLineFabricaName:= TRIM (inLineFabricaName);
      IF inLineFabricaName <> ''
      THEN
          -- Поиск
          vbLineFabricaId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_LineFabrica() AND UPPER (Object.ValueData) LIKE UPPER (inLineFabricaName) LIMIT 1);
-         -- 
+         --
          IF COALESCE (vbLineFabricaId, 0) = 0
          THEN
              -- Создание
@@ -78,14 +78,14 @@ BEGIN
                                                                   );
          END IF;
      END IF;
-     
+
      -- Состав товара
      inCompositionName:= TRIM (inCompositionName);
      IF inCompositionName <> ''
      THEN
          -- Поиск !!!без Группы!!!
          vbCompositionId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Composition() AND UPPER (Object.ValueData) LIKE UPPER (inCompositionName) LIMIT 1);
-         -- 
+         --
          IF COALESCE (vbCompositionId,0) = 0
          THEN
              -- Создание
@@ -97,14 +97,14 @@ BEGIN
                                                                   );
          END IF;
      END IF;
-     
-     -- Описание товара 
+
+     -- Описание товара
      inGoodsInfoName:= TRIM (inGoodsInfoName);
      IF COALESCE (TRIM (inGoodsInfoName), '') <> ''
      THEN
          -- Поиск !!!без Группы!!!
          vbGoodsInfoId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsInfo() AND UPPER (Object.ValueData) LIKE UPPER (inGoodsInfoName) LIMIT 1);
-         -- 
+         --
          IF COALESCE (vbGoodsInfoId, 0) = 0
          THEN
              -- Создание
@@ -122,7 +122,7 @@ BEGIN
      THEN
          -- Поиск
          vbLabelId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Label() AND UPPER (Object.ValueData) LIKE UPPER (inLabelName) LIMIT 1);
-         -- 
+         --
          IF COALESCE (vbLabelId, 0) = 0
          THEN
              -- Создание
@@ -137,27 +137,24 @@ BEGIN
      -- Размер товара
      inGoodsSizeName:= COALESCE (TRIM (inGoodsSizeName), '');
      -- проверка - свойство должно быть установлено
-     IF inGoodsSizeName = '' THEN
-        RAISE EXCEPTION 'Ошибка.Не установлено значение <Размер товара>.';
-     END IF;
+     -- IF inGoodsSizeName = '' THEN
+     --    RAISE EXCEPTION 'Ошибка.Не установлено значение <Размер товара>.';
+     -- END IF;
      --
-     IF inGoodsSizeName <> ''
+     -- Поиск - ВСЕГДА
+     vbGoodsSizeId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsSize() AND UPPER (Object.ValueData) LIKE UPPER (inGoodsSizeName) LIMIT 1);
+     --
+     IF COALESCE (vbGoodsSizeId, 0) = 0
      THEN
-         -- Поиск
-         vbGoodsSizeId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsSize() AND UPPER (Object.ValueData) LIKE UPPER (inGoodsSizeName) LIMIT 1);
-         -- 
-         IF COALESCE (vbGoodsSizeId, 0) = 0
-         THEN
-             -- Создание
-             vbGoodsSizeId := gpInsertUpdate_Object_GoodsSize (ioId     := 0
-                                                             , inCode   := 0
-                                                             , inName   := inGoodsSizeName
-                                                             , inSession:= inSession
-                                                              );
-         END IF;
+         -- Создание
+         vbGoodsSizeId := gpInsertUpdate_Object_GoodsSize (ioId     := 0
+                                                         , inCode   := 0
+                                                         , inName   := inGoodsSizeName
+                                                         , inSession:= inSession
+                                                          );
      END IF;
 
-     -- Товары 
+     -- Товары
      inGoodsName:= COALESCE (TRIM (inGoodsName), '');
      -- проверка - свойство должно быть установлено
      IF COALESCE (inGoodsGroupId, 0) = 0 THEN
@@ -168,7 +165,7 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Товар>.';
      END IF;
      -- Поиск - !!!без группы!!!
-     vbGoodsId:= (SELECT Object.Id 
+     vbGoodsId:= (SELECT DISTINCT Object.Id
                   FROM Object
                        -- обязательно условие из партии
                        INNER JOIN Object_PartionGoods ON Object_PartionGoods.GoodsId   = Object.Id
@@ -196,9 +193,9 @@ BEGIN
                                                  , inLabelId       := vbLabelId
                                                  , inSession       := inSession
                                                   );
-              
+
      ELSE
-         -- если изменился - Группы товаров 
+         -- если изменился - Группы товаров
          IF inGoodsGroupId <> COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbGoodsId AND OL.DescId = zc_ObjectLink_Goods_GoodsGroup()), 0)
          THEN
              -- пересохранили
@@ -207,14 +204,14 @@ BEGIN
              PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_GroupNameFull(), vbGoodsId, lfGet_Object_TreeNameFull (inGoodsGroupId, zc_ObjectLink_GoodsGroup_Parent()));
          END IF;
 
-         -- если изменился - Единицы измерения 
+         -- если изменился - Единицы измерения
          IF inMeasureId <> COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbGoodsId AND OL.DescId = zc_ObjectLink_Goods_Measure()), 0)
          THEN
              -- пересохранили
              PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Measure(), vbGoodsId, inMeasureId);
          END IF;
-         
-         -- если изменился - Состав товара 
+
+         -- если изменился - Состав товара
          IF vbCompositionId <> COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbGoodsId AND OL.DescId = zc_ObjectLink_Goods_Composition()), 0)
          THEN
              -- пересохранили
@@ -248,6 +245,7 @@ BEGIN
      -- Товары с размерами - Найдем или Добавим
      vbGoodsItemId:= lpInsertFind_Object_GoodsItem (inGoodsId      := vbGoodsId
                                                   , inGoodsSizeId  := vbGoodsSizeId
+                                                  , inPartionId    := ioId
                                                   , inUserId       := vbUserId
                                                    );
 
@@ -297,9 +295,9 @@ BEGIN
                                                 );
 
      -- дописали - партию = Id
-     UPDATE MovementItem SET PartionId = ioId WHERE Id = ioId;
-     
-     
+     UPDATE MovementItem SET PartionId = ioId WHERE MovementItem.Id = ioId AND MovementItem.PartionId IS NULL;
+
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -312,4 +310,4 @@ $BODY$
 */
 
 -- тест
--- 
+--
