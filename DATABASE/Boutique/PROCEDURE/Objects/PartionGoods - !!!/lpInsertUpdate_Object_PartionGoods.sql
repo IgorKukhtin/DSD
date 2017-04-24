@@ -67,10 +67,14 @@ BEGIN
        WHERE Object_PartionGoods.MovementItemId = inMovementItemId ;
                                      
                                      
-       -- если такой элемент небыл найден
+       -- если такой элемент не был найден
        IF NOT FOUND THEN             
           -- добавили новый элемент
-          INSERT INTO Object_PartionGoods (MovementItemId, MovementId, SybaseId, PartnerId, UnitId, OperDate, GoodsId, GoodsItemId, CurrencyId, Amount, OperPrice, PriceSale, BrandId, PeriodId, PeriodYear, FabrikaId, GoodsGroupId, MeasureId, CompositionId, GoodsInfoId, LineFabricaId, LabelId, CompositionGroupId, GoodsSizeId, JuridicalId)
+          INSERT INTO Object_PartionGoods (MovementItemId, MovementId, SybaseId, PartnerId, UnitId, OperDate, GoodsId, GoodsItemId
+                                         , CurrencyId, Amount, OperPrice, PriceSale, BrandId, PeriodId, PeriodYear
+                                         , FabrikaId, GoodsGroupId, MeasureId
+                                         , CompositionId, GoodsInfoId, LineFabricaId
+                                         , LabelId, CompositionGroupId, GoodsSizeId, JuridicalId)
                                    VALUES (inMovementItemId, inMovementId, inSybaseId, inPartnerId, inUnitId, inOperDate, inGoodsId, inGoodsItemId
                                          , inCurrencyId, inAmount, inOperPrice, inPriceSale, inBrandId, inPeriodId, inPeriodYear
                                          , zfConvert_IntToNull (inFabrikaId), inGoodsGroupId, inMeasureId
