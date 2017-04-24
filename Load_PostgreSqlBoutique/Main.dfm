@@ -143,8 +143,6 @@
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitLeft = -16
-        ExplicitTop = -2
         object cbAllGuide: TCheckBox
           Tag = 1
           Left = 15
