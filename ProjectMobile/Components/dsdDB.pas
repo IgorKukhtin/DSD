@@ -671,34 +671,24 @@ var i: Integer;
 begin
   Data := Value;
   if VarisNull(Data) then
-    exit('NULL');
+    case DataType of
+      ftDate, ftTime, ftDateTime: Data := '01-01-1900'
+      else  Data := '';
+    end;
   if varType(Data) in [varSingle, varDouble, varCurrency] then
-    if DataType = ftDate then
-      Result := FormatDateTime('YYYYMMDD',Data)
-    else
-      result := gfFloatToStr(Data)
-  else
-  begin
-    if (varType(Data) = varString) and (Data = #0) then
-       // При пустой строку result = #0
-       result := ''
-    else
-    if (varType(Data) = varDate) then
-      result := FormatDateTime('YYYYMMDD',Data)
-    else
-      result := Data;
+     result := gfFloatToStr(Data)
+  else begin
+     if (varType(Data) = varString) and (Data = #0) then
+        // При пустой строку result = #0
+        result := ''
+     else
+        result := Data;
   end;
   case DataType of
     ftSmallint, ftInteger, ftWord:
-      begin
-        if not TryStrToInt(result, i) then
-        begin
-          if not SameText(result, 'false') AND not SameText(result, '0') and (result <> '') then
-            result := '1'
-          else
-            result := '0'
-        end
-      end;
+           if not TryStrToInt(result, i)
+           then
+             result := '0';
  {   ftFloat: ;
     ftCurrency: ;
     ftBCD: ;

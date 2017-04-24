@@ -386,10 +386,10 @@ type
     lUnit: TLayout;
     Label22: TLabel;
     eUnitName: TEdit;
-    Layout8: TLayout;
+    lMobileVersion: TLayout;
     Label31: TLabel;
     eMobileVersion: TEdit;
-    Layout9: TLayout;
+    lSyncDateOut: TLayout;
     Label32: TLabel;
     SyncDateOut: TEdit;
     bsStoreRealItems: TBindSourceDB;
@@ -501,7 +501,7 @@ type
     deDateTask: TDateEdit;
     lwPartnerTasks: TListView;
     LinkListControlToField16: TLinkListControlToField;
-    layServerVersion: TLayout;
+    lServerVersion: TLayout;
     Label48: TLabel;
     eServerVersion: TEdit;
     bUpdateProgram: TButton;
@@ -638,6 +638,20 @@ type
     Label79: TLabel;
     lContractName: TLabel;
     Layout37: TLayout;
+    gbPartnerDebt: TGroupBox;
+    gbPartnerAllDebt: TGroupBox;
+    Layout38: TLayout;
+    Label80: TLabel;
+    lPartnerAllOver: TLabel;
+    Layout39: TLayout;
+    Label82: TLabel;
+    lPartnerAllDebt: TLabel;
+    Layout40: TLayout;
+    Label84: TLabel;
+    lPartnerAllOverDay: TLabel;
+    lCurWebService: TLayout;
+    Label81: TLabel;
+    eCurWebService: TEdit;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -1117,6 +1131,8 @@ end;
 
 // отображение на карты всех ТТ
 procedure TfrmMain.lbiShowAllOnMapClick(Sender: TObject);
+var
+  Coordinates: TLocationCoord2D;
 begin
   FMarkerList.Clear;
 
@@ -1128,7 +1144,10 @@ begin
     while not EOF do
     begin
        if (DM.qryPartnerGPSN.AsFloat <> 0) and (DM.qryPartnerGPSE.AsFloat <> 0) then
-         FMarkerList.Add(TLocationData.Create(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat, 0));
+         FMarkerList.Add(TLocationData.Create(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat, 0))
+       else
+       if GetCoordinates(DM.qryPartnerAddress.AsString, Coordinates) then
+         FMarkerList.Add(TLocationData.Create(Coordinates.Latitude, Coordinates.Longitude, 0));
 
       Next;
     end;
@@ -3294,7 +3313,7 @@ begin
   FWebGMap := TTMSFMXWebGMaps.Create(Self);
   FWebGMap.OnDownloadFinish := WebGMapDownloadFinish;
   FWebGMap.Align := TAlignLayout.Client;
-  FWebGMap.MapOptions.ZoomMap := 18;
+  FWebGMap.MapOptions.ZoomMap := 13;
   FWebGMap.Parent := tiMap;
 end;
 
@@ -3807,6 +3826,8 @@ begin
   if DM.qryPartnerPaidKindId.AsInteger = DM.tblObject_ConstPaidKindId_First.AsInteger then // БН
   begin
     lPartnerKind.Text := DM.tblObject_ConstPaidKindName_First.AsString;
+
+    gbPartnerDebt.Text := 'Долги юр.лица по выбранному контракту';
     if not DM.qryPartnerDebtSumJ.IsNull then
       lPartnerDebt.Text := FormatFloat(',0.##', DM.qryPartnerDebtSumJ.AsFloat)
     else
@@ -3819,14 +3840,43 @@ begin
       lPartnerOverDay.Text := DM.qryPartnerOverDaysJ.AsString
     else
       lPartnerOverDay.Text := '-';
+
+    DM.qrySelect.Open('select SUM(DEBTSUM), SUM(OVERSUM), MAX(OVERDAYS) from OBJECT_JURIDICAL WHERE ID = ' + DM.qryPartnerJuridicalId.AsString + ' GROUP BY ID');
+
+    gbPartnerAllDebt.Text := 'Долги юр.лица по всем контрактам';
+    if not DM.qrySelect.Fields[0].IsNull then
+      lPartnerAllDebt.Text := FormatFloat(',0.##', DM.qrySelect.Fields[0].AsFloat)
+    else
+      lPartnerAllDebt.Text := '-';
+    if not DM.qrySelect.Fields[1].IsNull then
+      lPartnerAllOver.Text := FormatFloat(',0.##', DM.qrySelect.Fields[1].AsFloat)
+    else
+      lPartnerAllOver.Text := '-';
+    if not DM.qrySelect.Fields[2].IsNull then
+      lPartnerAllOverDay.Text := DM.qrySelect.Fields[2].AsString
+    else
+      lPartnerAllOverDay.Text := '-';
+
+    DM.qrySelect.Close;
   end
   else
   if DM.qryPartnerPaidKindId.AsInteger = DM.tblObject_ConstPaidKindId_Second.AsInteger then // Нал
   begin
     lPartnerKind.Text := DM.tblObject_ConstPaidKindName_Second.AsString;
+
+    gbPartnerDebt.Text := 'Долги ТТ по выбранному контракту';
     lPartnerDebt.Text := FormatFloat(',0.##', DM.qryPartnerDebtSum.AsFloat);
     lPartnerOver.Text := FormatFloat(',0.##', DM.qryPartnerOverSum.AsFloat);
     lPartnerOverDay.Text := DM.qryPartnerOverDays.AsString;
+
+    DM.qrySelect.Open('select SUM(DEBTSUM), SUM(OVERSUM), MAX(OVERDAYS) from OBJECT_PARTNER WHERE ID = ' + DM.qryPartnerId.AsString + ' GROUP BY ID');
+
+    gbPartnerAllDebt.Text := 'Долги ТТ по всем контрактам';
+    lPartnerAllDebt.Text := FormatFloat(',0.##', DM.qrySelect.Fields[0].AsFloat);
+    lPartnerAllOver.Text := FormatFloat(',0.##', DM.qrySelect.Fields[1].AsFloat);
+    lPartnerAllOverDay.Text := DM.qrySelect.Fields[2].AsString;
+
+    DM.qrySelect.Close;
   end
   else  // нет договора
   begin
@@ -4193,7 +4243,7 @@ begin
   Res := DM.CompareVersion(eMobileVersion.Text, DM.tblObject_ConstMobileVersion.AsString);
   if Res > 0 then
   begin
-    layServerVersion.Visible := true;
+    lServerVersion.Height := 60;
     eServerVersion.Text := DM.tblObject_ConstMobileVersion.AsString;
 
     {$IFDEF ANDROID}
@@ -4203,15 +4253,22 @@ begin
     {$ENDIF}
   end
   else
-    layServerVersion.Visible := false;
+    lServerVersion.Height := 0;
 
   eUnitName.Text := DM.tblObject_ConstUnitName.AsString;
   UnitNameRet.Text := DM.tblObject_ConstUnitName_ret.AsString;
   eCashName.Text := DM.tblObject_ConstCashName.AsString;
   eMemberName.Text := DM.tblObject_ConstMemberName.AsString;
   eWebService.Text := DM.tblObject_ConstWebService.AsString;
-  eSyncDateIn.Text := FormatDateTime('DD.MM.YYYY', DM.tblObject_ConstSyncDateIn.AsDateTime);
-  SyncDateOut.Text := FormatDateTime('DD.MM.YYYY', DM.tblObject_ConstSyncDateOut.AsDateTime);
+  if not SameText(gc_WebService, DM.tblObject_ConstWebService.AsString) then
+  begin
+    lCurWebService.Height := 60;
+    eCurWebService.Text := gc_WebService;
+  end
+  else
+    lCurWebService.Height := 0;
+  eSyncDateIn.Text := FormatDateTime('DD.MM.YYYY hh:nn:ss', DM.tblObject_ConstSyncDateIn.AsDateTime);
+  SyncDateOut.Text := FormatDateTime('DD.MM.YYYY hh:nn:ss', DM.tblObject_ConstSyncDateOut.AsDateTime);
 
   SwitchToForm(tiInformation, nil);
 end;

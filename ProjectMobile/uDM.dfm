@@ -536,6 +536,9 @@ object DM: TDM
     object qryPartnerContractName: TWideStringField
       FieldName = 'ContractName'
     end
+    object qryPartnerJuridicalId: TIntegerField
+      FieldName = 'JuridicalId'
+    end
     object qryPartnerPaidKindId: TIntegerField
       FieldName = 'PaidKindId'
     end
