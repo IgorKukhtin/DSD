@@ -3,7 +3,7 @@ object IncomeForm: TIncomeForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
   ClientHeight = 466
-  ClientWidth = 811
+  ClientWidth = 925
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@ object IncomeForm: TIncomeForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 811
+    Width = 925
     Height = 97
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 811
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -190,27 +191,28 @@ object IncomeForm: TIncomeForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 123
-    Width = 811
+    Width = 925
     Height = 343
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 811
     ClientRectBottom = 343
-    ClientRectRight = 811
+    ClientRectRight = 925
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 811
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 811
+        Width = 925
         Height = 319
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 136
-        ExplicitTop = 16
+        ExplicitWidth = 811
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -509,6 +511,13 @@ object IncomeForm: TIncomeForm
             Visible = False
             Options.Editing = False
             Width = 50
+          end
+          object colJuridicalName: TcxGridDBColumn
+            Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
           end
         end
         object cxGridLevel: TcxGridLevel
