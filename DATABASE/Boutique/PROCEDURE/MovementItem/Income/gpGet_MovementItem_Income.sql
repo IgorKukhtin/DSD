@@ -92,7 +92,7 @@ BEGIN
            , Object_GoodsGroup.ValueData    AS GoodsGroupName
            , Object_Measure.Id              AS MeasureId
            , Object_Measure.ValueData       AS MeasureName  
-           , Object_Juridical.JuridicalId   AS JuridicalId
+           , Object_Juridical.lId           AS JuridicalId
            , Object_Juridical.ValueData     As JuridicalName
            , Object_Composition.Id          AS CompositionId
            , Object_Composition.ValueData   AS CompositionName
