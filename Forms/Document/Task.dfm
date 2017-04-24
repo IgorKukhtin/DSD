@@ -299,8 +299,8 @@ inherited TaskForm: TTaskForm
     Width = 222
   end
   object edInsertName: TcxButtonEdit [8]
-    Left = 746
-    Top = 23
+    Left = 660
+    Top = 62
     Properties.Buttons = <
       item
         Default = True
@@ -309,27 +309,26 @@ inherited TaskForm: TTaskForm
       end>
     Properties.ReadOnly = True
     TabOrder = 12
-    Width = 114
+    Width = 185
   end
   object cxLabel7: TcxLabel [9]
-    Left = 746
-    Top = 5
+    Left = 660
+    Top = 44
     Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
   end
   object cxLabel8: TcxLabel [10]
     Left = 660
     Top = 5
-    Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
+    Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
   end
   object edInsertDate: TcxDateEdit [11]
     Left = 660
     Top = 23
     EditValue = 42132d
+    Properties.Kind = ckDateTime
     Properties.ReadOnly = True
-    Properties.SaveTime = False
-    Properties.ShowTime = False
     TabOrder = 15
-    Width = 80
+    Width = 130
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 779
