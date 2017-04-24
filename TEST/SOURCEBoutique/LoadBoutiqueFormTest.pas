@@ -124,7 +124,7 @@ type
 //    procedure LoadRepriceFormTest;
 //    procedure LoadRetailFormTest;
 //    procedure LoadReturnTypeFormTest;
-//    procedure LoadReturnOutFormTest;
+    procedure LoadReturnOutFormTest;
 //    procedure LoadSaleFormTest;
     procedure LoadServiceFormTest;
 //    procedure LoadSendFormTest;
@@ -922,15 +922,15 @@ end;
 //  TdsdFormStorageFactory.GetStorage.Load('TRetailEditForm');
 //end;
 //
-//procedure TLoadFormTest.LoadReturnOutFormTest;
-//begin
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReturnOutForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutJournalForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReturnOutJournalForm');
+procedure TLoadFormTest.LoadReturnOutFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnOutForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnOutJournalForm');
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutPartnerDataDialogForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TReturnOutPartnerDataDialogForm');
-//end;
+end;
 //
 //procedure TLoadFormTest.LoadReturnTypeFormTest;
 //begin

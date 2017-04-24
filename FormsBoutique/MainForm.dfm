@@ -10,10 +10,22 @@ inherited MainForm: TMainForm
   inherited ActionList: TActionList
     Left = 336
     Top = 8
+    object actReturnOut: TdsdOpenForm [0]
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+      Hint = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+      FormName = 'TReturnOutJournalForm'
+      FormNameParam.Value = 'TReturnOutJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
     inherited actAbout: TAction
       Category = 'but'
     end
-    object actIncome: TdsdOpenForm [2]
+    object actIncome: TdsdOpenForm [3]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -25,7 +37,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actUser: TdsdOpenForm [5]
+    object actUser: TdsdOpenForm [6]
       Category = 'but'
       MoveParams = <>
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
@@ -36,7 +48,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actForms: TdsdOpenForm [9]
+    object actForms: TdsdOpenForm [10]
       Category = 'but'
       MoveParams = <>
       Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1086#1081' '#1089#1080#1089#1090#1077#1084#1086#1081
@@ -48,7 +60,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actRole: TdsdOpenForm [10]
+    object actRole: TdsdOpenForm [11]
       Category = 'but'
       MoveParams = <>
       Caption = #1056#1086#1083#1080
@@ -534,6 +546,9 @@ inherited MainForm: TMainForm
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       object N45: TMenuItem
         Action = actIncome
+      end
+      object N46: TMenuItem
+        Action = actReturnOut
       end
     end
     inherited miService: TMenuItem

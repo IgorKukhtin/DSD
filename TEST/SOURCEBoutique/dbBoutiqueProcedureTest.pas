@@ -24,6 +24,7 @@ type
   published
     procedure CreateCOMMON;
     procedure CreateIncome;
+    procedure CreateReturnOut;
   end;
 
 type
@@ -31,6 +32,7 @@ type
   published
     procedure CreateCOMMON;
     procedure CreateIncome;
+    procedure CreateReturnOut;
   end;
 
 type
@@ -136,6 +138,10 @@ begin
   DirectoryLoad(CommonProcedurePath + 'Movement\Income\');
 end;
 
+procedure TdbMovementProcedureTest.CreateReturnOut;
+begin
+  DirectoryLoad(CommonProcedurePath + 'Movement\ReturnOut\');
+end;
 { TdbObjectProcedureTest }
 procedure TdbObjectProcedureTest.CreateAccountDirection;
 begin
@@ -347,6 +353,11 @@ end;
 procedure TdbMovementItemProcedureTest.CreateIncome;
 begin
   DirectoryLoad(CommonProcedurePath + 'MovementItem\Income\');
+end;
+
+procedure TdbMovementItemProcedureTest.CreateReturnOut;
+begin
+  DirectoryLoad(CommonProcedurePath + 'MovementItem\ReturnOut\');
 end;
 
 { TdbMovementItemContainerProcedureTest }

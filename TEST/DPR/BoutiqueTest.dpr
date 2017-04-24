@@ -97,7 +97,6 @@ uses
   Juridical in '..\..\FormsBoutique\Guides\Juridical.pas' {JuridicalForm: TParentForm},
   JuridicalEdit in '..\..\FormsBoutique\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
   JuridicalBasis in '..\..\FormsBoutique\Guides\JuridicalBasis.pas' {JuridicalBasis: TParentForm},
-
   Units in '..\..\FormsBoutique\Guides\Units.pas' {UnitsForm: TParentForm},
   UnitEdit in '..\..\FormsBoutique\Guides\UnitEdit.pas' {UnitsEditForm: TParentForm},
   City in '..\..\FormsBoutique\Guides\City.pas' {CityForm: TParentForm},
@@ -173,7 +172,9 @@ uses
   IncomeJournal in '..\..\FormsBoutique\Document\IncomeJournal.pas' {IncomeJournalForm: TParentForm},
   Income in '..\..\FormsBoutique\Document\Income.pas' {IncomeForm: TParentForm},
   Movement_PeriodDialog in '..\..\FormsBoutique\Document\Movement_PeriodDialog.pas' {Movement_PeriodDialogForm: TParentForm},
-  IncomeItemEdit in '..\..\FormsBoutique\Document\IncomeItemEdit.pas' {IncomeItemEditForm: TParentForm};
+  IncomeItemEdit in '..\..\FormsBoutique\Document\IncomeItemEdit.pas' {IncomeItemEditForm: TParentForm},
+  ReturnOutJournal in '..\..\FormsBoutique\Document\ReturnOutJournal.pas' {ReturnOutJournalForm: TParentForm},
+  ReturnOut in '..\..\FormsBoutique\Document\ReturnOut.pas' {ReturnOutForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

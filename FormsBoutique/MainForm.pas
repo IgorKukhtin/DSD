@@ -93,6 +93,8 @@ type
     actIncome: TdsdOpenForm;
     N44: TMenuItem;
     N45: TMenuItem;
+    actReturnOut: TdsdOpenForm;
+    N46: TMenuItem;
   private
     { Private declarations }
   public
