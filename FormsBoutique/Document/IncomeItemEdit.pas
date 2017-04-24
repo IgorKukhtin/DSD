@@ -42,7 +42,7 @@ type
     cxLabel7: TcxLabel;
     cxLabel9: TcxLabel;
     ceGoodsSize: TcxButtonEdit;
-    GoodsSizeGuides: TdsdGuides;
+    GoodsItemSizeGuides: TdsdGuides;
     ceGoodsName: TcxButtonEdit;
     GoodsGuides: TdsdGuides;
     edGoodsGroupName: TcxButtonEdit;
