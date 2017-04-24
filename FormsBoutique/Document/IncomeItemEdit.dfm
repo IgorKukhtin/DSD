@@ -286,6 +286,12 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inSybaseId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsGroupId'
         Value = Null
         Component = GoodsGroupGuides

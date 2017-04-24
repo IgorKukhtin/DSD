@@ -3,11 +3,12 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income (Integer, Integer, TVarChar, TVarChar, TVarChar ,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income (Integer, Integer, TVarChar, TVarChar, TVarChar ,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income (Integer, Integer, Integer, TVarChar, TVarChar ,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,Integer,TFloat, TFloat, TFloat, TFloat, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income (Integer, Integer, Integer, Integer, TVarChar, TVarChar ,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,Integer,TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MIEdit_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
+    In inSybaseId            Integer   , -- BillItemsIncomeId
     IN inGoodsGroupId        Integer   , --
     IN inGoodsName           TVarChar   , -- Товары
     IN inGoodsInfoName       TVarChar   , --
@@ -227,7 +228,7 @@ BEGIN
       vbPartionId := lpInsertUpdate_Object_PartionGoods (
                                                   ioMovementItemId := ioId
                                                 , inMovementId     := inMovementId
-                                                , inSybaseId       := Null
+                                                , inSybaseId       := inSybaseId
                                                 , inPartnerId      := MovementLinkObject_From.ObjectId
                                                 , inUnitId         := MovementLinkObject_To.ObjectId
                                                 , inOperDate       := Movement.OperDate

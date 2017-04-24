@@ -1930,21 +1930,43 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('      select BillItemsIncome.Id as ObjectId ');
-        Add('          , Bill.Id_Postgres as MovementId ');
-        Add('          , GoodsProperty.Id_Pg_GoodsItem as GoodsItemId ');
-        Add('          , BillItemsIncome.Id as SybaseId ');
-        Add('          , BillItemsIncome.OperCount as Amount ');
-        Add('          , BillItemsIncome.OperPrice as OperPrice ');
-        Add('          , 1 as CountForPrice ');
-        Add('          , BillItemsIncome.PriceListPrice as OperPriceList ');
-        Add('          , BillItemsIncome.Id_Postgres as Id_Postgres ');
-        Add('      from dba.BillItemsIncome  ');
-        Add('          join dba.Bill on BillItemsIncome.BillID = Bill.Id     ');
-        Add('          left outer join dba.GoodsProperty on GoodsProperty.Id = BillItemsIncome.GoodsPropertyId ');
-        Add('          left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId ');
-        Add('      where  Bill.BillKind = 2 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add('      order by Bill.Id ');
+        Add(' select BillItemsIncome.Id as ObjectId  ');
+        Add('     , Bill.Id_Postgres as MovementId  ');
+        Add('     , GoodsProperty.Id_Pg_GoodsItem as GoodsItemId  ');
+        Add('     , BillItemsIncome.Id as SybaseId  ');
+        Add('     , GoodsGroup.Id_Postgres as GoodsGroupId ');
+        Add('     , Goods.GoodsName as GoodsName ');
+        Add('     , GoodsInfo.GoodsInfoName as GoodsInfoName ');
+        Add('     , GoodsSize.GoodsSizeName as GoodsSize  ');
+        Add('     , CompositionGroup.CompositionGroupName as CompositionGroupName ');
+        Add('     , Composition.CompositionName as CompositionName ');
+        Add('     , LineFabrica.LineFabricaName as LineFabricaName ');
+        Add('     , Label.LabelName as LabelName ');
+        Add('     , GoodsProperty.MeasureId as MeasureId ');
+        Add('     , BillItemsIncome.OperCount as Amount  ');
+        Add('     , BillItemsIncome.OperPrice as OperPrice  ');
+        Add('     , 1 as CountForPrice  ');
+        Add('     , BillItemsIncome.PriceListPrice as OperPriceList  ');
+        Add('     , BillItemsIncome.Id_Postgres as Id_Postgres  ');
+        Add(' from dba.BillItemsIncome   ');
+        Add('     join dba.Bill on BillItemsIncome.BillID = Bill.Id ');
+        Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItemsIncome.GoodsPropertyId  ');
+        Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId  ');
+        Add('     left join DBA.GoodsInfo  on GoodsInfo.Id = GoodsProperty.GoodsInfoId ');
+        Add('     left join DBA.GoodsSize on  GoodsSize.Id = GoodsProperty.GoodsSizeId ');
+        Add('     left join DBA.Composition on Composition.Id = GoodsProperty.CompositionId ');
+        Add('     left join DBA.CompositionGroup on CompositionGroup.Id = Composition.CompositionGroupId  ');
+        Add('     left join DBA.LineFabrica on LineFabrica.Id = GoodsProperty.LineFabricaId ');
+        Add('     left join  ');
+        Add('          ( select goods_group.goodsName AS LabelName ');
+        Add('            , GoodsProperty.goodsId ');
+        Add('              from GoodsProperty ');
+        Add('              join goods on goods.Id = GoodsProperty.goodsId ');
+        Add('              join goods as goods_group on goods_group.Id = goods.ParentId ');
+        Add('              group by  GoodsProperty.goodsId, goods_group.goodsName) as Label on label.goodsId = GoodsProperty.goodsId ');
+        Add('      left join  dba.Goods as GoodsGroup on  GoodsGroup.id = Goods.ParentId ');
+        Add(' where  Bill.BillKind = 2 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add(' order by Bill.Id ');
         Open;
 
         cbIncome.Caption:='1.1. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Приход от поставщика';
@@ -1955,18 +1977,25 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpInsertUpdate_MIEdit_Income_sybase';
+        toStoredProc.StoredProcName:='gpInsertUpdate_MIEdit_Income';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inGoodsItemId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inSybaseId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsGroupId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inGoodsInfoName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inGoodsSize',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inCompositionGroupName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inCompositionName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inLineFabricaName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inLabelName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inMeasureId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inOperPrice',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('ioCountForPrice',ftFloat,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inOperPriceList',ftFloat,ptInput, 0);
-
         //
         HideCurGrid(True);
         while not EOF do
@@ -1977,12 +2006,21 @@ begin
               //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
-             toStoredProc.Params.ParamByName('inGoodsItemId').Value:=FieldByName('GoodsItemId').AsInteger;
              toStoredProc.Params.ParamByName('inSybaseId').Value:=FieldByName('SybaseId').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsGroupId').Value:=FieldByName('GoodsGroupId').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsName').Value:=FieldByName('GoodsName').AsString;
+             toStoredProc.Params.ParamByName('inGoodsInfoName').Value:=FieldByName('GoodsInfoName').AsString;
+             toStoredProc.Params.ParamByName('inGoodsSize').Value:=FieldByName('GoodsSize').AsString;
+             toStoredProc.Params.ParamByName('inCompositionGroupName').Value:=FieldByName('CompositionGroupName').AsString;
+             toStoredProc.Params.ParamByName('inCompositionName').Value:=FieldByName('CompositionName').AsString;
+             toStoredProc.Params.ParamByName('inLineFabricaName').Value:=FieldByName('LineFabricaName').AsString;
+             toStoredProc.Params.ParamByName('inLabelName').Value:=FieldByName('LabelName').AsString;
+             toStoredProc.Params.ParamByName('inMeasureId').Value:=FieldByName('MeasureId').AsInteger;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
              toStoredProc.Params.ParamByName('inOperPrice').Value:=FieldByName('OperPrice').AsFloat;
              toStoredProc.Params.ParamByName('ioCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
              toStoredProc.Params.ParamByName('inOperPriceList').Value:=FieldByName('OperPriceList').AsFloat;
+
 
              if not myExecToStoredProc then ;//exit;
              //
