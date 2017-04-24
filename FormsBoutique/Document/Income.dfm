@@ -209,6 +209,8 @@ object IncomeForm: TIncomeForm
         Height = 319
         Align = alClient
         TabOrder = 0
+        ExplicitLeft = 136
+        ExplicitTop = 16
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS

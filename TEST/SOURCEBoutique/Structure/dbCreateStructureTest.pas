@@ -178,12 +178,12 @@ end;
 
 procedure TdbCreateStructureTest.CreateObjectGoodsItem;
 begin
-  ExecFile(StructurePath + 'ObjectGoodsItem\ObjectGoodsItem.sql', ZQuery);
+  ExecFile(StructurePath + 'ObjectGoodsItem - !!!\ObjectGoodsItem.sql', ZQuery);
 end;
 
 procedure TdbCreateStructureTest.CreateObjectPartionGoods;
 begin
- ExecFile(StructurePath + 'ObjectPartionGoods\ObjectPartionGoods.sql', ZQuery);
+ ExecFile(StructurePath + 'ObjectPartionGoods - !!!\ObjectPartionGoods.sql', ZQuery);
 end;
 
 procedure TdbCreateStructureTest.CreatePeriodClose;
