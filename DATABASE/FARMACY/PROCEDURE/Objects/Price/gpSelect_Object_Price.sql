@@ -19,6 +19,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Price(
 RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , MCSPeriod TFloat, MCSDay TFloat, StartDate TDateTime
              , GoodsId Integer, GoodsCode Integer,/* IdBarCode TVarChar,*/ GoodsName TVarChar
+             , IntenalSPName TVarChar
              , GoodsGroupName TVarChar, NDSKindName TVarChar
              , ConditionsKeepName TVarChar
              , Goods_isTop Boolean, Goods_PercentMarkup TFloat
@@ -29,7 +30,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , MinExpirationDate TDateTime
              , Remains TFloat, SummaRemains TFloat
              , RemainsNotMCS TFloat, SummaNotMCS TFloat
-             , PriceRetSP TFloat
+             , PriceRetSP TFloat, PriceOptSP TFloat, PriceSP TFloat
              , isSP Boolean
              , isErased boolean
              , isClose boolean, isFirst boolean , isSecond boolean
@@ -73,6 +74,7 @@ BEGIN
                ,NULL::Integer                    AS GoodsCode
 --               ,NULL::TVarChar                   AS IdBarCode
                ,NULL::TVarChar                   AS GoodsName
+               ,NULL::TVarChar                   AS IntenalSPName
                ,NULL::TVarChar                   AS GoodsGroupName
                ,NULL::TVarChar                   AS NDSKindName
                ,NULL::TVarChar                   AS ConditionsKeepName
@@ -92,6 +94,8 @@ BEGIN
                ,NULL::TFloat                     AS RemainsNotMCS
                ,NULL::TFloat                     AS SummaNotMCS
                ,NULL::TFloat                     AS PriceRetSP
+               ,NULL::TFloat                     AS PriceOptSP
+               ,NULL::TFloat                     AS PriceSP
                ,NULL::Boolean                    AS isSP
                ,NULL::Boolean                    AS isErased
                ,NULL::Boolean                    AS isClose 
@@ -174,6 +178,7 @@ BEGIN
                , Object_Goods_View.GoodsCodeInt                  AS GoodsCode
 --               , zfFormat_BarCode(zc_BarCodePref_Object(), Object_Price_View.Id) ::TVarChar  AS IdBarCode
                , Object_Goods_View.GoodsName                     AS GoodsName
+               , Object_IntenalSP.ValueData                      AS IntenalSPName
                , Object_Goods_View.GoodsGroupName                AS GoodsGroupName
                , Object_Goods_View.NDSKindName                   AS NDSKindName
                , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
@@ -197,6 +202,8 @@ BEGIN
                , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE (Object_Price_View.MCSValue, 0) THEN (COALESCE (Object_Remains.Remains, 0) - COALESCE (Object_Price_View.MCSValue, 0)) * COALESCE (Object_Price_View.Price, 0) ELSE 0 END :: TFloat AS SummaNotMCS
 
                , COALESCE (ObjectFloat_Goods_PriceRetSP.ValueData,0) ::TFloat  AS PriceRetSP
+               , COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) ::TFloat  AS PriceOptSP
+               , COALESCE (ObjectFloat_Goods_PriceSP.ValueData,0)    ::TFloat  AS PriceSP
 
                , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
                , Object_Goods_View.isErased                      AS isErased 
@@ -260,7 +267,18 @@ BEGIN
                LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceRetSP
                                      ON ObjectFloat_Goods_PriceRetSP.ObjectId = ObjectLink_Main.ChildObjectId 
                                     AND ObjectFloat_Goods_PriceRetSP.DescId = zc_ObjectFloat_Goods_PriceRetSP() 
+               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
+                                     ON ObjectFloat_Goods_PriceOptSP.ObjectId = ObjectLink_Main.ChildObjectId
+                                    AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP() 
+               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceSP
+                                     ON ObjectFloat_Goods_PriceSP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                    AND ObjectFloat_Goods_PriceSP.DescId = zc_ObjectFloat_Goods_PriceSP()   
 
+               LEFT JOIN ObjectLink AS ObjectLink_Goods_IntenalSP
+                                    ON ObjectLink_Goods_IntenalSP.ObjectId = ObjectLink_Main.ChildObjectId
+                                   AND ObjectLink_Goods_IntenalSP.DescId = zc_ObjectLink_Goods_IntenalSP()
+               LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = ObjectLink_Goods_IntenalSP.ChildObjectId
+        
             WHERE (inisShowDel = True OR Object_Goods_View.isErased = False)
               AND (Object_Goods_View.Id = inGoodsId OR inGoodsId = 0)
             ORDER BY GoodsGroupName, GoodsName;
@@ -333,6 +351,7 @@ BEGIN
                , Object_Goods_View.GoodsCodeInt            AS GoodsCode
 --               , zfFormat_BarCode(zc_BarCodePref_Object(), Object_Price_View.Id) ::TVarChar AS IdBarCode
                , Object_Goods_View.GoodsName               AS GoodsName
+               , Object_IntenalSP.ValueData                AS IntenalSPName
                , Object_Goods_View.GoodsGroupName          AS GoodsGroupName
                , Object_Goods_View.NDSKindName             AS NDSKindName
                , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
@@ -354,6 +373,8 @@ BEGIN
                , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE (Object_Price_View.MCSValue, 0) THEN (COALESCE (Object_Remains.Remains, 0) - COALESCE (Object_Price_View.MCSValue, 0)) * COALESCE (Object_Price_View.Price, 0) ELSE 0 END :: TFloat AS SummaNotMCS
                               
                , COALESCE (ObjectFloat_Goods_PriceRetSP.ValueData,0) ::TFloat  AS PriceRetSP
+               , COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) ::TFloat  AS PriceOptSP
+               , COALESCE (ObjectFloat_Goods_PriceSP.ValueData,0)    ::TFloat  AS PriceSP
 
                , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
                , Object_Goods_View.isErased                AS isErased 
@@ -413,7 +434,18 @@ BEGIN
                LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceRetSP
                                      ON ObjectFloat_Goods_PriceRetSP.ObjectId = ObjectLink_Main.ChildObjectId 
                                     AND ObjectFloat_Goods_PriceRetSP.DescId = zc_ObjectFloat_Goods_PriceRetSP() 
+               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
+                                     ON ObjectFloat_Goods_PriceOptSP.ObjectId = ObjectLink_Main.ChildObjectId
+                                    AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP() 
+               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceSP
+                                     ON ObjectFloat_Goods_PriceSP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                    AND ObjectFloat_Goods_PriceSP.DescId = zc_ObjectFloat_Goods_PriceSP()   
 
+               LEFT JOIN ObjectLink AS ObjectLink_Goods_IntenalSP
+                                    ON ObjectLink_Goods_IntenalSP.ObjectId = ObjectLink_Main.ChildObjectId
+                                   AND ObjectLink_Goods_IntenalSP.DescId = zc_ObjectLink_Goods_IntenalSP()
+               LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = ObjectLink_Goods_IntenalSP.ChildObjectId
+        
             WHERE Object_Price_View.unitid = inUnitId
               AND (inisShowDel = True OR Object_Goods_View.isErased = False)
               AND (Object_Goods_View.Id = inGoodsId OR inGoodsId = 0)
