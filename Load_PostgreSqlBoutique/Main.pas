@@ -1845,10 +1845,11 @@ begin
         try fExecSqFromQuery_noErr('alter table dba.LineFabrica add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Kassa add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.GoodsSize add Id_Postgres integer null;'); except end;
-        try fExecSqFromQuery_noErr('alter table dba.GoodsProperty add Id_Pg_goodsItem integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.GoodsInfo add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Goods add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.GoodsProperty add Id_Pg_goodsItem integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.GoodsProperty add Id_Pg_goods integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.GoodsProperty add Id_pg_label integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Fabrika add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.DiscountTools add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Discount add Id_Postgres integer null;'); except end;
@@ -1858,6 +1859,7 @@ begin
         try fExecSqFromQuery_noErr('alter table dba.Unit add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Brand add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Firma add Id_Postgres integer null;'); except end;
+
 
      end;
 end;
@@ -1874,49 +1876,49 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pSetNullGuide_Id_Postgres;
 begin
-      if cbMeasure.Checked then
+      //if cbMeasure.Checked then
       fExecSqFromQuery('update dba.Measure set Id_Postgres = null');
-      if cbCompositionGroup.Checked then
+      //if cbCompositionGroup.Checked then
       fExecSqFromQuery('update dba.CompositionGroup set Id_Postgres = null');
-      if cbComposition.Checked then
+      //if cbComposition.Checked then
       fExecSqFromQuery('update dba.Composition set Id_Postgres = null');
-      if cbCountryBrand.Checked then
+      //if cbCountryBrand.Checked then
       fExecSqFromQuery('update dba.CountryBrand set Id_Postgres = null');
-      if cbBrand.Checked then
+      //if cbBrand.Checked then
       fExecSqFromQuery('update dba.Brand set Id_Postgres = null');
-      if cbFabrika.Checked then
+      //if cbFabrika.Checked then
       fExecSqFromQuery('update dba.Fabrika set Id_Postgres = null');
-      if cbLineFabrica.Checked then
+      //if cbLineFabrica.Checked then
       fExecSqFromQuery('update dba.LineFabrica set Id_Postgres = null');
-      if cbGoodsInfo.Checked then
+      //if cbGoodsInfo.Checked then
       fExecSqFromQuery('update dba.GoodsInfo set Id_Postgres = null');
-      if cbGoodsSize.Checked then
+      //if cbGoodsSize.Checked then
       fExecSqFromQuery('update dba.GoodsSize set Id_Postgres = null');
-      if cbKassa.Checked then
+      //if cbKassa.Checked then
       fExecSqFromQuery('update dba.Kassa set Id_Postgres = null');
-      if cbValuta.Checked then
+      //if cbValuta.Checked then
       fExecSqFromQuery('update dba.Valuta set Id_Postgres = null');
-      if cbPeriod.Checked then
+      //if cbPeriod.Checked then
       fExecSqFromQuery('update dba.Period set Id_Postgres = null');
-      if cbGoodsGroup.Checked then
+      //if cbGoodsGroup.Checked then
       fExecSqFromQuery('update dba.Goods set Id_Postgres = null where Goods.HasChildren <> zc_hsLeaf()');
-      if cbDiscount.Checked then
+      //if cbDiscount.Checked then
       fExecSqFromQuery('update dba.Discount set Id_Postgres = null');
-      if cbDiscountTools.Checked then
+      //if cbDiscountTools.Checked then
       fExecSqFromQuery('update dba.DiscountTools set Id_Postgres = null');
-       if cbPartner.Checked then
+      //if cbPartner.Checked then
       fExecSqFromQuery('update dba.Unit set Id_Postgres = null  where KindUnit = zc_kuIncome()');
-      if cbUnit.Checked then
+      //if cbUnit.Checked then
       fExecSqFromQuery('update dba.Unit set Id_Postgres = null  where KindUnit = zc_kuUnit()');
-      if cbLabel.Checked then
+      //if cbLabel.Checked then
       fExecSqFromQuery('update dba.GoodsProperty set Id_pg_label = null');
-      if cbGoods.Checked then
+      //if cbGoods.Checked then
       fExecSqFromQuery('update dba.GoodsProperty set Id_Pg_Goods = null');
-      if cbGoodsItem.Checked then
+      //if cbGoodsItem.Checked then
       fExecSqFromQuery('update dba.GoodsProperty set Id_Pg_GoodsItem = null');
-       if cbClient.Checked then
+      //if cbClient.Checked then
       fExecSqFromQuery('update dba.Unit set Id_Postgres = null  where KindUnit = zc_kuClient()');
-       if cbJuridical.Checked then
+      //if cbJuridical.Checked then
       fExecSqFromQuery('update dba.Firma set Id_Postgres = null ');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1941,7 +1943,12 @@ begin
         Add('     , Bill.Id_Postgres as MovementId  ');
         Add('     , GoodsProperty.Id_Pg_GoodsItem as GoodsItemId  ');
         Add('     , BillItemsIncome.Id as SybaseId  ');
-        Add('     , GoodsGroup.Id_Postgres as GoodsGroupId ');
+        Add('     , case when Goods.ParentId = 500000');
+        Add('              or GoodsGroup1.ParentId = 500000');
+        Add('              or GoodsGroup2.ParentId = 500000');
+        Add('            then GoodsGroup1.Id_Postgres');
+        Add('            else GoodsGroup2.Id_Postgres');
+        Add('       end as GoodsGroupId'); // !!!последнюю группу не загружаем, но кроме ј–’»¬ј
         Add('     , Firma.Id_Postgres as JuridicalId ');
         Add('     , Goods.GoodsName as GoodsName ');
         Add('     , GoodsInfo.GoodsInfoName as GoodsInfoName ');
@@ -1972,8 +1979,11 @@ begin
         Add('              join goods on goods.Id = GoodsProperty.goodsId ');
         Add('              join goods as goods_group on goods_group.Id = goods.ParentId ');
         Add('              group by  GoodsProperty.goodsId, goods_group.goodsName) as Label on label.goodsId = GoodsProperty.goodsId ');
-        Add('      left join  dba.Goods as GoodsGroup on  GoodsGroup.id = Goods.ParentId ');
         Add('      left join  dba.Firma as Firma on  Firma.id = BillItemsIncome.FirmaId ');
+        //    !!!последнюю группу не загружаем, но кроме ј–’»¬ј
+        Add('      left join  dba.Goods as GoodsGroup1 on  GoodsGroup1.id = Goods.ParentId ');
+        Add('      left join  dba.Goods as GoodsGroup2 on  GoodsGroup2.id = GoodsGroup1.ParentId ');
+
         Add(' where  Bill.BillKind = 2 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add(' order by Bill.Id ');
         Open;
@@ -2404,6 +2414,12 @@ procedure TMainForm.pLoadGuide_Composition;
 begin
      if (not cbComposition.Checked)or(not cbComposition.Enabled) then exit;
      //
+     ShowMessage('cbComposition «ƒ≈—№ - Ќ≈ «ј√–”∆јё“—я');
+     cbComposition.Checked:= FALSE;
+     cbComposition.Enabled:= FALSE;
+     exit;
+     //
+     //
      myEnabledCB(cbComposition);
      //
      with fromQuery,Sql do begin
@@ -2781,7 +2797,14 @@ end;
 
 procedure TMainForm.pLoadGuide_Goods;
 begin
+     //
      if (not cbGoods.Checked)or(not cbGoods.Enabled) then exit;
+     //
+     ShowMessage('cbGoods «ƒ≈—№ - Ќ≈ «ј√–”∆јё“—я');
+     cbGoods.Checked:= FALSE;
+     cbGoods.Enabled:= FALSE;
+     exit;
+     //
      //
      myEnabledCB(cbGoods);
      //
@@ -2794,12 +2817,22 @@ begin
         Add('     , zc_erasedDel()         as zc_erasedDel');
         Add('     , GoodsProperty.Erased   as Erased');
         Add('     , GoodsProperty.Id_Pg_Goods');
-        Add('     , GoodsProperty_parent_GoodsGroup.Id as GoodsGroupId');
+        Add('     , case when GoodsName.ParentId = 500000');
+        Add('              or Goods_parent1.ParentId = 500000');
+        Add('              or Goods_parent2.ParentId = 500000');
+        Add('            then Goods_parent1.Id');
+        Add('            else Goods_parent2.Id');
+        Add('       end as GoodsGroupId'); // !!!последнюю группу не загружаем, но кроме ј–’»¬ј
         Add('     , GoodsProperty.MeasureId');
         Add('     , GoodsProperty.CompositionId');
         Add('     , GoodsProperty.GoodsInfoId');
         Add('     , GoodsProperty.LineFabricaId');
-        Add('     , GoodsProperty_parent_GoodsGroup.Id_Postgres as ParentId_Postgres_GoodsGroup');
+        Add('     , case when GoodsName.ParentId = 500000');
+        Add('              or Goods_parent1.ParentId = 500000');
+        Add('              or Goods_parent2.ParentId = 500000');
+        Add('            then Goods_parent1.Id_Postgres');
+        Add('            else Goods_parent2.Id_Postgres');
+        Add('       end as ParentId_Postgres_GoodsGroup'); // !!!последнюю группу не загружаем, но кроме ј–’»¬ј
         Add('     , GoodsProperty_parent_measure.Id_Postgres as ParentId_Postgres_measure');
         Add('     , GoodsProperty_parent_Composition.Id_Postgres as ParentId_Postgres_Composition');
         Add('     , GoodsProperty_parent_GoodsInfo.Id_Postgres as ParentId_Postgres_GoodsInfo');
@@ -2811,8 +2844,11 @@ begin
         Add(' left outer join dba.GoodsInfo as GoodsProperty_parent_GoodsInfo on GoodsProperty_parent_GoodsInfo.id = GoodsProperty.GoodsInfoId');
         Add(' left outer join dba.LineFabrica as GoodsProperty_parent_LineFabrica on GoodsProperty_parent_LineFabrica.Id =  GoodsProperty.LineFabricaId');
         Add(' left outer join dba.Goods as GoodsName  on GoodsName.Id = GoodsProperty.GoodsId');
-        Add(' left outer join dba.Goods as GoodsProperty_parent_GoodsGroup on GoodsProperty_parent_GoodsGroup.Id = GoodsName.ParentId');
         Add(' left outer join dba.Goods as GoodsLabel on GoodsLabel.Id = GoodsName.ParentId');
+        //    !!!последнюю группу не загружаем, но кроме ј–’»¬ј
+        Add(' left outer join dba.Goods as Goods_parent1 on Goods_parent1.Id = GoodsName.ParentId');
+        Add(' left outer join dba.Goods as Goods_parent2 on Goods_parent2.Id = Goods_parent1.ParentId');
+
         Add('order by ObjectCode');
         Open;
         //
@@ -2892,7 +2928,18 @@ begin
         Add('     , Goods_parent.Id_Postgres as ParentId_Postgres');
         Add('from dba.Goods');
         Add('     left outer join dba.Goods as Goods_parent on Goods_parent.Id = Goods.ParentId');
+        //        !!!последнюю группу не загружаем, но кроме ј–’»¬ј
+        Add('     left outer join (select distinct Goods_find.ParentId');
+        Add('                      from dba.Goods as Goods_find');
+        Add('                           left join dba.Goods as Goods_parent1 on Goods_parent1.Id = Goods_find.ParentId');
+        Add('                           left join dba.Goods as Goods_parent2 on Goods_parent2.Id = Goods_parent1.ParentId');
+        Add('                      where Goods_find.HasChildren = zc_hsLeaf()');
+        Add('                         and Goods_find.ParentId <> 500000');
+        Add('                         and Goods_parent1.ParentId <> 500000');
+        Add('                         and Goods_parent2.ParentId <> 500000');
+        Add('                     ) as Goods_find on Goods_find.ParentId = Goods.Id');
         Add('where Goods.HasChildren <> zc_hsLeaf()');
+        Add('  and Goods_find.ParentId is null'); // !!!последнюю группу не загружаем, но кроме ј–’»¬ј
         Add('order by ObjectId');
         Open;
         //
@@ -2923,7 +2970,7 @@ begin
              if not myExecToStoredProc then ;//exit;
              if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
              //
-             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.Goods set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
@@ -2940,6 +2987,12 @@ end;
 procedure TMainForm.pLoadGuide_GoodsInfo;
 begin
      if (not cbGoodsInfo.Checked)or(not cbGoodsInfo.Enabled) then exit;
+     //
+     ShowMessage('cbGoodsInfo «ƒ≈—№ - Ќ≈ «ј√–”∆јё“—я');
+     cbGoodsInfo.Checked:= FALSE;
+     cbGoodsInfo.Enabled:= FALSE;
+     exit;
+     //
      //
      myEnabledCB(cbGoodsInfo);
      //
@@ -2998,6 +3051,12 @@ end;
 procedure TMainForm.pLoadGuide_GoodsItem;
 begin
      if (not cbGoodsItem.Checked)or(not cbGoodsItem.Enabled) then exit;
+     //
+     ShowMessage('cbGoodsItem «ƒ≈—№ - Ќ≈ «ј√–”∆јё“—я');
+     cbGoodsItem.Checked:= FALSE;
+     cbGoodsItem.Enabled:= FALSE;
+     exit;
+     //
      //
      myEnabledCB(cbGoodsItem);
      //
@@ -3067,6 +3126,12 @@ end;
 procedure TMainForm.pLoadGuide_GoodsSize;
 begin
      if (not cbGoodsSize.Checked)or(not cbGoodsSize.Enabled) then exit;
+     //
+     ShowMessage('cbGoodsSize «ƒ≈—№ - Ќ≈ «ј√–”∆јё“—я');
+     cbGoodsSize.Checked:= FALSE;
+     cbGoodsSize.Enabled:= FALSE;
+     exit;
+     //
      //
      myEnabledCB(cbGoodsSize);
      //
@@ -3253,6 +3318,12 @@ procedure TMainForm.pLoadGuide_Label;
 begin
     if (not cbLabel.Checked)or(not cbLabel.Enabled) then exit;
      //
+     ShowMessage('cbLabel «ƒ≈—№ - Ќ≈ «ј√–”∆јё“—я');
+     cbLabel.Checked:= FALSE;
+     cbLabel.Enabled:= FALSE;
+     exit;
+     //
+     //
      myEnabledCB(cbLabel);
      //
      with fromQuery,Sql do begin
@@ -3303,6 +3374,12 @@ end;
 procedure TMainForm.pLoadGuide_LineFabrica;
 begin
      if (not cbLineFabrica.Checked)or(not cbLineFabrica.Enabled) then exit;
+     //
+     ShowMessage('cbLineFabrica «ƒ≈—№ - Ќ≈ «ј√–”∆јё“—я');
+     cbLineFabrica.Checked:= FALSE;
+     cbLineFabrica.Enabled:= FALSE;
+     exit;
+     //
      //
      myEnabledCB(cbLineFabrica);
      //

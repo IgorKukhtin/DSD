@@ -226,6 +226,7 @@
           Width = 122
           Height = 17
           Caption = '1.3. '#1057#1086#1089#1090#1072#1074' '#1090#1086#1074#1072#1088#1072
+          Enabled = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -286,6 +287,7 @@
           Width = 194
           Height = 17
           Caption = '1.7. '#1051#1080#1085#1080#1103' '#1082#1086#1083#1083#1077#1082#1094#1080#1080
+          Enabled = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -301,6 +303,7 @@
           Width = 194
           Height = 17
           Caption = '1.8. '#1054#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+          Enabled = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -316,6 +319,7 @@
           Width = 194
           Height = 17
           Caption = '1.9. '#1056#1072#1079#1084#1077#1088' '#1090#1086#1074#1072#1088#1072
+          Enabled = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -454,6 +458,7 @@
           Width = 178
           Height = 24
           Caption = '1.18. '#1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072
+          Enabled = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -470,6 +475,7 @@
           Width = 178
           Height = 24
           Caption = '1.19. '#1058#1086#1074#1072#1088#1099
+          Enabled = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -486,6 +492,7 @@
           Width = 178
           Height = 24
           Caption = '1.20. '#1058#1086#1074#1072#1088#1099' c '#1088#1072#1079#1084#1077#1088#1072#1084#1080
+          Enabled = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -946,6 +953,7 @@
   end
   object toZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
+    UTF8StringsAsWideField = True
     Catalog = 'public'
     DesignConnection = True
     HostName = 'localhost'
