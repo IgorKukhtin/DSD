@@ -96,6 +96,8 @@ uses
   JuridicalGroup_Object in '..\..\FormsBoutique\Guides\JuridicalGroup_Object.pas' {JuridicalGroup_ObjectForm: TParentForm},
   Juridical in '..\..\FormsBoutique\Guides\Juridical.pas' {JuridicalForm: TParentForm},
   JuridicalEdit in '..\..\FormsBoutique\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
+  JuridicalBasis in '..\..\FormsBoutique\Guides\JuridicalBasis.pas' {JuridicalBasis: TParentForm},
+
   Units in '..\..\FormsBoutique\Guides\Units.pas' {UnitsForm: TParentForm},
   UnitEdit in '..\..\FormsBoutique\Guides\UnitEdit.pas' {UnitsEditForm: TParentForm},
   City in '..\..\FormsBoutique\Guides\City.pas' {CityForm: TParentForm},

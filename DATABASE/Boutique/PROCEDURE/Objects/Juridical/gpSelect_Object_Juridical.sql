@@ -1,9 +1,11 @@
--- Function: gpSelect_Object_Juridical (Bolean, TVarChar)
+-- Function: gpSelect_Object_Juridical (Boolean, TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Juridical (Bolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Juridical (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Juridical (Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
     IN inIsShowAll   Boolean,       -- признак показать удаленные да / нет 
+    IN inIsBasis     Boolean,       -- если inIsBasis = TRUE то выводим только zc_ObjectBoolean_Juridical_isCorporate = TRUE иначе всех 
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isCorporate Boolean, FullName TVarChar, Address TVarChar, OKPO TVarChar, INN TVarChar, JuridicalGroupName TVarChar, isErased boolean) 
@@ -58,8 +60,8 @@ BEGIN
                                   AND ObjectString_INN.DescId = zc_ObjectString_Juridical_INN()
 
      WHERE Object_Juridical.DescId = zc_Object_Juridical()
-              AND (Object_Juridical.isErased = FALSE OR inIsShowAll = TRUE)
-
+           AND (Object_Juridical.isErased = FALSE  OR inIsShowAll = TRUE)  AND  
+           ((  ObjectBoolean_isCorporate.ValueData = True and inIsBasis = True) or (inIsBasis = false))
     ;
 
 END;
@@ -70,8 +72,10 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
+24.04.17                                                           *
 28.02.17                                                           *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Juridical (TRUE, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Juridical (TRUE,TRUE, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Juridical (TRUE,FALSE, zfCalc_UserAdmin())

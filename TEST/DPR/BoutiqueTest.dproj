@@ -320,6 +320,10 @@
 				<Form>JuridicalEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\JuridicalBasis.pas">
+				<Form>JuridicalBasis</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\Units.pas">
 				<Form>UnitsForm</Form>
 				<DesignClass>TParentForm</DesignClass>

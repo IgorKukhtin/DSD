@@ -87,6 +87,7 @@ type
     procedure LoadPartionGoodsFormTest;
     procedure LoadPositionFormTest;
     procedure LoadPersonalFormTest;
+    procedure LoadJuridicalBasisFormTest;
 
 
 
@@ -337,6 +338,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSizeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSizeEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSizeEditForm');
+end;
+
+procedure TLoadFormTest.LoadJuridicalBasisFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalBasisForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalBasisForm');
 end;
 
 procedure TLoadFormTest.LoadJuridicalFormTest;

@@ -885,7 +885,7 @@ inherited MainCashForm: TMainCashForm
       Left = 1
       Top = 1
       Width = 71
-      Height = 15
+      Height = 13
       Align = alLeft
       Caption = '     '#1052#1077#1085#1077#1076#1078#1077#1088' '
       Font.Charset = DEFAULT_CHARSET
@@ -894,13 +894,12 @@ inherited MainCashForm: TMainCashForm
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      ExplicitHeight = 13
     end
     object lblCashMember: TLabel
       Left = 72
       Top = 1
-      Width = 462
-      Height = 15
+      Width = 12
+      Height = 13
       Align = alClient
       Caption = '...'
       Font.Charset = DEFAULT_CHARSET
@@ -909,14 +908,12 @@ inherited MainCashForm: TMainCashForm
       Font.Name = 'Tahoma'
       Font.Style = [fsItalic]
       ParentFont = False
-      ExplicitWidth = 12
-      ExplicitHeight = 13
     end
     object Label2: TLabel
       Left = 534
       Top = 1
       Width = 64
-      Height = 15
+      Height = 13
       Align = alRight
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' '
       Font.Charset = DEFAULT_CHARSET
@@ -925,7 +922,6 @@ inherited MainCashForm: TMainCashForm
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      ExplicitHeight = 13
     end
     object lblBayer: TLabel
       Left = 598
@@ -958,7 +954,7 @@ inherited MainCashForm: TMainCashForm
       Left = 1
       Top = 1
       Width = 55
-      Height = 19
+      Height = 13
       Align = alLeft
       Caption = '     '#1055#1088#1086#1077#1082#1090' '
       Font.Charset = DEFAULT_CHARSET
@@ -967,7 +963,6 @@ inherited MainCashForm: TMainCashForm
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      ExplicitHeight = 13
     end
     object lblDiscountExternalName: TLabel
       Left = 56
@@ -989,7 +984,7 @@ inherited MainCashForm: TMainCashForm
       Left = 393
       Top = 1
       Width = 114
-      Height = 19
+      Height = 13
       Align = alLeft
       Caption = #8470' '#1076#1080#1089#1082#1086#1085#1090#1085#1086#1081' '#1082#1072#1088#1090#1099' '
       Font.Charset = DEFAULT_CHARSET
@@ -998,7 +993,6 @@ inherited MainCashForm: TMainCashForm
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      ExplicitHeight = 13
     end
     object lblDiscountCardNumber: TLabel
       Left = 507
@@ -1020,7 +1014,7 @@ inherited MainCashForm: TMainCashForm
       Left = 661
       Top = 1
       Width = 74
-      Height = 19
+      Height = 13
       Align = alLeft
       Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
       Font.Charset = DEFAULT_CHARSET
@@ -1029,7 +1023,6 @@ inherited MainCashForm: TMainCashForm
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      ExplicitHeight = 13
     end
     object edPrice: TcxCurrencyEdit
       Left = 741
@@ -1083,7 +1076,7 @@ inherited MainCashForm: TMainCashForm
       Left = 1
       Top = 1
       Width = 63
-      Height = 16
+      Height = 13
       Align = alLeft
       Caption = '     '#1052#1077#1076'.'#1091#1095'.: '
       Font.Charset = DEFAULT_CHARSET
@@ -1092,13 +1085,12 @@ inherited MainCashForm: TMainCashForm
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      ExplicitHeight = 13
     end
     object lblPartnerMedicalName: TLabel
       Left = 64
       Top = 1
-      Width = 414
-      Height = 16
+      Width = 12
+      Height = 14
       Align = alClient
       Caption = '...'
       Font.Charset = DEFAULT_CHARSET
@@ -1107,14 +1099,12 @@ inherited MainCashForm: TMainCashForm
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentFont = False
-      ExplicitWidth = 12
-      ExplicitHeight = 14
     end
     object Label7: TLabel
       Left = 478
       Top = 1
       Width = 26
-      Height = 16
+      Height = 13
       Align = alRight
       Caption = #1060#1048#1054' '
       Font.Charset = DEFAULT_CHARSET
@@ -1123,7 +1113,6 @@ inherited MainCashForm: TMainCashForm
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      ExplicitHeight = 13
     end
     object lblMedicSP: TLabel
       Left = 504
