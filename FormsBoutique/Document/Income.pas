@@ -139,6 +139,7 @@ type
     actRefreshMI: TdsdDataSetRefresh;
     macUpdateAction: TMultiAction;
     colPartionId: TcxGridDBColumn;
+    colJuridicalName: TcxGridDBColumn;
   private
   public
   end;

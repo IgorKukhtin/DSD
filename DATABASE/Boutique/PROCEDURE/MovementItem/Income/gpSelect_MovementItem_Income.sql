@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, PartionId Integer, GoodsId Integer, GoodsCode Integer
              , CompositionGroupName TVarChar
              , CompositionName TVarChar
              , GoodsInfoName TVarChar
+             , JuridicalName TVarChar
              , LineFabricaName TVarChar
              , LabelName TVarChar
              , GoodsSizeName TVarChar
@@ -66,7 +67,7 @@ BEGIN
            , Object_Goods.ValueData   AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData AS MeasureName
-
+           , Object_Juridical.ValueData as JuridicalName
            , Object_CompositionGroup.ValueData   AS CompositionGroupName  
            , Object_Composition.ValueData   AS CompositionName
            , Object_GoodsInfo.ValueData     AS GoodsInfoName
@@ -113,6 +114,7 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_PartionGoods.JuridicalId
                                   
        ;
 

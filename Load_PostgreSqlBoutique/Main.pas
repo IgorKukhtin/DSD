@@ -1942,9 +1942,10 @@ begin
         Add('     , GoodsProperty.Id_Pg_GoodsItem as GoodsItemId  ');
         Add('     , BillItemsIncome.Id as SybaseId  ');
         Add('     , GoodsGroup.Id_Postgres as GoodsGroupId ');
+        Add('     , Firma.Id_Postgres as JuridicalId ');
         Add('     , Goods.GoodsName as GoodsName ');
         Add('     , GoodsInfo.GoodsInfoName as GoodsInfoName ');
-        Add('     , GoodsSize.GoodsSizeName as GoodsSize  ');
+        Add('     , GoodsSize.GoodsSizeName as GoodsSizeName ');
         Add('     , CompositionGroup.CompositionGroupName as CompositionGroupName ');
         Add('     , Composition.CompositionName as CompositionName ');
         Add('     , LineFabrica.LineFabricaName as LineFabricaName ');
@@ -1972,6 +1973,7 @@ begin
         Add('              join goods as goods_group on goods_group.Id = goods.ParentId ');
         Add('              group by  GoodsProperty.goodsId, goods_group.goodsName) as Label on label.goodsId = GoodsProperty.goodsId ');
         Add('      left join  dba.Goods as GoodsGroup on  GoodsGroup.id = Goods.ParentId ');
+        Add('      left join  dba.Firma as Firma on  Firma.id = BillItemsIncome.FirmaId ');
         Add(' where  Bill.BillKind = 2 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add(' order by Bill.Id ');
         Open;
@@ -1989,19 +1991,18 @@ begin
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inSybaseId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsGroupId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inMeasureId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inGoodsInfoName',ftString,ptInput, '');
-        toStoredProc.Params.AddParam ('inGoodsSize',ftString,ptInput, '');
-        toStoredProc.Params.AddParam ('inCompositionGroupName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inGoodsSizeName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inCompositionName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inLineFabricaName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inLabelName',ftString,ptInput, '');
-        toStoredProc.Params.AddParam ('inMeasureId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inOperPrice',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('ioCountForPrice',ftFloat,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCountForPrice',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inOperPriceList',ftFloat,ptInput, 0);
         //
         HideCurGrid(True);
@@ -2013,19 +2014,19 @@ begin
               //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
-             toStoredProc.Params.ParamByName('inSybaseId').Value:=FieldByName('SybaseId').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsGroupId').Value:=FieldByName('GoodsGroupId').AsInteger;
+             toStoredProc.Params.ParamByName('inMeasureId').Value:=FieldByName('MeasureId').AsInteger;
+             toStoredProc.Params.ParamByName('inJuridicalId').Value:=FieldByName('JuridicalId').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsName').Value:=FieldByName('GoodsName').AsString;
              toStoredProc.Params.ParamByName('inGoodsInfoName').Value:=FieldByName('GoodsInfoName').AsString;
-             toStoredProc.Params.ParamByName('inGoodsSize').Value:=FieldByName('GoodsSize').AsString;
-             toStoredProc.Params.ParamByName('inCompositionGroupName').Value:=FieldByName('CompositionGroupName').AsString;
+             toStoredProc.Params.ParamByName('inGoodsSizeName').Value:=FieldByName('GoodsSizeName').AsString;
              toStoredProc.Params.ParamByName('inCompositionName').Value:=FieldByName('CompositionName').AsString;
              toStoredProc.Params.ParamByName('inLineFabricaName').Value:=FieldByName('LineFabricaName').AsString;
              toStoredProc.Params.ParamByName('inLabelName').Value:=FieldByName('LabelName').AsString;
-             toStoredProc.Params.ParamByName('inMeasureId').Value:=FieldByName('MeasureId').AsInteger;
+
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
              toStoredProc.Params.ParamByName('inOperPrice').Value:=FieldByName('OperPrice').AsFloat;
-             toStoredProc.Params.ParamByName('ioCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
+             toStoredProc.Params.ParamByName('inCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
              toStoredProc.Params.ParamByName('inOperPriceList').Value:=FieldByName('OperPriceList').AsFloat;
 
 

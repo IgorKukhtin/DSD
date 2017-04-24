@@ -92,8 +92,8 @@ BEGIN
            , Object_GoodsGroup.ValueData    AS GoodsGroupName
            , Object_Measure.Id              AS MeasureId
            , Object_Measure.ValueData       AS MeasureName  
-           , Object_Juridica.JuridicalId    AS JuridicalId
-           , Object_Juridica.ValueData      As JuridicalName
+           , Object_Juridical.JuridicalId   AS JuridicalId
+           , Object_Juridical.ValueData     As JuridicalName
            , Object_Composition.Id          AS CompositionId
            , Object_Composition.ValueData   AS CompositionName
            , Object_GoodsInfo.Id            AS GoodsInfoId
@@ -123,7 +123,7 @@ BEGIN
             LEFT JOIN Object AS Object_LineFabrica ON Object_LineFabrica.Id = Object_PartionGoods.LineFabricaId 
             LEFT JOIN Object AS Object_Label ON Object_Label.Id = Object_PartionGoods.LabelId
             LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = Object_PartionGoods.GoodsSizeId
-            LEFT JOIN Object AS Object_Juridica ON Object_Juridica.Id = Object_PartionGoods.JuridicalId
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_PartionGoods.JuridicalId
 
 
     /* 
