@@ -296,13 +296,15 @@ inherited PriceForm: TPriceForm
             DataBinding.FieldName = 'PriceOptSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 91
           end
           object colPriceSP: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1057#1055' (15)'
+            Caption = #1056#1086#1079#1084#1110#1088' '#1074#1110#1076#1096#1082#1086#1076#1091#1074#1072#1085#1085#1103' '#1079#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091' (15)'
             DataBinding.FieldName = 'PriceSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -311,6 +313,17 @@ inherited PriceForm: TPriceForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 103
+          end
+          object PaymentSP: TcxGridDBColumn
+            Caption = #1057#1091#1084#1072' '#1076#1086#1087#1083#1072#1090#1080' '#1079#1072' '#1091#1087#1072#1082#1086#1074#1082#1091', '#1075#1088#1085' (16)'
+            DataBinding.FieldName = 'PaymentSP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
           end
           object clMCSDateChange: TcxGridDBColumn
             AlternateCaption = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1085#1077#1089#1085#1080#1078#1072#1077#1084#1086#1075#1086' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
@@ -1594,8 +1607,8 @@ inherited PriceForm: TPriceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 408
-    Top = 136
+    Left = 392
+    Top = 168
   end
   object spDelete_Object_MCS: TdsdStoredProc
     StoredProcName = 'gpDelete_Object_MCS'
@@ -1612,7 +1625,7 @@ inherited PriceForm: TPriceForm
       end>
     PackSize = 1
     Left = 504
-    Top = 136
+    Top = 184
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
