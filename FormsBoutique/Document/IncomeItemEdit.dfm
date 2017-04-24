@@ -472,6 +472,21 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'JuridicalId'
+        Value = Null
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = Null
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'CompositionId'
         Value = Null
         Component = CompositionGuides
