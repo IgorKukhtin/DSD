@@ -25,8 +25,16 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Ёлемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, CASE WHEN ioId > 0 THEN ioId ELSE NULL END, inMovementId, inAmount, NULL);
-   
+     ioId := lpInsertUpdate_MovementItem (ioId         := ioId
+                                        , inDescId     := zc_MI_Master()
+                                        , inObjectId   := inGoodsId
+                                        , inPartionId  := CASE WHEN ioId > 0 THEN ioId ELSE NULL END
+                                        , inMovementId := inMovementId
+                                        , inAmount     := inAmount
+                                        , inParentId   := NULL
+                                        , inUserId     := inUserId
+                                         );
+
      -- сохранили свойство <÷ена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice(), ioId, inOperPrice);
      -- сохранили свойство <÷ена за количество>
@@ -35,7 +43,7 @@ BEGIN
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), ioId, inOperPriceList);
-     
+
      -- пересчитали »тоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSummIncome (inMovementId);
 
