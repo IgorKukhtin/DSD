@@ -51,8 +51,13 @@ BEGIN
       WHERE MIString_GUID.DescId = zc_MIString_GUID() 
         AND MIString_GUID.ValueData = inGUID;
 
-      IF vbStatusId = zc_Enum_Status_UnComplete()
+      IF vbStatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
       THEN
+           IF vbStatusId = zc_Enum_Status_Erased()
+           THEN -- Распроводим Документ
+                PERFORM lpUnComplete_Movement (inMovementId:= vbMovementId, inUserId:= vbUserId);
+           END IF;
+
            -- сохраняем элемент возврата
            SELECT ioId INTO vbId
            FROM lpInsertUpdate_MovementItem_ReturnIn (ioId                 := vbId
@@ -74,6 +79,9 @@ BEGIN
 
            -- сохранили свойство <Глобальный уникальный идентификатор>
            PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), vbId, inGUID);
+
+           -- !!! ДЛЯ ТЕСТА. Удаляем документ
+           PERFORM lpSetErased_Movement (inMovementId:= vbMovementId, inUserId:= vbUserId);
       END IF;
 
       RETURN vbId;
