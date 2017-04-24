@@ -30,7 +30,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , MinExpirationDate TDateTime
              , Remains TFloat, SummaRemains TFloat
              , RemainsNotMCS TFloat, SummaNotMCS TFloat
-             , PriceRetSP TFloat, PriceOptSP TFloat, PriceSP TFloat
+             , PriceRetSP TFloat, PriceOptSP TFloat, PriceSP TFloat, PaymentSP TFloat
              , isSP Boolean
              , isErased boolean
              , isClose boolean, isFirst boolean , isSecond boolean
@@ -96,6 +96,7 @@ BEGIN
                ,NULL::TFloat                     AS PriceRetSP
                ,NULL::TFloat                     AS PriceOptSP
                ,NULL::TFloat                     AS PriceSP
+               ,NULL::TFloat                     AS PaymentSP
                ,NULL::Boolean                    AS isSP
                ,NULL::Boolean                    AS isErased
                ,NULL::Boolean                    AS isClose 
@@ -204,6 +205,7 @@ BEGIN
                , COALESCE (ObjectFloat_Goods_PriceRetSP.ValueData,0) ::TFloat  AS PriceRetSP
                , COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) ::TFloat  AS PriceOptSP
                , COALESCE (ObjectFloat_Goods_PriceSP.ValueData,0)    ::TFloat  AS PriceSP
+               , COALESCE (ObjectFloat_Goods_PaymentSP.ValueData,0)  ::TFloat  AS PaymentSP
 
                , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
                , Object_Goods_View.isErased                      AS isErased 
@@ -273,6 +275,9 @@ BEGIN
                LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceSP
                                      ON ObjectFloat_Goods_PriceSP.ObjectId = ObjectLink_Main.ChildObjectId 
                                     AND ObjectFloat_Goods_PriceSP.DescId = zc_ObjectFloat_Goods_PriceSP()   
+               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PaymentSP
+                                     ON ObjectFloat_Goods_PaymentSP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                    AND ObjectFloat_Goods_PaymentSP.DescId = zc_ObjectFloat_Goods_PaymentSP() 
 
                LEFT JOIN ObjectLink AS ObjectLink_Goods_IntenalSP
                                     ON ObjectLink_Goods_IntenalSP.ObjectId = ObjectLink_Main.ChildObjectId
@@ -375,6 +380,7 @@ BEGIN
                , COALESCE (ObjectFloat_Goods_PriceRetSP.ValueData,0) ::TFloat  AS PriceRetSP
                , COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) ::TFloat  AS PriceOptSP
                , COALESCE (ObjectFloat_Goods_PriceSP.ValueData,0)    ::TFloat  AS PriceSP
+               , COALESCE (ObjectFloat_Goods_PaymentSP.ValueData,0)  ::TFloat  AS PaymentSP
 
                , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
                , Object_Goods_View.isErased                AS isErased 
@@ -440,6 +446,9 @@ BEGIN
                LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceSP
                                      ON ObjectFloat_Goods_PriceSP.ObjectId = ObjectLink_Main.ChildObjectId 
                                     AND ObjectFloat_Goods_PriceSP.DescId = zc_ObjectFloat_Goods_PriceSP()   
+               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PaymentSP
+                                     ON ObjectFloat_Goods_PaymentSP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                    AND ObjectFloat_Goods_PaymentSP.DescId = zc_ObjectFloat_Goods_PaymentSP() 
 
                LEFT JOIN ObjectLink AS ObjectLink_Goods_IntenalSP
                                     ON ObjectLink_Goods_IntenalSP.ObjectId = ObjectLink_Main.ChildObjectId
