@@ -12,6 +12,7 @@ CREATE TABLE Object_PartionGoods(
    MovementItemId      Integer NOT NULL PRIMARY KEY, 
    MovementId          Integer NOT NULL,
    SybaseId            Integer ,
+   JuridicalId         Integer ,
    PartnerId           Integer ,
    UnitId              Integer ,
    OperDate            TDateTime,
@@ -54,6 +55,7 @@ CREATE INDEX idx_Object_PartionGoods_MovementId	 ON Object_PartionGoods(Movement
  ДАТА         АВТОР
  ----------------
                  Климентьев К.И.   Кухтин И.В. Полятыкин А.А.
+24.04.17                                           *  add  JuridicalId
 15.03.17                                           *
 
 */

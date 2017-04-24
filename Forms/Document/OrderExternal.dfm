@@ -12,17 +12,17 @@ inherited OrderExternalForm: TOrderExternalForm
     Height = 245
     ExplicitTop = 166
     ExplicitWidth = 1362
-    ExplicitHeight = 370
+    ExplicitHeight = 245
     ClientRectBottom = 245
     ClientRectRight = 1362
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1362
-      ExplicitHeight = 346
+      ExplicitHeight = 221
       inherited cxGrid: TcxGrid
         Width = 1362
         Height = 221
         ExplicitWidth = 1362
-        ExplicitHeight = 346
+        ExplicitHeight = 221
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -378,7 +378,6 @@ inherited OrderExternalForm: TOrderExternalForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 168
-      ExplicitHeight = 22
       Width = 168
     end
     object cxLabel5: TcxLabel
@@ -687,6 +686,7 @@ inherited OrderExternalForm: TOrderExternalForm
   end
   inherited ActionList: TActionList
     Left = 15
+    Top = 262
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
@@ -873,6 +873,10 @@ inherited OrderExternalForm: TOrderExternalForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdateMovement'
         end
         item
@@ -886,7 +890,7 @@ inherited OrderExternalForm: TOrderExternalForm
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -906,7 +910,7 @@ inherited OrderExternalForm: TOrderExternalForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -940,6 +944,9 @@ inherited OrderExternalForm: TOrderExternalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Order

@@ -1,8 +1,8 @@
-object MainForm: TMainForm
+﻿object MainForm: TMainForm
   Left = 202
   Top = 180
   Caption = 'MainForm'
-  ClientHeight = 465
+  ClientHeight = 528
   ClientWidth = 1172
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,16 +18,17 @@ object MainForm: TMainForm
   object Splitter1: TSplitter
     Left = 685
     Top = 0
-    Height = 409
+    Height = 464
     Align = alRight
     ExplicitLeft = 683
     ExplicitTop = 32
+    ExplicitHeight = 409
   end
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
     Width = 685
-    Height = 409
+    Height = 464
     Align = alClient
     DataSource = DataSource
     TabOrder = 0
@@ -39,9 +40,9 @@ object MainForm: TMainForm
   end
   object ButtonPanel: TPanel
     Left = 0
-    Top = 409
+    Top = 464
     Width = 1172
-    Height = 56
+    Height = 64
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
@@ -83,7 +84,7 @@ object MainForm: TMainForm
     end
     object cbOnlyOpen: TCheckBox
       Left = 747
-      Top = 29
+      Top = 24
       Width = 262
       Height = 17
       Caption = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1076#1077#1081#1089#1090#1074#1080#1077' ('#1090#1086#1083#1100#1082#1086' '#1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077')'
@@ -115,12 +116,20 @@ object MainForm: TMainForm
       Caption = #1090#1086#1083#1100#1082#1086' '#1089#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       TabOrder = 6
     end
+    object сbNotVisibleCursor: TCheckBox
+      Left = 747
+      Top = 41
+      Width = 150
+      Height = 17
+      Caption = #1057#1082#1088#1099#1074#1072#1090#1100' '#1082#1091#1088#1089#1086#1088' '#1075#1088#1080#1076#1072
+      TabOrder = 7
+    end
   end
   object PageControl1: TPageControl
     Left = 688
     Top = 0
     Width = 484
-    Height = 409
+    Height = 464
     ActivePage = TabSheet1
     Align = alRight
     TabOrder = 2
@@ -130,10 +139,12 @@ object MainForm: TMainForm
         Left = -13
         Top = 0
         Width = 265
-        Height = 381
+        Height = 436
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitLeft = -16
+        ExplicitTop = -2
         object cbAllGuide: TCheckBox
           Tag = 1
           Left = 15
@@ -518,12 +529,28 @@ object MainForm: TMainForm
           TabOrder = 24
           WordWrap = True
         end
+        object cbJuridical: TCheckBox
+          Tag = 10
+          Left = 15
+          Top = 398
+          Width = 178
+          Height = 24
+          Caption = '1.23. '#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 25
+          WordWrap = True
+        end
       end
       object DocumentPanel: TPanel
         Left = 252
         Top = 0
         Width = 224
-        Height = 381
+        Height = 436
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
@@ -608,7 +635,7 @@ object MainForm: TMainForm
         Left = 0
         Top = 0
         Width = 476
-        Height = 381
+        Height = 436
         Align = alClient
         TabOrder = 0
         object Label3: TLabel
@@ -921,7 +948,6 @@ object MainForm: TMainForm
   end
   object toZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
-    UTF8StringsAsWideField = True
     Catalog = 'public'
     DesignConnection = True
     HostName = 'localhost'
