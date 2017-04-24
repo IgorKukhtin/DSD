@@ -34,8 +34,8 @@ CREATE TABLE Object_PartionGoods(
    LabelId             Integer ,
    CompositionGroupId  Integer ,
    GoodsSizeId         Integer ,
-   IsErased            Boolean NOT NULL DEFAULT false,
-   isArc               Boolean NOT NULL DEFAULT false
+   IsErased            Boolean NOT NULL DEFAULT FALSE,
+   isArc               Boolean NOT NULL DEFAULT FALSE
 
    /* Связь с таблицей <ObjectDesc> - класс объекта */
  

@@ -19,7 +19,7 @@ BEGIN
 
     SELECT SUM(COALESCE(MovementItem.Amount,0)),
            SUM((COALESCE(MovementItem.Amount,0)*COALESCE(MovementItemFloat_Price.ValueData,0))::NUMERIC (16, 2)),
-           SUM((COALESCE(MovementItem.Amount,0)*COALESCE(MIFloat_SummChangePercent.ValueData,0))::NUMERIC (16, 4))
+           SUM(COALESCE(MIFloat_SummChangePercent.ValueData,0)::NUMERIC (16, 4))
     INTO 
         vbTotalCountCheck,
         vbTotalSummCheck,
