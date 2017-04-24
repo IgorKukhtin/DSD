@@ -102,28 +102,28 @@ BEGIN
                , Object_Label.ValueData         AS LabelName
                , Object_GoodsSize.Id            AS GoodsSizeId
                , CASE WHEN Object_GoodsSize.ValueData = '' THEN ' ' ELSE Object_GoodsSize.ValueData END :: TVarChar AS GoodsSizeName
-    
+
                , tmpMI.Amount         ::TFloat
                , tmpMI.OperPrice      ::TFloat
                , tmpMI.CountForPrice  ::TFloat
                , tmpMI.OperPriceList  ::TFloat
-    
+
            FROM tmpMI
                 LEFT JOIN Object_PartionGoods          ON Object_PartionGoods.MovementItemId = tmpMI.PartionId
-    
+
                 LEFT JOIN Object AS Object_Goods       ON Object_Goods.Id       = tmpMI.GoodsId
                 LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = Object_PartionGoods.GoodsGroupId
                 LEFT JOIN Object AS Object_Measure     ON Object_Measure.Id     = Object_PartionGoods.MeasureId
                 LEFT JOIN Object AS Object_Composition ON Object_Composition.Id = Object_PartionGoods.CompositionId
-    
-    
+
+
                 LEFT JOIN Object AS Object_GoodsInfo   ON Object_GoodsInfo.Id   = Object_PartionGoods.GoodsInfoId
                 LEFT JOIN Object AS Object_LineFabrica ON Object_LineFabrica.Id = Object_PartionGoods.LineFabricaId
                 LEFT JOIN Object AS Object_Label       ON Object_Label.Id       = Object_PartionGoods.LabelId
                 LEFT JOIN Object AS Object_GoodsSize   ON Object_GoodsSize.Id   = Object_PartionGoods.GoodsSizeId
                 LEFT JOIN Object AS Object_Juridical   ON Object_Juridical.Id   = Object_PartionGoods.JuridicalId
                ;
-           
+
     END IF;
 
 END;
