@@ -408,7 +408,6 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 168
-      ExplicitHeight = 22
       Width = 168
     end
     object cxLabel5: TcxLabel
@@ -751,7 +750,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   end
   inherited ActionList: TActionList
     Left = 23
-    Top = 271
+    Top = 270
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
@@ -1088,6 +1087,10 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdateMovement'
         end
         item
@@ -1187,6 +1190,9 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Order

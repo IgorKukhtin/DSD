@@ -3,7 +3,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   ClientHeight = 637
   ClientWidth = 1259
   ExplicitWidth = 1275
-  ExplicitHeight = 675
+  ExplicitHeight = 672
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -735,7 +735,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       TabOrder = 8
       ExplicitTop = 63
       ExplicitWidth = 223
-      ExplicitHeight = 22
       Width = 223
     end
     object cxLabel3: TcxLabel
@@ -3203,7 +3202,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         MultiSelectSeparator = ','
       end>
     Left = 40
-    Top = 216
+    Top = 217
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ReturnIn'
