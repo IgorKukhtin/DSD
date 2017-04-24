@@ -1,7 +1,7 @@
-object JuridicalForm: TJuridicalForm
+object JuridicalBasisForm: TJuridicalBasisForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1083#1072#1074#1085#1099#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
   ClientHeight = 376
   ClientWidth = 722
   Color = clBtnFace
@@ -489,7 +489,7 @@ object JuridicalForm: TJuridicalForm
       end
       item
         Name = 'inIsBasis'
-        Value = False
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
