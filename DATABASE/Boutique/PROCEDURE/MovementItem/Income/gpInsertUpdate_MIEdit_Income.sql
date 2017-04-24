@@ -1,8 +1,5 @@
 -- Function: gpInsertUpdate_MIEdit_Income()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income (Integer, Integer, TVarChar, TVarChar, TVarChar ,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TFloat, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income (Integer, Integer, TVarChar, TVarChar, TVarChar ,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TFloat, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income (Integer, Integer, Integer, TVarChar, TVarChar ,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,Integer,TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income (Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar ,TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MIEdit_Income(
@@ -270,62 +267,39 @@ BEGIN
                                               , inUserId             := vbUserId
                                                );
 
-      -- cохраняем Object_PartionGoods
-      PERFORM lpInsertUpdate_Object_PartionGoods (inMovementItemId := ioId
-                                                       , inMovementId     := inMovementId
-                                                       , inSybaseId       := NULL -- !!!если что - оставим без изменения!!!
-                                                       , inPartnerId      := vbPartnerId
-                                                       , inUnitId         := MovementLinkObject_To.ObjectId
-                                                       , inOperDate       := vbOperDate
-                                                       , inGoodsId        := vbGoodsId
-                                                       , inGoodsItemId    := vbGoodsItemId
-                                                       , inCurrencyId     := MovementLinkObject_CurrencyDocument.ObjectId
-                                                       , inAmount         := inAmount
-                                                       , inOperPrice      := inOperPrice
-                                                       , inPriceSale      := inOperPriceList
-                                                       , inBrandId        := ObjectLink_Partner_Brand.ChildObjectId
-                                                       , inPeriodId       := ObjectLink_Partner_Period.ChildObjectId
-                                                       , inPeriodYear     := ObjectFloat_PeriodYear.ValueData :: Integer
-                                                       , inFabrikaId      := ObjectLink_Partner_Fabrika.ChildObjectId
-                                                       , inGoodsGroupId   := inGoodsGroupId
-                                                       , inMeasureId      := inMeasureId
-                                                       , inCompositionId  := vbCompositionId
-                                                       , inGoodsInfoId    := vbGoodsInfoId
-                                                       , inLineFabricaId  := vbLineFabricaId
-                                                       , inLabelId        := vbLabelId
-                                                       , inCompositionGroupId := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbCompositionId AND OL.DescId = zc_ObjectLink_Composition_CompositionGroup())
-                                                       , inGoodsSizeId    := vbGoodsSizeId
-                                                       , inJuridicalId    := inJuridicalId
-                                                       , inUserId         := vbUserId
-                                                        )
-     FROM Movement
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
-                                         ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
-                                        AND MovementLinkObject_CurrencyDocument.DescId     = zc_MovementLinkObject_CurrencyDocument()
-            --
-            LEFT JOIN ObjectLink AS ObjectLink_Partner_Brand
-                                 ON ObjectLink_Partner_Brand.ObjectId = vbPartnerId
-                                AND ObjectLink_Partner_Brand.DescId   = zc_ObjectLink_Partner_Brand()
-            LEFT JOIN ObjectLink AS ObjectLink_Partner_Period
-                                 ON ObjectLink_Partner_Period.ObjectId = vbPartnerId
-                                AND ObjectLink_Partner_Period.DescId   = zc_ObjectLink_Partner_Period()
-            LEFT JOIN ObjectLink AS ObjectLink_Partner_Fabrika
-                                 ON ObjectLink_Partner_Fabrika.ObjectId = vbPartnerId
-                                AND ObjectLink_Partner_Fabrika.DescId   = zc_ObjectLink_Partner_Fabrika()
-            LEFT JOIN ObjectFloat AS ObjectFloat_PeriodYear 
-                                  ON ObjectFloat_PeriodYear.ObjectId = vbPartnerId
-                                 AND ObjectFloat_PeriodYear.DescId   = zc_ObjectFloat_Partner_PeriodYear()
+     -- cохраняем Object_PartionGoods
+     PERFORM lpInsertUpdate_Object_PartionGoods (inMovementItemId := ioId
+                                               , inMovementId     := inMovementId
+                                               , inSybaseId       := NULL -- !!!если что - оставим без изменения!!!
+                                               , inPartnerId      := vbPartnerId
+                                               , inUnitId         := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = Movement.Id AND MLO.DescId = zc_MovementLinkObject_To())
+                                               , inOperDate       := vbOperDate
+                                               , inGoodsId        := vbGoodsId
+                                               , inGoodsItemId    := vbGoodsItemId
+                                               , inCurrencyId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = Movement.Id AND MLO.DescId = zc_MovementLinkObject_CurrencyDocument())
+                                               , inAmount         := inAmount
+                                               , inOperPrice      := inOperPrice
+                                               , inPriceSale      := inOperPriceList
+                                               , inBrandId        := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbPartnerId AND OL.DescId = zc_ObjectLink_Partner_Brand())
+                                               , inPeriodId       := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbPartnerId AND OL.DescId = zc_ObjectLink_Partner_Period())
+                                               , inPeriodYear     := (SELECT ObF.ValueData FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbPartnerId AND ObF.DescId = zc_ObjectFloat_Partner_PeriodYear()) :: Integer
+                                               , inFabrikaId      := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbPartnerId AND OL.DescId = zc_ObjectLink_Partner_Fabrika())
+                                               , inGoodsGroupId   := inGoodsGroupId
+                                               , inMeasureId      := inMeasureId
+                                               , inCompositionId  := vbCompositionId
+                                               , inGoodsInfoId    := vbGoodsInfoId
+                                               , inLineFabricaId  := vbLineFabricaId
+                                               , inLabelId        := vbLabelId
+                                               , inCompositionGroupId := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbCompositionId AND OL.DescId = zc_ObjectLink_Composition_CompositionGroup())
+                                               , inGoodsSizeId    := vbGoodsSizeId
+                                               , inJuridicalId    := inJuridicalId
+                                               , inUserId         := vbUserId
+                                                );
 
-     WHERE Movement.Id = inMovementId;
+     -- дописали - партию = Id
+     UPDATE MovementItem SET PartionId = ioId WHERE Id = ioId;
      
-    -- дописали - партия = Id
-    UPDATE MovementItem SET PartionId = ioId WHERE Id = ioId;
-
-
-
+     
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
