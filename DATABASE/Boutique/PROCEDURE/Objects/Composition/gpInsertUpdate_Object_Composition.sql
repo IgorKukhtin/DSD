@@ -29,7 +29,7 @@ BEGIN
    IF COALESCE (inCode, 0) = 0 THEN  inCode := NEXTVAL ('Object_Composition_seq'); END IF; 
 
    
-   -- проверка - свойства должно быть установлено
+   -- проверка - свойство должно быть установлено
    -- IF COALESCE (inCompositionGroupId, 0) = 0 THEN
    --    RAISE EXCEPTION 'Ошибка.Не установлено значение <Группа для состава товара>.';
    -- END IF;
@@ -41,14 +41,14 @@ BEGIN
    THEN
        IF EXISTS (SELECT 1
                   FROM Object
-                       JOIN ObjectLink AS ObjectLink_Composition_CompositionGroup
-                                       ON ObjectLink_Composition_CompositionGroup.ObjectId      = Object.Id
-                                      AND ObjectLink_Composition_CompositionGroup.DescId        = zc_ObjectLink_Composition_CompositionGroup()
-                                      AND ObjectLink_Composition_CompositionGroup.ChildObjectId = inCompositionGroupId
+                       LEFT JOIN ObjectLink AS ObjectLink_Composition_CompositionGroup
+                                            ON ObjectLink_Composition_CompositionGroup.ObjectId      = Object.Id
+                                           AND ObjectLink_Composition_CompositionGroup.DescId        = zc_ObjectLink_Composition_CompositionGroup()
                                    
                   WHERE Object.Descid           = zc_Object_Composition()
                     AND TRIM (Object.ValueData) = TRIM (inName)
                     AND Object.Id               <> COALESCE (ioId, 0))
+                    AND COALESCE (ObjectLink_Composition_CompositionGroup.ChildObjectId, 0) = COALESCE inCompositionGroupId, 0)
        THEN
            RAISE EXCEPTION 'Ошибка. Состав товара <%> в группе <%> уже существует.', TRIM (inName), lfGet_Object_ValueData (inCompositionGroupId);
        END IF;
