@@ -272,11 +272,11 @@ BEGIN
                                                , inMovementId     := inMovementId
                                                , inSybaseId       := NULL -- !!!если что - оставим без изменения!!!
                                                , inPartnerId      := vbPartnerId
-                                               , inUnitId         := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = Movement.Id AND MLO.DescId = zc_MovementLinkObject_To())
+                                               , inUnitId         := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
                                                , inOperDate       := vbOperDate
                                                , inGoodsId        := vbGoodsId
                                                , inGoodsItemId    := vbGoodsItemId
-                                               , inCurrencyId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = Movement.Id AND MLO.DescId = zc_MovementLinkObject_CurrencyDocument())
+                                               , inCurrencyId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_CurrencyDocument())
                                                , inAmount         := inAmount
                                                , inOperPrice      := inOperPrice
                                                , inPriceSale      := inOperPriceList
