@@ -61,6 +61,7 @@ BEGIN
                                               AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
                     ) AS tmpGoodsPropertyValue ON tmpGoodsPropertyValue.ArticleGLN = MIString_GLNCode.ValueData
      WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.isErased   = FALSE
     ;
 
 END;
