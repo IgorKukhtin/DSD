@@ -117,6 +117,7 @@ type
     cbCreateDocId_Postgres: TCheckBox;
     cbOnlyOpenMI: TCheckBox;
     ñbNotVisibleCursor: TCheckBox;
+    cbJuridical: TCheckBox;
 
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
@@ -202,6 +203,7 @@ type
     procedure pLoadGuide_GoodsItem;
     procedure pLoadGuide_City;
     procedure pLoadGuide_Client;
+    procedure pLoadGuide_Juridical;
 
 // Documents
     function pLoadDocument_Income:Integer;
@@ -1727,6 +1729,7 @@ begin
      if not fStop then pLoadGuide_GoodsItem;
      if not fStop then pLoadGuide_City;
      if not fStop then pLoadGuide_Client;
+     if not fStop then pLoadGuide_Juridical;
 
 
 
@@ -1854,6 +1857,8 @@ begin
         try fExecSqFromQuery_noErr('alter table dba.Composition add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Unit add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Brand add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.Firma add Id_Postgres integer null;'); except end;
+
      end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1911,6 +1916,8 @@ begin
       fExecSqFromQuery('update dba.GoodsProperty set Id_Pg_GoodsItem = null');
        if cbClient.Checked then
       fExecSqFromQuery('update dba.Unit set Id_Postgres = null  where KindUnit = zc_kuClient()');
+       if cbJuridical.Checked then
+      fExecSqFromQuery('update dba.Firma set Id_Postgres = null ');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pSetNullDocument_Id_Postgres;
@@ -3112,6 +3119,75 @@ begin
      end;
      //
      myDisabledCB(cbGoodsSize);
+end;
+
+procedure TMainForm.pLoadGuide_Juridical;
+begin
+     if (not cbJuridical.Checked)or(not cbJuridical.Enabled) then exit;
+     //
+     myEnabledCB(cbJuridical);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select');
+        Add('  Firma.Id as ObjectId');
+        Add(', 0 as ObjectCode');
+        Add(', Firma.FirmaName as ObjectName');
+        Add(', zc_erasedDel() as zc_erasedDel');
+        Add(', Firma.Erased as Erased');
+        Add(', Firma.Id_Postgres');
+        Add('from DBA.Firma ');
+        Add('order by  ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_Juridical';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inIsCorporate',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inFullName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inAddress',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inOKPO',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inINN',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inJuridicalGroupId',ftInteger,ptInput, 0);
+        //
+        HideCurGrid(True);
+        while not EOF do
+        begin
+
+             //!!!
+             if fStop then begin HideCurGrid(False); exit;end;
+
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             //
+
+             if not myExecToStoredProc then ;//exit;
+             if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.Firma set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        HideCurGrid(False);
+     end;
+     //
+     myDisabledCB(cbJuridical);
 end;
 
 procedure TMainForm.pLoadGuide_Kassa;

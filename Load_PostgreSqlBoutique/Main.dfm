@@ -143,6 +143,8 @@
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitLeft = -16
+        ExplicitTop = -2
         object cbAllGuide: TCheckBox
           Tag = 1
           Left = 15
@@ -525,6 +527,22 @@
           Font.Style = []
           ParentFont = False
           TabOrder = 24
+          WordWrap = True
+        end
+        object cbJuridical: TCheckBox
+          Tag = 10
+          Left = 15
+          Top = 398
+          Width = 178
+          Height = 24
+          Caption = '1.23. '#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 25
           WordWrap = True
         end
       end
