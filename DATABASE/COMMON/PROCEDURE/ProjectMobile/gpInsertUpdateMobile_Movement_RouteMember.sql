@@ -36,7 +36,7 @@ BEGIN
 
       vbisInsert:= (COALESCE (vbId, 0) = 0);
 
-      IF (vbisInsert = false) AND (vbStatusId = zc_Enum_Status_Complete())
+      IF (vbisInsert = false) AND (vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased()))
       THEN -- если маршрут торгового агента проведен, то распроводим
            PERFORM gpUnComplete_Movement_RouteMember (inMovementId:= vbId, inSession:= inSession);
       END IF;

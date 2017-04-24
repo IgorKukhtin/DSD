@@ -93,8 +93,13 @@ BEGIN
 
       vbCurrencyId:= COALESCE (vbCurrencyId, zc_Enum_Currency_Basis());
    
-      IF (vbIsInsert = true) OR (vbStatusId = zc_Enum_Status_UnComplete())
+      IF (vbIsInsert = true) OR (vbStatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased()))
       THEN 
+           IF vbStatusId = zc_Enum_Status_Erased()
+           THEN -- Распроводим Документ
+                PERFORM lpUnComplete_Movement (inMovementId:= vbId, inUserId:= vbUserId);
+           END IF;
+
            -- сохраняем возврат
            vbId:= lpInsertUpdate_Movement_ReturnIn (ioId                 := vbId               -- Ключ объекта <Документ Возврат покупателя>
                                                   , inInvNumber          := inInvNumber        -- Номер документа
@@ -133,6 +138,9 @@ BEGIN
                 -- сохранили свойство <Дата создания>
                 PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_Insert(), vbId, CURRENT_TIMESTAMP);
            END IF;
+
+           -- !!! ДЛЯ ТЕСТА. Удаляем документ
+           PERFORM lpSetErased_Movement (inMovementId:= vbId, inUserId:= vbUserId);
       END IF;
 
       RETURN vbId;
