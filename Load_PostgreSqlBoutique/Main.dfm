@@ -133,10 +133,8 @@
     ActivePage = TabSheet1
     Align = alRight
     TabOrder = 2
-    ExplicitHeight = 409
     object TabSheet1: TTabSheet
       Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080' - '#1044#1086#1082#1091#1084#1077#1085#1090#1099
-      ExplicitHeight = 381
       object GuidePanel: TPanel
         Left = -13
         Top = 0
@@ -145,7 +143,8 @@
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 381
+        ExplicitLeft = -16
+        ExplicitTop = -2
         object cbAllGuide: TCheckBox
           Tag = 1
           Left = 15
@@ -530,6 +529,22 @@
           TabOrder = 24
           WordWrap = True
         end
+        object cbJuridical: TCheckBox
+          Tag = 10
+          Left = 15
+          Top = 398
+          Width = 178
+          Height = 24
+          Caption = '1.23. '#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 25
+          WordWrap = True
+        end
       end
       object DocumentPanel: TPanel
         Left = 252
@@ -539,7 +554,6 @@
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitHeight = 381
         object Label1: TLabel
           Left = 6
           Top = 22
@@ -617,7 +631,6 @@
     object TabSheet2: TTabSheet
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1092#1072#1081#1083#1086#1074
       ImageIndex = 1
-      ExplicitHeight = 425
       object Panel1: TPanel
         Left = 0
         Top = 0
@@ -625,7 +638,6 @@
         Height = 436
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 425
         object Label3: TLabel
           Left = 8
           Top = 280
