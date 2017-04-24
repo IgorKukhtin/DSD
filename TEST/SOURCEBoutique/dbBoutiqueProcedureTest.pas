@@ -229,7 +229,7 @@ end;
 
 procedure TdbObjectProcedureTest.CreateGoodsItem;
 begin
-  DirectoryLoad(CommonProcedurePath + 'OBJECTS\GoodsItem\');
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\GoodsItem - !!!\');
 end;
 
 procedure TdbObjectProcedureTest.CreateGoodsSize;
@@ -294,7 +294,7 @@ end;
 
 procedure TdbObjectProcedureTest.CreatePartionGoods;
 begin
-  DirectoryLoad(CommonProcedurePath + 'OBJECTS\PartionGoods\');
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\PartionGoods - !!!\');
 end;
 
 procedure TdbObjectProcedureTest.CreatePartner;
