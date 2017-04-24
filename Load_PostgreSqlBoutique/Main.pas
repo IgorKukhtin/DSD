@@ -1933,7 +1933,7 @@ begin
         Add('      select BillItemsIncome.Id as ObjectId ');
         Add('          , Bill.Id_Postgres as MovementId ');
         Add('          , GoodsProperty.Id_Pg_GoodsItem as GoodsItemId ');
-        Add('          , GoodsProperty.Id as SybaseId ');
+        Add('          , BillItemsIncome.Id as SybaseId ');
         Add('          , BillItemsIncome.OperCount as Amount ');
         Add('          , BillItemsIncome.OperPrice as OperPrice ');
         Add('          , 1 as CountForPrice ');
