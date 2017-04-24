@@ -42,13 +42,13 @@ BEGIN
        IF EXISTS (SELECT 1
                   FROM Object
                        LEFT JOIN ObjectLink AS ObjectLink_Composition_CompositionGroup
-                                            ON ObjectLink_Composition_CompositionGroup.ObjectId      = Object.Id
-                                           AND ObjectLink_Composition_CompositionGroup.DescId        = zc_ObjectLink_Composition_CompositionGroup()
-                                   
+                                            ON ObjectLink_Composition_CompositionGroup.ObjectId = Object.Id
+                                           AND ObjectLink_Composition_CompositionGroup.DescId   = zc_ObjectLink_Composition_CompositionGroup()
                   WHERE Object.Descid           = zc_Object_Composition()
                     AND TRIM (Object.ValueData) = TRIM (inName)
-                    AND Object.Id               <> COALESCE (ioId, 0))
-                    AND COALESCE (ObjectLink_Composition_CompositionGroup.ChildObjectId, 0) = COALESCE inCompositionGroupId, 0)
+                    AND Object.Id               <> COALESCE (ioId, 0)
+                    AND COALESCE (ObjectLink_Composition_CompositionGroup.ChildObjectId, 0) = COALESCE (inCompositionGroupId, 0)
+                 )
        THEN
            RAISE EXCEPTION 'Ошибка. Состав товара <%> в группе <%> уже существует.', TRIM (inName), lfGet_Object_ValueData (inCompositionGroupId);
        END IF;

@@ -27,11 +27,11 @@ BEGIN
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, CASE WHEN ioId > 0 THEN ioId ELSE NULL END, inMovementId, inAmount, NULL);
-     IF vbIsInsert = TRUE
+     /*IF vbIsInsert = TRUE
      THEN
          -- дописали - партия = Id
          UPDATE MovementItem SET PartionId = ioId WHERE Id = ioId;
-     END IF;
+     END IF;*/
    
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice(), ioId, inOperPrice);

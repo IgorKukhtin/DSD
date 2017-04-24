@@ -2,7 +2,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088' '#1087#1088#1080#1093#1086#1076#1072'>'
-  ClientHeight = 404
+  ClientHeight = 387
   ClientWidth = 520
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,8 +22,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 148
-    Top = 371
+    Left = 172
+    Top = 339
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -31,8 +31,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 292
-    Top = 371
+    Left = 316
+    Top = 339
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -46,9 +46,9 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
   end
   object cxLabel4: TcxLabel
-    Left = 394
+    Left = 444
     Top = 53
-    Caption = #1045#1076#1080#1085#1080#1094#1072' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
+    Caption = #1045#1076'.'#1080#1079#1084'.'
   end
   object cxLabel5: TcxLabel
     Left = 10
@@ -66,20 +66,20 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Caption = #1051#1080#1085#1080#1103' '#1082#1086#1083#1083#1077#1082#1094#1080#1080
   end
   object cxLabel9: TcxLabel
-    Left = 10
-    Top = 271
+    Left = 289
+    Top = 54
     Caption = #1056#1072#1079#1084#1077#1088' '#1090#1086#1074#1072#1088#1072
   end
   object ceGoodsSize: TcxButtonEdit
-    Left = 10
-    Top = 287
+    Left = 289
+    Top = 70
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 1
-    Width = 273
+    Width = 91
   end
   object ceGoodsName: TcxButtonEdit
     Left = 10
@@ -100,8 +100,9 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 11
-    Width = 487
+    Width = 489
   end
   object edCompositionName: TcxButtonEdit
     Left = 10
@@ -137,68 +138,69 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Width = 273
   end
   object edMeasure: TcxButtonEdit
-    Left = 394
+    Left = 444
     Top = 70
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 15
-    Width = 103
+    Width = 55
   end
   object cxLabel18: TcxLabel
-    Left = 295
+    Left = 388
     Top = 53
     Caption = #1050#1086#1083'-'#1074#1086
   end
   object ceAmount: TcxCurrencyEdit
-    Left = 295
+    Left = 388
     Top = 70
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 17
-    Width = 91
+    Width = 49
   end
   object cxLabel2: TcxLabel
-    Left = 295
-    Top = 311
+    Left = 289
+    Top = 229
     Caption = #1042#1093'. '#1094#1077#1085#1072
   end
   object ceOperPrice: TcxCurrencyEdit
-    Left = 295
-    Top = 328
+    Left = 289
+    Top = 246
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 19
     Width = 91
   end
   object cxLabel8: TcxLabel
-    Left = 394
-    Top = 311
-    Caption = #1062#1077#1085#1072' '#1087#1086' '#1087'-'#1083
+    Left = 289
+    Top = 273
+    Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
   end
   object ceOperPriceList: TcxCurrencyEdit
-    Left = 394
-    Top = 328
+    Left = 289
+    Top = 293
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 21
-    Width = 103
+    Width = 210
   end
   object cxLabel10: TcxLabel
-    Left = 295
-    Top = 97
+    Left = 394
+    Top = 223
     Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
   end
   object ceCountForPrice: TcxCurrencyEdit
-    Left = 295
-    Top = 114
+    Left = 395
+    Top = 246
     EditValue = 1.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 23
-    Width = 91
+    Width = 104
   end
   object cxLabel11: TcxLabel
     Left = 10
@@ -218,23 +220,24 @@ object IncomeItemEditForm: TIncomeItemEditForm
   end
   object cxLabel12: TcxLabel
     Left = 10
-    Top = 314
-    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+    Top = 273
+    Caption = #1060#1080#1088#1084#1072
   end
   object ceJuridicalBasis: TcxButtonEdit
     Left = 10
-    Top = 328
+    Top = 293
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 27
     Width = 273
   end
   object ActionList: TActionList
-    Left = 344
-    Top = 224
+    Left = 24
+    Top = 328
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -374,11 +377,11 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioCountForPrice'
+        Name = 'inCountForPrice'
         Value = '1'
         Component = ceCountForPrice
         DataType = ftFloat
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -390,8 +393,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 460
-    Top = 184
+    Left = 468
+    Top = 328
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -407,8 +410,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 392
-    Top = 224
+    Left = 80
+    Top = 344
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_MovementItem_Income'
@@ -531,14 +534,14 @@ object IncomeItemEditForm: TIncomeItemEditForm
       item
         Name = 'GoodsSizeId'
         Value = Null
-        Component = GoodsItemSizeGuides
+        Component = GoodsSizeGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsSizeName'
         Value = Null
-        Component = GoodsItemSizeGuides
+        Component = GoodsSizeGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -570,21 +573,10 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Component = ceOperPriceList
         DataType = ftFloat
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CompositionGroupId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CompositionGroupName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 400
-    Top = 160
+    Left = 408
+    Top = 336
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -602,10 +594,10 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Top = 56
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 304
-    Top = 168
+    Left = 264
+    Top = 336
   end
-  object GoodsItemSizeGuides: TdsdGuides
+  object GoodsSizeGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceGoodsSize
     FormNameParam.Value = 'TGoodsSizeForm'
@@ -617,7 +609,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
       item
         Name = 'Key'
         Value = ''
-        Component = GoodsItemSizeGuides
+        Component = GoodsSizeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -625,14 +617,14 @@ object IncomeItemEditForm: TIncomeItemEditForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GoodsItemSizeGuides
+        Component = GoodsSizeGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 145
-    Top = 285
+    Left = 313
+    Top = 85
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
@@ -1013,7 +1005,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end>
     Left = 145
-    Top = 197
+    Top = 189
   end
   object MeasureGuides: TdsdGuides
     KeyField = 'Id'
@@ -1082,8 +1074,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 425
-    Top = 62
+    Left = 473
+    Top = 94
   end
   object LabelGuides: TdsdGuides
     KeyField = 'Id'
@@ -1152,8 +1144,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 169
-    Top = 245
+    Left = 209
+    Top = 229
   end
   object JuridicalBasisGuides: TdsdGuides
     KeyField = 'Id'
@@ -1181,7 +1173,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 351
-    Top = 262
+    Left = 111
+    Top = 278
   end
 end

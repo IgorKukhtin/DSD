@@ -19,16 +19,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MIEdit_Income(
     IN inLabelName             TVarChar  , --
     IN inAmount                TFloat    , -- Количество
     IN inOperPrice             TFloat    , -- Цена
- INOUT ioCountForPrice         TFloat    , -- Цена за количество
+    IN inCountForPrice         TFloat    , -- Цена за количество
     IN inOperPriceList         TFloat    , -- Цена по прайсу
     IN inSession               TVarChar    -- сессия пользователя
 )                              
-RETURNS RECORD
+RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
 
-   DECLARE vbPartionId     Integer;   
    DECLARE vbLineFabricaId Integer;
    DECLARE vbCompositionId Integer; 
    DECLARE vbGoodsSizeId   Integer;
@@ -258,7 +257,7 @@ BEGIN
 
 
      -- Заменили свойство <Цена за количество>
-     IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
+     IF COALESCE (inCountForPrice, 0) = 0 THEN inCountForPrice := 1; END IF;
 
      -- сохранили
      ioId:= lpInsertUpdate_MovementItem_Income (ioId                 := ioId
@@ -266,13 +265,13 @@ BEGIN
                                               , inGoodsId            := vbGoodsId
                                               , inAmount             := inAmount
                                               , inOperPrice          := inOperPrice
-                                              , inCountForPrice      := ioCountForPrice
+                                              , inCountForPrice      := inCountForPrice
                                               , inOperPriceList      := inOperPriceList
                                               , inUserId             := vbUserId
                                                );
 
       -- cохраняем Object_PartionGoods
-      vbPartionId := lpInsertUpdate_Object_PartionGoods (ioMovementItemId := ioId
+      PERFORM lpInsertUpdate_Object_PartionGoods (inMovementItemId := ioId
                                                        , inMovementId     := inMovementId
                                                        , inSybaseId       := NULL -- !!!если что - оставим без изменения!!!
                                                        , inPartnerId      := vbPartnerId
@@ -294,8 +293,8 @@ BEGIN
                                                        , inGoodsInfoId    := vbGoodsInfoId
                                                        , inLineFabricaId  := vbLineFabricaId
                                                        , inLabelId        := vbLabelId
-                                                       , inCompositionGroupId := (SELECT FROM ObjectLink AS OL WHERE OL.ObjectId = vbCompositionId AND OL.DescId = zc_ObjectLink_Composition_CompositionGroup())
-                                                       , inGoodsSizeNameId    := inGoodsSizeNameId
+                                                       , inCompositionGroupId := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbCompositionId AND OL.DescId = zc_ObjectLink_Composition_CompositionGroup())
+                                                       , inGoodsSizeId    := vbGoodsSizeId
                                                        , inJuridicalId    := inJuridicalId
                                                        , inUserId         := vbUserId
                                                         )
@@ -321,6 +320,10 @@ BEGIN
                                  AND ObjectFloat_PeriodYear.DescId   = zc_ObjectFloat_Partner_PeriodYear()
 
      WHERE Movement.Id = inMovementId;
+     
+    -- дописали - партия = Id
+    UPDATE MovementItem SET PartionId = ioId WHERE Id = ioId;
+
 
 
 END;

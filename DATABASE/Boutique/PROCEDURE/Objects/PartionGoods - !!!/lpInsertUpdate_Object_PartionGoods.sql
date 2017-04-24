@@ -45,37 +45,42 @@ $BODY$
 BEGIN
        -- изменили элемент - по значению <Ключ партии>
        UPDATE Object_PartionGoods
-              SET MovementId         = inMovementId
-                , SybaseId           = CASE WHEN inSybaseId > 0 THEN inSybaseId ELSE SybaseId END -- !!!если что - оставим без изменения!!!
-                , PartnerId          = inPartnerId
-                , UnitId             = inUnitId
-                , OperDate           = inOperDate
-                , GoodsId            = inGoodsId
-                , GoodsItemId        = inGoodsItemId
-                , CurrencyId         = inCurrencyId
-                , Amount             = inAmount
-                , OperPrice          = inOperPrice
-                , PriceSale          = inPriceSale
-                , BrandId            = inBrandId
-                , PeriodId           = inPeriodId
-                , PeriodYear         = inPeriodYear
-                , FabrikaId          = inFabrikaId
-                , GoodsGroupId       = inGoodsGroupId
-                , MeasureId          = inMeasureId
-                , CompositionId      = inCompositionId
-                , GoodsInfoId        = inGoodsInfoId
-                , LineFabricaId      = inLineFabricaId
-                , LabelId            = inLabelId
-                , CompositionGroupId = inCompositionGroupId
-                , GoodsSizeId        = inGoodsSizeId
+              SET MovementId           = inMovementId
+                , SybaseId             = CASE WHEN inSybaseId > 0 THEN inSybaseId ELSE SybaseId END -- !!!если что - оставим без изменения!!!
+                , PartnerId            = inPartnerId
+                , UnitId               = inUnitId
+                , OperDate             = inOperDate
+                , GoodsId              = inGoodsId
+                , GoodsItemId          = inGoodsItemId -- ***
+                , CurrencyId           = inCurrencyId
+                , Amount               = inAmount
+                , OperPrice            = inOperPrice
+                , PriceSale            = inPriceSale
+                , BrandId              = inBrandId
+                , PeriodId             = inPeriodId
+                , PeriodYear           = inPeriodYear
+                , FabrikaId            = zfConvert_IntToNull (inFabrikaId)
+                , GoodsGroupId         = inGoodsGroupId
+                , MeasureId            = inMeasureId
+                , CompositionId        = zfConvert_IntToNull (inCompositionId)
+                , GoodsInfoId          = zfConvert_IntToNull (inGoodsInfoId)
+                , LineFabricaId        = zfConvert_IntToNull (inLineFabricaId)
+                , LabelId              = inLabelId
+                , CompositionGroupId   = zfConvert_IntToNull (inCompositionGroupId)
+                , GoodsSizeId          = inGoodsSizeId
+                , JuridicalId          = zfConvert_IntToNull (inJuridicalId)
        WHERE MovementItemId = inMovementItemId ;
                                      
                                      
        -- если такой элемент небыл найден
        IF NOT FOUND THEN             
           -- добавили новый элемент
-          INSERT INTO Object_PartionGoods (MovementItemId, MovementId, SybaseId, PartnerId, UnitId, OperDate, GoodsId, GoodsItemId, CurrencyId, Amount, OperPrice, PriceSale, BrandId, PeriodId, PeriodYear, FabrikaId, GoodsGroupId, MeasureId, CompositionId, GoodsInfoId, LineFabricaId, LabelId, CompositionGroupId, GoodsSizeId)
-                                   VALUES (inMovementItemId, inMovementId, inSybaseId, inPartnerId, inUnitId, inOperDate, inGoodsId, inGoodsItemId, inCurrencyId, inAmount, inOperPrice, inPriceSale, inBrandId, inPeriodId, inPeriodYear, inFabrikaId, inGoodsGroupId, inMeasureId, inCompositionId, inGoodsInfoId, inLineFabricaId, inLabelId, inCompositionGroupId, inGoodsSizeId);
+          INSERT INTO Object_PartionGoods (MovementItemId, MovementId, SybaseId, PartnerId, UnitId, OperDate, GoodsId, GoodsItemId, CurrencyId, Amount, OperPrice, PriceSale, BrandId, PeriodId, PeriodYear, FabrikaId, GoodsGroupId, MeasureId, CompositionId, GoodsInfoId, LineFabricaId, LabelId, CompositionGroupId, GoodsSizeId, JuridicalId)
+                                   VALUES (inMovementItemId, inMovementId, inSybaseId, inPartnerId, inUnitId, inOperDate, inGoodsId, inGoodsItemId
+                                         , inCurrencyId, inAmount, inOperPrice, inPriceSale, inBrandId, inPeriodId, inPeriodYear
+                                         , zfConvert_IntToNull (inFabrikaId), inGoodsGroupId, inMeasureId
+                                         , zfConvert_IntToNull (inCompositionId), zfConvert_IntToNull (inGoodsInfoId), zfConvert_IntToNull (inLineFabricaId)
+                                         , inLabelId, zfConvert_IntToNull (inCompositionGroupId), inGoodsSizeId, inJuridicalId);
        END IF; -- if NOT FOUND       
 
        -- !!!меняем у остальных партий - все св-ва!!!
