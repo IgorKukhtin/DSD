@@ -39,7 +39,7 @@ BEGIN
 
       vbisInsert:= (COALESCE (vbId, 0) = 0);
 
-      IF (vbisInsert = false) AND (vbStatusId = zc_Enum_Status_Complete())
+      IF (vbisInsert = false) AND (vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased()))
       THEN -- если фактический остаток проведен, то распроводим    
            PERFORM gpUnComplete_Movement_StoreReal (inMovementId:= vbId, inSession:= inSession);
       END IF;

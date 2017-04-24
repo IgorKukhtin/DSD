@@ -38,7 +38,7 @@ BEGIN
            RAISE EXCEPTION 'Ошибка. Не заведена шапка документа.';
       END IF; 
 
-      IF vbStatusId = zc_Enum_Status_Complete()
+      IF vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased())
       THEN -- если фактический остаток проведен, то распроводим    
            PERFORM gpUnComplete_Movement_StoreReal (inMovementId:= vbMovementId, inSession:= inSession);
       END IF;

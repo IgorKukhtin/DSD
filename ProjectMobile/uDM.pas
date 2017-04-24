@@ -20,7 +20,7 @@ CONST
   DataBaseFileName = 'aMobile.sdb';
 
   { базовый запрос на получение информации по ТТ }
-  BasePartnerQuery = 'select P.Id, P.CONTRACTID, J.VALUEDATA Name, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, ' +
+  BasePartnerQuery = 'select P.Id, P.CONTRACTID, P.JURIDICALID, J.VALUEDATA Name, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, ' +
     'P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE, C.PAIDKINDID, C.CHANGEPERCENT, ' +
     'P.DEBTSUM, P.OVERSUM, P.OVERDAYS, J.DEBTSUM DEBTSUMJ, J.OVERSUM OVERSUMJ, J.OVERDAYS OVERDAYSJ, ' +
     'PL.ID PRICELISTID, PL.PRICEWITHVAT, PL.VATPERCENT, ' +
@@ -59,8 +59,8 @@ type
     LoadData: boolean;
     UploadData: boolean;
 
-    SyncDataIn : TDate;
-    SyncDataOut : TDate;
+    SyncDataIn : TDateTime;
+    SyncDataOut : TDateTime;
 
     procedure Update;
     procedure SetNewProgressTask(AName : string);
@@ -606,6 +606,7 @@ type
     tblMovementItem_VisitGPSE: TFloatField;
     qryPartnerContractInfo: TStringField;
     cdsJuridicalCollationPaidKindShow: TStringField;
+    qryPartnerJuridicalId: TIntegerField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
@@ -833,7 +834,7 @@ begin
       for x := 0 to Length(Mapping) - 1 do
         DM.tblObject_Const.Fields[ Mapping[x][1] ].Value := GetStoredProc.DataSet.Fields[ Mapping[x][2] ].Value;
 
-      DM.tblObject_Const.FieldByName('SYNCDATEIN').AsDateTime := Date();
+      DM.tblObject_Const.FieldByName('SYNCDATEIN').AsDateTime := Now();
 
       DM.tblObject_Const.Post;
     except
@@ -1844,7 +1845,7 @@ begin
         UploadPhotos;
 
         DM.tblObject_Const.Edit;
-        DM.tblObject_ConstSyncDateOut.AsDateTime := Date();
+        DM.tblObject_ConstSyncDateOut.AsDateTime := Now();
         DM.tblObject_Const.Post;
       except
         on E : Exception do

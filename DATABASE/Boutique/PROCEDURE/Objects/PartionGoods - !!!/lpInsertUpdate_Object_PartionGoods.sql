@@ -3,11 +3,6 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_PartionGoods (Integer, Integer, Integer, Integer, Integer
                                                           , TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat
                                                           , Integer, Integer, Integer, Integer, Integer, Integer, Integer
-                                                          , Integer, Integer, Integer, Integer, Integer, Integer
-                                                           );
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_PartionGoods (Integer, Integer, Integer, Integer, Integer
-                                                          , TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat
-                                                          , Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                           , Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                            );
 
@@ -80,7 +75,7 @@ BEGIN
                                          , inCurrencyId, inAmount, inOperPrice, inPriceSale, inBrandId, inPeriodId, inPeriodYear
                                          , zfConvert_IntToNull (inFabrikaId), inGoodsGroupId, inMeasureId
                                          , zfConvert_IntToNull (inCompositionId), zfConvert_IntToNull (inGoodsInfoId), zfConvert_IntToNull (inLineFabricaId)
-                                         , inLabelId, zfConvert_IntToNull (inCompositionGroupId), inGoodsSizeId, inJuridicalId);
+                                         , inLabelId, zfConvert_IntToNull (inCompositionGroupId), inGoodsSizeId, zfConvert_IntToNull (inJuridicalId));
        END IF; -- if NOT FOUND       
 
        -- !!!меняем у остальных партий - все св-ва!!!
