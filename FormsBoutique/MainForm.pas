@@ -95,6 +95,10 @@ type
     N45: TMenuItem;
     actReturnOut: TdsdOpenForm;
     N46: TMenuItem;
+    actSend: TdsdOpenForm;
+    actLoss: TdsdOpenForm;
+    N47: TMenuItem;
+    N48: TMenuItem;
   private
     { Private declarations }
   public
