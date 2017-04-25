@@ -248,7 +248,6 @@ type
     pNewOrderExternal: TPanel;
     bNewOrderExternal: TButton;
     tSavePath: TTimer;
-    bPathonMap: TButton;
     tiPathOnMap: TTabItem;
     Panel18: TPanel;
     Label26: TLabel;
@@ -652,6 +651,8 @@ type
     lCurWebService: TLayout;
     Label81: TLabel;
     eCurWebService: TEdit;
+    bPathonMap: TButton;
+    bPathonMapbyPhoto: TButton;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -839,6 +840,9 @@ type
     procedure lwPhotoDocsItemClickEx(const Sender: TObject; ItemIndex: Integer;
       const LocalClickPos: TPointF; const ItemObject: TListItemDrawable);
     procedure imCaptureClick(Sender: TObject);
+    procedure lwPartnerFilter(Sender: TObject; const AFilter, AValue: string;
+      var Accept: Boolean);
+    procedure bPathonMapbyPhotoClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -881,6 +885,8 @@ type
     FCanEditDocument: boolean;
 
     FEditDocuments: boolean;
+
+    FPhotoPath: boolean;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure BackResult(const AResult: TModalResult);
@@ -1491,6 +1497,15 @@ begin
   (AItem.Objects.FindDrawable('IsSelected') as TListItemDrawable).Visible := FCheckedGooodsItems.Contains((AItem.Objects.FindDrawable('FullInfo') as TListItemDrawable).Data.AsString);
 end;
 
+procedure TfrmMain.lwPartnerFilter(Sender: TObject; const AFilter,
+  AValue: string; var Accept: Boolean);
+begin
+  if Trim(AFilter) <> '' then
+    Accept :=  AValue.ToUpper.Contains(AFilter.ToUpper)
+  else
+    Accept := true;
+end;
+
 procedure TfrmMain.lwPartnerItemClick(const Sender: TObject;
   const AItem: TListViewItem);
 begin
@@ -1929,7 +1944,7 @@ begin
       ReturnPriorForm;
     end
     else
-      ShowMessage(ErrMes);
+      TDialogService.MessageDialog(ErrMes, TMsgDlgType.mtError, [TMsgDlgBtn.mbOK], TMsgDlgBtn.mbOK, 0, nil);
   end;
 end;
 
@@ -1959,7 +1974,7 @@ begin
       ReturnPriorForm;
     end
     else
-      ShowMessage(ErrMes);
+      TDialogService.MessageDialog(ErrMes, TMsgDlgType.mtError, [TMsgDlgBtn.mbOK], TMsgDlgBtn.mbOK, 0, nil);
   end;
 end;
 
@@ -1990,7 +2005,7 @@ begin
       ReturnPriorForm;
     end
     else
-      ShowMessage(ErrMes);
+      TDialogService.MessageDialog(ErrMes, TMsgDlgType.mtError, [TMsgDlgBtn.mbOK], TMsgDlgBtn.mbOK, 0, nil);
   end;
 end;
 
@@ -2605,8 +2620,19 @@ begin
 end;
 
 // переход на форму отображения маршрута контрагента
+procedure TfrmMain.bPathonMapbyPhotoClick(Sender: TObject);
+begin
+  FPhotoPath := true;
+  lCaption.Text := 'Маршрут торгового агента по фотографиям';
+
+  ShowPathOnMap;
+end;
+
 procedure TfrmMain.bPathonMapClick(Sender: TObject);
 begin
+  FPhotoPath := false;
+  lCaption.Text := 'Маршрут торгового агента';
+
   ShowPathOnMap;
 end;
 
@@ -2693,17 +2719,23 @@ end;
 procedure TfrmMain.bRefreshPathOnMapClick(Sender: TObject);
 var
   RouteQuery: TFDQuery;
+  TableName: string;
 begin
   FMarkerList.Clear;
+
+  if FPhotoPath then
+    TableName := 'MovementItem_Visit'
+  else
+    TableName := 'Movement_RouteMember';
 
   RouteQuery := TFDQuery.Create(nil);
   try
     RouteQuery.Connection := DM.conMain;
     try
       if cbShowAllPath.IsChecked then
-        RouteQuery.Open('select * from Movement_RouteMember')
+        RouteQuery.Open('select * from ' + TableName)
       else
-        RouteQuery.Open('select * from Movement_RouteMember where date(InsertDate) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', deDatePath.Date)));
+        RouteQuery.Open('select * from ' + TableName + ' where date(InsertDate) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', deDatePath.Date)));
     except
       on E: Exception do
         Showmessage(E.Message);
@@ -3472,9 +3504,6 @@ begin
     else
     if (tcMain.ActiveTab = tiPromoGoods) and (pPromoGoodsDate.Visible) then
       lCaption.Text := 'Акционные товары'
-    else
-    if tcMain.ActiveTab = tiPathOnMap then
-      lCaption.Text := 'Маршрут контрагента'
     else
     if tcMain.ActiveTab = tiSync then
       lCaption.Text := 'Синхронизация'
