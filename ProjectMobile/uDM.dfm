@@ -963,6 +963,9 @@ object DM: TDM
     object cdsOrderItemsRemains: TFloatField
       FieldName = 'Remains'
     end
+    object cdsOrderItemsRecommendCount: TFloatField
+      FieldName = 'RecommendCount'
+    end
     object cdsOrderItemsRecommend: TStringField
       FieldName = 'Recommend'
       Size = 10

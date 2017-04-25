@@ -1,7 +1,7 @@
-object ReturnOutJournalForm: TReturnOutJournalForm
+object SendJournalForm: TSendJournalForm
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 439
   ClientWidth = 911
   Color = clBtnFace
@@ -607,8 +607,8 @@ object ReturnOutJournalForm: TReturnOutJournalForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'TReturnOutForm'
-      FormNameParam.Value = 'TReturnOutForm'
+      FormName = 'TSendForm'
+      FormNameParam.Value = 'TSendForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -670,8 +670,8 @@ object ReturnOutJournalForm: TReturnOutJournalForm
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TReturnOutForm'
-      FormNameParam.Value = 'TReturnOutForm'
+      FormName = 'TSendForm'
+      FormNameParam.Value = 'TSendForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -999,7 +999,7 @@ object ReturnOutJournalForm: TReturnOutJournalForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ReturnOut'
+    StoredProcName = 'gpSelect_Movement_Send'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -1035,7 +1035,7 @@ object ReturnOutJournalForm: TReturnOutJournalForm
     Top = 192
   end
   object spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_ReturnOut'
+    StoredProcName = 'gpComplete_Movement_Send'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1172,7 +1172,7 @@ object ReturnOutJournalForm: TReturnOutJournalForm
     Top = 48
   end
   object spMovementReCompleteAll: TdsdStoredProc
-    StoredProcName = 'gpCompletePeriod_Movement_ReturnOut'
+    StoredProcName = 'gpCompletePeriod_Movement_Send'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1197,7 +1197,7 @@ object ReturnOutJournalForm: TReturnOutJournalForm
     Top = 288
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ReturnOut_Print'
+    StoredProcName = 'gpSelect_Movement_Send_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1251,7 +1251,7 @@ object ReturnOutJournalForm: TReturnOutJournalForm
     Top = 200
   end
   object spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_ReturnOut'
+    StoredProcName = 'gpReComplete_Movement_Send'
     DataSets = <>
     OutputType = otResult
     Params = <

@@ -4,13 +4,25 @@ inherited MainForm: TMainForm
   ClientWidth = 600
   KeyPreview = True
   ExplicitWidth = 616
-  ExplicitHeight = 223
+  ExplicitHeight = 226
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
     Left = 336
     Top = 8
-    object actReturnOut: TdsdOpenForm [0]
+    object actSend: TdsdOpenForm [0]
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+      Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+      FormName = 'TSendJournalForm'
+      FormNameParam.Value = 'TSendJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReturnOut: TdsdOpenForm [1]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
@@ -25,7 +37,7 @@ inherited MainForm: TMainForm
     inherited actAbout: TAction
       Category = 'but'
     end
-    object actIncome: TdsdOpenForm [3]
+    object actIncome: TdsdOpenForm [4]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -37,7 +49,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actUser: TdsdOpenForm [6]
+    object actUser: TdsdOpenForm [7]
       Category = 'but'
       MoveParams = <>
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
@@ -48,7 +60,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actForms: TdsdOpenForm [10]
+    object actForms: TdsdOpenForm [11]
       Category = 'but'
       MoveParams = <>
       Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1086#1081' '#1089#1080#1089#1090#1077#1084#1086#1081
@@ -60,7 +72,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actRole: TdsdOpenForm [11]
+    object actRole: TdsdOpenForm [12]
       Category = 'but'
       MoveParams = <>
       Caption = #1056#1086#1083#1080
@@ -420,6 +432,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actLoss: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1057#1087#1080#1089#1072#1085#1080#1077
+      Hint = #1057#1087#1080#1089#1072#1085#1080#1077
+      FormName = 'TLossJournalForm'
+      FormNameParam.Value = 'TLossJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 152
@@ -460,6 +484,12 @@ inherited MainForm: TMainForm
       end
       object N46: TMenuItem
         Action = actReturnOut
+      end
+      object N47: TMenuItem
+        Action = actSend
+      end
+      object N48: TMenuItem
+        Action = actLoss
       end
     end
     inherited miGuides: TMenuItem

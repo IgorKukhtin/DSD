@@ -174,7 +174,9 @@ uses
   Movement_PeriodDialog in '..\..\FormsBoutique\Document\Movement_PeriodDialog.pas' {Movement_PeriodDialogForm: TParentForm},
   IncomeItemEdit in '..\..\FormsBoutique\Document\IncomeItemEdit.pas' {IncomeItemEditForm: TParentForm},
   ReturnOutJournal in '..\..\FormsBoutique\Document\ReturnOutJournal.pas' {ReturnOutJournalForm: TParentForm},
-  ReturnOut in '..\..\FormsBoutique\Document\ReturnOut.pas' {ReturnOutForm: TParentForm};
+  ReturnOut in '..\..\FormsBoutique\Document\ReturnOut.pas' {ReturnOutForm: TParentForm},
+  SendJournal in '..\..\FormsBoutique\Document\SendJournal.pas' {SendJournalForm: TParentForm},
+  Send in '..\..\FormsBoutique\Document\Send.pas' {SendForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

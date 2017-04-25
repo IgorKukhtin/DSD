@@ -607,6 +607,7 @@ type
     qryPartnerContractInfo: TStringField;
     cdsJuridicalCollationPaidKindShow: TStringField;
     qryPartnerJuridicalId: TIntegerField;
+    cdsOrderItemsRecommendCount: TFloatField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
@@ -2708,12 +2709,36 @@ end;
 function TDM.SaveStoreReal(Comment: string; DelItems : string; Complete: boolean;
   var ErrorMessage : string) : boolean;
 var
-  GlobalId : TGUID;
-  MovementId, NewInvNumber : integer;
-  qryMaxInvNumber : TFDQuery;
-  b : TBookmark;
+  GlobalId: TGUID;
+  MovementId, NewInvNumber: integer;
+  qryMaxInvNumber: TFDQuery;
+  b: TBookmark;
+  isHasItems: boolean;
 begin
   Result := false;
+
+  // Проверяем есть ли "реальные" записи
+  with cdsStoreRealItems do
+  begin
+    isHasItems := false;
+    First;
+    while not EOF do
+    begin
+      if FieldbyName('Count').AsFloat > 0 then
+      begin
+        isHasItems := true;
+        break;
+      end;
+
+      Next;
+    end;
+
+    if not isHasItems then
+    begin
+      ErrorMessage := 'В остатках отсутствуют товары. Сохранение невозможно';
+      exit;
+    end;
+  end;
 
   NewInvNumber := 1;
   if cdsStoreRealsId.AsInteger = -1 then
@@ -2787,30 +2812,36 @@ begin
       First;
       while not EOF do
       begin
-        if FieldbyName('Id').AsInteger = -1 then // новая запись
+        if FieldbyName('Count').AsFloat > 0 then
         begin
-          tblMovementItem_StoreReal.Append;
-
-          tblMovementItem_StoreRealMovementId.AsInteger := MovementId;
-          CreateGUID(GlobalId);
-          tblMovementItem_StoreRealGUID.AsString := GUIDToString(GlobalId);
-          tblMovementItem_StoreRealGoodsId.AsInteger := FieldbyName('GoodsId').AsInteger;
-          tblMovementItem_StoreRealGoodsKindId.AsInteger := FieldbyName('KindID').AsInteger;
-          tblMovementItem_StoreRealAmount.AsFloat := FieldbyName('Count').AsFloat;
-
-          tblMovementItem_StoreReal.Post;
-        end
-        else
-        begin
-          if tblMovementItem_StoreReal.Locate('Id', FieldbyName('Id').AsInteger) then
+          if FieldbyName('Id').AsInteger = -1 then // новая запись
           begin
-            tblMovementItem_StoreReal.Edit;
+            tblMovementItem_StoreReal.Append;
 
+            tblMovementItem_StoreRealMovementId.AsInteger := MovementId;
+            CreateGUID(GlobalId);
+            tblMovementItem_StoreRealGUID.AsString := GUIDToString(GlobalId);
+            tblMovementItem_StoreRealGoodsId.AsInteger := FieldbyName('GoodsId').AsInteger;
+            tblMovementItem_StoreRealGoodsKindId.AsInteger := FieldbyName('KindID').AsInteger;
             tblMovementItem_StoreRealAmount.AsFloat := FieldbyName('Count').AsFloat;
 
             tblMovementItem_StoreReal.Post;
+          end
+          else
+          begin
+            if tblMovementItem_StoreReal.Locate('Id', FieldbyName('Id').AsInteger) then
+            begin
+              tblMovementItem_StoreReal.Edit;
+
+              tblMovementItem_StoreRealAmount.AsFloat := FieldbyName('Count').AsFloat;
+
+              tblMovementItem_StoreReal.Post;
+            end;
           end;
-        end;
+        end
+        else
+          if (FieldbyName('Id').AsInteger <> -1) and tblMovementItem_StoreReal.Locate('Id', FieldbyName('Id').AsInteger) then
+            tblMovementItem_StoreReal.Delete;
 
         Next;
       end;
@@ -3130,12 +3161,36 @@ end;
 function TDM.SaveOrderExternal(OperDate: TDate; Comment: string;
   ToralPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
 var
-  GlobalId : TGUID;
-  MovementId, NewInvNumber : integer;
-  qryMaxInvNumber : TFDQuery;
-  b : TBookmark;
+  GlobalId: TGUID;
+  MovementId, NewInvNumber: integer;
+  qryMaxInvNumber: TFDQuery;
+  b: TBookmark;
+  isHasItems: boolean;
 begin
   Result := false;
+
+  // Проверяем есть ли "реальные" записи
+  with cdsOrderItems do
+  begin
+    isHasItems := false;
+    First;
+    while not EOF do
+    begin
+      if FieldbyName('Count').AsFloat > 0 then
+      begin
+        isHasItems := true;
+        break;
+      end;
+
+      Next;
+    end;
+
+    if not isHasItems then
+    begin
+      ErrorMessage := 'В заявке отсутствуют товары. Сохранение невозможно';
+      exit;
+    end;
+  end;
 
   NewInvNumber := 1;
   if cdsOrderExternalId.AsInteger = -1 then
@@ -3225,34 +3280,40 @@ begin
       First;
       while not EOF do
       begin
-        if FieldbyName('Id').AsInteger = -1 then // новая запись
+        if (FieldbyName('Count').AsFloat > 0) and (FieldbyName('RecommendCount').AsFloat > 0) then
         begin
-          tblMovementItem_OrderExternal.Append;
-
-          tblMovementItem_OrderExternalMovementId.AsInteger := MovementId;
-          CreateGUID(GlobalId);
-          tblMovementItem_OrderExternalGUID.AsString := GUIDToString(GlobalId);
-          tblMovementItem_OrderExternalGoodsId.AsInteger := FieldbyName('GoodsId').AsInteger;
-          tblMovementItem_OrderExternalGoodsKindId.AsInteger := FieldbyName('KindID').AsInteger;
-          tblMovementItem_OrderExternalAmount.AsFloat := FieldbyName('Count').AsFloat;
-          tblMovementItem_OrderExternalPrice.AsFloat := FieldbyName('Price').AsFloat;
-          tblMovementItem_OrderExternalChangePercent.AsFloat := cdsOrderExternalChangePercent.AsFloat;
-
-          tblMovementItem_OrderExternal.Post;
-        end
-        else
-        begin
-          if tblMovementItem_OrderExternal.Locate('Id', FieldbyName('Id').AsInteger) then
+          if FieldbyName('Id').AsInteger = -1 then // новая запись
           begin
-            tblMovementItem_OrderExternal.Edit;
+            tblMovementItem_OrderExternal.Append;
 
-            tblMovementItem_OrderExternalChangePercent.AsFloat := cdsOrderExternalChangePercent.AsFloat;
+            tblMovementItem_OrderExternalMovementId.AsInteger := MovementId;
+            CreateGUID(GlobalId);
+            tblMovementItem_OrderExternalGUID.AsString := GUIDToString(GlobalId);
+            tblMovementItem_OrderExternalGoodsId.AsInteger := FieldbyName('GoodsId').AsInteger;
+            tblMovementItem_OrderExternalGoodsKindId.AsInteger := FieldbyName('KindID').AsInteger;
             tblMovementItem_OrderExternalAmount.AsFloat := FieldbyName('Count').AsFloat;
             tblMovementItem_OrderExternalPrice.AsFloat := FieldbyName('Price').AsFloat;
+            tblMovementItem_OrderExternalChangePercent.AsFloat := cdsOrderExternalChangePercent.AsFloat;
 
             tblMovementItem_OrderExternal.Post;
+          end
+          else
+          begin
+            if tblMovementItem_OrderExternal.Locate('Id', FieldbyName('Id').AsInteger) then
+            begin
+              tblMovementItem_OrderExternal.Edit;
+
+              tblMovementItem_OrderExternalChangePercent.AsFloat := cdsOrderExternalChangePercent.AsFloat;
+              tblMovementItem_OrderExternalAmount.AsFloat := FieldbyName('Count').AsFloat;
+              tblMovementItem_OrderExternalPrice.AsFloat := FieldbyName('Price').AsFloat;
+
+              tblMovementItem_OrderExternal.Post;
+            end;
           end;
-        end;
+        end
+        else
+          if (FieldbyName('Id').AsInteger <> -1) and tblMovementItem_OrderExternal.Locate('Id', FieldbyName('Id').AsInteger) then
+            tblMovementItem_OrderExternal.Delete;
 
         Next;
       end;
@@ -3515,19 +3576,31 @@ begin
   cdsOrderItemsKindName.AsString := ArrValue[4];  // вид товара
 
   if (ArrValue[5] = '0') or (cdsOrderExternalCalcDayCount.AsFloat = 0) then // рекомендуемое количество
-    cdsOrderItemsRecommend.AsString := '-'
+  begin
+    cdsOrderItemsRecommendCount.AsFloat := 0;
+    cdsOrderItemsRecommend.AsString := '-';
+  end
   else
   begin
     if StrToFloatDef(ArrValue[5], 0) - StrToFloatDef(ArrValue[6], 0) <= 0 then
-      cdsOrderItemsRecommend.AsString := '0'
+    begin
+      cdsOrderItemsRecommendCount.AsFloat := 0;
+      cdsOrderItemsRecommend.AsString := '0';
+    end
     else
     begin
       Recommend := (StrToFloatDef(ArrValue[5], 0) - StrToFloatDef(ArrValue[6], 0)) / cdsOrderExternalCalcDayCount.AsFloat *
         cdsOrderExternalOrderDayCount.AsFloat - StrToFloatDef(ArrValue[6], 0);
       if Recommend <= 0 then
-        cdsOrderItemsRecommend.AsString := '0'
+      begin
+        cdsOrderItemsRecommendCount.AsFloat := 0;
+        cdsOrderItemsRecommend.AsString := '0';
+      end
       else
+      begin
+        cdsOrderItemsRecommendCount.AsFloat := Recommend;
         cdsOrderItemsRecommend.AsString := FormatFloat(',0.00', Recommend);
+      end;
     end;
   end;
 
@@ -3721,12 +3794,36 @@ end;
 function TDM.SaveReturnIn(OperDate: TDate; Comment : string;
   ToralPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
 var
-  GlobalId : TGUID;
-  MovementId, NewInvNumber : integer;
-  qryMaxInvNumber : TFDQuery;
-  b : TBookmark;
+  GlobalId: TGUID;
+  MovementId, NewInvNumber: integer;
+  qryMaxInvNumber: TFDQuery;
+  b: TBookmark;
+  isHasItems: boolean;
 begin
   Result := false;
+
+  // Проверяем есть ли "реальные" записи
+  with cdsReturnInItems do
+  begin
+    isHasItems := false;
+    First;
+    while not EOF do
+    begin
+      if FieldbyName('Count').AsFloat > 0 then
+      begin
+        isHasItems := true;
+        break;
+      end;
+
+      Next;
+    end;
+
+    if not isHasItems then
+    begin
+      ErrorMessage := 'В возврате отсутствуют товары. Сохранение невозможно';
+      exit;
+    end;
+  end;
 
   NewInvNumber := 1;
   if cdsReturnInId.AsInteger = -1 then
@@ -3815,34 +3912,40 @@ begin
       First;
       while not EOF do
       begin
-        if FieldbyName('Id').AsInteger = -1 then // новая запись
+        if FieldbyName('Count').AsFloat > 0 then
         begin
-          tblMovementItem_ReturnIn.Append;
-
-          tblMovementItem_ReturnInMovementId.AsInteger := MovementId;
-          CreateGUID(GlobalId);
-          tblMovementItem_ReturnInGUID.AsString := GUIDToString(GlobalId);
-          tblMovementItem_ReturnInGoodsId.AsInteger := FieldbyName('GoodsId').AsInteger;
-          tblMovementItem_ReturnInGoodsKindId.AsInteger := FieldbyName('KindID').AsInteger;
-          tblMovementItem_ReturnInAmount.AsFloat := FieldbyName('Count').AsFloat;
-          tblMovementItem_ReturnInPrice.AsFloat := FieldbyName('Price').AsFloat;
-          tblMovementItem_ReturnInChangePercent.AsFloat := cdsReturnInChangePercent.AsFloat;
-
-          tblMovementItem_ReturnIn.Post;
-        end
-        else
-        begin
-          if tblMovementItem_ReturnIn.Locate('Id', FieldbyName('Id').AsInteger) then
+          if FieldbyName('Id').AsInteger = -1 then // новая запись
           begin
-            tblMovementItem_ReturnIn.Edit;
+            tblMovementItem_ReturnIn.Append;
 
-            tblMovementItem_ReturnInChangePercent.AsFloat := cdsReturnInChangePercent.AsFloat;
+            tblMovementItem_ReturnInMovementId.AsInteger := MovementId;
+            CreateGUID(GlobalId);
+            tblMovementItem_ReturnInGUID.AsString := GUIDToString(GlobalId);
+            tblMovementItem_ReturnInGoodsId.AsInteger := FieldbyName('GoodsId').AsInteger;
+            tblMovementItem_ReturnInGoodsKindId.AsInteger := FieldbyName('KindID').AsInteger;
             tblMovementItem_ReturnInAmount.AsFloat := FieldbyName('Count').AsFloat;
             tblMovementItem_ReturnInPrice.AsFloat := FieldbyName('Price').AsFloat;
+            tblMovementItem_ReturnInChangePercent.AsFloat := cdsReturnInChangePercent.AsFloat;
 
             tblMovementItem_ReturnIn.Post;
+          end
+          else
+          begin
+            if tblMovementItem_ReturnIn.Locate('Id', FieldbyName('Id').AsInteger) then
+            begin
+              tblMovementItem_ReturnIn.Edit;
+
+              tblMovementItem_ReturnInChangePercent.AsFloat := cdsReturnInChangePercent.AsFloat;
+              tblMovementItem_ReturnInAmount.AsFloat := FieldbyName('Count').AsFloat;
+              tblMovementItem_ReturnInPrice.AsFloat := FieldbyName('Price').AsFloat;
+
+              tblMovementItem_ReturnIn.Post;
+            end;
           end;
-        end;
+        end
+        else
+          if (FieldbyName('Id').AsInteger <> -1) and tblMovementItem_ReturnIn.Locate('Id', FieldbyName('Id').AsInteger) then
+            tblMovementItem_ReturnIn.Delete;
 
         Next;
       end;
