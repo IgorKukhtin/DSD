@@ -931,7 +931,8 @@ uses
   MobilePromo in '..\..\Forms\Document\MobilePromo.pas' {MobilePromoForm: TParentForm},
   GoodsListIncome in '..\..\Forms\Guides\GoodsListIncome.pas' {GoodsListIncomeForm: TParentForm},
   GoodsListIncomeEdit in '..\..\Forms\Guides\GoodsListIncomeEdit.pas' {GoodsListIncomeEditForm: TParentForm},
-  GoodsListIncome_byReportEdit in '..\..\Forms\Guides\GoodsListIncome_byReportEdit.pas' {GoodsListIncome_byReportEditForm: TParentForm};
+  GoodsListIncome_byReportEdit in '..\..\Forms\Guides\GoodsListIncome_byReportEdit.pas' {GoodsListIncome_byReportEditForm: TParentForm},
+  PartnerMap in '..\..\Forms\Guides\PartnerMap.pas' {PartnerMapForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

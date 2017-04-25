@@ -625,6 +625,14 @@ object PartnerForm: TPartnerForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic2'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateEdiOrdspr'
         end
         item
@@ -768,6 +776,23 @@ object PartnerForm: TPartnerForm
     object bbInsertMask: TdxBarButton
       Action = actInsertMask
       Category = 0
+    end
+    object bbShowCurPartnerOnMap: TdxBarButton
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' '#1085#1072' '#1082#1072#1088#1090#1077
+      Category = 0
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' '#1085#1072' '#1082#1072#1088#1090#1077
+      Visible = ivAlways
+      ImageIndex = 8
+    end
+    object dxBarButton1: TdxBarButton
+      Action = dsdShowCurrentPartnerMap
+      Category = 0
+    end
+    object dxBarStatic2: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Hint = '     '
+      Visible = ivAlways
     end
   end
   object ActionList: TActionList
@@ -1397,6 +1422,23 @@ object PartnerForm: TPartnerForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object dsdShowCurrentPartnerMap: TdsdPartnerMapAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'dsdShowCurrentPartnerMap'
+      ImageIndex = 8
+      FormName = 'TPartnerMapForm'
+      FormNameParam.Name = 'TPartnerMapForm'
+      FormNameParam.Value = 'TPartnerMapForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptInput
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+      MapType = acShowAll
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
     end
   end
   object dsdStoredProc: TdsdStoredProc

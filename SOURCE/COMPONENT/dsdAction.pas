@@ -22,6 +22,7 @@ type
   end;
 
   TDataSetAcionType = (acInsert, acUpdate);
+  TMapAcionType = (acShowAll, acShowOne);
 
   TdsdStoredProcItem = class(TCollectionItem)
   private
@@ -749,6 +750,30 @@ type
     //property IncludeFieldNames: boolean read FIncludeFieldNames write FIncludeFieldNames default False;
   end;
 
+  TdsdPartnerMapAction = class(TdsdOpenForm, IDataSetAction, IFormAction)
+  private
+    FActionDataLink: TDataSetDataLink;
+    FdsdDataSetRefresh: TdsdCustomAction;
+    FMapType: TMapAcionType;
+    function GetDataSource: TDataSource;
+    procedure SetDataSource(const Value: TDataSource);
+  protected
+    procedure Notification(AComponent: TComponent;
+      Operation: TOperation); override;
+    procedure DataSetChanged;
+    procedure UpdateData; virtual;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property MapType: TMapAcionType read FMapType write FMapType
+      default acShowOne;
+    property DataSource: TDataSource read GetDataSource write SetDataSource;
+    property DataSetRefresh: TdsdCustomAction read FdsdDataSetRefresh
+      write FdsdDataSetRefresh;
+    property PostDataSetBeforeExecute default true;
+  end;
+
 procedure Register;
 
 implementation
@@ -790,8 +815,10 @@ begin
   RegisterActions('DSDLib', [TShellExecuteAction], TShellExecuteAction);
   RegisterActions('DSDLib', [TShowMessageAction], TShowMessageAction);
   RegisterActions('DSDLib', [TdsdLoadXMLKS], TdsdLoadXMLKS);
+  RegisterActions('DSDLib', [TdsdPartnerMapAction], TdsdPartnerMapAction);
   RegisterActions('DSDLibExport', [TdsdStoredProcExportToFile], TdsdStoredProcExportToFile);
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
+
 end;
 
 { TdsdCustomDataSetAction }
@@ -3059,6 +3086,50 @@ procedure TdsdStoredProcExportToFile.SetdsdStoredProcName(
   Value: TdsdStoredProc);
 begin
   FdsdStoredProcName := Value;
+end;
+
+{ TdsdPartnerMapAction }
+
+constructor TdsdPartnerMapAction.Create(AOwner: TComponent);
+begin
+  inherited;
+  FActionDataLink := TDataSetDataLink.Create(Self);
+end;
+
+procedure TdsdPartnerMapAction.DataSetChanged;
+begin
+
+end;
+
+destructor TdsdPartnerMapAction.Destroy;
+begin
+  FActionDataLink.Free;
+  inherited;
+end;
+
+function TdsdPartnerMapAction.GetDataSource: TDataSource;
+begin
+  result := FActionDataLink.DataSource
+end;
+
+procedure TdsdPartnerMapAction.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited;
+  if csDestroying in ComponentState then
+    exit;
+  if (Operation = opRemove) and (AComponent = DataSource) then
+    DataSource := nil;
+end;
+
+procedure TdsdPartnerMapAction.SetDataSource(const Value: TDataSource);
+begin
+  FActionDataLink.DataSource := Value;
+end;
+
+procedure TdsdPartnerMapAction.UpdateData;
+begin
+
 end;
 
 end.

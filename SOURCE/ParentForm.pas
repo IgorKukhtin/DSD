@@ -58,7 +58,9 @@ uses
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
   cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView,
   cxDBEdit, dsdAction, dsdGuides, cxDBVGrid,
-  Vcl.DBActns, cxMemo, cxGridDBChartView, ShellAPI, CommonData{, DataModul};
+  Vcl.DBActns, cxMemo, cxGridDBChartView, ShellAPI, CommonData,
+  SHDocVw, GMClasses, GMMap, GMMapVCL, GMLinkedComponents,
+  GMMarker, GMMarkerVCL{, DataModul};
 
 {$R *.dfm}
 
@@ -325,6 +327,7 @@ initialization
   RegisterClass (TPopupMenu);
   RegisterClass (TPanel);
   RegisterClass (TStringField);
+  RegisterClass (TWebBrowser);
 
   // Библиотека DevExpress
   RegisterClass (TdxBarDockControl);
@@ -361,6 +364,10 @@ initialization
 
   RegisterClass (TcxGridDBChartView);
 
+  // Компоненты для карты
+  RegisterClass (TGMMap);
+  RegisterClass (TGMMarker);
+
   // Собственнтые компоненты
   RegisterClass (TBooleanStoredProcAction);
   RegisterClass (TChangeStatus);
@@ -386,6 +393,7 @@ initialization
   RegisterClass (TdsdUserSettingsStorageAddOn);
   RegisterClass (TdsdLoadXMLKS);
   RegisterClass (TdsdStoredProcExportToFile);
+  RegisterClass (TdsdPartnerMapAction);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);
