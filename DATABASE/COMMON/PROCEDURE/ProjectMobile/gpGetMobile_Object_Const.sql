@@ -37,7 +37,12 @@ RETURNS TABLE (PaidKindId_First      Integer   -- Форма оплаты - БН
 )
 AS
 $BODY$
-  DECLARE vbUserId Integer;
+  DECLARE vbUserId     Integer;
+
+  DECLARE vbMemberId   Integer;
+  DECLARE vbPersonalId Integer;
+  DECLARE vbUnitId     Integer;
+  DECLARE vbBranchId   Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -51,20 +56,65 @@ BEGIN
          RETURN;
      END IF;
 
+     -- нашли параметры
+     SELECT ObjectLink_User_Member.ChildObjectId AS MemberId
+          , lfSelect.PersonalId                  AS PersonalId
+          , lfSelect.UnitId                      AS UnitId
+          , ObjectLink_Unit_Branch.ChildObjectId AS BranchId
+            INTO vbMemberId, vbPersonalId, vbUnitId, vbBranchId
+     FROM ObjectLink AS ObjectLink_User_Member
+          LEFT JOIN lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                                                                    ON lfSelect.MemberId = ObjectLink_User_Member.ChildObjectId
+                                                                   AND lfSelect.Ord      = 1
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                               ON ObjectLink_Unit_Branch.ObjectId = lfSelect.UnitId
+                              AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
+     WHERE ObjectLink_User_Member.ObjectId = CASE WHEN inSession = '5' THEN 893469 /*140094*/ ELSE vbUserId END -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!! - Волошина Е.А.
+       AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+    ;
+
+     -- проверка - свойство должно быть установлено
+     IF COALESCE (vbMemberId, 0) =  0 THEN
+        RAISE EXCEPTION 'Ошибка.У пользователя <%> Не установлено значение <ФИО (физ.лицо)>.', lfGet_Object_ValueData (vbUserId);
+     END IF;
+     -- проверка - свойство должно быть установлено
+     IF COALESCE (vbPersonalId, 0) =  0 THEN
+        RAISE EXCEPTION 'Ошибка.У пользователя <%> Не установлено значение <ФИО (Сотрудник)>.', lfGet_Object_ValueData (vbUserId);
+     END IF;
+     -- проверка - свойство должно быть установлено
+     IF COALESCE (vbUnitId, 0) =  0 THEN
+        RAISE EXCEPTION 'Ошибка.У сотрудника <%> Не установлено значение <Подразделение>.', lfGet_Object_ValueData (vbPersonalId);
+     END IF;
+
      -- Результат
      RETURN QUERY
-       WITH tmpPersonal AS (SELECT ObjectLink_User_Member.ChildObjectId      AS MemberId
-                                 , Object_Member.ValueData                   AS MemberName
-                                 , MAX (View_Personal.PersonalId) :: Integer AS PersonalId
-                            FROM (SELECT 1) AS tmp
-                                 LEFT JOIN ObjectLink AS ObjectLink_User_Member
-                                                      ON -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!! - Волошина Е.А.
-                                                         ObjectLink_User_Member.ObjectId = CASE WHEN inSession = '5' THEN 893469 /*140094*/ ELSE vbUserId END
-                                                     AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-                                 LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
-                                 LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.MemberId = ObjectLink_User_Member.ChildObjectId
-                            GROUP BY ObjectLink_User_Member.ChildObjectId
-                                   , Object_Member.ValueData
+       WITH tmpPersonal AS (SELECT vbMemberId                AS MemberId
+                                 , Object_Member.ValueData   AS MemberName
+                                 , vbPersonalId              AS PersonalId
+                                 , CASE (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbBranchId)
+                                        WHEN 11 THEN 301309  -- филиал Запорожье - Склад ГП ф.Запорожье
+                                        WHEN 4  THEN 346093  -- филиал Одесса    - Склад ГП ф.Одесса
+                                        WHEN 3  THEN 8417    -- филиал Николаев (Херсон) - Склад ГП ф.Николаев (Херсон)
+                                        WHEN 2  THEN 8411    -- филиал Киев      - Склад ГП ф Киев
+                                        WHEN 5  THEN 8415    -- филиал Черкассы (Кировоград) - Склад ГП ф.Черкассы (Кировоград)
+                                        WHEN 7  THEN 8413    -- филиал Кр.Рог    - Склад ГП ф.Кривой Рог
+                                        WHEN 9  THEN 8425    -- филиал Харьков   - Склад ГП ф.Харьков
+                                        -- WHEN ??? THEN 8459   -- филиал ???    - Склад Реализации
+                                        ELSE vbUnitId
+                                   END AS UnitId
+                                 , CASE (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbBranchId)
+                                        WHEN 11 THEN 309599  -- филиал Запорожье - Склад возвратов ф.Запорожье
+                                        WHEN 4  THEN 346094  -- филиал Одесса    - Склад возвратов ф.Одесса
+                                        WHEN 3  THEN 428364  -- филиал Николаев (Херсон) - Склад возвратов ф.Николаев (Херсон)
+                                        WHEN 2  THEN 428365  -- филиал Киев      - Склад возвратов ф.Киев
+                                        WHEN 5  THEN 428363  -- филиал Черкассы (Кировоград) - Склад возвратов ф.Черкассы (Кировоград)
+                                        WHEN 7  THEN 428366  -- филиал Кр.Рог    - Склад возвратов ф.Кривой Рог
+                                        WHEN 9  THEN 409007  -- филиал Харьков   - Склад возвратов ф.Харьков
+                                        -- WHEN ??? THEN 8461   -- филиал ???    - Склад Возвратов
+                                        ELSE vbUnitId
+                                   END AS UnitId_ret
+                            FROM Object AS Object_Member
+                            WHERE Object_Member.Id = vbMemberId
                            )
        -- Результат
        SELECT Object_PaidKind_FirstForm.Id           AS PaidKindId_First
@@ -113,8 +163,8 @@ BEGIN
             LEFT JOIN Object AS Object_Status_Complete   ON Object_Status_Complete.Id   = zc_Enum_Status_Complete()
             LEFT JOIN Object AS Object_Status_Erased     ON Object_Status_Erased.Id     = zc_Enum_Status_Erased()
 
-            LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = 8459 -- Склад Реализации
-            LEFT JOIN Object AS Object_Unit_ret ON Object_Unit_ret.Id = 8461 -- Склад Возвратов
+            LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = tmpPersonal.UnitId -- Склад Реализации
+            LEFT JOIN Object AS Object_Unit_ret ON Object_Unit_ret.Id = tmpPersonal.UnitId_ret
             LEFT JOIN Object AS Object_Cash     ON Object_Cash.Id     = NULL
 
             LEFT JOIN Object AS Object_User ON Object_User.Id = vbUserId
