@@ -40,4 +40,4 @@ $BODY$
  */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_Send (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inFromId:= 1, inToId:= 2, inSession:= '2')
+-- select * from gpInsertUpdate_Movement_Send(ioId := 12 , inInvNumber := '14' , inOperDate := ('20.01.2017')::TDateTime , inFromId := 230 , inToId := 311 ,  inSession := '2');

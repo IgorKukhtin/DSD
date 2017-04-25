@@ -54,7 +54,7 @@ type
 //    procedure LoadJuridicalFormTest;
 //    procedure LoadLoadFormTest;
 //    procedure LoadLossDebtFormTest;
-//    procedure LoadLossFormTest;
+    procedure LoadLossFormTest;
 //    procedure LoadMakerFormTest;
 //    procedure LoadMargineCategory;
 //    procedure LoadMarginReport;
@@ -635,6 +635,8 @@ procedure TLoadFormTest.LoadPartionGoodsFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsChoiceForm');
 end;
 
 procedure TLoadFormTest.LoadPartnerFormTest;
@@ -1166,15 +1168,14 @@ end;
 //  TdsdFormStorageFactory.GetStorage.Load('TInventoryPartionForm');
 //end;
 //
-//procedure TLoadFormTest.LoadLossFormTest;
-//begin
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossJournalForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TLossJournalForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TLossForm');
-//end;
-//
+procedure TLoadFormTest.LoadLossFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLossJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLossForm');
+end;
+
 //procedure TLoadFormTest.LoadArticleLossFormTest;
 //begin
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TArticleLossForm'));

@@ -76,4 +76,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Send (inMovementId:= 1, inOperDate:= CURRENT_DATE, inSession:= zfCalc_UserAdmin())
+-- select * from gpGet_Movement_Send(inMovementId := 12 , inOperDate := ('20.01.2017')::TDateTime ,  inSession := '2');

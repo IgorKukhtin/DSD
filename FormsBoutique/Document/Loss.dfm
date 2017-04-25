@@ -1,7 +1,7 @@
-object SendForm: TSendForm
+object LossForm: TLossForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1087#1080#1089#1072#1085#1080#1077'>'
   ClientHeight = 466
   ClientWidth = 811
   Color = clBtnFace
@@ -459,7 +459,7 @@ object SendForm: TSendForm
     Top = 351
   end
   object spSelectMI: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_Send'
+    StoredProcName = 'gpSelect_MovementItem_Loss'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -1251,7 +1251,7 @@ object SendForm: TSendForm
     end
   end
   object spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Send'
+    StoredProcName = 'gpInsertUpdate_MovementItem_Loss'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1331,7 +1331,7 @@ object SendForm: TSendForm
     Top = 287
   end
   object spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Send'
+    StoredProcName = 'gpInsertUpdate_Movement_Loss'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1423,7 +1423,7 @@ object SendForm: TSendForm
     Top = 201
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Send'
+    StoredProcName = 'gpGet_Movement_Loss'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1595,7 +1595,7 @@ object SendForm: TSendForm
     Top = 24
   end
   object spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_Send'
+    StoredProcName = 'gpUpdate_Status_Loss'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -1688,7 +1688,7 @@ object SendForm: TSendForm
     Top = 350
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Send_Print'
+    StoredProcName = 'gpSelect_Movement_Loss_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1712,7 +1712,7 @@ object SendForm: TSendForm
     Top = 208
   end
   object spInsertMaskMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Send'
+    StoredProcName = 'gpInsertUpdate_MovementItem_Loss'
     DataSets = <>
     OutputType = otResult
     Params = <

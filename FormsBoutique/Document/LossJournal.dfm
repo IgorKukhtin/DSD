@@ -1,7 +1,7 @@
-object SendJournalForm: TSendJournalForm
+object LossJournalForm: TLossJournalForm
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1087#1080#1089#1072#1085#1080#1077'>'
   ClientHeight = 439
   ClientWidth = 911
   Color = clBtnFace
@@ -553,8 +553,8 @@ object SendJournalForm: TSendJournalForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'TSendForm'
-      FormNameParam.Value = 'TSendForm'
+      FormName = 'TLossForm'
+      FormNameParam.Value = 'TLossForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -616,8 +616,8 @@ object SendJournalForm: TSendJournalForm
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TSendForm'
-      FormNameParam.Value = 'TSendForm'
+      FormName = 'TLossForm'
+      FormNameParam.Value = 'TLossForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -945,7 +945,7 @@ object SendJournalForm: TSendJournalForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Send'
+    StoredProcName = 'gpSelect_Movement_Loss'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -981,7 +981,7 @@ object SendJournalForm: TSendJournalForm
     Top = 192
   end
   object spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Send'
+    StoredProcName = 'gpComplete_Movement_Loss'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1118,7 +1118,7 @@ object SendJournalForm: TSendJournalForm
     Top = 48
   end
   object spMovementReCompleteAll: TdsdStoredProc
-    StoredProcName = 'gpCompletePeriod_Movement_Send'
+    StoredProcName = 'gpCompletePeriod_Movement_Loss'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1143,7 +1143,7 @@ object SendJournalForm: TSendJournalForm
     Top = 288
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Send_Print'
+    StoredProcName = 'gpSelect_Movement_Loss_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1197,7 +1197,7 @@ object SendJournalForm: TSendJournalForm
     Top = 200
   end
   object spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_Send'
+    StoredProcName = 'gpReComplete_Movement_Loss'
     DataSets = <>
     OutputType = otResult
     Params = <
