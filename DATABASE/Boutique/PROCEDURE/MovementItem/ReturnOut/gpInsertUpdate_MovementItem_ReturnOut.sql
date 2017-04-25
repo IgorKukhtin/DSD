@@ -24,6 +24,20 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReturnOut());
 
+
+     -- проверка - документ должен быть сохранен
+     IF COALESCE (inMovementId, 0) = 0 THEN
+        RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
+     END IF;
+     -- проверка - свойство должно быть установлено
+     IF COALESCE (inGoodsId, 0) = 0 THEN
+        RAISE EXCEPTION 'Ошибка.Не установлено значение <Товар>.';
+     END IF;
+     -- проверка - свойство должно быть установлено
+     IF COALESCE (inPartionId, 0) = 0 THEN
+        RAISE EXCEPTION 'Ошибка.Не установлено значение <Партия>.';
+     END IF;
+
      -- Заменили свойство <Цена за количество>
      IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
 

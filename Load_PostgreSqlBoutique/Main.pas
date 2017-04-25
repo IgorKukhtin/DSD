@@ -2082,6 +2082,7 @@ begin
         Add('            else GoodsGroup2.Id_Postgres');
         Add('       end as GoodsGroupId'); // !!!последнюю группу не загружаем, но кроме АРХИВА
         Add('     , Goods.GoodsName as GoodsName ');
+        Add('     , BillItemsIncome.Id_Postgres as PartionId ');
         Add('     , GoodsInfo.GoodsInfoName as GoodsInfoName ');
         Add('     , GoodsSize.GoodsSizeName as GoodsSizeName ');
         Add('     , CompositionGroup.CompositionGroupName as CompositionGroupName ');
@@ -2114,7 +2115,7 @@ begin
         //    !!!последнюю группу не загружаем, но кроме АРХИВА
         Add('      left join  dba.Goods as GoodsGroup1 on  GoodsGroup1.id = Goods.ParentId ');
         Add('      left join  dba.Goods as GoodsGroup2 on  GoodsGroup2.id = GoodsGroup1.ParentId ');
-
+        Add('      left join  DBA.BillItemsIncome on BillItemsIncome.Id = BillItems.BillItemsIncomeID ');
         Add(' where  Bill.BillKind = 4 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add(' order by Bill.Id ');
         Open;
@@ -2151,7 +2152,7 @@ begin
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
-             toStoredProc.Params.ParamByName('inPartionId').Value:=0;
+             toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
              toStoredProc.Params.ParamByName('inOperPrice').Value:=FieldByName('OperPrice').AsFloat;
 //             toStoredProc.Params.ParamByName('ioCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
