@@ -177,6 +177,7 @@ uses
   ReturnOut in '..\..\FormsBoutique\Document\ReturnOut.pas' {ReturnOutForm: TParentForm},
   SendJournal in '..\..\FormsBoutique\Document\SendJournal.pas' {SendJournalForm: TParentForm},
   Send in '..\..\FormsBoutique\Document\Send.pas' {SendForm: TParentForm},
+  LoadBoutiqueReportTest in '..\SOURCEBoutique\LoadBoutiqueReportTest.pas',
   PartionGoodsChoice in '..\..\FormsBoutique\Guides\PartionGoodsChoice.pas' {PartionGoodsChoiceForm: TParentForm},
   LossJournal in '..\..\FormsBoutique\Document\LossJournal.pas' {LossJournalForm: TParentForm},
   Loss in '..\..\FormsBoutique\Document\Loss.pas' {LossForm: TParentForm};

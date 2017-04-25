@@ -573,7 +573,8 @@
 				<Form>SendForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Guides\PartionGoodsChoice.pas">
+			<DCCReference Include="..\SOURCEBoutique\LoadBoutiqueReportTest.pas"/>
+                        <DCCReference Include="..\..\FormsBoutique\Guides\PartionGoodsChoice.pas">
 				<Form>PartionGoodsChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
