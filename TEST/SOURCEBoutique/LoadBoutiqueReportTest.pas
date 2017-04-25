@@ -59,7 +59,7 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-  LoadReportFromFile('Приход от поставщика', ReportPath + '\Приход от поставщика.fr3');
+  LoadReportFromFile('PrintMovement_Income', ReportPath + '\Приход от поставщика.fr3');
 end;
 
 procedure TLoadReportTest.SetUp;
