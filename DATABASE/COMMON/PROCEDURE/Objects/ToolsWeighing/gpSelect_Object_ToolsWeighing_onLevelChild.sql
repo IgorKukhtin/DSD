@@ -87,6 +87,8 @@ BEGIN
        UNION SELECT 'isPersonalLoss'         AS Name WHERE inIsCeh = FALSE
        UNION SELECT 'isTax'                  AS Name WHERE inIsCeh = FALSE
        UNION SELECT 'isTransport'            AS Name WHERE inIsCeh = FALSE
+       UNION SELECT 'isEnterPrice'           AS Name WHERE inIsCeh = FALSE
+       UNION SELECT 'isDriverReturn'         AS Name WHERE inIsCeh = FALSE
 
        UNION SELECT 'DayPrior_PriceReturn' AS Name WHERE inIsCeh = FALSE
 

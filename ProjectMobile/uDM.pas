@@ -10,20 +10,34 @@ uses
   FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys,
   FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs,
   FireDAC.Comp.UI, Variants, FireDAC.FMXUI.Wait, dsdDB, Datasnap.DBClient,
-  FMX.Dialogs;
+  FMX.Dialogs, FMX.DialogService, System.UITypes, DateUtils
+  {$IFDEF ANDROID}
+  , Androidapi.JNI.GraphicsContentViewText, Androidapi.Helpers,
+  Androidapi.JNI.Net, Androidapi.JNI.JavaTypes, Androidapi.JNI.App
+  {$ENDIF};
 
 CONST
   DataBaseFileName = 'aMobile.sdb';
 
-  BasePartnerQuery = 'select P.Id, P.CONTRACTID, J.VALUEDATA Name, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, ' +
-    'P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE, P.PRICELISTID, C.PAIDKINDID, C.CHANGEPERCENT, PL.PRICEWITHVAT, PL.VATPERCENT, ' +
+  { базовый запрос на получение информации по ТТ }
+  BasePartnerQuery = 'select P.Id, P.CONTRACTID, P.JURIDICALID, J.VALUEDATA Name, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, ' +
+    'P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE, C.PAIDKINDID, C.CHANGEPERCENT, ' +
+    'P.DEBTSUM, P.OVERSUM, P.OVERDAYS, J.DEBTSUM DEBTSUMJ, J.OVERSUM OVERSUMJ, J.OVERDAYS OVERDAYSJ, ' +
+    'PL.ID PRICELISTID, PL.PRICEWITHVAT, PL.VATPERCENT, ' +
+    'PLR.ID PRICELISTID_RET, PLR.PRICEWITHVAT PRICEWITHVAT_RET, PLR.VATPERCENT VATPERCENT_RET, ' +
     'P.CalcDayCount, P.OrderDayCount, P.isOperDateOrder ' +
     'from OBJECT_PARTNER P ' +
-    'JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID and J.ISERASED = 0 ' +
-    'JOIN Object_PriceList PL ON PL.ID = P.PRICELISTID and PL.ISERASED = 0 ' +
-    'JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID and C.ISERASED = 0 where P.ISERASED = 0 ';
+    'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID AND J.CONTRACTID = P.CONTRACTID ' +
+    'LEFT JOIN Object_PriceList PL ON PL.ID = IFNULL(P.PRICELISTID, :DefaultPriceList) ' +
+    'LEFT JOIN Object_PriceList PLR ON PLR.ID = IFNULL(P.PRICELISTID_RET, :DefaultPriceList) ' +
+    'LEFT JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID ' +
+    'where P.ISERASED = 0 ';
 
 type
+  { состояния задания контрагента }
+  TActiveMode = (amAll, amOpen, amClose);
+
+  { отдельный поток для показа бегущего круга }
   TProgressThread = class(TThread)
   private
     { Private declarations }
@@ -34,6 +48,7 @@ type
     procedure Execute; override;
   end;
 
+  { отдельный поток для синхронизации }
   TSyncThread = class(TThread)
   private
     { Private declarations }
@@ -44,8 +59,8 @@ type
     LoadData: boolean;
     UploadData: boolean;
 
-    SyncDataIn : TDate;
-    SyncDataOut : TDate;
+    SyncDataIn : TDateTime;
+    SyncDataOut : TDateTime;
 
     procedure Update;
     procedure SetNewProgressTask(AName : string);
@@ -57,10 +72,33 @@ type
     procedure UploadStoreReal;
     procedure UploadOrderExternal;
     procedure UploadReturnIn;
+    procedure UploadTasks;
+    function UploadNewJuridicals(var AId: integer): boolean;
+    procedure UploadNewPartners;
+    procedure UploadPartnerGPS;
+    procedure UploadRouteMember;
+    procedure UploadPhotos;
   protected
     procedure Execute; override;
   end;
 
+  { отдельный поток для выполнения процедур получения данных с сервера }
+  TWaitThread = class(TThread)
+  private
+    TaskName : string;
+
+    DateStart, DateEnd: TDate;
+    JuridicalId, PartnerId, ContractId, PaidKindId: integer;
+
+    procedure SetTaskName(AName : string);
+
+    function LoadJuridicalCollation: string;
+    function UpdateProgram: string;
+  protected
+    procedure Execute; override;
+  end;
+
+  { классы для создания БД на основе TFDTable модуля TDM }
   TDataSets = TObjectList<TFDTable>;
 
   TStructure = Class(TObject)
@@ -84,6 +122,7 @@ type
     property IndexCount: integer read GetIndexCount;
   End;
 
+  { основной модуль работы с БД }
   TDM = class(TDataModule)
     FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink;
     qryMeta: TFDMetaInfoQuery;
@@ -208,7 +247,6 @@ type
     qryPartnerId: TIntegerField;
     qryPartnerCONTRACTID: TIntegerField;
     qryPartnerContractName: TWideStringField;
-    qryPartnerPRICELISTID: TIntegerField;
     qryPartnerGPSN: TFloatField;
     qryPartnerGPSE: TFloatField;
     qryPartnerPaidKindId: TIntegerField;
@@ -302,7 +340,7 @@ type
     cdsOrderExternal: TClientDataSet;
     cdsOrderExternalName: TStringField;
     cdsOrderExternalPrice: TStringField;
-    cdsOrderExternalWeigth: TStringField;
+    cdsOrderExternalWeight: TStringField;
     cdsOrderExternalStatus: TStringField;
     cdsOrderExternalId: TIntegerField;
     cdsOrderExternalOperDate: TDateField;
@@ -316,7 +354,6 @@ type
     tblMovement_VisitGUID: TStringField;
     tblMovement_VisitInvNumber: TStringField;
     tblMovement_VisitOperDate: TDateTimeField;
-    tblMovement_VisitStatusId: TIntegerField;
     tblMovement_VisitisSync: TBooleanField;
     tblMovementItem_Visit: TFDTable;
     tblMovementItem_VisitMovementId: TIntegerField;
@@ -329,7 +366,6 @@ type
     qryPhotos: TFDQuery;
     qryPhotoGroupsId: TIntegerField;
     qryPhotoGroupsComment: TStringField;
-    qryPhotoGroupsStatusId: TIntegerField;
     qryPhotosId: TIntegerField;
     qryPhotosPhoto: TBlobField;
     qryPhotosComment: TStringField;
@@ -393,7 +429,6 @@ type
     tblMovement_ReturnInInvNumber: TStringField;
     tblMovement_ReturnInOperDate: TDateTimeField;
     tblMovement_ReturnInStatusId: TIntegerField;
-    tblMovement_ReturnInChecked: TBooleanField;
     tblMovement_ReturnInPriceWithVAT: TBooleanField;
     tblMovement_ReturnInInsertDate: TDateTimeField;
     tblMovement_ReturnInVATPercent: TFloatField;
@@ -420,7 +455,7 @@ type
     cdsReturnInOperDate: TDateField;
     cdsReturnInName: TStringField;
     cdsReturnInPrice: TStringField;
-    cdsReturnInWeigth: TStringField;
+    cdsReturnInWeight: TStringField;
     cdsReturnInStatus: TStringField;
     cdsReturnInItemsId: TIntegerField;
     cdsReturnInItemsGoodsName: TStringField;
@@ -474,11 +509,109 @@ type
     cdsJuridicalCollationDocDate: TDateField;
     cdsJuridicalCollationPaidKind: TStringField;
     cdsJuridicalCollationDocNumDate: TStringField;
-    cdsJuridicalCollationPayment: TStringField;
-    cdsJuridicalCollationDebet: TFloatField;
-    cdsJuridicalCollationKredit: TFloatField;
+    cdsJuridicalCollationDocTypeShow: TStringField;
+    cdsJuridicalCollationFromName: TStringField;
+    cdsJuridicalCollationToName: TStringField;
+    cdsJuridicalCollationFromToName: TStringField;
+    cdsTasks: TClientDataSet;
+    cdsTasksInvNumber: TStringField;
+    cdsTasksOperDate: TDateTimeField;
+    cdsTasksPartnerId: TIntegerField;
+    cdsTasksClosed: TBooleanField;
+    cdsTasksDescription: TStringField;
+    cdsTasksComment: TStringField;
+    cdsTasksId: TIntegerField;
+    cdsTasksPartnerName: TStringField;
+    cdsTasksTaskDate: TStringField;
+    cdsTasksTaskDescription: TStringField;
+    cdsJuridicalCollationDebet: TStringField;
+    cdsJuridicalCollationKredit: TStringField;
+    tblObject_ConstPriceListId_def: TIntegerField;
+    tblObject_ConstPriceListName_def: TStringField;
+    qryPartnerPRICELISTID: TIntegerField;
+    qryPartnerPRICELISTID_RET: TIntegerField;
+    qryPartnerPriceWithVAT_RET: TBooleanField;
+    qryPartnerVATPercent_RET: TFloatField;
+    tblObject_PartnerGUID: TStringField;
+    tblObject_JuridicalGUID: TStringField;
+    tblObject_JuridicalisSync: TBooleanField;
+    qryPartnerDebtSum: TFloatField;
+    qryPartnerDebtSumJ: TFloatField;
+    qryPartnerOverSum: TFloatField;
+    qryPartnerOverSumJ: TFloatField;
+    qryPartnerOverDays: TIntegerField;
+    qryPartnerOverDaysJ: TIntegerField;
+    tblMovement_StoreRealInsertDate: TDateTimeField;
+    tblMovement_VisitInsertDate: TDateTimeField;
+    qryPhotoGroupsStatusId: TIntegerField;
+    tblMovement_VisitStatusId: TIntegerField;
+    tblMovementItem_VisitisErased: TBooleanField;
+    qryPhotosisErased: TBooleanField;
+    tblMovementItem_VisitisSync: TBooleanField;
+    qryPhotosisSync: TBooleanField;
+    tblMovement_OrderExternalComment: TStringField;
+    tblMovement_OrderExternalUnitId: TIntegerField;
+    cdsOrderExternalComment: TStringField;
+    tblMovement_ReturnInUnitId: TIntegerField;
+    cdsOrderExternalisSync: TBooleanField;
+    cdsStoreRealsisSync: TBooleanField;
+    cdsReturnInisSync: TBooleanField;
+    cdsOrderExternalStatusId: TIntegerField;
+    cdsStoreRealsStatusId: TIntegerField;
+    cdsReturnInStatusId: TIntegerField;
+    qryGoodsForPriceListStartDate: TDateTimeField;
+    qryGoodsForPriceListTermin: TStringField;
+    cdsStoreRealsPartnerId: TIntegerField;
+    cdsStoreRealsPartnerName: TStringField;
+    cdsStoreRealsPriceListId: TIntegerField;
+    cdsStoreRealsAddress: TStringField;
+    cdsOrderExternalPartnerId: TIntegerField;
+    cdsOrderExternalContractId: TIntegerField;
+    cdsOrderExternalPartnerName: TStringField;
+    cdsOrderExternalPaidKindId: TIntegerField;
+    cdsOrderExternalPriceListId: TIntegerField;
+    cdsOrderExternalPriceWithVAT: TBooleanField;
+    cdsOrderExternalVATPercent: TFloatField;
+    cdsOrderExternalChangePercent: TFloatField;
+    cdsOrderExternalCalcDayCount: TFloatField;
+    cdsOrderExternalOrderDayCount: TFloatField;
+    cdsOrderExternalisOperDateOrder: TBooleanField;
+    cdsOrderExternalAddress: TStringField;
+    cdsOrderExternalContractName: TStringField;
+    cdsReturnInPartnerId: TIntegerField;
+    cdsReturnInPartnerName: TStringField;
+    cdsReturnInContractId: TIntegerField;
+    cdsReturnInContractName: TStringField;
+    cdsReturnInPaidKindId: TIntegerField;
+    cdsReturnInPriceWithVAT: TBooleanField;
+    cdsReturnInVATPercent: TFloatField;
+    cdsReturnInChangePercent: TFloatField;
+    cdsReturnInPriceListId: TIntegerField;
+    cdsReturnInAddress: TStringField;
+    qryPhotoGroupsName: TStringField;
+    qryPhotoGroupsOperDate: TDateTimeField;
+    qryPhotoGroupsIsSync: TBooleanField;
+    qryPhotoGroupDocs: TFDQuery;
+    qryPhotoGroupDocsId: TIntegerField;
+    qryPhotoGroupDocsComment: TStringField;
+    qryPhotoGroupDocsStatusId: TIntegerField;
+    qryPhotoGroupDocsName: TStringField;
+    qryPhotoGroupDocsOperDate: TDateTimeField;
+    qryPhotoGroupDocsIsSync: TBooleanField;
+    qryPhotoGroupDocsPartnerId: TIntegerField;
+    qryPhotoGroupDocsPartnerName: TStringField;
+    qryPhotoGroupDocsAddress: TStringField;
+    qryPhotoGroupDocsGroupName: TStringField;
+    tblMovementItem_VisitGPSN: TFloatField;
+    tblMovementItem_VisitGPSE: TFloatField;
+    qryPartnerContractInfo: TStringField;
+    cdsJuridicalCollationPaidKindShow: TStringField;
+    qryPartnerJuridicalId: TIntegerField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
+    procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
+    procedure qryPhotoGroupDocsCalcFields(DataSet: TDataSet);
+    procedure qryPartnerCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
     FConnected: Boolean;
@@ -493,27 +626,38 @@ type
     procedure CreateIndexes;
     function CreateDataBase: Boolean;
 
+    function GetCurrentVersion: string;
+    function CompareVersion(ACurVersion, AServerVersion: string): integer;
+    procedure CheckUpdate;
+    procedure UpdateProgram(const AResult: TModalResult);
+
     procedure SynchronizeWithMainDatabase(LoadData: boolean = true; UploadData: boolean = true);
 
-    function SaveStoreReal(OldStoreRealId : string; Comment: string;
-      DelItems : string; var ErrorMessage : string) : boolean;
-    procedure LoadStoreReal(AId: string = '');
+    function SaveStoreReal(Comment: string; DelItems : string; Complete: boolean;
+      var ErrorMessage : string) : boolean;
+    procedure NewStoreReal;
+    procedure LoadStoreReals;
+    procedure LoadAllStoreReals(AStartDate, AEndDate: TDate);
     procedure AddedGoodsToStoreReal(AGoods : string);
     procedure DefaultStoreRealItems;
     procedure LoadStoreRealItems(AId: integer);
     procedure GenerateStoreRealItemsList;
 
-    function SaveOrderExternal(OldOrderExternalId : string; OperDate: TDate;
-      ToralPrice, TotalWeight: Currency; DelItems : string; var ErrorMessage : string) : boolean;
-    procedure LoadOrderExternal(AId: string = '');
+    function SaveOrderExternal(OperDate: TDate; Comment: string;
+      ToralPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
+    procedure NewOrderExternal;
+    procedure LoadOrderExternal;
+    procedure LoadAllOrderExternal(AStartDate, AEndDate: TDate);
     procedure AddedGoodsToOrderExternal(AGoods : string);
     procedure DefaultOrderExternalItems;
     procedure LoadOrderExtrenalItems(AId: integer);
     procedure GenerateOrderExtrenalItemsList;
 
-    function SaveReturnIn(OldReturnInId : string; OperDate: TDate; Comment : string;
-      ToralPrice, TotalWeight: Currency; DelItems : string; var ErrorMessage : string) : boolean;
-    procedure LoadReturnIn(AId: string = '');
+    function SaveReturnIn(OperDate: TDate; Comment : string;
+      ToralPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
+    procedure NewReturnIn;
+    procedure LoadReturnIn;
+    procedure LoadAllReturnIn(AStartDate, AEndDate: TDate);
     procedure AddedGoodsToReturnIn(AGoods : string);
     procedure DefaultReturnInItems;
     procedure LoadReturnInItems(AId: integer);
@@ -521,8 +665,16 @@ type
 
     procedure SavePhotoGroup(AGroupName: string);
     procedure LoadPhotoGroups;
+    procedure LoadAllPhotoGroups(AStartDate, AEndDate: TDate);
 
-    function GenerateJuridicalCollation(DateStart, DateEnd: TDate; JuridicalId, ContractId: integer): boolean;
+    procedure GenerateJuridicalCollation(ADateStart, ADateEnd: TDate;
+      AJuridicalId, APartnerId, AContractId, APaidKindId: integer);
+
+    function LoadTasks(Active: TActiveMode; SaveData: boolean = true; ADate: TDate = 0; APartnerId: integer = 0): integer;
+    function CloseTask(ATasksId: integer; ATaskComment: string): boolean;
+
+    function CreateNewPartner(JuridicalId: integer; JuridicalName, Address: string;
+      GPSN, GPSE: Double; var ErrorMessage : string): boolean;
 
     property Connected: Boolean read FConnected;
   end;
@@ -532,16 +684,50 @@ var
   Structure: TStructure;
   ProgressThread : TProgressThread;
   SyncThread : TSyncThread;
+  WaitThread : TWaitThread;
 
 implementation
 
 uses
-  System.IOUtils, CursorUtils, CommonData, Authentication, Storage, uMain;
+  System.IOUtils, CursorUtils, CommonData, Authentication, Storage, uMain, ZLib;
 
 {%CLASSGROUP 'FMX.Controls.TControl'}
 
 {$R *.dfm}
 
+{ Процедура по символьно переводит строку в набор цифр }
+function ReConvertConvert(S: string): TBytes;
+var
+  i, l, k: integer;
+  InB: TBytes;
+begin
+  i := Low(S);
+  l := High(S);
+  SetLength(InB, Length(S) div 2);
+  k := 0;
+  while i <= l do
+  begin
+    InB[k] := StrToInt('$' + s[i] + s[i+1]);
+    inc(k);
+    i := i + 2;
+  end;
+  ZDecompress(InB, Result);
+end;
+
+{ Процедура по символьно переводит строку в набор цифр }
+function ConvertConvert(S: TBytes): String;
+var
+  i, l: integer;
+  ArcS: TBytes;
+begin
+  ZCompress(S, ArcS);
+  result := '';
+  l := Length(ArcS);
+  for I := 0 to l - 1 do
+    result := result + IntToHex(ArcS[i], 2);
+end;
+
+{ обновление бегущего круга }
 procedure TProgressThread.Update;
 var
   d: single;
@@ -570,6 +756,7 @@ begin
   end;
 end;
 
+{ обновление процентов выполнения синхронизации и названия текущей операции }
 procedure TSyncThread.Update;
 var
   d: single;
@@ -582,6 +769,7 @@ begin
   frmMain.lProgressName.Text := FName;
 end;
 
+{ изменение текущей операции }
 procedure TSyncThread.SetNewProgressTask(AName : string);
 begin
   FName := AName;
@@ -590,6 +778,7 @@ begin
   Synchronize(Update);
 end;
 
+{ получение дат последней синхронизации }
 procedure TSyncThread.GetSyncDates;
 begin
   if DM.tblObject_Const.Active then
@@ -608,11 +797,11 @@ begin
   end;
 end;
 
+{ Загрузка с сервера констант и системной информации }
 procedure TSyncThread.GetConfigurationInfo;
 var
   x, y : integer;
   GetStoredProc : TdsdStoredProc;
-  str, str1 : string;
   Mapping : array of array[1..2] of integer;
 begin
   GetStoredProc := TdsdStoredProc.Create(nil);
@@ -645,7 +834,7 @@ begin
       for x := 0 to Length(Mapping) - 1 do
         DM.tblObject_Const.Fields[ Mapping[x][1] ].Value := GetStoredProc.DataSet.Fields[ Mapping[x][2] ].Value;
 
-      DM.tblObject_Const.FieldByName('SYNCDATEIN').AsDateTime := Date();
+      DM.tblObject_Const.FieldByName('SYNCDATEIN').AsDateTime := Now();
 
       DM.tblObject_Const.Post;
     except
@@ -659,6 +848,7 @@ begin
   end;
 end;
 
+{ Загрузка с сервера справочников }
 procedure TSyncThread.GetDictionaries(AName : string);
 var
   x, y : integer;
@@ -812,14 +1002,21 @@ begin
 
         while not Eof do
         begin
-          FindRec := false;
-          if AName = 'Partner' then
+          if (AName = 'Partner') or (AName = 'Juridical') then
             FindRec := CurDictTable.Locate('Id;ContractId', VarArrayOf([FieldByName('Id').AsInteger, FieldByName('ContractId').AsInteger]))
           else
             FindRec := CurDictTable.Locate('Id', FieldByName('Id').AsInteger);
 
           if FindRec then
-            CurDictTable.Edit
+          begin
+            if AName = 'MovementItemTask' then
+            begin
+              Next;
+              continue;
+            end
+            else
+              CurDictTable.Edit;
+          end
           else
           begin
             if not FieldByName('isSync').AsBoolean then
@@ -862,6 +1059,7 @@ begin
   end;
 end;
 
+{ Сохранение на сервер введенной информации по остаткам }
 procedure TSyncThread.UploadStoreReal;
 var
   UploadStoredProc : TdsdStoredProc;
@@ -873,7 +1071,7 @@ begin
 
     with DM.tblMovement_StoreReal do
     begin
-      Filter := 'isSync = 0 and StatusId <> ' + DM.tblObject_ConstStatusId_Erased.AsString;
+      Filter := 'isSync = 0 and StatusId = ' + DM.tblObject_ConstStatusId_Complete.AsString;
       Filtered := true;
       Open;
 
@@ -887,6 +1085,8 @@ begin
           UploadStoredProc.Params.AddParam('inInvNumber', ftString, ptInput, FieldByName('INVNUMBER').AsString);
           UploadStoredProc.Params.AddParam('inOperDate', ftDateTime, ptInput, FieldByName('OPERDATE').AsDateTime);
           UploadStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, FieldByName('PARTNERID').AsInteger);
+          UploadStoredProc.Params.AddParam('inComment', ftString, ptInput, FieldByName('COMMENT').AsString);
+          UploadStoredProc.Params.AddParam('inInsertDate', ftDateTime, ptInput, FieldByName('INSERTDATE').AsDateTime);
 
           try
             UploadStoredProc.Execute(false, false, false);
@@ -920,10 +1120,9 @@ begin
             on E : Exception do
             begin
               raise Exception.Create(E.Message);
+              exit;
             end;
           end;
-
-          Next;
         end;
       finally
         DM.tblMovementItem_StoreReal.Close;
@@ -940,18 +1139,19 @@ begin
   end;
 end;
 
+{ Сохранение на сервер введенных заявок }
 procedure TSyncThread.UploadOrderExternal;
 var
   UploadStoredProc : TdsdStoredProc;
 begin
   UploadStoredProc := TdsdStoredProc.Create(nil);
   try
-    // Загружаем шапки остатков
+    // Загружаем шапки заявок
     UploadStoredProc.OutputType := otResult;
 
     with DM.tblMovement_OrderExternal do
     begin
-      Filter := 'isSync = 0 and StatusId <> ' + DM.tblObject_ConstStatusId_Erased.AsString;
+      Filter := 'isSync = 0 and StatusId = ' + DM.tblObject_ConstStatusId_Complete.AsString;
       Filtered := true;
       Open;
 
@@ -964,13 +1164,16 @@ begin
           UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
           UploadStoredProc.Params.AddParam('inInvNumber', ftString, ptInput, FieldByName('INVNUMBER').AsString);
           UploadStoredProc.Params.AddParam('inOperDate', ftDateTime, ptInput, FieldByName('OPERDATE').AsDateTime);
+          UploadStoredProc.Params.AddParam('inComment', ftString, ptInput, FieldByName('COMMENT').AsString);
           UploadStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, FieldByName('PARTNERID').AsInteger);
+          UploadStoredProc.Params.AddParam('inUnitId', ftInteger, ptInput, FieldByName('UNITID').AsInteger);
           UploadStoredProc.Params.AddParam('inPaidKindId', ftInteger, ptInput, FieldByName('PAIDKINDID').AsInteger);
           UploadStoredProc.Params.AddParam('inContractId', ftInteger, ptInput, FieldByName('CONTRACTID').AsInteger);
           UploadStoredProc.Params.AddParam('inPriceListId', ftInteger, ptInput, FieldByName('PRICELISTID').AsInteger);
           UploadStoredProc.Params.AddParam('inPriceWithVAT', ftBoolean, ptInput, FieldByName('PRICEWITHVAT').AsBoolean);
           UploadStoredProc.Params.AddParam('inVATPercent', ftFloat, ptInput, FieldByName('VATPERCENT').AsFloat);
           UploadStoredProc.Params.AddParam('inChangePercent', ftFloat, ptInput, FieldByName('CHANGEPERCENT').AsFloat);
+          UploadStoredProc.Params.AddParam('inInsertDate', ftDateTime, ptInput, FieldByName('INSERTDATE').AsDateTime);
 
           try
             UploadStoredProc.Execute(false, false, false);
@@ -1006,10 +1209,9 @@ begin
             on E : Exception do
             begin
               raise Exception.Create(E.Message);
+              exit;
             end;
           end;
-
-          Next;
         end;
       finally
         DM.tblMovementItem_OrderExternal.Close;
@@ -1025,6 +1227,7 @@ begin
   end;
 end;
 
+{ Сохранение на сервер введенной информации по возврату товара }
 procedure TSyncThread.UploadReturnIn;
 var
   UploadStoredProc : TdsdStoredProc;
@@ -1036,7 +1239,7 @@ begin
 
     with DM.tblMovement_ReturnIn do
     begin
-      Filter := 'isSync = 0 and StatusId <> ' + DM.tblObject_ConstStatusId_Erased.AsString;
+      Filter := 'isSync = 0 and StatusId = ' + DM.tblObject_ConstStatusId_Complete.AsString;
       Filtered := true;
       Open;
 
@@ -1050,13 +1253,13 @@ begin
           UploadStoredProc.Params.AddParam('inInvNumber', ftString, ptInput, FieldByName('INVNUMBER').AsString);
           UploadStoredProc.Params.AddParam('inOperDate', ftDateTime, ptInput, FieldByName('OPERDATE').AsDateTime);
           UploadStoredProc.Params.AddParam('inStatusId', ftInteger, ptInput, FieldByName('STATUSID').AsInteger);
-          UploadStoredProc.Params.AddParam('inChecked', ftBoolean, ptInput, FieldByName('CHECKED').AsBoolean);
           UploadStoredProc.Params.AddParam('inPriceWithVAT', ftBoolean, ptInput, FieldByName('PRICEWITHVAT').AsBoolean);
           UploadStoredProc.Params.AddParam('inInsertDate', ftDateTime, ptInput, FieldByName('INSERTDATE').AsDateTime);
           UploadStoredProc.Params.AddParam('inVATPercent', ftFloat, ptInput, FieldByName('VATPERCENT').AsFloat);
           UploadStoredProc.Params.AddParam('inChangePercent', ftFloat, ptInput, FieldByName('CHANGEPERCENT').AsFloat);
           UploadStoredProc.Params.AddParam('inPaidKindId', ftInteger, ptInput, FieldByName('PAIDKINDID').AsInteger);
           UploadStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, FieldByName('PARTNERID').AsInteger);
+          UploadStoredProc.Params.AddParam('inUnitId', ftInteger, ptInput, FieldByName('UNITID').AsInteger);
           UploadStoredProc.Params.AddParam('inContractId', ftInteger, ptInput, FieldByName('CONTRACTID').AsInteger);
           UploadStoredProc.Params.AddParam('inComment', ftString, ptInput, FieldByName('COMMENT').AsString);
 
@@ -1094,10 +1297,9 @@ begin
             on E : Exception do
             begin
               raise Exception.Create(E.Message);
+              exit;
             end;
           end;
-
-          Next;
         end;
       finally
         DM.tblMovementItem_ReturnIn.Close;
@@ -1114,9 +1316,410 @@ begin
   end;
 end;
 
+{ сохранение на сервер закрытых заданий }
+procedure TSyncThread.UploadTasks;
+var
+  UploadStoredProc : TdsdStoredProc;
+begin
+  UploadStoredProc := TdsdStoredProc.Create(nil);
+  try
+    UploadStoredProc.OutputType := otResult;
+
+    with DM.tblMovementItem_Task do
+    begin
+      Filter := 'isSync = 0 and Closed = 1';
+      Filtered := true;
+      Open;
+
+      try
+        First;
+        while not Eof do
+        begin
+          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_MovementItem_Task';
+          UploadStoredProc.Params.Clear;
+          UploadStoredProc.Params.AddParam('inId', ftInteger, ptInput, FieldByName('ID').AsInteger);
+          UploadStoredProc.Params.AddParam('inMovementId', ftInteger, ptInput, FieldByName('MOVEMENTID').AsInteger);
+          UploadStoredProc.Params.AddParam('inClosed', ftBoolean, ptInput, FieldByName('CLOSED').AsBoolean);
+          UploadStoredProc.Params.AddParam('inComment', ftString, ptInput, FieldByName('COMMENT').AsString);
+          UploadStoredProc.Params.AddParam('inUpdateDate', ftDateTime, ptInput, Now());
+
+          try
+            UploadStoredProc.Execute(false, false, false);
+
+            Edit;
+            FieldByName('IsSync').AsBoolean := true;
+            Post;
+          except
+            on E : Exception do
+            begin
+              raise Exception.Create(E.Message);
+              exit;
+            end;
+          end;
+        end;
+      finally
+        Close;
+        Filter := '';
+        Filtered := false;
+      end;
+    end;
+  finally
+    FreeAndNil(UploadStoredProc);
+  end;
+end;
+
+{ сохранение на сервер новых юридических лиц }
+function TSyncThread.UploadNewJuridicals(var AId: integer): boolean;
+var
+  UploadStoredProc : TdsdStoredProc;
+begin
+  Result := false;
+
+  UploadStoredProc := TdsdStoredProc.Create(nil);
+  try
+    UploadStoredProc.OutputType := otResult;
+
+    with DM.tblObject_Juridical do
+    begin
+      Filter := 'Id = ' + IntToStr(AId);
+      Filtered := true;
+      Open;
+
+      try
+        First;
+
+        UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Object_Juridical';
+        UploadStoredProc.Params.Clear;
+        UploadStoredProc.Params.AddParam('ioId', ftInteger, ptInputOutput, 0);
+        UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
+        UploadStoredProc.Params.AddParam('inName', ftString, ptInput, FieldByName('VALUEDATA').AsString);
+
+        try
+          UploadStoredProc.Execute(false, false, false);
+
+          AId := StrToInt(UploadStoredProc.ParamByName('ioId').AsString);
+
+          Edit;
+          FieldByName('ID').AsInteger := AId;
+          FieldByName('GUID').AsString := '';
+          FieldByName('IsSync').AsBoolean := true;
+          Post;
+
+          Result := true;
+        except
+          on E : Exception do
+          begin
+            raise Exception.Create(E.Message);
+            exit;
+          end;
+        end;
+      finally
+        Close;
+        Filter := '';
+        Filtered := false;
+      end;
+    end;
+  finally
+    FreeAndNil(UploadStoredProc);
+  end;
+end;
+
+{ сохранение на сервер новых ТТ }
+procedure TSyncThread.UploadNewPartners;
+var
+  UploadStoredProc: TdsdStoredProc;
+  NewPartnerId, JuridicalId: integer;
+begin
+  UploadStoredProc := TdsdStoredProc.Create(nil);
+  try
+    UploadStoredProc.OutputType := otResult;
+
+    with DM.tblObject_Partner do
+    begin
+      Filter := 'isSync = 0 and isErased = 0 and Id < 0';
+      Filtered := true;
+      Open;
+
+      try
+        First;
+        while not Eof do
+        begin
+          JuridicalId := FieldByName('JURIDICALID').AsInteger;
+
+          if JuridicalId < 0 then // сохраняем новое юридическое лицо
+          begin
+            if not UploadNewJuridicals(JuridicalId) then
+            begin
+              raise Exception.Create('Не найдено новое юридическое лицо для новой ТТ. Обратитесь к разработчику');
+              exit;
+            end;
+          end;
+
+          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Object_Partner';
+
+          UploadStoredProc.Params.Clear;
+          UploadStoredProc.Params.AddParam('ioId', ftInteger, ptInputOutput, 0);
+          UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
+          UploadStoredProc.Params.AddParam('inName', ftString, ptInput, FieldByName('VALUEDATA').AsString);
+          UploadStoredProc.Params.AddParam('inAddress', ftString, ptInput, FieldByName('ADDRESS').AsString);
+          UploadStoredProc.Params.AddParam('inPrepareDayCount', ftInteger, ptInput, 1);
+          UploadStoredProc.Params.AddParam('inDocumentDayCount', ftInteger, ptInput, 1);
+          UploadStoredProc.Params.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
+
+          try
+            UploadStoredProc.Execute(false, false, false);
+
+            NewPartnerId := StrToInt(UploadStoredProc.ParamByName('ioId').AsString);
+
+            Edit;
+            FieldByName('ID').AsInteger := NewPartnerId;
+            FieldByName('GUID').AsString := '';
+            FieldByName('IsSync').AsBoolean := true;
+            Post;
+          except
+            on E : Exception do
+            begin
+              raise Exception.Create(E.Message);
+              exit;
+            end;
+          end;
+        end;
+      finally
+        Close;
+        Filter := '';
+        Filtered := false;
+      end;
+    end;
+  finally
+    FreeAndNil(UploadStoredProc);
+  end;
+end;
+
+{ сохранение на сервер координат ТТ }
+procedure TSyncThread.UploadPartnerGPS;
+var
+  UploadStoredProc : TdsdStoredProc;
+begin
+  UploadStoredProc := TdsdStoredProc.Create(nil);
+  try
+    UploadStoredProc.OutputType := otResult;
+
+    with DM.tblObject_Partner do
+    begin
+      Filter := 'isSync = 0 and Id > 0';
+      Filtered := true;
+      Open;
+
+      try
+        First;
+        while not Eof do
+        begin
+          UploadStoredProc.StoredProcName := 'gpUpdateMobile_Object_Partner_GPS';
+          UploadStoredProc.Params.Clear;
+          UploadStoredProc.Params.AddParam('inId', ftInteger, ptInput, FieldByName('ID').AsInteger);
+          UploadStoredProc.Params.AddParam('inGPSN', ftFloat, ptInput, FieldByName('GPSN').AsFloat);
+          UploadStoredProc.Params.AddParam('inGPSE', ftFloat, ptInput, FieldByName('GPSE').AsFloat);
+
+          try
+            UploadStoredProc.Execute(false, false, false);
+
+            Edit;
+            FieldByName('IsSync').AsBoolean := true;
+            Post;
+          except
+            on E : Exception do
+            begin
+              raise Exception.Create(E.Message);
+              exit;
+            end;
+          end;
+        end;
+      finally
+        Close;
+        Filter := '';
+        Filtered := false;
+      end;
+    end;
+  finally
+    FreeAndNil(UploadStoredProc);
+  end;
+end;
+
+{ сохранение на сервер маршрута контрагента }
+procedure TSyncThread.UploadRouteMember;
+var
+  UploadStoredProc : TdsdStoredProc;
+begin
+  UploadStoredProc := TdsdStoredProc.Create(nil);
+  try
+    UploadStoredProc.OutputType := otResult;
+
+    with DM.tblMovement_RouteMember do
+    begin
+      Filter := 'isSync = 0';
+      Filtered := true;
+      Open;
+
+      try
+        First;
+        while not Eof do
+        begin
+          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Movement_RouteMember';
+          UploadStoredProc.Params.Clear;
+          UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
+          UploadStoredProc.Params.AddParam('inInvNumber', ftString, ptInput, FieldByName('ID').AsString);
+          UploadStoredProc.Params.AddParam('inInsertDate', ftDateTime, ptInput, FieldByName('INSERTDATE').AsDateTime);
+          UploadStoredProc.Params.AddParam('inGPSN', ftFloat, ptInput, FieldByName('GPSN').AsFloat);
+          UploadStoredProc.Params.AddParam('inGPSE', ftFloat, ptInput, FieldByName('GPSE').AsFloat);
+
+          try
+            UploadStoredProc.Execute(false, false, false);
+
+            Edit;
+            FieldByName('IsSync').AsBoolean := true;
+            Post;
+          except
+            on E : Exception do
+            begin
+              raise Exception.Create(E.Message);
+              exit;
+            end;
+          end;
+        end;
+      finally
+        Close;
+        Filter := '';
+        Filtered := false;
+      end;
+    end;
+  finally
+    FreeAndNil(UploadStoredProc);
+  end;
+end;
+
+{ Сохранение на сервер фотографий }
+procedure TSyncThread.UploadPhotos;
+var
+  UploadStoredProc: TdsdStoredProc;
+  PhotoStream: TStream;
+  PhotoBytes: TBytes;
+  MainGUID : string;
+begin
+  UploadStoredProc := TdsdStoredProc.Create(nil);
+  try
+    UploadStoredProc.OutputType := otResult;
+
+    // Загружаем шапки фотографий (группы)
+    with DM.tblMovement_Visit do
+    begin
+      Filter := 'isSync = 0';
+      Filtered := true;
+      Open;
+
+      try
+        First;
+        while not Eof do
+        begin
+          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Movement_Visit';
+          UploadStoredProc.Params.Clear;
+          UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
+          UploadStoredProc.Params.AddParam('inInvNumber', ftString, ptInput, FieldByName('INVNUMBER').AsString);
+          UploadStoredProc.Params.AddParam('inOperDate', ftDateTime, ptInput, FieldByName('OPERDATE').AsDateTime);
+          UploadStoredProc.Params.AddParam('inStatusId', ftInteger, ptInput, FieldByName('STATUSID').AsInteger);
+          UploadStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, FieldByName('PARTNERID').AsInteger);
+          UploadStoredProc.Params.AddParam('inComment', ftString, ptInput, FieldByName('COMMENT').AsString);
+          UploadStoredProc.Params.AddParam('inInsertDate', ftDateTime, ptInput, FieldByName('INSERTDATE').AsDateTime);
+
+          try
+            UploadStoredProc.Execute(false, false, false);
+
+            Edit;
+            FieldByName('IsSync').AsBoolean := true;
+            Post;
+          except
+            on E : Exception do
+            begin
+              raise Exception.Create(E.Message);
+              exit;
+            end;
+          end;
+        end;
+      finally
+        Close;
+        Filter := '';
+        Filtered := false;
+      end;
+    end;
+
+    // загружаем фотогорафии
+    with DM.tblMovementItem_Visit do
+    begin
+      Filter := 'isSync = 0';
+      Filtered := true;
+      Open;
+
+      try
+        First;
+        while not Eof do
+        begin
+          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_MovementItem_Visit';
+          UploadStoredProc.Params.Clear;
+          UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
+
+          DM.qrySelect.Open('select GUID from Movement_Visit where Id = ' + FieldByName('MOVEMENTID').AsString);
+          if DM.qrySelect.RecordCount = 1 then
+          begin
+            MainGUID := DM.qrySelect.Fields[0].AsString;
+          end;
+          DM.qrySelect.Close;
+          UploadStoredProc.Params.AddParam('inMovementGUID', ftString, ptInput, MainGUID);
+
+          PhotoStream := CreateBlobStream(FieldByName('PHOTO'), bmRead);
+          try
+             SetLength(PhotoBytes, PhotoStream.Size);
+             PhotoStream.Position := 0;
+             PhotoStream.Read(PhotoBytes, PhotoStream.Size);
+             UploadStoredProc.Params.AddParam('inPhoto', ftBlob, ptInput, ConvertConvert(PhotoBytes));
+          finally
+            FreeAndNil(PhotoStream);
+          end;
+          UploadStoredProc.Params.AddParam('inPhotoName', ftString, ptInput, FieldByName('GUID').AsString);
+          UploadStoredProc.Params.AddParam('inComment', ftString, ptInput, FieldByName('COMMENT').AsString);
+          UploadStoredProc.Params.AddParam('inGPSN', ftFloat, ptInput, FieldByName('GPSN').AsFloat);
+          UploadStoredProc.Params.AddParam('inGPSE', ftFloat, ptInput, FieldByName('GPSE').AsFloat);
+          UploadStoredProc.Params.AddParam('inInsertDate', ftDateTime, ptInput, FieldByName('INSERTDATE').AsDateTime);
+          UploadStoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, FieldByName('ISERASED').AsBoolean);
+
+          try
+            UploadStoredProc.Execute(false, false, false);
+
+            Edit;
+            FieldByName('IsSync').AsBoolean := true;
+            Post;
+          except
+            on E : Exception do
+            begin
+              raise Exception.Create(E.Message);
+              exit;
+            end;
+          end;
+        end;
+      finally
+        Close;
+        Filter := '';
+        Filtered := false;
+      end;
+    end;
+  finally
+    FreeAndNil(UploadStoredProc);
+  end;
+end;
+
+{ синхронизация с центральной БД }
 procedure TSyncThread.Execute;
 var
   Res : string;
+  TaskCount: integer;
 begin
   Res := '';
 
@@ -1124,10 +1727,10 @@ begin
   FAllMax := 0;
 
   if LoadData then
-    FAllMax := FAllMax + 16;  // Количесто операций при загрузке данных из центра
+    FAllMax := FAllMax + 17;  // Количесто операций при загрузке данных из центра
 
   if UploadData then
-    FAllMax := FAllMax + 3;  // Количесто операций при сохранении данных в центр
+    FAllMax := FAllMax + 8;  // Количесто операций при сохранении данных в центр
 
   Synchronize(procedure
               begin
@@ -1140,6 +1743,7 @@ begin
     ProgressThread.FreeOnTerminate := true;
     ProgressThread.Start;
 
+    { получение данных из центра }
     if LoadData then
     begin
       Synchronize(GetSyncDates);
@@ -1194,11 +1798,11 @@ begin
 
         SetNewProgressTask('Загрузка справочника акционных товаров');
         GetDictionaries('PromoGoods');
-        {
+
         SetNewProgressTask('Загрузка заданий');
         GetDictionaries('MovementTask');
         GetDictionaries('MovementItemTask');
-        }
+
         DM.conMain.Commit;
         DM.conMain.TxOptions.AutoCommit := true;
       except
@@ -1212,6 +1816,7 @@ begin
       end;
     end;
 
+    { загрузка данных в центр }
     if UploadData then
     begin
       try
@@ -1224,8 +1829,23 @@ begin
         SetNewProgressTask('Сохранение возвратов');
         UploadReturnIn;
 
+        SetNewProgressTask('Сохранение заданий');
+        UploadTasks;
+
+        SetNewProgressTask('Сохранение новых ТТ');
+        UploadNewPartners;
+
+        SetNewProgressTask('Сохранение координат ТТ');
+        UploadPartnerGPS;
+
+        SetNewProgressTask('Сохранение маршрута');
+        UploadRouteMember;
+
+        SetNewProgressTask('Сохранение фотографий');
+        UploadPhotos;
+
         DM.tblObject_Const.Edit;
-        DM.tblObject_ConstSyncDateOut.AsDateTime := Date();
+        DM.tblObject_ConstSyncDateOut.AsDateTime := Now();
         DM.tblObject_Const.Post;
       except
         on E : Exception do
@@ -1246,6 +1866,16 @@ begin
                   begin
                     frmMain.pProgress.Visible := false;
                     frmMain.vsbMain.Enabled := true;
+
+                    if LoadData then
+                    begin
+                      TaskCount := DM.LoadTasks(amOpen, false);
+                      if TaskCount > 0 then
+                        frmMain.lTasks.Text := 'Задания (' + IntToStr(TaskCount) + ')'
+                      else
+                        frmMain.lTasks.Text := 'Задания';
+                    end;
+                    DM.CheckUpdate;
                   end);
     end
     else
@@ -1255,6 +1885,250 @@ begin
                     frmMain.pProgress.Visible := false;
                     frmMain.vsbMain.Enabled := true;
                     ShowMessage('Ошибка синхронизации (' + Res + ')');
+                  end);
+    end;
+  end;
+end;
+
+{ TWaitThread }
+
+procedure TWaitThread.SetTaskName(AName : string);
+begin
+  Synchronize(procedure
+              begin
+                frmMain.lProgressName.Text := AName;
+              end);
+end;
+
+{ получения данных для акта сверки }
+function TWaitThread.LoadJuridicalCollation: string;
+var
+  GetStoredProc : TdsdStoredProc;
+  StartRemains, EndRemains, TotalDebit, TotalKredit: Currency;
+begin
+  Result := '';
+
+  DM.cdsJuridicalCollation.DisableControls;
+  StartRemains := 0;
+  EndRemains := 0;
+  TotalDebit := 0;
+  TotalKredit := 0;
+
+  GetStoredProc := TdsdStoredProc.Create(nil);
+  try
+    GetStoredProc.StoredProcName := 'gpReport_JuridicalCollation';
+    GetStoredProc.OutputType := otDataSet;
+    GetStoredProc.DataSet := TClientDataSet.Create(nil);
+
+    GetStoredProc.Params.AddParam('inStartDate', ftDateTime, ptInput, DateStart);
+    GetStoredProc.Params.AddParam('inEndDate', ftDateTime, ptInput, DateEnd);
+    GetStoredProc.Params.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
+    GetStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, PartnerId);
+    GetStoredProc.Params.AddParam('inContractId', ftInteger, ptInput, ContractId);
+    GetStoredProc.Params.AddParam('inAccountId', ftInteger, ptInput, 0);
+    GetStoredProc.Params.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
+    GetStoredProc.Params.AddParam('inInfoMoneyId', ftInteger, ptInput, 0);
+    GetStoredProc.Params.AddParam('inCurrencyId', ftInteger, ptInput, 0);
+    GetStoredProc.Params.AddParam('inMovementId_Partion', ftInteger, ptInput, 0);
+
+    try
+      GetStoredProc.Execute(false, false, true);
+
+      with GetStoredProc.DataSet do
+      begin
+        First;
+
+        while not Eof do
+        begin
+          StartRemains := StartRemains + FieldByName('StartRemains').AsFloat;
+          EndRemains := StartRemains + FieldByName('EndRemains').AsFloat;
+
+          if FieldByName('InvNumber').AsString <> '' then
+          begin
+            DM.cdsJuridicalCollation.Append;
+
+            DM.cdsJuridicalCollationDocNum.AsString := FieldByName('InvNumber').AsString;
+            DM.cdsJuridicalCollationDocType.AsString := FieldByName('ItemName').AsString;
+            DM.cdsJuridicalCollationDocDate.AsDateTime := FieldByName('OperDate').AsDateTime;
+            DM.cdsJuridicalCollationPaidKind.AsString := FieldByName('PaidKindName').AsString;
+            DM.cdsJuridicalCollationFromName.AsString := FieldByName('FromName').AsString;
+            DM.cdsJuridicalCollationToName.AsString := FieldByName('ToName').AsString;
+
+            if FieldByName('Debet').AsFloat <> 0 then
+            begin
+              DM.cdsJuridicalCollationDebet.AsString := FormatFloat(',0.##', FieldByName('Debet').AsFloat);
+              DM.cdsJuridicalCollationFromToName.AsString := 'От кого: ' + DM.cdsJuridicalCollationFromName.AsString;
+            end
+            else
+              DM.cdsJuridicalCollationDebet.AsString := '';
+            if FieldByName('Kredit').AsFloat <> 0 then
+            begin
+              DM.cdsJuridicalCollationKredit.AsString := FormatFloat(',0.##', FieldByName('Kredit').AsFloat);
+              DM.cdsJuridicalCollationFromToName.AsString := 'Кому: ' + DM.cdsJuridicalCollationToName.AsString;
+            end
+            else
+              DM.cdsJuridicalCollationKredit.AsString := '';
+
+            DM.cdsJuridicalCollationDocNumDate.AsString := 'Документ №' + DM.cdsJuridicalCollationDocNum.AsString +
+              ' от ' + FormatDateTime('DD.MM.YYYY', DM.cdsJuridicalCollationDocDate.AsDateTime);
+            DM.cdsJuridicalCollationDocTypeShow.AsString := 'Вид: ' + DM.cdsJuridicalCollationDocType.AsString;
+            DM.cdsJuridicalCollationPaidKindShow.AsString := 'Форма оплаты: ' + DM.cdsJuridicalCollationPaidKind.AsString;
+
+            DM.cdsJuridicalCollation.Post;
+
+            TotalDebit := TotalDebit + FieldByName('Debet').AsFloat;
+            TotalKredit := TotalKredit + FieldByName('Kredit').AsFloat;
+          end;
+
+          Next;
+        end;
+
+        DM.cdsJuridicalCollation.First;
+      end;
+
+      if DM.cdsJuridicalCollation.RecordCount > 0 then
+      begin
+        Synchronize(procedure
+          begin
+            frmMain.lStartRemains.Text := 'Сальдо на начало периода: ' + FormatFloat(',0.00', StartRemains);
+            frmMain.lEndRemains.Text := 'Сальдо на конец периода: ' + FormatFloat(',0.00', EndRemains);
+            frmMain.lTotalDebit.Text := FormatFloat(',0.00', TotalDebit);
+            frmMain.lTotalKredit.Text := FormatFloat(',0.00', TotalKredit);
+
+            frmMain.lwJuridicalCollation.ScrollViewPos := 0;
+          end);
+      end //По заданым критериям данные не найдены
+      else
+        Result := '';
+    except
+      on E : Exception do
+      begin
+        Result := E.Message;
+      end;
+    end;
+  finally
+    FreeAndNil(GetStoredProc);
+    DM.cdsJuridicalCollation.EnableControls;
+  end;
+end;
+
+{ получение новой версии программы }
+function TWaitThread.UpdateProgram: string;
+var
+  GetStoredProc : TdsdStoredProc;
+  ApplicationName: string;
+  FileStream : TMemoryStream;
+  FileBytes: TBytes;
+  {$IFDEF ANDROID}
+  intent: JIntent;
+  uri: Jnet_Uri;
+  {$ENDIF}
+begin
+  Result := '';
+
+  ApplicationName := DM.tblObject_ConstMobileAPKFileName.AsString;
+
+  GetStoredProc := TdsdStoredProc.Create(nil);
+  FileStream := TMemoryStream.Create;
+  try
+    GetStoredProc.StoredProcName := 'gpGet_Object_Program';
+    GetStoredProc.OutputType := otBlob;
+    GetStoredProc.Params.AddParam('inProgramName', ftString, ptInput, ApplicationName);
+    try
+      FileBytes := ReConvertConvert(GetStoredProc.Execute(false, false, false));
+      FileStream.Write(FileBytes, Length(FileBytes));
+
+      if FileStream.Size = 0 then
+      begin
+        Result := 'Новая версия программы не загружена из базы данных';
+        exit;
+      end;
+
+      FileStream.Position := 0;
+      {$IFDEF ANDROID}
+      FileStream.SaveToFile(TPath.Combine(TPath.GetSharedDownloadsPath, ApplicationName));
+      {$ELSE}
+      FileStream.SaveToFile(ApplicationName);
+      {$ENDIF}
+
+    except
+      on E : Exception do
+      begin
+        Result := E.Message;
+        exit;
+      end;
+    end;
+  finally
+    FreeAndNil(GetStoredProc);
+    FreeAndNil(FileStream);
+  end;
+
+  // Update programm
+  {$IFDEF ANDROID}
+  try
+    Intent := TJIntent.Create;
+    Intent.setAction(TJIntent.JavaClass.ACTION_VIEW);
+
+    uri := TJnet_Uri.JavaClass.fromFile(TJFile.JavaClass.init(StringToJString(TPath.Combine(TPath.GetSharedDownloadsPath, ApplicationName))));
+    Intent.setDataAndType(uri, StringToJString('application/vnd.android.package-archive'));
+    Intent.setFlags(TJIntent.JavaClass.FLAG_ACTIVITY_NEW_TASK);
+    TAndroidHelper.Activity.startActivity(Intent);
+  except
+    on E : Exception do
+    begin
+      Result := E.Message;
+      exit;
+    end;
+  end;
+  {$ENDIF}
+end;
+
+procedure TWaitThread.Execute;
+var
+  Res : string;
+begin
+  Res := '';
+
+  Synchronize(procedure
+              begin
+                frmMain.lProgress.Visible := false;
+                frmMain.pieAllProgress.Visible := false;
+                frmMain.pProgress.Visible := true;
+                frmMain.vsbMain.Enabled := false;
+              end);
+
+  ProgressThread := TProgressThread.Create(true);
+  try
+    ProgressThread.FreeOnTerminate := true;
+    ProgressThread.Start;
+
+    if TaskName = 'JuridicalCollation' then
+    begin
+      SetTaskName('Формирование акта сверки');
+      Res := LoadJuridicalCollation;
+    end
+    else
+    if TaskName = 'UpdateProgram' then
+    begin
+      SetTaskName('Получение файла обновления');
+      Res := UpdateProgram;
+    end
+  finally
+    ProgressThread.Terminate;
+
+    Synchronize(procedure
+                begin
+                  frmMain.pProgress.Visible := false;
+                  frmMain.pieAllProgress.Visible := true;
+                  frmMain.lProgress.Visible := true;
+                  frmMain.vsbMain.Enabled := true;
+                end);
+
+    if Res <> '' then
+    begin
+      Synchronize(procedure
+                  begin
+                    ShowMessage(Res);
                   end);
     end;
   end;
@@ -1333,7 +2207,7 @@ begin
   Begin
     IndexName := 'PK_' + ATable.TableName;
 
-    if SameText(ATable.TableName, 'Object_Partner') then
+    if (SameText(ATable.TableName, 'Object_Partner')) or (SameText(ATable.TableName, 'Object_Juridical') ) then
       FIndexes.Add('CREATE UNIQUE INDEX IF NOT EXISTS `' + IndexName + '` ON `' + ATable.TableName + '` (`Id`,`ContractId`)')
     else
     if SameText(ATable.Fields[0].FieldName, 'Id') and (ATable.Fields[0].DataType <> ftAutoInc) then
@@ -1342,9 +2216,15 @@ begin
 end;
 
 procedure TStructure.MakeDopIndex(ATable: TFDTable);
-var
-  IndexName: String;
 begin
+  if SameText(ATable.TableName, 'Object_GoodsListSale') then
+  begin
+    FIndexes.Add('CREATE INDEX IF NOT EXISTS `idx_GoodsListSale_GoodsId` ON `' + ATable.TableName + '` (`GoodsId`)');
+    FIndexes.Add('CREATE INDEX IF NOT EXISTS `idx_GoodsListSale_GoodsKindId` ON `' + ATable.TableName + '` (`GoodsKindId`)');
+    FIndexes.Add('CREATE INDEX IF NOT EXISTS `idx_GoodsListSale_PartnerId` ON `' + ATable.TableName + '` (`PartnerId`)');
+  end
+
+
   {if SameText(ATable.TableName, 'Words_Table') then
   begin
     IndexName := 'idx_Words_Table_TextWord';
@@ -1429,6 +2309,7 @@ begin
   result := True;
 end;
 
+{ проверка структуры БД }
 function TDM.CheckStructure: Boolean;
 var
   T: TFDTable;
@@ -1441,6 +2322,10 @@ var
   DestSize: LongWord;
   DestPrec, DestScale: Integer;
   DestAttrs: TFDDataAttributes;
+
+  TempTableName: string;
+  InsertSQL: string;
+  Error: boolean;
 begin
   // Check Tables
   qryMeta.Active := False;
@@ -1526,36 +2411,51 @@ begin
       if ChangeStructure then
       Begin
         TempTable := TFDTable.Create(nil);
+        T.DisableConstraints;
+        Error := false;
         try
+          TempTableName := T.TableName + '_temp_for_recreate';
+          conMain.ExecSQL('DROP TABLE IF EXISTS ' + TempTableName);
+          conMain.ExecSQL('ALTER TABLE ' + T.TableName + ' RENAME TO ' + TempTableName);
+
           TempTable.Connection := conMain;
-          TempTable.TableName := T.TableName;
+          TempTable.TableName := TempTableName;
           TempTable.Open;
           conMain.StartTransaction;
           try
-            T.CreateTable(True);
+            T.CreateTable(False);
             Structure.OpenDS(T);
             TempTable.First;
-            while not TempTable.Eof do
-            Begin
-              T.Append;
-              for J := 0 to TempTable.FieldCount - 1 do
-                if T.FindField(TempTable.Fields[J].FieldName) <> nil then
-                  T.FieldByName(TempTable.Fields[J].FieldName).Value :=
-                    TempTable.Fields[J].Value;
-              T.Post;
-              TempTable.Next;
-            End;
+
+            InsertSQL := '';
+            for J := 0 to TempTable.FieldCount - 1 do
+              if T.FindField(TempTable.Fields[J].FieldName) <> nil then
+                InsertSQL := InsertSQL + TempTable.Fields[J].FieldName + ',';
+
+            delete(InsertSQL, Length(InsertSQL), 1);
+            InsertSQL := 'insert into ' + T.TableName + ' (' + InsertSQL + ') select ' + InsertSQL + ' from ' + TempTableName;
+            conMain.ExecSQL(InsertSQL);
             conMain.Commit;
           except
             on E: Exception do
             Begin
               //WriteLogE(E.Message);
+              Error := true;
               conMain.Rollback;
               Exit(False);
             End;
           end;
         finally
+          T.EnableConstraints;
           freeAndNil(TempTable);
+
+          if Error then
+          begin
+            conMain.ExecSQL('DROP TABLE IF EXISTS ' + T.TableName);
+            conMain.ExecSQL('ALTER TABLE ' + TempTableName + ' RENAME TO ' + T.TableName);
+          end
+          else
+            conMain.ExecSQL('DROP TABLE IF EXISTS ' + TempTableName);
         end;
       End;
     end;
@@ -1565,6 +2465,7 @@ begin
   result := True;
 end;
 
+{ создание индексов }
 procedure TDM.CreateIndexes;
 var
   i : integer;
@@ -1634,9 +2535,163 @@ begin
   cdsReturnIn.CreateDataSet;
   cdsReturnInItems.CreateDataSet;
   cdsJuridicalCollation.CreateDataSet;
+  cdsTasks.CreateDataSet;
 end;
 
+{ вычисление цены для товаров }
+procedure TDM.qryGoodsForPriceListCalcFields(DataSet: TDataSet);
+var
+  PriceWithoutVat, PriceWithVat : string;
+begin
+  if qryPriceListPriceWithVAT.AsBoolean then
+  begin
+    PriceWithoutVat := FormatFloat(',0.00', DataSet.FieldByName('Price').AsFloat * 100 / (100 + qryPriceListVATPercent.AsFloat));
+    PriceWithVat := FormatFloat(',0.00', DataSet.FieldByName('Price').AsFloat);
+  end
+  else
+  begin
+    PriceWithoutVat := FormatFloat(',0.00', DataSet.FieldByName('Price').AsFloat);
+    PriceWithVat := FormatFloat(',0.00', DataSet.FieldByName('Price').AsFloat * (100 + qryPriceListVATPercent.AsFloat) / 100);
+  end;
 
+  DataSet.FieldByName('FullPrice').AsString := 'Цена: ' + PriceWithoutVat +' (с НДС ' + PriceWithVat +
+    ') за ' + DataSet.FieldByName('Measure').AsString;
+
+  DataSet.FieldByName('Termin').AsString := 'Цена действительна с ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('StartDate').AsDateTime);
+end;
+
+procedure TDM.qryPartnerCalcFields(DataSet: TDataSet);
+begin
+  // информация о долгах ТТ
+  if DataSet.FieldByName('PaidKindId').AsInteger = DM.tblObject_ConstPaidKindId_First.AsInteger then // БН
+  begin
+    DataSet.FieldByName('ContractInfo').AsString := DM.tblObject_ConstPaidKindName_First.AsString + ' : ' + DataSet.FieldByName('ContractName').AsString +
+      '  долг : ' + FormatFloat(',0.##', DM.qryPartnerDebtSumJ.AsFloat) +
+      ' : ' + FormatFloat(',0.##', DM.qryPartnerOverSumJ.AsFloat) +
+      ' : ' + DM.qryPartnerOverDaysJ.AsString + ' дн';
+  end
+  else
+  if DM.qryPartnerPaidKindId.AsInteger = DM.tblObject_ConstPaidKindId_Second.AsInteger then // Нал
+  begin
+    DataSet.FieldByName('ContractInfo').AsString := DM.tblObject_ConstPaidKindName_Second.AsString + ' : ' + DataSet.FieldByName('ContractName').AsString +
+      '  долг : ' + FormatFloat(',0.##', DM.qryPartnerDebtSum.AsFloat) +
+      ' : ' + FormatFloat(',0.##', DM.qryPartnerOverSum.AsFloat) +
+      ' : ' + DM.qryPartnerOverDays.AsString + ' дн';
+  end
+  else  // нет договора
+  begin
+    DataSet.FieldByName('ContractInfo').AsString := DataSet.FieldByName('ContractName').AsString;
+  end;
+end;
+
+procedure TDM.qryPhotoGroupDocsCalcFields(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('Name').AsString := 'Фотографии за ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('OperDate').AsDateTime);
+  DataSet.FieldByName('GroupName').AsString := DataSet.FieldByName('PartnerName').AsString + chr(13) + chr(10) +
+    DataSet.FieldByName('Address').AsString;
+end;
+
+procedure TDM.qryPhotoGroupsCalcFields(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('Name').AsString := 'Фотографии за ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('OperDate').AsDateTime);
+end;
+
+{ получение текущей версии программы }
+function TDM.GetCurrentVersion: string;
+{$IFDEF ANDROID}
+var
+  PackageManager: JPackageManager;
+  PackageInfo : JPackageInfo;
+{$ENDIF}
+begin
+  {$IFDEF ANDROID}
+  PackageManager := TAndroidHelper.Activity.getPackageManager;
+  PackageInfo := PackageManager.getPackageInfo(TAndroidHelper.Context.getPackageName(), TJPackageManager.JavaClass.GET_ACTIVITIES);
+  Result := JStringToString(PackageInfo.versionName);
+  {$ELSE}
+  Result := '1.0.0.0';
+  {$ENDIF}
+end;
+
+{ сравнение версий }
+function TDM.CompareVersion(ACurVersion, AServerVersion: string): integer;
+var
+  ArrValueC, ArrValueS : TArray<string>;
+  MajorC, MinorC, ReleaseC, BuildC,
+  MajorS, MinorS, ReleaseS, BuildS : integer;
+begin
+  ArrValueC := ACurVersion.Split(['.']);
+  ArrValueS := AServerVersion.Split(['.']);
+  //major
+  if Length(ArrValueC) > 0 then
+    MajorC := StrToIntDef(ArrValueC[0], 0)
+  else
+    MajorC := 0;
+  if Length(ArrValueS) > 0 then
+    MajorS := StrToIntDef(ArrValueS[0], 0)
+  else
+    MajorS := 0;
+  //minor
+  if Length(ArrValueC) > 1 then
+    MinorC := StrToIntDef(ArrValueC[1], 0)
+  else
+    MinorC := 0;
+  if Length(ArrValueS) > 1 then
+    MinorS := StrToIntDef(ArrValueS[1], 0)
+  else
+    MinorS := 0;
+  //release
+  if Length(ArrValueC) > 2 then
+    ReleaseC := StrToIntDef(ArrValueC[2], 0)
+  else
+    ReleaseC := 0;
+  if Length(ArrValueS) > 2 then
+    ReleaseS := StrToIntDef(ArrValueS[2], 0)
+  else
+    ReleaseS := 0;
+  //build
+  if Length(ArrValueC) > 3 then
+    BuildC := StrToIntDef(ArrValueC[3], 0)
+  else
+    BuildC := 0;
+  if Length(ArrValueS) > 3 then
+    BuildS := StrToIntDef(ArrValueS[3], 0)
+  else
+    BuildS := 0;
+
+  if (MajorC = MajorS) and (MinorC = MinorS) and (ReleaseC = ReleaseS) and (BuildC = BuildS) then
+    Result := 0
+  else
+  if (MajorC > MajorS) or ((MajorC = MajorS) and (MinorC > MinorS)) or
+     ((MajorC = MajorS) and (MinorC = MinorS) and (ReleaseC > ReleaseS)) or
+     ((MajorC = MajorS) and (MinorC = MinorS) and (ReleaseC = ReleaseS) and (BuildC > BuildS))
+  then
+    Result := -1
+  else
+    Result := 1;
+end;
+
+{ проверка необходимо ли обновление программы }
+procedure TDM.CheckUpdate;
+begin
+  if CompareVersion(GetCurrentVersion, tblObject_ConstMobileVersion.AsString) > 0 then
+    TDialogService.MessageDialog('Обнаружена новая версия программы! Обновить?',
+      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbYes, 0, UpdateProgram);
+end;
+
+{ обновление программы }
+procedure TDM.UpdateProgram(const AResult: TModalResult);
+begin
+  if AResult = mrYes then
+  begin
+    WaitThread := TWaitThread.Create(true);
+    WaitThread.FreeOnTerminate := true;
+    WaitThread.TaskName := 'UpdateProgram';
+    WaitThread.Start;
+  end;
+end;
+
+{ синхронизация данных с центральной БД }
 procedure TDM.SynchronizeWithMainDatabase(LoadData: boolean = true; UploadData: boolean = true);
 begin
   if gc_User.Local or (not LoadData and not UploadData) then
@@ -1649,19 +2704,20 @@ begin
   SyncThread.Start;
 end;
 
-function TDM.SaveStoreReal(OldStoreRealId : string; Comment: string;
-  DelItems : string; var ErrorMessage : string) : boolean;
+{ сохранение остатков }
+function TDM.SaveStoreReal(Comment: string; DelItems : string; Complete: boolean;
+  var ErrorMessage : string) : boolean;
 var
   GlobalId : TGUID;
-  i, MovementId, NewInvNumber : integer;
+  MovementId, NewInvNumber : integer;
   qryMaxInvNumber : TFDQuery;
+  b : TBookmark;
 begin
   Result := false;
 
-  if OldStoreRealId = '' then
+  NewInvNumber := 1;
+  if cdsStoreRealsId.AsInteger = -1 then
   begin
-    NewInvNumber := 1;
-
     qryMaxInvNumber := TFDQuery.Create(nil);
     try
       qryMaxInvNumber.Connection := conMain;
@@ -1677,7 +2733,7 @@ begin
   try
     tblMovement_StoreReal.Open;
 
-    if OldStoreRealId = '' then
+    if cdsStoreRealsId.AsInteger = -1  then
     begin
       tblMovement_StoreReal.Append;
 
@@ -1685,9 +2741,13 @@ begin
       tblMovement_StoreRealGUID.AsString := GUIDToString(GlobalId);
       tblMovement_StoreRealInvNumber.AsString := IntToStr(NewInvNumber);
       tblMovement_StoreRealOperDate.AsDateTime := Date();
-      tblMovement_StoreRealStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
-      tblMovement_StoreRealPartnerId.AsInteger := qryPartnerId.AsInteger;
+      if Complete then
+        tblMovement_StoreRealStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger
+      else
+        tblMovement_StoreRealStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
+      tblMovement_StoreRealPartnerId.AsInteger := cdsStoreRealsPartnerId.AsInteger ;
       tblMovement_StoreRealComment.AsString := Comment;
+      tblMovement_StoreRealInsertDate.AsDateTime := Now();
       tblMovement_StoreRealisSync.AsBoolean := false;
 
       tblMovement_StoreReal.Post;
@@ -1699,16 +2759,19 @@ begin
     end
     else
     begin
-      if tblMovement_StoreReal.Locate('Id', OldStoreRealId) then
+      if tblMovement_StoreReal.Locate('Id', cdsStoreRealsId.AsInteger) then
       begin
         tblMovement_StoreReal.Edit;
 
-        tblMovement_StoreRealStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
+        if Complete then
+          tblMovement_StoreRealStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger
+        else
+          tblMovement_StoreRealStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
         tblMovement_StoreRealComment.AsString := Comment;
 
         tblMovement_StoreReal.Post;
 
-        MovementId := StrToInt(OldStoreRealId);
+        MovementId := cdsStoreRealsId.AsInteger;
       end
       else
       begin
@@ -1758,17 +2821,34 @@ begin
 
     conMain.Commit;
 
-    if OldStoreRealId = '' then
-      LoadStoreReal(IntToStr(MovementId))
-    else
-    begin
+    //обновляем данные в локальном хранилище
+    cdsStoreReals.DisableControls;
+    try
       cdsStoreReals.Edit;
 
+      cdsStoreRealsId.AsInteger := MovementId;
+
       cdsStoreRealsComment.AsString := Comment;
-      cdsStoreRealsStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_Complete.AsString;
+      if Complete then
+      begin
+        cdsStoreRealsStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
+        cdsStoreRealsStatus.AsString := tblObject_ConstStatusName_Complete.AsString;
+      end
+      else
+      begin
+        cdsStoreRealsStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
+        cdsStoreRealsStatus.AsString := tblObject_ConstStatusName_UnComplete.AsString;
+      end;
 
       cdsStoreReals.Post;
+    finally
+      cdsStoreReals.EnableControls;
+
+      b:= cdsStoreReals.Bookmark;
+      cdsStoreReals.First;
+      cdsStoreReals.GotoBookmark(b);
     end;
+    //=========
 
     Result := true;
   except
@@ -1780,29 +2860,50 @@ begin
   end;
 end;
 
-procedure TDM.LoadStoreReal(AId : string = '');
+{ создание новых остатков для выбранной ТТ (болванка) }
+procedure TDM.NewStoreReal;
+begin
+  cdsStoreReals.DisableControls;
+  try
+    cdsStoreReals.First;
+    cdsStoreReals.Insert;
+
+    cdsStoreRealsId.AsInteger := -1;
+    cdsStoreRealsComment.AsString := '';
+    cdsStoreRealsOperDate.AsDateTime := Date();
+    cdsStoreRealsName.AsString := 'Остатки на ' + FormatDateTime('DD.MM.YYYY', Date());
+    cdsStoreRealsStatus.AsString := tblObject_ConstStatusName_UnComplete.AsString;
+    cdsStoreRealsStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
+    cdsStoreRealsisSync.AsBoolean := false;
+
+    cdsStoreRealsPartnerId.AsInteger := qryPartnerId.AsInteger;
+    cdsStoreRealsPartnerName.AsString := qryPartnerName.AsString;
+    cdsStoreRealsPriceListId.AsInteger := qryPartnerPRICELISTID.AsInteger;
+
+    cdsStoreReals.Post;
+  finally
+    cdsStoreReals.EnableControls;
+  end;
+end;
+
+{ загрузка остатков из БД для выбранной ТТ}
+procedure TDM.LoadStoreReals;
 var
   qryStoreReals : TFDQuery;
 begin
-  if AId = '' then
-  begin
-    cdsStoreReals.Open;
-    cdsStoreReals.EmptyDataSet;
-  end;
+  cdsStoreReals.Open;
+  cdsStoreReals.EmptyDataSet;
 
+  cdsStoreReals.DisableControls;
   qryStoreReals := TFDQuery.Create(nil);
   try
     qryStoreReals.Connection := conMain;
     qryStoreReals.SQL.Text := 'select ID, OPERDATE, COMMENT, ISSYNC, STATUSID' +
       ' from Movement_StoreReal' +
       ' where PARTNERID = ' + qryPartnerId.AsString +
-      ' and STATUSID <> ' + tblObject_ConstStatusId_Erased.AsString;
-    if AId <> '' then
-      qryStoreReals.SQL.Text := qryStoreReals.SQL.Text + ' and ID = ' + AId;
-    qryStoreReals.SQL.Text := qryStoreReals.SQL.Text + ' order by OPERDATE desc';
+      ' order by OPERDATE desc';
 
     qryStoreReals.Open;
-    cdsStoreReals.Open;
 
     qryStoreReals.First;
     while not qryStoreReals.EOF do
@@ -1814,15 +2915,22 @@ begin
       cdsStoreRealsName.AsString := 'Остатки на ' + FormatDateTime('DD.MM.YYYY', qryStoreReals.FieldByName('OPERDATE').AsDateTime);
 
       if qryStoreReals.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Complete.AsInteger then
-        cdsStoreRealsStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_Complete.AsString
+        cdsStoreRealsStatus.AsString := tblObject_ConstStatusName_Complete.AsString
       else
       if qryStoreReals.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_UnComplete.AsInteger then
-        cdsStoreRealsStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_UnComplete.AsString
+        cdsStoreRealsStatus.AsString := tblObject_ConstStatusName_UnComplete.AsString
       else
       if qryStoreReals.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Erased.AsInteger then
-        cdsStoreRealsStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_Erased.AsString
+        cdsStoreRealsStatus.AsString := tblObject_ConstStatusName_Erased.AsString
       else
-        cdsStoreRealsStatus.AsString := 'Статус: Неизвестный';
+        cdsStoreRealsStatus.AsString := 'Неизвестный';
+
+      cdsStoreRealsStatusId.AsInteger := qryStoreReals.FieldByName('STATUSID').AsInteger;
+      cdsStoreRealsisSync.AsBoolean := qryStoreReals.FieldByName('ISSYNC').AsBoolean;
+
+      cdsStoreRealsPartnerId.AsInteger := qryPartnerId.AsInteger;
+      cdsStoreRealsPartnerName.AsString := qryPartnerName.AsString;
+      cdsStoreRealsPriceListId.AsInteger := qryPartnerPRICELISTID.AsInteger;
 
       cdsStoreReals.Post;
 
@@ -1832,9 +2940,79 @@ begin
     qryStoreReals.Close;
   finally
     qryStoreReals.Free;
+    cdsStoreReals.EnableControls;
+    cdsStoreReals.First;
   end;
 end;
 
+{ загрузка остатков из БД всех ТТ}
+procedure TDM.LoadAllStoreReals(AStartDate, AEndDate: TDate);
+var
+  qryStoreReals : TFDQuery;
+begin
+  cdsStoreReals.Open;
+  cdsStoreReals.EmptyDataSet;
+
+  cdsStoreReals.DisableControls;
+  qryStoreReals := TFDQuery.Create(nil);
+  try
+    qryStoreReals.Connection := conMain;
+    qryStoreReals.SQL.Text := 'select MSR.ID, MSR.OPERDATE, MSR.COMMENT, MSR.ISSYNC, MSR.STATUSID, ' +
+      'P.Id PartnerId, J.VALUEDATA PartnerName, P.ADDRESS, PL.ID PRICELISTID ' +
+      'from Movement_StoreReal MSR ' +
+      'JOIN OBJECT_PARTNER P ON P.ID = MSR.PARTNERID ' +
+      'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID AND J.CONTRACTID = P.CONTRACTID ' +
+      'LEFT JOIN Object_PriceList PL ON PL.ID = IFNULL(P.PRICELISTID, :DefaultPriceList) ' +
+      'WHERE DATE(MSR.OPERDATE) BETWEEN :STARTDATE AND :ENDDATE ' +
+      'GROUP BY MSR.ID, MSR.PARTNERID order by PartnerName, Address asc, OPERDATE desc';
+    qryStoreReals.ParamByName('STARTDATE').AsDate := AStartDate;
+    qryStoreReals.ParamByName('ENDDATE').AsDate := AEndDate;
+    qryStoreReals.ParamByName('DefaultPriceList').AsInteger := DM.tblObject_ConstPriceListId_def.AsInteger;
+
+    qryStoreReals.Open;
+
+    qryStoreReals.First;
+    while not qryStoreReals.EOF do
+    begin
+      cdsStoreReals.Append;
+      cdsStoreRealsId.AsInteger := qryStoreReals.FieldByName('ID').AsInteger;
+      cdsStoreRealsComment.AsString := qryStoreReals.FieldByName('COMMENT').AsString;
+      cdsStoreRealsOperDate.AsDateTime := qryStoreReals.FieldByName('OPERDATE').AsDateTime;
+      cdsStoreRealsName.AsString := 'Остатки на ' + FormatDateTime('DD.MM.YYYY', qryStoreReals.FieldByName('OPERDATE').AsDateTime);
+
+      if qryStoreReals.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Complete.AsInteger then
+        cdsStoreRealsStatus.AsString := tblObject_ConstStatusName_Complete.AsString
+      else
+      if qryStoreReals.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_UnComplete.AsInteger then
+        cdsStoreRealsStatus.AsString := tblObject_ConstStatusName_UnComplete.AsString
+      else
+      if qryStoreReals.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Erased.AsInteger then
+        cdsStoreRealsStatus.AsString := tblObject_ConstStatusName_Erased.AsString
+      else
+        cdsStoreRealsStatus.AsString := 'Неизвестный';
+
+      cdsStoreRealsStatusId.AsInteger := qryStoreReals.FieldByName('STATUSID').AsInteger;
+      cdsStoreRealsisSync.AsBoolean := qryStoreReals.FieldByName('ISSYNC').AsBoolean;
+
+      cdsStoreRealsPartnerId.AsInteger := qryStoreReals.FieldByName('PartnerId').AsInteger;
+      cdsStoreRealsPartnerName.AsString := qryStoreReals.FieldByName('PartnerName').AsString;
+      cdsStoreRealsPriceListId.AsInteger := qryStoreReals.FieldByName('PriceListId').AsInteger;
+      cdsStoreRealsAddress.AsString := qryStoreReals.FieldByName('Address').AsString;
+
+      cdsStoreReals.Post;
+
+      qryStoreReals.Next;
+    end;
+
+    qryStoreReals.Close;
+  finally
+    qryStoreReals.Free;
+    cdsStoreReals.EnableControls;
+    cdsStoreReals.First;
+  end;
+end;
+
+{ добавление нового товара в перечень товаров для ввода остатков }
 procedure TDM.AddedGoodsToStoreReal(AGoods : string);
 var
   ArrValue : TArray<string>;
@@ -1853,6 +3031,7 @@ begin
   cdsStoreRealItems.Post;
 end;
 
+{ начитка товаров для ввода остатков из шаблона }
 procedure TDM.DefaultStoreRealItems;
 var
   qryGoodsListSale : TFDQuery;
@@ -1860,16 +3039,18 @@ begin
   cdsStoreRealItems.Open;
   cdsStoreRealItems.EmptyDataSet;
 
+  cdsStoreRealItems.DisableControls;
   qryGoodsListSale := TFDQuery.Create(nil);
   try
     qryGoodsListSale.Connection := conMain;
-    qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || GK.VALUEDATA || '';'' || ' +
-      'M.VALUEDATA || '';0'' ' +
+    qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || ' +
+      'G.VALUEDATA || '';'' || IFNULL(GK.VALUEDATA, ''-'') || '';'' || ' +
+      'IFNULL(M.VALUEDATA, ''-'') || '';0'' ' +
       'from OBJECT_GOODSLISTSALE GLS ' +
       'JOIN OBJECT_GOODS G ON GLS.GOODSID = G.ID ' +
-      'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID AND GK.ISERASED = 0 ' +
-      'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
-      'WHERE GLS.PARTNERID = ' + qryPartnerId.AsString + ' and GLS.ISERASED = 0 order by G.VALUEDATA ';
+      'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID ' +
+      'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+      'WHERE GLS.PARTNERID = ' + cdsStoreRealsPartnerId.AsString + ' and GLS.ISERASED = 0 order by G.VALUEDATA ';
 
     qryGoodsListSale.Open;
 
@@ -1884,9 +3065,12 @@ begin
     qryGoodsListSale.Close;
   finally
     qryGoodsListSale.Free;
+    cdsStoreRealItems.EnableControls;
+    cdsStoreRealItems.First;
   end;
 end;
 
+{ начитка товаров для ввода остатков из БД }
 procedure TDM.LoadStoreRealItems(AId : integer);
 var
   qryGoodsListSale : TFDQuery;
@@ -1894,15 +3078,17 @@ begin
   cdsStoreRealItems.Open;
   cdsStoreRealItems.EmptyDataSet;
 
+  cdsStoreRealItems.DisableControls;
   qryGoodsListSale := TFDQuery.Create(nil);
   try
     qryGoodsListSale.Connection := conMain;
-    qryGoodsListSale.SQL.Text := 'select ISR.ID || '';'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || GK.VALUEDATA || '';'' || ' +
-      'M.VALUEDATA || '';'' || ISR.AMOUNT ' +
+    qryGoodsListSale.SQL.Text := 'select ISR.ID || '';'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || ' +
+      'G.VALUEDATA || '';'' || IFNULL(GK.VALUEDATA, ''-'') || '';'' || ' +
+      'IFNULL(M.VALUEDATA, ''-'') || '';'' || ISR.AMOUNT ' +
       'from MOVEMENTITEM_STOREREAL ISR ' +
       'JOIN OBJECT_GOODS G ON ISR.GOODSID = G.ID ' +
-      'JOIN OBJECT_GOODSKIND GK ON GK.ID = ISR.GOODSKINDID ' +
-      'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
+      'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = ISR.GOODSKINDID ' +
+      'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
       'WHERE ISR.MOVEMENTID = ' + IntToStr(AId) + ' order by G.VALUEDATA ';
 
     qryGoodsListSale.Open;
@@ -1918,58 +3104,42 @@ begin
     qryGoodsListSale.Close;
   finally
     qryGoodsListSale.Free;
+    cdsStoreRealItems.EnableControls;
+    cdsStoreRealItems.First;
   end;
 end;
 
-procedure TDM.qryGoodsForPriceListCalcFields(DataSet: TDataSet);
-var
-  PriceWithoutVat, PriceWithVat : string;
-begin
-  if qryPriceListPriceWithVAT.AsBoolean then
-  begin
-    PriceWithoutVat := FormatFloat('0.00', DataSet.FieldByName('Price').AsFloat * 100 / (100 + qryPriceListVATPercent.AsFloat));
-    PriceWithVat := FormatFloat('0.00', DataSet.FieldByName('Price').AsFloat);
-  end
-  else
-  begin
-    PriceWithoutVat := FormatFloat('0.00', DataSet.FieldByName('Price').AsFloat);
-    PriceWithVat := FormatFloat('0.00', DataSet.FieldByName('Price').AsFloat * (100 + qryPriceListVATPercent.AsFloat) / 100);
-  end;
-
-  DataSet.FieldByName('FullPrice').AsString := 'Цена: ' + PriceWithoutVat +' (с НДС ' + PriceWithVat +
-    ') за ' + DataSet.FieldByName('Measure').AsString;
-end;
-
+{ начитка новых товаров по которым можно ввести остатки }
 procedure TDM.GenerateStoreRealItemsList;
 begin
-  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID GoodsKindID, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ''-'' PromoPrice, ' +
-    'GLK.REMAINS, PI.ORDERPRICE PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
-    'GK.VALUEDATA || '';'' || M.VALUEDATA || '';0'' FullInfo, G.VALUEDATA || '';0'' SearchName ' +
+  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ''-'' PromoPrice, ' +
+    'GLK.REMAINS, PI.ORDERPRICE PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || G.VALUEDATA || '';'' || ' +
+    'IFNULL(GK.VALUEDATA, ''-'') || '';'' || IFNULL(M.VALUEDATA, ''-'') || '';0'' FullInfo, G.VALUEDATA || '';0'' SearchName ' +
     'from OBJECT_GOODS G ' +
-    'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID AND GLK.ISERASED = 0 ' +
-    'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERASED = 0 ' +
-    'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
-    'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
-    'WHERE G.ISERASED = 0 order by Name';
+    'LEFT JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID ' +
+    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID ' +
+    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+    'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+    'WHERE G.ISERASED = 0 order by GoodsName';
 
-  qryGoodsItems.ParamByName('PRICELISTID').AsInteger := DM.qryPartnerPRICELISTID.AsInteger;
+  qryGoodsItems.ParamByName('PRICELISTID').AsInteger := cdsStoreRealsPriceListId.AsInteger;
   qryGoodsItems.Open;
 end;
 
-
-function TDM.SaveOrderExternal(OldOrderExternalId : string; OperDate: TDate;
-  ToralPrice, TotalWeight: Currency; DelItems : string; var ErrorMessage : string) : boolean;
+{ сохранение заявки на товары в БД }
+function TDM.SaveOrderExternal(OperDate: TDate; Comment: string;
+  ToralPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
 var
   GlobalId : TGUID;
-  i, MovementId, NewInvNumber : integer;
+  MovementId, NewInvNumber : integer;
   qryMaxInvNumber : TFDQuery;
+  b : TBookmark;
 begin
   Result := false;
 
-  if OldOrderExternalId = '' then
+  NewInvNumber := 1;
+  if cdsOrderExternalId.AsInteger = -1 then
   begin
-    NewInvNumber := 1;
-
     qryMaxInvNumber := TFDQuery.Create(nil);
     try
       qryMaxInvNumber.Connection := conMain;
@@ -1985,7 +3155,7 @@ begin
   try
     tblMovement_OrderExternal.Open;
 
-    if OldOrderExternalId = '' then
+    if cdsOrderExternalId.AsInteger = -1 then
     begin
       tblMovement_OrderExternal.Append;
 
@@ -1993,14 +3163,19 @@ begin
       tblMovement_OrderExternalGUID.AsString := GUIDToString(GlobalId);
       tblMovement_OrderExternalInvNumber.AsString := IntToStr(NewInvNumber);
       tblMovement_OrderExternalOperDate.AsDateTime := OperDate;
-      tblMovement_OrderExternalStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
-      tblMovement_OrderExternalPartnerId.AsInteger := qryPartnerId.AsInteger;
-      tblMovement_OrderExternalPaidKindId.AsInteger := qryPartnerPaidKindId.AsInteger;
-      tblMovement_OrderExternalContractId.AsInteger := qryPartnerCONTRACTID.AsInteger;
-      tblMovement_OrderExternalPriceListId.AsInteger := qryPartnerPRICELISTID.AsInteger;
-      tblMovement_OrderExternalPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT.AsBoolean;
-      tblMovement_OrderExternalVATPercent.AsFloat := qryPartnerVATPercent.AsFloat;
-      tblMovement_OrderExternalChangePercent.AsFloat := qryPartnerChangePercent.AsFloat;
+      tblMovement_OrderExternalComment.AsString := Comment;
+      if Complete then
+        tblMovement_OrderExternalStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger
+      else
+        tblMovement_OrderExternalStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
+      tblMovement_OrderExternalPartnerId.AsInteger := cdsOrderExternalPartnerId.AsInteger;
+      tblMovement_OrderExternalUnitId.AsInteger := tblObject_ConstUnitId.AsInteger;
+      tblMovement_OrderExternalPaidKindId.AsInteger := cdsOrderExternalPaidKindId.AsInteger;
+      tblMovement_OrderExternalContractId.AsInteger := cdsOrderExternalCONTRACTID.AsInteger;
+      tblMovement_OrderExternalPriceListId.AsInteger := cdsOrderExternalPRICELISTID.AsInteger;
+      tblMovement_OrderExternalPriceWithVAT.AsBoolean := cdsOrderExternalPriceWithVAT.AsBoolean;
+      tblMovement_OrderExternalVATPercent.AsFloat := cdsOrderExternalVATPercent.AsFloat;
+      tblMovement_OrderExternalChangePercent.AsFloat := cdsOrderExternalChangePercent.AsFloat;
       tblMovement_OrderExternalTotalCountKg.AsFloat := TotalWeight;
       tblMovement_OrderExternalTotalSumm.AsFloat := ToralPrice;
       tblMovement_OrderExternalInsertDate.AsDateTime := Now();
@@ -2015,21 +3190,26 @@ begin
     end
     else
     begin
-      if tblMovement_OrderExternal.Locate('Id', OldOrderExternalId) then
+      if tblMovement_OrderExternal.Locate('Id', cdsOrderExternalId.AsInteger) then
       begin
         tblMovement_OrderExternal.Edit;
 
         tblMovement_OrderExternalOperDate.AsDateTime := OperDate;
-        tblMovement_OrderExternalStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
-        tblMovement_OrderExternalPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT.AsBoolean;
-        tblMovement_OrderExternalVATPercent.AsFloat := qryPartnerVATPercent.AsFloat;
-        tblMovement_OrderExternalChangePercent.AsFloat := qryPartnerChangePercent.AsFloat;
+        tblMovement_OrderExternalComment.AsString := Comment;
+        if Complete then
+          tblMovement_OrderExternalStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger
+        else
+          tblMovement_OrderExternalStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
+        tblMovement_OrderExternalUnitId.AsInteger := tblObject_ConstUnitId.AsInteger;
+        tblMovement_OrderExternalPriceWithVAT.AsBoolean := cdsOrderExternalPriceWithVAT.AsBoolean;
+        tblMovement_OrderExternalVATPercent.AsFloat := cdsOrderExternalVATPercent.AsFloat;
+        tblMovement_OrderExternalChangePercent.AsFloat := cdsOrderExternalChangePercent.AsFloat;
         tblMovement_OrderExternalTotalCountKg.AsFloat := TotalWeight;
         tblMovement_OrderExternalTotalSumm.AsFloat := ToralPrice;
 
         tblMovement_OrderExternal.Post;
 
-        MovementId := StrToInt(OldOrderExternalId);
+        MovementId := cdsOrderExternalId.AsInteger;
       end
       else
       begin
@@ -2056,7 +3236,7 @@ begin
           tblMovementItem_OrderExternalGoodsKindId.AsInteger := FieldbyName('KindID').AsInteger;
           tblMovementItem_OrderExternalAmount.AsFloat := FieldbyName('Count').AsFloat;
           tblMovementItem_OrderExternalPrice.AsFloat := FieldbyName('Price').AsFloat;
-          tblMovementItem_OrderExternalChangePercent.AsFloat := DM.qryPartnerChangePercent.AsFloat;
+          tblMovementItem_OrderExternalChangePercent.AsFloat := cdsOrderExternalChangePercent.AsFloat;
 
           tblMovementItem_OrderExternal.Post;
         end
@@ -2066,7 +3246,7 @@ begin
           begin
             tblMovementItem_OrderExternal.Edit;
 
-            tblMovementItem_OrderExternalChangePercent.AsFloat := DM.qryPartnerChangePercent.AsFloat;
+            tblMovementItem_OrderExternalChangePercent.AsFloat := cdsOrderExternalChangePercent.AsFloat;
             tblMovementItem_OrderExternalAmount.AsFloat := FieldbyName('Count').AsFloat;
             tblMovementItem_OrderExternalPrice.AsFloat := FieldbyName('Price').AsFloat;
 
@@ -2083,20 +3263,38 @@ begin
 
     conMain.Commit;
 
-    if OldOrderExternalId = '' then
-      LoadOrderExternal(IntToStr(MovementId))
-    else
-    begin
+    //обновляем данные в локальном хранилище
+    cdsOrderExternal.DisableControls;
+    try
       cdsOrderExternal.Edit;
 
+      cdsOrderExternalId.AsInteger := MovementId;
+
       cdsOrderExternalOperDate.AsDateTime := OperDate;
+      cdsOrderExternalComment.AsString := Comment;
       cdsOrderExternalName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', OperDate);
-      cdsOrderExternalPrice.AsString :=  'Стоимость: ' + FormatFloat('0.00', ToralPrice);
-      cdsOrderExternalWeigth.AsString := 'Вес: ' + FormatFloat('0.00', TotalWeight);
-      cdsOrderExternalStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_Complete.AsString;
+      cdsOrderExternalPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', ToralPrice);
+      cdsOrderExternalWeight.AsString := 'Вес: ' + FormatFloat(',0.00', TotalWeight);
+      if Complete then
+      begin
+        cdsOrderExternalStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
+        cdsOrderExternalStatus.AsString := tblObject_ConstStatusName_Complete.AsString;
+      end
+      else
+      begin
+        cdsOrderExternalStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
+        cdsOrderExternalStatus.AsString := tblObject_ConstStatusName_UnComplete.AsString;
+      end;
 
       cdsOrderExternal.Post;
+    finally
+      cdsOrderExternal.EnableControls;
+
+      b:= cdsOrderExternal.Bookmark;
+      cdsOrderExternal.First;
+      cdsOrderExternal.GotoBookmark(b);
     end;
+    //=========
 
     Result := true;
   except
@@ -2108,29 +3306,62 @@ begin
   end;
 end;
 
-procedure TDM.LoadOrderExternal(AId : string = '');
+{ создание новой заявки для выбранной ТТ (болванка) }
+procedure TDM.NewOrderExternal;
+begin
+  cdsOrderExternal.DisableControls;
+  try
+    cdsOrderExternal.First;
+    cdsOrderExternal.Insert;
+
+    cdsOrderExternalId.AsInteger := -1;
+    cdsOrderExternalOperDate.AsDateTime := Date();
+    cdsOrderExternalComment.AsString := '';
+    cdsOrderExternalName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', Date());
+    cdsOrderExternalPrice.AsString :=  'Стоимость: 0';
+    cdsOrderExternalWeight.AsString := 'Вес: 0';
+    cdsOrderExternalStatus.AsString := tblObject_ConstStatusName_UnComplete.AsString;
+    cdsOrderExternalStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
+    cdsOrderExternalisSync.AsBoolean := false;
+
+    cdsOrderExternalPartnerId.AsInteger := qryPartnerId.AsInteger;
+    cdsOrderExternalPaidKindId.AsInteger := qryPartnerPaidKindId.AsInteger;
+    cdsOrderExternalContractId.AsInteger := qryPartnerCONTRACTID.AsInteger;
+    cdsOrderExternalPriceListId.AsInteger := qryPartnerPRICELISTID.AsInteger;
+    cdsOrderExternalPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT.AsBoolean;
+    cdsOrderExternalVATPercent.AsFloat := qryPartnerVATPercent.AsFloat;
+    cdsOrderExternalChangePercent.AsFloat := qryPartnerChangePercent.AsFloat;
+    cdsOrderExternalCalcDayCount.AsFloat := qryPartnerCalcDayCount.AsFloat;
+    cdsOrderExternalOrderDayCount.AsFloat := qryPartnerOrderDayCount.AsFloat;
+    cdsOrderExternalisOperDateOrder.AsBoolean := qryPartnerisOperDateOrder.AsBoolean;
+    cdsOrderExternalAddress.AsString := qryPartnerAddress.AsString;
+    cdsOrderExternalPartnerName.AsString := qryPartnerName.AsString;
+    cdsOrderExternalContractName.AsString := qryPartnerContractName.AsString;
+
+    cdsOrderExternal.Post;
+  finally
+    cdsOrderExternal.EnableControls;
+  end;
+end;
+
+{ начитка заявок на товары из БД }
+procedure TDM.LoadOrderExternal;
 var
   qryOrderExternal : TFDQuery;
 begin
-  if AId = '' then
-  begin
-    cdsOrderExternal.Open;
-    cdsOrderExternal.EmptyDataSet;
-  end;
+  cdsOrderExternal.Open;
+  cdsOrderExternal.EmptyDataSet;
 
+  cdsOrderExternal.DisableControls;
   qryOrderExternal := TFDQuery.Create(nil);
   try
     qryOrderExternal.Connection := conMain;
-    qryOrderExternal.SQL.Text := 'select ID, OPERDATE, TOTALCOUNTKG, TOTALSUMM, ISSYNC, STATUSID' +
+    qryOrderExternal.SQL.Text := 'select ID, OPERDATE, COMMENT, TOTALCOUNTKG, TOTALSUMM, ISSYNC, STATUSID' +
       ' from MOVEMENT_ORDEREXTERNAL' +
       ' where PARTNERID = ' + qryPartnerId.AsString + ' and CONTRACTID = ' + qryPartnerCONTRACTID.AsString +
-      ' and STATUSID <> ' + tblObject_ConstStatusId_Erased.AsString;
-    if AId <> '' then
-      qryOrderExternal.SQL.Text := qryOrderExternal.SQL.Text + ' and ID = ' + AId;
-    qryOrderExternal.SQL.Text := qryOrderExternal.SQL.Text + ' order by OPERDATE desc';
+      ' order by OPERDATE desc';
 
     qryOrderExternal.Open;
-    cdsOrderExternal.Open;
 
     qryOrderExternal.First;
     while not qryOrderExternal.EOF do
@@ -2138,20 +3369,38 @@ begin
       cdsOrderExternal.Append;
       cdsOrderExternalid.AsInteger := qryOrderExternal.FieldByName('ID').AsInteger;
       cdsOrderExternalOperDate.AsDateTime := qryOrderExternal.FieldByName('OPERDATE').AsDateTime;
+      cdsOrderExternalComment.AsString := qryOrderExternal.FieldByName('COMMENT').AsString;
       cdsOrderExternalName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', qryOrderExternal.FieldByName('OPERDATE').AsDateTime);
-      cdsOrderExternalPrice.AsString :=  'Стоимость: ' + FormatFloat('0.00', qryOrderExternal.FieldByName('TOTALSUMM').AsFloat);
-      cdsOrderExternalWeigth.AsString := 'Вес: ' + FormatFloat('0.00', qryOrderExternal.FieldByName('TOTALCOUNTKG').AsFloat);
+      cdsOrderExternalPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', qryOrderExternal.FieldByName('TOTALSUMM').AsFloat);
+      cdsOrderExternalWeight.AsString := 'Вес: ' + FormatFloat(',0.00', qryOrderExternal.FieldByName('TOTALCOUNTKG').AsFloat);
 
       if qryOrderExternal.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Complete.AsInteger then
-        cdsOrderExternalStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_Complete.AsString
+        cdsOrderExternalStatus.AsString := tblObject_ConstStatusName_Complete.AsString
       else
       if qryOrderExternal.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_UnComplete.AsInteger then
-        cdsOrderExternalStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_UnComplete.AsString
+        cdsOrderExternalStatus.AsString := tblObject_ConstStatusName_UnComplete.AsString
       else
       if qryOrderExternal.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Erased.AsInteger then
-        cdsOrderExternalStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_Erased.AsString
+        cdsOrderExternalStatus.AsString := tblObject_ConstStatusName_Erased.AsString
       else
-        cdsOrderExternalStatus.AsString := 'Статус: Неизвестный';
+        cdsOrderExternalStatus.AsString := 'Неизвестный';
+
+      cdsOrderExternalStatusId.AsInteger := qryOrderExternal.FieldByName('STATUSID').AsInteger;
+      cdsOrderExternalisSync.AsBoolean := qryOrderExternal.FieldByName('ISSYNC').AsBoolean;
+
+      cdsOrderExternalPartnerId.AsInteger := qryPartnerId.AsInteger;
+      cdsOrderExternalPaidKindId.AsInteger := qryPartnerPaidKindId.AsInteger;
+      cdsOrderExternalContractId.AsInteger := qryPartnerCONTRACTID.AsInteger;
+      cdsOrderExternalPriceListId.AsInteger := qryPartnerPRICELISTID.AsInteger;
+      cdsOrderExternalPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT.AsBoolean;
+      cdsOrderExternalVATPercent.AsFloat := qryPartnerVATPercent.AsFloat;
+      cdsOrderExternalChangePercent.AsFloat := qryPartnerChangePercent.AsFloat;
+      cdsOrderExternalCalcDayCount.AsFloat := qryPartnerCalcDayCount.AsFloat;
+      cdsOrderExternalOrderDayCount.AsFloat := qryPartnerOrderDayCount.AsFloat;
+      cdsOrderExternalisOperDateOrder.AsBoolean := qryPartnerisOperDateOrder.AsBoolean;
+      cdsOrderExternalAddress.AsString := qryPartnerAddress.AsString;
+      cdsOrderExternalPartnerName.AsString := qryPartnerName.AsString;
+      cdsOrderExternalContractName.AsString := qryPartnerContractName.AsString;
 
       cdsOrderExternal.Post;
 
@@ -2161,9 +3410,94 @@ begin
     qryOrderExternal.Close;
   finally
     qryOrderExternal.Free;
+    cdsOrderExternal.EnableControls;
+    cdsOrderExternal.First;
   end;
 end;
 
+{ загрузка заявок на товары из БД всех ТТ}
+procedure TDM.LoadAllOrderExternal(AStartDate, AEndDate: TDate);
+var
+  qryOrderExternal : TFDQuery;
+begin
+  cdsOrderExternal.Open;
+  cdsOrderExternal.EmptyDataSet;
+
+  cdsOrderExternal.DisableControls;
+  qryOrderExternal := TFDQuery.Create(nil);
+  try
+
+    qryOrderExternal.Connection := conMain;
+    qryOrderExternal.SQL.Text := 'select MOE.ID, MOE.OPERDATE, MOE.COMMENT, MOE.TOTALCOUNTKG, MOE.TOTALSUMM, MOE.ISSYNC, MOE.STATUSID, ' +
+      'P.Id PartnerId, J.VALUEDATA PartnerName, P.ADDRESS, PL.ID PRICELISTID, PL.PRICEWITHVAT, PL.VATPERCENT, ' +
+      'P.CONTRACTID, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, C.PAIDKINDID, C.CHANGEPERCENT, ' +
+      'P.CalcDayCount, P.OrderDayCount, P.isOperDateOrder ' +
+      'from MOVEMENT_ORDEREXTERNAL MOE ' +
+      'JOIN OBJECT_PARTNER P ON P.ID = MOE.PARTNERID AND P.CONTRACTID = MOE.CONTRACTID ' +
+      'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID AND J.CONTRACTID = P.CONTRACTID ' +
+      'LEFT JOIN Object_PriceList PL ON PL.ID = IFNULL(P.PRICELISTID, :DefaultPriceList) ' +
+      'LEFT JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID ' +
+      'WHERE DATE(MOE.OPERDATE) BETWEEN :STARTDATE AND :ENDDATE ' +
+      'GROUP BY MOE.ID, MOE.PARTNERID, MOE.CONTRACTID order by PartnerName, P.Address, P.ContractId asc, MOE.OPERDATE desc';
+    qryOrderExternal.ParamByName('STARTDATE').AsDate := AStartDate;
+    qryOrderExternal.ParamByName('ENDDATE').AsDate := AEndDate;
+    qryOrderExternal.ParamByName('DefaultPriceList').AsInteger := DM.tblObject_ConstPriceListId_def.AsInteger;
+
+    qryOrderExternal.Open;
+
+    qryOrderExternal.First;
+    while not qryOrderExternal.EOF do
+    begin
+      cdsOrderExternal.Append;
+      cdsOrderExternalid.AsInteger := qryOrderExternal.FieldByName('ID').AsInteger;
+      cdsOrderExternalOperDate.AsDateTime := qryOrderExternal.FieldByName('OPERDATE').AsDateTime;
+      cdsOrderExternalComment.AsString := qryOrderExternal.FieldByName('COMMENT').AsString;
+      cdsOrderExternalName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', qryOrderExternal.FieldByName('OPERDATE').AsDateTime);
+      cdsOrderExternalPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', qryOrderExternal.FieldByName('TOTALSUMM').AsFloat);
+      cdsOrderExternalWeight.AsString := 'Вес: ' + FormatFloat(',0.00', qryOrderExternal.FieldByName('TOTALCOUNTKG').AsFloat);
+
+      if qryOrderExternal.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Complete.AsInteger then
+        cdsOrderExternalStatus.AsString := tblObject_ConstStatusName_Complete.AsString
+      else
+      if qryOrderExternal.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_UnComplete.AsInteger then
+        cdsOrderExternalStatus.AsString := tblObject_ConstStatusName_UnComplete.AsString
+      else
+      if qryOrderExternal.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Erased.AsInteger then
+        cdsOrderExternalStatus.AsString := tblObject_ConstStatusName_Erased.AsString
+      else
+        cdsOrderExternalStatus.AsString := 'Неизвестный';
+
+      cdsOrderExternalStatusId.AsInteger := qryOrderExternal.FieldByName('STATUSID').AsInteger;
+      cdsOrderExternalisSync.AsBoolean := qryOrderExternal.FieldByName('ISSYNC').AsBoolean;
+
+      cdsOrderExternalPartnerId.AsInteger := qryOrderExternal.FieldByName('PartnerId').AsInteger;
+      cdsOrderExternalPaidKindId.AsInteger := qryOrderExternal.FieldByName('PaidKindId').AsInteger;
+      cdsOrderExternalContractId.AsInteger := qryOrderExternal.FieldByName('CONTRACTID').AsInteger;
+      cdsOrderExternalPriceListId.AsInteger := qryOrderExternal.FieldByName('PRICELISTID').AsInteger;
+      cdsOrderExternalPriceWithVAT.AsBoolean := qryOrderExternal.FieldByName('PriceWithVAT').AsBoolean;
+      cdsOrderExternalVATPercent.AsFloat := qryOrderExternal.FieldByName('VATPercent').AsFloat;
+      cdsOrderExternalChangePercent.AsFloat := qryOrderExternal.FieldByName('ChangePercent').AsFloat;
+      cdsOrderExternalCalcDayCount.AsFloat := qryOrderExternal.FieldByName('CalcDayCount').AsFloat;
+      cdsOrderExternalOrderDayCount.AsFloat := qryOrderExternal.FieldByName('OrderDayCount').AsFloat;
+      cdsOrderExternalisOperDateOrder.AsBoolean := qryOrderExternal.FieldByName('isOperDateOrder').AsBoolean;
+      cdsOrderExternalAddress.AsString := qryOrderExternal.FieldByName('Address').AsString;
+      cdsOrderExternalPartnerName.AsString := qryOrderExternal.FieldByName('PartnerName').AsString;
+      cdsOrderExternalContractName.AsString := qryOrderExternal.FieldByName('ContractName').AsString;
+
+      cdsOrderExternal.Post;
+
+      qryOrderExternal.Next;
+    end;
+
+    qryOrderExternal.Close;
+  finally
+    qryOrderExternal.Free;
+    cdsOrderExternal.EnableControls;
+    cdsOrderExternal.First;
+  end;
+end;
+
+{ добавление новых товаров в перечень товаров для заявки }
 procedure TDM.AddedGoodsToOrderExternal(AGoods : string);
 var
   ArrValue : TArray<string>;
@@ -2180,7 +3514,7 @@ begin
   cdsOrderItemsGoodsName.AsString := ArrValue[3];      // название товара
   cdsOrderItemsKindName.AsString := ArrValue[4];  // вид товара
 
-  if (ArrValue[5] = '0') or (qryPartnerCalcDayCount.AsFloat = 0) then // рекомендуемое количество
+  if (ArrValue[5] = '0') or (cdsOrderExternalCalcDayCount.AsFloat = 0) then // рекомендуемое количество
     cdsOrderItemsRecommend.AsString := '-'
   else
   begin
@@ -2188,12 +3522,12 @@ begin
       cdsOrderItemsRecommend.AsString := '0'
     else
     begin
-      Recommend := (StrToFloatDef(ArrValue[5], 0) - StrToFloatDef(ArrValue[6], 0)) / qryPartnerCalcDayCount.AsFloat *
-        qryPartnerOrderDayCount.AsFloat - StrToFloatDef(ArrValue[6], 0);
+      Recommend := (StrToFloatDef(ArrValue[5], 0) - StrToFloatDef(ArrValue[6], 0)) / cdsOrderExternalCalcDayCount.AsFloat *
+        cdsOrderExternalOrderDayCount.AsFloat - StrToFloatDef(ArrValue[6], 0);
       if Recommend <= 0 then
         cdsOrderItemsRecommend.AsString := '0'
       else
-        cdsOrderItemsRecommend.AsString := FormatFloat('0.00', Recommend);
+        cdsOrderItemsRecommend.AsString := FormatFloat(',0.00', Recommend);
     end;
   end;
 
@@ -2222,6 +3556,7 @@ begin
   cdsOrderItems.Post;
 end;
 
+{ начитка товаров для заявки из шаблона }
 procedure TDM.DefaultOrderExternalItems;
 var
   qryGoodsListSale : TFDQuery;
@@ -2230,40 +3565,41 @@ begin
   cdsOrderItems.Open;
   cdsOrderItems.EmptyDataSet;
 
+  cdsOrderItems.DisableControls;;
   qryGoodsListSale := TFDQuery.Create(nil);
   try
     qryGoodsListSale.Connection := conMain;
 
-    if qryPartnerisOperDateOrder.AsBoolean then
+    if cdsOrderExternalisOperDateOrder.AsBoolean then
       PriceField := 'OrderPrice'
     else
       PriceField := 'SalePrice';
 
-    if qryPartnerPriceWithVAT.AsBoolean then
+    if cdsOrderExternalPriceWithVAT.AsBoolean then
       PromoPriceField := 'PriceWithVAT'
     else
       PromoPriceField := 'PriceWithOutVAT';
 
-    qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
-      'GK.VALUEDATA || '';'' || GLS.AMOUNTCALC || '';'' || IFNULL(SRI.AMOUNT, 0) || '';'' || ' +
-      'PI.' + PriceField + ' || '';'' || M.VALUEDATA || '';'' || G.WEIGHT || '';'' || ' +
+    qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || G.VALUEDATA || '';'' || ' +
+      'IFNULL(GK.VALUEDATA, ''-'') || '';'' || GLS.AMOUNTCALC || '';'' || IFNULL(SRI.AMOUNT, 0) || '';'' || ' +
+      'IFNULL(PI.' + PriceField + ', 0) || '';'' || IFNULL(M.VALUEDATA, ''-'') || '';'' || G.WEIGHT || '';'' || ' +
       'IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 1) || '';0''' +
       'from OBJECT_GOODSLISTSALE GLS ' +
       'JOIN OBJECT_GOODS G ON GLS.GOODSID = G.ID ' +
-      'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID AND GK.ISERASED = 0 ' +
+      'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID ' +
       'LEFT JOIN MOVEMENT_STOREREAL SR ON SR.PARTNERID = :PARTNERID ' +
       'AND DATE(SR.OPERDATE) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', Date())) + ' AND SR.STATUSID <> ' + tblObject_ConstStatusId_Erased.AsString + ' ' +
       'LEFT JOIN MOVEMENTITEM_STOREREAL SRI ON SRI.GOODSID = G.ID AND SRI.GOODSKINDID = GK.ID AND SRI.MOVEMENTID = SR.ID ' +
-      'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
-      'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+      'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+      'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
       'LEFT JOIN MOVEMENTITEM_PROMOGOODS PG ON PG.MOVEMENTID = PP.MOVEMENTID and PG.GOODSID = G.ID and (PG.GOODSKINDID = GK.ID or PG.GOODSKINDID = 0) ' +
       'LEFT JOIN MOVEMENTITEM_PROMOPARTNER PP ON PP.PARTNERID = :PARTNERID  and (PP.CONTRACTID = :CONTRACTID or PP.CONTRACTID = 0) ' +
       'LEFT JOIN MOVEMENT_PROMO P ON P.ID = PP.MOVEMENTID ' +
       'WHERE GLS.PARTNERID = :PARTNERID and GLS.ISERASED = 0 order by G.VALUEDATA ';
 
-    qryGoodsListSale.ParamByName('PARTNERID').AsInteger := qryPartnerId.AsInteger;
-    qryGoodsListSale.ParamByName('CONTRACTID').AsInteger := qryPartnerCONTRACTID.AsInteger;
-    qryGoodsListSale.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID.AsInteger;
+    qryGoodsListSale.ParamByName('PARTNERID').AsInteger := cdsOrderExternalPartnerId.AsInteger;
+    qryGoodsListSale.ParamByName('CONTRACTID').AsInteger := cdsOrderExternalCONTRACTID.AsInteger;
+    qryGoodsListSale.ParamByName('PRICELISTID').AsInteger := cdsOrderExternalPRICELISTID.AsInteger;
     qryGoodsListSale.Open;
 
     qryGoodsListSale.First;
@@ -2277,9 +3613,12 @@ begin
     qryGoodsListSale.Close;
   finally
     qryGoodsListSale.Free;
+    cdsOrderItems.EnableControls;
+    cdsOrderItems.First;
   end;
 end;
 
+{ начитка товаров для заявки из БД }
 procedure TDM.LoadOrderExtrenalItems(AId : integer);
 var
   qryGoodsListOrder : TFDQuery;
@@ -2288,41 +3627,42 @@ begin
   cdsOrderItems.Open;
   cdsOrderItems.EmptyDataSet;
 
+  cdsOrderItems.DisableControls;
   qryGoodsListOrder := TFDQuery.Create(nil);
   try
     qryGoodsListOrder.Connection := conMain;
 
-    if qryPartnerisOperDateOrder.AsBoolean then
+    if cdsOrderExternalisOperDateOrder.AsBoolean then
       PriceField := 'OrderPrice'
     else
       PriceField := 'SalePrice';
 
-    if qryPartnerPriceWithVAT.AsBoolean then
+    if cdsOrderExternalPriceWithVAT.AsBoolean then
       PromoPriceField := 'PriceWithVAT'
     else
       PromoPriceField := 'PriceWithOutVAT';
 
-    qryGoodsListOrder.SQL.Text := 'select IEO.ID || '';'' || G.ID || '';'' || GK.ID || '';'' || ' +
-      'G.VALUEDATA || '';'' || GK.VALUEDATA || '';'' || 0 || '';'' || IFNULL(SRI.AMOUNT, 0) || '';'' || ' +
-      'PI.' + PriceField + ' || '';'' || M.VALUEDATA || '';'' || G.WEIGHT || '';'' || ' +
+    qryGoodsListOrder.SQL.Text := 'select IEO.ID || '';'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || ' +
+      'G.VALUEDATA || '';'' || IFNULL(GK.VALUEDATA, ''-'') || '';'' || 0 || '';'' || IFNULL(SRI.AMOUNT, 0) || '';'' || ' +
+      'IFNULL(PI.' + PriceField + ', 0) || '';'' || IFNULL(M.VALUEDATA, ''-'') || '';'' || G.WEIGHT || '';'' || ' +
       'IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 1) || '';'' || IEO.AMOUNT ' +
       'from MOVEMENTITEM_ORDEREXTERNAL IEO ' +
       'JOIN OBJECT_GOODS G ON IEO.GOODSID = G.ID ' +
-      'JOIN OBJECT_GOODSKIND GK ON GK.ID = IEO.GOODSKINDID ' +
+      'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = IEO.GOODSKINDID ' +
       'LEFT JOIN MOVEMENT_STOREREAL SR ON SR.PARTNERID = :PARTNERID' +
       ' AND DATE(SR.OPERDATE) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', Date())) + ' AND SR.STATUSID <> ' + tblObject_ConstStatusId_Erased.AsString + ' ' +
       'LEFT JOIN MOVEMENTITEM_STOREREAL SRI ON SRI.GOODSID = G.ID AND SRI.GOODSKINDID = GK.ID AND SRI.MOVEMENTID = SR.ID ' +
-      'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-      'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+      'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+      'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
       'LEFT JOIN MOVEMENTITEM_PROMOGOODS PG ON PG.MOVEMENTID = PP.MOVEMENTID and PG.GOODSID = G.ID and (PG.GOODSKINDID = GK.ID or PG.GOODSKINDID = 0) ' +
       'LEFT JOIN MOVEMENTITEM_PROMOPARTNER PP ON PP.PARTNERID = :PARTNERID  and (PP.CONTRACTID = :CONTRACTID or PP.CONTRACTID = 0) ' +
       'LEFT JOIN MOVEMENT_PROMO P ON P.ID = PP.MOVEMENTID ' +
       'WHERE IEO.MOVEMENTID = ' + IntToStr(AId) + ' order by G.VALUEDATA ';
 
 
-    qryGoodsListOrder.ParamByName('PARTNERID').AsInteger := qryPartnerId.AsInteger;
-    qryGoodsListOrder.ParamByName('CONTRACTID').AsInteger := qryPartnerCONTRACTID.AsInteger;
-    qryGoodsListOrder.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID.AsInteger;
+    qryGoodsListOrder.ParamByName('PARTNERID').AsInteger := cdsOrderExternalPartnerId.AsInteger;
+    qryGoodsListOrder.ParamByName('CONTRACTID').AsInteger := cdsOrderExternalCONTRACTID.AsInteger;
+    qryGoodsListOrder.ParamByName('PRICELISTID').AsInteger := cdsOrderExternalPRICELISTID.AsInteger;
     qryGoodsListOrder.Open;
 
     qryGoodsListOrder.First;
@@ -2336,58 +3676,61 @@ begin
     qryGoodsListOrder.Close;
   finally
     qryGoodsListOrder.Free;
+    cdsOrderItems.EnableControls;
+    cdsOrderItems.First;
   end;
 end;
 
+{ начитка новых товаров, которые можно внести в заявку }
 procedure TDM.GenerateOrderExtrenalItemsList;
 var
   PriceField, PromoPriceField : string;
 begin
-  if qryPartnerisOperDateOrder.AsBoolean then
+  if cdsOrderExternalisOperDateOrder.AsBoolean then
     PriceField := 'OrderPrice'
   else
     PriceField := 'SalePrice';
 
-  if qryPartnerPriceWithVAT.AsBoolean then
+  if cdsOrderExternalPriceWithVAT.AsBoolean then
     PromoPriceField := 'PriceWithVAT'
   else
     PromoPriceField := 'PriceWithOutVAT';
 
-  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID GoodsKindID, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, IFNULL(' + PromoPriceField + ', ''-'') PromoPrice, ' +
-    'GLK.REMAINS, PI.' + PriceField + ' PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
-    'GK.VALUEDATA || '';'' || 0 || '';'' || 0 || '';'' || PI.' + PriceField + ' || '';'' || ' +
-    'M.VALUEDATA || '';'' || G.WEIGHT || '';'' || IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 1) || '';0'' FullInfo, ' +
+  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, IFNULL(' + PromoPriceField + ' || '''', ''-'') PromoPrice, ' +
+    'GLK.REMAINS, PI.' + PriceField + ' PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || G.VALUEDATA || '';'' || ' +
+    'IFNULL(GK.VALUEDATA, ''-'') || '';'' || 0 || '';'' || 0 || '';'' || IFNULL(PI.' + PriceField + ', ''0'') || '';'' || ' +
+    'IFNULL(M.VALUEDATA, ''-'') || '';'' || G.WEIGHT || '';'' || IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 1) || '';0'' FullInfo, ' +
     'G.VALUEDATA || CASE WHEN ' + PromoPriceField + ' IS NULL THEN '';0'' ELSE '';1'' END SearchName ' +
     'from OBJECT_GOODS G ' +
-    'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID AND GLK.ISERASED = 0 ' +
-    'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERASED = 0 ' +
-    'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
-    'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+    'LEFT JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID ' +
+    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID ' +
+    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+    'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
     'LEFT JOIN MOVEMENTITEM_PROMOGOODS PG ON PG.MOVEMENTID = PP.MOVEMENTID and PG.GOODSID = G.ID and (PG.GOODSKINDID = GK.ID or PG.GOODSKINDID = 0) ' +
     'LEFT JOIN MOVEMENTITEM_PROMOPARTNER PP ON PP.PARTNERID = :PARTNERID  and (PP.CONTRACTID = :CONTRACTID or PP.CONTRACTID = 0) ' +
     'LEFT JOIN MOVEMENT_PROMO P ON P.ID = PP.MOVEMENTID ' +
-    'WHERE G.ISERASED = 0 order by Name';
+    'WHERE G.ISERASED = 0 order by GoodsName';
 
-  qryGoodsItems.ParamByName('PARTNERID').AsInteger := qryPartnerId.AsInteger;
-  qryGoodsItems.ParamByName('CONTRACTID').AsInteger := qryPartnerCONTRACTID.AsInteger;
-  qryGoodsItems.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID.AsInteger;
+  qryGoodsItems.ParamByName('PARTNERID').AsInteger := cdsOrderExternalPartnerId.AsInteger;
+  qryGoodsItems.ParamByName('CONTRACTID').AsInteger := cdsOrderExternalCONTRACTID.AsInteger;
+  qryGoodsItems.ParamByName('PRICELISTID').AsInteger := cdsOrderExternalPRICELISTID.AsInteger;
   qryGoodsItems.Open;
 end;
 
-
-function TDM.SaveReturnIn(OldReturnInId : string; OperDate: TDate; Comment : string;
-  ToralPrice, TotalWeight: Currency; DelItems : string; var ErrorMessage : string) : boolean;
+{ сохранение возвратов в БД }
+function TDM.SaveReturnIn(OperDate: TDate; Comment : string;
+  ToralPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
 var
   GlobalId : TGUID;
-  i, MovementId, NewInvNumber : integer;
+  MovementId, NewInvNumber : integer;
   qryMaxInvNumber : TFDQuery;
+  b : TBookmark;
 begin
   Result := false;
 
-  if OldReturnInId = '' then
+  NewInvNumber := 1;
+  if cdsReturnInId.AsInteger = -1 then
   begin
-    NewInvNumber := 1;
-
     qryMaxInvNumber := TFDQuery.Create(nil);
     try
       qryMaxInvNumber.Connection := conMain;
@@ -2403,7 +3746,7 @@ begin
   try
     tblMovement_ReturnIn.Open;
 
-    if OldReturnInId = '' then
+    if cdsReturnInId.AsInteger = -1 then
     begin
       tblMovement_ReturnIn.Append;
 
@@ -2412,13 +3755,17 @@ begin
       tblMovement_ReturnInInvNumber.AsString := IntToStr(NewInvNumber);
       tblMovement_ReturnInOperDate.AsDateTime := OperDate;
       tblMovement_ReturnInComment.AsString := Comment;
-      tblMovement_ReturnInStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
-      tblMovement_ReturnInPartnerId.AsInteger := qryPartnerId.AsInteger;
-      tblMovement_ReturnInPaidKindId.AsInteger := qryPartnerPaidKindId.AsInteger;
-      tblMovement_ReturnInContractId.AsInteger := qryPartnerCONTRACTID.AsInteger;
-      tblMovement_ReturnInPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT.AsBoolean;
-      tblMovement_ReturnInVATPercent.AsFloat := qryPartnerVATPercent.AsFloat;
-      tblMovement_ReturnInChangePercent.AsFloat := qryPartnerChangePercent.AsFloat;
+      if Complete then
+        tblMovement_ReturnInStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger
+      else
+        tblMovement_ReturnInStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
+      tblMovement_ReturnInPartnerId.AsInteger := cdsReturnInPartnerId.AsInteger;
+      tblMovement_ReturnInUnitId.AsInteger := tblObject_ConstUnitId_ret.AsInteger;
+      tblMovement_ReturnInPaidKindId.AsInteger := cdsReturnInPaidKindId.AsInteger;
+      tblMovement_ReturnInContractId.AsInteger := cdsReturnInCONTRACTID.AsInteger;
+      tblMovement_ReturnInPriceWithVAT.AsBoolean := cdsReturnInPriceWithVAT.AsBoolean;
+      tblMovement_ReturnInVATPercent.AsFloat := cdsReturnInVATPercent.AsFloat;
+      tblMovement_ReturnInChangePercent.AsFloat := cdsReturnInChangePercent.AsFloat;
       tblMovement_ReturnInTotalCountKg.AsFloat := TotalWeight;
       tblMovement_ReturnInTotalSummPVAT.AsFloat := ToralPrice;
       tblMovement_ReturnInInsertDate.AsDateTime := Now();
@@ -2433,22 +3780,26 @@ begin
     end
     else
     begin
-      if tblMovement_ReturnIn.Locate('Id', OldReturnInId) then
+      if tblMovement_ReturnIn.Locate('Id', cdsReturnInId.AsInteger) then
       begin
         tblMovement_ReturnIn.Edit;
 
         tblMovement_ReturnInOperDate.AsDateTime := OperDate;
         tblMovement_ReturnInComment.AsString := Comment;
-        tblMovement_ReturnInStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
-        tblMovement_ReturnInPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT.AsBoolean;
-        tblMovement_ReturnInVATPercent.AsFloat := qryPartnerVATPercent.AsFloat;
-        tblMovement_ReturnInChangePercent.AsFloat := qryPartnerChangePercent.AsFloat;
+        if Complete then
+          tblMovement_ReturnInStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger
+        else
+          tblMovement_ReturnInStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
+        tblMovement_ReturnInUnitId.AsInteger := tblObject_ConstUnitId_ret.AsInteger;
+        tblMovement_ReturnInPriceWithVAT.AsBoolean := cdsReturnInPriceWithVAT.AsBoolean;
+        tblMovement_ReturnInVATPercent.AsFloat := cdsReturnInVATPercent.AsFloat;
+        tblMovement_ReturnInChangePercent.AsFloat := cdsReturnInChangePercent.AsFloat;
         tblMovement_ReturnInTotalCountKg.AsFloat := TotalWeight;
         tblMovement_ReturnInTotalSummPVAT.AsFloat := ToralPrice;
 
         tblMovement_ReturnIn.Post;
 
-        MovementId := StrToInt(OldReturnInId);
+        MovementId := cdsReturnInId.AsInteger;
       end
       else
       begin
@@ -2475,7 +3826,7 @@ begin
           tblMovementItem_ReturnInGoodsKindId.AsInteger := FieldbyName('KindID').AsInteger;
           tblMovementItem_ReturnInAmount.AsFloat := FieldbyName('Count').AsFloat;
           tblMovementItem_ReturnInPrice.AsFloat := FieldbyName('Price').AsFloat;
-          tblMovementItem_ReturnInChangePercent.AsFloat := DM.qryPartnerChangePercent.AsFloat;
+          tblMovementItem_ReturnInChangePercent.AsFloat := cdsReturnInChangePercent.AsFloat;
 
           tblMovementItem_ReturnIn.Post;
         end
@@ -2485,7 +3836,7 @@ begin
           begin
             tblMovementItem_ReturnIn.Edit;
 
-            tblMovementItem_ReturnInChangePercent.AsFloat := DM.qryPartnerChangePercent.AsFloat;
+            tblMovementItem_ReturnInChangePercent.AsFloat := cdsReturnInChangePercent.AsFloat;
             tblMovementItem_ReturnInAmount.AsFloat := FieldbyName('Count').AsFloat;
             tblMovementItem_ReturnInPrice.AsFloat := FieldbyName('Price').AsFloat;
 
@@ -2502,21 +3853,39 @@ begin
 
     conMain.Commit;
 
-    if OldReturnInId = '' then
-      LoadReturnIn(IntToStr(MovementId))
-    else
-    begin
+    //обновляем данные в локальном хранилище
+    cdsReturnIn.DisableControls;
+    try
       cdsReturnIn.Edit;
+
+      cdsReturnInId.AsInteger := MovementId;
 
       cdsReturnInOperDate.AsDateTime := OperDate;
       cdsReturnInComment.AsString := Comment;
-      cdsReturnInName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', OperDate);
-      cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat('0.00', ToralPrice);
-      cdsReturnInWeigth.AsString := 'Вес: ' + FormatFloat('0.00', TotalWeight);
-      cdsReturnInStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_Complete.AsString;
+      cdsReturnInName.AsString := 'Возврат от ' + FormatDateTime('DD.MM.YYYY', OperDate);
+      cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', ToralPrice);
+      cdsReturnInWeight.AsString := 'Вес: ' + FormatFloat(',0.00', TotalWeight);
+
+      if Complete then
+      begin
+        cdsReturnInStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
+        cdsReturnInStatus.AsString := tblObject_ConstStatusName_Complete.AsString;
+      end
+      else
+      begin
+        cdsReturnInStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
+        cdsReturnInStatus.AsString := tblObject_ConstStatusName_UnComplete.AsString;
+      end;
 
       cdsReturnIn.Post;
+    finally
+      cdsReturnIn.EnableControls;
+
+      b:= cdsReturnIn.Bookmark;
+      cdsReturnIn.First;
+      cdsReturnIn.GotoBookmark(b);
     end;
+    //=========
 
     Result := true;
   except
@@ -2528,29 +3897,60 @@ begin
   end;
 end;
 
-procedure TDM.LoadReturnIn(AId : string = '');
+{ создание нового возврата для выбранной ТТ (болванка) }
+procedure TDM.NewReturnIn;
+begin
+  cdsReturnIn.DisableControls;
+  try
+    cdsReturnIn.First;
+    cdsReturnIn.Insert;
+
+    cdsReturnInId.AsInteger := -1;
+    cdsReturnInOperDate.AsDateTime := Date();
+    cdsReturnInComment.AsString := '';
+    cdsReturnInName.AsString := 'Возврат от ' + FormatDateTime('DD.MM.YYYY', Date());
+    cdsReturnInPrice.AsString :=  'Стоимость: 0';
+    cdsReturnInWeight.AsString := 'Вес: 0';
+    cdsReturnInStatus.AsString := tblObject_ConstStatusName_UnComplete.AsString;
+
+    cdsReturnInStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
+    cdsReturnInisSync.AsBoolean := false;
+
+    cdsReturnInPartnerId.AsInteger := qryPartnerId.AsInteger;
+    cdsReturnInPartnerName.AsString := qryPartnerName.AsString;
+    cdsReturnInAddress.AsString := qryPartnerAddress.AsString;
+    cdsReturnInContractId.AsInteger := qryPartnerCONTRACTID.AsInteger;
+    cdsReturnInContractName.AsString := qryPartnerContractName.AsString;
+    cdsReturnInPaidKindId.AsInteger := qryPartnerPaidKindId.AsInteger;
+    cdsReturnInPriceListId.AsInteger := qryPartnerPRICELISTID_RET.AsInteger;
+    cdsReturnInPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT_RET.AsBoolean;
+    cdsReturnInVATPercent.AsFloat := qryPartnerVATPercent_RET.AsFloat;
+    cdsReturnInChangePercent.AsFloat := qryPartnerChangePercent.AsFloat;
+
+    cdsReturnIn.Post;
+  finally
+    cdsReturnIn.EnableControls;
+  end;
+end;
+
+{ начитка возвратов из БД }
+procedure TDM.LoadReturnIn;
 var
   qryReturnIn : TFDQuery;
 begin
-  if AId = '' then
-  begin
-    cdsReturnIn.Open;
-    cdsReturnIn.EmptyDataSet;
-  end;
+  cdsReturnIn.Open;
+  cdsReturnIn.EmptyDataSet;
 
+  cdsReturnIn.DisableControls;
   qryReturnIn := TFDQuery.Create(nil);
   try
     qryReturnIn.Connection := conMain;
     qryReturnIn.SQL.Text := 'select ID, OPERDATE, TOTALCOUNTKG, TOTALSUMMPVAT, ISSYNC, STATUSID, COMMENT' +
       ' from MOVEMENT_RETURNIN' +
       ' where PARTNERID = ' + qryPartnerId.AsString + ' and CONTRACTID = ' + qryPartnerCONTRACTID.AsString +
-      ' and STATUSID <> ' + tblObject_ConstStatusId_Erased.AsString;
-    if AId <> '' then
-      qryReturnIn.SQL.Text := qryReturnIn.SQL.Text + ' and ID = ' + AId;
-    qryReturnIn.SQL.Text := qryReturnIn.SQL.Text + ' order by OPERDATE desc';
+      ' order by OPERDATE desc';
 
     qryReturnIn.Open;
-    cdsReturnIn.Open;
 
     qryReturnIn.First;
     while not qryReturnIn.EOF do
@@ -2559,20 +3959,34 @@ begin
       cdsReturnInId.AsInteger := qryReturnIn.FieldByName('ID').AsInteger;
       cdsReturnInOperDate.AsDateTime := qryReturnIn.FieldByName('OPERDATE').AsDateTime;
       cdsReturnInComment.AsString := qryReturnIn.FieldByName('COMMENT').AsString;
-      cdsReturnInName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', qryReturnIn.FieldByName('OPERDATE').AsDateTime);
-      cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat('0.00', qryReturnIn.FieldByName('TOTALSUMMPVAT').AsFloat);
-      cdsReturnInWeigth.AsString := 'Вес: ' + FormatFloat('0.00', qryReturnIn.FieldByName('TOTALCOUNTKG').AsFloat);
+      cdsReturnInName.AsString := 'Возврат от ' + FormatDateTime('DD.MM.YYYY', qryReturnIn.FieldByName('OPERDATE').AsDateTime);
+      cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', qryReturnIn.FieldByName('TOTALSUMMPVAT').AsFloat);
+      cdsReturnInWeight.AsString := 'Вес: ' + FormatFloat(',0.00', qryReturnIn.FieldByName('TOTALCOUNTKG').AsFloat);
 
       if qryReturnIn.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Complete.AsInteger then
-        cdsReturnInStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_Complete.AsString
+        cdsReturnInStatus.AsString := tblObject_ConstStatusName_Complete.AsString
       else
       if qryReturnIn.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_UnComplete.AsInteger then
-        cdsReturnInStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_UnComplete.AsString
+        cdsReturnInStatus.AsString := tblObject_ConstStatusName_UnComplete.AsString
       else
       if qryReturnIn.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Erased.AsInteger then
-        cdsReturnInStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_Erased.AsString
+        cdsReturnInStatus.AsString := tblObject_ConstStatusName_Erased.AsString
       else
-        cdsReturnInStatus.AsString := 'Статус: Неизвестный';
+        cdsReturnInStatus.AsString := 'Неизвестный';
+
+      cdsReturnInStatusId.AsInteger := qryReturnIn.FieldByName('STATUSID').AsInteger;
+      cdsReturnInisSync.AsBoolean := qryReturnIn.FieldByName('ISSYNC').AsBoolean;
+
+      cdsReturnInPartnerId.AsInteger := qryPartnerId.AsInteger;
+      cdsReturnInPartnerName.AsString := qryPartnerName.AsString;
+      cdsReturnInAddress.AsString := qryPartnerAddress.AsString;
+      cdsReturnInContractId.AsInteger := qryPartnerCONTRACTID.AsInteger;
+      cdsReturnInContractName.AsString := qryPartnerContractName.AsString;
+      cdsReturnInPaidKindId.AsInteger := qryPartnerPaidKindId.AsInteger;
+      cdsReturnInPriceListId.AsInteger := qryPartnerPRICELISTID_RET.AsInteger;
+      cdsReturnInPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT_RET.AsBoolean;
+      cdsReturnInVATPercent.AsFloat := qryPartnerVATPercent_RET.AsFloat;
+      cdsReturnInChangePercent.AsFloat := qryPartnerChangePercent.AsFloat;
 
       cdsReturnIn.Post;
 
@@ -2582,13 +3996,91 @@ begin
     qryReturnIn.Close;
   finally
     qryReturnIn.Free;
+    cdsReturnIn.EnableControls;
+    cdsReturnIn.First;
   end;
 end;
 
+{ начитка возвратов из БД всех ТТ }
+procedure TDM.LoadAllReturnIn(AStartDate, AEndDate: TDate);
+var
+  qryReturnIn : TFDQuery;
+begin
+  cdsReturnIn.Open;
+  cdsReturnIn.EmptyDataSet;
+
+  cdsReturnIn.DisableControls;
+  qryReturnIn := TFDQuery.Create(nil);
+  try
+    qryReturnIn.Connection := conMain;
+    qryReturnIn.SQL.Text := 'select MRI.ID, MRI.OPERDATE, MRI.COMMENT, MRI.TOTALCOUNTKG, MRI.TOTALSUMMPVAT, MRI.ISSYNC, MRI.STATUSID, ' +
+      'P.Id PartnerId, J.VALUEDATA PartnerName, P.ADDRESS, PL.ID PRICELISTID, PL.PRICEWITHVAT, PL.VATPERCENT, ' +
+      'P.CONTRACTID, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, C.PAIDKINDID, C.CHANGEPERCENT ' +
+      'from MOVEMENT_RETURNIN MRI ' +
+      'JOIN OBJECT_PARTNER P ON P.ID = MRI.PARTNERID AND P.CONTRACTID = MRI.CONTRACTID ' +
+      'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID AND J.CONTRACTID = P.CONTRACTID ' +
+      'LEFT JOIN Object_PriceList PL ON PL.ID = IFNULL(P.PRICELISTID_RET, :DefaultPriceList) ' +
+      'LEFT JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID ' +
+      'WHERE DATE(MRI.OPERDATE) BETWEEN :STARTDATE AND :ENDDATE ' +
+      'GROUP BY MRI.ID, MRI.PARTNERID, MRI.CONTRACTID order by PartnerName, P.Address, P.ContractId asc, MRI.OPERDATE desc';
+    qryReturnIn.ParamByName('STARTDATE').AsDate := AStartDate;
+    qryReturnIn.ParamByName('ENDDATE').AsDate := AEndDate;
+    qryReturnIn.ParamByName('DefaultPriceList').AsInteger := DM.tblObject_ConstPriceListId_def.AsInteger;
+
+    qryReturnIn.Open;
+
+    qryReturnIn.First;
+    while not qryReturnIn.EOF do
+    begin
+      cdsReturnIn.Append;
+      cdsReturnInId.AsInteger := qryReturnIn.FieldByName('ID').AsInteger;
+      cdsReturnInOperDate.AsDateTime := qryReturnIn.FieldByName('OPERDATE').AsDateTime;
+      cdsReturnInComment.AsString := qryReturnIn.FieldByName('COMMENT').AsString;
+      cdsReturnInName.AsString := 'Возврат от ' + FormatDateTime('DD.MM.YYYY', qryReturnIn.FieldByName('OPERDATE').AsDateTime);
+      cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', qryReturnIn.FieldByName('TOTALSUMMPVAT').AsFloat);
+      cdsReturnInWeight.AsString := 'Вес: ' + FormatFloat(',0.00', qryReturnIn.FieldByName('TOTALCOUNTKG').AsFloat);
+
+      if qryReturnIn.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Complete.AsInteger then
+        cdsReturnInStatus.AsString := tblObject_ConstStatusName_Complete.AsString
+      else
+      if qryReturnIn.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_UnComplete.AsInteger then
+        cdsReturnInStatus.AsString := tblObject_ConstStatusName_UnComplete.AsString
+      else
+      if qryReturnIn.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Erased.AsInteger then
+        cdsReturnInStatus.AsString := tblObject_ConstStatusName_Erased.AsString
+      else
+        cdsReturnInStatus.AsString := 'Неизвестный';
+
+      cdsReturnInStatusId.AsInteger := qryReturnIn.FieldByName('STATUSID').AsInteger;
+      cdsReturnInisSync.AsBoolean := qryReturnIn.FieldByName('ISSYNC').AsBoolean;
+
+      cdsReturnInPartnerId.AsInteger := qryReturnIn.FieldByName('PartnerId').AsInteger;
+      cdsReturnInPartnerName.AsString := qryReturnIn.FieldByName('PartnerName').AsString;
+      cdsReturnInAddress.AsString := qryReturnIn.FieldByName('Address').AsString;
+      cdsReturnInContractId.AsInteger := qryReturnIn.FieldByName('CONTRACTID').AsInteger;
+      cdsReturnInContractName.AsString := qryReturnIn.FieldByName('ContractName').AsString;
+      cdsReturnInPaidKindId.AsInteger := qryReturnIn.FieldByName('PaidKindId').AsInteger;
+      cdsReturnInPriceListId.AsInteger := qryReturnIn.FieldByName('PRICELISTID').AsInteger;
+      cdsReturnInPriceWithVAT.AsBoolean := qryReturnIn.FieldByName('PriceWithVAT').AsBoolean;
+      cdsReturnInVATPercent.AsFloat := qryReturnIn.FieldByName('VATPercent').AsFloat;
+      cdsReturnInChangePercent.AsFloat := qryReturnIn.FieldByName('ChangePercent').AsFloat;
+      cdsReturnIn.Post;
+
+      qryReturnIn.Next;
+    end;
+
+    qryReturnIn.Close;
+  finally
+    qryReturnIn.Free;
+    cdsReturnIn.EnableControls;
+    cdsReturnIn.First;
+  end;
+end;
+
+{ добавление новых товаров в перечень товаров для возврата }
 procedure TDM.AddedGoodsToReturnIn(AGoods : string);
 var
   ArrValue : TArray<string>;
-  Recommend : Extended;
 begin
   ArrValue := AGoods.Split([';']); //Id;GoodsId;GoodsKindID;название товара;вид товара;цена;единица измерения;вес;количество по умолчанию
 
@@ -2607,6 +4099,7 @@ begin
   cdsReturnInItems.Post;
 end;
 
+{ начитка товаров для возврата из шаблона }
 procedure TDM.DefaultReturnInItems;
 var
   qryGoodsListSale : TFDQuery;
@@ -2614,21 +4107,22 @@ begin
   cdsReturnInItems.Open;
   cdsReturnInItems.EmptyDataSet;
 
+  cdsReturnInItems.DisableControls;
   qryGoodsListSale := TFDQuery.Create(nil);
   try
     qryGoodsListSale.Connection := conMain;
 
-    qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
-      'GK.VALUEDATA || '';'' || PI.OrderPrice || '';'' || M.VALUEDATA || '';'' || G.WEIGHT || '';0''' +
+    qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || G.VALUEDATA || '';'' || ' +
+      'IFNULL(GK.VALUEDATA, ''-'') || '';'' || IFNULL(PI.OrderPrice, 0) || '';'' || IFNULL(M.VALUEDATA, ''-'') || '';'' || G.WEIGHT || '';0''' +
       'from OBJECT_GOODSLISTSALE GLS ' +
       'JOIN OBJECT_GOODS G ON GLS.GOODSID = G.ID ' +
-      'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID AND GK.ISERASED = 0 ' +
-      'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
-      'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+      'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID ' +
+      'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+      'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
       'WHERE GLS.PARTNERID = :PARTNERID and GLS.ISERASED = 0 order by G.VALUEDATA ';
 
-    qryGoodsListSale.ParamByName('PARTNERID').AsInteger := qryPartnerId.AsInteger;
-    qryGoodsListSale.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID.AsInteger;
+    qryGoodsListSale.ParamByName('PARTNERID').AsInteger := cdsReturnInPartnerId.AsInteger;
+    qryGoodsListSale.ParamByName('PRICELISTID').AsInteger := cdsReturnInPRICELISTID.AsInteger;
     qryGoodsListSale.Open;
 
     qryGoodsListSale.First;
@@ -2642,9 +4136,12 @@ begin
     qryGoodsListSale.Close;
   finally
     qryGoodsListSale.Free;
+    cdsReturnInItems.EnableControls;
+    cdsReturnInItems.First;
   end;
 end;
 
+{ начитка товаров для возврата из БД }
 procedure TDM.LoadReturnInItems(AId : integer);
 var
   qryGoodsListReturn : TFDQuery;
@@ -2652,21 +4149,22 @@ begin
   cdsReturnInItems.Open;
   cdsReturnInItems.EmptyDataSet;
 
+  cdsReturnInItems.DisableControls;
   qryGoodsListReturn := TFDQuery.Create(nil);
   try
     qryGoodsListReturn.Connection := conMain;
 
-    qryGoodsListReturn.SQL.Text := 'select IR.ID || '';'' || G.ID || '';'' || GK.ID || '';'' || ' +
-      'G.VALUEDATA || '';'' || GK.VALUEDATA || '';'' || PI.OrderPrice || '';'' || M.VALUEDATA || '';'' || ' +
-      'G.WEIGHT || '';'' || IR.AMOUNT ' +
+    qryGoodsListReturn.SQL.Text := 'select IR.ID || '';'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || ' +
+      'G.VALUEDATA || '';'' || IFNULL(GK.VALUEDATA, ''-'') || '';'' || IFNULL(PI.OrderPrice, 0) || '';'' || ' +
+      'IFNULL(M.VALUEDATA, ''-'') || '';'' || G.WEIGHT || '';'' || IR.AMOUNT ' +
       'from MOVEMENTITEM_RETURNIN IR ' +
-      'JOIN OBJECT_GOODS G ON IR.GOODSID = G.ID ' +
-      'JOIN OBJECT_GOODSKIND GK ON GK.ID = IR.GOODSKINDID ' +
-      'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-      'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+      'JOIN OBJECT_GOODS G ON G.ID = IR.GOODSID ' +
+      'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = IR.GOODSKINDID ' +
+      'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+      'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
       'WHERE IR.MOVEMENTID = ' + IntToStr(AId) + ' order by G.VALUEDATA ';
 
-    qryGoodsListReturn.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID.AsInteger;
+    qryGoodsListReturn.ParamByName('PRICELISTID').AsInteger := cdsReturnInPRICELISTID.AsInteger;
     qryGoodsListReturn.Open;
 
     qryGoodsListReturn.First;
@@ -2680,31 +4178,34 @@ begin
     qryGoodsListReturn.Close;
   finally
     qryGoodsListReturn.Free;
+    cdsReturnInItems.EnableControls;
+    cdsReturnInItems.First;
   end;
 end;
 
+{ начитка новых товаров, которые можно вернуть }
 procedure TDM.GenerateReturnInItemsList;
 begin
-  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID GoodsKindID, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ''-'' PromoPrice, ' +
-    'GLK.REMAINS, PI.OrderPrice PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
-    'GK.VALUEDATA || '';'' || PI.OrderPrice || '';'' || ' + 'M.VALUEDATA || '';'' || G.WEIGHT || '';0'' FullInfo, ' +
+  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ''-'' PromoPrice, ' +
+    'GLK.REMAINS, PI.OrderPrice PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || G.VALUEDATA || '';'' || ' +
+    'IFNULL(GK.VALUEDATA, ''-'') || '';'' || IFNULL(PI.OrderPrice, 0) || '';'' || IFNULL(M.VALUEDATA, ''-'') || '';'' || G.WEIGHT || '';0'' FullInfo, ' +
     'G.VALUEDATA || '';0'' SearchName ' +
     'from OBJECT_GOODS G ' +
-    'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID AND GLK.ISERASED = 0 ' +
-    'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERASED = 0 ' +
-    'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
-    'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
-    'WHERE G.ISERASED = 0 order by Name';
+    'LEFT JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID ' +
+    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID ' +
+    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+    'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+    'WHERE G.ISERASED = 0 order by GoodsName';
 
-  qryGoodsItems.ParamByName('PRICELISTID').AsInteger := qryPartnerPRICELISTID.AsInteger;
+  qryGoodsItems.ParamByName('PRICELISTID').AsInteger := cdsReturnInPRICELISTID.AsInteger;
   qryGoodsItems.Open;
 end;
 
-
+{ сохранение группы фотографий в БД }
 procedure TDM.SavePhotoGroup(AGroupName: string);
 var
   GlobalId : TGUID;
-  i, MovementId, NewInvNumber : integer;
+  NewInvNumber : integer;
   qryMaxInvNumber : TFDQuery;
 begin
   NewInvNumber := 1;
@@ -2727,12 +4228,13 @@ begin
     CreateGUID(GlobalId);
     tblMovement_VisitGUID.AsString := GUIDToString(GlobalId);
     tblMovement_VisitInvNumber.AsString := IntToStr(NewInvNumber);
-    tblMovement_VisitOperDate.AsDateTime := Now();
+    tblMovement_VisitOperDate.AsDateTime := Date();
     tblMovement_VisitPartnerId.AsInteger := qryPartnerId.AsInteger;
     if Trim(AGroupName) <> '' then
       tblMovement_VisitComment.AsString := AGroupName
     else
       tblMovement_VisitComment.AsString := 'Общая';
+    tblMovement_VisitInsertDate.AsDateTime := Now();
     tblMovement_VisitStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
     tblMovement_VisitisSync.AsBoolean := false;
 
@@ -2747,73 +4249,235 @@ begin
   end;
 end;
 
+{ начитка групп фотографий из БД }
 procedure TDM.LoadPhotoGroups;
 begin
-  qryPhotoGroups.Open('select Id, Comment, StatusId from Movement_Visit where PartnerId = ' + qryPartnerId.AsString +
+  qryPhotoGroups.Close;
+  qryPhotoGroups.Open('select Id, Comment, StatusId, OperDate, isSync ' +
+    ' from Movement_Visit where PartnerId = ' + qryPartnerId.AsString +
     ' and StatusId <> ' + tblObject_ConstStatusId_Erased.AsString);
 end;
 
-
-function TDM.GenerateJuridicalCollation(DateStart, DateEnd: TDate; JuridicalId, ContractId: integer): boolean;
-var
-  x : integer;
-  FieldName : string;
-  GetStoredProc : TdsdStoredProc;
+{ начитка групп фотографий из БД для всех ТТ }
+procedure TDM.LoadAllPhotoGroups;
 begin
-  GetStoredProc := TdsdStoredProc.Create(nil);
+  qryPhotoGroupDocs.Close;
+  qryPhotoGroupDocs.SQL.Text := 'select MV.Id, MV.Comment, MV.StatusId, MV.OperDate, MV.isSync, ' +
+    'P.Id PartnerId, J.VALUEDATA PartnerName, P.ADDRESS ' +
+    'FROM Movement_Visit MV ' +
+    'JOIN OBJECT_PARTNER P ON P.ID = MV.PARTNERID ' +
+    'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID AND J.CONTRACTID = P.CONTRACTID ' +
+    'WHERE DATE(MV.OPERDATE) BETWEEN :STARTDATE AND :ENDDATE AND MV.StatusId <> ' + tblObject_ConstStatusId_Erased.AsString + ' ' +
+    'GROUP BY MV.ID, MV.PARTNERID order by PartnerName, Address asc, OPERDATE desc';
+  qryPhotoGroupDocs.ParamByName('STARTDATE').AsDate := AStartDate;
+  qryPhotoGroupDocs.ParamByName('ENDDATE').AsDate := AEndDate;
+  qryPhotoGroupDocs.Open;
+end;
+
+
+{ получение данных для акта сверки }
+procedure TDM.GenerateJuridicalCollation(ADateStart, ADateEnd: TDate;
+  AJuridicalId, APartnerId, AContractId, APaidKindId: integer);
+begin
+  DM.cdsJuridicalCollation.EmptyDataSet;
+
+  WaitThread := TWaitThread.Create(true);
+  WaitThread.FreeOnTerminate := true;
+  WaitThread.TaskName := 'JuridicalCollation';
+  WaitThread.DateStart := ADateStart;
+  WaitThread.DateEnd := ADateEnd;
+  WaitThread.JuridicalId := AJuridicalId;
+  WaitThread.PartnerId := APartnerId;
+  WaitThread.ContractId := AContractId;
+  WaitThread.PaidKindId := APaidKindId;
+  WaitThread.Start;
+end;
+
+{ начитка заданий контрагента из БД }
+function TDM.LoadTasks(Active: TActiveMode; SaveData: boolean = true; ADate: TDate = 0; APartnerId: integer = 0): integer;
+var
+  DateSql, WhereSql : string;
+begin
+  if ADate = 0 then
+    DateSql := 'JOIN MOVEMENT_TASK TM ON TM.ID = TI.MOVEMENTID '
+  else
+    DateSql := 'JOIN MOVEMENT_TASK TM ON TM.ID = TI.MOVEMENTID AND DATE(TM.OPERDATE) = :TASKDATE ';
+
+  if Active <> amAll then
+    WhereSql := 'WHERE TI.CLOSED = :CLOSED '
+  else
+    WhereSql := 'WHERE 1 = 1 ';
+
+  if APartnerId <> 0 then
+    WhereSql := WhereSql + 'AND TI.PARTNERID = ' + IntToStr(APartnerId) + ' ';
+
+  qrySelect.SQL.Text := 'SELECT TI.ID, TI.PARTNERID, TI.CLOSED, TI.DESCRIPTION, TI.COMMENT, ' +
+    'TM.OPERDATE, TM.INVNUMBER, P.VALUEDATA PartnerName ' +
+    'FROM MOVEMENTITEM_TASK TI ' +
+    DateSql +
+    'LEFT JOIN OBJECT_PARTNER P ON P.ID = TI.PARTNERID ' +
+    WhereSql+
+    'GROUP BY TI.ID ORDER BY TM.OPERDATE DESC';
+
+  if ADate <> 0 then
+    qrySelect.ParamByName('TASKDATE').AsDate := ADate;
+
+  if Active = amOpen then
+    qrySelect.ParamByName('CLOSED').AsBoolean := false
+  else
+  if Active = amClose then
+    qrySelect.ParamByName('CLOSED').AsBoolean := true;
+
+  cdsTasks.EmptyDataSet;
+  qrySelect.Open;
   try
-    GetStoredProc.StoredProcName := 'gpReport_JuridicalCollation';
-    GetStoredProc.OutputType := otDataSet;
-    GetStoredProc.DataSet := TClientDataSet.Create(nil);
+    Result := qrySelect.RecordCount;
 
-    GetStoredProc.Params.AddParam('inStartDate', ftDateTime, ptInput, DateStart);
-    GetStoredProc.Params.AddParam('inEndDate', ftDateTime, ptInput, DateEnd);
-    GetStoredProc.Params.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
-    GetStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, 0);
-    GetStoredProc.Params.AddParam('inContractId', ftInteger, ptInput, ContractId);
-    GetStoredProc.Params.AddParam('inAccountId', ftInteger, ptInput, 0);
-    GetStoredProc.Params.AddParam('inPaidKindId', ftInteger, ptInput, 0);
-    GetStoredProc.Params.AddParam('inInfoMoneyId', ftInteger, ptInput, 0);
-    GetStoredProc.Params.AddParam('inCurrencyId', ftInteger, ptInput, 0);
-    GetStoredProc.Params.AddParam('inMovementId_Partion', ftInteger, ptInput, 0);
+    if SaveData then
+    begin
+      qrySelect.First;
 
-    try
-      GetStoredProc.Execute(false, false, true);
-
-
-      with GetStoredProc.DataSet do
+      while not qrySelect.Eof do
       begin
-        First;
+        cdsTasks.Append;
 
-        while not Eof do
-        begin
-          cdsJuridicalCollation.Append;
+        cdsTasksId.AsInteger := qrySelect.FieldByName('Id').AsInteger;
+        cdsTasksInvNumber.AsString := qrySelect.FieldByName('InvNumber').AsString;
+        cdsTasksOperDate.AsDateTime := qrySelect.FieldByName('OperDate').AsDateTime;
+        cdsTasksPartnerId.AsInteger := qrySelect.FieldByName('PartnerId').AsInteger;
+        cdsTasksClosed.AsBoolean := qrySelect.FieldByName('Closed').AsBoolean;
+        cdsTasksDescription.AsString := qrySelect.FieldByName('Description').AsString;
+        cdsTasksComment.AsString := qrySelect.FieldByName('Comment').AsString;
+        if qrySelect.FieldByName('PartnerName').AsString <> '' then
+          cdsTasksPartnerName.AsString := 'ТТ: ' + qrySelect.FieldByName('PartnerName').AsString;
+        cdsTasksTaskDate.AsString := 'Задание от ' + FormatDateTime('DD.MM.YYYY', cdsTasksOperDate.AsDateTime);
+        cdsTasksTaskDescription.AsString := 'Описание: ' + cdsTasksDescription.AsString;
 
-          cdsJuridicalCollationDocNum.AsString := FieldByName('InvNumber').AsString;
-          cdsJuridicalCollationDocType.AsString := FieldByName('ItemName').AsString;
-          cdsJuridicalCollationDocDate.AsDateTime := FieldByName('OperDate').AsDateTime;
-          cdsJuridicalCollationPaidKind.AsString := FieldByName('PaidKindName').AsString;
-          cdsJuridicalCollationDebet.AsString := FieldByName('Debet').AsString;
-          cdsJuridicalCollationKredit.AsFloat := FieldByName('Kredit').AsFloat;
+        cdsTasks.Post;
 
-          cdsJuridicalCollation.Post;
-
-          Next;
-        end;
+        qrySelect.Next;
       end;
-      ShowMessage(IntToStr(GetStoredProc.DataSet.RecordCount));
 
-
-    except
-      on E : Exception do
-      begin
-        raise Exception.Create(E.Message);
-      end;
+      cdsTasks.First;
     end;
   finally
-    FreeAndNil(GetStoredProc);
+    qrySelect.Close;
   end;
 end;
+
+{ Сохранение в БД отметки о выполнении задания контрагентом }
+function TDM.CloseTask(ATasksId: integer; ATaskComment: string): boolean;
+begin
+  try
+    conMain.ExecSQL('update MovementItem_Task set Closed = 1, Comment = ' + QuotedStr(ATaskComment) +
+      ', ISSYNC = 0 where Id = ' + IntToStr(ATasksId));
+    ShowMessage('Задание отмечено закрытым');
+    Result := true;
+  except
+    ShowMessage('Ошибка при попытке закрыть задание');
+    Result := false;
+  end;
+end;
+
+{ сохранение в БД информации о новой ТТ и юр.лице }
+function TDM.CreateNewPartner(JuridicalId: integer; JuridicalName, Address: string;
+  GPSN, GPSE: Double; var ErrorMessage : string): boolean;
+var
+  GlobalId: TGUID;
+  NewJuridicalId, NewPartnerId: integer;
+  qryNewId: TFDQuery;
+begin
+  Result := false;
+
+  // получение Id для новой юридического лица (если не выбрали из существующих)
+  NewJuridicalId := JuridicalId;
+  if NewJuridicalId = -1 then
+  begin
+    qryNewId := TFDQuery.Create(nil);
+    try
+      qryNewId.Connection := conMain;
+
+      qryNewId.Open('select Min(ID) from OBJECT_JURIDICAL');
+      if (qryNewId.RecordCount > 0) and (qryNewId.Fields[0].AsInteger < 0) then
+        NewJuridicalId := qryNewId.Fields[0].AsInteger - 1;
+    finally
+      FreeAndNil(qryNewId);
+    end;
+  end;
+
+  // получение Id для новой ТТ
+  NewPartnerId := -1;
+  qryNewId := TFDQuery.Create(nil);
+  try
+    qryNewId.Connection := conMain;
+
+    qryNewId.Open('select Min(ID) from OBJECT_PARTNER');
+    if (qryNewId.RecordCount > 0) and (qryNewId.Fields[0].AsInteger < 0) then
+      NewPartnerId := qryNewId.Fields[0].AsInteger - 1;
+  finally
+    FreeAndNil(qryNewId);
+  end;
+
+  conMain.StartTransaction;
+  try
+    if NewJuridicalId < 0 then // необходимо сохранить новое юридическое лицо
+    begin
+      tblObject_Juridical.Open;
+
+      tblObject_Juridical.Append;
+
+      CreateGUID(GlobalId);
+      tblObject_JuridicalId.AsInteger := NewJuridicalId;
+      tblObject_JuridicalContractId.AsInteger := 0;
+      tblObject_JuridicalGUID.AsString := GUIDToString(GlobalId);
+      tblObject_JuridicalValueData.AsString := JuridicalName;
+      tblObject_JuridicalisErased.AsBoolean := false;
+      tblObject_JuridicalisSync.AsBoolean := false;
+
+      tblObject_Juridical.Post;
+    end;
+
+    // сохранение новой ТТ
+    tblObject_Partner.Open;
+
+    tblObject_Partner.Append;
+
+    CreateGUID(GlobalId);
+    tblObject_PartnerId.AsInteger := NewPartnerId;
+    tblObject_PartnerJuridicalId.AsInteger := NewJuridicalId;
+    tblObject_PartnerContractId.AsInteger := 0;
+    tblObject_PartnerGUID.AsString := GUIDToString(GlobalId);
+    tblObject_PartnerAddress.AsString := Address;
+    tblObject_PartnerValueData.AsString := JuridicalName + ' ' + Address;
+    tblObject_PartnerGPSN.AsFloat := GPSN;
+    tblObject_PartnerGPSE.AsFloat := GPSE;
+    tblObject_PartnerSchedule.AsString := 't;t;t;t;t;t;t';
+    tblObject_PartnerPriceListId.AsInteger := tblObject_ConstPriceListId_def.AsInteger;
+    tblObject_PartnerPriceListId_ret.AsInteger := tblObject_ConstPriceListId_def.AsInteger;
+    tblObject_PartnerisErased.AsBoolean := false;
+    tblObject_PartnerisSync.AsBoolean := false;
+
+    tblObject_Partner.Post;
+
+    conMain.Commit;
+
+    tblObject_Partner.Close;
+    tblObject_Juridical.Close;
+
+    Result := true;
+  except
+    on E : Exception do
+    begin
+      conMain.Rollback;
+
+      tblObject_Partner.Close;
+      tblObject_Juridical.Close;
+
+      ErrorMessage := E.Message;
+    end;
+  end;
+end;
+
 
 initialization
 
@@ -2824,4 +4488,5 @@ finalization
 FreeAndNil(Structure);
 
 end.
+
 

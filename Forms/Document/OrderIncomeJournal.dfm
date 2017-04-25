@@ -499,8 +499,8 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 48
-    Top = 64
+    Left = 80
+    Top = 56
     DockControlHeights = (
       0
       0
@@ -641,7 +641,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 80
+    Left = 128
     Top = 64
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -1174,6 +1174,13 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisSnab'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inJuridicalBasisId'
         Value = Null
         Component = JuridicalBasisGuides
@@ -1204,7 +1211,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 112
+    Left = 168
     Top = 64
     object N3: TMenuItem
       Action = actInsert

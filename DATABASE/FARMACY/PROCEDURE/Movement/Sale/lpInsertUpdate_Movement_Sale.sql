@@ -78,6 +78,10 @@ BEGIN
     --PERFORM lpInsertUpdate_MovementString (zc_MovementString_MedicSP(), ioId, inMedicSP);
    
     IF COALESCE(inPartnerMedicalId,0) <> 0 OR COALESCE(inInvNumberSP,'') <> '' THEN
+          IF inOperDateSP > inOperDate
+             THEN
+                 RAISE EXCEPTION 'Проверьте дату рецепта.';
+          END IF;
        -- сохранили <>
        PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateSP(), ioId, inOperDateSP);
     END IF;
@@ -99,6 +103,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 03.04.17         *
  14.02.17         *
  08.02.17         * add SP
  13.10.15                                                                       *

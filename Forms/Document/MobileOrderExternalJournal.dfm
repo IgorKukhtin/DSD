@@ -124,7 +124,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
-          OptionsView.HeaderHeight = 40
+          OptionsView.HeaderHeight = 50
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -438,6 +438,62 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object clInsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1080#1085#1093#1088'. '#1089' '#1084#1086#1073'.'#1091#1089#1090#1088')'
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 76
+          end
+          object clInsertMobileDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1084#1086#1073'.'#1091#1089#1090#1088')'
+            DataBinding.FieldName = 'InsertMobileDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object clInsertName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
+          end
+          object clMemberName: TcxGridDBColumn
+            Caption = #1060#1048#1054
+            DataBinding.FieldName = 'MemberName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object UnitCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087'.'
+            DataBinding.FieldName = 'UnitCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 35
+          end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 130
+          end
+          object PositionName: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'PositionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
           end
         end
       end
@@ -1054,6 +1110,10 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
     Left = 400
     Top = 200
   end
+  inherited spMovementReComplete: TdsdStoredProc
+    Left = 400
+    Top = 144
+  end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
@@ -1181,10 +1241,10 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
     KeyField = 'Id'
     LookupControl = edPersonalTrade
     Key = '0'
-    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.Value = 'TMemberPosition_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMember_ObjectForm'
+    FormName = 'TMemberPosition_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1202,6 +1262,11 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = '149831'
         MultiSelectSeparator = ','
       end>
     Left = 607

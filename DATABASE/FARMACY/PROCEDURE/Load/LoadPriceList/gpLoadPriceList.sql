@@ -66,6 +66,8 @@ BEGIN
           ExpirationDate , -- Партия товара
                  Remains , -- остаток
                 vbUserId)
+        , lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_LastPrice(), GoodsId, vbOperDate)              -- дата прайса --CURRENT_TIMESTAMP
+        , lpInsertUpdate_Goods_CountPrice (vbPriceListId, vbOperDate, GoodsId)
        FROM LoadPriceListItem 
                JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
           LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
@@ -101,6 +103,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 21.04.17         *
  28.01.15                        *  меняем цены в случае изменения прайса
  26.10.14                        *  
  18.09.14                        *  

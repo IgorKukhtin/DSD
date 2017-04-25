@@ -77,10 +77,9 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-			<Debugger_HostApplication>D:\Documents\RAD Studio\Projects\DSD.git\BIN\FarmacyCashServise.exe</Debugger_HostApplication>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.11.32;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-			<VerInfo_Release>11</VerInfo_Release>
-			<VerInfo_Build>32</VerInfo_Build>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.12.5;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Release>12</VerInfo_Release>
+			<VerInfo_Build>5</VerInfo_Build>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
@@ -209,8 +208,8 @@
 				<Form>frmSplash</Form>
 				<FormType>dfm</FormType>
 			</DCCReference>
-			<DCCReference Include="..\FormsFarmacy\Cash\DiscountDialog.pas">
-				<Form>DiscountDialogForm</Form>
+			<DCCReference Include="..\FormsFarmacy\Cash\SPDialog.pas">
+				<Form>SPDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\FormsFarmacy\Cash\VIPDialog.pas">
@@ -227,6 +226,10 @@
 			</DCCReference>
 			<DCCReference Include="..\FormsFarmacy\Cash\LoginFormInh.pas">
 				<Form>LoginForm1</Form>
+			</DCCReference>
+			<DCCReference Include="..\FormsFarmacy\Cash\DiscountDialog.pas">
+				<Form>DiscountDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
@@ -272,7 +275,11 @@
 						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
-					<Excluded_Packages/>
+					<Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl160.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
+					</Excluded_Packages>
 					<Source>
 						<Source Name="MainSource">FarmacyCash.dpr</Source>
 					</Source>

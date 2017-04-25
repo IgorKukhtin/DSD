@@ -151,6 +151,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_ReportCollation_Buh() RETURNS Integer A
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_ReportCollation(), 'zc_ObjectDate_ReportCollation_Buh', 'дата (сдали в бухгалтерию)' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ReportCollation_Buh');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_GoodsListIncome_Last() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_GoodsListIncome_Last'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_GoodsListIncome(), 'zc_ObjectDate_GoodsListIncome_Last', 'последняя дата изм.' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_GoodsListIncome_Last');
+
 
 --!!!FARMACY
 
@@ -202,8 +206,31 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Price_PercentMarkupDateChange() RETURNS
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Price(), 'zc_ObjectDate_Price_PercentMarkupDateChange', 'Дата изменения % наценки' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Price_PercentMarkupDateChange');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Goods_ReestrSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_ReestrSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectDate_Goods_ReestrSP', 'Дата закінчення строку дії реєстраційного посвідчення на лікарський засіб(Соц. проект)' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_ReestrSP');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Protocol_InsertSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Protocol_InsertSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectDate_Protocol_InsertSP', 'Дата создания' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Protocol_InsertSP');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Goods_LastPrice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_LastPrice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectDate_Goods_LastPrice', 'Дата загрузки прайса' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_LastPrice');
+
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_User_UpdateMobileFrom() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_UpdateMobileFrom'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_User(), 'zc_ObjectDate_User_UpdateMobileFrom', 'Дата/время успешной синхронизации с Мобильного устройства' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_UpdateMobileFrom');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_User_UpdateMobileTo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_UpdateMobileTo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_User(), 'zc_ObjectDate_User_UpdateMobileTo', 'Дата/время успешной синхронизации на Мобильное устройство' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_UpdateMobileTo');
+
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 14.04.17         * zc_ObjectDate_GoodsListIncome_Last
+ 04.04.17         * zc_ObjectDate_Goods_ReestrSP
  13.06.16         * add zc_ObjectDate_Unit_FarmacyCash
  03.03.16         *
  14.01.16         * add zc_ObjectDate_Member_StartSummer, zc_ObjectDate_Member_EndSummer

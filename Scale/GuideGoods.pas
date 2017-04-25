@@ -80,6 +80,8 @@ type
     isPromo: TcxGridDBColumn;
     GoodsKindName_max: TcxGridDBColumn;
     GoodsKindId_list: TcxGridDBColumn;
+    gbPrice: TGroupBox;
+    EditPrice: TcxCurrencyEdit;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -127,6 +129,9 @@ type
     procedure actChoiceExecute(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
     procedure actSaveExecute(Sender: TObject);
+    procedure gbWeightValueClick(Sender: TObject);
+    procedure EditPriceKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     fStartWrite:Boolean;
     fEnterGoodsCode:Boolean;
@@ -160,6 +165,10 @@ begin
      fEnterGoodsName:=false;
      fEnterGoodsKindCode:=false;
 
+     gbPrice.Visible:=(GetArrayList_Value_byName(Default_Array,'isEnterPrice') = AnsiUpperCase('TRUE'))
+                  and (execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income);
+     if SettingMain.BranchCode = 301 then EditWeightValue.Properties.DecimalPlaces:= 4;
+
      CancelCxFilter;
      fStartWrite:=true;
 
@@ -167,9 +176,10 @@ begin
      with spSelect do
      begin
        Self.Caption:='Параметры продукции на основании '+execParamsMovement.ParamByName('OrderExternalName_master').asString;
-       Params.ParamByName('inOrderExternalId').Value:=execParamsMovement.ParamByName('OrderExternalId').AsInteger;
-       Params.ParamByName('inMovementId').Value:=execParamsMovement.ParamByName('MovementId').AsInteger;
-       Params.ParamByName('inGoodsCode').Value:=0;
+       Params.ParamByName('inOrderExternalId').Value:= execParamsMovement.ParamByName('OrderExternalId').AsInteger;
+       Params.ParamByName('inMovementId').Value     := execParamsMovement.ParamByName('MovementId').AsInteger;
+       Params.ParamByName('inGoodsCode').Value      := 0;
+       Params.ParamByName('inGoodsName').Value      := '';
        Execute;
      end
      else
@@ -177,8 +187,36 @@ begin
      with spSelect do
      begin
        Self.Caption:='Параметры продукции для покупателя <('+execParamsMovement.ParamByName('FromCode').asString + ')' + execParamsMovement.ParamByName('FromName').asString + '>';
-       Params.ParamByName('inMovementId').Value:= -1 * execParamsMovement.ParamByName('FromId').AsInteger;
        Params.ParamByName('inOrderExternalId').Value:= -1 * execParamsMovement.ParamByName('ContractId').AsInteger;
+       Params.ParamByName('inMovementId').Value     := -1 * execParamsMovement.ParamByName('FromId').AsInteger;
+       Params.ParamByName('inGoodsCode').Value      := 0;
+       Params.ParamByName('inGoodsName').Value      := '';
+       Execute;
+     end
+     else
+     if (execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+     and(SettingMain.BranchCode = 301)
+     then
+     with spSelect do
+     begin
+       Self.Caption:='Параметры продукции для поставщика <('+execParamsMovement.ParamByName('FromCode').asString + ')' + execParamsMovement.ParamByName('FromName').asString + '>';
+       Params.ParamByName('inOrderExternalId').Value:= -1 * execParamsMovement.ParamByName('ContractId').AsInteger;
+       Params.ParamByName('inMovementId').Value     := -1 * execParamsMovement.ParamByName('FromId').AsInteger;
+       Params.ParamByName('inGoodsCode').Value      := 0;
+       Params.ParamByName('inGoodsName').Value      := '';
+       Execute;
+     end
+     else
+     if (execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
+     and(SettingMain.BranchCode = 301)
+     then
+     with spSelect do
+     begin
+       Self.Caption:='Параметры продукции по заявке на <('+execParamsMovement.ParamByName('FromCode').asString + ')' + execParamsMovement.ParamByName('FromName').asString + '>';
+       Params.ParamByName('inOrderExternalId').Value:= 0;
+       Params.ParamByName('inMovementId').Value     := 0;
+       Params.ParamByName('inGoodsCode').Value      := 0;
+       Params.ParamByName('inGoodsName').Value      := '';
        Execute;
      end
      ;
@@ -191,6 +229,17 @@ begin
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName').Index].Visible:= rgGoodsKind.Items.Count > 1; // (execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)or(execParamsMovement.ParamByName('OrderExternalId').AsInteger<>0);
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName_max').Index].VisibleForCustomization:= (rgGoodsKind.Items.Count > 1) and (execParamsMovement.ParamByName('OrderExternalId').AsInteger = 0);
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindId_list').Index].VisibleForCustomization:= (rgGoodsKind.Items.Count > 1) and (execParamsMovement.ParamByName('OrderExternalId').AsInteger = 0);
+
+  if SettingMain.BranchCode = 301 then
+  begin
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isPromo').Index].Visible:= false;
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price').Index].Visible:= false;
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price_Return').Index].Visible:= false;
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount_Weighing').Index].Caption:= 'Расход';
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount_WeighingWeight').Index].Caption:= 'Расход (кол-во)';
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount_OrderWeight').Index].Caption:= 'Заявка (кол-во)';
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount_diffWeight').Index].Caption:= 'Разница (кол-во)';
+  end;
 
   if ParamsMI.ParamByName('GoodsId').AsInteger<>0
   then begin
@@ -209,13 +258,15 @@ begin
             EditTareWeightEnter.Text:='';
 
             EditWeightValue.Text:='0';
+            EditPrice.Text:='0';
 
-            if (CDS.RecordCount=1)and(CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
-            then EditTareCount.Text:='0'
-            else EditTareCount.Text:=GetArrayList_Value_byName(Default_Array,'TareCount');
-            EditTareWeightCode.Text:=    IntToStr(TareWeight_Array[GetArrayList_Index_byNumber(TareWeight_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'TareWeightNumber')))].Code);
+            if (CDS.RecordCount=1)and((CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301))
+            then EditTareCount.Text:= '0'
+            else EditTareCount.Text:= GetArrayList_Value_byName(Default_Array,'TareCount');
+
+            EditTareWeightCode.Text:= IntToStr(TareWeight_Array[GetArrayList_Index_byNumber(TareWeight_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'TareWeightNumber')))].Code);
             EditChangePercentAmountCode.Text:= IntToStr(ChangePercentAmount_Array[GetArrayList_Index_byValue(ChangePercentAmount_Array,ParamsMovement.ParamByName('ChangePercentAmount').AsString)].Code);
-            EditPriceListCode.Text:=     IntToStr(PriceList_Array[GetArrayList_Index_byNumber(PriceList_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'PriceListNumber')))].Code);
+            EditPriceListCode.Text:=  IntToStr(PriceList_Array[GetArrayList_Index_byNumber(PriceList_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'PriceListNumber')))].Code);
 
             if rgGoodsKind.Items.Count>1
             then begin EditGoodsKindCode.Text:=ParamsMI.ParamByName('GoodsKindCode').AsString;
@@ -229,7 +280,7 @@ begin
             end;}
 
             if (CDS.RecordCount<>1) then ActiveControl:=EditGoodsCode
-            else if CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg
+            else if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301)
                  then ActiveControl:=EditWeightValue
                  else ActiveControl:=EditTareCount
   end
@@ -240,6 +291,7 @@ begin
             EditTareWeightEnter.Text:='';
 
             EditWeightValue.Text:='0';
+            EditPrice.Text:='0';
 
             EditTareCount.Text:=         GetArrayList_Value_byName(Default_Array,'TareCount');
             EditTareWeightCode.Text:=    IntToStr(TareWeight_Array[GetArrayList_Index_byNumber(TareWeight_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'TareWeightNumber')))].Code);
@@ -309,29 +361,36 @@ begin
     if Key=13 then
     begin
       if (ActiveControl=EditGoodsCode) then EditGoodsCodeExit(EditGoodsCode);
-      if (ActiveControl=EditGoodsName) then EditGoodsNameExit(EditGoodsName);
+      if (ActiveControl=EditGoodsName)and(trim (EditGoodsName.Text) <> '')and(SettingMain.BranchCode = 301)
+      then begin
+                spSelect.Params.ParamByName('inGoodsCode').Value:= 0;
+                spSelect.Params.ParamByName('inGoodsName').Value:= trim(EditGoodsName.Text);
+                actRefreshExecute(Self);
+      end;
 
       if (ActiveControl=EditGoodsCode)and(CDS.RecordCount=1)
-      then if CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg
+      then if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301)
            then ActiveControl:=EditWeightValue
            else if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
       else
-      if ActiveControl=EditWeightValue
-      then if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
+      if (ActiveControl=EditWeightValue)or(ActiveControl=EditPrice)
+      then if (gbPrice.Visible = TRUE)and (ActiveControl<>EditPrice)
+           then ActiveControl:=EditPrice
+           else if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
       else if (ActiveControl=EditGoodsCode)
            then if (Length(trim(EditGoodsCode.Text))>1)and(CDS.RecordCount>=1)
-                then if CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg
+                then if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301)
                      then ActiveControl:=EditWeightValue
                      else if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
                 else ActiveControl:=EditGoodsName
 
            else if (ActiveControl=EditGoodsName)and(CDS.RecordCount=1)
-                then if CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg
+                then if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301)
                      then ActiveControl:=EditWeightValue
                      else if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
 
                 else if (ActiveControl=EditGoodsName)
-                     then ActiveControl:=EditGoodsCode
+                     then if CDS.RecordCount>1 then ActiveControl:=cxDBGrid else ActiveControl:=EditGoodsCode
                      else if (ActiveControl=cxDBGrid)and(CDS.RecordCount>0)
                           then actChoiceExecute(cxDBGrid)
 
@@ -354,6 +413,11 @@ begin
       then CancelCxFilter
       else actExitExecute(Self);
 end;
+procedure TGuideGoodsForm.gbWeightValueClick(Sender: TObject);
+begin
+
+end;
+
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.CDSFilterRecord(DataSet: TDataSet;var Accept: Boolean);
 var
@@ -469,13 +533,28 @@ begin
             ShowMessage('Ошибка.Количество за минусом тары не может быть меньше 0.');
             exit;
        end;
+
+       //ПРОВЕРКА - Ввод ЦЕНА
+       if gbPrice.Visible then
+       begin
+            //!!!Криво - передаем цену через этот параметр!!!
+            try ParamsMI.ParamByName('BoxCount').AsFloat:= StrToFloat(EditPrice.Text);
+            except
+                  ParamsMI.ParamByName('BoxCount').AsFloat:= 0;
+            end;
+            if ParamsMI.ParamByName('BoxCount').AsFloat <=0
+            then begin
+                     ShowMessage('Ошибка.ЦЕНА не может быть <= 0.');
+                     exit;
+            end;
+       end;
      end;
      //
      //Save MI
      if Result = TRUE then
      begin
           //если не ШТ, проверка стабильности - т.е. вес такой же как и был
-          if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Kg
+          if (CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Kg) and (SettingMain.BranchCode <> 301)
           then begin
                     //получили еще раз
                     WeightReal_check:=MainForm.fGetScale_CurrentWeight;
@@ -545,8 +624,11 @@ begin
      if (CDS.Filtered=false)and(Length(trim(EditGoodsCode.Text))>0)
      then begin fEnterGoodsCode:=true;CDS.Filtered:=true;end;
 
-     if {(CDS.RecordCount=0}(SettingMain.isGoodsComplete = FALSE)and(ParamsMovement.ParamByName('OrderExternalId').asInteger<>0)and(Code_begin>0)
+     if  (SettingMain.isGoodsComplete = FALSE){(CDS.RecordCount=0}
+      and((ParamsMovement.ParamByName('OrderExternalId').asInteger<>0) or (SettingMain.BranchCode = 301))
+      and(Code_begin>0)
      then begin spSelect.Params.ParamByName('inGoodsCode').Value:=Code_begin;
+                spSelect.Params.ParamByName('inGoodsName').Value:='';
                 actRefreshExecute(Self);
                 fEnterGoodsCode:=true;CDS.Filtered:=False;CDS.Filtered:=True;
      end;
@@ -651,7 +733,7 @@ begin if(Key='+')then Key:=#0;end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditWeightValueExit(Sender: TObject);
 begin
-     if CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Kg
+     if (CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Kg) and (SettingMain.BranchCode <> 301)
      then exit;
 
      try StrToFloat(EditWeightValue.Text)
@@ -663,11 +745,32 @@ begin
      else if CDS.RecordCount=1
           then try ParamsMI.ParamByName('RealWeight').AsFloat:=StrToFloat(EditWeightValue.Text);
           except ParamsMI.ParamByName('RealWeight').AsFloat:=0;end;
+
+     if gbPrice.Visible = TRUE
+     then begin
+               try StrToFloat(EditPrice.Text)
+               except ActiveControl:=EditPrice;
+                      exit;
+               end;
+               //
+               if StrToFloat(EditPrice.Text) <= 0
+               then ActiveControl:=EditPrice
+     end;
+
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditWeightValueKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
-    if Key=13 then if rgGoodsKind.Items.Count>1 then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount;
+    if Key=13
+    then if (gbPrice.Visible = TRUE)
+         then ActiveControl:=EditPrice
+         else if rgGoodsKind.Items.Count>1 then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditPriceKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+    if Key=13
+    then if rgGoodsKind.Items.Count>1 then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsKindCodeChange(Sender: TObject);
@@ -715,7 +818,7 @@ begin
                   end
         else if ParamsMI.ParamByName('RealWeight').AsFloat<=0.0001
              then
-                  if CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg
+                  if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301)
                   then begin ShowMessage('Ошибка.Не определено значение <Ввод КОЛИЧЕСТВО>.');ActiveControl:=EditWeightValue;end
                   else begin ShowMessage('Ошибка.Не определено значение <Вес на Табло>.');ActiveControl:=EditGoodsCode;end;
 
@@ -814,9 +917,9 @@ begin
       end;
 
       if (ActiveControl=EditGoodsKindCode)and(rgGoodsKind.ItemIndex>=0)and(rgGoodsKind.Items.Count=1)then begin rgGoodsKind.ItemIndex:=0;FormKeyDown(Sender,Key,[]);exit;end;
-      if (ActiveControl=EditTareCount)and(CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)then begin EditTareCount.Text:='0';FormKeyDown(Sender,Key,[]);exit;end;
-      if (ActiveControl=EditTareWeightCode)and(CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)then begin FormKeyDown(Sender,Key,[]);exit;end;
-      if (ActiveControl=EditTareWeightEnter)and(CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)then begin FormKeyDown(Sender,Key,[]);exit;end;
+      if (ActiveControl=EditTareCount) and ((CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301)) then begin EditTareCount.Text:='0';FormKeyDown(Sender,Key,[]);exit;end;
+      if (ActiveControl=EditTareWeightCode) and ((CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301)) then begin FormKeyDown(Sender,Key,[]);exit;end;
+      if (ActiveControl=EditTareWeightEnter) and ((CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301)) then begin FormKeyDown(Sender,Key,[]);exit;end;
       if (ActiveControl=EditChangePercentAmountCode)then begin FormKeyDown(Sender,Key,[]);exit;end;
       if (ActiveControl=EditPriceListCode){and(rgPriceList.ItemIndex>=0)and(rgPriceList.Items.Count=1)}then begin FormKeyDown(Sender,Key,[]);exit;end;
       //
@@ -997,7 +1100,7 @@ procedure TGuideGoodsForm.DSDataChange(Sender: TObject; Field: TField);
 begin
      with ParamsMI do begin
         if CDS.RecordCount=1 then
-         if CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg
+         if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301)
          then try ParamByName('RealWeight').AsFloat:=StrToFloat(EditWeightValue.Text); except ParamByName('RealWeight').AsFloat:=0;end
          else ParamByName('RealWeight').AsFloat:=ParamByName('RealWeight_Get').AsFloat
         else
@@ -1035,11 +1138,23 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.actChoiceExecute(Sender: TObject);
 begin
-     EditGoodsCode.Text:=CDS.FieldByName('GoodsCode').AsString;
-     fEnterGoodsCode:=true;
+     if CDS.FieldByName('GoodsCode').AsString <> '0'
+     then begin EditGoodsCode.Text:=CDS.FieldByName('GoodsCode').AsString;
+                fEnterGoodsCode:= true;
+                fEnterGoodsName:= false;
+                if SettingMain.BranchCode = 301
+                then EditGoodsCodeChange(EditGoodsCode); // EditGoodsCodeExit(EditGoodsCode);
+          end
+     else if (SettingMain.BranchCode = 301)
+          then begin
+                EditGoodsName.Text:=CDS.FieldByName('GoodsName').AsString;
+                fEnterGoodsCode:= false;
+                fEnterGoodsName:= true;
+                EditGoodsNameChange(EditGoodsName) // EditGoodsNameExit(EditGoodsName);
+          end;
 
      if (ParamsMovement.ParamByName('OrderExternalId').asInteger=0)
-     then EditGoodsCodeChange(EditGoodsCode)
+     then if (SettingMain.BranchCode <> 301) then EditGoodsCodeChange(EditGoodsCode) else
      else begin
                fEnterGoodsKindCode:=true;
                if rgGoodsKind.Items.Count>1
@@ -1047,7 +1162,7 @@ begin
                EditGoodsKindCodeChange(EditGoodsKindCode);
           end;
      //
-     if CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg
+     if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301)
      then ActiveControl:=EditWeightValue
      else if (ParamsMovement.ParamByName('OrderExternalId').asInteger=0)and(rgGoodsKind.Items.Count>1)
           then ActiveControl:=EditGoodsKindCode
@@ -1094,7 +1209,9 @@ begin
        Params.AddParam('inOrderExternalId', ftInteger, ptInput, 0);
        Params.AddParam('inPriceListId', ftInteger, ptInput, 0);
        Params.AddParam('inGoodsCode', ftInteger, ptInput, 0);
+       Params.AddParam('inGoodsName', ftString, ptInput, '');
        Params.AddParam('inDayPrior_PriceReturn', ftInteger, ptInput,GetArrayList_Value_byName(Default_Array,'DayPrior_PriceReturn'));
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        Execute;
   end;
   //

@@ -1591,6 +1591,9 @@ BEGIN
      -- DELETE FROM _tmpItem WHERE _tmpItem.isLossMaterials = TRUE;
 
 
+     IF vbIsHistoryCost         = TRUE -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
+        AND zc_isHistoryCost()  = TRUE -- !!!если нужны проводки!!!
+     THEN
      -- 1.3.1.1. самое интересное: заполняем таблицу - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItemSumm (MovementItemId, ContainerId_ProfitLoss_40208, ContainerId_ProfitLoss_10500, ContainerId_ProfitLoss_10400, ContainerId_ProfitLoss_20200, ContainerId, AccountId, ContainerId_Transit, OperSumm, OperSumm_ChangePercent, OperSumm_Partner, isLossMaterials)
         SELECT
@@ -1637,9 +1640,7 @@ BEGIN
                                      AND ContainerObjectCost_Basis.ObjectCostDescId = zc_ObjectCost_Basis()*/
              LEFT JOIN HistoryCost ON HistoryCost.ContainerId = COALESCE (lfContainerSumm_20901.ContainerId, Container_Summ.Id) -- HistoryCost.ObjectCostId = ContainerObjectCost_Basis.ObjectCostId
                                   AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
-        WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
-          AND vbIsHistoryCost = TRUE -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
-          AND (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) <> 0                 -- !!!
+        WHERE (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) <> 0                 -- !!!
              OR _tmpItem.OperCount_ChangePercent * COALESCE (HistoryCost.Price, 0) <> 0  -- здесь нули !!!НЕ НУЖНЫ!!!
              OR _tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0) <> 0)       -- !!!
           AND vbPartnerId_From = 0 -- !!!если НЕ продажа от Контрагента -> Контрагенту!!!
@@ -1649,6 +1650,8 @@ BEGIN
                , lfContainerSumm_20901.ContainerId
                , lfContainerSumm_20901.AccountId
                , _tmpItem.isLossMaterials;
+
+     END IF; -- if vbIsHistoryCost = TRUE AND zc_isHistoryCost() = TRUE
 
      -- 1.3.1.2. определяется ContainerId - Транзит
      UPDATE _tmpItemSumm SET ContainerId_Transit = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate

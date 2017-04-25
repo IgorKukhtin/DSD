@@ -4,8 +4,8 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
   ClientWidth = 829
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 837
-  ExplicitHeight = 443
+  ExplicitWidth = 845
+  ExplicitHeight = 455
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -242,6 +242,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actUnCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
@@ -291,6 +292,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       FormName = 'TMovementItemContainerForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -298,6 +300,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
           Component = FormParams
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -310,6 +313,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       FormName = 'TMovementItemProtocolForm'
       FormNameParam.Value = 'TMovementItemProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -317,6 +321,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
@@ -325,6 +330,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
           ComponentItem = 'GoodsName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -350,11 +356,13 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       Hint = #1053#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = '0'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       IdFieldName = 'Id'
@@ -397,6 +405,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -405,6 +414,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         ComponentItem = 'ShowAll'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -412,6 +422,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 176
@@ -553,6 +564,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = -1
       end>
     Left = 318
@@ -564,12 +576,14 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
@@ -577,11 +591,13 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSumm'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 104
     Top = 264
@@ -591,6 +607,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     LookupControl = ceStatus
     FormNameParam.Value = ''
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 136
@@ -606,6 +623,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStatusCode'
@@ -613,6 +631,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Component = StatusGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 168
@@ -628,30 +647,35 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
         Value = ''
         Component = StatusGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -659,6 +683,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152
@@ -674,6 +699,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -681,6 +707,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -688,6 +715,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 194
@@ -697,6 +725,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
     GuidesList = <>
     ActionItemList = <
       item
@@ -709,6 +738,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
     StoredProc = spInsertUpdateMovement
     ControlList = <
       item
@@ -737,6 +767,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsErased'
@@ -744,6 +775,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Component = MasterCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 326
@@ -760,6 +792,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsErased'
@@ -767,6 +800,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Component = MasterCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 358
@@ -782,6 +816,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -789,6 +824,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -796,6 +832,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -804,6 +841,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 384
@@ -817,6 +855,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Name = 'ioId'
         Value = '0'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -824,6 +863,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -831,6 +871,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -839,6 +880,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 392
@@ -855,6 +897,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSumm'
@@ -862,6 +905,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Component = FormParams
         ComponentItem = 'TotalSumm'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 436

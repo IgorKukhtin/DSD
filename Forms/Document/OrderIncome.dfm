@@ -3,7 +3,7 @@ object OrderIncomeForm: TOrderIncomeForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 431
-  ClientWidth = 972
+  ClientWidth = 1060
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object OrderIncomeForm: TOrderIncomeForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 972
+    Width = 1060
     Height = 97
     Align = alTop
     BevelOuter = bvNone
@@ -53,7 +53,7 @@ object OrderIncomeForm: TOrderIncomeForm
       Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
     end
     object edFrom: TcxButtonEdit
-      Left = 271
+      Left = 416
       Top = 23
       Properties.Buttons = <
         item
@@ -61,15 +61,15 @@ object OrderIncomeForm: TOrderIncomeForm
           Kind = bkEllipsis
         end>
       TabOrder = 2
-      Width = 278
+      Width = 233
     end
     object cxLabel3: TcxLabel
-      Left = 271
+      Left = 416
       Top = 5
       Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 271
+      Left = 372
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       State = cbsChecked
@@ -77,7 +77,7 @@ object OrderIncomeForm: TOrderIncomeForm
       Width = 130
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 221
+      Left = 321
       Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -87,7 +87,7 @@ object OrderIncomeForm: TOrderIncomeForm
       Width = 44
     end
     object edChangePercent: TcxCurrencyEdit
-      Left = 405
+      Left = 505
       Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -98,22 +98,22 @@ object OrderIncomeForm: TOrderIncomeForm
       Width = 144
     end
     object cxLabel7: TcxLabel
-      Left = 176
-      Top = 63
+      Left = 277
+      Top = 64
       Caption = '% '#1053#1044#1057
     end
     object cxLabel8: TcxLabel
-      Left = 405
+      Left = 505
       Top = 45
       Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
     end
     object cxLabel9: TcxLabel
-      Left = 560
+      Left = 660
       Top = 5
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object edContract: TcxButtonEdit
-      Left = 560
+      Left = 660
       Top = 23
       Properties.Buttons = <
         item
@@ -125,12 +125,12 @@ object OrderIncomeForm: TOrderIncomeForm
       Width = 113
     end
     object cxLabel10: TcxLabel
-      Left = 681
+      Left = 781
       Top = 5
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
-      Left = 681
+      Left = 781
       Top = 23
       Properties.Buttons = <
         item
@@ -169,12 +169,12 @@ object OrderIncomeForm: TOrderIncomeForm
       Width = 157
     end
     object cxLabel12: TcxLabel
-      Left = 851
+      Left = 951
       Top = 5
       Caption = #1050#1091#1088#1089' '#1059#1055
     end
     object edCurrencyValue: TcxCurrencyEdit
-      Left = 851
+      Left = 951
       Top = 23
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -185,12 +185,12 @@ object OrderIncomeForm: TOrderIncomeForm
       Width = 58
     end
     object cxLabel14: TcxLabel
-      Left = 764
+      Left = 864
       Top = 5
       Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
     end
     object edCurrencyDocument: TcxButtonEdit
-      Left = 764
+      Left = 864
       Top = 23
       Properties.Buttons = <
         item
@@ -203,18 +203,18 @@ object OrderIncomeForm: TOrderIncomeForm
       Width = 78
     end
     object cxLabel16: TcxLabel
-      Left = 560
+      Left = 660
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 560
+      Left = 660
       Top = 63
       TabOrder = 22
       Width = 399
     end
     object edParValue: TcxCurrencyEdit
-      Left = 915
+      Left = 1015
       Top = 23
       EditValue = 1.000000000000000000
       Properties.DecimalPlaces = 4
@@ -224,22 +224,53 @@ object OrderIncomeForm: TOrderIncomeForm
       Width = 44
     end
     object cxLabel24: TcxLabel
-      Left = 915
+      Left = 1015
       Top = 5
       Caption = #1053#1086#1084'. '#1059#1055
+    end
+    object cxLabel6: TcxLabel
+      Left = 171
+      Top = 45
+      Caption = #1044#1072#1090#1072' '#1087#1083#1072#1085' '#1087#1088#1080#1093'.'
+    end
+    object edOperDatePartner: TcxDateEdit
+      Left = 171
+      Top = 63
+      EditValue = 42839d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 26
+      Width = 94
+    end
+    object cxLabel4: TcxLabel
+      Left = 268
+      Top = 5
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+    end
+    object edUnit: TcxButtonEdit
+      Left = 268
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 28
+      Width = 145
     end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 123
-    Width = 972
+    Width = 1060
     Height = 308
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 308
-    ClientRectRight = 972
+    ClientRectRight = 1060
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -247,7 +278,7 @@ object OrderIncomeForm: TOrderIncomeForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 972
+        Width = 1060
         Height = 284
         Align = alClient
         TabOrder = 0
@@ -1426,6 +1457,22 @@ object OrderIncomeForm: TOrderIncomeForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inOperDatePartner'
+        Value = 'NULL'
+        Component = edOperDatePartner
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inJuridicalId'
         Value = ''
         Component = GuidesFrom
@@ -1522,6 +1569,9 @@ object OrderIncomeForm: TOrderIncomeForm
       end
       item
         Control = edFrom
+      end
+      item
+        Control = edUnit
       end
       item
         Control = edPriceWithVAT
@@ -1700,6 +1750,28 @@ object OrderIncomeForm: TOrderIncomeForm
         Name = 'Comment'
         Value = Null
         Component = ceComment
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDatePartner'
+        Value = 'NULL'
+        Component = edOperDatePartner
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -1942,8 +2014,8 @@ object OrderIncomeForm: TOrderIncomeForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 336
-    Top = 8
+    Left = 424
+    Top = 56
   end
   object spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TotalSumm'
@@ -2157,5 +2229,35 @@ object OrderIncomeForm: TOrderIncomeForm
     PackSize = 1
     Left = 150
     Top = 343
+  end
+  object UnitGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 304
+    Top = 16
   end
 end

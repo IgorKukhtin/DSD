@@ -298,6 +298,8 @@ var
 begin
   FCriticalSection.Enter;
   try
+    if (gc_User.Local = true)  and  (AMaxAtempt = 10) then
+     AMaxAtempt := 2;   // для локольного режима один проход
     if gc_isDebugMode then
        TMessagesForm.Create(nil).Execute(ConvertXMLParamToStrings(pData), ConvertXMLParamToStrings(pData), true);
     FSendList.Clear;

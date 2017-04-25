@@ -4,7 +4,7 @@ inherited GoodsMainForm: TGoodsMainForm
   ClientWidth = 782
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 798
-  ExplicitHeight = 461
+  ExplicitHeight = 462
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

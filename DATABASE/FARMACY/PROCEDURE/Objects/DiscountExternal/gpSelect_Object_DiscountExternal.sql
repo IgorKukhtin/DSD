@@ -51,6 +51,7 @@ BEGIN
                             AND ObjectString_Port.DescId = zc_ObjectString_DiscountExternal_Port()
    WHERE Object_DiscountExternal.DescId = zc_Object_DiscountExternal()
      AND (vbUnitId = 0
+       OR COALESCE (ObjectString_URL.ValueData, '') = ''
        OR Object_DiscountExternal.Id IN (SELECT ObjectLink_DiscountExternal.ChildObjectId
                                          FROM ObjectLink AS ObjectLink_Unit
                                               INNER JOIN ObjectLink AS ObjectLink_DiscountExternal

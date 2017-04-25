@@ -72,38 +72,52 @@ uses
   OposFiscalPrinter_1_11_Lib_TLB in '..\FormsFarmacy\Cash\OposFiscalPrinter_1_11_Lib_TLB.pas',
   LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas',
   Splash in '..\FormsFarmacy\Cash\Splash.pas' {frmSplash},
-  DiscountDialog in '..\FormsFarmacy\Cash\DiscountDialog.pas' {DiscountDialogForm: TParentForm},
+  SPDialog in '..\FormsFarmacy\Cash\SPDialog.pas' {SPDialogForm: TParentForm},
   VIPDialog in '..\FormsFarmacy\Cash\VIPDialog.pas' {VIPDialogForm: TParentForm},
   DiscountService in '..\FormsFarmacy\DiscountService\DiscountService.pas' {DiscountServiceForm},
   uCardService in '..\FormsFarmacy\DiscountService\uCardService.pas',
   MainCash2 in '..\FormsFarmacy\Cash\MainCash2.pas' {MainCashForm2: TParentForm},
-  LoginFormInh in '..\FormsFarmacy\Cash\LoginFormInh.pas' {LoginForm1};
+  LoginFormInh in '..\FormsFarmacy\Cash\LoginFormInh.pas' {LoginForm1},
+  DiscountDialog in '..\FormsFarmacy\Cash\DiscountDialog.pas' {DiscountDialogForm: TParentForm};
 
 {$R *.res}
 
-
+var MForm:Boolean; // Какая форма запускается
 begin
   Application.Initialize;
   Logger.Enabled := FindCmdLineSwitch('log');
   ConnectionPath := '..\INIT\farmacy_init.php';
-
   StartSplash('Старт');
   TdsdApplication.Create;
 
   with TLoginForm1.Create(Application) do
   Begin
     //Если все хорошо создаем главную форму Application.CreateForm();
-    AllowLocalConnect := False; //True;
 
-    if FindCmdLineSwitch('autologin', true)
+   //  Выбор формы для запуска
+    case 1 of   // 1 для MainCash;  2 для MainCash2
+     1: begin
+          AllowLocalConnect := False;
+          MForm := True;
+        end;
+     2: begin
+          AllowLocalConnect := True;
+          MForm := False;
+        end;
+    end;
+
+    if FindCmdLineSwitch('autologin', True)
     then begin
-     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1111', gc_User);
-     //TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1234', gc_User);
-     //if ShowModal <> mrOk then exit;   // для тестирования // НЕ закомменчено
-     gc_User.Local:=TRUE;// !!!НЕ ЗАГРУЖАЕТСЯ БАЗА!!!
+      edUserName.Text := 'Админ';
+      edPassword.Text := 'Админ1111';
+      btnOkClick(btnOk);
+//    TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1111', gc_User); // не работает вмести с AllowLocalConnect := True;
+      //TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1234', gc_User);
+      //if ShowModal <> mrOk then exit;   // для тестирования // НЕ закомменчено
+      gc_User.Local:=TRUE;// !!!НЕ ЗАГРУЖАЕТСЯ БАЗА!!!
     end
     else
-        if ShowModal <> mrOk then exit;
+      if ShowModal <> mrOk then exit;
 
     //then
     begin
@@ -117,10 +131,11 @@ begin
       //
       Application.CreateForm(TdmMain, dmMain);
 
-      if true then  // выбираем главную форму
+      if MForm then  // определяет главную форму
        Application.CreateForm(TMainCashForm, MainCash.MainCashForm) // имя модуля обязательно
       else  // Форма работате в связке с FarmacyCashServise.exe
        Application.CreateForm(TMainCashForm2, MainCash2.MainCashForm); // имя модуля обязательно
+
 
       Application.CreateForm(TfrmSplash, frmSplash);
 

@@ -262,6 +262,8 @@ BEGIN
            , OH_JuridicalDetails_To.AccounterName       AS AccounterName_To
            , OH_JuridicalDetails_To.Phone               AS Phone_To
 
+           , Object_Member_Driver.ValueData             AS MemberName_Driver
+
            , CASE WHEN ObjectLink_Contract_JuridicalDocument.ChildObjectId > 0 THEN TRUE ELSE FALSE END AS isJuridicalDocument
 
            , (SELECT MS_InvNumberPartner.ValueData
@@ -361,6 +363,12 @@ BEGIN
                                    ON ObjectString_FromAddress.ObjectId = COALESCE (MovementLinkObject_PartnerFrom.ObjectId, Object_From.Id)
                                   AND ObjectString_FromAddress.DescId = zc_ObjectString_Partner_Address()
 
+
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Member_Driver
+                                         ON MovementLinkObject_Member_Driver.MovementId = Movement.Id
+                                        AND MovementLinkObject_Member_Driver.DescId = zc_MovementLinkObject_Member()
+            LEFT JOIN Object AS Object_Member_Driver ON Object_Member_Driver.Id = MovementLinkObject_Member_Driver.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id

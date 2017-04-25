@@ -10,6 +10,7 @@ uses
   Androidapi.JNIBridge,
   Androidapi.JNI.GraphicsContentViewText,
   Androidapi.JNI.JavaTypes,
+  Androidapi.JNI.App,
   FMX.Helpers.Android,
   Androidapi.Helpers,
   {$ENDIF}
@@ -79,6 +80,8 @@ var
   tm: JTelephonyManager;
   {$ENDIF}
   IMEI: String;
+  ConnectOk: boolean;
+  ServNum: integer;
 const
   {создаем XML вызова процедуры на сервере}
   pXML =
@@ -91,7 +94,7 @@ const
   '</xml>';
 begin
   {$IFDEF ANDROID}
-  obj := SharedActivityContext.getSystemService(TJContext.JavaClass.TELEPHONY_SERVICE);
+  obj := TAndroidHelper.Context.getSystemService(TJContext.JavaClass.TELEPHONY_SERVICE);
   if obj <> nil then
   begin
     tm := TJTelephonyManager.Wrap( (obj as ILocalObject).GetObjectID );
@@ -99,48 +102,53 @@ begin
       IMEI := JStringToString(tm.getDeviceId);
   end;
   if IMEI = '' then
-    IMEI := JStringToString(TJSettings_Secure.JavaClass.getString(SharedActivity.getContentResolver,
+    IMEI := JStringToString(TJSettings_Secure.JavaClass.getString(TAndroidHelper.Activity.getContentResolver,
                             TJSettings_Secure.JavaClass.ANDROID_ID));
   {$ELSE}
   IMEI := '';
   {$ENDIF}
 
-  N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IMEI]), False, 4, ANeedShowException)).DocumentElement;
-
-  if Assigned(N) then
-  begin
-    Result := N.GetAttribute(AnsiLowerCase(gcMessage));
-
-    if Result = '' then
-    begin
-      if Assigned(pUser) then
+  ConnectOk := false;
+  ServNum := -1;
+  repeat
+    try
+      inc(ServNum);
+      if ServNum > 0 then
       begin
-        pUser.Session := N.GetAttribute(AnsiLowerCase(gcSession));
-        pUser.Local := false;
-      end
-      else
-        pUser := TUser.Create(pUserName, pPassword, N.GetAttribute(AnsiLowerCase(gcSession)), false);
+        gc_WebService := gc_WebServers[ServNum];
+        pStorage.Connection := gc_WebService;
+      end;
+
+      N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IMEI]), False, 1, ANeedShowException)).DocumentElement;
+
+      if Assigned(N) then
+      begin
+        Result := N.GetAttribute(AnsiLowerCase(gcMessage));
+
+        ConnectOk := true;
+
+        if Result = '' then
+        begin
+          if Assigned(pUser) then
+          begin
+            pUser.Session := N.GetAttribute(AnsiLowerCase(gcSession));
+            pUser.Local := false;
+          end
+          else
+            pUser := TUser.Create(pUserName, pPassword, N.GetAttribute(AnsiLowerCase(gcSession)), false);
+        end;
+      end;
+    except
     end;
-  end
-  else
-    Result := 'Не удалось установить соединение';
+  until ConnectOk or (ServNum >= Length(gc_WebServers) - 1);
+
+  if not ConnectOk then
+    raise Exception.Create('Не удалось установить соединение');
 end;
 
 procedure TUser.SetLocal(const Value: Boolean);
-var
-  I : Integer;
-  //F: TForm;
 begin
   FLocal := Value;
-  {for I := 0 to Screen.FormCount - 1 do
-  Begin
-    try
-      F := Screen.Forms[I];
-      if assigned(F) AND (F.Handle <> 0) AND (F.ClassNameIs('TMainCashForm')) then
-        PostMessage(F.Handle, UM_LOCAL_CONNECTION,0,0);
-    Except
-    end;
-  End; }
 end;
 
 end.

@@ -43,17 +43,23 @@ begin
 
   if ModalResult <> mrOk then exit;
 
-  spChekFarmacyName.ParamByName('inUnitName').Value := edFarmacyName.Text;
-  try spChekFarmacyName.Execute;
-    if spChekFarmacyName.ParamByName('outIsEnter').Value = FALSE
-    then ModalResult := mrCancel
-    else if edFarmacyName.Enabled then iniLocalUnitNameSave(edFarmacyName.Text);
-  except ON E: Exception do
-      Begin
-         Application.OnException(Application.MainForm,E);
-         ModalResult := mrNone;
-      End;
+  //только для On-line режима 10.04.2017
+  if not gc_User.Local then
+  begin
+      spChekFarmacyName.ParamByName('inUnitName').Value := edFarmacyName.Text;
+      try spChekFarmacyName.Execute;
+          //
+          if spChekFarmacyName.ParamByName('outIsEnter').Value = FALSE
+          then ModalResult := mrCancel
+          else if edFarmacyName.Enabled then iniLocalUnitNameSave(edFarmacyName.Text);
+      except ON E: Exception do
+          Begin
+             Application.OnException(Application.MainForm,E);
+             ModalResult := mrNone;
+          End;
+      end;
   end;
+
 end;
 
 procedure TLoginForm1.FormShow(Sender: TObject);

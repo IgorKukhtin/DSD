@@ -144,6 +144,14 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object InvNumber_Invoice: TcxGridDBColumn
+            Caption = #8470' '#1057#1095#1077#1090#1072' ('#1087#1086#1089#1090'.1303)'
+            DataBinding.FieldName = 'InvNumber_Invoice'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
           object clOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'OperDate'
@@ -847,7 +855,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         item
           Name = 'JuridicalId'
           Value = ''
-          Component = JuridicalGuide
+          Component = JuridicalGuides
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -855,7 +863,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         item
           Name = 'JuridicalName'
           Value = ''
-          Component = JuridicalGuide
+          Component = JuridicalGuides
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1037,6 +1045,13 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
           Component = cbGroupMemberSP
           DataType = ftBoolean
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Invoice'
+          Value = Null
+          Component = edInvoice
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       ReportName = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303'
       ReportNameParam.Value = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303'
@@ -1099,7 +1114,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       item
         Name = 'inJuridicalId'
         Value = Null
-        Component = JuridicalGuide
+        Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1253,7 +1268,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         Component = HospitalGuides
       end
       item
-        Component = JuridicalGuide
+        Component = JuridicalGuides
       end
       item
         Component = GroupMemberSPGuides
@@ -1292,7 +1307,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       end>
     Left = 632
   end
-  object JuridicalGuide: TdsdGuides
+  object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridicalCorporateForm'
@@ -1304,7 +1319,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       item
         Name = 'Key'
         Value = ''
-        Component = JuridicalGuide
+        Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1312,7 +1327,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalGuide
+        Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1402,6 +1417,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       item
         Name = 'inJuridicalId'
         Value = ''
+        Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1472,7 +1488,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 704
+    Left = 592
     Top = 192
   end
 end

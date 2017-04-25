@@ -3,6 +3,7 @@ inherited Report_CheckPromoForm: TReport_CheckPromoForm
   ClientHeight = 556
   ClientWidth = 841
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 857
   ExplicitHeight = 594
   PixelsPerInch = 96
@@ -360,6 +361,15 @@ inherited Report_CheckPromoForm: TReport_CheckPromoForm
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsFarm'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inIsFarm'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 104
     Top = 120
@@ -415,5 +425,17 @@ inherited Report_CheckPromoForm: TReport_CheckPromoForm
   inherited RefreshDispatcher: TRefreshDispatcher
     Left = 408
     Top = 56
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'inIsFarm'
+        Value = ''
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 352
+    Top = 186
   end
 end

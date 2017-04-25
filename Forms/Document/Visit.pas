@@ -13,12 +13,11 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter;
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxImage;
 
 type
   TVisitForm = class(TAncestorDocumentForm)
-    GoodsName: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
+    PhotoMobileName: TcxGridDBColumn;
     actPhotoMobileChoice: TOpenChoiceForm;
     N2: TMenuItem;
     N3: TMenuItem;
@@ -42,6 +41,10 @@ type
     InsertMobile: TcxGridDBColumn;
     InsertRecord: TInsertRecord;
     bbInsertRecord: TdxBarButton;
+    PhotoData: TcxGridDBColumn;
+    actRefreshEx: TdsdDataSetRefreshEx;
+    clGPSN: TcxGridDBColumn;
+    clGPSE: TcxGridDBColumn;
   private
     { Private declarations }
   public

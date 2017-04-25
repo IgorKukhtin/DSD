@@ -12,12 +12,13 @@
 /*-------------------------------------------------------------------------------*/
 CREATE TABLE Movement
 (
-  Id         serial    NOT NULL PRIMARY KEY,
-  DescId     integer   NOT NULL,
-  InvNumber  TVarChar          ,
-  OperDate   TDateTime NOT NULL,
-  StatusId   integer   NOT NULL,
-  ParentId   Integer   ,
+  Id          SERIAL    NOT NULL PRIMARY KEY,
+  DescId      Integer   NOT NULL,
+  InvNumber   TVarChar  NOT NULL,
+  OperDate    TDateTime NOT NULL,
+  StatusId    Integer   NOT NULL,
+  ParentId    Integer   ,
+  AccessKeyId Integer   ,
   CONSTRAINT fk_Movement_MovementDesc FOREIGN KEY (DescId)    REFERENCES MovementDesc (id),
   CONSTRAINT fk_Movement_StatusId FOREIGN KEY (StatusId)      REFERENCES Object (id),
   CONSTRAINT fk_Movement_ParentId FOREIGN KEY (ParentId)      REFERENCES Movement (id)

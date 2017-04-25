@@ -1509,10 +1509,6 @@
 				<Form>BrandSPEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsSP.pas">
-				<Form>GoodsSPForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_CheckSP.pas">
 				<Form>Report_CheckSPForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1639,6 +1635,18 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_PromoDialog.pas">
 				<Form>Report_PromoDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsSP.pas">
+				<Form>GoodsSPForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsSP_Object.pas">
+				<Form>GoodsSP_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Check_SPEdit.pas">
+				<Form>Check_SPEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

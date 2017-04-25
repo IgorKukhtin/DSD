@@ -218,7 +218,7 @@ BEGIN
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = tmpPartner.PriceListId
 
             LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = tmpPartner.GoodsPropertyId
-                                                     
+
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiOrdspr
                                     ON ObjectBoolean_Partner_EdiOrdspr.ObjectId =  tmpPartner.PartnerId
                                    AND ObjectBoolean_Partner_EdiOrdspr.DescId = zc_ObjectBoolean_Partner_EdiOrdspr()
@@ -439,7 +439,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Scale_Partner (TDateTime, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -451,4 +450,4 @@ ALTER FUNCTION gpGet_Scale_Partner (TDateTime, Integer, TVarChar) OWNER TO postg
 -- тест
 -- SELECT * FROM gpGet_Scale_Partner (inOperDate:= '01.01.2015', inMovementDescId:= zc_Movement_SendOnPrice(),inPartnerCode:= '0', inPaidKindId:=0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpGet_Scale_Partner (inOperDate:= '01.01.2015', inMovementDescId:= zc_Movement_Loss(),inPartnerCode:= '0', inPaidKindId:=0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpGet_Scale_Partner (inOperDate:= '01.01.2015', inMovementDescId:= zc_Movement_Sale(),inPartnerCode:= '0', inPaidKindId:=0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_Partner (inOperDate:= '01.01.2015', inMovementDescId:= zc_Movement_Sale(),inPartnerCode:= '0', inPaidKindId:=0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inBranchCode:= 301, inSession:= zfCalc_UserAdmin())

@@ -4,7 +4,7 @@
 			<ProjectVersion>13.4</ProjectVersion>
 			<FrameworkType>VCL</FrameworkType>
 			<Base>True</Base>
-			<Config Condition="'$(Config)'==''">Release</Config>
+			<Config Condition="'$(Config)'==''">Debug</Config>
 			<Platform Condition="'$(Platform)'==''">Win32</Platform>
 			<TargetedPlatforms>1</TargetedPlatforms>
 			<AppType>Console</AppType>
@@ -3082,6 +3082,42 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsListIncome_byReportEdit.pas">
 				<Form>GoodsListIncome_byReportEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_SupplyBalance.pas">
+				<Form>Report_SupplyBalanceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_SupplyBalanceDialog.pas">
+				<Form>Report_SupplyBalanceDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_MotionGoodsWeek.pas">
+				<Form>Report_MotionGoodsWeekForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_MotionGoodsWeekDialog.pas">
+				<Form>Report_MotionGoodsWeekDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Check_OrderInternalBySendDialog.pas">
+				<Form>Report_Check_OrderInternalBySendDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Check_OrderInternalBySend.pas">
+				<Form>Report_Check_OrderInternalBySendForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderIncomeSnabJournal.pas">
+				<Form>OrderIncomeSnabJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderIncomeSnab.pas">
+				<Form>OrderIncomeSnabForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\MobileReturnInJournal.pas">
+				<Form>MobileReturnInJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

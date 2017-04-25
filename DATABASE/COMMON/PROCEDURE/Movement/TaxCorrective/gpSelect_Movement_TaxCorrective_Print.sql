@@ -618,12 +618,6 @@ BEGIN
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
-            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
-                                                                ON OH_JuridicalDetails_To.JuridicalId = Object_To.Id
-                                                               AND Movement.OperDate >= OH_JuridicalDetails_To.StartDate AND Movement.OperDate < OH_JuridicalDetails_To.EndDate
-            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
-                                                                ON OH_JuridicalDetails_From.JuridicalId = Object_From.Id
-                                                               AND Movement.OperDate >= OH_JuridicalDetails_From.StartDate AND Movement.OperDate < OH_JuridicalDetails_From.EndDate
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
@@ -633,10 +627,10 @@ BEGIN
                                   AND ObjectString_FromAddress.DescId = zc_ObjectString_Partner_Address()
 
             /*LEFT JOIN ObjectString AS ObjectString_BuyerGLNCode
-                                   ON ObjectString_BuyerGLNCode.ObjectId = OH_JuridicalDetails_To.JuridicalId
+                                   ON ObjectString_BuyerGLNCode.ObjectId = Object_To.Id
                                   AND ObjectString_BuyerGLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
             LEFT JOIN ObjectString AS ObjectString_SupplierGLNCode
-                                   ON ObjectString_SupplierGLNCode.ObjectId = OH_JuridicalDetails_From.JuridicalId
+                                   ON ObjectString_SupplierGLNCode.ObjectId = Object_From.Id
                                   AND ObjectString_SupplierGLNCode.DescId = zc_ObjectString_Juridical_GLNCode()*/
 
             LEFT JOIN ObjectString AS ObjectString_Partner_GLNCodeJuridical
@@ -647,17 +641,17 @@ BEGIN
                                   AND ObjectString_Partner_GLNCodeCorporate.DescId = zc_ObjectString_Partner_GLNCodeCorporate()
 
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                 ON ObjectLink_Juridical_Retail.ObjectId = OH_JuridicalDetails_From.JuridicalId
+                                 ON ObjectLink_Juridical_Retail.ObjectId = Object_From.Id
                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
             LEFT JOIN ObjectString AS ObjectString_Juridical_GLNCode
-                                   ON ObjectString_Juridical_GLNCode.ObjectId = OH_JuridicalDetails_From.JuridicalId
+                                   ON ObjectString_Juridical_GLNCode.ObjectId = Object_From.Id
                                   AND ObjectString_Juridical_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
             LEFT JOIN ObjectString AS ObjectString_Retail_GLNCodeCorporate
                                    ON ObjectString_Retail_GLNCodeCorporate.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
                                   AND ObjectString_Retail_GLNCodeCorporate.DescId = zc_ObjectString_Retail_GLNCodeCorporate()
 
             LEFT JOIN ObjectString AS ObjectString_JuridicalTo_GLNCode
-                                   ON ObjectString_JuridicalTo_GLNCode.ObjectId = OH_JuridicalDetails_To.JuridicalId
+                                   ON ObjectString_JuridicalTo_GLNCode.ObjectId = Object_To.Id
                                   AND ObjectString_JuridicalTo_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
 
 
@@ -687,6 +681,13 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind_Child
                                          ON MovementLinkObject_DocumentTaxKind_Child.MovementId = MovementLinkMovement_child.MovementChildId
                                         AND MovementLinkObject_DocumentTaxKind_Child.DescId = zc_MovementLinkObject_DocumentTaxKind()
+
+            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
+                                                                ON OH_JuridicalDetails_To.JuridicalId = Object_To.Id
+                                                               AND COALESCE (Movement_child.OperDate, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate AND COALESCE (Movement_child.OperDate, Movement.OperDate) < OH_JuridicalDetails_To.EndDate
+            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
+                                                                ON OH_JuridicalDetails_From.JuridicalId = Object_From.Id
+                                                               AND COALESCE (Movement_child.OperDate, Movement.OperDate) >= OH_JuridicalDetails_From.StartDate AND COALESCE (Movement_child.OperDate, Movement.OperDate) < OH_JuridicalDetails_From.EndDate
 
 ---- номера строк в НН
             LEFT JOIN tmpMITax AS tmpMITax1 ON tmpMITax1.Kind        = 1

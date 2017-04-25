@@ -150,7 +150,7 @@ return;
    -- Если это Днепр или Запорожье (вносят сами)
    IF vbAccessKey = 0 THEN 
       IF inDocKind = 'Tax' THEN
-             vbMovementId:= (WITH tmp AS (SELECT Movement.Id
+             vbMovementId:= (WITH tmp AS (SELECT Movement.Id, Movement.OperDate
                                           FROM Movement 
                                                LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                                                         ON MovementString_InvNumberPartner.MovementId =  Movement.Id
@@ -167,17 +167,23 @@ return;
                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                                ON MovementLinkObject_From.MovementId = Movement.Id
                                                               AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                  LEFT JOIN ObjectHistory_JuridicalDetails_View AS JuridicalFrom ON JuridicalFrom.JuridicalId = MovementLinkObject_From.ObjectId
                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                                ON MovementLinkObject_To.MovementId = Movement.Id
                                                               AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                  LEFT JOIN ObjectHistory_JuridicalDetails_View AS JuridicalTo ON JuridicalTo.JuridicalId = MovementLinkObject_To.ObjectId
                                   LEFT JOIN MovementString AS MovementString_InvNumberBranch
                                                            ON MovementString_InvNumberBranch.MovementId =  Movement.Id
                                                           AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
                                   /*LEFT JOIN MovementString AS MovementString_InvNumberRegistered
                                                            ON MovementString_InvNumberRegistered.MovementId = Movement.Id
                                                           AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()*/
+                                  -- LEFT JOIN ObjectHistory_JuridicalDetails_View AS JuridicalTo ON JuridicalTo.JuridicalId = MovementLinkObject_To.ObjectId
+                                  -- LEFT JOIN ObjectHistory_JuridicalDetails_View AS JuridicalFrom ON JuridicalFrom.JuridicalId = MovementLinkObject_From.ObjectId
+                                  LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS JuridicalTo
+                                                                                      ON JuridicalTo.JuridicalId = MovementLinkObject_To.ObjectId
+                                                                                     AND Movement.OperDate >= JuridicalTo.StartDate AND Movement.OperDate < JuridicalTo.EndDate
+                                  LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS JuridicalFrom
+                                                                                      ON JuridicalFrom.JuridicalId = MovementLinkObject_From.ObjectId
+                                                                                     AND Movement.OperDate >= JuridicalFrom.StartDate AND Movement.OperDate < JuridicalFrom.EndDate
                              WHERE JuridicalFrom.INN = inFromINN AND JuridicalTo.INN = inToINN
                                AND ABS (inTotalSumm) = ABS (MovementFloat_TotalSumm.ValueData)
                                AND COALESCE (MovementString_InvNumberBranch.ValueData, '') = COALESCE (inInvNumberBranch, '')
@@ -185,8 +191,8 @@ return;
                              LIMIT 1
                             ) ;
         ELSE
-             vbMovementId:= (WITH tmp AS (SELECT Movement.Id
-                                          FROM Movement 
+             vbMovementId:= (WITH tmp AS (SELECT Movement.Id, Movement.OperDate
+                                          FROM Movement
                                                LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                                                         ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                                                        AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
@@ -202,17 +208,30 @@ return;
                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                                ON MovementLinkObject_From.MovementId = Movement.Id
                                                               AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                  LEFT JOIN ObjectHistory_JuridicalDetails_View AS JuridicalFrom ON JuridicalFrom.JuridicalId = MovementLinkObject_From.ObjectId
                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                                ON MovementLinkObject_To.MovementId = Movement.Id
                                                               AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                  LEFT JOIN ObjectHistory_JuridicalDetails_View AS JuridicalTo ON JuridicalTo.JuridicalId = MovementLinkObject_To.ObjectId
                                   LEFT JOIN MovementString AS MovementString_InvNumberBranch
                                                            ON MovementString_InvNumberBranch.MovementId =  Movement.Id
                                                           AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
                                   /*LEFT JOIN MovementString AS MovementString_InvNumberRegistered
                                                            ON MovementString_InvNumberRegistered.MovementId = Movement.Id
                                                           AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()*/
+                                  -- LEFT JOIN ObjectHistory_JuridicalDetails_View AS JuridicalTo ON JuridicalTo.JuridicalId = MovementLinkObject_To.ObjectId
+                                  -- LEFT JOIN ObjectHistory_JuridicalDetails_View AS JuridicalFrom ON JuridicalFrom.JuridicalId = MovementLinkObject_From.ObjectId
+
+                                  LEFT JOIN MovementLinkMovement AS MovementLinkMovement_child
+                                                                 ON MovementLinkMovement_child.MovementId = Movement.Id
+                                                                AND MovementLinkMovement_child.DescId = zc_MovementLinkMovement_Child()
+                                  LEFT JOIN Movement AS Movement_child ON Movement_child.Id = MovementLinkMovement_child.MovementChildId
+
+                                  LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS JuridicalTo
+                                                                                      ON JuridicalTo.JuridicalId = MovementLinkObject_To.ObjectId
+                                                                                     AND COALESCE (Movement_child.OperDate, Movement.OperDate) >= JuridicalTo.StartDate AND COALESCE (Movement_child.OperDate, Movement.OperDate) < JuridicalTo.EndDate
+                                  LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS JuridicalFrom
+                                                                                      ON JuridicalFrom.JuridicalId = MovementLinkObject_From.ObjectId
+                                                                                     AND COALESCE (Movement_child.OperDate, Movement.OperDate) >= JuridicalFrom.StartDate AND COALESCE (Movement_child.OperDate, Movement.OperDate) < JuridicalFrom.EndDate
+
                              WHERE JuridicalFrom.INN = inToINN AND JuridicalTo.INN = inFromINN
                                AND ABS (inTotalSumm) = ABS (MovementFloat_TotalSumm.ValueData)
                                AND COALESCE (MovementString_InvNumberBranch.ValueData, '') = COALESCE (inInvNumberBranch, '')

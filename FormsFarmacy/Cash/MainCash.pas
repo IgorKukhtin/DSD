@@ -41,8 +41,15 @@ type
     CONFIRMED   : String[50];  //Статус заказа (Состояние VIP-чека) - ConfirmedKind
     NUMORDER    : String[50];  //Номер заказа (с сайта) - InvNumberOrder
     CONFIRMEDC  : String[50];  //Статус заказа (Состояние VIP-чека) - ConfirmedKindClient
-    // Для сервиса передает рельную сесию при которой была продажа
-    USERSESION: string[50]; // Номер индификационной сесии
+    //***24.01.17
+    USERSESION: string[50]; //Для сервиса - реальная сесия при продаже
+    //***08.04.17
+    PMEDICALID  : Integer;       //Id Медицинское учреждение(Соц. проект)
+    PMEDICALN   : String[254];   //Название Медицинское учреждение(Соц. проект)
+    AMBULANCE   : String[50];    //№ амбулатории (Соц. проект)
+    MEDICSP     : String[254];   //ФИО врача (Соц. проект)
+    INVNUMSP    : String[50];    //номер рецепта (Соц. проект)
+    OPERDATESP  : TDateTime;     //дата рецепта (Соц. проект)
   end;
   TBodyRecord = record
     ID: Integer;            //ид записи
@@ -85,7 +92,7 @@ type
   end;
 
    TRefreshDiffThread = class(TThread)
-    FUserSesion: string; // Подмененная сесия
+    FUserSession: string; // Подмененная сесия
     FShapeColor: TColor;
     procedure SetShapeState(AColor: TColor);
     procedure SyncShapeState;
@@ -197,13 +204,13 @@ type
     Label2: TLabel;
     lblBayer: TLabel;
     chbNotMCS: TcxCheckBox;
-    mainColor_calc: TcxGridDBColumn;
+    MainColor_calc: TcxGridDBColumn;
     MaincolisFirst: TcxGridDBColumn;
-    MaincolisSecond: TcxGridDBColumn;
+    MaincolIsSecond: TcxGridDBColumn;
     cxButton1: TcxButton;
     actChoiceGoodsFromRemains: TOpenChoiceForm;
     TimerMoneyInCash: TTimer;
-    mainColisPromo: TcxGridDBColumn;
+    MaincolIsPromo: TcxGridDBColumn;
     actSelectLocalVIPCheck: TAction;
     actCheckConnection: TAction;
     N2: TMenuItem;
@@ -247,6 +254,23 @@ type
     ceScaner: TcxCurrencyEdit;
     lbScaner: TLabel;
     GoodsId_main: TcxGridDBColumn;
+    MainColIsSP: TcxGridDBColumn;
+    MainColPriceSP: TcxGridDBColumn;
+    actSetSP: TAction;
+    pnlSP: TPanel;
+    Label4: TLabel;
+    lblPartnerMedicalName: TLabel;
+    Label7: TLabel;
+    lblMedicSP: TLabel;
+    N15: TMenuItem;
+    MainColPriceSaleSP: TcxGridDBColumn;
+    DiffSP1: TcxGridDBColumn;
+    DiffSP2: TcxGridDBColumn;
+    MainColIntenalSPName: TcxGridDBColumn;
+    actOpenGoodsSP_UserForm: TdsdOpenForm;
+    miOpenGoodsSP_UserForm: TMenuItem;
+    lblPrice: TLabel;
+    edPrice: TcxCurrencyEdit;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -294,7 +318,8 @@ type
     procedure actSetConfirmedKind_UnCompleteExecute(Sender: TObject);
     procedure btnCheckClick(Sender: TObject);
     procedure ParentFormDestroy(Sender: TObject);
-    procedure ceScanerKeyPress(Sender: TObject; var Key: Char); //***10.08.16
+    procedure ceScanerKeyPress(Sender: TObject; var Key: Char);
+    procedure actSetSPExecute(Sender: TObject); //***10.08.16
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -340,9 +365,11 @@ type
     //подключение к локальной базе данных
     function InitLocalStorage: Boolean;
     //Сохранение чека в локальной базе. возвращает УИД
-    function SaveLocal(ADS :TClientDataSet; AManagerId: integer; AManagerName: String;
+    function SaveLocal(ADS :TClientDataSet; AManagerId: Integer; AManagerName: String;
       ABayerName, ABayerPhone, AConfirmedKindName, AInvNumberOrder, AConfirmedKindClientName: String;
-      ADiscountExternalId: integer; ADiscountExternalName, ADiscountCardNumber: String;
+      ADiscountExternalId: Integer; ADiscountExternalName, ADiscountCardNumber: String;
+      APartnerMedicalId: Integer; APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP : String;
+      AOperDateSP : TDateTime;
       NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
     //сохраняет чек в реальную базу
     procedure SaveReal(AUID: String; ANeedComplete: boolean = False);
@@ -384,7 +411,7 @@ implementation
 
 {$R *.dfm}
 
-uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, CashWork, MessagesUnit,
+uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog, CashWork, MessagesUnit,
      LocalWorkUnit, Splash, DiscountService, MainCash2, UnilWin;
 
 const
@@ -499,10 +526,21 @@ begin
   FormParams.ParamByName('ConfirmedKindName').Value       := '';
   FormParams.ParamByName('InvNumberOrder').Value          := '';
   FormParams.ParamByName('ConfirmedKindClientName').Value := '';
+  //***10.04.17
+  FormParams.ParamByName('PartnerMedicalId').Value   := 0;
+  FormParams.ParamByName('PartnerMedicalName').Value := '';
+  FormParams.ParamByName('Ambulance').Value          := '';
+  FormParams.ParamByName('MedicSP').Value            := '';
+  FormParams.ParamByName('InvNumberSP').Value        := '';
+  FormParams.ParamByName('OperDateSP').Value         := NOW;
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
+  edPrice.Value := 0.0;
+  edPrice.Visible := False;
+  lblPrice.Visible := False;
   pnlDiscount.Visible := False;
+  pnlSP.Visible := False;
   lblCashMember.Caption := '';
   lblBayer.Caption := '';
   chbNotMCS.Checked := False;
@@ -560,12 +598,20 @@ begin
          end;
 
     end;
-    // Update Дисконт в CDS - по всем "обновим" Дисконт
-    DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
+    //
+    if FormParams.ParamByName('InvNumberSP').Value = ''
+    then
+        // Update Дисконт в CDS - по всем "обновим" Дисконт
+        DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
+
     //***20.07.16
     lblDiscountExternalName.Caption:= '  ' + FormParams.ParamByName('DiscountExternalName').Value + '  ';
     lblDiscountCardNumber.Caption  := '  ' + FormParams.ParamByName('DiscountCardNumber').Value + '  ';
     pnlDiscount.Visible            := FormParams.ParamByName('DiscountExternalId').Value > 0;
+
+    lblPartnerMedicalName.Caption:= '  ' + FormParams.ParamByName('PartnerMedicalName').Value + '  /  № амб. ' + FormParams.ParamByName('Ambulance').Value;
+    lblMedicSP.Caption  := '  ' + FormParams.ParamByName('MedicSP').Value + '  /  № '+FormParams.ParamByName('InvNumberSP').Value+'  от ' + DateToStr(FormParams.ParamByName('OperDateSP').Value);
+    pnlSP.Visible                  := FormParams.ParamByName('InvNumberSP').Value <> '';
 
     lblCashMember.Caption := FormParams.ParamByName('ManagerName').AsString;
     if (FormParams.ParamByName('ConfirmedKindName').AsString <> '')
@@ -757,11 +803,19 @@ begin
                    FormParams.ParamByName('DiscountExternalId').Value,
                    FormParams.ParamByName('DiscountExternalName').Value,
                    FormParams.ParamByName('DiscountCardNumber').Value,
+                   //***08.04.17
+                   FormParams.ParamByName('PartnerMedicalId').Value,
+                   FormParams.ParamByName('PartnerMedicalName').Value,
+                   FormParams.ParamByName('Ambulance').Value,
+                   FormParams.ParamByName('MedicSP').Value,
+                   FormParams.ParamByName('InvNumberSP').Value,
+                   FormParams.ParamByName('OperDateSP').Value,
 
-                   True,
-                   CheckNumber,
-                   UID) then
-      Begin
+                   True,         // NeedComplete
+                   CheckNumber,  // FiscalCheckNumber
+                   UID           // out AUID
+                  )
+      then Begin
         SaveReal(UID, True);
         NewCheck(false);
       End;
@@ -928,6 +982,7 @@ begin
   else ActiveControl := lcName;
 end;
 
+
 procedure TMainCashForm.actSetConfirmedKind_CompleteExecute(Sender: TObject);
 var UID: String;
     lConfirmedKindName:String;
@@ -975,8 +1030,18 @@ begin
               ,FormParams.ParamByName('DiscountExternalId').Value
               ,FormParams.ParamByName('DiscountExternalName').Value
               ,FormParams.ParamByName('DiscountCardNumber').Value
+               //***08.04.17
+              ,FormParams.ParamByName('PartnerMedicalId').Value
+              ,FormParams.ParamByName('PartnerMedicalName').Value
+              ,FormParams.ParamByName('Ambulance').Value
+              ,FormParams.ParamByName('MedicSP').Value
+              ,FormParams.ParamByName('InvNumberSP').Value
+              ,FormParams.ParamByName('OperDateSP').Value
 
-              ,False,'',UID)
+              ,False         // NeedComplete
+              ,''            // FiscalCheckNumber
+              ,UID           // out AUID
+              )
   then begin
     SaveReal(UID);
     //
@@ -1033,8 +1098,18 @@ begin
               ,FormParams.ParamByName('DiscountExternalId').Value
               ,FormParams.ParamByName('DiscountExternalName').Value
               ,FormParams.ParamByName('DiscountCardNumber').Value
+               //***08.04.17
+              ,FormParams.ParamByName('PartnerMedicalId').Value
+              ,FormParams.ParamByName('PartnerMedicalName').Value
+              ,FormParams.ParamByName('Ambulance').Value
+              ,FormParams.ParamByName('MedicSP').Value
+              ,FormParams.ParamByName('InvNumberSP').Value
+              ,FormParams.ParamByName('OperDateSP').Value
 
-              ,False,'',UID)
+              ,False         // NeedComplete
+              ,''            // FiscalCheckNumber
+              ,UID           // out AUID
+              )
   then begin
     SaveReal(UID);
     //
@@ -1076,6 +1151,49 @@ begin
   pnlDiscount.Visible    := DiscountExternalId > 0;
   lblDiscountExternalName.Caption:= '  ' + DiscountExternalName + '  ';
   lblDiscountCardNumber.Caption  := '  ' + DiscountCardNumber + '  ';
+  lblPrice.Visible := (DiscountServiceForm.gCode = 2);
+  edPrice.Visible := lblPrice.Visible;
+end;
+
+//***20.04.17
+procedure TMainCashForm.actSetSPExecute(Sender: TObject);
+var
+  PartnerMedicalId:Integer;
+  PartnerMedicalName,MedicSP,Ambulance,InvNumberSP: String;
+  OperDateSP : TDateTime;
+begin
+  if (not CheckCDS.IsEmpty) and (Self.FormParams.ParamByName('InvNumberSP').Value = '') then
+  Begin
+    ShowMessage('Текущий чек не пустой. Сначала очистите чек!');
+    exit;
+  End;
+  //
+  with TSPDialogForm.Create(nil) do
+  try
+     PartnerMedicalId  := Self.FormParams.ParamByName('PartnerMedicalId').Value;
+     PartnerMedicalName:= Self.FormParams.ParamByName('PartnerMedicalName').Value;
+     Ambulance    := Self.FormParams.ParamByName('Ambulance').Value;
+     MedicSP      := Self.FormParams.ParamByName('MedicSP').Value;
+     InvNumberSP  := Self.FormParams.ParamByName('InvNumberSP').Value;
+     if Self.FormParams.ParamByName('PartnerMedicalId').Value > 0
+     then OperDateSP   := Self.FormParams.ParamByName('OperDateSP').Value
+     else OperDateSP   := NOW;
+     if not DiscountDialogExecute(PartnerMedicalId, PartnerMedicalName, Ambulance, MedicSP, InvNumberSP, OperDateSP)
+     then exit;
+  finally
+     Free;
+  end;
+  //
+  FormParams.ParamByName('PartnerMedicalId').Value := PartnerMedicalId;
+  FormParams.ParamByName('PartnerMedicalName').Value := PartnerMedicalName;
+  FormParams.ParamByName('Ambulance').Value := Ambulance;
+  FormParams.ParamByName('MedicSP').Value := MedicSP;
+  FormParams.ParamByName('InvNumberSP').Value := InvNumberSP;
+  FormParams.ParamByName('OperDateSP').Value := OperDateSP;
+  //
+  pnlSP.Visible := InvNumberSP <> '';
+  lblPartnerMedicalName.Caption:= '  ' + PartnerMedicalName + '  /  № амб. ' + Ambulance;
+  lblMedicSP.Caption  := '  ' + MedicSP + '  /  № '+InvNumberSP+'  от ' + DateToStr(OperDateSP);
 end;
 
 procedure TMainCashForm.actSetVIPExecute(Sender: TObject);
@@ -1104,8 +1222,18 @@ begin
               ,FormParams.ParamByName('DiscountExternalId').Value
               ,FormParams.ParamByName('DiscountExternalName').Value
               ,FormParams.ParamByName('DiscountCardNumber').Value
+               //***08.04.17
+              ,FormParams.ParamByName('PartnerMedicalId').Value
+              ,FormParams.ParamByName('PartnerMedicalName').Value
+              ,FormParams.ParamByName('Ambulance').Value
+              ,FormParams.ParamByName('MedicSP').Value
+              ,FormParams.ParamByName('InvNumberSP').Value
+              ,FormParams.ParamByName('OperDateSP').Value
 
-              ,False,'',UID)
+              ,False         // NeedComplete
+              ,''            // FiscalCheckNumber
+              ,UID           // out AUID
+              )
   then begin
     NewCheck(False);
     SaveReal(UID);
@@ -1213,7 +1341,6 @@ begin
 end;
 
 procedure TMainCashForm.CheckCDSBeforePost(DataSet: TDataSet);
-
 begin
   inherited;
   if DataSet.FieldByName('List_UID').AsString = '' then
@@ -1306,6 +1433,7 @@ end;
 function TMainCashForm.InitLocalStorage: Boolean;
 var fields11, fields12, fields13, fields14, fields15, fields16, fields17, fields18: TVKDBFFieldDefs;
     fields21, fields22, fields23, fields24, fields25: TVKDBFFieldDefs;
+    fields31, fields32, fields33, fields34, fields35, fields36: TVKDBFFieldDefs;
   procedure InitTable(DS: TVKSmartDBF; AFileName: String);
   Begin
     DS.DBFFileName := AnsiString(AFileName);
@@ -1342,9 +1470,16 @@ begin
     AddStrField(FLocalDataBaseHead,'CONFIRMED',50);  //Статус заказа (Состояние VIP-чека) - ConfirmedKind
     AddStrField(FLocalDataBaseHead,'NUMORDER',50);   //Номер заказа (с сайта) - InvNumberOrder
     AddStrField(FLocalDataBaseHead,'CONFIRMEDC',50); //Статус заказа (Состояние VIP-чека) - ConfirmedKindClient
+    //***24.01.17
+    AddStrField(FLocalDataBaseHead,'USERSESION',50); //Для сервиса - реальная сесия при продаже
+    //***08.04.17
+    AddIntField(FLocalDataBaseHead,'PMEDICALID');    //Id Медицинское учреждение(Соц. проект)
+    AddStrField(FLocalDataBaseHead,'PMEDICALN',254); //Название Медицинское учреждение(Соц. проект)
+    AddStrField(FLocalDataBaseHead,'AMBULANCE',50);  //№ амбулатории (Соц. проект)
+    AddStrField(FLocalDataBaseHead,'MEDICSP',254);   //ФИО врача (Соц. проект)
+    AddStrField(FLocalDataBaseHead,'INVNUMSP',50);   //номер рецепта (Соц. проект)
+    AddDateField(FLocalDataBaseHead,'OPERDATESP');   //дата рецепта (Соц. проект)
 
-      // Для сервиса передает рельную сесию при которой была продажа // Номер индификационной сесии
-    AddStrField(FLocalDataBaseHead,'USERSESION',50);
     try
       FLocalDataBaseHead.CreateTable;
     except ON E: Exception do
@@ -1394,7 +1529,8 @@ begin
                     len := 50;
                end;
                FLocalDataBaseHead.AddFields(fields13,1000);
-           end;
+          end;
+
           //***16.08.16
           if FLocalDataBaseHead.FindField('BAYERPHONE') = nil then
           begin
@@ -1419,6 +1555,7 @@ begin
                end;
                FLocalDataBaseHead.AddFields(fields15,1000);
            end;
+
           //***16.08.16
           if FLocalDataBaseHead.FindField('NUMORDER') = nil then
           begin
@@ -1431,6 +1568,7 @@ begin
                end;
                FLocalDataBaseHead.AddFields(fields16,1000);
            end;
+
           //***25.08.16
           if FLocalDataBaseHead.FindField('CONFIRMEDC') = nil then
           begin
@@ -1443,9 +1581,10 @@ begin
                end;
                FLocalDataBaseHead.AddFields(fields17,1000);
            end;
-           //
-              if FLocalDataBaseHead.FindField('USERSESION') = nil then
-          begin
+
+           //***24.01.17
+           if FLocalDataBaseHead.FindField('USERSESION') = nil then
+           begin
                fields18:=TVKDBFFieldDefs.Create(self);
                with fields18.Add as TVKDBFFieldDef do
                begin
@@ -1456,8 +1595,80 @@ begin
                FLocalDataBaseHead.AddFields(fields18,1000);
            end;
 
+           //***08.04.17
+           if FLocalDataBaseHead.FindField('PMEDICALID') = nil then
+           begin
+               fields31:=TVKDBFFieldDefs.Create(self);
+               with fields31.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'PMEDICALID';
+                    field_type := 'N';
+                    len := 10;
+               end;
+               FLocalDataBaseHead.AddFields(fields31,1000);
+           end;
+           //
+           if FLocalDataBaseHead.FindField('PMEDICALN') = nil then
+           begin
+               fields32:=TVKDBFFieldDefs.Create(self);
+               with fields32.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'PMEDICALN';
+                    field_type := 'C';
+                    len := 254;
+               end;
+               FLocalDataBaseHead.AddFields(fields32,1000);
+           end;
+           //
+           if FLocalDataBaseHead.FindField('AMBULANCE') = nil then
+           begin
+               fields33:=TVKDBFFieldDefs.Create(self);
+               with fields33.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'AMBULANCE';
+                    field_type := 'C';
+                    len := 55;
+               end;
+               FLocalDataBaseHead.AddFields(fields33,1000);
+           end;
+           //
+           if FLocalDataBaseHead.FindField('MEDICSP') = nil then
+           begin
+               fields34:=TVKDBFFieldDefs.Create(self);
+               with fields34.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'MEDICSP';
+                    field_type := 'C';
+                    len := 254;
+               end;
+               FLocalDataBaseHead.AddFields(fields34,1000);
+           end;
+           //
+           if FLocalDataBaseHead.FindField('INVNUMSP') = nil then
+           begin
+               fields35:=TVKDBFFieldDefs.Create(self);
+               with fields35.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'INVNUMSP';
+                    field_type := 'C';
+                    len := 55;
+               end;
+               FLocalDataBaseHead.AddFields(fields35,1000);
+           end;
+           //
+           if FLocalDataBaseHead.FindField('OPERDATESP') = nil then
+           begin
+               fields36:=TVKDBFFieldDefs.Create(self);
+               with fields36.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'OPERDATESP';
+                    field_type := 'D';
+               end;
+               FLocalDataBaseHead.AddFields(fields36,1000);
+           end;
 
            FLocalDataBaseHead.Close;
+
   end;// !!!добавляем НОВЫЕ поля
 
 
@@ -1592,7 +1803,15 @@ begin
      (FLocalDataBaseHead.FindField('CONFIRMED') = nil) or
      (FLocalDataBaseHead.FindField('NUMORDER') = nil) or
      (FLocalDataBaseHead.FindField('CONFIRMEDC') = nil) or
-     (FLocalDataBaseHead.FindField('USERSESION') = nil)
+      //***24.01.17
+     (FLocalDataBaseHead.FindField('USERSESION') = nil) or
+      //***08.04.17
+     (FLocalDataBaseHead.FindField('PMEDICALID') = nil) or
+     (FLocalDataBaseHead.FindField('PMEDICALN') = nil) or
+     (FLocalDataBaseHead.FindField('AMBULANCE') = nil) or
+     (FLocalDataBaseHead.FindField('MEDICSP') = nil) or
+     (FLocalDataBaseHead.FindField('INVNUMSP') = nil) or
+     (FLocalDataBaseHead.FindField('OPERDATESP') = nil)
 
   then begin
     ShowMessage('Неверная структура файла локального хранилища ('+FLocalDataBaseHead.DBFFileName+')');
@@ -1620,22 +1839,24 @@ begin
     Exit;
   End;
 
-  LocalDataBaseisBusy := 0;
   Result := FLocalDataBaseHead.Active AND FLocalDataBaseBody.Active;
   if Result then
   begin
     FLocalDataBaseHead.Active:=False;
     FLocalDataBaseBody.Active:=False;
+    ReleaseMutex(MutexDBF);
     SaveRealAll;
-  end;
- ReleaseMutex(MutexDBF);
-end;
+  end
+  else
+      ReleaseMutex(MutexDBF);
+
+ end;
 
 procedure TMainCashForm.InsertUpdateBillCheckItems;
 var lQuantity, lPrice, lPriceSale, lChangePercent, lSummChangePercent : Currency;
     lMsg : String;
     lGoodsId_bySoldRegim : Integer;
-    lPriceSale_bySoldRegim : Currency;
+    lPriceSale_bySoldRegim, lPrice_bySoldRegim : Currency;
 begin
   if ceAmount.Value = 0 then
      exit;
@@ -1657,14 +1878,38 @@ begin
   end;
   //
   // потому что криво, надо правильно определить ТОВАР + цена БЕЗ скидки
-  if SoldRegim
-  then begin lGoodsId_bySoldRegim   := SourceClientDataSet.FieldByName('Id').asInteger;
-             lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
+  if SoldRegim = TRUE
+  then //это ПРОДАЖА
+       begin lGoodsId_bySoldRegim   := SourceClientDataSet.FieldByName('Id').asInteger;
+             if (SourceClientDataSet.FieldByName('isSP').asBoolean = TRUE)
+                 and(Self.FormParams.ParamByName('InvNumberSP').Value <> '')
+             then begin
+                       // цена БЕЗ скидки
+                       lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('PriceSaleSP').asCurrency;
+                       // цена СО скидкой
+                       lPrice_bySoldRegim := SourceClientDataSet.FieldByName('PriceSP').asCurrency;
+             end else
+             if (DiscountServiceForm.gCode = 2) and (Abs(edPrice.Value) > 0.0001) then
+             begin
+               // цена БЕЗ скидки
+               lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
+               // цена СО скидкой
+               lPrice_bySoldRegim := edPrice.Value;
+             end
+             else begin
+                       // цена БЕЗ скидки
+                       lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
+                       // цена СО скидкой в этом случае такая же
+                       lPrice_bySoldRegim := lPriceSale_bySoldRegim;
+                  end
        end
-  else begin lGoodsId_bySoldRegim   := CheckCDS.FieldByName('GoodsId').AsInteger;
+  else //это ВОЗВРАТ
+       begin lGoodsId_bySoldRegim   := CheckCDS.FieldByName('GoodsId').AsInteger;
              if CheckCDS.FieldByName('PriceSale').asCurrency > 0 // !!!на всяк случай, временно
              then lPriceSale_bySoldRegim := CheckCDS.FieldByName('PriceSale').asCurrency
              else lPriceSale_bySoldRegim := CheckCDS.FieldByName('Price').asCurrency;
+             // ?цена СО скидкой в этом случае такая же?
+             lPrice_bySoldRegim:= lPriceSale_bySoldRegim;
        end;
   {
   //Находится "ИТОГО" кол-во - сколько уже набрали в продаже и к нему плюсуется или минусуется "новое" кол-во
@@ -1691,10 +1936,10 @@ begin
          else // все хорошо и сохраним скидку
   end
   else} begin
-         lPrice             := lPriceSale_bySoldRegim;
+         lPrice             := lPrice_bySoldRegim; //lPriceSale_bySoldRegim;
          lPriceSale         := lPriceSale_bySoldRegim;
          lChangePercent     := 0;
-         lSummChangePercent := 0;
+         lSummChangePercent := (lPriceSale_bySoldRegim - lPrice_bySoldRegim) * 0;
          // обнулим "нужные" параметры-Item
          //DiscountServiceForm.pSetParamItemNull;
   end; // else если установлен Проект (дисконтные карты) ***20.07.16
@@ -1982,12 +2227,19 @@ begin
   FormParams.ParamByName('ConfirmedKindName').Value := '';
   FormParams.ParamByName('InvNumberOrder').Value    := '';
   FormParams.ParamByName('ConfirmedKindClientName').Value := '';
-  FormParams.ParamByName('USERSESION').Value:=gc_User.Session;
-
+  FormParams.ParamByName('UserSession').Value:=gc_User.Session;
+  //***10.04.17
+  FormParams.ParamByName('PartnerMedicalId').Value   := 0;
+  FormParams.ParamByName('PartnerMedicalName').Value := '';
+  FormParams.ParamByName('Ambulance').Value          := '';
+  FormParams.ParamByName('MedicSP').Value            := '';
+  FormParams.ParamByName('InvNumberSP').Value        := '';
+  FormParams.ParamByName('OperDateSP').Value         := NOW;
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
   pnlDiscount.Visible := False;
+  pnlSP.Visible := False;
   lblCashMember.Caption := '';
   lblBayer.Caption := '';
   CheckCDS.DisableControls;
@@ -2383,7 +2635,27 @@ begin
             checkCDS.FieldByName('ChangePercent').asCurrency     :=DiscountServiceForm.gChangePercent;
             checkCDS.FieldByName('SummChangePercent').asCurrency :=DiscountServiceForm.gSummChangePercent;
         end
-        else} begin
+        else}
+        if (RemainsCDS.FieldByName('isSP').asBoolean = TRUE)
+          and(Self.FormParams.ParamByName('InvNumberSP').Value <> '')
+        then begin
+            // на всяк случай - УСТАНОВИМ скидку еще разок
+            checkCDS.FieldByName('PriceSale').asCurrency:= RemainsCDS.FieldByName('PriceSaleSP').asCurrency;
+            checkCDS.FieldByName('Price').asCurrency    := RemainsCDS.FieldByName('PriceSP').asCurrency;
+            // и УСТАНОВИМ скидку
+            checkCDS.FieldByName('ChangePercent').asCurrency     := 0;
+            checkCDS.FieldByName('SummChangePercent').asCurrency := AAmount * (RemainsCDS.FieldByName('PriceSaleSP').asCurrency - RemainsCDS.FieldByName('PriceSP').asCurrency);
+        end else
+        if (DiscountServiceForm.gCode = 2) and (Abs(edPrice.Value) > 0.0001) then
+        begin
+            // на всяк случай - УСТАНОВИМ скидку еще разок
+            checkCDS.FieldByName('PriceSale').asCurrency:= RemainsCDS.FieldByName('Price').asCurrency;
+            checkCDS.FieldByName('Price').asCurrency    := edPrice.Value;
+            // и УСТАНОВИМ скидку
+            checkCDS.FieldByName('ChangePercent').asCurrency     := 0;
+            checkCDS.FieldByName('SummChangePercent').asCurrency := AAmount * (RemainsCDS.FieldByName('Price').asCurrency - edPrice.Value);
+        end
+        else begin
             // на всяк случай условие - восстановим если Цена БЕЗ скидки была запонена
             if checkCDS.FieldByName('PriceSale').asCurrency > 0
             then checkCDS.FieldByName('Price').asCurrency        := checkCDS.FieldByName('PriceSale').asCurrency;
@@ -2424,10 +2696,12 @@ begin
   end;
 end;
 
-function TMainCashForm.SaveLocal(ADS: TClientDataSet; AManagerId: integer; AManagerName: String;
-  ABayerName, ABayerPhone, AConfirmedKindName, AInvNumberOrder, AConfirmedKindClientName: String;
-  ADiscountExternalId: integer; ADiscountExternalName, ADiscountCardNumber: String;
-  NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
+function TMainCashForm.SaveLocal(ADS :TClientDataSet; AManagerId: Integer; AManagerName: String;
+      ABayerName, ABayerPhone, AConfirmedKindName, AInvNumberOrder, AConfirmedKindClientName: String;
+      ADiscountExternalId: Integer; ADiscountExternalName, ADiscountCardNumber: String;
+      APartnerMedicalId: Integer; APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP : String;
+      AOperDateSP : TDateTime;
+      NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: integer;
   myVIPCDS, myVIPListCDS: TClientDataSet;
@@ -2483,6 +2757,13 @@ begin
     MyVipCDS.FieldByName('ConfirmedKindName').AsString := AConfirmedKindName;
     MyVipCDS.FieldByName('InvNumberOrder').AsString    := AInvNumberOrder;
     MyVipCDS.FieldByName('ConfirmedKindClientName').AsString := AConfirmedKindClientName;
+    //***10.04.17
+    MyVipCDS.FieldByName('PartnerMedicalId').AsInteger  := APartnerMedicalId;
+    MyVipCDS.FieldByName('PartnerMedicalName').AsString := APartnerMedicalName;
+    MyVipCDS.FieldByName('Ambulance').AsString          := AAmbulance;
+    MyVipCDS.FieldByName('MedicSP').AsString            := AMedicSP;
+    MyVipCDS.FieldByName('InvNumberSP').AsString        := AInvNumberSP;
+    MyVipCDS.FieldByName('OperDateSP').AsDateTime       := AOperDateSP;
 
     MyVipCDS.Post;
 
@@ -2558,15 +2839,23 @@ begin
                                          chbNotMCS.Checked,                       //Не участвует в расчете НТЗ
                                          FiscalCheckNumber,                       //Номер фискального чека
                                          //***20.07.16
-                                         ADiscountExternalId,                     //Id Проекта дисконтных карт
-                                         ADiscountExternalName,                   //Название Проекта дисконтных карт
-                                         ADiscountCardNumber,                     //№ Дисконтной карты
+                                         ADiscountExternalId,      //Id Проекта дисконтных карт
+                                         ADiscountExternalName,    //Название Проекта дисконтных карт
+                                         ADiscountCardNumber,      //№ Дисконтной карты
                                          //***20.07.16
-                                         ABayerPhone,                             //Контактный телефон (Покупателя) - BayerPhone
-                                         AConfirmedKindName,                      //Статус заказа (Состояние VIP-чека) - ConfirmedKind
-                                         AInvNumberOrder,                         //Номер заказа (с сайта) - InvNumberOrder
-                                         AConfirmedKindClientName,                 //Статус заказа (Состояние VIP-чека) - ConfirmedKindClient
-                                         gc_User.Session
+                                         ABayerPhone,              //Контактный телефон (Покупателя) - BayerPhone
+                                         AConfirmedKindName,       //Статус заказа (Состояние VIP-чека) - ConfirmedKind
+                                         AInvNumberOrder,          //Номер заказа (с сайта) - InvNumberOrder
+                                         AConfirmedKindClientName, //Статус заказа (Состояние VIP-чека) - ConfirmedKindClient
+                                         //***24.01.17
+                                         gc_User.Session,          //Для сервиса - реальная сесия при продаже
+                                         //***08.04.17
+                                         APartnerMedicalId,        //Id Медицинское учреждение(Соц. проект)
+                                         APartnerMedicalName,      //Название Медицинское учреждение(Соц. проект)
+                                         AAmbulance,               //№ амбулатории (Соц. проект)
+                                         AMedicSP,                 //ФИО врача (Соц. проект)
+                                         AInvNumberSP,             //номер рецепта (Соц. проект)
+                                         AOperDateSP                //дата рецепта (Соц. проект)
                                         ]);
       End
       else
@@ -2591,8 +2880,17 @@ begin
         FLocalDataBaseHead.FieldByName('CONFIRMED').Value  := AConfirmedKindName;       //Статус заказа (Состояние VIP-чека) - ConfirmedKind
         FLocalDataBaseHead.FieldByName('NUMORDER').Value   := AInvNumberOrder;          //Номер заказа (с сайта) - InvNumberOrder
         FLocalDataBaseHead.FieldByName('CONFIRMEDC').Value := AConfirmedKindClientName; //Статус заказа (Состояние VIP-чека) - ConfirmedKindClient
-        FLocalDataBaseHead.FieldByName('USERSESION').Value := gc_User.Session;
-        FLocalDataBaseHead.post;
+        //***24.01.17
+        FLocalDataBaseHead.FieldByName('USERSESION').Value := gc_User.Session;  //Для сервиса - реальная сесия при продаже
+        //***08.04.17
+        FLocalDataBaseHead.FieldByName('PMEDICALID').Value := APartnerMedicalId;   //Id Медицинское учреждение(Соц. проект)
+        FLocalDataBaseHead.FieldByName('PMEDICALN').Value  := APartnerMedicalName; //Название Медицинское учреждение(Соц. проект)
+        FLocalDataBaseHead.FieldByName('AMBULANCE').Value  := AAmbulance;          //№ амбулатории (Соц. проект)
+        FLocalDataBaseHead.FieldByName('MEDICSP').Value    := AMedicSP;            //ФИО врача (Соц. проект)
+        FLocalDataBaseHead.FieldByName('INVNUMSP').Value   := AInvNumberSP;        //номер рецепта (Соц. проект)
+        FLocalDataBaseHead.FieldByName('OPERDATESP').Value := AOperDateSP;         //дата рецепта (Соц. проект)
+
+        FLocalDataBaseHead.Post;
       End;
     except ON E:Exception do
       Begin
@@ -2830,6 +3128,9 @@ procedure TMainCashForm.Thread_Exception(var Msg: TMessage);
 var
   spUserProtocol : TdsdStoredProc;
 begin
+  // Отключено только для MainCash, в форме MainCash2 сохранение ОШИБОК - ОСТАВИТЬ
+  exit;
+
   spUserProtocol := TdsdStoredProc.Create(nil);
   try
     spUserProtocol.StoredProcName := 'gpInsert_UserProtocol';
@@ -2878,7 +3179,7 @@ procedure TMainCashForm.SetBlinkVIP (isRefresh : boolean);
 var lMovementId_BlinkVIP : String;
 begin
   // если прошло > 100 сек - захардкодил
-  if ((now - time_onBlink) > 0.001) or(isRefresh = true) then
+  if ((now - time_onBlink) > 0.002) or(isRefresh = true) then
 
   try
       //сохранили время "последней" обработки ВСЕХ документов - с типом "Не подтвержден"
@@ -2912,7 +3213,7 @@ procedure TMainCashForm.SetBlinkCheck (isRefresh : boolean);
 var lMovementId_BlinkCheck : String;
 begin
   // если прошло > 50 сек - захардкодил
-  if ((now - time_onBlinkCheck) > 0.0005) or(isRefresh = true) then
+  if ((now - time_onBlinkCheck) > 0.003) or(isRefresh = true) then
 
   try
       //сохранили время "последней" обработки ВСЕХ документов - с "ошибка - расч/факт остаток"
@@ -2937,19 +3238,38 @@ end;
 
 
 procedure TMainCashForm.TimerSaveAllTimer(Sender: TObject);
+var fEmpt  : Boolean;
+    RCount : Integer;
 begin
  TimerSaveAll.Enabled:=False;
+ fEmpt:= true;
+ RCount:= 0;
+ //
  try
-  //пишем протокол что связь с базой есть + сколько чеков еще не перенеслось
-  try spUpdate_UnitForFarmacyCash.ParamByName('inAmount').Value:=FLocalDataBaseHead.RecordCount;
-      spUpdate_UnitForFarmacyCash.Execute;
-  except end;
-  //
-  if not FLocalDataBaseHead.IsEmpty then
-    SaveRealAll;
+     WaitForSingleObject(MutexDBF, INFINITE);
+     try
+       FLocalDataBaseHead.Active:=True;
+       fEmpt:= FLocalDataBaseHead.IsEmpty;
+       RCount:= FLocalDataBaseHead.RecordCount;
+       FLocalDataBaseBody.Active:=False;
+     finally
+       FLocalDataBaseBody.Active:=False;
+       ReleaseMutex(MutexDBF);
+     end;
+     //
+     //пишем протокол что связь с базой есть + сколько чеков еще не перенеслось
+     try spUpdate_UnitForFarmacyCash.ParamByName('inAmount').Value:= RCount;
+         spUpdate_UnitForFarmacyCash.Execute;
+     except end;
+     //
+     //еще сохраним чеки, если они есть
+     if not fEmpt then
+       SaveRealAll;
+
  finally
-   TimerSaveAll.Enabled:=True;
+    TimerSaveAll.Enabled:=True;
  end;
+
 end;
 
 { TSaveRealThread }
@@ -3008,7 +3328,16 @@ begin
               CONFIRMED  := trim(FieldByName('CONFIRMED').AsString);
               NUMORDER   := trim(FieldByName('NUMORDER').AsString);
               CONFIRMEDC := trim(FieldByName('CONFIRMEDC').AsString);
+              //***24.01.17
               USERSESION := trim(FieldByName('USERSESION').AsString);
+              //***08.04.17
+              PMEDICALID := FieldByName('PMEDICALID').AsInteger;
+              PMEDICALN  := trim(FieldByName('PMEDICALN').AsString);
+              AMBULANCE  := trim(FieldByName('AMBULANCE').AsString);
+              MEDICSP    := trim(FieldByName('MEDICSP').AsString);
+              INVNUMSP   := trim(FieldByName('INVNUMSP').AsString);
+              OPERDATESP := FieldByName('OPERDATESP').asCurrency;
+
               FNeedSaveVIP := (MANAGER <> 0);
             end;
             FLocalDataBaseBody.First;
@@ -3094,14 +3423,21 @@ begin
                 dsdSave.Params.AddParam('inFiscalCheckNumber',ftString,ptInput,Head.FISCID);
                 dsdSave.Params.AddParam('inNotMCS',ftBoolean,ptInput,Head.NOTMCS);
                 //***20.07.16
-                dsdSave.Params.AddParam('inDiscountExternalId',ftInteger,ptInputOutput,Head.DISCOUNTID);
+                dsdSave.Params.AddParam('inDiscountExternalId',ftInteger,ptInput,Head.DISCOUNTID);
                 dsdSave.Params.AddParam('inDiscountCardNumber',ftString,ptInput,Head.DISCOUNT);
                 //***16.08.16
                 dsdSave.Params.AddParam('inBayerPhone',       ftString,ptInput,Head.BAYERPHONE);
                 dsdSave.Params.AddParam('inConfirmedKindName',ftString,ptInput,Head.CONFIRMED);
                 dsdSave.Params.AddParam('inInvNumberOrder',   ftString,ptInput,Head.NUMORDER);
-                //
-                dsdSave.Params.AddParam('inUserSesion', ftString, ptInput, Head.USERSESION);
+                //***08.04.17
+                dsdSave.Params.AddParam('inPartnerMedicalId',ftInteger,ptInput,Head.PMEDICALID);
+                dsdSave.Params.AddParam('inAmbulance', ftString, ptInput, Head.AMBULANCE);
+                dsdSave.Params.AddParam('inMedicSP', ftString, ptInput, Head.MEDICSP);
+                dsdSave.Params.AddParam('inInvNumberSP', ftString, ptInput, Head.INVNUMSP);
+                dsdSave.Params.AddParam('inOperDateSP', ftDateTime, ptInput, Head.OPERDATESP);
+                //***24.01.17
+                dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
+
                 dsdSave.Execute(False,False);
                 SetShapeState(clBlack);
                 //сохранили в локальной базе полученный номер
@@ -3144,7 +3480,7 @@ begin
                 //***10.08.16
                 dsdSave.Params.AddParam('inList_UID',ftString,ptInput,Null);
                 //
-                dsdSave.Params.AddParam('inUserSesion', ftString, ptInput, Head.USERSESION);
+                dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 
                 for I := 0 to Length(Body)-1 do
                 Begin
@@ -3235,7 +3571,7 @@ begin
               dsdSave.Params.AddParam('inPaidType',ftInteger,ptInput,Head.PAIDTYPE);
               dsdSave.Params.AddParam('inCashRegister',ftString,ptInput,Head.CASH);
               dsdSave.Params.AddParam('inCashSessionId',ftString,ptInput,MainCashForm.FormParams.ParamByName('CashSessionId').Value);
-              dsdSave.Params.AddParam('inUserSesion', ftString,ptInput, Head.USERSESION);
+              dsdSave.Params.AddParam('inUserSession', ftString,ptInput, Head.USERSESION);
               try
                 dsdSave.Execute(False,False);
                 Head.COMPL := True;
@@ -3297,7 +3633,7 @@ begin
             //стало
             trd:= TRefreshDiffThread.Create(true);
             try
-            Trd.FUserSesion := Head.USERSESION;
+            Trd.FUserSession := Head.USERSESION;
             Trd.Execute;
             finally
             Trd.Free;

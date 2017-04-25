@@ -16,6 +16,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , UnitCode Integer
              , UnitName TVarChar
              , PositionName TVarChar
+             , ProjectMobile TVarChar
+             , isProjectMobile Boolean
               )
 AS
 $BODY$
@@ -62,6 +64,8 @@ END IF;
        , Object_Unit.ValueData     AS UnitName
        , Object_Position.ValueData AS PositionName
 
+       , ObjectString_ProjectMobile.ValueData  AS ProjectMobile
+       , COALESCE (ObjectBoolean_ProjectMobile.ValueData, FALSE) :: Boolean  AS isProjectMobile
    FROM Object AS Object_User
          LEFT JOIN ObjectString AS ObjectString_User_
                                 ON ObjectString_User_.ObjectId = Object_User.Id
@@ -77,6 +81,13 @@ END IF;
          LEFT JOIN ObjectString AS ObjectString_UserKey 
                                 ON ObjectString_UserKey.DescId = zc_ObjectString_User_Key() 
                                AND ObjectString_UserKey.ObjectId = Object_User.Id
+
+         LEFT JOIN ObjectString AS ObjectString_ProjectMobile
+                                ON ObjectString_ProjectMobile.ObjectId = Object_User.Id
+                               AND ObjectString_ProjectMobile.DescId = zc_ObjectString_User_ProjectMobile()
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
+                                 ON ObjectBoolean_ProjectMobile.ObjectId = Object_User.Id
+                                AND ObjectBoolean_ProjectMobile.DescId = zc_ObjectBoolean_User_ProjectMobile()
 
         LEFT JOIN ObjectLink AS ObjectLink_User_Member
                              ON ObjectLink_User_Member.ObjectId = Object_User.Id
@@ -102,6 +113,7 @@ ALTER FUNCTION gpSelect_Object_User (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.04.17         *
  12.09.16         *
  07.06.13                                        * lpCheckRight
  25.09.13                                        *

@@ -11,13 +11,14 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_Visit());
+      -- проверка прав пользователя на вызов процедуры
+      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_Visit());
+      vbUserId:= lpGetUserBySession (inSession);
 
-     -- Удаляем Документ
-     PERFORM lpSetErased_Movement (inMovementId := inMovementId
-                                 , inUserId     := vbUserId);
-
+      -- Удаляем Документ
+      PERFORM lpSetErased_Movement (inMovementId := inMovementId
+                                  , inUserId     := vbUserId
+                                   );
 
 END;
 $BODY$

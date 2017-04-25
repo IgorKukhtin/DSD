@@ -3,7 +3,7 @@ unit dsdAction;
 interface
 
 uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst,
-  cxControls, dsdGuides, ImgList, cxPC, cxGridTableView,
+  cxControls, dsdGuides, ImgList, cxPC, cxGrid, cxGridTableView,
   cxGridDBTableView, frxClass, frxExportPDF, cxGridCustomView, Dialogs, Controls,
   dsdDataSetDataLink, ExtCtrls;
 
@@ -212,10 +212,9 @@ type
     procedure OnTimerNotifyEvent(Sender: TObject);
     procedure AfterScrollNotifyEvent(DataSet: TDataSet);
   protected
-    procedure OnPageChanging(Sender: TObject; NewPage: TcxTabSheet;
-      var AllowChange: Boolean); override;
-    procedure Notification(AComponent: TComponent;
-      Operation: TOperation); override;
+    procedure OnPageChanging(Sender: TObject; NewPage: TcxTabSheet; var AllowChange: Boolean); override;
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    property Timer: TTimer read FTimer;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -427,6 +426,18 @@ type
   TUpdateRecord = class(TDSAction)
   protected
     procedure ChangeDSState; override;
+  end;
+
+  TdsdDataSetRefreshEx = class(TdsdDataSetRefresh)
+  private
+    FColumn: TcxGridDBColumn;
+    procedure SetColumn(const Value: TcxGridDBColumn);
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  public
+    function Execute: Boolean; override;
+  published
+    property Column: TcxGridDBColumn read FColumn write SetColumn;
   end;
 
   // Данный класс дополняет поведение класса TdsdOpenForm по работе со справочниками
@@ -781,10 +792,10 @@ implementation
 uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
   Menus, cxGridExportLink, ShellApi,
   frxDesgn, messages, ParentForm, SimpleGauge, TypInfo,
-  cxExportPivotGridLink, cxGrid, cxCustomPivotGrid, StrUtils, Variants,
+  cxExportPivotGridLink, cxCustomPivotGrid, StrUtils, Variants,
   frxDBSet, Printers,
   cxGridAddOn, cxTextEdit, cxGridDBDataDefinitions, ExternalSave,
-  dxmdaset, dxCore, cxCustomData, cxGridLevel;
+  dxmdaset, dxCore, cxCustomData, cxGridLevel, cxImage, UnilWin;
 
 procedure Register;
 begin
@@ -795,6 +806,7 @@ begin
     TdsdChangeMovementStatus);
   RegisterActions('DSDLib', [TdsdChoiceGuides], TdsdChoiceGuides);
   RegisterActions('DSDLib', [TdsdDataSetRefresh], TdsdDataSetRefresh);
+  RegisterActions('DSDLib', [TdsdDataSetRefreshEx], TdsdDataSetRefreshEx);
   RegisterActions('DSDLib', [TdsdExecStoredProc], TdsdExecStoredProc);
   RegisterActions('DSDLib', [TdsdFormClose], TdsdFormClose);
   RegisterActions('DSDLib', [TdsdGridToExcel], TdsdGridToExcel);
@@ -3130,6 +3142,77 @@ end;
 procedure TdsdPartnerMapAction.UpdateData;
 begin
 
+end;
+
+{ TdsdDataSetRefreshEx }
+
+function TdsdDataSetRefreshEx.Execute: Boolean;
+var
+  DestBlob: AnsiString;
+  NoPhotoName: string;
+begin
+  if Assigned(FDataSet) then
+    DataSet.DisableControls;
+
+  if Assigned(FColumn) then
+    Column.PropertiesClassName := '';
+
+  Result := inherited Execute;
+
+  try
+    if Result and Assigned(FColumn) and Assigned(FDataSet) then
+      if DataSet.FindField(Column.DataBinding.FieldName) <> nil then
+      begin
+        DataSet.First;
+        while not DataSet.Eof do
+        begin
+          try
+            DestBlob := ReConvertConvert(DataSet.FieldByName(Column.DataBinding.FieldName).AsString);
+          except
+            NoPhotoName := ExtractFilePath(ParamStr(0)) + 'NoPhoto.jpg';
+            if FileExists(NoPhotoName) then
+              DestBlob := FileReadString(NoPhotoName)
+            else
+              DestBlob := '';
+          end;
+          DataSet.Edit;
+          DataSet.FieldByName(Column.DataBinding.FieldName).AsString := DestBlob;
+          DataSet.Post;
+          DataSet.Next;
+        end;
+        DataSet.First;
+        Column.PropertiesClassName := 'TcxImageProperties';
+        if Column.PropertiesClass <> nil then
+        begin
+          (Column.Properties as TcxCustomImageProperties).GraphicClassName := 'TJPEGImage';
+          (Column.Properties as TcxCustomImageProperties).Stretch := True;
+        end;
+      end;
+  finally
+    if Assigned(FDataSet) then
+    begin
+      DataSet.AfterScroll := nil;
+      DataSet.EnableControls;
+    end;
+  end;
+
+  if Timer.Enabled then
+    Timer.Enabled := False;
+end;
+
+procedure TdsdDataSetRefreshEx.Notification(AComponent: TComponent; Operation: TOperation);
+begin
+  inherited Notification(AComponent, Operation);
+  if csDestroying in ComponentState then
+    Exit;
+  if (Operation = opRemove) and Assigned(FColumn) then
+    if (AComponent is TcxGridDBColumn) and (AComponent = FColumn) then
+      Column := nil;
+end;
+
+procedure TdsdDataSetRefreshEx.SetColumn(const Value: TcxGridDBColumn);
+begin
+  FColumn := Value;
 end;
 
 end.

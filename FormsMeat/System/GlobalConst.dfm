@@ -2,7 +2,6 @@ inherited GlobalConstForm: TGlobalConstForm
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1089#1080#1089#1090#1077#1084#1099
   ClientWidth = 373
   ExplicitWidth = 389
-  ExplicitHeight = 343
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -37,7 +36,7 @@ inherited GlobalConstForm: TGlobalConstForm
     end
   end
   inherited ActionList: TActionList
-    object dsdUpdateDataSet1: TdsdUpdateDataSet
+    object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -46,8 +45,38 @@ inherited GlobalConstForm: TGlobalConstForm
         item
           StoredProc = spUpdateGlobalConst
         end>
-      Caption = 'dsdUpdateDataSet1'
+      Caption = 'actUpdateDataSet'
       DataSource = MasterDS
+    end
+    object ProtocolOpenForm: TdsdOpenForm
+      Category = #1055#1088#1086#1090#1086#1082#1086#1083
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ValueText'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource
@@ -67,6 +96,44 @@ inherited GlobalConstForm: TGlobalConstForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
+    end
+    object bbProtocolOpenForm: TdxBarButton
+      Action = ProtocolOpenForm
+      Category = 0
+    end
   end
   object spUpdateGlobalConst: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_GlobalConst'
@@ -79,14 +146,16 @@ inherited GlobalConstForm: TGlobalConstForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inActualBankStatementDate'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 136

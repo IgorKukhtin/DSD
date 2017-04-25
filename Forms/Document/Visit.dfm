@@ -1,34 +1,35 @@
 inherited VisitForm: TVisitForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1080#1079#1080#1090' '#1085#1072' '#1090#1086#1088#1075#1086#1074#1091#1102' '#1090#1086#1095#1082#1091'>'
-  ClientHeight = 397
-  ClientWidth = 937
-  ExplicitWidth = 953
-  ExplicitHeight = 435
+  ClientHeight = 449
+  ClientWidth = 1011
+  AddOnFormData.RefreshAction = actRefreshEx
+  ExplicitWidth = 1027
+  ExplicitHeight = 487
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 76
-    Width = 937
-    Height = 321
+    Width = 1011
+    Height = 373
     ExplicitTop = 76
-    ExplicitWidth = 937
-    ExplicitHeight = 321
-    ClientRectBottom = 321
-    ClientRectRight = 937
+    ExplicitWidth = 1011
+    ExplicitHeight = 373
+    ClientRectBottom = 373
+    ClientRectRight = 1011
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 937
-      ExplicitHeight = 297
+      ExplicitWidth = 1011
+      ExplicitHeight = 349
       inherited cxGrid: TcxGrid
-        Width = 937
-        Height = 297
-        ExplicitWidth = 937
-        ExplicitHeight = 297
+        Width = 1011
+        Height = 349
+        ExplicitLeft = 8
+        ExplicitWidth = 1011
+        ExplicitHeight = 349
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount
             end
             item
               Format = ',0.####'
@@ -54,7 +55,6 @@ inherited VisitForm: TVisitForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount
             end
             item
               Format = ',0.####'
@@ -80,18 +80,18 @@ inherited VisitForm: TVisitForm
               Kind = skSum
             end>
           OptionsBehavior.FocusCellOnCycle = False
-          OptionsCustomize.DataRowSizing = False
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsView.CellAutoHeight = True
           OptionsView.GroupSummaryLayout = gslStandard
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object GoodsName: TcxGridDBColumn [0]
-            Caption = #1060#1086#1090#1086
+          object PhotoMobileName: TcxGridDBColumn [0]
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1092#1072#1081#1083#1072' '#1092#1086#1090#1086
             DataBinding.FieldName = 'PhotoMobileName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -103,27 +103,29 @@ inherited VisitForm: TVisitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 143
+            Width = 150
           end
-          object Amount: TcxGridDBColumn [1]
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object PhotoData: TcxGridDBColumn [1]
+            Caption = #1060#1086#1090#1086
+            DataBinding.FieldName = 'PhotoData'
+            PropertiesClassName = 'TcxImageProperties'
+            Properties.GraphicClassName = 'TJPEGImage'
+            Properties.Stretch = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Options.Editing = False
+            Width = 223
           end
           object Comment: TcxGridDBColumn [2]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 126
+            Width = 259
           end
           object colGUID: TcxGridDBColumn [3]
             DataBinding.FieldName = 'GUID'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -131,22 +133,38 @@ inherited VisitForm: TVisitForm
           end
           object InsertMobile: TcxGridDBColumn [4]
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076'. '#1092#1086#1090#1086
-            DataBinding.FieldName = 'InsertMobile'
+            DataBinding.FieldName = 'InsertMobileDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103' '#1092#1086#1090#1086
             Options.Editing = False
             Width = 161
           end
+          object clGPSN: TcxGridDBColumn [5]
+            Caption = 'GPS '#1082#1086#1086#1088#1076#1080#1085#1072#1090#1099' '#1092#1086#1090#1086' ('#1096#1080#1088#1086#1090#1072')'
+            DataBinding.FieldName = 'GPSN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
+          end
+          object clGPSE: TcxGridDBColumn [6]
+            Caption = 'GPS '#1082#1086#1086#1088#1076#1080#1085#1072#1090#1099' '#1092#1086#1090#1086' ('#1076#1086#1083#1075#1086#1090#1072')'
+            DataBinding.FieldName = 'GPSE'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
+          end
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 937
+    Width = 1011
     Height = 50
     TabOrder = 3
-    ExplicitWidth = 937
+    ExplicitWidth = 1011
     ExplicitHeight = 50
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -236,7 +254,9 @@ inherited VisitForm: TVisitForm
   inherited ActionList: TActionList
     Left = 15
     inherited actRefresh: TdsdDataSetRefresh
+      ShortCut = 0
       RefreshOnTabSetChanges = True
+      DataSet = MasterCDS
     end
     inherited actPrint: TdsdPrintAction
       StoredProcList = <
@@ -362,6 +382,28 @@ inherited VisitForm: TVisitForm
       ShortCut = 45
       ImageIndex = 0
     end
+    object actRefreshEx: TdsdDataSetRefreshEx
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+      DataSet = MasterCDS
+      Column = PhotoData
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -472,6 +514,9 @@ inherited VisitForm: TVisitForm
           ItemName = 'dxBarStatic'
         end>
     end
+    inherited bbRefresh: TdxBarButton
+      Action = actRefreshEx
+    end
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Order
       Visible = ivNever
@@ -493,10 +538,10 @@ inherited VisitForm: TVisitForm
       item
       end
       item
-        Column = GoodsName
+        Column = PhotoMobileName
       end
       item
-        Column = Amount
+        Column = PhotoData
       end>
     SummaryItemList = <
       item
@@ -810,19 +855,20 @@ inherited VisitForm: TVisitForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPhotoMobileId'
+        Name = 'inPhotoMobileName'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'PhotoMobileId'
+        ComponentItem = 'PhotoMobileName'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmount'
+        Name = 'inPhotoData'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Amount'
-        DataType = ftFloat
+        ComponentItem = 'PhotoData'
+        DataType = ftWideString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

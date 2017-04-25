@@ -3,8 +3,8 @@
 DROP FUNCTION IF EXISTS gpSelect_MI_ReestrReturnUser(TDateTime, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_ReestrReturnUser(
-    IN inStartDate          TDateTime , 
-    IN inEndDate            TDateTime , 
+    IN inStartDate          TDateTime ,
+    IN inEndDate            TDateTime ,
     IN inReestrKindId       Integer   ,
     IN inSession            TVarChar    -- сессия пользователя
 )
@@ -21,7 +21,11 @@ RETURNS TABLE ( Id Integer, MovementId Integer, LineNum Integer
               , FromName TVarChar, ToName TVarChar
               , PaidKindName TVarChar
               , ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
-              , JuridicalName_To TVarChar, OKPO_To TVarChar 
+              , JuridicalName_To TVarChar, OKPO_To TVarChar
+              , MemberCode_driver Integer
+              , MemberName_driver TVarChar
+              , UnitName_driver TVarChar
+              , PositionName_driver TVarChar
               , ReestrKindName TVarChar
                )
 AS
@@ -57,26 +61,35 @@ BEGIN
                       ;
      -- Проверка
      IF COALESCE (vbMemberId_user, 0) = 0
-     THEN 
+     THEN
           RAISE EXCEPTION 'Ошибка.У пользователя <%> не определно значение <Физ.лицо>.', lfGet_Object_ValueData (vbUserId);
      END IF;
 
 
      -- Результат
      RETURN QUERY
-     WITH
+       WITH -- Member
+        tmpMember AS (SELECT gpSelect.Id
+                           , gpSelect.Code
+                           , gpSelect.Name
+                           , gpSelect.BranchName
+                           , gpSelect.UnitCode
+                           , gpSelect.UnitName
+                           , gpSelect.PositionName
+                      FROM gpSelect_Object_Member (inIsShowAll:= FALSE, inSession:= inSession) AS gpSelect
+                     )
          -- строчная часть реестра - для Одного пользователя
-         tmpMI AS (SELECT MIDate.MovementItemId 
+       , tmpMI AS (SELECT MIDate.MovementItemId
                         , MovementFloat_MovementItemId.MovementId AS MovementId_ReturnIn
                    FROM MovementItemDate AS MIDate
                         INNER JOIN MovementItemLinkObject AS MILinkObject_RemakeBuh
                                                           ON MILinkObject_RemakeBuh.MovementItemId = MIDate.MovementItemId
-                                                         AND MILinkObject_RemakeBuh.DescId         = vbMILinkObjectId 
-                                                         AND MILinkObject_RemakeBuh.ObjectId       = vbMemberId_user 
+                                                         AND MILinkObject_RemakeBuh.DescId         = vbMILinkObjectId
+                                                         AND MILinkObject_RemakeBuh.ObjectId       = vbMemberId_user
                         LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
-                                                ON MovementFloat_MovementItemId.ValueData = MIDate.MovementItemId  
+                                                ON MovementFloat_MovementItemId.ValueData = MIDate.MovementItemId
                                                AND MovementFloat_MovementItemId.DescId    = zc_MovementFloat_MovementItemId()
-                   WHERE MIDate.DescId = vbDateDescId 
+                   WHERE MIDate.DescId = vbDateDescId
                      AND MIDate.ValueData >= inStartDate AND MIDate.ValueData < inEndDate + INTERVAL '1 DAY'
                    )
        -- Результат
@@ -87,7 +100,7 @@ BEGIN
             , Object_Status.ValueData           AS StatusName
             , Movement_Reestr.OperDate                  AS OperDate
             , Movement_Reestr.InvNumber                 AS InvNumber
-           
+
             , Object_Update.ValueData           AS UpdateName
             , MovementDate_Update.ValueData     AS UpdateDate
 
@@ -106,12 +119,12 @@ BEGIN
             , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
             , Object_Status_ReturnIn.ObjectCode         AS StatusCode_ReturnIn
             , Object_Status_ReturnIn.ValueData          AS StatusName_ReturnIn
-    
+
             , MovementFloat_TotalCountKg.ValueData      AS TotalCountKg
             , MovementFloat_TotalSumm.ValueData         AS TotalSumm
 
             , Object_From.ValueData                     AS FromName
-            , Object_To.ValueData                       AS ToName   
+            , Object_To.ValueData                       AS ToName
             , Object_PaidKind.ValueData                 AS PaidKindName
             , View_Contract_InvNumber.ContractCode      AS ContractCode
             , View_Contract_InvNumber.InvNumber         AS ContractName
@@ -119,21 +132,26 @@ BEGIN
             , Object_JuridicalTo.ValueData              AS JuridicalName_To
             , ObjectHistory_JuridicalDetails_View.OKPO  AS OKPO_To
 
-            , Object_ReestrKind.ValueData               AS ReestrKindName    
+            , tmpMember.Code         AS MemberCode_driver
+            , tmpMember.Name         AS MemberName_driver
+            , tmpMember.UnitName     AS UnitName_driver
+            , tmpMember.PositionName AS PositionName_driver
+
+            , Object_ReestrKind.ValueData               AS ReestrKindName
 
        FROM tmpMI
             LEFT JOIN MovementItem ON MovementItem.Id = tmpMI.MovementItemId
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementItem.ObjectId
             LEFT JOIN Movement AS Movement_Reestr ON Movement_Reestr.Id = MovementItem.MovementId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Reestr.StatusId
-            
+
             LEFT JOIN MovementDate AS MovementDate_Update
                                    ON MovementDate_Update.MovementId = Movement_Reestr.Id
                                   AND MovementDate_Update.DescId = zc_MovementDate_Update()
             LEFT JOIN MovementLinkObject AS MLO_Update
                                          ON MLO_Update.MovementId = Movement_Reestr.Id
                                         AND MLO_Update.DescId = zc_MovementLinkObject_Update()
-            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId  
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
 
             LEFT JOIN MovementItemDate AS MIDate_Insert
                                        ON MIDate_Insert.MovementItemId = MovementItem.Id
@@ -177,7 +195,7 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement_ReturnIn.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-            
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement_ReturnIn.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -188,7 +206,7 @@ BEGIN
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
             LEFT JOIN Object AS Object_JuridicalTo ON Object_JuridicalTo.Id = ObjectLink_Partner_Juridical.ChildObjectId
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_JuridicalTo.Id
-           
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement_ReturnIn.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
@@ -203,6 +221,11 @@ BEGIN
                                          ON MovementLinkObject_ReestrKind.MovementId = Movement_ReturnIn.Id
                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Member
+                                         ON MovementLinkObject_Member.MovementId = Movement_ReturnIn.Id
+                                        AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
+            LEFT JOIN tmpMember ON tmpMember.Id = MovementLinkObject_Member.ObjectId
            ;
 
 END;

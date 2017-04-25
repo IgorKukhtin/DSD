@@ -468,7 +468,6 @@ uses
   IntenalSP in '..\..\FormsFarmacy\Guides\IntenalSP.pas' {IntenalSPForm: TParentForm},
   BrandSP in '..\..\FormsFarmacy\Guides\BrandSP.pas' {BrandSPForm: TParentForm},
   BrandSPEdit in '..\..\FormsFarmacy\Guides\BrandSPEdit.pas' {BrandSPEditForm: TParentForm},
-  GoodsSP in '..\..\FormsFarmacy\Guides\GoodsSP.pas' {GoodsSPForm: TParentForm},
   Report_CheckSP in '..\..\FormsFarmacy\Report\Report_CheckSP.pas' {Report_CheckSPForm: TParentForm},
   Report_CheckSPDialog in '..\..\FormsFarmacy\Report\Report_CheckSPDialog.pas' {Report_CheckSPDialogForm: TParentForm},
   PartnerMedical in '..\..\FormsFarmacy\Guides\PartnerMedical.pas' {PartnerMedicalForm: TParentForm},
@@ -500,7 +499,10 @@ uses
   MemberSP in '..\..\FormsFarmacy\Guides\MemberSP.pas' {MemberSPForm: TParentForm},
   Report_RemainsOverGoods_To in '..\..\FormsFarmacy\Report\Report_RemainsOverGoods_To.pas' {Report_RemainsOverGoods_ToForm: TParentForm},
   InvoiceJournal in '..\..\FormsFarmacy\Document\InvoiceJournal.pas' {InvoiceJournalForm: TParentForm},
-  Report_PromoDialog in '..\..\FormsFarmacy\Report\Report_PromoDialog.pas' {Report_PromoDialogForm: TParentForm};
+  Report_PromoDialog in '..\..\FormsFarmacy\Report\Report_PromoDialog.pas' {Report_PromoDialogForm: TParentForm},
+  GoodsSP in '..\..\FormsFarmacy\Guides\GoodsSP.pas' {GoodsSPForm: TParentForm},
+  GoodsSP_Object in '..\..\FormsFarmacy\Guides\GoodsSP_Object.pas' {GoodsSP_ObjectForm: TParentForm},
+  Check_SPEdit in '..\..\FormsFarmacy\Document\Check_SPEdit.pas' {Check_SPEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

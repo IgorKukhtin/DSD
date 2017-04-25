@@ -147,22 +147,15 @@ inherited TaskForm: TTaskForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 172
+            Width = 163
           end
           object colisClose: TcxGridDBColumn [4]
             Caption = #1042#1099#1087#1086#1083#1085#1077#1085#1086' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isClose'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Caption = 'UnitForm'
-                Default = True
-                Kind = bkEllipsis
-              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 104
+            Width = 80
           end
           object colUpdateMobileDate: TcxGridDBColumn [5]
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1099#1087#1086#1083#1085#1077#1085#1086')'
@@ -174,6 +167,17 @@ inherited TaskForm: TTaskForm
               #1080#1103
             Options.Editing = False
             Width = 92
+          end
+          object UpdateDate: TcxGridDBColumn [6]
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1079#1072#1075#1088#1091#1079#1082#1072' '#1089' '#1084#1086#1073'.'#1091#1089#1090#1088'.)'
+            DataBinding.FieldName = 'UpdateDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          inherited colIsErased: TcxGridDBColumn
+            Width = 80
           end
         end
       end
@@ -235,6 +239,7 @@ inherited TaskForm: TTaskForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 7
       Width = 228
     end
@@ -248,6 +253,7 @@ inherited TaskForm: TTaskForm
         Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 6
     Width = 222
   end
@@ -270,6 +276,7 @@ inherited TaskForm: TTaskForm
         Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 9
     Width = 228
   end
@@ -287,8 +294,41 @@ inherited TaskForm: TTaskForm
         Enabled = False
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 11
     Width = 222
+  end
+  object edInsertName: TcxButtonEdit [8]
+    Left = 660
+    Top = 62
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 12
+    Width = 185
+  end
+  object cxLabel7: TcxLabel [9]
+    Left = 660
+    Top = 44
+    Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+  end
+  object cxLabel8: TcxLabel [10]
+    Left = 660
+    Top = 5
+    Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
+  end
+  object edInsertDate: TcxDateEdit [11]
+    Left = 660
+    Top = 23
+    EditValue = 42132d
+    Properties.Kind = ckDateTime
+    Properties.ReadOnly = True
+    TabOrder = 15
+    Width = 130
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 779
@@ -584,8 +624,8 @@ inherited TaskForm: TTaskForm
     Top = 225
   end
   inherited PopupMenu: TPopupMenu
-    Left = 792
-    Top = 184
+    Left = 808
+    Top = 224
     object N2: TMenuItem
       Action = actMISetErased
     end
@@ -732,6 +772,20 @@ inherited TaskForm: TTaskForm
         Value = Null
         Component = edPosition
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsertName'
+        Value = Null
+        Component = edInsertName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsertDate'
+        Value = 'NULL'
+        Component = edInsertDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 200
     Top = 208
@@ -771,14 +825,14 @@ inherited TaskForm: TTaskForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
+    AutoWidth = True
     Left = 258
     Top = 248
   end
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
       item
-      end
-      item
+        Guides = GuidesPersonalTrade
       end>
     Left = 152
     Top = 152
@@ -794,32 +848,6 @@ inherited TaskForm: TTaskForm
       end
       item
         Control = edPersonalTrade
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
       end>
     Left = 264
     Top = 321
@@ -830,13 +858,13 @@ inherited TaskForm: TTaskForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Task_SetErased'
-    Left = 790
-    Top = 128
+    Left = 702
+    Top = 192
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Task_SetUnErased'
-    Left = 654
-    Top = 152
+    Left = 638
+    Top = 208
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Task'
@@ -927,9 +955,6 @@ inherited TaskForm: TTaskForm
       end
       item
         Component = edPersonalTrade
-      end
-      item
-        Component = edPosition
       end>
     Left = 336
     Top = 144
@@ -985,10 +1010,11 @@ inherited TaskForm: TTaskForm
   object GuidesPersonalTrade: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalTrade
-    FormNameParam.Value = 'TMember_ObjectForm'
+    isShowModal = True
+    FormNameParam.Value = 'TMemberPosition_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMember_ObjectForm'
+    FormName = 'TMemberPosition_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1007,6 +1033,44 @@ inherited TaskForm: TTaskForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = '149831'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Unitname'
+        Value = Null
+        Component = edUnit
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchName'
+        Value = Null
+        Component = edBranch
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 500
     Top = 56
@@ -1014,6 +1078,7 @@ inherited TaskForm: TTaskForm
   object GuidesPosition: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPosition
+    isShowModal = True
     FormNameParam.Value = 'TPositionForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','

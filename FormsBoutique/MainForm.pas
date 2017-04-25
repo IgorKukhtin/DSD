@@ -90,6 +90,11 @@ type
     N42: TMenuItem;
     actPersonal: TdsdOpenForm;
     N43: TMenuItem;
+    actIncome: TdsdOpenForm;
+    N44: TMenuItem;
+    N45: TMenuItem;
+    actReturnOut: TdsdOpenForm;
+    N46: TMenuItem;
   private
     { Private declarations }
   public

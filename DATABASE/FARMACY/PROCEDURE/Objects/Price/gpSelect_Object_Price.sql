@@ -19,6 +19,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Price(
 RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , MCSPeriod TFloat, MCSDay TFloat, StartDate TDateTime
              , GoodsId Integer, GoodsCode Integer,/* IdBarCode TVarChar,*/ GoodsName TVarChar
+             , IntenalSPName TVarChar
              , GoodsGroupName TVarChar, NDSKindName TVarChar
              , ConditionsKeepName TVarChar
              , Goods_isTop Boolean, Goods_PercentMarkup TFloat
@@ -29,6 +30,8 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , MinExpirationDate TDateTime
              , Remains TFloat, SummaRemains TFloat
              , RemainsNotMCS TFloat, SummaNotMCS TFloat
+             , PriceRetSP TFloat, PriceOptSP TFloat, PriceSP TFloat, PaymentSP TFloat
+             , isSP Boolean
              , isErased boolean
              , isClose boolean, isFirst boolean , isSecond boolean
              , isPromo boolean
@@ -71,6 +74,7 @@ BEGIN
                ,NULL::Integer                    AS GoodsCode
 --               ,NULL::TVarChar                   AS IdBarCode
                ,NULL::TVarChar                   AS GoodsName
+               ,NULL::TVarChar                   AS IntenalSPName
                ,NULL::TVarChar                   AS GoodsGroupName
                ,NULL::TVarChar                   AS NDSKindName
                ,NULL::TVarChar                   AS ConditionsKeepName
@@ -89,6 +93,11 @@ BEGIN
                ,NULL::TFloat                     AS SummaRemains
                ,NULL::TFloat                     AS RemainsNotMCS
                ,NULL::TFloat                     AS SummaNotMCS
+               ,NULL::TFloat                     AS PriceRetSP
+               ,NULL::TFloat                     AS PriceOptSP
+               ,NULL::TFloat                     AS PriceSP
+               ,NULL::TFloat                     AS PaymentSP
+               ,NULL::Boolean                    AS isSP
                ,NULL::Boolean                    AS isErased
                ,NULL::Boolean                    AS isClose 
                ,NULL::Boolean                    AS isFirst 
@@ -170,6 +179,7 @@ BEGIN
                , Object_Goods_View.GoodsCodeInt                  AS GoodsCode
 --               , zfFormat_BarCode(zc_BarCodePref_Object(), Object_Price_View.Id) ::TVarChar  AS IdBarCode
                , Object_Goods_View.GoodsName                     AS GoodsName
+               , Object_IntenalSP.ValueData                      AS IntenalSPName
                , Object_Goods_View.GoodsGroupName                AS GoodsGroupName
                , Object_Goods_View.NDSKindName                   AS NDSKindName
                , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
@@ -191,7 +201,13 @@ BEGIN
                
                , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE (Object_Price_View.MCSValue, 0) THEN COALESCE (Object_Remains.Remains, 0) - COALESCE (Object_Price_View.MCSValue, 0) ELSE 0 END :: TFloat AS RemainsNotMCS
                , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE (Object_Price_View.MCSValue, 0) THEN (COALESCE (Object_Remains.Remains, 0) - COALESCE (Object_Price_View.MCSValue, 0)) * COALESCE (Object_Price_View.Price, 0) ELSE 0 END :: TFloat AS SummaNotMCS
-               
+
+               , COALESCE (ObjectFloat_Goods_PriceRetSP.ValueData,0) ::TFloat  AS PriceRetSP
+               , COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) ::TFloat  AS PriceOptSP
+               , COALESCE (ObjectFloat_Goods_PriceSP.ValueData,0)    ::TFloat  AS PriceSP
+               , COALESCE (ObjectFloat_Goods_PaymentSP.ValueData,0)  ::TFloat  AS PaymentSP
+
+               , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
                , Object_Goods_View.isErased                      AS isErased 
 
                , Object_Goods_View.isClose
@@ -205,7 +221,8 @@ BEGIN
                , Object_Price_View.PercentMarkup           AS PercentMarkup
                , Object_Price_View.PercentMarkupDateChange AS PercentMarkupDateChange
                
-               , CASE WHEN Object_Remains.MinExpirationDate < CURRENT_DATE  + zc_Interval_ExpirationDate() THEN zc_Color_Blue() 
+               , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE THEN 25088 --zc_Color_GreenL()
+                      WHEN Object_Remains.MinExpirationDate < CURRENT_DATE  + zc_Interval_ExpirationDate() THEN zc_Color_Blue() 
                       WHEN (Object_Price_View.isTop = TRUE OR Object_Goods_View.isTop = TRUE) THEN 15993821 -- ðîçîâûé
                       ELSE zc_Color_Black() 
                  END     AS Color_ExpirationDate                --vbAVGDateEnd
@@ -238,6 +255,35 @@ BEGIN
                                      ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
                                     AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
                 LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId                        
+
+               -- ïîëó÷àåòñÿ GoodsMainId
+               LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods_View.Id
+                                                        AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+               LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                       AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+
+               LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
+                                        ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                       AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+
+               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceRetSP
+                                     ON ObjectFloat_Goods_PriceRetSP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                    AND ObjectFloat_Goods_PriceRetSP.DescId = zc_ObjectFloat_Goods_PriceRetSP() 
+               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
+                                     ON ObjectFloat_Goods_PriceOptSP.ObjectId = ObjectLink_Main.ChildObjectId
+                                    AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP() 
+               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceSP
+                                     ON ObjectFloat_Goods_PriceSP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                    AND ObjectFloat_Goods_PriceSP.DescId = zc_ObjectFloat_Goods_PriceSP()   
+               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PaymentSP
+                                     ON ObjectFloat_Goods_PaymentSP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                    AND ObjectFloat_Goods_PaymentSP.DescId = zc_ObjectFloat_Goods_PaymentSP() 
+
+               LEFT JOIN ObjectLink AS ObjectLink_Goods_IntenalSP
+                                    ON ObjectLink_Goods_IntenalSP.ObjectId = ObjectLink_Main.ChildObjectId
+                                   AND ObjectLink_Goods_IntenalSP.DescId = zc_ObjectLink_Goods_IntenalSP()
+               LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = ObjectLink_Goods_IntenalSP.ChildObjectId
+        
             WHERE (inisShowDel = True OR Object_Goods_View.isErased = False)
               AND (Object_Goods_View.Id = inGoodsId OR inGoodsId = 0)
             ORDER BY GoodsGroupName, GoodsName;
@@ -310,6 +356,7 @@ BEGIN
                , Object_Goods_View.GoodsCodeInt            AS GoodsCode
 --               , zfFormat_BarCode(zc_BarCodePref_Object(), Object_Price_View.Id) ::TVarChar AS IdBarCode
                , Object_Goods_View.GoodsName               AS GoodsName
+               , Object_IntenalSP.ValueData                AS IntenalSPName
                , Object_Goods_View.GoodsGroupName          AS GoodsGroupName
                , Object_Goods_View.NDSKindName             AS NDSKindName
                , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
@@ -330,6 +377,12 @@ BEGIN
                , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE (Object_Price_View.MCSValue, 0) THEN COALESCE (Object_Remains.Remains, 0) - COALESCE (Object_Price_View.MCSValue, 0) ELSE 0 END :: TFloat AS RemainsNotMCS
                , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE (Object_Price_View.MCSValue, 0) THEN (COALESCE (Object_Remains.Remains, 0) - COALESCE (Object_Price_View.MCSValue, 0)) * COALESCE (Object_Price_View.Price, 0) ELSE 0 END :: TFloat AS SummaNotMCS
                               
+               , COALESCE (ObjectFloat_Goods_PriceRetSP.ValueData,0) ::TFloat  AS PriceRetSP
+               , COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) ::TFloat  AS PriceOptSP
+               , COALESCE (ObjectFloat_Goods_PriceSP.ValueData,0)    ::TFloat  AS PriceSP
+               , COALESCE (ObjectFloat_Goods_PaymentSP.ValueData,0)  ::TFloat  AS PaymentSP
+
+               , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
                , Object_Goods_View.isErased                AS isErased 
 
                , Object_Goods_View.isClose
@@ -343,7 +396,8 @@ BEGIN
                , Object_Price_View.PercentMarkup           AS PercentMarkup
                , Object_Price_View.PercentMarkupDateChange AS PercentMarkupDateChange
 
-               , CASE WHEN Object_Remains.MinExpirationDate < CURRENT_DATE  + zc_Interval_ExpirationDate() THEN zc_Color_Blue() 
+               , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE THEN 25088 --zc_Color_GreenL()
+                      WHEN Object_Remains.MinExpirationDate < CURRENT_DATE  + zc_Interval_ExpirationDate() THEN zc_Color_Blue() 
                       WHEN (Object_Price_View.isTop = TRUE OR Object_Goods_View.isTop = TRUE) THEN 15993821 -- ðîçîâûé
                       ELSE zc_Color_Black() 
                  END      AS Color_ExpirationDate                --vbAVGDateEnd
@@ -372,6 +426,35 @@ BEGIN
                                      ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
                                     AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
                 LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
+
+               -- ïîëó÷àåòñÿ GoodsMainId
+               LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods_View.Id
+                                                        AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+               LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                       AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+
+               LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
+                                        ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                       AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+
+               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceRetSP
+                                     ON ObjectFloat_Goods_PriceRetSP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                    AND ObjectFloat_Goods_PriceRetSP.DescId = zc_ObjectFloat_Goods_PriceRetSP() 
+               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
+                                     ON ObjectFloat_Goods_PriceOptSP.ObjectId = ObjectLink_Main.ChildObjectId
+                                    AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP() 
+               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceSP
+                                     ON ObjectFloat_Goods_PriceSP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                    AND ObjectFloat_Goods_PriceSP.DescId = zc_ObjectFloat_Goods_PriceSP()   
+               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PaymentSP
+                                     ON ObjectFloat_Goods_PaymentSP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                    AND ObjectFloat_Goods_PaymentSP.DescId = zc_ObjectFloat_Goods_PaymentSP() 
+
+               LEFT JOIN ObjectLink AS ObjectLink_Goods_IntenalSP
+                                    ON ObjectLink_Goods_IntenalSP.ObjectId = ObjectLink_Main.ChildObjectId
+                                   AND ObjectLink_Goods_IntenalSP.DescId = zc_ObjectLink_Goods_IntenalSP()
+               LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = ObjectLink_Goods_IntenalSP.ChildObjectId
+        
             WHERE Object_Price_View.unitid = inUnitId
               AND (inisShowDel = True OR Object_Goods_View.isErased = False)
               AND (Object_Goods_View.Id = inGoodsId OR inGoodsId = 0)
@@ -385,6 +468,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.  Âîðîáêàëî À.À. 
+ 06.04.17         *
  12.01.17         *
  06.09.16         *
  11.07.16         *

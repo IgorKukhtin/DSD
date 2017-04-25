@@ -61,6 +61,8 @@ type
     Color_Calc: TcxGridDBColumn;
     Color_CalcDoc: TcxGridDBColumn;
     actShowMessage: TShowMessageAction;
+    InvNumberSP: TcxGridDBColumn;
+    MedicSP: TcxGridDBColumn;
   private
     { Private declarations }
   public

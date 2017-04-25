@@ -14,6 +14,7 @@ type
   ///	</remarks>
   IStorage = interface
     function GetConnection: string;
+    procedure SetConnection(Value: string);
     ///	<summary>
     /// Процедура вызова обработчика XML структры на среднем уровне.
     ///	</summary>
@@ -28,7 +29,7 @@ type
     ///	</param>
     function ExecuteProc(pData: String; pExecOnServer: boolean = false;
       AMaxAtempt: Byte = 10; ANeedShowException: Boolean = True): Variant;
-    property Connection: String read GetConnection;
+    property Connection: String read GetConnection write SetConnection;
   end;
 
   TStorageFactory = class
@@ -87,8 +88,9 @@ type
     procedure ProcessErrorCode(pData: String; ProcedureParam: String);
     function ProcessMultiDataSet: Variant;
     function GetConnection: string;
+    procedure SetConnection(Value: string);
   public
-    property Connection: String read GetConnection;
+    property Connection: String read GetConnection write SetConnection;
     class function NewInstance: TObject; override;
   end;
 
@@ -107,11 +109,14 @@ begin
   result := FConnection;
 end;
 
+procedure TStorage.SetConnection(Value: string);
+begin
+  FConnection := Value;
+end;
+
 class function TStorage.NewInstance: TObject;
 var
   ConnectionString: string;
-  i: Integer;
-  StartPHP: Boolean;
 begin
   if not Assigned(Instance) then begin
     Instance := TStorage(inherited NewInstance);
@@ -270,7 +275,6 @@ var
   AttemptCount: integer;
   ok: Boolean;
   StartActiveConnection: Integer;
-  LastError: integer;
   ResStr : string;
   function NextActiveConnection: Integer;
   Begin

@@ -26,6 +26,11 @@ inherited CheckForm: TCheckForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountOrder
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummSale
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -54,6 +59,11 @@ inherited CheckForm: TCheckForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountOrder
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummSale
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -83,7 +93,15 @@ inherited CheckForm: TCheckForm
             Options.Editing = False
             Width = 222
           end
-          object colChangePercent: TcxGridDBColumn [2]
+          object colIntenalSPName: TcxGridDBColumn [2]
+            Caption = #1052#1110#1078#1085#1072#1088#1086#1076#1085#1072' '#1085#1077#1087#1072#1090#1077#1085#1090#1086#1074#1072#1085#1072' '#1085#1072#1079#1074#1072
+            DataBinding.FieldName = 'IntenalSPName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 107
+          end
+          object colChangePercent: TcxGridDBColumn [3]
             Caption = '% c'#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'ChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -94,7 +112,7 @@ inherited CheckForm: TCheckForm
             Options.Editing = False
             Width = 74
           end
-          object colAmount: TcxGridDBColumn [3]
+          object colAmount: TcxGridDBColumn [4]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -105,7 +123,7 @@ inherited CheckForm: TCheckForm
             Options.Editing = False
             Width = 73
           end
-          object colAmountOrder: TcxGridDBColumn [4]
+          object colAmountOrder: TcxGridDBColumn [5]
             Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'AmountOrder'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -116,49 +134,38 @@ inherited CheckForm: TCheckForm
             Options.Editing = False
             Width = 73
           end
-          object colPrice: TcxGridDBColumn [5]
+          object colPrice: TcxGridDBColumn [6]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00;-,0.00'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
-          object colPriceSale: TcxGridDBColumn [6]
+          object colPriceSale: TcxGridDBColumn [7]
             Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'PriceSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00;-,0.00'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 74
           end
-          object colSummChangePercent: TcxGridDBColumn [7]
+          object colSummChangePercent: TcxGridDBColumn [8]
             Caption = #1057#1091#1084#1084#1072' '#1057#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'SummChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00;-,0.00'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 65
-          end
-          object colSumm: TcxGridDBColumn [8]
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'Summ'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00;-,0.00'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
           end
           object List_UID: TcxGridDBColumn [9]
             Caption = 'UID '#1101#1083#1077#1084#1077#1085#1090#1072
@@ -174,6 +181,37 @@ inherited CheckForm: TCheckForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object colSumm: TcxGridDBColumn [10]
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colSummSale: TcxGridDBColumn [11]
+            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'SummSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colisSp: TcxGridDBColumn [12]
+            Caption = #1059#1095'. '#1074' '#1057#1055
+            DataBinding.FieldName = 'isSp'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1077
+            Options.Editing = False
+            Width = 50
           end
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
@@ -410,7 +448,6 @@ inherited CheckForm: TCheckForm
   object edInvNumberSP: TcxTextEdit [15]
     Left = 347
     Top = 130
-    Hint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1057#1086#1089#1090#1086#1103#1085#1080#1077' VIP-'#1095#1077#1082#1072')'
     Properties.ReadOnly = True
     TabOrder = 19
     Width = 116
@@ -425,7 +462,19 @@ inherited CheckForm: TCheckForm
     Top = 130
     Properties.ReadOnly = True
     TabOrder = 21
-    Width = 324
+    Width = 160
+  end
+  object cxLabel17: TcxLabel [18]
+    Left = 641
+    Top = 114
+    Caption = #8470' '#1072#1084#1073#1091#1083#1072#1090#1086#1088#1080#1080' '
+  end
+  object edAmbulance: TcxTextEdit [19]
+    Left = 641
+    Top = 130
+    Properties.ReadOnly = True
+    TabOrder = 23
+    Width = 160
   end
   inherited ActionList: TActionList
     inherited actMISetErased: TdsdUpdateErased
@@ -720,6 +769,81 @@ inherited CheckForm: TCheckForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1095#1077#1082#1072
       ImageIndex = 67
     end
+    object actUpdateSpParam: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdate_SpParam
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SpParam
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 26
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
+    object ExecuteDialogSP: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1055
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1055
+      ImageIndex = 26
+      FormName = 'TCheck_SPEditForm'
+      FormNameParam.Value = 'TCheck_SPEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDateSp'
+          Value = 42261d
+          Component = edOperDateSP
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumberSP'
+          Value = Null
+          Component = edInvNumberSP
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMedicSPName'
+          Value = Null
+          Component = edMedicSP
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inAmbulance'
+          Value = Null
+          Component = edAmbulance
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macUpdateSpParam: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogSP
+        end
+        item
+          Action = actUpdateSpParam
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1055
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1055
+      ImageIndex = 26
+    end
   end
   inherited MasterDS: TDataSource
     Top = 221
@@ -803,6 +927,14 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -822,6 +954,10 @@ inherited CheckForm: TCheckForm
     end
     object bbUpdateOperDate: TdxBarButton
       Action = macUpdateOperDate
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = macUpdateSpParam
       Category = 0
     end
   end
@@ -1068,6 +1204,13 @@ inherited CheckForm: TCheckForm
         Component = edMedicSP
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Ambulance'
+        Value = Null
+        Component = edAmbulance
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 312
@@ -1123,8 +1266,8 @@ inherited CheckForm: TCheckForm
     Top = 304
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Left = 516
-    Top = 212
+    Left = 508
+    Top = 236
   end
   object spUpdate_Movement_Check: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Check'
@@ -1226,6 +1369,55 @@ inherited CheckForm: TCheckForm
       end>
     PackSize = 1
     Left = 482
+    Top = 336
+  end
+  object spUpdate_SpParam: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_SpParam'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDateSP'
+        Value = 42261d
+        Component = edOperDateSP
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmbulance'
+        Value = 'edInvNumber'
+        Component = edAmbulance
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMedicSP'
+        Value = Null
+        Component = edMedicSP
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumberSP'
+        Value = Null
+        Component = edInvNumberSP
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 554
     Top = 336
   end
 end

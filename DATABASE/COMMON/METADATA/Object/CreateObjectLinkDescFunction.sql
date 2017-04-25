@@ -849,7 +849,7 @@ SELECT 'zc_ObjectLink_Contract_Currency', 'Валюта', zc_Object_Contract(), zc_Obj
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Contract_GroupMemberSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Contract_GroupMemberSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
-  SELECT 'zc_ObjectLink_Contract_GroupMemberSP', 'Категория пациента(Соц. проект)', zc_Object_Contract(), zc_Object_GroupMemberSP() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Contract_GroupMemberSP');
+  SELECT 'zc_ObjectLink_Contract_GroupMemberSP', 'Категория пациента(СП)', zc_Object_Contract(), zc_Object_GroupMemberSP() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Contract_GroupMemberSP');
 
 
 --!!! ContractPartner
@@ -1425,15 +1425,15 @@ SELECT 'zc_ObjectLink_Goods_NDSKind', 'Связь товаров с Видом НДС', zc_Object_Goo
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_IntenalSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_IntenalSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
-SELECT 'zc_ObjectLink_Goods_IntenalSP', 'Міжнародна непатентована назва (Соц. проект)', zc_Object_Goods(), zc_Object_IntenalSP() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_IntenalSP');
+SELECT 'zc_ObjectLink_Goods_IntenalSP', 'Міжнародна непатентована назва (2)(СП)', zc_Object_Goods(), zc_Object_IntenalSP() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_IntenalSP');
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_BrandSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_BrandSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
-SELECT 'zc_ObjectLink_Goods_BrandSP', 'Торговельна назва лікарського засобу (Соц. проект)', zc_Object_Goods(), zc_Object_BrandSP() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_BrandSP');
+SELECT 'zc_ObjectLink_Goods_BrandSP', 'Торгова назва лікарського засобу (3)(СП)', zc_Object_Goods(), zc_Object_BrandSP() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_BrandSP');
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_KindOutSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_KindOutSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
-SELECT 'zc_ObjectLink_Goods_KindOutSP', 'Форма випуску (Соц. проект)', zc_Object_Goods(), zc_Object_KindOutSP() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_KindOutSP');
+SELECT 'zc_ObjectLink_Goods_KindOutSP', 'Форма випуску (4)(СП)', zc_Object_Goods(), zc_Object_KindOutSP() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_KindOutSP');
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_ConditionsKeep() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_ConditionsKeep'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)

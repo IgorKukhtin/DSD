@@ -79,6 +79,7 @@ type
     edOrderSumm: TcxTextEdit;
     cxLabel12: TcxLabel;
     edOrderTime: TcxTextEdit;
+    clCalc_Color: TcxGridDBColumn;
   private
     { Private declarations }
   public

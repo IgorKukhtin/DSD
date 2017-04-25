@@ -64,7 +64,10 @@ BEGIN
                                                                 )
                                    )
                                 OR (View_Personal.BranchId = vbBranchId_Constraint
-                                AND vbIsConstraint = TRUE
+                                AND vbIsConstraint = TRUE)
+                                OR (View_Personal.PositionId IN (8466 -- водитель
+                                                               , 81178 -- экспедитор
+                                                                )
                                   ))
                            )
 

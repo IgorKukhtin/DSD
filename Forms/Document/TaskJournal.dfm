@@ -108,7 +108,7 @@ inherited TaskJournalForm: TTaskJournalForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
-          OptionsView.HeaderHeight = 40
+          OptionsView.HeaderHeight = 50
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -167,12 +167,72 @@ inherited TaskJournalForm: TTaskJournalForm
             Width = 101
           end
           object clInsertDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 78
+          end
+          object colPartnerCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088'.'
+            DataBinding.FieldName = 'PartnerCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 46
+          end
+          object colPartnerName: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+            DataBinding.FieldName = 'PartnerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
+          end
+          object colDescription: TcxGridDBColumn
+            Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1079#1072#1076#1072#1085#1080#1103
+            DataBinding.FieldName = 'Description'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 299
+          end
+          object clComment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 172
+          end
+          object colisClose: TcxGridDBColumn
+            Caption = #1042#1099#1087#1086#1083#1085#1077#1085#1086' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object colUpdateMobileDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1099#1087#1086#1083#1085#1077#1085#1086')'
+            DataBinding.FieldName = 'UpdateMobileDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 
+              #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1082#1086#1075#1076#1072' '#1090#1086#1088#1075#1086#1074#1099#1081' '#1086#1090#1084#1077#1090#1080#1083' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1077'/'#1085#1077' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1077' '#1079#1072#1076#1072#1085 +
+              #1080#1103
+            Options.Editing = False
+            Width = 92
+          end
+          object UpdateDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1079#1072#1075#1088#1091#1079#1082#1072' '#1089' '#1084#1086#1073'.'#1091#1089#1090#1088'.)'
+            DataBinding.FieldName = 'UpdateDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
         end
       end
@@ -182,10 +242,10 @@ inherited TaskJournalForm: TTaskJournalForm
     Width = 958
     ExplicitWidth = 958
     inherited deStart: TcxDateEdit
-      EditValue = 42795d
+      EditValue = 42736d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 42736d
     end
   end
   object cxLabel27: TcxLabel [2]
@@ -492,9 +552,6 @@ inherited TaskJournalForm: TTaskJournalForm
           StoredProc = spGet_UserJuridicalBasis
         end
         item
-          StoredProc = spGet_PersonalTrade
-        end
-        item
           StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
@@ -779,6 +836,10 @@ inherited TaskJournalForm: TTaskJournalForm
     Left = 400
     Top = 200
   end
+  inherited spMovementReComplete: TdsdStoredProc
+    Left = 384
+    Top = 128
+  end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
@@ -872,10 +933,10 @@ inherited TaskJournalForm: TTaskJournalForm
     KeyField = 'Id'
     LookupControl = edPersonalTrade
     Key = '0'
-    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.Value = 'TMemberPosition_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMember_ObjectForm'
+    FormName = 'TMemberPosition_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -894,31 +955,12 @@ inherited TaskJournalForm: TTaskJournalForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end>
-    Left = 607
-  end
-  object spGet_PersonalTrade: TdsdStoredProc
-    StoredProcName = 'gpGetMobile_Object_Const'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'MemberId'
-        Value = '0'
-        Component = PersonalTradeGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
       end
       item
-        Name = 'MemberName'
-        Value = ''
-        Component = PersonalTradeGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
+        Name = 'MasterPositionId'
+        Value = '149831'
         MultiSelectSeparator = ','
       end>
-    PackSize = 1
-    Left = 592
-    Top = 48
+    Left = 607
   end
 end

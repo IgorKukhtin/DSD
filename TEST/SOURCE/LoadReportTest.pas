@@ -190,7 +190,12 @@ begin
 
   LoadReportFromFile('Производство План и Факт расход сырья', ReportPath + '\Отчеты (производство)\Производство План и Факт расход сырья.fr3');
   LoadReportFromFile('Производство План и Факт запас цен', ReportPath + '\Отчеты (производство)\Производство План и Факт запас цен.fr3');
+   }
+  LoadReportFromFile('Отчет по остаткам для снабжения', ReportPath + '\Отчеты (производство)\Отчет по остаткам для снабжения.fr3');
+  LoadReportFromFile('Отчет по остаткам для снабжения(поставщик)', ReportPath + '\Отчеты (производство)\Отчет по остаткам для снабжения(поставщик).fr3');
+  LoadReportFromFile('Отчет по движению по дням недели', ReportPath + '\Отчеты (производство)\Отчет по движению по дням недели.fr3');
 
+  {
   LoadReportFromFile('Дефростер по партиям', ReportPath + '\Отчеты (производство)\Дефростер по партиям.fr3');
   LoadReportFromFile('Дефростер(итог)', ReportPath + '\Отчеты (производство)\Дефростер(итог).fr3');
   LoadReportFromFile('Отчет по упаковке', ReportPath + '\Отчеты (производство)\Отчет по упаковке.fr3');
@@ -241,7 +246,7 @@ begin
   LoadReportFromFile('PrintMovement_SalePack', ReportPath + '\Товарный Учет\PrintMovement_SalePack.fr3');
 
   LoadReportFromFile('PrintMovement_Quality', ReportPath + '\Товарный Учет\PrintMovement_Quality.fr3');
- }
+
   LoadReportFromFile('PrintMovement_ReturnIn', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn.fr3');
   LoadReportFromFile('PrintMovement_ReturnIn32049199', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn32049199.fr3');
   LoadReportFromFile('PrintMovement_ReturnIn32516492', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn32516492.fr3');
@@ -268,7 +273,9 @@ begin
   LoadReportFromFile('PrintMovement_SalePack22', ReportPath + '\Товарный Учет\PrintMovement_SalePack22.fr3');
 
   LoadReportFromFile('PrintMovement_ReturnIn_By_TaxCorrective', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn_By_TaxCorrective.fr3');
-
+  }
+  LoadReportFromFile('PrintMovement_OrderIncomeSnab', ReportPath + '\Товарный Учет\PrintMovement_OrderIncomeSnab.fr3');
+  exit;
   LoadReportFromFile('PrintMovement_OrderExternal', ReportPath + '\Товарный Учет\PrintMovement_OrderExternal.fr3');
   LoadReportFromFile('PrintMovement_Loss', ReportPath + '\Товарный Учет\PrintMovement_Loss.fr3');
   LoadReportFromFile('PrintMovement_Income', ReportPath + '\Товарный Учет\PrintMovement_Income.fr3');

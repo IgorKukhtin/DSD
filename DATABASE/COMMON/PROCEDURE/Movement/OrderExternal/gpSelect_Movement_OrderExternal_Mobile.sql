@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_OrderExternal_Mobile()
+ -- Function: gpSelect_Movement_OrderExternal_Mobile()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderExternal_Mobile (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar);
 
@@ -17,11 +17,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ToId Integer, ToName TVarChar
              , PersonalId Integer, PersonalName TVarChar
              , RouteGroupName TVarChar, RouteId Integer, RouteName TVarChar
-             , RouteSortingId Integer, RouteSortingName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , PriceListId Integer, PriceListName TVarChar
-             , PartnerId Integer, PartnerName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PriceWithVAT Boolean, isPrinted Boolean,VATPercent TFloat, ChangePercent TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
@@ -29,32 +27,64 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isEDI Boolean, isPromo Boolean
              , MovementPromo TVarChar
              , Comment TVarChar
+             , InsertName TVarChar
+             , InsertDate TDateTime
+             , InsertMobileDate TDateTime
+             , MemberName TVarChar
+             , UnitCode Integer
+             , UnitName TVarChar
+             , PositionName TVarChar
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbMemberId Integer;
-   DECLARE vbPersonalId Integer;
-   
-   DECLARE vbIsUserOrder  Boolean;
+   DECLARE vbUserId          Integer;
+
+   DECLARE vbIsProjectMobile Boolean;
+   DECLARE vbUserId_Member   Integer;
+   DECLARE vbIsUserOrder     Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderExternal());
      vbUserId:= lpGetUserBySession (inSession);
 
+
      -- определяется уровень доступа
      vbIsUserOrder:= EXISTS (SELECT Object_RoleAccessKeyGuide_View.AccessKeyId_UserOrder FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.AccessKeyId_UserOrder > 0);
 
-     SELECT tmp.MemberId, tmp.PersonalId
-     INTO vbMemberId, vbPersonalId     
-     FROM gpGetMobile_Object_Const (inSession) AS tmp;
+     -- Только так определяется что пользователь inSession - Торговый агент - т.е. у него есть моб телефон, может потом для этого заведем спец роль и захардкодим
+     vbIsProjectMobile:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = vbUserId AND ObjectBoolean.DescId = zc_ObjectBoolean_User_ProjectMobile());
 
-     IF (COALESCE(inMemberId,0) <> 0 AND COALESCE(vbMemberId,0) <> inMemberId)
-        THEN
-            RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.'; 
+     IF inMemberId > 0
+     THEN
+         -- Определяется для <Физическое лицо> - его UserId
+         vbUserId_Member:= (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_User_Member() AND OL.ChildObjectId = inMemberId);
+         -- Проверка
+         IF COALESCE (vbUserId_Member, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Для ФИО <%> не определно значение <Пользователь>.', lfGet_Object_ValueData (inMemberId);
+         END IF;
+
+     ELSEIF vbIsProjectMobile = TRUE
+     THEN
+         -- в этом случае - видит только себя
+         vbUserId_Member:= vbUserId;
+         -- !!!меняем значение!!! - Определяется для UserId - его <Физическое лицо>
+         inMemberId:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_User_Member() AND OL.ObjectId = vbUserId);
+     ELSE
+         -- в этом случае - видит ВСЕ
+         vbUserId_Member:= 0;
+         -- !!!меняем значение!!!
+         inMemberId:= 0;
      END IF;
 
-     --inMemberId:=0;
+
+     -- Проверка - Торговый агент видит только себя
+     IF vbIsProjectMobile = TRUE AND vbUserId_Member <> vbUserId
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.';
+     END IF;
+
+
      -- Результат
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
@@ -70,23 +100,26 @@ BEGIN
                          UNION SELECT tmpRoleAccessKey_all.AccessKeyId FROM tmpRoleAccessKey_all WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll) GROUP BY tmpRoleAccessKey_all.AccessKeyId
                          UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
                               )
-        , tmpPartner AS (SELECT ObjectLink_Partner_PersonalTrade.ObjectId AS PartnerId
-                         FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
-                         WHERE ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                           AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId --301468 --
-                         )
-        , tmpMovement AS (SELECT tmp.Id, MovementLinkObject_From.ObjectId  AS FromId
-                          FROM
-                             (SELECT Movement.id
-                              FROM tmpStatus
-                                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.StatusId = tmpStatus.StatusId
-                                   JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
-                              ) AS tmp
-                                LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                       ON MovementLinkObject_From.MovementId = tmp.Id
-                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                LEFT JOIN tmpPartner ON tmpPartner.PartnerId = MovementLinkObject_From.ObjectId
-                          WHERE (tmpPartner.PartnerId IS NOT NULL AND COALESCE(inMemberId,0) <> 0) OR COALESCE(inMemberId,0) = 0 
+        , tmpMovement AS (SELECT tmp.*, MovementLinkObject_Insert.ObjectId AS UserId_insert
+                          FROM (SELECT Movement.*
+                                FROM tmpStatus
+                                     JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.StatusId = tmpStatus.StatusId
+                                     JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                                ) AS tmp
+                                INNER JOIN MovementLinkObject AS MovementLinkObject_Insert
+                                                              ON MovementLinkObject_Insert.MovementId = tmp.Id
+                                                             AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
+                                                             AND MovementLinkObject_Insert.ObjectId > 0
+                          WHERE MovementLinkObject_Insert.ObjectId = vbUserId_Member
+                             OR vbUserId_Member = 0
+                          )
+         , tmpPersonal AS (SELECT lfSelect.MemberId
+                                , lfSelect.PersonalId
+                                , lfSelect.UnitId
+                                , lfSelect.PositionId
+                                , lfSelect.BranchId
+                           FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                           WHERE lfSelect.Ord = 1
                           )
 
        SELECT
@@ -108,8 +141,6 @@ BEGIN
            , Object_RouteGroup.ValueData                    AS RouteGroupName
            , Object_Route.Id                                AS RouteId
            , Object_Route.ValueData                         AS RouteName
-           , Object_RouteSorting.Id                         AS RouteSortingId
-           , Object_RouteSorting.ValueData                  AS RouteSortingName
            , Object_PaidKind.Id                             AS PaidKindId
            , Object_PaidKind.ValueData                      AS PaidKindName
            , View_Contract_InvNumber.ContractId             AS ContractId
@@ -118,8 +149,6 @@ BEGIN
            , View_Contract_InvNumber.ContractTagName        AS ContractTagName
            , Object_PriceList.id                            AS PriceListId
            , Object_PriceList.ValueData                     AS PriceListName
-           , Object_Partner.id                              AS PartnerId
-           , Object_Partner.ValueData                       AS PartnerName
            , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
            , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
            , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
@@ -144,20 +173,33 @@ BEGIN
            , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
 
            , MovementString_Comment.ValueData       AS Comment
+           , Object_User.ValueData                  AS InsertName
+           , MovementDate_Insert.ValueData          AS InsertDate
+           , MovementDate_InsertMobile.ValueData    AS InsertMobileDate
+           , Object_Member.ValueData   AS MemberName
+           , Object_Unit.ObjectCode    AS UnitCode
+           , Object_Unit.ValueData     AS UnitName
+           , Object_Position.ValueData AS PositionName
 
-       FROM tmpMovement
-
-            LEFT JOIN Movement ON Movement.id = tmpMovement.id
+       FROM tmpMovement AS Movement
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+            LEFT JOIN Object AS Object_User ON Object_User.Id = Movement.UserId_insert
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN MovementDate AS MovementDate_OperDateMark
-                                   ON MovementDate_OperDateMark.MovementId =  Movement.Id
+                                   ON MovementDate_OperDateMark.MovementId = Movement.Id
                                   AND MovementDate_OperDateMark.DescId = zc_MovementDate_OperDateMark()
+
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = Movement.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+            LEFT JOIN MovementDate AS MovementDate_InsertMobile
+                                   ON MovementDate_InsertMobile.MovementId = Movement.Id
+                                  AND MovementDate_InsertMobile.DescId = zc_MovementDate_InsertMobile()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
@@ -171,13 +213,13 @@ BEGIN
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
-            /*LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()*/
-            LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId --MovementLinkObject_From.ObjectId
+                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
-            LEFT JOIN ObjectFloat AS ObjectFloat_PrepareDayCount  ON ObjectFloat_PrepareDayCount.ObjectId = tmpMovement.FromId AND ObjectFloat_PrepareDayCount.DescId = zc_ObjectFloat_Partner_PrepareDayCount()
-            LEFT JOIN ObjectFloat AS ObjectFloat_DocumentDayCount ON ObjectFloat_DocumentDayCount.ObjectId = tmpMovement.FromId AND ObjectFloat_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
+            LEFT JOIN ObjectFloat AS ObjectFloat_PrepareDayCount  ON ObjectFloat_PrepareDayCount.ObjectId = Object_From.Id AND ObjectFloat_PrepareDayCount.DescId = zc_ObjectFloat_Partner_PrepareDayCount()
+            LEFT JOIN ObjectFloat AS ObjectFloat_DocumentDayCount ON ObjectFloat_DocumentDayCount.ObjectId = Object_From.Id AND ObjectFloat_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
@@ -197,11 +239,6 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Route_RouteGroup ON ObjectLink_Route_RouteGroup.ObjectId = Object_Route.Id
                                                                AND ObjectLink_Route_RouteGroup.DescId = zc_ObjectLink_Route_RouteGroup()
             LEFT JOIN Object AS Object_RouteGroup ON Object_RouteGroup.Id = COALESCE (ObjectLink_Route_RouteGroup.ChildObjectId, Object_Route.Id)
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
-                                         ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
-                                        AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
-            LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
@@ -261,11 +298,6 @@ BEGIN
                                            ON MovementLinkMovement_Order.MovementId = Movement.Id
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
          
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
-                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
-                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
-            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
-
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Promo
                                            ON MovementLinkMovement_Promo.MovementId = Movement.Id
                                           AND MovementLinkMovement_Promo.DescId = zc_MovementLinkMovement_Promo()
@@ -277,25 +309,26 @@ BEGIN
                                    ON MD_EndSale.MovementId =  Movement_Promo.Id
                                   AND MD_EndSale.DescId = zc_MovementDate_EndSale()
 
-       WHERE COALESCE (Object_From.DescId, 0) <> zc_Object_Unit();
+             LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                  ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                                 AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+             LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+
+             LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
+             LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
+             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
+           ;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
---ALTER FUNCTION gpSelect_Movement_OrderExternal_Mobile (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.04.17         *
  07.03.17         * add inMemberId
- 05.10.16         * add inJuridicalBasisId
- 25.11.15         * add isPromo
- 26.05.15         * add Partner
- 20.10.14                                        * add isEDI
- 26.08.14                                                        *
- 18.08.14                                                        *
- 06.06.14                                                        *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderExternal_Mobile (inStartDate:= '01.01.2017', inEndDate:= CURRENT_DATE, inIsErased:= FALSE, inJuridicalBasisId:=0, inMemberId:=0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_OrderExternal_Mobile(instartdate := ('26.12.2016')::TDateTime , inenddate := ('22.04.2017')::TDateTime , inIsErased := 'False' , inJuridicalBasisId := 9399 , inMemberId := 0 ,  inSession := '5');

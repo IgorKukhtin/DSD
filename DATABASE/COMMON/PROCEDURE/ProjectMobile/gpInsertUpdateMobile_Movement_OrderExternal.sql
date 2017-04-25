@@ -28,13 +28,18 @@ $BODY$
    DECLARE vbOperDatePartner TDateTime;
    DECLARE vbRouteId Integer;
    DECLARE vbPersonalId Integer;
+   DECLARE vbStatusId Integer;
+   DECLARE vbPrinted Boolean;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
-      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
-
+      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
+      vbUserId:= lpGetUserBySession (inSession);
+      
       -- определение идентификатора заявки по глобальному уникальному идентификатору
       SELECT MovementString_GUID.MovementId 
+           , Movement_OrderExternal.StatusId
       INTO vbId 
+         , vbStatusId
       FROM MovementString AS MovementString_GUID
            JOIN Movement AS Movement_OrderExternal
                          ON Movement_OrderExternal.Id = MovementString_GUID.MovementId
@@ -81,25 +86,29 @@ BEGIN
                                                         WHEN 0 THEN zc_ObjectLink_Partner_MemberTake7()
                                                    END;
 
+      IF (vbisInsert = FALSE) AND (vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased()))
+      THEN -- если заявка проведена, то распроводим
+           SELECT outPrinted INTO vbPrinted FROM lpUnComplete_Movement_OrderExternal (inMovementId:= vbId, inUserId:= vbUserId);
+      END IF;
 
-      vbId:= lpInsertUpdate_Movement_OrderExternal (ioId:= vbId
-                                                  , inInvNumber:= inInvNumber
+      vbId:= lpInsertUpdate_Movement_OrderExternal (ioId              := vbId
+                                                  , inInvNumber       := inInvNumber
                                                   , inInvNumberPartner:= inInvNumber
-                                                  , inOperDate:= inOperDate
-                                                  , inOperDatePartner:= vbOperDatePartner
-                                                  , inOperDateMark:= inOperDate
-                                                  , inPriceWithVAT:= inPriceWithVAT
-                                                  , inVATPercent:= inVATPercent
-                                                  , inChangePercent:= inChangePercent    
-                                                  , inFromId:= inPartnerId
-                                                  , inToId:= inUnitId
-                                                  , inPaidKindId:= inPaidKindId
-                                                  , inContractId:= inContractId
-                                                  , inRouteId:= vbRouteId
-                                                  , inRouteSortingId:= NULL
-                                                  , inPersonalId:= vbPersonalId
-                                                  , inPriceListId:= inPriceListId
-                                                  , inPartnerId:= inPartnerId
+                                                  , inOperDate        := inOperDate
+                                                  , inOperDatePartner := vbOperDatePartner
+                                                  , inOperDateMark    := inOperDate
+                                                  , inPriceWithVAT    := inPriceWithVAT
+                                                  , inVATPercent      := inVATPercent
+                                                  , inChangePercent   := inChangePercent    
+                                                  , inFromId          := inPartnerId
+                                                  , inToId            := inUnitId
+                                                  , inPaidKindId      := inPaidKindId
+                                                  , inContractId      := inContractId
+                                                  , inRouteId         := vbRouteId
+                                                  , inRouteSortingId  := NULL
+                                                  , inPersonalId      := vbPersonalId
+                                                  , inPriceListId     := inPriceListId
+                                                  , inPartnerId       := NULL
                                                   , inUserId:= vbUserId
                                                    );
 
@@ -120,6 +129,11 @@ BEGIN
 
       -- сохранили свойство <Дата/время создания заказа на мобильном устройстве>
       PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_InsertMobile(), vbId, inInsertDate);
+
+      -- !!!ВРЕМЕННО - НЕ проводим заявку!!!
+      -- SELECT outPrinted INTO vbPrinted FROM lpComplete_Movement_OrderExternal (inMovementId:= vbId, inUserId:= vbUserId);
+      -- !!!ВРЕМЕННО - УДАЛЯЕМ заявку!!!
+      PERFORM lpSetErased_Movement (inMovementId:= vbId, inUserId:= vbUserId);
 
       RETURN vbId;                                                                      
 END;                                                                                    

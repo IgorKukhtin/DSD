@@ -201,10 +201,37 @@
             <Overwrite>True</Overwrite>
             <Required>True</Required>
         </DeployFile>
+        <DeployFile Include="..\BIN\Android\Release\styles.xml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>ProjectMobile\res\values\</RemoteDir>
+            <RemoteName>styles.xml</RemoteName>
+            <DeployClass>AndroidSplashStyles</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="$(BDS)\bin\Artwork\Android\FM_SplashImage_426x320.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>ProjectMobile\res\drawable-small\</RemoteDir>
             <RemoteName>splash_image.png</RemoteName>
             <DeployClass>Android_SplashImage426</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="img\144.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>ProjectMobile\res\drawable-xxhdpi\</RemoteDir>
+            <RemoteName>ic_launcher.png</RemoteName>
+            <DeployClass>Android_LauncherIcon144</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="$(NDKBasePath)\prebuilt\android-arm\gdbserver\gdbserver" Condition="'$(Config)'=='Release'">
+            <RemoteDir>ProjectMobile\library\lib\armeabi-v7a\</RemoteDir>
+            <RemoteName>gdbserver</RemoteName>
+            <DeployClass>AndroidGDBServer</DeployClass>
             <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -228,6 +255,15 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="..\BIN\Android\Release\classes.dex" Condition="'$(Config)'=='Release'">
+            <RemoteDir>ProjectMobile\classes\</RemoteDir>
+            <RemoteName>classes.dex</RemoteName>
+            <DeployClass>AndroidClassesDexFile</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="CameraClick.mp3" Condition="'$(Config)'=='Debug'">
             <RemoteDir>ProjectMobile\assets\internal\</RemoteDir>
             <RemoteName>CameraClick.mp3</RemoteName>
@@ -237,9 +273,9 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="CameraClick.3gp" Condition="'$(Config)'=='Debug'">
+        <DeployFile Include="CameraClick.mp3" Condition="'$(Config)'=='Release'">
             <RemoteDir>ProjectMobile\assets\internal\</RemoteDir>
-            <RemoteName>CameraClick.3gp</RemoteName>
+            <RemoteName>CameraClick.mp3</RemoteName>
             <DeployClass>File</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -250,6 +286,15 @@
             <RemoteDir>ProjectMobile\library\lib\armeabi\</RemoteDir>
             <RemoteName>libProjectMobile.so</RemoteName>
             <DeployClass>AndroidLibnativeArmeabiFile</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="img\96.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>ProjectMobile\res\drawable-xhdpi\</RemoteDir>
+            <RemoteName>ic_launcher.png</RemoteName>
+            <DeployClass>Android_LauncherIcon96</DeployClass>
             <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -273,11 +318,39 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="Android\Debug\init.php" Condition="'$(Config)'=='Release'">
-            <RemoteDir>ProjectMobile\</RemoteDir>
-            <RemoteName>init.php</RemoteName>
-            <DeployClass>File</DeployClass>
-            <Operation>0</Operation>
+        <DeployFile Include="..\BIN\Android\Release\libProjectMobile.so" Condition="'$(Config)'=='Release'">
+            <RemoteDir>ProjectMobile\library\lib\armeabi-v7a\</RemoteDir>
+            <RemoteName>libProjectMobile.so</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
+        </DeployFile>
+        <DeployFile Include="$(BDS)\lib\android\debug\mips\libnative-activity.so" Condition="'$(Config)'=='Release'">
+            <RemoteDir>ProjectMobile\library\lib\mips\</RemoteDir>
+            <RemoteName>libProjectMobile.so</RemoteName>
+            <DeployClass>AndroidLibnativeMipsFile</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="$(BDS)\bin\Artwork\Android\FM_SplashImage_470x320.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>ProjectMobile\res\drawable-normal\</RemoteDir>
+            <RemoteName>splash_image.png</RemoteName>
+            <DeployClass>Android_SplashImage470</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\BIN\Android\Release\splash_image_def.xml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>ProjectMobile\res\drawable\</RemoteDir>
+            <RemoteName>splash_image_def.xml</RemoteName>
+            <DeployClass>AndroidSplashImageDef</DeployClass>
+            <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
@@ -286,6 +359,24 @@
             <RemoteDir>ProjectMobile\classes\</RemoteDir>
             <RemoteName>classes.dex</RemoteName>
             <DeployClass>AndroidClassesDexFile</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="$(BDS)\bin\Artwork\Android\FM_SplashImage_426x320.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>ProjectMobile\res\drawable-small\</RemoteDir>
+            <RemoteName>splash_image.png</RemoteName>
+            <DeployClass>Android_SplashImage426</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="$(BDS)\bin\Artwork\Android\FM_SplashImage_960x720.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>ProjectMobile\res\drawable-xlarge\</RemoteDir>
+            <RemoteName>splash_image.png</RemoteName>
+            <DeployClass>Android_SplashImage960</DeployClass>
             <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -327,6 +418,15 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="$(BDS)\lib\android\debug\armeabi\libnative-activity.so" Condition="'$(Config)'=='Release'">
+            <RemoteDir>ProjectMobile\library\lib\armeabi\</RemoteDir>
+            <RemoteName>libProjectMobile.so</RemoteName>
+            <DeployClass>AndroidLibnativeArmeabiFile</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="img\36.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>ProjectMobile\res\drawable-ldpi\</RemoteDir>
             <RemoteName>ic_launcher.png</RemoteName>
@@ -340,6 +440,15 @@
             <RemoteDir>ProjectMobile\library\lib\armeabi-v7a\</RemoteDir>
             <RemoteName>gdbserver</RemoteName>
             <DeployClass>AndroidGDBServer</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="img\sale1.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>ProjectMobile\res\drawable-mdpi\</RemoteDir>
+            <RemoteName>ic_launcher.png</RemoteName>
+            <DeployClass>Android_LauncherIcon48</DeployClass>
             <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -399,10 +508,46 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="img\72.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>ProjectMobile\res\drawable-hdpi\</RemoteDir>
+            <RemoteName>ic_launcher.png</RemoteName>
+            <DeployClass>Android_LauncherIcon72</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="$(BDS)\bin\Artwork\Android\FM_SplashImage_640x480.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>ProjectMobile\res\drawable-large\</RemoteDir>
+            <RemoteName>splash_image.png</RemoteName>
+            <DeployClass>Android_SplashImage640</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="img\36.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>ProjectMobile\res\drawable-ldpi\</RemoteDir>
+            <RemoteName>ic_launcher.png</RemoteName>
+            <DeployClass>Android_LauncherIcon36</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="img\sale1.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>ProjectMobile\res\drawable-mdpi\</RemoteDir>
             <RemoteName>ic_launcher.png</RemoteName>
             <DeployClass>Android_LauncherIcon48</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\BIN\Android\Release\AndroidManifest.xml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>ProjectMobile\</RemoteDir>
+            <RemoteName>AndroidManifest.xml</RemoteName>
+            <DeployClass>ProjectAndroidManifest</DeployClass>
             <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>

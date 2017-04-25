@@ -182,3 +182,4 @@ ALTER FUNCTION gpSelect_MovementItem_Sale (Integer, Boolean, Boolean, TVarChar) 
  22.02.17         *   
  13.10.15                                                          *
 */
+--select * from gpSelect_MovementItem_Sale(inMovementId := 4516628 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

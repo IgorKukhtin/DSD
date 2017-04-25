@@ -25,6 +25,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PartnerMedicalName TVarChar
              , InvNumberSP TVarChar
              , MedicSPName TVarChar
+             , Ambulance TVarChar
+             , InvNumber_Invoice_Full TVarChar
               )
 AS
 $BODY$
@@ -93,6 +95,8 @@ BEGIN
            , Movement_Check.PartnerMedicalName
            , Movement_Check.InvNumberSP
            , Movement_Check.MedicSPName
+           , Movement_Check.Ambulance
+           , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full 
 
         FROM Movement_Check_View AS Movement_Check 
              JOIN tmpStatus ON tmpStatus.StatusId = Movement_Check.StatusId
@@ -113,6 +117,11 @@ BEGIN
                                          AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
              LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
 
+             LEFT JOIN MovementLinkMovement AS MLM_Child
+                                            ON MLM_Child.MovementId = Movement_Check.Id
+                                           AND MLM_Child.descId = zc_MovementLinkMovement_Child()
+             LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Child.MovementChildId
+
        WHERE Movement_Check.OperDate >= DATE_TRUNC ('DAY', inStartDate) AND Movement_Check.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
          AND (Movement_Check.UnitId = inUnitId OR (MovementString_CommentError.ValueData <> '' AND inUnitId = 0))
          AND (vbRetailId = vbObjectId)
@@ -126,6 +135,7 @@ ALTER FUNCTION gpSelect_Movement_Check (TDateTime, TDateTime, Boolean, Integer, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 18.04.17         * add Movement_Invoice
  06.10.16         * add InsertName, InsertDate
  25.08.16         *
  21.07.16         *

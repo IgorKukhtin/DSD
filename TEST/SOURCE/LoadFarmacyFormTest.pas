@@ -259,6 +259,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataTimeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDataTimeDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheck_SPEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheck_SPEditForm');
 end;
 
 procedure TLoadFormTest.LoadConditionsKeepFormTest;
@@ -496,13 +499,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MinPrice_onGoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MinPrice_onGoodsDialogForm');
 //  exit;
-
+    }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckPromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckPromoForm');
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PeriodDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PeriodDialogForm');
-  }
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PromoDialogForm');
@@ -1171,7 +1174,7 @@ end;
 
 procedure TLoadFormTest.LoadSPObjectFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMedicSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSPEditForm'));
@@ -1181,14 +1184,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMemberSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSPEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberSPEditForm');
-
+  }
   // отчет реестр по постановлению 1303
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPDialogForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMemberSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGroupMemberSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMemberSPEditForm'));
@@ -1208,6 +1211,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TIntenalSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIntenalSPEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIntenalSPEditForm');
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSP_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSP_ObjectForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSPForm');

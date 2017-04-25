@@ -49,6 +49,9 @@ type
     actPublishedList: TMultiAction;
     bbPublished: TdxBarButton;
     clisMarketToday: TcxGridDBColumn;
+    clisSp: TcxGridDBColumn;
+    clLastPriceDate: TcxGridDBColumn;
+    clCountPrice: TcxGridDBColumn;
   private
     { Private declarations }
   public

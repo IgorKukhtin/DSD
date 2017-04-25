@@ -50,7 +50,6 @@ type
     cxLabel3: TcxLabel;
     edPersonalTrade: TcxButtonEdit;
     PersonalTradeGuides: TdsdGuides;
-    spGet_PersonalTrade: TdsdStoredProc;
     colPositionName: TcxGridDBColumn;
     colUnitName: TcxGridDBColumn;
     colBranchName: TcxGridDBColumn;

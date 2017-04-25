@@ -21,8 +21,6 @@ inherited CheckVIPForm: TCheckVIPForm
         Width = 369
         Height = 356
         Align = alLeft
-        ExplicitLeft = 72
-        ExplicitTop = -72
         ExplicitWidth = 369
         ExplicitHeight = 356
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -129,6 +127,20 @@ inherited CheckVIPForm: TCheckVIPForm
             Caption = #1055#1088#1086#1077#1082#1090
             DataBinding.FieldName = 'DiscountExternalName'
             Width = 70
+          end
+          object InvNumberSP: TcxGridDBColumn
+            Caption = #8470' '#1088#1077#1094#1077#1087#1090#1072
+            DataBinding.FieldName = 'InvNumberSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object MedicSP: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
+            DataBinding.FieldName = 'MedicSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object Color_CalcDoc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_CalcDoc'
@@ -384,6 +396,53 @@ inherited CheckVIPForm: TCheckVIPForm
           Component = MasterCDS
           ComponentItem = 'ConfirmedKindClientName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerMedicalId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerMedicalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerMedicalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerMedicalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Ambulance'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Ambulance'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MedicSP'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MedicSP'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberSP'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumberSP'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDateSP'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'OperDateSP'
+          DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1088#1072#1073#1086#1090#1091
@@ -666,6 +725,7 @@ inherited CheckVIPForm: TCheckVIPForm
       end
       item
         Name = 'outMessageText'
+        Value = Null
         Component = actShowMessage
         ComponentItem = 'MessageText'
         DataType = ftString
@@ -705,6 +765,7 @@ inherited CheckVIPForm: TCheckVIPForm
       end
       item
         Name = 'outMessageText'
+        Value = Null
         Component = actShowMessage
         ComponentItem = 'MessageText'
         DataType = ftString

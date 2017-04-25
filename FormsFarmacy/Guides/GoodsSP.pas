@@ -64,6 +64,7 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     FormParams: TdsdFormParams;
     spInsertUpdateLoad: TdsdStoredProc;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
   private
     { Private declarations }
   public

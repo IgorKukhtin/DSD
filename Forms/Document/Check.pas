@@ -66,6 +66,14 @@ type
     spUpdateMovement_OperDate: TdsdStoredProc;
     macUpdateOperDate: TMultiAction;
     bbUpdateOperDate: TdxBarButton;
+    cxLabel17: TcxLabel;
+    edAmbulance: TcxTextEdit;
+    colisSp: TcxGridDBColumn;
+    spUpdate_SpParam: TdsdStoredProc;
+    actUpdateSpParam: TdsdDataSetRefresh;
+    ExecuteDialogSP: TExecuteDialog;
+    macUpdateSpParam: TMultiAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

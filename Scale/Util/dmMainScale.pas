@@ -123,12 +123,12 @@ begin
          ParamByName('MovementDescNumber').AsInteger:= DataSet.FieldByName('MovementDescNumber').asInteger;
 
          ParamByName('MovementDescId').AsInteger:= DataSet.FieldByName('MovementDescId').asInteger;
-         ParamByName('FromId').AsInteger:= DataSet.FieldByName('ToId').asInteger;
-         ParamByName('FromCode').AsInteger:= DataSet.FieldByName('ToCode').asInteger;
-         ParamByName('FromName').asString:= DataSet.FieldByName('ToName').asString;
-         ParamByName('ToId').AsInteger:= DataSet.FieldByName('FromId').asInteger;
-         ParamByName('ToCode').AsInteger:= DataSet.FieldByName('FromCode').asInteger;
-         ParamByName('ToName').asString:= DataSet.FieldByName('FromName').asString;
+         ParamByName('FromId').AsInteger:= DataSet.FieldByName('FromId').asInteger;     // ToId
+         ParamByName('FromCode').AsInteger:= DataSet.FieldByName('FromCode').asInteger; // ToCode
+         ParamByName('FromName').asString:= DataSet.FieldByName('FromName').asString;   // ToName
+         ParamByName('ToId').AsInteger:= DataSet.FieldByName('ToId').asInteger;         // FromId
+         ParamByName('ToCode').AsInteger:= DataSet.FieldByName('ToCode').asInteger;     // FromCode
+         ParamByName('ToName').asString:= DataSet.FieldByName('ToName').asString;       // FromName
          ParamByName('PaidKindId').AsInteger:= DataSet.FieldByName('PaidKindId').asInteger;
          ParamByName('PaidKindName').asString:= DataSet.FieldByName('PaidKindName').asString;
 
@@ -476,7 +476,11 @@ begin
        Params.AddParam('inPaidKindId', ftInteger, ptInput, execParamsMovement.ParamByName('PaidKindId').AsInteger);
        Params.AddParam('inPriceListId', ftInteger, ptInput, execParamsMovement.ParamByName('PriceListId').AsInteger);
        Params.AddParam('inMovementId_Order', ftInteger, ptInput, execParamsMovement.ParamByName('OrderExternalId').AsInteger);
-       Params.AddParam('inMovementId_Transport', ftInteger, ptInput, execParamsMovement.ParamByName('TransportId').AsInteger);
+       //криво - через этот прараметр передаем - Через кого поступил возврат
+       if (GetArrayList_Value_byName(Default_Array,'isDriverReturn') = AnsiUpperCase('TRUE'))
+       and(execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)
+       then Params.AddParam('inMovementId_Transport', ftInteger, ptInput, execParamsMovement.ParamByName('PersonalDriverId').AsInteger)
+       else Params.AddParam('inMovementId_Transport', ftInteger, ptInput, execParamsMovement.ParamByName('TransportId').AsInteger);
        Params.AddParam('inChangePercent', ftFloat, ptInput, execParamsMovement.ParamByName('ChangePercent').AsFloat);
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        //try
@@ -1160,6 +1164,10 @@ begin
          Params.ParamByName('inSqlText').Value:='SELECT zc_Movement_OrderExternal() :: TVarChar';
          Execute;
          zc_Movement_OrderExternal:=DataSet.FieldByName('Value').asInteger;
+
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Movement_OrderInternal() :: TVarChar';
+         Execute;
+         zc_Movement_OrderInternal:=DataSet.FieldByName('Value').asInteger;
 
          //Measure
          //Params.ParamByName('inSqlText').Value:='SELECT zc_Measure_Sh() :: TVarChar';

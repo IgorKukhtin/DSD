@@ -212,6 +212,8 @@ type
     actReestrRemakeIn: TdsdOpenForm;
     SpeedButton2: TSpeedButton;
     SpeedButton3: TSpeedButton;
+    SpeedButton4: TSpeedButton;
+    actReestrReturnStart: TdsdOpenForm;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -260,6 +262,8 @@ type
     procedure Initialize_afterSave_all;
     procedure Initialize_afterSave_MI;
     procedure myActiveControl;
+    procedure pSetDriverReturn;
+
   public
     function Save_Movement_PersonalComplete(execParams:TParams):Boolean;
     function Save_Movement_PersonalLoss(execParams:TParams):Boolean;
@@ -326,13 +330,26 @@ begin
          and(err_count < 3)
      then begin
          err_count:=err_count+1;
-         ShowMessage('Ошибка.'+#10+#13+'Не определено значение <Штрих код Путевой лист.>.');
+         ShowMessage('Ошибка.'+#10+#13+'Не определено значение <Штрих код Путевой лист>.');
          ActiveControl:=EditBarCodeTransport;
          exit;
      end;
      //
      if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)
+         and(GetArrayList_Value_byName(Default_Array,'isDriverReturn') = AnsiUpperCase('TRUE'))
+         and(ParamsMovement.ParamByName('PersonalDriverId').AsInteger=0)
+         and(err_count < 3)
+     then begin
+         err_count:=err_count+1;
+         ShowMessage('Ошибка.'+#10+#13+'Не определено значение для возврата <ФИО (водитель/экспедитор)>.');
+         pSetDriverReturn;
+         exit;
+     end;
+     //
+     if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)
          and(ParamsMovement.ParamByName('isTransport_link').AsBoolean = TRUE)
+         and(ParamsMovement.ParamByName('TransportId').AsInteger = 0)
+         and(err_count < 3)
      then begin
          err_count:=err_count+1;
          ShowMessage('Ошибка.'+#10+#13+'Не определено значение <Штрих код Путевой лист.>.');
@@ -650,7 +667,11 @@ begin
          else
      else
          // Диалог для параметров товара из списка всех товаров + в нем сохранение MovementItem
-         if ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn
+         if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)
+          or((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+             and(SettingMain.BranchCode = 301))
+          or((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
+             and(SettingMain.BranchCode = 301))
          then
               if GuideGoodsPartnerForm.Execute(ParamsMovement) = TRUE
               then begin
@@ -1025,8 +1046,36 @@ begin
      WriteParamsMovement;
 end;
 //---------------------------------------------------------------------------------------------
+procedure TMainForm.pSetDriverReturn;
+var execParams:TParams;
+begin
+     Create_ParamsPersonal(execParams,'');
+     //
+     with execParams do
+     begin
+          ParamByName('PersonalId').AsInteger:=ParamsMovement.ParamByName('PersonalDriverId').AsInteger;
+          ParamByName('PersonalCode').AsInteger:=ParamsMovement.ParamByName('PersonalDriverCode').AsInteger;
+     end;
+     if GuidePersonalForm.Execute(execParams)
+     then begin
+               ParamsMovement.ParamByName('TransportId').AsInteger:=0;
+               ParamsMovement.ParamByName('PersonalDriverId').AsInteger:=execParams.ParamByName('PersonalId').AsInteger;
+               ParamsMovement.ParamByName('PersonalDriverCode').AsInteger:=execParams.ParamByName('PersonalCode').AsInteger;
+               ParamsMovement.ParamByName('PersonalDriverName').AsString:=execParams.ParamByName('PersonalName').AsString;
+               PanelPersonalDriver.Caption:=execParams.ParamByName('PersonalName').AsString;
+               //
+               DMMainScaleForm.gpInsertUpdate_Scale_Movement(ParamsMovement);
+     end;
+     //
+     execParams.Free;
+end;
+//---------------------------------------------------------------------------------------------
 procedure TMainForm.EditBarCodeTransportPropertiesButtonClick(Sender: TObject;AButtonIndex: Integer);
 begin
+     if (GetArrayList_Value_byName(Default_Array,'isDriverReturn') = AnsiUpperCase('TRUE'))
+     and(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)
+     then pSetDriverReturn
+     else
      if GuideMovementTransportForm.Execute(ParamsMovement,TRUE)//isChoice=TRUE
      then begin
                ActiveControl:=EditBarCodeTransport;
@@ -1172,7 +1221,8 @@ begin
     PanelTotalSumm.Caption:=FormatFloat(',0.00##',ParamByName('TotalSumm').asFloat);
 
     if ParamByName('OrderExternalId').AsInteger<>0
-    then if ParamByName('OrderExternal_DescId').AsInteger=zc_Movement_OrderExternal
+    then if (ParamByName('OrderExternal_DescId').AsInteger=zc_Movement_OrderExternal)
+          or(ParamByName('OrderExternal_DescId').AsInteger=zc_Movement_OrderInternal)
          then PanelOrderExternal.Caption:=' з.'+ParamByName('OrderExternalName_master').asString
          else if ParamByName('OrderExternal_DescId').AsInteger=zc_Movement_SendOnPrice
               then PanelOrderExternal.Caption:=' ф.'+ParamByName('OrderExternalName_master').asString

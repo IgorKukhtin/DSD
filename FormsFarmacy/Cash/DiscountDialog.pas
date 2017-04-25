@@ -43,17 +43,20 @@ begin
            //обновим "нужные" параметры-Main ***20.07.16
            DiscountServiceForm.pGetDiscountExternal (Key, trim (edCardNumber.Text));
            // проверка карты + сохраним "текущие" параметры-Main
-           if DiscountServiceForm.fCheckCard (lMsg
-                                             ,DiscountServiceForm.gURL
-                                             ,DiscountServiceForm.gService
-                                             ,DiscountServiceForm.gPort
-                                             ,DiscountServiceForm.gUserName
-                                             ,DiscountServiceForm.gPassword
-                                             ,trim (edCardNumber.Text)
-                                             ,Key
-                                             )
-           then ModalResult:=mrOk
-           else ;// ??? еще раз ругнуться
+           if DiscountServiceForm.gCode = 1 then
+           begin
+             if DiscountServiceForm.fCheckCard (lMsg
+                                               ,DiscountServiceForm.gURL
+                                               ,DiscountServiceForm.gService
+                                               ,DiscountServiceForm.gPort
+                                               ,DiscountServiceForm.gUserName
+                                               ,DiscountServiceForm.gPassword
+                                               ,trim (edCardNumber.Text)
+                                               ,Key
+                                               ) then
+               ModalResult := mrOk;
+           end else
+             ModalResult := mrOk;
       end
       else begin ActiveControl:=edCardNumber;ShowMessage ('Ошибка.Значение <№ дисконтной карты> не определено');end
   else begin ActiveControl:=ceDiscountExternal;
@@ -65,8 +68,10 @@ end;
 
 function TDiscountDialogForm.DiscountDialogExecute(var ADiscountExternalId: Integer; var ADiscountExternalName, ADiscountCardNumber: String): boolean;
 Begin
-      DiscountExternalGuides.Params.ParamByName('Key').Value      := ADiscountExternalId;
       edCardNumber.Text:= ADiscountCardNumber;
+      //
+      DiscountExternalGuides.Params.ParamByName('Key').Value      := ADiscountExternalId;
+      DiscountExternalGuides.Params.ParamByName('TextValue').Value:='';
       if ADiscountExternalId > 0 then
       begin
           ceDiscountExternal.Text:= ADiscountExternalName;

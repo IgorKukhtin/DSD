@@ -13,7 +13,8 @@ CREATE TABLE Object(
    DescId                Integer NOT NULL,
    ObjectCode            Integer NOT NULL,
    ValueData             TVarChar NOT NULL,
-   IsErased              Boolean NOT NULL DEFAULT false,
+   AccessKeyId           Integer,
+   IsErased              Boolean NOT NULL DEFAULT FALSE,
 
    /* Связь с таблицей <ObjectDesc> - класс объекта */
    CONSTRAINT fk_Object_DescId FOREIGN KEY(DescId) REFERENCES ObjectDesc(Id));

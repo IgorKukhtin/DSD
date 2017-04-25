@@ -60,7 +60,7 @@ uses
   cxDBEdit, dsdAction, dsdGuides, cxDBVGrid,
   Vcl.DBActns, cxMemo, cxGridDBChartView, ShellAPI, CommonData,
   SHDocVw, GMClasses, GMMap, GMMapVCL, GMLinkedComponents,
-  GMMarker, GMMarkerVCL{, DataModul};
+  GMMarker, GMMarkerVCL, cxImage{, DataModul};
 
 {$R *.dfm}
 
@@ -411,6 +411,8 @@ initialization
   RegisterClass (TAddOnFormRefresh);
   RegisterClass (TShellExecuteAction);
   RegisterClass (TShowMessageAction);
+  RegisterClass (TcxImage);
+  RegisterClass (TdsdDataSetRefreshEx);
 
 // ƒÀﬂ “≈—“¿
 

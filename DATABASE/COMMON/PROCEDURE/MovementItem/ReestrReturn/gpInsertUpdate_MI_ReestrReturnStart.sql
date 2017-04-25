@@ -149,7 +149,7 @@ BEGIN
           PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), vbId_mi, CURRENT_TIMESTAMP);
 
 
-          -- сохранили свойство у документа продажи <№ строчной части в Реестре накладных>
+          -- сохранили свойство у документа возврата <№ строчной части в Реестре накладных>
           PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementItemId(), vbMovementId_ReturnIn, vbId_mi);
           -- сохранили у документа продажи связь с <Состояние по реестру>
           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbMovementId_ReturnIn, zc_Enum_ReestrKind_PartnerIn());

@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Comment TVarChar
              , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime, InvNumber_Transport_Full TVarChar
              , CarName TVarChar, CarModelName TVarChar, PersonalDriverName TVarChar
+             , MovementId_Order Integer, InvNumber_Order TVarChar, OperDate_Order TDateTime, InvNumber_Order_Full TVarChar
               )
 AS
 $BODY$
@@ -103,6 +104,11 @@ BEGIN
            , Object_Car.ValueData                        AS CarName
            , Object_CarModel.ValueData                   AS CarModelName
            , View_PersonalDriver.PersonalName            AS PersonalDriverName
+
+           , Movement_Order.Id                       AS MovementId_Order
+           , Movement_Order.InvNumber                AS InvNumber_Order
+           , Movement_Order.OperDate                 AS OperDate_Order
+           , ('π ' || Movement_Order.InvNumber || ' ÓÚ ' || Movement_Order.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Order_Full
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -229,6 +235,12 @@ BEGIN
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
             LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                           ON MovementLinkMovement_Order.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
+
+
        WHERE MovementBoolean_isIncome.ValueData is NULL
          AND COALESCE (Object_To.DescId, 0) NOT IN (zc_Object_Car(), zc_Object_Member()) -- !!!—¿ÃŒ≈ Õ≈ –¿—»¬Œ≈ –≈ÿ≈Õ»≈!!!
     ;
@@ -240,6 +252,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 14.04.17         * add Movement_Order
  04.10.16         * add inJuridicalBasisId
  25.06.15         * add inIsErased
  02.08.14                                        * add Object_Member

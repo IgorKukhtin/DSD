@@ -11,15 +11,18 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ReturnIn(
     IN inJuridicalBasisId   Integer   ,
     IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, ParentId Integer, InvNumber_Parent TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+             , ParentId Integer, InvNumber_Parent TVarChar
              , StatusCode Integer, StatusName TVarChar
              , Checked Boolean
              , isPartner Boolean
              , PriceWithVAT Boolean
              , OperDatePartner TDateTime, InvNumberPartner TVarChar, InvNumberMark TVarChar
              , VATPercent TFloat, ChangePercent TFloat
-             , TotalCount TFloat, TotalCountPartner TFloat, TotalCountTare TFloat, TotalCountSh TFloat, TotalCountKg TFloat
-             , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSummChange TFloat, TotalSumm TFloat
+             , TotalCount TFloat, TotalCountPartner TFloat, TotalCountTare TFloat
+             , TotalCountSh TFloat, TotalCountKg TFloat
+             , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat
+             , TotalSummChange TFloat, TotalSumm TFloat
              , CurrencyValue TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -37,6 +40,14 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, ParentId Inte
              , isList Boolean
              , isPromo Boolean
              , MovementPromo TVarChar
+
+             , InsertName TVarChar
+             , InsertDate TDateTime
+             , InsertMobileDate TDateTime
+             , MemberInsertName TVarChar
+             , UnitCode Integer
+             , UnitName TVarChar
+             , PositionName TVarChar
               )
 AS
 $BODY$
@@ -68,6 +79,14 @@ BEGIN
                          UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
                          UNION SELECT zc_Enum_Process_AccessKey_DocumentDnepr() AS AccessKeyId WHERE vbIsXleb = TRUE
                               )
+         , tmpPersonal AS (SELECT lfSelect.MemberId
+                                , lfSelect.PersonalId
+                                , lfSelect.UnitId
+                                , lfSelect.PositionId
+                                , lfSelect.BranchId
+                           FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                           WHERE lfSelect.Ord = 1
+                          )
        SELECT
              Movement.Id                                AS Id
            , Movement.InvNumber                         AS InvNumber
@@ -130,6 +149,14 @@ BEGIN
            , COALESCE(MovementBoolean_Promo.ValueData, FALSE) AS isPromo
            , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndReturn.ValueData) AS MovementPromo
 
+           , Object_User.ValueData                  AS InsertName
+           , MovementDate_Insert.ValueData          AS InsertDate
+           , MovementDate_InsertMobile.ValueData    AS InsertMobileDate
+           , Object_MemberInsert.ValueData          AS MemberInsertName
+           , Object_Unit.ObjectCode                 AS UnitCode
+           , Object_Unit.ValueData                  AS UnitName
+           , Object_Position.ValueData              AS PositionName
+
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ReturnIn() AND Movement.StatusId = tmpStatus.StatusId
@@ -171,6 +198,13 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_List
                                       ON MovementBoolean_List.MovementId = Movement.Id
                                      AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
+
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = Movement.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+            LEFT JOIN MovementDate AS MovementDate_InsertMobile
+                                   ON MovementDate_InsertMobile.MovementId = Movement.Id
+                                  AND MovementDate_InsertMobile.DescId = zc_MovementDate_InsertMobile()
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -299,6 +333,21 @@ BEGIN
                                    ON MD_EndReturn.MovementId =  Movement_Promo.Id
                                   AND MD_EndReturn.DescId = zc_MovementDate_EndReturn()
 
+           --
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
+                                         ON MovementLinkObject_Insert.MovementId = Movement.Id
+                                        AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_Insert.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                 ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                                AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+            LEFT JOIN Object AS Object_MemberInsert ON Object_MemberInsert.Id = ObjectLink_User_Member.ChildObjectId
+
+            LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
+            LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
+
      WHERE vbIsXleb = FALSE OR (View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_30103() -- Хлеб
                                 AND vbIsXleb = TRUE)
     ;
@@ -311,6 +360,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.04.17         *
  05.10.16         * add inJuridicalBasisId
  14.05.16         *
  21.08.15         * add isPartner

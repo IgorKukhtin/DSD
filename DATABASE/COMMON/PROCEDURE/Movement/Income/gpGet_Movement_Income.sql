@@ -12,7 +12,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , CurrencyValue TFloat
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, ToParentId Integer
+             , FromId Integer, FromName TVarChar
+             , JuridicalId_From Integer, JuridicalName_From TVarChar
+             , ToId Integer, ToName TVarChar, ToParentId Integer
              , PaidKindId Integer, PaidKindName TVarChar, ContractId Integer, ContractName TVarChar
              , PersonalPackerId Integer, PersonalPackerName TVarChar
              , CurrencyDocumentId Integer, CurrencyDocumentName TVarChar
@@ -23,6 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Comment TVarChar 
              , MovementId_Transport Integer, InvNumber_Transport TVarChar
              , InvoiceId Integer, InvoiceName TVarChar
+             , MovementId_Order Integer, InvNumber_Order TVarChar 
                )
 AS
 $BODY$
@@ -53,6 +56,9 @@ BEGIN
 
              , 0                     AS FromId
              , CAST ('' as TVarChar) AS FromName
+             , 0                     AS JuridicalId_From
+             , CAST ('' as TVarChar) AS JuridicalName_From
+
              , 0                     AS ToId
              , CAST ('' as TVarChar) AS ToName
              , 0                     AS ToParentId
@@ -82,6 +88,9 @@ BEGIN
 
              , 0                                    AS InvoiceId
              , CAST ('' as TVarChar) 	            AS InvoiceName
+
+             , 0                                    AS MovementId_Order
+             , '' :: TVarChar                       AS InvNumber_Order 
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
               JOIN Object as ObjectCurrency on ObjectCurrency.descid= zc_Object_Currency()
@@ -119,6 +128,9 @@ BEGIN
 
              , Object_From.Id                        AS FromId
              , Object_From.ValueData                 AS FromName
+             , Object_JuridicalFrom.id               AS JuridicalId_From
+             , Object_JuridicalFrom.ValueData        AS JuridicalName_From
+
              , Object_To.Id                          AS ToId
              , Object_To.ValueData                   AS ToName
              , ObjectLink_Unit_Parent.ChildObjectId  AS ToParentId
@@ -147,6 +159,9 @@ BEGIN
 
              , tmpMI.MovementId                       AS InvoiceId
              , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, COALESCE (MovementString_InvNumberPartner_Invoice.ValueData,'')||'/'||Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvoiceName
+
+             , Movement_Order.Id                     AS MovementId_Order
+             , ('№ ' || Movement_Order.InvNumber || ' от ' || Movement_Order.OperDate  :: Date :: TVarChar) :: TVarChar AS InvNumber_Order
 
        FROM Movement
             LEFT JOIN tmpMI ON 1 = 1
@@ -179,7 +194,6 @@ BEGIN
                                     ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
-
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercentTo
                                     ON MovementFloat_ChangePercentTo.MovementId =  Movement.Id
                                    AND MovementFloat_ChangePercentTo.DescId = zc_MovementFloat_ChangePercentPartner()
@@ -192,6 +206,11 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId = Object_From.Id
+                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN Object AS Object_JuridicalFrom ON Object_JuridicalFrom.Id = ObjectLink_Partner_Juridical.ChildObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
@@ -242,6 +261,10 @@ BEGIN
                                           AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
             LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                           ON MovementLinkMovement_Order.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Income();
      END IF;

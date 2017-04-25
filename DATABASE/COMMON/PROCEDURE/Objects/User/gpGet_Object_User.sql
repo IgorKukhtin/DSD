@@ -11,7 +11,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UserSign TVarChar
              , UserSeal TVarChar
              , UserKey TVarChar
-             , MemberId Integer, MemberName TVarChar) AS
+             , MemberId Integer, MemberName TVarChar
+             , ProjectMobile TVarChar
+             , isProjectMobile Boolean
+) AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
@@ -32,7 +35,10 @@ BEGIN
            , CAST ('' as TVarChar)  AS UserSeal
            , CAST ('' as TVarChar)  AS UserKey
            , 0 AS MemberId 
-           , CAST ('' as TVarChar)  AS MemberName;
+           , CAST ('' as TVarChar)  AS MemberName
+           , CAST ('' as TVarChar)  AS ProjectMobile
+           , FALSE                  AS isProjectMobile
+;
    ELSE
       RETURN QUERY 
       SELECT 
@@ -47,6 +53,10 @@ BEGIN
 
           , Object_Member.Id AS MemberId
           , Object_Member.ValueData AS MemberName
+
+          , ObjectString_ProjectMobile.ValueData  AS ProjectMobile
+          , COALESCE (ObjectBoolean_ProjectMobile.ValueData, FALSE) :: Boolean  AS isProjectMobile
+
       FROM Object AS Object_User
    LEFT JOIN ObjectString AS ObjectString_UserPassword 
           ON ObjectString_UserPassword.DescId = zc_ObjectString_User_Password() 
@@ -64,6 +74,13 @@ BEGIN
           ON ObjectString_UserKey.DescId = zc_ObjectString_User_Key() 
          AND ObjectString_UserKey.ObjectId = Object_User.Id
 
+   LEFT JOIN ObjectString AS ObjectString_ProjectMobile
+          ON ObjectString_ProjectMobile.ObjectId = Object_User.Id
+         AND ObjectString_ProjectMobile.DescId = zc_ObjectString_User_ProjectMobile()
+   LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
+          ON ObjectBoolean_ProjectMobile.ObjectId = Object_User.Id
+         AND ObjectBoolean_ProjectMobile.DescId = zc_ObjectBoolean_User_ProjectMobile()
+
    LEFT JOIN ObjectLink AS ObjectLink_User_Member
           ON ObjectLink_User_Member.ObjectId = Object_User.Id
          AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
@@ -80,10 +97,11 @@ ALTER FUNCTION gpGet_Object_User (Integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.04.17         *
  12.09.16         *
  07.06.13                                        * lpCheckRight
  03.06.13         *
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_User('2')
+-- SELECT * FROM gpGet_Object_User (1, '5')

@@ -165,7 +165,27 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1045#1089#1090#1100' '#1085#1072' '#1088#1099#1085#1082#1077' '#1089#1077#1075#1086#1076#1085#1103' ('#1044#1072'/'#1053#1077#1090')'
+            Options.Editing = False
             Width = 70
+          end
+          object clLastPriceDate: TcxGridDBColumn
+            Caption = #1055#1086#1089#1083#1077#1076'. '#1076#1072#1090#1072' '#1085#1072#1083#1080#1095#1080#1103' '#1085#1072' '#1088#1099#1085#1082#1077
+            DataBinding.FieldName = 'LastPriceDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1089#1083#1077#1076'. '#1076#1072#1090#1072' '#1085#1072#1083#1080#1095#1080#1103' '#1085#1072' '#1088#1099#1085#1082#1077
+            Options.Editing = False
+            Width = 65
+          end
+          object clCountPrice: TcxGridDBColumn
+            Caption = #1053#1072' '#1088#1099#1085#1082#1077' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1072#1081#1089#1086#1074
+            DataBinding.FieldName = 'CountPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##; ; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object cbPercentMarkup: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080
@@ -259,6 +279,15 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object clisSp: TcxGridDBColumn
+            Caption = #1057#1086#1094'. '#1087#1088#1086#1077#1082#1090
+            DataBinding.FieldName = 'isSp'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042' '#1089#1087#1080#1089#1082#1077' '#1087#1088#1086#1077#1082#1090#1072' '#171#1044#1086#1089#1090#1091#1087#1085#1099#1077' '#1083#1077#1082#1072#1088#1089#1090#1074#1072#187
+            Options.Editing = False
+            Width = 60
           end
         end
       end

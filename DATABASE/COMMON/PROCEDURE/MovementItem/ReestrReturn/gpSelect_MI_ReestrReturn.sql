@@ -20,9 +20,13 @@ RETURNS TABLE  (Id Integer, LineNum Integer
               , FromName TVarChar, ToName TVarChar
               , PaidKindName TVarChar
               , ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
-              , JuridicalName_To TVarChar, OKPO_To TVarChar 
+              , JuridicalName_To TVarChar, OKPO_To TVarChar
+              , MemberCode_driver Integer
+              , MemberName_driver TVarChar
+              , UnitName_driver TVarChar
+              , PositionName_driver TVarChar
               , ReestrKindName TVarChar
-              )
+               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -32,8 +36,18 @@ BEGIN
 
       -- Результат
      RETURN QUERY
-       WITH -- строчная часть реестра
-            tmpMI AS (SELECT MovementItem.Id            AS MovementItemId
+       WITH -- Member
+        tmpMember AS (SELECT gpSelect.Id
+                           , gpSelect.Code
+                           , gpSelect.Name
+                           , gpSelect.BranchName
+                           , gpSelect.UnitCode
+                           , gpSelect.UnitName
+                           , gpSelect.PositionName
+                      FROM gpSelect_Object_Member (inIsShowAll:= FALSE, inSession:= inSession) AS gpSelect
+                     )
+            -- строчная часть реестра
+          , tmpMI AS (SELECT MovementItem.Id            AS MovementItemId
                            , MovementItem.ObjectId      AS MemberId
                            , MIDate_Insert.ValueData    AS InsertDate
                            , MovementFloat_MovementItemId.MovementId AS MovementId_ReturnIn
@@ -81,6 +95,11 @@ BEGIN
            , Object_JuridicalTo.ValueData              AS JuridicalName_To
            , ObjectHistory_JuridicalDetails_View.OKPO  AS OKPO_To
 
+           , tmpMember.Code         AS MemberCode_driver
+           , tmpMember.Name         AS MemberName_driver
+           , tmpMember.UnitName     AS UnitName_driver
+           , tmpMember.PositionName AS PositionName_driver
+
            , Object_ReestrKind.ValueData       	       AS ReestrKindName
 
        FROM tmpMI AS tmp
@@ -110,7 +129,7 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement_ReturnIn.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-            
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement_ReturnIn.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -121,7 +140,7 @@ BEGIN
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
             LEFT JOIN Object AS Object_JuridicalTo ON Object_JuridicalTo.Id = ObjectLink_Partner_Juridical.ChildObjectId
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_JuridicalTo.Id
-           
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement_ReturnIn.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
@@ -136,6 +155,12 @@ BEGIN
                                          ON MovementLinkObject_ReestrKind.MovementId = Movement_ReturnIn.Id
                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Member
+                                         ON MovementLinkObject_Member.MovementId = Movement_ReturnIn.Id
+                                        AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
+            LEFT JOIN tmpMember ON tmpMember.Id = MovementLinkObject_Member.ObjectId
+
            ;
 
 END;

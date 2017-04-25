@@ -109,8 +109,10 @@ begin
     Properties.Add('Users');
   end;
   cxPropertiesStore.RestoreFrom;
+
   AllowLocalConnect := False;
   FOnlyLocal := False;
+
 end;
 
 function TLoginForm.GetUsers: string;

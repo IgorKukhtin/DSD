@@ -193,6 +193,15 @@ type
     cxLabel19: TcxLabel;
     edInvNumberInvoice: TcxButtonEdit;
     InvoiceGuides: TdsdGuides;
+    spUpdateOrder: TdsdStoredProc;
+    HeaderSaver3: THeaderSaver;
+    cxLabel17: TcxLabel;
+    edInvNumberOrder: TcxButtonEdit;
+    OrderGuides: TdsdGuides;
+    edJuridicalFrom: TcxButtonEdit;
+    JuridicalFromGuides: TdsdGuides;
+    InsertRecordGoods: TInsertRecord;
+    bbInsertRecordGoods: TdxBarButton;
   private
   public
   end;

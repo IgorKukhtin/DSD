@@ -80,10 +80,15 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Update() RETURNS Integer AS $BO
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_Update', 'Пользователь корр.' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Update');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_To() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_To'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_To', 'Кому (в документе)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_To');
+
 
 /*-------------------------------------------------------------------------------
  !!!!!!!!!!!!!!!!!!! РАСПОЛАГАЙТЕ ДЕСКИ ПО АЛФАВИТУ !!!!!!!!!!!!!!!!!!!
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Алексей   Роман
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.   Роман
+ 10.04.17         * zc_MovementLinkObject_To
  25.02.17                                        * start
 */

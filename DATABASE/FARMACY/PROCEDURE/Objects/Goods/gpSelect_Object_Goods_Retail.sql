@@ -12,11 +12,14 @@ RETURNS TABLE (Id Integer, Code Integer, IdBarCode TVarChar, Name TVarChar, isEr
              , NDSKindId Integer, NDSKindName TVarChar
              , NDS TFloat, MinimumLot TFloat, isClose Boolean
              , isTOP Boolean, isFirst Boolean, isSecond Boolean, isPublished Boolean
+             , isSP Boolean
              , PercentMarkup TFloat, Price TFloat
+             , CountPrice TFloat
              , Color_calc Integer
              , RetailCode Integer, RetailName TVarChar
              , isPromo boolean
              , isMarketToday Boolean
+             , LastPriceDate TDateTime
              , InsertName TVarChar, InsertDate TDateTime 
              , UpdateName TVarChar, UpdateDate TDateTime
              , ConditionsKeepName TVarChar
@@ -33,7 +36,7 @@ BEGIN
 
    -- поиск <Торговой сети>
    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
-
+/*
    -- !!!для Админа!!!
    IF (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
    THEN
@@ -82,11 +85,12 @@ BEGIN
            , Object_Goods_View.isTOP          
            , Object_Goods_View.isFirst 
            , Object_Goods_View.isSecond
-           , Object_Goods_View.isPublished
+           , COALESCE (Object_Goods_View.isPublished,False) :: Boolean  AS isPublished
+           , Object_Goods_View.isSP
            -- , CASE WHEN Object_Goods_View.isPublished = FALSE THEN NULL ELSE Object_Goods_View.isPublished END :: Boolean AS isPublished
            , Object_Goods_View.PercentMarkup  
            , Object_Goods_View.Price
-           , CASE WHEN Object_Goods_View.isSecond = TRUE THEN 16440317 WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc  --16380671   10965163 
+           , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE THEN zc_Color_Yelow() WHEN Object_Goods_View.isSecond = TRUE THEN 16440317 WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc  --16380671   10965163 
            , Object_Retail.ObjectCode AS RetailCode
            , Object_Retail.ValueData  AS RetailName
            , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
@@ -118,11 +122,6 @@ BEGIN
                              AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
          LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId 
 
-        -- получается GoodsMainId
-        LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods_View.Id --Object_Goods.Id
-                                                 AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
-        LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
         -- условия хранения
         LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
                              ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
@@ -130,11 +129,13 @@ BEGIN
         LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
         LEFT JOIN tmpLoadPriceList ON tmpLoadPriceList.MainGoodsId = ObjectLink_Main.ChildObjectId
-    WHERE Object_Retail.DescId = zc_Object_Retail();
+    WHERE Object_Retail.DescId = zc_Object_Retail()
+;
 
    ELSE
 
    -- для остальных...
+*/
 
    RETURN QUERY 
   -- Маркетинговый контракт
@@ -156,17 +157,18 @@ BEGIN
                                                          AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
                          )
 
-     , tmpLoadPriceList AS (SELECT DISTINCT LoadPriceListItem.GoodsId AS MainGoodsId
+  /*   , tmpLoadPriceList AS (SELECT DISTINCT LoadPriceListItem.GoodsId AS MainGoodsId
                             FROM LoadPriceList  
                                  INNER JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
                             WHERE LoadPriceList.OperDate >= CURRENT_DATE AND LoadPriceList.OperDate < CURRENT_DATE + INTERVAL '1 DAY'
-                            )
+                            
+  */
 
    SELECT 
              Object_Goods_View.Id
            , Object_Goods_View.GoodsCodeInt
 --           , ObjectString.ValueData                           AS GoodsCode
-           , zfFormat_BarCode(zc_BarCodePref_Object(), ObjectLink_Main.ChildObjectId) AS IdBarCode
+           , zfFormat_BarCode(zc_BarCodePref_Object(), ObjectLink_Main.ChildObjectId) AS IdBarCode         --ObjectLink_Main.ChildObjectId
            , Object_Goods_View.GoodsName
            , Object_Goods_View.isErased
            , Object_Goods_View.GoodsGroupId
@@ -181,22 +183,29 @@ BEGIN
            , Object_Goods_View.isTOP          
            , Object_Goods_View.isFirst
            , Object_Goods_View.isSecond
-           , Object_Goods_View.isPublished
+           , COALESCE (Object_Goods_View.isPublished,False) :: Boolean  AS isPublished
+           , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
            -- , CASE WHEN Object_Goods_View.isPublished = FALSE THEN NULL ELSE Object_Goods_View.isPublished END :: Boolean AS isPublished
            , Object_Goods_View.PercentMarkup  
            , Object_Goods_View.Price
-           , CASE WHEN Object_Goods_View.isSecond = TRUE THEN 16440317 WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc   --10965163
+
+           , COALESCE (ObjectFloat_CountPrice.ValueData,0) ::TFloat AS CountPrice
+
+           , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE THEN zc_Color_Yelow() WHEN Object_Goods_View.isSecond = TRUE THEN 16440317 WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc   --10965163
            , Object_Retail.ObjectCode AS RetailCode
            , Object_Retail.ValueData  AS RetailName
            , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
-           , CASE WHEN COALESCE(tmpLoadPriceList.MainGoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isMarketToday
+
+           --, CASE WHEN COALESCE(tmpLoadPriceList.MainGoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isMarketToday
+           , CASE WHEN DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData) = CURRENT_DATE THEN TRUE ELSE FALSE END AS isMarketToday
+           , DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData)                   ::TDateTime  AS LastPriceDate
 
            , COALESCE(Object_Insert.ValueData, '')         ::TVarChar  AS InsertName
            , COALESCE(ObjectDate_Insert.ValueData, Null)   ::TDateTime AS InsertDate
            , COALESCE(Object_Update.ValueData, '')         ::TVarChar  AS UpdateName
            , COALESCE(ObjectDate_Update.ValueData, Null)   ::TDateTime AS UpdateDate
            , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
-
+ 
     FROM Object_Goods_View
          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = Object_Goods_View.ObjectId
          LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id 
@@ -223,16 +232,29 @@ BEGIN
         LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
 
+        LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
+                                 ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+
+        LEFT JOIN ObjectDate AS ObjectDate_LastPrice
+                             ON ObjectDate_LastPrice.ObjectId = ObjectLink_Main.ChildObjectId
+                            AND ObjectDate_LastPrice.DescId = zc_ObjectDate_Goods_LastPrice()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_CountPrice
+                              ON ObjectFloat_CountPrice.ObjectId = ObjectLink_Main.ChildObjectId
+                             AND ObjectFloat_CountPrice.DescId = zc_ObjectFloat_Goods_CountPrice()
+
         -- условия хранения
         LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
                              ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
                             AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
         LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
-        LEFT JOIN tmpLoadPriceList ON tmpLoadPriceList.MainGoodsId = ObjectLink_Main.ChildObjectId
-    WHERE Object_Goods_View.ObjectId = vbObjectId;
+        --LEFT JOIN tmpLoadPriceList ON tmpLoadPriceList.MainGoodsId = ObjectLink_Main.ChildObjectId
+    WHERE Object_Goods_View.ObjectId = vbObjectId
+;
 
-   END IF;
+  -- END IF;
   
 END;
 $BODY$
@@ -243,6 +265,9 @@ ALTER FUNCTION gpSelect_Object_Goods_Retail(TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.04.17         *
+ 19.04.17         * add zc_ObjectDate_Goods_LastPrice
+ 06.04.17         *
  21.03.17         *
  13.12.16         *
  13.07.16         * protocol

@@ -59,12 +59,15 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-  {
+  LoadReportFromFile('Счет соц.проект', ReportPath + '\Счет соц.проект.fr3');
+
   LoadReportFromFile('Счет постановление 1303', ReportPath + '\Счет постановление 1303.fr3');
   LoadReportFromFile('Pеестр по постановлению 1303', ReportPath + '\Pеестр по постановлению 1303.fr3');
   LoadReportFromFile('Отчет по продажам Соц.проекта', ReportPath + '\Отчет по продажам Соц.проекта.fr3');
+
+  LoadReportFromFile('Отчет по продажам Соц.проекта(пост.152)', ReportPath + '\Отчет по продажам Соц.проекта(пост.152).fr3');
   exit;
-   }
+
   LoadReportFromFile('Печать стикера самоклейки', ReportPath + '\Печать стикера самоклейки.fr3');
   LoadReportFromFile('Копия чека клиенту', ReportPath + '\Копия чека клиенту.fr3');
   LoadReportFromFile('Копия чека клиенту(продажа)', ReportPath + '\Копия чека клиенту(продажа).fr3');

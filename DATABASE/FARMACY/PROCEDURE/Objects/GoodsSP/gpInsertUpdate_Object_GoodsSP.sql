@@ -2,17 +2,43 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP (Integer, TVarChar, Boolean, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP (Integer, Boolean, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP (Integer, Boolean, TFloat, TFloat, TFloat,  TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP (Integer, Boolean, TFloat, TFloat,  TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP (Integer, Boolean, TFloat, TFloat,  TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP (Integer, Boolean, TFloat, TFloat,  TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , TDateTime, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsSP(
     IN inId                  Integer   ,    -- ключ объекта <Товар> MainID
     IN inisSP                Boolean   ,    -- участвует в Соц. проекте
     IN inPriceSP             TFloat    ,    -- Референтна ціна за уп, грн (Соц. проект)
-    IN inGroupSP             TFloat    ,    -- Групи відшкоду-вання – І або ІІ
-    IN inCountSP             TFloat  ,    -- Кількість одиниць лікарського засобу у споживчій упаковці (Соц. проект) 
+   -- IN inGroupSP             TFloat    ,    -- Групи відшкоду-вання – І або ІІ
+    IN inCountSP             TFloat    ,    -- Кількість одиниць лікарського засобу у споживчій упаковці (Соц. проект) 
+
+    IN inColSP               TFloat    ,    --
+    IN inPriceOptSP          TFloat    ,    -- 
+    IN inPriceRetSP          TFloat    ,    -- 
+    IN inDailyNormSP         TFloat    ,    -- 
+    IN inDailyCompensationSP TFloat    ,    -- 
+    IN inPaymentSP           TFloat    ,    -- 
+
+    IN inDateReestrSP        TVarChar  ,    -- 
     IN inPack                TVarChar  ,    -- дозування
     IN inIntenalSPName       TVarChar  ,    -- Міжнародна непатентована назва (Соц. проект)
     IN inBrandSPName         TVarChar  ,    -- Торговельна назва лікарського засобу (Соц. проект)
     IN inKindOutSPName       TVarChar  ,    -- Форма випуску (Соц. проект)
+    IN inCodeATX             TVarChar  ,    --
+    IN inMakerSP             TVarChar  ,    --
+    IN inReestrSP            TVarChar  ,    --  
+    IN inInsertDateSP        TDateTime ,    -- 
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS Void
@@ -23,6 +49,8 @@ $BODY$
    DECLARE vbKindOutSPId Integer;
    DECLARE vbBrandSPId Integer;
    DECLARE vbName TVarChar;
+
+   DECLARE vbId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_...());
@@ -76,6 +104,23 @@ BEGIN
                                                     , inSession:= inSession
                                                      );
      END IF; 
+
+     -- ищем № п.п. Не должно быть товаров с одинаковым №, если находим обнуляем 
+     IF COALESCE (inColSP, 0) <> 0 
+        THEN
+            vbId := (SELECT ObjectFloat.ObjectId
+                     FROM ObjectFloat
+                     WHERE ObjectFloat.DescId = zc_ObjectFloat_Goods_ColSP()
+                       AND ObjectFloat.ValueData = inColSP
+                       AND ObjectFloat.ObjectId <> COALESCE (inId, 0)
+                    );
+
+            IF COALESCE (vbId, 0) <> 0 
+               THEN
+                   --убираем № п.п. если нашли
+                   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_ColSP(), vbId, Null);
+            END IF;
+     END IF;
        
     -- сохранили связь с <>
     PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_IntenalSP(), inId, vbIntenalSPId);
@@ -90,11 +135,36 @@ BEGIN
     -- сохранили свойство <>
     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_PriceSP(), inId, inPriceSP);
     -- сохранили свойство <>
-    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_GroupSP(), inId, inGroupSP);
+    --PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_GroupSP(), inId, inGroupSP);
     -- сохранили свойство <>
     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_CountSP(), inId, inCountSP);
     -- сохранили свойство <>
     PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_SP(), inId, TRUE);
+
+    -- сохранили свойство <>
+    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_PriceOptSP(), inId, inPriceOptSP);
+    -- сохранили свойство <>
+    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_PriceRetSP(), inId, inPriceRetSP);
+    -- сохранили свойство <>
+    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_DailyNormSP(), inId, inDailyNormSP);
+    -- сохранили свойство <>
+    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_DailyCompensationSP(), inId, inDailyCompensationSP);
+    -- сохранили свойство <>
+    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_PaymentSP(), inId, inPaymentSP);
+    -- сохранили свойство <>
+    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_ColSP(), inId, inColSP);
+
+    -- сохранили свойство <>
+    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_CodeATX(), inId, inCodeATX); 
+    -- сохранили свойство <>
+    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_ReestrSP(), inId, inReestrSP); 
+    -- сохранили свойство <>
+    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_MakerSP(), inId, inMakerSP); 
+    -- сохранили свойство <>
+    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_ReestrDateSP(), inId, inDateReestrSP);
+
+    -- сохранили свойство <Дата создания>
+    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_InsertSP(), inId, inInsertDateSP);
 
 
     -- сохранили протокол
@@ -106,6 +176,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.04.17         *
+ 04.04.17         *
  19.12.16         *
 */
 

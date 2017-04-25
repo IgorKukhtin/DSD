@@ -277,7 +277,7 @@ object GuideGoodsForm: TGuideGoodsForm
         end
         object Amount_WeighingWeight: TcxGridDBColumn
           Caption = #1054#1090#1075#1088#1091#1079#1082#1072' ('#1074#1077#1089')'
-          DataBinding.FieldName = 'Amount_Weighing'
+          DataBinding.FieldName = 'Amount_WeighingWeight'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -289,7 +289,7 @@ object GuideGoodsForm: TGuideGoodsForm
         end
         object Amount_diffWeight: TcxGridDBColumn
           Caption = #1056#1072#1079#1085#1080#1094#1072' ('#1074#1077#1089')'
-          DataBinding.FieldName = 'Amount_diff'
+          DataBinding.FieldName = 'Amount_diffWeight'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -557,7 +557,7 @@ object GuideGoodsForm: TGuideGoodsForm
       end
       object gbGoodsWieghtValue: TGroupBox
         Left = 0
-        Top = 123
+        Top = 164
         Width = 135
         Height = 41
         Align = alTop
@@ -588,6 +588,7 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         Caption = #1042#1074#1086#1076' '#1050#1054#1051#1048#1063#1045#1057#1058#1042#1054
         TabOrder = 3
+        OnClick = gbWeightValueClick
         object EditWeightValue: TcxCurrencyEdit
           Left = 5
           Top = 18
@@ -599,6 +600,28 @@ object GuideGoodsForm: TGuideGoodsForm
           OnEnter = EditTareCountEnter
           OnExit = EditWeightValueExit
           OnKeyDown = EditWeightValueKeyDown
+          Width = 125
+        end
+      end
+      object gbPrice: TGroupBox
+        Left = 0
+        Top = 123
+        Width = 135
+        Height = 41
+        Align = alTop
+        Caption = #1042#1074#1086#1076' '#1062#1045#1053#1040
+        TabOrder = 4
+        object EditPrice: TcxCurrencyEdit
+          Left = 5
+          Top = 18
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.AssignedValues.DisplayFormat = True
+          Properties.DecimalPlaces = 4
+          TabOrder = 0
+          OnEnter = EditTareCountEnter
+          OnExit = EditWeightValueExit
+          OnKeyDown = EditPriceKeyDown
           Width = 125
         end
       end

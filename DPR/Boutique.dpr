@@ -4,7 +4,7 @@ uses
   Vcl.Forms,
   Controls,
   SysUtils,
-  DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule} ,
+  DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
   dsdAction in '..\SOURCE\COMPONENT\dsdAction.pas',
   dsdAddOn in '..\SOURCE\COMPONENT\dsdAddOn.pas',
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
@@ -14,14 +14,14 @@ uses
   UtilConvert in '..\SOURCE\UtilConvert.pas',
   CommonData in '..\SOURCE\CommonData.pas',
   Authentication in '..\SOURCE\Authentication.pas',
-  ParentForm in '..\SOURCE\ParentForm.pas' {ParentForm} ,
+  ParentForm in '..\SOURCE\ParentForm.pas' {ParentForm},
   FormStorage in '..\SOURCE\FormStorage.pas',
-  ChoicePeriod in '..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm} ,
+  ChoicePeriod in '..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm},
   Defaults in '..\SOURCE\COMPONENT\Defaults.pas',
   UnilWin in '..\SOURCE\UnilWin.pas',
-  MessagesUnit in '..\SOURCE\MessagesUnit.pas' {MessagesForm} ,
+  MessagesUnit in '..\SOURCE\MessagesUnit.pas' {MessagesForm},
   ClientBankLoad in '..\SOURCE\COMPONENT\ClientBankLoad.pas',
-  SimpleGauge in '..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm} ,
+  SimpleGauge in '..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm},
   Document in '..\SOURCE\COMPONENT\Document.pas',
   ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas',
   Log in '..\SOURCE\Log.pas',
@@ -48,27 +48,27 @@ uses
   OrderXML in '..\SOURCE\EDI\OrderXML.pas',
   MeDOC in '..\SOURCE\MeDOC\MeDOC.pas',
   MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas',
-  AboutBoxUnit in '..\SOURCE\AboutBoxUnit.pas' {AboutBox} ,
-  MainForm in '..\FormsBoutique\MainForm.pas' {MainForm} ,
+  AboutBoxUnit in '..\SOURCE\AboutBoxUnit.pas' {AboutBox},
+  MainForm in '..\FormsBoutique\MainForm.pas' {MainForm},
   Updater in '..\SOURCE\COMPONENT\Updater.pas',
   ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
-  LoginForm in '..\SOURCE\LoginForm.pas' {LoginForm} ,
-  // UploadUnloadData in '..\FormsFarmacy\ConnectWithOld\UploadUnloadData.pas' {dmUnloadUploadData: TDataModule},
-  LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm} ,
+  LoginForm in '..\SOURCE\LoginForm.pas' {LoginForm},
+  LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
   OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas',
   InvoiceXML in '..\SOURCE\EDI\InvoiceXML.pas',
   dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
-  AncestorMain in '..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm} ,
+  AncestorMain in '..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
   dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
   FastReportAddOn in '..\SOURCE\COMPONENT\FastReportAddOn.pas',
   StatusXML in '..\SOURCE\EDI\StatusXML.pas',
   dsdApplication in '..\SOURCE\dsdApplication.pas',
   dsdException in '..\SOURCE\dsdException.pas',
   dsdXMLTransform in '..\SOURCE\COMPONENT\dsdXMLTransform.pas',
-  // RepriceUnit in '..\FormsFarmacy\ConnectWithOld\RepriceUnit.pas' {RepriceUnitForm},
   RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
   LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas',
-  RoleUnion in '..\Forms\RoleUnion.pas' {RoleUnionForm: TParentForm};
+  RoleUnion in '..\Forms\RoleUnion.pas' {RoleUnionForm: TParentForm},
+  Movement_PeriodDialog in '..\FormsBoutique\Document\Movement_PeriodDialog.pas' {Movement_PeriodDialogForm: TParentForm};
+
 {$R *.res}
 
 begin
@@ -85,8 +85,8 @@ begin
       TUpdater.AutomaticUpdateProgram;
       TUpdater.AutomaticCheckConnect;
       Application.CreateForm(TdmMain, dmMain);
-      Application.CreateForm(TMainForm, MainFormInstance);
-    end;
+  Application.CreateForm(TMainForm, MainFormInstance);
+  end;
   Application.Run;
 
 end.

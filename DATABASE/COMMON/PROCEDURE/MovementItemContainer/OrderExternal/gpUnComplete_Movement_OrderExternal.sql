@@ -3,7 +3,6 @@
 DROP FUNCTION IF EXISTS gpUnComplete_Movement_OrderExternal (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUnComplete_Movement_OrderExternal (Integer, Boolean, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpUnComplete_Movement_OrderExternal(
     IN inMovementId        Integer               , -- ключ Документа
    OUT outPrinted          Boolean               ,
@@ -16,22 +15,12 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_OrderExternal());
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_UnComplete_OrderExternal());
 
-     --
-     outPrinted := gpUpdate_Movement_OrderExternal_Print (inId := inMovementId, inNewPrinted := FALSE, inSession := inSession);
 
-     -- проверка - если <Master> Удален, то <Ошибка>
-     PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_UnComplete(), inComment:= 'распровести');
+     -- меняем статус документа + сохранили протокол
+     outPrinted := lpUnComplete_Movement_OrderExternal (inMovementId := inMovementId, inUserId := vbUserId);
 
-     -- !!!обнуляются свойства в элементах документа!!!
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), MovementItem.Id, 0)
-     FROM MovementItem
-     WHERE MovementItem.MovementId = inMovementId;
-
-     -- Распроводим Документ
-     PERFORM lpUnComplete_Movement (inMovementId := inMovementId
-                                  , inUserId     := vbUserId);
 
 END;
 $BODY$
@@ -40,6 +29,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.04.17                                        *
  06.06.14                                                       *
 */
 

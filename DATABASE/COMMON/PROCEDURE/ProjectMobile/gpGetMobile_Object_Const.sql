@@ -32,17 +32,24 @@ RETURNS TABLE (PaidKindId_First      Integer   -- Форма оплаты - БН
              -- , SyncDateOut        TDateTime -- Дата/время последней синхронизации - когда "успешно" выгружалась иходящая информация - заказы, возвраты и т.д
              , MobileVersion         TVarChar  -- Версия мобильного приложения. Пример: "1.0.3.625"
              , MobileAPKFileName     TVarChar  -- Название ".apk" файла мобильного приложения. Пример: "ProjectMobile.apk"
+             , PriceListId_def       Integer   -- Прайс-лист для "безликих" ТТ, т.е. добавленных на мобильном устройстве
+             , PriceListName_def     TVarChar  -- Прайс-лист для "безликих" ТТ, т.е. добавленных на мобильном устройстве
 )
 AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-      -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!! - Волошина Е.А.
-      -- IF inSession = '5' THEN inSession:= '140094'; END IF;
-
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- Если пользователь inSession - НЕ Торговый агент - !!!ВЫХОД!!!
+     IF NOT EXISTS (SELECT 1 FROM ObjectBoolean WHERE ObjectBoolean.DescId = zc_ObjectBoolean_User_ProjectMobile() AND ObjectBoolean.ObjectId = vbUserId AND ObjectBoolean.ValueData = TRUE)
+       AND inSession <> zfCalc_UserAdmin()
+     THEN
+         RETURN;
+     END IF;
 
      -- Результат
      RETURN QUERY
@@ -65,10 +72,10 @@ BEGIN
             , Object_PaidKind_SecondForm.Id          AS PaidKindId_Second
             , Object_PaidKind_SecondForm.ValueData   AS PaidKindName_Second
            
-            , Object_Status_Complete.Id              AS StatusId_Complete
-            , Object_Status_Complete.ValueData       AS StatusName_Complete
             , Object_Status_UnComplete.Id            AS StatusId_UnComplete
             , Object_Status_UnComplete.ValueData     AS StatusName_UnComplete
+            , Object_Status_Complete.Id              AS StatusId_Complete
+            , Object_Status_Complete.ValueData       AS StatusName_Complete
             , Object_Status_Erased.Id                AS StatusId_Erased
             , Object_Status_Erased.ValueData         AS StatusName_Erased
 
@@ -87,20 +94,23 @@ BEGIN
             , Object_User.ValueData        AS UserLogin
             , ObjectString_User_.ValueData AS UserPassword
 
-            , REPLACE (LOWER (Object_ConnectParam.ValueData), '/project/', '/projectmobile/')::TVarChar AS WebService
+            , REPLACE (REPLACE (LOWER (Object_ConnectParam.ValueData), '/project/', '/projectmobile/'), '//integer-srv.alan.dp.ua', '//project-vds.vds.colocall.com/projectmobile/index.php') :: TVarChar AS WebService
 
             -- AS LastDateIn
             -- AS LastDateOut
 
-            , '1.0.0.0'::TVarChar           AS MobileVersion
+            , '1.6.0.0'::TVarChar           AS MobileVersion
             , 'ProjectMobile.apk'::TVarChar AS MobileAPKFileName
+
+            , Object_PriceList_def.Id        AS PriceListId_def
+            , Object_PriceList_def.ValueData AS PriceListName_def
 
        FROM tmpPersonal
             LEFT JOIN Object AS Object_PaidKind_FirstForm  ON Object_PaidKind_FirstForm.Id = zc_Enum_PaidKind_FirstForm()
             LEFT JOIN Object AS Object_PaidKind_SecondForm ON Object_PaidKind_SecondForm.Id = zc_Enum_PaidKind_SecondForm()
 
-            LEFT JOIN Object AS Object_Status_Complete   ON Object_Status_Complete.Id   = zc_Enum_Status_Complete()
             LEFT JOIN Object AS Object_Status_UnComplete ON Object_Status_UnComplete.Id = zc_Enum_Status_UnComplete()
+            LEFT JOIN Object AS Object_Status_Complete   ON Object_Status_Complete.Id   = zc_Enum_Status_Complete()
             LEFT JOIN Object AS Object_Status_Erased     ON Object_Status_Erased.Id     = zc_Enum_Status_Erased()
 
             LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = 8459 -- Склад Реализации
@@ -113,6 +123,8 @@ BEGIN
                                   AND ObjectString_User_.DescId = zc_ObjectString_User_Password()
 
             LEFT JOIN Object AS Object_ConnectParam ON Object_ConnectParam.Id = zc_Enum_GlobalConst_ConnectParam ()
+
+            LEFT JOIN Object AS Object_PriceList_def ON Object_PriceList_def.Id = zc_PriceList_Basis()
       ;
 
 

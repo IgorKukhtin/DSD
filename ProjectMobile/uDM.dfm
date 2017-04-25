@@ -21,10 +21,8 @@ object DM: TDM
   end
   object conMain: TFDConnection
     Params.Strings = (
-      
-        'Database=C:\POLAK\PROJECT\OUTSORCE\Customers\VisualTax\vtMobile\' +
-        'DataBase\vtMobile.sdb'
-      'DriverID=SQLite')
+      'DriverID=SQLite'
+      'LockingMode=Exclusive')
     LoginPrompt = False
     Left = 40
     Top = 32
@@ -36,6 +34,8 @@ object DM: TDM
   end
   object tblObject_Const: TFDTable
     Connection = conMain
+    FetchOptions.AssignedValues = [evItems]
+    UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate]
     UpdateOptions.UpdateTableName = 'Object_Const'
     TableName = 'Object_Const'
     Left = 416
@@ -134,6 +134,13 @@ object DM: TDM
       FieldName = 'MobileAPKFileName'
       Size = 255
     end
+    object tblObject_ConstPriceListId_def: TIntegerField
+      FieldName = 'PriceListId_def'
+    end
+    object tblObject_ConstPriceListName_def: TStringField
+      FieldName = 'PriceListName_def'
+      Size = 255
+    end
   end
   object tblObject_Partner: TFDTable
     Connection = conMain
@@ -143,6 +150,10 @@ object DM: TDM
     Top = 200
     object tblObject_PartnerId: TIntegerField
       FieldName = 'Id'
+    end
+    object tblObject_PartnerGUID: TStringField
+      FieldName = 'GUID'
+      Size = 255
     end
     object tblObject_PartnerObjectCode: TIntegerField
       FieldName = 'ObjectCode'
@@ -220,6 +231,10 @@ object DM: TDM
     object tblObject_JuridicalId: TIntegerField
       FieldName = 'Id'
     end
+    object tblObject_JuridicalGUID: TStringField
+      FieldName = 'GUID'
+      Size = 255
+    end
     object tblObject_JuridicalObjectCode: TIntegerField
       FieldName = 'ObjectCode'
     end
@@ -241,6 +256,9 @@ object DM: TDM
     end
     object tblObject_JuridicalisErased: TBooleanField
       FieldName = 'isErased'
+    end
+    object tblObject_JuridicalisSync: TBooleanField
+      FieldName = 'isSync'
     end
   end
   object tblObject_Route: TFDTable
@@ -488,6 +506,7 @@ object DM: TDM
     end
   end
   object qryPartner: TFDQuery
+    OnCalcFields = qryPartnerCalcFields
     Connection = conMain
     Left = 40
     Top = 176
@@ -517,8 +536,8 @@ object DM: TDM
     object qryPartnerContractName: TWideStringField
       FieldName = 'ContractName'
     end
-    object qryPartnerPRICELISTID: TIntegerField
-      FieldName = 'PRICELISTID'
+    object qryPartnerJuridicalId: TIntegerField
+      FieldName = 'JuridicalId'
     end
     object qryPartnerPaidKindId: TIntegerField
       FieldName = 'PaidKindId'
@@ -526,11 +545,23 @@ object DM: TDM
     object qryPartnerChangePercent: TFloatField
       FieldName = 'ChangePercent'
     end
+    object qryPartnerPRICELISTID: TIntegerField
+      FieldName = 'PRICELISTID'
+    end
     object qryPartnerPriceWithVAT: TBooleanField
       FieldName = 'PriceWithVAT'
     end
     object qryPartnerVATPercent: TFloatField
       FieldName = 'VATPercent'
+    end
+    object qryPartnerPRICELISTID_RET: TIntegerField
+      FieldName = 'PRICELISTID_RET'
+    end
+    object qryPartnerPriceWithVAT_RET: TBooleanField
+      FieldName = 'PriceWithVAT_RET'
+    end
+    object qryPartnerVATPercent_RET: TFloatField
+      FieldName = 'VATPercent_RET'
     end
     object qryPartnerCalcDayCount: TFloatField
       FieldName = 'CalcDayCount'
@@ -540,6 +571,30 @@ object DM: TDM
     end
     object qryPartnerisOperDateOrder: TBooleanField
       FieldName = 'isOperDateOrder'
+    end
+    object qryPartnerDebtSum: TFloatField
+      FieldName = 'DebtSum'
+    end
+    object qryPartnerDebtSumJ: TFloatField
+      FieldName = 'DebtSumJ'
+    end
+    object qryPartnerOverSum: TFloatField
+      FieldName = 'OverSum'
+    end
+    object qryPartnerOverSumJ: TFloatField
+      FieldName = 'OverSumJ'
+    end
+    object qryPartnerOverDays: TIntegerField
+      FieldName = 'OverDays'
+    end
+    object qryPartnerOverDaysJ: TIntegerField
+      FieldName = 'OverDaysJ'
+    end
+    object qryPartnerContractInfo: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'ContractInfo'
+      Size = 400
+      Calculated = True
     end
   end
   object qryPriceList: TFDQuery
@@ -588,10 +643,19 @@ object DM: TDM
       FieldName = 'Measure'
       Size = 100
     end
+    object qryGoodsForPriceListStartDate: TDateTimeField
+      FieldName = 'StartDate'
+    end
     object qryGoodsForPriceListFullPrice: TStringField
       FieldKind = fkCalculated
       FieldName = 'FullPrice'
       Size = 200
+      Calculated = True
+    end
+    object qryGoodsForPriceListTermin: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'Termin'
+      Size = 255
       Calculated = True
     end
   end
@@ -621,8 +685,15 @@ object DM: TDM
     object tblMovement_OrderExternalStatusId: TIntegerField
       FieldName = 'StatusId'
     end
+    object tblMovement_OrderExternalComment: TStringField
+      FieldName = 'Comment'
+      Size = 255
+    end
     object tblMovement_OrderExternalPartnerId: TIntegerField
       FieldName = 'PartnerId'
+    end
+    object tblMovement_OrderExternalUnitId: TIntegerField
+      FieldName = 'UnitId'
     end
     object tblMovement_OrderExternalPaidKindId: TIntegerField
       FieldName = 'PaidKindId'
@@ -720,6 +791,9 @@ object DM: TDM
     object tblMovement_StoreRealComment: TStringField
       FieldName = 'Comment'
       Size = 255
+    end
+    object tblMovement_StoreRealInsertDate: TDateTimeField
+      FieldName = 'InsertDate'
     end
     object tblMovement_StoreRealIsSync: TBooleanField
       FieldName = 'IsSync'
@@ -826,6 +900,9 @@ object DM: TDM
     object tblMovement_VisitOperDate: TDateTimeField
       FieldName = 'OperDate'
     end
+    object tblMovement_VisitInsertDate: TDateTimeField
+      FieldName = 'InsertDate'
+    end
     object tblMovement_VisitStatusId: TIntegerField
       FieldName = 'StatusId'
     end
@@ -922,6 +999,10 @@ object DM: TDM
     object cdsOrderExternalOperDate: TDateField
       FieldName = 'OperDate'
     end
+    object cdsOrderExternalComment: TStringField
+      FieldName = 'Comment'
+      Size = 255
+    end
     object cdsOrderExternalName: TStringField
       FieldName = 'Name'
       Size = 255
@@ -930,13 +1011,61 @@ object DM: TDM
       FieldName = 'Price'
       Size = 100
     end
-    object cdsOrderExternalWeigth: TStringField
-      FieldName = 'Weigth'
+    object cdsOrderExternalWeight: TStringField
+      FieldName = 'Weight'
       Size = 100
+    end
+    object cdsOrderExternalStatusId: TIntegerField
+      FieldName = 'StatusId'
     end
     object cdsOrderExternalStatus: TStringField
       FieldName = 'Status'
       Size = 200
+    end
+    object cdsOrderExternalisSync: TBooleanField
+      FieldName = 'isSync'
+    end
+    object cdsOrderExternalPartnerId: TIntegerField
+      FieldName = 'PartnerId'
+    end
+    object cdsOrderExternalPartnerName: TStringField
+      FieldName = 'PartnerName'
+      Size = 255
+    end
+    object cdsOrderExternalAddress: TStringField
+      FieldName = 'Address'
+      Size = 255
+    end
+    object cdsOrderExternalContractId: TIntegerField
+      FieldName = 'ContractId'
+    end
+    object cdsOrderExternalContractName: TStringField
+      FieldName = 'ContractName'
+      Size = 255
+    end
+    object cdsOrderExternalPaidKindId: TIntegerField
+      FieldName = 'PaidKindId'
+    end
+    object cdsOrderExternalPriceListId: TIntegerField
+      FieldName = 'PriceListId'
+    end
+    object cdsOrderExternalPriceWithVAT: TBooleanField
+      FieldName = 'PriceWithVAT'
+    end
+    object cdsOrderExternalVATPercent: TFloatField
+      FieldName = 'VATPercent'
+    end
+    object cdsOrderExternalChangePercent: TFloatField
+      FieldName = 'ChangePercent'
+    end
+    object cdsOrderExternalCalcDayCount: TFloatField
+      FieldName = 'CalcDayCount'
+    end
+    object cdsOrderExternalOrderDayCount: TFloatField
+      FieldName = 'OrderDayCount'
+    end
+    object cdsOrderExternalisOperDateOrder: TBooleanField
+      FieldName = 'isOperDateOrder'
     end
   end
   object tblMovement_RouteMember: TFDTable
@@ -996,8 +1125,21 @@ object DM: TDM
     object tblMovementItem_VisitInsertDate: TDateTimeField
       FieldName = 'InsertDate'
     end
+    object tblMovementItem_VisitGPSN: TFloatField
+      FieldName = 'GPSN'
+    end
+    object tblMovementItem_VisitGPSE: TFloatField
+      FieldName = 'GPSE'
+    end
+    object tblMovementItem_VisitisErased: TBooleanField
+      FieldName = 'isErased'
+    end
+    object tblMovementItem_VisitisSync: TBooleanField
+      FieldName = 'isSync'
+    end
   end
   object qryPhotoGroups: TFDQuery
+    OnCalcFields = qryPhotoGroupsCalcFields
     Connection = conMain
     SQL.Strings = (
       '')
@@ -1013,12 +1155,24 @@ object DM: TDM
     object qryPhotoGroupsStatusId: TIntegerField
       FieldName = 'StatusId'
     end
+    object qryPhotoGroupsName: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'Name'
+      Size = 255
+      Calculated = True
+    end
+    object qryPhotoGroupsOperDate: TDateTimeField
+      FieldName = 'OperDate'
+    end
+    object qryPhotoGroupsIsSync: TBooleanField
+      FieldName = 'IsSync'
+    end
   end
   object qryPhotos: TFDQuery
     Connection = conMain
     SQL.Strings = (
       '')
-    Left = 128
+    Left = 216
     Top = 392
     object qryPhotosId: TIntegerField
       FieldName = 'Id'
@@ -1029,6 +1183,12 @@ object DM: TDM
     object qryPhotosComment: TStringField
       FieldName = 'Comment'
       Size = 255
+    end
+    object qryPhotosisErased: TBooleanField
+      FieldName = 'isErased'
+    end
+    object qryPhotosisSync: TBooleanField
+      FieldName = 'isSync'
     end
   end
   object cdsStoreReals: TClientDataSet
@@ -1050,9 +1210,29 @@ object DM: TDM
       FieldName = 'Comment'
       Size = 255
     end
+    object cdsStoreRealsStatusId: TIntegerField
+      FieldName = 'StatusId'
+    end
     object cdsStoreRealsStatus: TStringField
       FieldName = 'Status'
       Size = 255
+    end
+    object cdsStoreRealsisSync: TBooleanField
+      FieldName = 'isSync'
+    end
+    object cdsStoreRealsPartnerId: TIntegerField
+      FieldName = 'PartnerId'
+    end
+    object cdsStoreRealsPartnerName: TStringField
+      FieldName = 'PartnerName'
+      Size = 255
+    end
+    object cdsStoreRealsAddress: TStringField
+      FieldName = 'Address'
+      Size = 255
+    end
+    object cdsStoreRealsPriceListId: TIntegerField
+      FieldName = 'PriceListId'
     end
   end
   object cdsStoreRealItems: TClientDataSet
@@ -1190,9 +1370,6 @@ object DM: TDM
     object tblMovement_ReturnInStatusId: TIntegerField
       FieldName = 'StatusId'
     end
-    object tblMovement_ReturnInChecked: TBooleanField
-      FieldName = 'Checked'
-    end
     object tblMovement_ReturnInPriceWithVAT: TBooleanField
       FieldName = 'PriceWithVAT'
     end
@@ -1216,6 +1393,9 @@ object DM: TDM
     end
     object tblMovement_ReturnInPartnerId: TIntegerField
       FieldName = 'PartnerId'
+    end
+    object tblMovement_ReturnInUnitId: TIntegerField
+      FieldName = 'UnitId'
     end
     object tblMovement_ReturnInContractId: TIntegerField
       FieldName = 'ContractId'
@@ -1281,9 +1461,12 @@ object DM: TDM
       FieldName = 'Price'
       Size = 100
     end
-    object cdsReturnInWeigth: TStringField
-      FieldName = 'Weigth'
+    object cdsReturnInWeight: TStringField
+      FieldName = 'Weight'
       Size = 100
+    end
+    object cdsReturnInStatusId: TIntegerField
+      FieldName = 'StatusId'
     end
     object cdsReturnInStatus: TStringField
       FieldName = 'Status'
@@ -1292,6 +1475,42 @@ object DM: TDM
     object cdsReturnInComment: TStringField
       FieldName = 'Comment'
       Size = 255
+    end
+    object cdsReturnInisSync: TBooleanField
+      FieldName = 'isSync'
+    end
+    object cdsReturnInPartnerId: TIntegerField
+      FieldName = 'PartnerId'
+    end
+    object cdsReturnInPartnerName: TStringField
+      FieldName = 'PartnerName'
+      Size = 255
+    end
+    object cdsReturnInAddress: TStringField
+      FieldName = 'Address'
+      Size = 255
+    end
+    object cdsReturnInContractId: TIntegerField
+      FieldName = 'ContractId'
+    end
+    object cdsReturnInContractName: TStringField
+      FieldName = 'ContractName'
+      Size = 255
+    end
+    object cdsReturnInPaidKindId: TIntegerField
+      FieldName = 'PaidKindId'
+    end
+    object cdsReturnInPriceListId: TIntegerField
+      FieldName = 'PriceListId'
+    end
+    object cdsReturnInPriceWithVAT: TBooleanField
+      FieldName = 'PriceWithVAT'
+    end
+    object cdsReturnInVATPercent: TFloatField
+      FieldName = 'VATPercent'
+    end
+    object cdsReturnInChangePercent: TFloatField
+      FieldName = 'ChangePercent'
     end
   end
   object cdsReturnInItems: TClientDataSet
@@ -1444,6 +1663,7 @@ object DM: TDM
   end
   object cdsJuridicalCollation: TClientDataSet
     Aggregates = <>
+    IndexFieldNames = 'DocType;DocDate'
     Params = <>
     Left = 40
     Top = 536
@@ -1462,21 +1682,124 @@ object DM: TDM
       FieldName = 'PaidKind'
       Size = 100
     end
-    object cdsJuridicalCollationDebet: TFloatField
+    object cdsJuridicalCollationFromName: TStringField
+      FieldName = 'FromName'
+      Size = 255
+    end
+    object cdsJuridicalCollationToName: TStringField
+      FieldName = 'ToName'
+      Size = 255
+    end
+    object cdsJuridicalCollationDebet: TStringField
       FieldName = 'Debet'
     end
-    object cdsJuridicalCollationKredit: TFloatField
+    object cdsJuridicalCollationKredit: TStringField
       FieldName = 'Kredit'
     end
     object cdsJuridicalCollationDocNumDate: TStringField
-      FieldKind = fkCalculated
       FieldName = 'DocNumDate'
+      Size = 200
+    end
+    object cdsJuridicalCollationDocTypeShow: TStringField
+      DisplayWidth = 300
+      FieldName = 'DocTypeShow'
+      Size = 300
+    end
+    object cdsJuridicalCollationFromToName: TStringField
+      FieldName = 'FromToName'
+      Size = 300
+    end
+    object cdsJuridicalCollationPaidKindShow: TStringField
+      FieldName = 'PaidKindShow'
+      Size = 255
+    end
+  end
+  object cdsTasks: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 128
+    Top = 536
+    object cdsTasksId: TIntegerField
+      FieldName = 'Id'
+    end
+    object cdsTasksInvNumber: TStringField
+      FieldName = 'InvNumber'
+      Size = 255
+    end
+    object cdsTasksOperDate: TDateTimeField
+      FieldName = 'OperDate'
+    end
+    object cdsTasksPartnerId: TIntegerField
+      FieldName = 'PartnerId'
+    end
+    object cdsTasksClosed: TBooleanField
+      FieldName = 'Closed'
+    end
+    object cdsTasksDescription: TStringField
+      FieldName = 'Description'
+      Size = 1000
+    end
+    object cdsTasksComment: TStringField
+      FieldName = 'Comment'
+      Size = 1000
+    end
+    object cdsTasksPartnerName: TStringField
+      FieldName = 'PartnerName'
+      Size = 300
+    end
+    object cdsTasksTaskDate: TStringField
+      FieldName = 'TaskDate'
+      Size = 200
+    end
+    object cdsTasksTaskDescription: TStringField
+      FieldName = 'TaskDescription'
+      Size = 1100
+    end
+  end
+  object qryPhotoGroupDocs: TFDQuery
+    OnCalcFields = qryPhotoGroupDocsCalcFields
+    Connection = conMain
+    SQL.Strings = (
+      '')
+    Left = 128
+    Top = 392
+    object qryPhotoGroupDocsId: TIntegerField
+      FieldName = 'Id'
+    end
+    object qryPhotoGroupDocsComment: TStringField
+      FieldName = 'Comment'
+      Size = 255
+    end
+    object qryPhotoGroupDocsStatusId: TIntegerField
+      FieldName = 'StatusId'
+    end
+    object qryPhotoGroupDocsName: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'Name'
+      Size = 255
       Calculated = True
     end
-    object cdsJuridicalCollationPayment: TStringField
+    object qryPhotoGroupDocsOperDate: TDateTimeField
+      FieldName = 'OperDate'
+    end
+    object qryPhotoGroupDocsIsSync: TBooleanField
+      FieldName = 'IsSync'
+    end
+    object qryPhotoGroupDocsPartnerId: TIntegerField
+      FieldName = 'PartnerId'
+    end
+    object qryPhotoGroupDocsPartnerName: TStringField
+      FieldName = 'PartnerName'
+      Size = 255
+    end
+    object qryPhotoGroupDocsAddress: TStringField
+      FieldName = 'Address'
+      Size = 255
+    end
+    object qryPhotoGroupDocsGroupName: TStringField
       FieldKind = fkCalculated
-      FieldName = 'Payment'
-      Size = 200
+      FieldName = 'GroupName'
+      Size = 600
       Calculated = True
     end
   end

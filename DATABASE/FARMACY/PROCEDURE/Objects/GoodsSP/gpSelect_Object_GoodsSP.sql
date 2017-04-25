@@ -13,6 +13,12 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PriceSP TFloat, GroupSP TFloat, CountSP TFloat
              , isSP Boolean
              , Pack TVarChar
+             , CodeATX TVarChar, ReestrSP TVarChar, MakerSP TVarChar
+             , DateReestrSP TVarChar
+             , PriceOptSP TFloat, PriceRetSP TFloat
+             , DailyNormSP TFloat, DailyCompensationSP TFloat
+             , PaymentSP TFloat, ColSP TFloat
+             , InsertDateSP TDateTime
              ) AS
 $BODY$ 
   DECLARE vbUserId Integer;
@@ -43,6 +49,18 @@ BEGIN
            , ObjectFloat_Goods_CountSP.ValueData          AS CountSP
            , ObjectBoolean_Goods_SP.ValueData             AS isSP
            , ObjectString_Goods_Pack.ValueData            AS Pack
+
+           , ObjectString_Goods_CodeATX.ValueData         AS CodeATX 
+           , ObjectString_Goods_ReestrSP.ValueData        AS ReestrSP
+           , ObjectString_Goods_MakerSP.ValueData         AS MakerSP
+           , ObjectString_Goods_ReestrDateSP.ValueData    AS DateReestrSP
+           , ObjectFloat_Goods_PriceOptSP.ValueData       AS PriceOptSP
+           , ObjectFloat_Goods_PriceRetSP.ValueData       AS PriceRetSP
+           , ObjectFloat_Goods_DailyNormSP.ValueData      AS DailyNormSP
+           , ObjectFloat_Goods_DailyCompensationSP.ValueData  AS DailyCompensationSP
+           , ObjectFloat_Goods_PaymentSP.ValueData        AS PaymentSP
+           , ObjectFloat_Goods_ColSP.ValueData            AS ColSP
+           , ObjectDate_InsertSP.ValueData                AS InsertDateSP
 
        FROM ObjectBoolean AS ObjectBoolean_Goods_SP 
 
@@ -79,11 +97,49 @@ BEGIN
                                   ON ObjectFloat_Goods_CountSP.ObjectId = Object_Goods.Id 
                                  AND ObjectFloat_Goods_CountSP.DescId = zc_ObjectFloat_Goods_CountSP()
 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
+                                  ON ObjectFloat_Goods_PriceOptSP.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP() 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceRetSP
+                                  ON ObjectFloat_Goods_PriceRetSP.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_Goods_PriceRetSP.DescId = zc_ObjectFloat_Goods_PriceRetSP() 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Goods_DailyNormSP
+                                  ON ObjectFloat_Goods_DailyNormSP.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_Goods_DailyNormSP.DescId = zc_ObjectFloat_Goods_DailyNormSP() 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Goods_DailyCompensationSP
+                                  ON ObjectFloat_Goods_DailyCompensationSP.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_Goods_DailyCompensationSP.DescId = zc_ObjectFloat_Goods_DailyCompensationSP() 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PaymentSP
+                                  ON ObjectFloat_Goods_PaymentSP.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_Goods_PaymentSP.DescId = zc_ObjectFloat_Goods_PaymentSP() 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Goods_ColSP
+                                  ON ObjectFloat_Goods_ColSP.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_Goods_ColSP.DescId = zc_ObjectFloat_Goods_ColSP() 
+
             LEFT JOIN ObjectString AS ObjectString_Goods_Pack
                                    ON ObjectString_Goods_Pack.ObjectId = Object_Goods.Id 
                                   AND ObjectString_Goods_Pack.DescId = zc_ObjectString_Goods_Pack()
+
+            LEFT JOIN ObjectString AS ObjectString_Goods_CodeATX
+                                   ON ObjectString_Goods_CodeATX.ObjectId = Object_Goods.Id 
+                                  AND ObjectString_Goods_CodeATX.DescId = zc_ObjectString_Goods_CodeATX()
+            LEFT JOIN ObjectString AS ObjectString_Goods_ReestrSP
+                                   ON ObjectString_Goods_ReestrSP.ObjectId = Object_Goods.Id 
+                                  AND ObjectString_Goods_ReestrSP.DescId = zc_ObjectString_Goods_ReestrSP()
+            LEFT JOIN ObjectString AS ObjectString_Goods_MakerSP
+                                   ON ObjectString_Goods_MakerSP.ObjectId = Object_Goods.Id 
+                                  AND ObjectString_Goods_MakerSP.DescId = zc_ObjectString_Goods_MakerSP()
+
+            LEFT JOIN ObjectString AS ObjectString_Goods_ReestrDateSP
+                                   ON ObjectString_Goods_ReestrDateSP.ObjectId = Object_Goods.Id 
+                                  AND ObjectString_Goods_ReestrDateSP.DescId = zc_ObjectString_Goods_ReestrDateSP()
+
+            LEFT JOIN ObjectDate AS ObjectDate_InsertSP
+                                 ON ObjectDate_InsertSP.ObjectId = Object_Goods.Id 
+                                AND ObjectDate_InsertSP.DescId = zc_ObjectDate_Protocol_InsertSP()
      
-   WHERE ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP();
+   WHERE ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+     AND ObjectBoolean_Goods_SP.ValueData;
 
   
 END;
@@ -95,9 +151,9 @@ ALTER FUNCTION gpSelect_Object_GoodsSP(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 04.04.17         *
  19.12.16         *
 */
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_Object_GoodsSP (zfCalc_UserAdmin())
-

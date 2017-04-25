@@ -155,12 +155,12 @@ type
 
 implementation
 
-uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit, VCL.Forms,
+uses Storage, CommonData, TypInfo, UtilConvert, System.SysUtils, cxTextEdit, VCL.Forms,
      XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar,
      Variants, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
      dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document, Controls,
-     cxButtonEdit, EDI, ExternalSave, Medoc,
-     cxMemo, dsdInternetAction, ParentForm, Vcl.ActnList, System.Rtti;
+     cxButtonEdit, EDI, ExternalSave, Medoc, UnilWin, FormStorage,
+     cxMemo, cxImage, dsdInternetAction, ParentForm, Vcl.ActnList, System.Rtti;
 
 procedure Register;
 begin
@@ -948,6 +948,8 @@ var
   FRttiContext: TRttiContext;
   FRttiProperty: TRttiProperty;
   RttiValue : TValue;
+  PhotoGUID: TGUID;
+  PhotoName: string;
 begin
   FValue := Value;
   // передаем значение параметра дальше по цепочке
@@ -960,6 +962,14 @@ begin
         (Component as TcxTextEdit).Text := FValue;
      if Component is TcxMemo then
         (Component as TcxMemo).Text := FValue;
+     if Component is TcxImage then
+     begin
+        CreateGUID(PhotoGUID);
+        PhotoName := ExtractFilePath(ParamStr(0)) + GUIDToString(PhotoGUID) + '.jpeg';
+        FileWriteString(PhotoName, ReConvertConvert(VarToStr(FValue)));
+        (Component as TcxImage).Picture.LoadFromFile(PhotoName);
+        System.SysUtils.DeleteFile(PhotoName);
+     end;
      if Component is TcxButtonEdit then
         (Component as TcxButtonEdit).Text := FValue;
      if Component is TdsdFormParams then

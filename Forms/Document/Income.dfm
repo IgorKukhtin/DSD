@@ -2,7 +2,7 @@ object IncomeForm: TIncomeForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
-  ClientHeight = 492
+  ClientHeight = 480
   ClientWidth = 943
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -283,7 +283,7 @@ object IncomeForm: TIncomeForm
       Left = 603
       Top = 103
       TabOrder = 32
-      Width = 332
+      Width = 198
     end
     object cxLabel19: TcxLabel
       Left = 453
@@ -307,24 +307,27 @@ object IncomeForm: TIncomeForm
     Left = 0
     Top = 166
     Width = 943
-    Height = 326
+    Height = 314
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 326
+    ExplicitHeight = 326
+    ClientRectBottom = 314
     ClientRectRight = 943
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 302
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 943
-        Height = 302
+        Height = 290
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 302
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -745,13 +748,15 @@ object IncomeForm: TIncomeForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
+      ExplicitHeight = 302
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
         Width = 943
-        Height = 302
+        Height = 290
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 302
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSourceCost
@@ -930,8 +935,38 @@ object IncomeForm: TIncomeForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 5
     Width = 173
+  end
+  object cxLabel17: TcxLabel
+    Left = 808
+    Top = 85
+    Caption = #1047#1072#1103#1074#1082#1072
+  end
+  object edInvNumberOrder: TcxButtonEdit
+    Left = 808
+    Top = 103
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 127
+  end
+  object edJuridicalFrom: TcxButtonEdit
+    Left = 272
+    Top = 41
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Visible = False
+    Width = 64
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -949,8 +984,8 @@ object IncomeForm: TIncomeForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 262
-    Top = 375
+    Left = 246
+    Top = 343
   end
   object spSelectMI: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Income'
@@ -1062,6 +1097,10 @@ object IncomeForm: TIncomeForm
         item
           Visible = True
           ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordGoods'
         end
         item
           Visible = True
@@ -1220,6 +1259,10 @@ object IncomeForm: TIncomeForm
     end
     object bbShowErasedCost: TdxBarButton
       Action = actShowErasedCost
+      Category = 0
+    end
+    object bbInsertRecordGoods: TdxBarButton
+      Action = InsertRecordGoods
       Category = 0
     end
   end
@@ -1713,6 +1756,19 @@ object IncomeForm: TIncomeForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object InsertRecordGoods: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      View = cxGridDBTableView
+      Action = actGoodsChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      ShortCut = 45
+      ImageIndex = 0
     end
     object InsertRecord1: TInsertRecord
       Category = 'DSDLib'
@@ -2245,7 +2301,7 @@ object IncomeForm: TIncomeForm
       end>
     GetStoredProc = spGet
     Left = 248
-    Top = 241
+    Top = 225
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Income'
@@ -2484,6 +2540,36 @@ object IncomeForm: TIncomeForm
         Name = 'InvoiceName'
         Value = Null
         Component = InvoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Order'
+        Value = Null
+        Component = OrderGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Order'
+        Value = Null
+        Component = OrderGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId_From'
+        Value = Null
+        Component = JuridicalFromGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName_From'
+        Value = Null
+        Component = JuridicalFromGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2810,7 +2896,7 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     Left = 824
-    Top = 56
+    Top = 32
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
@@ -3054,7 +3140,7 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     Left = 340
-    Top = 88
+    Top = 96
   end
   object HeaderSaver2: THeaderSaver
     IdParam.Value = Null
@@ -3067,8 +3153,8 @@ object IncomeForm: TIncomeForm
         Control = edInvNumberTransport
       end>
     GetStoredProc = spGet
-    Left = 328
-    Top = 225
+    Left = 312
+    Top = 217
   end
   object spInsertUpdateMovement_Params: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Income_Transport'
@@ -3349,5 +3435,103 @@ object IncomeForm: TIncomeForm
       end>
     Left = 484
     Top = 96
+  end
+  object spUpdateOrder: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Income_Order'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Order'
+        Value = '0'
+        Component = OrderGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 273
+    Top = 408
+  end
+  object HeaderSaver3: THeaderSaver
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
+    StoredProc = spUpdateOrder
+    ControlList = <
+      item
+        Control = edInvNumberOrder
+      end>
+    GetStoredProc = spGet
+    Left = 368
+    Top = 225
+  end
+  object OrderGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberOrder
+    Key = '0'
+    FormNameParam.Value = 'TOrderIncomeJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderIncomeJournalChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = OrderGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = OrderGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = ''
+        Component = JuridicalFromGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = ''
+        Component = JuridicalFromGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 836
+    Top = 96
+  end
+  object JuridicalFromGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalFrom
+    FormNameParam.Name = 'TJuridical_ObjectForm'
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <>
+    Left = 377
+    Top = 24
   end
 end

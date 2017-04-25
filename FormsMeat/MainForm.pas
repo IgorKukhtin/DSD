@@ -811,7 +811,6 @@ type
     miProductionUnionTechSiryo: TMenuItem;
     miProductionUnionTechReceiptSiryo: TMenuItem;
     actStoreReal: TdsdOpenForm;
-    miStoreReal: TMenuItem;
     actOrderExternalPersonalTrade: TdsdOpenForm;
     miPersonalTrade: TMenuItem;
     N43: TMenuItem;
@@ -841,7 +840,7 @@ type
     actMobileOrderExternal: TdsdOpenForm;
     actTask: TdsdOpenForm;
     N158: TMenuItem;
-    N159: TMenuItem;
+    miStoreReal: TMenuItem;
     actVisit: TdsdOpenForm;
     N160: TMenuItem;
     actPhotoMobile: TdsdOpenForm;
@@ -853,6 +852,19 @@ type
     N164: TMenuItem;
     actGoodsListIncome: TdsdOpenForm;
     N165: TMenuItem;
+    actReport_SupplyBalance: TdsdOpenForm;
+    N166: TMenuItem;
+    N167: TMenuItem;
+    actReport_MotionGoodsWeek: TdsdOpenForm;
+    N168: TMenuItem;
+    actReport_Check_OrderInternalBySend: TdsdOpenForm;
+    N169: TMenuItem;
+    N170: TMenuItem;
+    actOrderIncomeSnab: TdsdOpenForm;
+    N171: TMenuItem;
+    N159: TMenuItem;
+    actMobileReturnIn: TdsdOpenForm;
+    N172: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

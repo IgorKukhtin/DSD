@@ -211,6 +211,13 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object clisDocument: TcxGridDBColumn
+            Caption = #1045#1089#1090#1100' '#1085#1072#1096' '#1101#1082#1079'.'
+            DataBinding.FieldName = 'isDocument'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
         end
       end
     end
@@ -552,6 +559,15 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         Component = MasterCDS
         ComponentItem = 'InvNumberRegistered'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDocument'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isDocument'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

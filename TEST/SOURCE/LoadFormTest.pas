@@ -701,6 +701,11 @@ end;
 
 procedure TLoadFormTest.LoadOrderIncomeFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderIncomeSnabForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderIncomeSnabForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderIncomeSnabJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderIncomeSnabJournalForm');
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderIncomeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderIncomeJournalForm'));
@@ -811,18 +816,19 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TActionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProcessForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProcessForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserSettingsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserSettingsForm');
   exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserForm');
-  //exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserKeyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserKeyForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUser_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUser_ObjectForm');
 
@@ -1470,7 +1476,22 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  //exit;
+    {
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_OrderInternalBySendForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_OrderInternalBySendForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_OrderInternalBySendDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_OrderInternalBySendDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsWeekForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsWeekForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsWeekDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsWeekDialogForm');
+   }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SupplyBalanceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SupplyBalanceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SupplyBalanceDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SupplyBalanceDialogForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsForm');
@@ -2369,6 +2390,9 @@ end;
 
 procedure TLoadFormTest.LoadMobileProjectFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileReturnInJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobileReturnInJournalForm');
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePromoJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobilePromoJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePromoForm'));

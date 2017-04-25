@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelectMobile_Object_Partner (
 RETURNS TABLE (Id               Integer
              , ObjectCode       Integer  -- Код
              , ValueData        TVarChar -- Название
+             , GUID             TVarChar -- Глобальный уникальный идентификатор. Для синхронизации с Главной БД
              , Address          TVarChar -- Адрес точки доставки
              , GPSN             TFloat   -- GPS координаты точки доставки (широта)
              , GPSE             TFloat   -- GPS координаты точки доставки (долгота)
@@ -150,14 +151,17 @@ BEGIN
              SELECT Object_Partner.Id
                   , Object_Partner.ObjectCode
                   , Object_Partner.ValueData
+                  , ObjectString_Partner_GUID.ValueData     AS GUID
                   , ObjectString_Partner_Address.ValueData  AS Address
                   , ObjectFloat_Partner_GPSN.ValueData      AS GPSN
                   , ObjectFloat_Partner_GPSE.ValueData      AS GPSE
-                  , REPLACE (REPLACE (LOWER (COALESCE (ObjectString_Partner_Schedule.ValueData, 't;t;t;t;t;t;t')), 'true', 't'), 'false', 'f')::TVarChar AS Schedule
-                  , REPLACE (REPLACE (LOWER (COALESCE (ObjectString_Partner_Delivery.ValueData, 'f;f;f;f;f;f;f')), 'true', 't'), 'false', 'f')::TVarChar AS Delivery
+                  --, REPLACE (REPLACE (LOWER (COALESCE (ObjectString_Partner_Schedule.ValueData, 't;t;t;t;t;t;t')), 'true', 't'), 'false', 'f')::TVarChar AS Schedule
+                  --, REPLACE (REPLACE (LOWER (COALESCE (ObjectString_Partner_Delivery.ValueData, 'f;f;f;f;f;f;f')), 'true', 't'), 'false', 'f')::TVarChar AS Delivery
+                  , zfReCalc_ScheduleOrDelivery (ObjectString_Partner_Schedule.ValueData, ObjectString_Partner_Delivery.ValueData, false) AS Schedule
+                  , zfReCalc_ScheduleOrDelivery (ObjectString_Partner_Schedule.ValueData, ObjectString_Partner_Delivery.ValueData, true)  AS Delivery
                   , COALESCE (tmpDebt.DebtSum, 0.0)::TFloat AS DebtSum
                   , COALESCE (tmpDebt.OverSum, 0.0)::TFloat AS OverSum
-                  , COALESCE (tmpDebt.OverDays, 0)::Integer AS OverDays
+                  , CASE WHEN COALESCE (tmpDebt.OverSum, 0.0) > 0.0 THEN COALESCE (tmpDebt.OverDays, 0)::Integer ELSE 0::Integer END AS OverDays
                   , COALESCE (ObjectFloat_Partner_PrepareDayCount.ValueData, 0.0)::TFloat  AS PrepareDayCount
                   , COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0.0)::TFloat AS DocumentDayCount
                   , CASE WHEN tmpStoreRealDoc.OperDate IS NULL THEN 0.0::TFloat ELSE DATE_PART ('day', CURRENT_DATE::TDateTime - tmpStoreRealDoc.OperDate)::TFloat END AS CalcDayCount
@@ -217,7 +221,11 @@ BEGIN
                   LEFT JOIN ObjectBoolean AS ObjectBoolean_Retail_OperDateOrder
                                           ON ObjectBoolean_Retail_OperDateOrder.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
                                          AND ObjectBoolean_Retail_OperDateOrder.DescId = zc_ObjectBoolean_Retail_OperDateOrder()                      
-             WHERE Object_Partner.DescId = zc_Object_Partner();
+                  LEFT JOIN ObjectString AS ObjectString_Partner_GUID
+                                         ON ObjectString_Partner_GUID.ObjectId = Object_Partner.Id
+                                        AND ObjectString_Partner_GUID.DescId = zc_ObjectString_Partner_GUID() 
+             WHERE Object_Partner.DescId = zc_Object_Partner()
+               AND NOT Object_Partner.isErased;
       END IF;
 
 END; 

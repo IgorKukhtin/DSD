@@ -3,7 +3,7 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
   ClientHeight = 407
-  ClientWidth = 626
+  ClientWidth = 742
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,14 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 626
+    Width = 742
     Height = 381
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 626
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -44,7 +45,6 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
@@ -54,7 +54,7 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 52
+        Width = 54
       end
       object clName: TcxGridDBColumn
         Caption = #1060#1048#1054
@@ -62,14 +62,30 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 200
+        Width = 241
       end
       object clPositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
         DataBinding.FieldName = 'PositionName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 195
+      end
+      object BranchName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083
+        DataBinding.FieldName = 'BranchName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 87
+      end
+      object UnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 190
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -315,6 +331,51 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PositionId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PositionName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BranchId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BranchName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'UnitName'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

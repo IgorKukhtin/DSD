@@ -22,8 +22,8 @@ type
     function myStrToFloat(aValue: String) : Double;
   public
     // так криво будем хранить "текущие" параметры-Main
-    gURL, gService, gPort, gUserName, gPassword, gCardNumber : String;
-    gDiscountExternalId : Integer;
+    gURL, gService, gPort, gUserName, gPassword, gCardNumber: string;
+    gDiscountExternalId, gCode: Integer;
     // так криво будем хранить "текущие" параметры-Item
     //gGoodsId : Integer;
     //gPriceSale, gPrice, gChangePercent, gSummChangePercent : Currency;
@@ -293,6 +293,7 @@ begin
          Execute;
          // сохраним "нужные" параметры-Main
          gDiscountExternalId:= lDiscountExternalId;
+         gCode       := ParamByName('Code').Value;
          gURL        := ParamByName('URL').Value;
          gService    := ParamByName('Service').Value;
          gPort       := ParamByName('Port').Value;
@@ -304,6 +305,7 @@ begin
      begin
           //обнулим параметры-Main
           gDiscountExternalId:= 0;
+          gCode       := 0;
           gURL        := '';
           gService    := '';
           gPort       := '';
@@ -805,7 +807,9 @@ begin
       end // if BarCode_find <> ''
 
       // иначе - обнуляем скидку
-      else begin
+      else
+      if (DiscountServiceForm.gCode <> 2) then
+      begin
                // на всяк случай - с условием
                if CheckCDS.FieldByName('PriceSale').asFloat > 0
                then lPriceSale:= CheckCDS.FieldByName('PriceSale').asFloat

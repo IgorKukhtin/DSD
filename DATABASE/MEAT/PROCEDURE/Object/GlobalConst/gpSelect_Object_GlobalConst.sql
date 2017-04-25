@@ -90,9 +90,12 @@ BEGIN
        SELECT Object_GlobalConst.Id
             , CASE WHEN Object_GlobalConst.Id = 418996 -- актуальность данных Integer
                         THEN CURRENT_TIMESTAMP -- CURRENT_TIME
-                   ELSE COALESCE (ActualBankStatement.ValueData, CURRENT_DATE)
+                   ELSE COALESCE (ActualBankStatement.ValueData, CASE WHEN Object_GlobalConst.Id = zc_Enum_GlobalConst_PeriodClosePlan() THEN NULL ELSE CURRENT_DATE END)
               END :: TDateTime AS OperDate
-            , CASE WHEN Object_GlobalConst.Id = 418996 -- актуальность данных Integer
+            , CASE WHEN Object_GlobalConst.Id = zc_Enum_GlobalConst_PeriodClosePlan()
+                        THEN 'План закрытия периода за ' || zfCalc_MonthName (ActualBankStatement.ValueData - INTERVAL '1 MONTH') || ' :'
+                        
+                   WHEN Object_GlobalConst.Id = 418996 -- актуальность данных Integer
                         THEN 'Кол-во АП = <' || COALESCE ((SELECT Res FROM tmpProcess_All), '0') || '> из которых :'
 
                           || CASE WHEN COALESCE ((SELECT Res FROM tmpProcess_HistoryCost), '0') <> '0'
@@ -133,6 +136,8 @@ BEGIN
 
                           || ' О-др. = <'   || COALESCE ((SELECT Res FROM tmpProcess_RepOth), '0') || '>'
 
+                          -- || '  <'   || COALESCE ((SELECT Object.ValueData FROM Object WHERE Object.Id = zc_Enum_GlobalConst_ConnectParam()), '') || '>'
+
                    ELSE Object_GlobalConst.ValueData
               END :: TVarChar AS ValueText
             , ObjectString.ValueData AS EnumName
@@ -144,6 +149,7 @@ BEGIN
                                   AND ObjectString.DescId = zc_ObjectString_Enum()
        WHERE Object_GlobalConst.DescId = zc_Object_GlobalConst()
          AND Object_GlobalConst.ObjectCode < 100
+         AND Object_GlobalConst.Id <> zc_Enum_GlobalConst_ConnectParam()
        ORDER BY 1
       ;
   
@@ -161,7 +167,7 @@ ALTER FUNCTION gpSelect_Object_GlobalConst (TVarChar, TVarChar) OWNER TO postgre
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_GlobalConst (zfCalc_UserAdmin())
--- select *  from  Object where Id = zc_Enum_GlobalConst_ConnectParam() 
 -- update Object set valuedata = 'http://integer-srv.alan.dp.ua' where Id = zc_Enum_GlobalConst_ConnectParam() 
 -- update Object set valuedata = 'http://integer-srv2.alan.dp.ua' where Id = zc_Enum_GlobalConst_ConnectParam() 
+-- SELECT * FROM Object where Id = zc_Enum_GlobalConst_ConnectParam() 
+-- SELECT * FROM gpSelect_Object_GlobalConst ('', zfCalc_UserAdmin())

@@ -30,6 +30,7 @@ BEGIN
                || '</XML>'
                 ;
      ELSE
+         RETURN;
          -- Найдем что есть в протоколе подключения
          SELECT MAX (CASE WHEN POSITION (LOWER ('Подключение') IN LOWER (ProtocolData)) > 0 THEN Id ELSE 0 END) AS Id_connect
               , MAX (CASE WHEN POSITION (LOWER ('Работает')    IN LOWER (ProtocolData)) > 0 THEN Id ELSE 0 END) AS Id_process

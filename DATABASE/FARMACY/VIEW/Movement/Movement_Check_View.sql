@@ -4,7 +4,6 @@ DROP VIEW IF EXISTS Movement_Check_View;
 
 CREATE OR REPLACE VIEW Movement_Check_View AS 
 SELECT       
-
              Movement.Id
            , Movement.InvNumber
            , Movement.OperDate
@@ -43,6 +42,7 @@ SELECT
            , MovementString_InvNumberSP.ValueData            AS InvNumberSP
            , MovementString_MedicSP.ValueData                AS MedicSPName
            , Object_PartnerMedical.ValueData                 AS PartnerMedicalName
+           , MovementString_Ambulance.ValueData              AS Ambulance
        FROM Movement 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -127,6 +127,11 @@ SELECT
             LEFT JOIN MovementString AS MovementString_MedicSP
                                      ON MovementString_MedicSP.MovementId = Movement.Id
                                     AND MovementString_MedicSP.DescId = zc_MovementString_MedicSP()
+
+            LEFT JOIN MovementString AS MovementString_Ambulance
+                                     ON MovementString_Ambulance.MovementId = Movement.Id
+                                    AND MovementString_Ambulance.DescId = zc_MovementString_Ambulance()
+
             LEFT JOIN MovementDate AS MovementDate_OperDateSP
                                    ON MovementDate_OperDateSP.MovementId = Movement.Id
                                   AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
@@ -145,6 +150,7 @@ ALTER TABLE Movement_Check_View
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 07.04.17         *
  07.05.15                        * 
 */
 

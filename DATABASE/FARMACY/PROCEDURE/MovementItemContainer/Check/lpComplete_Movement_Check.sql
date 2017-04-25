@@ -183,7 +183,7 @@ BEGIN
                                 , vbGoodsId                AS ObjectId_analyzer
                                 , vbUnitId                 AS WhereObjectId_analyzer
                                 , vbMovementItemId_partion AS AnalyzerId
-                                , (SELECT MIContainer.ObjectIntId_analyzer FROM MovementItemContainer AS MIContainer WHERE MIContainer.MovementItemId = vbMovementItemId_partion AND MIContainer.DescId = zc_MIContainer_Count()) AS ObjectIntId_analyzer
+                                , (SELECT MIContainer.ObjectIntId_analyzer FROM MovementItemContainer AS MIContainer WHERE MIContainer.MovementItemId = vbMovementItemId_partion AND MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.ObjectIntId_analyzer <> 0) AS ObjectIntId_analyzer
                                 , (SELECT _tmpItem.Price FROM _tmpItem WHERE _tmpItem.MovementItemId = vbMovementItemId) AS Price
                                  ;
                         -- обнуляем кол-во что бы больше не искать
@@ -204,7 +204,7 @@ BEGIN
                                 , vbGoodsId                AS ObjectId_analyzer
                                 , vbUnitId                 AS WhereObjectId_analyzer
                                 , vbMovementItemId_partion AS AnalyzerId
-                                , (SELECT MIContainer.ObjectIntId_analyzer FROM MovementItemContainer AS MIContainer WHERE MIContainer.MovementItemId = vbMovementItemId_partion AND MIContainer.DescId = zc_MIContainer_Count()) AS ObjectIntId_analyzer
+                                , (SELECT MIContainer.ObjectIntId_analyzer FROM MovementItemContainer AS MIContainer WHERE MIContainer.MovementItemId = vbMovementItemId_partion AND MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.ObjectIntId_analyzer <> 0) AS ObjectIntId_analyzer
                                 , (SELECT _tmpItem.Price FROM _tmpItem WHERE _tmpItem.MovementItemId = vbMovementItemId) AS Price
                                  ;
                         -- уменьшаем на кол-во которое нашли и продолжаем поиск
@@ -246,7 +246,7 @@ BEGIN
                 , tmpItem.GoodsId                AS ObjectId_analyzer
                 , vbUnitId                       AS WhereObjectId_analyzer
                 , tmpItem.MovementItemId_partion AS AnalyzerId
-                , (SELECT MIContainer.ObjectIntId_analyzer FROM MovementItemContainer AS MIContainer WHERE MIContainer.MovementItemId = tmpItem.MovementItemId_partion AND MIContainer.DescId = zc_MIContainer_Count()) AS ObjectIntId_analyzer
+                , (SELECT MIContainer.ObjectIntId_analyzer FROM MovementItemContainer AS MIContainer WHERE MIContainer.MovementItemId = tmpItem.MovementItemId_partion AND MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.ObjectIntId_analyzer <> 0) AS ObjectIntId_analyzer
                 , tmpItem.Price
               FROM (SELECT DD.ContainerId
                          , DD.GoodsId

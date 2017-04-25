@@ -7,17 +7,23 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_OrderIncome(
     IN inOperDate          TDateTime, -- дата Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar
+             , OperDate TDateTime, OperDatePartner TDateTime
+             , StatusCode Integer, StatusName TVarChar
              , InsertDate TDateTime, InsertName TVarChar
 
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyDocumentId Integer, CurrencyDocumentName TVarChar
 
+             , UnitId Integer, UnitName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , ContractId Integer, ContractName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , Comment TVarChar
+             , OperDateStart TDateTime
+             , OperDateEnd TDateTime
+             , DayCount TFloat
               )
 AS
 $BODY$
@@ -35,6 +41,8 @@ BEGIN
                0 AS Id
              , CAST (NEXTVAL ('movement_OrderIncome_seq') AS TVarChar) AS InvNumber
              , inOperDate                                 AS OperDate
+             , inOperDate		                  AS OperDatePartner
+
              , Object_Status.Code                         AS StatusCode
              , Object_Status.Name                         AS StatusName
              
@@ -47,8 +55,11 @@ BEGIN
              , CAST (0 as TFloat)                         AS CurrencyValue
              , CAST (0 as TFloat)                         AS ParValue
 
-             , Object_CurrencyDocument.Id                         AS CurrencyDocumentId	-- грн
-             , Object_CurrencyDocument.ValueData                  AS CurrencyDocumentName
+             , Object_CurrencyDocument.Id                 AS CurrencyDocumentId	-- грн
+             , Object_CurrencyDocument.ValueData          AS CurrencyDocumentName
+
+             , 0                                          AS UnitId
+             , CAST ('' as TVarChar)                      AS UnitName
 
              , 0                                          AS JuridicalId
              , CAST ('' as TVarChar)                      AS JuridicalName
@@ -59,6 +70,9 @@ BEGIN
   
              , CAST ('' as TVarChar) 	                  AS Comment
 
+             , DATE_TRUNC ('MONTH', inOperDate)   ::TDateTime    AS OperDateStart
+             , (DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')  ::TDateTime AS OperDateEnd
+             , CAST (30 as TFloat)                        AS DayCount
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
                LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = zc_Enum_Currency_Basis()
@@ -70,6 +84,7 @@ BEGIN
       SELECT Movement.Id                            AS Id
            , Movement.InvNumber                     AS InvNumber
            , Movement.OperDate                      AS OperDate
+           , MovementDate_OperDatePartner.ValueData AS OperDatePartner
            , Object_Status.ObjectCode               AS StatusCode
            , Object_Status.ValueData                AS StatusName
            
@@ -85,6 +100,8 @@ BEGIN
            , Object_CurrencyDocument.Id             AS CurrencyDocumentId
            , Object_CurrencyDocument.ValueData      AS CurrencyDocumentName
 
+           , Object_Unit.Id                         AS UnitId
+           , Object_Unit.ValueData                  AS UnitName
 
            , Object_Juridical.Id                    AS JuridicalId
            , Object_Juridical.ValueData             AS JuridicalName
@@ -97,12 +114,26 @@ BEGIN
 
            , MovementString_Comment.ValueData       AS Comment
 
+           , COALESCE (MovementDate_OperDateStart.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate)) ::TDateTime  AS OperDateStart
+           , COALESCE (MovementDate_OperDateEnd.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY') ::TDateTime  AS OperDateEnd
+           , COALESCE (MovementFloat_DayCount.ValueData, 30)  ::TFloat  AS DayCount
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementDate AS MovementDate_Insert
-                                   ON MovementDate_Insert.MovementId =  Movement.Id
+                                   ON MovementDate_Insert.MovementId = Movement.Id
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                   ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
+            LEFT JOIN MovementDate AS MovementDate_OperDateStart
+                                   ON MovementDate_OperDateStart.MovementId = Movement.Id
+                                  AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
+            LEFT JOIN MovementDate AS MovementDate_OperDateEnd
+                                   ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                  AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
 
             LEFT JOIN MovementLinkObject AS MLO_Insert
                                          ON MLO_Insert.MovementId = Movement.Id
@@ -114,7 +145,7 @@ BEGIN
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                      ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
@@ -128,6 +159,15 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ParValue
                                     ON MovementFloat_ParValue.MovementId = Movement.Id
                                    AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
+
+            LEFT JOIN MovementFloat AS MovementFloat_DayCount
+                                    ON MovementFloat_DayCount.MovementId = Movement.Id
+                                   AND MovementFloat_DayCount.DescId = zc_MovementFloat_DayCount()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -150,7 +190,7 @@ BEGIN
             LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
 
 
-       WHERE Movement.Id =  inMovementId
+       WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_OrderIncome();
 
        END IF;
@@ -163,7 +203,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 12.07.16         *                                                       *
+ 14.04.17         * 
+ 12.07.16         *  
 */
 
 -- тест

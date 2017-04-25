@@ -17,8 +17,10 @@ type
   TGlobalConstForm = class(TAncestorDBGridForm)
     colValueText: TcxGridDBColumn;
     spUpdateGlobalConst: TdsdStoredProc;
-    dsdUpdateDataSet1: TdsdUpdateDataSet;
+    actUpdateDataSet: TdsdUpdateDataSet;
     colDate: TcxGridDBColumn;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

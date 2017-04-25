@@ -2,7 +2,8 @@
 
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar);
   
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ ЧЕК>
@@ -18,6 +19,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
     IN inBayerPhone          TVarChar  , -- ***Контактный телефон (Покупателя)
     IN inConfirmedKindName   TVarChar  , -- ***Статус заказа (Состояние VIP-чека)
     IN inInvNumberOrder      TVarChar  , -- ***Номер заказа (с сайта)
+    IN inPartnerMedicalId    Integer   , -- Медицинское учреждение(Соц. проект)
+    IN inAmbulance           TVarChar  , --
+    IN inMedicSP             TVarChar  , -- ФИО врача (Соц. проект)
+    IN inInvNumberSP         TVarChar  , -- номер рецепта (Соц. проект)
+    IN inOperDateSP          TDateTime , -- дата рецепта (Соц. проект)
     in inUserSession	     TVarChar  , -- сессия пользователя под которой создан чек в программе
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -33,9 +39,12 @@ $BODY$
    DECLARE vbCashRegisterId Integer;
    DECLARE vbPaidTypeId Integer;
 BEGIN
-    if coalesce(inUserSession, '') <> '' then 
-     inSession := inUserSession;
-    end if;
+    -- !!!заменили!!!
+    IF COALESCE (inUserSession, '') <> '' AND inUserSession <> '5'
+    THEN
+        inSession := inUserSession;
+    END IF;
+
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_...());
     vbUserId := lpGetUserBySession (inSession);
@@ -137,6 +146,22 @@ BEGIN
     -- сохранили связь с <Дисконтная карта> + здесь же и сформировали <Дисконтная карта>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DiscountCard(), ioId, CASE WHEN inDiscountExternalId > 0 THEN lpInsertFind_Object_DiscountCard (inObjectId:= inDiscountExternalId, inValue:= inDiscountCardNumber, inUserId:= vbUserId) ELSE 0 END);
 
+    -- сохранили связь с <>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PartnerMedical(), ioId, inPartnerMedicalId);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_Ambulance(), ioId, inAmbulance);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_MedicSP(), ioId, inMedicSP);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberSP(), ioId, inInvNumberSP);
+    -- сохранили <>
+    IF inInvNumberSP <> ''
+    THEN
+       -- сохранили <>
+       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateSP(), ioId, inOperDateSP);
+    END IF;
+
+
     IF vbIsInsert = TRUE
       THEN
           -- сохранили свойство <Дата создания>
@@ -148,6 +173,14 @@ BEGIN
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 
+
+    -- !!!ВРЕМЕННО для ТЕСТА!!!
+    IF inSession = zfCalc_UserAdmin()
+    THEN
+        RAISE EXCEPTION 'Тест прошел успешно для <%> <%>', inUserSession, inSession;
+    END IF;
+
+    
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

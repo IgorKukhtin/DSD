@@ -18,7 +18,7 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxMemo;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, cxMemo, cxImage;
 
 type
   TPhotoMobileEditForm = class(TParentForm)
@@ -37,8 +37,8 @@ type
     edCode: TcxCurrencyEdit;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    edPhotoData: TcxMemo;
     cxLabel3: TcxLabel;
+    edPhotoData: TcxImage;
   private
     { Private declarations }
   public

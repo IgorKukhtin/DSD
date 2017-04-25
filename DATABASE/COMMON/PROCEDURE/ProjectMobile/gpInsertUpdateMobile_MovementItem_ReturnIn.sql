@@ -17,6 +17,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbId Integer;
    DECLARE vbMovementId Integer;
+   DECLARE vbStatusId Integer;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -24,11 +25,13 @@ BEGIN
 
       -- получаем Id документа по GUID
       SELECT MovementString_GUID.MovementId 
-      INTO vbMovementId 
+           , Movement_ReturnIn.StatusId
+      INTO vbMovementId
+         , vbStatusId
       FROM MovementString AS MovementString_GUID
-           JOIN Movement AS Movement_StoreReal
-                         ON Movement_StoreReal.Id = MovementString_GUID.MovementId
-                        AND Movement_StoreReal.DescId = zc_Movement_ReturnIn()
+           JOIN Movement AS Movement_ReturnIn
+                         ON Movement_ReturnIn.Id = MovementString_GUID.MovementId
+                        AND Movement_ReturnIn.DescId = zc_Movement_ReturnIn()
       WHERE MovementString_GUID.DescId = zc_MovementString_GUID() 
         AND MovementString_GUID.ValueData = inMovementGUID;
 
@@ -48,26 +51,38 @@ BEGIN
       WHERE MIString_GUID.DescId = zc_MIString_GUID() 
         AND MIString_GUID.ValueData = inGUID;
 
-      SELECT ioId INTO vbId
-      FROM lpInsertUpdate_MovementItem_ReturnIn (ioId                 := vbId
-                                               , inMovementId         := vbMovementId
-                                               , inGoodsId            := inGoodsId
-                                               , inAmount             := inAmount
-                                               , inAmountPartner      := inAmount
-                                               , inPrice              := inPrice
-                                               , ioCountForPrice      := 0.0
-                                               , inHeadCount          := 0.0
-                                               , inMovementId_Partion := 0
-                                               , inPartionGoods       := ''
-                                               , inGoodsKindId        := inGoodsKindId
-                                               , inAssetId            := 0
-                                               , ioMovementId_Promo   := NULL
-                                               , ioChangePercent      := NULL
-                                               , inUserId             := vbUserId
-                                                );
+      IF vbStatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+      THEN
+           IF vbStatusId = zc_Enum_Status_Erased()
+           THEN -- Распроводим Документ
+                PERFORM lpUnComplete_Movement (inMovementId:= vbMovementId, inUserId:= vbUserId);
+           END IF;
 
-      -- сохранили свойство <Глобальный уникальный идентификатор>
-      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), vbId, inGUID);
+           -- сохраняем элемент возврата
+           SELECT ioId INTO vbId
+           FROM lpInsertUpdate_MovementItem_ReturnIn (ioId                 := vbId
+                                                    , inMovementId         := vbMovementId
+                                                    , inGoodsId            := inGoodsId
+                                                    , inAmount             := inAmount
+                                                    , inAmountPartner      := inAmount
+                                                    , inPrice              := inPrice
+                                                    , ioCountForPrice      := 0.0
+                                                    , inHeadCount          := 0.0
+                                                    , inMovementId_Partion := 0
+                                                    , inPartionGoods       := ''
+                                                    , inGoodsKindId        := inGoodsKindId
+                                                    , inAssetId            := 0
+                                                    , ioMovementId_Promo   := NULL
+                                                    , ioChangePercent      := NULL
+                                                    , inUserId             := vbUserId
+                                                     );
+
+           -- сохранили свойство <Глобальный уникальный идентификатор>
+           PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), vbId, inGUID);
+
+           -- !!! ДЛЯ ТЕСТА. Удаляем документ
+           PERFORM lpSetErased_Movement (inMovementId:= vbMovementId, inUserId:= vbUserId);
+      END IF;
 
       RETURN vbId;
 END;

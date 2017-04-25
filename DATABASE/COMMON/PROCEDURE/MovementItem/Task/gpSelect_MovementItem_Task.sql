@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer
              , Description TVarChar
              , Comment TVarChar
              , UpdateMobileDate TDateTime
+             , UpdateDate TDateTime
              , isClose Boolean
              , isErased Boolean
               )
@@ -35,9 +36,10 @@ BEGIN
            , MIString_Description.ValueData       AS Description
            , MIString_Comment.ValueData           AS Comment
            , MIDate_UpdateMobile.ValueData        AS UpdateMobileDate
+           , MIDate_Update.ValueData              AS UpdateDate
 
-           , MIBoolean_Close.ValueData            AS isClose
-           , MovementItem.isErased                AS isErased
+           , COALESCE (MIBoolean_Close.ValueData, false)::Boolean AS isClose
+           , MovementItem.isErased                                AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -49,6 +51,9 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_UpdateMobile
                                        ON MIDate_UpdateMobile.MovementItemId = MovementItem.Id
                                       AND MIDate_UpdateMobile.DescId = zc_MIDate_UpdateMobile()
+            LEFT JOIN MovementItemDate AS MIDate_Update
+                                       ON MIDate_Update.MovementItemId = MovementItem.Id
+                                      AND MIDate_Update.DescId = zc_MIDate_Update()
 
             LEFT JOIN MovementItemString AS MIString_Description
                                          ON MIString_Description.MovementItemId = MovementItem.Id
@@ -73,4 +78,4 @@ $BODY$
 */
 
 -- тест
--- 
+-- SELECT * FROM gpSelect_MovementItem_Task (inMovementId:= 1, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
