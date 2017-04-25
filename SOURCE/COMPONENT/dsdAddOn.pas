@@ -6,7 +6,8 @@ uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
      cxTextEdit, DB, dsdAction, cxGridTableView,
      VCL.Graphics, cxGraphics, cxStyles, cxCalendar, Forms, Controls,
      SysUtils, dsdDB, Contnrs, cxGridCustomView, cxGridCustomTableView, dsdGuides,
-     VCL.ActnList, cxDBPivotGrid, cxEdit, cxCustomData, Windows, Winapi.Messages;
+     VCL.ActnList, cxDBPivotGrid, cxEdit, cxCustomData, Windows, Winapi.Messages,
+     GMClasses, GMMap, GMMapVCL;
 
 const
   WM_SETFLAG = WM_USER + 2;
@@ -519,6 +520,13 @@ type
     property AddOnFormRefresh: TAddOnFormRefresh Read FAddOnFormRefresh Write FAddOnFormRefresh;
   end;
 
+  TdsdGMMap = class(TGMMap)
+  private
+    procedure DoAfterPageLoaded(Sender: TObject; First: Boolean);
+  public
+    constructor Create(AOwner: TComponent); override;
+  end;
+
   procedure Register;
 
 implementation
@@ -545,6 +553,7 @@ begin
    RegisterComponents('DSDComponent', [TRefreshAddOn]);
    RegisterComponents('DSDComponent', [TRefreshDispatcher]);
    RegisterComponents('DSDComponent', [TPivotAddOn]);
+   RegisterComponents('DSDComponent', [TdsdGMMap]);
    RegisterActions('DSDLib', [TExecuteDialog], TExecuteDialog);
 end;
 
@@ -2395,6 +2404,22 @@ procedure TAddOnFormRefresh.SetGetStoredProc(Value: TdsdStoredProc);
 begin
   if Value = FGetStoredProc then exit;
   FGetStoredProc := Value;
+end;
+
+{  TProjectGMMap  }
+
+constructor TdsdGMMap.Create(AOwner: TComponent);
+begin
+  inherited;
+  AfterPageLoaded := DoAfterPageLoaded;
+end;
+
+procedure TdsdGMMap.DoAfterPageLoaded(Sender: TObject; First: Boolean);
+begin
+  if First then
+  begin
+    DoMap;
+  end;
 end;
 
 end.

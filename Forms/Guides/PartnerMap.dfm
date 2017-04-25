@@ -33,16 +33,11 @@ object PartnerMapForm: TPartnerMapForm
       8000000000000000000000000000000000000000000000000000000000000000
       00000000000000000100000000000000000000000000000000000000}
   end
-  object gmPartnerMap: TGMMap
-    Language = Russian
-    WebBrowser = wbPartnerMap
-    Left = 24
-    Top = 8
-  end
   object gmPartnerMarker: TGMMarker
+    Language = Russian
     Map = gmPartnerMap
     VisualObjects = <>
-    Left = 96
+    Left = 112
     Top = 8
   end
   object ActionList: TActionList
@@ -58,5 +53,11 @@ object PartnerMapForm: TPartnerMapForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+  end
+  object gmPartnerMap: TdsdGMMap
+    Language = Russian
+    WebBrowser = wbPartnerMap
+    Left = 24
+    Top = 8
   end
 end
