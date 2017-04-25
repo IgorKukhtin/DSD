@@ -74,7 +74,7 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, inChangePercent);
 
     -- сохранили свойство <Сумма Скидки>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, inSummChangePercent);
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, CASE WHEN inAmount = 0 THEN 0 ELSE inSummChangePercent END);
 
     -- сохранили свойство <UID строки продажи>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_UID(), ioId, inList_UID);

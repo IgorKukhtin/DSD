@@ -12,7 +12,7 @@ $BODY$
 DECLARE
   vbNameFull TVarChar;
 BEGIN
-     vbNameFull:= (SELECT CASE WHEN COALESCE (ObjectLink_Parent0.ChildObjectId, 0) = 0
+     vbNameFull:= (SELECT CASE WHEN COALESCE (ObjectLink.ChildObjectId, 0) = 0
                                     THEN ''
                                ELSE lfGet_Object_TreeNameFull (Objectlink.ChildObjectId, inObjectLinkDescId) || ' '
                           END
@@ -20,8 +20,8 @@ BEGIN
                    FROM Object
                         LEFT JOIN ObjectLink ON ObjectLink.ObjectId = Object.Id
                                             AND ObjectLink.DescId = inObjectLinkDescId
-                        LEFT JOIN ObjectLink AS ObjectLink_Parent0 ON ObjectLink_Parent0.ObjectId = Objectlink.ChildObjectId
-                                                                  AND ObjectLink_Parent0.DescId = inObjectLinkDescId
+                        -- LEFT JOIN ObjectLink AS ObjectLink_Parent0 ON ObjectLink_Parent0.ObjectId = Objectlink.ChildObjectId
+                        --                                           AND ObjectLink_Parent0.DescId = inObjectLinkDescId
                    WHERE Object.Id = inObjectId);
      --
      RETURN (vbNameFull);
