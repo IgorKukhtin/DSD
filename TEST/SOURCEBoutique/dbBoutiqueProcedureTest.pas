@@ -25,6 +25,8 @@ type
     procedure CreateCOMMON;
     procedure CreateIncome;
     procedure CreateReturnOut;
+    procedure CreateSend;
+    procedure CreateLoss;
   end;
 
 type
@@ -33,12 +35,15 @@ type
     procedure CreateCOMMON;
     procedure CreateIncome;
     procedure CreateReturnOut;
+    procedure CreateSend;
+    procedure CreateLoss;
   end;
 
 type
   TdbMovementItemContainerProcedureTest = class(TdbTest)
   published
     procedure CreateCOMMON;
+    procedure CreateIncome;
   end;
 
 type
@@ -141,6 +146,14 @@ end;
 procedure TdbMovementProcedureTest.CreateReturnOut;
 begin
   DirectoryLoad(CommonProcedurePath + 'Movement\ReturnOut\');
+end;
+procedure TdbMovementProcedureTest.CreateSend;
+begin
+  DirectoryLoad(CommonProcedurePath + 'Movement\Send\');
+end;
+procedure TdbMovementProcedureTest.CreateLoss;
+begin
+  DirectoryLoad(CommonProcedurePath + 'Movement\Loss\');
 end;
 { TdbObjectProcedureTest }
 procedure TdbObjectProcedureTest.CreateAccountDirection;
@@ -360,11 +373,23 @@ begin
   DirectoryLoad(CommonProcedurePath + 'MovementItem\ReturnOut\');
 end;
 
+procedure TdbMovementItemProcedureTest.CreateSend;
+begin
+  DirectoryLoad(CommonProcedurePath + 'MovementItem\Send\');
+end;
+procedure TdbMovementItemProcedureTest.CreateLoss;
+begin
+  DirectoryLoad(CommonProcedurePath + 'MovementItem\Loss\');
+end;
 { TdbMovementItemContainerProcedureTest }
 
 procedure TdbMovementItemContainerProcedureTest.CreateCOMMON;
 begin
   DirectoryLoad(CommonProcedurePath + 'MovementItemContainer\_COMMON\');
+end;
+procedure TdbMovementItemContainerProcedureTest.CreateIncome;
+begin
+  DirectoryLoad(CommonProcedurePath + 'MovementItemContainer\Income\');
 end;
 
 initialization

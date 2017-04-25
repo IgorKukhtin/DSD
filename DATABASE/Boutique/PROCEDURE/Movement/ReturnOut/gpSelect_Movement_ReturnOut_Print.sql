@@ -136,156 +136,82 @@ BEGIN
 
 
     OPEN Cursor2 FOR
-       SELECT COALESCE (Object_GoodsByGoodsKind_View.Id, Object_Goods.Id) AS Id
-           , Object_Goods.ObjectCode         AS GoodsCode
-           , (Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
-           , Object_Goods.ValueData          AS GoodsName_two
-           , Object_GoodsKind.ValueData      AS GoodsKindName
-           , Object_Measure.ValueData        AS MeasureName
-           , tmpMI.Amount                    AS Amount
-           , tmpMI.AmountPartner             AS AmountPartner
-           , tmpMI.AmountPacker              AS AmountPacker
-          
-           , tmpMI.Price                     AS Price
-           , tmpMI.CountForPrice             AS CountForPrice
+       WITH tmpMI AS (SELECT MovementItem.Id
+                           , MovementItem.ObjectId AS GoodsId
+                           , MovementItem.PartionId
+                           , MovementItem.Amount 
+                           , COALESCE (MIFloat_OperPrice.ValueData, 0)       AS OperPrice
+                           , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice 
+                           , COALESCE (MIFloat_OperPriceList.ValueData, 0)   AS OperPriceList
+                           , MovementItem.isErased
+                       FROM MovementItem 
+                            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                            LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
+                                                        ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()    
+                            LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                                        ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
+                        WHERE MovementItem.MovementId = inMovementId
+                          AND MovementItem.DescId     = zc_MI_Master()
+                          AND MovementItem.isErased   = False
+                       )
 
-           , CASE WHEN tmpMI.Amount = 0
-                       THEN 0
-                  WHEN tmpMI.CountForPrice <> 0
-                       THEN CAST (tmpMI.AmountPartner * (tmpMI.Price / tmpMI.CountForPrice) AS NUMERIC (16, 2)) / tmpMI.Amount
-                  ELSE CAST (tmpMI.AmountPartner * tmpMI.Price AS NUMERIC (16, 2)) / tmpMI.Amount
-             END AS Price2
+       -- результат
+       SELECT
+             tmpMI.Id
+           , tmpMI.PartionId
+           , Object_Goods.Id          AS GoodsId
+           , Object_Goods.ObjectCode  AS GoodsCode
+           , Object_Goods.ValueData   AS GoodsName
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , Object_Measure.ValueData AS MeasureName
 
+           , Object_CompositionGroup.ValueData   AS CompositionGroupName  
+           , Object_Composition.ValueData   AS CompositionName
+           , Object_GoodsInfo.ValueData     AS GoodsInfoName
+           , Object_LineFabrica.ValueData   AS LineFabricaName
+           , Object_Label.ValueData         AS LabelName
+           , Object_GoodsSize.ValueData     AS GoodsSizeName 
 
-             -- сумма по ценам док-та
-           , CASE WHEN tmpMI.CountForPrice <> 0
-                       THEN CAST (tmpMI.AmountPartner * (tmpMI.Price / tmpMI.CountForPrice) AS NUMERIC (16, 2))
-                  ELSE CAST (tmpMI.AmountPartner * tmpMI.Price AS NUMERIC (16, 2))
-             END AS AmountSumm
+           , tmpMI.Amount
 
-             -- расчет цены без НДС, до 4 знаков
-           , CASE WHEN vbPriceWithVAT = TRUE
-                  THEN CAST (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 2))
-                  ELSE tmpMI.Price
-             END  / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-             AS PriceNoVAT
+           , tmpMI.OperPrice      ::TFloat
+           , tmpMI.CountForPrice  ::TFloat
+           , tmpMI.OperPriceList  ::TFloat
 
-             -- расчет цены с НДС, до 4 знаков
-           , CASE WHEN vbPriceWithVAT <> TRUE
-                  THEN CAST ((tmpMI.Price + tmpMI.Price * (vbVATPercent / 100))
-                                         * CASE WHEN vbDiscountPercent <> 0 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ учитываем!!!
-                                                     THEN (1 - vbDiscountPercent / 100)
-                                                WHEN vbExtraChargesPercent <> 0 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ учитываем!!!
-                                                     THEN (1 + vbExtraChargesPercent / 100)
-                                                ELSE 1
-                                           END
-                             AS NUMERIC (16, 4))
-                  ELSE CAST (tmpMI.Price * CASE WHEN vbDiscountPercent <> 0 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
-                                                     THEN (1 - vbDiscountPercent / 100)
-                                                WHEN vbExtraChargesPercent <> 0 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
-                                                     THEN (1 + vbExtraChargesPercent / 100)
-                                                ELSE 1
-                                           END
-                             AS NUMERIC (16, 4))
-             END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-             AS PriceWVAT
+           , CAST (CASE WHEN tmpMI.CountForPrice <> 0
+                           THEN CAST (COALESCE (tmpMI.Amount, 0) * tmpMI.OperPrice / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                        ELSE CAST ( COALESCE (tmpMI.Amount, 0) * tmpMI.OperPrice AS NUMERIC (16, 2))
+                   END AS TFloat) AS AmountSumm
 
-             -- расчет суммы без НДС, до 2 знаков
-           , CAST (tmpMI.AmountPartner * CASE WHEN vbPriceWithVAT = TRUE
-                                              THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / 100))
-                                              ELSE tmpMI.Price
-                                         END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-                   AS NUMERIC (16, 2)) AS AmountSummNoVAT
-
-             -- расчет суммы с НДС, до 3 знаков
-           , CAST (tmpMI.AmountPartner * CASE WHEN vbPriceWithVAT <> TRUE
-                                              THEN tmpMI.Price + tmpMI.Price * (vbVATPercent / 100)
-                                              ELSE tmpMI.Price
-                                         END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-                   AS NUMERIC (16, 3)) AS AmountSummWVAT
-
-           , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
---           , CAST ((CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END) AS TFloat) AS Amount_Sh
-
-             -- расчет цены C НДС покупателя , до 4 знаков, для  (с учетом скидки)
-           , CASE WHEN vbPriceWithVAT <> TRUE
-                  THEN CAST ((tmpMI.PriceOriginal + tmpMI.PriceOriginal * (vbVATPercent / 100))
-                                         * CASE WHEN vbChangePercentTo <> 0 
-                                                     THEN (1 + vbChangePercentTo / 100)
-                                                ELSE 1
-                                           END
-                             AS NUMERIC (16, 4))
-                  ELSE CAST (tmpMI.PriceOriginal * CASE WHEN vbChangePercentTo <> 0
-                                                             THEN (1 + vbChangePercentTo / 100)
-                                                        ELSE 1
-                                                   END
-                             AS NUMERIC (16, 4))
-             END   AS PriceWVAT_To
-   
-           , vbChangePercentTo
-      
-       FROM (SELECT MovementItem.ObjectId AS GoodsId
-                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                  , CASE WHEN vbDiscountPercent <> 0 AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
-                              THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                         WHEN vbExtraChargesPercent <> 0 AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
-                              THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                         ELSE COALESCE (MIFloat_Price.ValueData, 0)
-                    END AS Price
-                  , MIFloat_CountForPrice.ValueData AS CountForPrice
-                  , SUM (MovementItem.Amount) AS Amount
-                  , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_ReturnOut(), zc_Movement_ReturnIn())
-                                   THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
-                              WHEN Movement.DescId IN (zc_Movement_SendOnPrice()) AND vbIsProcess_BranchIn = TRUE
-                                   THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
-                              ELSE MovementItem.Amount
-                         END) AS AmountPartner
-                  , SUM (COALESCE (MIFloat_AmountPacker.VAlueData, 0)) AS AmountPacker
-                  , COALESCE (MIFloat_Price.ValueData, 0) AS PriceOriginal
-             FROM MovementItem
-                  LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                              -- AND MIFloat_Price.ValueData <> 0
-                  LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                              ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                             AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                  LEFT JOIN MovementItemFloat AS MIFloat_AmountPacker
-                                              ON MIFloat_AmountPacker.MovementItemId = MovementItem.Id
-                                             AND MIFloat_AmountPacker.DescId = zc_MIFloat_AmountPacker()
-                  LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
-
-                  LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                              ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                             AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-
-                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                   ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-             WHERE MovementItem.MovementId = inMovementId
-               AND MovementItem.DescId     = zc_MI_Master()
-               AND MovementItem.isErased   = FALSE
-             GROUP BY MovementItem.ObjectId
-                    , MILinkObject_GoodsKind.ObjectId
-                    , MIFloat_Price.ValueData
-                    , MIFloat_CountForPrice.ValueData
-            ) AS tmpMI
-
+           , CAST (CASE WHEN tmpMI.CountForPrice <> 0
+                           THEN CAST (COALESCE (tmpMI.Amount, 0) * tmpMI.OperPriceList / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                        ELSE CAST ( COALESCE (tmpMI.Amount, 0) * tmpMI.OperPriceList AS NUMERIC (16, 2))
+                   END AS TFloat) AS AmountPriceListSumm
+       FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
-            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
-                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
-                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+            LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpMI.PartionId                                 
 
-            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = Object_PartionGoods.GoodsGroupId
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = Object_PartionGoods.MeasureId
+            LEFT JOIN Object AS Object_Composition ON Object_Composition.Id = Object_PartionGoods.CompositionId
 
-            LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
-                                                  AND Object_GoodsByGoodsKind_View.GoodsKindId = Object_GoodsKind.Id
+            LEFT JOIN ObjectLink AS ObjectLink_Composition_CompositionGroup
+                                 ON ObjectLink_Composition_CompositionGroup.ObjectId = Object_Composition.Id 
+                                AND ObjectLink_Composition_CompositionGroup.DescId = zc_ObjectLink_Composition_CompositionGroup()
+            LEFT JOIN Object AS Object_CompositionGroup ON Object_CompositionGroup.Id = ObjectLink_Composition_CompositionGroup.ChildObjectId
 
-       WHERE tmpMI.AmountPartner <> 0 OR tmpMI.AmountPacker <> 0
+            LEFT JOIN Object AS Object_GoodsInfo ON Object_GoodsInfo.Id = Object_PartionGoods.GoodsInfoId
+            LEFT JOIN Object AS Object_LineFabrica ON Object_LineFabrica.Id = Object_PartionGoods.LineFabricaId 
+            LEFT JOIN Object AS Object_Label ON Object_Label.Id = Object_PartionGoods.LabelId
+            LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = Object_PartionGoods.GoodsSizeId
+           
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
        ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData
 
        ;

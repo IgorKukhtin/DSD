@@ -127,7 +127,7 @@ type
     procedure LoadReturnOutFormTest;
 //    procedure LoadSaleFormTest;
     procedure LoadServiceFormTest;
-//    procedure LoadSendFormTest;
+    procedure LoadSendFormTest;
 //    procedure LoadSendOnPriceFormTest;
 //    procedure LoadSPObjectFormTest;
 //    procedure LoadSheetWorkTimeFormTest;
@@ -930,6 +930,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutJournalForm');
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutPartnerDataDialogForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TReturnOutPartnerDataDialogForm');
+end;
+procedure TLoadFormTest.LoadSendFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
 end;
 //
 //procedure TLoadFormTest.LoadReturnTypeFormTest;
