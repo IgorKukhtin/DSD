@@ -48,11 +48,11 @@ BEGIN
        SELECT
              tmpMI.Id
            , tmpMI.PartionId
-           , Object_Goods.Id          AS GoodsId
-           , Object_Goods.ObjectCode  AS GoodsCode
-           , Object_Goods.ValueData   AS GoodsName
+           , Object_Goods.Id                AS GoodsId
+           , Object_Goods.ObjectCode        AS GoodsCode
+           , Object_Goods.ValueData         AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-           , Object_Measure.ValueData AS MeasureName
+           , Object_Measure.ValueData       AS MeasureName
 
            , Object_CompositionGroup.ValueData   AS CompositionGroupName  
            , Object_Composition.ValueData   AS CompositionName
@@ -66,21 +66,16 @@ BEGIN
 
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
-            LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpMI.PartionId                                 
+            LEFT JOIN Object_PartionGoods    ON Object_PartionGoods.MovementItemId = tmpMI.PartionId                                 
 
-            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = Object_PartionGoods.GoodsGroupId
-            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = Object_PartionGoods.MeasureId
-            LEFT JOIN Object AS Object_Composition ON Object_Composition.Id = Object_PartionGoods.CompositionId
-
-            LEFT JOIN ObjectLink AS ObjectLink_Composition_CompositionGroup
-                                 ON ObjectLink_Composition_CompositionGroup.ObjectId = Object_Composition.Id 
-                                AND ObjectLink_Composition_CompositionGroup.DescId = zc_ObjectLink_Composition_CompositionGroup()
-            LEFT JOIN Object AS Object_CompositionGroup ON Object_CompositionGroup.Id = ObjectLink_Composition_CompositionGroup.ChildObjectId
-
-            LEFT JOIN Object AS Object_GoodsInfo ON Object_GoodsInfo.Id = Object_PartionGoods.GoodsInfoId
-            LEFT JOIN Object AS Object_LineFabrica ON Object_LineFabrica.Id = Object_PartionGoods.LineFabricaId 
-            LEFT JOIN Object AS Object_Label ON Object_Label.Id = Object_PartionGoods.LabelId
-            LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = Object_PartionGoods.GoodsSizeId
+            LEFT JOIN Object AS Object_GoodsGroup       ON Object_GoodsGroup.Id       = Object_PartionGoods.GoodsGroupId
+            LEFT JOIN Object AS Object_Measure          ON Object_Measure.Id          = Object_PartionGoods.MeasureId
+            LEFT JOIN Object AS Object_Composition      ON Object_Composition.Id      = Object_PartionGoods.CompositionId
+            LEFT JOIN Object AS Object_CompositionGroup ON Object_CompositionGroup.Id = Object_PartionGoods.CompositionGroupId
+            LEFT JOIN Object AS Object_GoodsInfo        ON Object_GoodsInfo.Id        = Object_PartionGoods.GoodsInfoId
+            LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId 
+            LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = Object_PartionGoods.LabelId
+            LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
            
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId

@@ -25,9 +25,9 @@ BEGIN
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('Movement_Loss_seq') AS TVarChar) AS InvNumber
-             , inOperDate                       AS OperDate
-             , Object_Status.Code               AS StatusCode
-             , Object_Status.Name               AS StatusName
+             , inOperDate            AS OperDate
+             , Object_Status.Code    AS StatusCode
+             , Object_Status.Name    AS StatusName
             
              , 0                     AS FromId
              , CAST ('' as TVarChar) AS FromName
@@ -41,13 +41,13 @@ BEGIN
                Movement.Id
              , Movement.InvNumber
              , Movement.OperDate
-             , Object_Status.ObjectCode               AS StatusCode
-             , Object_Status.ValueData                AS StatusName
+             , Object_Status.ObjectCode  AS StatusCode
+             , Object_Status.ValueData   AS StatusName
 
-             , Object_From.Id                         AS FromId
-             , Object_From.ValueData                  AS FromName
-             , Object_To.Id                           AS ToId
-             , Object_To.ValueData                    AS ToName
+             , Object_From.Id            AS FromId
+             , Object_From.ValueData     AS FromName
+             , Object_To.Id              AS ToId
+             , Object_To.ValueData       AS ToName
            
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
