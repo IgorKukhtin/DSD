@@ -631,6 +631,21 @@
           ParentFont = False
           TabOrder = 4
         end
+        object cbReturnOut: TCheckBox
+          Tag = 20
+          Left = 6
+          Top = 63
+          Width = 235
+          Height = 17
+          Caption = '1.2. '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 5
+        end
       end
     end
     object TabSheet2: TTabSheet
@@ -953,7 +968,6 @@
   end
   object toZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
-    UTF8StringsAsWideField = True
     Catalog = 'public'
     DesignConnection = True
     HostName = 'localhost'
