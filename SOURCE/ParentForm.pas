@@ -413,6 +413,7 @@ initialization
   RegisterClass (TShowMessageAction);
   RegisterClass (TcxImage);
   RegisterClass (TdsdDataSetRefreshEx);
+  RegisterClass (TdsdGMMap);
 
 // дкъ реярю
 
