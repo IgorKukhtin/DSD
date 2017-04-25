@@ -28,6 +28,7 @@ $BODY$
 BEGIN
 
   -- 1.1. проверка <Зарегестрирован>
+/*
   IF  EXISTS (SELECT MovementId FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Registered() AND ValueData = TRUE)
    OR EXISTS (SELECT MovementId FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Electron() AND ValueData = TRUE)
   THEN
@@ -36,6 +37,7 @@ BEGIN
                                                                                                     , DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId))
                                                                                                      ;
   END IF;
+*/
   -- END 1.1. проверка <Зарегестрирован>
   -- 1.2. проверка <Медок>
   /*IF  EXISTS (SELECT MovementId FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Medoc() AND ValueData = TRUE)

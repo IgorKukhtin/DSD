@@ -1877,6 +1877,13 @@ begin
     exit;
   end;
   //
+  if  (Self.FormParams.ParamByName('InvNumberSP').Value <> '')
+   and(SourceClientDataSet.FieldByName('isSP').asBoolean = FALSE)
+  then begin
+    ShowMessage('Ошибка.Выбранный код товара не участвует в Соц.проекте!');
+    exit;
+  end;
+  //
   // потому что криво, надо правильно определить ТОВАР + цена БЕЗ скидки
   if SoldRegim = TRUE
   then //это ПРОДАЖА
@@ -2622,6 +2629,19 @@ begin
       if (AGoodsId = 0) or ((CheckCDS.FieldByName('GoodsId').AsInteger = AGoodsId) and (CheckCDS.FieldByName('PriceSale').asCurrency = APriceSale)) then
       Begin
         CheckCDS.Edit;
+
+        if (AAmount = 0) or
+           (
+             (AAmount < 0)
+             AND
+             (ABS(AAmount) >= CheckCDS.FieldByName('Amount').asCurrency)
+           ) then
+          CheckCDS.FieldByName('Amount').asCurrency := 0
+        else
+          CheckCDS.FieldByName('Amount').asCurrency := CheckCDS.FieldByName('Amount').asCurrency
+            + AAmount;
+
+
         {
         //сначала допишем скидку, и изменим цену, надеюсь она сохранена правильно ***20.07.16
         if (FormParams.ParamByName('DiscountExternalId').Value > 0) and (AGoodsId <> 0)
@@ -2644,7 +2664,7 @@ begin
             checkCDS.FieldByName('Price').asCurrency    := RemainsCDS.FieldByName('PriceSP').asCurrency;
             // и УСТАНОВИМ скидку
             checkCDS.FieldByName('ChangePercent').asCurrency     := 0;
-            checkCDS.FieldByName('SummChangePercent').asCurrency := AAmount * (RemainsCDS.FieldByName('PriceSaleSP').asCurrency - RemainsCDS.FieldByName('PriceSP').asCurrency);
+            checkCDS.FieldByName('SummChangePercent').asCurrency := CheckCDS.FieldByName('Amount').asCurrency * (RemainsCDS.FieldByName('PriceSaleSP').asCurrency - RemainsCDS.FieldByName('PriceSP').asCurrency);
         end else
         if (DiscountServiceForm.gCode = 2) and (Abs(edPrice.Value) > 0.0001) then
         begin
@@ -2653,7 +2673,7 @@ begin
             checkCDS.FieldByName('Price').asCurrency    := edPrice.Value;
             // и УСТАНОВИМ скидку
             checkCDS.FieldByName('ChangePercent').asCurrency     := 0;
-            checkCDS.FieldByName('SummChangePercent').asCurrency := AAmount * (RemainsCDS.FieldByName('Price').asCurrency - edPrice.Value);
+            checkCDS.FieldByName('SummChangePercent').asCurrency := CheckCDS.FieldByName('Amount').asCurrency * (RemainsCDS.FieldByName('Price').asCurrency - edPrice.Value);
         end
         else begin
             // на всяк случай условие - восстановим если Цена БЕЗ скидки была запонена
@@ -2664,17 +2684,6 @@ begin
             checkCDS.FieldByName('SummChangePercent').asCurrency := 0;
         end;
 
-
-        if (AAmount = 0) or
-           (
-             (AAmount < 0)
-             AND
-             (ABS(AAmount) >= CheckCDS.FieldByName('Amount').asCurrency)
-           ) then
-          CheckCDS.FieldByName('Amount').asCurrency := 0
-        else
-          CheckCDS.FieldByName('Amount').asCurrency := CheckCDS.FieldByName('Amount').asCurrency
-            + AAmount;
         CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency);
 
         CheckCDS.Post;

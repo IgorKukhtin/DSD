@@ -41,6 +41,9 @@ BEGIN
           END IF;
        -- сохранили <>
        PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateSP(), inId, inOperDateSP);
+    ELSE   
+       -- сохранили <>
+       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateSP(), inId, NULL);
     END IF;
 
     -- сохранили протокол

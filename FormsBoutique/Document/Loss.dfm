@@ -40,6 +40,8 @@ object LossForm: TLossForm
         Height = 361
         Align = alClient
         TabOrder = 0
+        ExplicitLeft = -3
+        ExplicitTop = 16
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
