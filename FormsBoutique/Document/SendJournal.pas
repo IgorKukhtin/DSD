@@ -79,9 +79,6 @@ type
     actReCompleteAll: TdsdExecStoredProc;
     bbReCompleteAll: TdxBarButton;
     spMovementReCompleteAll: TdsdStoredProc;
-    colCurrencyValue: TcxGridDBColumn;
-    colCurrencyDocumentName: TcxGridDBColumn;
-    colCurrencyPartnerName: TcxGridDBColumn;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
     MovementProtocolOpenForm: TdsdOpenForm;
@@ -94,7 +91,6 @@ type
     FormParams: TdsdFormParams;
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
-    Comment: TcxGridDBColumn;
     spMovementReComplete: TdsdStoredProc;
     spReCompete: TdsdExecStoredProc;
     actSimpleReCompleteList: TMultiAction;

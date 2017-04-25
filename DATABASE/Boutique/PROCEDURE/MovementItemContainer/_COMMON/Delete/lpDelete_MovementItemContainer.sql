@@ -8,6 +8,7 @@ $BODY$
    DECLARE vbLock Integer;
    DECLARE vbSec Integer;
 BEGIN
+/*
     -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
     IF zc_IsLockTable() = TRUE
     THEN
@@ -67,7 +68,7 @@ BEGIN
           GROUP BY MIContainer.ContainerId
          ) AS _tmpMIContainer
     WHERE Container.Id = _tmpMIContainer.ContainerId;
-
+*/
     -- Удалить все проводки
     DELETE FROM MovementItemContainer WHERE MovementId = inMovementId;
 

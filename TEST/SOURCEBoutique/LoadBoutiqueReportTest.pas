@@ -1,4 +1,4 @@
-unit LoadFarmacyReportTest;
+unit LoadBoutiqueReportTest;
 
 interface
 
@@ -28,7 +28,7 @@ implementation
 uses Authentication, FormStorage, CommonData, Storage, UtilConst;
 
 const
-  ReportPath = '..\Reports\Farmacy';
+  ReportPath = '..\Reports\Boutique';
 
 { TLoadReportTest }
 
@@ -59,22 +59,7 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-  LoadReportFromFile('Отчет по продажам Соц.проекта', ReportPath + '\Отчет по продажам Соц.проекта.fr3');
- // exit;
-  LoadReportFromFile('Печать стикера самоклейки', ReportPath + '\Печать стикера самоклейки.fr3');
-  LoadReportFromFile('Копия чека клиенту', ReportPath + '\Копия чека клиенту.fr3');
-  // Другие
-  LoadReportFromFile('Расходная_накладная', ReportPath + '\Расходная_накладная.fr3');
-  LoadReportFromFile('Расходная_накладная_для_менеджера', ReportPath + '\Расходная_накладная_для_менеджера.fr3');
-  LoadReportFromFile('Инвентаризация', ReportPath + '\Инвентаризация.fr3');
-  LoadReportFromFile('Списание', ReportPath + '\Списание.fr3');
-  LoadReportFromFile('Перемещение', ReportPath + '\Перемещение.fr3');
-  LoadReportFromFile('Продажа', ReportPath + '\Продажа.fr3');
-  LoadReportFromFile('Оплаты', ReportPath + '\Оплаты.fr3');
-  LoadReportFromFile('Возвратная_накладная', ReportPath + '\Возвратная_накладная.fr3');
-  LoadReportFromFile('Отчет по продажам на кассах', ReportPath + '\Отчет по продажам на кассах.fr3');
-  LoadReportFromFile('Отчет Доходности', ReportPath + '\Отчет Доходности.fr3');
-
+  LoadReportFromFile('Приход от поставщика', ReportPath + '\Приход от поставщика.fr3');
 end;
 
 procedure TLoadReportTest.SetUp;

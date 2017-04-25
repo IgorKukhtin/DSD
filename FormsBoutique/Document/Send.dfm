@@ -27,15 +27,12 @@ object SendForm: TSendForm
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 123
-    ExplicitHeight = 343
     ClientRectBottom = 385
     ClientRectRight = 811
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 319
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -43,7 +40,6 @@ object SendForm: TSendForm
         Height = 361
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 319
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -188,7 +184,7 @@ object SendForm: TSendForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actPartionGoodsChoiceForm
+                Action = actGoodsChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -389,6 +385,7 @@ object SendForm: TSendForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 3
       Width = 208
     end
@@ -400,6 +397,7 @@ object SendForm: TSendForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 2
       Width = 208
     end
@@ -473,14 +471,6 @@ object SendForm: TSendForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inShowAll'
-        Value = Null
-        Component = actShowAll
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1068,18 +1058,46 @@ object SendForm: TSendForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
     end
-    object actPartionGoodsChoiceForm: TOpenChoiceForm
+    object InsertRecord: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      View = cxGridDBTableView
+      Action = actGoodsChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      ShortCut = 45
+      ImageIndex = 0
+    end
+    object actGoodsChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'GoodsForm'
-      FormName = 'TPartionGoodsForm'
-      FormNameParam.Value = 'TPartionGoodsForm'
+      FormName = 'TPartionGoodsChoiceForm'
+      FormNameParam.Value = 'TPartionGoodsChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Key'
+          Name = 'MasterUnitId'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterUnitName'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsId'
@@ -1094,25 +1112,93 @@ object SendForm: TSendForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'Code'
+          Name = 'PartionId'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsCode'
+          ComponentItem = 'PartionId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GroupNameFull'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupNamefull'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MeasureName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MeasureName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CompositionName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CompositionName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CompositionGroupName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CompositionGroupName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsInfoName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsInfoName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LineFabricaName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'LineFabricaName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LabelName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'LabelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsSizeName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsSizeName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceSale'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperPriceList'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperPrice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperPrice'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       isShowModal = True
-    end
-    object InsertRecord: TInsertRecord
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      Action = actPartionGoodsChoiceForm
-      Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      ShortCut = 45
-      ImageIndex = 0
     end
   end
   object MasterDS: TDataSource
@@ -1128,6 +1214,7 @@ object SendForm: TSendForm
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edFrrom
     FormNameParam.Value = 'TUnitForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1208,49 +1295,6 @@ object SendForm: TSendForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'OperPrice'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioCountForPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CountForPrice'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAmountSumm'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountSumm'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperPriceList'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'OperPriceList'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAmountPriceListSumm'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountPriceListSumm'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 150
@@ -1302,6 +1346,7 @@ object SendForm: TSendForm
       item
         Name = 'inInvNumber'
         Value = ''
+        Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1309,6 +1354,7 @@ object SendForm: TSendForm
       item
         Name = 'inOperDate'
         Value = 0d
+        Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1326,53 +1372,6 @@ object SendForm: TSendForm
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCurrencyDocumentId'
-        Value = ''
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCurrencyPartnerId'
-        Value = ''
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCurrencyValue'
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inParValue'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCurrencyPartnerValue'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inParPartnerValue'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inComment'
-        Value = Null
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1448,11 +1447,13 @@ object SendForm: TSendForm
       item
         Name = 'InvNumber'
         Value = ''
+        Component = edInvNumber
         MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
+        Component = edOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -1487,52 +1488,6 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CurrencyValue'
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ParValue'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CurrencyPartnerValue'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ParPartnerValue'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CurrencyDocumentId'
-        Value = ''
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CurrencyDocumentName'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CurrencyPartnerId'
-        Value = ''
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CurrencyPartnerName'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'StatusCode'
         Value = ''
         Component = StatusGuides
@@ -1544,12 +1499,6 @@ object SendForm: TSendForm
         Value = ''
         Component = StatusGuides
         ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Comment'
-        Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -1636,13 +1585,14 @@ object SendForm: TSendForm
   end
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
+    LookupControl = ceStatus
     FormNameParam.Value = ''
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 47
-    Top = 8
+    Left = 39
+    Top = 24
   end
   object spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Send'
@@ -1675,6 +1625,7 @@ object SendForm: TSendForm
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edTo
     FormNameParam.Value = 'TUnitForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1696,8 +1647,8 @@ object SendForm: TSendForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 600
-    Top = 8
+    Left = 656
+    Top = 16
   end
   object spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TotalSumm'
@@ -1800,49 +1751,6 @@ object SendForm: TSendForm
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'OperPrice'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioCountForPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CountForPrice'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAmountSumm'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountSumm'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperPriceList'
-        Value = 0.000000000000000000
-        Component = MasterCDS
-        ComponentItem = 'OperPriceList'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAmountPriceListSumm'
-        Value = 0.000000000000000000
-        Component = MasterCDS
-        ComponentItem = 'AmountPriceListSumm'
-        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

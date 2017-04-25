@@ -3084,6 +3084,10 @@
 				<Form>GoodsListIncome_byReportEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PartnerMap.pas">
+				<Form>PartnerMapForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_SupplyBalance.pas">
 				<Form>Report_SupplyBalanceForm</Form>
 				<DesignClass>TParentForm</DesignClass>

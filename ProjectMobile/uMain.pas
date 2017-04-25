@@ -1161,7 +1161,8 @@ begin
     EnableConstraints;
   end;
 
-  lCaption.Text := 'Карта (Все ТТ)';
+  LastDelimiter(' ', lDayInfo.Text);
+  lCaption.Text := 'Карта (Все ТТ за ' + AnsiLowerCase(Copy(lDayInfo.Text, LastDelimiter(' ', lDayInfo.Text) + 1)) + ')';
   ShowBigMap;
 
   ppPartner.IsOpen := False;
@@ -3829,6 +3830,7 @@ begin
   DM.qryPartner.ParamByName('DefaultPriceList').AsInteger := DM.tblObject_ConstPriceListId_def.AsInteger;
   DM.qryPartner.Open;
 
+  lwPartner.ScrollViewPos := 0;
   SwitchToForm(tiPartners, DM.qryPartner);
 end;
 

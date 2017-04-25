@@ -44,6 +44,9 @@ type
   published
     procedure CreateCOMMON;
     procedure CreateIncome;
+    procedure CreateReturnOut;
+    procedure CreateSend;
+    procedure CreateLoss;
   end;
 
 type
@@ -390,6 +393,19 @@ end;
 procedure TdbMovementItemContainerProcedureTest.CreateIncome;
 begin
   DirectoryLoad(CommonProcedurePath + 'MovementItemContainer\Income\');
+end;
+
+procedure TdbMovementItemContainerProcedureTest.CreateReturnOut;
+begin
+  DirectoryLoad(CommonProcedurePath + 'MovementItemContainer\ReturnOut\');
+end;
+procedure TdbMovementItemContainerProcedureTest.CreateSend;
+begin
+  DirectoryLoad(CommonProcedurePath + 'MovementItemContainer\Send\');
+end;
+procedure TdbMovementItemContainerProcedureTest.CreateLoss;
+begin
+  DirectoryLoad(CommonProcedurePath + 'MovementItemContainer\Loss\');
 end;
 
 initialization

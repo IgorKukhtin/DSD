@@ -99,7 +99,6 @@ type
     spInsertMaskMIMaster: TdsdStoredProc;
     actAddMask: TdsdExecStoredProc;
     bbAddMask: TdxBarButton;
-    actPartionGoodsChoiceForm: TOpenChoiceForm;
     bbInsertRecord: TdxBarButton;
     bbCompleteCost: TdxBarButton;
     bbactUnCompleteCost: TdxBarButton;
@@ -120,6 +119,7 @@ type
     cxLabel11: TcxLabel;
     ceStatus: TcxButtonEdit;
     InsertRecord: TInsertRecord;
+    actGoodsChoiceForm: TOpenChoiceForm;
   private
   public
   end;

@@ -228,7 +228,7 @@ object SendJournalForm: TSendJournalForm
         DataBinding.FieldName = 'ToName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 159
+        Width = 181
       end
       object colTotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
@@ -246,57 +246,10 @@ object SendJournalForm: TSendJournalForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 92
-      end
-      object colCurrencyValue: TcxGridDBColumn
-        Caption = #1050#1091#1088#1089' '#1074#1072#1083#1102#1090#1099
-        DataBinding.FieldName = 'CurrencyValue'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 40
-      end
-      object colParValue: TcxGridDBColumn
-        Caption = #1053#1086#1084#1080#1085#1072#1083
-        DataBinding.FieldName = 'ParValue'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 40
-      end
-      object colCurrencyPartnerValue: TcxGridDBColumn
-        Caption = #1050#1091#1088#1089' '#1074#1072#1083#1102#1090#1099' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-        DataBinding.FieldName = 'CurrencyPartnerValue'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 40
-      end
-      object colParPartnerValue: TcxGridDBColumn
-        Caption = #1053#1086#1084#1080#1085#1072#1083' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-        DataBinding.FieldName = 'ParPartnerValue'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 40
-      end
-      object colCurrencyDocumentName: TcxGridDBColumn
-        Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1082')'
-        DataBinding.FieldName = 'CurrencyDocumentName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 52
-      end
-      object colCurrencyPartnerName: TcxGridDBColumn
-        Caption = #1042#1072#1083#1102#1090#1072' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
-        DataBinding.FieldName = 'CurrencyPartnerName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 54
       end
       object colTotalSummPriceList: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
@@ -304,17 +257,10 @@ object SendJournalForm: TSendJournalForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 78
-      end
-      object Comment: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-        DataBinding.FieldName = 'Comment'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 228
       end
     end
     object cxGridLevel: TcxGridLevel

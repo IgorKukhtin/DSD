@@ -1874,6 +1874,7 @@ begin
         try fExecSqFromQuery_noErr('alter table dba.Bill add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.BillItems add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.BillItemsIncome add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.BillItemsIncome add GoodsId_Postgres integer null;'); except end;
      end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1914,7 +1915,7 @@ begin
       //if cbUnit.Checked then
       fExecSqFromQuery('update dba.Unit set Id_Postgres = null  where KindUnit = zc_kuUnit()');
       //if cbLabel.Checked then
-      fExecSqFromQuery('update dba.GoodsProperty set Id_pg_label = null');
+//      fExecSqFromQuery('update dba.GoodsProperty set Id_pg_label = null');
       //if cbGoods.Checked then
       fExecSqFromQuery('update dba.GoodsProperty set Id_Pg_Goods = null');
       //if cbGoodsItem.Checked then
@@ -1930,6 +1931,8 @@ begin
      fExecSqFromQuery('update dba.Bill set Id_Postgres = null where Id_Postgres is not null'); //
      fExecSqFromQuery('update dba.BillItems set Id_Postgres = null where Id_Postgres is not null');
      fExecSqFromQuery('update dba.BillItemsIncome set Id_Postgres = null where Id_Postgres is not null');
+     fExecSqFromQuery('update dba.BillItemsIncome set GoodsId_Postgres = null where GoodsId_Postgres is not null');
+
 //     fExecSqFromQuery('update dba.BillItemsReceipt set Id_Postgres = null where Id_Postgres is not null');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2049,7 +2052,10 @@ begin
              if FieldByName('Id_Postgres').AsInteger=0 then
                fExecSqFromQuery('update dba.BillItemsIncome set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
-
+              fOpenSqToQuery_two(' select GoodsID '
+                           +' from Object_PartionGoods'
+                           +' where MovementItemId='+inttostr(toStoredProc.Params.ParamByName('ioId').Value));
+              fExecSqFromQuery('update dba.BillItemsIncome set GoodsId_Postgres='+IntToStr(toSqlQuery_two.FieldByName('GoodsID').Value)+' where Id = '+FieldByName('ObjectId').AsString);
 
              Next;
              Application.ProcessMessages;
@@ -2073,7 +2079,7 @@ begin
         Clear;
         Add(' select BillItems.Id as ObjectId  ');
         Add('     , Bill.Id_Postgres as MovementId  ');
-        Add('     , IncomeGoods.Id_Postgres as GoodsId  ');
+        Add('     , BillItemsIncome.GoodsId_Postgres as GoodsId  ');
         Add('     , BillItems.Id as SybaseId  ');
         Add('     , case when Goods.ParentId = 500000');
         Add('              or GoodsGroup1.ParentId = 500000');
@@ -2116,7 +2122,7 @@ begin
         Add('      left join  dba.Goods as GoodsGroup1 on  GoodsGroup1.id = Goods.ParentId ');
         Add('      left join  dba.Goods as GoodsGroup2 on  GoodsGroup2.id = GoodsGroup1.ParentId ');
         Add('      left join  DBA.BillItemsIncome on BillItemsIncome.Id = BillItems.BillItemsIncomeID ');
-        Add('      left join  dba.Goods as IncomeGoods on IncomeGoods.id = BillItemsIncome.GoodsId     ');
+
         Add(' where  Bill.BillKind = 4 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add(' order by Bill.Id ');
         Open;
