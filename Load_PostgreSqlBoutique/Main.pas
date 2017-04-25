@@ -1915,7 +1915,7 @@ begin
       //if cbUnit.Checked then
       fExecSqFromQuery('update dba.Unit set Id_Postgres = null  where KindUnit = zc_kuUnit()');
       //if cbLabel.Checked then
-      fExecSqFromQuery('update dba.GoodsProperty set Id_pg_label = null');
+//      fExecSqFromQuery('update dba.GoodsProperty set Id_pg_label = null');
       //if cbGoods.Checked then
       fExecSqFromQuery('update dba.GoodsProperty set Id_Pg_Goods = null');
       //if cbGoodsItem.Checked then
@@ -2052,7 +2052,10 @@ begin
              if FieldByName('Id_Postgres').AsInteger=0 then
                fExecSqFromQuery('update dba.BillItemsIncome set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
-
+              fOpenSqToQuery_two(' select GoodsID '
+                           +' from Object_PartionGoods'
+                           +' where MovementItemId='+inttostr(toStoredProc.Params.ParamByName('ioId').Value));
+              fExecSqFromQuery('update dba.BillItemsIncome set GoodsId_Postgres='+IntToStr(toSqlQuery_two.FieldByName('GoodsID').Value)+' where Id = '+FieldByName('ObjectId').AsString);
 
              Next;
              Application.ProcessMessages;
