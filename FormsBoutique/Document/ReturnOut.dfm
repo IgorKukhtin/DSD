@@ -441,6 +441,7 @@ object ReturnOutForm: TReturnOutForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 75
           end
           object colCountForPrice: TcxGridDBColumn
@@ -653,11 +654,7 @@ object ReturnOutForm: TReturnOutForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertRecord'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateRecord1'
+          ItemName = 'bbAddMask'
         end
         item
           Visible = True
@@ -1788,10 +1785,10 @@ object ReturnOutForm: TReturnOutForm
     IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
-        Guides = GuidesTo
+        Guides = GuidesFrom
       end
       item
-        Guides = GuidesFrom
+        Guides = GuidesTo
       end>
     ActionItemList = <
       item
@@ -2065,46 +2062,25 @@ object ReturnOutForm: TReturnOutForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioAmount'
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioAmountPartner'
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountPacker'
-        Value = 0.000000000000000000
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsCalcAmountPartner'
+        Name = 'inPartionId'
         Value = 'True'
-        DataType = ftBoolean
+        Component = MasterCDS
+        ComponentItem = 'PartionId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Price'
+        Name = 'inAmount'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMIId_Invoice'
+        Name = 'inOperPrice'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'MIId_Invoice'
+        ComponentItem = 'OperPrice'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2115,7 +2091,7 @@ object ReturnOutForm: TReturnOutForm
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -2127,42 +2103,20 @@ object ReturnOutForm: TReturnOutForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inLiveWeight'
+        Name = 'inOperPriceList'
         Value = 0.000000000000000000
+        Component = MasterCDS
+        ComponentItem = 'OperPriceList'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inHeadCount'
+        Name = 'outAmountPriceListSumm'
         Value = 0.000000000000000000
+        Component = MasterCDS
+        ComponentItem = 'AmountPriceListSumm'
         DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPartionGoods'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PartionGoods'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsKindId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsKindId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAssetId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AssetId'
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1

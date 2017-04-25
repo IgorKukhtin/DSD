@@ -118,6 +118,7 @@ type
     cbOnlyOpenMI: TCheckBox;
     сbNotVisibleCursor: TCheckBox;
     cbJuridical: TCheckBox;
+    cbReturnOut: TCheckBox;
 
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
@@ -206,8 +207,10 @@ type
     procedure pLoadGuide_Juridical;
 
 // Documents
-    function pLoadDocument_Income:Integer;
+    function  pLoadDocument_Income:Integer;
     procedure pLoadDocumentItem_Income(SaveCount:Integer);
+    function  pLoadDocument_ReturnOut:Integer;
+    procedure pLoadDocumentItem_ReturnOut(SaveCount:Integer);
 // Load from files *.dat
     procedure pLoad_Chado;
 
@@ -1789,8 +1792,8 @@ begin
 
      if not fStop then myRecordCount1:=pLoadDocument_Income;
      if not fStop then pLoadDocumentItem_Income(myRecordCount1);
-//     if not fStop then myRecordCount1:=pLoadDocument_ReturnOut;
-//     if not fStop then pLoadDocumentItem_ReturnOut(myRecordCount1);
+     if not fStop then myRecordCount1:=pLoadDocument_ReturnOut;
+     if not fStop then pLoadDocumentItem_ReturnOut(myRecordCount1);
 
 
      //
@@ -1925,7 +1928,7 @@ end;
 procedure TMainForm.pSetNullDocument_Id_Postgres;
 begin
      fExecSqFromQuery('update dba.Bill set Id_Postgres = null where Id_Postgres is not null'); //
-//     fExecSqFromQuery('update dba.BillItems set Id_Postgres = null where Id_Postgres is not null');
+     fExecSqFromQuery('update dba.BillItems set Id_Postgres = null where Id_Postgres is not null');
      fExecSqFromQuery('update dba.BillItemsIncome set Id_Postgres = null where Id_Postgres is not null');
 //     fExecSqFromQuery('update dba.BillItemsReceipt set Id_Postgres = null where Id_Postgres is not null');
 end;
@@ -2059,6 +2062,120 @@ begin
      myDisabledCB(cbIncome);
 end;
 
+procedure TMainForm.pLoadDocumentItem_ReturnOut(SaveCount: Integer);
+begin
+     if (not cbReturnOut.Checked)or(not cbReturnOut.Enabled) then exit;
+     //
+     myEnabledCB(cbReturnOut);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add(' select BillItems.Id as ObjectId  ');
+        Add('     , Bill.Id_Postgres as MovementId  ');
+        Add('     , GoodsProperty.Id_Pg_GoodsItem as GoodsId  ');
+        Add('     , BillItems.Id as SybaseId  ');
+        Add('     , case when Goods.ParentId = 500000');
+        Add('              or GoodsGroup1.ParentId = 500000');
+        Add('              or GoodsGroup2.ParentId = 500000');
+        Add('            then GoodsGroup1.Id_Postgres');
+        Add('            else GoodsGroup2.Id_Postgres');
+        Add('       end as GoodsGroupId'); // !!!последнюю группу не загружаем, но кроме АРХИВА
+        Add('     , Goods.GoodsName as GoodsName ');
+        Add('     , GoodsInfo.GoodsInfoName as GoodsInfoName ');
+        Add('     , GoodsSize.GoodsSizeName as GoodsSizeName ');
+        Add('     , CompositionGroup.CompositionGroupName as CompositionGroupName ');
+        Add('     , Composition.CompositionName as CompositionName ');
+        Add('     , LineFabrica.LineFabricaName as LineFabricaName ');
+        Add('     , Label.LabelName as LabelName ');
+        Add('     , Measure.Id_Postgres as MeasureId ');
+        Add('     , BillItems.OperCount as Amount  ');
+        Add('     , BillItems.OperPrice as OperPrice  ');
+        Add('     , 1 as CountForPrice  ');
+        Add('     , BillItems.PriceListPrice as OperPriceList  ');
+        Add('     , BillItems.Id_Postgres as Id_Postgres  ');
+        Add(' from dba.BillItems   ');
+        Add('     join dba.Bill on BillItems.BillID = Bill.Id ');
+        Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId  ');
+        Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId  ');
+        Add('     left outer join dba.Measure on Measure.Id = GoodsProperty.MeasureId  ');
+        Add('     left join DBA.GoodsInfo  on GoodsInfo.Id = GoodsProperty.GoodsInfoId ');
+        Add('     left join DBA.GoodsSize on  GoodsSize.Id = GoodsProperty.GoodsSizeId ');
+        Add('     left join DBA.Composition on Composition.Id = GoodsProperty.CompositionId ');
+        Add('     left join DBA.CompositionGroup on CompositionGroup.Id = Composition.CompositionGroupId  ');
+        Add('     left join DBA.LineFabrica on LineFabrica.Id = GoodsProperty.LineFabricaId ');
+        Add('     left join  ');
+        Add('          ( select goods_group.goodsName AS LabelName ');
+        Add('            , GoodsProperty.goodsId ');
+        Add('              from GoodsProperty ');
+        Add('              join goods on goods.Id = GoodsProperty.goodsId ');
+        Add('              join goods as goods_group on goods_group.Id = goods.ParentId ');
+        Add('              group by  GoodsProperty.goodsId, goods_group.goodsName) as Label on label.goodsId = GoodsProperty.goodsId ');
+        //    !!!последнюю группу не загружаем, но кроме АРХИВА
+        Add('      left join  dba.Goods as GoodsGroup1 on  GoodsGroup1.id = Goods.ParentId ');
+        Add('      left join  dba.Goods as GoodsGroup2 on  GoodsGroup2.id = GoodsGroup1.ParentId ');
+
+        Add(' where  Bill.BillKind = 4 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add(' order by Bill.Id ');
+        Open;
+
+        cbReturnOut.Caption:='1.2. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Возврат поставщику';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_MovementItem_ReturnOut';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPartionId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inOperPrice',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('ioCountForPrice',ftFloat,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('outAmountSumm',ftFloat,ptOutput, 0);
+        toStoredProc.Params.AddParam ('inOperPriceList',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('outAmountPriceListSumm',ftFloat,ptOutput, 0);
+        //
+        HideCurGrid(True);
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin HideCurGrid(False);  exit; end;
+
+              //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
+             toStoredProc.Params.ParamByName('inPartionId').Value:=0;
+             toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+             toStoredProc.Params.ParamByName('inOperPrice').Value:=FieldByName('OperPrice').AsFloat;
+//             toStoredProc.Params.ParamByName('ioCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
+//             toStoredProc.Params.ParamByName('outAmountSumm').Value:=FieldByName('AmountSumm').AsFloat;
+             toStoredProc.Params.ParamByName('inOperPriceList').Value:=FieldByName('OperPriceList').AsFloat;
+//             toStoredProc.Params.ParamByName('outAmountPriceListSumm').Value:=FieldByName('AmountPriceListSumm').AsFloat;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             if FieldByName('Id_Postgres').AsInteger=0 then
+               fExecSqFromQuery('update dba.BillItems set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        HideCurGrid(False);
+     end;
+     //
+     myDisabledCB(cbReturnOut);
+end;
+
 function TMainForm.pLoadDocument_Income: Integer;
 begin
      Result:=0;
@@ -2168,6 +2285,113 @@ end;
 
 
 
+
+function TMainForm.pLoadDocument_ReturnOut: Integer;
+begin
+     Result:=0;
+     //
+     if (not cbReturnOut.Checked)or(not cbReturnOut.Enabled) then exit;
+     //
+     myEnabledCB(cbReturnOut);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add(' select Bill.Id as ObjectId ');
+        Add('     , Bill.BillNumber as InvNumber ');
+        Add('     , Bill.BillDate as OperDate ');
+        Add('     , Bill_From.Id_Postgres as FromId  ');
+        Add('     , Bill_From.UnitName as UnitNameFrom ');
+        Add('     , Bill_To.Id_Postgres as ToId ');
+        Add('     , Bill_To.UnitName as UnitNameTo ');
+        Add('     , Bill_CurrencyDocument.Id_Postgres as CurrencyDocumentId ');
+        Add('     , Bill_CurrencyDocument.ValutaName as  CurrencyDocumentName ');
+        Add('     , Bill_CurrencyPartner.Id_Postgres as CurrencyPartnerId ');
+        Add('     , Bill_CurrencyPartner.ValutaName as CurrencyPartnerName ');
+        Add('     , ValutaDoc.NewKursIn as CurrencyValue ');
+        Add('     , ValutaDoc.NominalFromValuta as ParValue ');
+        Add('     , ValutaPar.NewKursOut as CurrencyPartnerValue ');
+        Add('     , ValutaPar.NominalFromValuta as ParPartnerValue ');
+        Add('     , '''' as Comments ');
+        Add('     , Bill.Id_Postgres ');
+        Add(' from DBA.Bill ');
+        Add('     left join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
+        Add('     left join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
+        Add('     left join DBA.Valuta as Bill_CurrencyDocument on Bill_CurrencyDocument.Id = Bill.ValutaIDIn   ');
+        Add('     left join DBA.Valuta as Bill_CurrencyPartner on Bill_CurrencyPartner.Id = Bill.ValutaID  ');
+        Add('     left join (select * from  DBA.ValutaKursItems order by id desc ) as valutaDoc  on Bill.BillDate  between valutaDoc.startDate and valutaDoc.EndDate and valutaDoc.FromValutaID = Bill.ValutaIDIn  and valutaDoc.ToValutaID = Bill.ValutaIDpl ');
+        Add('     left join (select * from  DBA.ValutaKursItems order by id desc ) as valutaPar  on Bill.BillDate  between valutaPar.startDate and valutaPar.EndDate and valutaPar.FromValutaID = Bill.ValutaIDIn  and valutaPar.ToValutaID = Bill.ValutaID ');
+        Add(' where  Bill.BillKind = 4 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add(' order by ObjectId ');
+        Open;
+
+        Result:=RecordCount;
+        cbReturnOut.Caption:='1.2. ('+IntToStr(RecordCount)+') Возврат поставщику';
+        //
+        //
+        //
+        //
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Movement_ReturnOut';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCurrencyDocumentId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCurrencyPartnerId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCurrencyValue',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inParValue',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCurrencyPartnerValue',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inParPartnerValue',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
+        //
+        HideCurGrid(True);
+        while not EOF do
+        begin
+             //!!!
+            if fStop then begin HideCurGrid(False);  exit; end;
+             //
+
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString;
+             toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
+             toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
+             toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId').AsInteger;
+             toStoredProc.Params.ParamByName('inCurrencyDocumentId').Value:=FieldByName('CurrencyDocumentId').AsInteger;
+             toStoredProc.Params.ParamByName('inCurrencyPartnerId').Value:=FieldByName('CurrencyPartnerId').AsInteger;
+             toStoredProc.Params.ParamByName('inCurrencyValue').Value:=FieldByName('CurrencyValue').AsFloat;
+             toStoredProc.Params.ParamByName('inParValue').Value:=FieldByName('ParValue').AsFloat;
+             toStoredProc.Params.ParamByName('inCurrencyPartnerValue').Value:=FieldByName('CurrencyPartnerValue').AsFloat;
+             toStoredProc.Params.ParamByName('inParPartnerValue').Value:=FieldByName('ParPartnerValue').AsFloat;
+             toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('Comments').AsString;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             if FieldByName('Id_Postgres').AsInteger=0 then
+               fExecSqFromQuery('update dba.Bill set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        HideCurGrid(False);
+     end;
+     //
+     myDisabledCB(cbReturnOut);
+
+end;
 
 procedure TMainForm.pLoadGuide_Brand;
 begin
