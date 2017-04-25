@@ -105,6 +105,7 @@ type
     procedure LoadPersonalServiceFormTest;
     procedure LoadPersonalServiceListFormTest;
     procedure LoadPhotoMobileFormTest;
+    procedure LoadPartnerMapFormTest;
     procedure LoadPriceListFormTest;
     procedure LoadPriceCorrectiveFormTest;
     procedure LoadProductionUnionFormTest;
@@ -632,6 +633,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPhotoMobileForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPhotoMobileEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPhotoMobileEditForm');
+end;
+
+procedure TLoadFormTest.LoadPartnerMapFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerMapForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerMapForm');
 end;
 
 procedure TLoadFormTest.LoadImportSettingsFormTest;
