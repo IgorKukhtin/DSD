@@ -15,7 +15,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_SetErased_Movement());
      vbUserId:= lpGetUserBySession (inSession);
-
+/*
      -- !!!Для Админа отключаем эти проверки, иначе из Sybase не загрузить!!!
      IF NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
      THEN
@@ -25,7 +25,7 @@ BEGIN
          -- проверка - если есть <Child> Проведен, то <Ошибка>
          PERFORM lfCheck_Movement_ChildStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
      END IF;
-
+*/
      -- Удаляем Документ
      PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                  , inUserId     := vbUserId);
