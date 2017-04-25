@@ -932,7 +932,7 @@ uses
   GoodsListIncome in '..\..\Forms\Guides\GoodsListIncome.pas' {GoodsListIncomeForm: TParentForm},
   GoodsListIncomeEdit in '..\..\Forms\Guides\GoodsListIncomeEdit.pas' {GoodsListIncomeEditForm: TParentForm},
   GoodsListIncome_byReportEdit in '..\..\Forms\Guides\GoodsListIncome_byReportEdit.pas' {GoodsListIncome_byReportEditForm: TParentForm},
-  PartnerMap in '..\..\Forms\Guides\PartnerMap.pas' {PartnerMapForm: TParentForm};
+  PartnerMap in '..\..\Forms\Guides\PartnerMap.pas' {PartnerMapForm: TParentForm},
   Report_SupplyBalance in '..\..\Forms\Report\Report_SupplyBalance.pas' {Report_SupplyBalanceForm: TParentForm},
   Report_SupplyBalanceDialog in '..\..\Forms\Report\Report_SupplyBalanceDialog.pas' {Report_SupplyBalanceDialogForm: TParentForm},
   Report_MotionGoodsWeek in '..\..\Forms\Report\Report_MotionGoodsWeek.pas' {Report_MotionGoodsWeekForm: TParentForm},
