@@ -1,4 +1,4 @@
-unit Send;
+unit Loss;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   cxImageComboBox;
 
 type
-  TSendForm = class(TParentForm)
+  TLossForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -129,6 +129,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TSendForm);
+  RegisterClass(TLossForm);
 
 end.

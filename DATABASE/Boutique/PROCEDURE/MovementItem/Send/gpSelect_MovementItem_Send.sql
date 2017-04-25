@@ -17,6 +17,8 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , LabelName TVarChar
              , GoodsSizeName TVarChar
              , Amount TFloat
+             , OperPrice TFloat, OperPriceList TFloat
+             , AmountSumm TFloat, AmountPriceListSumm TFloat
              , isErased Boolean
               )
 AS
@@ -62,6 +64,11 @@ BEGIN
            , Object_GoodsSize.ValueData     AS GoodsSizeName 
 
            , tmpMI.Amount
+           , Object_PartionGoods.OperPrice      ::TFloat
+           , Object_PartionGoods.PriceSale      ::TFloat
+           , (tmpMI.Amount * Object_PartionGoods.OperPrice) ::TFloat AS AmountSumm
+           , (tmpMI.Amount * Object_PartionGoods.PriceSale) ::TFloat AS AmountPriceListSumm
+
            , tmpMI.isErased
 
        FROM tmpMI
@@ -93,5 +100,4 @@ $BODY$
 */
 
 -- тест
---select * from gpSelect_MovementItem_Send(inMovementId := 7 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '2');
---select * from gpSelect_MovementItem_Send(inMovementId := 7 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '2');
+--select * from gpSelect_MovementItem_Send(inMovementId := 12 , inIsErased := 'False' ,  inSession := '2');

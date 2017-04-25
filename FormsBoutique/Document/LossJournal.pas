@@ -1,4 +1,4 @@
-unit SendJournal;
+unit LossJournal;
 
 interface
 
@@ -28,7 +28,7 @@ uses
   dsdGuides, cxButtonEdit;
 
 type
-  TSendJournalForm = class(TParentForm)
+  TLossJournalForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -107,6 +107,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TSendJournalForm);
+  RegisterClass(TLossJournalForm);
 
 end.
