@@ -1247,6 +1247,7 @@ object ReturnOutForm: TReturnOutForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ImageIndex = 1
+      ShortCut = 115
     end
     object actInsertAction1: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -1289,6 +1290,7 @@ object ReturnOutForm: TReturnOutForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ImageIndex = 0
+      ShortCut = 45
     end
   end
   object MasterDS: TDataSource
