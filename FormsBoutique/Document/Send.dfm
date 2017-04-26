@@ -20,26 +20,30 @@ object SendForm: TSendForm
   TextHeight = 13
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 81
+    Top = 115
     Width = 811
-    Height = 385
+    Height = 351
     Align = alClient
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 385
+    ExplicitTop = 81
+    ExplicitHeight = 385
+    ClientRectBottom = 351
     ClientRectRight = 811
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 361
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 811
-        Height = 361
+        Height = 327
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 361
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -269,6 +273,7 @@ object SendForm: TSendForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -284,6 +289,7 @@ object SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 55
           end
           object colAmountSumm: TcxGridDBColumn
@@ -293,6 +299,7 @@ object SendForm: TSendForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Properties.ReadOnly = False
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -309,18 +316,6 @@ object SendForm: TSendForm
             Options.Editing = False
             Width = 80
           end
-          object colAmountPriceListSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' ('#1087#1088#1072#1081#1089')'
-            DataBinding.FieldName = 'AmountPriceListSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 91
-          end
           object colIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
@@ -336,6 +331,18 @@ object SendForm: TSendForm
             Options.Editing = False
             Width = 50
           end
+          object colAmountPriceListSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' ('#1087#1088#1072#1081#1089')'
+            DataBinding.FieldName = 'AmountPriceListSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView
@@ -347,24 +354,25 @@ object SendForm: TSendForm
     Left = 0
     Top = 0
     Width = 811
-    Height = 55
+    Height = 89
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 5
+    ExplicitWidth = 793
     object edInvNumber: TcxTextEdit
-      Left = 175
+      Left = 9
       Top = 23
       Properties.ReadOnly = True
       TabOrder = 0
       Width = 70
     end
     object cxLabel1: TcxLabel
-      Left = 175
+      Left = 9
       Top = 5
       Caption = #8470' '#1076#1086#1082'.'
     end
     object edOperDate: TcxDateEdit
-      Left = 253
+      Left = 87
       Top = 23
       EditValue = 42160d
       Properties.SaveTime = False
@@ -373,12 +381,12 @@ object SendForm: TSendForm
       Width = 82
     end
     object cxLabel2: TcxLabel
-      Left = 253
+      Left = 87
       Top = 5
       Caption = #1044#1072#1090#1072
     end
     object edTo: TcxButtonEdit
-      Left = 558
+      Left = 392
       Top = 23
       Properties.Buttons = <
         item
@@ -390,7 +398,7 @@ object SendForm: TSendForm
       Width = 208
     end
     object edFrrom: TcxButtonEdit
-      Left = 343
+      Left = 177
       Top = 23
       Properties.Buttons = <
         item
@@ -402,23 +410,23 @@ object SendForm: TSendForm
       Width = 208
     end
     object cxLabel3: TcxLabel
-      Left = 343
+      Left = 177
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object cxLabel4: TcxLabel
-      Left = 558
+      Left = 392
       Top = 5
       Caption = #1050#1086#1084#1091
     end
     object cxLabel11: TcxLabel
       Left = 9
-      Top = 5
+      Top = 45
       Caption = #1057#1090#1072#1090#1091#1089
     end
     object ceStatus: TcxButtonEdit
       Left = 9
-      Top = 23
+      Top = 63
       Properties.Buttons = <
         item
           Action = CompleteMovement
@@ -437,6 +445,17 @@ object SendForm: TSendForm
       Properties.ReadOnly = True
       TabOrder = 9
       Width = 157
+    end
+    object cxLabel16: TcxLabel
+      Left = 177
+      Top = 45
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object ceComment: TcxTextEdit
+      Left = 177
+      Top = 63
+      TabOrder = 11
+      Width = 423
     end
   end
   object FormParams: TdsdFormParams
@@ -1239,8 +1258,8 @@ object SendForm: TSendForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 408
-    Top = 8
+    Left = 288
+    Top = 24
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -1294,6 +1313,23 @@ object SendForm: TSendForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPriceList'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPriceList'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountPriceListSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPriceListSumm'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -1374,6 +1410,14 @@ object SendForm: TSendForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 402
@@ -1387,16 +1431,22 @@ object SendForm: TSendForm
     StoredProc = spInsertUpdateMovement
     ControlList = <
       item
+        Control = ceComment
       end
       item
+        Control = ceStatus
       end
       item
+        Control = edFrrom
       end
       item
+        Control = edTo
       end
       item
+        Control = edOperDate
       end
       item
+        Control = edInvNumber
       end
       item
       end
@@ -1501,6 +1551,13 @@ object SendForm: TSendForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 200
@@ -1592,7 +1649,7 @@ object SendForm: TSendForm
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 39
-    Top = 24
+    Top = 64
   end
   object spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Send'
@@ -1620,8 +1677,8 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 108
-    Top = 8
+    Left = 92
+    Top = 72
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1647,8 +1704,8 @@ object SendForm: TSendForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 656
-    Top = 16
+    Left = 496
+    Top = 8
   end
   object spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TotalSumm'
@@ -1749,6 +1806,15 @@ object SendForm: TSendForm
       item
         Name = 'inAmount'
         Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPriceList'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPriceList'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

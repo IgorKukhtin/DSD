@@ -120,6 +120,8 @@ type
     ceStatus: TcxButtonEdit;
     InsertRecord: TInsertRecord;
     actGoodsChoiceForm: TOpenChoiceForm;
+    cxLabel16: TcxLabel;
+    ceComment: TcxTextEdit;
   private
   public
   end;
