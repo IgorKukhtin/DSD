@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_Loss()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Loss (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Loss (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Loss(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
@@ -8,9 +9,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Loss(
     IN inOperDate             TDateTime , -- Дата документа
     IN inFromId               Integer   , -- От кого (в документе)
     IN inToId                 Integer   , -- Кому (в документе)
+    IN inCurrencyDocumentId   Integer   , -- Валюта (документа)
+   OUT outCurrencyValue       TFloat    , -- курс валюты
+   OUT outParValue            TFloat    , -- Номинал для перевода в валюту баланса
+    IN inComment              TVarChar  , -- Примечание
     IN inSession              TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -20,12 +25,19 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Loss());
      
+     outCurrencyValue := 1;
+     outParValue := 0;
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_Loss (ioId                := ioId
                                          , inInvNumber         := inInvNumber
                                          , inOperDate          := inOperDate
                                          , inFromId            := inFromId
                                          , inToId              := inToId
+                                         , inCurrencyDocumentId:= inCurrencyDocumentId
+                                         , inCurrencyValue     := outCurrencyValue
+                                         , inParValue          := outParValue
+                                         , inComment           := inComment
                                          , inUserId            := vbUserId
                                            );
 

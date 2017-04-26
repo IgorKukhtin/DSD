@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , LabelName TVarChar
              , GoodsSizeName TVarChar
              , Amount TFloat
+             , CountForPrice TFloat
              , OperPrice TFloat, OperPriceList TFloat
              , AmountSumm TFloat, AmountPriceListSumm TFloat
              , isErased Boolean
@@ -39,11 +40,24 @@ BEGIN
                            , MovementItem.ObjectId AS GoodsId
                            , MovementItem.PartionId
                            , MovementItem.Amount 
+                           , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
+                           , COALESCE (MIFloat_OperPrice.ValueData, 0)       AS OperPrice
+                           , COALESCE (MIFloat_OperPriceList.ValueData, 0)   AS OperPriceList
                            , MovementItem.isErased
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.DescId     = zc_MI_Master()
                                              AND MovementItem.isErased   = tmpIsErased.isErased
+                            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                            LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
+                                                        ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
+                            LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                                        ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
+
                        )
 
        -- результат
@@ -64,10 +78,11 @@ BEGIN
            , Object_GoodsSize.ValueData     AS GoodsSizeName 
 
            , tmpMI.Amount
-           , Object_PartionGoods.OperPrice      ::TFloat
-           , Object_PartionGoods.PriceSale      ::TFloat
-           , (tmpMI.Amount * Object_PartionGoods.OperPrice) ::TFloat AS AmountSumm
-           , (tmpMI.Amount * Object_PartionGoods.PriceSale) ::TFloat AS AmountPriceListSumm
+           , tmpMI.CountForPrice  ::TFloat
+           , tmpMI.OperPrice      ::TFloat
+           , tmpMI.OperPriceList      ::TFloat
+           , (tmpMI.Amount * tmpMI.OperPrice) ::TFloat AS AmountSumm
+           , (tmpMI.Amount * tmpMI.OperPriceList) ::TFloat AS AmountPriceListSumm
 
            , tmpMI.isErased
 
