@@ -12,19 +12,19 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
     Width = 1077
     Height = 394
     TabOrder = 3
-    ExplicitTop = 58
+    ExplicitTop = 86
     ExplicitWidth = 1077
-    ExplicitHeight = 422
+    ExplicitHeight = 394
     ClientRectBottom = 394
     ClientRectRight = 1077
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1077
-      ExplicitHeight = 422
+      ExplicitHeight = 394
       inherited cxGrid: TcxGrid
         Width = 1077
         Height = 394
         ExplicitWidth = 1077
-        ExplicitHeight = 422
+        ExplicitHeight = 394
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -263,6 +263,13 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             HeaderAlignmentVert = vaCenter
             Width = 68
           end
+          object PriceSale: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090#1080#1095#1085#1072' '#1088#1086#1079#1076#1088#1110#1073#1085#1072' '#1094#1110#1085#1072' '#1088#1077#1072#1083#1110#1079#1072#1094#1110#1111' '#1091#1087#1072#1082#1086#1074#1082#1080
+            DataBinding.FieldName = 'PriceSale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 91
+          end
           object DailyNormSP: TcxGridDBColumn
             Caption = #1044#1086#1073#1086#1074#1072' '#1076#1086#1079#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091', '#1088#1077#1082#1086#1084#1077#1085#1076#1086#1074#1072#1085#1072' '#1042#1054#1054#1047' (13)'
             DataBinding.FieldName = 'DailyNormSP'
@@ -361,6 +368,16 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1050#1055#1054' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object MainName: TcxGridDBColumn
+            Caption = #1044#1080#1088#1077#1082#1090#1086#1088' ('#1057#1043')'
+            DataBinding.FieldName = 'MainName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
             Options.Editing = False
             Width = 155
           end

@@ -38,13 +38,15 @@ RETURNS TABLE (MovementId     Integer
              , ColSP          TFloat
              , InsertDateSP   TDateTime
 
-             , Amount         TFloat 
+             , Amount         TFloat
+             , PriceSale      TFloat
              , SummaSP        TFloat 
              , NumLine        Integer
 
            , JuridicalFullName  TVarChar
            , JuridicalAddress   TVarChar
            , OKPO               TVarChar
+           , MainName           TVarChar
            , AccounterName      TVarChar
            , INN                TVarChar
            , NumberVAT          TVarChar
@@ -222,6 +224,7 @@ BEGIN
                               , tmpGoods.GoodsMainId                                      AS GoodsMainId
                               , SUM (MI_Check.Amount) AS Amount
                               , SUM (COALESCE (MIFloat_SummChangePercent.ValueData, 0))   AS SummChangePercent
+                              , COALESCE (MIFloat_PriceSale.ValueData, 0)                 AS PriceSale
                               , MovementString_InvNumberSP.ValueData                      AS InvNumberSP
                               , MovementString_MedicSP.ValueData                          AS MedicSPName
                          FROM Movement AS Movement_Check
@@ -253,6 +256,10 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                                           ON MIFloat_SummChangePercent.MovementItemId = MI_Check.Id
                                                          AND MIFloat_SummChangePercent.DescId = zc_MIFloat_SummChangePercent()
+                              LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                                          ON MIFloat_PriceSale.MovementItemId = MI_Check.Id
+                                                         AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+
                          WHERE Movement_Check.DescId = zc_Movement_Check()
                            AND Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY'
                            AND Movement_Check.StatusId = zc_Enum_Status_Complete()
@@ -264,6 +271,7 @@ BEGIN
                                 , MovementString_InvNumberSP.ValueData
                                 , MovementString_MedicSP.ValueData          
                                 , Movement_Check.OperDate, Movement_Check.Id
+                                , COALESCE (MIFloat_PriceSale.ValueData, 0)
                          HAVING SUM (MI_Check.Amount) <> 0
                         )
 
@@ -293,6 +301,7 @@ BEGIN
                          , ObjectHistory_JuridicalDetails.FullName AS JuridicalFullName
                          , ObjectHistory_JuridicalDetails.JuridicalAddress
                          , ObjectHistory_JuridicalDetails.OKPO
+                         , ObjectHistory_JuridicalDetails.MainName
                          , ObjectHistory_JuridicalDetails.AccounterName
                          , ObjectHistory_JuridicalDetails.INN
                          , ObjectHistory_JuridicalDetails.NumberVAT
@@ -377,12 +386,14 @@ BEGIN
              , tmpGoodsSP.InsertDateSP    :: TDateTime
 
              , tmpData.Amount            :: TFloat 
+             , tmpData.PriceSale         :: TFloat 
              , tmpData.SummChangePercent :: TFloat  AS SummaSP
              , CAST (ROW_NUMBER() OVER (PARTITION BY Object_Unit.ValueData,Object_Juridical.ValueData ORDER BY Object_Unit.ValueData, Object_Juridical.ValueData, tmpGoodsSP.IntenalSPName ) AS Integer) AS NumLine
 
              , COALESCE (tmpParam.JuridicalFullName, Object_Juridical.ValueData ) :: TVarChar  AS JuridicalFullName
              , tmpParam.JuridicalAddress
              , tmpParam.OKPO
+             , tmpParam.MainName
              , tmpParam.AccounterName
              , tmpParam.INN
              , tmpParam.NumberVAT

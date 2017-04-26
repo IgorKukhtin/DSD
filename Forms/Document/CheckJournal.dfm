@@ -32,6 +32,11 @@ inherited CheckJournalForm: TCheckJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = clTotalSummChangePercent
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalCount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -43,6 +48,11 @@ inherited CheckJournalForm: TCheckJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = clTotalSummChangePercent
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalCount
             end>
           OptionsView.GroupByBox = True
           Styles.Content = nil

@@ -25,8 +25,8 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
 
   -- определяем список аптек для просмотра категорий
-  CREATE TEMP TABLE _tmpMarginCategoryList (MarginCategoryId integer, MarginCategoryName TVarChar) ON COMMIT DROP;
-     INSERT INTO _tmpMarginCategoryList (MarginCategoryId, MarginCategoryName)
+  CREATE TEMP TABLE _tmpGoods (CommonCode integer, GoodsMainId integer, GoodsId integer, GoodsName TVarChar) ON COMMIT DROP;
+     INSERT INTO _tmpGoods (CommonCode, GoodsMainId, GoodsId, GoodsName)
                                SELECT Object_MarginCategory.Id         AS MarginCategoryId
                                     , Object_MarginCategory.ValueData  AS MarginCategoryName
                                FROM  Object AS Object_MarginCategory
@@ -61,18 +61,6 @@ BEGIN
                    , _tmpMarginCategoryList.MarginCategoryName
               ORDER BY 1;
             
-
-                              /*SELECT Object_MarginCategory.Id         AS MarginCategoryId
-                                    , Object_MarginCategory.ValueData  AS MarginCategoryName
-                               FROM  Object AS Object_MarginCategory
-                                     Left JOIN ObjectFloat AS ObjectFloat_Percent 	
-                                            ON Object_MarginCategory.Id = ObjectFloat_Percent.ObjectId
-                                           AND ObjectFloat_Percent.DescId = zc_ObjectFloat_MarginCategory_Percent()
-                               WHERE Object_MarginCategory.DescId = zc_Object_MarginCategory()
-                                 AND Object_MarginCategory.isErased = FALSE
-                                 AND COALESCE (ObjectFloat_Percent.ValueData ,0) = 0
-                               ORDER by 1*/
-
      -- 
   CREATE TEMP TABLE _tmpminPrice (minPrice TFloat, Num integer) ON COMMIT DROP; 
      INSERT INTO _tmpminPrice (minPrice, Num)
