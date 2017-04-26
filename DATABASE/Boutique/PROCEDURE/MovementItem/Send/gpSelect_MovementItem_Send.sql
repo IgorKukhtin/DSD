@@ -39,11 +39,15 @@ BEGIN
                            , MovementItem.ObjectId AS GoodsId
                            , MovementItem.PartionId
                            , MovementItem.Amount 
+                           , COALESCE (MIFloat_OperPriceList.ValueData, 0)  AS OperPriceList
                            , MovementItem.isErased
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.DescId     = zc_MI_Master()
                                              AND MovementItem.isErased   = tmpIsErased.isErased
+                            LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                                        ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
                        )
 
        -- результат
@@ -65,9 +69,9 @@ BEGIN
 
            , tmpMI.Amount
            , Object_PartionGoods.OperPrice      ::TFloat
-           , Object_PartionGoods.PriceSale      ::TFloat
+           , tmpMI.OperPriceList                ::TFloat
            , (tmpMI.Amount * Object_PartionGoods.OperPrice) ::TFloat AS AmountSumm
-           , (tmpMI.Amount * Object_PartionGoods.PriceSale) ::TFloat AS AmountPriceListSumm
+           , (tmpMI.Amount * tmpMI.OperPriceList)           ::TFloat AS AmountPriceListSumm
 
            , tmpMI.isErased
 

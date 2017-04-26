@@ -285,7 +285,6 @@ object ReturnOutJournalForm: TReturnOutJournalForm
       object colCurrencyDocumentName: TcxGridDBColumn
         Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1082')'
         DataBinding.FieldName = 'CurrencyDocumentName'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 52
@@ -293,7 +292,6 @@ object ReturnOutJournalForm: TReturnOutJournalForm
       object colCurrencyPartnerName: TcxGridDBColumn
         Caption = #1042#1072#1083#1102#1090#1072' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
         DataBinding.FieldName = 'CurrencyPartnerName'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 54

@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Send(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , Comment TVarChar 
                )
 AS
 $BODY$
@@ -33,6 +34,7 @@ BEGIN
              , CAST ('' as TVarChar) AS FromName
              , 0                     AS ToId
              , CAST ('' as TVarChar) AS ToName
+             , CAST ('' as TVarChar) AS Comment
            
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
@@ -48,9 +50,13 @@ BEGIN
              , Object_From.ValueData                  AS FromName
              , Object_To.Id                           AS ToId
              , Object_To.ValueData                    AS ToName
-           
+             , MovementString_Comment.ValueData       AS Comment           
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementString AS MovementString_Comment 
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id

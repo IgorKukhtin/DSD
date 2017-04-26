@@ -23,11 +23,11 @@ BEGIN
 
      SELECT SUM(COALESCE(MovementItem.Amount, 0))
           , SUM(CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) <> 0
-                           THEN CAST (COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0) / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
+                           THEN CAST (COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
                      ELSE CAST ( COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0) AS NUMERIC (16, 2))
                 END)
           , SUM(CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) <> 0
-                           THEN CAST (COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
+                           THEN CAST (COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
                      ELSE CAST ( COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2))
                 END)
 

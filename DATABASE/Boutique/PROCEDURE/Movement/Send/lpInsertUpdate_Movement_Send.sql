@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Movement_Send()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Send(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Send(
     IN inOperDate             TDateTime , -- Дата документа
     IN inFromId               Integer   , -- От кого (в документе)
     IN inToId                 Integer   , -- Кому (в документе)
+    IN inComment              TVarChar  , -- Примечание
     IN inUserId               Integer     -- пользователь
 )
 RETURNS Integer
@@ -32,6 +34,9 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
      -- сохранили связь с <Кому (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
+
+     -- Комментарий
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
