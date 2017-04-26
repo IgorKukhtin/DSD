@@ -3280,7 +3280,7 @@ begin
       First;
       while not EOF do
       begin
-        if (FieldbyName('Count').AsFloat > 0) and (FieldbyName('RecommendCount').AsFloat > 0) then
+        if (FieldbyName('Count').AsFloat > 0) or (FieldbyName('RecommendCount').AsFloat > 0) then
         begin
           if FieldbyName('Id').AsInteger = -1 then // новая запись
           begin
