@@ -1877,12 +1877,14 @@ begin
     exit;
   end;
   //
-  if  (Self.FormParams.ParamByName('InvNumberSP').Value <> '')
-   and(SourceClientDataSet.FieldByName('isSP').asBoolean = FALSE)
-  then begin
-    ShowMessage('Ошибка.Выбранный код товара не участвует в Соц.проекте!');
-    exit;
-  end;
+  if SoldRegim = TRUE
+  then
+      if  (Self.FormParams.ParamByName('InvNumberSP').Value <> '')
+       and(SourceClientDataSet.FieldByName('isSP').asBoolean = FALSE)
+      then begin
+        ShowMessage('Ошибка.Выбранный код товара не участвует в Соц.проекте!');
+        exit;
+      end;
   //
   // потому что криво, надо правильно определить ТОВАР + цена БЕЗ скидки
   if SoldRegim = TRUE

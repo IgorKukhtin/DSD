@@ -92,7 +92,8 @@ BEGIN
             LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = ObjectLink_Goods_IntenalSP.ChildObjectId
 
        WHERE MovementItem.MovementId = inMovementId
-         AND MovementItem.isErased   = FALSE;
+         -- AND MovementItem.isErased   = FALSE
+      ;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

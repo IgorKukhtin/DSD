@@ -123,7 +123,7 @@ BEGIN
              LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Child.MovementChildId
 
        WHERE Movement_Check.OperDate >= DATE_TRUNC ('DAY', inStartDate) AND Movement_Check.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
-         AND (Movement_Check.UnitId = inUnitId OR (MovementString_CommentError.ValueData <> '' AND inUnitId = 0))
+         AND (Movement_Check.UnitId = inUnitId OR ((MovementString_CommentError.ValueData <> '' OR Movement_Check.InvNumberSP <> '') AND inUnitId = 0))
          AND (vbRetailId = vbObjectId)
       ;
 

@@ -61,7 +61,7 @@ BEGIN
                                             LEFT JOIN tmpStoreRealDoc ON tmpStoreRealDoc.PartnerId = tmpPartner.PartnerId
                                       )
                   -- предопределенный список товар+вид товара+контрагент доступный торговому агенту
-                , tmpGoodsListSale AS (SELECT Object_GoodsListSale.Id
+                , tmpGoodsListSale AS (SELECT MAX (Object_GoodsListSale.Id)                                  AS Id
                                             , ObjectLink_GoodsListSale_Goods.ChildObjectId                   AS GoodsId
                                             , COALESCE (ObjectLink_GoodsListSale_GoodsKind.ChildObjectId, 0) AS GoodsKindId 
                                             , ObjectLink_GoodsListSale_Partner.ChildObjectId                 AS PartnerId
@@ -71,8 +71,8 @@ BEGIN
                                                             ON ObjectLink_GoodsListSale_Partner.ChildObjectId = tmpPartner.PartnerId
                                                            AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
                                             JOIN Object AS Object_GoodsListSale 
-                                                        ON Object_GoodsListSale.Id = ObjectLink_GoodsListSale_Partner.ObjectId
-                                                       AND Object_GoodsListSale.DescId = zc_Object_GoodsListSale()
+                                                        ON Object_GoodsListSale.Id       = ObjectLink_GoodsListSale_Partner.ObjectId
+                                                       AND Object_GoodsListSale.isErased = FALSE
                                             JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods
                                                             ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
                                                            AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
@@ -80,6 +80,10 @@ BEGIN
                                             LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_GoodsKind
                                                                  ON ObjectLink_GoodsListSale_GoodsKind.ObjectId = Object_GoodsListSale.Id
                                                                 AND ObjectLink_GoodsListSale_GoodsKind.DescId = zc_ObjectLink_GoodsListSale_GoodsKind()
+                                       GROUP BY ObjectLink_GoodsListSale_Goods.ChildObjectId
+                                              , COALESCE (ObjectLink_GoodsListSale_GoodsKind.ChildObjectId, 0)
+                                              , ObjectLink_GoodsListSale_Partner.ChildObjectId
+                                              , Object_GoodsListSale.isErased
                                       )
                   -- строки фактического остатка
                 , tmpStoreRealItem AS (SELECT tmpStoreRealDoc.PartnerId
@@ -90,7 +94,7 @@ BEGIN
                                             JOIN MovementItem AS MI_StoreReal
                                                               ON MI_StoreReal.MovementId = tmpStoreRealDoc.StoreRealId
                                                              AND MI_StoreReal.DescId = zc_MI_Master()
-                                                             AND NOT MI_StoreReal.isErased
+                                                             AND MI_StoreReal.isErased = FALSE
                                                              AND MI_StoreReal.ObjectId > 0 
                                                              AND COALESCE (MI_StoreReal.Amount, 0.0) > 0.0
                                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
@@ -125,7 +129,7 @@ BEGIN
                                        JOIN MovementItem AS MI_Sale
                                                          ON MI_Sale.MovementId = Movement_Sale.Id
                                                         AND MI_Sale.DescId = zc_MI_Master()
-                                                        AND NOT MI_Sale.isErased
+                                                        AND MI_Sale.isErased = FALSE
                                        LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                         ON MILinkObject_GoodsKind.MovementItemId = MI_Sale.Id
                                                                        AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind() 
@@ -164,7 +168,7 @@ BEGIN
                                            JOIN MovementItem AS MI_ReturnIn
                                                              ON MI_ReturnIn.MovementId = Movement_ReturnIn.Id
                                                             AND MI_ReturnIn.DescId = zc_MI_Master()
-                                                            AND NOT MI_ReturnIn.isErased
+                                                            AND MI_ReturnIn.isErased = FALSE
                                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                             ON MILinkObject_GoodsKind.MovementItemId = MI_ReturnIn.Id
                                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind() 
