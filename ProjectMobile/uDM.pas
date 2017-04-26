@@ -2746,9 +2746,12 @@ begin
     qryMaxInvNumber := TFDQuery.Create(nil);
     try
       qryMaxInvNumber.Connection := conMain;
-      qryMaxInvNumber.Open('select Max(InvNumber) from Movement_StoreReal');
-      if qryMaxInvNumber.RecordCount > 0 then
-        NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1;
+      try
+        qryMaxInvNumber.Open('select Max(cast(invNumber as Integer)) from Movement_StoreReal');
+        if qryMaxInvNumber.RecordCount > 0 then
+          NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1;
+      except
+      end;
     finally
       FreeAndNil(qryMaxInvNumber);
     end;
@@ -3198,9 +3201,12 @@ begin
     qryMaxInvNumber := TFDQuery.Create(nil);
     try
       qryMaxInvNumber.Connection := conMain;
-      qryMaxInvNumber.Open('select Max(InvNumber) from Movement_OrderExternal');
-      if qryMaxInvNumber.RecordCount > 0 then
-        NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1;
+      try
+        qryMaxInvNumber.Open('select Max(cast(invNumber as Integer)) from Movement_OrderExternal');
+        if qryMaxInvNumber.RecordCount > 0 then
+          NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1;
+      except
+      end;
     finally
       FreeAndNil(qryMaxInvNumber);
     end;
@@ -3831,9 +3837,12 @@ begin
     qryMaxInvNumber := TFDQuery.Create(nil);
     try
       qryMaxInvNumber.Connection := conMain;
-      qryMaxInvNumber.Open('select Max(InvNumber) from Movement_ReturnIn');
-      if qryMaxInvNumber.RecordCount > 0 then
-        NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1;
+      try
+        qryMaxInvNumber.Open('select Max(cast(invNumber as Integer)) from Movement_ReturnIn');
+        if qryMaxInvNumber.RecordCount > 0 then
+          NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1;
+      except
+      end;
     finally
       FreeAndNil(qryMaxInvNumber);
     end;
@@ -4316,9 +4325,12 @@ begin
   qryMaxInvNumber := TFDQuery.Create(nil);
   try
     qryMaxInvNumber.Connection := conMain;
-    qryMaxInvNumber.Open('select Max(InvNumber) from Movement_OrderExternal');
-    if qryMaxInvNumber.RecordCount > 0 then
-      NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1;
+    try
+      qryMaxInvNumber.Open('select Max(cast(invNumber as Integer)) from MOVEMENT_VISIT');
+      if qryMaxInvNumber.RecordCount > 0 then
+        NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1;
+    except
+    end;
   finally
     FreeAndNil(qryMaxInvNumber);
   end;
