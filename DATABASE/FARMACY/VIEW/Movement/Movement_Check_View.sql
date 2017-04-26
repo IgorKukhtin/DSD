@@ -41,6 +41,7 @@ SELECT
            , MovementDate_OperDateSP.ValueData               AS OperDateSP
            , MovementString_InvNumberSP.ValueData            AS InvNumberSP
            , MovementString_MedicSP.ValueData                AS MedicSPName
+           , Object_PartnerMedical.Id                        AS PartnerMedicalId
            , Object_PartnerMedical.ValueData                 AS PartnerMedicalName
            , MovementString_Ambulance.ValueData              AS Ambulance
        FROM Movement 

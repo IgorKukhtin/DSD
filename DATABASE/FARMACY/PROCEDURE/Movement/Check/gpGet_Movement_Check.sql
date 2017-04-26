@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ConfirmedKindClientName TVarChar
 
              , OperDateSP TDateTime
-             , PartnerMedicalName TVarChar
+             , PartnerMedicalId Integer, PartnerMedicalName TVarChar
              , InvNumberSP TVarChar
              , MedicSPName TVarChar
              , Ambulance TVarChar
@@ -57,6 +57,7 @@ BEGIN
            , Movement_Check.ConfirmedKindClientName
 
            , Movement_Check.OperDateSP
+           , Movement_Check.PartnerMedicalId
            , Movement_Check.PartnerMedicalName
            , Movement_Check.InvNumberSP
            , Movement_Check.MedicSPName
@@ -78,6 +79,7 @@ ALTER FUNCTION gpGet_Movement_Check (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.04.17         * add PartnerMedicalId
  07.04.17         *
  21.07.16         *
  23.05.15                         *                 
