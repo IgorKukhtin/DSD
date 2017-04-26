@@ -3152,7 +3152,8 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select Goods.Id as ObjectId');
+        Add('select DISTINCT');
+        Add('       Goods.Id as ObjectId');
         Add('     , 0 as ObjectCode');
         Add('     , Goods.GoodsName as ObjectName');
         Add('     , zc_erasedDel() as zc_erasedDel');
@@ -3161,6 +3162,8 @@ begin
         Add('     , Goods_parent.Id_Postgres as ParentId_Postgres');
         Add('from dba.Goods');
         Add('     left outer join dba.Goods as Goods_parent on Goods_parent.Id = Goods.ParentId');
+        Add('     left outer join dba.Goods as Goods_child on Goods_child.ParentId    = Goods.Id');
+        Add('                                             and Goods_child.HasChildren <> zc_hsLeaf()');
         //        !!!последнюю группу не загружаем, но кроме АРХИВА
         Add('     left outer join (select distinct Goods_find.ParentId');
         Add('                      from dba.Goods as Goods_find');
@@ -3172,7 +3175,8 @@ begin
         Add('                         and Goods_parent2.ParentId <> 500000');
         Add('                     ) as Goods_find on Goods_find.ParentId = Goods.Id');
         Add('where Goods.HasChildren <> zc_hsLeaf()');
-        Add('  and Goods_find.ParentId is null'); // !!!последнюю группу не загружаем, но кроме АРХИВА
+        Add('  and (Goods_find.ParentId is null'); // !!!последнюю группу не загружаем, но кроме АРХИВА
+        Add('    or Goods_child.Id > 0)');
         Add('order by ObjectId');
         Open;
         //

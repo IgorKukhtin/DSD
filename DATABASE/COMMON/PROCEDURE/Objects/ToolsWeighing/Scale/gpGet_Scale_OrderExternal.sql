@@ -87,7 +87,8 @@ BEGIN
                                         WHEN ObjectLink_UnitFrom_Branch.ChildObjectId > 0
                                              THEN TRUE -- для главного - приход на него
                                    END AS isSendOnPriceIn
-                            FROM (SELECT Movement.Id
+                            FROM (-- по Ш/К
+                                  SELECT Movement.Id
                                        , Movement.InvNumber
                                        , Movement.DescId
                                        , Movement.OperDate
@@ -98,6 +99,20 @@ BEGIN
                                                           AND Movement.OperDate BETWEEN inOperDate - INTERVAL '8 DAY' AND inOperDate + INTERVAL '8 DAY'
                                                           AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  UNION
+                                  -- по Ш/К - Приход, т.к. период 80 дней
+                                  SELECT Movement.Id
+                                       , Movement.InvNumber
+                                       , Movement.DescId
+                                       , Movement.OperDate
+                                  FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId WHERE CHAR_LENGTH (inBarCode) >= 13
+                                                                                                                      AND inBranchCode = 301
+                                       ) AS tmp
+                                       INNER JOIN Movement ON Movement.Id = tmp.MovementId
+                                                          AND Movement.DescId = zc_Movement_OrderIncome()
+                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '80 DAY' AND inOperDate + INTERVAL '80 DAY'
+                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                 UNION
+                                  -- по № документа
                                   SELECT Movement.Id
                                        , Movement.InvNumber
                                        , Movement.DescId
@@ -107,6 +122,19 @@ BEGIN
                                        INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode
                                                           AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal(), zc_Movement_SendOnPrice())
                                                           AND Movement.OperDate BETWEEN inOperDate - INTERVAL '8 DAY' AND inOperDate + INTERVAL '8 DAY'
+                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                 UNION
+                                  -- по № документа - Приход, т.к. период 80 дней
+                                  SELECT Movement.Id
+                                       , Movement.InvNumber
+                                       , Movement.DescId
+                                       , Movement.OperDate
+                                  FROM (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) > 0 AND CHAR_LENGTH (inBarCode) < 13
+                                                                      AND inBranchCode = 301
+                                       ) AS tmp
+                                       INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode
+                                                          AND Movement.DescId = zc_Movement_OrderIncome()
+                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '80 DAY' AND inOperDate + INTERVAL '80 DAY'
                                                           AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  ) AS tmpMovement
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
@@ -158,7 +186,9 @@ BEGIN
                                         INNER JOIN lpGet_Object_Juridical_PrintKindItem ((SELECT tmpMovement.JuridicalId FROM tmpMovement LIMIT 1)) AS tmpGet ON tmpGet.Id = tmp.JuridicalId
                                   )
       , tmpMovementDescNumber AS (SELECT tmpSelect.Number AS MovementDescNumber
-                                  FROM (SELECT CASE WHEN tmpMovement.DescId = zc_Movement_OrderInternal()
+                                  FROM (SELECT CASE WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
+                                                         THEN zc_Movement_Income()
+                                                    WHEN tmpMovement.DescId = zc_Movement_OrderInternal()
                                                          THEN zc_Movement_Send()
                                                     WHEN Object_From.DescId = zc_Object_ArticleLoss()
                                                          THEN zc_Movement_Loss()
@@ -195,7 +225,9 @@ BEGIN
                                                                                                                                        WHEN tmp.isSendOnPriceIn = FALSE
                                                                                                                                             THEN tmp.FromId -- для для филиала - расход с него
                                                                                                                                   END
-                                                                                                           AND tmpSelect.ToId   = CASE WHEN tmp.MovementDescId = zc_Movement_Send()
+                                                                                                           AND tmpSelect.ToId   = CASE WHEN tmp.MovementDescId = zc_Movement_Income()
+                                                                                                                                            THEN tmp.FromId -- для Прихода от поставщика
+                                                                                                                                       WHEN tmp.MovementDescId = zc_Movement_Send()
                                                                                                                                             THEN tmp.FromId -- для Перемещения
                                                                                                                                        WHEN tmp.MovementDescId = zc_Movement_Loss()
                                                                                                                                             THEN 0 -- для списания здесь 0 т.к. он выбирается из справочника
