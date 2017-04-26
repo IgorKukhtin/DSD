@@ -24,7 +24,34 @@ $BODY$
    DECLARE vbIsChangePercent_Promo Boolean;
    DECLARE vbTaxPromo TFloat;
    DECLARE vbPartnerId Integer;
+
+   DECLARE vbPriceListId Integer;
+   DECLARE vbOperDate_pl TDateTime;
 BEGIN
+     -- !!!временно - пока есть ошибка на моб устройстве с ценами!!!
+     IF COALESCE (ioPrice, 0) = 0 AND EXISTS (SELECT 1 FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_GUID())
+     THEN
+         -- !!!замена!!!
+         SELECT tmp.PriceListId, tmp.OperDate
+                INTO vbPriceListId, vbOperDate_pl
+         FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                                                   , inPartnerId      := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
+                                                   , inMovementDescId := zc_Movement_Sale()
+                                                   , inOperDate_order := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+                                                   , inOperDatePartner:=  NULL
+                                                   , inDayPrior_PriceReturn:= NULL
+                                                   , inIsPrior        := FALSE -- !!!отказались от старых цен!!!
+                                                    ) AS tmp;
+         -- !!!замена!!!
+         ioPrice:= COALESCE ((SELECT tmp.ValuePrice FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := vbOperDate_pl
+                                                                                          , inPriceListId:= vbPriceListId
+                                                                                          , inGoodsId    := inGoodsId
+                                                                                          , inSession    := inUserId :: TVarChar
+                                                                                           ) AS tmp), 0);
+                                                                                                                                                                                                                             
+     END IF;
+
+
      -- Контрагент
      vbPartnerId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From());
      -- Цены с НДС

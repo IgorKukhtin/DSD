@@ -93,7 +93,7 @@ BEGIN
 
       vbId:= lpInsertUpdate_Movement_OrderExternal (ioId              := vbId
                                                   , inInvNumber       := inInvNumber
-                                                  , inInvNumberPartner:= inInvNumber
+                                                  , inInvNumberPartner:= COALESCE ((SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = vbId AND MS.DescId = zc_MovementString_InvNumberPartner()), '')
                                                   , inOperDate        := inOperDate
                                                   , inOperDatePartner := vbOperDatePartner
                                                   , inOperDateMark    := inOperDate

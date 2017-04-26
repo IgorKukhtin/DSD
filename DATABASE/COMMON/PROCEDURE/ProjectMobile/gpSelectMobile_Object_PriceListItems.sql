@@ -22,6 +22,9 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPersonalId Integer;
 BEGIN
+      -- !!! ВРЕМЕННО будем выгружать все
+      inSyncDateIn:= zc_DateStart();
+
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
@@ -275,4 +278,5 @@ $BODY$
 */
 
 -- тест
+-- SELECT * FROM gpSelectMobile_Object_PriceListItems(inSyncDateIn := zc_DateStart(), inSession := '1000168') WHERE GoodsId = 477449
 -- SELECT * FROM gpSelectMobile_Object_PriceListItems(inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
