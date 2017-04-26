@@ -4,9 +4,11 @@
 -- DROP FUNCTION IF EXISTS gpUpdate_Movement_Check_SpParam (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 DROP FUNCTION IF EXISTS gpUpdate_Movement_Check_SpParam (Integer, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_Check_SpParam (Integer, Integer, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar);
   
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_Check_SpParam(
     IN inId                  Integer   , -- Ключ объекта <Документ ЧЕК>
+    IN inPartnerMedicalId    Integer   , -- Медицинское учреждение(Соц. проект)
     IN inOperDateSP          TDateTime , -- дата рецепта (Соц. проект)
     IN inAmbulance           TVarChar  , --
     IN inMedicSP             TVarChar  , -- ФИО врача (Соц. проект)
@@ -26,6 +28,8 @@ BEGIN
 
     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inId);
 
+    -- сохранили связь с <>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PartnerMedical(), inId, inPartnerMedicalId);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Ambulance(), inId, inAmbulance);
     -- сохранили <>
@@ -56,6 +60,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 26.04.17         * add inPartnerMedicalId
  21.04.17         *
 */
 

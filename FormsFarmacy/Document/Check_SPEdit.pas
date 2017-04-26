@@ -27,6 +27,9 @@ type
     cxLabel17: TcxLabel;
     edAmbulance: TcxTextEdit;
     edMedicSP: TcxTextEdit;
+    cxLabel12: TcxLabel;
+    edPartnerMedical: TcxButtonEdit;
+    PartnerMedicalGuides: TdsdGuides;
   private
     { Private declarations }
   public

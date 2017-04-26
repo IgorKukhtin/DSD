@@ -41,9 +41,24 @@ BEGIN
                                    WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
                                      AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
                                   )
+                , tmpContract AS (SELECT tmpJuridical.JuridicalId
+                                       , ObjectLink_Contract_Juridical.ObjectId AS ContractId
+                                  FROM tmpJuridical
+                                       JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                                       ON ObjectLink_Contract_Juridical.ChildObjectId = tmpJuridical.JuridicalId
+                                                      AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical() 
+                                       JOIN Object AS Object_Contract
+                                                   ON Object_Contract.Id = ObjectLink_Contract_Juridical.ObjectId
+                                                  AND Object_Contract.isErased = false
+                                       LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
+                                                            ON ObjectLink_Contract_ContractStateKind.ObjectId = Object_Contract.Id
+                                                           AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind()
+                                                           AND ObjectLink_Contract_ContractStateKind.ChildObjectId = zc_Enum_ContractStateKind_Close()
+                                  WHERE ObjectLink_Contract_ContractStateKind.ChildObjectId IS NULL
+                                 )
                 , tmpDayInfo AS (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId              AS ContractId
                                       , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId AS ContractConditionKindId
-                                      , ObjectLink_Contract_Juridical.ChildObjectId                      AS JuridicalId
+                                      , tmpContract.JuridicalId
                                       , zfCalc_DetermentPaymentDate (ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId
                                                                    , MIN (ObjectFloat_ContractCondition_Value.ValueData)::Integer
                                                                    , CURRENT_DATE)::Date AS ContractDate
@@ -60,18 +75,12 @@ BEGIN
                                                       AND ObjectFloat_ContractCondition_Value.ValueData <> 0.0
                                       JOIN Object AS Object_ContractCondition
                                                   ON Object_ContractCondition.Id = ObjectLink_ContractCondition_Contract.ObjectId
-                                                 AND NOT Object_ContractCondition.isErased 
-                                      JOIN Object AS Object_Contract
-                                                  ON Object_Contract.Id = ObjectLink_ContractCondition_Contract.ChildObjectId
-                                                 AND NOT Object_Contract.isErased 
-                                      JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                                      ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_ContractCondition_Contract.ChildObjectId
-                                                     AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical() 
-                                      JOIN tmpJuridical ON tmpJuridical.JuridicalId = ObjectLink_Contract_Juridical.ChildObjectId
+                                                 AND Object_ContractCondition.isErased = false
+                                      JOIN tmpContract ON tmpContract.ContractId = ObjectLink_ContractCondition_Contract.ChildObjectId
                                  WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
                                  GROUP BY ObjectLink_ContractCondition_Contract.ChildObjectId
                                         , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId
-                                        , ObjectLink_Contract_Juridical.ChildObjectId
+                                        , tmpContract.JuridicalId
                                 )
                 , tmpContainer AS (SELECT Container_Summ.Id      AS ContainerId
                                         , CLO_Juridical.ObjectId AS JuridicalId
@@ -86,10 +95,11 @@ BEGIN
                                         JOIN ContainerLinkObject AS CLO_Juridical
                                                                  ON CLO_Juridical.ContainerId = Container_Summ.Id
                                                                 AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                                        JOIN tmpJuridical ON tmpJuridical.JuridicalId = CLO_Juridical.ObjectId
                                         JOIN ContainerLinkObject AS CLO_Contract
                                                                  ON CLO_Contract.ContainerId = Container_Summ.Id
                                                                 AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
+                                        JOIN tmpContract ON tmpContract.JuridicalId = CLO_Juridical.ObjectId
+                                                        AND tmpContract.ContractId = CLO_Contract.ObjectId
                                         JOIN ContainerLinkObject AS CLO_PaidKind
                                                                  ON CLO_PaidKind.ContainerId = Container_Summ.Id
                                                                 AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind() 
@@ -125,18 +135,15 @@ BEGIN
                   , ObjectString_Juridical_GUID.ValueData   AS GUID
                   , COALESCE (tmpDebt.DebtSum, 0.0)::TFloat AS DebtSum
                   , COALESCE (tmpDebt.OverSum, 0.0)::TFloat AS OverSum
-                  , COALESCE (tmpDebt.OverDays, 0)::Integer AS OverDays
-                  , ObjectLink_Contract_Juridical.ObjectId  AS ContractId
+                  , CASE WHEN COALESCE (tmpDebt.OverSum, 0.0) > 0.0 THEN COALESCE (tmpDebt.OverDays, 0)::Integer ELSE 0::Integer END AS OverDays
+                  , tmpContract.ContractId
                   , ObjectLink_Juridical_JuridicalGroup.ChildObjectId AS JuridicalGroupId
                   , Object_Juridical.isErased
                   , CAST(true AS Boolean) AS isSync
              FROM Object AS Object_Juridical
-                  JOIN tmpJuridical ON tmpJuridical.JuridicalId = Object_Juridical.Id 
-                  JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                  ON ObjectLink_Contract_Juridical.ChildObjectId = Object_Juridical.Id
-                                 AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                  JOIN tmpContract ON tmpContract.JuridicalId = Object_Juridical.Id 
                   LEFT JOIN tmpDebt ON tmpDebt.JuridicalId = Object_Juridical.Id
-                                   AND tmpDebt.ContractId = ObjectLink_Contract_Juridical.ObjectId
+                                   AND tmpDebt.ContractId = tmpContract.ContractId
                   LEFT JOIN ObjectString AS ObjectString_Juridical_GUID
                                          ON ObjectString_Juridical_GUID.ObjectId = Object_Juridical.Id
                                         AND ObjectString_Juridical_GUID.DescId = zc_ObjectString_Juridical_GUID()
@@ -144,7 +151,7 @@ BEGIN
                                        ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                                       AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
              WHERE Object_Juridical.DescId = zc_Object_Juridical()
-               AND NOT Object_Juridical.isErased;
+               AND Object_Juridical.isErased = false;
       END IF;
 
 END; 

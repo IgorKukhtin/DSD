@@ -22,6 +22,9 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPersonalId Integer;
 BEGIN
+      -- !!! ВРЕМЕННО будем выгружать все
+      inSyncDateIn:= zc_DateStart();
+
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
