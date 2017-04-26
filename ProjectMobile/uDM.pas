@@ -804,6 +804,7 @@ var
   x, y : integer;
   GetStoredProc : TdsdStoredProc;
   Mapping : array of array[1..2] of integer;
+  OldLogin: string;
 begin
   GetStoredProc := TdsdStoredProc.Create(nil);
   try
@@ -814,6 +815,7 @@ begin
       GetStoredProc.Execute(false, false, false);
 
       DM.tblObject_Const.First;
+      OldLogin := DM.tblObject_ConstUserLogin.AsString;
       while not DM.tblObject_Const.Eof do
         DM.tblObject_Const.Delete;
 
@@ -835,9 +837,12 @@ begin
       for x := 0 to Length(Mapping) - 1 do
         DM.tblObject_Const.Fields[ Mapping[x][1] ].Value := GetStoredProc.DataSet.Fields[ Mapping[x][2] ].Value;
 
-      DM.tblObject_Const.FieldByName('SYNCDATEIN').AsDateTime := Now();
+      DM.tblObject_ConstSyncDateIn.AsDateTime := Now();
 
       DM.tblObject_Const.Post;
+
+      if not SameText(OldLogin, DM.tblObject_ConstUserLogin.AsString) then
+        SyncDataIn := varNull;
     except
       on E : Exception do
       begin
@@ -1744,6 +1749,45 @@ begin
     ProgressThread.FreeOnTerminate := true;
     ProgressThread.Start;
 
+    { загрузка данных в центр }
+    if UploadData then
+    begin
+      try
+        SetNewProgressTask('Сохранение остатков');
+        UploadStoreReal;
+
+        SetNewProgressTask('Сохранение заявок');
+        UploadOrderExternal;
+
+        SetNewProgressTask('Сохранение возвратов');
+        UploadReturnIn;
+
+        SetNewProgressTask('Сохранение заданий');
+        UploadTasks;
+
+        SetNewProgressTask('Сохранение новых ТТ');
+        UploadNewPartners;
+
+        SetNewProgressTask('Сохранение координат ТТ');
+        UploadPartnerGPS;
+
+        SetNewProgressTask('Сохранение маршрута');
+        UploadRouteMember;
+
+        SetNewProgressTask('Сохранение фотографий');
+        UploadPhotos;
+
+        DM.tblObject_Const.Edit;
+        DM.tblObject_ConstSyncDateOut.AsDateTime := Now();
+        DM.tblObject_Const.Post;
+      except
+        on E : Exception do
+        begin
+          Res := E.Message;
+        end;
+      end;
+    end;
+
     { получение данных из центра }
     if LoadData then
     begin
@@ -1813,45 +1857,6 @@ begin
           DM.conMain.TxOptions.AutoCommit := true;
           Res := E.Message;
           exit;
-        end;
-      end;
-    end;
-
-    { загрузка данных в центр }
-    if UploadData then
-    begin
-      try
-        SetNewProgressTask('Сохранение остатков');
-        UploadStoreReal;
-
-        SetNewProgressTask('Сохранение заявок');
-        UploadOrderExternal;
-
-        SetNewProgressTask('Сохранение возвратов');
-        UploadReturnIn;
-
-        SetNewProgressTask('Сохранение заданий');
-        UploadTasks;
-
-        SetNewProgressTask('Сохранение новых ТТ');
-        UploadNewPartners;
-
-        SetNewProgressTask('Сохранение координат ТТ');
-        UploadPartnerGPS;
-
-        SetNewProgressTask('Сохранение маршрута');
-        UploadRouteMember;
-
-        SetNewProgressTask('Сохранение фотографий');
-        UploadPhotos;
-
-        DM.tblObject_Const.Edit;
-        DM.tblObject_ConstSyncDateOut.AsDateTime := Now();
-        DM.tblObject_Const.Post;
-      except
-        on E : Exception do
-        begin
-          Res := E.Message;
         end;
       end;
     end;
