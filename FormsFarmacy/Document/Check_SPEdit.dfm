@@ -3,8 +3,8 @@ object Check_SPEditForm: TCheck_SPEditForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1055
-  ClientHeight = 197
-  ClientWidth = 338
+  ClientHeight = 253
+  ClientWidth = 323
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object Check_SPEditForm: TCheck_SPEditForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 41
-    Top = 164
+    Left = 45
+    Top = 218
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Check_SPEditForm: TCheck_SPEditForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 202
-    Top = 164
+    Left = 206
+    Top = 218
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -85,9 +85,26 @@ object Check_SPEditForm: TCheck_SPEditForm
     TabOrder = 9
     Width = 160
   end
+  object cxLabel12: TcxLabel
+    Left = 34
+    Top = 163
+    Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076'.('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
+  end
+  object edPartnerMedical: TcxButtonEdit
+    Left = 34
+    Top = 182
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 250
+  end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 287
-    Top = 129
+    Left = 263
+    Top = 113
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -135,13 +152,59 @@ object Check_SPEditForm: TCheck_SPEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerMedicalId'
+        Value = Null
+        Component = PartnerMedicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerMedicalName'
+        Value = Null
+        Component = PartnerMedicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 39
     Top = 65
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deOperDateSP
-    Left = 144
-    Top = 139
+    Left = 96
+    Top = 67
+  end
+  object PartnerMedicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartnerMedical
+    FormNameParam.Value = 'TPartnerMedicalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartnerMedicalForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PartnerMedicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PartnerMedicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 176
+    Top = 176
   end
 end
