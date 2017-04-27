@@ -54,7 +54,8 @@ BEGIN
                GROUP BY ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId
               );
            
-           IF inSyncDateIn > zc_DateStart()
+           -- Убрал, есть ошибка у одного торгового - пусть выгружется ВСЕ
+           IF 1 = 0 -- inSyncDateIn > zc_DateStart()
            THEN
                 RETURN QUERY
                   WITH tmpProtocol AS (SELECT ObjectProtocol.ObjectId AS GoodsKindId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
@@ -79,11 +80,15 @@ BEGIN
                        , Object_GoodsKind.ObjectCode
                        , Object_GoodsKind.ValueData 
                        , Object_GoodsKind.isErased
-                       , CAST(true AS Boolean) AS isSync
+                       , TRUE AS isSync
                   FROM Object AS Object_GoodsKind
-                  WHERE Object_GoodsKind.DescId = zc_Object_GoodsKind()
-                    AND EXISTS(SELECT 1 FROM tmpGoodsKind WHERE tmpGoodsKind.GoodsKindId = Object_GoodsKind.Id);
+                  WHERE Object_GoodsKind.DescId   = zc_Object_GoodsKind()
+                    AND Object_GoodsKind.isErased = FALSE
+                    AND EXISTS(SELECT 1 FROM tmpGoodsKind WHERE tmpGoodsKind.GoodsKindId = Object_GoodsKind.Id)
+                 ;
+                 
            END IF;
+           
       END IF;
 
 END; 

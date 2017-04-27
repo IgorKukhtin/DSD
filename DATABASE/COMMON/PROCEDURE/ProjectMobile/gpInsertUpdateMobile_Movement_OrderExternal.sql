@@ -92,7 +92,7 @@ BEGIN
       END IF;
 
       vbId:= lpInsertUpdate_Movement_OrderExternal (ioId              := vbId
-                                                  , inInvNumber       := inInvNumber
+                                                  , inInvNumber       := (zfConvert_StringToNumber (inInvNumber) + lfGet_User_BillNumberMobile (vbUserId)) :: TVarChar
                                                   , inInvNumberPartner:= COALESCE ((SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = vbId AND MS.DescId = zc_MovementString_InvNumberPartner()), '')
                                                   , inOperDate        := inOperDate
                                                   , inOperDatePartner := vbOperDatePartner

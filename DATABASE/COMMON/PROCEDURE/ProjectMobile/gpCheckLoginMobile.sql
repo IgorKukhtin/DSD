@@ -57,6 +57,16 @@ BEGIN
                 PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_User_ProjectMobile(), vbUserId, TRUE);
             END IF;
 
+            -- если нет своей нумераци€ документов
+            IF NOT EXISTS (SELECT 1 FROM ObjectFloat WHERE ObjectFloat.DescId = zc_ObjectFloat_User_BillNumberMobile() AND ObjectFloat.ObjectId = vbUserId AND ObjectFloat.ValueData > 0)
+            THEN
+                -- теперь у этого пользовател€ - сво€ нумераци€ документов = найдем ћј —»ћ”ћ + 1 и умножим на 10 000
+                PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_User_BillNumberMobile(), vbUserId
+                                                  , (1 + COALESCE ((SELECT MAX (ObjectFloat.ValueData) / 10000 FROM ObjectFloat WHERE ObjectFloat.DescId = zc_ObjectFloat_User_BillNumberMobile()), 0))
+                                                    * 10000
+                                                   );
+            END IF;
+
         END IF;
 
     END IF;

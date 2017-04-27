@@ -102,7 +102,7 @@ BEGIN
 
            -- сохраняем возврат
            vbId:= lpInsertUpdate_Movement_ReturnIn (ioId                 := vbId               -- Ключ объекта <Документ Возврат покупателя>
-                                                  , inInvNumber          := inInvNumber        -- Номер документа
+                                                  , inInvNumber          := (zfConvert_StringToNumber (inInvNumber) + lfGet_User_BillNumberMobile (vbUserId)) :: TVarChar
                                                   , inInvNumberPartner   := vbInvNumberPartner -- Номер накладной у контрагента
                                                   , inInvNumberMark      := vbInvNumberMark    -- Номер "перекресленої зеленої марки зi складу"
                                                   , inParentId           := NULL

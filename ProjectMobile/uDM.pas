@@ -66,7 +66,6 @@ type
     procedure SetNewProgressTask(AName : string);
 
     procedure GetSyncDates;
-    procedure GetConfigurationInfo;
     procedure GetDictionaries(AName : string);
 
     procedure UploadStoreReal;
@@ -617,6 +616,7 @@ type
     { Private declarations }
     FConnected: Boolean;
     FDataBase: String;
+    FOldLogin: string;
 
     procedure InitStructure;
   public
@@ -632,6 +632,7 @@ type
     procedure CheckUpdate;
     procedure UpdateProgram(const AResult: TModalResult);
 
+    procedure GetConfigurationInfo;
     procedure SynchronizeWithMainDatabase(LoadData: boolean = true; UploadData: boolean = true);
 
     function SaveStoreReal(Comment: string; DelItems : string; Complete: boolean;
@@ -678,6 +679,7 @@ type
       GPSN, GPSE: Double; var ErrorMessage : string): boolean;
 
     property Connected: Boolean read FConnected;
+    property OldLogin: string read FOldLogin;
   end;
 
 var
@@ -788,69 +790,16 @@ begin
 
   if DM.tblObject_Const.RecordCount = 1 then
   begin
-    SyncDataIn := DM.tblObject_ConstSyncDateIn.AsDateTime;
+    if DM.OldLogin = DM.tblObject_ConstUserLogin.AsString then
+      SyncDataIn := DM.tblObject_ConstSyncDateIn.AsDateTime
+    else
+      SyncDataIn := varNull;
     SyncDataOut := DM.tblObject_ConstSyncDateOut.AsDateTime;
   end
   else
   begin
     SyncDataIn := varNull;
     SyncDataOut := varNull;
-  end;
-end;
-
-{ Загрузка с сервера констант и системной информации }
-procedure TSyncThread.GetConfigurationInfo;
-var
-  x, y : integer;
-  GetStoredProc : TdsdStoredProc;
-  Mapping : array of array[1..2] of integer;
-  OldLogin: string;
-begin
-  GetStoredProc := TdsdStoredProc.Create(nil);
-  try
-    GetStoredProc.StoredProcName := 'gpGetMobile_Object_Const';
-    GetStoredProc.OutputType := otDataSet;
-    GetStoredProc.DataSet := TClientDataSet.Create(nil);
-    try
-      GetStoredProc.Execute(false, false, false);
-
-      DM.tblObject_Const.First;
-      OldLogin := DM.tblObject_ConstUserLogin.AsString;
-      while not DM.tblObject_Const.Eof do
-        DM.tblObject_Const.Delete;
-
-      SetLength(Mapping, 0);
-      for x := 0 to DM.tblObject_Const.Fields.Count - 1 do
-        for y := 0 to GetStoredProc.DataSet.Fields.Count - 1 do
-          if CompareText(DM.tblObject_Const.Fields[x].FieldName, GetStoredProc.DataSet.Fields[y].FieldName) = 0 then
-          begin
-            SetLength(Mapping, Length(Mapping) + 1);
-
-            Mapping[Length(Mapping) - 1][1] := x;
-            Mapping[Length(Mapping) - 1][2] := y;
-
-            break;
-          end;
-
-      DM.tblObject_Const.Append;
-
-      for x := 0 to Length(Mapping) - 1 do
-        DM.tblObject_Const.Fields[ Mapping[x][1] ].Value := GetStoredProc.DataSet.Fields[ Mapping[x][2] ].Value;
-
-      DM.tblObject_ConstSyncDateIn.AsDateTime := Now();
-
-      DM.tblObject_Const.Post;
-
-      if not SameText(OldLogin, DM.tblObject_ConstUserLogin.AsString) then
-        SyncDataIn := varNull;
-    except
-      on E : Exception do
-      begin
-        raise Exception.Create(E.Message);
-      end;
-    end;
-  finally
-    FreeAndNil(GetStoredProc);
   end;
 end;
 
@@ -1796,9 +1745,6 @@ begin
       DM.conMain.TxOptions.AutoCommit := false;
       DM.conMain.StartTransaction;
       try
-        SetNewProgressTask('Загрузка констант');
-        Synchronize(GetConfigurationInfo);
-
         SetNewProgressTask('Загрузка справочника ТТ');
         GetDictionaries('Partner');
 
@@ -1847,6 +1793,10 @@ begin
         SetNewProgressTask('Загрузка заданий');
         GetDictionaries('MovementTask');
         GetDictionaries('MovementItemTask');
+
+        DM.tblObject_Const.Edit;
+        DM.tblObject_ConstSyncDateIn.AsDateTime := Now();
+        DM.tblObject_Const.Post;
 
         DM.conMain.Commit;
         DM.conMain.TxOptions.AutoCommit := true;
@@ -2689,6 +2639,63 @@ begin
     WaitThread.FreeOnTerminate := true;
     WaitThread.TaskName := 'UpdateProgram';
     WaitThread.Start;
+  end;
+end;
+
+{ Загрузка с сервера констант и системной информации }
+procedure TDM.GetConfigurationInfo;
+var
+  x, y : integer;
+  GetStoredProc : TdsdStoredProc;
+  Mapping : array of array[1..2] of integer;
+  OldSyncDateIn, OldSyncDateOut: TDateTime;
+begin
+  GetStoredProc := TdsdStoredProc.Create(nil);
+  try
+    GetStoredProc.StoredProcName := 'gpGetMobile_Object_Const';
+    GetStoredProc.OutputType := otDataSet;
+    GetStoredProc.DataSet := TClientDataSet.Create(nil);
+    try
+      GetStoredProc.Execute(false, false, false);
+
+      tblObject_Const.First;
+      FOldLogin := tblObject_ConstUserLogin.AsString;
+      OldSyncDateIn := tblObject_ConstSyncDateIn.AsDateTime;
+      OldSyncDateOut := tblObject_ConstSyncDateOut.AsDateTime;
+
+      while not tblObject_Const.Eof do
+        tblObject_Const.Delete;
+
+      SetLength(Mapping, 0);
+      for x := 0 to tblObject_Const.Fields.Count - 1 do
+        for y := 0 to GetStoredProc.DataSet.Fields.Count - 1 do
+          if CompareText(tblObject_Const.Fields[x].FieldName, GetStoredProc.DataSet.Fields[y].FieldName) = 0 then
+          begin
+            SetLength(Mapping, Length(Mapping) + 1);
+
+            Mapping[Length(Mapping) - 1][1] := x;
+            Mapping[Length(Mapping) - 1][2] := y;
+
+            break;
+          end;
+
+      tblObject_Const.Append;
+
+      for x := 0 to Length(Mapping) - 1 do
+        tblObject_Const.Fields[ Mapping[x][1] ].Value := GetStoredProc.DataSet.Fields[ Mapping[x][2] ].Value;
+
+      tblObject_ConstSyncDateIn.AsDateTime := OldSyncDateIn;
+      tblObject_ConstSyncDateOut.AsDateTime := OldSyncDateOut;
+
+      tblObject_Const.Post;
+    except
+      on E : Exception do
+      begin
+        raise Exception.Create(E.Message);
+      end;
+    end;
+  finally
+    FreeAndNil(GetStoredProc);
   end;
 end;
 

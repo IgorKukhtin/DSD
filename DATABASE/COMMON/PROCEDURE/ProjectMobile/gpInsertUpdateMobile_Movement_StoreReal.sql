@@ -1,7 +1,5 @@
 -- Function: gpInsertUpdateMobile_Movement_StoreReal()
 
-DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Movement_StoreReal (TVarChar, TVarChar, TDateTime, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Movement_StoreReal (TVarChar, TVarChar, TDateTime, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Movement_StoreReal (TVarChar, TVarChar, TDateTime, Integer, TVarChar, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_Movement_StoreReal (
@@ -44,12 +42,12 @@ BEGIN
            PERFORM gpUnComplete_Movement_StoreReal (inMovementId:= vbId, inSession:= inSession);
       END IF;
 
-      vbId:= lpInsertUpdate_Movement_StoreReal (ioId:= vbId
-                                              , inInvNumber:= inInvNumber
-                                              , inOperDate:= inOperDate
-                                              , inUserId:= vbUserId
-                                              , inPartnerId:= inPartnerId
-                                              , inComment:= inComment 
+      vbId:= lpInsertUpdate_Movement_StoreReal (ioId        := vbId
+                                              , inInvNumber := (zfConvert_StringToNumber (inInvNumber) + lfGet_User_BillNumberMobile (vbUserId)) :: TVarChar
+                                              , inOperDate  := inOperDate
+                                              , inUserId    := vbUserId
+                                              , inPartnerId := inPartnerId
+                                              , inComment   := inComment 
                                                );
 
       -- сохранили свойство <Дата/время создания на мобильном устройстве>
