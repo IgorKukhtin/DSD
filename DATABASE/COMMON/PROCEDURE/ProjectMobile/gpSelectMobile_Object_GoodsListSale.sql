@@ -77,9 +77,26 @@ BEGIN
                                                             ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
                                                            AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
                                                            AND ObjectLink_GoodsListSale_Goods.ChildObjectId > 0
-                                            LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_GoodsKind
-                                                                 ON ObjectLink_GoodsListSale_GoodsKind.ObjectId = Object_GoodsListSale.Id
-                                                                AND ObjectLink_GoodsListSale_GoodsKind.DescId = zc_ObjectLink_GoodsListSale_GoodsKind()
+                                            -- Ограничим - есть Вид товара
+                                            INNER JOIN ObjectLink AS ObjectLink_GoodsListSale_GoodsKind
+                                                                  ON ObjectLink_GoodsListSale_GoodsKind.ObjectId = Object_GoodsListSale.Id
+                                                                 AND ObjectLink_GoodsListSale_GoodsKind.DescId = zc_ObjectLink_GoodsListSale_GoodsKind()
+                                                                 AND ObjectLink_GoodsListSale_GoodsKind.ChildObjectId > 0
+                                            -- Ограничим - если НЕ удален
+                                            JOIN Object AS Object_Goods ON Object_Goods.Id       = ObjectLink_GoodsListSale_Goods.ChildObjectId
+                                                                       AND Object_Goods.isErased = FALSE
+                                            -- Ограничим - если НЕ удален
+                                            JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id       = ObjectLink_GoodsListSale_GoodsKind.ChildObjectId
+                                                                           AND Object_GoodsKind.isErased = FALSE
+                                            -- Ограничим - ТОЛЬКО если ГП
+                                            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                                 ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_GoodsListSale_Goods.ChildObjectId
+                                                                AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                                            INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                                            AND Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
+                                                                                                                               , zc_Enum_InfoMoneyDestination_21000() -- Общефирменные + Чапли
+                                                                                                                               , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                                                                                                )
                                        GROUP BY ObjectLink_GoodsListSale_Goods.ChildObjectId
                                               , COALESCE (ObjectLink_GoodsListSale_GoodsKind.ChildObjectId, 0)
                                               , ObjectLink_GoodsListSale_Partner.ChildObjectId

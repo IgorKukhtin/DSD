@@ -48,10 +48,26 @@ BEGIN
                                                              ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId = Object_GoodsByGoodsKind.Id
                                                             AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
                                                             AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId > 0
+                                             -- Ограничим - есть Вид товара
                                              JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
                                                              ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = Object_GoodsByGoodsKind.Id
                                                             AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
                                                             AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId > 0
+                                             -- Ограничим - если НЕ удален
+                                             JOIN Object AS Object_Goods ON Object_Goods.Id       = ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId
+                                                                        AND Object_Goods.isErased = FALSE
+                                             -- Ограничим - если НЕ удален
+                                             JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id       = ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId
+                                                                            AND Object_GoodsKind.isErased = FALSE
+                                             -- Ограничим - ТОЛЬКО если ГП
+                                             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                                  ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId
+                                                                 AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                                             INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                                             AND Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
+                                                                                                                                , zc_Enum_InfoMoneyDestination_21000() -- Общефирменные + Чапли
+                                                                                                                                , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                                                                                                 )
                                         WHERE Object_GoodsByGoodsKind.DescId = zc_Object_GoodsByGoodsKind()
                                        )
                   -- сгруппировали Товар
