@@ -1750,7 +1750,7 @@ begin
     ProgressThread.Start;
 
     { загрузка данных в центр }
-    if UploadData then
+    if UploadData and (DM.tblObject_Const.RecordCount > 0) then
     begin
       try
         SetNewProgressTask('Сохранение остатков');
