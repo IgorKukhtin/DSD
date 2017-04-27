@@ -27,15 +27,12 @@ object SendForm: TSendForm
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 81
-    ExplicitHeight = 385
     ClientRectBottom = 351
     ClientRectRight = 811
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 361
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -43,7 +40,6 @@ object SendForm: TSendForm
         Height = 327
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 361
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -358,7 +354,6 @@ object SendForm: TSendForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 5
-    ExplicitWidth = 793
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -649,7 +644,6 @@ object SendForm: TSendForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
-      Visible = ivNever
     end
     object bbGridToExel: TdxBarButton
       Action = GridToExcel
@@ -902,8 +896,8 @@ object SendForm: TSendForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Income'
-      ReportNameParam.Value = 'PrintMovement_Income'
+      ReportName = 'PrintMovement_Send'
+      ReportNameParam.Value = 'PrintMovement_Send'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end

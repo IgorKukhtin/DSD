@@ -549,8 +549,8 @@ object SendJournalForm: TSendJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_ReturnOut'
-      ReportNameParam.Value = 'PrintMovement_ReturnOut'
+      ReportName = 'PrintMovement_Send'
+      ReportNameParam.Value = 'PrintMovement_Send'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
