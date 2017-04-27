@@ -180,7 +180,9 @@ uses
   LoadBoutiqueReportTest in '..\SOURCEBoutique\LoadBoutiqueReportTest.pas',
   PartionGoodsChoice in '..\..\FormsBoutique\Guides\PartionGoodsChoice.pas' {PartionGoodsChoiceForm: TParentForm},
   LossJournal in '..\..\FormsBoutique\Document\LossJournal.pas' {LossJournalForm: TParentForm},
-  Loss in '..\..\FormsBoutique\Document\Loss.pas' {LossForm: TParentForm};
+  Loss in '..\..\FormsBoutique\Document\Loss.pas' {LossForm: TParentForm},
+  CurrencyJournal in '..\..\FormsBoutique\Document\CurrencyJournal.pas' {CurrencyJournalForm: TParentForm},
+  CurrencyMovement in '..\..\FormsBoutique\Document\CurrencyMovement.pas' {CurrencyMovementForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

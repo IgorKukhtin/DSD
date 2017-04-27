@@ -444,6 +444,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actCurrencyMovement: TdsdOpenForm
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1050#1091#1088#1089#1086#1074#1072#1103' '#1088#1072#1079#1085#1080#1094#1072
+      Hint = #1050#1091#1088#1089#1086#1074#1072#1103' '#1088#1072#1079#1085#1080#1094#1072
+      FormName = 'TCurrencyJournalForm'
+      FormNameParam.Value = 'TCurrencyJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 152
@@ -490,6 +502,12 @@ inherited MainForm: TMainForm
       end
       object N48: TMenuItem
         Action = actLoss
+      end
+      object N50: TMenuItem
+        Caption = '-'
+      end
+      object N49: TMenuItem
+        Action = actCurrencyMovement
       end
     end
     inherited miGuides: TMenuItem
