@@ -2246,8 +2246,6 @@ begin
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inCurrencyDocumentId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inCurrencyPartnerId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inCurrencyValue',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inParValue',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inCurrencyPartnerValue',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inParPartnerValue',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
@@ -2267,8 +2265,6 @@ begin
              toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId').AsInteger;
              toStoredProc.Params.ParamByName('inCurrencyDocumentId').Value:=FieldByName('CurrencyDocumentId').AsInteger;
              toStoredProc.Params.ParamByName('inCurrencyPartnerId').Value:=FieldByName('CurrencyPartnerId').AsInteger;
-             toStoredProc.Params.ParamByName('inCurrencyValue').Value:=FieldByName('CurrencyValue').AsFloat;
-             toStoredProc.Params.ParamByName('inParValue').Value:=FieldByName('ParValue').AsFloat;
              toStoredProc.Params.ParamByName('inCurrencyPartnerValue').Value:=FieldByName('CurrencyPartnerValue').AsFloat;
              toStoredProc.Params.ParamByName('inParPartnerValue').Value:=FieldByName('ParPartnerValue').AsFloat;
              toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('Comments').AsString;
@@ -2356,8 +2352,6 @@ begin
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inCurrencyDocumentId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inCurrencyPartnerId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inCurrencyValue',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inParValue',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inCurrencyPartnerValue',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inParPartnerValue',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
@@ -2377,8 +2371,6 @@ begin
              toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId').AsInteger;
              toStoredProc.Params.ParamByName('inCurrencyDocumentId').Value:=FieldByName('CurrencyDocumentId').AsInteger;
              toStoredProc.Params.ParamByName('inCurrencyPartnerId').Value:=FieldByName('CurrencyPartnerId').AsInteger;
-             toStoredProc.Params.ParamByName('inCurrencyValue').Value:=FieldByName('CurrencyValue').AsFloat;
-             toStoredProc.Params.ParamByName('inParValue').Value:=FieldByName('ParValue').AsFloat;
              toStoredProc.Params.ParamByName('inCurrencyPartnerValue').Value:=FieldByName('CurrencyPartnerValue').AsFloat;
              toStoredProc.Params.ParamByName('inParPartnerValue').Value:=FieldByName('ParPartnerValue').AsFloat;
              toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('Comments').AsString;

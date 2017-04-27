@@ -480,6 +480,7 @@ begin
         end;
        if Assigned(B) then
           try
+           if DataSets[i].DataSet.BookmarkValid(B) then
             DataSets[i].DataSet.GotoBookmark(B);
           except
           end;
