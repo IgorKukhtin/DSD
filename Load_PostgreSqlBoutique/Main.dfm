@@ -646,6 +646,21 @@
           ParentFont = False
           TabOrder = 5
         end
+        object cbSend: TCheckBox
+          Tag = 20
+          Left = 6
+          Top = 82
+          Width = 235
+          Height = 17
+          Caption = '1.3. '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 6
+        end
       end
     end
     object TabSheet2: TTabSheet
