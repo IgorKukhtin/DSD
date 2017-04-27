@@ -343,4 +343,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_SupplyBalance(inStartDate := ('01.12.2016')::TDateTime , inEndDate := ('21.12.2016')::TDateTime , inUnitId := 8455 , inGoodsGroupId := 1917 ,  inSession := '5');
+-- SELECT * FROM gpReport_SupplyBalance(inStartDate := ('01.12.2016')::TDateTime , inEndDate := ('21.12.2016')::TDateTime , inUnitId := 8455 , inGoodsGroupId := 1917 ,  inJuridicalId:= 0, inSession := '5');
