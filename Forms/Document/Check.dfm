@@ -1276,7 +1276,8 @@ inherited CheckForm: TCheckForm
     Top = 261
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    Left = 422
+    Left = 406
+    Top = 240
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     Left = 536
@@ -1287,8 +1288,8 @@ inherited CheckForm: TCheckForm
     Top = 304
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Left = 508
-    Top = 236
+    Left = 500
+    Top = 260
   end
   object spUpdate_Movement_Check: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Check'

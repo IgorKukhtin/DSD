@@ -62,6 +62,7 @@ type
     procedure LoadCompositionGroupFormTest;
     procedure LoadCompositionFormTest;
     procedure LoadCountryBrandFormTest;
+    procedure LoadCurrencyMovementFormTest;
     procedure LoadBrandFormTest;
     procedure LoadFabrikaFormTest;
     procedure LoadLineFabricaFormTest;
@@ -264,6 +265,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCountryBrandForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountryBrandEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCountryBrandEditForm');
+end;
+
+ procedure TLoadFormTest.LoadCurrencyMovementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCurrencyMovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCurrencyJournalForm');
 end;
 
 procedure TLoadFormTest.LoadDiscountFormTest;

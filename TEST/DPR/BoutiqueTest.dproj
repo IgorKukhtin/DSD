@@ -574,7 +574,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCEBoutique\LoadBoutiqueReportTest.pas"/>
-                        <DCCReference Include="..\..\FormsBoutique\Guides\PartionGoodsChoice.pas">
+			<DCCReference Include="..\..\FormsBoutique\Guides\PartionGoodsChoice.pas">
 				<Form>PartionGoodsChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -584,6 +584,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Document\Loss.pas">
 				<Form>LossForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Document\CurrencyJournal.pas">
+				<Form>CurrencyJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Document\CurrencyMovement.pas">
+				<Form>CurrencyMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
