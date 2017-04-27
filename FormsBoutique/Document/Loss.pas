@@ -113,13 +113,22 @@ type
     edOperDate: TcxDateEdit;
     cxLabel2: TcxLabel;
     edTo: TcxButtonEdit;
-    edFrrom: TcxButtonEdit;
+    edFrom: TcxButtonEdit;
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
     cxLabel11: TcxLabel;
     ceStatus: TcxButtonEdit;
     InsertRecord: TInsertRecord;
     actGoodsChoiceForm: TOpenChoiceForm;
+    cxLabel14: TcxLabel;
+    edCurrencyDocument: TcxButtonEdit;
+    cxLabel12: TcxLabel;
+    edCurrencyValue: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
+    ceParValue: TcxCurrencyEdit;
+    CurrencyDocumentGuides: TdsdGuides;
+    cxLabel16: TcxLabel;
+    ceComment: TcxTextEdit;
   private
   public
   end;

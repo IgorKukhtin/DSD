@@ -1,6 +1,9 @@
 -- Function: gpInsertUpdate_Movement_Income()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income 
+                       (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income
+                       (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
@@ -10,14 +13,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
     IN inToId                 Integer   , -- Кому (в документе)
     IN inCurrencyDocumentId   Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId    Integer   , -- Валюта (контрагента)
-    IN inCurrencyValue        TFloat    , -- курс валюты
-    IN inParValue             TFloat    , -- Номинал для перевода в валюту баланса
+   OUT outCurrencyValue       TFloat    , -- курс валюты
+   OUT outParValue            TFloat    , -- Номинал для перевода в валюту баланса
     IN inCurrencyPartnerValue TFloat    , -- Курс для расчета суммы операции
     IN inParPartnerValue      TFloat    , -- Номинал для расчета суммы операции
     IN inComment              TVarChar  , -- Примечание
     IN inSession              TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -27,6 +30,8 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Income());
 
+     outCurrencyValue := 1;
+     outParValue := 0;
      
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_Income (ioId                := ioId
@@ -36,8 +41,8 @@ BEGIN
                                            , inToId              := inToId
                                            , inCurrencyDocumentId:= inCurrencyDocumentId
                                            , inCurrencyPartnerId := inCurrencyPartnerId
-                                           , inCurrencyValue     := inCurrencyValue
-                                           , inParValue          := inParValue
+                                           , inCurrencyValue     := outCurrencyValue
+                                           , inParValue          := outParValue
                                            , inCurrencyPartnerValue := inCurrencyPartnerValue
                                            , inParPartnerValue   := inParPartnerValue
                                            , inComment           := inComment

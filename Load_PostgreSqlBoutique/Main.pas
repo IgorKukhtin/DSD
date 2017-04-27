@@ -119,6 +119,7 @@ type
     ñbNotVisibleCursor: TCheckBox;
     cbJuridical: TCheckBox;
     cbReturnOut: TCheckBox;
+    cbSend: TCheckBox;
 
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
@@ -211,6 +212,10 @@ type
     procedure pLoadDocumentItem_Income(SaveCount:Integer);
     function  pLoadDocument_ReturnOut:Integer;
     procedure pLoadDocumentItem_ReturnOut(SaveCount:Integer);
+    function  pLoadDocument_Send:Integer;
+    procedure pLoadDocumentItem_Send(SaveCount:Integer);
+
+
 // Load from files *.dat
     procedure pLoad_Chado;
 
@@ -1794,6 +1799,8 @@ begin
      if not fStop then pLoadDocumentItem_Income(myRecordCount1);
      if not fStop then myRecordCount1:=pLoadDocument_ReturnOut;
      if not fStop then pLoadDocumentItem_ReturnOut(myRecordCount1);
+     if not fStop then myRecordCount1:=pLoadDocument_Send;
+     if not fStop then pLoadDocumentItem_Send(myRecordCount1);
 
 
      //
@@ -2184,6 +2191,84 @@ begin
      myDisabledCB(cbReturnOut);
 end;
 
+procedure TMainForm.pLoadDocumentItem_Send(SaveCount: Integer);
+begin
+      if (not cbSend.Checked)or(not cbSend.Enabled) then exit;
+     //
+     myEnabledCB(cbSend);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add(' select BillItems.Id as ObjectId  ');
+        Add('     , Bill.Id_Postgres as MovementId  ');
+        Add('     , BillItemsIncome.GoodsId_Postgres as GoodsId  ');
+        Add('     , BillItems.Id as SybaseId  ');
+        Add('     , Goods.GoodsName as GoodsName ');
+        Add('     , BillItemsIncome.Id_Postgres as PartionId ');
+        Add('     , BillItems.OperCount as Amount  ');
+        Add('     , BillItems.OperPrice as OperPrice  ');
+        Add('     , BillItems.PriceListPrice as OperPriceList  ');
+        Add('     , BillItems.Id_Postgres as Id_Postgres  ');
+        Add(' from dba.BillItems   ');
+        Add('     join dba.Bill on BillItems.BillID = Bill.Id ');
+        Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId  ');
+        Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId  ');
+        Add('     left join  DBA.BillItemsIncome on BillItemsIncome.Id = BillItems.BillItemsIncomeID ');
+        Add(' where  Bill.BillKind = 6 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add(' order by Bill.Id ');
+        Open;
+        Open;
+
+        cbSend.Caption:='1.3. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Ïåðåìåùåíèå';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_MovementItem_Send';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPartionId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inOperPriceList',ftFloat,ptInput, 0);
+        //
+        HideCurGrid(True);
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin HideCurGrid(False);  exit; end;
+
+              //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
+             toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
+             toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+             toStoredProc.Params.ParamByName('inOperPriceList').Value:=FieldByName('OperPriceList').AsFloat;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             if FieldByName('Id_Postgres').AsInteger=0 then
+               fExecSqFromQuery('update dba.BillItems set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        HideCurGrid(False);
+     end;
+     //
+     myDisabledCB(cbSend);
+end;
+
 function TMainForm.pLoadDocument_Income: Integer;
 begin
      Result:=0;
@@ -2246,8 +2331,6 @@ begin
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inCurrencyDocumentId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inCurrencyPartnerId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inCurrencyValue',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inParValue',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inCurrencyPartnerValue',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inParPartnerValue',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
@@ -2267,8 +2350,6 @@ begin
              toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId').AsInteger;
              toStoredProc.Params.ParamByName('inCurrencyDocumentId').Value:=FieldByName('CurrencyDocumentId').AsInteger;
              toStoredProc.Params.ParamByName('inCurrencyPartnerId').Value:=FieldByName('CurrencyPartnerId').AsInteger;
-             toStoredProc.Params.ParamByName('inCurrencyValue').Value:=FieldByName('CurrencyValue').AsFloat;
-             toStoredProc.Params.ParamByName('inParValue').Value:=FieldByName('ParValue').AsFloat;
              toStoredProc.Params.ParamByName('inCurrencyPartnerValue').Value:=FieldByName('CurrencyPartnerValue').AsFloat;
              toStoredProc.Params.ParamByName('inParPartnerValue').Value:=FieldByName('ParPartnerValue').AsFloat;
              toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('Comments').AsString;
@@ -2356,8 +2437,6 @@ begin
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inCurrencyDocumentId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inCurrencyPartnerId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inCurrencyValue',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inParValue',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inCurrencyPartnerValue',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inParPartnerValue',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
@@ -2377,8 +2456,6 @@ begin
              toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId').AsInteger;
              toStoredProc.Params.ParamByName('inCurrencyDocumentId').Value:=FieldByName('CurrencyDocumentId').AsInteger;
              toStoredProc.Params.ParamByName('inCurrencyPartnerId').Value:=FieldByName('CurrencyPartnerId').AsInteger;
-             toStoredProc.Params.ParamByName('inCurrencyValue').Value:=FieldByName('CurrencyValue').AsFloat;
-             toStoredProc.Params.ParamByName('inParValue').Value:=FieldByName('ParValue').AsFloat;
              toStoredProc.Params.ParamByName('inCurrencyPartnerValue').Value:=FieldByName('CurrencyPartnerValue').AsFloat;
              toStoredProc.Params.ParamByName('inParPartnerValue').Value:=FieldByName('ParPartnerValue').AsFloat;
              toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('Comments').AsString;
@@ -2398,6 +2475,90 @@ begin
      end;
      //
      myDisabledCB(cbReturnOut);
+
+end;
+
+function TMainForm.pLoadDocument_Send: Integer;
+begin
+      Result:=0;
+     //
+     if (not cbSend.Checked)or(not cbSend.Enabled) then exit;
+     //
+     myEnabledCB(cbSend);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add(' select Bill.Id as ObjectId ');
+        Add('     , Bill.BillNumber as InvNumber ');
+        Add('     , Bill.BillDate as OperDate ');
+        Add('     , Bill_From.Id_Postgres as FromId  ');
+        Add('     , Bill_From.UnitName as UnitNameFrom ');
+        Add('     , Bill_To.Id_Postgres as ToId ');
+        Add('     , Bill_To.UnitName as UnitNameTo ');
+        Add('     , '''' as Comments ');
+        Add('     , Bill.Id_Postgres ');
+        Add(' from DBA.Bill ');
+        Add('     left join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
+        Add('     left join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
+        Add(' where  Bill.BillKind = 6 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add(' order by ObjectId ');
+        Open;
+        Open;
+
+        Result:=RecordCount;
+        cbSend.Caption:='1.3. ('+IntToStr(RecordCount)+') Ïåðåìåùåíèå';
+        //
+        //
+        //
+        //
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Movement_Send';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
+        //
+        HideCurGrid(True);
+        while not EOF do
+        begin
+             //!!!
+            if fStop then begin HideCurGrid(False);  exit; end;
+             //
+
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString;
+             toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
+             toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
+             toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId').AsInteger;
+             toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('Comments').AsString;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             if FieldByName('Id_Postgres').AsInteger=0 then
+               fExecSqFromQuery('update dba.Bill set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        HideCurGrid(False);
+     end;
+     //
+     myDisabledCB(cbSend);
 
 end;
 

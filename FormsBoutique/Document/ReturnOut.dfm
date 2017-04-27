@@ -743,7 +743,6 @@ object ReturnOutForm: TReturnOutForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
-      Visible = ivNever
     end
     object bbGridToExel: TdxBarButton
       Action = GridToExcel
@@ -994,8 +993,8 @@ object ReturnOutForm: TReturnOutForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Income'
-      ReportNameParam.Value = 'PrintMovement_Income'
+      ReportName = 'PrintMovement_ReturnOut'
+      ReportNameParam.Value = 'PrintMovement_ReturnOut'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
@@ -1524,19 +1523,17 @@ object ReturnOutForm: TReturnOutForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCurrencyValue'
+        Name = 'outCurrencyValue'
         Value = 0.000000000000000000
         Component = edCurrencyValue
         DataType = ftFloat
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inParValue'
+        Name = 'outParValue'
         Value = Null
         Component = ceParValue
         DataType = ftFloat
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item

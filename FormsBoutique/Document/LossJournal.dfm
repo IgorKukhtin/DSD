@@ -246,9 +246,9 @@ object LossJournalForm: TLossJournalForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 92
       end
       object colTotalSummPriceList: TcxGridDBColumn
@@ -257,10 +257,42 @@ object LossJournalForm: TLossJournalForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 78
+      end
+      object colCurrencyValue: TcxGridDBColumn
+        Caption = #1050#1091#1088#1089' '#1074#1072#1083#1102#1090#1099
+        DataBinding.FieldName = 'CurrencyValue'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 78
+        Width = 40
+      end
+      object colParValue: TcxGridDBColumn
+        Caption = #1053#1086#1084#1080#1085#1072#1083
+        DataBinding.FieldName = 'ParValue'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object colCurrencyDocumentName: TcxGridDBColumn
+        Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1082')'
+        DataBinding.FieldName = 'CurrencyDocumentName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 52
+      end
+      object Comment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 228
       end
     end
     object cxGridLevel: TcxGridLevel

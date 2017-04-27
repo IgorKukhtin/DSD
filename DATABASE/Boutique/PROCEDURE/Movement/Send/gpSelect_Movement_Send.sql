@@ -10,8 +10,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Send(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , TotalCount TFloat
+             , TotalCount TFloat, TotalSummPriceList TFloat
              , FromName TVarChar, ToName TVarChar
+             , Comment TVarChar
              )
 AS
 $BODY$
@@ -36,9 +37,12 @@ BEGIN
            , Object_Status.ValueData                     AS StatusName
 
            , MovementFloat_TotalCount.ValueData          AS TotalCount
+           , MovementFloat_TotalSummPriceList.ValueData  AS TotalSummPriceList
         
            , Object_From.ValueData                       AS FromName
            , Object_To.ValueData                         AS ToName
+
+           , MovementString_Comment.ValueData            AS Comment
          
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -50,9 +54,17 @@ BEGIN
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
+            LEFT JOIN MovementString AS MovementString_Comment 
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId = Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPriceList
+                                    ON MovementFloat_TotalSummPriceList.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummPriceList.DescId = zc_MovementFloat_TotalSummPriceList()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id

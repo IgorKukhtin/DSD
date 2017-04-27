@@ -84,7 +84,7 @@ BEGIN
      IF inCompositionName <> ''
      THEN
          -- Поиск !!!без Группы!!!
-         vbCompositionId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Composition() AND UPPER (Object.ValueData) LIKE UPPER (inCompositionName));
+         vbCompositionId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Composition() AND UPPER (Object.ValueData) LIKE UPPER (inCompositionName) limit 1);   -- limit 1 так как ошибка  LIKE UPPER ('100%шерсть')
          --
          IF COALESCE (vbCompositionId,0) = 0
          THEN

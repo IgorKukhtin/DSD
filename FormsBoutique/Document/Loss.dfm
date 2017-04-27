@@ -3,7 +3,7 @@ object LossForm: TLossForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1087#1080#1089#1072#1085#1080#1077'>'
   ClientHeight = 466
-  ClientWidth = 811
+  ClientWidth = 759
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,28 +20,33 @@ object LossForm: TLossForm
   TextHeight = 13
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 81
-    Width = 811
-    Height = 385
+    Top = 115
+    Width = 759
+    Height = 351
     Align = alClient
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 385
-    ClientRectRight = 811
+    ExplicitTop = 81
+    ExplicitWidth = 811
+    ExplicitHeight = 385
+    ClientRectBottom = 351
+    ClientRectRight = 759
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 811
+      ExplicitHeight = 361
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 811
-        Height = 361
+        Width = 759
+        Height = 327
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = -3
-        ExplicitTop = 16
+        ExplicitWidth = 811
+        ExplicitHeight = 361
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -348,25 +353,26 @@ object LossForm: TLossForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 811
-    Height = 55
+    Width = 759
+    Height = 89
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 5
+    ExplicitWidth = 811
     object edInvNumber: TcxTextEdit
-      Left = 175
+      Left = 9
       Top = 23
       Properties.ReadOnly = True
       TabOrder = 0
       Width = 70
     end
     object cxLabel1: TcxLabel
-      Left = 175
+      Left = 9
       Top = 5
       Caption = #8470' '#1076#1086#1082'.'
     end
     object edOperDate: TcxDateEdit
-      Left = 253
+      Left = 87
       Top = 23
       EditValue = 42160d
       Properties.SaveTime = False
@@ -375,12 +381,12 @@ object LossForm: TLossForm
       Width = 82
     end
     object cxLabel2: TcxLabel
-      Left = 253
+      Left = 87
       Top = 5
       Caption = #1044#1072#1090#1072
     end
     object edTo: TcxButtonEdit
-      Left = 558
+      Left = 450
       Top = 23
       Properties.Buttons = <
         item
@@ -389,10 +395,10 @@ object LossForm: TLossForm
         end>
       Properties.ReadOnly = True
       TabOrder = 3
-      Width = 208
+      Width = 268
     end
-    object edFrrom: TcxButtonEdit
-      Left = 343
+    object edFrom: TcxButtonEdit
+      Left = 177
       Top = 23
       Properties.Buttons = <
         item
@@ -401,26 +407,26 @@ object LossForm: TLossForm
         end>
       Properties.ReadOnly = True
       TabOrder = 2
-      Width = 208
+      Width = 268
     end
     object cxLabel3: TcxLabel
-      Left = 343
+      Left = 177
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object cxLabel4: TcxLabel
-      Left = 558
+      Left = 450
       Top = 5
       Caption = #1050#1086#1084#1091
     end
     object cxLabel11: TcxLabel
       Left = 9
-      Top = 5
+      Top = 46
       Caption = #1057#1090#1072#1090#1091#1089
     end
     object ceStatus: TcxButtonEdit
       Left = 9
-      Top = 23
+      Top = 64
       Properties.Buttons = <
         item
           Action = CompleteMovement
@@ -438,7 +444,66 @@ object LossForm: TLossForm
       Properties.Images = dmMain.ImageList
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 157
+      Width = 160
+    end
+    object cxLabel14: TcxLabel
+      Left = 450
+      Top = 46
+      Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
+    end
+    object edCurrencyDocument: TcxButtonEdit
+      Left = 451
+      Top = 64
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Width = 110
+    end
+    object cxLabel12: TcxLabel
+      Left = 563
+      Top = 46
+      Caption = #1050#1091#1088#1089
+    end
+    object edCurrencyValue: TcxCurrencyEdit
+      Left = 564
+      Top = 64
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Properties.ReadOnly = True
+      TabOrder = 13
+      Width = 65
+    end
+    object cxLabel7: TcxLabel
+      Left = 633
+      Top = 46
+      Caption = #1053#1086#1084#1080#1085#1072#1083
+    end
+    object ceParValue: TcxCurrencyEdit
+      Left = 633
+      Top = 64
+      EditValue = 1.000000000000000000
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.'
+      Properties.ReadOnly = False
+      TabOrder = 15
+      Width = 85
+    end
+    object cxLabel16: TcxLabel
+      Left = 177
+      Top = 46
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object ceComment: TcxTextEdit
+      Left = 177
+      Top = 64
+      TabOrder = 17
+      Width = 268
     end
   end
   object FormParams: TdsdFormParams
@@ -1216,7 +1281,7 @@ object LossForm: TLossForm
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edFrrom
+    LookupControl = edFrom
     FormNameParam.Value = 'TUnitForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1241,8 +1306,8 @@ object LossForm: TLossForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 408
-    Top = 8
+    Left = 296
+    Top = 16
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -1296,6 +1361,49 @@ object LossForm: TLossForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioCountForPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountForPrice'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSumm'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPriceList'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPriceList'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountPriceListSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPriceListSumm'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -1376,6 +1484,36 @@ object LossForm: TLossForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyDocumentId'
+        Value = Null
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCurrencyValue'
+        Value = Null
+        Component = edCurrencyValue
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outParValue'
+        Value = Null
+        Component = ceParValue
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 402
@@ -1389,22 +1527,31 @@ object LossForm: TLossForm
     StoredProc = spInsertUpdateMovement
     ControlList = <
       item
+        Control = ceComment
       end
       item
+        Control = ceParValue
       end
       item
+        Control = ceStatus
       end
       item
+        Control = edCurrencyDocument
       end
       item
+        Control = edCurrencyValue
       end
       item
+        Control = edFrom
       end
       item
+        Control = edTo
       end
       item
+        Control = edInvNumber
       end
       item
+        Control = edOperDate
       end
       item
       end
@@ -1503,6 +1650,42 @@ object LossForm: TLossForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyDocumentId'
+        Value = Null
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyDocumentName'
+        Value = Null
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyValue'
+        Value = Null
+        Component = edCurrencyValue
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ParValue'
+        Value = Null
+        Component = ceParValue
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 200
@@ -1593,8 +1776,8 @@ object LossForm: TLossForm
     FormNameParam.MultiSelectSeparator = ','
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 39
-    Top = 24
+    Left = 63
+    Top = 56
   end
   object spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Loss'
@@ -1623,7 +1806,7 @@ object LossForm: TLossForm
       end>
     PackSize = 1
     Left = 108
-    Top = 8
+    Top = 40
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1649,7 +1832,7 @@ object LossForm: TLossForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 656
+    Left = 536
     Top = 16
   end
   object spGetTotalSumm: TdsdStoredProc
@@ -1758,5 +1941,34 @@ object LossForm: TLossForm
     PackSize = 1
     Left = 158
     Top = 335
+  end
+  object CurrencyDocumentGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCurrencyDocument
+    FormNameParam.Value = 'TCurrencyForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCurrencyForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 480
+    Top = 64
   end
 end

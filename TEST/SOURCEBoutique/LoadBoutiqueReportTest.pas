@@ -60,6 +60,7 @@ var
  i : integer;
 begin
   LoadReportFromFile('PrintMovement_Income', ReportPath + '\Приход от поставщика.fr3');
+  LoadReportFromFile('PrintMovement_ReturnOut', ReportPath + '\Возврат поставщику.fr3');
 end;
 
 procedure TLoadReportTest.SetUp;
