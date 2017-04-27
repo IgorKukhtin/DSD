@@ -41,12 +41,12 @@ BEGIN
            PERFORM gpUnComplete_Movement_RouteMember (inMovementId:= vbId, inSession:= inSession);
       END IF;
 
-      vbId:= lpInsertUpdate_Movement_RouteMember (ioId:= vbId
-                                                , inInvNumber:= inInvNumber
-                                                , inOperDate:= DATE_TRUNC ('day', inInsertDate)
-                                                , inGPSN:= inGPSN
-                                                , inGPSE:= inGPSE
-                                                , inUserId:= vbUserId
+      vbId:= lpInsertUpdate_Movement_RouteMember (ioId        := vbId
+                                                , inInvNumber := (zfConvert_StringToNumber (inInvNumber) + lfGet_User_BillNumberMobile (vbUserId)) :: TVarChar
+                                                , inOperDate  := DATE_TRUNC ('day', inInsertDate)
+                                                , inGPSN      := inGPSN
+                                                , inGPSE      := inGPSE
+                                                , inUserId    := vbUserId
                                                  );
 
       -- сохранили свойство <Дата/время создания на мобильном устройстве>

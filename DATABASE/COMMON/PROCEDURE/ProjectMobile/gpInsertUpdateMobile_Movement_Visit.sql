@@ -44,12 +44,12 @@ BEGIN
            PERFORM gpUnComplete_Movement_Visit (inMovementId:= vbId, inSession:= inSession);
       END IF;
 
-      vbId:= lpInsertUpdate_Movement_Visit (ioId:= vbId
-                                          , inInvNumber:= inInvNumber
-                                          , inOperDate:= inOperDate
-                                          , inPartnerId:= inPartnerId
-                                          , inComment:= inComment 
-                                          , inUserId:= vbUserId
+      vbId:= lpInsertUpdate_Movement_Visit (ioId        := vbId
+                                          , inInvNumber := (zfConvert_StringToNumber (inInvNumber) + lfGet_User_BillNumberMobile (vbUserId)) :: TVarChar
+                                          , inOperDate  := inOperDate
+                                          , inPartnerId := inPartnerId
+                                          , inComment   := inComment 
+                                          , inUserId    := vbUserId
                                            );
 
       -- сохранили свойство <Дата/время создания на мобильном устройстве>

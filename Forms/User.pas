@@ -11,7 +11,7 @@ uses
   Datasnap.DBClient, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxButtonEdit, cxSplitter,
   Vcl.ExtCtrls, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, cxCurrencyEdit;
 
 type
   TUserForm = class(TParentForm)
@@ -86,6 +86,7 @@ type
     bbProtocolRole: TdxBarButton;
     clProjectMobile: TcxGridDBColumn;
     clisProjectMobile: TcxGridDBColumn;
+    BillNumberMobile: TcxGridDBColumn;
   private
     { Private declarations }
   public

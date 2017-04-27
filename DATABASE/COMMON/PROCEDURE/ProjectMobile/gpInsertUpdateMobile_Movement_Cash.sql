@@ -50,7 +50,7 @@ BEGIN
 
       vbId:= lpInsertUpdate_Movement_Cash (ioId                   := vbId
                                          , inParentId             := NULL
-                                         , inInvNumber            := inInvNumber
+                                         , inInvNumber            := (zfConvert_StringToNumber (inInvNumber) + lfGet_User_BillNumberMobile (vbUserId)) :: TVarChar
                                          , inOperDate             := inOperDate
                                          , inServiceDate          := DATE_TRUNC ('MONTH', inOperDate)
                                          , inAmountIn             := inAmount

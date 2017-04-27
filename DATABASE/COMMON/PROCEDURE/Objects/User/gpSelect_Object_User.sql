@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , UnitName TVarChar
              , PositionName TVarChar
              , ProjectMobile TVarChar
+             , BillNumberMobile Integer
              , isProjectMobile Boolean
               )
 AS
@@ -64,7 +65,8 @@ END IF;
        , Object_Unit.ValueData     AS UnitName
        , Object_Position.ValueData AS PositionName
 
-       , ObjectString_ProjectMobile.ValueData  AS ProjectMobile
+       , ObjectString_ProjectMobile.ValueData    AS ProjectMobile
+       , ObjectFloat_BillNumberMobile.ValueData :: Integer AS BillNumberMobile
        , COALESCE (ObjectBoolean_ProjectMobile.ValueData, FALSE) :: Boolean  AS isProjectMobile
    FROM Object AS Object_User
          LEFT JOIN ObjectString AS ObjectString_User_
@@ -88,6 +90,9 @@ END IF;
          LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
                                  ON ObjectBoolean_ProjectMobile.ObjectId = Object_User.Id
                                 AND ObjectBoolean_ProjectMobile.DescId = zc_ObjectBoolean_User_ProjectMobile()
+         LEFT JOIN ObjectFloat AS ObjectFloat_BillNumberMobile
+                               ON ObjectFloat_BillNumberMobile.ObjectId = Object_User.Id
+                              AND ObjectFloat_BillNumberMobile.DescId = zc_ObjectFloat_User_BillNumberMobile()
 
         LEFT JOIN ObjectLink AS ObjectLink_User_Member
                              ON ObjectLink_User_Member.ObjectId = Object_User.Id
