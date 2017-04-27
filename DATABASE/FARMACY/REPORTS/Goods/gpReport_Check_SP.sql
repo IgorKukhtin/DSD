@@ -42,6 +42,7 @@ RETURNS TABLE (MovementId     Integer
              , PriceSale      TFloat
              , SummaSP        TFloat 
              , NumLine        Integer
+             , CountInvNumberSP  Integer
 
            , JuridicalFullName  TVarChar
            , JuridicalAddress   TVarChar
@@ -313,7 +314,7 @@ BEGIN
                          , ObjectHistory_PartnerMedicalDetails.FullName          AS PartnerMedical_FullName
                          , ObjectHistory_PartnerMedicalDetails.JuridicalAddress  AS PartnerMedical_JuridicalAddress
                          , ObjectHistory_PartnerMedicalDetails.Phone             AS PartnerMedical_Phone
-                         , Object_PartnerMedical_Contract.Id                     AS PartnerMedical_ContractId
+                         , COALESCE(Object_PartnerMedical_Contract.Id,0)         AS PartnerMedical_ContractId
                          , Object_PartnerMedical_Contract.ValueData              AS PartnerMedical_ContractName
                          , ObjectDate_Start.ValueData                            AS PartnerMedical_Contract_StartDate 
 
@@ -331,10 +332,10 @@ BEGIN
                                  AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
                           LEFT JOIN Object AS Object_PartnerMedical_Contract ON Object_PartnerMedical_Contract.Id = ObjectLink_Contract_Juridical.ObjectId
 
-                          INNER JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
-                                  ON ObjectLink_Contract_JuridicalBasis.ObjectId = Object_PartnerMedical_Contract.Id
-                                 AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
-                                 AND ObjectLink_Contract_JuridicalBasis.ChildObjectId = tmp.JuridicalId
+                          LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
+                                 ON ObjectLink_Contract_JuridicalBasis.ObjectId = Object_PartnerMedical_Contract.Id
+                                AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+                                AND ObjectLink_Contract_JuridicalBasis.ChildObjectId = tmp.JuridicalId
 
                           LEFT JOIN ObjectLink AS ObjectLink_Contract_GroupMemberSP
                                  ON ObjectLink_Contract_GroupMemberSP.ObjectId = Object_PartnerMedical_Contract.Id
@@ -351,6 +352,23 @@ BEGIN
                           LEFT JOIN tmpBankAccount ON tmpBankAccount.JuridicalId = tmp.JuridicalId
                                                   AND tmpBankAccount.BankAccount = ObjectHistory_JuridicalDetails.BankAccount
                     WHERE COALESCE (Object_PartnerMedical_GroupMemberSP.ObjectCode,0) = -1
+                    )
+
+    , tmpCountR AS (SELECT  tmpData.JuridicalId
+                          , tmpData.HospitalId
+                          , tmpParam.PartnerMedical_ContractId AS ContractId
+                          , COUNT ( DISTINCT tmpData.InvNumberSP) AS CountInvNumberSP
+                    FROM (SELECT DISTINCT tmpMI.UnitId
+                               , tmpMI.JuridicalId
+                               , tmpMI.HospitalId
+                               , tmpMI.InvNumberSP
+                          FROM tmpMI) AS tmpData
+                         LEFT JOIN tmpParam ON tmpParam.UnitId = tmpData.UnitId
+                               AND tmpParam.JuridicalId = tmpData.JuridicalId
+                               AND tmpParam.HospitalId = tmpData.HospitalId
+                    GROUP BY tmpData.JuridicalId
+                           , tmpData.HospitalId
+                           , tmpParam.PartnerMedical_ContractId
                     )
 
 
@@ -389,6 +407,7 @@ BEGIN
              , tmpData.PriceSale         :: TFloat 
              , tmpData.SummChangePercent :: TFloat  AS SummaSP
              , CAST (ROW_NUMBER() OVER (PARTITION BY Object_Unit.ValueData,Object_Juridical.ValueData ORDER BY Object_Unit.ValueData, Object_Juridical.ValueData, tmpGoodsSP.IntenalSPName ) AS Integer) AS NumLine
+             , CAST (tmpCountR.CountInvNumberSP AS Integer) AS CountInvNumberSP
 
              , COALESCE (tmpParam.JuridicalFullName, Object_Juridical.ValueData ) :: TVarChar  AS JuridicalFullName
              , tmpParam.JuridicalAddress
@@ -431,6 +450,10 @@ BEGIN
              LEFT JOIN tmpParam ON tmpParam.UnitId = tmpData.UnitId
                                AND tmpParam.JuridicalId = tmpData.JuridicalId
                                AND tmpParam.HospitalId = tmpData.HospitalId
+
+             LEFT JOIN tmpCountR ON tmpCountR.JuridicalId = tmpData.JuridicalId
+                                AND tmpCountR.HospitalId = tmpData.HospitalId
+                                AND COALESCE (tmpCountR.ContractId,0) = COALESCE (tmpParam.PartnerMedical_ContractId,0)
           
         ORDER BY Object_Unit.ValueData 
                , Object_Juridical.ValueData

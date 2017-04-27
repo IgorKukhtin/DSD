@@ -570,6 +570,12 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             VisibleForCustomization = False
             Width = 155
           end
+          object CountInvNumberSP: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1088#1077#1094#1077#1087#1090#1086#1074
+            DataBinding.FieldName = 'CountInvNumberSP'
+            Visible = False
+            Width = 70
+          end
         end
       end
       object cbisInsert: TcxCheckBox

@@ -99,6 +99,9 @@ type
     actLoss: TdsdOpenForm;
     N47: TMenuItem;
     N48: TMenuItem;
+    actCurrencyMovement: TdsdOpenForm;
+    N49: TMenuItem;
+    N50: TMenuItem;
   private
     { Private declarations }
   public

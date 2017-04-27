@@ -1750,7 +1750,7 @@ begin
     ProgressThread.Start;
 
     { загрузка данных в центр }
-    if UploadData then
+    if UploadData and (DM.tblObject_Const.RecordCount > 0) then
     begin
       try
         SetNewProgressTask('Сохранение остатков');
@@ -1992,9 +1992,7 @@ begin
         DM.cdsJuridicalCollation.First;
       end;
 
-      if DM.cdsJuridicalCollation.RecordCount > 0 then
-      begin
-        Synchronize(procedure
+      Synchronize(procedure
           begin
             frmMain.lStartRemains.Text := 'Сальдо на начало периода: ' + FormatFloat(',0.00', StartRemains);
             frmMain.lEndRemains.Text := 'Сальдо на конец периода: ' + FormatFloat(',0.00', EndRemains);
@@ -2003,9 +2001,6 @@ begin
 
             frmMain.lwJuridicalCollation.ScrollViewPos := 0;
           end);
-      end //По заданым критериям данные не найдены
-      else
-        Result := '';
     except
       on E : Exception do
       begin
