@@ -8,7 +8,7 @@ uses
   idHTTP, IdSSLOpenSSL, Soap.EncdDecd;
 
 const
-  cURL = 'http://www.medicard.com.ua/api/api.php';
+  cURL = 'http://medicard.in.ua/api/api.php';
 
 type
   TfrmMain = class(TForm)
@@ -29,7 +29,7 @@ implementation
 
 function SendXML(SendData: TStream; Response: TStream; ErrMsg: string): Boolean;
 var
-  LHandler : TIdSSLIOHandlerSocketOpenSSL;
+  //LHandler : TIdSSLIOHandlerSocketOpenSSL;
   MyHTTP: TidHTTP;
   ReqBase64, ResBase64: TMemoryStream;
 begin
@@ -38,24 +38,27 @@ begin
   ReqBase64 := TMemoryStream.Create;
   ResBase64 := TMemoryStream.Create;
 
-  LHandler := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
+  //LHandler := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
   MyHTTP := TidHTTP.Create(nil);
   try
-    MyHTTP.IOHandler:= LHandler;
+    //MyHTTP.IOHandler:= LHandler;
     MyHTTP.Request.CustomHeaders.AddValue('Content-Type', 'application/xml');
+    //MyHTTP.Request.CustomHeaders.AddValue('Content-Encoding', 'base64');
 
     try
       SendData.Position := 0;
-      EncodeStream(SendData, ReqBase64);
-      ReqBase64.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Req.Base64');
-      ReqBase64.Position := 0;
-      MyHTTP.Post(cURL, ReqBase64, ResBase64);
+      //EncodeStream(SendData, ReqBase64);
+      //ReqBase64.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Req.Base64');
+      //ReqBase64.Position := 0;
+      //MyHTTP.Post(cURL, ReqBase64, ResBase64);
+      MyHTTP.Post(cURL, SendData, Response);
 
       if MyHTTP.ResponseCode = 200 then
       begin
-        ResBase64.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Res.Base64');
-        ResBase64.Position := 0;
-        DecodeStream(ResBase64, Response);
+        //ResBase64.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Res.Base64');
+        //Response.SaveToFile(ExtractFilePath(ParamStr(0)) + 'response.txt');
+        //ResBase64.Position := 0;
+        //DecodeStream(ResBase64, Response);
       end;
     except
       on E: Exception do
@@ -66,7 +69,7 @@ begin
       end;
     end;
   finally
-    FreeAndNil(LHandler);
+    //FreeAndNil(LHandler);
     FreeAndNil(MyHTTP);
     ReqBase64.Free;
     ResBase64.Free;
