@@ -27,15 +27,12 @@ object SendForm: TSendForm
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 81
-    ExplicitHeight = 385
     ClientRectBottom = 351
     ClientRectRight = 811
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 361
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -43,7 +40,6 @@ object SendForm: TSendForm
         Height = 327
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 361
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -277,6 +273,7 @@ object SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 75
           end
           object colCountForPrice: TcxGridDBColumn
@@ -303,6 +300,7 @@ object SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 91
           end
           object colOperPriceList: TcxGridDBColumn
@@ -358,7 +356,6 @@ object SendForm: TSendForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 5
-    ExplicitWidth = 793
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -1208,14 +1205,6 @@ object SendForm: TSendForm
           ComponentItem = 'OperPriceList'
           DataType = ftFloat
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OperPrice'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'OperPrice'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1677,8 +1666,8 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 92
-    Top = 72
+    Left = 100
+    Top = 40
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
