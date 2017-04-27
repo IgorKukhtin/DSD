@@ -574,8 +574,8 @@ object LossJournalForm: TLossJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_ReturnOut'
-      ReportNameParam.Value = 'PrintMovement_ReturnOut'
+      ReportName = 'PrintMovement_Loss'
+      ReportNameParam.Value = 'PrintMovement_Loss'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','

@@ -27,17 +27,12 @@ object LossForm: TLossForm
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 81
-    ExplicitWidth = 811
-    ExplicitHeight = 385
     ClientRectBottom = 351
     ClientRectRight = 759
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 811
-      ExplicitHeight = 361
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -45,8 +40,6 @@ object LossForm: TLossForm
         Height = 327
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 811
-        ExplicitHeight = 361
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -358,7 +351,6 @@ object LossForm: TLossForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 5
-    ExplicitWidth = 811
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -697,7 +689,6 @@ object LossForm: TLossForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
-      Visible = ivNever
     end
     object bbGridToExel: TdxBarButton
       Action = GridToExcel
@@ -950,8 +941,8 @@ object LossForm: TLossForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Income'
-      ReportNameParam.Value = 'PrintMovement_Income'
+      ReportName = 'PrintMovement_Loss'
+      ReportNameParam.Value = 'PrintMovement_Loss'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end

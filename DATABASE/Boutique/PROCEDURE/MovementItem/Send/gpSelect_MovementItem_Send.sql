@@ -17,8 +17,10 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , LabelName TVarChar
              , GoodsSizeName TVarChar
              , Amount TFloat
-             , OperPrice TFloat, OperPriceList TFloat
-             , AmountSumm TFloat, AmountPriceListSumm TFloat
+             --, OperPrice TFloat
+             , OperPriceList TFloat
+             --, AmountSumm TFloat
+             , AmountPriceListSumm TFloat
              , isErased Boolean
               )
 AS
@@ -68,9 +70,9 @@ BEGIN
            , Object_GoodsSize.ValueData     AS GoodsSizeName 
 
            , abs(tmpMI.Amount) ::TFloat     AS Amount
-           , Object_PartionGoods.OperPrice      ::TFloat
+           --, Object_PartionGoods.OperPrice      ::TFloat
            , tmpMI.OperPriceList                ::TFloat
-           , (tmpMI.Amount * Object_PartionGoods.OperPrice) ::TFloat AS AmountSumm
+           --, (tmpMI.Amount * Object_PartionGoods.OperPrice) ::TFloat AS AmountSumm
            , (tmpMI.Amount * tmpMI.OperPriceList)           ::TFloat AS AmountPriceListSumm
 
            , tmpMI.isErased
