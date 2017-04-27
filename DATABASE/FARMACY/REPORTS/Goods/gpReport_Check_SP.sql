@@ -40,6 +40,7 @@ RETURNS TABLE (MovementId     Integer
 
              , Amount         TFloat
              , PriceSale      TFloat
+             , PriceCheckSP   TFloat 
              , SummaSP        TFloat 
              , NumLine        Integer
              , CountInvNumberSP  Integer
@@ -405,6 +406,7 @@ BEGIN
 
              , tmpData.Amount            :: TFloat 
              , tmpData.PriceSale         :: TFloat 
+             , (tmpData.SummChangePercent / tmpData.Amount) :: TFloat AS PriceCheckSP
              , tmpData.SummChangePercent :: TFloat  AS SummaSP
              , CAST (ROW_NUMBER() OVER (PARTITION BY Object_Unit.ValueData,Object_Juridical.ValueData ORDER BY Object_Unit.ValueData, Object_Juridical.ValueData, tmpGoodsSP.IntenalSPName ) AS Integer) AS NumLine
              , CAST (tmpCountR.CountInvNumberSP AS Integer) AS CountInvNumberSP

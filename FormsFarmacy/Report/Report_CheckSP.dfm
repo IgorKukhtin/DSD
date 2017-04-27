@@ -333,6 +333,17 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             HeaderAlignmentVert = vaCenter
             Width = 65
           end
+          object clPriceCheckSP: TcxGridDBColumn
+            Caption = 
+              #1056#1086#1079#1084#1110#1088' '#1074#1110#1076#1096#1082#1086#1076#1091#1074#1072#1085#1085#1103' '#1074#1072#1088#1090#1086#1089#1090#1110' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091' '#1079#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1095#1077 +
+              #1082')'
+            DataBinding.FieldName = 'PriceCheckSP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 102
+          end
           object colSummaSP: TcxGridDBColumn
             Caption = #1057#1091#1084#1072' '#1074#1110#1076#1096#1082#1086#1076#1091#1074#1072#1085#1085#1103', '#1075#1088#1085
             DataBinding.FieldName = 'SummaSP'
