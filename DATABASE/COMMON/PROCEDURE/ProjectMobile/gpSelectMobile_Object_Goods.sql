@@ -6,14 +6,15 @@ CREATE OR REPLACE FUNCTION gpSelectMobile_Object_Goods (
     IN inSyncDateIn TDateTime, -- Дата/время последней синхронизации - когда "успешно" загружалась входящая информация - актуальные справочники, цены, акции, долги, остатки и т.д
     IN inSession    TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id           Integer
-             , ObjectCode   Integer  -- Код
-             , ValueData    TVarChar -- Название
-             , Weight       TFloat   -- Вес товара
-             , GoodsGroupId Integer  -- Группа товара
-             , MeasureId    Integer  -- Единица измерения
-             , isErased     Boolean  -- Удаленный ли элемент
-             , isSync       Boolean  -- Синхронизируется (да/нет)
+RETURNS TABLE (Id            Integer
+             , ObjectCode    Integer  -- Код
+             , ValueData     TVarChar -- Название
+             , Weight        TFloat   -- Вес товара
+             , GoodsGroupId  Integer  -- Группа товара
+             , MeasureId     Integer  -- Единица измерения
+             , TradeMarkId   Integer  -- Торговая марка
+             , isErased      Boolean  -- Удаленный ли элемент
+             , isSync        Boolean  -- Синхронизируется (да/нет)
               )
 AS 
 $BODY$
@@ -35,7 +36,7 @@ BEGIN
                     JOIN ObjectBoolean AS ObjectBoolean_GoodsByGoodsKind_Order
                                        ON ObjectBoolean_GoodsByGoodsKind_Order.ObjectId = Object_GoodsByGoodsKind.Id
                                       AND ObjectBoolean_GoodsByGoodsKind_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order() 
-                                      AND ObjectBoolean_GoodsByGoodsKind_Order.ValueData
+                                      AND ObjectBoolean_GoodsByGoodsKind_Order.ValueData = true
                     JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                     ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId = Object_GoodsByGoodsKind.Id
                                    AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
@@ -73,9 +74,10 @@ BEGIN
                   SELECT Object_Goods.Id
                        , Object_Goods.ObjectCode
                        , Object_Goods.ValueData
-                       , ObjectFloat_Goods_Weight.ValueData AS Weight
-                       , ObjectLink_Goods_GoodsGroup.ChildObjectId AS GoodsGroupId
-                       , ObjectLink_Goods_Measure.ChildObjectId    AS MeasureId
+                       , ObjectFloat_Goods_Weight.ValueData            AS Weight
+                       , ObjectLink_Goods_GoodsGroup.ChildObjectId     AS GoodsGroupId
+                       , ObjectLink_Goods_Measure.ChildObjectId        AS MeasureId
+                       , ObjectLink_GoodsGroup_TradeMark.ChildObjectId AS TradeMarkId
                        , Object_Goods.isErased
                        , EXISTS(SELECT 1 FROM tmpGoods WHERE tmpGoods.GoodsId = Object_Goods.Id) AS isSync
                   FROM Object AS Object_Goods
@@ -89,15 +91,19 @@ BEGIN
                        LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                             ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                            AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure() 
+                       LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_TradeMark
+                                            ON ObjectLink_GoodsGroup_TradeMark.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
+                                           AND ObjectLink_GoodsGroup_TradeMark.DescId = zc_ObjectLink_GoodsGroup_TradeMark() 
                   WHERE Object_Goods.DescId = zc_Object_Goods();
            ELSE
                 RETURN QUERY
                   SELECT Object_Goods.Id
                        , Object_Goods.ObjectCode
                        , Object_Goods.ValueData
-                       , ObjectFloat_Goods_Weight.ValueData AS Weight
-                       , ObjectLink_Goods_GoodsGroup.ChildObjectId AS GoodsGroupId
-                       , ObjectLink_Goods_Measure.ChildObjectId    AS MeasureId
+                       , ObjectFloat_Goods_Weight.ValueData            AS Weight
+                       , ObjectLink_Goods_GoodsGroup.ChildObjectId     AS GoodsGroupId
+                       , ObjectLink_Goods_Measure.ChildObjectId        AS MeasureId
+                       , ObjectLink_GoodsGroup_TradeMark.ChildObjectId AS TradeMarkId
                        , Object_Goods.isErased
                        , CAST(true AS Boolean) AS isSync
                   FROM Object AS Object_Goods
@@ -111,6 +117,9 @@ BEGIN
                        LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                             ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                            AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure() 
+                       LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_TradeMark
+                                            ON ObjectLink_GoodsGroup_TradeMark.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
+                                           AND ObjectLink_GoodsGroup_TradeMark.DescId = zc_ObjectLink_GoodsGroup_TradeMark() 
                   WHERE Object_Goods.DescId = zc_Object_Goods();
            END IF;
       END IF;
