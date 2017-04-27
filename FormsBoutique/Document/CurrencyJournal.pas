@@ -21,7 +21,6 @@ type
     clComment: TcxGridDBColumn;
     N13: TMenuItem;
     clParValue: TcxGridDBColumn;
-    clPaidKindName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     cxLabel27: TcxLabel;
     edJuridicalBasis: TcxButtonEdit;

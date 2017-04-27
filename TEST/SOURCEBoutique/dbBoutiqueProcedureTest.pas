@@ -48,6 +48,7 @@ type
     procedure CreateReturnOut;
     procedure CreateSend;
     procedure CreateLoss;
+    procedure CreateCurrency;
   end;
 
 type
@@ -414,6 +415,10 @@ begin
   DirectoryLoad(CommonProcedurePath + 'MovementItemContainer\Loss\');
 end;
 
+   procedure TdbMovementItemContainerProcedureTest.CreateCurrency;
+begin
+  DirectoryLoad(CommonProcedurePath + 'MovementItemContainer\Currency\');
+end;
 initialization
 
 TestFramework.RegisterTest('Процедуры', TdbProcedureTest.Suite);

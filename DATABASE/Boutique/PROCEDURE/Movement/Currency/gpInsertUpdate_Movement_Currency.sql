@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_Currency()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Currency (Integer, TVarChar, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Currency (Integer, TVarChar, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Currency(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ Курсовая разница>
@@ -11,7 +12,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Currency(
     IN inComment                  TVarChar  , -- Комментарий
     IN inCurrencyFromId           Integer   , -- валюта в которой вводится курc
     IN inCurrencyToId             Integer   , -- валюта для которой вводится курс
-    IN inPaidKindId               Integer   , -- Виды форм оплаты 
     IN inSession                  TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -23,11 +23,6 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Currency());
 
-     -- проверка
-     IF COALESCE (inPaidKindId, 0) = 0
-     THEN
-        RAISE EXCEPTION 'Ошибка.Не установлена <Форма оплаты>.';
-     END IF;
      -- проверка
      IF COALESCE (inCurrencyFromId, 0) = 0
      THEN
@@ -64,7 +59,7 @@ BEGIN
      vbIsInsert:= COALESCE (vbMovementItemId, 0) = 0;
 
      -- сохранили <Элемент документа>
-     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inCurrencyFromId, ioId, inAmount, NULL);
+     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inCurrencyFromId,Null, ioId, inAmount, NULL);
     
      -- Номинал валюты для которой вводится курс
      IF COALESCE (inParValue, 0) = 0 THEN inParValue := 1; END IF;
@@ -76,15 +71,12 @@ BEGIN
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency(), vbMovementItemId, inCurrencyToId);
 
-     -- сохранили связь с <Виды форм оплаты >
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PaidKind(), vbMovementItemId, inPaidKindId);
-
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
 
 
      -- 5.2. создаются временные таблицы - для формирование данных для проводок
-     PERFORM lpComplete_Movement_Finance_CreateTemp();
+     --PERFORM lpComplete_Movement_Finance_CreateTemp();
 
      -- 5.3. проводим Документ
      IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_Currency())
@@ -100,6 +92,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 27.04.17         * бутики
  10.11.14                                        * add inParValue
  28.07.14         *
 */

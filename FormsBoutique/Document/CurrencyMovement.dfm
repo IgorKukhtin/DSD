@@ -88,15 +88,15 @@
     Caption = #1042#1072#1083#1102#1090#1072' ('#1079#1085#1072#1095#1077#1085#1080#1077')'
   end
   object cxLabel10: TcxLabel [11]
-    Left = 152
-    Top = 158
+    Left = 8
+    Top = 160
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [12]
-    Left = 152
+    Left = 8
     Top = 179
     TabOrder = 6
-    Width = 118
+    Width = 262
   end
   object edInvNumber: TcxTextEdit [13]
     Left = 8
@@ -120,23 +120,6 @@
     Left = 8
     Top = 109
     Caption = #1053#1086#1084#1080#1085#1072#1083
-  end
-  object edPaidKind: TcxButtonEdit [16]
-    Left = 8
-    Top = 179
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 16
-    Width = 118
-  end
-  object cxLabel3: TcxLabel [17]
-    Left = 8
-    Top = 158
-    Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 139
@@ -170,8 +153,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 72
-    Top = 154
+    Left = 144
+    Top = 114
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Currency'
@@ -236,14 +219,6 @@
         Name = 'inCurrencyToid'
         Value = ''
         Component = CurrencyToGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPaidKindId'
-        Value = Null
-        Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -349,21 +324,6 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindId'
-        Value = Null
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindName'
-        Value = Null
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
       end>
     Left = 248
     Top = 112
@@ -375,7 +335,7 @@
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCurrencyForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -392,7 +352,7 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 176
+    Left = 168
     Top = 71
   end
   object GuidesFiller: TGuidesFiller
@@ -423,7 +383,7 @@
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCurrencyForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -442,35 +402,5 @@
       end>
     Left = 96
     Top = 13
-  end
-  object PaidKindGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPaidKind
-    FormNameParam.Value = 'TPaidKindForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPaidKindForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 11
-    Top = 176
   end
 end

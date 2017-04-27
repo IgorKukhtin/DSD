@@ -1,17 +1,16 @@
 -- Function: lfSelect_Movement_Currency_byDate()
 
 DROP FUNCTION IF EXISTS lfSelect_Movement_Currency_byDate (TDateTime, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lfSelect_Movement_Currency_byDate (TDateTime, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lfSelect_Movement_Currency_byDate(
     IN inOperDate          TDateTime , -- 
     IN inCurrencyFromId    Integer   , -- валюта в которой введен курc
-    IN inCurrencyToId      Integer   , -- валюта для которой введен курс
-    IN inPaidKindId        Integer     -- 
+    IN inCurrencyToId      Integer     -- валюта для которой введен курс
 )
 RETURNS TABLE (MovementId Integer, OperDate TDateTime
              , CurrencyFromId Integer, CurrencyFromName TVarChar
              , CurrencyToId Integer, CurrencyToName TVarChar
-             , PaidKindId Integer, PaidKindName TVarChar
              , Amount TFloat, ParValue TFloat
              )
 AS
@@ -26,14 +25,9 @@ BEGIN
                                  , MovementItem.ObjectId          AS CurrencyFromId
                                  , MovementItem.Amount            AS Amount
                                  , MILinkObject_Currency.ObjectId AS CurrencyToId
-                                 , MILinkObject_PaidKind.ObjectId AS PaidKindId
                             FROM Movement
                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                         AND MovementItem.DescId = zc_MI_Master()
-                                 INNER JOIN MovementItemLinkObject AS MILinkObject_PaidKind
-                                                                   ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
-                                                                  AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
-                                                                  AND MILinkObject_PaidKind.ObjectId = inPaidKindId
                                  INNER JOIN MovementItemLinkObject AS MILinkObject_Currency
                                                                    ON MILinkObject_Currency.MovementItemId = MovementItem.Id
                                                                   AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
@@ -50,8 +44,6 @@ BEGIN
            , Object_CurrencyFrom.ValueData   AS CurrencyFromName
            , Object_CurrencyTo.Id            AS CurrencyToId
            , Object_CurrencyTo.ValueData     AS CurrencyToName
-           , Object_PaidKind.Id              AS PaidKindId
-           , Object_PaidKind.ValueData       AS PaidKindName
 
            , CASE WHEN tmpMovement.CurrencyFromId = inCurrencyFromId AND tmpMovement.CurrencyToId = inCurrencyToId
                        THEN tmpMovement.Amount
@@ -71,7 +63,6 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_ParValue
                                         ON MIFloat_ParValue.MovementItemId = tmpMovement.MovementItemId
                                        AND MIFloat_ParValue.DescId = zc_MIFloat_ParValue()
-            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpMovement.PaidKindId
             LEFT JOIN Object AS Object_CurrencyFrom ON Object_CurrencyFrom.Id = tmpMovement.CurrencyFromId
             LEFT JOIN Object AS Object_CurrencyTo ON Object_CurrencyTo.Id = tmpMovement.CurrencyToId
       ;
@@ -79,14 +70,14 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION lfSelect_Movement_Currency_byDate (TDateTime, Integer, Integer, Integer) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.04.17         * бутики
  13.11.14                                        *
 */
 
 -- тест
--- SELECT * FROM lfSelect_Movement_Currency_byDate (inOperDate:= CURRENT_DATE, inCurrencyFromId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Currency() AND ObjectCode = 980), inCurrencyToId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Currency() AND ObjectCode = 840),  inPaidKindId:= zc_Enum_PaidKind_FirstForm());
--- SELECT * FROM lfSelect_Movement_Currency_byDate (inOperDate:= CURRENT_DATE, inCurrencyFromId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Currency() AND ObjectCode = 980), inCurrencyToId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Currency() AND ObjectCode = 643),  inPaidKindId:= zc_Enum_PaidKind_FirstForm());
+-- SELECT * FROM lfSelect_Movement_Currency_byDate (inOperDate:= CURRENT_DATE, inCurrencyFromId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Currency() AND ObjectCode = 980), inCurrencyToId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Currency() AND ObjectCode = 840));
+-- SELECT * FROM lfSelect_Movement_Currency_byDate (inOperDate:= CURRENT_DATE, inCurrencyFromId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Currency() AND ObjectCode = 980), inCurrencyToId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Currency() AND ObjectCode = 643));

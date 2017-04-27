@@ -14,7 +14,6 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Comment TVarChar
              , CurrencyFromId Integer, CurrencyFromName TVarChar
              , CurrencyToId Integer, CurrencyToName TVarChar
-             , PaidKindId Integer, PaidKindName TVarChar
              )
 AS
 $BODY$
@@ -42,8 +41,6 @@ BEGIN
            , CAST ('' as TVarChar)            AS CurrencyFromName
            , 0                                AS CurrencyToId
            , CAST ('' as TVarChar)            AS CurrencyToName
-           , 0                     AS PaidKindId
-           , CAST ('' AS TVarChar) AS PaidKindName
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
   
      ELSE
@@ -68,9 +65,6 @@ BEGIN
            , Object_CurrencyTo.Id         AS CurrencyToId
            , Object_CurrencyTo.ValueData  AS CurrencyToName
 
-           , Object_PaidKind.Id                 AS PaidKindId
-           , Object_PaidKind.ValueData          AS PaidKindName
-
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
             
@@ -89,11 +83,6 @@ BEGIN
                                              ON MILinkObject_CurrencyTo.MovementItemId = MovementItem.Id
                                             AND MILinkObject_CurrencyTo.DescId = zc_MILinkObject_Currency()
             LEFT JOIN Object AS Object_CurrencyTo ON Object_CurrencyTo.Id = MILinkObject_CurrencyTo.ObjectId
-        
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
-                                         ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
-                                        AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
-            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
 
        WHERE Movement.Id =  inMovementId_Value;
 
@@ -107,6 +96,7 @@ ALTER FUNCTION gpGet_Movement_Currency (Integer, Integer, TDateTime, TVarChar) O
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.04.17         * ·ÛÚËÍË
  11.11.14                                        * add PaidKind...
  10.11.14                                        * add ParValue
  28.07.14         *

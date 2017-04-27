@@ -16,7 +16,6 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Comment TVarChar
              , CurrencyFromName TVarChar
              , CurrencyToName TVarChar
-             , PaidKindName TVarChar
              )
 AS
 $BODY$
@@ -51,8 +50,6 @@ BEGIN
            
            , Object_CurrencyTo.ValueData     AS CurrencyToName
 
-           , Object_PaidKind.ValueData       AS PaidKindName
-
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_Currency()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -75,11 +72,6 @@ BEGIN
                                              ON MILinkObject_CurrencyTo.MovementItemId = MovementItem.Id
                                             AND MILinkObject_CurrencyTo.DescId = zc_MILinkObject_Currency()
             LEFT JOIN Object AS Object_CurrencyTo ON Object_CurrencyTo.Id = MILinkObject_CurrencyTo.ObjectId
-          
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
-                                         ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
-                                        AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
-            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
       ;
   
 END;
@@ -90,6 +82,7 @@ ALTER FUNCTION gpSelect_Movement_Currency (TDateTime, TDateTime, Integer, Boolea
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 27.04.17         * бутики
  06.10.16         * add inJuridicalBasisId
  10.11.14                                        * add ParValue
  28.07.14         *

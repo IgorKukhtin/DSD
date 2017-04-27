@@ -1,29 +1,29 @@
 inherited CurrencyJournalForm: TCurrencyJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1091#1088#1089#1086#1074#1072#1103' '#1088#1072#1079#1085#1080#1094#1072'>'
-  ClientHeight = 289
+  ClientHeight = 304
   ClientWidth = 661
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 677
-  ExplicitHeight = 327
+  ExplicitHeight = 342
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 661
-    Height = 232
+    Height = 247
     TabOrder = 3
-    ExplicitWidth = 921
-    ExplicitHeight = 592
-    ClientRectBottom = 232
+    ExplicitWidth = 661
+    ExplicitHeight = 232
+    ClientRectBottom = 247
     ClientRectRight = 661
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 921
-      ExplicitHeight = 592
+      ExplicitWidth = 661
+      ExplicitHeight = 232
       inherited cxGrid: TcxGrid
         Width = 661
-        Height = 232
-        ExplicitWidth = 921
-        ExplicitHeight = 592
+        Height = 247
+        ExplicitWidth = 661
+        ExplicitHeight = 232
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -50,13 +50,6 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 75
-          end
-          object clPaidKindName: TcxGridDBColumn
-            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaidKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
           end
           object clAmount: TcxGridDBColumn
             Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1082#1091#1088#1089#1072
@@ -98,7 +91,7 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 300
+            Width = 211
           end
         end
       end
@@ -106,7 +99,7 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
   end
   inherited Panel: TPanel
     Width = 661
-    ExplicitWidth = 921
+    ExplicitWidth = 661
     inherited deStart: TcxDateEdit
       EditValue = 42736d
     end
@@ -383,8 +376,8 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 472
-    Top = 248
+    Left = 520
+    Top = 136
   end
   inherited PopupMenu: TPopupMenu
     object N13: TMenuItem [1]
