@@ -653,6 +653,13 @@ type
     eCurWebService: TEdit;
     bPathonMap: TButton;
     bPathonMapbyPhoto: TButton;
+    bEnterServer: TButton;
+    Image20: TImage;
+    pTemporaryServerPassword: TPanel;
+    bOkPassword: TButton;
+    bCancelPassword: TButton;
+    ePassword: TEdit;
+    Label83: TLabel;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -843,6 +850,9 @@ type
     procedure lwPartnerFilter(Sender: TObject; const AFilter, AValue: string;
       var Accept: Boolean);
     procedure bPathonMapbyPhotoClick(Sender: TObject);
+    procedure bCancelPasswordClick(Sender: TObject);
+    procedure bOkPasswordClick(Sender: TObject);
+    procedure bEnterServerClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -872,6 +882,8 @@ type
     FCameraZoomDistance: Integer;
     CameraComponent : TCameraComponent;
 
+    FTemporaryServer: string;
+    FUseTemporaryServer: boolean;
     FFirstSet: boolean;
     FStartRJC: string;
     FEndRJC: string;
@@ -972,6 +984,15 @@ uses
 
 {$R *.fmx}
 
+function CorrectPassword : string;
+begin
+    { Obscure the 'cupcdvum' password a little. }
+    Result := 'um';
+    Result := 'dv' + Result;
+    Result := 'pc' + Result;
+    Result := 'cu' + Result;
+end;
+
 { TJuridicalItem }
 constructor TJuridicalItem.Create(AId: Integer; AContractIds: string);
 begin
@@ -1020,6 +1041,7 @@ begin
   {$ENDIF}
   try
     LoginEdit.Text := SettingsFile.ReadString('LOGIN', 'USERNAME', '');
+    FTemporaryServer := SettingsFile.ReadString('LOGIN', 'TemporaryServer', '');
 
     // for reports
     FStartRJC := SettingsFile.ReadString('REPORT', 'StartRJC', '');
@@ -1319,6 +1341,7 @@ begin
   // сохранение координат при логине и запуск таймера
   tSavePathTimer(tSavePath);
 
+  DM.GetConfigurationInfo;
   if (not gc_User.Local) and NeedSync then
   begin
     DM.SynchronizeWithMainDatabase;
@@ -1334,6 +1357,11 @@ begin
   {$ENDIF}
   try
     SettingsFile.WriteString('LOGIN', 'USERNAME', LoginEdit.Text);
+    if FUseTemporaryServer then
+    begin
+      SettingsFile.WriteString('LOGIN', 'TemporaryServer', WebServerEdit.Text);
+      FTemporaryServer := WebServerEdit.Text;
+    end;
   finally
     FreeAndNil(SettingsFile);
   end;
@@ -2408,6 +2436,12 @@ begin
 end;
 
 // отмена сохранения фотографии
+procedure TfrmMain.bCancelPasswordClick(Sender: TObject);
+begin
+  vsbMain.Enabled := true;
+  pTemporaryServerPassword.Visible := false;
+end;
+
 procedure TfrmMain.bCancelPhotoClick(Sender: TObject);
 begin
   vsbMain.Enabled := true;
@@ -2463,6 +2497,23 @@ begin
   end;
 
   ppEnterAmount.IsOpen := false;
+end;
+
+procedure TfrmMain.bEnterServerClick(Sender: TObject);
+begin
+  if not FUseTemporaryServer then
+  begin
+    ePassword.Text := '';
+    vsbMain.Enabled := false;
+    pTemporaryServerPassword.Visible := true;
+  end
+  else
+  begin
+    FUseTemporaryServer := false;
+    WebServerLayout1.Height := 0;
+    WebServerLayout2.Height := 0;
+    gc_WebService := gc_WebServers[0];
+  end;
 end;
 
 // добавление количества товаров к введенным ранее
@@ -2593,6 +2644,24 @@ begin
   end
   else
     CreateEditStoreReal(mrNone);
+end;
+
+procedure TfrmMain.bOkPasswordClick(Sender: TObject);
+begin
+  if ePassword.Text <> CorrectPassword then
+  begin
+    TDialogService.MessageDialog('Введен неправильный пароль', TMsgDlgType.mtError, [TMsgDlgBtn.mbOK], TMsgDlgBtn.mbOK, 0, nil);
+    exit;
+  end;
+
+  vsbMain.Enabled := true;
+  pTemporaryServerPassword.Visible := false;
+
+  WebServerLayout1.Height := 25;
+  WebServerLayout2.Height := 60;
+  WebServerEdit.Text := FTemporaryServer;
+  gc_WebService := '';
+  FUseTemporaryServer := true;
 end;
 
 // переход на форму ввода нового возврата товаров
@@ -3601,6 +3670,8 @@ end;
 // проверка локальной БД (получения настроек конекта с центральной БД)
 procedure TfrmMain.CheckDataBase;
 begin
+  PasswordEdit.Text := '';
+
   if not DM.Connected then
   begin
     LogInButton.Enabled := false;
@@ -3618,8 +3689,8 @@ begin
     gc_WebServers := DM.tblObject_ConstWebService.AsString.Split([';']);
     gc_WebService := gc_WebServers[0];
 
-    WebServerLayout1.Visible := false;
-    WebServerLayout2.Visible := false;
+    WebServerLayout1.Height := 0;
+    WebServerLayout2.Height := 0;
     SyncLayout.Visible := true;
   end
   else
@@ -3628,10 +3699,12 @@ begin
     SetLength(gc_WebServers, 0);
     gc_WebService := '';
 
-    WebServerLayout1.Visible := true;
-    WebServerLayout2.Visible := true;
+    WebServerLayout1.Height := 25;
+    WebServerLayout2.Height := 60;
     SyncLayout.Visible := false;
   end;
+
+  FUseTemporaryServer := false;
 end;
 
 // формирования перечня дней на которые запланированы визиты в ТТ (с количеством ТТ)
