@@ -144,7 +144,7 @@ BEGIN
             , Object_User.ValueData        AS UserLogin
             , ObjectString_User_.ValueData AS UserPassword
 
-            , CASE WHEN STRPOS (Object_ConnectParam.ValueData, 'integer-srv.alan.dp.ua') > 0 AND inSession = '1000168' -- Молдован Е.А.
+            , CASE WHEN STRPOS (Object_ConnectParam.ValueData, 'integer-srv.alan.dp.ua') > 0 AND 1=0 -- AND inSession = '1000168' -- Молдован Е.А.
                         THEN REPLACE (LOWER (Object_ConnectParam.ValueData), '//integer-srv.alan.dp.ua','//integer-srv2.alan.dp.ua/projectmobile/index.php')
                    ELSE REPLACE (REPLACE (LOWER (Object_ConnectParam.ValueData), '/project/', '/projectmobile/'), '//integer-srv.alan.dp.ua', '//project-vds.vds.colocall.com/projectmobile/index.php')
               END :: TVarChar AS WebService
@@ -152,7 +152,7 @@ BEGIN
             -- AS LastDateIn
             -- AS LastDateOut
 
-            , '1.8.0'::TVarChar             AS MobileVersion
+            , '1.9.0'::TVarChar             AS MobileVersion
             , 'ProjectMobile.apk'::TVarChar AS MobileAPKFileName
 
             , Object_PriceList_def.Id        AS PriceListId_def

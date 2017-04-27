@@ -66,7 +66,8 @@ BEGIN
                  AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
               );
                 
-           IF inSyncDateIn > zc_DateStart()
+           -- Убрал, есть ошибка у одного торгового - пусть выгружется ВСЕ
+           IF 1 = 0 -- inSyncDateIn > zc_DateStart()
            THEN
                 RETURN QUERY
                   WITH tmpProtocol AS (SELECT ObjectProtocol.ObjectId AS PriceListId, MAX(ObjectProtocol.OperDate) AS MaxOperDate        
@@ -101,7 +102,7 @@ BEGIN
                        , ObjectBoolean_PriceList_PriceWithVAT.ValueData AS PriceWithVAT                                                  
                        , ObjectFloat_PriceList_VATPercent.ValueData AS VATPercent                                                        
                        , Object_PriceList.isErased                                                                                       
-                       , CAST(true AS Boolean) AS isSync
+                       , TRUE AS isSync
                   FROM Object AS Object_PriceList                                                                                        
                        LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceList_PriceWithVAT                                                   
                                                ON ObjectBoolean_PriceList_PriceWithVAT.ObjectId = Object_PriceList.Id                    
@@ -110,8 +111,12 @@ BEGIN
                                              ON ObjectFloat_PriceList_VATPercent.ObjectId = Object_PriceList.Id                          
                                             AND ObjectFloat_PriceList_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()          
                   WHERE Object_PriceList.DescId = zc_Object_PriceList()
-                    AND EXISTS(SELECT 1 FROM tmpPriceList WHERE Object_PriceList.Id IN (tmpPriceList.PriceListId, tmpPriceList.PriceListPriorId));
+                    AND Object_PriceList.isErased = FALSE
+                    AND Object_PriceList.Id IN (SELECT tmpPriceList.PriceListId FROM tmpPriceList UNION SELECT tmpPriceList.PriceListPriorId FROM tmpPriceList)
+                 ;
+                    
            END IF;
+
       END IF; 
 
 END; 

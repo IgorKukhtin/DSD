@@ -20,10 +20,11 @@ BEGIN
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
 
-      -- Результат
-      IF inSyncDateIn > zc_DateStart()
+      -- Убрал, есть ошибка у одного торгового - пусть выгружется ВСЕ
+      IF 1 = 0 -- inSyncDateIn > zc_DateStart()
       THEN
-           RETURN QUERY
+          -- Результат
+          RETURN QUERY
              WITH tmpProtocol AS (SELECT ObjectProtocol.ObjectId AS MeasureId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
                                   FROM ObjectProtocol
                                        JOIN Object AS Object_Measure
@@ -41,15 +42,19 @@ BEGIN
                   JOIN tmpProtocol ON tmpProtocol.MeasureId = Object_Measure.Id
              WHERE Object_Measure.DescId = zc_Object_Measure();
       ELSE
+           -- Результат
            RETURN QUERY
              SELECT Object_Measure.Id
                   , Object_Measure.ObjectCode
                   , Object_Measure.ValueData
                   , Object_Measure.isErased
-                  , CAST(true AS Boolean) AS isSync
+                  , TRUE AS isSync
              FROM Object AS Object_Measure
              WHERE Object_Measure.DescId = zc_Object_Measure()
-               AND (NOT Object_Measure.isErased);
+               -- Убрал - НАДО выгружать ВСЕ
+               -- AND Object_Measure.isErased = FALSE
+            ;  
+
       END IF;
 
 END; 

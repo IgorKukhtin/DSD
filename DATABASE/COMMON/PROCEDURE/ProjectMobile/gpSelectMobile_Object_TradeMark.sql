@@ -27,7 +27,8 @@ BEGIN
       IF vbPersonalId IS NOT NULL
       THEN
            RETURN QUERY
-             WITH tmpTradeMark AS (SELECT DISTINCT ObjectLink_GoodsGroup_TradeMark.ChildObjectId AS TradeMarkId
+             -- Убрал - пусть выгружется ВСЕ
+             /*WITH tmpTradeMark AS (SELECT DISTINCT ObjectLink_GoodsGroup_TradeMark.ChildObjectId AS TradeMarkId
                                    FROM (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId AS GoodsId
                                          FROM Object AS Object_GoodsByGoodsKind
                                               JOIN ObjectBoolean AS ObjectBoolean_GoodsByGoodsKind_Order
@@ -64,15 +65,19 @@ BEGIN
                                                         ON ObjectLink_GoodsGroup_TradeMark.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
                                                        AND ObjectLink_GoodsGroup_TradeMark.DescId = zc_ObjectLink_GoodsGroup_TradeMark()
                                                        AND ObjectLink_GoodsGroup_TradeMark.ChildObjectId IS NOT NULL
-                                  )
+                                  )*/
              SELECT Object_TradeMark.Id
                   , Object_TradeMark.ObjectCode
                   , Object_TradeMark.ValueData
                   , Object_TradeMark.isErased
-                  , NOT Object_TradeMark.isErased AS isSync
+                  -- , NOT Object_TradeMark.isErased AS isSync
+                  , TRUE AS isSync
              FROM Object AS Object_TradeMark
-                  JOIN tmpTradeMark ON tmpTradeMark.TradeMarkId = Object_TradeMark.Id
-             WHERE Object_TradeMark.DescId = zc_Object_TradeMark();
+                  -- JOIN tmpTradeMark ON tmpTradeMark.TradeMarkId = Object_TradeMark.Id
+             WHERE Object_TradeMark.DescId = zc_Object_TradeMark()
+               AND Object_TradeMark.isErased = FALSE
+            ;  
+
       END IF;
 
 END; 
