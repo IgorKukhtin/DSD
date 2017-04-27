@@ -152,7 +152,7 @@ BEGIN
             -- AS LastDateIn
             -- AS LastDateOut
 
-            , '1.8.0'::TVarChar             AS MobileVersion
+            , '1.9.0'::TVarChar             AS MobileVersion
             , 'ProjectMobile.apk'::TVarChar AS MobileAPKFileName
 
             , Object_PriceList_def.Id        AS PriceListId_def
@@ -168,7 +168,10 @@ BEGIN
 
             LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = tmpPersonal.UnitId -- Склад Реализации
             LEFT JOIN Object AS Object_Unit_ret ON Object_Unit_ret.Id = tmpPersonal.UnitId_ret
-            LEFT JOIN Object AS Object_Cash     ON Object_Cash.Id     = NULL
+            LEFT JOIN ObjectLink AS ObjectLink_Cash_Branch 
+                                 ON ObjectLink_Cash_Branch.ChildObjectId = vbBranchId
+                                AND ObjectLink_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch() 
+            LEFT JOIN Object AS Object_Cash     ON Object_Cash.Id     = ObjectLink_Cash_Branch.ObjectId
 
             LEFT JOIN Object AS Object_User ON Object_User.Id = vbUserId
             LEFT JOIN ObjectString AS ObjectString_User_

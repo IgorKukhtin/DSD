@@ -273,6 +273,7 @@ object SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 75
           end
           object colCountForPrice: TcxGridDBColumn
@@ -299,6 +300,7 @@ object SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 91
           end
           object colOperPriceList: TcxGridDBColumn
@@ -1202,14 +1204,6 @@ object SendForm: TSendForm
           ComponentItem = 'OperPriceList'
           DataType = ftFloat
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OperPrice'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'OperPrice'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1671,8 +1665,8 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 92
-    Top = 72
+    Left = 100
+    Top = 40
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'

@@ -249,6 +249,7 @@ object SendJournalForm: TSendJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        VisibleForCustomization = False
         Width = 92
       end
       object colTotalSummPriceList: TcxGridDBColumn
