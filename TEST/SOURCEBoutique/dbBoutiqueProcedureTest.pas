@@ -17,6 +17,7 @@ type
   TdbObjectHistoryProcedureTest = class(TdbTest)
   published
     procedure CreateCOMMON;
+    procedure CreatePriceListItem;
   end;
 
 type
@@ -136,7 +137,10 @@ procedure TdbObjectHistoryProcedureTest.CreateCOMMON;
 begin
   DirectoryLoad(CommonProcedurePath + 'ObjectHistory\_COMMON\');
 end;
-
+procedure TdbObjectHistoryProcedureTest.CreatePriceListItem;
+begin
+  DirectoryLoad(CommonProcedurePath + 'ObjectHistory\PriceListItem\');
+end;
 { TdbMovementProcedureTest }
 procedure TdbMovementProcedureTest.CreateCOMMON;
 begin
@@ -350,6 +354,7 @@ end;
 procedure TdbObjectProcedureTest.CreatePriceList;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\PriceList\');
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\PriceListItem\');
 end;
 
 procedure TdbObjectProcedureTest.CreateStatus;

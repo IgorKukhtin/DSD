@@ -104,6 +104,9 @@ type
     N50: TMenuItem;
     actPriceList: TdsdOpenForm;
     N51: TMenuItem;
+    actPriceListItem: TdsdOpenForm;
+    miHistory: TMenuItem;
+    N52: TMenuItem;
   private
     { Private declarations }
   public
