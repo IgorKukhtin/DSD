@@ -987,10 +987,11 @@ uses
 function CorrectPassword : string;
 begin
     { Obscure the 'cupcdvum' password a little. }
-    Result := 'um';
+    {Result := 'um';
     Result := 'dv' + Result;
     Result := 'pc' + Result;
-    Result := 'cu' + Result;
+    Result := 'cu' + Result; }
+    Result := '111';
 end;
 
 { TJuridicalItem }
@@ -3594,7 +3595,7 @@ begin
       lCaption.Text := 'Ввод новой ТТ'
     else
     if tcMain.ActiveTab = tiOrderExternal then
-      lCaption.Text := 'Заявки (' + DM.cdsOrderExternalName.AsString + ')'
+      lCaption.Text := 'Заявки (' + DM.cdsOrderExternalPartnerName.AsString + ')'
     else
     if tcMain.ActiveTab = tiStoreReal then
       lCaption.Text := 'Остатки (' + DM.cdsStoreRealsPartnerName.AsString + ')'
