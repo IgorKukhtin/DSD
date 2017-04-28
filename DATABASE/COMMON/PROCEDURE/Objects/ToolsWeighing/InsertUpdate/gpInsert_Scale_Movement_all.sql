@@ -471,6 +471,7 @@ end if;
                                                   , inChecked               := NULL
                                                   , inIsPartner             := NULL
                                                   , inPriceWithVAT          := PriceWithVAT
+                                                  , inisList                := FALSE
                                                   , inVATPercent            := VATPercent
                                                   , inChangePercent         := ChangePercent
                                                   , inFromId                := FromId

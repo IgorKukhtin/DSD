@@ -117,15 +117,13 @@ BEGIN
       --  омментарий
       PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), vbId, inComment);
 
-      IF vbisInsert 
+      /*IF vbisInsert 
       THEN
            -- сохранили св€зь с <ѕользователь>
-           PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_Insert(), vbId, vbUserId);
+           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), vbId, vbUserId);
       END IF;
-
-      -- сохранили свойство <ƒата создани€>
-      -- формируетрс€ при загрузке с моб устр., здесь дата загрузки
-      PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_Insert(), vbId, CURRENT_TIMESTAMP);
+      -- сохранили свойство <ƒата создани€> - при загрузке с моб устр., здесь дата загрузки
+      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), vbId, CURRENT_TIMESTAMP);*/
 
       -- сохранили свойство <ƒата/врем€ создани€ заказа на мобильном устройстве>
       PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_InsertMobile(), vbId, inInsertDate);

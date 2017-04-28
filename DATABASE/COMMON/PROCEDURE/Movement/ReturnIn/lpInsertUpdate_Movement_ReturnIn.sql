@@ -163,6 +163,15 @@ BEGIN
      END IF;
 
 
+     IF vbIsInsert = TRUE
+     THEN
+         -- сохранили свойство <Дата создания> - при загрузке с моб устр., здесь дата загрузки
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
+         -- сохранили связь с <Пользователь>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
+     END IF;
+
+
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovemenTFloat_TotalSumm (ioId);
 

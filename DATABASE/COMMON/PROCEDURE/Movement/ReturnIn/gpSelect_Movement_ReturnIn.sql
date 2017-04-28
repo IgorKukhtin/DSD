@@ -152,10 +152,10 @@ BEGIN
            , Object_User.ValueData                  AS InsertName
            , MovementDate_Insert.ValueData          AS InsertDate
            , MovementDate_InsertMobile.ValueData    AS InsertMobileDate
-           , Object_MemberInsert.ValueData          AS MemberInsertName
+           , CASE WHEN MovementString_GUID.ValueData <> '' THEN Object_MemberInsert.ValueData ELSE '' END :: TVarChar AS MemberInsertName
            , Object_Unit.ObjectCode                 AS UnitCode
            , Object_Unit.ValueData                  AS UnitName
-           , Object_Position.ValueData              AS PositionName
+           , CASE WHEN MovementString_GUID.ValueData <> '' THEN Object_Position.ValueData ELSE '' END :: TVarChar AS PositionName
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -339,9 +339,14 @@ BEGIN
                                         AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_Insert.ObjectId
 
+            LEFT JOIN MovementString AS MovementString_GUID
+                                     ON MovementString_GUID.MovementId = Movement.Id
+                                    AND MovementString_GUID.DescId = zc_MovementString_GUID()
+
             LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                  ON ObjectLink_User_Member.ObjectId = Object_User.Id
                                 AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                                -- AND MovementString_GUID.ValueData <> ''
             LEFT JOIN Object AS Object_MemberInsert ON Object_MemberInsert.Id = ObjectLink_User_Member.ChildObjectId
 
             LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId

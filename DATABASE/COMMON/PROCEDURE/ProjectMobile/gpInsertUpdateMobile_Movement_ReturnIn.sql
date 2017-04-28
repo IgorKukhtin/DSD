@@ -131,13 +131,14 @@ BEGIN
            -- сохранили свойство <Дата/время создания на мобильном устройстве>
            PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_InsertMobile(), vbId, inInsertDate);
 
-           IF vbIsInsert 
+           /*IF vbIsInsert 
            THEN
                 -- сохранили связь с <Пользователь>
                 PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_Insert(), vbId, vbUserId);
-                -- сохранили свойство <Дата создания>
-                PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_Insert(), vbId, CURRENT_TIMESTAMP);
            END IF;
+           -- сохранили свойство <Дата создания> - при загрузке с моб устр., здесь дата загрузки
+           PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_Insert(), vbId, CURRENT_TIMESTAMP);
+           */
 
            -- !!! ДЛЯ ТЕСТА. Удаляем документ
            PERFORM lpSetErased_Movement (inMovementId:= vbId, inUserId:= vbUserId);
