@@ -1223,6 +1223,7 @@ begin
     if ParamByName('OrderExternalId').AsInteger<>0
     then if (ParamByName('OrderExternal_DescId').AsInteger=zc_Movement_OrderExternal)
           or(ParamByName('OrderExternal_DescId').AsInteger=zc_Movement_OrderInternal)
+          or(ParamByName('OrderExternal_DescId').AsInteger=zc_Movement_OrderIncome)
          then PanelOrderExternal.Caption:=' ç.'+ParamByName('OrderExternalName_master').asString
          else if ParamByName('OrderExternal_DescId').AsInteger=zc_Movement_SendOnPrice
               then PanelOrderExternal.Caption:=' ô.'+ParamByName('OrderExternalName_master').asString

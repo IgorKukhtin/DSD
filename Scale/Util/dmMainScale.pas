@@ -968,9 +968,10 @@ begin
          ParamByName('PaidKindId').AsInteger:= DataSet.FieldByName('PaidKindId').asInteger;
          ParamByName('PaidKindName').asString:= DataSet.FieldByName('PaidKindName').asString;
 
-         //определяется только для zc_Movement_SendOnPrice + zc_Movement_Loss
+         //определяется только для zc_Movement_SendOnPrice + zc_Movement_Loss + zc_Movement_Income
          if  (DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_SendOnPrice)
            or(DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_Loss)
+           or(DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_Income)
          then ParamByName('MovementDescNumber').AsInteger:= DataSet.FieldByName('MovementDescNumber').asInteger;
 
          ParamByName('calcPartnerId').AsInteger:= DataSet.FieldByName('PartnerId_calc').AsInteger;
@@ -1168,6 +1169,10 @@ begin
          Params.ParamByName('inSqlText').Value:='SELECT zc_Movement_OrderInternal() :: TVarChar';
          Execute;
          zc_Movement_OrderInternal:=DataSet.FieldByName('Value').asInteger;
+
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Movement_OrderIncome() :: TVarChar';
+         Execute;
+         zc_Movement_OrderIncome:=DataSet.FieldByName('Value').asInteger;
 
          //Measure
          //Params.ParamByName('inSqlText').Value:='SELECT zc_Measure_Sh() :: TVarChar';

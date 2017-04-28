@@ -120,6 +120,7 @@ var
 
   zc_Movement_OrderExternal: Integer;
   zc_Movement_OrderInternal: Integer;
+  zc_Movement_OrderIncome: Integer;
 
   zc_Enum_InfoMoney_30201: Integer; // Доходы + Мясное сырье + Мясное сырье
 

@@ -69,17 +69,17 @@ BEGIN
                                  , tmpMovement.OperDate
                                  , MovementLinkObject_Contract.ObjectId       AS ContractId
                                  , CASE WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
-                                             THEN (SELECT OL.ChildObjectId
-                                                   FROM MovementLinkObject AS MLO
-                                                        INNER JOIN ObjectLink AS OL ON OL.ObjectId = MLO.ObjectId AND OL.DescId = zc_ObjectLink_Partner_Juridical()
-                                                        INNER JOIN Object ON Object.Id = OL.ChildObjectId AND Object.isErased = FALSE
-                                                   WHERE MLO.MovementId = tmpMovement.Id
-                                                     AND MLO.DescId     = zc_MovementLinkObject_Juridical()
-                                                   LIMIT 1)
+                                             THEN MovementLinkObject_Unit.ObjectId
                                         ELSE MovementLinkObject_From.ObjectId
                                    END AS FromId
                                  , CASE WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
-                                             THEN MovementLinkObject_Unit.ObjectId
+                                             THEN (SELECT OL.ChildObjectId
+                                                   FROM MovementLinkObject AS MLO
+                                                        INNER JOIN ObjectLink AS OL ON OL.ChildObjectId = MLO.ObjectId AND OL.DescId = zc_ObjectLink_Partner_Juridical()
+                                                        INNER JOIN Object ON Object.Id = OL.ObjectId AND Object.isErased = FALSE
+                                                   WHERE MLO.MovementId = tmpMovement.Id
+                                                     AND MLO.DescId     = zc_MovementLinkObject_Juridical()
+                                                   LIMIT 1)
                                         WHEN MovementLinkObject_From.ObjectId = MovementLinkObject_To.ObjectId
                                          AND inBranchCode = 301
                                          AND tmpMovement.DescId = zc_Movement_OrderInternal()
@@ -188,7 +188,7 @@ BEGIN
                                                ON MovementLinkObject_User.MovementId = Movement.Id
                                               AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
                                               AND MovementLinkObject_User.ObjectId = vbUserId
-                                              AND vbUserId <> 5
+                                              -- AND vbUserId <> 5
                                  )
            , tmpJuridicalPrint AS (SELECT tmpGet.Id AS JuridicalId
                                         , tmpGet.isMovement, tmpGet.CountMovement
@@ -202,6 +202,7 @@ BEGIN
                                         INNER JOIN lpGet_Object_Juridical_PrintKindItem ((SELECT tmpMovement.JuridicalId FROM tmpMovement LIMIT 1)) AS tmpGet ON tmpGet.Id = tmp.JuridicalId
                                   )
       , tmpMovementDescNumber AS (SELECT tmpSelect.Number AS MovementDescNumber
+                                       , tmp.MovementId
                                   FROM (SELECT CASE WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
                                                          THEN zc_Movement_Income()
                                                     WHEN tmpMovement.DescId = zc_Movement_OrderInternal()
@@ -216,6 +217,7 @@ BEGIN
                                              , tmpMovement.FromId
                                              , tmpMovement.ToId
                                              , tmpMovement.isSendOnPriceIn
+                                             , tmpMovement.Id AS MovementId
                                         FROM tmpMovement
                                              LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
                                         WHERE tmpMovement.DescId = zc_Movement_OrderIncome()
@@ -245,7 +247,7 @@ BEGIN
                                                                                                                                             THEN tmp.FromId -- для для филиала - расход с него
                                                                                                                                   END
                                                                                                            AND tmpSelect.ToId   = CASE WHEN tmp.MovementDescId = zc_Movement_Income()
-                                                                                                                                            THEN tmp.ToId -- для Прихода от поставщика
+                                                                                                                                            THEN tmp.FromId -- для Прихода от поставщика
                                                                                                                                        WHEN tmp.MovementDescId = zc_Movement_Send()
                                                                                                                                             THEN tmp.FromId -- для Перемещения
                                                                                                                                        WHEN tmp.MovementDescId = zc_Movement_Loss()
@@ -263,7 +265,7 @@ BEGIN
                                                                                                                                             THEN tmp.ToId -- для для филиала - расход с него, а здесь ToId т.к. не выбирается
                                                                                                                                   END
                                                                                                            AND COALESCE (tmpSelect.PaidKindId, 0) = CASE WHEN tmp.MovementDescId = zc_Movement_Income()
-                                                                                                                                                              THEN (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PaisKind())
+                                                                                                                                                              THEN (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = tmp.MovementId AND MLO.DescId = zc_MovementLinkObject_PaidKind())
                                                                                                                                                          ELSE COALESCE (tmpSelect.PaidKindId, 0)
                                                                                                                                                     END
                                  )
@@ -275,7 +277,11 @@ BEGIN
             , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
 
             , tmpMovementDescNumber.MovementDescNumber       AS MovementDescNumber -- !!!только для zc_Movement_SendOnPrice!!!
-            , CASE WHEN Object_From.DescId = zc_Object_ArticleLoss()
+            , CASE WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
+                        THEN zc_Movement_Income()
+                   WHEN tmpMovement.DescId = zc_Movement_OrderInternal()
+                        THEN  zc_Movement_Send()
+                   WHEN Object_From.DescId = zc_Object_ArticleLoss()
                         THEN zc_Movement_Loss()
                    WHEN Object_From.DescId = zc_Object_Unit()
                         THEN zc_Movement_SendOnPrice()
@@ -304,21 +310,27 @@ BEGIN
             , Object_GoodsProperty.ObjectCode                AS GoodsPropertyCode
             , Object_GoodsProperty.ValueData                 AS GoodsPropertyName
 
-            , CASE WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
+            , CASE WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
+                        THEN Object_To.Id
+                   WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
                         THEN Object_From.Id
                    WHEN tmpMovement.DescId = zc_Movement_SendOnPrice() AND tmpMovement.isSendOnPriceIn = TRUE
                         THEN Object_From.Id
                    WHEN tmpMovement.DescId = zc_Movement_SendOnPrice() AND tmpMovement.isSendOnPriceIn = FALSE
                         THEN Object_To.Id
               END :: Integer AS PartnerId_calc
-            , CASE WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
+            , CASE WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
+                        THEN Object_To.ObjectCode
+                   WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
                         THEN Object_From.ObjectCode
                    WHEN tmpMovement.DescId = zc_Movement_SendOnPrice() AND tmpMovement.isSendOnPriceIn = TRUE
                         THEN Object_From.ObjectCode
                    WHEN tmpMovement.DescId = zc_Movement_SendOnPrice() AND tmpMovement.isSendOnPriceIn = FALSE
                         THEN Object_To.ObjectCode
               END :: Integer AS PartnerCode_calc
-            , CASE WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
+            , CASE WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
+                        THEN Object_To.ValueData
+                   WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
                         THEN Object_From.ValueData
                    WHEN tmpMovement.DescId = zc_Movement_SendOnPrice() AND tmpMovement.isSendOnPriceIn = TRUE
                         THEN Object_From.ValueData
