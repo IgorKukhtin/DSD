@@ -1714,9 +1714,6 @@ begin
         SetNewProgressTask('Сохранение заданий');
         UploadTasks;
 
-        SetNewProgressTask('Сохранение новых ТТ');
-        UploadNewPartners;
-
         SetNewProgressTask('Сохранение координат ТТ');
         UploadPartnerGPS;
 
@@ -1725,6 +1722,9 @@ begin
 
         SetNewProgressTask('Сохранение фотографий');
         UploadPhotos;
+
+        SetNewProgressTask('Сохранение новых ТТ');
+        UploadNewPartners;
 
         DM.tblObject_Const.Edit;
         DM.tblObject_ConstSyncDateOut.AsDateTime := Now();

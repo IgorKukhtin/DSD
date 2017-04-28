@@ -164,11 +164,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Discount_DiscountKind() RETURNS Integer
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Discount_DiscountKind', 'Связь Вид скидки', zc_Object_Discount(), zc_Object_DiscountKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Discount_DiscountKind');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PriceList_Currency() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PriceList_Currency'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_PriceList_Currency', 'Связь Валюта', zc_Object_PriceList(), zc_Object_Currency() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PriceList_Currency');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Полятыкин А.А.  Воробкало А.А.
+28.04.17          * add zc_ObjectLink_PriceList_Currency
 10.03.17                                                         *
 02.03.17                                                         *
 28.02.17                                                         * 

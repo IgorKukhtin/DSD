@@ -182,7 +182,9 @@ uses
   LossJournal in '..\..\FormsBoutique\Document\LossJournal.pas' {LossJournalForm: TParentForm},
   Loss in '..\..\FormsBoutique\Document\Loss.pas' {LossForm: TParentForm},
   CurrencyJournal in '..\..\FormsBoutique\Document\CurrencyJournal.pas' {CurrencyJournalForm: TParentForm},
-  CurrencyMovement in '..\..\FormsBoutique\Document\CurrencyMovement.pas' {CurrencyMovementForm: TParentForm};
+  CurrencyMovement in '..\..\FormsBoutique\Document\CurrencyMovement.pas' {CurrencyMovementForm: TParentForm},
+  PriceList in '..\..\FormsBoutique\Guides\PriceList.pas' {PriceListForm: TParentForm},
+  PriceListEdit in '..\..\FormsBoutique\Guides\PriceListEdit.pas' {PriceListEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -102,6 +102,8 @@ type
     actCurrencyMovement: TdsdOpenForm;
     N49: TMenuItem;
     N50: TMenuItem;
+    actPriceList: TdsdOpenForm;
+    N51: TMenuItem;
   private
     { Private declarations }
   public

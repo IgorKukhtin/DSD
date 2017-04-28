@@ -1,12 +1,14 @@
-DROP FUNCTION IF EXISTS gpReport_Movement_PriceList_cross(Integer,Integer,Integer,Integer,Integer,Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Movement_PriceList_cross(TDateTime,TDateTime,Integer,Integer,Integer,Integer,Integer,Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Movement_PriceList_cross(
-    IN inJuridicalId_Optima  Integer , --
-    IN inJuridicalId_BADM    Integer , --
-    IN inJuridicalId_Venta   Integer , --
-    IN inContractId_Optima   Integer , --
-    IN inContractId_BADM     Integer , --
-    IN inContractId_Venta    Integer , --
+    IN inStartDate           TDateTime,  -- Дата начала
+    IN inEndDate             TDateTime,  -- Дата окончания
+    IN inJuridicalId_1       Integer , --
+    IN inJuridicalId_2       Integer , --
+    IN inJuridicalId_3       Integer , --
+    IN inContractId_1        Integer , --
+    IN inContractId_2        Integer , --
+    IN inContractId_3        Integer , --
     IN inSession             TVarChar    -- сессия пользователя
 )
   RETURNS SETOF refcursor 
@@ -24,83 +26,121 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
 
-  -- определяем список аптек для просмотра категорий
-  CREATE TEMP TABLE _tmpGoods (CommonCode integer, GoodsMainId integer, GoodsId integer, GoodsName TVarChar) ON COMMIT DROP;
-     INSERT INTO _tmpGoods (CommonCode, GoodsMainId, GoodsId, GoodsName)
-                               SELECT Object_MarginCategory.Id         AS MarginCategoryId
-                                    , Object_MarginCategory.ValueData  AS MarginCategoryName
-                               FROM  Object AS Object_MarginCategory
-                                     Left JOIN ObjectFloat AS ObjectFloat_Percent 	
-                                            ON Object_MarginCategory.Id = ObjectFloat_Percent.ObjectId
-                                           AND ObjectFloat_Percent.DescId = zc_ObjectFloat_MarginCategory_Percent()
-                               WHERE Object_MarginCategory.DescId = zc_Object_MarginCategory()
-                                 AND Object_MarginCategory.isErased = FALSE
-                                 AND COALESCE (ObjectFloat_Percent.ValueData ,0) = 0;
+    inStartDate := date_trunc('day', inStartDate);
+    inEndDate := date_trunc('day', inEndDate); 
+    --inEndDate := date_trunc('month', inEndDate) + interval '1 month' - 1 ; 
 
+     CREATE TEMP TABLE tmpOperDate ON COMMIT DROP AS
+        SELECT GENERATE_SERIES ( inStartDate, inEndDate, '1 DAY' :: INTERVAL) AS OperDate;
+
+  -- определяем список товаров
+  CREATE TEMP TABLE _tmpGoods (CommonCode integer, GoodsMainId integer, GoodsId integer) ON COMMIT DROP;
+     INSERT INTO _tmpGoods (CommonCode, GoodsMainId, GoodsId)
+            WITH tmpGoods AS (
+                              SELECT DISTINCT COALESCE(Object_LinkGoods_View.GoodsCode, Object_LinkGoods_View.GoodsCodeInt::TVarChar) ::Integer AS CommonCode
+                                   , ObjectLink_LinkGoods_GoodsMain.ChildObjectId     AS GoodsMainId
+                                   , ObjectLink_Goods_Object.ObjectId                 AS GoodsId 
+                              FROM ObjectLink AS ObjectLink_Goods_Object
+                                    INNER JOIN Object AS Object_Goods 
+                                            ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId 
+                                           AND Object_Goods.isErased = False
+                                           AND Object_Goods.DescId = zc_Object_Goods() 
+                                    LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                           ON ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                          AND ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
+                                    LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain 
+                                           ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId 
+                                          AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    LEFT JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsmainId = ObjectLink_LinkGoods_Goodsmain.ChildObjectId
+                                         AND Object_LinkGoods_View.ObjectId = zc_Enum_GlobalConst_Marion()
+                              WHERE ObjectLink_Goods_Object.ChildObjectId  = inJuridicalId_1 --59611 --inObjectId  --in ( 59612,59610,59611) -- оптима
+                                AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object() 
+                                AND ObjectLink_LinkGoods_GoodsMain.ChildObjectId = 324
+                             )
+
+            SELECT DISTINCT tmpGoods.CommonCode, tmpGoods.GoodsMainId
+                 , ObjectLink_Child_Jurid.ChildObjectId AS GoodsId
+            FROM (SELECT DISTINCT tmpGoods.GoodsMainId, tmpGoods.CommonCode FROM tmpGoods) AS tmpGoods
+                 INNER JOIN ObjectLink AS ObjectLink_Main_Jurid 
+                                       ON ObjectLink_Main_Jurid.ChildObjectId = tmpGoods.GoodsMainId --ObjectLink_Main.ChildObjectId
+                                      AND ObjectLink_Main_Jurid.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                 INNER JOIN ObjectLink AS ObjectLink_Child_Jurid 
+                                       ON ObjectLink_Child_Jurid.ObjectId = ObjectLink_Main_Jurid.ObjectId
+                                      AND ObjectLink_Child_Jurid.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                 INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                       ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_Jurid.ChildObjectId
+                                      AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                      AND ObjectLink_Goods_Object.ChildObjectId in ( inJuridicalId_3,inJuridicalId_2,inJuridicalId_1) --vbObjectId
+--            WHERE GoodsMainId = 324
+;
   
-  CREATE TEMP TABLE _tmpMarginCategory (MarginCategoryId integer, MarginCategoryName TVarChar, JuridicalName TVarChar) ON COMMIT DROP; /*tmpMI */
-     INSERT INTO _tmpMarginCategory (MarginCategoryId, MarginCategoryName, JuridicalName)
-              SELECT Object_MarginCategoryLink_View.MarginCategoryId
-                   , _tmpMarginCategoryList.MarginCategoryName
-                   , MAX (Object_Juridical.ValueData)       AS JuridicalName
-              FROM Object_MarginCategoryLink_View 
-                   INNER JOIN (SELECT ObjectBoolean_MarginCategory.ObjectId AS UnitId
-                               FROM ObjectBoolean AS ObjectBoolean_MarginCategory
-                               WHERE ObjectBoolean_MarginCategory.DescId = zc_ObjectBoolean_Unit_MarginCategory()
-                                 AND ObjectBoolean_MarginCategory.ValueData = TRUE
-                               ) AS tmpUnit ON tmpUnit.UnitId = Object_MarginCategoryLink_View.UnitId
-                   INNER JOIN _tmpMarginCategoryList ON _tmpMarginCategoryList.MarginCategoryId = Object_MarginCategoryLink_View.MarginCategoryId
+  CREATE TEMP TABLE _tmpPriceList (OperDate TDateTime, GoodsMainId integer, Price_1 TFloat, Price_2 TFloat, Price_3 TFloat) ON COMMIT DROP; /*tmpMI */
+     INSERT INTO _tmpPriceList (OperDate, GoodsMainId, Price_1, Price_2, Price_3)
+        SELECT tmp.OperDate, tmp.GoodsMainId
+             , MAX(tmp.Price_1)  AS Price_1
+             , MAX(tmp.Price_2)  AS Price_2
+             , MAX(tmp.Price_3)  AS Price_3
+        FROM (
+             SELECT DISTINCT
+                    DATE_TRUNC ('DAY', Movement.OperDate) AS OperDate, tmpGoodsAll.GoodsMainId
+                  , CASE WHEN MovementLinkObject_Juridical.ObjectId = inJuridicalId_1 THEN MovementItem.Amount  ELSE 0 END ::TFloat AS Price_1   -- оптима
+                  , CASE WHEN MovementLinkObject_Juridical.ObjectId = inJuridicalId_2 THEN MovementItem.Amount  ELSE 0 END ::TFloat AS Price_2   -- бадм
+                  , CASE WHEN MovementLinkObject_Juridical.ObjectId = inJuridicalId_3 THEN MovementItem.Amount  ELSE 0 END ::TFloat AS Price_3   -- вента
+             FROM Movement
+                  INNER JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                                ON MovementLinkObject_Juridical.MovementId = Movement.Id
+                                               AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+                                               AND MovementLinkObject_Juridical.ObjectId IN ( inJuridicalId_3,inJuridicalId_2,inJuridicalId_1)
+                  INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                               ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                              AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                              AND MovementLinkObject_Contract.ObjectId IN (inContractId_1, inContractId_2, inContractId_3) --(183275,183338,183378)              --бадм, оптима, вента
+                  JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                   AND MovementItem.DescId     = zc_MI_Master()
+                                   AND MovementItem.isErased   = False
+                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                   ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                  AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                  INNER JOIN _tmpGoods AS tmpGoodsAll ON tmpGoodsAll.GoodsMainId = MovementItem.ObjectId
+                                                     AND tmpGoodsAll.GoodsId     = MILinkObject_Goods.ObjectId
+                  LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                              ON MIFloat_Price.MovementItemId =  MovementItem.Id
+                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
+              WHERE Movement.DescId = zc_Movement_PriceList() 
+                AND DATE_TRUNC ('DAY', Movement.OperDate) >= inStartDate AND DATE_TRUNC ('DAY', Movement.OperDate) < inEndDate + interval '1 day'  -- '01.12.2016' --
+              --  and MovementItem.ObjectId = 324
+                ) AS tmp
+        GROUP BY tmp.OperDate, tmp.GoodsMainId;
 
-                   LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
-                                        ON ObjectLink_Unit_Juridical.ObjectId = tmpUnit.UnitId
-                                       AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                   LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
-
-              WHERE Object_MarginCategoryLink_View.MarginCategoryId Not in (1327351, 1599495)   --"ПЕРЕОЦЕНКА ПО ВСЕЙ СЕТИ", "Для Сайта по Украине"
-              GROUP BY Object_MarginCategoryLink_View.MarginCategoryId
-                   , _tmpMarginCategoryList.MarginCategoryName
-              ORDER BY 1;
             
-     -- 
-  CREATE TEMP TABLE _tmpminPrice (minPrice TFloat, Num integer) ON COMMIT DROP; 
-     INSERT INTO _tmpminPrice (minPrice, Num)
-                SELECT tmp.minPrice
-                     , ROW_NUMBER() OVER (ORDER BY tmp.MinPrice)  ::integer      AS Num
-                FROM (
-                     SELECT DISTINCT ObjectFloat_MinPrice.ValueData AS minPrice 
-                     FROM ObjectFloat AS ObjectFloat_MinPrice
-                     WHERE ObjectFloat_MinPrice.DescId = zc_ObjectFloat_MarginCategoryItem_MinPrice()
-                     ) AS tmp;
+  CREATE TEMP TABLE _tmpGoodsReport (CommonCode integer, GoodsMainId integer, GoodsName TVarChar) ON COMMIT DROP;
+     INSERT INTO _tmpGoodsReport (CommonCode, GoodsMainId, GoodsName)
+                SELECT DISTINCT _tmpGoods.CommonCode
+                     , _tmpGoods.GoodsMainId
+                     , Object_Goods.ValueData  AS GoodsName
+                FROM _tmpGoods
+                     LEFT JOIN Object AS Object_Goods 
+                                      ON Object_Goods.Id = _tmpGoods.GoodsMainId
+                                     AND Object_Goods.isErased = False
+                                     AND Object_Goods.DescId = zc_Object_Goods() ;
+
 
      -- все данные  
      CREATE TEMP TABLE tmpMI ON COMMIT DROP AS
-            SELECT _tmpMarginCategory.MarginCategoryId 
-                 , _tmpminPrice.num AS Num
-                 , _tmpMarginCategory.MarginCategoryId AS ObjectId 
-                 , tmpMarginCategoryItem.Id AS Object1Id 
-                 , tmpMarginCategoryItem.MarginPercent  AS ShortName 
-                 ,  avg(tmpMarginCategoryItem.MarginPercent) OVER (ORDER BY  _tmpminPrice.num)  AS avgPercent 
-            FROM _tmpMarginCategory 
-                    LEFT JOIN  (SELECT MAX (Object_MarginCategoryItem.Id)      AS Id
-                                    , Object_MarginCategoryItem.MarginCategoryId
-                                    , CAST (Object_MarginCategoryItem.MarginPercent AS NUMERIC (16,2)) AS MarginPercent
-                                    , Object_MarginCategoryItem.minPrice
-                               FROM Object_MarginCategoryItem_View AS Object_MarginCategoryItem
-                                    INNER JOIN Object ON Object.Id = Object_MarginCategoryItem.Id
-                                                     AND Object.isErased = FALSE
-                               GROUP BY Object_MarginCategoryItem.MarginCategoryId
-                                      , Object_MarginCategoryItem.MarginPercent
-                                      , Object_MarginCategoryItem.minPrice
-                                ) AS tmpMarginCategoryItem
-                                  ON tmpMarginCategoryItem.MarginCategoryId = _tmpMarginCategory.MarginCategoryId
-                    LEFT JOIN _tmpminPrice ON _tmpminPrice.minPrice = tmpMarginCategoryItem.minPrice
-            ORDER BY _tmpMarginCategory.MarginCategoryId, _tmpminPrice.num
-           
-     ;
+           SELECT tmpOperDate.OperDate
+                , _tmpGoodsReport.GoodsMainId
+                , _tmpPriceList.Price_2
+                , _tmpPriceList.Price_1
+                , _tmpPriceList.Price_3
+           FROM tmpOperDate
+                LEFT JOIN _tmpGoodsReport ON 1 = 1
+                LEFT JOIN _tmpPriceList ON _tmpPriceList.OperDate = tmpOperDate.OperDate
+                                       AND _tmpPriceList.GoodsMainId = _tmpGoodsReport.GoodsMainId           
+           ;
 
      vbIndex := 0;
      -- кол-во категорий наценок 
-     vbCount := (SELECT COUNT(*) FROM _tmpMarginCategory);
+     vbCount := (SELECT COUNT(*) FROM tmpOperDate);
 
 
      vbCrossString := 'Key Integer[]';
@@ -109,49 +149,50 @@ BEGIN
      WHILE (vbIndex < vbCount) LOOP
        vbIndex := vbIndex + 1;
        vbCrossString := vbCrossString || ', DAY' || vbIndex || ' VarChar[]'; 
-       vbFieldNameText := vbFieldNameText || ', DAY' || vbIndex || '[1] :: TFloat AS Value'||vbIndex||'  '||
-                          ', DAY' || vbIndex || '[2]::Integer  AS MarginCategoryId'||vbIndex||' '||
-                          ', DAY' || vbIndex || '[3]::Integer  AS MarginCategoryItemId'||vbIndex||' ';
+       vbFieldNameText := vbFieldNameText || ', DAY' || vbIndex || '[1] ::TFloat AS Value'||vbIndex||'  '||
+                                       --      ', DAY' || vbIndex || '[2] ::TFloat AS Value1'||vbIndex||
+                                        --     ', DAY' || vbIndex || '[3] ::TFloat AS Value2'||vbIndex||
+                                             ', DAY' || vbIndex || '[4] ::Integer  AS GoodsMainId'||vbIndex||' ';
      END LOOP;
 
-     OPEN cur1 FOR SELECT _tmpMarginCategory.MarginCategoryId, 
-                          ( _tmpMarginCategory.JuridicalName|| ', '||_tmpMarginCategory.MarginCategoryName )  ::TVarChar AS ValueField
-               FROM _tmpMarginCategory
-               ORDER by 1
-     ;  
+     OPEN cur1 FOR SELECT tmpOperDate.OperDate::TDateTime, 
+                          ((EXTRACT(DAY FROM tmpOperDate.OperDate))||case when tmpCalendar.Working = False then ' *' else ' ' END||tmpWeekDay.DayOfWeekName) ::TVarChar AS ValueField
+                   FROM tmpOperDate
+                        LEFT JOIN zfCalc_DayOfWeekName (tmpOperDate.OperDate) AS tmpWeekDay ON 1=1
+                        LEFT JOIN gpSelect_Object_Calendar(tmpOperDate.OperDate,tmpOperDate.OperDate,inSession) tmpCalendar ON 1=1 
+     ; 
+
      RETURN NEXT cur1;
 
-
      vbQueryText := '
-          SELECT _tmpminPrice.Num       AS Num
-               , _tmpminPrice.minPrice  AS minPrice
-               , CAST (tmp.avgPercent AS NUMERIC (16,2)) AS avgPercent
+          SELECT _tmpGoodsReport.GoodsMainId
+               , _tmpGoodsReport.CommonCode
+               , _tmpGoodsReport.GoodsName
                '|| vbFieldNameText ||'
           FROM
          (SELECT * FROM CROSSTAB (''
-                                    SELECT ARRAY[COALESCE (tmpData.Num, Object_Data.Num)     
+                                    SELECT ARRAY[COALESCE (Movement_Data.GoodsMainId, Object_Data.GoodsMainId)           -- AS GoodsId
                                                 ] :: Integer[]
-                                         , COALESCE (tmpData.MarginCategoryId, Object_Data.MarginCategoryId) AS MarginCategoryId
-                                         , ARRAY[ tmpData.ShortName :: VarChar
-                                               , COALESCE (tmpData.ObjectId, 0) :: VarChar
-                                               , COALESCE (tmpData.Object1Id, 0) :: VarChar
+                                         , COALESCE (Movement_Data.OperDate, Object_Data.OperDate) AS OperDate
+                                         , ARRAY[  COALESCE(Movement_Data.Price_1,0) :: VarChar 
+                                               -- , COALESCE(Movement_Data.Price_2,0) :: VarChar
+                                               -- , COALESCE(Movement_Data.Price_3,0) :: VarChar
                                                 ] :: TVarChar
-                                    FROM (SELECT * FROM tmpMI) AS tmpData
+
+                                    FROM (SELECT * FROM tmpMI) AS Movement_Data
                                         FULL JOIN  
-                                         (SELECT _tmpMarginCategory.MarginCategoryId, 0, 
-                                                 _tmpminPrice.Num AS Num
-                                          FROM _tmpMarginCategory, _tmpminPrice
-                                      ) AS Object_Data
-                                           ON Object_Data.MarginCategoryId = tmpData.MarginCategoryId
-                                          AND Object_Data.Num = tmpData.Num
-      
+                                         (SELECT tmpOperDate.operdate, 0, 
+                                                 COALESCE(_tmpGoodsReport.GoodsMainId, 0) AS GoodsMainId 
+                                            FROM tmpOperDate, _tmpGoodsReport 
+                                        ) AS Object_Data
+                                           ON Object_Data.OperDate    = Movement_Data.OperDate
+                                          AND Object_Data.GoodsMainId = Movement_Data.GoodsMainId
                                   order by 1,2''
-                                , ''SELECT _tmpMarginCategory.MarginCategoryId FROM _tmpMarginCategory order by 1
-                                  ''
-                                ) AS CT (' || vbCrossString || ')
+                                , ''SELECT OperDate FROM tmpOperDate order by 1
+                                  '') AS CT (' || vbCrossString || ')
          ) AS D
-         LEFT JOIN _tmpminPrice ON _tmpminPrice.Num = D.Key[1]
-         LEFT JOIN (SELECT DISTINCT tmpMI.Num AS Num, tmpMI.avgPercent FROM tmpMI ) AS tmp ON tmp.Num = _tmpminPrice.Num
+         LEFT JOIN _tmpGoodsReport ON _tmpGoodsReport.GoodsMainId = D.Key[1]
+        ORDER BY _tmpGoodsReport.GoodsName
         ';
 
 
@@ -167,5 +208,5 @@ $BODY$
 /*   
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 29.01.16         * 
+ 27.04.17         * 
 */
