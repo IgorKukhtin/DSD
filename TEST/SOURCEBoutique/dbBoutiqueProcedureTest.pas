@@ -18,6 +18,7 @@ type
   published
     procedure CreateCOMMON;
     procedure CreatePriceListItem;
+    procedure CreateDiscountPeriodItem;
   end;
 
 type
@@ -70,6 +71,7 @@ type
     procedure CreateDiscountKind;
     procedure CreateDiscount;
     procedure CreateDiscountTools;
+    procedure CreateDiscountPeriodItem;
     procedure CreateFabrika;
     procedure CreateGoodsInfo;
     procedure CreateGoodsSize;
@@ -141,6 +143,12 @@ procedure TdbObjectHistoryProcedureTest.CreatePriceListItem;
 begin
   DirectoryLoad(CommonProcedurePath + 'ObjectHistory\PriceListItem\');
 end;
+
+procedure TdbObjectHistoryProcedureTest.CreateDiscountPeriodItem;
+begin
+  DirectoryLoad(CommonProcedurePath + 'ObjectHistory\DiscountPeriodItem\');
+end;
+
 { TdbMovementProcedureTest }
 procedure TdbMovementProcedureTest.CreateCOMMON;
 begin
@@ -241,6 +249,10 @@ begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\DiscountTools\');
 end;
 
+procedure TdbObjectProcedureTest.CreateDiscountPeriodItem;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\DiscountPeriodItem\');
+end;
 procedure TdbObjectProcedureTest.CreateFabrika;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Fabrika\');

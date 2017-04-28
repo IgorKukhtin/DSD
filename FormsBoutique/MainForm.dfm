@@ -10,7 +10,19 @@ inherited MainForm: TMainForm
   inherited ActionList: TActionList
     Left = 336
     Top = 8
-    object actSend: TdsdOpenForm [0]
+    object actDiscountPeriodItem: TdsdOpenForm [0]
+      Category = #1048#1089#1090#1086#1088#1080#1080
+      MoveParams = <>
+      Caption = #1048#1089#1090#1086#1088#1080#1080' '#1089#1077#1079#1086#1085#1085#1099#1093' '#1089#1082#1080#1076#1086#1082
+      Hint = #1048#1089#1090#1086#1088#1080#1080' '#1057#1077#1079#1086#1085#1085#1099#1093' '#1089#1082#1080#1076#1086#1082
+      FormName = 'TDiscountPeriodItemForm'
+      FormNameParam.Value = 'TDiscountPeriodItemForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actSend: TdsdOpenForm [1]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
@@ -22,7 +34,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReturnOut: TdsdOpenForm [1]
+    object actReturnOut: TdsdOpenForm [2]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
@@ -37,7 +49,7 @@ inherited MainForm: TMainForm
     inherited actAbout: TAction
       Category = 'but'
     end
-    object actIncome: TdsdOpenForm [4]
+    object actIncome: TdsdOpenForm [5]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -49,7 +61,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actUser: TdsdOpenForm [7]
+    object actUser: TdsdOpenForm [8]
       Category = 'but'
       MoveParams = <>
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
@@ -60,7 +72,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actForms: TdsdOpenForm [11]
+    object actForms: TdsdOpenForm [12]
       Category = 'but'
       MoveParams = <>
       Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1086#1081' '#1089#1080#1089#1090#1077#1084#1086#1081
@@ -72,7 +84,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actRole: TdsdOpenForm [12]
+    object actRole: TdsdOpenForm [13]
       Category = 'but'
       MoveParams = <>
       Caption = #1056#1086#1083#1080
@@ -83,7 +95,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actPriceList: TdsdOpenForm [13]
+    object actPriceList: TdsdOpenForm [14]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099
@@ -629,6 +641,9 @@ inherited MainForm: TMainForm
       Caption = #1048#1089#1090#1086#1088#1080#1080
       object N52: TMenuItem
         Action = actPriceListItem
+      end
+      object N53: TMenuItem
+        Action = actDiscountPeriodItem
       end
     end
     inherited miService: TMenuItem
