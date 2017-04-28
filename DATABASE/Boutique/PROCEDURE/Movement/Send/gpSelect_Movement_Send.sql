@@ -36,7 +36,7 @@ BEGIN
            , Object_Status.ObjectCode                    AS StatusCode
            , Object_Status.ValueData                     AS StatusName
 
-           , abs(MovementFloat_TotalCount.ValueData)::TFloat     AS TotalCount
+           , MovementFloat_TotalCount.ValueData          AS TotalCount
            , MovementFloat_TotalSummPriceList.ValueData  AS TotalSummPriceList
         
            , Object_From.ValueData                       AS FromName

@@ -2095,7 +2095,7 @@ begin
         Add('     , BillItems.Id as SybaseId  ');
         Add('     , Goods.GoodsName as GoodsName ');
         Add('     , BillItemsIncome.Id_Postgres as PartionId ');
-        Add('     , BillItems.OperCount as Amount  ');
+        Add('     , abs(BillItems.OperCount) as Amount  ');
         Add('     , BillItems.OperPrice as OperPrice  ');
         Add('     , 1 as CountForPrice  ');
         Add('     , BillItems.PriceListPrice as OperPriceList  ');
@@ -2262,7 +2262,7 @@ begin
         Add('     , BillItems.Id as SybaseId  ');
         Add('     , Goods.GoodsName as GoodsName ');
         Add('     , BillItemsIncome.Id_Postgres as PartionId ');
-        Add('     , BillItems.OperCount as Amount  ');
+        Add('     , abs(BillItems.OperCount) as Amount  ');
         Add('     , BillItems.OperPrice as OperPrice  ');
         Add('     , BillItems.PriceListPrice as OperPriceList  ');
         Add('     , BillItems.Id_Postgres as Id_Postgres  ');

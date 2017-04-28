@@ -69,7 +69,7 @@ BEGIN
            , Object_Label.ValueData         AS LabelName
            , Object_GoodsSize.ValueData     AS GoodsSizeName 
 
-           , abs(tmpMI.Amount) ::TFloat     AS Amount
+           , tmpMI.Amount
            --, Object_PartionGoods.OperPrice      ::TFloat
            , tmpMI.OperPriceList                ::TFloat
            --, (tmpMI.Amount * Object_PartionGoods.OperPrice) ::TFloat AS AmountSumm

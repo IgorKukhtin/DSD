@@ -36,7 +36,7 @@ BEGIN
            , Object_Status.ObjectCode                    AS StatusCode
            , Object_Status.ValueData                     AS StatusName
 
-           , abs(MovementFloat_TotalCount.ValueData) ::TFloat     AS TotalCount
+           , MovementFloat_TotalCount.ValueData          AS TotalCount
            , MovementFloat_TotalSumm.ValueData           AS TotalSumm
            , MovementFloat_TotalSummPriceList.ValueData  AS TotalSummPriceList
 
@@ -135,7 +135,7 @@ BEGIN
            , Object_Label.ValueData         AS LabelName
            , Object_GoodsSize.ValueData     AS GoodsSizeName 
 
-           , abs(tmpMI.Amount) :: TFloat    As Amount
+           , tmpMI.Amount
            , tmpMI.CountForPrice  ::TFloat
            , tmpMI.OperPrice      ::TFloat
            , tmpMI.OperPriceList      ::TFloat
