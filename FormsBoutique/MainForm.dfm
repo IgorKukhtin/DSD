@@ -467,6 +467,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actPriceListItem: TdsdOpenForm
+      Category = #1048#1089#1090#1086#1088#1080#1080
+      MoveParams = <>
+      Caption = #1048#1089#1090#1086#1088#1080#1080' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074
+      Hint = #1048#1089#1090#1086#1088#1080#1080' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074
+      FormName = 'TPriceListItemForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 152
@@ -611,6 +623,12 @@ inherited MainForm: TMainForm
       end
       object N43: TMenuItem
         Action = actPersonal
+      end
+    end
+    object miHistory: TMenuItem [2]
+      Caption = #1048#1089#1090#1086#1088#1080#1080
+      object N52: TMenuItem
+        Action = actPriceListItem
       end
     end
     inherited miService: TMenuItem

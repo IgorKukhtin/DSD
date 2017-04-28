@@ -15,7 +15,6 @@ uses
   dbCreateViewTest in '..\SOURCEBoutique\View\dbCreateViewTest.pas',
   DefaultsTest in '..\SOURCEBoutique\Defaults\DefaultsTest.pas',
   LoadBoutiqueFormTest in '..\SOURCEBoutique\LoadBoutiqueFormTest.pas',
-  PriceListGoodsItem in '..\..\Forms\Guides\PriceListGoodsItem.pas' {PriceListGoodsItemForm},
   CommonData in '..\..\SOURCE\CommonData.pas',
   Authentication in '..\..\SOURCE\Authentication.pas',
   FormStorage in '..\..\SOURCE\FormStorage.pas',
@@ -184,7 +183,11 @@ uses
   CurrencyJournal in '..\..\FormsBoutique\Document\CurrencyJournal.pas' {CurrencyJournalForm: TParentForm},
   CurrencyMovement in '..\..\FormsBoutique\Document\CurrencyMovement.pas' {CurrencyMovementForm: TParentForm},
   PriceList in '..\..\FormsBoutique\Guides\PriceList.pas' {PriceListForm: TParentForm},
-  PriceListEdit in '..\..\FormsBoutique\Guides\PriceListEdit.pas' {PriceListEditForm: TParentForm};
+  PriceListEdit in '..\..\FormsBoutique\Guides\PriceListEdit.pas' {PriceListEditForm: TParentForm},
+  PriceListItem in '..\..\FormsBoutique\Guides\PriceListItem.pas' {PriceListItemForm: TParentForm},
+  PriceListGoodsItem in '..\..\FormsBoutique\Guides\PriceListGoodsItem.pas' {PriceListGoodsItemForm: TParentForm},
+  PriceListGoodsItemEdit in '..\..\FormsBoutique\Guides\PriceListGoodsItemEdit.pas' {PriceListGoodsItemEditForm: TParentForm},
+  PriceListTaxDialog in '..\..\FormsBoutique\Guides\PriceListTaxDialog.pas' {PriceListTaxDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

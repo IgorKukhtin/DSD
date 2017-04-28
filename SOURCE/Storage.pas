@@ -28,6 +28,7 @@ type
     ///	</param>
     function ExecuteProc(pData: String; pExecOnServer: boolean = false;
       AMaxAtempt: Byte = 10; ANeedShowException: Boolean = True): Variant;
+    procedure LoadReportList(ASession: string);
     property Connection: String read GetConnection;
   end;
 
@@ -49,7 +50,8 @@ implementation
 
 uses IdHTTP, Xml.XMLDoc, XMLIntf, Classes, ZLibEx, idGlobal, UtilConst, Variants,
      UtilConvert, MessagesUnit, Dialogs, StrUtils, IDComponent, SimpleGauge,
-     Forms, Log, IdStack, IdExceptionCore, SyncObjS, CommonData;
+     Forms, Log, IdStack, IdExceptionCore, SyncObjS, CommonData, System.AnsiStrings,
+     Datasnap.DBClient;
 
 const
 
@@ -65,6 +67,7 @@ type
       Instance: TStorage;
   private
     FConnection: String;
+    FReportConnection: string;
     FConnections: TStringList;
     FActiveConnection: Integer;
     IdHTTP: TIdHTTP;
@@ -75,12 +78,15 @@ type
     isArchive: boolean;
     // критичесая секция нужна из-за таймера
     FCriticalSection: TCriticalSection;
+    FReportList: TStringList;
     function PrepareStr: AnsiString;
     function ExecuteProc(pData: String; pExecOnServer: boolean = false;
       AMaxAtempt: Byte = 10; ANeedShowException: Boolean = True): Variant;
     procedure ProcessErrorCode(pData: String; ProcedureParam: String);
     function ProcessMultiDataSet: Variant;
     function GetConnection: string;
+    procedure LoadReportList(ASession: string);
+    function CheckReportConnection(pData: string): string;
   public
     property Connection: String read GetConnection;
     class function NewInstance: TObject; override;
@@ -101,16 +107,50 @@ begin
   result := FConnection;
 end;
 
+procedure TStorage.LoadReportList(ASession: string);
+const
+  {создаем XML вызова процедуры на сервере}
+  pXML =
+    '<xml Session = "%s" AutoWidth = "0">' +
+      '<gpSelect_Object_ReportExternal OutputType = "otDataSet" DataSetType = "TClientDataSet">' +
+      '</gpSelect_Object_ReportExternal>' +
+    '</xml>';
+var
+  DataSet: TClientDataSet;
+  Stream: TStringStream;
+begin
+  FReportList.Clear;
+  try
+    DataSet := TClientDataSet.Create(nil);
+    try
+      Stream := TStringStream.Create(TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [ASession])));
+      DataSet.LoadFromStream(Stream);
+      if not DataSet.IsEmpty then
+        while not DataSet.Eof do
+        begin
+          if not DataSet.FieldByName('isErased').AsBoolean then
+            FReportList.Add(DataSet.FieldByName('Name').AsString);
+          DataSet.Next;
+        end;
+    finally
+      Stream.Free;
+      DataSet.Free;
+    end;
+  except
+  end;
+end;
+
 class function TStorage.NewInstance: TObject;
 var
   StringList: TStringList;
-  ConnectionString: string;
+  ConnectionString, ReportConnectionString: string;
   i: Integer;
   StartPHP: Boolean;
 begin
   if not Assigned(Instance) then begin
     Instance := TStorage(inherited NewInstance);
     Instance.FConnections := TStringList.Create;
+    Instance.FReportList := TStringList.Create;
     Instance.FActiveConnection := 0;
     try
       StringList := TStringList.Create;
@@ -118,32 +158,36 @@ begin
         StringList.LoadFromFile(ConnectionPath);
         //составление списка возможных альтернативных серверов
         StartPHP := False;
-        for i := 0 to StringList.Count-1 do
-        Begin
-          if not StartPHP AND (pos('<?php',StringList.Strings[i]) = 1) then
+        ReportConnectionString := '';
+        for i := 0 to StringList.Count - 1 do
+        begin
+          if not StartPHP and (Pos('<?php', StringList[i]) = 1) then
             StartPHP := True
           else
-          if StartPHP AND (pos('?>',StringList.Strings[i]) = 1) then
+          if StartPHP and (Pos('?>', StringList[i]) = 1) then
             StartPHP := False
           else
-          Begin
-            if StartPHP AND (pos('$host',StringList.Strings[i])>0) then
-            Begin
-              ConnectionString := Copy(StringList.Strings[i],pos('$host',StringList.Strings[i])+5,maxInt);
-              delete(ConnectionString,1,pos('"',ConnectionString));
-              ConnectionString := Copy(ConnectionString,1,pos('"',ConnectionString)-1);
-              Instance.FConnections.Add(trim(ConnectionString));
-            End
-            else
+          begin
+            if StartPHP and (Pos('$host', StringList[i]) > 0) then
+            begin
+              ConnectionString := AnsiDequotedStr(Trim(StringList.ValueFromIndex[i]), '"');
+              Instance.FConnections.Add(Trim(ConnectionString));
+            end else
+            if StartPHP and (Pos('$rephost', StringList[i]) > 0) then
+            begin
+              ReportConnectionString := AnsiDequotedStr(Trim(StringList.ValueFromIndex[i]), '"');
+            end else
             if not StartPHP then
-            Begin
-              Instance.FConnections.Add(trim(StringList.Strings[i]));
+            begin
+              Instance.FConnections.Add(Trim(StringList[i]));
             end;
-          End;
-        End;
+          end;
+        end;
         if Instance.FConnections.Count = 0 then
           Instance.FConnections.Add('http://localhost/dsd/index.php');
         ConnectionString := Instance.FConnections.Strings[0];
+        if ReportConnectionString = '' then
+          ReportConnectionString := ConnectionString;
         (*
         if StringList.Count = 1 then
            ConnectionString := StringList[0]
@@ -160,9 +204,12 @@ begin
       if Instance.FConnections.Count = 0 then
         Instance.FConnections.Add('http://localhost/dsd/index.php');
       ConnectionString := Instance.FConnections.Strings[0];
+      if ReportConnectionString = '' then
+        ReportConnectionString := ConnectionString;
       //ConnectionString := 'http://localhost/dsd/index.php';
     end;
     Instance.FConnection := ConnectionString;
+    Instance.FReportConnection := ReportConnectionString;
     Instance.IdHTTP := TIdHTTP.Create(nil);
 //    Instance.IdHTTP.ConnectTimeout := 5000;
     Instance.IdHTTP.Response.CharSet := 'windows-1251';// 'Content-Type: text/xml; charset=utf-8'
@@ -268,6 +315,20 @@ begin
   end;
 end;
 
+function TStorage.CheckReportConnection(pData: string): string;
+var
+  S: string;
+begin
+  Result := FConnection;
+  if FReportList.Count > 0 then
+    for S in FReportList do
+      if Pos(S, pData) > 0 then
+      begin
+        Result := FReportConnection;
+        Break;
+      end;
+end;
+
 function TStorage.ExecuteProc(pData: String; pExecOnServer: boolean = false;
   AMaxAtempt: Byte = 10; ANeedShowException: Boolean = True): Variant;
   function GetAddConnectString(pExecOnServer: boolean): String;
@@ -283,6 +344,7 @@ var
   ok: Boolean;
   StartActiveConnection: Integer;
   LastError: integer;
+  OldConnection: string;
   function NextActiveConnection: Integer;
   Begin
     Result := (FActiveConnection+1) mod FConnections.Count;
@@ -309,6 +371,8 @@ begin
     IdHTTPWork.FExecOnServer := pExecOnServer;
     AttemptCount := 0;
     ok := False;
+    OldConnection := FConnection;
+    FConnection := CheckReportConnection(pData);
     StartActiveConnection := FActiveConnection;
     try
       repeat
@@ -403,6 +467,7 @@ begin
         end;
       *)
     finally
+      FConnection := OldConnection;
       if IdHTTPWork.FExecOnServer then
          IdHTTPWork.Gauge.Finish;
       IdHTTPWork.FExecOnServer := false;
