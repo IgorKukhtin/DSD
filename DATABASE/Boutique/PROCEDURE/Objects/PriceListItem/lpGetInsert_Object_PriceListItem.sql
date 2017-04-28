@@ -1,6 +1,5 @@
 -- Function: lpGetInsert_Object_PriceListItem(Integer,Integer,TVarChar,Integer,Integer,Integer,TVarChar)
 
-DROP FUNCTION IF EXISTS lpGetInsert_Object_PriceListItem (Integer, Integer);
 DROP FUNCTION IF EXISTS lpGetInsert_Object_PriceListItem (Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpGetInsert_Object_PriceListItem(
