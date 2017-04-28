@@ -119,21 +119,24 @@ var
   DataSet: TClientDataSet;
   Stream: TStringStream;
 begin
-  DataSet := TClientDataSet.Create(nil);
+  FReportList.Clear;
   try
-    Stream := TStringStream.Create(TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [ASession])));
-    DataSet.LoadFromStream(Stream);
-    FReportList.Clear;
-    if not DataSet.IsEmpty then
-      while not DataSet.Eof do
-      begin
-        if not DataSet.FieldByName('isErased').AsBoolean then
-          FReportList.Add(DataSet.FieldByName('Name').AsString);
-        DataSet.Next;
-      end;
-  finally
-    Stream.Free;
-    DataSet.Free;
+    DataSet := TClientDataSet.Create(nil);
+    try
+      Stream := TStringStream.Create(TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [ASession])));
+      DataSet.LoadFromStream(Stream);
+      if not DataSet.IsEmpty then
+        while not DataSet.Eof do
+        begin
+          if not DataSet.FieldByName('isErased').AsBoolean then
+            FReportList.Add(DataSet.FieldByName('Name').AsString);
+          DataSet.Next;
+        end;
+    finally
+      Stream.Free;
+      DataSet.Free;
+    end;
+  except
   end;
 end;
 

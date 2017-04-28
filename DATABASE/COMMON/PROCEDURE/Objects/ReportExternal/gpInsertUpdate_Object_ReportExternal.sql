@@ -1,6 +1,6 @@
 ﻿-- Function: gpInsertUpdate_Object_ReportExternal()
 
--- DROP FUNCTION gpInsertUpdate_Object_ReportExternal();
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReportExternal(Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReportExternal(
  INOUT ioId          Integer  ,    -- ид
