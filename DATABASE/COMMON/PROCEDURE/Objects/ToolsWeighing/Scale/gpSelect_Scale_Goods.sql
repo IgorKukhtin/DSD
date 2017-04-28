@@ -95,7 +95,8 @@ BEGIN
 
     -- Результат - по заявке
     RETURN QUERY
-       WITH tmpMovement AS (SELECT Movement_find.Id AS MovementId
+       WITH tmpMovement AS (SELECT Movement_find.Id     AS MovementId
+                                 , Movement_find.DescId AS MovementDescId
                             FROM (SELECT inOrderExternalId AS MovementId WHERE vbRetailId <> 0) AS tmpMovement
                                  INNER JOIN Movement ON Movement.Id = tmpMovement.MovementId
                                  INNER JOIN Movement AS Movement_find ON Movement_find.OperDate = Movement.OperDate
@@ -110,9 +111,9 @@ BEGIN
                                                               AND MovementLinkObject_Retail_find.DescId = zc_MovementLinkObject_Retail()
                                                               AND MovementLinkObject_Retail_find.ObjectId = vbRetailId
                            UNION
-                            SELECT inOrderExternalId AS MovementId WHERE vbRetailId = 0
+                            SELECT inOrderExternalId AS MovementId, Movement.DescId AS MovementDescId FROM Movement WHERE Movement.Id = inOrderExternalId AND vbRetailId = 0
                            )
-          , tmpMI_Order2 AS (SELECT MovementItem.ObjectId                                                AS GoodsId
+          , tmpMI_Order2 AS (SELECT COALESCE (MILinkObject_Goods.ObjectId, MovementItem.ObjectId) AS GoodsId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, CASE WHEN inIsGoodsComplete = FALSE THEN zc_Enum_GoodsKind_Main() ELSE zc_Enum_GoodsKind_Main() END) AS GoodsKindId
                                  , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)   AS Amount
                                  , COALESCE (MIFloat_Price.ValueData, 0)                                AS Price
@@ -123,6 +124,10 @@ BEGIN
                                  INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
                                                         AND MovementItem.DescId     = zc_MI_Master()
                                                         AND MovementItem.isErased   = FALSE
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                                  ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
+                                                                 AND tmpMovement.MovementDescId        = zc_Movement_OrderIncome()
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                   ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()

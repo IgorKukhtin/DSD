@@ -14,7 +14,7 @@ BEGIN
      RETURN COALESCE ((SELECT ObjectFloat.ValueData
                        FROM ObjectFloat
                        WHERE ObjectFloat.DescId   = zc_ObjectFloat_User_BillNumberMobile()
-                         AND ObjectFloat.ObjectId = inUserId), 0);
+                         AND ObjectFloat.ObjectId = inUserId), 0) :: Integer;
 
 END;
 $BODY$
