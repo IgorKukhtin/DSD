@@ -1,0 +1,51 @@
+-- Function: gpInsertUpdate_Object_PriceList (Integer, Integer, TVarChar, Integer, TVarChar)
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceList (Integer, Integer, TVarChar, Integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PriceList(
+ INOUT ioId              Integer,       -- ключ объекта <Прайс лист>
+    IN inCode            Integer,       -- свойство <Код>
+    IN inName            TVarChar,      -- главное Название
+    IN inCurrencyId      Integer,       -- ключ объекта <Валюта> 
+    IN inSession         TVarChar       -- сессия пользователя
+)
+RETURNS integer
+AS
+$BODY$
+  DECLARE vbUserId Integer;
+BEGIN
+
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_PriceList());
+   vbUserId:= lpGetUserBySession (inSession);
+
+   -- Нужен для загрузки из Sybase т.к. там код = 0 
+   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_PriceList_seq'); END IF; 
+
+
+   -- проверка уникальности для свойства <Наименование>
+   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_PriceList(), inName); 
+
+   -- сохранили <Объект>
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_PriceList(), inCode, inName);
+
+   -- сохранили связь с <СВАлюта>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PriceList_Currency(), ioId, inCurrencyId);
+
+   -- сохранили протокол
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+
+END;
+$BODY$
+
+LANGUAGE plpgsql VOLATILE;
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+28.04.17          *
+*/
+
+-- тест
+-- SELECT * FROM gpInsertUpdate_Object_PriceList()

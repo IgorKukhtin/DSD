@@ -3,12 +3,12 @@ DROP FUNCTION IF EXISTS gpReport_Movement_PriceList_cross(TDateTime,TDateTime,In
 CREATE OR REPLACE FUNCTION gpReport_Movement_PriceList_cross(
     IN inStartDate           TDateTime,  -- Дата начала
     IN inEndDate             TDateTime,  -- Дата окончания
-    IN inJuridicalId_Optima  Integer , --
-    IN inJuridicalId_BADM    Integer , --
-    IN inJuridicalId_Venta   Integer , --
-    IN inContractId_Optima   Integer , --
-    IN inContractId_BADM     Integer , --
-    IN inContractId_Venta    Integer , --
+    IN inJuridicalId_1       Integer , --
+    IN inJuridicalId_2       Integer , --
+    IN inJuridicalId_3       Integer , --
+    IN inContractId_1        Integer , --
+    IN inContractId_2        Integer , --
+    IN inContractId_3        Integer , --
     IN inSession             TVarChar    -- сессия пользователя
 )
   RETURNS SETOF refcursor 
@@ -26,8 +26,8 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
 
-    inStartDate := date_trunc('month', inStartDate);
-    inEndDate := date_trunc('month', inEndDate); 
+    inStartDate := date_trunc('day', inStartDate);
+    inEndDate := date_trunc('day', inEndDate); 
     --inEndDate := date_trunc('month', inEndDate) + interval '1 month' - 1 ; 
 
      CREATE TEMP TABLE tmpOperDate ON COMMIT DROP AS
@@ -53,7 +53,7 @@ BEGIN
                                           AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
                                     LEFT JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsmainId = ObjectLink_LinkGoods_Goodsmain.ChildObjectId
                                          AND Object_LinkGoods_View.ObjectId = zc_Enum_GlobalConst_Marion()
-                              WHERE ObjectLink_Goods_Object.ChildObjectId  = 59611 --inObjectId  --in ( 59612,59610,59611) --
+                              WHERE ObjectLink_Goods_Object.ChildObjectId  = inJuridicalId_1 --59611 --inObjectId  --in ( 59612,59610,59611) -- оптима
                                 AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object() 
                                 AND ObjectLink_LinkGoods_GoodsMain.ChildObjectId = 324
                              )
@@ -70,30 +70,31 @@ BEGIN
                  INNER JOIN ObjectLink AS ObjectLink_Goods_Object
                                        ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_Jurid.ChildObjectId
                                       AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                                      AND ObjectLink_Goods_Object.ChildObjectId in ( 59612,59610,59611) --vbObjectId
-            WHERE GoodsMainId = 324;
+                                      AND ObjectLink_Goods_Object.ChildObjectId in ( inJuridicalId_3,inJuridicalId_2,inJuridicalId_1) --vbObjectId
+--            WHERE GoodsMainId = 324
+;
   
-  CREATE TEMP TABLE _tmpPriceList (OperDate TDateTime, GoodsMainId integer, Price_Badm TFloat, Price_Opt TFloat, Price_Venta TFloat) ON COMMIT DROP; /*tmpMI */
-     INSERT INTO _tmpPriceList (OperDate, GoodsMainId, Price_Badm, Price_Opt, Price_Venta)
+  CREATE TEMP TABLE _tmpPriceList (OperDate TDateTime, GoodsMainId integer, Price_1 TFloat, Price_2 TFloat, Price_3 TFloat) ON COMMIT DROP; /*tmpMI */
+     INSERT INTO _tmpPriceList (OperDate, GoodsMainId, Price_1, Price_2, Price_3)
         SELECT tmp.OperDate, tmp.GoodsMainId
-             , MAX(tmp.Price_Badm)  AS Price_Badm
-             , MAX(tmp.Price_Opt)   AS Price_Opt
-             , MAX(tmp.Price_Venta) AS Price_Venta
+             , MAX(tmp.Price_1)  AS Price_1
+             , MAX(tmp.Price_2)  AS Price_2
+             , MAX(tmp.Price_3)  AS Price_3
         FROM (
              SELECT DISTINCT
                     DATE_TRUNC ('DAY', Movement.OperDate) AS OperDate, tmpGoodsAll.GoodsMainId
-                  , CASE WHEN MovementLinkObject_Juridical.ObjectId = 59610 THEN MovementItem.Amount  ELSE 0 END ::TFloat AS Price_Badm   -- бадм
-                  , CASE WHEN MovementLinkObject_Juridical.ObjectId = 59611 THEN MovementItem.Amount  ELSE 0 END ::TFloat AS Price_Opt   -- оптима
-                  , CASE WHEN MovementLinkObject_Juridical.ObjectId = 59612 THEN MovementItem.Amount  ELSE 0 END ::TFloat AS Price_Venta   -- вента
+                  , CASE WHEN MovementLinkObject_Juridical.ObjectId = inJuridicalId_1 THEN MovementItem.Amount  ELSE 0 END ::TFloat AS Price_1   -- оптима
+                  , CASE WHEN MovementLinkObject_Juridical.ObjectId = inJuridicalId_2 THEN MovementItem.Amount  ELSE 0 END ::TFloat AS Price_2   -- бадм
+                  , CASE WHEN MovementLinkObject_Juridical.ObjectId = inJuridicalId_3 THEN MovementItem.Amount  ELSE 0 END ::TFloat AS Price_3   -- вента
              FROM Movement
                   INNER JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                                 ON MovementLinkObject_Juridical.MovementId = Movement.Id
                                                AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
-                                               AND MovementLinkObject_Juridical.ObjectId IN ( 59612,59610,59611)
+                                               AND MovementLinkObject_Juridical.ObjectId IN ( inJuridicalId_3,inJuridicalId_2,inJuridicalId_1)
                   INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                ON MovementLinkObject_Contract.MovementId = Movement.Id
                                               AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                                              AND MovementLinkObject_Contract.ObjectId IN (183275,183338,183378)              --бадм, оптима, вента
+                                              AND MovementLinkObject_Contract.ObjectId IN (inContractId_1, inContractId_2, inContractId_3) --(183275,183338,183378)              --бадм, оптима, вента
                   JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                    AND MovementItem.DescId     = zc_MI_Master()
                                    AND MovementItem.isErased   = False
@@ -105,10 +106,9 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_Price
                                               ON MIFloat_Price.MovementItemId =  MovementItem.Id
                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
-              WHERE --Movement.Id = 3924465
-                    Movement.DescId = zc_Movement_PriceList() 
-                AND DATE_TRUNC ('DAY', Movement.OperDate) >= '01.12.2016' --BETWEEN inStartDate AND inEndDate  
-                and MovementItem.ObjectId = 324
+              WHERE Movement.DescId = zc_Movement_PriceList() 
+                AND DATE_TRUNC ('DAY', Movement.OperDate) >= inStartDate AND DATE_TRUNC ('DAY', Movement.OperDate) < inEndDate + interval '1 day'  -- '01.12.2016' --
+              --  and MovementItem.ObjectId = 324
                 ) AS tmp
         GROUP BY tmp.OperDate, tmp.GoodsMainId;
 
@@ -129,9 +129,9 @@ BEGIN
      CREATE TEMP TABLE tmpMI ON COMMIT DROP AS
            SELECT tmpOperDate.OperDate
                 , _tmpGoodsReport.GoodsMainId
-                , _tmpPriceList.Price_Badm
-                , _tmpPriceList.Price_Opt
-                , _tmpPriceList.Price_Venta
+                , _tmpPriceList.Price_2
+                , _tmpPriceList.Price_1
+                , _tmpPriceList.Price_3
            FROM tmpOperDate
                 LEFT JOIN _tmpGoodsReport ON 1 = 1
                 LEFT JOIN _tmpPriceList ON _tmpPriceList.OperDate = tmpOperDate.OperDate
@@ -149,8 +149,10 @@ BEGIN
      WHILE (vbIndex < vbCount) LOOP
        vbIndex := vbIndex + 1;
        vbCrossString := vbCrossString || ', DAY' || vbIndex || ' VarChar[]'; 
-       vbFieldNameText := vbFieldNameText || ', DAY' || vbIndex || '[1] :: TFloat AS Value'||vbIndex||'  '||
-                                             ', DAY' || vbIndex || '[2]::Integer  AS GoodsMainId'||vbIndex||' ';
+       vbFieldNameText := vbFieldNameText || ', DAY' || vbIndex || '[1] ::TFloat AS Value'||vbIndex||'  '||
+                                       --      ', DAY' || vbIndex || '[2] ::TFloat AS Value1'||vbIndex||
+                                        --     ', DAY' || vbIndex || '[3] ::TFloat AS Value2'||vbIndex||
+                                             ', DAY' || vbIndex || '[4] ::Integer  AS GoodsMainId'||vbIndex||' ';
      END LOOP;
 
      OPEN cur1 FOR SELECT tmpOperDate.OperDate::TDateTime, 
@@ -164,6 +166,7 @@ BEGIN
 
      vbQueryText := '
           SELECT _tmpGoodsReport.GoodsMainId
+               , _tmpGoodsReport.CommonCode
                , _tmpGoodsReport.GoodsName
                '|| vbFieldNameText ||'
           FROM
@@ -171,15 +174,18 @@ BEGIN
                                     SELECT ARRAY[COALESCE (Movement_Data.GoodsMainId, Object_Data.GoodsMainId)           -- AS GoodsId
                                                 ] :: Integer[]
                                          , COALESCE (Movement_Data.OperDate, Object_Data.OperDate) AS OperDate
-                                         , ARRAY[ COALESCE(Movement_Data.Amount,0) :: VarChar
+                                         , ARRAY[  COALESCE(Movement_Data.Price_1,0) :: VarChar 
+                                               -- , COALESCE(Movement_Data.Price_2,0) :: VarChar
+                                               -- , COALESCE(Movement_Data.Price_3,0) :: VarChar
                                                 ] :: TVarChar
+
                                     FROM (SELECT * FROM tmpMI) AS Movement_Data
                                         FULL JOIN  
                                          (SELECT tmpOperDate.operdate, 0, 
                                                  COALESCE(_tmpGoodsReport.GoodsMainId, 0) AS GoodsMainId 
                                             FROM tmpOperDate, _tmpGoodsReport 
                                         ) AS Object_Data
-                                           ON Object_Data.OperDate = Movement_Data.OperDate
+                                           ON Object_Data.OperDate    = Movement_Data.OperDate
                                           AND Object_Data.GoodsMainId = Movement_Data.GoodsMainId
                                   order by 1,2''
                                 , ''SELECT OperDate FROM tmpOperDate order by 1
@@ -202,5 +208,5 @@ $BODY$
 /*   
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 29.01.16         * 
+ 27.04.17         * 
 */

@@ -3,7 +3,7 @@ inherited PriceListForm: TPriceListForm
   ClientHeight = 668
   ClientWidth = 820
   ExplicitWidth = 836
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

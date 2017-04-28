@@ -352,6 +352,9 @@ type
     N135: TMenuItem;
     actReport_CheckPromoFarm: TdsdOpenForm;
     N136: TMenuItem;
+    actReport_MovementPriceList_Cross: TdsdOpenForm;
+    N137: TMenuItem;
+    N138: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
