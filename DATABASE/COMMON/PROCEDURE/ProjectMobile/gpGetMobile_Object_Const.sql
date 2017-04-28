@@ -152,8 +152,8 @@ BEGIN
             -- AS LastDateIn
             -- AS LastDateOut
 
-            , '1.9.0'::TVarChar             AS MobileVersion
-            , 'ProjectMobile.apk'::TVarChar AS MobileAPKFileName
+            , '1.10.0'::TVarChar             AS MobileVersion
+            , 'ProjectMobile.apk'::TVarChar  AS MobileAPKFileName
 
             , Object_PriceList_def.Id        AS PriceListId_def
             , Object_PriceList_def.ValueData AS PriceListName_def
