@@ -91,6 +91,7 @@ type
     procedure CreatePartner;
     procedure CreatePartionGoods;
     procedure CreatePosition;
+    procedure CreatePriceList;
     procedure CreatePersonal;
     procedure CreateStatus;
     procedure CreateUnit;
@@ -344,6 +345,11 @@ end;
 procedure TdbObjectProcedureTest.CreatePosition;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Position\');
+end;
+
+procedure TdbObjectProcedureTest.CreatePriceList;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\PriceList\');
 end;
 
 procedure TdbObjectProcedureTest.CreateStatus;

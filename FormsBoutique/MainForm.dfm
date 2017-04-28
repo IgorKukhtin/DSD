@@ -83,6 +83,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actPriceList: TdsdOpenForm [13]
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099
+      FormName = 'TPriceListForm'
+      FormNameParam.Value = 'TPriceListForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
     inherited actProtocol: TdsdOpenForm
       Category = 'but'
     end
@@ -558,6 +569,9 @@ inherited MainForm: TMainForm
       end
       object N14: TMenuItem
         Action = actCurrency
+      end
+      object N51: TMenuItem
+        Action = actPriceList
       end
       object N15: TMenuItem
         Action = actMember
