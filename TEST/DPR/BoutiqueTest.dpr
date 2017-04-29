@@ -187,7 +187,10 @@ uses
   PriceListItem in '..\..\FormsBoutique\Guides\PriceListItem.pas' {PriceListItemForm: TParentForm},
   PriceListGoodsItem in '..\..\FormsBoutique\Guides\PriceListGoodsItem.pas' {PriceListGoodsItemForm: TParentForm},
   PriceListGoodsItemEdit in '..\..\FormsBoutique\Guides\PriceListGoodsItemEdit.pas' {PriceListGoodsItemEditForm: TParentForm},
-  PriceListTaxDialog in '..\..\FormsBoutique\Guides\PriceListTaxDialog.pas' {PriceListTaxDialogForm: TParentForm};
+  PriceListTaxDialog in '..\..\FormsBoutique\Guides\PriceListTaxDialog.pas' {PriceListTaxDialogForm: TParentForm},
+  DiscountPeriodItem in '..\..\FormsBoutique\Guides\DiscountPeriodItem.pas' {DiscountPeriodItemForm: TParentForm},
+  DiscountPeriodGoodsItemEdit in '..\..\FormsBoutique\Guides\DiscountPeriodGoodsItemEdit.pas' {DiscountPeriodGoodsItemEditForm: TParentForm},
+  DiscountPeriodGoodsItem in '..\..\FormsBoutique\Guides\DiscountPeriodGoodsItem.pas' {DiscountPeriodGoodsItemForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

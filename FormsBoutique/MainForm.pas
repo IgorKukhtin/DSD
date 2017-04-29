@@ -107,6 +107,8 @@ type
     actPriceListItem: TdsdOpenForm;
     miHistory: TMenuItem;
     N52: TMenuItem;
+    actDiscountPeriodItem: TdsdOpenForm;
+    N53: TMenuItem;
   private
     { Private declarations }
   public

@@ -75,6 +75,7 @@ type
     procedure LoadPeriodFormTest;
     procedure LoadDiscountFormTest;
     procedure LoadDiscountToolsFormTest;
+    procedure LoadDiscountPeriodItemFormTest;
     procedure LoadPartnerFormTest;
     procedure LoadJuridicalGroupFormTest;
     procedure LoadJuridicalFormTest;
@@ -296,6 +297,18 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TDiscountToolsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountToolsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountToolsEditForm');
+end;
+
+procedure TLoadFormTest.LoadDiscountPeriodItemFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountPeriodItemForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDiscountPeriodItemForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountPeriodGoodsItemForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDiscountPeriodGoodsItemForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountPeriodGoodsItemEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDiscountPeriodGoodsItemEditForm');
+
 end;
 
 procedure TLoadFormTest.LoadFabrikaFormTest;
