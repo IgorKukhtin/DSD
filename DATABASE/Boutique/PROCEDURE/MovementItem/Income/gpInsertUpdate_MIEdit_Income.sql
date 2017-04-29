@@ -265,7 +265,7 @@ BEGIN
                                               , inUserId             := vbUserId
                                                );
 
-     -- cохраняем Object_PartionGoods
+     -- cохраняем Object_PartionGoods + Update св-ва у остальных партий этого vbGoodsId
      PERFORM lpInsertUpdate_Object_PartionGoods (inMovementItemId := ioId
                                                , inMovementId     := inMovementId
                                                , inSybaseId       := NULL -- !!!если что - оставим без изменения!!!
