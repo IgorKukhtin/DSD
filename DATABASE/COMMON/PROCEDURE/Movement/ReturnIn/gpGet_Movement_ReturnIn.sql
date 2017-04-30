@@ -25,7 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , StartDateTax TDateTime
              , MovementId_Partion Integer, PartionMovementName TVarChar
-             , MemberId Integer, MemberName TVarChar
+             , MemberId Integer, MemberName TVarChar, MemberInsertName TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
              , Comment TVarChar
              , isPromo Boolean
@@ -91,6 +91,7 @@ BEGIN
              , CAST ('' as TVarChar) 		        AS PartionMovementName
              , 0                                        AS MemberId
              , CAST ('' AS TVarChar)                    AS MemberName
+             , CAST ('' AS TVarChar)                    AS MemberInsertName
              , 0                   		        AS ReestrKindId
              , CAST ('' AS TVarChar)                    AS ReestrKindName 
              , CAST ('' as TVarChar) 		        AS Comment
@@ -196,6 +197,7 @@ BEGIN
 
            , Object_Member.Id                       AS MemberId
            , Object_Member.ValueData                AS MemberName
+           , CASE WHEN MovementString_GUID.ValueData <> '' THEN Object_MemberInsert.ValueData ELSE '' END :: TVarChar AS MemberInsertName
            , Object_ReestrKind.Id             	    AS ReestrKindId
            , Object_ReestrKind.ValueData       	    AS ReestrKindName
 
@@ -332,6 +334,20 @@ BEGIN
             LEFT JOIN Object as ObjectCurrencycyDocumentInf 
                              on ObjectCurrencycyDocumentInf.descid= zc_Object_Currency()
                             AND ObjectCurrencycyDocumentInf.id = 14461
+--
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
+                                         ON MovementLinkObject_Insert.MovementId = Movement.Id
+                                        AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_Insert.ObjectId
+
+            LEFT JOIN MovementString AS MovementString_GUID
+                                     ON MovementString_GUID.MovementId = Movement.Id
+                                    AND MovementString_GUID.DescId = zc_MovementString_GUID()
+
+            LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                 ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                                AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+            LEFT JOIN Object AS Object_MemberInsert ON Object_MemberInsert.Id = ObjectLink_User_Member.ChildObjectId
 
          WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_ReturnIn();

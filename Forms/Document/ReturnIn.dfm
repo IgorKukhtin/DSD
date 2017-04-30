@@ -2,9 +2,9 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 648
   ClientWidth = 1252
-  ExplicitTop = -102
+  ExplicitLeft = -149
   ExplicitWidth = 1268
-  ExplicitHeight = 683
+  ExplicitHeight = 686
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1086,6 +1086,7 @@ inherited ReturnInForm: TReturnInForm
       TabOrder = 8
       ExplicitTop = 63
       ExplicitWidth = 114
+      ExplicitHeight = 22
       Width = 114
     end
     object cxLabel3: TcxLabel
@@ -1479,6 +1480,24 @@ inherited ReturnInForm: TReturnInForm
       end>
     Properties.ReadOnly = True
     TabOrder = 20
+    Width = 144
+  end
+  object cxLabel24: TcxLabel [17]
+    Left = 1102
+    Top = 85
+    Caption = #1060#1048#1054' ('#1084#1086#1073'. '#1072#1075#1077#1085#1090')'
+  end
+  object edMemberInsertName: TcxButtonEdit [18]
+    Left = 1102
+    Top = 103
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 22
     Width = 144
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -3869,6 +3888,13 @@ inherited ReturnInForm: TReturnInForm
         Component = edReestrKind
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberInsertName'
+        Value = Null
+        Component = edMemberInsertName
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 248
@@ -5040,8 +5066,8 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1024
-    Top = 72
+    Left = 1000
+    Top = 80
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
