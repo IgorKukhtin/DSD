@@ -125,10 +125,10 @@ type
     bbInsertMask: TdxBarButton;
     GPSN: TcxGridDBColumn;
     GPSE: TcxGridDBColumn;
-    dsdShowCurrentPartnerMap: TdsdPartnerMapAction;
+    bbShowAllPartnerOnMap: TdxBarButton;
+    actShowAllPartneronMap: TdsdPartnerMapAction;
+    actShowCurPartneronMap: TdsdPartnerMapAction;
     bbShowCurPartnerOnMap: TdxBarButton;
-    dxBarButton1: TdxBarButton;
-    dxBarStatic2: TdxBarStatic;
   private
     { Private declarations }
   public

@@ -5,7 +5,7 @@ interface
 uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst,
   cxControls, dsdGuides, ImgList, cxPC, cxGrid, cxGridTableView,
   cxGridDBTableView, frxClass, frxExportPDF, cxGridCustomView, Dialogs, Controls,
-  dsdDataSetDataLink, ExtCtrls;
+  dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL;
 
 type
 
@@ -22,7 +22,7 @@ type
   end;
 
   TDataSetAcionType = (acInsert, acUpdate);
-  TMapAcionType = (acShowAll, acShowOne);
+  TMapAcionType = (acShowOne, acShowAll);
 
   TdsdStoredProcItem = class(TCollectionItem)
   private
@@ -761,28 +761,23 @@ type
     //property IncludeFieldNames: boolean read FIncludeFieldNames write FIncludeFieldNames default False;
   end;
 
-  TdsdPartnerMapAction = class(TdsdOpenForm, IDataSetAction, IFormAction)
+  TdsdPartnerMapAction = class(TdsdOpenForm, IFormAction)
   private
-    FActionDataLink: TDataSetDataLink;
-    FdsdDataSetRefresh: TdsdCustomAction;
+    FDataSet: TDataSet;
     FMapType: TMapAcionType;
-    function GetDataSource: TDataSource;
-    procedure SetDataSource(const Value: TDataSource);
+    FGMMap: TGMMap;
+    procedure SetDataSet(const Value: TDataSet);
   protected
     procedure Notification(AComponent: TComponent;
       Operation: TOperation); override;
-    procedure DataSetChanged;
-    procedure UpdateData; virtual;
+    procedure BeforeExecute(Form: TForm); override;
+    procedure OnFormClose(Sender: TObject; var Action: TCloseAction);
   public
-    constructor Create(AOwner: TComponent); override;
-    destructor Destroy; override;
+    constructor Create(AOwner: TComponent);
   published
     property MapType: TMapAcionType read FMapType write FMapType
       default acShowOne;
-    property DataSource: TDataSource read GetDataSource write SetDataSource;
-    property DataSetRefresh: TdsdCustomAction read FdsdDataSetRefresh
-      write FdsdDataSetRefresh;
-    property PostDataSetBeforeExecute default true;
+    property DataSet: TDataSet read FDataSet write SetDataSet;
   end;
 
 procedure Register;
@@ -795,7 +790,7 @@ uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
   cxExportPivotGridLink, cxCustomPivotGrid, StrUtils, Variants,
   frxDBSet, Printers,
   cxGridAddOn, cxTextEdit, cxGridDBDataDefinitions, ExternalSave,
-  dxmdaset, dxCore, cxCustomData, cxGridLevel, cxImage, UnilWin;
+  dxmdaset, dxCore, cxCustomData, cxGridLevel, cxImage, UnilWin, dsdAddOn;
 
 procedure Register;
 begin
@@ -3105,23 +3100,33 @@ end;
 constructor TdsdPartnerMapAction.Create(AOwner: TComponent);
 begin
   inherited;
-  FActionDataLink := TDataSetDataLink.Create(Self);
+  FMapType := acShowOne;
 end;
 
-procedure TdsdPartnerMapAction.DataSetChanged;
+procedure TdsdPartnerMapAction.BeforeExecute(Form: TForm);
+var
+  i: integer;
 begin
+  if Assigned(FDataSet) then
+  begin
+    Form.OnClose := OnFormClose;
 
+    for i := 0 to Form.ComponentCount - 1 do
+      if Form.Components[i].ClassType = TdsdGMMap then
+      begin
+        FGMMap := TGMMap(Form.Components[i]);
+        TdsdGMMap(Form.Components[i]).MapType := FMapType;
+        TdsdGMMap(Form.Components[i]).DataSet := FDataSet;
+        FGMMap.Active := True;
+        Break;
+      end;
+  end;
 end;
 
-destructor TdsdPartnerMapAction.Destroy;
+procedure TdsdPartnerMapAction.OnFormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  FActionDataLink.Free;
-  inherited;
-end;
-
-function TdsdPartnerMapAction.GetDataSource: TDataSource;
-begin
-  result := FActionDataLink.DataSource
+  if Assigned(FGMMap) then
+    FGMMap.Active := false;
 end;
 
 procedure TdsdPartnerMapAction.Notification(AComponent: TComponent;
@@ -3130,18 +3135,13 @@ begin
   inherited;
   if csDestroying in ComponentState then
     exit;
-  if (Operation = opRemove) and (AComponent = DataSource) then
-    DataSource := nil;
+  if (Operation = opRemove) and (AComponent = DataSet) then
+    DataSet := nil;
 end;
 
-procedure TdsdPartnerMapAction.SetDataSource(const Value: TDataSource);
+procedure TdsdPartnerMapAction.SetDataSet(const Value: TDataSet);
 begin
-  FActionDataLink.DataSource := Value;
-end;
-
-procedure TdsdPartnerMapAction.UpdateData;
-begin
-
+  FDataSet := Value;
 end;
 
 { TdsdDataSetRefreshEx }

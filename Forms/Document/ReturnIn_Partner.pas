@@ -215,6 +215,8 @@ type
     actMemberOpenForm: TOpenChoiceForm;
     macMemberOpenForm: TMultiAction;
     bbMemberOpenForm: TdxBarButton;
+    cxLabel24: TcxLabel;
+    edMemberInsertName: TcxButtonEdit;
   private
     { Private declarations }
   public

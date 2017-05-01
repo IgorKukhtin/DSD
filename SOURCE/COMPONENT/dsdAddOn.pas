@@ -7,7 +7,7 @@ uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
      VCL.Graphics, cxGraphics, cxStyles, cxCalendar, Forms, Controls,
      SysUtils, dsdDB, Contnrs, cxGridCustomView, cxGridCustomTableView, dsdGuides,
      VCL.ActnList, cxDBPivotGrid, cxEdit, cxCustomData, Windows, Winapi.Messages,
-     GMClasses, GMMap, GMMapVCL;
+     GMClasses, GMMap, GMMapVCL, GMGeoCode, GMConstants, SHDocVw, ExtCtrls;
 
 const
   WM_SETFLAG = WM_USER + 2;
@@ -522,9 +522,29 @@ type
 
   TdsdGMMap = class(TGMMap)
   private
+    FMapType: TMapAcionType;
+    FDataSet: TDataSet;
+    FMapLoad: Boolean;
     procedure DoAfterPageLoaded(Sender: TObject; First: Boolean);
   public
     constructor Create(AOwner: TComponent); override;
+
+    property MapType: TMapAcionType read FMapType write FMapType
+      default acShowOne;
+    property DataSet: TDataSet read FDataSet write FDataSet;
+    property MapLoad: Boolean read FMapLoad write FMapLoad;
+  end;
+
+  TdsdWebBrowser = class(TWebBrowser)
+  private
+    FTimer: TTimer;
+    FGeoCode: TGMGeoCode;
+
+    procedure DoDownloadComplete(Sender: TObject);
+    procedure OnTimerNotifyEvent(Sender: TObject);
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor  Destroy; override;
   end;
 
   procedure Register;
@@ -554,6 +574,7 @@ begin
    RegisterComponents('DSDComponent', [TRefreshDispatcher]);
    RegisterComponents('DSDComponent', [TPivotAddOn]);
    RegisterComponents('DSDComponent', [TdsdGMMap]);
+   RegisterComponents('DSDComponent', [TdsdWebBrowser]);
    RegisterActions('DSDLib', [TExecuteDialog], TExecuteDialog);
 end;
 
@@ -2406,19 +2427,166 @@ begin
   FGetStoredProc := Value;
 end;
 
-{  TProjectGMMap  }
+{  TdsdGMMap  }
 
 constructor TdsdGMMap.Create(AOwner: TComponent);
 begin
   inherited;
   AfterPageLoaded := DoAfterPageLoaded;
+  FMapLoad := False;
 end;
 
 procedure TdsdGMMap.DoAfterPageLoaded(Sender: TObject; First: Boolean);
+var
+  i: integer;
+  LatList: TArray<Real>;
+  LngList: TArray<Real>;
+  TitleList: TArray<string>;
+  FForm: TForm;
+  FGeoCode: TGMGeoCode;
 begin
   if First then
   begin
     DoMap;
+
+    FMapLoad := True;
+  end;
+end;
+
+{  TdsdWebBrowser  }
+
+constructor TdsdWebBrowser.Create(AOwner: TComponent);
+begin
+  inherited;
+  OnDownloadComplete := DoDownloadComplete;
+
+  FTimer := TTimer.Create(Self);
+  FTimer.Enabled := False;
+  FTimer.Interval := 1000;
+  FTimer.OnTimer := OnTimerNotifyEvent;
+end;
+
+destructor TdsdWebBrowser.Destroy;
+begin
+  FTimer.Free;
+  inherited;
+end;
+
+procedure TdsdWebBrowser.OnTimerNotifyEvent(Sender: TObject);
+var
+  i: integer;
+  LatList: TArray<Real>;
+  LngList: TArray<Real>;
+  TitleList: TArray<string>;
+  FDataSet: TDataSet;
+begin
+  FTimer.Enabled := False;
+
+  FDataSet := TdsdGMMap(FGeoCode.Map).DataSet;
+
+  if Assigned(FDataSet) then
+    FDataSet.DisableControls;
+
+  try
+    if Assigned(FDataSet) then
+      if (FDataSet.FindField('GPSN') <> nil) and (FDataSet.FindField('GPSE') <> nil) and
+         (FDataSet.FindField('Address') <> nil) then
+      begin
+        if TdsdGMMap(FGeoCode.Map).MapType = acShowOne then
+        begin
+          FGeoCode.Map.RequiredProp.Zoom := 18;
+
+          if (FDataSet.FindField('GPSN').AsFloat <> 0) and
+             (FDataSet.FindField('GPSE').AsFloat <> 0)
+          then
+            FGeoCode.Geocode(FDataSet.FindField('GPSN').AsFloat, FDataSet.FindField('GPSe').AsFloat)
+          else
+            FGeoCode.Geocode(FDataSet.FindField('Address').AsString);
+
+          if (FGeoCode.GeoStatus = gsOK) and (FGeoCode.Count > 0) then
+          begin
+            SetLength(LatList, 1);
+            SetLength(LngList, 1);
+            SetLength(TitleList, 1);
+
+            LatList[0] := FGeoCode.GeoResult[0].Geometry.Location.Lat;
+            LngList[0] := FGeoCode.GeoResult[0].Geometry.Location.Lng;
+            TitleList[0] := FGeoCode.GeoResult[0].FormatedAddr;
+          end;
+        end
+        else
+        begin
+          FGeoCode.Map.RequiredProp.Zoom := 13;
+
+          SetLength(LatList, FDataSet.RecordCount);
+          SetLength(LngList, FDataSet.RecordCount);
+          SetLength(TitleList, FDataSet.RecordCount);
+
+          i := 0;
+          FDataSet.First;
+          while not FDataSet.Eof do
+          begin
+            if (FDataSet.FindField('GPSN').AsFloat <> 0) and
+               (FDataSet.FindField('GPSE').AsFloat <> 0)
+            then
+              FGeoCode.Geocode(FDataSet.FindField('GPSN').AsFloat, FDataSet.FindField('GPSe').AsFloat)
+            else
+              FGeoCode.Geocode(FDataSet.FindField('Address').AsString);
+
+            if (FGeoCode.GeoStatus = gsOK) and (FGeoCode.Count > 0) then
+            begin
+              LatList[i] := FGeoCode.GeoResult[0].Geometry.Location.Lat;
+              LngList[i] := FGeoCode.GeoResult[0].Geometry.Location.Lng;
+              TitleList[i] := FGeoCode.GeoResult[0].FormatedAddr;
+
+              inc(i);
+            end
+            else
+              SetLength(LatList, Length(LatList) - 1);
+
+            FDataSet.Next;
+          end;
+
+          FDataSet.First;
+        end;
+
+        for i := 0 to Length(LatList) - 1 do
+          FGeoCode.Marker.Add(LatList[i], LngList[i], TitleList[i]);
+
+        if FGeoCode.Marker.Count > 0 then
+          FGeoCode.Marker.Items[0].CenterMapTo;
+      end;
+  finally
+    if Assigned(FDataSet) then
+      FDataSet.EnableControls;
+  end;
+end;
+
+procedure TdsdWebBrowser.DoDownloadComplete(Sender: TObject);
+var
+  i: integer;
+  FForm: TForm;
+begin
+  FForm := Owner as TForm;
+  if Assigned(FForm) then
+  begin
+    FGeoCode := nil;
+
+    for i := 0 to FForm.ComponentCount - 1 do
+      if FForm.Components[i].ClassType = TGMGeoCode then
+      begin
+        FGeoCode := FForm.Components[i] as TGMGeoCode;
+        break;
+      end;
+
+    if Assigned(FGeoCode) and Assigned(FGeoCode.Map) and (FGeoCode.Map.ClassType = TdsdGMMap) and
+       Assigned(FGeoCode.Marker) and TdsdGMMap(FGeoCode.Map).MapLoad then
+    begin
+      FGeoCode.Marker.Clear;
+      TdsdGMMap(FGeoCode.Map).MapLoad := False;
+
+      FTimer.Enabled := true;
+    end;
   end;
 end;
 
