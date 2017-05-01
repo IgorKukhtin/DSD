@@ -11,6 +11,9 @@ AS
 $BODY$
     DECLARE vbUserId Integer;
 
+    DECLARE vbServiceDateId         Integer;
+    DECLARE vbPersonalServiceListId Integer;
+
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
 
@@ -36,18 +39,19 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> не проведен.', (SELECT ItemName FROM MovementDesc WHERE Id = (SELECT DescId FROM Movement WHERE Id = inMovementId)), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inMovementId);
      END IF;
 
+
+     vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MIDate_ServiceDate()));
+     vbPersonalServiceListId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList());
+
      --
      OPEN Cursor1 FOR
---     WITH tmpObject_GoodsPropertyValue AS
-
-
        SELECT
              Movement.Id                                AS Id
            , Movement.InvNumber                         AS InvNumber
            , Movement.OperDate                          AS OperDate
-  
-           , MovementDate_ServiceDate.ValueData         AS ServiceDate 
-       
+
+           , MovementDate_ServiceDate.ValueData         AS ServiceDate
+
            , MovementString_Comment.ValueData           AS Comment
            , Object_PersonalServiceList.Id              AS PersonalServiceListId
            , Object_PersonalServiceList.ValueData       AS PersonalServiceListName
@@ -55,7 +59,7 @@ BEGIN
            , CASE WHEN COALESCE (Object_MemberHeadManager.ValueData, '') <> '' THEN zfConvert_FIO (Object_MemberHeadManager.ValueData, 2) ELSE '' /*'Махота Д.П.'*/    END  AS MemberHeadManagerName
            , CASE WHEN COALESCE (Object_MemberManager.ValueData, '') <> ''     THEN zfConvert_FIO (Object_MemberManager.ValueData, 2)     ELSE '' /*'Крыхта В.Н.'*/    END  AS MemberManagerName
            , CASE WHEN COALESCE (Object_MemberBookkeeper.ValueData, '') <> ''  THEN zfConvert_FIO (Object_MemberBookkeeper.ValueData, 2)  ELSE '' /*'Нагорнова Т.С.'*/ END  AS MemberBookkeeperName
-                      
+
            , Object_Juridical.Id                        AS JuridicalId
            , Object_Juridical.ValueData                 AS JuridicalName
            , (COALESCE (MovementFloat_TotalSummService.ValueData, 0)
@@ -64,9 +68,9 @@ BEGIN
             -- + COALESCE (MovementFloat_TotalSummSocialAdd.ValueData, 0)
              ) :: TFloat AS TotalSummService
            , MovementFloat_TotalSummMinus.ValueData      AS TotalSummMinus
-           , MovementFloat_TotalSummCard.ValueData       AS TotalSummCard     
+           , MovementFloat_TotalSummCard.ValueData       AS TotalSummCard
            , MovementFloat_TotalSummCardSecond.ValueData AS TotalSummCardSecond
-           , MovementFloat_TotalSummNalog.ValueData      AS TotalSummNalog 
+           , MovementFloat_TotalSummNalog.ValueData      AS TotalSummNalog
            , MovementFloat_TotalSummChild.ValueData      AS TotalSummChild
            , MovementFloat_TotalSummMinusExt.ValueData   AS TotalSummMinusExt
            , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0)
@@ -86,7 +90,7 @@ BEGIN
                                    ON MovementDate_ServiceDate.MovementId = Movement.Id
                                   AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
 
-             LEFT JOIN MovementString AS MovementString_Comment 
+             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
@@ -96,15 +100,15 @@ BEGIN
             LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = MovementLinkObject_PersonalServiceList.ObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_MemberHeadManager
-                                 ON ObjectLink_PersonalServiceList_MemberHeadManager.ObjectId = Object_PersonalServiceList.Id 
+                                 ON ObjectLink_PersonalServiceList_MemberHeadManager.ObjectId = Object_PersonalServiceList.Id
                                 AND ObjectLink_PersonalServiceList_MemberHeadManager.DescId = zc_ObjectLink_PersonalServiceList_MemberHeadManager()
             LEFT JOIN Object AS Object_MemberHeadManager ON Object_MemberHeadManager.Id = ObjectLink_PersonalServiceList_MemberHeadManager.ChildObjectId
             LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_MemberManager
-                                 ON ObjectLink_PersonalServiceList_MemberManager.ObjectId = Object_PersonalServiceList.Id 
+                                 ON ObjectLink_PersonalServiceList_MemberManager.ObjectId = Object_PersonalServiceList.Id
                                 AND ObjectLink_PersonalServiceList_MemberManager.DescId = zc_ObjectLink_PersonalServiceList_MemberManager()
             LEFT JOIN Object AS Object_MemberManager ON Object_MemberManager.Id = ObjectLink_PersonalServiceList_MemberManager.ChildObjectId
             LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_MemberBookkeeper
-                                 ON ObjectLink_PersonalServiceList_MemberBookkeeper.ObjectId = Object_PersonalServiceList.Id 
+                                 ON ObjectLink_PersonalServiceList_MemberBookkeeper.ObjectId = Object_PersonalServiceList.Id
                                 AND ObjectLink_PersonalServiceList_MemberBookkeeper.DescId = zc_ObjectLink_PersonalServiceList_MemberBookkeeper()
             LEFT JOIN Object AS Object_MemberBookkeeper ON Object_MemberBookkeeper.Id = ObjectLink_PersonalServiceList_MemberBookkeeper.ChildObjectId
 
@@ -124,7 +128,7 @@ BEGIN
                                    AND MovementFloat_TotalSummService.DescId = zc_MovementFloat_TotalSummService()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCard
                                     ON MovementFloat_TotalSummCard.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSummCard.DescId = zc_MovementFloat_TotalSummCard()  
+                                   AND MovementFloat_TotalSummCard.DescId = zc_MovementFloat_TotalSummCard()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardSecond
                                     ON MovementFloat_TotalSummCardSecond.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummCardSecond.DescId = zc_MovementFloat_TotalSummCardSecond()
@@ -174,9 +178,10 @@ BEGIN
        WITH tmpMIContainer_all AS (SELECT MIContainer.MovementItemId
                                         , CLO_Unit.ObjectId     AS UnitId
                                         , CLO_Position.ObjectId AS PositionId
-                                        , CLO_Personal.ObjectId AS PersonalId
+                                        , ObjectLink_Personal_Member.ChildObjectId AS MemberId
                                         , (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_PersonalService_Nalog() THEN MIContainer.Amount ELSE 0 END) AS SummNalog
-                                        , ROW_NUMBER() OVER (PARTITION BY MIContainer.MovementItemId ORDER BY ABS (MIContainer.Amount) DESC) AS Ord
+                                        -- , ROW_NUMBER() OVER (PARTITION BY MIContainer.MovementItemId ORDER BY ABS (MIContainer.Amount) DESC) AS Ord
+                                        , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Personal_Member.ChildObjectId ORDER BY ABS (MIContainer.Amount) DESC) AS Ord
                                    FROM MovementItemContainer AS MIContainer
                                         LEFT JOIN ContainerLinkObject AS CLO_Unit
                                                                       ON CLO_Unit.ContainerId = MIContainer.ContainerId
@@ -187,29 +192,54 @@ BEGIN
                                         LEFT JOIN ContainerLinkObject AS CLO_Personal
                                                                       ON CLO_Personal.ContainerId = MIContainer.ContainerId
                                                                      AND CLO_Personal.DescId = zc_ContainerLinkObject_Personal()
+                                        LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                             ON ObjectLink_Personal_Member.ObjectId = CLO_Personal.ObjectId
+                                                            AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
                                    WHERE MIContainer.MovementId = inMovementId
                                      AND MIContainer.DescId     = zc_MIContainer_Summ()
                                      AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_PersonalService_Nalog())
 	                                  )
-          , tmpMIContainer AS (SELECT tmpMIContainer_all.UnitId
+          , tmpMIContainer AS (SELECT /*tmpMIContainer_all.UnitId
                                     , tmpMIContainer_all.PositionId
-                                    , tmpMIContainer_all.PersonalId
+                                    ,*/ tmpMIContainer_all.MemberId
                                     , SUM (tmpMIContainer_all.SummNalog) :: TFloat AS SummNalog
                                FROM tmpMIContainer_all
-                               GROUP BY tmpMIContainer_all.UnitId
+                               GROUP BY /*tmpMIContainer_all.UnitId
                                       , tmpMIContainer_all.PositionId
-                                      , tmpMIContainer_all.PersonalId
+                                      ,*/ tmpMIContainer_all.MemberId
                               )
-          , tmpMI AS (SELECT MovementItem.Id                          AS MovementItemId
+      , tmpMI_all AS (SELECT MovementItem.Id                            AS MovementItemId
                            , MovementItem.Amount
-                           , MovementItem.ObjectId                    AS PersonalId
-                           , MILinkObject_Unit.ObjectId               AS UnitId
-                           , MILinkObject_Position.ObjectId           AS PositionId
+                           , MovementItem.ObjectId                      AS PersonalId
+                           , MILinkObject_Unit.ObjectId                 AS UnitId
+                           , MILinkObject_Position.ObjectId             AS PositionId
 
-                           , MILinkObject_Member.ObjectId             AS MemberId
-                           , ObjectLink_Personal_Member.ChildObjectId AS MemberId_Personal
-                           , MILinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
-                          
+                           -- , MILinkObject_Member.ObjectId               AS MemberId
+                           , ObjectLink_Personal_Member.ChildObjectId   AS MemberId -- MemberId_Personal
+                           , MILinkObject_PersonalServiceList.ObjectId  AS PersonalServiceListId
+
+                           , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Personal_Member.ChildObjectId ORDER BY CASE WHEN MIBoolean_Main.ValueData = TRUE THEN 1 ELSE 2 END, MovementItem.Amount DESC) AS Ord --  № п/п
+                           
+                           , COALESCE (MIBoolean_Main.ValueData, FALSE) AS isMain
+                           
+                           , COALESCE (MIFloat_SummToPay.ValueData, 0)        AS SummToPay
+                           , COALESCE (MIFloat_SummNalog.ValueData, 0)        AS SummNalog
+                           , COALESCE (MIFloat_SummCard.ValueData, 0)         AS SummCard
+                           , COALESCE (MIFloat_SummCardSecond.ValueData, 0)   AS SummCardSecond
+                           , COALESCE (MIFloat_SummService.ValueData, 0)      AS SummService
+                           , COALESCE (MIFloat_SummAdd.ValueData, 0)          AS SummAdd
+                           , COALESCE (MIFloat_SummHoliday.ValueData, 0)      AS SummHoliday
+
+                           , COALESCE (MIFloat_SummMinus.ValueData, 0)        AS SummMinus
+                           , COALESCE (MIFloat_SummChild.ValueData, 0)        AS SummChild
+                           , COALESCE (MIFloat_SummMinusExt.ValueData, 0)     AS SummMinusExt
+
+                           , COALESCE (MIFloat_SummTransportAdd.ValueData, 0) AS SummTransportAdd
+                           , COALESCE (MIFloat_SummTransport.ValueData, 0)    AS SummTransport
+                           , COALESCE (MIFloat_SummPhone.ValueData, 0)        AS SummPhone
+
+                           , MIString_Comment.ValueData         AS Comment
+
                       FROM MovementItem
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
@@ -217,58 +247,219 @@ BEGIN
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
                                                             ON MILinkObject_Position.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Member
+                           /*LEFT JOIN MovementItemLinkObject AS MILinkObject_Member
                                                             ON MILinkObject_Member.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_Member.DescId = zc_MILinkObject_Member()                                                           
+                                                           AND MILinkObject_Member.DescId = zc_MILinkObject_Member()*/
                            LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                                 ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
                                                AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
 
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalServiceList
                                                             ON MILinkObject_PersonalServiceList.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_PersonalServiceList.DescId = zc_MILinkObject_PersonalServiceList() 
+                                                           AND MILinkObject_PersonalServiceList.DescId = zc_MILinkObject_PersonalServiceList()
+
+                           LEFT JOIN MovementItemString AS MIString_Comment
+                                                        ON MIString_Comment.MovementItemId = MovementItem.Id
+                                                       AND MIString_Comment.DescId = zc_MIString_Comment()
+               
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummToPay
+                                                       ON MIFloat_SummToPay.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummToPay.DescId = zc_MIFloat_SummToPay()
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummService
+                                                       ON MIFloat_SummService.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummService.DescId = zc_MIFloat_SummService()
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummCard
+                                                       ON MIFloat_SummCard.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecond
+                                                       ON MIFloat_SummCardSecond.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummCardSecond.DescId = zc_MIFloat_SummCardSecond()
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummNalog
+                                                       ON MIFloat_SummNalog.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummNalog.DescId = zc_MIFloat_SummNalog()
+               
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummMinus
+                                                       ON MIFloat_SummMinus.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummMinus.DescId = zc_MIFloat_SummMinus()
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
+                                                       ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
+                                                       ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummTransportAdd
+                                                       ON MIFloat_SummTransportAdd.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummTransportAdd.DescId = zc_MIFloat_SummTransportAdd()
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummTransport
+                                                       ON MIFloat_SummTransport.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummTransport.DescId = zc_MIFloat_SummTransport()
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummPhone
+                                                       ON MIFloat_SummPhone.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummPhone.DescId = zc_MIFloat_SummPhone()
+               
+                         /*  LEFT JOIN MovementItemFloat AS MIFloat_SummSocialIn
+                                                       ON MIFloat_SummSocialIn.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummSocialIn.DescId = zc_MIFloat_SummSocialIn()
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummSocialAdd
+                                                       ON MIFloat_SummSocialAdd.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummSocialAdd.DescId = zc_MIFloat_SummSocialAdd()    */
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummChild
+                                                       ON MIFloat_SummChild.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummMinusExt
+                                                       ON MIFloat_SummMinusExt.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummMinusExt.DescId = zc_MIFloat_SummMinusExt()
+                           LEFT JOIN MovementItemBoolean AS MIBoolean_Main
+                                                         ON MIBoolean_Main.MovementItemId = MovementItem.Id
+                                                        AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
+
                       WHERE  MovementItem.MovementId = inMovementId
                          AND MovementItem.DescId = zc_MI_Master()
                          AND MovementItem.isErased = FALSE
                      )
+
+          , tmpMI AS (SELECT tmpMI_all_find.PersonalId
+                           , tmpMI_all_find.UnitId
+                           , tmpMI_all_find.PositionId
+
+                           , tmpMI_all_find.MemberId
+                           , tmpMI_all_find.PersonalServiceListId
+                           , tmpMI_all_find.isMain
+                           , tmpMI_all_find.Comment
+                          
+                           , SUM (tmpMI_all.Amount)           AS Amount
+
+                           , SUM (tmpMI_all.SummToPay)        AS SummToPay
+                           , SUM (tmpMI_all.SummNalog)        AS SummNalog
+                           , SUM (tmpMI_all.SummCard)         AS SummCard
+                           , SUM (tmpMI_all.SummCardSecond)   AS SummCardSecond
+                           , SUM (tmpMI_all.SummService)      AS SummService
+                           , SUM (tmpMI_all.SummAdd)          AS SummAdd
+                           , SUM (tmpMI_all.SummHoliday)      AS SummHoliday
+
+                           , SUM (tmpMI_all.SummMinus)        AS SummMinus
+                           , SUM (tmpMI_all.SummChild)        AS SummChild
+                           , SUM (tmpMI_all.SummMinusExt)     AS SummMinusExt
+
+                           , SUM (tmpMI_all.SummTransportAdd) AS SummTransportAdd
+                           , SUM (tmpMI_all.SummTransport)    AS SummTransport
+                           , SUM (tmpMI_all.SummPhone)        AS SummPhone
+
+                      FROM tmpMI_all As tmpMI_all_find
+                           LEFT JOIN tmpMI_all ON tmpMI_all.MemberId = tmpMI_all_find.MemberId
+                      WHERE tmpMI_all_find.Ord = 1
+                      GROUP BY tmpMI_all_find.PersonalId
+                             , tmpMI_all_find.UnitId
+                             , tmpMI_all_find.PositionId
+                             , tmpMI_all_find.MemberId
+                             , tmpMI_all_find.PersonalServiceListId
+                             , tmpMI_all_find.isMain
+                             , tmpMI_all_find.Comment
+                     )
           , tmpUserAll AS (SELECT DISTINCT UserId FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin()) AND UserId = vbUserId) -- Документы-меню (управленцы) AND <> Рудик Н.В.
-          , tmpPersonal AS (SELECT 0 AS MovementItemId
-                                 , 0 AS Amount
+          , tmpPersonal AS (SELECT View_Personal.isMain
                                  , View_Personal.PersonalId
                                  , View_Personal.UnitId
                                  , View_Personal.PositionId
-                                 , View_Personal.MemberId    AS MemberId_Personal
-                                 , 0     AS MemberId
+                                 , View_Personal.MemberId -- AS MemberId_Personal
                                  , ObjectLink_Personal_PersonalServiceList.ChildObjectId AS PersonalServiceListId -- !!!берем это поле т.к. есть ограничение по БН!!!
-                                
-                            FROM (SELECT UnitId_PersonalService FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND UserId = vbUserId 
+                                 , ROW_NUMBER() OVER (PARTITION BY View_Personal.MemberId ORDER BY CASE WHEN View_Personal.isMain = TRUE THEN 1 ELSE 2 END) AS Ord --  № п/п
+                            FROM (SELECT UnitId_PersonalService FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND UserId = vbUserId
                                  UNION
                                   -- Админ видит ВСЕХ
-                                  SELECT Object.Id AS UnitId_PersonalService FROM tmpUserAll INNER JOIN Object ON Object.DescId = zc_Object_Unit() 
+                                  SELECT Object.Id AS UnitId_PersonalService FROM tmpUserAll INNER JOIN Object ON Object.DescId = zc_Object_Unit()
                                  ) AS View_RoleAccessKeyGuide
                                  INNER JOIN Object_Personal_View AS View_Personal ON View_Personal.UnitId = View_RoleAccessKeyGuide.UnitId_PersonalService
-                                                                                
+
                                  LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                                       ON ObjectLink_Personal_PersonalServiceList.ObjectId = View_Personal.PersonalId
                                                      AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
                                                      --AND vbIsSummCardRecalc = TRUE -- !!!т.е. если это БН!!!
 
-                                 JOIN tmpMI ON tmpMI.PersonalId = View_Personal.PersonalId
-                                           AND tmpMI.UnitId     = View_Personal.UnitId
-                                           AND tmpMI.PositionId = View_Personal.PositionId
-                                              
+                                 JOIN tmpMI ON tmpMI.MemberId = View_Personal.MemberId
+                                           -- AND tmpMI.UnitId     = View_Personal.UnitId
+                                           -- AND tmpMI.PositionId = View_Personal.PositionId
+
                             WHERE tmpMI.PersonalId IS NULL
                            )
-          , tmpAll AS (SELECT tmpMI.MovementItemId, tmpMI.Amount, tmpMI.PersonalId, tmpMI.UnitId, tmpMI.PositionId, tmpMI.MemberId_Personal, tmpMI.MemberId , tmpMI.PersonalServiceListId FROM tmpMI
+          , tmpAll AS (SELECT tmpMI.Amount, tmpMI.PersonalId, tmpMI.UnitId, tmpMI.PositionId, tmpMI.MemberId , tmpMI.PersonalServiceListId
+                            , tmpMI.isMain
+                            , tmpMI.Comment
+                            , tmpMI.Amount
+                            , tmpMI.SummToPay
+                            , tmpMI.SummNalog
+                            , tmpMI.SummCard
+                            , tmpMI.SummCardSecond
+                            , tmpMI.SummService
+                            , tmpMI.SummAdd
+                            , tmpMI.SummHoliday
+
+                            , tmpMI.SummMinus
+                            , tmpMI.SummChild
+                            , tmpMI.SummMinusExt
+
+                            , tmpMI.SummTransportAdd
+                            , tmpMI.SummTransport
+                            , tmpMI.SummPhone
+                       FROM tmpMI
                       UNION ALL
-                       SELECT tmpPersonal.MovementItemId, tmpPersonal.Amount, tmpPersonal.PersonalId, tmpPersonal.UnitId, tmpPersonal.PositionId, tmpPersonal.Memberid_Personal, tmpPersonal.MemberId, tmpPersonal.PersonalServiceListId FROM tmpPersonal
+                       SELECT 0 AS Amount, tmpPersonal.PersonalId, tmpPersonal.UnitId, tmpPersonal.PositionId, tmpPersonal.MemberId, tmpPersonal.PersonalServiceListId
+                            , tmpPersonal.isMain
+                            , '' AS Comment
+                            , 0 AS Amount
+                            , 0 AS SummToPay
+                            , 0 AS SummNalog
+                            , 0 AS SummCard
+                            , 0 AS SummCardSecond
+                            , 0 AS SummService
+                            , 0 AS SummAdd
+                            , 0 AS SummHoliday
+
+                            , 0 AS SummMinus
+                            , 0 AS SummChild
+                            , 0 AS SummMinusExt
+
+                            , 0 AS SummTransportAdd
+                            , 0 AS SummTransport
+                            , 0 AS SummPhone
+                        FROM tmpPersonal
+                        WHERE tmpPersonal.Ord = 1
                       )
-       SELECT tmpAll.MovementItemId                   AS Id
+       , tmpContainer_pay AS (SELECT DISTINCT
+                                     CLO_ServiceDate.ContainerId
+                                   , tmpAll.MemberId
+                              FROM tmpAll
+                                   INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                         ON ObjectLink_Personal_Member.ChildObjectId = tmpAll.MemberId
+                                                        AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                                   INNER JOIN ContainerLinkObject AS CLO_ServiceDate
+                                                                  ON CLO_ServiceDate.ObjectId = vbServiceDateId
+                                                                 AND CLO_ServiceDate.DescId = zc_ContainerLinkObject_ServiceDate()
+                                   INNER JOIN ContainerLinkObject AS CLO_Personal
+                                                                  ON CLO_Personal.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                                 AND CLO_Personal.DescId = zc_ContainerLinkObject_Personal()
+                                                                 AND CLO_Personal.ContainerId = CLO_ServiceDate.ContainerId
+                                   INNER JOIN ContainerLinkObject AS CLO_PersonalServiceList
+                                                                  ON CLO_PersonalServiceList.ObjectId = vbPersonalServiceListId
+                                                                 AND CLO_PersonalServiceList.DescId = zc_ContainerLinkObject_PersonalServiceList()
+                                                                 AND CLO_PersonalServiceList.ContainerId = CLO_ServiceDate.ContainerId
+                             )
+     , tmpMIContainer_pay AS (SELECT SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalAvance() THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
+                                   , tmpContainer_pay.MemberId
+                              FROM tmpContainer_pay
+                                   INNER JOIN MovementItemContainer AS MIContainer
+                                                                    ON MIContainer.ContainerId = tmpContainer_pay.ContainerId
+                                                                   AND MIContainer.DescId = zc_MIContainer_Summ()
+                                                                   AND MIContainer.MovementDescId = zc_Movement_Cash()
+                              GROUP BY tmpContainer_pay.MemberId
+                             )
+       -- Результат
+       SELECT 0 :: Integer                            AS Id
             , Object_Personal.Id                      AS PersonalId
             , Object_Personal.ObjectCode              AS PersonalCode
             , Object_Personal.ValueData               AS PersonalName
             , ObjectString_Member_INN.ValueData       AS INN
-            , CASE WHEN tmpAll.MovementItemId > 0 THEN COALESCE (MIBoolean_Main.ValueData, FALSE) ELSE COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE) END :: Boolean   AS isMain
+            , COALESCE (tmpAll.isMain, FALSE) :: Boolean AS isMain
             , COALESCE (ObjectBoolean_Member_Official.ValueData, FALSE) :: Boolean AS isOfficial
 
             , Object_PersonalTo.ObjectCode            AS PersonalCode_to
@@ -280,121 +471,67 @@ BEGIN
             , Object_Position.Id                      AS PositionId
             , Object_Position.ValueData               AS PositionName
 
-            , COALESCE (Object_Member.Id, 0)          AS MemberId
-            , COALESCE (Object_Member.ValueData, ''::TVarChar) AS MemberName
+            , COALESCE (Object_Member.Id, 0)         :: Integer  AS MemberId
+            , COALESCE (Object_Member.ValueData, '') :: TVarChar AS MemberName
 
---            , tmpAll.Amount :: TFloat          AS Amount
---            , MIFloat_SummToPay.ValueData      AS AmountToPay
-            , (COALESCE (MIFloat_SummToPay.ValueData, 0) - COALESCE (tmpMIContainer.SummNalog, 0) + COALESCE (MIFloat_SummNalog.ValueData, 0)
-             - COALESCE (MIFloat_SummCard.ValueData, 0)
-             - COALESCE (MIFloat_SummCardSecond.ValueData, 0)
+--            , tmpAll.Amount    :: TFloat     AS Amount
+--            , tmpAll.SummToPay :: TFloat     AS AmountToPay
+            , (tmpAll.SummToPay - COALESCE (tmpMIContainer.SummNalog, 0) + tmpAll.SummNalog
+             - tmpAll.SummCard
+             - tmpAll.SummCardSecond
+             - COALESCE (tmpMIContainer_pay.Amount_avance, 0)
               ) :: TFloat AS AmountCash
-            , (COALESCE (MIFloat_SummService.ValueData, 0) /*+ COALESCE (tmpMIContainer.SummNalog, 0)*/
-             + COALESCE (MIFloat_SummAdd.ValueData, 0)
-             + COALESCE (MIFloat_SummHoliday.ValueData, 0)
+            , (tmpAll.SummService /*+ COALESCE (tmpMIContainer.SummNalog, 0)*/
+             + tmpAll.SummAdd
+             + tmpAll.SummHoliday
               ) :: TFloat AS SummService
-            , MIFloat_SummCard.ValueData       AS SummCard  
-            , MIFloat_SummCardSecond.ValueData AS SummCardSecond
-            , tmpMIContainer.SummNalog         AS SummNalog
---            , MIFloat_SummCardRecalc.ValueData AS SummCardRecalc        
-            , MIFloat_SummMinus.ValueData      AS SummMinus
---            , MIFloat_SummAdd.ValueData        AS SummAdd
---            , MIFloat_SummSocialIn.ValueData   AS SummSocialIn
---            , MIFloat_SummSocialAdd.ValueData  AS SummSocialAdd
-            , MIFloat_SummChild.ValueData        AS SummChild
-            , MIFloat_SummMinusExt.ValueData     AS SummMinusExt
+            , tmpAll.SummCard          :: TFloat AS SummCard
+            , tmpAll.SummCardSecond    :: TFloat AS SummCardSecond
+            , tmpMIContainer.SummNalog :: TFloat AS SummNalog
+--            , tmpAll.SummCardRecalc  :: TFloat AS SummCardRecalc
+            , tmpAll.SummMinus         :: TFloat AS SummMinus
+--            , tmpAll.SummAdd         :: TFloat AS SummAdd
+--            , tmpAll.SummSocialIn    :: TFloat AS SummSocialIn
+--            , tmpAll.SummSocialAdd   :: TFloat AS SummSocialAdd
+            , tmpAll.SummChild         :: TFloat AS SummChild
+            , tmpAll.SummMinusExt      :: TFloat AS SummMinusExt
 
-            , MIFloat_SummTransportAdd.ValueData AS SummTransportAdd
-            , MIFloat_SummTransport.ValueData    AS SummTransport
-            , MIFloat_SummPhone.ValueData        AS SummPhone
+            , tmpAll.SummTransportAdd  :: TFloat AS SummTransportAdd
+            , tmpAll.SummTransport     :: TFloat AS SummTransport
+            , tmpAll.SummPhone         :: TFloat AS SummPhone
+            
+            , tmpMIContainer_pay.Amount_avance :: TFloat AS Amount_avance
 
-            , MIString_Comment.ValueData         AS Comment
-         
+            , tmpAll.Comment
+
        FROM tmpAll
-            LEFT JOIN tmpMIContainer ON tmpMIContainer.PersonalId = tmpAll.PersonalId
-                                    AND tmpMIContainer.UnitId     = tmpAll.UnitId
-                                    AND tmpMIContainer.PositionId = tmpAll.PositionId
-            LEFT JOIN tmpMIContainer_all ON tmpMIContainer_all.MovementItemId = tmpAll.MovementItemId
-                                        AND tmpMIContainer_all.Ord            = 1 -- !!!только 1-ый!!!
-
-            LEFT JOIN MovementItemString AS MIString_Comment
-                                         ON MIString_Comment.MovementItemId = tmpAll.MovementItemId
-                                        AND MIString_Comment.DescId = zc_MIString_Comment()
+            LEFT JOIN tmpMIContainer ON tmpMIContainer.MemberId = tmpAll.MemberId
+            LEFT JOIN tmpMIContainer_all ON tmpMIContainer_all.MemberId = tmpAll.MemberId
+                                        AND tmpMIContainer_all.Ord      = 1 -- !!!только 1-ый!!!
+            LEFT JOIN tmpMIContainer_pay ON tmpMIContainer_pay.MemberId = tmpAll.MemberId
                                         
-            LEFT JOIN MovementItemFloat AS MIFloat_SummToPay
-                                        ON MIFloat_SummToPay.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummToPay.DescId = zc_MIFloat_SummToPay()
-            LEFT JOIN MovementItemFloat AS MIFloat_SummService
-                                        ON MIFloat_SummService.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummService.DescId = zc_MIFloat_SummService()
-            LEFT JOIN MovementItemFloat AS MIFloat_SummCard
-                                        ON MIFloat_SummCard.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()    
-            LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecond
-                                        ON MIFloat_SummCardSecond.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummCardSecond.DescId = zc_MIFloat_SummCardSecond()
-            LEFT JOIN MovementItemFloat AS MIFloat_SummNalog
-                                        ON MIFloat_SummNalog.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummNalog.DescId = zc_MIFloat_SummNalog() 
-                                                          
-            LEFT JOIN MovementItemFloat AS MIFloat_SummMinus
-                                        ON MIFloat_SummMinus.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummMinus.DescId = zc_MIFloat_SummMinus()
-            LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
-                                        ON MIFloat_SummAdd.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
-            LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
-                                        ON MIFloat_SummHoliday.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
-            LEFT JOIN MovementItemFloat AS MIFloat_SummTransportAdd
-                                        ON MIFloat_SummTransportAdd.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummTransportAdd.DescId = zc_MIFloat_SummTransportAdd()
-            LEFT JOIN MovementItemFloat AS MIFloat_SummTransport
-                                        ON MIFloat_SummTransport.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummTransport.DescId = zc_MIFloat_SummTransport()
-            LEFT JOIN MovementItemFloat AS MIFloat_SummPhone
-                                        ON MIFloat_SummPhone.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummPhone.DescId = zc_MIFloat_SummPhone()
 
-          /*  LEFT JOIN MovementItemFloat AS MIFloat_SummSocialIn
-                                        ON MIFloat_SummSocialIn.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummSocialIn.DescId = zc_MIFloat_SummSocialIn()
-            LEFT JOIN MovementItemFloat AS MIFloat_SummSocialAdd
-                                        ON MIFloat_SummSocialAdd.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummSocialAdd.DescId = zc_MIFloat_SummSocialAdd()    */                                 
-            LEFT JOIN MovementItemFloat AS MIFloat_SummChild
-                                        ON MIFloat_SummChild.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
-            LEFT JOIN MovementItemFloat AS MIFloat_SummMinusExt
-                                        ON MIFloat_SummMinusExt.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummMinusExt.DescId = zc_MIFloat_SummMinusExt()
-            LEFT JOIN MovementItemBoolean AS MIBoolean_Main
-                                          ON MIBoolean_Main.MovementItemId = tmpAll.MovementItemId
-                                         AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
-                                                   
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpAll.PersonalId
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpAll.UnitId
             LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpAll.PositionId
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpAll.MemberId
-            LEFT JOIN Object AS Object_PersonalTo ON Object_PersonalTo.Id = tmpMIContainer_all.PersonalId
+            LEFT JOIN Object AS Object_PersonalTo ON Object_PersonalTo.Id = tmpMIContainer_all.MemberId
 
-            LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal_Main
-                                    ON ObjectBoolean_Personal_Main.ObjectId = tmpAll.PersonalId
-                                   AND ObjectBoolean_Personal_Main.DescId = zc_ObjectBoolean_Personal_Main()
             LEFT JOIN ObjectString AS ObjectString_Member_INN
-                                   ON ObjectString_Member_INN.ObjectId = tmpAll.MemberId_Personal
+                                   ON ObjectString_Member_INN.ObjectId = tmpAll.MemberId
                                   AND ObjectString_Member_INN.DescId = zc_ObjectString_Member_INN()
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Member_Official
-                                    ON ObjectBoolean_Member_Official.ObjectId = tmpAll.MemberId_Personal
+                                    ON ObjectBoolean_Member_Official.ObjectId = tmpAll.MemberId
                                    AND ObjectBoolean_Member_Official.DescId = zc_ObjectBoolean_Member_Official()
-       WHERE 0 <> COALESCE (MIFloat_SummToPay.ValueData, 0) + COALESCE (MIFloat_SummNalog.ValueData, 0) - COALESCE (tmpMIContainer.SummNalog, 0) - COALESCE (MIFloat_SummCard.ValueData, 0) - COALESCE (MIFloat_SummChild.ValueData, 0)
-          OR 0 <> COALESCE (MIFloat_SummService.ValueData, 0) /*+ COALESCE (tmpMIContainer.SummNalog, 0)*/ + COALESCE (MIFloat_SummHoliday.ValueData, 0)
-          OR 0 <> MIFloat_SummCard.ValueData
+       WHERE 0 <> tmpAll.SummToPay + tmpAll.SummNalog - COALESCE (tmpMIContainer.SummNalog, 0) - tmpAll.SummCard - tmpAll.SummChild
+          OR 0 <> tmpAll.SummService /*+ COALESCE (tmpMIContainer.SummNalog, 0)*/ + tmpAll.SummHoliday
+          OR 0 <> tmpAll.SummCard
           OR 0 <> tmpMIContainer.SummNalog
-          OR 0 <> MIFloat_SummMinus.ValueData
-          OR 0 <> MIFloat_SummTransportAdd.ValueData
-          OR 0 <> MIFloat_SummTransport.ValueData
-          OR 0 <> MIFloat_SummPhone.ValueData
+          OR 0 <> tmpAll.SummMinus
+          OR 0 <> tmpAll.SummTransportAdd
+          OR 0 <> tmpAll.SummTransport
+          OR 0 <> tmpAll.SummPhone
+       ORDER BY Object_Personal.ValueData
       ;
 
     RETURN NEXT Cursor2;

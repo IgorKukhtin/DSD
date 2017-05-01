@@ -43,6 +43,8 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    ItemName_from: TcxGridDBColumn;
+    ItemName_to: TcxGridDBColumn;
   private
     { Private declarations }
   public

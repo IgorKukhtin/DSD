@@ -4,8 +4,9 @@ inherited SendJournalForm: TSendJournalForm
   ClientWidth = 761
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitTop = -96
   ExplicitWidth = 777
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -141,12 +142,26 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 111
           end
+          object ItemName_from: TcxGridDBColumn
+            Caption = #1054#1090' '#1082#1086#1075#1086' ('#1101#1083#1077#1084#1077#1085#1090')'
+            DataBinding.FieldName = 'ItemName_from'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object colFromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
+          end
+          object ItemName_to: TcxGridDBColumn
+            Caption = #1050#1086#1084#1091' ('#1101#1083#1077#1084#1077#1085#1090')'
+            DataBinding.FieldName = 'ItemName_to'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object colToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091

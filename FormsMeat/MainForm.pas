@@ -614,10 +614,10 @@ type
     actReport_GoodsMI_SaleReturnInUnit: TdsdOpenForm;
     miReport_GoodsMI_SaleReturnInUnit: TMenuItem;
     actReport_GoodsMI_Internal: TdsdOpenForm;
-    N73: TMenuItem;
+    miReport_GoodsMI_Internal_Loss: TMenuItem;
     actReport_GoodsMI_Send: TdsdOpenForm;
     actReport_GoodsMI_SendonPrice: TdsdOpenForm;
-    N74: TMenuItem;
+    miReport_GoodsMI_Internal_Send: TMenuItem;
     N75: TMenuItem;
     actOrderInternalBasisDelik: TdsdOpenForm;
     miOrderInternalBasisDelik: TMenuItem;

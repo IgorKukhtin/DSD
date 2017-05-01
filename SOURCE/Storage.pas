@@ -142,8 +142,9 @@ end;
 
 class function TStorage.NewInstance: TObject;
 var
-  StringList: TStringList;
+  StringList, StringListRep: TStringList;
   ConnectionString, ReportConnectionString: string;
+  lConnectionPathRep:String;
   i: Integer;
   StartPHP: Boolean;
 begin
@@ -154,14 +155,18 @@ begin
     Instance.FActiveConnection := 0;
     try
       StringList := TStringList.Create;
+      StringListRep:= TStringList.Create;
       try
+        lConnectionPathRep:=ReplaceStr(ConnectionPath,'\init.php','\initRep.php');
+        //
         StringList.LoadFromFile(ConnectionPath);
-        //составление списка возможных альтернативных серверов
+        if (lConnectionPathRep <> ConnectionPath) and (FileExists(lConnectionPathRep) = TRUE) then StringListRep.LoadFromFile(lConnectionPathRep);
+        //
+        //составление списка возможных альтернативных серверов - ОСНОВНОЙ
         StartPHP := False;
-        ReportConnectionString := '';
         for i := 0 to StringList.Count - 1 do
         begin
-          if not StartPHP and (Pos('<?php', StringList[i]) = 1) then
+           if not StartPHP and (Pos('<?php', StringList[i]) = 1) then
             StartPHP := True
           else
           if StartPHP and (Pos('?>', StringList[i]) = 1) then
@@ -173,19 +178,42 @@ begin
               ConnectionString := AnsiDequotedStr(Trim(StringList.ValueFromIndex[i]), '"');
               Instance.FConnections.Add(Trim(ConnectionString));
             end else
-            if StartPHP and (Pos('$rephost', StringList[i]) > 0) then
-            begin
-              ReportConnectionString := AnsiDequotedStr(Trim(StringList.ValueFromIndex[i]), '"');
-            end else
             if not StartPHP then
             begin
               Instance.FConnections.Add(Trim(StringList[i]));
             end;
           end;
         end;
+        //
+        //составление списка возможных альтернативных серверов - для ОТЧЕТОВ
+        StartPHP := False;
+        ReportConnectionString := '';
+        for i := 0 to StringListRep.Count - 1 do
+        begin
+           if not StartPHP and (Pos('<?php', StringListRep[i]) = 1) then
+            StartPHP := True
+          else
+          if StartPHP and (Pos('?>', StringListRep[i]) = 1) then
+            StartPHP := False
+          else
+          begin
+            if StartPHP and (Pos('$host', StringListRep[i]) > 0) then
+            begin
+              ReportConnectionString := AnsiDequotedStr(Trim(StringListRep.ValueFromIndex[i]), '"');
+              //Instance.FReportConnection.Add(Trim(ReportConnectionString));
+            end else
+            if not StartPHP then
+            begin
+               ReportConnectionString := Trim(StringListRep[0]);
+              //Instance.FReportConnection.Add(Trim(StringListRep[i]));
+            end;
+          end;
+        end;
+        //
         if Instance.FConnections.Count = 0 then
           Instance.FConnections.Add('http://localhost/dsd/index.php');
         ConnectionString := Instance.FConnections.Strings[0];
+        //
         if ReportConnectionString = '' then
           ReportConnectionString := ConnectionString;
         (*
@@ -199,6 +227,7 @@ begin
         end;*)
       finally
         StringList.Free;
+        StringListRep.Free;
       end;
     except
       if Instance.FConnections.Count = 0 then

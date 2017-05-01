@@ -75,6 +75,9 @@ type
     PriceListGuides: TdsdGuides;
     Price_PriceList: TcxGridDBColumn;
     SummOut_PriceList: TcxGridDBColumn;
+    LocationItemName: TcxGridDBColumn;
+    LocationItemName_by: TcxGridDBColumn;
+    Summ_ProfitLoss: TcxGridDBColumn;
   private
     { Private declarations }
   public

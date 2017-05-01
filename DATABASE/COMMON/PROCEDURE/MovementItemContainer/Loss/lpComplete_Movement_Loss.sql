@@ -40,7 +40,10 @@ BEGIN
 
 
      -- Эти параметры нужны для формирования Аналитик в проводках
-     WITH tmpMember AS (SELECT View_Personal.MemberId, MAX (View_Personal.UnitId) AS UnitId FROM Object_Personal_View AS View_Personal GROUP BY View_Personal.MemberId)
+     WITH tmpMember AS (SELECT lfSelect.MemberId, lfSelect.UnitId
+                        FROM lfSelect_Object_Member_findPersonal (inUserId :: TVarChar) AS lfSelect
+                        WHERE lfSelect.Ord = 1
+                       )
      SELECT _tmp.MovementDescId, _tmp.OperDate
           , _tmp.UnitId, _tmp.MemberId, _tmp.BranchId_Unit, _tmp.AccountDirectionId, _tmp.isPartionDate_Unit, _tmp.isPartionGoodsKind_Unit
           , _tmp.InfoMoneyId_ArticleLoss, _tmp.BranchId_ProfitLoss
@@ -471,7 +474,7 @@ BEGIN
             , vbAnalyzerId                            AS AnalyzerId             -- есть аналитика: Статья списания
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
-            , tmpProfitLoss.ContainerId_ProfitLoss    AS ContainerId_Analyzer   -- статья ОПиУ
+            , tmpProfitLoss.ContainerId_ProfitLoss    AS ContainerId_Analyzer   -- Контейнер ОПиУ - статья ОПиУ
             , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
             , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- Подраделение кому или...
             , 0                                       AS ParentId
@@ -479,7 +482,7 @@ BEGIN
             , vbOperDate
             , FALSE
        FROM _tmpItem
-            LEFT JOIN (SELECT _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId_ProfitLoss FROM _tmpItemSumm GROUP BY _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId_ProfitLoss
+            LEFT JOIN (SELECT DISTINCT _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId_ProfitLoss FROM _tmpItemSumm
                       ) AS tmpProfitLoss ON tmpProfitLoss.MovementItemId = _tmpItem.MovementItemId
        ;
      -- 1.2.2. формируются Проводки для суммового учета, !!!после прибыли, т.к. нужен ContainerId_ProfitLoss!!!
@@ -492,7 +495,7 @@ BEGIN
             , vbAnalyzerId                            AS AnalyzerId             -- есть аналитика: Статья списания
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
-            , _tmpItemSumm.ContainerId_ProfitLoss     AS ContainerId_Analyzer   -- статья ОПиУ
+            , _tmpItemSumm.ContainerId_ProfitLoss     AS ContainerId_Analyzer   -- Контейнер ОПиУ - статья ОПиУ
             , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
             , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- Подраделение кому или...
             , 0                                       AS ParentId
@@ -503,46 +506,6 @@ BEGIN
             JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
 
 
-
-
-     -- 3. формируются Проводки для отчета (Аналитики: Товар и Прибыль)
-     PERFORM lpInsertUpdate_MovementItemReport (inMovementDescId     := vbMovementDescId
-                                              , inMovementId         := inMovementId
-                                              , inMovementItemId     := _tmpItem_byProfitLoss.MovementItemId
-                                              , inActiveContainerId  := _tmpItem_byProfitLoss.ActiveContainerId
-                                              , inPassiveContainerId := _tmpItem_byProfitLoss.PassiveContainerId
-                                              , inActiveAccountId    := _tmpItem_byProfitLoss.ActiveAccountId
-                                              , inPassiveAccountId   := _tmpItem_byProfitLoss.PassiveAccountId
-                                              , inReportContainerId  := lpInsertFind_ReportContainer (inActiveContainerId  := _tmpItem_byProfitLoss.ActiveContainerId
-                                                                                                    , inPassiveContainerId := _tmpItem_byProfitLoss.PassiveContainerId
-                                                                                                    , inActiveAccountId    := _tmpItem_byProfitLoss.ActiveAccountId
-                                                                                                    , inPassiveAccountId   := _tmpItem_byProfitLoss.PassiveAccountId
-                                                                                                     )
-                                              , inChildReportContainerId := lpInsertFind_ChildReportContainer (inActiveContainerId  := _tmpItem_byProfitLoss.ActiveContainerId
-                                                                                                             , inPassiveContainerId := _tmpItem_byProfitLoss.PassiveContainerId
-                                                                                                             , inActiveAccountId    := _tmpItem_byProfitLoss.ActiveAccountId
-                                                                                                             , inPassiveAccountId   := _tmpItem_byProfitLoss.PassiveAccountId
-                                                                                                     )
-                                              , inAmount   := _tmpItem_byProfitLoss.OperSumm
-                                              , inOperDate := vbOperDate
-                                               )
-     FROM (SELECT ABS (_tmpCalc.OperSumm) AS OperSumm
-                , CASE WHEN _tmpCalc.OperSumm > 0 THEN _tmpCalc.ContainerId_ProfitLoss ELSE _tmpCalc.ContainerId            END AS ActiveContainerId
-                , CASE WHEN _tmpCalc.OperSumm > 0 THEN _tmpCalc.ContainerId            ELSE _tmpCalc.ContainerId_ProfitLoss END AS PassiveContainerId
-                , CASE WHEN _tmpCalc.OperSumm > 0 THEN _tmpCalc.AccountId_ProfitLoss   ELSE _tmpCalc.AccountId              END AS ActiveAccountId
-                , CASE WHEN _tmpCalc.OperSumm > 0 THEN _tmpCalc.AccountId              ELSE _tmpCalc.AccountId_ProfitLoss   END AS PassiveAccountId
-                , _tmpCalc.MovementItemId
-           FROM (SELECT _tmpItemSumm.MovementItemId
-                      , _tmpItemSumm.ContainerId
-                      , _tmpItemSumm.AccountId
-                      , _tmpItemSumm.ContainerId_ProfitLoss
-                      , zc_Enum_Account_100301 () AS AccountId_ProfitLoss   -- 100301; "прибыль текущего периода"
-                      , _tmpItemSumm.OperSumm                               -- !!!если>0, значит "убыток"
-                 FROM _tmpItemSumm
-                ) AS _tmpCalc
-           WHERE _tmpCalc.OperSumm <> 0
-          ) AS _tmpItem_byProfitLoss
-     ;
 
 
      -- убрал, т.к. св-во пишется теперь в ОПиУ

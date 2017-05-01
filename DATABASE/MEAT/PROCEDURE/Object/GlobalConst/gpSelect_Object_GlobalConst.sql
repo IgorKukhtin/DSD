@@ -149,7 +149,7 @@ BEGIN
                                   AND ObjectString.DescId = zc_ObjectString_Enum()
        WHERE Object_GlobalConst.DescId = zc_Object_GlobalConst()
          AND Object_GlobalConst.ObjectCode < 100
-         AND Object_GlobalConst.Id <> zc_Enum_GlobalConst_ConnectParam()
+         AND Object_GlobalConst.Id NOT IN (zc_Enum_GlobalConst_ConnectParam(), zc_Enum_GlobalConst_ConnectReportParam())
        ORDER BY 1
       ;
   
@@ -169,5 +169,9 @@ ALTER FUNCTION gpSelect_Object_GlobalConst (TVarChar, TVarChar) OWNER TO postgre
 -- тест
 -- update Object set valuedata = 'http://integer-srv.alan.dp.ua' where Id = zc_Enum_GlobalConst_ConnectParam() 
 -- update Object set valuedata = 'http://integer-srv2.alan.dp.ua' where Id = zc_Enum_GlobalConst_ConnectParam() 
--- SELECT * FROM Object where Id = zc_Enum_GlobalConst_ConnectParam() 
+--
+-- update Object set valuedata = 'http://integer-srv-r.alan.dp.ua' where Id = zc_Enum_GlobalConst_ConnectReportParam() 
+-- update Object set valuedata = 'http://integer-srv2-r.alan.dp.ua' where Id = zc_Enum_GlobalConst_ConnectReportParam() 
+--
+-- SELECT * FROM Object where Id IN (zc_Enum_GlobalConst_ConnectParam(), zc_Enum_GlobalConst_ConnectReportParam())
 -- SELECT * FROM gpSelect_Object_GlobalConst ('', zfCalc_UserAdmin())

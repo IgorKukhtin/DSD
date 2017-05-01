@@ -6,7 +6,8 @@ type
 
   TUpdater = class
   private
-     class procedure UpdateConnect(Connection: string);
+     class procedure UpdateConnect (Connection: string);
+     class procedure UpdateConnectReport (Connection: string);
      class procedure UpdateProgram;
   public
      class procedure AutomaticCheckConnect;
@@ -22,7 +23,7 @@ uses UnilWin, VCL.Dialogs, Controls, StdCtrls, FormStorage, SysUtils, forms,
 
 class procedure TUpdater.AutomaticCheckConnect;
 var StoredProc: TdsdStoredProc;
-    Connection: String;
+    Connection, ReportConnection: String;
     StringList: TStringList;
     i:Integer;
     fFind:Boolean;
@@ -58,6 +59,43 @@ begin
       // and (TStorageFactory.GetStorage.Connection <> ReplaceStr(Connection,'srv.alan','srv2.alan'))
     then
        UpdateConnect(Connection);
+    //
+    // теперь тоже самое для отчетов
+    if Pos('\init.php', ConnectionPath) > 0 then
+    begin
+        StoredProc.Params.Clear;
+        StoredProc.Params.AddParam('inConstName', ftString, ptInput, 'zc_Enum_GlobalConst_ConnectReportParam');
+        StoredProc.Params.AddParam('gpGetConstName', ftString, ptOutput, '');
+        StoredProc.OutputType := otResult;
+        StoredProc.StoredProcName := 'gpGetConstName';
+        try
+          StoredProc.Execute;
+        except
+          // Если это наша ошибка, то тихонько обходим
+          on E: EStorageException do begin
+             exit;
+          end;
+          // Если не наша, то возмущаемся
+          on E: Exception do
+              raise;
+        end;
+        ReportConnection := StoredProc.ParamByName('gpGetConstName').AsString;
+        //
+        StringList := TStringList.Create;
+        with StringList do begin
+           if FileExists(ReplaceStr(ConnectionPath,'\init.php','\initRep.php')) = TRUE
+           then LoadFromFile(ReplaceStr(ConnectionPath,'\init.php','\initRep.php'));
+           fFind:=false;
+           for i:=0 to Count-1
+           do fFind:= (fFind) or (StringList[i] = ReportConnection);
+           StringList.Free;
+        end;
+        if    (fFind = FALSE) and (ReportConnection<>'')
+        then
+           UpdateConnectReport(ReportConnection);
+
+    end;
+
   finally
     StoredProc.Free;
   end;
@@ -80,7 +118,7 @@ begin
   end;
 end;
 
-class procedure TUpdater.UpdateConnect;
+class procedure TUpdater.UpdateConnect (Connection: string);
 var StringList: TStringList;
 begin
   StringList := TStringList.Create;
@@ -97,6 +135,25 @@ begin
   Application.Terminate;
   ShellExecute(Application.Handle, 'open', PWideChar(Application.ExeName), nil, nil, SW_SHOWNORMAl);
 end;
+
+class procedure TUpdater.UpdateConnectReport (Connection: string);
+var StringList: TStringList;
+begin
+  StringList := TStringList.Create;
+  try
+    if Pos('srv2-r.alan', Connection) > 0 then Connection:=ReplaceStr(Connection,'srv2-r.alan','srv-r.alan');
+    StringList.Add(Connection);
+    if Pos('srv2-r.alan', Connection) > 0 then StringList.Add(ReplaceStr(Connection,'srv2-r.alan','srv-r.alan'));
+    if Pos('srv-r.alan', Connection) > 0 then StringList.Add(ReplaceStr(Connection,'srv-r.alan','srv2-r.alan'));
+    StringList.SaveToFile(ReplaceStr(ConnectionPath,'\init.php','\initRep.php'));
+  finally
+    StringList.Free;
+  end;
+  ShowMessage('Путь к серверу ОТЧЕТОВ изменен на <'+Connection+'>. Нажмите кнопку для перезапуска');
+  Application.Terminate;
+  ShellExecute(Application.Handle, 'open', PWideChar(Application.ExeName), nil, nil, SW_SHOWNORMAl);
+end;
+
 
 class procedure TUpdater.UpdateProgram;
 begin
