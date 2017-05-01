@@ -660,6 +660,21 @@ type
     bCancelPassword: TButton;
     ePassword: TEdit;
     Label83: TLabel;
+    TabItem1: TTabItem;
+    lwCashList: TListView;
+    Panel37: TPanel;
+    bNewCash: TButton;
+    pEnterMovmentCash: TPanel;
+    bSaveCash: TButton;
+    bCancelCash: TButton;
+    eCashAmount: TEdit;
+    Label85: TLabel;
+    Panel38: TPanel;
+    Panel39: TPanel;
+    Label86: TLabel;
+    Label87: TLabel;
+    Panel40: TPanel;
+    eCashComment: TEdit;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -853,6 +868,11 @@ type
     procedure bCancelPasswordClick(Sender: TObject);
     procedure bOkPasswordClick(Sender: TObject);
     procedure bEnterServerClick(Sender: TObject);
+    procedure lwCashListUpdateObjects(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure bNewCashClick(Sender: TObject);
+    procedure bCancelCashClick(Sender: TObject);
+    procedure bSaveCashClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -1478,6 +1498,15 @@ begin
 end;
 
 // условия фильтра для товаров, выбираемых для завок на поставку или возврат или ввода остатков
+procedure TfrmMain.lwCashListUpdateObjects(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  // установить иконку кнопки удаления
+  TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
+
+  DeleteButtonHide(AItem);
+end;
+
 procedure TfrmMain.lwGoodsItemsFilter(Sender: TObject; const AFilter,
   AValue: string; var Accept: Boolean);
 var
@@ -1743,7 +1772,7 @@ begin
       FDeletedOI.Add(DM.cdsReturnInItemsId.AsInteger);
     DM.cdsReturnInItems.Delete;
 
-    RecalculateTotalPriceAndWeight;
+    RecalculateReturnInTotalPriceAndWeight;
   end
   else
   // вызов формы для редактирования количества выбранного товара
@@ -2139,7 +2168,7 @@ end;
 procedure TfrmMain.dePromoGoodsDateChange(Sender: TObject);
 begin
   DM.qryPromoGoods.Close;
-  DM.qryPromoGoods.SQL.Text := 'select G.VALUEDATA GoodsName, ' +
+  DM.qryPromoGoods.SQL.Text := 'select G.OBJECTCODE, G.VALUEDATA GoodsName, T.VALUEDATA TradeMarkName, ' +
     'CASE WHEN PG.GOODSKINDID = 0 THEN ''все виды'' ELSE GK.VALUEDATA END KindName, ' +
     '''Скидка '' || PG.TAXPROMO || ''%'' Tax, ' +
     '''Акционная цена: '' || PG.PRICEWITHOUTVAT || '' (с НДС '' || PG.PRICEWITHVAT || '') за '' || M.VALUEDATA Price, ' +
@@ -2148,6 +2177,7 @@ begin
     'JOIN MOVEMENT_PROMO P ON P.ID = PG.MOVEMENTID AND :PROMODATE BETWEEN P.STARTSALE AND P.ENDSALE ' +
     'LEFT JOIN OBJECT_GOODS G ON G.ID = PG.GOODSID ' +
     'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+    'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
     'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = PG.GOODSKINDID ' +
     'ORDER BY G.VALUEDATA, P.ENDSALE';
   DM.qryPromoGoods.ParamByName('PROMODATE').AsDate := dePromoGoodsDate.Date;
@@ -2429,6 +2459,12 @@ begin
 end;
 
 // отмена выбора товаров
+procedure TfrmMain.bCancelCashClick(Sender: TObject);
+begin
+  vsbMain.Enabled := true;
+  pEnterMovmentCash.Visible := false;
+end;
+
 procedure TfrmMain.bCancelOIClick(Sender: TObject);
 begin
   FCheckedGooodsItems.Clear;
@@ -2618,6 +2654,14 @@ begin
 end;
 
 // переход на форму ввода новой заявки на товары
+procedure TfrmMain.bNewCashClick(Sender: TObject);
+begin
+  vsbMain.Enabled := false;
+  eCashAmount.Text := '';
+  eCashComment.Text := '';
+  pEnterMovmentCash.Visible := true;
+end;
+
 procedure TfrmMain.bNewOrderExternalClick(Sender: TObject);
 begin
   CreateEditOrderExtrernal(true);
@@ -2953,6 +2997,12 @@ begin
   FCanEditPartner := false;
 
   SwitchToForm(tiRoutes, nil);
+end;
+
+procedure TfrmMain.bSaveCashClick(Sender: TObject);
+begin
+  vsbMain.Enabled := true;
+  pEnterMovmentCash.Visible := false;
 end;
 
 // сохранение новой ТТ
@@ -3552,7 +3602,7 @@ begin
 
     if tcMain.ActiveTab = tiPartnerInfo then
     begin
-      lCaption.Text := DM.qryPartnerName.AsString;
+      lCaption.Text := DM.qryPartnerFullName.AsString;
     end
     else
     if tcMain.ActiveTab = tiMain then
@@ -3595,13 +3645,13 @@ begin
       lCaption.Text := 'Ввод новой ТТ'
     else
     if tcMain.ActiveTab = tiOrderExternal then
-      lCaption.Text := 'Заявки (' + DM.cdsOrderExternalPartnerName.AsString + ')'
+      lCaption.Text := DM.cdsOrderExternalPartnerFullName.AsString
     else
     if tcMain.ActiveTab = tiStoreReal then
-      lCaption.Text := 'Остатки (' + DM.cdsStoreRealsPartnerName.AsString + ')'
+      lCaption.Text := DM.cdsStoreRealsPartnerFullName.AsString
     else
     if tcMain.ActiveTab = tiReturnIn then
-      lCaption.Text := 'Возврат (' + DM.cdsReturnInPartnerName.AsString + ')';
+      lCaption.Text := DM.cdsReturnInPartnerFullName.AsString;
   end;
 
   if tcMain.ActiveTab = tiMain then
@@ -4002,6 +4052,10 @@ begin
   // возвраты по ТТ
   DM.LoadReturnIn;
 
+  // приходы денег по ТТ
+  DM.LoadCash;
+
+
   // фотографии ТТ
   DM.LoadPhotoGroups;
 
@@ -4221,13 +4275,14 @@ begin
   lCaption.Text := 'Прайс-лист "' + DM.qryPriceListValueData.AsString + '"';
 
   DM.qryGoodsForPriceList.Open('select G.ID, G.OBJECTCODE, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ' +
-    'PLI.ORDERPRICE Price, M.VALUEDATA Measure, PLI.ORDERSTARTDATE StartDate ' +
+    'PLI.ORDERPRICE Price, M.VALUEDATA Measure, PLI.ORDERSTARTDATE StartDate, T.VALUEDATA TradeMarkName ' +
     'FROM OBJECT_PRICELISTITEMS PLI ' +
     'JOIN OBJECT_GOODS G ON G.ID = PLI.GOODSID AND G.ISERASED = 0 ' +
     'LEFT JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID ' +
     'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID ' +
     'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-    'WHERE PLI.PRICELISTID = ' + DM.qryPriceListId.AsString);
+    'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
+    'WHERE PLI.PRICELISTID = ' + DM.qryPriceListId.AsString + ' ORDER BY G.VALUEDATA');
 
   lwPriceListGoods.ScrollViewPos := 0;
   SwitchToForm(tiPriceListItems, DM.qryGoodsForPriceList);
@@ -4249,7 +4304,7 @@ begin
   lCaption.Text := 'Акционные товары для ' + DM.qryPromoPartnersPartnerName.AsString;
   pPromoGoodsDate.Visible := false;
 
-  DM.qryPromoGoods.SQL.Text := 'select G.VALUEDATA GoodsName, ' +
+  DM.qryPromoGoods.SQL.Text := 'select G.OBJECTCODE, G.VALUEDATA GoodsName, T.VALUEDATA TradeMarkName, ' +
     'CASE WHEN PG.GOODSKINDID = 0 THEN ''все виды'' ELSE GK.VALUEDATA END KindName, ' +
     '''Скидка '' || PG.TAXPROMO || ''%'' Tax, ' +
     '''Акционная цена: '' || PG.PRICEWITHOUTVAT || '' (с НДС '' || PG.PRICEWITHVAT || '') за '' || M.VALUEDATA Price, ' +
@@ -4258,6 +4313,7 @@ begin
     'JOIN MOVEMENT_PROMO P ON P.ID = PG.MOVEMENTID ' +
     'LEFT JOIN OBJECT_GOODS G ON G.ID = PG.GOODSID ' +
     'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+    'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
     'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = PG.GOODSKINDID ' +
     'WHERE PG.MOVEMENTID IN (' + DM.qryPromoPartnersPromoIds.AsString + ') ' +
     'ORDER BY G.VALUEDATA, P.ENDSALE';
