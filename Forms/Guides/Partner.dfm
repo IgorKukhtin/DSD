@@ -597,7 +597,7 @@ object PartnerForm: TPartnerForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 6
+    TabOrder = 5
     Width = 245
   end
   object DataSource: TDataSource
@@ -609,7 +609,7 @@ object PartnerForm: TPartnerForm
     Aggregates = <>
     Params = <>
     Left = 152
-    Top = 192
+    Top = 200
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -688,7 +688,11 @@ object PartnerForm: TPartnerForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'bbShowAllPartnerOnMap'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowCurPartnerOnMap'
         end
         item
           Visible = True
@@ -840,15 +844,8 @@ object PartnerForm: TPartnerForm
       Action = actInsertMask
       Category = 0
     end
-    object bbShowCurPartnerOnMap: TdxBarButton
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' '#1085#1072' '#1082#1072#1088#1090#1077
-      Category = 0
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' '#1085#1072' '#1082#1072#1088#1090#1077
-      Visible = ivAlways
-      ImageIndex = 8
-    end
-    object dxBarButton1: TdxBarButton
-      Action = dsdShowCurrentPartnerMap
+    object bbShowAllPartnerOnMap: TdxBarButton
+      Action = actShowAllPartneronMap
       Category = 0
     end
     object dxBarStatic2: TdxBarStatic
@@ -856,6 +853,10 @@ object PartnerForm: TPartnerForm
       Category = 0
       Hint = '     '
       Visible = ivAlways
+    end
+    object bbShowCurPartnerOnMap: TdxBarButton
+      Action = actShowCurPartneronMap
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -1486,22 +1487,34 @@ object PartnerForm: TPartnerForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
-    object dsdShowCurrentPartnerMap: TdsdPartnerMapAction
+    object actShowAllPartneronMap: TdsdPartnerMapAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'dsdShowCurrentPartnerMap'
-      ImageIndex = 8
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1058#1058' '#1085#1072' '#1082#1072#1088#1090#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1058#1058' '#1085#1072' '#1082#1072#1088#1090#1077
+      ImageIndex = 60
       FormName = 'TPartnerMapForm'
-      FormNameParam.Name = 'TPartnerMapForm'
       FormNameParam.Value = 'TPartnerMapForm'
       FormNameParam.DataType = ftString
-      FormNameParam.ParamType = ptInput
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
-      isShowModal = False
+      isShowModal = True
       MapType = acShowAll
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
+      DataSet = MasterCDS
+    end
+    object actShowCurPartneronMap: TdsdPartnerMapAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1081' '#1058#1058' '#1085#1072' '#1082#1072#1088#1090#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1081' '#1058#1058' '#1085#1072' '#1082#1072#1088#1090#1077
+      ImageIndex = 61
+      FormName = 'TPartnerMapForm'
+      FormNameParam.Value = 'TPartnerMapForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = True
+      DataSet = MasterCDS
     end
   end
   object dsdStoredProc: TdsdStoredProc

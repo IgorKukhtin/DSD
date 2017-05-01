@@ -12,18 +12,17 @@ object PartnerMapForm: TPartnerMapForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = actRefresh
   PixelsPerInch = 96
   TextHeight = 13
-  object wbPartnerMap: TWebBrowser
+  object wbPartner: TdsdWebBrowser
     Left = 0
     Top = 0
     Width = 494
     Height = 487
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 160
-    ExplicitTop = 120
+    ExplicitLeft = 264
+    ExplicitTop = 144
     ExplicitWidth = 300
     ExplicitHeight = 150
     ControlData = {
@@ -40,24 +39,19 @@ object PartnerMapForm: TPartnerMapForm
     Left = 112
     Top = 8
   end
-  object ActionList: TActionList
-    Left = 31
-    Top = 143
-    object actRefresh: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-  end
   object gmPartnerMap: TdsdGMMap
     Language = Russian
-    WebBrowser = wbPartnerMap
+    Active = True
+    WebBrowser = wbPartner
     Left = 24
+    Top = 8
+  end
+  object gmPartnerGeoCode: TGMGeoCode
+    Language = Russian
+    Map = gmPartnerMap
+    Marker = gmPartnerMarker
+    LangCode = lcRUSSIAN
+    Left = 200
     Top = 8
   end
 end

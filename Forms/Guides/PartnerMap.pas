@@ -6,15 +6,14 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, ParentForm, Vcl.OleCtrls, SHDocVw,
   GMClasses, GMMap, GMMapVCL, GMLinkedComponents, GMMarker, GMMarkerVCL,
-  Vcl.ActnList, dsdAction, dsdAddOn;
+  Vcl.ActnList, dsdAction, dsdAddOn, GMGeoCode, Data.DB, Datasnap.DBClient;
 
 type
   TPartnerMapForm = class(TParentForm)
-    wbPartnerMap: TWebBrowser;
     gmPartnerMarker: TGMMarker;
-    ActionList: TActionList;
-    actRefresh: TdsdDataSetRefresh;
     gmPartnerMap: TdsdGMMap;
+    gmPartnerGeoCode: TGMGeoCode;
+    wbPartner: TdsdWebBrowser;
   private
     { Private declarations }
   public
