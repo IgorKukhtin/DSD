@@ -46,10 +46,22 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actInventory: TdsdOpenForm [3]
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
+      Hint = #1057#1087#1080#1089#1072#1085#1080#1077
+      FormName = 'TInventoryJournalForm'
+      FormNameParam.Value = 'TInventoryJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
     inherited actAbout: TAction
       Category = 'but'
     end
-    object actIncome: TdsdOpenForm [5]
+    object actIncome: TdsdOpenForm [6]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -61,7 +73,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actUser: TdsdOpenForm [8]
+    object actUser: TdsdOpenForm [9]
       Category = 'but'
       MoveParams = <>
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
@@ -72,7 +84,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actForms: TdsdOpenForm [12]
+    object actForms: TdsdOpenForm [13]
       Category = 'but'
       MoveParams = <>
       Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1086#1081' '#1089#1080#1089#1090#1077#1084#1086#1081
@@ -84,7 +96,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actRole: TdsdOpenForm [13]
+    object actRole: TdsdOpenForm [14]
       Category = 'but'
       MoveParams = <>
       Caption = #1056#1086#1083#1080
@@ -95,7 +107,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actPriceList: TdsdOpenForm [14]
+    object actPriceList: TdsdOpenForm [15]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099
@@ -537,6 +549,9 @@ inherited MainForm: TMainForm
       end
       object N48: TMenuItem
         Action = actLoss
+      end
+      object N54: TMenuItem
+        Action = actInventory
       end
       object N50: TMenuItem
         Caption = '-'

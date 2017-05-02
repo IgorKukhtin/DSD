@@ -50,7 +50,7 @@ type
 //    procedure LoadInfoMoneyGroupFormTest;
 //    procedure LoadInfoMoneyDestinationFormTest;
 //    procedure LoadInfoMoneyFormTest;
-//    procedure LoadInventoryFormTest;
+    procedure LoadInventoryFormTest;
 //    procedure LoadJuridicalFormTest;
 //    procedure LoadLoadFormTest;
 //    procedure LoadLossDebtFormTest;
@@ -1198,17 +1198,16 @@ end;
 //end;
 //
 //
-//procedure TLoadFormTest.LoadInventoryFormTest;
-//begin
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryJournalForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TInventoryJournalForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TInventoryForm');
-//  //
+procedure TLoadFormTest.LoadInventoryFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInventoryJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInventoryForm');
+
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryPartionForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TInventoryPartionForm');
-//end;
+end;
 //
 procedure TLoadFormTest.LoadLossFormTest;
 begin
