@@ -1952,8 +1952,46 @@ object DM: TDM
     end
   end
   object qryCash: TFDQuery
+    OnCalcFields = qryCashCalcFields
     Connection = conMain
     Left = 128
     Top = 400
+    object qryCashId: TIntegerField
+      FieldName = 'Id'
+    end
+    object qryCashAmount: TFloatField
+      FieldName = 'Amount'
+    end
+    object qryCashComment: TStringField
+      FieldName = 'Comment'
+      Size = 255
+    end
+    object qryCashStatusId: TIntegerField
+      FieldName = 'StatusId'
+    end
+    object qryCashOperDate: TDateField
+      FieldName = 'OperDate'
+    end
+    object qryCashisSync: TBooleanField
+      FieldName = 'isSync'
+    end
+    object qryCashName: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'Name'
+      Size = 300
+      Calculated = True
+    end
+    object qryCashAmountShow: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'AmountShow'
+      Size = 200
+      Calculated = True
+    end
+    object qryCashStatus: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'Status'
+      Size = 255
+      Calculated = True
+    end
   end
 end

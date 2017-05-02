@@ -644,6 +644,15 @@ type
     tblMovement_CashComment: TStringField;
     tblMovement_CashisSync: TBooleanField;
     qryCash: TFDQuery;
+    qryCashId: TIntegerField;
+    qryCashAmount: TFloatField;
+    qryCashComment: TStringField;
+    qryCashStatusId: TIntegerField;
+    qryCashOperDate: TDateField;
+    qryCashisSync: TBooleanField;
+    qryCashName: TStringField;
+    qryCashAmountShow: TStringField;
+    qryCashStatus: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
@@ -651,6 +660,7 @@ type
     procedure qryPartnerCalcFields(DataSet: TDataSet);
     procedure qryPromoGoodsCalcFields(DataSet: TDataSet);
     procedure qryGoodsItemsCalcFields(DataSet: TDataSet);
+    procedure qryCashCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
     FConnected: Boolean;
@@ -708,6 +718,7 @@ type
     procedure LoadPhotoGroups;
     procedure LoadAllPhotoGroups(AStartDate, AEndDate: TDate);
 
+    procedure SaveCash(AId: integer; AAmount: Double; AComment: string);
     procedure LoadCash;
 
     procedure GenerateJuridicalCollation(ADateStart, ADateEnd: TDate;
@@ -2541,6 +2552,24 @@ begin
 end;
 
 { вычисление цены для товаров }
+procedure TDM.qryCashCalcFields(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('Name').AsString := 'Приход денег от ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('OperDate').AsDateTime);
+
+  DataSet.FieldByName('AmountShow').AsString := 'Сумма: ' + FormatFloat(',0.00', DataSet.FieldByName('Amount').AsFloat);
+
+  if DataSet.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Complete.AsInteger then
+    DataSet.FieldByName('Status').AsString := tblObject_ConstStatusName_Complete.AsString
+  else
+  if DataSet.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_UnComplete.AsInteger then
+    DataSet.FieldByName('Status').AsString := tblObject_ConstStatusName_UnComplete.AsString
+  else
+  if DataSet.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Erased.AsInteger then
+    DataSet.FieldByName('Status').AsString := tblObject_ConstStatusName_Erased.AsString
+  else
+    DataSet.FieldByName('Status').AsString := 'Неизвестный';
+end;
+
 procedure TDM.qryGoodsForPriceListCalcFields(DataSet: TDataSet);
 var
   PriceWithoutVat, PriceWithVat : string;
@@ -4544,11 +4573,96 @@ begin
   qryPhotoGroupDocs.Open;
 end;
 
+{ сохранение прихода денег в БД }
+procedure TDM.SaveCash(AId: integer; AAmount: Double; AComment: string);
+var
+  GlobalId : TGUID;
+  NewInvNumber : integer;
+  qryMaxInvNumber : TFDQuery;
+begin
+  if AId = -1 then // сохранение нового прихода денег
+  begin
+    NewInvNumber := 1;
+
+    qryMaxInvNumber := TFDQuery.Create(nil);
+    try
+      qryMaxInvNumber.Connection := conMain;
+      try
+        qryMaxInvNumber.Open('select Max(cast(invNumber as Integer)) from MOVEMENT_CASH');
+        if qryMaxInvNumber.RecordCount > 0 then
+          NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1;
+      except
+      end;
+    finally
+      FreeAndNil(qryMaxInvNumber);
+    end;
+
+    try
+      tblMovement_Cash.Open;
+
+      tblMovement_Cash.Append;
+
+      CreateGUID(GlobalId);
+      tblMovement_CashGUID.AsString := GUIDToString(GlobalId);
+      tblMovement_CashInvNumber.AsString := IntToStr(NewInvNumber);
+      tblMovement_CashOperDate.AsDateTime := Date();
+      tblMovement_CashStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
+      tblMovement_CashInsertDate.AsDateTime := Now();
+      tblMovement_CashAmount.AsFloat := AAmount;
+      tblMovement_CashPaidKindId.AsInteger := qryPartnerId.AsInteger;
+      tblMovement_CashPartnerId.AsInteger := qryPartnerId.AsInteger;
+      tblMovement_CashCashId.AsInteger := tblObject_ConstCashId.AsInteger;
+      tblMovement_CashMemberId.AsInteger := tblObject_ConstMemberId.AsInteger;
+      tblMovement_CashContractId.AsInteger := qryPartnerId.AsInteger;
+      tblMovement_CashComment.AsString := AComment;
+      tblMovement_CashisSync.AsBoolean := false;
+
+      tblMovement_Cash.Post;
+
+      tblMovement_Cash.Close;
+    except
+      on E : Exception do
+      begin
+        ShowMessage(E.Message);
+      end;
+    end;
+  end
+  else
+  begin
+    try
+      tblMovement_Cash.Open;
+
+      if tblMovement_Cash.Locate('Id', AId) then
+      begin
+        tblMovement_Cash.Edit;
+
+        tblMovement_CashAmount.AsFloat := AAmount;
+        tblMovement_CashComment.AsString := AComment;
+        tblMovement_CashisSync.AsBoolean := false;
+
+        tblMovement_Cash.Post;
+      end
+      else
+      begin
+        ShowMessage('Ошибка работы с БД: не найдена редактируемый приход денег');
+        exit;
+      end;
+
+      tblMovement_Cash.Close;
+    except
+      on E : Exception do
+      begin
+        ShowMessage(E.Message);
+      end;
+    end;
+  end;
+end;
+
 { начитка приходов денег из БД }
 procedure TDM.LoadCash;
 begin
-  qryPhotoGroups.Close;
-  qryPhotoGroups.Open('select Id, Amount, Comment, StatusId, OperDate, isSync ' +
+  qryCash.Close;
+  qryCash.Open('select Id, Amount, Comment, StatusId, OperDate, isSync ' +
     ' from Movement_Cash where PartnerId = ' + qryPartnerId.AsString);
 end;
 

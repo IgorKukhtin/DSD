@@ -660,7 +660,7 @@ type
     bCancelPassword: TButton;
     ePassword: TEdit;
     Label83: TLabel;
-    TabItem1: TTabItem;
+    tiCash: TTabItem;
     lwCashList: TListView;
     Panel37: TPanel;
     bNewCash: TButton;
@@ -675,6 +675,8 @@ type
     Label87: TLabel;
     Panel40: TPanel;
     eCashComment: TEdit;
+    bsCash: TBindSourceDB;
+    LinkListControlToFieldCash: TLinkListControlToField;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -873,6 +875,10 @@ type
     procedure bNewCashClick(Sender: TObject);
     procedure bCancelCashClick(Sender: TObject);
     procedure bSaveCashClick(Sender: TObject);
+    procedure LinkListControlToFieldCashFilledListItem(Sender: TObject;
+      const AEditor: IBindListEditorItem);
+    procedure bDotClick(Sender: TObject);
+    procedure eCashAmountValidate(Sender: TObject; var Text: string);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -911,6 +917,8 @@ type
     FPartnerRJC: integer;
     FContractRJC: integer;
     FPaidKindRJC: integer;
+
+    FOldCashId: integer;
 
     FDeafultStyleName: string;
 
@@ -1268,6 +1276,16 @@ procedure TfrmMain.LinkListControlToFieldReturnInItemsFilledListItem(Sender: TOb
   const AEditor: IBindListEditorItem);
 begin
   lwReturnInItems.Items[AEditor.CurrentIndex].Objects.FindDrawable('DeleteButton').Visible := FCanEditDocument;
+end;
+
+procedure TfrmMain.LinkListControlToFieldCashFilledListItem(Sender: TObject;
+  const AEditor: IBindListEditorItem);
+var
+  CurItem: TListViewItem;
+begin
+  CurItem := lwCashList.Items[AEditor.CurrentIndex];
+  ChangeStatusIcon(CurItem);
+  DeleteButtonHide(CurItem);
 end;
 
 procedure TfrmMain.LinkListControlToFieldOrderExternalFilledListItem(
@@ -2313,6 +2331,31 @@ begin
 end;
 
 // проверка и корректировка введенной координаты GPS
+procedure TfrmMain.eCashAmountValidate(Sender: TObject; var Text: string);
+var
+  str : string;
+begin
+  try
+    Text := Trim(Text);
+    if Text.Length > 0 then
+      StrToFloat(Text);
+  except
+    ShowMessage('Ќеправильный формат суммы (nn.nn)');
+
+    // пытаемс€ исправить на правильное значение
+    str := StringReplace(Text, ',', '.', [rfReplaceAll]);
+    str := StringReplace(str, '-', '', [rfReplaceAll]);
+    str := StringReplace(str, ' ', '', [rfReplaceAll]);
+    str := StringReplace(str, '.', ';', []);
+    str := StringReplace(str, '.', '', [rfReplaceAll]);
+    str := StringReplace(str, ';', '.', []);
+    if (str.Length > 0) and (str[Low(str)] = '.') then
+      str := '0' + str;
+
+    Text := str;
+  end;
+end;
+
 procedure TfrmMain.eNewPartnerGPSNValidate(Sender: TObject; var Text: string);
 var
   str : string;
@@ -2324,7 +2367,7 @@ begin
   except
     ShowMessage('Ќеправильный формат координаты (nn.nnnnnn)');
 
-    // пфытаемс€ исправить на правильное значение
+    // пытаемс€ исправить на правильное значение
     str := StringReplace(Text, ',', '.', [rfReplaceAll]);
     str := StringReplace(str, '-', '', [rfReplaceAll]);
     str := StringReplace(str, ' ', '', [rfReplaceAll]);
@@ -2657,6 +2700,7 @@ end;
 procedure TfrmMain.bNewCashClick(Sender: TObject);
 begin
   vsbMain.Enabled := false;
+  FOldCashId := -1;
   eCashAmount.Text := '';
   eCashComment.Text := '';
   pEnterMovmentCash.Visible := true;
@@ -3001,6 +3045,10 @@ end;
 
 procedure TfrmMain.bSaveCashClick(Sender: TObject);
 begin
+  DM.SaveCash(FOldCashId, StrToFloat(eCashAmount.Text), eCashComment.Text);
+
+  DM.qryCash.Refresh;
+
   vsbMain.Enabled := true;
   pEnterMovmentCash.Visible := false;
 end;
@@ -3272,6 +3320,15 @@ procedure TfrmMain.bDocumentsClick(Sender: TObject);
 begin
   // начитка и отображение документов
   ShowDocuments;
+end;
+
+procedure TfrmMain.bDotClick(Sender: TObject);
+begin
+  if lAmount.Text = '' then
+    lAmount.Text := '0.'
+  else
+  if pos('.', lAmount.Text) = 0 then
+    lAmount.Text := lAmount.Text + TButton(Sender).Text;
 end;
 
 // переход на форму визитов (дни недели в которые надо посетить ““)
