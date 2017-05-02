@@ -7,18 +7,14 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_User(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , MemberId Integer, MemberName TVarChar
-             , User_ TVarChar
-             , UserSign TVarChar
-             , UserSeal TVarChar
-             , UserKey TVarChar
-             , BranchCode Integer
-             , BranchName TVarChar
-             , UnitCode Integer
-             , UnitName TVarChar
+             , User_ TVarChar, UserSign TVarChar, UserSeal TVarChar, UserKey TVarChar
+             , BranchCode Integer, BranchName TVarChar
+             , UnitCode Integer, UnitName TVarChar
              , PositionName TVarChar
              , ProjectMobile TVarChar
              , BillNumberMobile Integer
              , isProjectMobile Boolean
+             , UpdateMobileFrom TDateTime, UpdateMobileTo TDateTime
               )
 AS
 $BODY$
@@ -68,31 +64,34 @@ END IF;
        , ObjectString_ProjectMobile.ValueData    AS ProjectMobile
        , ObjectFloat_BillNumberMobile.ValueData :: Integer AS BillNumberMobile
        , COALESCE (ObjectBoolean_ProjectMobile.ValueData, FALSE) :: Boolean  AS isProjectMobile
+
+       , ObjectDate_User_UpdateMobileFrom.ValueData AS UpdateMobileFrom
+       , ObjectDate_User_UpdateMobileTo.ValueData   AS UpdateMobileTo
    FROM Object AS Object_User
-         LEFT JOIN ObjectString AS ObjectString_User_
-                                ON ObjectString_User_.ObjectId = Object_User.Id
-                               AND ObjectString_User_.DescId = zc_ObjectString_User_Password()
-         LEFT JOIN ObjectString AS ObjectString_UserSign
-                                ON ObjectString_UserSign.DescId = zc_ObjectString_User_Sign() 
-                               AND ObjectString_UserSign.ObjectId = Object_User.Id
+        LEFT JOIN ObjectString AS ObjectString_User_
+                               ON ObjectString_User_.ObjectId = Object_User.Id
+                              AND ObjectString_User_.DescId = zc_ObjectString_User_Password()
+        LEFT JOIN ObjectString AS ObjectString_UserSign
+                               ON ObjectString_UserSign.DescId = zc_ObjectString_User_Sign() 
+                              AND ObjectString_UserSign.ObjectId = Object_User.Id
 
-         LEFT JOIN ObjectString AS ObjectString_UserSeal
-                                ON ObjectString_UserSeal.DescId = zc_ObjectString_User_Seal() 
-                               AND ObjectString_UserSeal.ObjectId = Object_User.Id
+        LEFT JOIN ObjectString AS ObjectString_UserSeal
+                               ON ObjectString_UserSeal.DescId = zc_ObjectString_User_Seal() 
+                              AND ObjectString_UserSeal.ObjectId = Object_User.Id
 
-         LEFT JOIN ObjectString AS ObjectString_UserKey 
-                                ON ObjectString_UserKey.DescId = zc_ObjectString_User_Key() 
-                               AND ObjectString_UserKey.ObjectId = Object_User.Id
+        LEFT JOIN ObjectString AS ObjectString_UserKey 
+                               ON ObjectString_UserKey.DescId = zc_ObjectString_User_Key() 
+                              AND ObjectString_UserKey.ObjectId = Object_User.Id
 
-         LEFT JOIN ObjectString AS ObjectString_ProjectMobile
-                                ON ObjectString_ProjectMobile.ObjectId = Object_User.Id
-                               AND ObjectString_ProjectMobile.DescId = zc_ObjectString_User_ProjectMobile()
-         LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
-                                 ON ObjectBoolean_ProjectMobile.ObjectId = Object_User.Id
-                                AND ObjectBoolean_ProjectMobile.DescId = zc_ObjectBoolean_User_ProjectMobile()
-         LEFT JOIN ObjectFloat AS ObjectFloat_BillNumberMobile
-                               ON ObjectFloat_BillNumberMobile.ObjectId = Object_User.Id
-                              AND ObjectFloat_BillNumberMobile.DescId = zc_ObjectFloat_User_BillNumberMobile()
+        LEFT JOIN ObjectString AS ObjectString_ProjectMobile
+                               ON ObjectString_ProjectMobile.ObjectId = Object_User.Id
+                              AND ObjectString_ProjectMobile.DescId = zc_ObjectString_User_ProjectMobile()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
+                                ON ObjectBoolean_ProjectMobile.ObjectId = Object_User.Id
+                               AND ObjectBoolean_ProjectMobile.DescId = zc_ObjectBoolean_User_ProjectMobile()
+        LEFT JOIN ObjectFloat AS ObjectFloat_BillNumberMobile
+                              ON ObjectFloat_BillNumberMobile.ObjectId = Object_User.Id
+                             AND ObjectFloat_BillNumberMobile.DescId = zc_ObjectFloat_User_BillNumberMobile()
 
         LEFT JOIN ObjectLink AS ObjectLink_User_Member
                              ON ObjectLink_User_Member.ObjectId = Object_User.Id
@@ -107,6 +106,13 @@ END IF;
                             AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
 
+        LEFT JOIN ObjectDate AS ObjectDate_User_UpdateMobileFrom
+                             ON ObjectDate_User_UpdateMobileFrom.ObjectId = Object_User.Id
+                            AND ObjectDate_User_UpdateMobileFrom.DescId = zc_ObjectDate_User_UpdateMobileFrom()
+        LEFT JOIN ObjectDate AS ObjectDate_User_UpdateMobileTo
+                             ON ObjectDate_User_UpdateMobileTo.ObjectId = Object_User.Id
+                            AND ObjectDate_User_UpdateMobileTo.DescId = zc_ObjectDate_User_UpdateMobileTo()
+
    WHERE Object_User.DescId = zc_Object_User();
   
 END;
@@ -117,7 +123,8 @@ ALTER FUNCTION gpSelect_Object_User (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------*/
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
-               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».  ﬂÓ¯ÂÌÍÓ –.‘.
+ 02.05.17                                                       * zc_ObjectDate_User_UpdateMobileFrom, zc_ObjectDate_User_UpdateMobileTo
  21.04.17         *
  12.09.16         *
  07.06.13                                        * lpCheckRight
