@@ -62,8 +62,6 @@ type
     bbPriceListGoodsItem: TdxBarButton;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    GoodsGroupNameFull: TcxGridDBColumn;
-    MeasureName: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
@@ -71,7 +69,6 @@ type
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
     ObjectId: TcxGridDBColumn;
-    PriceListTaxDialoglOpenForm: TdsdOpenForm;
     bbPriceListTaxDialog: TdxBarButton;
     UpdateName: TcxGridDBColumn;
     UpdateDate: TcxGridDBColumn;
@@ -81,6 +78,12 @@ type
     actPrint: TdsdPrintAction;
     PrintItemsCDS: TClientDataSet;
     bbPrint: TdxBarButton;
+    edPersent: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
+    spInsertUpdateList: TdsdStoredProc;
+    spUpdatePersent: TdsdExecStoredProc;
+    macUpdatePersent: TMultiAction;
+    macUpdateAll: TMultiAction;
   private
     { Private declarations }
   public
