@@ -94,7 +94,6 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
-    bbCalcAmountPartner: TdxBarControlContainerItem;
     spInsertMaskMIMaster: TdsdStoredProc;
     actAddMask: TdsdExecStoredProc;
     bbAddMask: TdxBarButton;
@@ -119,6 +118,9 @@ type
     actGoodsChoiceForm: TOpenChoiceForm;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
+    actUpdateAmountRemains: TdsdExecStoredProc;
+    spUpdate_MI_Inventory_AmountRemains: TdsdStoredProc;
+    bb: TdxBarButton;
   private
   public
   end;

@@ -623,6 +623,14 @@ object InventoryForm: TInventoryForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -712,12 +720,6 @@ object InventoryForm: TInventoryForm
       Action = MovementItemProtocolOpenForm
       Category = 0
     end
-    object bbCalcAmountPartner: TdxBarControlContainerItem
-      Caption = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
-      Category = 0
-      Hint = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
-      Visible = ivAlways
-    end
     object bbAddMask: TdxBarButton
       Action = actAddMask
       Category = 0
@@ -765,6 +767,10 @@ object InventoryForm: TInventoryForm
       Visible = ivAlways
       ImageIndex = 1
       ShortCut = 115
+    end
+    object bb: TdxBarButton
+      Action = actUpdateAmountRemains
+      Category = 0
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -1257,6 +1263,27 @@ object InventoryForm: TInventoryForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actUpdateAmountRemains: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMovement
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
+        item
+          StoredProc = spUpdate_MI_Inventory_AmountRemains
+        end
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
+      Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1086#1089#1090#1072#1090#1086#1082
+      ImageIndex = 41
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082'?'
+      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1056#1072#1089#1095#1077#1090#1085#1086#1075#1086' '#1086#1089#1090#1072#1090#1082#1072
     end
   end
   object MasterDS: TDataSource
@@ -1887,5 +1914,22 @@ object InventoryForm: TInventoryForm
     PackSize = 1
     Left = 158
     Top = 335
+  end
+  object spUpdate_MI_Inventory_AmountRemains: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Inventory_AmountRemains'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 704
+    Top = 168
   end
 end
