@@ -87,6 +87,8 @@ type
     clProjectMobile: TcxGridDBColumn;
     clisProjectMobile: TcxGridDBColumn;
     BillNumberMobile: TcxGridDBColumn;
+    clUpdateMobileFrom: TcxGridDBColumn;
+    clUpdateMobileTo: TcxGridDBColumn;
   private
     { Private declarations }
   public

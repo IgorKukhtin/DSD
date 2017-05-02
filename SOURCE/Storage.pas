@@ -155,12 +155,13 @@ begin
     Instance.FActiveConnection := 0;
     try
       StringList := TStringList.Create;
-      StringListRep:= TStringList.Create;
+      StringListRep := TStringList.Create;
       try
-        lConnectionPathRep:=ReplaceStr(ConnectionPath,'\init.php','\initRep.php');
+        lConnectionPathRep := ReplaceStr(ConnectionPath, '\init.php', '\initRep.php');
         //
         StringList.LoadFromFile(ConnectionPath);
-        if (lConnectionPathRep <> ConnectionPath) and (FileExists(lConnectionPathRep) = TRUE) then StringListRep.LoadFromFile(lConnectionPathRep);
+        if (lConnectionPathRep <> ConnectionPath) and (FileExists(lConnectionPathRep) = TRUE) then
+          StringListRep.LoadFromFile(lConnectionPathRep);
         //
         //составление списка возможных альтернативных серверов - ОСНОВНОЙ
         StartPHP := False;
