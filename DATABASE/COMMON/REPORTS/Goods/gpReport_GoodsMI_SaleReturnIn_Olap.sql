@@ -54,18 +54,21 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
 AS
 $BODY$
    DECLARE vbUserId Integer;
+
+   DECLARE vbIsJuridical_Branch Boolean;
+   DECLARE vbObjectId_Constraint_Branch Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
     vbUserId:= lpGetUserBySession (inSession);
 
 
-    -- для оптимизации
-    ANALYZE _tmpGoods;
-    ANALYZE _tmpPartner;
-    ANALYZE _tmpJuridical;
-    ANALYZE _tmpJuridicalBranch;
-    -- ANALYZE SoldTable;
+    vbIsJuridical_Branch:= COALESCE (inBranchId, 0) = 0;
+
+    -- определяется уровень доступа
+    vbObjectId_Constraint_Branch:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
+    -- !!!меняется параметр!!!
+    IF vbObjectId_Constraint_Branch > 0 THEN inBranchId:= vbObjectId_Constraint_Branch; END IF;
 
     -- для оптимизации
     inJuridicalId:= COALESCE (inJuridicalId, 0);
@@ -77,7 +80,110 @@ BEGIN
     -- Результат
     RETURN QUERY
     -- собираем все данные
-    WITH tmpInfoMoney AS (SELECT * FROM Object_InfoMoney_View WHERE InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000()) -- !!!Доходы!!!)
+    WITH _tmpGoods AS
+          (SELECT lfObject_Goods_byGoodsGroup.GoodsId AS GoodsId
+                , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0) ELSE 0 END AS TradeMarkId
+           FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                     ON ObjectLink_Goods_TradeMark.ObjectId = lfObject_Goods_byGoodsGroup.GoodsId
+                                    AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+           WHERE (ObjectLink_Goods_TradeMark.ChildObjectId = inTradeMarkId OR COALESCE (inTradeMarkId, 0) = 0)
+             AND inGoodsGroupId > 0 -- !!!
+
+          UNION
+                SELECT ObjectLink_Goods_TradeMark.ObjectId AS GoodsId
+                     , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0) ELSE 0 END AS TradeMarkId
+                FROM ObjectLink AS ObjectLink_Goods_TradeMark
+                WHERE ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+                  AND ObjectLink_Goods_TradeMark.ChildObjectId = inTradeMarkId
+                  AND COALESCE (inGoodsGroupId, 0) = 0 AND inIsGoods_where = TRUE -- !!!
+          UNION
+                SELECT ObjectLink_Goods_TradeMark.ObjectId AS GoodsId
+                     , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0) ELSE 0 END AS TradeMarkId
+                FROM ObjectLink AS ObjectLink_Goods_TradeMark
+                WHERE ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+                  AND ObjectLink_Goods_TradeMark.ChildObjectId > 0
+                  AND (inIsTradeMark = TRUE AND inIsGoods = FALSE)
+                  AND inIsGoods_where = FALSE -- !!!
+          )
+        , _tmpJuridicalBranch AS (
+                                     SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                                     FROM ObjectLink AS ObjectLink_Unit_Branch
+                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                                ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
+                                                               AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                                                ON ObjectLink_Partner_PersonalTrade.ChildObjectId = ObjectLink_Personal_Unit.ObjectId
+                                                               AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                                ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
+                                                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                     WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Constraint_Branch
+                                       AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                       AND vbIsJuridical_Branch = TRUE AND vbObjectId_Constraint_Branch <> 0 -- !!!
+                                     GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
+                                    UNION
+                                     SELECT ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
+                                     FROM ObjectLink AS ObjectLink_Unit_Branch
+                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                                ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
+                                                               AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                          INNER JOIN ObjectLink AS ObjectLink_Contract_Personal
+                                                                ON ObjectLink_Contract_Personal.ChildObjectId = ObjectLink_Personal_Unit.ObjectId
+                                                               AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+                                          INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                                                ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Contract_Personal.ObjectId
+                                                               AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                                     WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Constraint_Branch
+                                       AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                       AND vbIsJuridical_Branch = TRUE AND vbObjectId_Constraint_Branch <> 0 -- !!!
+                                     GROUP BY ObjectLink_Contract_Juridical.ChildObjectId
+                                 )
+
+        , _tmpPartner AS (
+        -- заполнение по Контрагенту
+           SELECT ObjectLink_Partner_Area.ObjectId AS PartnerId
+                , COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, 0) AS JuridicalId
+                -- , COALESCE (ObjectLink_Partner_Area.ChildObjectId, 0)
+           FROM ObjectLink AS ObjectLink_Partner_Area
+                LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                     ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_Area.ObjectId
+                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+           WHERE ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
+             AND ObjectLink_Partner_Area.ChildObjectId = inAreaId
+             AND inAreaId > 0 -- !!!
+                         )
+        , _tmpJuridical AS (
+           -- по Юр Лицу
+           SELECT DISTINCT _tmpPartner.JuridicalId
+           FROM _tmpPartner
+                LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                     ON ObjectLink_Juridical_Retail.ObjectId = _tmpPartner.JuridicalId
+                                    AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+           WHERE (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR COALESCE (inRetailId, 0) = 0)
+             AND (_tmpPartner.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
+
+             UNION
+               -- по Юр Лицу (только)
+               SELECT Object.Id
+               FROM Object
+                    LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                         ON ObjectLink_Juridical_Retail.ObjectId = Object.Id
+                                        AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+               WHERE Object.Id = inJuridicalId
+                 AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR COALESCE (inRetailId, 0) = 0)
+                 AND COALESCE (inAreaId, 0) = 0 AND inJuridicalId > 0 -- !!!
+
+                  UNION
+                   -- по inRetailId
+                   SELECT ObjectLink_Juridical_Retail.ObjectId
+                   FROM ObjectLink AS ObjectLink_Juridical_Retail
+                   WHERE ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                     AND ObjectLink_Juridical_Retail.ChildObjectId = inRetailId
+                     AND COALESCE (inAreaId, 0) = 0 AND COALESCE (inJuridicalId, 0) = 0 -- !!!
+                           )
+
+       , tmpInfoMoney AS (SELECT * FROM Object_InfoMoney_View WHERE InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000()) -- !!!Доходы!!!)
        , tmpOperationGroup AS
                         (SELECT SoldTable.BranchId
                               , CASE WHEN inIsPartner  = TRUE  THEN SoldTable.JuridicalGroupId   ELSE 0 END AS JuridicalGroupId

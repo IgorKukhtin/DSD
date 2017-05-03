@@ -143,6 +143,7 @@ type
     procedure btnUpdateGoods2Click(Sender: TObject);
     procedure btnResultCSVClick(Sender: TObject);
     procedure btnResultGroupCSVClick(Sender: TObject);
+    procedure ButtonPanelDblClick(Sender: TObject);
   private
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
@@ -183,7 +184,7 @@ type
 
 
 
-// Guides :
+    // Guides :
     procedure pLoadGuide_Measure;
     procedure pLoadGuide_CompositionGroup;
     procedure pLoadGuide_Composition;
@@ -232,7 +233,7 @@ var
   MainForm: TMainForm;
 
 implementation
-uses Authentication, CommonData, Storage, SysUtils, Dialogs, Graphics;
+uses Authentication, CommonData, Storage, SysUtils, Dialogs, Graphics, UtilConst;
 {$R *.dfm}
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1059,6 +1060,15 @@ rollback
 
 end;
 
+procedure TMainForm.ButtonPanelDblClick(Sender: TObject);
+begin
+     gc_isDebugMode:=not gc_isDebugMode;
+     if gc_isDebugMode = TRUE
+     then ShowMessage ('Отладка - Включена')
+     else ShowMessage ('Отладка - Выключена');
+
+end;
+
 procedure TMainForm.btnResultCSVClick(Sender: TObject);
 var strCSV: string;
     csvFile: TextFile;
@@ -1350,6 +1360,7 @@ begin
 //     EndDateCompleteEdit.Text:=EndDateEdit.Text;
      //
      TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+     if not Assigned (gc_User) then ShowMessage ('not Assigned (gc_User)');
      //
 
      //
@@ -3995,9 +4006,6 @@ var
 begin
      if (not cbMeasure.Checked)or(not cbMeasure.Enabled) then exit;
      //
-      fExecSqFromQuery('update dba.LineFabrica set Id_Postgres = null');
-      if cbGoodsInfo.Checked then
-     //
      myEnabledCB(cbMeasure);
      //
      with fromQuery,Sql do begin
@@ -4057,7 +4065,8 @@ begin
              toStoredProc.Params.ParamByName('inInternalCode').Value:=InternalCode_pg;
              toStoredProc.Params.ParamByName('inInternalName').Value:=InternalName_pg;
 
-             if not myExecToStoredProc then;
+
+             if not myExecToStoredProc then ;
              if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)

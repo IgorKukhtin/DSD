@@ -46,6 +46,7 @@
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    OnDblClick = ButtonPanelDblClick
     object Gauge: TGauge
       Left = 0
       Top = 0
@@ -998,6 +999,7 @@
   end
   object toZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
+    UTF8StringsAsWideField = True
     Catalog = 'public'
     DesignConnection = True
     HostName = 'localhost'

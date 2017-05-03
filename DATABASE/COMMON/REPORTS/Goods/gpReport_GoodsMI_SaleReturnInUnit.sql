@@ -51,20 +51,35 @@ $BODY$
 
    DECLARE vbIsGoods Boolean;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
-     vbUserId:= lpGetUserBySession (inSession);
+    -- проверка прав пользователя на вызов процедуры
+    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
+    vbUserId:= lpGetUserBySession (inSession);
 
 
     -- Ограничения по товару
-    CREATE TEMP TABLE _tmpGoods_report (GoodsId Integer, TradeMarkId Integer) ON COMMIT DROP;
     IF inGoodsGroupId <> 0
     THEN
         -- устанавливается признак
         vbIsGoods:= TRUE;
-        -- заполнение
-        INSERT INTO _tmpGoods_report (GoodsId, TradeMarkId)
-           SELECT lfObject_Goods_byGoodsGroup.GoodsId AS GoodsId
+
+    ELSE IF inTradeMarkId <> 0
+         THEN
+             -- устанавливается признак
+             vbIsGoods:= TRUE;
+
+         ELSE
+             -- устанавливается признак
+             vbIsGoods:= FALSE;
+
+         END IF;
+    END IF;
+
+
+
+    -- результат
+    RETURN QUERY
+       WITH _tmpGoods_report AS
+          (SELECT lfObject_Goods_byGoodsGroup.GoodsId AS GoodsId
                 , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0) ELSE 0 END AS TradeMarkId
                 -- , COALESCE (ObjectLink_Goods_Measure.ChildObjectId, 0) AS MeasureId
                 -- , COALESCE (ObjectFloat_Weight.ValueData, 0)           AS Weight
@@ -72,49 +87,27 @@ BEGIN
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                      ON ObjectLink_Goods_TradeMark.ObjectId = lfObject_Goods_byGoodsGroup.GoodsId
                                     AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
-/*                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                     ON ObjectLink_Goods_Measure.ObjectId = lfObject_Goods_byGoodsGroup.GoodsId
-                                    AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-                LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                      ON ObjectFloat_Weight.ObjectId = lfObject_Goods_byGoodsGroup.GoodsId
-                                     AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()*/
            WHERE (ObjectLink_Goods_TradeMark.ChildObjectId = inTradeMarkId OR COALESCE (inTradeMarkId, 0) = 0)
-       ;
-    ELSE IF inTradeMarkId <> 0
-         THEN
-             -- устанавливается признак
-             vbIsGoods:= TRUE;
-             -- заполнение
-             INSERT INTO _tmpGoods_report (GoodsId, TradeMarkId)
+             AND inGoodsGroupId <> 0 -- !!!
+
+          UNION
                 SELECT ObjectLink_Goods_TradeMark.ObjectId AS GoodsId
                      , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0) ELSE 0 END AS TradeMarkId
                 FROM ObjectLink AS ObjectLink_Goods_TradeMark
                 WHERE ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
                   AND ObjectLink_Goods_TradeMark.ChildObjectId = inTradeMarkId
-            ;
-         ELSE
-             -- устанавливается признак
-             vbIsGoods:= FALSE;
-             -- заполнение
-             INSERT INTO _tmpGoods_report (GoodsId, TradeMarkId)
+                  AND COALESCE (inGoodsGroupId, 0) = 0 AND vbIsGoods = TRUE -- !!!
+          UNION
                 SELECT ObjectLink_Goods_TradeMark.ObjectId AS GoodsId
                      , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0) ELSE 0 END AS TradeMarkId
                 FROM ObjectLink AS ObjectLink_Goods_TradeMark
                 WHERE ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
                   AND ObjectLink_Goods_TradeMark.ChildObjectId > 0
                   AND (inIsTradeMark = TRUE AND inIsGoods = FALSE)
-            ;
+                  AND vbIsGoods = FALSE -- !!!
+          )
 
-         END IF;
-    END IF;
-
-
-    ANALYZE _tmpGoods_report;
-
-
-    -- результат
-       RETURN QUERY
-       WITH tmp_Unit AS  (SELECT 8459 AS UnitId -- Склад Реализации
+          , tmp_Unit AS  (SELECT 8459 AS UnitId -- Склад Реализации
                          UNION 
                           SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8460) AS lfSelect_Object_Unit_byGroup) -- Возвраты общие
        , tmpInfoMoney AS (SELECT * FROM Object_InfoMoney_View WHERE InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000()) -- !!!Доходы!!!)
@@ -819,4 +812,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_SaleReturnInUnit (inStartDate:= '01.08.2016', inEndDate:= '01.08.2016', inBranchId:= 0, inAreaId:= 1, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= FALSE, inIsGoods:= FALSE, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnInUnit (inStartDate:= '01.04.2017', inEndDate:= '30.04.2017', inBranchId:= 0, inAreaId:= 1, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= FALSE, inIsGoods:= FALSE, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin());
