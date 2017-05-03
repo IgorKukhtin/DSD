@@ -275,7 +275,7 @@ BEGIN
        , tmpContract AS (SELECT ObjectLink_PartnerMedical_Juridical.ObjectId        AS PartnerMedicalId
                               , ObjectLink_PartnerMedical_Juridical.ChildObjectId   AS PartnerMedical_JuridicalId
                               , COALESCE(ObjectLink_Contract_Juridical.ObjectId,0)            AS PartnerMedical_ContractId
-                              , COALESCE(ObjectFloat_PercentSP.ValueData,0) :: TFloat                   AS PercentSP
+                              , COALESCE(ObjectFloat_PercentSP.ValueData,0) :: TFloat         AS PercentSP
                               , COALESCE(ObjectLink_Contract_JuridicalBasis.ChildObjectId,0)  AS Contract_JuridicalBasisId
                               , COALESCE(ObjectLink_Contract_GroupMemberSP.ChildObjectId,0)   AS Contract_GroupMemberSPId
 
@@ -369,8 +369,10 @@ BEGIN
                        LEFT JOIN tmpContract ON tmpContract.PartnerMedicalId = tmpSale.HospitalId
                                             AND tmpContract.PartnerMedical_JuridicalId = ObjectLink_PartnerMedical_Juridical.ChildObjectId 
                                             AND tmpContract.Contract_JuridicalBasisId = tmpSale.JuridicalId
-                                            AND COALESCE (tmpContract.Contract_GroupMemberSPId,0) = CASE WHEN COALESCE (tmpSale.GroupMemberSPId,0) = 4063780 THEN COALESCE (tmpSale.GroupMemberSPId,0) ELSE 0 END 
-                                                                                                                                                   --4063780;6;"Дитячий"  -- test 3690580
+                                            AND COALESCE (tmpContract.Contract_GroupMemberSPId,0) = CASE WHEN (COALESCE (tmpSale.GroupMemberSPId,0) = 4063780 AND COALESCE(inGroupMemberSPId,0) <> 0)
+                                                                                                          THEN COALESCE (tmpSale.GroupMemberSPId,0)
+                                                                                                         ELSE 0 
+                                                                                                    END                                             --4063780;6;"Дитячий"  -- test 3690580
                   --                          AND COALESCE (tmpContract.PercentSP,0) = tmpSale.ChangePercent
 
                     )
