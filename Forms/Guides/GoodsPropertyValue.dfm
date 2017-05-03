@@ -61,6 +61,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         DataBinding.FieldName = 'GoodsGroupNameFull'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 150
       end
       object clGoodsGroupName: TcxGridDBColumn
@@ -69,6 +70,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 172
       end
       object colCode: TcxGridDBColumn
@@ -595,6 +597,14 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
