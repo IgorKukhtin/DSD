@@ -162,8 +162,8 @@ object BankAccountForm: TBankAccountForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -319,10 +319,12 @@ object BankAccountForm: TBankAccountForm
       FormName = 'TBankAccountEditForm'
       FormNameParam.Value = 'TBankAccountEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
@@ -338,6 +340,7 @@ object BankAccountForm: TBankAccountForm
       FormName = 'TBankAccountEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -345,6 +348,7 @@ object BankAccountForm: TBankAccountForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       ActionType = acUpdate
@@ -392,6 +396,7 @@ object BankAccountForm: TBankAccountForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -399,6 +404,7 @@ object BankAccountForm: TBankAccountForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -407,6 +413,7 @@ object BankAccountForm: TBankAccountForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -430,6 +437,7 @@ object BankAccountForm: TBankAccountForm
           ComponentItem = 'Id'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -438,12 +446,14 @@ object BankAccountForm: TBankAccountForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'CurrencyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
@@ -451,6 +461,15 @@ object BankAccountForm: TBankAccountForm
           Component = MasterCDS
           ComponentItem = 'CurrencyName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BankName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -512,6 +531,7 @@ object BankAccountForm: TBankAccountForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 288

@@ -66,11 +66,14 @@ type
     procedure SetNewProgressTask(AName : string);
 
     procedure GetSyncDates;
+    procedure SaveSyncDataOut(ADate: TDateTime);
+    procedure SaveSyncDataIn(ADate: TDateTime);
     procedure GetDictionaries(AName : string);
 
     procedure UploadStoreReal;
     procedure UploadOrderExternal;
     procedure UploadReturnIn;
+    procedure UploadCash;
     procedure UploadTasks;
     function UploadNewJuridicals(var AId: integer): boolean;
     procedure UploadNewPartners;
@@ -653,6 +656,11 @@ type
     qryCashName: TStringField;
     qryCashAmountShow: TStringField;
     qryCashStatus: TStringField;
+    qryCashPartnerId: TIntegerField;
+    qryCashPartnerName: TWideStringField;
+    qryCashAddress: TWideStringField;
+    qryCashContractId: TIntegerField;
+    qryCashContractName: TWideStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
@@ -661,6 +669,7 @@ type
     procedure qryPromoGoodsCalcFields(DataSet: TDataSet);
     procedure qryGoodsItemsCalcFields(DataSet: TDataSet);
     procedure qryCashCalcFields(DataSet: TDataSet);
+    procedure qryCashDocsCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
     FConnected: Boolean;
@@ -683,6 +692,8 @@ type
 
     procedure GetConfigurationInfo;
     procedure SynchronizeWithMainDatabase(LoadData: boolean = true; UploadData: boolean = true);
+
+    function GetInvNumber(ATableName: string): string;
 
     function SaveStoreReal(Comment: string; DelItems : string; Complete: boolean;
       var ErrorMessage : string) : boolean;
@@ -720,6 +731,7 @@ type
 
     procedure SaveCash(AId: integer; AAmount: Double; AComment: string);
     procedure LoadCash;
+    procedure LoadAllCash(AStartDate, AEndDate: TDate);
 
     procedure GenerateJuridicalCollation(ADateStart, ADateEnd: TDate;
       AJuridicalId, APartnerId, AContractId, APaidKindId: integer);
@@ -852,6 +864,60 @@ begin
   begin
     SyncDataIn := varNull;
     SyncDataOut := varNull;
+  end;
+end;
+
+{ сохранение на сервер даты последней отправки данных на сервер }
+procedure TSyncThread.SaveSyncDataOut(ADate: TDateTime);
+var
+  UploadStoredProc : TdsdStoredProc;
+begin
+  UploadStoredProc := TdsdStoredProc.Create(nil);
+  try
+    UploadStoredProc.OutputType := otResult;
+
+    UploadStoredProc.StoredProcName := 'gpUpdateMobile_ObjectDate_User_UpdateMobileFrom';
+    UploadStoredProc.Params.Clear;
+    UploadStoredProc.Params.AddParam('inUpdateMobileFrom', ftDateTime, ptInput, ADate);
+
+    try
+      UploadStoredProc.Execute(false, false, false);
+    except
+      on E : Exception do
+      begin
+        raise Exception.Create(E.Message);
+        exit;
+      end;
+    end;
+  finally
+    FreeAndNil(UploadStoredProc);
+  end;
+end;
+
+{ сохранение на сервер даты последнего получения данных с сервера }
+procedure TSyncThread.SaveSyncDataIn(ADate: TDateTime);
+var
+  UploadStoredProc : TdsdStoredProc;
+begin
+  UploadStoredProc := TdsdStoredProc.Create(nil);
+  try
+    UploadStoredProc.OutputType := otResult;
+
+    UploadStoredProc.StoredProcName := 'gpUpdateMobile_ObjectDate_User_UpdateMobileTo';
+    UploadStoredProc.Params.Clear;
+    UploadStoredProc.Params.AddParam('inUpdateMobileTo', ftDateTime, ptInput, ADate);
+
+    try
+      UploadStoredProc.Execute(false, false, false);
+    except
+      on E : Exception do
+      begin
+        raise Exception.Create(E.Message);
+        exit;
+      end;
+    end;
+  finally
+    FreeAndNil(UploadStoredProc);
   end;
 end;
 
@@ -1330,6 +1396,65 @@ begin
   end;
 end;
 
+{ Сохранение на сервер введенной информации по оплатам }
+procedure TSyncThread.UploadCash;
+var
+  UploadStoredProc : TdsdStoredProc;
+begin
+  UploadStoredProc := TdsdStoredProc.Create(nil);
+  try
+    UploadStoredProc.OutputType := otResult;
+
+    with DM.tblMovement_Cash do
+    begin
+      Filter := 'isSync = 0 and StatusId = ' + DM.tblObject_ConstStatusId_Complete.AsString;
+      Filtered := true;
+      Open;
+
+      try
+        First;
+        while not Eof do
+        begin
+          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Movement_Cash';
+          UploadStoredProc.Params.Clear;
+          UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
+          UploadStoredProc.Params.AddParam('inInvNumber', ftString, ptInput, FieldByName('INVNUMBER').AsString);
+          UploadStoredProc.Params.AddParam('inOperDate', ftDateTime, ptInput, FieldByName('OPERDATE').AsDateTime);
+          UploadStoredProc.Params.AddParam('inStatusId', ftInteger, ptInput, FieldByName('STATUSID').AsInteger);
+          UploadStoredProc.Params.AddParam('inInsertDate', ftDateTime, ptInput, FieldByName('INSERTDATE').AsDateTime);
+          UploadStoredProc.Params.AddParam('inAmount', ftFloat, ptInput, FieldByName('AMOUNT').AsFloat);
+          UploadStoredProc.Params.AddParam('inPaidKindId', ftInteger, ptInput, FieldByName('PAIDKINDID').AsInteger);
+          UploadStoredProc.Params.AddParam('inPartnerId', ftInteger, ptInput, FieldByName('PARTNERID').AsInteger);
+          UploadStoredProc.Params.AddParam('inCashId', ftInteger, ptInput, FieldByName('CASHID').AsInteger);
+          UploadStoredProc.Params.AddParam('inMemberId', ftInteger, ptInput, FieldByName('MEMBERID').AsInteger);
+          UploadStoredProc.Params.AddParam('inContractId', ftInteger, ptInput, FieldByName('CONTRACTID').AsInteger);
+          UploadStoredProc.Params.AddParam('inComment', ftString, ptInput, FieldByName('COMMENT').AsString);
+
+          try
+            UploadStoredProc.Execute(false, false, false);
+
+            Edit;
+            FieldByName('IsSync').AsBoolean := true;
+            Post;
+          except
+            on E : Exception do
+            begin
+              raise Exception.Create(E.Message);
+              exit;
+            end;
+          end;
+        end;
+      finally
+        Close;
+        Filter := '';
+        Filtered := false;
+      end;
+    end;
+  finally
+    FreeAndNil(UploadStoredProc);
+  end;
+end;
+
 { сохранение на сервер закрытых заданий }
 procedure TSyncThread.UploadTasks;
 var
@@ -1744,7 +1869,7 @@ begin
     FAllMax := FAllMax + 17;  // Количесто операций при загрузке данных из центра
 
   if UploadData then
-    FAllMax := FAllMax + 8;  // Количесто операций при сохранении данных в центр
+    FAllMax := FAllMax + 9;  // Количесто операций при сохранении данных в центр
 
   Synchronize(procedure
               begin
@@ -1770,6 +1895,9 @@ begin
         SetNewProgressTask('Сохранение возвратов');
         UploadReturnIn;
 
+        SetNewProgressTask('Сохранение оплат');
+        UploadCash;
+
         SetNewProgressTask('Сохранение заданий');
         UploadTasks;
 
@@ -1785,9 +1913,12 @@ begin
         SetNewProgressTask('Сохранение новых ТТ');
         UploadNewPartners;
 
+        SyncDataOut := Now();
         DM.tblObject_Const.Edit;
-        DM.tblObject_ConstSyncDateOut.AsDateTime := Now();
+        DM.tblObject_ConstSyncDateOut.AsDateTime := SyncDataOut;
         DM.tblObject_Const.Post;
+
+        SaveSyncDataOut(SyncDataOut);
       except
         on E : Exception do
         begin
@@ -1856,9 +1987,12 @@ begin
         GetDictionaries('MovementTask');
         GetDictionaries('MovementItemTask');
 
+        SyncDataIn := Now();
         DM.tblObject_Const.Edit;
-        DM.tblObject_ConstSyncDateIn.AsDateTime := Now();
+        DM.tblObject_ConstSyncDateIn.AsDateTime := SyncDataIn;
         DM.tblObject_Const.Post;
+
+        SaveSyncDataIn(SyncDataIn);
 
         DM.conMain.Commit;
         DM.conMain.TxOptions.AutoCommit := true;
@@ -2554,7 +2688,7 @@ end;
 { вычисление цены для товаров }
 procedure TDM.qryCashCalcFields(DataSet: TDataSet);
 begin
-  DataSet.FieldByName('Name').AsString := 'Приход денег от ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('OperDate').AsDateTime);
+  DataSet.FieldByName('Name').AsString := 'Оплата от ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('OperDate').AsDateTime);
 
   DataSet.FieldByName('AmountShow').AsString := 'Сумма: ' + FormatFloat(',0.00', DataSet.FieldByName('Amount').AsFloat);
 
@@ -2568,6 +2702,26 @@ begin
     DataSet.FieldByName('Status').AsString := tblObject_ConstStatusName_Erased.AsString
   else
     DataSet.FieldByName('Status').AsString := 'Неизвестный';
+end;
+
+procedure TDM.qryCashDocsCalcFields(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('Name').AsString := 'Оплата от ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('OperDate').AsDateTime);
+
+  DataSet.FieldByName('AmountShow').AsString := 'Сумма: ' + FormatFloat(',0.00', DataSet.FieldByName('Amount').AsFloat);
+
+  if DataSet.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Complete.AsInteger then
+    DataSet.FieldByName('Status').AsString := tblObject_ConstStatusName_Complete.AsString
+  else
+  if DataSet.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_UnComplete.AsInteger then
+    DataSet.FieldByName('Status').AsString := tblObject_ConstStatusName_UnComplete.AsString
+  else
+  if DataSet.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Erased.AsInteger then
+    DataSet.FieldByName('Status').AsString := tblObject_ConstStatusName_Erased.AsString
+  else
+    DataSet.FieldByName('Status').AsString := 'Неизвестный';
+
+
 end;
 
 procedure TDM.qryGoodsForPriceListCalcFields(DataSet: TDataSet);
@@ -2819,13 +2973,37 @@ begin
   SyncThread.Start;
 end;
 
+{ получение уникального номера (каждый год начинается с 1) }
+function TDM.GetInvNumber(ATableName: string): string;
+var
+  NewInvNumber: integer;
+  qryMaxInvNumber: TFDQuery;
+begin
+  NewInvNumber := 1;
+
+  qryMaxInvNumber := TFDQuery.Create(nil);
+  try
+    qryMaxInvNumber.Connection := conMain;
+    try
+      qryMaxInvNumber.Open('select Max(cast(invNumber as Integer)) from ' + ATableName + ' where strftime(''%Y'', InsertDate) = ' + QuotedStr(FormatDateTime('YYYY', Date())));
+      if qryMaxInvNumber.RecordCount > 0 then
+        NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1;
+    except
+    end;
+  finally
+    FreeAndNil(qryMaxInvNumber);
+  end;
+
+  Result := IntToStr(NewInvNumber);
+end;
+
 { сохранение остатков }
 function TDM.SaveStoreReal(Comment: string; DelItems : string; Complete: boolean;
   var ErrorMessage : string) : boolean;
 var
   GlobalId: TGUID;
-  MovementId, NewInvNumber: integer;
-  qryMaxInvNumber: TFDQuery;
+  MovementId: integer;
+  NewInvNumber: string;
   b: TBookmark;
   isHasItems: boolean;
 begin
@@ -2854,22 +3032,10 @@ begin
     end;
   end;
 
-  NewInvNumber := 1;
   if cdsStoreRealsId.AsInteger = -1 then
-  begin
-    qryMaxInvNumber := TFDQuery.Create(nil);
-    try
-      qryMaxInvNumber.Connection := conMain;
-      try
-        qryMaxInvNumber.Open('select Max(cast(invNumber as Integer)) from Movement_StoreReal');
-        if qryMaxInvNumber.RecordCount > 0 then
-          NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1;
-      except
-      end;
-    finally
-      FreeAndNil(qryMaxInvNumber);
-    end;
-  end;
+    NewInvNumber := GetInvNumber('Movement_StoreReal')
+  else
+    NewInvNumber := '0';
 
   conMain.StartTransaction;
   try
@@ -2881,7 +3047,7 @@ begin
 
       CreateGUID(GlobalId);
       tblMovement_StoreRealGUID.AsString := GUIDToString(GlobalId);
-      tblMovement_StoreRealInvNumber.AsString := IntToStr(NewInvNumber);
+      tblMovement_StoreRealInvNumber.AsString := NewInvNumber;
       tblMovement_StoreRealOperDate.AsDateTime := Date();
       if Complete then
         tblMovement_StoreRealStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger
@@ -3291,8 +3457,8 @@ function TDM.SaveOrderExternal(OperDate: TDate; Comment: string;
   ToralPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
 var
   GlobalId: TGUID;
-  MovementId, NewInvNumber: integer;
-  qryMaxInvNumber: TFDQuery;
+  MovementId: integer;
+  NewInvNumber: string;
   b: TBookmark;
   isHasItems: boolean;
 begin
@@ -3321,22 +3487,11 @@ begin
     end;
   end;
 
-  NewInvNumber := 1;
+
   if cdsOrderExternalId.AsInteger = -1 then
-  begin
-    qryMaxInvNumber := TFDQuery.Create(nil);
-    try
-      qryMaxInvNumber.Connection := conMain;
-      try
-        qryMaxInvNumber.Open('select Max(cast(invNumber as Integer)) from Movement_OrderExternal');
-        if qryMaxInvNumber.RecordCount > 0 then
-          NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1;
-      except
-      end;
-    finally
-      FreeAndNil(qryMaxInvNumber);
-    end;
-  end;
+    NewInvNumber := GetInvNumber('Movement_OrderExternal')
+  else
+    NewInvNumber := '0';
 
   conMain.StartTransaction;
   try
@@ -3348,7 +3503,7 @@ begin
 
       CreateGUID(GlobalId);
       tblMovement_OrderExternalGUID.AsString := GUIDToString(GlobalId);
-      tblMovement_OrderExternalInvNumber.AsString := IntToStr(NewInvNumber);
+      tblMovement_OrderExternalInvNumber.AsString := NewInvNumber;
       tblMovement_OrderExternalOperDate.AsDateTime := OperDate;
       tblMovement_OrderExternalComment.AsString := Comment;
       if Complete then
@@ -3956,8 +4111,8 @@ function TDM.SaveReturnIn(OperDate: TDate; Comment : string;
   ToralPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
 var
   GlobalId: TGUID;
-  MovementId, NewInvNumber: integer;
-  qryMaxInvNumber: TFDQuery;
+  MovementId: integer;
+  NewInvNumber: string;
   b: TBookmark;
   isHasItems: boolean;
 begin
@@ -3986,22 +4141,10 @@ begin
     end;
   end;
 
-  NewInvNumber := 1;
   if cdsReturnInId.AsInteger = -1 then
-  begin
-    qryMaxInvNumber := TFDQuery.Create(nil);
-    try
-      qryMaxInvNumber.Connection := conMain;
-      try
-        qryMaxInvNumber.Open('select Max(cast(invNumber as Integer)) from Movement_ReturnIn');
-        if qryMaxInvNumber.RecordCount > 0 then
-          NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1;
-      except
-      end;
-    finally
-      FreeAndNil(qryMaxInvNumber);
-    end;
-  end;
+    NewInvNumber := GetInvNumber('Movement_ReturnIn')
+  else
+    NewInvNumber := '0';
 
   conMain.StartTransaction;
   try
@@ -4013,7 +4156,7 @@ begin
 
       CreateGUID(GlobalId);
       tblMovement_ReturnInGUID.AsString := GUIDToString(GlobalId);
-      tblMovement_ReturnInInvNumber.AsString := IntToStr(NewInvNumber);
+      tblMovement_ReturnInInvNumber.AsString := NewInvNumber;
       tblMovement_ReturnInOperDate.AsDateTime := OperDate;
       tblMovement_ReturnInComment.AsString := Comment;
       if Complete then
@@ -4500,24 +4643,10 @@ end;
 { сохранение группы фотографий в БД }
 procedure TDM.SavePhotoGroup(AGroupName: string);
 var
-  GlobalId : TGUID;
-  NewInvNumber : integer;
-  qryMaxInvNumber : TFDQuery;
+  GlobalId: TGUID;
+  NewInvNumber: string;
 begin
-  NewInvNumber := 1;
-
-  qryMaxInvNumber := TFDQuery.Create(nil);
-  try
-    qryMaxInvNumber.Connection := conMain;
-    try
-      qryMaxInvNumber.Open('select Max(cast(invNumber as Integer)) from MOVEMENT_VISIT');
-      if qryMaxInvNumber.RecordCount > 0 then
-        NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1;
-    except
-    end;
-  finally
-    FreeAndNil(qryMaxInvNumber);
-  end;
+  NewInvNumber := GetInvNumber('MOVEMENT_VISIT');
 
   try
     tblMovement_Visit.Open;
@@ -4526,7 +4655,7 @@ begin
 
     CreateGUID(GlobalId);
     tblMovement_VisitGUID.AsString := GUIDToString(GlobalId);
-    tblMovement_VisitInvNumber.AsString := IntToStr(NewInvNumber);
+    tblMovement_VisitInvNumber.AsString := NewInvNumber;
     tblMovement_VisitOperDate.AsDateTime := Date();
     tblMovement_VisitPartnerId.AsInteger := qryPartnerId.AsInteger;
     if Trim(AGroupName) <> '' then
@@ -4576,26 +4705,12 @@ end;
 { сохранение прихода денег в БД }
 procedure TDM.SaveCash(AId: integer; AAmount: Double; AComment: string);
 var
-  GlobalId : TGUID;
-  NewInvNumber : integer;
-  qryMaxInvNumber : TFDQuery;
+  GlobalId: TGUID;
+  NewInvNumber: string;
 begin
   if AId = -1 then // сохранение нового прихода денег
   begin
-    NewInvNumber := 1;
-
-    qryMaxInvNumber := TFDQuery.Create(nil);
-    try
-      qryMaxInvNumber.Connection := conMain;
-      try
-        qryMaxInvNumber.Open('select Max(cast(invNumber as Integer)) from MOVEMENT_CASH');
-        if qryMaxInvNumber.RecordCount > 0 then
-          NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1;
-      except
-      end;
-    finally
-      FreeAndNil(qryMaxInvNumber);
-    end;
+    NewInvNumber := GetInvNumber('MOVEMENT_CASH');
 
     try
       tblMovement_Cash.Open;
@@ -4604,16 +4719,16 @@ begin
 
       CreateGUID(GlobalId);
       tblMovement_CashGUID.AsString := GUIDToString(GlobalId);
-      tblMovement_CashInvNumber.AsString := IntToStr(NewInvNumber);
+      tblMovement_CashInvNumber.AsString := NewInvNumber;
       tblMovement_CashOperDate.AsDateTime := Date();
       tblMovement_CashStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
       tblMovement_CashInsertDate.AsDateTime := Now();
       tblMovement_CashAmount.AsFloat := AAmount;
-      tblMovement_CashPaidKindId.AsInteger := qryPartnerId.AsInteger;
+      tblMovement_CashPaidKindId.AsInteger := qryPartnerPaidKindId.AsInteger;
       tblMovement_CashPartnerId.AsInteger := qryPartnerId.AsInteger;
       tblMovement_CashCashId.AsInteger := tblObject_ConstCashId.AsInteger;
       tblMovement_CashMemberId.AsInteger := tblObject_ConstMemberId.AsInteger;
-      tblMovement_CashContractId.AsInteger := qryPartnerId.AsInteger;
+      tblMovement_CashContractId.AsInteger := qryPartnerCONTRACTID.AsInteger;
       tblMovement_CashComment.AsString := AComment;
       tblMovement_CashisSync.AsBoolean := false;
 
@@ -4638,6 +4753,7 @@ begin
 
         tblMovement_CashAmount.AsFloat := AAmount;
         tblMovement_CashComment.AsString := AComment;
+        tblMovement_CashStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
         tblMovement_CashisSync.AsBoolean := false;
 
         tblMovement_Cash.Post;
@@ -4662,8 +4778,27 @@ end;
 procedure TDM.LoadCash;
 begin
   qryCash.Close;
-  qryCash.Open('select Id, Amount, Comment, StatusId, OperDate, isSync ' +
-    ' from Movement_Cash where PartnerId = ' + qryPartnerId.AsString);
+  qryCash.Open('select Id, Amount, Comment, StatusId, OperDate, isSync, ' +
+    'PartnerId, '''' PartnerName, '''' Address, ContractId, '''' ContractName ' +
+    'from Movement_Cash where PartnerId = ' + qryPartnerId.AsString);
+end;
+
+procedure TDM.LoadAllCash(AStartDate, AEndDate: TDate);
+begin
+  qryCash.Close;
+
+  qryCash.SQL.Text := 'select MC.ID, MC.OPERDATE, MC.COMMENT, MC.AMOUNT, MC.ISSYNC, MC.STATUSID, ' +
+    'P.Id PartnerId, '''' || J.VALUEDATA PartnerName, '''' || P.ADDRESS Address, ' +
+    'P.CONTRACTID, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName ' +
+    'FROM Movement_Cash MC ' +
+    'JOIN OBJECT_PARTNER P ON P.ID = MC.PARTNERID AND P.CONTRACTID = MC.CONTRACTID ' +
+    'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID AND J.CONTRACTID = P.CONTRACTID ' +
+    'LEFT JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID ' +
+    'WHERE DATE(MC.OPERDATE) BETWEEN :STARTDATE AND :ENDDATE ' +
+    'GROUP BY MC.ID, MC.PARTNERID, MC.CONTRACTID order by PartnerName, P.Address, P.ContractId asc, MC.OPERDATE desc';
+  qryCash.ParamByName('STARTDATE').AsDate := AStartDate;
+  qryCash.ParamByName('ENDDATE').AsDate := AEndDate;
+  qryCash.Open;
 end;
 
 

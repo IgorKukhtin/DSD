@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsPropertyId Integer, GoodsPropertyName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, MeasureName TVarChar
+             , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , isOrder Boolean
              , isErased boolean) AS
 $BODY$
@@ -59,6 +60,9 @@ BEGIN
        , Object_Goods.ObjectCode              AS GoodsCode
        , Object_Goods.ValueData               AS GoodsName
        , Object_Measure.ValueData             AS MeasureName
+       , Object_GoodsGroup.ValueData          AS GoodsGroupName 
+       , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+
        , COALESCE (tmpGoodsByGoodsKind.isOrder, FALSE) :: Boolean AS isOrder
        , Object_GoodsPropertyValue.isErased   AS isErased
 
@@ -115,6 +119,15 @@ BEGIN
                             AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
         LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+        LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                             ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                            AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+        LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+        LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                               ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                              AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
         LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = Object_Goods.Id
                                      AND tmpGoodsByGoodsKind.GoodsKindId = Object_GoodsKind.Id 
 
@@ -128,6 +141,8 @@ BEGIN
                         , Object_Goods.ObjectCode     AS GoodsCode 
                         , Object_Goods.ValueData      AS GoodsName
                         , Object_Measure.ValueData    AS MeasureName
+                        , Object_GoodsGroup.ValueData AS GoodsGroupName 
+                        , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
                    FROM Object_InfoMoney_View
                         INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                               ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
@@ -138,6 +153,16 @@ BEGIN
                                              ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                             AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                         LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+                        LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                             ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                            AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+                        LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+                        LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                               ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                              AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
                    WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200())
                   )
  , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
@@ -173,6 +198,9 @@ BEGIN
        , tmpGoods.GoodsCode                   AS GoodsCode
        , tmpGoods.GoodsName                   AS GoodsName
        , tmpGoods.MeasureName                 AS MeasureName
+
+       , tmpGoods.GoodsGroupName 
+       , tmpGoods.GoodsGroupNameFull
 
        , COALESCE (tmpGoodsByGoodsKind.isOrder, FALSE) :: Boolean AS isOrder
        ,tmpObjectLink.isErased
@@ -261,6 +289,7 @@ END;$BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 03.05.17         * add GoodsGroupName, GoodsGroupNameFull
  01.02.17         * add isOrder 
  17.09.15         * add BoxCount
  13.02.15         * add inGoodsPropertyId

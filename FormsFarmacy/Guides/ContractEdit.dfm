@@ -1,32 +1,32 @@
 inherited ContractEditForm: TContractEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1075#1086#1074#1086#1088
-  ClientHeight = 294
+  ClientHeight = 349
   ClientWidth = 353
   ExplicitWidth = 359
-  ExplicitHeight = 322
+  ExplicitHeight = 377
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 60
-    Top = 257
+    Top = 311
     ExplicitLeft = 60
-    ExplicitTop = 257
+    ExplicitTop = 311
   end
   inherited bbCancel: TcxButton
     Left = 204
-    Top = 257
+    Top = 311
     ExplicitLeft = 204
-    ExplicitTop = 257
+    ExplicitTop = 311
   end
   object cxLabel2: TcxLabel [2]
     Left = 8
-    Top = 248
+    Top = 307
     Caption = #1050#1086#1076
     Visible = False
   end
   object edCode: TcxCurrencyEdit [3]
     Left = 8
-    Top = 264
+    Top = 323
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
@@ -64,12 +64,12 @@ inherited ContractEditForm: TContractEditForm
   end
   object cxLabel3: TcxLabel [8]
     Left = 8
-    Top = 203
+    Top = 256
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit [9]
     Left = 8
-    Top = 222
+    Top = 276
     TabOrder = 7
     Width = 339
   end
@@ -173,13 +173,42 @@ inherited ContractEditForm: TContractEditForm
     TabOrder = 23
     Width = 165
   end
+  object cxLabel12: TcxLabel [24]
+    Left = 8
+    Top = 209
+    Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
+  end
+  object edBankAccount: TcxButtonEdit [25]
+    Left = 8
+    Top = 229
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 25
+    Width = 168
+  end
+  object edBank: TcxTextEdit [26]
+    Left = 182
+    Top = 229
+    Properties.ReadOnly = True
+    TabOrder = 26
+    Width = 165
+  end
+  object cxLabel13: TcxLabel [27]
+    Left = 182
+    Top = 208
+    Caption = #1041#1072#1085#1082
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 291
     Top = 73
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 304
-    Top = 245
+    Top = 304
   end
   inherited ActionList: TActionList
     Left = 119
@@ -240,6 +269,14 @@ inherited ContractEditForm: TContractEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inBankAccountId'
+        Value = Null
+        Component = BankAccountGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inDeferment'
         Value = 0.000000000000000000
         Component = ceDeferment
@@ -287,7 +324,7 @@ inherited ContractEditForm: TContractEditForm
         MultiSelectSeparator = ','
       end>
     Left = 298
-    Top = 185
+    Top = 244
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Contract'
@@ -398,6 +435,28 @@ inherited ContractEditForm: TContractEditForm
         Component = cePercentSP
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankAccountId'
+        Value = Null
+        Component = BankAccountGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankAccountName'
+        Value = Null
+        Component = BankAccountGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankName'
+        Value = Null
+        Component = edBank
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 226
     Top = 177
@@ -488,5 +547,41 @@ inherited ContractEditForm: TContractEditForm
       end>
     Left = 72
     Top = 164
+  end
+  object BankAccountGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBankAccount
+    FormNameParam.Value = 'TBankAccountForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBankAccountForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BankAccountGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BankAccountGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankName'
+        Value = Null
+        Component = edBank
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 72
+    Top = 222
   end
 end

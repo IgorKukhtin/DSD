@@ -9,6 +9,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                JuridicalBasisId Integer, JuridicalBasisName TVarChar,
                JuridicalId Integer, JuridicalName TVarChar,
                GroupMemberSPId Integer, GroupMemberSPName TVarChar,
+               BankAccountId Integer, BankAccountName TVarChar, BankName TVarChar, 
                Percent_Juridical TFloat,
                Deferment Integer, Percent TFloat, PercentSP TFloat, 
                Comment TVarChar,
@@ -36,6 +37,10 @@ BEGIN
            , Object_Contract_View.GroupMemberSPId
            , Object_Contract_View.GroupMemberSPName 
 
+           , Object_Contract_View.BankAccountId
+           , Object_Contract_View.BankAccountName
+           , Object_Bank.ValueData AS BankName
+
            , ObjectFloat_Percent.ValueData  AS Percent_Juridical
            , Object_Contract_View.Deferment
            , Object_Contract_View.Percent
@@ -62,6 +67,11 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Report
                                    ON ObjectBoolean_Report.ObjectId = Object_Contract_View.Id
                                   AND ObjectBoolean_Report.DescId = zc_ObjectBoolean_Contract_Report()
+
+           LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
+                                ON ObjectLink_BankAccount_Bank.ObjectId = Object_Contract_View.BankAccountId
+                               AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
+           LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
 ;
   
 END;
@@ -74,6 +84,7 @@ ALTER FUNCTION gpSelect_Object_Contract(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 03.05.17         * add BankAccount
  11.01.17         * add isReport
  08.12.16         * add Percent
  01.07.14         *

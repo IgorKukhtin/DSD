@@ -567,22 +567,6 @@
           TabOrder = 26
           WordWrap = True
         end
-        object cbPriceListItem: TCheckBox
-          Tag = 10
-          Left = 15
-          Top = 436
-          Width = 178
-          Height = 24
-          Caption = '1.25. '#1048#1089#1090#1086#1088#1080#1103' '#1094#1077#1085#1099
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 27
-          WordWrap = True
-        end
       end
       object DocumentPanel: TPanel
         Left = 252
@@ -708,6 +692,38 @@
           Font.Style = []
           ParentFont = False
           TabOrder = 7
+        end
+        object cbDiscountPeriodItem: TCheckBox
+          Tag = 20
+          Left = 6
+          Top = 176
+          Width = 178
+          Height = 17
+          Caption = '2.2. '#1048#1089#1090#1086#1088#1080#1103' '#1089#1082#1080#1076#1086#1082
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 8
+          WordWrap = True
+        end
+        object cbPriceListItem: TCheckBox
+          Tag = 20
+          Left = 6
+          Top = 160
+          Width = 178
+          Height = 17
+          Caption = '2.1. '#1048#1089#1090#1086#1088#1080#1103' '#1094#1077#1085#1099
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 9
+          WordWrap = True
         end
       end
     end
@@ -1031,7 +1047,6 @@
   end
   object toZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
-    UTF8StringsAsWideField = True
     Catalog = 'public'
     DesignConnection = True
     HostName = 'localhost'

@@ -26,6 +26,9 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
            , Object_GroupMemberSP.Id         AS GroupMemberSPId
            , Object_GroupMemberSP.ValueData  AS GroupMemberSPName
 
+           , Object_BankAccount.Id           AS BankAccountId
+           , Object_BankAccount.ValueData    AS BankAccountName
+
            , ObjectFloat_Deferment.ValueData ::Integer AS Deferment
            , ObjectFloat_Percent.ValueData   ::Tfloat  AS Percent
            , COALESCE (ObjectFloat_PercentSP.ValueData,0) ::Tfloat  AS PercentSP
@@ -50,7 +53,12 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
            LEFT JOIN ObjectLink AS ObjectLink_Contract_GroupMemberSP
                                 ON ObjectLink_Contract_GroupMemberSP.ObjectId = Object_Contract.Id
                                AND ObjectLink_Contract_GroupMemberSP.DescId = zc_ObjectLink_Contract_GroupMemberSP()
-           LEFT JOIN Object AS Object_GroupMemberSP ON Object_GroupMemberSP.Id = ObjectLink_Contract_GroupMemberSP.ChildObjectId             
+           LEFT JOIN Object AS Object_GroupMemberSP ON Object_GroupMemberSP.Id = ObjectLink_Contract_GroupMemberSP.ChildObjectId          
+
+           LEFT JOIN ObjectLink AS ObjectLink_Contract_BankAccount
+                                ON ObjectLink_Contract_BankAccount.ObjectId = Object_Contract.Id
+                               AND ObjectLink_Contract_BankAccount.DescId = zc_ObjectLink_Contract_BankAccount()
+           LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = ObjectLink_Contract_BankAccount.ChildObjectId    
 
            LEFT JOIN ObjectString AS ObjectString_Comment 
                                   ON ObjectString_Comment.ObjectId = Object_Contract.Id

@@ -38,6 +38,11 @@ type
     GroupMemberSPGuides: TdsdGuides;
     cxLabel11: TcxLabel;
     cePercentSP: TcxCurrencyEdit;
+    cxLabel12: TcxLabel;
+    edBankAccount: TcxButtonEdit;
+    BankAccountGuides: TdsdGuides;
+    edBank: TcxTextEdit;
+    cxLabel13: TcxLabel;
   private
     { Private declarations }
   public

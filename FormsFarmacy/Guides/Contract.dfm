@@ -8,13 +8,13 @@ inherited ContractForm: TContractForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 828
-    ExplicitWidth = 798
+    ExplicitWidth = 828
     ClientRectRight = 828
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 798
+      ExplicitWidth = 828
       inherited cxGrid: TcxGrid
         Width = 828
-        ExplicitWidth = 798
+        ExplicitWidth = 828
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -43,6 +43,22 @@ inherited ContractForm: TContractForm
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
             Width = 212
+          end
+          object clBankAccountName: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
+            DataBinding.FieldName = 'BankAccountName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 134
+          end
+          object clBankName: TcxGridDBColumn
+            Caption = #1041#1072#1085#1082
+            DataBinding.FieldName = 'BankName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 96
           end
           object colPercent: TcxGridDBColumn
             Caption = '% '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1085#1072#1094#1077#1085#1082#1080
