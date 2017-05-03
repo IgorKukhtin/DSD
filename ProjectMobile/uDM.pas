@@ -2985,7 +2985,7 @@ begin
   try
     qryMaxInvNumber.Connection := conMain;
     try
-      qryMaxInvNumber.Open('select Max(cast(invNumber as Integer)) from ' + ATableName);
+      qryMaxInvNumber.Open('select Max(cast(invNumber as Integer)) from ' + ATableName + ' where strftime(''%Y'', InsertDate) = ' + QuotedStr(FormatDateTime('YYYY', Date())));
       if qryMaxInvNumber.RecordCount > 0 then
         NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1;
     except
