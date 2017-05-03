@@ -121,6 +121,7 @@ type
     cbReturnOut: TCheckBox;
     cbSend: TCheckBox;
     cbLoss: TCheckBox;
+    cbPriceList: TCheckBox;
 
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
@@ -207,6 +208,7 @@ type
     procedure pLoadGuide_City;
     procedure pLoadGuide_Client;
     procedure pLoadGuide_Juridical;
+    procedure pLoadGuide_PriceList;
 
 // Documents
     function  pLoadDocument_Income:Integer;
@@ -1741,6 +1743,7 @@ begin
      if not fStop then pLoadGuide_City;
      if not fStop then pLoadGuide_Client;
      if not fStop then pLoadGuide_Juridical;
+     if not fStop then pLoadGuide_PriceList;
 
 
 
@@ -4205,6 +4208,73 @@ begin
      end;
      //
      myDisabledCB(cbPeriod);
+end;
+
+procedure TMainForm.pLoadGuide_PriceList;
+begin
+     if (not cbPriceList.Checked)or(not cbPriceList.Enabled) then exit;
+     //
+     myEnabledCB(cbPriceList);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select');
+        Add('  PriceList.Id as ObjectId');
+        Add(', 0 as ObjectCode');
+        Add(', PriceList.PriceListName as ObjectName');
+        Add(', zc_erasedDel() as zc_erasedDel');
+        Add(', PriceList.Erased as Erased');
+        Add(', PriceList.Id_Postgres');
+        Add(', valuta.Id_Postgres as ValutaID');
+        Add('from DBA.PriceList ');
+        Add('left join valuta on valuta.id = PriceList.valutaid');
+        Add('order by  ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_PriceList';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inCurrencyId',ftInteger,ptInput, 0);
+        //
+        HideCurGrid(True);
+        while not EOF do
+        begin
+
+             //!!!
+             if fStop then begin HideCurGrid(False); exit;end;
+
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inCurrencyId').Value:=FieldByName('ValutaId').AsString;
+             //
+
+             if not myExecToStoredProc then ;//exit;
+             if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.PriceList set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        HideCurGrid(False);
+     end;
+     //
+     myDisabledCB(cbPriceList);
 end;
 
 procedure TMainForm.pLoadGuide_Unit;
