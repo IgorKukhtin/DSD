@@ -46,7 +46,6 @@
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 464
     object Gauge: TGauge
       Left = 0
       Top = 0
@@ -134,10 +133,8 @@
     ActivePage = TabSheet1
     Align = alRight
     TabOrder = 2
-    ExplicitHeight = 464
     object TabSheet1: TTabSheet
       Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080' - '#1044#1086#1082#1091#1084#1077#1085#1090#1099
-      ExplicitHeight = 436
       object GuidePanel: TPanel
         Left = -13
         Top = 0
@@ -146,7 +143,6 @@
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 436
         object cbAllGuide: TCheckBox
           Tag = 1
           Left = 15
@@ -570,6 +566,22 @@
           TabOrder = 26
           WordWrap = True
         end
+        object cbPriceListItem: TCheckBox
+          Tag = 10
+          Left = 15
+          Top = 436
+          Width = 178
+          Height = 24
+          Caption = '1.25. '#1048#1089#1090#1086#1088#1080#1103' '#1094#1077#1085#1099
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 27
+          WordWrap = True
+        end
       end
       object DocumentPanel: TPanel
         Left = 252
@@ -579,7 +591,6 @@
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitHeight = 436
         object Label1: TLabel
           Left = 6
           Top = 22
