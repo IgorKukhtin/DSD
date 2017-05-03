@@ -668,7 +668,7 @@ type
     bSaveCash: TButton;
     bCancelCash: TButton;
     eCashAmount: TEdit;
-    Label85: TLabel;
+    lCashDate: TLabel;
     Panel38: TPanel;
     Panel39: TPanel;
     Label86: TLabel;
@@ -677,6 +677,8 @@ type
     eCashComment: TEdit;
     bsCash: TBindSourceDB;
     LinkListControlToFieldCash: TLinkListControlToField;
+    tiCashDocs: TTabItem;
+    lwCashDocs: TListView;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -879,6 +881,12 @@ type
       const AEditor: IBindListEditorItem);
     procedure bDotClick(Sender: TObject);
     procedure eCashAmountValidate(Sender: TObject; var Text: string);
+    procedure lwCashListItemClickEx(const Sender: TObject; ItemIndex: Integer;
+      const LocalClickPos: TPointF; const ItemObject: TListItemDrawable);
+    procedure lwCashDocsUpdateObjects(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure lwCashDocsItemClickEx(const Sender: TObject; ItemIndex: Integer;
+      const LocalClickPos: TPointF; const ItemObject: TListItemDrawable);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -936,12 +944,14 @@ type
     procedure DeleteOrderExtrernal(const AResult: TModalResult);
     procedure DeleteStoreReal(const AResult: TModalResult);
     procedure DeleteReturnIn(const AResult: TModalResult);
+    procedure DeleteMovementCash(const AResult: TModalResult);
     procedure DeletePhotoGroup(const AResult: TModalResult);
     procedure DeletePhotoGroupDoc(const AResult: TModalResult);
     procedure DeletePhoto(const AResult: TModalResult);
     procedure CreateEditStoreReal(const AResult: TModalResult);
     procedure CreateEditOrderExtrernal(New: boolean);
     procedure CreateEditReturnIn(New: boolean);
+    procedure CreateEditMovementCash(New: boolean);
     procedure SetPartnerCoordinates(const AResult: TModalResult);
 
     function GetAddress(const Latitude, Longitude: Double): string;
@@ -960,12 +970,14 @@ type
     procedure EnterNewPartner;
     procedure ShowPartners(Day : integer; Caption : string);
     procedure ShowPartnerInfo;
-    procedure ChangeStoreRealDocStatus;
+    procedure ChangeStoreRealDoc;
     procedure BuildStoreRealDocsList;
-    procedure ChangeOrderExternalDocStatus;
+    procedure ChangeOrderExternalDoc;
     procedure BuildOrderExternalDocsList;
-    procedure ChangeReturnInDocStatus;
+    procedure ChangeReturnInDoc;
     procedure BuildReturnInDocsList;
+    procedure ChangeCashDoc;
+    procedure BuildCashDocsList;
     procedure ShowDocuments;
     procedure ShowPriceLists;
     procedure ShowPriceListItems;
@@ -1516,6 +1528,47 @@ begin
 end;
 
 // условия фильтра для товаров, выбираемых для завок на поставку или возврат или ввода остатков
+procedure TfrmMain.lwCashDocsItemClickEx(const Sender: TObject;
+  ItemIndex: Integer; const LocalClickPos: TPointF;
+  const ItemObject: TListItemDrawable);
+begin
+  DM.qryCash.Locate('Id', StrToIntDef(TListItemText(lwCashDocs.Items[ItemIndex].Objects.FindDrawable('Id')).Text, 0), []);
+
+  if (ItemObject <> nil) and (ItemObject.Name = 'DeleteButton') then // удаление оплаты
+  begin
+    TDialogService.MessageDialog('Удалить оплату "' + DM.qryCashPartnerName.AsString +
+      '" от ' + FormatDateTime('DD.MM.YYYY', DM.qryCashOperDate.AsDateTime) + '?',
+      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteMovementCash);
+  end
+  else
+  // вызов формы редакирования выбранной оплаты
+  begin
+    CreateEditMovementCash(false);
+  end;
+end;
+
+procedure TfrmMain.lwCashDocsUpdateObjects(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  DeleteButtonHide(AItem);
+end;
+
+procedure TfrmMain.lwCashListItemClickEx(const Sender: TObject;
+  ItemIndex: Integer; const LocalClickPos: TPointF;
+  const ItemObject: TListItemDrawable);
+begin
+  if (ItemObject <> nil) and (ItemObject.Name = 'DeleteButton') then // удалить выбранную оплату
+  begin
+    TDialogService.MessageDialog('Удалить оплату от ' + FormatDateTime('DD.MM.YYYY', DM.qryCashOperDate.AsDateTime) + '?',
+      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteMovementCash);
+  end
+  else
+  // показать информацию по выбранной оплате
+  begin
+    CreateEditMovementCash(false);
+  end;
+end;
+
 procedure TfrmMain.lwCashListUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
@@ -2015,7 +2068,7 @@ begin
       FOrderTotalPrice, FOrderTotalCountKg, DelItems, AResult = mrNone ,ErrMes) then
     begin
       if FEditDocuments then
-        ChangeOrderExternalDocStatus;
+        ChangeOrderExternalDoc;
 
       ShowMessage('Сохранение заявки прошло успешно.');
       ReturnPriorForm;
@@ -2045,7 +2098,7 @@ begin
     if DM.SaveStoreReal(eStoreRealComment.Text, DelItems, AResult = mrNone, ErrMes) then
     begin
       if FEditDocuments then
-        ChangeStoreRealDocStatus;
+        ChangeStoreRealDoc;
 
       ShowMessage('Сохранение остатков прошло успешно.');
       ReturnPriorForm;
@@ -2076,7 +2129,7 @@ begin
       FReturnInTotalPrice, FReturnInTotalCountKg, DelItems, AResult = mrNone, ErrMes) then
     begin
       if FEditDocuments then
-        ChangeReturnInDocStatus;
+        ChangeReturnInDoc;
 
       ShowMessage('Сохранение возврата прошло успешно.');
       ReturnPriorForm;
@@ -2100,7 +2153,7 @@ begin
     DM.cdsOrderExternal.Post;
 
     if FEditDocuments then
-      ChangeOrderExternalDocStatus;
+      ChangeOrderExternalDoc;
   end;
 end;
 
@@ -2118,7 +2171,7 @@ begin
     DM.cdsStoreReals.Post;
 
     if FEditDocuments then
-      ChangeStoreRealDocStatus;
+      ChangeStoreRealDoc;
   end;
 end;
 
@@ -2136,7 +2189,21 @@ begin
     DM.cdsReturnIn.Post;
 
     if FEditDocuments then
-      ChangeReturnInDocStatus;
+      ChangeReturnInDoc;
+  end;
+end;
+
+{ удаление "оплаты" }
+procedure TfrmMain.DeleteMovementCash(const AResult: TModalResult);
+begin
+  if AResult = mrYes then
+  begin
+    DM.qryCash.Edit;
+    DM.qryCashStatusId.AsInteger := DM.tblObject_ConstStatusId_Erased.AsInteger;
+    DM.qryCash.Post;
+
+    if FEditDocuments then
+      ChangeCashDoc;
   end;
 end;
 
@@ -2293,7 +2360,7 @@ begin
   SwitchToForm(tiOrderExternal, nil);
 end;
 
-{ создание новых или редактирование ранее введенных "остатков" }
+{ создание новых или редактирование ранее введенных "возвратов" }
 procedure TfrmMain.CreateEditReturnIn(New: boolean);
 begin
   FDeletedRI.Clear;
@@ -2330,6 +2397,45 @@ begin
   SwitchToForm(tiReturnIn, nil);
 end;
 
+{ создание новых или редактирование ранее введенных "оплат" }
+procedure TfrmMain.CreateEditMovementCash(New: boolean);
+begin
+  vsbMain.Enabled := false;
+
+  if New then
+  begin
+    FOldCashId := -1;
+    lCashDate.Text := 'Оплата от ' + FormatDateTime('DD.MM.YYYY', Date());
+    eCashAmount.Text := '';
+    eCashComment.Text := '';
+    FCanEditDocument := true;
+  end
+  else
+  begin
+    FOldCashId := DM.qryCashId.AsInteger;
+    lCashDate.Text := 'Оплата от ' + FormatDateTime('DD.MM.YYYY', DM.qryCashOperDate.AsDateTime);
+    eCashAmount.Text := FormatFloat(',0.##', DM.qryCashAmount.AsFloat);
+    eCashComment.Text := DM.qryCashComment.AsString;
+    FCanEditDocument := not DM.qryCashisSync.AsBoolean;
+  end;
+
+  eCashAmount.ReadOnly := not FCanEditDocument;
+  eCashComment.ReadOnly := not FCanEditDocument;
+  if FCanEditDocument then
+  begin
+    bCancelCash.Visible := true;
+    bSaveCash.Text := 'Сохранить';
+  end
+  else
+  begin
+    bCancelCash.Visible := false;
+    bSaveCash.Text := 'Закрыть';
+  end;
+
+  pEnterMovmentCash.Visible := true;
+end;
+
+
 // проверка и корректировка введенной координаты GPS
 procedure TfrmMain.eCashAmountValidate(Sender: TObject; var Text: string);
 var
@@ -2340,7 +2446,7 @@ begin
     if Text.Length > 0 then
       StrToFloat(Text);
   except
-    ShowMessage('Неправильный формат суммы (nn.nn)');
+    ShowMessage('Неправильный формат суммы (n.nn)');
 
     // пытаемся исправить на правильное значение
     str := StringReplace(Text, ',', '.', [rfReplaceAll]);
@@ -2699,11 +2805,7 @@ end;
 // переход на форму ввода новой заявки на товары
 procedure TfrmMain.bNewCashClick(Sender: TObject);
 begin
-  vsbMain.Enabled := false;
-  FOldCashId := -1;
-  eCashAmount.Text := '';
-  eCashComment.Text := '';
-  pEnterMovmentCash.Visible := true;
+  CreateEditMovementCash(true);
 end;
 
 procedure TfrmMain.bNewOrderExternalClick(Sender: TObject);
@@ -2866,7 +2968,12 @@ begin
   DM.LoadAllReturnIn(deStartDoc.Date, deEndDoc.Date);
   BuildReturnInDocsList;
 
-  DM.LoadAllPhotoGroups(deStartDoc.Date, deEndDoc.Date);;
+  // фотографии
+  DM.LoadAllPhotoGroups(deStartDoc.Date, deEndDoc.Date);
+
+  // оплаты
+  DM.LoadAllCash(deStartDoc.Date, deEndDoc.Date);
+  BuildCashDocsList;
 end;
 
 procedure TfrmMain.bRefreshMapScreenClick(Sender: TObject);
@@ -3045,9 +3152,15 @@ end;
 
 procedure TfrmMain.bSaveCashClick(Sender: TObject);
 begin
-  DM.SaveCash(FOldCashId, StrToFloat(eCashAmount.Text), eCashComment.Text);
+  if FCanEditDocument then
+  begin
+    DM.SaveCash(FOldCashId, StrToFloat(eCashAmount.Text), eCashComment.Text);
 
-  DM.qryCash.Refresh;
+    DM.qryCash.Refresh;
+
+    if FEditDocuments then
+      ChangeCashDoc;
+  end;
 
   vsbMain.Enabled := true;
   pEnterMovmentCash.Visible := false;
@@ -4120,7 +4233,7 @@ begin
   tcPartnerInfo.ActiveTab := tiInfo;
 end;
 
-procedure TfrmMain.ChangeStoreRealDocStatus;
+procedure TfrmMain.ChangeStoreRealDoc;
 var
   CurItem: TListViewItem;
 begin
@@ -4177,13 +4290,16 @@ begin
   end;
 end;
 
-procedure TfrmMain.ChangeOrderExternalDocStatus;
+procedure TfrmMain.ChangeOrderExternalDoc;
 var
   CurItem: TListViewItem;
 begin
   CurItem := lwOrderDocs.Items[lwOrderDocs.Selected.Index];
   TListItemText(CurItem.Objects.FindDrawable('StatusId')).Text := DM.cdsOrderExternalStatusId.AsString;
   TListItemText(CurItem.Objects.FindDrawable('Status')).Text := DM.cdsOrderExternalStatus.AsString;
+  TListItemText(CurItem.Objects.FindDrawable('Name')).Text := DM.cdsOrderExternalName.AsString;
+  TListItemText(CurItem.Objects.FindDrawable('Price')).Text := DM.cdsOrderExternalPrice.AsString;
+  TListItemText(CurItem.Objects.FindDrawable('Weight')).Text := DM.cdsOrderExternalWeight.AsString;
 
   ChangeStatusIcon(CurItem);
   DeleteButtonHide(CurItem);
@@ -4240,13 +4356,15 @@ begin
   end;
 end;
 
-procedure TfrmMain.ChangeReturnInDocStatus;
+procedure TfrmMain.ChangeReturnInDoc;
 var
   CurItem: TListViewItem;
 begin
   CurItem := lwReturnInDocs.Items[lwReturnInDocs.Selected.Index];
   TListItemText(CurItem.Objects.FindDrawable('StatusId')).Text := DM.cdsReturnInStatusId.AsString;
   TListItemText(CurItem.Objects.FindDrawable('Status')).Text := DM.cdsReturnInStatus.AsString;
+  TListItemText(CurItem.Objects.FindDrawable('Price')).Text := DM.cdsReturnInPrice.AsString;
+  TListItemText(CurItem.Objects.FindDrawable('Weight')).Text := DM.cdsReturnInWeight.AsString;
 
   ChangeStatusIcon(CurItem);
   DeleteButtonHide(CurItem);
@@ -4300,6 +4418,69 @@ begin
     end;
   finally
     lwReturnInDocs.EndUpdate;
+  end;
+end;
+
+procedure TfrmMain.ChangeCashDoc;
+var
+  CurItem: TListViewItem;
+begin
+  CurItem := lwCashDocs.Items[lwCashDocs.Selected.Index];
+  TListItemText(CurItem.Objects.FindDrawable('StatusId')).Text := DM.qryCashStatusId.AsString;
+  TListItemText(CurItem.Objects.FindDrawable('Status')).Text := DM.qryCashStatus.AsString;
+  TListItemText(CurItem.Objects.FindDrawable('Amount')).Text := DM.qryCashAmountShow.AsString;
+
+  ChangeStatusIcon(CurItem);
+  DeleteButtonHide(CurItem);
+end;
+
+{ заполнение списка документов оплат за товары }
+procedure TfrmMain.BuildCashDocsList;
+var
+  OldPartnerId, OldContractId: integer;
+  NewItem: TListViewItem;
+begin
+  OldPartnerId := -1;
+  OldContractId := -1;
+
+  lwCashDocs.BeginUpdate;
+  DM.qryCash.First;
+  try
+    lwCashDocs.Items.Clear;
+
+    while not DM.qryCash.Eof do
+    begin
+      if (OldPartnerId <> DM.qryCashPartnerId.AsInteger) or
+         (OldContractId <> DM.qryCashContractId.AsInteger) then
+      begin
+        NewItem := lwCashDocs.Items.Add;
+        NewItem.Text := DM.qryCashPartnerName.AsString;
+        NewItem.Detail := DM.qryCashAddress.AsString + chr(13) + chr(10) +
+          DM.qryCashContractName.AsString;
+        NewItem.Purpose := TListItemPurpose.Header;
+
+        OldPartnerId := DM.qryCashPartnerId.AsInteger;
+        OldContractId := DM.qryCashContractId.AsInteger;
+      end;
+
+      NewItem := lwCashDocs.Items.Add;
+      NewItem.Text := DM.qryCashName.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Name')).Text := DM.qryCashName.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Amount')).Text := DM.qryCashAmountShow.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Status')).Text := DM.qryCashStatus.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('Id')).Text := DM.qryCashId.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('StatusId')).Text := DM.qryCashStatusId.AsString;
+      TListItemText(NewItem.Objects.FindDrawable('isSync')).Text := DM.qryCashisSync.AsString;
+
+      // установить иконку кнопки удаления
+      TListItemImage(NewItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
+      ChangeStatusIcon(NewItem);
+      DeleteButtonHide(NewItem);
+
+      DM.qryCash.Next;
+    end;
+  finally
+    lwCashDocs.EndUpdate;
   end;
 end;
 
