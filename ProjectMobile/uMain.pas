@@ -3082,6 +3082,8 @@ procedure TfrmMain.bReportJuridicalCollationClick(Sender: TObject);
 var
   i: integer;
 begin
+  SwitchToForm(tiReportJuridicalCollation, nil);
+
   FFirstSet := true; // для востановления сохраненных значений ТТ и договоров при первом открытии
 
   // заполнение списка юридических лиц
@@ -3138,8 +3140,6 @@ begin
     cbPaidKind.ItemIndex := 0;
 
   FFirstSet := false;
-
-  SwitchToForm(tiReportJuridicalCollation, nil);
 end;
 
 // переход на форму отображение маршрутов
@@ -3807,6 +3807,9 @@ begin
     else
     if tcMain.ActiveTab = tiDocuments then
       lCaption.Text := 'Документы'
+    else
+    if tcMain.ActiveTab = tiReports then
+      lCaption.Text := 'Отчеты'
     else
     if tcMain.ActiveTab = tiReportJuridicalCollation then
       lCaption.Text := 'Акт сверки'
