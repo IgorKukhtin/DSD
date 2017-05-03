@@ -12,6 +12,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract
      (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TVarChar, TDateTime, TDateTime, Tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
      (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TDateTime, TDateTime, Tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
+     (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TDateTime, TDateTime, Tvarchar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
@@ -21,6 +23,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inJuridicalBasisId        Integer   ,    -- ссылка на главное юр.лицо
     IN inJuridicalId             Integer   ,    -- ссылка на  юр.лицо
     IN inGroupMemberSPId         Integer   ,    -- ссылка на Категория пациента(Соц. проект)
+    IN inBankAccountId           Integer   ,    -- ссылка на р/счет
     IN inDeferment               Integer   ,    -- Дней отсрочки
     IN inPercent                 TFloat    ,    -- % Корректировки наценки
     IN inPercentSP               TFloat    ,    -- % cкидки Соц.проект
@@ -57,6 +60,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Contract_Juridical(), ioId, inJuridicalId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Contract_GroupMemberSP(), ioId, inGroupMemberSPId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Contract_BankAccount(), ioId, inBankAccountId);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Contract_Deferment(), ioId, inDeferment);
@@ -85,6 +90,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.05.17         * add BankAccountId
  16.03.17         * inPercentSP
  05.03.17         * inGroupMemberSPId
  08.12.16         * inPercent

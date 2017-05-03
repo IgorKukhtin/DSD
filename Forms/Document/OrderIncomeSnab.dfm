@@ -496,6 +496,14 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             Options.Editing = False
             Width = 232
           end
+          object colGoodsName_Partner: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' ('#1085#1072#1079#1074#1072#1085#1080#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
+            DataBinding.FieldName = 'GoodsName_Partner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 112
+          end
           object colMeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'

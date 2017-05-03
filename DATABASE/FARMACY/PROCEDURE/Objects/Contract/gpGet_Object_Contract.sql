@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                JuridicalBasisId Integer, JuridicalBasisName TVarChar,
                JuridicalId Integer, JuridicalName TVarChar,
                GroupMemberSPId Integer, GroupMemberSPName TVarChar,
+               BankAccountId Integer, BankAccountName TVarChar, BankName TVarChar, 
                Deferment Integer, Percent TFloat, PercentSP TFloat,
                Comment TVarChar,
                StartDate TDateTime, EndDate TDateTime,
@@ -35,6 +36,10 @@ BEGIN
 
            , CAST (0 as Integer)   AS GroupMemberSPId
            , CAST ('' as TVarChar) AS GroupMemberSPName
+
+           , CAST (0 as Integer)   AS BankAccountId
+           , CAST ('' as TVarChar) AS BankAccountName
+           , CAST ('' as TVarChar) AS BankName
 
            , 0                     AS Deferment
            , CAST (0 AS TFloat)    AS Percent
@@ -63,6 +68,10 @@ BEGIN
            , Object_Contract_View.GroupMemberSPId
            , Object_Contract_View.GroupMemberSPName 
 
+           , Object_Contract_View.BankAccountId
+           , Object_Contract_View.BankAccountName
+           , Object_Bank.ValueData AS BankName
+
            , Object_Contract_View.Deferment
            , Object_Contract_View.Percent
            , Object_Contract_View.PercentSP
@@ -79,7 +88,12 @@ BEGIN
                                 AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
             LEFT JOIN ObjectDate AS ObjectDate_End
                                  ON ObjectDate_End.ObjectId = Object_Contract_View.ContractId
-                                AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()      
+                                AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()     
+            LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
+                                 ON ObjectLink_BankAccount_Bank.ObjectId = Object_Contract_View.BankAccountId
+                                AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
+            LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId 
+
       WHERE Object_Contract_View.Id = inId;
    END IF;
   
@@ -94,6 +108,7 @@ ALTER FUNCTION gpGet_Object_Contract (integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 03.05.17         * add BankAccount
  08.12.16         *
  01.07.14         *
 

@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_OrderIncomeSnab(
 RETURNS TABLE (Id Integer, LineNum Integer
              , GoodsGroupNameFull TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsName_Partner TVarChar
              , MeasureId Integer, MeasureName TVarChar
              , Price          TFloat
              , AmountSumm     TFloat
@@ -43,6 +44,9 @@ $BODY$
    DECLARE vbDayCount  TFloat;
    DECLARE vbEndDate TDateTime;
    DECLARE vbStartDate TDateTime;
+
+   DECLARE vbGoodsPropertyId Integer;
+   DECLARE vbGoodsPropertyId_basis Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_OrderIncome());
@@ -57,7 +61,9 @@ BEGIN
      SELECT  COALESCE (MovementDate_OperDateStart.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate)) ::TDateTime  AS OperDateStart
            , COALESCE (MovementDate_OperDateEnd.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY') ::TDateTime  AS OperDateEnd
            , COALESCE (MovementFloat_DayCount.ValueData, 30)  ::TFloat  AS DayCount
-    INTO vbStartDate, vbEndDate, vbDayCount
+           , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId), MovementLinkObject_To.ObjectId) AS GoodsPropertyId
+           , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)       AS GoodsPropertyId_basis
+    INTO vbStartDate, vbEndDate, vbDayCount, vbGoodsPropertyId, vbGoodsPropertyId_basis
      FROM Movement
             LEFT JOIN MovementDate AS MovementDate_OperDateStart
                                    ON MovementDate_OperDateStart.MovementId = Movement.Id
@@ -68,6 +74,16 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_DayCount
                                     ON MovementFloat_DayCount.MovementId = Movement.Id
                                    AND MovementFloat_DayCount.DescId = zc_MovementFloat_DayCount()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                        AND MovementLinkObject_Contract.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractTo())
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
      WHERE Movement.id = inMovementId
        AND Movement.DescId = zc_Movement_OrderIncome();
 
@@ -76,8 +92,37 @@ BEGIN
      IF inShowAll THEN
 
      RETURN QUERY
-     WITH 
-     tmpGoodsListIncome AS (SELECT DISTINCT ObjectLink_GoodsListIncome_Goods.ChildObjectId AS GoodsId
+     WITH tmpObject_GoodsPropertyValue AS
+                 (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                       , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId  AS GoodsId
+                       , Object_GoodsPropertyValue.ValueData                AS Name
+                  FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
+                        ) AS tmpGoodsProperty
+                       INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                               ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                              AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                       LEFT JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+
+                       LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                              ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                             AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                  )
+     , tmpObject_GoodsPropertyValue_basis AS
+                  (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
+                        , Object_GoodsPropertyValue.ValueData  AS Name
+                   FROM (SELECT vbGoodsPropertyId_basis AS GoodsPropertyId
+                         ) AS tmpGoodsProperty
+                       INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                               ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                              AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                       INNER JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                           
+                       LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                              ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                             AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                   )
+
+  ,  tmpGoodsListIncome AS (SELECT DISTINCT ObjectLink_GoodsListIncome_Goods.ChildObjectId AS GoodsId
                             FROM Object AS Object_GoodsListIncome
                                  INNER JOIN ObjectLink AS ObjectLink_GoodsListIncome_Juridical
                                          ON ObjectLink_GoodsListIncome_Juridical.ObjectId = Object_GoodsListIncome.Id
@@ -156,6 +201,10 @@ BEGIN
              , Object_Goods.Id            AS GoodsId
              , Object_Goods.ObjectCode    AS GoodsCode
              , Object_Goods.ValueData     AS GoodsName
+          , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name
+                   WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name 
+                   ELSE ''
+              END) :: TVarChar AS GoodsName_Partner
              , Object_Measure.Id          AS MeasureId
              , Object_Measure.ValueData   AS MeasureName
              , CAST (NULL AS TFloat)      AS Price
@@ -194,6 +243,11 @@ BEGIN
                                     ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                    AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
+
+            LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = Object_Goods.Id
+                                                  AND tmpObject_GoodsPropertyValue.Name <> ''
+            LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = Object_Goods.Id
+
         WHERE tmpMI.GoodsId IS NULL
 
       UNION ALL
@@ -203,6 +257,11 @@ BEGIN
              , tmpMI.GoodsId
              , Object_Goods.ObjectCode    AS GoodsCode
              , Object_Goods.ValueData     AS GoodsName
+          , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name
+                   WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name 
+                   ELSE ''
+              END) :: TVarChar AS GoodsName_Partner
+
              , Object_Measure.Id          AS MeasureId
              , Object_Measure.ValueData   AS MeasureName
              , tmpMI.Price          ::TFloat
@@ -260,13 +319,47 @@ BEGIN
                                     ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                    AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
+
+            LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = tmpMI.GoodsId
+                                                  AND tmpObject_GoodsPropertyValue.Name <> ''
+            LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpMI.GoodsId
+
 ;
 
      ELSE
 
      RETURN QUERY
-     WITH  
-             tmpMI_Goods AS (SELECT MovementItem.Id                               AS MovementItemId
+     WITH tmpObject_GoodsPropertyValue AS
+                 (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                       , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId  AS GoodsId
+                       , Object_GoodsPropertyValue.ValueData                AS Name
+                  FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
+                        ) AS tmpGoodsProperty
+                       INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                               ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                              AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                       LEFT JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+
+                       LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                              ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                             AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                  )
+     , tmpObject_GoodsPropertyValue_basis AS
+                  (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
+                        , Object_GoodsPropertyValue.ValueData  AS Name
+                   FROM (SELECT vbGoodsPropertyId_basis AS GoodsPropertyId
+                         ) AS tmpGoodsProperty
+                       INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                               ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                              AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                       INNER JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                           
+                       LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                              ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                             AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                   )
+
+  ,          tmpMI_Goods AS (SELECT MovementItem.Id                               AS MovementItemId
                                   , MovementItem.ObjectId                         AS MeasureId
                                   , MILinkObject_Goods.ObjectId                   AS GoodsId
                                   , MovementItem.Amount                           AS Amount
@@ -332,6 +425,11 @@ BEGIN
              , tmpMI.GoodsId
              , Object_Goods.ObjectCode    AS GoodsCode
              , Object_Goods.ValueData     AS GoodsName
+          , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name
+                   WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name 
+                   ELSE ''
+              END) :: TVarChar AS GoodsName_Partner
+
              , Object_Measure.Id          AS MeasureId
              , Object_Measure.ValueData   AS MeasureName
              , tmpMI.Price            ::TFloat
@@ -390,8 +488,11 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                     ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                    AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-;
 
+            LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = tmpMI.GoodsId
+                                                  AND tmpObject_GoodsPropertyValue.Name <> ''
+            LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpMI.GoodsId
+;
 
      END IF;
  
@@ -401,7 +502,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. 
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.05.17         * 
  14.04.17         * 
 */
 
