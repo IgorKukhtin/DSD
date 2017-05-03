@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION lpUpdate_Movement_Send_DocumentKind(
     IN inIsUpdate     Boolean   , --
     IN inStartDate    TDateTime , --
     IN inEndDate      TDateTime , --
-    IN inUnitId       Integer,    -- Подоазделение с которого факт расход (а приход на него формируем автоматом)
+    IN inUnitId       Integer,    -- Подразделение с которого факт расход (а приход на него формируем автоматом)
     IN inUserId       Integer     -- Пользователь
 )                              
 RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, isDelete Boolean, MovementItemId Integer, ContainerId_to Integer
@@ -33,10 +33,10 @@ BEGIN
                                  , MIContainer.MovementId
                                  , MIContainer.MovementItemId
                                  , MIContainer.OperDate
-                                 , CASE WHEN MovementBoolean_isAuto.ValueData = TRUE THEN MIContainer.ObjectExtId_Analyzer   ELSE MIContainer.WhereObjectId_Analyzer END AS FromId
-                                 , CASE WHEN MovementBoolean_isAuto.ValueData = TRUE THEN MIContainer.WhereObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer   END AS ToId
-                                 , CASE WHEN MovementBoolean_isAuto.ValueData = TRUE THEN MIContainer.ContainerId_Analyzer   ELSE MIContainer.ContainerId            END AS ContainerId_from
-                                 , CASE WHEN MovementBoolean_isAuto.ValueData = TRUE THEN MIContainer.ContainerId            ELSE MIContainer.ContainerId_Analyzer   END AS ContainerId_to
+                                 , CASE WHEN MovementBoolean_isAuto.ValueData = TRUE THEN MIContainer.ObjectExtId_Analyzer   ELSE MIContainer.WhereObjectId_Analyzer    END AS FromId
+                                 , CASE WHEN MovementBoolean_isAuto.ValueData = TRUE THEN MIContainer.WhereObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer      END AS ToId
+                                 , CASE WHEN MovementBoolean_isAuto.ValueData = TRUE THEN MIContainer.ContainerIntId_Analyzer   ELSE MIContainer.ContainerId            END AS ContainerId_from
+                                 , CASE WHEN MovementBoolean_isAuto.ValueData = TRUE THEN MIContainer.ContainerId            ELSE MIContainer.ContainerIntId_Analyzer   END AS ContainerId_to
                                  , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) AS isAuto -- для TRUE - приходы на "нужное" подразделение, для FALSE - расходы с "нужного" подразделение
                                  , CASE WHEN MovementBoolean_isAuto.ValueData = TRUE THEN 1 ELSE -1 END * MIContainer.Amount AS OperCount
                             FROM Movement
@@ -313,5 +313,5 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM lpUpdate_Movement_Send_DocumentKind (inIsUpdate:= TRUE, inStartDate:= '30.08.2016', inEndDate:= '30.08.2016', inUnitId:= 0, inUserId:= zfCalc_UserAdmin() :: Integer) -- Цех Упаковки
--- SELECT * FROM lpUpdate_Movement_Send_DocumentKind (inIsUpdate:= FALSE, inStartDate:= '30.08.2016', inEndDate:= '30.08.2016', inUnitId:= 0, inUserId:= zfCalc_UserAdmin() :: Integer) -- Цех Упаковки
+-- SELECT * FROM lpUpdate_Movement_Send_DocumentKind (inIsUpdate:= FALSE, inStartDate:= '26.04.2017', inEndDate:= '26.04.2017', inUnitId:= 635388 , inUserId:= zfCalc_UserAdmin() :: Integer) -- Участок нарезки
+ SELECT * FROM lpUpdate_Movement_Send_DocumentKind (inIsUpdate:= TRUE, inStartDate:= '26.04.2017', inEndDate:= '26.04.2017', inUnitId:= 635388 , inUserId:= zfCalc_UserAdmin() :: Integer) -- Участок нарезки

@@ -94,7 +94,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionGoods(), ioId, inPartionGoodsId);
 
 
-     IF inGoodsId <> 0
+     IF inGoodsId <> 0 AND inGoodsKindId <> 0
      THEN
          -- создали объект <Связи Товары и Виды товаров>
          PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, inUserId);
@@ -103,9 +103,9 @@ BEGIN
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
-
      -- сохранили протокол
-     -- !!! времнно откл.!!! PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
+     -- !!! времнно откл.!!!
+     -- PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 
 END;
 $BODY$
