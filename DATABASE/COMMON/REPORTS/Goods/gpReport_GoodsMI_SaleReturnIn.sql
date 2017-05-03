@@ -79,25 +79,25 @@ BEGIN
     END IF;
 */
 
-    IF inEndDate >= '01.04.2017' AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 15 AND inSession NOT IN ('9463', '106593', '106594', '140094')
-         AND (1  < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%')
-           OR 10 < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active'))
+    IF inEndDate >= DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAl '3 DAY') AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 15 AND inSession NOT IN ('9463', '106593', '106594', '140094')
+         AND ((1+4)  < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%')
+           OR (10+5) < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active'))
     THEN
         RAISE EXCEPTION 'Кол-во АП = <%> / <%>.Повторите действие через 30 мин.'
                       , (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active') - 1
                       , (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%') - 1
                        ;
-    ELSEIF inEndDate >= '01.04.2017' AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 15
-         AND (1 < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%')
-           OR 15 < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active'))
+    ELSEIF inEndDate >= DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAl '3 DAY') AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 15
+         AND ((1+4) < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%')
+           OR (15+5) < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active'))
     THEN
         RAISE EXCEPTION 'Кол-во АП = <%> / <%>.Повторите действие через 5 мин.'
                       , (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active') - 1
                       , (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%') - 1
                        ;
-    ELSEIF inEndDate >= '01.04.2017'
-         AND (2  < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%')
-           OR 15 < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active'))
+    ELSEIF inEndDate >= DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAl '3 DAY')
+         AND ((2+7)  < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%')
+           OR (15+5) < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active'))
     THEN
         RAISE EXCEPTION 'Кол-во АП = <%> / <%>.Повторите действие через 3 мин.'
                       , (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active') - 1
@@ -165,187 +165,47 @@ BEGIN
 
 
     -- Ограничения по товару
-    CREATE TEMP TABLE _tmpGoods (GoodsId Integer, TradeMarkId Integer) ON COMMIT DROP;
-
     IF inGoodsGroupId <> 0
     THEN
         -- устанавливается признак
         vbIsGoods_where:= TRUE;
-        -- заполнение
-        INSERT INTO _tmpGoods (GoodsId, TradeMarkId)
-           SELECT lfObject_Goods_byGoodsGroup.GoodsId AS GoodsId
-                , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0) ELSE 0 END AS TradeMarkId
-                -- , COALESCE (ObjectLink_Goods_Measure.ChildObjectId, 0) AS MeasureId
-                -- , COALESCE (ObjectFloat_Weight.ValueData, 0)           AS Weight
-           FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup
-                LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
-                                     ON ObjectLink_Goods_TradeMark.ObjectId = lfObject_Goods_byGoodsGroup.GoodsId
-                                    AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
-/*                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                     ON ObjectLink_Goods_Measure.ObjectId = lfObject_Goods_byGoodsGroup.GoodsId
-                                    AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-                LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                      ON ObjectFloat_Weight.ObjectId = lfObject_Goods_byGoodsGroup.GoodsId
-                                     AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()*/
-           WHERE (ObjectLink_Goods_TradeMark.ChildObjectId = inTradeMarkId OR COALESCE (inTradeMarkId, 0) = 0)
-       ;
+
     ELSE IF inTradeMarkId <> 0
          THEN
              -- устанавливается признак
              vbIsGoods_where:= TRUE;
-             -- заполнение
-             INSERT INTO _tmpGoods (GoodsId, TradeMarkId)
-                SELECT ObjectLink_Goods_TradeMark.ObjectId AS GoodsId
-                     , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0) ELSE 0 END AS TradeMarkId
-                FROM ObjectLink AS ObjectLink_Goods_TradeMark
-                WHERE ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
-                  AND ObjectLink_Goods_TradeMark.ChildObjectId = inTradeMarkId
-            ;
+
          ELSE
              -- устанавливается признак
              vbIsGoods_where:= FALSE;
-             -- заполнение
-             INSERT INTO _tmpGoods (GoodsId, TradeMarkId)
-                SELECT ObjectLink_Goods_TradeMark.ObjectId AS GoodsId
-                     , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0) ELSE 0 END AS TradeMarkId
-                FROM ObjectLink AS ObjectLink_Goods_TradeMark
-                WHERE ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
-                  AND ObjectLink_Goods_TradeMark.ChildObjectId > 0
-                  AND (inIsTradeMark = TRUE AND inIsGoods = FALSE)
-            ;
 
          END IF;
     END IF;
 
     -- Ограничения
-    CREATE TEMP TABLE _tmpPartner (PartnerId Integer, JuridicalId Integer/*, AreaId Integer*/) ON COMMIT DROP;
-    CREATE TEMP TABLE _tmpJuridical (JuridicalId Integer/*, RetailId Integer, JuridicalGroupId Integer, OKPO TVarChar*/) ON COMMIT DROP;
-    CREATE TEMP TABLE _tmpJuridicalBranch (JuridicalId Integer) ON COMMIT DROP;
-    --
-    IF vbIsJuridical_Branch = TRUE AND vbObjectId_Constraint_Branch <> 0
-    THEN
-        INSERT INTO _tmpJuridicalBranch (JuridicalId)
-                                     SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
-                                     FROM ObjectLink AS ObjectLink_Unit_Branch
-                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
-                                                                ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
-                                                               AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-                                          INNER JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                                                ON ObjectLink_Partner_PersonalTrade.ChildObjectId = ObjectLink_Personal_Unit.ObjectId
-                                                               AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                                          INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                                ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
-                                                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                     WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Constraint_Branch
-                                       AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-                                     GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
-                                    UNION
-                                     SELECT ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
-                                     FROM ObjectLink AS ObjectLink_Unit_Branch
-                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
-                                                                ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
-                                                               AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-                                          INNER JOIN ObjectLink AS ObjectLink_Contract_Personal
-                                                                ON ObjectLink_Contract_Personal.ChildObjectId = ObjectLink_Personal_Unit.ObjectId
-                                                               AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
-                                          INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                                                ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Contract_Personal.ObjectId
-                                                               AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-                                     WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Constraint_Branch
-                                       AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-                                     GROUP BY ObjectLink_Contract_Juridical.ChildObjectId;
-    END IF;
-    --
     IF inAreaId <> 0
     THEN
         -- устанавливается признак
         vbIsPartner_where:= TRUE;
-        -- заполнение по Контрагенту
-        INSERT INTO _tmpPartner (PartnerId, JuridicalId/*, AreaId*/)
-           SELECT ObjectLink_Partner_Area.ObjectId
-                , COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, 0)
-                -- , COALESCE (ObjectLink_Partner_Area.ChildObjectId, 0)
-           FROM ObjectLink AS ObjectLink_Partner_Area
-                LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                     ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_Area.ObjectId
-                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-           WHERE ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
-             AND ObjectLink_Partner_Area.ChildObjectId = inAreaId
-       ;
         -- устанавливается признак
         vbIsJuridical_where:= TRUE;
-        -- заполнение по Юр Лицу
-        INSERT INTO _tmpJuridical (JuridicalId/*, RetailId, JuridicalGroupId, OKPO*/)
-           SELECT _tmpPartner.JuridicalId
-                -- , COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, 0)
-                -- , COALESCE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId, 0)
-                -- , COALESCE (ObjectHistory_JuridicalDetails_View.OKPO, '')
-           FROM _tmpPartner
-                LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                     ON ObjectLink_Juridical_Retail.ObjectId = _tmpPartner.JuridicalId
-                                    AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                /*LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
-                                     ON ObjectLink_Juridical_JuridicalGroup.ObjectId = _tmpPartner.JuridicalId
-                                    AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
-                LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = _tmpPartner.JuridicalId*/
-           WHERE (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR COALESCE (inRetailId, 0) = 0)
-             AND (_tmpPartner.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
-           GROUP BY _tmpPartner.JuridicalId
-       ;
+
     ELSE
         -- по Юр Лицу (только)
         IF inJuridicalId <> 0
         THEN
             -- устанавливается признак
             vbIsJuridical_where:= TRUE;
-            -- заполнение
-            INSERT INTO _tmpJuridical (JuridicalId/*, RetailId, JuridicalGroupId, OKPO*/)
-               SELECT Object.Id
-                    -- , COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, 0)
-                    -- , COALESCE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId, 0)
-                    -- , COALESCE (ObjectHistory_JuridicalDetails_View.OKPO, '')
-               FROM Object
-                    LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                         ON ObjectLink_Juridical_Retail.ObjectId = Object.Id
-                                        AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                    /*LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
-                                         ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object.Id
-                                        AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
-                    LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object.Id*/
-               WHERE Object.Id = inJuridicalId
-                 AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR COALESCE (inRetailId, 0) = 0)
-           ;
+
         ELSE
             IF inRetailId <> 0
             THEN
                 -- устанавливается признак
                 vbIsJuridical_where:= TRUE;
-                -- заполнение
-                INSERT INTO _tmpJuridical (JuridicalId/*, RetailId, JuridicalGroupId, OKPO*/)
-                   SELECT ObjectLink_Juridical_Retail.ObjectId
-                        /*, COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, 0)
-                        , COALESCE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId, 0)
-                        , COALESCE (ObjectHistory_JuridicalDetails_View.OKPO, '')*/
-                   FROM ObjectLink AS ObjectLink_Juridical_Retail
-                        /*LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
-                                             ON ObjectLink_Juridical_JuridicalGroup.ObjectId = ObjectLink_Juridical_Retail.ObjectId
-                                            AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
-                        LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = ObjectLink_Juridical_Retail.ObjectId*/
-                   WHERE ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                     AND ObjectLink_Juridical_Retail.ChildObjectId = inRetailId
-                  ;
+
             END IF;
         END IF;
     END IF;
-
-/*
-    CREATE TEMP TABLE tmpAnalyzer (AnalyzerId Integer, isSale Boolean, isCost Boolean, isSumm Boolean, MLO_DescId Integer) ON COMMIT DROP;
-    INSERT INTO tmpAnalyzer (AnalyzerId, isSale, isCost, isSumm, MLO_DescId)
-         SELECT AnalyzerId, isSale, isCost, isSumm
-              , CASE WHEN isSale = TRUE THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END AS MLO_DescId
-         FROM Constant_ProfitLoss_AnalyzerId_View
-         WHERE isCost = FALSE OR (isCost = TRUE AND vbIsCost = TRUE);
-    ANALYZE tmpAnalyzer;*/
 
 
 
@@ -378,18 +238,115 @@ BEGIN
     END IF;
 
 
-    ANALYZE _tmpGoods;
-    ANALYZE _tmpPartner;
-    ANALYZE _tmpJuridical;
-    ANALYZE _tmpJuridicalBranch;
-
-
 
     -- Результат
     RETURN QUERY
 
     -- собираем все данные
-    WITH tmpInfoMoney AS (SELECT * FROM Object_InfoMoney_View WHERE InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000()) -- !!!Доходы!!!)
+    WITH _tmpGoods AS
+          (SELECT lfObject_Goods_byGoodsGroup.GoodsId AS GoodsId
+                , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0) ELSE 0 END AS TradeMarkId
+           FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                     ON ObjectLink_Goods_TradeMark.ObjectId = lfObject_Goods_byGoodsGroup.GoodsId
+                                    AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+           WHERE (ObjectLink_Goods_TradeMark.ChildObjectId = inTradeMarkId OR COALESCE (inTradeMarkId, 0) = 0)
+             AND inGoodsGroupId > 0 -- !!!
+
+          UNION
+                SELECT ObjectLink_Goods_TradeMark.ObjectId AS GoodsId
+                     , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0) ELSE 0 END AS TradeMarkId
+                FROM ObjectLink AS ObjectLink_Goods_TradeMark
+                WHERE ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+                  AND ObjectLink_Goods_TradeMark.ChildObjectId = inTradeMarkId
+                  AND COALESCE (inGoodsGroupId, 0) = 0 AND vbIsGoods_where = TRUE -- !!!
+          UNION
+                SELECT ObjectLink_Goods_TradeMark.ObjectId AS GoodsId
+                     , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0) ELSE 0 END AS TradeMarkId
+                FROM ObjectLink AS ObjectLink_Goods_TradeMark
+                WHERE ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+                  AND ObjectLink_Goods_TradeMark.ChildObjectId > 0
+                  AND (inIsTradeMark = TRUE AND inIsGoods = FALSE)
+                  AND vbIsGoods_where = FALSE -- !!!
+          )
+        , _tmpJuridicalBranch AS (
+                                     SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                                     FROM ObjectLink AS ObjectLink_Unit_Branch
+                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                                ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
+                                                               AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                                                ON ObjectLink_Partner_PersonalTrade.ChildObjectId = ObjectLink_Personal_Unit.ObjectId
+                                                               AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                          INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                                ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
+                                                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                     WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Constraint_Branch
+                                       AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                       AND vbIsJuridical_Branch = TRUE AND vbObjectId_Constraint_Branch <> 0 -- !!!
+                                     GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
+                                    UNION
+                                     SELECT ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
+                                     FROM ObjectLink AS ObjectLink_Unit_Branch
+                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                                ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
+                                                               AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                          INNER JOIN ObjectLink AS ObjectLink_Contract_Personal
+                                                                ON ObjectLink_Contract_Personal.ChildObjectId = ObjectLink_Personal_Unit.ObjectId
+                                                               AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+                                          INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                                                ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Contract_Personal.ObjectId
+                                                               AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                                     WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Constraint_Branch
+                                       AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                       AND vbIsJuridical_Branch = TRUE AND vbObjectId_Constraint_Branch <> 0 -- !!!
+                                     GROUP BY ObjectLink_Contract_Juridical.ChildObjectId
+                                 )
+
+        , _tmpPartner AS (
+        -- заполнение по Контрагенту
+           SELECT ObjectLink_Partner_Area.ObjectId AS PartnerId
+                , COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, 0) AS JuridicalId
+                -- , COALESCE (ObjectLink_Partner_Area.ChildObjectId, 0)
+           FROM ObjectLink AS ObjectLink_Partner_Area
+                LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                     ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_Area.ObjectId
+                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+           WHERE ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
+             AND ObjectLink_Partner_Area.ChildObjectId = inAreaId
+             AND inAreaId > 0 -- !!!
+                         )
+        , _tmpJuridical AS (
+           -- по Юр Лицу
+           SELECT DISTINCT _tmpPartner.JuridicalId
+           FROM _tmpPartner
+                LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                     ON ObjectLink_Juridical_Retail.ObjectId = _tmpPartner.JuridicalId
+                                    AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+           WHERE (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR COALESCE (inRetailId, 0) = 0)
+             AND (_tmpPartner.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
+
+             UNION
+               -- по Юр Лицу (только)
+               SELECT Object.Id
+               FROM Object
+                    LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                         ON ObjectLink_Juridical_Retail.ObjectId = Object.Id
+                                        AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+               WHERE Object.Id = inJuridicalId
+                 AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR COALESCE (inRetailId, 0) = 0)
+                 AND COALESCE (inAreaId, 0) = 0 AND inJuridicalId > 0 -- !!!
+
+                  UNION
+                   -- по inRetailId
+                   SELECT ObjectLink_Juridical_Retail.ObjectId
+                   FROM ObjectLink AS ObjectLink_Juridical_Retail
+                   WHERE ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                     AND ObjectLink_Juridical_Retail.ChildObjectId = inRetailId
+                     AND COALESCE (inAreaId, 0) = 0 AND COALESCE (inJuridicalId, 0) = 0 -- !!!
+                           )
+
+       , tmpInfoMoney AS (SELECT * FROM Object_InfoMoney_View WHERE InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000()) -- !!!Доходы!!!)
        , tmpAnalyzer AS (SELECT Constant_ProfitLoss_AnalyzerId_View.*
                               , CASE WHEN isSale = TRUE THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END AS MLO_DescId
                          FROM Constant_ProfitLoss_AnalyzerId_View

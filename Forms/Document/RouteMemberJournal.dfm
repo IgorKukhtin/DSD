@@ -5,7 +5,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 969
-  ExplicitHeight = 434
+  ExplicitHeight = 435
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -519,6 +519,20 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actRouteOnMap: TdsdPartnerMapAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1084#1072#1088#1096#1088#1091#1090' '#1085#1072' '#1082#1072#1088#1090#1077
+      ImageIndex = 61
+      FormName = 'TPartnerMapForm'
+      FormNameParam.Value = 'TPartnerMapForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = True
+      MapType = acShowAll
+      DataSet = MasterCDS
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -648,12 +662,30 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRouteOnMap'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
         end>
     end
     object bbPrint: TdxBarButton
       Action = mactPrint_Order
       Category = 0
       Visible = ivNever
+    end
+    object bbRouteOnMap: TdxBarButton
+      Action = actRouteOnMap
+      Category = 0
+    end
+    object dxBarStatic1: TdxBarStatic
+      Caption = '    '
+      Category = 0
+      Hint = '    '
+      Visible = ivAlways
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

@@ -60,6 +60,7 @@ var
  i : integer;
 begin
   LoadReportFromFile('PrintMovement_Income', ReportPath + '\Приход от поставщика.fr3');
+  LoadReportFromFile('PrintMovement_IncomeIn', ReportPath + '\Приход от поставщика вх цена.fr3');
   LoadReportFromFile('PrintMovement_ReturnOut', ReportPath + '\Возврат поставщику.fr3');
   LoadReportFromFile('PrintMovement_Send', ReportPath + '\Перемещение.fr3');
   LoadReportFromFile('PrintMovement_Loss', ReportPath + '\Списание.fr3');

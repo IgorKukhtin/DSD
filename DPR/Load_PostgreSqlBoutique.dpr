@@ -2,6 +2,7 @@ program Load_PostgreSqlBoutique;
 
 uses
   Forms,
+  SysUtils,
   Main in '..\Load_PostgreSqlBoutique\Main.pas' {MainForm},
   Storage in '..\SOURCE\Storage.pas',
   UtilConst in '..\SOURCE\UtilConst.pas',
@@ -60,6 +61,8 @@ uses
 begin
   ConnectionPath := '..\INIT\Boutique_init.php';
   Application.Initialize;
+  Logger.Enabled := FindCmdLineSwitch('log');
+
   Application.CreateForm(TMainForm, MainForm);
   MainForm.Show;
 
