@@ -2489,8 +2489,7 @@ begin
 
   try
     if Assigned(FDataSet) then
-      if (FDataSet.FindField('GPSN') <> nil) and (FDataSet.FindField('GPSE') <> nil) and
-         (FDataSet.FindField('Address') <> nil) then
+      if (FDataSet.FindField('GPSN') <> nil) and (FDataSet.FindField('GPSE') <> nil) then
       begin
         if TdsdGMMap(FGeoCode.Map).MapType = acShowOne then
         begin
@@ -2501,6 +2500,7 @@ begin
           then
             FGeoCode.Geocode(FDataSet.FindField('GPSN').AsFloat, FDataSet.FindField('GPSe').AsFloat)
           else
+          if FDataSet.FindField('Address') <> nil then
             FGeoCode.Geocode(FDataSet.FindField('Address').AsString);
 
           if (FGeoCode.GeoStatus = gsOK) and (FGeoCode.Count > 0) then
@@ -2531,6 +2531,7 @@ begin
             then
               FGeoCode.Geocode(FDataSet.FindField('GPSN').AsFloat, FDataSet.FindField('GPSe').AsFloat)
             else
+            if FDataSet.FindField('Address') <> nil then
               FGeoCode.Geocode(FDataSet.FindField('Address').AsString);
 
             if (FGeoCode.GeoStatus = gsOK) and (FGeoCode.Count > 0) then

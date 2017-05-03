@@ -1954,7 +1954,7 @@ object DM: TDM
   object qryCash: TFDQuery
     OnCalcFields = qryCashCalcFields
     Connection = conMain
-    Left = 128
+    Left = 40
     Top = 400
     object qryCashId: TIntegerField
       FieldName = 'Id'
@@ -1992,6 +1992,24 @@ object DM: TDM
       FieldName = 'Status'
       Size = 255
       Calculated = True
+    end
+    object qryCashPartnerId: TIntegerField
+      FieldName = 'PartnerId'
+    end
+    object qryCashPartnerName: TWideStringField
+      FieldName = 'PartnerName'
+      Size = 255
+    end
+    object qryCashAddress: TWideStringField
+      FieldName = 'Address'
+      Size = 255
+    end
+    object qryCashContractId: TIntegerField
+      FieldName = 'ContractId'
+    end
+    object qryCashContractName: TWideStringField
+      FieldName = 'ContractName'
+      Size = 400
     end
   end
 end

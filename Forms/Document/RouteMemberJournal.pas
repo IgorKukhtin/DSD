@@ -50,6 +50,9 @@ type
     PersonalTradeGuides: TdsdGuides;
     spGet_PersonalTrade: TdsdStoredProc;
     clGPSE: TcxGridDBColumn;
+    bbRouteOnMap: TdxBarButton;
+    dxBarStatic1: TdxBarStatic;
+    actRouteOnMap: TdsdPartnerMapAction;
   private
     { Private declarations }
   public

@@ -112,6 +112,44 @@ ALTER FUNCTION gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer
 */
 
 /*
+-- Œ¯Ë·Í‡ Ò ◊≈ ¿Ã» - — »ƒ ¿
+-- update MovementItemFloat set ValueData = tmp.new2  from (
+-- select lpInsertUpdate_MovementFloat_TotalSummCheck (tmp.Id) from (select distinct Movement.Id
+
+select MIFloat_SummChangePercent.*,  MovementItem.Amount * (COALESCE (MIFloat_PriceSale.ValueData, 0) - COALESCE (MIFloat_Price.ValueData, 0)) as new
+                                  , ROUND (MovementItem.Amount * (COALESCE (MIFloat_PriceSale.ValueData, 0) - COALESCE (MIFloat_Price.ValueData, 0)), 4) as new2
+-- , Movement.*, Object_Unit.*
+from Movement
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+
+     inner join MovementItem on MovementItem.MovementId = Movement.Id 
+                               and MovementItem.isErased = false
+           inner JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                        ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummChangePercent.DescId = zc_MIFloat_SummChangePercent()
+                                       AND MIFloat_SummChangePercent.ValueData <> 0
+
+            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
+            LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                        ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+
+where Movement.OperDate between '01.04.2017'  and '01.06.2017' 
+  and Movement.DescId = zc_Movement_Check()
+-- and MIFloat_SummChangePercent.ValueData <>  MovementItem.Amount * (COALESCE (MIFloat_PriceSale.ValueData, 0) - COALESCE (MIFloat_Price.ValueData, 0)) 
+and MIFloat_SummChangePercent.ValueData <>  ROUND (MovementItem.Amount * (COALESCE (MIFloat_PriceSale.ValueData, 0) - COALESCE (MIFloat_Price.ValueData, 0)) , 4)
+-- and MovementItem .Amount = 0
+
+ -- ) as tmp
+ -- where MovementItemFloat .MovementItemId = tmp.MovementItemId  and MovementItemFloat .DescId = tmp.DescId 
+
+
 select lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSale(), MovementItem.Id, MIFloat_Price.ValueData)
 , *
 from Movement

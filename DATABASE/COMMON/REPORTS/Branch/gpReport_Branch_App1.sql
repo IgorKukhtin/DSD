@@ -34,17 +34,18 @@ $BODY$
    DECLARE vbUserId Integer;
 
 BEGIN
-     vbUserId:= lpGetUserBySession (inSession);
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpGetUserBySession (inSession);
 
 
-    CREATE TEMP TABLE _tmpBranch (BranchId Integer) ON COMMIT DROP; 
+    -- CREATE TEMP TABLE _tmpBranch (BranchId Integer) ON COMMIT DROP; 
    
 
     -- Филиал
     IF COALESCE (inBranchId, 0) = 0 AND 0 < (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId)
     THEN
        RAISE EXCEPTION 'Ошибка. Не выбран Филиал.';
-    ELSE
+    /*ELSE
     IF COALESCE (inBranchId,0) = 0
     THEN
        INSERT INTO _tmpBranch (BranchId)
@@ -52,15 +53,19 @@ BEGIN
     ELSE
        INSERT INTO _tmpBranch (BranchId)
            SELECT inBranchId;
-    END IF;
+    END IF;*/
     END IF;
 
 
     -- Результат
      RETURN QUERY
    WITH 
-      -- выбираем склады возвратов (пока так), чтобы выделить движение                   
-         tmpUnitVz AS (SELECT Object_Unit_View.Id AS UnitVzId
+         _tmpBranch AS (SELECT Object.Id AS BranchId FROM Object WHERE Object.DescId = zc_Object_Branch() and Object.Id <> zc_Branch_Basis() and Object.isErased = False AND Object.ObjectCode not in (6,8,10)
+                                                                   AND COALESCE (inBranchId,0) = 0
+                  UNION SELECT inBranchId WHERE inBranchId <> 0
+                       )
+         -- выбираем склады возвратов (пока так), чтобы выделить движение                   
+       , tmpUnitVz AS (SELECT Object_Unit_View.Id AS UnitVzId
                         FROM Object_Unit_View 
                         WHERE Object_Unit_View.Name like '%возврат%'   --.Code in (22022, 22122, 22032, 22052, 22082, 22092, 22042)
                         )
