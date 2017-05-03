@@ -109,6 +109,8 @@ type
     N52: TMenuItem;
     actDiscountPeriodItem: TdsdOpenForm;
     N53: TMenuItem;
+    actInventory: TdsdOpenForm;
+    N54: TMenuItem;
   private
     { Private declarations }
   public

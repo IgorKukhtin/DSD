@@ -2,7 +2,7 @@
   Left = 202
   Top = 180
   Caption = 'MainForm'
-  ClientHeight = 528
+  ClientHeight = 571
   ClientWidth = 1172
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@
   object Splitter1: TSplitter
     Left = 685
     Top = 0
-    Height = 464
+    Height = 507
     Align = alRight
     ExplicitLeft = 683
     ExplicitTop = 32
@@ -28,7 +28,7 @@
     Left = 0
     Top = 0
     Width = 685
-    Height = 464
+    Height = 507
     Align = alClient
     DataSource = DataSource
     TabOrder = 0
@@ -40,7 +40,7 @@
   end
   object ButtonPanel: TPanel
     Left = 0
-    Top = 464
+    Top = 507
     Width = 1172
     Height = 64
     Align = alBottom
@@ -130,7 +130,7 @@
     Left = 688
     Top = 0
     Width = 484
-    Height = 464
+    Height = 507
     ActivePage = TabSheet1
     Align = alRight
     TabOrder = 2
@@ -140,7 +140,7 @@
         Left = -13
         Top = 0
         Width = 265
-        Height = 436
+        Height = 479
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 0
@@ -551,12 +551,44 @@
           TabOrder = 25
           WordWrap = True
         end
+        object cbPriceList: TCheckBox
+          Tag = 10
+          Left = 15
+          Top = 417
+          Width = 178
+          Height = 24
+          Caption = '1.24. '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 26
+          WordWrap = True
+        end
+        object cbPriceListItem: TCheckBox
+          Tag = 10
+          Left = 15
+          Top = 436
+          Width = 178
+          Height = 24
+          Caption = '1.25. '#1048#1089#1090#1086#1088#1080#1103' '#1094#1077#1085#1099
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 27
+          WordWrap = True
+        end
       end
       object DocumentPanel: TPanel
         Left = 252
         Top = 0
         Width = 224
-        Height = 436
+        Height = 479
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 1
@@ -686,7 +718,7 @@
         Left = 0
         Top = 0
         Width = 476
-        Height = 436
+        Height = 479
         Align = alClient
         TabOrder = 0
         object Label3: TLabel

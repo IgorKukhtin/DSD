@@ -1,7 +1,7 @@
 object DM: TDM
   OldCreateOrder = False
   OnCreate = DataModuleCreate
-  Height = 607
+  Height = 674
   Width = 1084
   object FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink
     Left = 40
@@ -326,6 +326,9 @@ object DM: TDM
     object tblObject_GoodsMeasureId: TIntegerField
       FieldName = 'MeasureId'
     end
+    object tblObject_GoodsTradeMarkId: TIntegerField
+      FieldName = 'TradeMarkId'
+    end
     object tblObject_GoodsisErased: TBooleanField
       FieldName = 'isErased'
     end
@@ -596,13 +599,19 @@ object DM: TDM
       Size = 400
       Calculated = True
     end
+    object qryPartnerFullName: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'FullName'
+      Size = 1000
+      Calculated = True
+    end
   end
   object qryPriceList: TFDQuery
     Connection = conMain
     SQL.Strings = (
       '')
     Left = 40
-    Top = 448
+    Top = 512
     object qryPriceListId: TIntegerField
       FieldName = 'Id'
     end
@@ -621,12 +630,12 @@ object DM: TDM
     OnCalcFields = qryGoodsForPriceListCalcFields
     Connection = conMain
     Left = 128
-    Top = 448
+    Top = 512
     object qryGoodsForPriceListId: TIntegerField
       FieldName = 'Id'
     end
-    object qryGoodsForPriceListOBJECTCODE: TIntegerField
-      FieldName = 'OBJECTCODE'
+    object qryGoodsForPriceListObjectCode: TIntegerField
+      FieldName = 'ObjectCode'
     end
     object qryGoodsForPriceListGoodsName: TStringField
       FieldName = 'GoodsName'
@@ -656,6 +665,16 @@ object DM: TDM
       FieldKind = fkCalculated
       FieldName = 'Termin'
       Size = 255
+      Calculated = True
+    end
+    object qryGoodsForPriceListTradeMarkName: TStringField
+      FieldName = 'TradeMarkName'
+      Size = 255
+    end
+    object qryGoodsForPriceListFullGoodsName: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'FullGoodsName'
+      Size = 600
       Calculated = True
     end
   end
@@ -828,6 +847,7 @@ object DM: TDM
     end
   end
   object qryGoodsItems: TFDQuery
+    OnCalcFields = qryGoodsItemsCalcFields
     FilterOptions = [foCaseInsensitive]
     Connection = conMain
     SQL.Strings = (
@@ -839,6 +859,9 @@ object DM: TDM
     end
     object qryGoodsItemsKindID: TIntegerField
       FieldName = 'KindID'
+    end
+    object qryGoodsItemsObjectCode: TIntegerField
+      FieldName = 'ObjectCode'
     end
     object qryGoodsItemsName: TStringField
       FieldName = 'GoodsName'
@@ -869,6 +892,16 @@ object DM: TDM
     object qryGoodsItemsSearchName: TWideStringField
       FieldName = 'SearchName'
       Size = 257
+    end
+    object qryGoodsItemsTradeMark: TStringField
+      FieldName = 'TradeMarkName'
+      Size = 255
+    end
+    object qryGoodsItemsFullGoodsName: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'FullGoodsName'
+      Size = 400
+      Calculated = True
     end
   end
   object tblMovement_Visit: TFDTable
@@ -952,6 +985,10 @@ object DM: TDM
     end
     object cdsOrderItemsKindName: TStringField
       FieldName = 'KindName'
+      Size = 255
+    end
+    object cdsOrderItemsTradeMarkName: TStringField
+      FieldName = 'TradeMarkName'
       Size = 255
     end
     object cdsOrderItemsPrice: TFloatField
@@ -1070,6 +1107,10 @@ object DM: TDM
     object cdsOrderExternalisOperDateOrder: TBooleanField
       FieldName = 'isOperDateOrder'
     end
+    object cdsOrderExternalPartnerFullName: TStringField
+      FieldName = 'PartnerFullName'
+      Size = 1000
+    end
   end
   object tblMovement_RouteMember: TFDTable
     Connection = conMain
@@ -1147,7 +1188,7 @@ object DM: TDM
     SQL.Strings = (
       '')
     Left = 40
-    Top = 392
+    Top = 456
     object qryPhotoGroupsId: TIntegerField
       FieldName = 'Id'
     end
@@ -1176,7 +1217,7 @@ object DM: TDM
     SQL.Strings = (
       '')
     Left = 216
-    Top = 392
+    Top = 456
     object qryPhotosId: TIntegerField
       FieldName = 'Id'
     end
@@ -1237,6 +1278,10 @@ object DM: TDM
     object cdsStoreRealsPriceListId: TIntegerField
       FieldName = 'PriceListId'
     end
+    object cdsStoreRealsPartnerFullName: TStringField
+      FieldName = 'PartnerFullName'
+      Size = 1000
+    end
   end
   object cdsStoreRealItems: TClientDataSet
     Aggregates = <>
@@ -1252,6 +1297,10 @@ object DM: TDM
     end
     object cdsStoreRealItemsKindName: TStringField
       FieldName = 'KindName'
+      Size = 255
+    end
+    object cdsStoreRealItemsTradeMarkName: TStringField
+      FieldName = 'TradeMarkName'
       Size = 255
     end
     object cdsStoreRealItemsCount: TFloatField
@@ -1515,6 +1564,10 @@ object DM: TDM
     object cdsReturnInChangePercent: TFloatField
       FieldName = 'ChangePercent'
     end
+    object cdsReturnInPartnerFullName: TStringField
+      FieldName = 'PartnerFullName'
+      Size = 1000
+    end
   end
   object cdsReturnInItems: TClientDataSet
     Aggregates = <>
@@ -1530,6 +1583,10 @@ object DM: TDM
     end
     object cdsReturnInItemsKindName: TStringField
       FieldName = 'KindName'
+      Size = 255
+    end
+    object cdsReturnInItemsTradeMarkName: TStringField
+      FieldName = 'TradeMarkName'
       Size = 255
     end
     object cdsReturnInItemsPrice: TFloatField
@@ -1555,7 +1612,7 @@ object DM: TDM
   object qryPromoPartners: TFDQuery
     Connection = conMain
     Left = 216
-    Top = 448
+    Top = 512
     object qryPromoPartnersPartnerName: TStringField
       FieldName = 'PartnerName'
       Size = 255
@@ -1579,9 +1636,10 @@ object DM: TDM
     end
   end
   object qryPromoGoods: TFDQuery
+    OnCalcFields = qryPromoGoodsCalcFields
     Connection = conMain
     Left = 304
-    Top = 448
+    Top = 512
     object qryPromoGoodsGoodsName: TStringField
       FieldName = 'GoodsName'
       Size = 255
@@ -1604,6 +1662,19 @@ object DM: TDM
     end
     object qryPromoGoodsPromoId: TIntegerField
       FieldName = 'PromoId'
+    end
+    object qryPromoGoodsObjectCode: TIntegerField
+      FieldName = 'ObjectCode'
+    end
+    object qryPromoGoodsTradeMarkName: TStringField
+      FieldName = 'TradeMarkName'
+      Size = 255
+    end
+    object qryPromoGoodsFullGoodsName: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'FullGoodsName'
+      Size = 400
+      Calculated = True
     end
   end
   object tblMovement_Task: TFDTable
@@ -1669,7 +1740,7 @@ object DM: TDM
     IndexFieldNames = 'DocType;DocDate'
     Params = <>
     Left = 40
-    Top = 536
+    Top = 600
     object cdsJuridicalCollationDocNum: TStringField
       FieldName = 'DocNum'
       Size = 200
@@ -1721,7 +1792,7 @@ object DM: TDM
     Aggregates = <>
     Params = <>
     Left = 128
-    Top = 536
+    Top = 600
     object cdsTasksId: TIntegerField
       FieldName = 'Id'
     end
@@ -1765,7 +1836,7 @@ object DM: TDM
     SQL.Strings = (
       '')
     Left = 128
-    Top = 392
+    Top = 456
     object qryPhotoGroupDocsId: TIntegerField
       FieldName = 'Id'
     end
@@ -1803,6 +1874,123 @@ object DM: TDM
       FieldKind = fkCalculated
       FieldName = 'GroupName'
       Size = 600
+      Calculated = True
+    end
+  end
+  object tblObject_TradeMark: TFDTable
+    Connection = conMain
+    UpdateOptions.UpdateTableName = 'Object_TradeMark'
+    TableName = 'Object_TradeMark'
+    Left = 528
+    Top = 392
+    object tblObject_TradeMarkId: TIntegerField
+      FieldName = 'Id'
+    end
+    object tblObject_TradeMarkObjectCode: TIntegerField
+      FieldName = 'ObjectCode'
+    end
+    object tblObject_TradeMarkValueData: TStringField
+      FieldName = 'ValueData'
+      Size = 255
+    end
+    object tblObject_TradeMarkisErased: TBooleanField
+      FieldName = 'isErased'
+    end
+  end
+  object tblMovement_Cash: TFDTable
+    Connection = conMain
+    UpdateOptions.UpdateTableName = 'Movement_Cash'
+    TableName = 'Movement_Cash'
+    Left = 960
+    Top = 384
+    object tblMovement_CashId: TAutoIncField
+      FieldName = 'Id'
+      ProviderFlags = [pfInWhere]
+      ReadOnly = True
+    end
+    object tblMovement_CashGUID: TStringField
+      FieldName = 'GUID'
+      Size = 255
+    end
+    object tblMovement_CashInvNumber: TStringField
+      FieldName = 'InvNumber'
+      Size = 255
+    end
+    object tblMovement_CashOperDate: TDateField
+      FieldName = 'OperDate'
+    end
+    object tblMovement_CashStatusId: TIntegerField
+      FieldName = 'StatusId'
+    end
+    object tblMovement_CashInsertDate: TDateTimeField
+      FieldName = 'InsertDate'
+    end
+    object tblMovement_CashAmount: TFloatField
+      FieldName = 'Amount'
+    end
+    object tblMovement_CashPaidKindId: TIntegerField
+      FieldName = 'PaidKindId'
+    end
+    object tblMovement_CashPartnerId: TIntegerField
+      FieldName = 'PartnerId'
+    end
+    object tblMovement_CashCashId: TIntegerField
+      FieldName = 'CashId'
+    end
+    object tblMovement_CashMemberId: TIntegerField
+      FieldName = 'MemberId'
+    end
+    object tblMovement_CashContractId: TIntegerField
+      FieldName = 'ContractId'
+    end
+    object tblMovement_CashComment: TStringField
+      FieldName = 'Comment'
+      Size = 255
+    end
+    object tblMovement_CashisSync: TBooleanField
+      FieldName = 'isSync'
+    end
+  end
+  object qryCash: TFDQuery
+    OnCalcFields = qryCashCalcFields
+    Connection = conMain
+    Left = 128
+    Top = 400
+    object qryCashId: TIntegerField
+      FieldName = 'Id'
+    end
+    object qryCashAmount: TFloatField
+      FieldName = 'Amount'
+    end
+    object qryCashComment: TStringField
+      FieldName = 'Comment'
+      Size = 255
+    end
+    object qryCashStatusId: TIntegerField
+      FieldName = 'StatusId'
+    end
+    object qryCashOperDate: TDateField
+      FieldName = 'OperDate'
+    end
+    object qryCashisSync: TBooleanField
+      FieldName = 'isSync'
+    end
+    object qryCashName: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'Name'
+      Size = 300
+      Calculated = True
+    end
+    object qryCashAmountShow: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'AmountShow'
+      Size = 200
+      Calculated = True
+    end
+    object qryCashStatus: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'Status'
+      Size = 255
       Calculated = True
     end
   end

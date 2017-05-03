@@ -1,4 +1,4 @@
-unit Income;
+unit Inventory;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   cxImageComboBox;
 
 type
-  TIncomeForm = class(TParentForm)
+  TInventoryForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -38,16 +38,7 @@ type
     actRefresh: TdsdDataSetRefresh;
     MasterDS: TDataSource;
     MasterCDS: TClientDataSet;
-    DataPanel: TPanel;
-    edInvNumber: TcxTextEdit;
-    cxLabel1: TcxLabel;
-    edOperDate: TcxDateEdit;
-    cxLabel2: TcxLabel;
-    edFrom: TcxButtonEdit;
-    edTo: TcxButtonEdit;
-    cxLabel3: TcxLabel;
-    cxLabel4: TcxLabel;
-    GuidesTo: TdsdGuides;
+    GuidesFrom: TdsdGuides;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
     cxPageControl: TcxPageControl;
@@ -85,7 +76,6 @@ type
     bbErased: TdxBarButton;
     bbUnErased: TdxBarButton;
     bbShowErased: TdxBarButton;
-    cxLabel11: TcxLabel;
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
     colIsErased: TcxGridDBColumn;
@@ -94,18 +84,8 @@ type
     UnCompleteMovement: TChangeGuidesStatus;
     CompleteMovement: TChangeGuidesStatus;
     DeleteMovement: TChangeGuidesStatus;
-    ceStatus: TcxButtonEdit;
     colMeasureName: TcxGridDBColumn;
-    GuidesFrom: TdsdGuides;
     spGetTotalSumm: TdsdStoredProc;
-    cxLabel12: TcxLabel;
-    edCurrencyValue: TcxCurrencyEdit;
-    cxLabel14: TcxLabel;
-    edCurrencyDocument: TcxButtonEdit;
-    CurrencyDocumentGuides: TdsdGuides;
-    cxLabel15: TcxLabel;
-    edCurrencyPartner: TcxButtonEdit;
-    CurrencyPartnerGuides: TdsdGuides;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
     MovementItemProtocolOpenForm: TdsdOpenForm;
@@ -114,35 +94,33 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
-    bbCalcAmountPartner: TdxBarControlContainerItem;
     spInsertMaskMIMaster: TdsdStoredProc;
     actAddMask: TdsdExecStoredProc;
     bbAddMask: TdxBarButton;
-    actGoodsChoiceForm: TOpenChoiceForm;
-    cxLabel16: TcxLabel;
-    ceComment: TcxTextEdit;
     bbInsertRecord: TdxBarButton;
     bbCompleteCost: TdxBarButton;
     bbactUnCompleteCost: TdxBarButton;
     bbactSetErasedCost: TdxBarButton;
     bbShowErasedCost: TdxBarButton;
-    cxLabel5: TcxLabel;
-    edCurrencyPartnerValue: TcxCurrencyEdit;
-    cxLabel6: TcxLabel;
-    ceParPartnerValue: TcxCurrencyEdit;
-    cxLabel7: TcxLabel;
-    ceParValue: TcxCurrencyEdit;
     bbUpdateRecord1: TdxBarButton;
-    actInsertAction1: TdsdInsertUpdateAction;
-    actUpdateAction1: TdsdInsertUpdateAction;
-    macInsertAction: TMultiAction;
     actRefreshMI: TdsdDataSetRefresh;
-    macUpdateAction: TMultiAction;
     colPartionId: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
-    dxBarStatic1: TdxBarStatic;
-    dxBarButton1: TdxBarButton;
-    actPrintIn: TdsdPrintAction;
+    DataPanel: TPanel;
+    edInvNumber: TcxTextEdit;
+    cxLabel1: TcxLabel;
+    edOperDate: TcxDateEdit;
+    cxLabel2: TcxLabel;
+    edFrom: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    cxLabel11: TcxLabel;
+    ceStatus: TcxButtonEdit;
+    InsertRecord: TInsertRecord;
+    actGoodsChoiceForm: TOpenChoiceForm;
+    cxLabel16: TcxLabel;
+    ceComment: TcxTextEdit;
+    actUpdateAmountRemains: TdsdExecStoredProc;
+    spUpdate_MI_Inventory_AmountRemains: TdsdStoredProc;
+    bb: TdxBarButton;
   private
   public
   end;
@@ -152,6 +130,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TIncomeForm);
+  RegisterClass(TInventoryForm);
 
 end.

@@ -190,7 +190,9 @@ uses
   PriceListTaxDialog in '..\..\FormsBoutique\Guides\PriceListTaxDialog.pas' {PriceListTaxDialogForm: TParentForm},
   DiscountPeriodItem in '..\..\FormsBoutique\Guides\DiscountPeriodItem.pas' {DiscountPeriodItemForm: TParentForm},
   DiscountPeriodGoodsItemEdit in '..\..\FormsBoutique\Guides\DiscountPeriodGoodsItemEdit.pas' {DiscountPeriodGoodsItemEditForm: TParentForm},
-  DiscountPeriodGoodsItem in '..\..\FormsBoutique\Guides\DiscountPeriodGoodsItem.pas' {DiscountPeriodGoodsItemForm: TParentForm};
+  DiscountPeriodGoodsItem in '..\..\FormsBoutique\Guides\DiscountPeriodGoodsItem.pas' {DiscountPeriodGoodsItemForm: TParentForm},
+  Inventory in '..\..\FormsBoutique\Document\Inventory.pas' {InventoryForm: TParentForm},
+  InventoryJournal in '..\..\FormsBoutique\Document\InventoryJournal.pas' {InventoryJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

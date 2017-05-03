@@ -12,8 +12,10 @@ $BODY$
   DECLARE vbMovementDescId Integer;
 
   DECLARE vbTotalCount TFloat;
+  DECLARE vbTotalCountRemains TFloat;
   DECLARE vbTotalSumm TFloat;
   DECLARE vbTotalSummPriceList TFloat;
+  DECLARE vbTotalSummRemainsPriceList TFloat;
 
 BEGIN
      IF COALESCE (inMovementId, 0) = 0
@@ -21,17 +23,22 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Элемент документа не сохранен.';
      END IF;
 
-     SELECT SUM(COALESCE(MovementItem.Amount, 0))
+     SELECT SUM(COALESCE(MovementItem.Amount, 0))             AS TotalCount
+          , SUM(COALESCE(MIFloat_AmountRemains.ValueData, 0)) AS TotalCountRemains
           , SUM(CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) <> 0
                            THEN CAST (COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
                      ELSE CAST ( COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0) AS NUMERIC (16, 2))
-                END)
+                END)  AS TotalSumm
           , SUM(CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) <> 0
                            THEN CAST (COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
                      ELSE CAST ( COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2))
-                END)
+                END)  AS TotalSummPriceList
+          , SUM(CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) <> 0
+                           THEN CAST (COALESCE(MIFloat_AmountRemains.ValueData, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
+                     ELSE CAST (COALESCE(MIFloat_AmountRemains.ValueData, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2))
+                END)  AS TotalSummRemainsPriceList
 
-    INTO vbTotalCount, vbTotalSumm, vbTotalSummPriceList
+    INTO vbTotalCount, vbTotalCountRemains, vbTotalSumm, vbTotalSummPriceList, vbTotalSummRemainsPriceList
        FROM MovementItem
             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
@@ -42,6 +49,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                         ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                        AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountRemains
+                                        ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountRemains.DescId = zc_MIFloat_AmountRemains()
                     
       WHERE MovementItem.MovementId = inMovementId 
         AND MovementItem.DescId     = zc_MI_Master()
@@ -53,6 +63,11 @@ BEGIN
       PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbTotalSumm);
       -- Сохранили свойство <Итого Сумма реализации>
       PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPriceList(), inMovementId, vbTotalSummPriceList);
+
+      -- Сохранили свойство <Итого количество остатка>
+      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCountRemains(), inMovementId, vbTotalCountRemains);
+      -- Сохранили свойство <Итого Сумма реализации остатка>
+      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummRemainsPriceList(), inMovementId, vbTotalSummRemainsPriceList);
 
 
 END;

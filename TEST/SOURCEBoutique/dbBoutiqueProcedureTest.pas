@@ -30,6 +30,7 @@ type
     procedure CreateSend;
     procedure CreateLoss;
     procedure CreateCurrency;
+    procedure CreateInventory;
   end;
 
 type
@@ -40,6 +41,7 @@ type
     procedure CreateReturnOut;
     procedure CreateSend;
     procedure CreateLoss;
+    procedure CreateInventory;
   end;
 
 type
@@ -51,7 +53,8 @@ type
     procedure CreateSend;
     procedure CreateLoss;
     procedure CreateCurrency;
-  end;
+    procedure CreateInventory;
+end;
 
 type
   TdbObjectProcedureTest = class(TdbTest)
@@ -176,6 +179,10 @@ end;
 procedure TdbMovementProcedureTest.CreateCurrency;
 begin
   DirectoryLoad(CommonProcedurePath + 'Movement\Currency\');
+end;
+procedure TdbMovementProcedureTest.CreateInventory;
+begin
+  DirectoryLoad(CommonProcedurePath + 'Movement\Inventory\');
 end;
 
 { TdbObjectProcedureTest }
@@ -414,6 +421,10 @@ procedure TdbMovementItemProcedureTest.CreateLoss;
 begin
   DirectoryLoad(CommonProcedurePath + 'MovementItem\Loss\');
 end;
+procedure TdbMovementItemProcedureTest.CreateInventory;
+begin
+  DirectoryLoad(CommonProcedurePath + 'MovementItem\Inventory\');
+end;
 { TdbMovementItemContainerProcedureTest }
 
 procedure TdbMovementItemContainerProcedureTest.CreateCOMMON;
@@ -438,9 +449,13 @@ begin
   DirectoryLoad(CommonProcedurePath + 'MovementItemContainer\Loss\');
 end;
 
-   procedure TdbMovementItemContainerProcedureTest.CreateCurrency;
+procedure TdbMovementItemContainerProcedureTest.CreateCurrency;
 begin
   DirectoryLoad(CommonProcedurePath + 'MovementItemContainer\Currency\');
+end;
+procedure TdbMovementItemContainerProcedureTest.CreateInventory;
+begin
+  DirectoryLoad(CommonProcedurePath + 'MovementItemContainer\Inventory\');
 end;
 initialization
 

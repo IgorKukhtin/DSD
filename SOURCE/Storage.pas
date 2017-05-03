@@ -48,10 +48,10 @@ type
 
 implementation
 
-uses IdHTTP, Xml.XMLDoc, XMLIntf, Classes, ZLibEx, idGlobal, UtilConst, Variants,
+uses IdHTTP, Xml.XMLDoc, XMLIntf, System.Classes, ZLibEx, idGlobal, UtilConst, System.Variants,
      UtilConvert, MessagesUnit, Dialogs, StrUtils, IDComponent, SimpleGauge,
      Forms, Log, IdStack, IdExceptionCore, SyncObjS, CommonData, System.AnsiStrings,
-     Datasnap.DBClient;
+     Datasnap.DBClient, System.Contnrs;
 
 const
 
@@ -60,6 +60,26 @@ const
    XMLStructureLenghtLenght = 10;
 
 type
+  TConnectionType = (ctMain, ctReport);
+
+  TConnection = class
+  private
+    FCString: string;
+    FCType: TConnectionType;
+  public
+    constructor Create(ACString: string; ACType: TConnectionType);
+    property CString: string read FCString;
+    property CType: TConnectionType read FCType;
+  end;
+
+  TConnectionList = class(TObjectList)
+  private
+    function GetConnection(Index: Integer): TConnection;
+    procedure SetConnection(Index: Integer; const Value: TConnection);
+  public
+    procedure AddFromFile(AFileName: string; AConnectionType: TConnectionType);
+    property Items[Index: Integer]: TConnection read GetConnection write SetConnection; default;
+  end;
 
   TStorage = class(TInterfacedObject, IStorage)
   strict private
@@ -69,6 +89,7 @@ type
     FConnection: String;
     FReportConnection: string;
     FConnections: TStringList;
+    FReportConnections: TStringList;
     FActiveConnection: Integer;
     IdHTTP: TIdHTTP;
     FSendList: TStringList;
@@ -151,22 +172,24 @@ begin
   if not Assigned(Instance) then begin
     Instance := TStorage(inherited NewInstance);
     Instance.FConnections := TStringList.Create;
+    Instance.FReportConnections := TStringList.Create;
     Instance.FReportList := TStringList.Create;
     Instance.FActiveConnection := 0;
     try
       StringList := TStringList.Create;
-      StringListRep:= TStringList.Create;
+      StringListRep := TStringList.Create;
       try
-        lConnectionPathRep:=ReplaceStr(ConnectionPath,'\init.php','\initRep.php');
+        lConnectionPathRep := ReplaceStr(ConnectionPath, '\init.php', '\initRep.php');
         //
         StringList.LoadFromFile(ConnectionPath);
-        if (lConnectionPathRep <> ConnectionPath) and (FileExists(lConnectionPathRep) = TRUE) then StringListRep.LoadFromFile(lConnectionPathRep);
+        if (lConnectionPathRep <> ConnectionPath) and FileExists(lConnectionPathRep) then
+          StringListRep.LoadFromFile(lConnectionPathRep);
         //
         //составление списка возможных альтернативных серверов - ОСНОВНОЙ
         StartPHP := False;
         for i := 0 to StringList.Count - 1 do
         begin
-           if not StartPHP and (Pos('<?php', StringList[i]) = 1) then
+          if not StartPHP and (Pos('<?php', StringList[i]) = 1) then
             StartPHP := True
           else
           if StartPHP and (Pos('?>', StringList[i]) = 1) then
@@ -190,7 +213,7 @@ begin
         ReportConnectionString := '';
         for i := 0 to StringListRep.Count - 1 do
         begin
-           if not StartPHP and (Pos('<?php', StringListRep[i]) = 1) then
+          if not StartPHP and (Pos('<?php', StringListRep[i]) = 1) then
             StartPHP := True
           else
           if StartPHP and (Pos('?>', StringListRep[i]) = 1) then
@@ -200,19 +223,20 @@ begin
             if StartPHP and (Pos('$host', StringListRep[i]) > 0) then
             begin
               ReportConnectionString := AnsiDequotedStr(Trim(StringListRep.ValueFromIndex[i]), '"');
-              //Instance.FReportConnection.Add(Trim(ReportConnectionString));
+              Instance.FReportConnections.Add(Trim(ReportConnectionString));
             end else
             if not StartPHP then
             begin
-               ReportConnectionString := Trim(StringListRep[0]);
-              //Instance.FReportConnection.Add(Trim(StringListRep[i]));
+              Instance.FReportConnections.Add(Trim(StringListRep[i]));
             end;
           end;
         end;
         //
         if Instance.FConnections.Count = 0 then
           Instance.FConnections.Add('http://localhost/dsd/index.php');
-        ConnectionString := Instance.FConnections.Strings[0];
+        ConnectionString := Instance.FConnections[0];
+        if Instance.FReportConnections.Count > 0 then
+          ReportConnectionString := Instance.FReportConnections[0];
         //
         if ReportConnectionString = '' then
           ReportConnectionString := ConnectionString;
@@ -540,6 +564,69 @@ constructor EStorageException.Create(AMessage: String; AErrorCode: String = '');
 begin
   inherited Create(AMessage);
   ErrorCode := AErrorCode;
+end;
+
+{ TConnection }
+
+constructor TConnection.Create(ACString: string; ACType: TConnectionType);
+begin
+  inherited Create;
+  FCString := ACString;
+  FCType := ACType;
+end;
+
+{ TConnectionList }
+
+procedure TConnectionList.AddFromFile(AFileName: string; AConnectionType: TConnectionType);
+var
+  InitList: TStringList;
+  StartPHP: Boolean;
+  I: Integer;
+  ConnectionString: string;
+begin
+  if FileExists(AFileName) then
+  begin
+    InitList := TStringList.Create;
+
+    try
+      InitList.LoadFromFile(AFileName);
+      StartPHP := False;
+
+      for I := 0 to InitList.Count - 1 do
+      begin
+        if not StartPHP and (Pos('<?php', InitList[I]) = 1) then
+          StartPHP := True
+        else
+        if StartPHP and (Pos('?>', InitList[I]) = 1) then
+          StartPHP := False
+        else
+        begin
+          ConnectionString := '';
+
+          if StartPHP and (Pos('$host', InitList[I]) > 0) then
+            ConnectionString := Trim(AnsiDequotedStr(Trim(InitList.ValueFromIndex[I]), '"'))
+          else
+          if not StartPHP then
+            ConnectionString := Trim(InitList[I]);
+
+          if ConnectionString <> '' then
+            Add(TConnection.Create(ConnectionString, AConnectionType));
+        end;
+      end;
+    finally
+      InitList.Free;
+    end;
+  end;
+end;
+
+function TConnectionList.GetConnection(Index: Integer): TConnection;
+begin
+  Result := inherited GetItem(Index) as TConnection;
+end;
+
+procedure TConnectionList.SetConnection(Index: Integer; const Value: TConnection);
+begin
+  inherited SetItem(Index, Value);
 end;
 
 initialization
