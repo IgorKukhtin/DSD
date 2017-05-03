@@ -4,27 +4,26 @@ inherited VisitForm: TVisitForm
   ClientWidth = 1011
   AddOnFormData.RefreshAction = actRefreshEx
   ExplicitWidth = 1027
-  ExplicitHeight = 487
+  ExplicitHeight = 488
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 76
     Width = 1011
     Height = 373
-    ExplicitTop = 76
+    ExplicitTop = 50
     ExplicitWidth = 1011
-    ExplicitHeight = 373
+    ExplicitHeight = 399
     ClientRectBottom = 373
     ClientRectRight = 1011
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1011
-      ExplicitHeight = 349
+      ExplicitHeight = 375
       inherited cxGrid: TcxGrid
         Width = 1011
         Height = 349
-        ExplicitLeft = 8
         ExplicitWidth = 1011
-        ExplicitHeight = 349
+        ExplicitHeight = 375
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -404,6 +403,20 @@ inherited VisitForm: TVisitForm
       DataSet = MasterCDS
       Column = PhotoData
     end
+    object actAllPhotoOnMap: TdsdPartnerMapAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1082#1086#1086#1088#1076#1080#1085#1072#1090#1099' '#1092#1086#1090#1086#1075#1088#1072#1092#1080#1081' '#1085#1072' '#1082#1072#1088#1090#1077
+      ImageIndex = 61
+      FormName = 'TPartnerMapForm'
+      FormNameParam.Value = 'TPartnerMapForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = True
+      MapType = acShowAll
+      DataSet = MasterCDS
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -512,7 +525,16 @@ inherited VisitForm: TVisitForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAllPhotoOnMap'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
         end>
+      Visible = True
     end
     inherited bbRefresh: TdxBarButton
       Action = actRefreshEx
@@ -524,6 +546,16 @@ inherited VisitForm: TVisitForm
     object bbInsertRecord: TdxBarButton
       Action = InsertRecord
       Category = 0
+    end
+    object bbAllPhotoOnMap: TdxBarButton
+      Action = actAllPhotoOnMap
+      Category = 0
+    end
+    object dxBarStatic1: TdxBarStatic
+      Caption = '    '
+      Category = 0
+      Hint = '    '
+      Visible = ivAlways
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -620,8 +652,8 @@ inherited VisitForm: TVisitForm
     Top = 552
   end
   inherited StatusGuides: TdsdGuides
-    Left = 212
-    Top = 12
+    Left = 204
+    Top = 108
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Visit'
@@ -656,8 +688,8 @@ inherited VisitForm: TVisitForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 288
-    Top = 12
+    Left = 280
+    Top = 100
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Visit'
