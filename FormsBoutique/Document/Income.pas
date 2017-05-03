@@ -140,6 +140,9 @@ type
     macUpdateAction: TMultiAction;
     colPartionId: TcxGridDBColumn;
     colJuridicalName: TcxGridDBColumn;
+    dxBarStatic1: TdxBarStatic;
+    dxBarButton1: TdxBarButton;
+    actPrintIn: TdsdPrintAction;
   private
   public
   end;
