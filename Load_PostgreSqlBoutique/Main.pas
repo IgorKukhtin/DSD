@@ -223,6 +223,7 @@ type
     function  pLoadDocument_Loss:Integer;
     procedure pLoadDocumentItem_Loss(SaveCount:Integer);
     procedure pLoadDocuments_PriceListItem;
+    procedure pLoadDocuments_DiscountPeriodItem;
 
 
 // Load from files *.dat
@@ -231,7 +232,6 @@ type
     procedure myEnabledCB (cb:TCheckBox);
     procedure myDisabledCB (cb:TCheckBox);
     procedure HideCurGrid(AVisible: BOOL);
-    procedure pLoadGuide_PriceListItem;
   public
   end;
 
@@ -1826,6 +1826,7 @@ begin
      if not fStop then myRecordCount1:=pLoadDocument_Loss;
      if not fStop then pLoadDocumentItem_Loss(myRecordCount1);
      if not fStop then pLoadDocuments_PriceListItem;
+     if not fStop then pLoadDocuments_DiscountPeriodItem;
 
 
      //
@@ -4303,6 +4304,78 @@ begin
      myDisabledCB(cbPriceList);
 end;
 
+procedure TMainForm.pLoadDocuments_DiscountPeriodItem;
+begin
+     if (not cbDiscountPeriodItem.Checked)or(not cbDiscountPeriodItem.Enabled) then exit;
+     //
+     myEnabledCB(cbDiscountPeriodItem);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select');
+        Add('  DiscountTaxItems.Id as ObjectId');
+        Add(', Unit.Id_Postgres   as UnitId');
+        Add(', BillItemsIncome.GoodsId_Postgres as GoodsID');
+        Add(', DiscountTaxItems.StartDate as OperDate');
+        Add(', DiscountTaxItems.PercentTax as Value');
+        Add(', DiscountTaxItems.Id_Postgres');
+        Add('from DBA.DiscountTaxItems');
+        Add('left join Unit on Unit.id = DiscountTaxItems.UnitID');
+        Add('left join BillItemsIncome on BillItemsIncome.ID= DiscountTaxItems.BillItemsIncomeID');
+        Add('where  BillItemsIncome.GoodsId_Postgres is not null');  // Эта строка только для тестирования в реальной загрузке удалить
+        Add('order by  StartDate');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_ObjectHistory_DiscountPeriodItemLast';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inUnitId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inValue',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inIsLast',ftBoolean,ptInput, True);
+        //
+        HideCurGrid(True);
+        while not EOF do
+        begin
+
+             //!!!
+             if fStop then begin HideCurGrid(False); exit;end;
+
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inUnitId').Value:=FieldByName('UnitId').AsString;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsString;
+             toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsString;
+             toStoredProc.Params.ParamByName('inValue').Value:=FieldByName('Value').AsString;
+             //
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.DiscountTaxItems set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        HideCurGrid(False);
+     end;
+     //
+     myDisabledCB(cbDiscountPeriodItem);
+end;
+
+
 procedure TMainForm.pLoadDocuments_PriceListItem;
 begin
      if (not cbPriceListItem.Checked)or(not cbPriceListItem.Enabled) then exit;
@@ -4316,10 +4389,7 @@ begin
         Add('  PriceListItems.Id as ObjectId');
         Add(', PriceList.Id_Postgres as PriceListID');
         Add(', BillItemsIncome.GoodsId_Postgres as GoodsId ');
-// Удалить       Add(', date(PriceListItems.ProtocolDate) as OperDate');
         Add(', PriceListItems.StartDate as OperDate');
-        Add(', PriceListItems.StartDate as StartDate');
-        Add(', PriceListItems.EndDate as EndDate');
         Add(', PriceListItems.NewPrice as Value');
         Add(', PriceListItems.Id_Postgres');
         Add('from DBA.PriceListItems');
@@ -4360,7 +4430,6 @@ begin
              //
 
              if not myExecToStoredProc then ;//exit;
-// Удалить   if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.PriceListItems set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
