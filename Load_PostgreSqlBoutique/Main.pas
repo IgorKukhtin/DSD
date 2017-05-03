@@ -122,6 +122,7 @@ type
     cbSend: TCheckBox;
     cbLoss: TCheckBox;
     cbPriceList: TCheckBox;
+    cbDiscountPeriodItem: TCheckBox;
     cbPriceListItem: TCheckBox;
 
     procedure OKGuideButtonClick(Sender: TObject);
@@ -210,7 +211,6 @@ type
     procedure pLoadGuide_Client;
     procedure pLoadGuide_Juridical;
     procedure pLoadGuide_PriceList;
-    procedure pLoadGuide_PriceListItem;
 
 // Documents
     function  pLoadDocument_Income:Integer;
@@ -221,6 +221,7 @@ type
     procedure pLoadDocumentItem_Send(SaveCount:Integer);
     function  pLoadDocument_Loss:Integer;
     procedure pLoadDocumentItem_Loss(SaveCount:Integer);
+    procedure pLoadDocuments_PriceListItem;
 
 
 // Load from files *.dat
@@ -229,6 +230,7 @@ type
     procedure myEnabledCB (cb:TCheckBox);
     procedure myDisabledCB (cb:TCheckBox);
     procedure HideCurGrid(AVisible: BOOL);
+    procedure pLoadGuide_PriceListItem;
   public
   end;
 
@@ -1746,7 +1748,7 @@ begin
      if not fStop then pLoadGuide_Client;
      if not fStop then pLoadGuide_Juridical;
      if not fStop then pLoadGuide_PriceList;
-     if not fStop then pLoadGuide_PriceListItem;
+
 
 
 
@@ -1812,6 +1814,7 @@ begin
      if not fStop then pLoadDocumentItem_Send(myRecordCount1);
      if not fStop then myRecordCount1:=pLoadDocument_Loss;
      if not fStop then pLoadDocumentItem_Loss(myRecordCount1);
+     if not fStop then pLoadDocuments_PriceListItem;
 
 
      //
@@ -1881,7 +1884,7 @@ begin
         try fExecSqFromQuery_noErr('alter table dba.Brand add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Firma add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.PriceList add Id_Postgres integer null;'); except end;
-        try fExecSqFromQuery_noErr('alter table dba.PriceListItems add Id_Postgres integer null;'); except end;
+
 
 
      end;
@@ -1895,6 +1898,8 @@ begin
         try fExecSqFromQuery_noErr('alter table dba.BillItems add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.BillItemsIncome add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.BillItemsIncome add GoodsId_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.PriceListItems add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.DiscountTaxItems add Id_Postgres integer null;'); except end;
      end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1946,7 +1951,7 @@ begin
       fExecSqFromQuery('update dba.Firma set Id_Postgres = null ');
       //
       fExecSqFromQuery('update dba.PriceList set Id_Postgres = null ');
-      fExecSqFromQuery('update dba.PriceListItems set Id_Postgres = null ');
+
 
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1956,7 +1961,8 @@ begin
      fExecSqFromQuery('update dba.BillItems set Id_Postgres = null where Id_Postgres is not null');
      fExecSqFromQuery('update dba.BillItemsIncome set Id_Postgres = null where Id_Postgres is not null');
      fExecSqFromQuery('update dba.BillItemsIncome set GoodsId_Postgres = null where GoodsId_Postgres is not null');
-
+     fExecSqFromQuery('update dba.PriceListItems set Id_Postgres = null ');
+     fExecSqFromQuery('update dba.DiscountTaxItems set Id_Postgres = null ');
 //     fExecSqFromQuery('update dba.BillItemsReceipt set Id_Postgres = null where Id_Postgres is not null');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2336,6 +2342,8 @@ begin
      //
      myDisabledCB(cbSend);
 end;
+
+
 
 function TMainForm.pLoadDocument_Income: Integer;
 begin
@@ -4286,7 +4294,7 @@ begin
      myDisabledCB(cbPriceList);
 end;
 
-procedure TMainForm.pLoadGuide_PriceListItem;
+procedure TMainForm.pLoadDocuments_PriceListItem;
 begin
      if (not cbPriceListItem.Checked)or(not cbPriceListItem.Enabled) then exit;
      //
@@ -4299,8 +4307,9 @@ begin
         Add('  PriceListItems.Id as ObjectId');
         Add(', PriceList.Id_Postgres as PriceListID');
         Add(', BillItemsIncome.GoodsId_Postgres as GoodsId ');
-        Add(', date(PriceListItems.ProtocolDate) as OperDate');
-        Add(', PriceListItems.StartDate as StatrDate');
+// Удалить       Add(', date(PriceListItems.ProtocolDate) as OperDate');
+        Add(', PriceListItems.StartDate as OperDate');
+        Add(', PriceListItems.StartDate as StartDate');
         Add(', PriceListItems.EndDate as EndDate');
         Add(', PriceListItems.NewPrice as Value');
         Add(', PriceListItems.Id_Postgres');
@@ -4308,7 +4317,7 @@ begin
         Add('left join PriceList on PriceList.id = PriceListItems.PriceListID');
         Add('left join BillItemsIncome on BillItemsIncome.GoodsID= PriceListItems.goodsid');
         Add('where  BillItemsIncome.GoodsId_Postgres is not null'); // Эта строка только для тестирования в реальной загрузке удалить
-        Add('order by  ObjectId');
+        Add('order by StartDate');
         Open;
         //
         fStop:=cbOnlyOpen.Checked;
