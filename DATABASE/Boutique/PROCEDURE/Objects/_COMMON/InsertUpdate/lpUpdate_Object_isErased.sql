@@ -39,7 +39,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpUpdate_Object_isErased (Integer, Integer) OWNER TO postgres;
+ALTER FUNCTION lpUpdate_Object_isErased (Integer, Boolean, Integer) OWNER TO postgres;
 
 
 /*
