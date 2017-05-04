@@ -668,7 +668,6 @@ type
     bSaveCash: TButton;
     bCancelCash: TButton;
     eCashAmount: TEdit;
-    lCashDate: TLabel;
     Panel38: TPanel;
     Panel39: TPanel;
     Label86: TLabel;
@@ -679,6 +678,9 @@ type
     LinkListControlToFieldCash: TLinkListControlToField;
     tiCashDocs: TTabItem;
     lwCashDocs: TListView;
+    Panel42: TPanel;
+    Label85: TLabel;
+    deCashDate: TDateEdit;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -1172,6 +1174,21 @@ begin
     begin
       Key := 0;
 
+      if pProgress.Visible then
+        exit
+      else
+      if ppEnterAmount.IsOpen then
+        ppEnterAmount.IsOpen := false
+      else
+      if ppPartner.IsOpen then
+        ppPartner.IsOpen := false
+      else
+      if pTemporaryServerPassword.Visible then
+        bCancelPasswordClick(bCancelPassword)
+      else
+      if pEnterMovmentCash.Visible then
+        bCancelCashClick(bCancelCash)
+      else
       if pNewPhotoGroup.Visible then
         bCanclePGClick(bCanclePG)
       else
@@ -2405,7 +2422,7 @@ begin
   if New then
   begin
     FOldCashId := -1;
-    lCashDate.Text := 'Оплата от ' + FormatDateTime('DD.MM.YYYY', Date());
+    deCashDate.Date := Date();
     eCashAmount.Text := '';
     eCashComment.Text := '';
     FCanEditDocument := true;
@@ -2413,7 +2430,7 @@ begin
   else
   begin
     FOldCashId := DM.qryCashId.AsInteger;
-    lCashDate.Text := 'Оплата от ' + FormatDateTime('DD.MM.YYYY', DM.qryCashOperDate.AsDateTime);
+    deCashDate.Date := DM.qryCashOperDate.AsDateTime;
     eCashAmount.Text := FormatFloat(',0.##', DM.qryCashAmount.AsFloat);
     eCashComment.Text := DM.qryCashComment.AsString;
     FCanEditDocument := not DM.qryCashisSync.AsBoolean;
@@ -3154,7 +3171,19 @@ procedure TfrmMain.bSaveCashClick(Sender: TObject);
 begin
   if FCanEditDocument then
   begin
-    DM.SaveCash(FOldCashId, StrToFloat(eCashAmount.Text), eCashComment.Text);
+    if Trim(eCashAmount.Text) = '' then
+    begin
+      ShowMessage('Необходимо ввести сумму оплаты');
+      exit;
+    end;
+
+    if StrToFloatDef(eCashAmount.Text, 0) = 0 then
+    begin
+      ShowMessage('Необходимо ввести корректную сумму оплаты больше 0');
+      exit;
+    end;
+
+    DM.SaveCash(FOldCashId, deCashDate.Date, StrToFloat(eCashAmount.Text), eCashComment.Text);
 
     DM.qryCash.Refresh;
 
@@ -3912,6 +3941,9 @@ begin
     gc_User := TUser.Create(DM.tblObject_ConstUserLogin.AsString, DM.tblObject_ConstUserPassword.AsString);
     gc_WebServers := DM.tblObject_ConstWebService.AsString.Split([';']);
     gc_WebService := gc_WebServers[0];
+
+    if FTemporaryServer = '' then
+      FTemporaryServer := gc_WebServers[0];
 
     WebServerLayout1.Height := 0;
     WebServerLayout2.Height := 0;
