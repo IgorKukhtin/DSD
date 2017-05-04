@@ -6,7 +6,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1382
-  ExplicitHeight = 572
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -57,11 +57,6 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
               Format = ',0.####'
               Kind = skSum
               Column = RemainsEnd
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = CountOnDay
             end
             item
               Format = ',0.####'
@@ -270,11 +265,6 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = CountDays
             end
             item
               Format = ',0.####'
@@ -355,11 +345,6 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountOnDay
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = CountProductionOut
             end
             item
@@ -564,11 +549,6 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = CountDays
             end
             item
               Format = ',0.####'
@@ -866,7 +846,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 98
-      EditValue = 42005d
+      EditValue = 42736d
       Properties.SaveTime = False
       ExplicitLeft = 98
       ExplicitWidth = 79
@@ -874,7 +854,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
     end
     inherited deEnd: TcxDateEdit
       Left = 294
-      EditValue = 42005d
+      EditValue = 42736d
       Properties.SaveTime = False
       ExplicitLeft = 294
       ExplicitWidth = 81

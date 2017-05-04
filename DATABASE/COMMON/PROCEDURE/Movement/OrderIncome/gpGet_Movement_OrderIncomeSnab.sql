@@ -23,7 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , Comment TVarChar
              , OperDateStart TDateTime
              , OperDateEnd TDateTime
-             , DayCount TFloat
+             , DayCount Integer
               )
 AS
 $BODY$
@@ -58,8 +58,8 @@ BEGIN
              , Object_CurrencyDocument.Id                 AS CurrencyDocumentId	-- грн
              , Object_CurrencyDocument.ValueData          AS CurrencyDocumentName
 
-             , Object_To.Id                               AS UnitId
-             , Object_To.ValueData                        AS UnitName
+             , Object_Unit.Id                               AS UnitId
+             , Object_Unit.ValueData                        AS UnitName
 
              , 0                                          AS JuridicalId
              , CAST ('' as TVarChar)                      AS JuridicalName
@@ -72,11 +72,13 @@ BEGIN
 
              , DATE_TRUNC ('MONTH', inOperDate)   ::TDateTime    AS OperDateStart
              , (DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')  ::TDateTime AS OperDateEnd
-             , CAST (30 as TFloat)                        AS DayCount
+             , (DATE_PART ('DAY', (DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')  ::TDateTime
+                                - DATE_TRUNC ('MONTH', inOperDate)
+                         ) + 1) :: Integer                AS DayCount
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
                LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = zc_Enum_Currency_Basis()
-               LEFT JOIN Object AS Object_To ON Object_To.Id = 8455 -- Склад специй
+               LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = 8455 -- Склад специй
           ;
 
      ELSE
@@ -117,7 +119,7 @@ BEGIN
 
            , COALESCE (MovementDate_OperDateStart.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate)) ::TDateTime  AS OperDateStart
            , COALESCE (MovementDate_OperDateEnd.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY') ::TDateTime  AS OperDateEnd
-           , COALESCE (MovementFloat_DayCount.ValueData, 30)  ::TFloat  AS DayCount
+           , COALESCE (MovementFloat_DayCount.ValueData, 0)  ::Integer  AS DayCount
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
