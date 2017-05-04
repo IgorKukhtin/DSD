@@ -298,16 +298,19 @@ BEGIN
                END  :: TFloat AS RemainsDaysWithOrder
 
              , vbCountDays
-             , CASE WHEN tmpMI.AmountForecast <= 0 AND tmpMI.AmountRemainsEnd <> 0
-                    THEN zc_Color_Black()
-                    WHEN COALESCE (tmpMI.AmountForecast, 0) <= 0 AND COALESCE (tmpMI.AmountRemainsEnd, 0) = 0
-                    THEN zc_Color_Black()
-                    WHEN (CASE WHEN tmpMI.AmountRemainsEnd <> 0 AND (tmpMI.AmountForecast/vbCountDays) <> 0
-                          THEN COALESCE(tmpMI.AmountRemainsEnd,0) / (tmpMI.AmountForecast/vbCountDays)
-                          ELSE 0 END) > 29.9
-                    THEN zc_Color_Black()
-                    ELSE zc_Color_Red()
-               END  :: integer AS Color_RemainsDays
+             , CASE WHEN COALESCE(tmpMI.AmountOrder,0) > 0 THEN 25088  -- зеленый
+                    ELSE
+                    CASE WHEN tmpMI.AmountForecast <= 0 AND tmpMI.AmountRemainsEnd <> 0
+                         THEN zc_Color_Black()
+                         WHEN COALESCE (tmpMI.AmountForecast, 0) <= 0 AND COALESCE (tmpMI.AmountRemainsEnd, 0) = 0
+                         THEN zc_Color_Black()
+                         WHEN (CASE WHEN tmpMI.AmountRemainsEnd <> 0 AND (tmpMI.AmountForecast/vbCountDays) <> 0
+                               THEN COALESCE(tmpMI.AmountRemainsEnd,0) / (tmpMI.AmountForecast/vbCountDays)
+                               ELSE 0 END) > 29.9
+                         THEN zc_Color_Black()
+                         ELSE zc_Color_Red()
+                    END 
+               END :: integer AS Color_RemainsDays
 
              , tmpMI.Comment
              , tmpMI.isErased
@@ -323,7 +326,6 @@ BEGIN
             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = tmpMI.GoodsId
                                                   AND tmpObject_GoodsPropertyValue.Name <> ''
             LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpMI.GoodsId
-
 ;
 
      ELSE
@@ -467,16 +469,19 @@ BEGIN
 
              , vbCountDays
 
-             , CASE WHEN tmpMI.AmountForecast <= 0 AND tmpMI.AmountRemainsEnd <> 0
-                    THEN zc_Color_Black()
-                    WHEN COALESCE (tmpMI.AmountForecast, 0) <= 0 AND COALESCE (tmpMI.AmountRemainsEnd, 0) = 0
-                    THEN zc_Color_Black()
-                    WHEN (CASE WHEN tmpMI.AmountRemainsEnd <> 0 AND (tmpMI.AmountForecast/vbCountDays) <> 0
-                          THEN COALESCE(tmpMI.AmountRemainsEnd,0) / (tmpMI.AmountForecast/vbCountDays)
-                          ELSE 0 END) > (vbDayCount - 0.1)
-                    THEN zc_Color_Black()
-                    ELSE zc_Color_Red()
-               END  :: integer AS Color_RemainsDays
+             , CASE WHEN COALESCE(tmpMI.AmountOrder,0) > 0 THEN 25088  -- зеленый
+                    ELSE
+                    CASE WHEN tmpMI.AmountForecast <= 0 AND tmpMI.AmountRemainsEnd <> 0
+                         THEN zc_Color_Black()
+                         WHEN COALESCE (tmpMI.AmountForecast, 0) <= 0 AND COALESCE (tmpMI.AmountRemainsEnd, 0) = 0
+                         THEN zc_Color_Black()
+                         WHEN (CASE WHEN tmpMI.AmountRemainsEnd <> 0 AND (tmpMI.AmountForecast/vbCountDays) <> 0
+                               THEN COALESCE(tmpMI.AmountRemainsEnd,0) / (tmpMI.AmountForecast/vbCountDays)
+                               ELSE 0 END) > (vbDayCount - 0.1)
+                         THEN zc_Color_Black()
+                         ELSE zc_Color_Red()
+                    END 
+                END :: integer AS Color_RemainsDays 
 
              , tmpMI.Comment 
              , tmpMI.isErased
@@ -509,3 +514,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_MI_OrderIncomeSnab (0, FALSE, FALSE, zfCalc_UserAdmin());
+--select * from gpSelect_MI_OrderIncomeSnab(inMovementId := 5812842 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '5');

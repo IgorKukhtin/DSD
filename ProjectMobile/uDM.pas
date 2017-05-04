@@ -729,7 +729,7 @@ type
     procedure LoadPhotoGroups;
     procedure LoadAllPhotoGroups(AStartDate, AEndDate: TDate);
 
-    procedure SaveCash(AId: integer; AAmount: Double; AComment: string);
+    procedure SaveCash(AId: integer; OperDate: TDate; AAmount: Double; AComment: string);
     procedure LoadCash;
     procedure LoadAllCash(AStartDate, AEndDate: TDate);
 
@@ -4703,7 +4703,7 @@ begin
 end;
 
 { сохранение прихода денег в БД }
-procedure TDM.SaveCash(AId: integer; AAmount: Double; AComment: string);
+procedure TDM.SaveCash(AId: integer; OperDate: TDate; AAmount: Double; AComment: string);
 var
   GlobalId: TGUID;
   NewInvNumber: string;
@@ -4720,7 +4720,7 @@ begin
       CreateGUID(GlobalId);
       tblMovement_CashGUID.AsString := GUIDToString(GlobalId);
       tblMovement_CashInvNumber.AsString := NewInvNumber;
-      tblMovement_CashOperDate.AsDateTime := Date();
+      tblMovement_CashOperDate.AsDateTime := OperDate;
       tblMovement_CashStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
       tblMovement_CashInsertDate.AsDateTime := Now();
       tblMovement_CashAmount.AsFloat := AAmount;

@@ -1,9 +1,11 @@
 -- Function: gpUpdate_Object_isErased_Currency (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Currency (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Currency (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_isErased_Currency(
     IN inObjectId Integer, 
+    IN inIsErased Boolean,
     IN inSession  TVarChar
 )
 RETURNS VOID
@@ -16,7 +18,7 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- изменили
-   PERFORM lpUpdate_Object_isErased (inObjectId:= inObjectId, inUserId:= vbUserId);
+   PERFORM lpUpdate_Object_isErased (inObjectId:= inObjectId, inIsErased:=inIsErased, inUserId:= vbUserId);
 
 END;
 $BODY$
@@ -25,6 +27,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+04.05.17                                                          *
 02.03.17                                                          *
 19.02.17                                                          *
 */

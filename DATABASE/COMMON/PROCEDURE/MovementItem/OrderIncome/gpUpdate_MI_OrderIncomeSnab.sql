@@ -175,8 +175,14 @@ BEGIN
                                                              ON MILinkObject_Goods.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
                             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MILinkObject_Goods.ObjectId
+
+                            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Income
+                                                           ON MovementLinkMovement_Income.MovementChildId = Movement.Id
+                                                          AND MovementLinkMovement_Income.DescId = zc_MovementLinkMovement_Order()
+
                        WHERE Movement.DescId = zc_Movement_OrderIncome()
                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                         AND MovementLinkMovement_Income.MovementId IS NULL   --  берем только те заявки, у которых нет связи с zc_Movement_Income
                        GROUP BY MILinkObject_Goods.ObjectId
                        )
  
@@ -245,6 +251,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.05.17         *
  18.04.17         *
 */
 

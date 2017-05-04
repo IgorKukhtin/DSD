@@ -1,9 +1,12 @@
 -- Function: gpUpdate_Object_isErased_City (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_City (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_City (Integer, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_isErased_City(
-    IN inObjectId Integer, 
+    IN inObjectId Integer,
+    IN inIsErased Boolean,
     IN inSession  TVarChar
 )
 RETURNS VOID
@@ -16,7 +19,7 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- изменили
-   PERFORM lpUpdate_Object_isErased (inObjectId:= inObjectId, inUserId:= vbUserId);
+   PERFORM lpUpdate_Object_isErased (inObjectId:= inObjectId, inIsErased:=inIsErased, inUserId:= vbUserId);
 
 END;
 $BODY$
