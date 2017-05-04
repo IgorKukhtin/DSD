@@ -504,7 +504,8 @@ uses
   GoodsSP_Object in '..\..\FormsFarmacy\Guides\GoodsSP_Object.pas' {GoodsSP_ObjectForm: TParentForm},
   Check_SPEdit in '..\..\FormsFarmacy\Document\Check_SPEdit.pas' {Check_SPEditForm: TParentForm},
   Report_MovementPriceList_Cross in '..\..\FormsFarmacy\Report\Report_MovementPriceList_Cross.pas' {Report_MovementPriceList_CrossForm: TParentForm},
-  Report_MovementPriceList_Dialog in '..\..\FormsFarmacy\Report\Report_MovementPriceList_Dialog.pas' {Report_MovementPriceList_DialogForm: TParentForm};
+  Report_MovementPriceList_Dialog in '..\..\FormsFarmacy\Report\Report_MovementPriceList_Dialog.pas' {Report_MovementPriceList_DialogForm: TParentForm},
+  Report_MovementPriceList in '..\..\FormsFarmacy\Report\Report_MovementPriceList.pas' {Report_MovementPriceListForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

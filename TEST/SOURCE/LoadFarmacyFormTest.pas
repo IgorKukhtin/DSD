@@ -486,8 +486,8 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementPriceList_CrossForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementPriceList_CrossForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementPriceListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementPriceListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementPriceList_DialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementPriceList_DialogForm');
  {

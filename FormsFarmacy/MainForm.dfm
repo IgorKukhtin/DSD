@@ -13,8 +13,8 @@ inherited MainForm: TMainForm
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1072#1081#1089#1072#1084
-      FormName = 'TReport_MovementPriceList_CrossForm'
-      FormNameParam.Value = 'TReport_MovementPriceList_CrossForm'
+      FormName = 'TReport_MovementPriceListForm'
+      FormNameParam.Value = 'TReport_MovementPriceListForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

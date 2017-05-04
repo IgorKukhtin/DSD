@@ -307,10 +307,10 @@ BEGIN
                          , ObjectHistory_JuridicalDetails.AccounterName
                          , ObjectHistory_JuridicalDetails.INN
                          , ObjectHistory_JuridicalDetails.NumberVAT
-                         , COALESCE (Object_BankAccount.ValueData,ObjectHistory_JuridicalDetails.BankAccount) ::TVarChar AS BankAccount
+                         , ObjectHistory_JuridicalDetails.BankAccount ::TVarChar AS BankAccount  --COALESCE (Object_BankAccount.ValueData,
                          , ObjectHistory_JuridicalDetails.Phone
-                         , COALESCE (Object_Bank.ValueData,tmpBankAccount.BankName)  ::TVarChar AS BankName
-                         , COALESCE (ObjectString_MFO.ValueData, tmpBankAccount.MFO) ::TVarChar AS MFO
+                         , tmpBankAccount.BankName  ::TVarChar AS BankName --COALESCE (Object_Bank.ValueData,
+                         , tmpBankAccount.MFO ::TVarChar AS MFO             --COALESCE (ObjectString_MFO.ValueData, 
 
                          , ObjectHistory_PartnerMedicalDetails.FullName          AS PartnerMedical_FullName
                          , ObjectHistory_PartnerMedicalDetails.JuridicalAddress  AS PartnerMedical_JuridicalAddress
@@ -352,8 +352,8 @@ BEGIN
        
                           LEFT JOIN tmpBankAccount ON tmpBankAccount.JuridicalId = tmp.JuridicalId
                                                   AND tmpBankAccount.BankAccount = ObjectHistory_JuridicalDetails.BankAccount
-                          -- расчетный счет из договора
-                          LEFT JOIN ObjectLink AS ObjectLink_Contract_BankAccount
+                          -- расчетный счет из договора , по идее для заклада охорони здоров'я
+                      /*    LEFT JOIN ObjectLink AS ObjectLink_Contract_BankAccount
                                  ON ObjectLink_Contract_BankAccount.ObjectId = Object_PartnerMedical_Contract.Id
                                 AND ObjectLink_Contract_BankAccount.DescId = zc_ObjectLink_Contract_BankAccount()
                           LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = ObjectLink_Contract_BankAccount.ChildObjectId 
@@ -363,7 +363,7 @@ BEGIN
                           LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
                           LEFT JOIN ObjectString AS ObjectString_MFO
                                  ON ObjectString_MFO.ObjectId = Object_Bank.Id
-                                AND ObjectString_MFO.DescId = zc_ObjectString_Bank_MFO()
+                                AND ObjectString_MFO.DescId = zc_ObjectString_Bank_MFO()*/
                     WHERE COALESCE (Object_PartnerMedical_GroupMemberSP.ObjectCode,0) = -1
                     )
 
