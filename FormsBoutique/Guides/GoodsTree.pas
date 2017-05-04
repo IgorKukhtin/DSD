@@ -53,7 +53,7 @@ type
     dsdGridToExcel: TdsdGridToExcel;
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    spErasedUnErased: TdsdStoredProc;
+    spErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     GoodsGroupName: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
@@ -75,6 +75,7 @@ type
     LineFabricaName: TcxGridDBColumn;
     LabelName: TcxGridDBColumn;
     GroupNameFull: TcxGridDBColumn;
+    spUnErased: TdsdStoredProc;
   private
     { Private declarations }
   public

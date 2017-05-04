@@ -688,11 +688,11 @@ object PartnerForm: TPartnerForm
         end
         item
           Visible = True
-          ItemName = 'bbShowAllPartnerOnMap'
+          ItemName = 'bbShowCurPartnerOnMap'
         end
         item
           Visible = True
-          ItemName = 'bbShowCurPartnerOnMap'
+          ItemName = 'bbShowAllPartnerOnMap'
         end
         item
           Visible = True
@@ -805,6 +805,7 @@ object PartnerForm: TPartnerForm
       Category = 0
       Hint = '     '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbJuridicalLabel: TdxBarControlContainerItem
       Caption = 'JuridicalLabel'
@@ -845,7 +846,7 @@ object PartnerForm: TPartnerForm
       Category = 0
     end
     object bbShowAllPartnerOnMap: TdxBarButton
-      Action = actShowAllPartneronMap
+      Action = mactShowAllPartnerOnMap
       Category = 0
     end
     object dxBarStatic2: TdxBarStatic
@@ -855,7 +856,7 @@ object PartnerForm: TPartnerForm
       Visible = ivAlways
     end
     object bbShowCurPartnerOnMap: TdxBarButton
-      Action = actShowCurPartneronMap
+      Action = actShowCurPartnerOnMap
       Category = 0
     end
   end
@@ -1487,34 +1488,60 @@ object PartnerForm: TPartnerForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
-    object actShowAllPartneronMap: TdsdPartnerMapAction
+    object mactShowAllPartnerOnMap: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1058#1058' '#1085#1072' '#1082#1072#1088#1090#1077
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1058#1058' '#1085#1072' '#1082#1072#1088#1090#1077
-      ImageIndex = 60
+      ActionList = <
+        item
+          Action = actCheckShowAllPartnerOnMap
+        end
+        item
+          Action = actShowAllPartnerOnMap
+        end>
+      QuestionBeforeExecute = 
+        #1054#1090#1082#1088#1099#1090#1080#1077' '#1082#1072#1088#1090#1099' '#1076#1083#1103' '#1073#1086#1083#1100#1096#1086#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1072#1076#1088#1077#1089#1086#1074' '#1084#1086#1078#1077#1090' '#1074#1099#1087#1086#1083#1085#1103#1090#1100#1089#1103 +
+        ' '#1076#1086#1083#1075#1086'.'#1055#1088#1086#1076#1086#1083#1078#1080#1090#1100'? '
+      Caption = #1050#1072#1088#1090#1072' Google - '#1042#1057#1045' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
+      Hint = #1050#1072#1088#1090#1072' Google - '#1042#1057#1045' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
+      ImageIndex = 40
+    end
+    object actShowAllPartnerOnMap: TdsdPartnerMapAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1082#1072#1088#1090#1091' '#1076#1083#1103' '#1087#1088#1086#1089#1084#1086#1090#1088#1072' '#1042#1057#1045#1061' '#1072#1076#1088#1077#1089#1086#1074
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1082#1072#1088#1090#1091' '#1076#1083#1103' '#1087#1088#1086#1089#1084#1086#1090#1088#1072' '#1042#1057#1045#1061' '#1072#1076#1088#1077#1089#1086#1074
       FormName = 'TPartnerMapForm'
       FormNameParam.Value = 'TPartnerMapForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
-      isShowModal = True
+      isShowModal = False
       MapType = acShowAll
       DataSet = MasterCDS
     end
-    object actShowCurPartneronMap: TdsdPartnerMapAction
+    object actShowCurPartnerOnMap: TdsdPartnerMapAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1081' '#1058#1058' '#1085#1072' '#1082#1072#1088#1090#1077
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1081' '#1058#1058' '#1085#1072' '#1082#1072#1088#1090#1077
-      ImageIndex = 61
+      Caption = #1050#1072#1088#1090#1072' Google - '#1090#1086#1083#1100#1082#1086' '#1054#1044#1048#1053' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090
+      Hint = #1050#1072#1088#1090#1072' Google - '#1090#1086#1083#1100#1082#1086' '#1054#1044#1048#1053' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090
+      ImageIndex = 74
       FormName = 'TPartnerMapForm'
       FormNameParam.Value = 'TPartnerMapForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
-      isShowModal = True
+      isShowModal = False
       DataSet = MasterCDS
+    end
+    object actCheckShowAllPartnerOnMap: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCheck
+      StoredProcList = <
+        item
+          StoredProc = spCheck
+        end>
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -1843,5 +1870,22 @@ object PartnerForm: TPartnerForm
     PackSize = 1
     Left = 744
     Top = 264
+  end
+  object spCheck: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_Partner_checkMap'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 289
+    Top = 290
   end
 end

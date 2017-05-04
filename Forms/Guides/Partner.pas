@@ -126,9 +126,12 @@ type
     GPSN: TcxGridDBColumn;
     GPSE: TcxGridDBColumn;
     bbShowAllPartnerOnMap: TdxBarButton;
-    actShowAllPartneronMap: TdsdPartnerMapAction;
-    actShowCurPartneronMap: TdsdPartnerMapAction;
+    actShowAllPartnerOnMap: TdsdPartnerMapAction;
+    actShowCurPartnerOnMap: TdsdPartnerMapAction;
     bbShowCurPartnerOnMap: TdxBarButton;
+    mactShowAllPartnerOnMap: TMultiAction;
+    actCheckShowAllPartnerOnMap: TdsdExecStoredProc;
+    spCheck: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -163,7 +163,16 @@ BEGIN
                                                ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                               AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
-                   WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200())
+                   WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
+                                                                        -- , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
+                                                                        , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                                                        , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                                                                        , zc_Enum_InfoMoneyDestination_20900() -- Ирна
+                                                                        , zc_Enum_InfoMoneyDestination_21000() -- Чапли
+                                                                        , zc_Enum_InfoMoneyDestination_21100() -- Дворкин
+                                                                        , zc_Enum_InfoMoneyDestination_30100() -- Готовая продукция
+                                                                        , zc_Enum_InfoMoneyDestination_30200() -- Тушенка
+                                                                         )
                   )
  , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
                                 , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId

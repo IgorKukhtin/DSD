@@ -5,7 +5,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1066
-  ExplicitHeight = 434
+  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -474,6 +474,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
           object UnitCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087'.'
             DataBinding.FieldName = 'UnitCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -503,10 +504,10 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
     Width = 1050
     ExplicitWidth = 1050
     inherited deStart: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 42736d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 42736d
     end
   end
   object cxLabel27: TcxLabel [2]
@@ -659,10 +660,12 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
       ImageIndex = 3
     end
     inherited actInsert: TdsdInsertUpdateAction
+      Enabled = False
       FormName = 'TMobileOrderExternalForm'
       FormNameParam.Value = 'TMobileOrderExternalForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
+      Enabled = False
       FormName = 'TMobileOrderExternalForm'
       FormNameParam.Value = 'TMobileOrderExternalForm'
       GuiParams = <
@@ -955,6 +958,9 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     object bbPrint: TdxBarButton
       Action = mactPrint_Order

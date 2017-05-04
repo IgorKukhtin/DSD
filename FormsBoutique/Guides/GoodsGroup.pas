@@ -50,13 +50,14 @@ type
     dxBarStatic1: TdxBarStatic;
     Code: TcxDBTreeListColumn;
     isErased: TcxDBTreeListColumn;
-    spErasedUnErased: TdsdStoredProc;
+    spErased: TdsdStoredProc;
     dsdDBTreeAddOn: TdsdDBTreeAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    spUnErased: TdsdStoredProc;
   private
     { Private declarations }
   public

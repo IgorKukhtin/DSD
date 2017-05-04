@@ -47,7 +47,7 @@ type
     dsdGridToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
-    spErasedUnErased: TdsdStoredProc;
+    spErased: TdsdStoredProc;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
     clErased: TcxGridDBColumn;
@@ -62,6 +62,7 @@ type
     dStartSumm: TcxGridDBColumn;
     dEndSumm: TcxGridDBColumn;
     dDiscountTax: TcxGridDBColumn;
+    spUnErased: TdsdStoredProc;
   private
     { Private declarations }
   public

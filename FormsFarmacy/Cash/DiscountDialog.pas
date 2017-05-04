@@ -53,10 +53,10 @@ begin
                                                ,DiscountServiceForm.gPassword
                                                ,trim (edCardNumber.Text)
                                                ,Key
-                                               ) then
-               ModalResult := mrOk;
-           end else
-             ModalResult := mrOk;
+                                               )
+             then ModalResult := mrOk;
+           end
+           else if DiscountServiceForm.gCode > 0 then ModalResult := mrOk;
       end
       else begin ActiveControl:=edCardNumber;ShowMessage ('Ошибка.Значение <№ дисконтной карты> не определено');end
   else begin ActiveControl:=ceDiscountExternal;

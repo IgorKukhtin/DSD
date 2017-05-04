@@ -5,7 +5,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1130
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -165,6 +165,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
           object isError: TcxGridDBColumn [2]
             Caption = #1054#1096#1080#1073#1082#1072' '#1087#1088#1080#1074#1103#1079#1082#1080
             DataBinding.FieldName = 'isError'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -216,6 +217,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
           object colInvNumber_Parent: TcxGridDBColumn
             Caption = #1054#1089#1085'. '#8470' ('#1074#1086#1079#1074#1088#1072#1090')'
             DataBinding.FieldName = 'InvNumber_Parent'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -223,6 +225,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
           object colDocumentTaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
             DataBinding.FieldName = 'DocumentTaxKindName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -616,7 +619,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
     end
     object edDocumentTaxKind: TcxButtonEdit
       Left = 419
-      Top = 31
+      Top = 26
       Properties.Buttons = <
         item
           Default = True
@@ -628,7 +631,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
     end
     object cxLabel14: TcxLabel
       Left = 286
-      Top = 32
+      Top = 27
       Caption = #1058#1080#1087' '#1076#1083#1103' '#1092#1086#1088#1084'. '#1085#1072#1083#1086#1075'.'#1076#1086#1082'.'
       Visible = False
     end
@@ -730,6 +733,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
     object actExport: TMultiAction [0]
       Category = 'Export_Email'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actGet_Export_Email
@@ -755,10 +759,12 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
       ImageIndex = 53
     end
     inherited actInsert: TdsdInsertUpdateAction [1]
+      Enabled = False
       FormName = 'TReturnInForm'
       FormNameParam.Value = 'TReturnInForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction [2]
+      Enabled = False
       FormName = 'TReturnInForm'
       FormNameParam.Value = 'TReturnInForm'
       GuiParams = <
@@ -1487,14 +1493,6 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbactChecked'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbPrintReturnIn'
         end
         item
@@ -1511,35 +1509,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint_Return_By_TaxCorrective'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintTaxCorrective_Client'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintTaxCorrective_Us'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbMovementProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExport'
         end
         item
           Visible = True
@@ -1553,6 +1523,9 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     object bbTaxCorrective: TdxBarButton
       Action = actTaxCorrective

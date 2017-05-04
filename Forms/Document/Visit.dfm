@@ -4,26 +4,26 @@ inherited VisitForm: TVisitForm
   ClientWidth = 1011
   AddOnFormData.RefreshAction = actRefreshEx
   ExplicitWidth = 1027
-  ExplicitHeight = 488
+  ExplicitHeight = 484
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 76
     Width = 1011
     Height = 373
-    ExplicitTop = 50
+    ExplicitTop = 76
     ExplicitWidth = 1011
-    ExplicitHeight = 399
+    ExplicitHeight = 373
     ClientRectBottom = 373
     ClientRectRight = 1011
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1011
-      ExplicitHeight = 375
+      ExplicitHeight = 349
       inherited cxGrid: TcxGrid
         Width = 1011
         Height = 349
         ExplicitWidth = 1011
-        ExplicitHeight = 375
+        ExplicitHeight = 349
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -83,6 +83,7 @@ inherited VisitForm: TVisitForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.CellAutoHeight = True
+          OptionsView.Footer = False
           OptionsView.GroupSummaryLayout = gslStandard
           Styles.Content = nil
           Styles.Inactive = nil
@@ -99,6 +100,7 @@ inherited VisitForm: TVisitForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -113,7 +115,7 @@ inherited VisitForm: TVisitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 223
+            Width = 515
           end
           object Comment: TcxGridDBColumn [2]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -142,6 +144,7 @@ inherited VisitForm: TVisitForm
           object clGPSN: TcxGridDBColumn [5]
             Caption = 'GPS '#1082#1086#1086#1088#1076#1080#1085#1072#1090#1099' '#1092#1086#1090#1086' ('#1096#1080#1088#1086#1090#1072')'
             DataBinding.FieldName = 'GPSN'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -150,6 +153,7 @@ inherited VisitForm: TVisitForm
           object clGPSE: TcxGridDBColumn [6]
             Caption = 'GPS '#1082#1086#1086#1088#1076#1080#1085#1072#1090#1099' '#1092#1086#1090#1086' ('#1076#1086#1083#1075#1086#1090#1072')'
             DataBinding.FieldName = 'GPSE'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -166,36 +170,38 @@ inherited VisitForm: TVisitForm
     ExplicitWidth = 1011
     ExplicitHeight = 50
     inherited edInvNumber: TcxTextEdit
-      Left = 8
-      ExplicitLeft = 8
+      Left = 181
+      ExplicitLeft = 181
       ExplicitWidth = 74
       Width = 74
     end
     inherited cxLabel1: TcxLabel
-      Left = 8
-      ExplicitLeft = 8
+      Left = 181
+      ExplicitLeft = 181
     end
     inherited edOperDate: TcxDateEdit
-      Left = 88
+      Left = 261
       Properties.SaveTime = False
       Properties.ShowTime = False
-      ExplicitLeft = 88
+      ExplicitLeft = 261
       ExplicitWidth = 85
       Width = 85
     end
     inherited cxLabel2: TcxLabel
-      Left = 88
-      Caption = #1044#1072#1090#1072' '#1079#1072#1103#1074#1082#1080
-      ExplicitLeft = 88
-      ExplicitWidth = 68
+      Left = 261
+      ExplicitLeft = 261
     end
     inherited cxLabel15: TcxLabel
-      Left = 179
-      ExplicitLeft = 179
+      Left = 5
+      Top = 4
+      ExplicitLeft = 5
+      ExplicitTop = 4
     end
     inherited ceStatus: TcxButtonEdit
-      Left = 179
-      ExplicitLeft = 179
+      Left = 5
+      Top = 22
+      ExplicitLeft = 5
+      ExplicitTop = 22
       ExplicitWidth = 168
       ExplicitHeight = 22
       Width = 168
@@ -234,12 +240,14 @@ inherited VisitForm: TVisitForm
     Left = 871
     Top = 5
     Caption = 'GUID'
+    Visible = False
   end
   object edGUID: TcxTextEdit [5]
     Left = 871
     Top = 23
     Properties.ReadOnly = True
     TabOrder = 9
+    Visible = False
     Width = 133
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -406,14 +414,15 @@ inherited VisitForm: TVisitForm
     object actAllPhotoOnMap: TdsdPartnerMapAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1082#1086#1086#1088#1076#1080#1085#1072#1090#1099' '#1092#1086#1090#1086#1075#1088#1072#1092#1080#1081' '#1085#1072' '#1082#1072#1088#1090#1077
-      ImageIndex = 61
+      Caption = #1050#1072#1088#1090#1072' Google - '#1042#1057#1045' '#1092#1086#1090#1086#1075#1088#1072#1092#1080#1080
+      Hint = #1050#1072#1088#1090#1072' Google - '#1042#1057#1045' '#1092#1086#1090#1086#1075#1088#1072#1092#1080#1080
+      ImageIndex = 40
       FormName = 'TPartnerMapForm'
       FormNameParam.Value = 'TPartnerMapForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
-      isShowModal = True
+      isShowModal = False
       MapType = acShowAll
       DataSet = MasterCDS
     end
@@ -476,7 +485,7 @@ inherited VisitForm: TVisitForm
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -492,7 +501,7 @@ inherited VisitForm: TVisitForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -504,7 +513,7 @@ inherited VisitForm: TVisitForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbAllPhotoOnMap'
         end
         item
           Visible = True
@@ -525,19 +534,13 @@ inherited VisitForm: TVisitForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbAllPhotoOnMap'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
         end>
-      Visible = True
     end
     inherited bbRefresh: TdxBarButton
       Action = actRefreshEx
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Order

@@ -5,7 +5,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 969
-  ExplicitHeight = 435
+  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -102,6 +102,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
+          OptionsView.Footer = False
           OptionsView.GroupByBox = True
           OptionsView.HeaderHeight = 50
           Styles.Content = nil
@@ -141,6 +142,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
           object UnitCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087'.'
             DataBinding.FieldName = 'UnitCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -181,6 +183,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
           object clGPSN: TcxGridDBColumn
             Caption = 'GPS '#1082#1086#1086#1088#1076#1080#1085#1072#1090#1099' ('#1096#1080#1088#1086#1090#1072')'
             DataBinding.FieldName = 'GPSN'
+            Visible = False
             FooterAlignmentHorz = taCenter
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
@@ -191,6 +194,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
           object clGPSE: TcxGridDBColumn
             Caption = 'GPS '#1082#1086#1086#1088#1076#1080#1085#1072#1090#1099' ('#1076#1086#1083#1075#1086#1090#1072')'
             DataBinding.FieldName = 'GPSE'
+            Visible = False
             FooterAlignmentHorz = taCenter
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
@@ -199,6 +203,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
           end
           object clGUID: TcxGridDBColumn
             DataBinding.FieldName = 'GUID'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -212,10 +217,10 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
     Width = 953
     ExplicitWidth = 953
     inherited deStart: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 42736d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 42736d
     end
     object cxLabel3: TcxLabel
       Left = 475
@@ -359,6 +364,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
       ImageIndex = 3
     end
     inherited actUpdate: TdsdInsertUpdateAction [5]
+      Enabled = False
       FormName = 'TRouteMemberMovementForm'
       FormNameParam.Value = 'TRouteMemberMovementForm'
       GuiParams = <
@@ -385,6 +391,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
         end>
     end
     inherited actInsert: TdsdInsertUpdateAction [6]
+      Enabled = False
       FormName = 'TRouteMemberMovementForm'
       FormNameParam.Value = 'TRouteMemberMovementForm'
     end
@@ -522,8 +529,9 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
     object actRouteOnMap: TdsdPartnerMapAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1084#1072#1088#1096#1088#1091#1090' '#1085#1072' '#1082#1072#1088#1090#1077
-      ImageIndex = 61
+      Caption = #1050#1072#1088#1090#1072' Google - '#1042#1077#1089#1100' '#1084#1072#1088#1096#1088#1091#1090
+      Hint = #1050#1072#1088#1090#1072' Google - '#1042#1077#1089#1100' '#1084#1072#1088#1096#1088#1091#1090
+      ImageIndex = 40
       FormName = 'TPartnerMapForm'
       FormNameParam.Value = 'TPartnerMapForm'
       FormNameParam.DataType = ftString
@@ -641,7 +649,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbRouteOnMap'
         end
         item
           Visible = True
@@ -662,15 +670,10 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRouteOnMap'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     object bbPrint: TdxBarButton
       Action = mactPrint_Order

@@ -285,21 +285,40 @@ end;
 
 // попробуем обновить "нужные" параметры-Main
 procedure TDiscountServiceForm.pGetDiscountExternal (lDiscountExternalId : Integer; lCardNumber : String);
+var lCode : Integer;
 begin
   if lDiscountExternalId > 0
   then
       with spGet_DiscountExternal do begin
          ParamByName('inId').Value := lDiscountExternalId;
+         ParamByName('Code').Value := 0;
          Execute;
          // сохраним "нужные" параметры-Main
          gDiscountExternalId:= lDiscountExternalId;
-         gCode       := ParamByName('Code').Value;
-         gURL        := ParamByName('URL').Value;
-         gService    := ParamByName('Service').Value;
-         gPort       := ParamByName('Port').Value;
-         gUserName   := ParamByName('UserName').Value;
-         gPassword   := ParamByName('Password').Value;
-         gCardNumber := lCardNumber;
+         try
+            lCode:= ParamByName('Code').Value;
+         except
+               lCode:= 0;
+         end;
+         gCode       := lCode;
+         if lCode > 0 then
+         begin
+               gURL        := ParamByName('URL').Value;
+               gService    := ParamByName('Service').Value;
+               gPort       := ParamByName('Port').Value;
+               gUserName   := ParamByName('UserName').Value;
+               gPassword   := ParamByName('Password').Value;
+               gCardNumber := lCardNumber;
+         end
+         else begin
+               gURL        := '';
+               gService    := '';
+               gPort       := '';
+               gUserName   := '';
+               gPassword   := '';
+               gCardNumber := '';
+               ShowMessage ('Ошибка.Для аптеки не настроена работа с Проектами дисконтных карт.')
+         end;
       end
   else
      begin

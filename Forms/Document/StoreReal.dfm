@@ -3,7 +3,7 @@ inherited StoreRealForm: TStoreRealForm
   ClientHeight = 397
   ClientWidth = 937
   ExplicitWidth = 953
-  ExplicitHeight = 435
+  ExplicitHeight = 432
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -135,7 +135,7 @@ inherited StoreRealForm: TStoreRealForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 100
           end
           object MeasureName: TcxGridDBColumn [5]
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -193,6 +193,7 @@ inherited StoreRealForm: TStoreRealForm
           end
           object colGUID: TcxGridDBColumn [11]
             DataBinding.FieldName = 'GUID'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -209,36 +210,34 @@ inherited StoreRealForm: TStoreRealForm
     ExplicitWidth = 937
     ExplicitHeight = 50
     inherited edInvNumber: TcxTextEdit
-      Left = 8
-      ExplicitLeft = 8
+      Left = 179
+      ExplicitLeft = 179
       ExplicitWidth = 74
       Width = 74
     end
     inherited cxLabel1: TcxLabel
-      Left = 8
-      ExplicitLeft = 8
+      Left = 179
+      ExplicitLeft = 179
     end
     inherited edOperDate: TcxDateEdit
-      Left = 88
+      Left = 259
       Properties.SaveTime = False
       Properties.ShowTime = False
-      ExplicitLeft = 88
+      ExplicitLeft = 259
       ExplicitWidth = 85
       Width = 85
     end
     inherited cxLabel2: TcxLabel
-      Left = 88
-      Caption = #1044#1072#1090#1072' '#1079#1072#1103#1074#1082#1080
-      ExplicitLeft = 88
-      ExplicitWidth = 68
+      Left = 259
+      ExplicitLeft = 259
     end
     inherited cxLabel15: TcxLabel
-      Left = 179
-      ExplicitLeft = 179
+      Left = 4
+      ExplicitLeft = 4
     end
     inherited ceStatus: TcxButtonEdit
-      Left = 179
-      ExplicitLeft = 179
+      Left = 4
+      ExplicitLeft = 4
       ExplicitWidth = 168
       ExplicitHeight = 22
       Width = 168
@@ -483,7 +482,7 @@ inherited StoreRealForm: TStoreRealForm
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -495,19 +494,11 @@ inherited StoreRealForm: TStoreRealForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -529,6 +520,9 @@ inherited StoreRealForm: TStoreRealForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Order
