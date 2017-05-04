@@ -207,8 +207,8 @@ BEGIN
                                                  , inMovementId             := _tmpResult.MovementId
                                                  , inGoodsId                := Container.ObjectId
                                                  , inGoodsId_child          := Container.ObjectId
-                                                 , inGoodsKindId            := NULL
-                                                 , inGoodsKindId_child      := NULL
+                                                 , inGoodsKindId            := CLO_GoodsKind.ObjectId
+                                                 , inGoodsKindId_child      := CLO_GoodsKind.ObjectId
                                                  , inAmount                 := _tmpResult.OperCount_master
                                                  , inAmount_child           := _tmpResult.OperCount_child
                                                  , inPartionGoods           := Object_PartionGoods.ValueData
@@ -219,6 +219,9 @@ BEGIN
                                                   )
      FROM _tmpResult
           LEFT JOIN Container ON Container.Id = _tmpResult.ContainerId
+          LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                        ON CLO_GoodsKind.ContainerId = _tmpResult.ContainerId
+                                       AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
           LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
                                         ON CLO_PartionGoods.ContainerId = _tmpResult.ContainerId
                                        AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
