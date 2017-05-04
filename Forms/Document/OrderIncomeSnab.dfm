@@ -1283,6 +1283,15 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
           Component = FormParams
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IdBarCode'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'IdBarCode'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_OrderIncomeSnab'
       ReportNameParam.Value = 'PrintMovement_OrderIncomeSnab'
@@ -2117,6 +2126,14 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         Value = Null
         Component = edDayCount
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IdBarCode'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'IdBarCode'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1

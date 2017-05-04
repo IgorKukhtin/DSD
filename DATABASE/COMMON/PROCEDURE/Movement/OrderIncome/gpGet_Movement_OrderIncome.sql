@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_OrderIncome(
     IN inOperDate          TDateTime, -- дата Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar
+RETURNS TABLE (Id Integer, IdBarCode TVarChar, InvNumber TVarChar
              , OperDate TDateTime, OperDatePartner TDateTime
              , StatusCode Integer, StatusName TVarChar
              , InsertDate TDateTime, InsertName TVarChar
@@ -39,6 +39,7 @@ BEGIN
      RETURN QUERY
          SELECT
                0 AS Id
+             , '' ::TVarChar AS IdBarCode
              , CAST (NEXTVAL ('movement_OrderIncome_seq') AS TVarChar) AS InvNumber
              , inOperDate                                 AS OperDate
              , inOperDate		                  AS OperDatePartner
@@ -82,6 +83,7 @@ BEGIN
 
      RETURN QUERY
       SELECT Movement.Id                            AS Id
+           , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
            , Movement.InvNumber                     AS InvNumber
            , Movement.OperDate                      AS OperDate
            , MovementDate_OperDatePartner.ValueData AS OperDatePartner
