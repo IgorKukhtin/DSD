@@ -205,8 +205,8 @@ BEGIN
                   , COALESCE (ObjectBoolean_PartionGoodsKind_From.ValueData, TRUE) AS isPartionGoodsKind_From
                   , COALESCE (ObjectBoolean_PartionGoodsKind_To.ValueData, TRUE)   AS isPartionGoodsKind_To
 
-                        -- Группы ОПиУ
-                  , CASE WHEN Movement.OperDate >= '01.04.2017'
+                    -- Группы ОПиУ - криво захардкодил
+                  , CASE WHEN Movement.OperDate >= '01.05.2017'
                           AND Object_From.Id IN (8455 , 8456) -- Склад специй + Склад запчастей
                           AND Object_To_find.DescId = zc_Object_Member()
                           AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты

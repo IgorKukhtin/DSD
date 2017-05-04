@@ -688,11 +688,11 @@ object PartnerForm: TPartnerForm
         end
         item
           Visible = True
-          ItemName = 'bbShowAllPartnerOnMap'
+          ItemName = 'bbShowCurPartnerOnMap'
         end
         item
           Visible = True
-          ItemName = 'bbShowCurPartnerOnMap'
+          ItemName = 'bbShowAllPartnerOnMap'
         end
         item
           Visible = True
@@ -805,6 +805,7 @@ object PartnerForm: TPartnerForm
       Category = 0
       Hint = '     '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbJuridicalLabel: TdxBarControlContainerItem
       Caption = 'JuridicalLabel'
@@ -1490,30 +1491,30 @@ object PartnerForm: TPartnerForm
     object actShowAllPartneronMap: TdsdPartnerMapAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1058#1058' '#1085#1072' '#1082#1072#1088#1090#1077
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1058#1058' '#1085#1072' '#1082#1072#1088#1090#1077
-      ImageIndex = 60
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1082#1072#1088#1090#1091' '#1076#1083#1103' '#1087#1088#1086#1089#1084#1086#1090#1088#1072' '#1042#1057#1045#1061' '#1072#1076#1088#1077#1089#1086#1074
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1082#1072#1088#1090#1091' '#1076#1083#1103' '#1087#1088#1086#1089#1084#1086#1090#1088#1072' '#1042#1057#1045#1061' '#1072#1076#1088#1077#1089#1086#1074
+      ImageIndex = 40
       FormName = 'TPartnerMapForm'
       FormNameParam.Value = 'TPartnerMapForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
-      isShowModal = True
+      isShowModal = False
       MapType = acShowAll
       DataSet = MasterCDS
     end
     object actShowCurPartneronMap: TdsdPartnerMapAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1081' '#1058#1058' '#1085#1072' '#1082#1072#1088#1090#1077
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1081' '#1058#1058' '#1085#1072' '#1082#1072#1088#1090#1077
-      ImageIndex = 61
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1082#1072#1088#1090#1091' '#1076#1083#1103' '#1087#1088#1086#1089#1084#1086#1090#1088#1072' '#1086#1076#1085#1086#1075#1086' '#1072#1076#1088#1077#1089#1072
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1082#1072#1088#1090#1091' '#1076#1083#1103' '#1087#1088#1086#1089#1084#1086#1090#1088#1072' '#1086#1076#1085#1086#1075#1086' '#1072#1076#1088#1077#1089#1072
+      ImageIndex = 74
       FormName = 'TPartnerMapForm'
       FormNameParam.Value = 'TPartnerMapForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
-      isShowModal = True
+      isShowModal = False
       DataSet = MasterCDS
     end
   end

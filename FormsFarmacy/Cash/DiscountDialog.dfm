@@ -7,7 +7,7 @@ inherited DiscountDialogForm: TDiscountDialogForm
   ClientWidth = 554
   Position = poDesktopCenter
   ExplicitWidth = 560
-  ExplicitHeight = 146
+  ExplicitHeight = 142
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel [0]

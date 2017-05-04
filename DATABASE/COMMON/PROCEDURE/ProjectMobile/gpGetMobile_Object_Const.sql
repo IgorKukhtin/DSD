@@ -144,6 +144,7 @@ BEGIN
             , Object_User.ValueData        AS UserLogin
             , ObjectString_User_.ValueData AS UserPassword
 
+            -- , 'http://project-vds.vds.colocall.com/testmobile/index.php' :: TVarChar AS WebService -- только для Теста
             , CASE WHEN STRPOS (Object_ConnectParam.ValueData, 'integer-srv.alan.dp.ua') > 0 AND inSession = '5' -- AND 1=0 -- AND inSession = '1000168' -- Молдован Е.А.
                         THEN REPLACE (LOWER (Object_ConnectParam.ValueData), '//integer-srv.alan.dp.ua','//integer-srv2.alan.dp.ua/projectmobile/index.php')
                    ELSE REPLACE (REPLACE (LOWER (Object_ConnectParam.ValueData), '/project/', '/projectmobile/'), '//integer-srv.alan.dp.ua', '//project-vds.vds.colocall.com/projectmobile/index.php')

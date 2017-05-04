@@ -1925,7 +1925,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
     Top = 201
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_OrderIncome'
+    StoredProcName = 'gpGet_Movement_OrderIncomeSnab'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2139,6 +2139,12 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
     GuidesList = <
       item
         Guides = GuidesFrom
+      end
+      item
+        Guides = UnitGuides
+      end
+      item
+        Guides = ContractGuides
       end
       item
         Guides = PaidKindGuides
