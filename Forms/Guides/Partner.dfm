@@ -1872,7 +1872,7 @@ object PartnerForm: TPartnerForm
     Top = 264
   end
   object spCheck: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_Income'
+    StoredProcName = 'gpGet_Object_Partner_checkMap'
     DataSets = <>
     OutputType = otResult
     Params = <

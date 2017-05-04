@@ -5,7 +5,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 994
-  ExplicitHeight = 434
+  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -102,6 +102,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
+          OptionsView.Footer = False
           OptionsView.GroupByBox = True
           OptionsView.HeaderHeight = 50
           Styles.Content = nil
@@ -139,6 +140,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
           end
           object clGUID: TcxGridDBColumn
             DataBinding.FieldName = 'GUID'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -179,6 +181,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
           object UnitCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087'.'
             DataBinding.FieldName = 'UnitCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -208,10 +211,10 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
     Width = 978
     ExplicitWidth = 978
     inherited deStart: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 42736d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 42736d
     end
     object cxLabel3: TcxLabel
       Left = 475
@@ -355,6 +358,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
       ImageIndex = 3
     end
     inherited actUpdate: TdsdInsertUpdateAction [5]
+      Enabled = False
       FormName = 'TStoreRealForm'
       FormNameParam.Value = 'TStoreRealForm'
       GuiParams = <
@@ -381,6 +385,7 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
         end>
     end
     inherited actInsert: TdsdInsertUpdateAction [6]
+      Enabled = False
       FormName = 'TStoreRealForm'
       FormNameParam.Value = 'TStoreRealForm'
     end
@@ -623,14 +628,6 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -645,6 +642,9 @@ inherited StoreRealJournalForm: TStoreRealJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     object bbPrint: TdxBarButton
       Action = mactPrint_Order

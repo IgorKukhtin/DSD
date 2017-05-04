@@ -17,7 +17,7 @@ BEGIN
    -- определяется 
    IF COALESCE (inJuridicalId, 0) = 0 THEN
      -- RAISE EXCEPTION 'Ошибка. нельзя на карте Google показать такое количество <%> контрагентов.Необходимо ограничить <Торговая сеть> или <Юридическое лицо> или <ФИО сотрудник (ТП)>.', (SELECT COUNT() FROM Object WHERE DescId = zc_Object_Partner()) :: Integer;
-     RAISE EXCEPTION 'Ошибка. нельзя на карте Google показать такое количество <%> контрагентов.Необходимо установить ограничение в ячейке <Юридическое лицо>.', (SELECT COUNT() FROM Object WHERE DescId = zc_Object_Partner()) :: Integer;
+     RAISE EXCEPTION 'Ошибка. нельзя на карте Google показать такое количество <%> контрагентов.Необходимо установить ограничение в ячейке <Юридическое лицо>.', (SELECT COUNT(*) FROM Object WHERE DescId = zc_Object_Partner()) :: Integer;
    END IF;
    
    -- просто так   

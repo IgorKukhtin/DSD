@@ -3,7 +3,7 @@ object PartnerMapForm: TPartnerMapForm
   Top = 0
   Caption = #1056#1072#1089#1087#1086#1083#1086#1078#1077#1085#1080#1077' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
   ClientHeight = 487
-  ClientWidth = 494
+  ClientWidth = 759
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,12 +12,14 @@ object PartnerMapForm: TPartnerMapForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.isAlwaysRefresh = False
+  AddOnFormData.isSingle = False
   PixelsPerInch = 96
   TextHeight = 13
   object wbPartner: TdsdWebBrowser
     Left = 0
     Top = 0
-    Width = 494
+    Width = 759
     Height = 487
     Align = alClient
     TabOrder = 0
@@ -26,7 +28,7 @@ object PartnerMapForm: TPartnerMapForm
     ExplicitWidth = 300
     ExplicitHeight = 150
     ControlData = {
-      4C0000000E330000553200000000000000000000000000000000000000000000
+      4C000000724E0000553200000000000000000000000000000000000000000000
       000000004C000000000000000000000001000000E0D057007335CF11AE690800
       2B2E126208000000000000004C0000000114020000000000C000000000000046
       8000000000000000000000000000000000000000000000000000000000000000

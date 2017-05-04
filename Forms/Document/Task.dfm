@@ -3,7 +3,7 @@ inherited TaskForm: TTaskForm
   ClientHeight = 426
   ClientWidth = 873
   ExplicitWidth = 889
-  ExplicitHeight = 464
+  ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -325,6 +325,8 @@ inherited TaskForm: TTaskForm
     Left = 660
     Top = 23
     EditValue = 42132d
+    Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+    Properties.EditFormat = 'dd.mm.yyyy hh:mm'
     Properties.Kind = ckDateTime
     Properties.ReadOnly = True
     TabOrder = 15
@@ -557,27 +559,11 @@ inherited TaskForm: TTaskForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -599,6 +585,9 @@ inherited TaskForm: TTaskForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     object bbInsertRecord: TdxBarButton
       Action = InsertRecord
