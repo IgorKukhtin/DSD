@@ -134,7 +134,7 @@ BEGIN
        AND Movement.DescId IN (zc_Movement_Loss())
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
-       AND (tmpUnit_from.UnitId > 0)
+       -- AND (tmpUnit_from.UnitId > 0)
 
     UNION
      -- 1.3. To: ReturnIn
@@ -411,5 +411,5 @@ create table dba._pgMovementReComlete
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 */
 -- тест
--- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE)
--- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.01.2017', inEndDate:= '31.01.2017', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.01.2017', inEndDate:= '31.01.2017', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE)

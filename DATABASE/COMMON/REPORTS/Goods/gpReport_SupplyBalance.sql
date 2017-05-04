@@ -151,10 +151,15 @@ BEGIN
 
                             LEFT JOIN Object ON Object.Id = MovementLinkObject_Juridical.ObjectId
 
+                            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Income
+                                                           ON MovementLinkMovement_Income.MovementChildId = Movement.Id
+                                                          AND MovementLinkMovement_Income.DescId = zc_MovementLinkMovement_Order()
                        WHERE Movement.DescId = zc_Movement_OrderIncome()
                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                         AND MovementLinkMovement_Income.MovementId IS NULL   --  берем только те заявки, у которых нет связи с zc_Movement_Income
                        GROUP BY MILinkObject_Goods.ObjectId
                        )
+
  , tmpGoodsByReport AS (SELECT tmpGoods.GoodsId
                              , COALESCE (tmpPartnerList.PartnerName, tmpGoodsListIncome.PartnerName) AS PartnerName
                         FROM (SELECT DISTINCT tmpContainerAll.GoodsId
@@ -298,16 +303,19 @@ BEGIN
                   ELSE 0
              END  :: TFloat AS RemainsDaysWithOrder
 
-           , CASE WHEN tmpContainer.CountProductionOut <= 0 AND tmpContainer.RemainsEnd <> 0
-                  THEN zc_Color_Black()
-                  WHEN COALESCE (tmpContainer.CountProductionOut, 0) <= 0 AND COALESCE (tmpContainer.RemainsEnd, 0) = 0
-                  THEN zc_Color_Black()
-                  WHEN (CASE WHEN tmpContainer.RemainsEnd <> 0 AND (tmpContainer.CountProductionOut/vbCountDays) <> 0
-                        THEN COALESCE(tmpContainer.RemainsEnd,0) / (tmpContainer.CountProductionOut/vbCountDays)
-                        ELSE 0 END) > 29.9
-                  THEN zc_Color_Black()
-                  ELSE zc_Color_Red()
-             END  :: integer AS Color_RemainsDays
+           , CASE WHEN COALESCE(tmpOrderIncome.Amount,0) > 0 THEN 25088  -- зеленый
+                    ELSE
+                    CASE WHEN tmpContainer.CountProductionOut <= 0 AND tmpContainer.RemainsEnd <> 0
+                         THEN zc_Color_Black()
+                         WHEN COALESCE (tmpContainer.CountProductionOut, 0) <= 0 AND COALESCE (tmpContainer.RemainsEnd, 0) = 0
+                         THEN zc_Color_Black()
+                         WHEN (CASE WHEN tmpContainer.RemainsEnd <> 0 AND (tmpContainer.CountProductionOut/vbCountDays) <> 0
+                               THEN COALESCE(tmpContainer.RemainsEnd,0) / (tmpContainer.CountProductionOut/vbCountDays)
+                               ELSE 0 END) > 29.9
+                         THEN zc_Color_Black()
+                         ELSE zc_Color_Red()
+                    END 
+              END :: integer AS Color_RemainsDays
 
        FROM tmpGoodsByReport
           LEFT JOIN tmpContainer ON tmpContainer.GoodsId = tmpGoodsByReport.GoodsId

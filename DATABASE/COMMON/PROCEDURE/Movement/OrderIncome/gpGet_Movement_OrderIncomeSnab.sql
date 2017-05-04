@@ -1,13 +1,13 @@
--- Function: gpGet_Movement_OrderIncome()
+-- Function: gpGet_Movement_OrderIncomeSnab()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_OrderIncome (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_OrderIncomeSnab (Integer, TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Movement_OrderIncome(
+CREATE OR REPLACE FUNCTION gpGet_Movement_OrderIncomeSnab(
     IN inMovementId        Integer  , -- ключ Документа
     IN inOperDate          TDateTime, -- дата Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, IdBarCode TVarChar, InvNumber TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar
              , OperDate TDateTime, OperDatePartner TDateTime
              , StatusCode Integer, StatusName TVarChar
              , InsertDate TDateTime, InsertName TVarChar
@@ -39,7 +39,6 @@ BEGIN
      RETURN QUERY
          SELECT
                0 AS Id
-             , '' ::TVarChar AS IdBarCode
              , CAST (NEXTVAL ('movement_OrderIncome_seq') AS TVarChar) AS InvNumber
              , inOperDate                                 AS OperDate
              , inOperDate		                  AS OperDatePartner
@@ -50,7 +49,7 @@ BEGIN
              , CURRENT_TIMESTAMP ::TDateTime              AS InsertDate
              , COALESCE(Object_Insert.ValueData,'')  ::TVarChar AS InsertName
                           
-             , CAST (True as Boolean)                     AS PriceWithVAT
+             , CAST (TRUE as Boolean)                     AS PriceWithVAT
              , CAST (20 as TFloat)                        AS VATPercent
              , CAST (0 as TFloat)                         AS ChangePercent
              , CAST (0 as TFloat)                         AS CurrencyValue
@@ -59,8 +58,8 @@ BEGIN
              , Object_CurrencyDocument.Id                 AS CurrencyDocumentId	-- грн
              , Object_CurrencyDocument.ValueData          AS CurrencyDocumentName
 
-             , 0                                          AS UnitId
-             , CAST ('' as TVarChar)                      AS UnitName
+             , Object_To.Id                               AS UnitId
+             , Object_To.ValueData                        AS UnitName
 
              , 0                                          AS JuridicalId
              , CAST ('' as TVarChar)                      AS JuridicalName
@@ -77,13 +76,13 @@ BEGIN
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
                LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = zc_Enum_Currency_Basis()
+               LEFT JOIN Object AS Object_To ON Object_To.Id = 8455 -- Склад специй
           ;
 
      ELSE
 
      RETURN QUERY
       SELECT Movement.Id                            AS Id
-           , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
            , Movement.InvNumber                     AS InvNumber
            , Movement.OperDate                      AS OperDate
            , MovementDate_OperDatePartner.ValueData AS OperDatePartner
@@ -210,4 +209,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_OrderIncome (inMovementId:= 40874, inOperDate:= CURRENT_DATE, inSession := zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_Movement_OrderIncomeSnab (inMovementId:= 40874, inOperDate:= CURRENT_DATE, inSession := zfCalc_UserAdmin());

@@ -1533,6 +1533,10 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         ColorColumn = RemainsEnd
         ValueColumn = Color_RemainsDays
         ColorValueList = <>
+      end
+      item
+        ValueColumn = Color_RemainsDays
+        ColorValueList = <>
       end>
     Left = 320
     Top = 232

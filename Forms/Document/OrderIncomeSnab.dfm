@@ -1283,6 +1283,15 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
           Component = FormParams
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IdBarCode'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'IdBarCode'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_OrderIncomeSnab'
       ReportNameParam.Value = 'PrintMovement_OrderIncomeSnab'
@@ -1925,7 +1934,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
     Top = 201
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_OrderIncome'
+    StoredProcName = 'gpGet_Movement_OrderIncomeSnab'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2118,6 +2127,14 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         Component = edDayCount
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IdBarCode'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'IdBarCode'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 200
@@ -2139,6 +2156,12 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
     GuidesList = <
       item
         Guides = GuidesFrom
+      end
+      item
+        Guides = UnitGuides
+      end
+      item
+        Guides = ContractGuides
       end
       item
         Guides = PaidKindGuides
