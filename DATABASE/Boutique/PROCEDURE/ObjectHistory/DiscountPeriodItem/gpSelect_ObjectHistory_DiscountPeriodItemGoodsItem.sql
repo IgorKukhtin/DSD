@@ -16,7 +16,6 @@ BEGIN
      RETURN QUERY 
        SELECT
              ObjectHistory_DiscountPeriodItem.Id
-
            , ObjectHistory_DiscountPeriodItem.StartDate
            , ObjectHistory_DiscountPeriodItem.EndDate
            , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS ValuePrice

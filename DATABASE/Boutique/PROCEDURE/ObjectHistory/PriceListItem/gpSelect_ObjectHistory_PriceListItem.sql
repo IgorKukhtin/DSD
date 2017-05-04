@@ -28,9 +28,6 @@ RETURNS TABLE (Id Integer , ObjectId Integer
                 , ValuePrice TFloat
                 , InsertName TVarChar, UpdateName TVarChar
                 , InsertDate TDateTime, UpdateDate TDateTime
-
-
-
                )
 AS
 $BODY$
@@ -44,7 +41,7 @@ BEGIN
        SELECT
              tmpPrice.PriceListItemId AS Id
            , tmpPrice.PriceListItemObjectId AS ObjectId
-           , Object_Goods.Id          AS GoodsId                 --ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
+           , Object_Goods.Id          AS GoodsId               
            , Object_Goods.ObjectCode  AS GoodsCode
            , Object_Goods.ValueData   AS GoodsName
            , Object_Goods.isErased    AS isErased 
