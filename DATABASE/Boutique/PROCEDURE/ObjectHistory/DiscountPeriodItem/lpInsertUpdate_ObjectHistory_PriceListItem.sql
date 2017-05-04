@@ -16,10 +16,6 @@ DECLARE
    DECLARE vbDiscountPeriodItemId Integer;
 BEGIN
 
-   THEN
-       RAISE EXCEPTION 'Ошибка. Нет прав корректировать прайс <%>', lfGet_Object_ValueData (inUnitId);
-   END IF;
-
    -- Получаем ссылку на объект цен
    vbDiscountPeriodItemId := lpGetInsert_Object_DiscountPeriodItem (inUnitId, inGoodsId, inUserId);
  
