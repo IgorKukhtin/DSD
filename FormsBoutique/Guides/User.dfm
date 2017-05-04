@@ -866,8 +866,8 @@ object UserForm: TUserForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 72
-    Top = 120
+    Left = 104
+    Top = 216
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 272
@@ -1109,7 +1109,7 @@ object UserForm: TUserForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 120
-    Top = 224
+    Left = 168
+    Top = 136
   end
 end

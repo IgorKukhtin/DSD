@@ -38,14 +38,9 @@ type
     bbInsert: TdxBarButton;
     spSelect: TdsdStoredProc;
     bbEdit: TdxBarButton;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
-    bbSetErased: TdxBarButton;
-    bbSetUnErased: TdxBarButton;
     dsdGridToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
-    spErasedUnErased: TdsdStoredProc;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
     PartnerName: TcxGridDBColumn;

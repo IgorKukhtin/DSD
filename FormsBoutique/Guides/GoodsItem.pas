@@ -40,14 +40,9 @@ type
     spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
-    bbSetErased: TdxBarButton;
-    bbSetUnErased: TdxBarButton;
     dsdGridToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
-    spErasedUnErased: TdsdStoredProc;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
     GoodsCode: TcxGridDBColumn;
