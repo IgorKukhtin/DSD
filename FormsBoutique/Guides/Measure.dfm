@@ -329,10 +329,10 @@ object MeasureForm: TMeasureForm
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spErasedUnErased
+      StoredProc = spErased
       StoredProcList = <
         item
-          StoredProc = spErasedUnErased
+          StoredProc = spErased
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -344,10 +344,10 @@ object MeasureForm: TMeasureForm
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spErasedUnErased
+      StoredProc = spUnErased
       StoredProcList = <
         item
-          StoredProc = spErasedUnErased
+          StoredProc = spUnErased
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -461,7 +461,7 @@ object MeasureForm: TMeasureForm
     Left = 88
     Top = 128
   end
-  object spErasedUnErased: TdsdStoredProc
+  object spErased: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_Measure'
     DataSets = <>
     OutputType = otResult
@@ -473,10 +473,17 @@ object MeasureForm: TMeasureForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 232
-    Top = 144
+    Left = 320
+    Top = 72
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
@@ -509,5 +516,29 @@ object MeasureForm: TMeasureForm
     SummaryItemList = <>
     Left = 104
     Top = 248
+  end
+  object spUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_isErased_Measure'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 320
+    Top = 128
   end
 end

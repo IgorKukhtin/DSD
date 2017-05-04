@@ -47,7 +47,7 @@ type
     dsdGridToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
-    spErasedUnErased: TdsdStoredProc;
+    spErased: TdsdStoredProc;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
     isErased: TcxGridDBColumn;
@@ -64,6 +64,7 @@ type
     FabrikaName: TcxGridDBColumn;
     Code: TcxGridDBColumn;
     PeriodYear: TcxGridDBColumn;
+    spUnErased: TdsdStoredProc;
   private
     { Private declarations }
   public

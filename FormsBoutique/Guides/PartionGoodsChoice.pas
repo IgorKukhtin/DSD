@@ -46,7 +46,7 @@ type
     dsdGridToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
-    spErasedUnErased: TdsdStoredProc;
+    spErased: TdsdStoredProc;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
     PartnerName: TcxGridDBColumn;
@@ -87,6 +87,7 @@ type
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     FormParams: TdsdFormParams;
     RefreshDispatcher: TRefreshDispatcher;
+    spUnErased: TdsdStoredProc;
   private
     { Private declarations }
   public
