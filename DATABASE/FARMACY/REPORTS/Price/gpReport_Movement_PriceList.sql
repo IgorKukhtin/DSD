@@ -15,19 +15,21 @@ CREATE OR REPLACE FUNCTION gpReport_Movement_PriceList(
 AS
 $BODY$
   DECLARE vbUserId Integer;
-  DECLARE cur1 refcursor; 
+  DECLARE Cursor1 refcursor; 
           cur2 refcursor; 
           vbIndex Integer;
           vbCount Integer;
           vbQueryText Text;
           vbFieldNameText Text;
+  DECLARE vbEndDate TDateTime; 
+
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
 
     inStartDate := date_trunc('day', inStartDate);
-    inEndDate := date_trunc('day', inEndDate); 
-    --inEndDate := date_trunc('month', inEndDate) + interval '1 month' - 1 ; 
+    vbEndDate := date_trunc('month', inStartDate) + interval '1 month' - interval '1 day' ; 
+    inEndDate := CASE WHEN date_trunc('day', inEndDate) > vbEndDate THEN vbEndDate ELSE date_trunc('day', inEndDate) END ; 
 
      CREATE TEMP TABLE tmpOperDate ON COMMIT DROP AS
         SELECT GENERATE_SERIES ( inStartDate, inEndDate, '1 DAY' :: INTERVAL) AS OperDate;
@@ -54,7 +56,7 @@ BEGIN
                                          AND Object_LinkGoods_View.ObjectId = zc_Enum_GlobalConst_Marion()
                               WHERE ObjectLink_Goods_Object.ChildObjectId  = inJuridicalId_1 --59611 --inObjectId  --in ( 59612,59610,59611) -- оптима
                                 AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object() 
-                                AND ObjectLink_LinkGoods_GoodsMain.ChildObjectId = 324
+                             --   AND ObjectLink_LinkGoods_GoodsMain.ChildObjectId = 324
                              )
 
             SELECT DISTINCT tmpGoods.CommonCode, tmpGoods.GoodsMainId
@@ -112,11 +114,11 @@ BEGIN
         GROUP BY tmp.OperDate, tmp.GoodsMainId;
 
             
-  CREATE TEMP TABLE _tmpGoodsReport (CommonCode integer, GoodsMainId integer, GoodCode integer, GoodsName TVarChar) ON COMMIT DROP;
-     INSERT INTO _tmpGoodsReport (CommonCode, GoodsMainId, GoodCode, GoodsName)
+  CREATE TEMP TABLE _tmpGoodsReport (CommonCode integer, GoodsMainId integer, GoodsCode integer, GoodsName TVarChar) ON COMMIT DROP;
+     INSERT INTO _tmpGoodsReport (CommonCode, GoodsMainId, GoodsCode, GoodsName)
                 SELECT DISTINCT _tmpGoods.CommonCode
                      , _tmpGoods.GoodsMainId
-                     , Object_Goods.ObjectCode AS GoodCode
+                     , Object_Goods.ObjectCode AS GoodsCode
                      , Object_Goods.ValueData  AS GoodsName
                 FROM _tmpGoods
                      LEFT JOIN Object AS Object_Goods 
@@ -131,7 +133,7 @@ BEGIN
                 , EXTRACT(DAY FROM tmpOperDate.OperDate) AS NumDay
                 , _tmpGoodsReport.GoodsMainId
                 , _tmpGoodsReport.CommonCode
-                , _tmpGoodsReport.GoodCode
+                , _tmpGoodsReport.GoodsCode
                 , _tmpGoodsReport.GoodsName
                 , _tmpPriceList.Price_1
                 , _tmpPriceList.Price_2
@@ -146,10 +148,10 @@ BEGIN
      -- кол-во категорий наценок 
      vbCount := (SELECT COUNT(*) FROM tmpOperDate);
 
-     RETURN NEXT cur1;
+    OPEN Cursor1 FOR
      SELECT tmp.GoodsMainId
           , tmp.CommonCode
-          , tmp.GoodCode
+          , tmp.GoodsCode
           , tmp.GoodsName
           , SUM(tmp.Price_1_1) ::TFloat AS Price_1_1, SUM(tmp.Price_2_1) ::TFloat AS Price_2_1, SUM(tmp.Price_3_1) ::TFloat AS Price_3_1
           , SUM(tmp.Price_1_2) ::TFloat AS Price_1_2, SUM(tmp.Price_2_2) ::TFloat AS Price_2_2, SUM(tmp.Price_3_2) ::TFloat AS Price_3_2
@@ -182,9 +184,11 @@ BEGIN
           , SUM(tmp.Price_1_29) ::TFloat AS Price_1_29, SUM(tmp.Price_2_29) ::TFloat AS Price_2_29, SUM(tmp.Price_3_29) ::TFloat AS Price_3_29
           , SUM(tmp.Price_1_30) ::TFloat AS Price_1_30, SUM(tmp.Price_2_30) ::TFloat AS Price_2_30, SUM(tmp.Price_3_30) ::TFloat AS Price_3_30
           , SUM(tmp.Price_1_31) ::TFloat AS Price_1_31, SUM(tmp.Price_2_31) ::TFloat AS Price_2_31, SUM(tmp.Price_3_31) ::TFloat AS Price_3_31
+          , zc_Color_Aqua() AS Color1
+          , zc_Color_White()  AS Color2
      FROM (SELECT tmpMI.GoodsMainId
                 , tmpMI.CommonCode
-                , tmpMI.GoodCode
+                , tmpMI.GoodsCode
                 , tmpMI.GoodsName
                 , CASE WHEN tmpMI.NumDay = 1 THEN tmpMI.Price_1 ELSE 0 END AS Price_1_1
                 , CASE WHEN tmpMI.NumDay = 1 THEN tmpMI.Price_2 ELSE 0 END AS Price_2_1
@@ -312,10 +316,11 @@ BEGIN
            FROM tmpMI) AS tmp
         GROUP BY tmp.GoodsMainId
                , tmp.CommonCode
-               , tmp.GoodCode
+               , tmp.GoodsCode
                , tmp.GoodsName
 
    ;
+  RETURN NEXT Cursor1;
 
 
 END;
@@ -329,3 +334,5 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
 04.05.17         * 
 */
+--select * from gpReport_Movement_PriceList(inStartDate := ('01.12.2016')::TDateTime , inEndDate := ('13.12.2016')::TDateTime , inJuridicalId_1 := 59611 , inJuridicalId_2 := 59610 , inJuridicalId_3 := 59612 , inContractId_1 := 183338 , inContractId_2 := 183275 , inContractId_3 := 183378 ,  inSession := '3');
+ --FETCH ALL "<unnamed portal 5>";

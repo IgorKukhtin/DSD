@@ -339,11 +339,11 @@ BEGIN
                           , ObjectHistory_PartnerMedicalDetails.AccounterName     AS PartnerMedical_AccounterName
                           , ObjectHistory_PartnerMedicalDetails.INN               AS PartnerMedical_INN
                           , ObjectHistory_PartnerMedicalDetails.NumberVAT         AS PartnerMedical_NumberVAT
-                          , ObjectHistory_PartnerMedicalDetails.BankAccount       AS PartnerMedical_BankAccount
-                          , tmpPartnerMedicalBankAccount.BankName                 AS PartnerMedical_BankName
-                          , tmpPartnerMedicalBankAccount.MFO                      AS PartnerMedical_MFO
+                          , COALESCE (Object_BankAccount.ValueData,ObjectHistory_PartnerMedicalDetails.BankAccount)       AS PartnerMedical_BankAccount
+                          , COALESCE (Object_Bank.ValueData,tmpPartnerMedicalBankAccount.BankName)                 AS PartnerMedical_BankName
+                          , COALESCE (ObjectString_MFO.ValueData,tmpPartnerMedicalBankAccount.MFO)                      AS PartnerMedical_MFO
                           , ObjectString_PartnerMedical_FIO.ValueData             AS MedicFIO
-                          , COALESCE(tmpContract.PartnerMedical_ContractId,0)     AS PartnerMedical_ContractId
+                          , COALESCE (tmpContract.PartnerMedical_ContractId,0)    AS PartnerMedical_ContractId
                           , tmpContract.PercentSP
 
                      FROM tmpSale
@@ -374,6 +374,20 @@ BEGIN
                                                                                                          ELSE 0 
                                                                                                     END                                             --4063780;6;"ƒит€чий"  -- test 3690580
                   --                          AND COALESCE (tmpContract.PercentSP,0) = tmpSale.ChangePercent
+
+                          -- расчетный счет из договора
+                          LEFT JOIN ObjectLink AS ObjectLink_Contract_BankAccount
+                                 ON ObjectLink_Contract_BankAccount.ObjectId = Object_PartnerMedical_Contract.Id
+                                AND ObjectLink_Contract_BankAccount.DescId = zc_ObjectLink_Contract_BankAccount()
+                          LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = ObjectLink_Contract_BankAccount.ChildObjectId 
+                          LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
+                                 ON ObjectLink_BankAccount_Bank.ObjectId = Object_BankAccount.Id
+                                AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
+                          LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
+                          LEFT JOIN ObjectString AS ObjectString_MFO
+                                 ON ObjectString_MFO.ObjectId = Object_Bank.Id
+                                AND ObjectString_MFO.DescId = zc_ObjectString_Bank_MFO()
+
 
                     )
 
