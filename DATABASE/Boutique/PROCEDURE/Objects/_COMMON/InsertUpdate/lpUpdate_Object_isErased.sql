@@ -1,9 +1,11 @@
 -- Function: lpUpdate_Object_isErased (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS lpUpdate_Object_isErased (Integer, Integer);
+DROP FUNCTION IF EXISTS lpUpdate_Object_isErased (Integer, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_Object_isErased(
-    IN inObjectId    Integer, 
+    IN inObjectId    Integer,
+    IN inIsErased    Boolean, 
     IN inUserId      Integer
 )
 RETURNS VOID AS
@@ -13,7 +15,7 @@ $BODY$
 BEGIN
 
    -- изменили
-   UPDATE Object SET isErased = NOT isErased WHERE Id = inObjectId  RETURNING DescId, isErased INTO vbDescId, vbIsErased;
+   UPDATE Object SET isErased = inIsErased WHERE Id = inObjectId  RETURNING DescId, isErased INTO vbDescId, vbIsErased;
 
 
    IF vbDescId = zc_Object_Member() AND vbIsErased = TRUE
@@ -42,7 +44,8 @@ ALTER FUNCTION lpUpdate_Object_isErased (Integer, Integer) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+ 04.05.17                                                         * inIsErased
  12.09.14                                        * add синхронизируем удаление
  08.05.14                                        *
 */
