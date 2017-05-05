@@ -107,6 +107,7 @@ type
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     clUnitName: TcxGridDBColumn;
+    isNotOne: TcxGridDBColumn;
   private
   public
   end;
