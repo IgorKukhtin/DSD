@@ -21,6 +21,15 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Member());
    vbUserId:= lpGetUserBySession (inSession);
 
+  -- !!!ВРЕМЕННО!!! - пытаемся найти Id  для Загрузки из Sybase - !!!но если в Sybase нет уникальности - НАДО УБРАТЬ!!!
+   IF COALESCE (ioId, 0) = 0
+   THEN ioId := (SELECT Id FROM Object WHERE Valuedata = inName AND DescId = zc_Object_Member());
+        -- пытаемся найти код
+        inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId);
+   END IF;
+   -- !!!ВРЕМЕННО!!! - для загрузки из Sybase т.к. там код = 0 
+
+
    -- Нужен для загрузки из Sybase т.к. там код = 0 
    IF inCode = 0 THEN  inCode := NEXTVAL ('Object_Member_seq'); END IF; 
    

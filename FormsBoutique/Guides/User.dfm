@@ -48,7 +48,7 @@ object UserForm: TUserForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 26
+        Width = 55
       end
       object clName: TcxGridDBColumn
         Caption = #1051#1086#1075#1080#1085
@@ -66,29 +66,13 @@ object UserForm: TUserForm
         Options.Editing = False
         Width = 87
       end
-      object BranchCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1092'.'
-        DataBinding.FieldName = 'BranchCode'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 26
-      end
-      object BranchName: TcxGridDBColumn
-        Caption = #1060#1080#1083#1080#1072#1083
-        DataBinding.FieldName = 'BranchName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 61
-      end
       object UnitCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087'.'
         DataBinding.FieldName = 'UnitCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 35
+        Width = 55
       end
       object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -96,7 +80,7 @@ object UserForm: TUserForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 61
+        Width = 142
       end
       object PositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
@@ -104,7 +88,7 @@ object UserForm: TUserForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 61
+        Width = 104
       end
       object User_: TcxGridDBColumn
         DataBinding.FieldName = 'User_'
@@ -112,27 +96,6 @@ object UserForm: TUserForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 47
-      end
-      object UserSign: TcxGridDBColumn
-        Caption = #1069#1083'. '#1087#1086#1076#1087#1080#1089#1100
-        DataBinding.FieldName = 'UserSign'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object UserSeal: TcxGridDBColumn
-        Caption = #1069#1083'. '#1087#1077#1095#1072#1090#1100
-        DataBinding.FieldName = 'UserSeal'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object UserKey: TcxGridDBColumn
-        Caption = #1069#1083'. '#1050#1083#1102#1095
-        DataBinding.FieldName = 'UserKey'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -165,11 +128,11 @@ object UserForm: TUserForm
     TabOrder = 2
     object RoleGrid: TcxGrid
       Left = 1
-      Top = 1
+      Top = 4
       Width = 353
-      Height = 176
-      Align = alTop
-      TabOrder = 1
+      Height = 326
+      Align = alClient
+      TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
       object RoleGridView: TcxGridDBTableView
@@ -208,71 +171,9 @@ object UserForm: TUserForm
         GridView = RoleGridView
       end
     end
-    object PeriodCloseGrid: TcxGrid
-      Left = 1
-      Top = 180
-      Width = 353
-      Height = 150
-      Align = alClient
-      TabOrder = 0
-      LookAndFeel.NativeStyle = True
-      LookAndFeel.SkinName = 'UserSkin'
-      object PeriodCloseGridView: TcxGridDBTableView
-        Navigator.Buttons.CustomButtons = <>
-        DataController.DataSource = PeriodCloseDS
-        DataController.Filter.Options = [fcoCaseInsensitive]
-        DataController.Summary.DefaultGroupSummaryItems = <>
-        DataController.Summary.FooterSummaryItems = <>
-        DataController.Summary.SummaryGroups = <>
-        Images = dmMain.SortImageList
-        OptionsCustomize.ColumnHiding = True
-        OptionsCustomize.ColumnsQuickCustomization = True
-        OptionsData.Deleting = False
-        OptionsData.DeletingConfirmation = False
-        OptionsData.Editing = False
-        OptionsData.Inserting = False
-        OptionsView.ColumnAutoWidth = True
-        OptionsView.GroupByBox = False
-        OptionsView.HeaderAutoHeight = True
-        OptionsView.Indicator = True
-        Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-        object RoleName: TcxGridDBColumn
-          Caption = #1056#1086#1083#1080
-          DataBinding.FieldName = 'RoleName'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Action = ChoiceRole
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Width = 159
-        end
-        object Name: TcxGridDBColumn
-          Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072
-          DataBinding.FieldName = 'Name'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Action = ChoiceUnit
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Width = 232
-        end
-        object CloseDate_excl: TcxGridDBColumn
-          Caption = #1055#1077#1088#1080#1086#1076
-          DataBinding.FieldName = 'CloseDate_excl'
-          Width = 68
-        end
-      end
-      object PeriodCloseGridLevel: TcxGridLevel
-        GridView = PeriodCloseGridView
-      end
-    end
     object HorSplitter: TcxSplitter
       Left = 1
-      Top = 177
+      Top = 1
       Width = 353
       Height = 3
       AlignSplitter = salTop
@@ -282,13 +183,13 @@ object UserForm: TUserForm
   object DataSource: TDataSource
     DataSet = MasterCDS
     Left = 32
-    Top = 72
+    Top = 112
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 40
-    Top = 88
+    Top = 128
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -301,11 +202,6 @@ object UserForm: TUserForm
         Component = Panel
         Properties.Strings = (
           'Width')
-      end
-      item
-        Component = PeriodCloseGrid
-        Properties.Strings = (
-          'Height')
       end
       item
         Component = RoleGrid
@@ -322,8 +218,8 @@ object UserForm: TUserForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 240
-    Top = 56
+    Left = 64
+    Top = 208
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -342,8 +238,7 @@ object UserForm: TUserForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 176
-    Top = 64
+    Top = 208
     DockControlHeights = (
       0
       0
@@ -473,8 +368,8 @@ object UserForm: TUserForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 288
-    Top = 64
+    Left = 32
+    Top = 208
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -487,7 +382,6 @@ object UserForm: TUserForm
           StoredProc = spUserRole
         end
         item
-          StoredProc = spPeriodClose
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -546,10 +440,10 @@ object UserForm: TUserForm
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spErasedUnErased
+      StoredProc = spErased
       StoredProcList = <
         item
-          StoredProc = spErasedUnErased
+          StoredProc = spErased
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -561,10 +455,10 @@ object UserForm: TUserForm
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spErasedUnErased
+      StoredProc = spUnErased
       StoredProcList = <
         item
-          StoredProc = spErasedUnErased
+          StoredProc = spUnErased
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -700,15 +594,11 @@ object UserForm: TUserForm
         item
           Name = 'Key'
           Value = Null
-          Component = PeriodCloseCDS
-          ComponentItem = 'RoleId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = PeriodCloseCDS
-          ComponentItem = 'RoleName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -726,15 +616,11 @@ object UserForm: TUserForm
         item
           Name = 'Key'
           Value = Null
-          Component = PeriodCloseCDS
-          ComponentItem = 'UnitId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = PeriodCloseCDS
-          ComponentItem = 'UnitName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -744,12 +630,9 @@ object UserForm: TUserForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdatePeriodClose
       StoredProcList = <
         item
-          StoredProc = spInsertUpdatePeriodClose
         end>
-      DataSource = PeriodCloseDS
     end
     object actProtocolRoleForm: TdsdOpenForm
       Category = 'DSDLib'
@@ -822,7 +705,7 @@ object UserForm: TUserForm
     Params = <>
     PackSize = 1
     Left = 56
-    Top = 104
+    Top = 144
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -852,8 +735,8 @@ object UserForm: TUserForm
     Left = 248
     Top = 232
   end
-  object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
+  object spErased: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_isErased_User'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -864,10 +747,17 @@ object UserForm: TUserForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 104
-    Top = 216
+    Left = 144
+    Top = 224
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 272
@@ -883,8 +773,8 @@ object UserForm: TUserForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 392
-    Top = 96
+    Left = 344
+    Top = 136
   end
   object spUserRole: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_UserRole'
@@ -946,21 +836,6 @@ object UserForm: TUserForm
     Left = 432
     Top = 128
   end
-  object PeriodCloseDS: TDataSource
-    DataSet = PeriodCloseCDS
-    Left = 384
-    Top = 216
-  end
-  object PeriodCloseCDS: TClientDataSet
-    Aggregates = <>
-    IndexFieldNames = 'UserId_excl'
-    MasterFields = 'Id'
-    MasterSource = DataSource
-    PacketRecords = 0
-    Params = <>
-    Left = 384
-    Top = 264
-  end
   object PeriodCloseViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     OnDblClickActionList = <>
@@ -972,67 +847,6 @@ object UserForm: TUserForm
     SummaryItemList = <>
     Left = 472
     Top = 216
-  end
-  object spPeriodClose: TdsdStoredProc
-    StoredProcName = 'gpSelect_PeriodClose'
-    DataSet = PeriodCloseCDS
-    DataSets = <
-      item
-        DataSet = PeriodCloseCDS
-      end>
-    Params = <>
-    PackSize = 1
-    Left = 600
-    Top = 144
-  end
-  object spInsertUpdatePeriodClose: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_PeriodClose'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioid'
-        Value = Null
-        Component = PeriodCloseCDS
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inuserid'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inroleid'
-        Value = Null
-        Component = PeriodCloseCDS
-        ComponentItem = 'RoleId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inunitid'
-        Value = Null
-        Component = PeriodCloseCDS
-        ComponentItem = 'UnitId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inperiod'
-        Value = Null
-        Component = PeriodCloseCDS
-        ComponentItem = 'Period'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 576
-    Top = 232
   end
   object spInsertUpdateUser: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_User'
@@ -1111,5 +925,29 @@ object UserForm: TUserForm
     PackSize = 1
     Left = 168
     Top = 136
+  end
+  object spUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_isErased_User'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inobjectid'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 144
+    Top = 288
   end
 end

@@ -1242,7 +1242,10 @@ begin
   end;
 
   LastDelimiter(' ', lDayInfo.Text);
-  lCaption.Text := 'Карта (Все ТТ за ' + AnsiLowerCase(Copy(lDayInfo.Text, LastDelimiter(' ', lDayInfo.Text) + 1)) + ')';
+  if pos('Все ТТ', lDayInfo.Text) = 0 then
+    lCaption.Text := 'Карта (Все ТТ за ' + AnsiLowerCase(Copy(lDayInfo.Text, LastDelimiter(' ', lDayInfo.Text) + 1)) + ')'
+  else
+    lCaption.Text := 'Карта (Все ТТ)';
   ShowBigMap;
 
   ppPartner.IsOpen := False;
