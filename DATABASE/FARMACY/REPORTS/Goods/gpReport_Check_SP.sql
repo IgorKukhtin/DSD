@@ -73,6 +73,9 @@ RETURNS TABLE (MovementId     Integer
            , MedicSPName                        TVarChar
            , InvNumberSP                        TVarChar
            , OperDate                           TDateTime
+
+           , InvNumber_Invoice      TVarChar
+           , InvNumber_Invoice_Full TVarChar
 )
 AS
 $BODY$
@@ -229,6 +232,9 @@ BEGIN
                               , COALESCE (MIFloat_PriceSale.ValueData, 0)                 AS PriceSale
                               , MovementString_InvNumberSP.ValueData                      AS InvNumberSP
                               , MovementString_MedicSP.ValueData                          AS MedicSPName
+
+                              , Movement_Invoice.InvNumber                 :: TVarChar    AS InvNumber_Invoice 
+                              , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full 
                          FROM Movement AS Movement_Check
                               INNER JOIN MovementString AS MovementString_InvNumberSP
                                                         ON MovementString_InvNumberSP.MovementId = Movement_Check.Id
@@ -246,6 +252,12 @@ BEGIN
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
                                                            ON MovementLinkObject_PartnerMedical.MovementId = Movement_Check.Id
                                                           AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
+                              -- счет
+                              LEFT JOIN MovementLinkMovement AS MLM_Child
+                                     ON MLM_Child.MovementId = Movement_Check.Id
+                                    AND MLM_Child.descId = zc_MovementLinkMovement_Child()
+                              LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Child.MovementChildId
+
                               -- еще нужно добавить ограничение по больнице
                               INNER JOIN MovementItem AS MI_Check
                                                       ON MI_Check.MovementId = Movement_Check.Id
@@ -274,6 +286,8 @@ BEGIN
                                 , MovementString_MedicSP.ValueData          
                                 , Movement_Check.OperDate, Movement_Check.Id
                                 , COALESCE (MIFloat_PriceSale.ValueData, 0)
+                                , Movement_Invoice.InvNumber 
+                                , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar )
                          HAVING SUM (MI_Check.Amount) <> 0
                         )
 
@@ -445,6 +459,9 @@ BEGIN
              , tmpData.MedicSPName
              , tmpData.InvNumberSP
              , tmpData.OperDate     ::TDateTime
+
+             , tmpData.InvNumber_Invoice
+             , tmpData.InvNumber_Invoice_Full
 
         FROM tmpMI AS tmpData
              LEFT JOIN Movement AS Movement_err ON Movement_err.Id = tmpData.MovementId_err
