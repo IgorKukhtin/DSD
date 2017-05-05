@@ -798,7 +798,7 @@ var i:Integer;
 begin
      for i:=0 to ComponentCount-1 do
         if (Components[i] is TCheckBox) then
-          if Components[i].Tag=10
+          if (Components[i].Tag=10)and(TCheckBox(Components[i]).Enabled)
           then TCheckBox(Components[i]).Checked:=cbAllGuide.Checked;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1107,7 +1107,7 @@ begin
         Add('      , Shop.UnitName as Shop  ');
         Add('      , BillItemsIncome.DateIn as DateIn  ');
         Add(' from goods2  ');
-        Add('     left join (select BillItemsIncome.goodsid ');
+        Add('     left outer join (select BillItemsIncome.goodsid ');
         Add('                     , sum(BillItemsIncome.OperCount) as OperCount ');
         Add('                     , sum(BillItemsIncome.RemainsCount) as RemainsCount ');
         Add('                     , max(BillItemsIncome.OperPrice) as OperPrice ');
@@ -1119,10 +1119,10 @@ begin
         Add('                 from BillItemsIncome  ');
         Add('                 group by goodsid');
         Add('                ) as BillItemsIncome on BillItemsIncome.goodsid = goods2.id ');
-        Add('     left join (select DISTINCT goodsid, GroupsName from goodsproperty) as grGoods on grGoods.goodsid = goods2.id');
-        Add('     left join  Unit as Shop on shop.id = BillItemsIncome.UnitID ');
-        Add('     left join  Unit as Partner on Partner.id = BillItemsIncome.clientid ');
-        Add('     left join valuta on valuta.id = BillItemsIncome.ValutaID ');
+        Add('     left outer join (select DISTINCT goodsid, GroupsName from goodsproperty) as grGoods on grGoods.goodsid = goods2.id');
+        Add('     left outer join  Unit as Shop on shop.id = BillItemsIncome.UnitID ');
+        Add('     left outer join  Unit as Partner on Partner.id = BillItemsIncome.clientid ');
+        Add('     left outer join valuta on valuta.id = BillItemsIncome.ValutaID ');
         Add(' where goods2.ParentId = 500000 ');
         Add('   and goods2.HasChildren = -1  ');
         Add(' order by goods2.CashCode');
@@ -1200,7 +1200,7 @@ begin
         Add('      , Shop.UnitName as Shop  ');
         Add('      , max (BillItemsIncome.DateIn) as DateIn');
         Add(' from goods2');
-        Add('     left join (select BillItemsIncome.goodsid ');
+        Add('     left outer join (select BillItemsIncome.goodsid ');
         Add('                     , sum(BillItemsIncome.OperCount) as OperCount ');
         Add('                     , sum(BillItemsIncome.RemainsCount) as RemainsCount ');
         Add('                     , max(BillItemsIncome.OperPrice) as OperPrice ');
@@ -1212,8 +1212,8 @@ begin
         Add('                 from BillItemsIncome  ');
         Add('                 group by goodsid');
         Add('                ) as BillItemsIncome on BillItemsIncome.goodsid = goods2.id ');
-        Add('     left join (select DISTINCT goodsid, GroupsName from goodsproperty) as grGoods on grGoods.goodsid = goods2.id');
-        Add('     left join Unit as Shop on shop.id = BillItemsIncome.UnitID ');
+        Add('     left outer join (select DISTINCT goodsid, GroupsName from goodsproperty) as grGoods on grGoods.goodsid = goods2.id');
+        Add('     left outer join Unit as Shop on shop.id = BillItemsIncome.UnitID ');
         Add(' where goods2.ParentId = 500000 ');
         Add('   and goods2.HasChildren = -1  ');
         Add(' group by grgoods.GroupsName');
@@ -2024,22 +2024,22 @@ begin
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItemsIncome.GoodsPropertyId  ');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId  ');
         Add('     left outer join dba.Measure on Measure.Id = GoodsProperty.MeasureId  ');
-        Add('     left join DBA.GoodsInfo  on GoodsInfo.Id = GoodsProperty.GoodsInfoId ');
-        Add('     left join DBA.GoodsSize on  GoodsSize.Id = GoodsProperty.GoodsSizeId ');
-        Add('     left join DBA.Composition on Composition.Id = GoodsProperty.CompositionId ');
-        Add('     left join DBA.CompositionGroup on CompositionGroup.Id = Composition.CompositionGroupId  ');
-        Add('     left join DBA.LineFabrica on LineFabrica.Id = GoodsProperty.LineFabricaId ');
-        Add('     left join  ');
+        Add('     left outer join DBA.GoodsInfo  on GoodsInfo.Id = GoodsProperty.GoodsInfoId ');
+        Add('     left outer join DBA.GoodsSize on  GoodsSize.Id = GoodsProperty.GoodsSizeId ');
+        Add('     left outer join DBA.Composition on Composition.Id = GoodsProperty.CompositionId ');
+        Add('     left outer join DBA.CompositionGroup on CompositionGroup.Id = Composition.CompositionGroupId  ');
+        Add('     left outer join DBA.LineFabrica on LineFabrica.Id = GoodsProperty.LineFabricaId ');
+        Add('     left outer join  ');
         Add('          ( select goods_group.goodsName AS LabelName ');
         Add('            , GoodsProperty.goodsId ');
         Add('              from GoodsProperty ');
         Add('              join goods on goods.Id = GoodsProperty.goodsId ');
         Add('              join goods as goods_group on goods_group.Id = goods.ParentId ');
         Add('              group by  GoodsProperty.goodsId, goods_group.goodsName) as Label on label.goodsId = GoodsProperty.goodsId ');
-        Add('      left join  dba.Firma as Firma on  Firma.id = BillItemsIncome.FirmaId ');
+        Add('      left outer join  dba.Firma as Firma on  Firma.id = BillItemsIncome.FirmaId ');
         //    !!!последнюю группу не загружаем, но кроме АРХИВА
-        Add('      left join  dba.Goods as GoodsGroup1 on  GoodsGroup1.id = Goods.ParentId ');
-        Add('      left join  dba.Goods as GoodsGroup2 on  GoodsGroup2.id = GoodsGroup1.ParentId ');
+        Add('      left outer join  dba.Goods as GoodsGroup1 on  GoodsGroup1.id = Goods.ParentId ');
+        Add('      left outer join  dba.Goods as GoodsGroup2 on  GoodsGroup2.id = GoodsGroup1.ParentId ');
 
         Add(' where  Bill.BillKind = 2 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add(' order by Bill.Id ');
@@ -2142,7 +2142,7 @@ begin
         Add('     join dba.Bill on BillItems.BillID = Bill.Id ');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId  ');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId  ');
-        Add('      left join  DBA.BillItemsIncome on BillItemsIncome.Id = BillItems.BillItemsIncomeID ');
+        Add('      left outer join  DBA.BillItemsIncome on BillItemsIncome.Id = BillItems.BillItemsIncomeID ');
         Add(' where  Bill.BillKind = 1 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add(' order by Bill.Id ');
         Open;
@@ -2226,7 +2226,7 @@ begin
         Add('     join dba.Bill on BillItems.BillID = Bill.Id ');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId  ');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId  ');
-        Add('     left join  DBA.BillItemsIncome on BillItemsIncome.Id = BillItems.BillItemsIncomeID ');
+        Add('     left outer join  DBA.BillItemsIncome on BillItemsIncome.Id = BillItems.BillItemsIncomeID ');
         Add(' where  Bill.BillKind = 4 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add(' order by Bill.Id ');
         Open;
@@ -2308,7 +2308,7 @@ begin
         Add('     join dba.Bill on BillItems.BillID = Bill.Id ');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId  ');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId  ');
-        Add('     left join  DBA.BillItemsIncome on BillItemsIncome.Id = BillItems.BillItemsIncomeID ');
+        Add('     left outer join  DBA.BillItemsIncome on BillItemsIncome.Id = BillItems.BillItemsIncomeID ');
         Add(' where  Bill.BillKind = 6 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add(' order by Bill.Id ');
         Open;
@@ -2387,19 +2387,23 @@ begin
         Add('     , Bill_CurrencyDocument.ValutaName as  CurrencyDocumentName ');
         Add('     , Bill_CurrencyPartner.Id_Postgres as CurrencyPartnerId ');
         Add('     , Bill_CurrencyPartner.ValutaName as CurrencyPartnerName ');
-        Add('     , ValutaDoc.NewKursIn as CurrencyValue ');
-        Add('     , ValutaDoc.NominalFromValuta as ParValue ');
-        Add('     , ValutaPar.NewKursOut as CurrencyPartnerValue ');
-        Add('     , ValutaPar.NominalFromValuta as ParPartnerValue ');
+        Add('     , 0 as CurrencyValue ');
+        Add('     , 1 as ParValue ');
+        Add('     , 0 as CurrencyPartnerValue ');
+        Add('     , 1 as ParPartnerValue ');
+        //Add('     , ValutaDoc.NewKursIn as CurrencyValue ');
+        //Add('     , ValutaDoc.NominalFromValuta as ParValue ');
+        //Add('     , ValutaPar.NewKursOut as CurrencyPartnerValue ');
+        //Add('     , ValutaPar.NominalFromValuta as ParPartnerValue ');
         Add('     , '''' as Comments ');
         Add('     , Bill.Id_Postgres ');
         Add(' from DBA.Bill ');
-        Add('     left join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
-        Add('     left join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
-        Add('     left join DBA.Valuta as Bill_CurrencyDocument on Bill_CurrencyDocument.Id = Bill.ValutaIDIn   ');
-        Add('     left join DBA.Valuta as Bill_CurrencyPartner on Bill_CurrencyPartner.Id = Bill.ValutaID  ');
-        Add('     left join (select * from  DBA.ValutaKursItems order by id desc ) as valutaDoc  on Bill.BillDate  between valutaDoc.startDate and valutaDoc.EndDate and valutaDoc.FromValutaID = Bill.ValutaIDIn  and valutaDoc.ToValutaID = Bill.ValutaIDpl ');
-        Add('     left join (select * from  DBA.ValutaKursItems order by id desc ) as valutaPar  on Bill.BillDate  between valutaPar.startDate and valutaPar.EndDate and valutaPar.FromValutaID = Bill.ValutaIDIn  and valutaPar.ToValutaID = Bill.ValutaID ');
+        Add('     left outer join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
+        Add('     left outer join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
+        Add('     left outer join DBA.Valuta as Bill_CurrencyDocument on Bill_CurrencyDocument.Id = Bill.ValutaIDIn   ');
+        Add('     left outer join DBA.Valuta as Bill_CurrencyPartner on Bill_CurrencyPartner.Id = Bill.ValutaID  ');
+        //Add('     left outer join (select * from  DBA.ValutaKursItems order by id desc ) as valutaDoc  on Bill.BillDate  between valutaDoc.startDate and valutaDoc.EndDate and valutaDoc.FromValutaID = Bill.ValutaIDIn  and valutaDoc.ToValutaID = Bill.ValutaIDpl ');
+        //Add('     left outer join (select * from  DBA.ValutaKursItems order by id desc ) as valutaPar  on Bill.BillDate  between valutaPar.startDate and valutaPar.EndDate and valutaPar.FromValutaID = Bill.ValutaIDIn  and valutaPar.ToValutaID = Bill.ValutaID ');
         Add(' where  Bill.BillKind = 2 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add(' order by ObjectId ');
         Open;
@@ -2493,19 +2497,19 @@ begin
         Add('     , Bill_CurrencyDocument.ValutaName as  CurrencyDocumentName ');
         Add('     , Bill_CurrencyPartner.Id_Postgres as CurrencyPartnerId ');
         Add('     , Bill_CurrencyPartner.ValutaName as CurrencyPartnerName ');
-        Add('     , ValutaDoc.NewKursIn as CurrencyValue ');
-        Add('     , ValutaDoc.NominalFromValuta as ParValue ');
-        Add('     , ValutaPar.NewKursOut as CurrencyPartnerValue ');
-        Add('     , ValutaPar.NominalFromValuta as ParPartnerValue ');
+        //Add('     , ValutaDoc.NewKursIn as CurrencyValue ');
+        //Add('     , ValutaDoc.NominalFromValuta as ParValue ');
+        //Add('     , ValutaPar.NewKursOut as CurrencyPartnerValue ');
+        //Add('     , ValutaPar.NominalFromValuta as ParPartnerValue ');
         Add('     , '''' as Comments ');
         Add('     , Bill.Id_Postgres ');
         Add(' from DBA.Bill ');
-        Add('     left join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
-        Add('     left join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
-        Add('     left join DBA.Valuta as Bill_CurrencyDocument on Bill_CurrencyDocument.Id = Bill.ValutaIDIn   ');
-        Add('     left join DBA.Valuta as Bill_CurrencyPartner on Bill_CurrencyPartner.Id = Bill.ValutaID  ');
-        Add('     left join (select * from  DBA.ValutaKursItems order by id desc ) as valutaDoc  on Bill.BillDate  between valutaDoc.startDate and valutaDoc.EndDate and valutaDoc.FromValutaID = Bill.ValutaIDIn  and valutaDoc.ToValutaID = Bill.ValutaIDpl ');
-        Add('     left join (select * from  DBA.ValutaKursItems order by id desc ) as valutaPar  on Bill.BillDate  between valutaPar.startDate and valutaPar.EndDate and valutaPar.FromValutaID = Bill.ValutaIDIn  and valutaPar.ToValutaID = Bill.ValutaID ');
+        Add('     left outer join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
+        Add('     left outer join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
+        Add('     left outer join DBA.Valuta as Bill_CurrencyDocument on Bill_CurrencyDocument.Id = Bill.ValutaIDIn   ');
+        Add('     left outer join DBA.Valuta as Bill_CurrencyPartner on Bill_CurrencyPartner.Id = Bill.ValutaID  ');
+        //Add('     left outer join (select * from  DBA.ValutaKursItems order by id desc ) as valutaDoc  on Bill.BillDate  between valutaDoc.startDate and valutaDoc.EndDate and valutaDoc.FromValutaID = Bill.ValutaIDIn  and valutaDoc.ToValutaID = Bill.ValutaIDpl ');
+        //Add('     left outer join (select * from  DBA.ValutaKursItems order by id desc ) as valutaPar  on Bill.BillDate  between valutaPar.startDate and valutaPar.EndDate and valutaPar.FromValutaID = Bill.ValutaIDIn  and valutaPar.ToValutaID = Bill.ValutaID ');
         Add(' where  Bill.BillKind = 1 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add(' order by ObjectId ');
         Open;
@@ -2592,19 +2596,23 @@ begin
         Add('     , Bill_CurrencyDocument.ValutaName as  CurrencyDocumentName ');
         Add('     , Bill_CurrencyPartner.Id_Postgres as CurrencyPartnerId ');
         Add('     , Bill_CurrencyPartner.ValutaName as CurrencyPartnerName ');
-        Add('     , ValutaDoc.NewKursIn as CurrencyValue ');
-        Add('     , ValutaDoc.NominalFromValuta as ParValue ');
-        Add('     , ValutaPar.NewKursOut as CurrencyPartnerValue ');
-        Add('     , ValutaPar.NominalFromValuta as ParPartnerValue ');
+        //Add('     , ValutaDoc.NewKursIn as CurrencyValue ');
+        //Add('     , ValutaDoc.NominalFromValuta as ParValue ');
+        //Add('     , ValutaPar.NewKursOut as CurrencyPartnerValue ');
+        //Add('     , ValutaPar.NominalFromValuta as ParPartnerValue ');
+        Add('     , 0 as CurrencyValue ');
+        Add('     , 1 as ParValue ');
+        Add('     , 0 as CurrencyPartnerValue ');
+        Add('     , 1 as ParPartnerValue ');
         Add('     , '''' as Comments ');
         Add('     , Bill.Id_Postgres ');
         Add(' from DBA.Bill ');
-        Add('     left join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
-        Add('     left join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
-        Add('     left join DBA.Valuta as Bill_CurrencyDocument on Bill_CurrencyDocument.Id = Bill.ValutaIDIn   ');
-        Add('     left join DBA.Valuta as Bill_CurrencyPartner on Bill_CurrencyPartner.Id = Bill.ValutaID  ');
-        Add('     left join (select * from  DBA.ValutaKursItems order by id desc ) as valutaDoc  on Bill.BillDate  between valutaDoc.startDate and valutaDoc.EndDate and valutaDoc.FromValutaID = Bill.ValutaIDIn  and valutaDoc.ToValutaID = Bill.ValutaIDpl ');
-        Add('     left join (select * from  DBA.ValutaKursItems order by id desc ) as valutaPar  on Bill.BillDate  between valutaPar.startDate and valutaPar.EndDate and valutaPar.FromValutaID = Bill.ValutaIDIn  and valutaPar.ToValutaID = Bill.ValutaID ');
+        Add('     left outer join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
+        Add('     left outer join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
+        Add('     left outer join DBA.Valuta as Bill_CurrencyDocument on Bill_CurrencyDocument.Id = Bill.ValutaIDIn   ');
+        Add('     left outer join DBA.Valuta as Bill_CurrencyPartner on Bill_CurrencyPartner.Id = Bill.ValutaID  ');
+        //Add('     left outer join (select * from  DBA.ValutaKursItems order by id desc ) as valutaDoc  on Bill.BillDate  between valutaDoc.startDate and valutaDoc.EndDate and valutaDoc.FromValutaID = Bill.ValutaIDIn  and valutaDoc.ToValutaID = Bill.ValutaIDpl ');
+        //Add('     left outer join (select * from  DBA.ValutaKursItems order by id desc ) as valutaPar  on Bill.BillDate  between valutaPar.startDate and valutaPar.EndDate and valutaPar.FromValutaID = Bill.ValutaIDIn  and valutaPar.ToValutaID = Bill.ValutaID ');
         Add(' where  Bill.BillKind = 4 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add(' order by ObjectId ');
         Open;
@@ -2694,8 +2702,8 @@ begin
         Add('     , '''' as Comments ');
         Add('     , Bill.Id_Postgres ');
         Add(' from DBA.Bill ');
-        Add('     left join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
-        Add('     left join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
+        Add('     left outer join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
+        Add('     left outer join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
         Add(' where  Bill.BillKind = 6 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add(' order by ObjectId ');
         Open;
@@ -3523,8 +3531,8 @@ begin
         //        !!!последнюю группу не загружаем, но кроме АРХИВА
         Add('     left outer join (select distinct Goods_find.ParentId');
         Add('                      from dba.Goods as Goods_find');
-        Add('                           left join dba.Goods as Goods_parent1 on Goods_parent1.Id = Goods_find.ParentId');
-        Add('                           left join dba.Goods as Goods_parent2 on Goods_parent2.Id = Goods_parent1.ParentId');
+        Add('                           left outer join dba.Goods as Goods_parent1 on Goods_parent1.Id = Goods_find.ParentId');
+        Add('                           left outer join dba.Goods as Goods_parent2 on Goods_parent2.Id = Goods_parent1.ParentId');
         Add('                      where Goods_find.HasChildren = zc_hsLeaf()');
         Add('                         and Goods_find.ParentId <> 500000');
         Add('                         and Goods_parent1.ParentId <> 500000');
@@ -4075,10 +4083,10 @@ begin
              fOpenSqToQuery (' select OS_Measure_InternalCode.ValueData  AS InternalCode'
                            +'       , OS_Measure_InternalName.ValueData  AS InternalName'
                            +' from Object'
-                           +'         LEFT JOIN ObjectString AS OS_Measure_InternalName'
+                           +'         left outer join ObjectString AS OS_Measure_InternalName'
                            +'                  ON OS_Measure_InternalName.ObjectId = Object.Id'
                            +'                 AND OS_Measure_InternalName.DescId = zc_ObjectString_Measure_InternalName()'
-                           +'         LEFT JOIN ObjectString AS OS_Measure_InternalCode'
+                           +'         left outer join ObjectString AS OS_Measure_InternalCode'
                            +'                  ON OS_Measure_InternalCode.ObjectId = Object.Id'
                            +'                 AND OS_Measure_InternalCode.DescId = zc_ObjectString_Measure_InternalCode()'
                            +' where Object.Id='+inttostr(FieldByName('Id_Postgres').AsInteger));
@@ -4324,7 +4332,7 @@ begin
         Add(', PriceList.Id_Postgres');
         Add(', valuta.Id_Postgres as ValutaID');
         Add('from DBA.PriceList ');
-        Add('left join valuta on valuta.id = PriceList.valutaid');
+        Add('left outer join valuta on valuta.id = PriceList.valutaid');
         Add('order by  ObjectId');
         Open;
         //
@@ -4390,8 +4398,8 @@ begin
         Add(', DiscountTaxItems.PercentTax as Value');
         Add(', DiscountTaxItems.Id_Postgres');
         Add('from DBA.DiscountTaxItems');
-        Add('left join Unit on Unit.id = DiscountTaxItems.UnitID');
-        Add('left join BillItemsIncome on BillItemsIncome.ID= DiscountTaxItems.BillItemsIncomeID');
+        Add('left outer join Unit on Unit.id = DiscountTaxItems.UnitID');
+        Add('left outer join BillItemsIncome on BillItemsIncome.ID= DiscountTaxItems.BillItemsIncomeID');
         Add('where  BillItemsIncome.GoodsId_Postgres is not null');  // Эта строка только для тестирования в реальной загрузке удалить
         Add('order by  StartDate');
         Open;
@@ -4462,8 +4470,8 @@ begin
         Add(', PriceListItems.NewPrice as Value');
         Add(', PriceListItems.Id_Postgres');
         Add('from DBA.PriceListItems');
-        Add('left join PriceList on PriceList.id = PriceListItems.PriceListID');
-        Add('left join BillItemsIncome on BillItemsIncome.GoodsID= PriceListItems.goodsid');
+        Add('left outer join PriceList on PriceList.id = PriceListItems.PriceListID');
+        Add('left outer join BillItemsIncome on BillItemsIncome.GoodsID= PriceListItems.goodsid');
         Add('where  BillItemsIncome.GoodsId_Postgres is not null'); // Эта строка только для тестирования в реальной загрузке удалить
         Add('order by StartDate');
         Open;

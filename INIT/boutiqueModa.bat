@@ -1,0 +1,1 @@
+copy /Y boutiqueModa.php boutique_init.php

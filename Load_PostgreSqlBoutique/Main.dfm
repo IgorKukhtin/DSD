@@ -874,7 +874,7 @@
           Width = 215
           Height = 21
           TabOrder = 3
-          Text = 'd:\DatFiles'
+          Text = 'E:\Project\DATABASE\DatFiles'
         end
         object cbEsc: TCheckBox
           Tag = 11
@@ -1079,6 +1079,7 @@
   end
   object toZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
+    UTF8StringsAsWideField = True
     Catalog = 'public'
     DesignConnection = True
     HostName = 'localhost'
