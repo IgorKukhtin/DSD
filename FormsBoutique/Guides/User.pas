@@ -54,7 +54,7 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     spSelect: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    spErasedUnErased: TdsdStoredProc;
+    spErased: TdsdStoredProc;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     clMemberName: TcxGridDBColumn;
     RoleAddOn: TdsdDBViewAddOn;
@@ -85,6 +85,7 @@ type
     bbProtocolOpen: TdxBarButton;
     actProtocolRoleForm: TdsdOpenForm;
     bbProtocolRole: TdxBarButton;
+    spUnErased: TdsdStoredProc;
   private
     { Private declarations }
   public

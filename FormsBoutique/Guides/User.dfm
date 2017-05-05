@@ -135,8 +135,6 @@ object UserForm: TUserForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitTop = 1
-      ExplicitHeight = 176
       object RoleGridView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = RoleDS
@@ -180,7 +178,6 @@ object UserForm: TUserForm
       Height = 3
       AlignSplitter = salTop
       Control = RoleGrid
-      ExplicitTop = 177
     end
   end
   object DataSource: TDataSource
@@ -443,10 +440,10 @@ object UserForm: TUserForm
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spErasedUnErased
+      StoredProc = spErased
       StoredProcList = <
         item
-          StoredProc = spErasedUnErased
+          StoredProc = spErased
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -458,10 +455,10 @@ object UserForm: TUserForm
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spErasedUnErased
+      StoredProc = spUnErased
       StoredProcList = <
         item
-          StoredProc = spErasedUnErased
+          StoredProc = spUnErased
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -738,8 +735,8 @@ object UserForm: TUserForm
     Left = 248
     Top = 232
   end
-  object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
+  object spErased: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_isErased_User'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -750,10 +747,17 @@ object UserForm: TUserForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 104
-    Top = 256
+    Left = 144
+    Top = 224
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 272
@@ -921,5 +925,29 @@ object UserForm: TUserForm
     PackSize = 1
     Left = 168
     Top = 136
+  end
+  object spUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_isErased_User'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inobjectid'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 144
+    Top = 288
   end
 end
