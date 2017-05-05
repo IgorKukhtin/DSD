@@ -1412,10 +1412,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TObjectDescForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TObjectForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TRoleForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleEditForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TRoleEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRoleForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRoleEditForm');
 //
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleUnionForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TRoleUnionForm');

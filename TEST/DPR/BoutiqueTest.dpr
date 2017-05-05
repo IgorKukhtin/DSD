@@ -192,7 +192,12 @@ uses
   DiscountPeriodGoodsItemEdit in '..\..\FormsBoutique\Guides\DiscountPeriodGoodsItemEdit.pas' {DiscountPeriodGoodsItemEditForm: TParentForm},
   DiscountPeriodGoodsItem in '..\..\FormsBoutique\Guides\DiscountPeriodGoodsItem.pas' {DiscountPeriodGoodsItemForm: TParentForm},
   Inventory in '..\..\FormsBoutique\Document\Inventory.pas' {InventoryForm: TParentForm},
-  InventoryJournal in '..\..\FormsBoutique\Document\InventoryJournal.pas' {InventoryJournalForm: TParentForm};
+  InventoryJournal in '..\..\FormsBoutique\Document\InventoryJournal.pas' {InventoryJournalForm: TParentForm},
+  Role in '..\..\FormsBoutique\Guides\Role.pas' {RoleForm: TParentForm},
+  RoleEdit in '..\..\FormsBoutique\Guides\RoleEdit.pas' {RoleEditForm: TParentForm}
+
+
+  ;
 
 {$R *.res}
 {$R DevExpressRus.res}
