@@ -2,11 +2,15 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Mobile (Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Mobile (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Mobile (Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner_Mobile (
-     IN inMemberId          Integer  , -- физ.лицо
-     IN inisShowAll         Boolean  , --
-     IN inSession           TVarChar   -- сессия пользователя
+    IN inMemberId          Integer  , -- физ.лицо
+    IN inJuridicalId       Integer  , 
+    IN inRetailId          Integer  , 
+    IN inRouteId           Integer  , 
+    IN inisShowAll         Boolean  , --
+    IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id              Integer
              , Code            Integer  -- Код
@@ -24,6 +28,7 @@ RETURNS TABLE (Id              Integer
              , JuridicalName   TVarChar --
              , RouteId         Integer  -- Маршрут
              , RouteName       TVarChar -- 
+             , RetailId Integer, RetailName TVarChar  -- торговая сеть
              , ContractId      Integer  -- Договор - все возможные договора...
              , ContractCode    Integer  --
              , ContractName    TVarChar -- 
@@ -84,7 +89,8 @@ BEGIN
                , Object_Juridical.ValueData     AS JuridicalName
                , Object_Route.Id                AS RouteId
                , Object_Route.ValueData         AS RouteName
-
+               , Object_Retail.Id               AS RetailId
+               , Object_Retail.ValueData        AS RetailName
                , Object_Contract.Id             AS ContractId
                , Object_Contract.ObjectCode     AS ContractCode
                , Object_Contract.ValueData      AS ContractName
@@ -128,11 +134,16 @@ BEGIN
                                    AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
                LEFT JOIN Object_Personal_View AS Object_PersonalTrade ON Object_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
 
+               LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                    ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id 
+                                   AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+               LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
           WHERE tmpMobilePartner.isSync = TRUE
            AND ( tmpMobilePartner.isErased = inisShowAll OR inisShowAll = True)
-
- 
-
+           AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
+           AND (tmpMobilePartner.RouteId = inRouteId OR inRouteId = 0)
+           AND (tmpMobilePartner.JuridicalId = inJuridicalId OR inJuridicalId = 0)
 ;
 
 END; 
@@ -142,9 +153,9 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Ярошенко Р.Ф.
+ 05.05.17         *
  07.03.17         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Partner_Mobile(inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
---select * from gpSelect_Object_Partner_Mobile(inMemberId := 149833 , inisShowAll := 'False' ,  inSession := '5');
+-- select * from gpSelect_Object_Partner_Mobile(inMemberId := 274610 , inRetailId := 310847 , inJuridicalId := 140733 , inRouteId := 8548 , inisShowAll := 'False' ,  inSession := '5');

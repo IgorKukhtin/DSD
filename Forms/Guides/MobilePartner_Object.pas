@@ -23,7 +23,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter, dxBarExtItems,
   dsdAddOn, cxCheckBox, dxSkinscxPCPainter, cxButtonEdit, cxContainer,
-  cxTextEdit, dsdGuides, cxLabel, cxCurrencyEdit;
+  cxTextEdit, dsdGuides, cxLabel, cxCurrencyEdit, Vcl.ExtCtrls;
 
 type
   TMobilePartner_ObjectForm = class(TParentForm)
@@ -79,6 +79,23 @@ type
     spUpdate_Partner_Schedule: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     spUpdate_Partner_Delivery: TdsdStoredProc;
+    Panel: TPanel;
+    edRetail: TcxButtonEdit;
+    cxLabel1: TcxLabel;
+    cxLabel6: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    cxLabel4: TcxLabel;
+    edRoute: TcxButtonEdit;
+    GuidesRetail: TdsdGuides;
+    GuidesRoute: TdsdGuides;
+    JuridicalGuides: TdsdGuides;
+    spCheck: TdsdStoredProc;
+    actShowCurPartnerOnMap: TdsdPartnerMapAction;
+    actShowAllPartnerOnMap: TdsdPartnerMapAction;
+    actCheckShowAllPartnerOnMap: TdsdExecStoredProc;
+    mactShowAllPartnerOnMap: TMultiAction;
+    bbShowCurPartnerOnMap: TdxBarButton;
+    bbShowAllPartnerOnMap: TdxBarButton;
   private
     { Private declarations }
   public

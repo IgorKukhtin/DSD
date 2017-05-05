@@ -9,7 +9,6 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderIncome(
     IN inIsErased          Boolean   , --
     IN inisSnab            Boolean   , --
     IN inJuridicalBasisId  Integer   , --
-
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Full TVarChar
@@ -33,6 +32,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Full TVarChar
              , MovementId_Income Integer, InvNumber_Income TVarChar, OperDate_Income TDateTime, InvNumber_Income_Full TVarChar
              , FromName_Income TVarChar
              , isNotOne Boolean
+             , isClosed Boolean
               )
 
 AS
@@ -118,6 +118,7 @@ BEGIN
                        END
                   ELSE FALSE
              END AS isNotOne
+           , COALESCE (MovementBoolean_Closed.ValueData, false)::Boolean AS isClosed
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_OrderIncome() AND Movement.StatusId = tmpStatus.StatusId
@@ -126,6 +127,10 @@ BEGIN
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Closed
+                                      ON MovementBoolean_Closed.MovementId = Movement.Id
+                                     AND MovementBoolean_Closed.DescId = zc_MovementBoolean_Closed()
             
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId =  Movement.Id

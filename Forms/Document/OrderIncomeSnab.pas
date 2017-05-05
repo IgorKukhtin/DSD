@@ -150,7 +150,7 @@ type
     macUpdateAmountAll: TMultiAction;
     actUpdateAmountRemains: TdsdExecStoredProc;
     actRefresh_MI: TdsdDataSetRefresh;
-    bb: TdxBarButton;
+    bbUpdateAmountAll: TdxBarButton;
     HeaderSaver1: THeaderSaver;
     spUpdateMovementByReport: TdsdStoredProc;
     actPrintOrder: TdsdPrintAction;
@@ -158,6 +158,10 @@ type
     edFromName_Income: TcxTextEdit;
     cxLabel5: TcxLabel;
     cxLabel13: TcxLabel;
+    edisClosed: TcxCheckBox;
+    spisClosed: TdsdStoredProc;
+    actClosed: TdsdExecStoredProc;
+    bbClosed: TdxBarButton;
   private
   public
   end;

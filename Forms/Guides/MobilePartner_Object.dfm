@@ -19,9 +19,9 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 91
     Width = 915
-    Height = 438
+    Height = 373
     Align = alClient
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
@@ -164,6 +164,14 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 150
+      end
+      object RetailName: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+        DataBinding.FieldName = 'RetailName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
       end
       object clRouteName: TcxGridDBColumn
         Caption = #1052#1072#1088#1096#1088#1091#1090
@@ -365,27 +373,86 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       GridView = cxGridDBTableView
     end
   end
-  object cxLabel3: TcxLabel
-    Left = 579
-    Top = 134
-    Caption = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090':'
-  end
-  object edPersonalTrade: TcxButtonEdit
-    Left = 668
-    Top = 133
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 6
-    Width = 247
+  object Panel: TPanel
+    Left = 0
+    Top = 0
+    Width = 915
+    Height = 65
+    Align = alTop
+    TabOrder = 1
+    object edRetail: TcxButtonEdit
+      Left = 93
+      Top = 32
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 1
+      Width = 247
+    end
+    object cxLabel1: TcxLabel
+      Left = 11
+      Top = 33
+      Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100':'
+    end
+    object cxLabel6: TcxLabel
+      Left = 353
+      Top = 6
+      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
+    end
+    object edJuridical: TcxButtonEdit
+      Left = 459
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 0
+      Width = 194
+    end
+    object cxLabel3: TcxLabel
+      Left = 5
+      Top = 6
+      Caption = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090':'
+    end
+    object edPersonalTrade: TcxButtonEdit
+      Left = 93
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 5
+      Width = 247
+    end
+    object cxLabel4: TcxLabel
+      Left = 404
+      Top = 32
+      Caption = #1052#1072#1088#1096#1088#1091#1090':'
+    end
+    object edRoute: TcxButtonEdit
+      Left = 459
+      Top = 32
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 194
+    end
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
-    Left = 40
-    Top = 120
+    Left = 32
+    Top = 248
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
@@ -404,8 +471,8 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
-    Left = 296
-    Top = 120
+    Left = 264
+    Top = 304
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -424,8 +491,8 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 152
-    Top = 112
+    Left = 128
+    Top = 280
     DockControlHeights = (
       0
       0
@@ -465,11 +532,11 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         end
         item
           Visible = True
-          ItemName = 'dxBarControlContainerItem1'
+          ItemName = 'bbShowCurPartnerOnMap'
         end
         item
           Visible = True
-          ItemName = 'dxBarControlContainerItem2'
+          ItemName = 'bbShowAllPartnerOnMap'
         end
         item
           Visible = True
@@ -545,11 +612,19 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       Visible = ivAlways
       Control = edPersonalTrade
     end
+    object bbShowCurPartnerOnMap: TdxBarButton
+      Action = actShowCurPartnerOnMap
+      Category = 0
+    end
+    object bbShowAllPartnerOnMap: TdxBarButton
+      Action = mactShowAllPartnerOnMap
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 232
-    Top = 144
+    Left = 208
+    Top = 216
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -674,6 +749,62 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
     end
+    object actShowCurPartnerOnMap: TdsdPartnerMapAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1050#1072#1088#1090#1072' Google - '#1090#1086#1083#1100#1082#1086' '#1054#1044#1048#1053' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090
+      Hint = #1050#1072#1088#1090#1072' Google - '#1090#1086#1083#1100#1082#1086' '#1054#1044#1048#1053' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090
+      ImageIndex = 74
+      FormName = 'TPartnerMapForm'
+      FormNameParam.Value = 'TPartnerMapForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+      DataSet = MasterCDS
+    end
+    object actShowAllPartnerOnMap: TdsdPartnerMapAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1082#1072#1088#1090#1091' '#1076#1083#1103' '#1087#1088#1086#1089#1084#1086#1090#1088#1072' '#1042#1057#1045#1061' '#1072#1076#1088#1077#1089#1086#1074
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1082#1072#1088#1090#1091' '#1076#1083#1103' '#1087#1088#1086#1089#1084#1086#1090#1088#1072' '#1042#1057#1045#1061' '#1072#1076#1088#1077#1089#1086#1074
+      FormName = 'TPartnerMapForm'
+      FormNameParam.Value = 'TPartnerMapForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+      MapType = acShowAll
+      DataSet = MasterCDS
+    end
+    object actCheckShowAllPartnerOnMap: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCheck
+      StoredProcList = <
+        item
+          StoredProc = spCheck
+        end>
+      Caption = 'actCheckShowAllPartnerOnMap'
+    end
+    object mactShowAllPartnerOnMap: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCheckShowAllPartnerOnMap
+        end
+        item
+          Action = actShowAllPartnerOnMap
+        end>
+      QuestionBeforeExecute = 
+        #1054#1090#1082#1088#1099#1090#1080#1077' '#1082#1072#1088#1090#1099' '#1076#1083#1103' '#1073#1086#1083#1100#1096#1086#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1072#1076#1088#1077#1089#1086#1074' '#1084#1086#1078#1077#1090' '#1074#1099#1087#1086#1083#1085#1103#1090#1100#1089#1103 +
+        ' '#1076#1086#1083#1075#1086'.'#1055#1088#1086#1076#1086#1083#1078#1080#1090#1100'? '
+      Caption = #1050#1072#1088#1090#1072' Google - '#1042#1057#1045' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
+      Hint = #1050#1072#1088#1090#1072' Google - '#1042#1057#1045' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
+      ImageIndex = 40
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Partner_Mobile'
@@ -687,6 +818,30 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Name = 'inMemberId'
         Value = Null
         Component = PersonalTradeGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRouteId'
+        Value = Null
+        Component = GuidesRoute
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -730,8 +885,8 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
     Top = 288
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 424
-    Top = 152
+    Left = 488
+    Top = 232
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -740,6 +895,15 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
     ComponentList = <
       item
         Component = PersonalTradeGuides
+      end
+      item
+        Component = GuidesRetail
+      end
+      item
+        Component = GuidesRoute
+      end
+      item
+        Component = JuridicalGuides
       end>
     Left = 288
     Top = 184
@@ -757,8 +921,8 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 384
-    Top = 112
+    Left = 376
+    Top = 280
   end
   object PersonalTradeGuides: TdsdGuides
     KeyField = 'Id'
@@ -792,8 +956,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Value = '149831'
         MultiSelectSeparator = ','
       end>
-    Left = 703
-    Top = 136
+    Left = 127
   end
   object spGet_PersonalTrade: TdsdStoredProc
     StoredProcName = 'gpGetMobile_Object_Const'
@@ -978,5 +1141,150 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
     PackSize = 1
     Left = 776
     Top = 281
+  end
+  object GuidesRetail: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRetail
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 216
+    Top = 16
+  end
+  object GuidesRoute: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRoute
+    FormNameParam.Value = 'TRoute_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRoute_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRoute
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRoute
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = '149831'
+        MultiSelectSeparator = ','
+      end>
+    Left = 535
+    Top = 32
+  end
+  object JuridicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 496
+    Top = 8
+  end
+  object spCheck: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_Partner_checkMap'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inJuridicalId'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalTradeId'
+        Value = '0'
+        Component = PersonalTradeGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRouteId'
+        Value = ''
+        Component = GuidesRoute
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRouteId_30201'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 401
+    Top = 202
   end
 end

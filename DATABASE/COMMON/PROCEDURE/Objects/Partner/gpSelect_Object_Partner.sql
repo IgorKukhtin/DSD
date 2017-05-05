@@ -2,9 +2,15 @@
 
 -- DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner(
     IN inJuridicalId       Integer  , 
+    IN inRetailId          Integer  , 
+    IN inPersonalId        Integer  , 
+    IN inPersonalTradeId   Integer  , 
+    IN inRouteId           Integer  , 
+    IN inRouteId_30201     Integer  , 
     IN inShowAll           Boolean  ,
     IN inSession           TVarChar   -- сессия пользователя
 )
@@ -389,22 +395,27 @@ BEGIN
                               ON ObjectLink_Partner_GoodsProperty.ObjectId = Object_Partner.Id 
                              AND ObjectLink_Partner_GoodsProperty.DescId = zc_ObjectLink_Partner_GoodsProperty()
          LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Partner_GoodsProperty.ChildObjectId
-        
 
     WHERE (inJuridicalId = 0 OR inJuridicalId = ObjectLink_Partner_Juridical.ChildObjectId)
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
            OR Object_PersonalTrade.BranchId = vbBranchId_Constraint
            OR vbIsConstraint = FALSE)
+      AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
+      AND (ObjectLink_Partner_Route.ChildObjectId = inRouteId OR inRouteId = 0)
+      AND (ObjectLink_Partner_Route_30201.ChildObjectId = inRouteId_30201 OR inRouteId_30201 = 0)
+      AND (ObjectLink_Partner_Personal.ChildObjectId = inPersonalId OR inPersonalId = 0)      
+      AND (ObjectLink_Partner_PersonalTrade.ChildObjectId = inPersonalTradeId OR inPersonalTradeId = 0)
    ;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Partner (integer, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_Partner (integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.05.17         * add вх.парам-ры 
  25.12.15         * add GoodsProperty
  06.10.15         * add inShowAll
  06.02.15         * add redmine 

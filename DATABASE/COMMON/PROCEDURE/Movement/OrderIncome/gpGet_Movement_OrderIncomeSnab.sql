@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , DayCount Integer
              , InvNumber_Income_Full TVarChar
              , FromName_Income TVarChar
+             , isClosed Boolean
               )
 AS
 $BODY$
@@ -80,6 +81,8 @@ BEGIN
 
              , CAST ('' as TVarChar) 	                  AS InvNumber_Income_Full
              , CAST ('' as TVarChar) 	                  AS FromName_Income
+
+             , FALSE AS isClosed
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
@@ -153,8 +156,13 @@ BEGIN
            , tmpIncome.InvNumber_Income_Full
            , tmpIncome.FromName_Income
 
+           , COALESCE (MovementBoolean_Closed.ValueData, false)::Boolean AS isClosed
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Closed
+                                      ON MovementBoolean_Closed.MovementId = Movement.Id
+                                     AND MovementBoolean_Closed.DescId = zc_MovementBoolean_Closed()
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
