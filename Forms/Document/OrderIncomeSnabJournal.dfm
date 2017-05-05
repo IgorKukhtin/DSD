@@ -2,8 +2,8 @@ object OrderIncomeSnabJournalForm: TOrderIncomeSnabJournalForm
   Left = 0
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1089#1085#1072#1073#1078#1077#1085#1080'e>'
-  ClientHeight = 381
-  ClientWidth = 809
+  ClientHeight = 388
+  ClientWidth = 788
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,10 +21,11 @@ object OrderIncomeSnabJournalForm: TOrderIncomeSnabJournalForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 809
+    Width = 788
     Height = 31
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 809
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -59,12 +60,14 @@ object OrderIncomeSnabJournalForm: TOrderIncomeSnabJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 809
-    Height = 324
+    Width = 788
+    Height = 331
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 809
+    ExplicitHeight = 324
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -457,6 +460,14 @@ object OrderIncomeSnabJournalForm: TOrderIncomeSnabJournalForm
         Options.Editing = False
         Width = 163
       end
+      object colisClose: TcxGridDBColumn
+        Caption = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+        DataBinding.FieldName = 'isClosed'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 50
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -584,6 +595,14 @@ object OrderIncomeSnabJournalForm: TOrderIncomeSnabJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbClose'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowErased'
         end
         item
@@ -669,6 +688,10 @@ object OrderIncomeSnabJournalForm: TOrderIncomeSnabJournalForm
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
+      Category = 0
+    end
+    object bbClose: TdxBarButton
+      Action = actClose
       Category = 0
     end
   end
@@ -1173,6 +1196,19 @@ object OrderIncomeSnabJournalForm: TOrderIncomeSnabJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actClose: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spisClose
+      StoredProcList = <
+        item
+          StoredProc = spisClose
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1087#1086#1083#1085#1077#1085#1086' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1087#1086#1083#1085#1077#1085#1086' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 58
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_OrderIncome'
@@ -1486,5 +1522,31 @@ object OrderIncomeSnabJournalForm: TOrderIncomeSnabJournalForm
     PackSize = 1
     Left = 704
     Top = 40
+  end
+  object spisClose: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Close'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisClosed'
+        Value = 'False'
+        Component = ClientDataSet
+        ComponentItem = 'isClosed'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 488
+    Top = 161
   end
 end

@@ -108,6 +108,10 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     clUnitName: TcxGridDBColumn;
     isNotOne: TcxGridDBColumn;
+    colisClose: TcxGridDBColumn;
+    spisClose: TdsdStoredProc;
+    actClose: TdsdExecStoredProc;
+    bbClose: TdxBarButton;
   private
   public
   end;

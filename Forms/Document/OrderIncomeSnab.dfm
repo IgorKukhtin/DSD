@@ -2,8 +2,8 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1089#1085#1072#1073#1078#1077#1085#1080'e>'
-  ClientHeight = 431
-  ClientWidth = 1170
+  ClientHeight = 429
+  ClientWidth = 1253
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1170
+    Width = 1253
     Height = 97
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 1170
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -295,7 +296,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       Top = 23
       Properties.ReadOnly = True
       TabOrder = 34
-      Width = 133
+      Width = 214
     end
     object edFromName_Income: TcxTextEdit
       Left = 1037
@@ -314,29 +315,43 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       Top = 45
       Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1087#1088#1080#1093#1086#1076')'
     end
+    object edisClosed: TcxCheckBox
+      Left = 1172
+      Top = 63
+      Caption = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Properties.ReadOnly = True
+      TabOrder = 38
+      Width = 79
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 123
-    Width = 1170
-    Height = 308
+    Width = 1253
+    Height = 306
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 308
-    ClientRectRight = 1170
+    ExplicitWidth = 1170
+    ExplicitHeight = 308
+    ClientRectBottom = 306
+    ClientRectRight = 1253
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 1170
+      ExplicitHeight = 284
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1170
-        Height = 284
+        Width = 1253
+        Height = 282
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1170
+        ExplicitHeight = 284
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -920,7 +935,15 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbUpdateAmountAll'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbClosed'
         end
         item
           Visible = True
@@ -1047,8 +1070,12 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       Visible = ivAlways
       ImageIndex = 64
     end
-    object bb: TdxBarButton
+    object bbUpdateAmountAll: TdxBarButton
       Action = macUpdateAmountAll
+      Category = 0
+    end
+    object bbClosed: TdxBarButton
+      Action = actClosed
       Category = 0
     end
   end
@@ -1644,6 +1671,19 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1086#1089#1090#1072#1090#1086#1082
       ImageIndex = 47
     end
+    object actClosed: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spisClosed
+      StoredProcList = <
+        item
+          StoredProc = spisClosed
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1087#1086#1083#1085#1077#1085#1086' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1087#1086#1083#1085#1077#1085#1086' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 58
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -2171,6 +2211,13 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         Component = edFromName_Income
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isClosed'
+        Value = Null
+        Component = edisClosed
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 200
@@ -2291,7 +2338,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 712
+    Left = 624
     Top = 16
   end
   object PaidKindGuides: TdsdGuides
@@ -2839,5 +2886,30 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
     PackSize = 1
     Left = 402
     Top = 264
+  end
+  object spisClosed: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Close'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisClosed'
+        Value = Null
+        Component = edisClosed
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 872
+    Top = 273
   end
 end
