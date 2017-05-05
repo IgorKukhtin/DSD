@@ -303,16 +303,19 @@ BEGIN
                             , SUM (tmp.StartAmount) AS RemainsStart
                             , SUM (tmp.EndAmount)   AS RemainsEnd
 
-                       FROM (SELECT tmpContainer_Oth.GoodsId
+                       FROM (SELECT tmpContainer_Oth.ContainerId
+                                  , tmpContainer_Oth.GoodsId
                                   , tmpContainer_Oth.Amount - SUM (COALESCE (MIContainer.Amount, 0))  AS StartAmount
                                   , tmpContainer_Oth.Amount - SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS EndAmount
                              FROM tmpContainer_Oth
                                   LEFT JOIN MovementItemContainer AS MIContainer
                                                                   ON MIContainer.Containerid = tmpContainer_Oth.ContainerId
-                                                                 AND MIContainer.OperDate >= inStartDate
+                                                                 AND MIContainer.OperDate    >= inStartDate
                              GROUP BY tmpContainer_Oth.ContainerId, tmpContainer_Oth.GoodsId, tmpContainer_Oth.Amount
+                             HAVING tmpContainer_Oth.Amount - SUM (COALESCE (MIContainer.Amount, 0))  <> 0
+                                 OR tmpContainer_Oth.Amount - SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) <> 0
                             ) AS tmp
-                       GROUP BY tmp.GoodsId
+                       GROUP BY tmp.GoodsId, tmp.ContainerId
                       )
        -- Результат
        SELECT
@@ -391,9 +394,11 @@ BEGIN
                               AND ObjectLink_Goods_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
           
-       WHERE tmpContainer.RemainsStart <> 0 OR tmpContainer.RemainsEnd         <> 0 OR tmpOrderIncome.Amount  <> 0
-          OR tmpContainer.CountIncome  <> 0 OR tmpContainer.CountProductionOut <> 0
-          OR tmpContainer.CountIn_oth  <> 0 OR tmpContainer.CountOut_oth       <> 0
+       WHERE tmpContainer.RemainsStart   <> 0 OR tmpContainer.RemainsEnd         <> 0 OR tmpOrderIncome.Amount  <> 0
+          OR tmpContainer.CountIncome    <> 0 OR tmpContainer.CountProductionOut <> 0
+          OR tmpContainer.CountIn_oth    <> 0 OR tmpContainer.CountOut_oth       <> 0
+          OR tmpRemains_Oth.RemainsStart <> 0
+          OR tmpRemains_Oth.RemainsEnd   <> 0
       ;
 
 END;

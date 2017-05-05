@@ -2,10 +2,8 @@
   Caption = #1054#1090#1095#1077#1090' <'#1057#1082#1083#1072#1076' '#1055#1088#1080#1093#1086#1076' / '#1056#1072#1089#1093#1086#1076' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'>'
   ClientHeight = 387
   ClientWidth = 1362
-  AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -572
   ExplicitWidth = 1378
   ExplicitHeight = 422
   PixelsPerInch = 96

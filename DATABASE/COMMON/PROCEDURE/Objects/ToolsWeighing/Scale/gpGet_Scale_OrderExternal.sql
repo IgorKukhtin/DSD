@@ -1,6 +1,5 @@
 -- Function: gpGet_Scale_OrderExternal()
 
--- DROP FUNCTION IF EXISTS gpSelect_Scale_OrderExternal (TDateTime, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Scale_OrderExternal (TDateTime, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Scale_OrderExternal(
@@ -73,7 +72,7 @@ BEGIN
                                         ELSE MovementLinkObject_From.ObjectId
                                    END AS FromId
                                  , CASE WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
-                                             THEN (SELECT OL.ChildObjectId
+                                             THEN (SELECT OL.ObjectId
                                                    FROM MovementLinkObject AS MLO
                                                         INNER JOIN ObjectLink AS OL ON OL.ChildObjectId = MLO.ObjectId AND OL.DescId = zc_ObjectLink_Partner_Juridical()
                                                         INNER JOIN Object ON Object.Id = OL.ObjectId AND Object.isErased = FALSE
@@ -389,13 +388,21 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = tmpMovement.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-                                        AND tmpMovement.DescId = zc_Movement_OrderExternal()
+                                        AND tmpMovement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderIncome())
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                         ON MovementLinkObject_Juridical.MovementId = tmpMovement.Id
+                                        AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+                                        AND tmpMovement.DescId = zc_Movement_OrderIncome()
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
+                                 ON ObjectLink_Juridical_PriceList.ObjectId = MovementLinkObject_Juridical.ObjectId 
+                                AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
                                          ON MovementLinkObject_PriceList.MovementId = tmpMovement.Id
                                         AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
-            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = COALESCE (ObjectLink_Juridical_PriceList.ChildObjectId, CASE WHEN tmpMovement.DescId = zc_Movement_OrderIncome() THEN zc_PriceList_Basis() ELSE MovementLinkObject_PriceList.ObjectId END)
 
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                     ON MovementFloat_ChangePercent.MovementId =  tmpMovement.Id
@@ -440,5 +447,5 @@ ALTER FUNCTION gpGet_Scale_OrderExternal (TDateTime, Integer, TVarChar, TVarChar
 */
 
 -- тест
--- select * from gpGet_Scale_OrderExternal (inOperDate := ('01.07.2015')::TDateTime , inBranchCode := 1 , inBarCode := '2020018777013' ,  inSession := '5');
--- select * from gpGet_Scale_OrderExternal(inOperDate := ('03.01.2016')::TDateTime , inBranchCode := 2 , inBarCode := '6245' ,  inSession := '5');
+-- SELECT * FROM gpGet_Scale_OrderExternal (inOperDate := ('01.07.2015')::TDateTime , inBranchCode := 1 , inBarCode := '2020018777013' ,  inSession := '5');
+-- SELECT * FROM gpGet_Scale_OrderExternal(inOperDate := CURRENT_DATE , inBranchCode := 301 , inBarCode := '135', inSession := '5');

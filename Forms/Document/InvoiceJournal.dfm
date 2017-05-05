@@ -13,7 +13,6 @@ object InvoiceJournalForm: TInvoiceJournalForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefreshStart
-  AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   PixelsPerInch = 96
   TextHeight = 13

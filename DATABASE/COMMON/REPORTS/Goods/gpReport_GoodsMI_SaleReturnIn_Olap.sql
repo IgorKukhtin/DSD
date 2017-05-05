@@ -1,6 +1,7 @@
 -- Function: gpReport_Goods_Movement ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn_Olap (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn_Olap (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn_Olap (
     IN inStartDate    TDateTime ,
@@ -18,10 +19,11 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn_Olap (
     IN inIsGoods      Boolean   , --
     IN inIsGoodsKind  Boolean   , --
     IN inIsContract   Boolean   , --
-    IN inIsJuridical_where Boolean   , -- ***
-    IN inIsPartner_where   Boolean   , -- ***
-    IN inIsGoods_where     Boolean   , -- ***
-    IN inIsCost            Boolean   , -- ***
+    IN inIsJuridical_Branch Boolean   , -- ***
+    IN inIsJuridical_where  Boolean   , -- ***
+    IN inIsPartner_where    Boolean   , -- ***
+    IN inIsGoods_where      Boolean   , -- ***
+    IN inIsCost             Boolean   , -- ***
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
@@ -55,15 +57,12 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 
-   DECLARE vbIsJuridical_Branch Boolean;
    DECLARE vbObjectId_Constraint_Branch Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
     vbUserId:= lpGetUserBySession (inSession);
 
-
-    vbIsJuridical_Branch:= COALESCE (inBranchId, 0) = 0;
 
     -- определяется уровень доступа
     vbObjectId_Constraint_Branch:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
@@ -120,7 +119,7 @@ BEGIN
                                                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                      WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Constraint_Branch
                                        AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-                                       AND vbIsJuridical_Branch = TRUE AND vbObjectId_Constraint_Branch <> 0 -- !!!
+                                       AND inIsJuridical_Branch = TRUE AND vbObjectId_Constraint_Branch <> 0 -- !!!
                                      GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
                                     UNION
                                      SELECT ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
@@ -136,7 +135,7 @@ BEGIN
                                                                AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
                                      WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Constraint_Branch
                                        AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-                                       AND vbIsJuridical_Branch = TRUE AND vbObjectId_Constraint_Branch <> 0 -- !!!
+                                       AND inIsJuridical_Branch = TRUE AND vbObjectId_Constraint_Branch <> 0 -- !!!
                                      GROUP BY ObjectLink_Contract_Juridical.ChildObjectId
                                  )
 
@@ -499,5 +498,5 @@ $BODY$
     CREATE TEMP TABLE _tmpJuridical (JuridicalId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpJuridicalBranch (JuridicalId Integer) ON COMMIT DROP;
 -- тест
-SELECT * FROM gpReport_GoodsMI_SaleReturnIn_Olap (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsJuridical_where:= FALSE, inIsPartner_where:= FALSE, inIsGoods_where:= FALSE, inIsCost:= TRUE, inSession:= zfCalc_UserAdmin());
+SELECT * FROM gpReport_GoodsMI_SaleReturnIn_Olap (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsJuridical_Branch:= FALSE, inIsJuridical_where:= FALSE, inIsPartner_where:= FALSE, inIsGoods_where:= FALSE, inIsCost:= FALSE, inSession:= zfCalc_UserAdmin());
 */
