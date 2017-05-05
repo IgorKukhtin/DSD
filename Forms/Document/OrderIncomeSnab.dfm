@@ -257,6 +257,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       Top = 63
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
+      Properties.ReadOnly = True
       TabOrder = 29
       Width = 39
     end
@@ -366,11 +367,6 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountOnDay
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = PlanOrder
             end
             item
@@ -382,6 +378,10 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
               Format = ',0.####'
               Kind = skSum
               Column = BalanceEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -436,11 +436,6 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = CountOnDay
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = PlanOrder
             end
             item
@@ -457,6 +452,10 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
               Format = ',0.####'
               Kind = skSum
               Column = BalanceEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -497,7 +496,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             Width = 232
           end
           object colGoodsName_Partner: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088' ('#1085#1072#1079#1074#1072#1085#1080#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'GoodsName_Partner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -666,7 +665,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             DataBinding.FieldName = 'CountOnDay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -677,7 +676,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             DataBinding.FieldName = 'RemainsDays'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -688,7 +687,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             DataBinding.FieldName = 'ReserveDays'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -701,7 +700,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             DataBinding.FieldName = 'PlanOrder'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -712,19 +711,10 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             DataBinding.FieldName = 'RemainsDaysWithOrder'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
-          end
-          object Color_RemainsDays: TcxGridDBColumn
-            DataBinding.FieldName = 'Color_RemainsDays'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
             Width = 70
           end
           object Comment: TcxGridDBColumn
@@ -741,6 +731,15 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 70
+          end
+          object Color_RemainsDays: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_RemainsDays'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
             Width = 70
           end
         end
@@ -2125,7 +2124,6 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         Name = 'DayCount'
         Value = Null
         Component = edDayCount
-        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
@@ -2718,11 +2716,10 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDayCount'
+        Name = 'outDayCount'
         Value = 0.000000000000000000
         Component = edDayCount
         DataType = ftFloat
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
