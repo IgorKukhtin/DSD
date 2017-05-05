@@ -23,7 +23,7 @@ BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_User());
-
+ 
    -- проверка уникальности для свойства <Наименование Пользователя>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_User(), inUserName);
    -- проверка уникальности <Код>

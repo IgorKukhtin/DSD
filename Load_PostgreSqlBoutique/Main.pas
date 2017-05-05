@@ -125,6 +125,7 @@ type
     cbDiscountPeriodItem: TCheckBox;
     cbPriceListItem: TCheckBox;
     cbMember: TCheckBox;
+    cbUser: TCheckBox;
 
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
@@ -214,6 +215,7 @@ type
     procedure pLoadGuide_Juridical;
     procedure pLoadGuide_PriceList;
     procedure pLoadGuide_Member;
+    procedure pLoadGuide_User;
 
 // Documents
     function  pLoadDocument_Income:Integer;
@@ -1762,6 +1764,7 @@ begin
      if not fStop then pLoadGuide_Juridical;
      if not fStop then pLoadGuide_PriceList;
      if not fStop then pLoadGuide_Member;
+     if not fStop then pLoadGuide_User;
 
 
 
@@ -1900,6 +1903,7 @@ begin
         try fExecSqFromQuery_noErr('alter table dba.Firma add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.PriceList add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Users add MemberId_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.Users add UserId_Postgres integer null;'); except end;
 
      end;
 end;
@@ -1966,6 +1970,7 @@ begin
       //
       fExecSqFromQuery('update dba.PriceList set Id_Postgres = null ');
       fExecSqFromQuery('update dba.Users set MemberId_Postgres = null ');
+      fExecSqFromQuery('update dba.Users set UserId_Postgres = null ');
 
 
 end;
@@ -4122,7 +4127,7 @@ begin
         Add('     , zc_erasedDel() as zc_erasedDel');
         Add('     , Users.Erased as Erased');
         Add('     , Users.MemberId_Postgres as Id_Postgres');
-        Add('from dba.Users');
+        Add('from dba.Users  where haschildren = -1');
         Add('order by ObjectId');
         Open;
         //
@@ -4570,6 +4575,71 @@ begin
      end;
      //
      myDisabledCB(cbUnit);
+end;
+
+procedure TMainForm.pLoadGuide_User;
+begin
+       if (not cbUser.Checked)or(not cbUser.Enabled) then exit;
+     //
+     myEnabledCB(cbUser);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Users.Id as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     , Users.UsersName as UserName');
+        Add('     , Users.UsersPassword as Password');
+        Add('     , zc_erasedDel() as zc_erasedDel');
+        Add('     , Users.Erased as Erased');
+        Add('     , Users.MemberId_Postgres as MemberId');
+        Add('     , Users.UserId_Postgres as Id_Postgres');
+        Add('from dba.Users where haschildren = -1');
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_User';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inUserName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inPassword',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inMemberId',ftInteger,ptInput, 0);
+
+        //
+        HideCurGrid(True);
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin  HideCurGrid(False); exit; end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inUserName').Value:=FieldByName('UserName').AsString;
+             toStoredProc.Params.ParamByName('inPassword').Value:=FieldByName('Password').AsString;
+             toStoredProc.Params.ParamByName('inMemberId').Value:=FieldByName('MemberId').AsInteger;
+             if not myExecToStoredProc then ;//exit;
+             if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.Users set UserId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        HideCurGrid(False);
+     end;
+     //
+     myDisabledCB(cbUser);
 end;
 
 procedure TMainForm.pLoadGuide_Valuta;
