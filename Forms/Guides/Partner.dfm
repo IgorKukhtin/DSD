@@ -635,7 +635,7 @@ object PartnerForm: TPartnerForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 5
+    TabOrder = 4
     Width = 185
   end
   object cxLabel1: TcxLabel
@@ -657,7 +657,7 @@ object PartnerForm: TPartnerForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 6
     Width = 185
   end
   object cxLabel4: TcxLabel
@@ -674,7 +674,7 @@ object PartnerForm: TPartnerForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 10
+    TabOrder = 9
     Width = 185
   end
   object cxLabel5: TcxLabel
@@ -697,7 +697,7 @@ object PartnerForm: TPartnerForm
   object DataSource: TDataSource
     DataSet = MasterCDS
     Left = 40
-    Top = 120
+    Top = 208
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
@@ -716,8 +716,8 @@ object PartnerForm: TPartnerForm
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
-    Left = 296
-    Top = 120
+    Left = 232
+    Top = 248
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -736,8 +736,8 @@ object PartnerForm: TPartnerForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 152
-    Top = 112
+    Left = 96
+    Top = 232
     DockControlHeights = (
       0
       0
@@ -1906,8 +1906,8 @@ object PartnerForm: TPartnerForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 384
-    Top = 112
+    Left = 352
+    Top = 232
   end
   object spUpdateEdiOrdspr: TdsdStoredProc
     StoredProcName = 'gpUpdateObject_Partner_Edi'
