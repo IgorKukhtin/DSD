@@ -124,6 +124,7 @@ type
     cbPriceList: TCheckBox;
     cbDiscountPeriodItem: TCheckBox;
     cbPriceListItem: TCheckBox;
+    cbMember: TCheckBox;
 
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
@@ -212,6 +213,7 @@ type
     procedure pLoadGuide_Client;
     procedure pLoadGuide_Juridical;
     procedure pLoadGuide_PriceList;
+    procedure pLoadGuide_Member;
 
 // Documents
     function  pLoadDocument_Income:Integer;
@@ -1759,6 +1761,7 @@ begin
      if not fStop then pLoadGuide_Client;
      if not fStop then pLoadGuide_Juridical;
      if not fStop then pLoadGuide_PriceList;
+     if not fStop then pLoadGuide_Member;
 
 
 
@@ -1896,8 +1899,7 @@ begin
         try fExecSqFromQuery_noErr('alter table dba.Brand add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Firma add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.PriceList add Id_Postgres integer null;'); except end;
-
-
+        try fExecSqFromQuery_noErr('alter table dba.Users add MemberId_Postgres integer null;'); except end;
 
      end;
 end;
@@ -1963,6 +1965,7 @@ begin
       fExecSqFromQuery('update dba.Firma set Id_Postgres = null ');
       //
       fExecSqFromQuery('update dba.PriceList set Id_Postgres = null ');
+      fExecSqFromQuery('update dba.Users set MemberId_Postgres = null ');
 
 
 end;
@@ -4104,6 +4107,67 @@ begin
      //
      myDisabledCB(cbMeasure);
 end;
+procedure TMainForm.pLoadGuide_Member;
+begin
+      if (not cbMember.Checked)or(not cbMember.Enabled) then exit;
+     //
+     myEnabledCB(cbMember);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Users.Id as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     , Users.UsersName as ObjectName');
+        Add('     , zc_erasedDel() as zc_erasedDel');
+        Add('     , Users.Erased as Erased');
+        Add('     , Users.MemberId_Postgres as Id_Postgres');
+        Add('from dba.Users');
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_Member';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inINN',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inEMail',ftString,ptInput, '');
+        //
+        HideCurGrid(True);
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin  HideCurGrid(False); exit; end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             if not myExecToStoredProc then ;//exit;
+             if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.Users set MemberId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        HideCurGrid(False);
+     end;
+     //
+     myDisabledCB(cbMember);
+end;
+
 procedure TMainForm.pLoadGuide_Partner;
 begin
      if (not cbPartner.Checked)or(not cbPartner.Enabled) then exit;
