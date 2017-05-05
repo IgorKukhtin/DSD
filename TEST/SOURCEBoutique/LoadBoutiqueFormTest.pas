@@ -1426,8 +1426,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUserForm');
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserKeyForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TUserKeyForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
 //
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoadObjectForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TLoadObjectForm');

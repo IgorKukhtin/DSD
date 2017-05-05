@@ -3,6 +3,7 @@
 -- DROP FUNCTION gpInsertUpdate_Object_User();
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_User(
@@ -10,9 +11,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_User(
     IN inCode        Integer   ,    -- 
     IN inUserName    TVarChar  ,    -- главное Название пользователя объекта <Пользователь> 
     IN inPassword    TVarChar  ,    -- пароль пользователя 
-    IN inSign        TVarChar  ,    -- Электронная подпись
-    IN inSeal        TVarChar  ,    -- Электронная печать
-    IN inKey         TVarChar  ,    -- Электроный Ключ 
     IN inMemberId    Integer   ,    -- физ. лицо
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -36,10 +34,6 @@ BEGIN
 
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Password(), ioId, inPassword);
 
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Sign(), ioId, inSign);
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Seal(), ioId, inSeal);
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Key(), ioId, inKey);
-
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_User_Member(), ioId, inMemberId);
 
 
@@ -53,7 +47,8 @@ $BODY$
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыки А.А.
+ 05.05.17                                                          *
  12.09.16         *
  07.06.13                                        * lpCheckRight
 */
