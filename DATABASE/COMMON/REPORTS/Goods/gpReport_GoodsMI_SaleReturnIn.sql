@@ -228,6 +228,7 @@ BEGIN
                                                       , inIsGoods
                                                       , inIsGoodsKind
                                                       , inIsContract
+                                                      , vbIsJuridical_Branch
                                                       , vbIsJuridical_where
                                                       , vbIsPartner_where
                                                       , vbIsGoods_where

@@ -1476,6 +1476,7 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  //exit;
     {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_OrderInternalBySendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_OrderInternalBySendForm');
