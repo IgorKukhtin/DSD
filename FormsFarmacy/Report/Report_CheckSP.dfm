@@ -112,6 +112,21 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             HeaderAlignmentVert = vaCenter
             Width = 42
           end
+          object InvNumber_Invoice_Full: TcxGridDBColumn
+            Caption = #1057#1095#1077#1090' ('#1057#1055')'
+            DataBinding.FieldName = 'InvNumber_Invoice_Full'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object InvNumber_Invoice: TcxGridDBColumn
+            Caption = #8470' '#1057#1095#1077#1090#1072' ('#1057#1055')'
+            DataBinding.FieldName = 'InvNumber_Invoice'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
           object clUnitName: TcxGridDBColumn
             Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083
             DataBinding.FieldName = 'UnitName'
@@ -217,7 +232,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 77
+            Width = 122
           end
           object CodeATX: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1040#1058#1061' (7)'
@@ -864,6 +879,13 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Invoice'
+          Value = Null
+          Component = edInvoice
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072'('#1087#1086#1089#1090'.152)'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072'('#1087#1086#1089#1090'.152)'
@@ -978,12 +1000,11 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 48
-    Top = 160
+    Left = 64
+    Top = 216
   end
   inherited MasterCDS: TClientDataSet
-    Left = 16
-    Top = 160
+    Top = 208
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_Check_SP'
@@ -1028,12 +1049,12 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 80
-    Top = 160
+    Left = 104
+    Top = 224
   end
   inherited BarManager: TdxBarManager
-    Left = 120
-    Top = 160
+    Left = 168
+    Top = 216
     DockControlHeights = (
       0
       0
