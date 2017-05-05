@@ -77,12 +77,12 @@ type
     IdHTTP: TIdHTTP;
     FSendList: TStringList;
     FReceiveStream: TStringStream;
-    Str: String;//???AnsiString;
+    InBytes: TBytes;
     XMLDocument: IXMLDocument;
     isArchive: boolean;
     // критичесая секция нужна из-за таймера
     FCriticalSection: TCriticalSection;
-    function PrepareStr: String;//???AnsiString;
+    function PrepareStr: String;
     function ExecuteProc(pData: String; pExecOnServer: boolean = false;
       AMaxAtempt: Byte = 10; ANeedShowException: Boolean = True): Variant;
     procedure ProcessErrorCode(pData: String; ProcedureParam: String);
@@ -177,29 +177,16 @@ end;
 
 function TStorage.PrepareStr: String;
 var
-  strInput,
-  strOutput: TStringStream;
-  Unzipper: TZDecompressionStream;
+  ResBytes: TBytes;
 begin
   if isArchive then
   begin
-    strInput:= TStringStream.Create(Str); {AnsiString(Str)}
-    strOutput:= TStringStream.Create;
-    try
-      Unzipper:= TZDecompressionStream.Create(strInput);
-      try
-        strOutput.CopyFrom(Unzipper, Unzipper.Size);
-      finally
-        Unzipper.Free;
-      end;
-      Result:= strOutput.DataString;
-    finally
-      strInput.Free;
-      strOutput.Free;
-    end;
+    ZDecompress(InBytes, ResBytes);
+
+    Result := StringReplace(TEncoding.UTF8.GetString(ResBytes), #0, '', [rfReplaceAll]);
   end
   else
-     result := Str;
+    Result := StringReplace(TEncoding.UTF8.GetString(InBytes), #0, '', [rfReplaceAll]);
 end;
 
 procedure TStorage.ProcessErrorCode(pData: String; ProcedureParam: String);
@@ -256,7 +243,7 @@ begin
          with ChildNodes[i] do begin
            result := result + NodeName + ' := ' + PrepareValue(GetAttribute('Value'), GetAttribute('DataType')) + ' , ';
          end;
-       result := result + ' inSession := ' + chr(39) + Session + chr(39) + ');';
+       result := result + ' ioSession := ' + chr(39) + Session + chr(39) + ');';
      end;
   end;
 end;
@@ -379,11 +366,13 @@ begin
     // Определяем тип возвращаемого результата
     if Ok then
     Begin
-      ResStr := StringReplace(TEncoding.UTF8.GetString(FReceiveStream.Bytes), #0, '', [rfReplaceAll]);
+      ResStr := StringReplace(TEncoding.UTF8.GetString(FReceiveStream.Bytes, 0, ResultTypeLenght + IsArchiveLenght), #0, '', [rfReplaceAll]);
 
       ResultType := trim(Copy(ResStr, 1, ResultTypeLenght));
       isArchive := trim(lowercase(Copy(ResStr, ResultTypeLenght + 1, IsArchiveLenght))) = 't';
-      Str := Copy(ResStr, ResultTypeLenght + IsArchiveLenght + 1, maxint);
+
+      SetLength(InBytes, Length(FReceiveStream.Bytes) - ResultTypeLenght - IsArchiveLenght);
+      Move(FReceiveStream.Bytes[ResultTypeLenght + IsArchiveLenght], InBytes[0], Length(InBytes));
       if ResultType = gcMultiDataSet then begin
          Result := ProcessMultiDataSet;
          exit;

@@ -24,6 +24,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , OperDateStart TDateTime
              , OperDateEnd TDateTime
              , DayCount Integer
+             , InvNumber_Income_Full TVarChar
+             , FromName_Income TVarChar
               )
 AS
 $BODY$
@@ -75,6 +77,10 @@ BEGIN
              , (DATE_PART ('DAY', (DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')  ::TDateTime
                                 - DATE_TRUNC ('MONTH', inOperDate)
                          ) + 1) :: Integer                AS DayCount
+
+             , CAST ('' as TVarChar) 	                  AS InvNumber_Income_Full
+             , CAST ('' as TVarChar) 	                  AS FromName_Income
+
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
                LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = zc_Enum_Currency_Basis()
@@ -84,6 +90,29 @@ BEGIN
      ELSE
 
      RETURN QUERY
+     WITH 
+     tmpIncome AS 
+              (SELECT STRING_AGG ( tmp.InvNumber_Income_Full, '; ')    :: TVarChar  AS InvNumber_Income_Full
+                    , STRING_AGG (DISTINCT tmp.FromName_Income, '; ')  :: TVarChar  AS FromName_Income
+               FROM (
+                     SELECT ('π ' || Movement_Income.InvNumber || ' ÓÚ ' || Movement_Income.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Income_Full
+                          , CASE WHEN Object_FromIncome.DescId = zc_Object_Juridical() THEN Object_FromIncome.ValueData ELSE Object_JuridicalFromIncome.ValueData END :: TVarChar AS FromName_Income
+                     FROM MovementLinkMovement AS MovementLinkMovement_Income
+                          LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = MovementLinkMovement_Income.MovementId
+                          LEFT JOIN MovementLinkObject AS MovementLinkObject_FromIncome
+                                                       ON MovementLinkObject_FromIncome.MovementId = Movement_Income.Id
+                                                      AND MovementLinkObject_FromIncome.DescId = zc_MovementLinkObject_From()
+                          LEFT JOIN Object AS Object_FromIncome ON Object_FromIncome.Id = MovementLinkObject_FromIncome.ObjectId
+                          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                               ON ObjectLink_Partner_Juridical.ObjectId = Object_FromIncome.Id
+                                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                          LEFT JOIN Object AS Object_JuridicalFromIncome ON Object_JuridicalFromIncome.Id = ObjectLink_Partner_Juridical.ChildObjectId
+
+                     WHERE MovementLinkMovement_Income.MovementChildId = inMovementId --5811398 -- Movement.Id
+                       AND MovementLinkMovement_Income.DescId = zc_MovementLinkMovement_Order()
+                     ) AS tmp
+                 )
+
       SELECT Movement.Id                            AS Id
            , Movement.InvNumber                     AS InvNumber
            , Movement.OperDate                      AS OperDate
@@ -120,6 +149,9 @@ BEGIN
            , COALESCE (MovementDate_OperDateStart.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate)) ::TDateTime  AS OperDateStart
            , COALESCE (MovementDate_OperDateEnd.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY') ::TDateTime  AS OperDateEnd
            , COALESCE (MovementFloat_DayCount.ValueData, 0)  ::Integer  AS DayCount
+
+           , tmpIncome.InvNumber_Income_Full
+           , tmpIncome.FromName_Income
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -192,6 +224,7 @@ BEGIN
                                         AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
             LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
 
+            LEFT JOIN tmpIncome ON 1=1
 
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_OrderIncome();
@@ -206,9 +239,11 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 05.05.17         *
  14.04.17         * 
  12.07.16         *  
 */
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpGet_Movement_OrderIncomeSnab (inMovementId:= 40874, inOperDate:= CURRENT_DATE, inSession := zfCalc_UserAdmin());
+--select * from gpGet_Movement_OrderIncomeSnab(inMovementId := 5811398 , inOperDate := ('31.12.2017')::TDateTime ,  inSession := '5');

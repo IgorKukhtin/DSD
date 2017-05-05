@@ -1,6 +1,6 @@
 -- View: Object_Personal_View
 
--- DROP VIEW IF EXISTS Object_Personal_View;
+DROP VIEW IF EXISTS Object_Personal_View;
 
 CREATE OR REPLACE VIEW Object_Personal_View AS
   SELECT Object_Personal.Id                        AS PersonalId
@@ -17,10 +17,6 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
        , COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId, 0) AS PositionLevelId
        , Object_PositionLevel.ObjectCode                 AS PositionLevelCode
        , Object_PositionLevel.ValueData                  AS PositionLevelName
-
-       , Object_Branch.Id                            AS BranchId
-       , Object_Branch.ObjectCode                    AS BranchCode
-       , Object_Branch.ValueData                     AS BranchName
 
        , COALESCE (ObjectLink_Personal_Unit.ChildObjectId, 0) AS UnitId
        , Object_Unit.ObjectCode                    AS UnitCode
@@ -56,11 +52,6 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
                             ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
                            AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
-
-       LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
-                            ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
-                           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-       LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
 
        LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
                             ON ObjectLink_Personal_PersonalGroup.ObjectId = Object_Personal.Id

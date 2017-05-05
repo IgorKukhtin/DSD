@@ -12,6 +12,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsListIncome(
 RETURNS TABLE (Id Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar
+             , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
+             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , Amount TFloat, AmountChoice TFloat
              , RetailId Integer, RetailName TVarChar
              , ContractId Integer, ContractCode Integer, InvNumber TVarChar
@@ -80,6 +82,13 @@ BEGIN
            , Object_GoodsKind.Id         AS GoodsKindId
            , Object_GoodsKind.ObjectCode AS GoodsKindCode
            , Object_GoodsKind.ValueData  AS GoodsKindName
+
+           , Object_GoodsGroup.ValueData AS GoodsGroupName 
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyName
 
            , ObjectFloat_GoodsListIncome_Amount.ValueData AS Amount
            , ObjectFloat_GoodsListIncome_AmountChoice.ValueData AS AmountChoice
@@ -216,6 +225,18 @@ BEGIN
         LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
 
         LEFT JOIN tmpGoodsKind ON tmpGoodsKind.WordList = ObjectString_GoodsKind.ValueData
+        --
+        LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                             ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                            AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+        LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+        LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                               ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                              AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+        LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                             ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                            AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+        LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
     WHERE (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
        AND (ObjectLink_GoodsListIncome_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
@@ -229,6 +250,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 05.05.17         *
  30.03.17         *
 */
 

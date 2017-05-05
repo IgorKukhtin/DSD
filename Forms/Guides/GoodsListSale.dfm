@@ -6,9 +6,8 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
   AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -165
   ExplicitWidth = 1015
-  ExplicitHeight = 423
+  ExplicitHeight = 426
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -66,6 +65,21 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object clGoodsGroupNameFull: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'GoodsGroupNameFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 150
+          end
+          object clGoodsGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 172
+          end
           object clGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -307,6 +321,36 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object clInfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object clInfoMoneyGroupName: TcxGridDBColumn
+            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object clInfoMoneyDestinationName: TcxGridDBColumn
+            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'InfoMoneyDestinationName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object clInfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
           end
           object clErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085

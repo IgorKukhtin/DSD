@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
-  ClientHeight = 396
+  ClientHeight = 274
   ClientWidth = 303
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 45
-    Top = 362
+    Top = 226
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 189
-    Top = 362
+    Top = 226
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -89,42 +89,6 @@
     Left = 13
     Top = 101
     Caption = #1055#1072#1088#1086#1083#1100
-  end
-  object cxLabel4: TcxLabel
-    Left = 13
-    Top = 203
-    Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
-  end
-  object edSign: TcxTextEdit
-    Left = 13
-    Top = 224
-    Properties.PasswordChar = '*'
-    TabOrder = 11
-    Width = 273
-  end
-  object edSeal: TcxTextEdit
-    Left = 13
-    Top = 270
-    Properties.PasswordChar = '*'
-    TabOrder = 12
-    Width = 273
-  end
-  object cxLabel5: TcxLabel
-    Left = 13
-    Top = 251
-    Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1077#1095#1072#1090#1100
-  end
-  object edKey: TcxTextEdit
-    Left = 13
-    Top = 320
-    Properties.PasswordChar = '*'
-    TabOrder = 14
-    Width = 273
-  end
-  object cxLabel6: TcxLabel
-    Left = 13
-    Top = 299
-    Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1099#1081' '#1050#1083#1102#1095
   end
   object ActionList: TActionList
     Left = 269
@@ -191,30 +155,6 @@
         Name = 'inPassword'
         Value = ''
         Component = edPassword
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inSign'
-        Value = Null
-        Component = edSign
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inSeal'
-        Value = Null
-        Component = edSeal
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inKey'
-        Value = Null
-        Component = edKey
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -293,21 +233,18 @@
       item
         Name = 'UserSign'
         Value = Null
-        Component = edSign
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'UserSeal'
         Value = Null
-        Component = edSeal
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'UserKey'
         Value = Null
-        Component = edKey
         DataType = ftString
         MultiSelectSeparator = ','
       end>

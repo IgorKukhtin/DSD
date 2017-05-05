@@ -54,7 +54,7 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     spSelect: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    spErasedUnErased: TdsdStoredProc;
+    spErased: TdsdStoredProc;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     clMemberName: TcxGridDBColumn;
     RoleAddOn: TdsdDBViewAddOn;
@@ -70,20 +70,11 @@ type
     UpdateDataSet: TdsdUpdateDataSet;
     OpenChoiceForm: TOpenChoiceForm;
     Panel: TPanel;
-    RoleName: TcxGridDBColumn;
-    Name: TcxGridDBColumn;
-    CloseDate_excl: TcxGridDBColumn;
     ChoiceRole: TOpenChoiceForm;
-    PeriodCloseDS: TDataSource;
-    PeriodCloseCDS: TClientDataSet;
     PeriodCloseViewAddOn: TdsdDBViewAddOn;
-    spPeriodClose: TdsdStoredProc;
-    spInsertUpdatePeriodClose: TdsdStoredProc;
     HorSplitter: TcxSplitter;
     ChoiceUnit: TOpenChoiceForm;
     UpdatePeriodClose: TdsdUpdateDataSet;
-    BranchCode: TcxGridDBColumn;
-    BranchName: TcxGridDBColumn;
     UnitCode: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
     PositionName: TcxGridDBColumn;
@@ -94,6 +85,7 @@ type
     bbProtocolOpen: TdxBarButton;
     actProtocolRoleForm: TdsdOpenForm;
     bbProtocolRole: TdxBarButton;
+    spUnErased: TdsdStoredProc;
   private
     { Private declarations }
   public

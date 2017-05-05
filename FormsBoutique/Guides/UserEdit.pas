@@ -42,12 +42,6 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     edPassword: TcxTextEdit;
     cxLabel2: TcxLabel;
-    cxLabel4: TcxLabel;
-    edSign: TcxTextEdit;
-    edSeal: TcxTextEdit;
-    cxLabel5: TcxLabel;
-    edKey: TcxTextEdit;
-    cxLabel6: TcxLabel;
   private
     { Private declarations }
   public
