@@ -30,6 +30,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Full TVarChar
              , OperDateStart TDateTime
              , OperDateEnd TDateTime
              , DayCount TFloat
+             , MovementId_Income Integer, InvNumber_Income TVarChar, OperDate_Income TDateTime, InvNumber_Income_Full TVarChar
+             , FromName_Income TVarChar
+             , isNotOne Boolean
               )
 
 AS
@@ -103,6 +106,18 @@ BEGIN
            , COALESCE (MovementDate_OperDateEnd.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY') ::TDateTime  AS OperDateEnd
            , COALESCE (MovementFloat_DayCount.ValueData, 30)  ::TFloat  AS DayCount
 
+           , Movement_Income.Id                       AS MovementId_Income
+           , Movement_Income.InvNumber                AS InvNumber_Income
+           , Movement_Income.OperDate                 AS OperDate_Income
+           , ('π ' || Movement_Income.InvNumber || ' ÓÚ ' || Movement_Income.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Income_Full
+           , CASE WHEN Object_FromIncome.DescId = zc_Object_Juridical() THEN Object_FromIncome.ValueData ELSE Object_JuridicalFromIncome.ValueData END :: TVarChar AS FromName_Income
+           , CASE WHEN COALESCE (Movement_Income.Id,0) <> 0 
+                  THEN CASE WHEN Object_FromIncome.DescId = zc_Object_Juridical() 
+                            THEN CASE WHEN COALESCE (Object_FromIncome.Id,0) <> COALESCE(Object_Juridical.Id,0) THEN TRUE ELSE FALSE END
+                            ELSE CASE WHEN COALESCE (ObjectLink_Partner_Juridical.ChildObjectId,0) <> COALESCE(Object_Juridical.Id,0) THEN TRUE ELSE FALSE END
+                       END
+                  ELSE FALSE
+             END AS isNotOne
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_OrderIncome() AND Movement.StatusId = tmpStatus.StatusId
@@ -200,6 +215,20 @@ BEGIN
                                         AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
             LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Income
+                                           ON MovementLinkMovement_Income.MovementChildId = Movement.Id
+                                          AND MovementLinkMovement_Income.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = MovementLinkMovement_Income.MovementId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_FromIncome
+                                         ON MovementLinkObject_FromIncome.MovementId = Movement_Income.Id
+                                        AND MovementLinkObject_FromIncome.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN Object AS Object_FromIncome ON Object_FromIncome.Id = MovementLinkObject_FromIncome.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId = Object_FromIncome.Id
+                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN Object AS Object_JuridicalFromIncome ON Object_JuridicalFromIncome.Id = ObjectLink_Partner_Juridical.ChildObjectId
+
         WHERE (inisSnab = TRUE AND COALESCE (MovementLinkObject_Unit.ObjectId,0) <> 0)
            OR (inisSnab = FALSE AND COALESCE (MovementLinkObject_Unit.ObjectId,0) = 0)
 /*         WHERE (Object_Contract.Id = inFromId or inFromId=0)
@@ -214,6 +243,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 05.05.17         * add Movement_Income
  14.04.17         * add inisSnab
  05.10.16         * add inJuridicalBasisId
  12.07.16         *

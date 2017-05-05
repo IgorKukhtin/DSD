@@ -317,6 +317,14 @@ object OrderIncomeSnabJournalForm: TOrderIncomeSnabJournalForm
         Options.Editing = False
         Width = 80
       end
+      object colInvNumberIncome: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076
+        DataBinding.FieldName = 'InvNumber_Income_Full'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
       object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
         DataBinding.FieldName = 'JuridicalName'
@@ -353,6 +361,23 @@ object OrderIncomeSnabJournalForm: TOrderIncomeSnabJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
+      end
+      object FromName_Income: TcxGridDBColumn
+        Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'FromName_Income'
+        DateTimeGrouping = dtgRelativeToToday
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 154
+      end
+      object isNotOne: TcxGridDBColumn
+        Caption = #1044#1088#1091#1075#1086#1081' '#1087#1086#1089#1090'. ('#1076#1072'/'#1085#1077#1090')'
+        DataBinding.FieldName = 'isNotOne'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1088#1091#1075#1086#1081' '#1087#1086#1089#1090#1072#1074#1097#1080#1082' ('#1076#1072'/'#1085#1077#1090')'
+        Options.Editing = False
+        Width = 57
       end
       object colPaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099

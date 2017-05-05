@@ -154,6 +154,10 @@ type
     HeaderSaver1: THeaderSaver;
     spUpdateMovementByReport: TdsdStoredProc;
     actPrintOrder: TdsdPrintAction;
+    edInvNumber_Income: TcxTextEdit;
+    edFromName_Income: TcxTextEdit;
+    cxLabel5: TcxLabel;
+    cxLabel13: TcxLabel;
   private
   public
   end;

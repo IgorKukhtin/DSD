@@ -3,7 +3,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1089#1085#1072#1073#1078#1077#1085#1080'e>'
   ClientHeight = 431
-  ClientWidth = 1057
+  ClientWidth = 1170
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1057
+    Width = 1170
     Height = 97
     Align = alTop
     BevelOuter = bvNone
@@ -290,18 +290,42 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       TabOrder = 33
       Width = 83
     end
+    object edInvNumber_Income: TcxTextEdit
+      Left = 1037
+      Top = 23
+      Properties.ReadOnly = True
+      TabOrder = 34
+      Width = 133
+    end
+    object edFromName_Income: TcxTextEdit
+      Left = 1037
+      Top = 63
+      Properties.ReadOnly = True
+      TabOrder = 35
+      Width = 133
+    end
+    object cxLabel5: TcxLabel
+      Left = 1037
+      Top = 5
+      Caption = #1044#1086#1082'. '#1087#1088#1080#1093#1086#1076
+    end
+    object cxLabel13: TcxLabel
+      Left = 1037
+      Top = 45
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1087#1088#1080#1093#1086#1076')'
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 123
-    Width = 1057
+    Width = 1170
     Height = 308
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 308
-    ClientRectRight = 1057
+    ClientRectRight = 1170
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -309,7 +333,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1057
+        Width = 1170
         Height = 284
         Align = alClient
         TabOrder = 0
@@ -2133,6 +2157,20 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         ComponentItem = 'IdBarCode'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Income_Full'
+        Value = Null
+        Component = edInvNumber_Income
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FromName_Income'
+        Value = Null
+        Component = edFromName_Income
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 200
@@ -2159,10 +2197,9 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         Guides = UnitGuides
       end
       item
-        Guides = ContractGuides
+        Guides = PaidKindGuides
       end
       item
-        Guides = PaidKindGuides
       end>
     ActionItemList = <
       item
@@ -2236,9 +2273,26 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         Component = edChangePercent
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 712
-    Top = 8
+    Top = 16
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -2359,28 +2413,88 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
-    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.Value = 'TContractChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TJuridical_ObjectForm'
+    FormName = 'TContractChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesFrom
+        Component = ContractGuides
         ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = Null
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindId'
+        Value = Null
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindName'
+        Value = Null
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ChangePercent'
+        Value = Null
+        Component = edChangePercent
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 576
+    Left = 544
+    Top = 8
   end
   object spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TotalSumm'
