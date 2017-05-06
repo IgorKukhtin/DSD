@@ -18,13 +18,11 @@ BEGIN
 
    UserId := inSession;
 
-   -- Если код не установлен, определяем его каи последний+1
-   inCode := lfGet_ObjectCode(inCode, zc_Object_Role()); 
+   -- Нужен для загрузки из Sybase т.к. там код = 0 
+   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_Role_seq'); END IF; 
    
    -- проверка уникальности для свойства <Наименование Действия>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Role(), inName);
-   -- проверка уникальности для свойства <Код Марки Действия>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Role(), inCode);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Role(), inCode, inName);
@@ -35,13 +33,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Role (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Полятыкин А.А.
+ 06.05.17                                                        *
  23.09.13                         *
 
 */

@@ -65,9 +65,9 @@ BEGIN
 
 
 END $$;
-
-DO $$
 /*
+DO $$
+
 Эта ф-ция НЕ нужна
 BEGIN
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_ConnectParam(),  inDescId:= zc_Object_GlobalConst(), inCode:= 1, inName:= 'http://localhost/boutique/index.php', inEnumName:= 'zc_Enum_GlobalConst_ConnectParam');

@@ -23,11 +23,12 @@ BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_User());
+
+   -- Нужен для загрузки из Sybase т.к. там код = 0 
+   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_User_seq'); END IF; 
  
    -- проверка уникальности для свойства <Наименование Пользователя>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_User(), inUserName);
-   -- проверка уникальности <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_User(), inCode);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_User(), inCode, inUserName);
@@ -48,6 +49,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыки А.А.
+ 06.05.17                                                          *
  05.05.17                                                          *
  12.09.16         *
  07.06.13                                        * lpCheckRight
