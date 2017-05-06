@@ -3,7 +3,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
   ClientHeight = 460
   ClientWidth = 1000
   ExplicitWidth = 1016
-  ExplicitHeight = 495
+  ExplicitHeight = 498
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -498,12 +498,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -511,12 +513,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'InvNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -524,12 +528,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -537,12 +543,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -550,12 +558,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -563,6 +573,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName_all'
@@ -570,12 +581,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName_all'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractTagId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractTagId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractTagName'
@@ -583,6 +596,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'ContractTagName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RouteName'
@@ -590,12 +604,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'RouteName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RouteSortingId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteSortingId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RouteSortingName'
@@ -603,12 +619,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'RouteSortingName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PersonalTakeId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MemberTakeId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PersonalTakeName'
@@ -616,6 +634,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'MemberTakeName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ChangePercent'
@@ -623,6 +642,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'ChangePercent'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ChangePercentPartner'
@@ -630,15 +650,18 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'ChangePercentPartner'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PriceListId'
           Value = 0
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PriceListName'
           Value = ''
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
     end
     object actShowAll: TBooleanStoredProcAction
@@ -680,12 +703,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
       FormName = 'TRoute_ObjectForm'
       FormNameParam.Value = 'TRoute_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -693,6 +718,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'RouteName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -704,12 +730,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
       FormName = 'TRoute_ObjectForm'
       FormNameParam.Value = 'TRoute_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteId_30201'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -717,6 +745,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'RouteName_30201'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -728,12 +757,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
       FormName = 'TRouteSorting_ObjectForm'
       FormNameParam.Value = 'TRouteSorting_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteSortingId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -741,6 +772,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'RouteSortingName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -752,12 +784,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
       FormName = 'TMember_ObjectForm'
       FormNameParam.Value = 'TMember_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MemberTakeId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -765,6 +799,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'MemberTakeName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -776,12 +811,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
       FormName = 'TMember_ObjectForm'
       FormNameParam.Value = 'TMember_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MemberTakeId1'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -789,6 +826,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'MemberTakeName1'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -800,12 +838,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
       FormName = 'TMember_ObjectForm'
       FormNameParam.Value = 'TMember_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MemberTakeId2'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -813,6 +853,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'MemberTakeName2'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -824,12 +865,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
       FormName = 'TMember_ObjectForm'
       FormNameParam.Value = 'TMember_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MemberTakeId3'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -837,6 +880,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'MemberTakeName3'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -848,12 +892,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
       FormName = 'TMember_ObjectForm'
       FormNameParam.Value = 'TMember_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MemberTakeId4'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -861,6 +907,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'MemberTakeName4'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -872,12 +919,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
       FormName = 'TMember_ObjectForm'
       FormNameParam.Value = 'TMember_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MemberTakeId5'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -885,6 +934,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'MemberTakeName5'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -896,12 +946,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
       FormName = 'TMember_ObjectForm'
       FormNameParam.Value = 'TMember_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MemberTakeId6'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -909,6 +961,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'MemberTakeName6'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -920,12 +973,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
       FormName = 'TMember_ObjectForm'
       FormNameParam.Value = 'TMember_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MemberTakeId7'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -933,8 +988,23 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Component = MasterCDS
           ComponentItem = 'MemberTakeName7'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actShowCurPartnerOnMap: TdsdPartnerMapAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1050#1072#1088#1090#1072' Google - '#1090#1086#1083#1100#1082#1086' '#1054#1044#1048#1053' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090
+      Hint = #1050#1072#1088#1090#1072' Google - '#1090#1086#1083#1100#1082#1086' '#1054#1044#1048#1053' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090
+      ImageIndex = 74
+      FormName = 'TPartnerMapForm'
+      FormNameParam.Value = 'TPartnerMapForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+      DataSet = MasterCDS
     end
   end
   inherited MasterDS: TDataSource
@@ -953,6 +1023,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 82
@@ -989,6 +1060,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
         end
         item
           Visible = True
+          ItemName = 'bbShowCurPartnerOnMap'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoice'
         end
         item
@@ -1008,6 +1087,10 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
       Action = actShowAll
       Category = 0
     end
+    object bbShowCurPartnerOnMap: TdxBarButton
+      Action = actShowCurPartnerOnMap
+      Category = 0
+    end
   end
   inherited PopupMenu: TPopupMenu
     Left = 160
@@ -1023,6 +1106,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
         Component = MasterCDS
         ComponentItem = 'PartnerId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
@@ -1030,6 +1114,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRouteId'
@@ -1037,6 +1122,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
         Component = MasterCDS
         ComponentItem = 'RouteId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRouteSortingId'
@@ -1044,6 +1130,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
         Component = MasterCDS
         ComponentItem = 'RouteSortingId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberId'
@@ -1051,6 +1138,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
         Component = MasterCDS
         ComponentItem = 'MemberTakeId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberId1'
@@ -1058,6 +1146,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
         Component = MasterCDS
         ComponentItem = 'MemberTakeId1'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberId2'
@@ -1065,6 +1154,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
         Component = MasterCDS
         ComponentItem = 'MemberTakeId2'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberId3'
@@ -1072,6 +1162,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
         Component = MasterCDS
         ComponentItem = 'MemberTakeId3'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberId4'
@@ -1079,6 +1170,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
         Component = MasterCDS
         ComponentItem = 'MemberTakeId4'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberId5'
@@ -1086,6 +1178,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
         Component = MasterCDS
         ComponentItem = 'MemberTakeId5'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberId6'
@@ -1093,6 +1186,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
         Component = MasterCDS
         ComponentItem = 'MemberTakeId6'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberId7'
@@ -1100,6 +1194,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
         Component = MasterCDS
         ComponentItem = 'MemberTakeId7'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrepareDayCount'
@@ -1108,6 +1203,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
         ComponentItem = 'PrepareDayCount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocumentDayCount'
@@ -1116,6 +1212,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
         ComponentItem = 'DocumentDayCount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344

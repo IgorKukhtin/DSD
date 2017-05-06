@@ -67,6 +67,8 @@ type
     actChoiceMemberTake5: TOpenChoiceForm;
     actChoiceMemberTake6: TOpenChoiceForm;
     actChoiceMemberTake7: TOpenChoiceForm;
+    actShowCurPartnerOnMap: TdsdPartnerMapAction;
+    bbShowCurPartnerOnMap: TdxBarButton;
   private
     { Private declarations }
   public

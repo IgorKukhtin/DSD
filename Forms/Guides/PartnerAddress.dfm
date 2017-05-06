@@ -20,17 +20,22 @@ object PartnerAddressForm: TPartnerAddressForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 61
     Width = 1362
-    Height = 438
+    Height = 403
     Align = alClient
-    TabOrder = 1
+    TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = #1057#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = ceName
+        end>
       DataController.Summary.SummaryGroups = <>
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
@@ -38,6 +43,7 @@ object PartnerAddressForm: TPartnerAddressForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
+      OptionsView.Footer = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -157,6 +163,14 @@ object PartnerAddressForm: TPartnerAddressForm
       object RetailName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
         DataBinding.FieldName = 'RetailName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object clRouteName: TcxGridDBColumn
+        Caption = #1052#1072#1088#1096#1088#1091#1090
+        DataBinding.FieldName = 'RouteName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -561,32 +575,13 @@ object PartnerAddressForm: TPartnerAddressForm
       GridView = cxGridDBTableView
     end
   end
-  object cxLabel6: TcxLabel
-    Left = 24
-    Top = 36
-    AutoSize = False
-    Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
-    Height = 17
-    Width = 110
-  end
-  object edJuridical: TcxButtonEdit
-    Left = 143
-    Top = 35
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 2
-    Width = 245
-  end
   object deStart: TcxDateEdit
     Left = 544
     Top = 36
     EditValue = 41852d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 4
+    TabOrder = 3
     Width = 85
   end
   object cxlEnd: TcxLabel
@@ -608,32 +603,110 @@ object PartnerAddressForm: TPartnerAddressForm
     TabOrder = 6
     Width = 85
   end
-  object cxLabel5: TcxLabel
-    Left = 809
-    Top = 36
-    AutoSize = False
-    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103':'
-    Height = 17
-    Width = 60
-  end
-  object ceInfoMoney: TcxButtonEdit
-    Left = 880
-    Top = 35
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 7
-    Width = 290
-  end
   object cbPeriod: TcxCheckBox
     Left = 394
     Top = 36
     Action = actRefreshPeriod
-    TabOrder = 12
+    TabOrder = 1
     Width = 148
+  end
+  object Panel: TPanel
+    Left = 0
+    Top = 0
+    Width = 1362
+    Height = 35
+    Align = alTop
+    TabOrder = 4
+    object edRetail: TcxButtonEdit
+      Left = 669
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 0
+      Width = 129
+    end
+    object cxLabel3: TcxLabel
+      Left = 588
+      Top = 9
+      Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100':'
+    end
+    object cxLabel5: TcxLabel
+      Left = 991
+      Top = 9
+      AutoSize = False
+      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103':'
+      Height = 17
+      Width = 60
+    end
+    object ceInfoMoney: TcxButtonEdit
+      Left = 1051
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 4
+      Width = 306
+    end
+    object cxLabel6: TcxLabel
+      Left = 6
+      Top = 9
+      AutoSize = False
+      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
+      Height = 17
+      Width = 110
+    end
+    object edJuridical: TcxButtonEdit
+      Left = 111
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 2
+      Width = 221
+    end
+    object cxLabel2: TcxLabel
+      Left = 335
+      Top = 9
+      Caption = #1060#1048#1054' ('#1058#1055'):'
+    end
+    object edPersonalTrade: TcxButtonEdit
+      Left = 390
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 194
+    end
+    object cxLabel4: TcxLabel
+      Left = 803
+      Top = 9
+      Caption = #1052#1072#1088#1096#1088#1091#1090':'
+    end
+    object edRoute: TcxButtonEdit
+      Left = 855
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 9
+      Width = 130
+    end
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -677,6 +750,24 @@ object PartnerAddressForm: TPartnerAddressForm
           'Left'
           'Top'
           'Width')
+      end
+      item
+        Component = GuidesPersonalTrade
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesRetail
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesRoute
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
     StorageName = 'cxPropertiesStore'
     Left = 296
@@ -761,11 +852,11 @@ object PartnerAddressForm: TPartnerAddressForm
         end
         item
           Visible = True
-          ItemName = 'bbJuridicalLabel'
+          ItemName = 'bbShowCurPartnerOnMap'
         end
         item
           Visible = True
-          ItemName = 'bbJuridicalGuides'
+          ItemName = 'bbShowAllPartnerOnMap'
         end
         item
           Visible = True
@@ -794,18 +885,6 @@ object PartnerAddressForm: TPartnerAddressForm
         item
           Visible = True
           ItemName = 'deEndDate'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem2'
         end
         item
           Visible = True
@@ -938,6 +1017,14 @@ object PartnerAddressForm: TPartnerAddressForm
     end
     object bbInsertMask: TdxBarButton
       Action = actInsertMask
+      Category = 0
+    end
+    object bbShowCurPartnerOnMap: TdxBarButton
+      Action = actShowCurPartnerOnMap
+      Category = 0
+    end
+    object bbShowAllPartnerOnMap: TdxBarButton
+      Action = mactShowAllPartnerOnMap
       Category = 0
     end
   end
@@ -1646,6 +1733,62 @@ object PartnerAddressForm: TPartnerAddressForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actShowCurPartnerOnMap: TdsdPartnerMapAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1050#1072#1088#1090#1072' Google - '#1090#1086#1083#1100#1082#1086' '#1054#1044#1048#1053' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090
+      Hint = #1050#1072#1088#1090#1072' Google - '#1090#1086#1083#1100#1082#1086' '#1054#1044#1048#1053' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090
+      ImageIndex = 74
+      FormName = 'TPartnerMapForm'
+      FormNameParam.Value = 'TPartnerMapForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+      DataSet = MasterCDS
+    end
+    object actCheckShowAllPartnerOnMap: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCheck
+      StoredProcList = <
+        item
+          StoredProc = spCheck
+        end>
+      Caption = 'actCheckShowAllPartnerOnMap'
+    end
+    object actShowAllPartnerOnMap: TdsdPartnerMapAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1082#1072#1088#1090#1091' '#1076#1083#1103' '#1087#1088#1086#1089#1084#1086#1090#1088#1072' '#1042#1057#1045#1061' '#1072#1076#1088#1077#1089#1086#1074
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1082#1072#1088#1090#1091' '#1076#1083#1103' '#1087#1088#1086#1089#1084#1086#1090#1088#1072' '#1042#1057#1045#1061' '#1072#1076#1088#1077#1089#1086#1074
+      FormName = 'TPartnerMapForm'
+      FormNameParam.Value = 'TPartnerMapForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+      MapType = acShowAll
+      DataSet = MasterCDS
+    end
+    object mactShowAllPartnerOnMap: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCheckShowAllPartnerOnMap
+        end
+        item
+          Action = actShowAllPartnerOnMap
+        end>
+      QuestionBeforeExecute = 
+        #1054#1090#1082#1088#1099#1090#1080#1077' '#1082#1072#1088#1090#1099' '#1076#1083#1103' '#1073#1086#1083#1100#1096#1086#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1072#1076#1088#1077#1089#1086#1074' '#1084#1086#1078#1077#1090' '#1074#1099#1087#1086#1083#1085#1103#1090#1100#1089#1103 +
+        ' '#1076#1086#1083#1075#1086'.'#1055#1088#1086#1076#1086#1083#1078#1080#1090#1100'? '
+      Caption = #1050#1072#1088#1090#1072' Google - '#1042#1057#1045' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
+      Hint = #1050#1072#1088#1090#1072' Google - '#1042#1057#1045' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
+      ImageIndex = 40
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Partner_Address'
@@ -1699,6 +1842,30 @@ object PartnerAddressForm: TPartnerAddressForm
         Name = 'inInfoMoneyId'
         Value = Null
         Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalTradeId'
+        Value = Null
+        Component = GuidesPersonalTrade
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRouteId'
+        Value = Null
+        Component = GuidesRoute
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2042,8 +2209,8 @@ object PartnerAddressForm: TPartnerAddressForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 296
-    Top = 24
+    Left = 208
+    Top = 8
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -2058,6 +2225,15 @@ object PartnerAddressForm: TPartnerAddressForm
       end
       item
         Component = InfoMoneyGuides
+      end
+      item
+        Component = GuidesPersonalTrade
+      end
+      item
+        Component = GuidesRetail
+      end
+      item
+        Component = GuidesRoute
       end>
     Left = 288
     Top = 184
@@ -2112,7 +2288,139 @@ object PartnerAddressForm: TPartnerAddressForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 984
-    Top = 69
+    Left = 1080
+    Top = 13
+  end
+  object GuidesRetail: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRetail
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 672
+    Top = 8
+  end
+  object GuidesPersonalTrade: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalTrade
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPersonalTrade
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonalTrade
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 495
+    Top = 8
+  end
+  object GuidesRoute: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRoute
+    FormNameParam.Value = 'TRoute_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRoute_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRoute
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRoute
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = '149831'
+        MultiSelectSeparator = ','
+      end>
+    Left = 911
+  end
+  object spCheck: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_Partner_checkMap'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inJuridicalId'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalTradeId'
+        Value = ''
+        Component = GuidesPersonalTrade
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRouteId'
+        Value = ''
+        Component = GuidesRoute
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 289
+    Top = 290
   end
 end

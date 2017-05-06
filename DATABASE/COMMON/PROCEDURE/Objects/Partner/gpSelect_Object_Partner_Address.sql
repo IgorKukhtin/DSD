@@ -4,6 +4,8 @@
 -- DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner_Address(
     IN inStartDate         TDateTime , --
@@ -12,6 +14,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Partner_Address(
     IN inShowAll           Boolean,
     IN inJuridicalId       Integer  ,
     IN inInfoMoneyId       Integer  ,
+    IN inPersonalTradeId   Integer  ,
+    IN inRetailId          Integer  ,
+    IN inRouteId           Integer  ,
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
@@ -22,7 +27,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                CityName TVarChar, CityKindName TVarChar, CityKindId Integer,
                RegionName TVarChar, ProvinceName TVarChar,
                StreetKindName TVarChar, StreetKindId Integer,
-               JuridicalId Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, RetailName TVarChar,
+               JuridicalId Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, RetailName TVarChar, RouteName TVarChar,
                Order_ContactPersonKindId Integer, Order_ContactPersonKindName TVarChar, Order_Name TVarChar, Order_Mail TVarChar, Order_Phone TVarChar,
                Doc_ContactPersonKindId Integer, Doc_ContactPersonKindName TVarChar, Doc_Name TVarChar, Doc_Mail TVarChar, Doc_Phone TVarChar,
                Act_ContactPersonKindId Integer, Act_ContactPersonKindName TVarChar, Act_Name TVarChar, Act_Mail TVarChar, Act_Phone TVarChar,
@@ -124,6 +129,7 @@ BEGIN
          , Object_Juridical.ValueData       AS JuridicalName
          , Object_JuridicalGroup.ValueData  AS JuridicalGroupName
          , Object_Retail.ValueData          AS RetailName
+         , Object_Route.ValueData           AS RouteName
 
          , zc_Enum_ContactPersonKind_CreateOrder()  AS Order_ContactPersonKindId
          , lfGet_Object_ValueData (zc_Enum_ContactPersonKind_CreateOrder()) AS Order_ContactPersonKindName
@@ -324,6 +330,11 @@ BEGIN
                              AND ObjectLink_Partner_PartnerTag.DescId = zc_ObjectLink_Partner_PartnerTag()
          LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = ObjectLink_Partner_PartnerTag.ChildObjectId
 
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
+                              ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
+         LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
+
          LEFT JOIN tmpContactPerson AS tmpContactPerson_Order on tmpContactPerson_Order.PartnerId = Object_Partner.Id  AND  tmpContactPerson_Order.ContactPersonKindId = 153272    --"Формирование заказов"
          LEFT JOIN tmpContactPerson AS tmpContactPerson_Doc on tmpContactPerson_Doc.PartnerId = Object_Partner.Id  AND  tmpContactPerson_Doc.ContactPersonKindId = 153273    --"Проверка документов"
          LEFT JOIN tmpContactPerson AS tmpContactPerson_Act on tmpContactPerson_Act.PartnerId = Object_Partner.Id  AND  tmpContactPerson_Act.ContactPersonKindId = 153274    --"Акты сверки и выполенных работ"
@@ -336,17 +347,21 @@ BEGIN
            OR View_PersonalTrade.BranchId = vbObjectId_Branch_Constraint
            OR tmpMovement.PartnerId > 0
            OR vbIsConstraint = FALSE)
+      AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId        OR COALESCE (inRetailId, 0)        = 0)
+      AND (ObjectLink_Partner_Route.ChildObjectId    = inRouteId         OR COALESCE (inRouteId, 0)         = 0)
+      AND (ObjectLink_Partner_Personal.ChildObjectId = inPersonalTradeId OR COALESCE (inPersonalTradeId, 0) = 0)
    ;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.05.17         * 
  06.10.15         * add inShowAll
  09.12.14                                        * add inInfoMoneyId
  03.12.14                                        * all

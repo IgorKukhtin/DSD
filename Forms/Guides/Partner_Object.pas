@@ -75,6 +75,8 @@ type
     clRetailName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    actShowCurPartnerOnMap: TdsdPartnerMapAction;
+    bbShowCurPartnerOnMap: TdxBarButton;
   private
     { Private declarations }
   public

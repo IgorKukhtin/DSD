@@ -356,6 +356,14 @@ object Partner_ObjectForm: TPartner_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'bbShowCurPartnerOnMap'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoiceGuides'
         end
         item
@@ -410,6 +418,10 @@ object Partner_ObjectForm: TPartner_ObjectForm
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll
+      Category = 0
+    end
+    object bbShowCurPartnerOnMap: TdxBarButton
+      Action = actShowCurPartnerOnMap
       Category = 0
     end
   end
@@ -524,6 +536,20 @@ object Partner_ObjectForm: TPartner_ObjectForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object actShowCurPartnerOnMap: TdsdPartnerMapAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1050#1072#1088#1090#1072' Google - '#1090#1086#1083#1100#1082#1086' '#1054#1044#1048#1053' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090
+      Hint = #1050#1072#1088#1090#1072' Google - '#1090#1086#1083#1100#1082#1086' '#1054#1044#1048#1053' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090
+      ImageIndex = 74
+      FormName = 'TPartnerMapForm'
+      FormNameParam.Value = 'TPartnerMapForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+      DataSet = MasterCDS
     end
   end
   object spSelect: TdsdStoredProc
