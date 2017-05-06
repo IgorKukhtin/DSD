@@ -20,9 +20,9 @@ object PartnerForm: TPartnerForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 91
+    Top = 61
     Width = 1000
-    Height = 373
+    Height = 403
     Align = alClient
     TabOrder = 1
     object cxGridDBTableView: TcxGridDBTableView
@@ -30,7 +30,12 @@ object PartnerForm: TPartnerForm
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = #1057#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = clName
+        end>
       DataController.Summary.SummaryGroups = <>
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
@@ -38,6 +43,7 @@ object PartnerForm: TPartnerForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
+      OptionsView.Footer = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -588,12 +594,12 @@ object PartnerForm: TPartnerForm
     Left = 0
     Top = 0
     Width = 1000
-    Height = 65
+    Height = 35
     Align = alTop
     TabOrder = 0
     object edRetail: TcxButtonEdit
-      Left = 111
-      Top = 37
+      Left = 389
+      Top = 6
       Properties.Buttons = <
         item
           Default = True
@@ -601,11 +607,11 @@ object PartnerForm: TPartnerForm
         end>
       Properties.ReadOnly = True
       TabOrder = 1
-      Width = 194
+      Width = 129
     end
     object cxLabel3: TcxLabel
-      Left = 29
-      Top = 38
+      Left = 308
+      Top = 7
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100':'
     end
     object cxLabel6: TcxLabel
@@ -614,7 +620,7 @@ object PartnerForm: TPartnerForm
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
     end
     object edJuridical: TcxButtonEdit
-      Left = 111
+      Left = 109
       Top = 6
       Properties.Buttons = <
         item
@@ -626,8 +632,13 @@ object PartnerForm: TPartnerForm
       Width = 194
     end
   end
-  object edPersonal: TcxButtonEdit
-    Left = 417
+  object cxLabel2: TcxLabel
+    Left = 522
+    Top = 7
+    Caption = #1060#1048#1054' ('#1058#1055'):'
+  end
+  object edPersonalTrade: TcxButtonEdit
+    Left = 577
     Top = 6
     Properties.Buttons = <
       item
@@ -638,61 +649,22 @@ object PartnerForm: TPartnerForm
     TabOrder = 4
     Width = 185
   end
-  object cxLabel1: TcxLabel
-    Left = 311
-    Top = 7
-    Caption = #1060#1048#1054' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088'):'
-  end
-  object cxLabel2: TcxLabel
-    Left = 362
-    Top = 38
-    Caption = #1060#1048#1054' ('#1058#1055'):'
-  end
-  object edPersonalTrade: TcxButtonEdit
-    Left = 417
-    Top = 37
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 6
-    Width = 185
-  end
   object cxLabel4: TcxLabel
-    Left = 680
-    Top = 8
+    Left = 767
+    Top = 7
     Caption = #1052#1072#1088#1096#1088#1091#1090':'
   end
   object edRoute: TcxButtonEdit
-    Left = 735
-    Top = 8
+    Left = 819
+    Top = 6
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 9
-    Width = 185
-  end
-  object cxLabel5: TcxLabel
-    Left = 608
-    Top = 38
-    Caption = #1052#1072#1088#1096#1088#1091#1090' ('#1084#1103#1089#1085'. '#1089#1099#1088#1100#1077'):'
-  end
-  object edRoute_30201: TcxButtonEdit
-    Left = 735
-    Top = 37
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 13
-    Width = 185
+    TabOrder = 5
+    Width = 176
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -1651,14 +1623,6 @@ object PartnerForm: TPartnerForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPersonalId'
-        Value = Null
-        Component = GuidesPersonal
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inPersonalTradeId'
         Value = Null
         Component = GuidesPersonalTrade
@@ -1675,14 +1639,6 @@ object PartnerForm: TPartnerForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inRouteId_30201'
-        Value = Null
-        Component = GuidesRoute_30201
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inShowAll'
         Value = Null
         Component = actShowAll
@@ -1691,8 +1647,8 @@ object PartnerForm: TPartnerForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 80
-    Top = 216
+    Left = 104
+    Top = 152
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -1860,8 +1816,7 @@ object PartnerForm: TPartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 216
-    Top = 8
+    Left = 184
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1872,7 +1827,6 @@ object PartnerForm: TPartnerForm
         Component = JuridicalGuides
       end
       item
-        Component = GuidesPersonal
       end
       item
         Component = GuidesPersonalTrade
@@ -1884,7 +1838,6 @@ object PartnerForm: TPartnerForm
         Component = GuidesRoute
       end
       item
-        Component = GuidesRoute_30201
       end>
     Left = 288
     Top = 184
@@ -2030,14 +1983,6 @@ object PartnerForm: TPartnerForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPersonalId'
-        Value = Null
-        Component = GuidesPersonal
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inPersonalTradeId'
         Value = Null
         Component = GuidesPersonalTrade
@@ -2049,14 +1994,6 @@ object PartnerForm: TPartnerForm
         Name = 'inRouteId'
         Value = Null
         Component = GuidesRoute
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inRouteId_30201'
-        Value = Null
-        Component = GuidesRoute_30201
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2091,37 +2028,8 @@ object PartnerForm: TPartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 160
-    Top = 16
-  end
-  object GuidesPersonal: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPersonal
-    Key = '0'
-    FormNameParam.Value = 'TPersonal_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPersonal_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = '0'
-        Component = GuidesPersonal
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesPersonal
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 519
+    Left = 416
+    Top = 8
   end
   object GuidesPersonalTrade: TdsdGuides
     KeyField = 'Id'
@@ -2149,8 +2057,7 @@ object PartnerForm: TPartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 455
-    Top = 32
+    Left = 607
   end
   object GuidesRoute: TdsdGuides
     KeyField = 'Id'
@@ -2183,40 +2090,6 @@ object PartnerForm: TPartnerForm
         Value = '149831'
         MultiSelectSeparator = ','
       end>
-    Left = 767
-  end
-  object GuidesRoute_30201: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edRoute_30201
-    FormNameParam.Value = 'TRoute_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TRoute_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesRoute_30201
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesRoute_30201
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterPositionId'
-        Value = '149831'
-        MultiSelectSeparator = ','
-      end>
-    Left = 831
-    Top = 24
+    Left = 911
   end
 end

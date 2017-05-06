@@ -30,7 +30,12 @@ object Partner_PriceListForm: TPartner_PriceListForm
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = #1057#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = clName
+        end>
       DataController.Summary.SummaryGroups = <>
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
@@ -38,6 +43,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
+      OptionsView.Footer = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -712,16 +718,19 @@ object Partner_PriceListForm: TPartner_PriceListForm
       FormName = 'TPartnerEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = ''
           Component = JuridicalGuides
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -737,6 +746,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -744,6 +754,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -752,6 +763,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -764,6 +776,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
       FormName = 'TPartnerEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -771,6 +784,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -856,12 +870,14 @@ object Partner_PriceListForm: TPartner_PriceListForm
       FormName = 'TPriceListForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListPromoId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -869,6 +885,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
           Component = MasterCDS
           ComponentItem = 'PriceListPromoName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -880,12 +897,14 @@ object Partner_PriceListForm: TPartner_PriceListForm
       FormName = 'TPriceListForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -893,6 +912,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
           Component = MasterCDS
           ComponentItem = 'PriceListName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -906,6 +926,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -913,12 +934,14 @@ object Partner_PriceListForm: TPartner_PriceListForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -926,6 +949,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -961,12 +985,14 @@ object Partner_PriceListForm: TPartner_PriceListForm
       FormName = 'TRoute_ObjectForm'
       FormNameParam.Value = 'TRoute_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -974,6 +1000,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
           Component = MasterCDS
           ComponentItem = 'RouteName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -985,12 +1012,14 @@ object Partner_PriceListForm: TPartner_PriceListForm
       FormName = 'TRouteSorting_ObjectForm'
       FormNameParam.Value = 'TRouteSorting_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteSortingId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -998,6 +1027,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
           Component = MasterCDS
           ComponentItem = 'RouteSortingName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1009,12 +1039,14 @@ object Partner_PriceListForm: TPartner_PriceListForm
       FormName = 'TMember_ObjectForm'
       FormNameParam.Value = 'TMember_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MemberTakeId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1022,6 +1054,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
           Component = MasterCDS
           ComponentItem = 'MemberTakeName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1033,12 +1066,14 @@ object Partner_PriceListForm: TPartner_PriceListForm
       FormName = 'TPersonal_ObjectForm'
       FormNameParam.Value = 'TPersonal_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PersonalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1046,6 +1081,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
           Component = MasterCDS
           ComponentItem = 'PersonalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1057,12 +1093,14 @@ object Partner_PriceListForm: TPartner_PriceListForm
       FormName = 'TPersonal_ObjectForm'
       FormNameParam.Value = 'TPersonal_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PersonalTradeId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1070,6 +1108,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
           Component = MasterCDS
           ComponentItem = 'PersonalTradeName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1081,18 +1120,21 @@ object Partner_PriceListForm: TPartner_PriceListForm
       FormName = 'TUnit_ObjectForm'
       FormNameParam.Value = 'TUnit_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'UnitCode'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1100,6 +1142,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
           Component = MasterCDS
           ComponentItem = 'UnitName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1111,12 +1154,14 @@ object Partner_PriceListForm: TPartner_PriceListForm
       FormName = 'TPriceListForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListId_Prior'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1124,6 +1169,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
           Component = MasterCDS
           ComponentItem = 'PriceListName_Prior'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1135,12 +1181,14 @@ object Partner_PriceListForm: TPartner_PriceListForm
       FormName = 'TPriceListForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListId_30103'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1148,6 +1196,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
           Component = MasterCDS
           ComponentItem = 'PriceListName_30103'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1159,12 +1208,14 @@ object Partner_PriceListForm: TPartner_PriceListForm
       FormName = 'TPriceListForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListId_30201'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1172,6 +1223,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
           Component = MasterCDS
           ComponentItem = 'PriceListName_30201'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1209,6 +1261,25 @@ object Partner_PriceListForm: TPartner_PriceListForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalTradeId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRouteId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -1216,6 +1287,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 80
@@ -1232,6 +1304,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 424
@@ -1280,6 +1353,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceListId'
@@ -1287,6 +1361,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
         Component = MasterCDS
         ComponentItem = 'PriceListId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceListPromoId'
@@ -1294,6 +1369,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
         Component = MasterCDS
         ComponentItem = 'PriceListPromoId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceListId_Prior'
@@ -1301,6 +1377,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
         Component = MasterCDS
         ComponentItem = 'PriceListId_Prior'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceListId_30103'
@@ -1308,6 +1385,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
         Component = MasterCDS
         ComponentItem = 'PriceListId_30103'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceListId_30201'
@@ -1315,32 +1393,36 @@ object Partner_PriceListForm: TPartner_PriceListForm
         Component = MasterCDS
         ComponentItem = 'PriceListId_30201'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartPromo'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'StartPromo'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndPromo'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'EndPromo'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 88
-    Top = 344
+    Left = 224
+    Top = 280
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1350,6 +1432,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1358,12 +1441,14 @@ object Partner_PriceListForm: TPartner_PriceListForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 552
     Top = 32
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -1379,6 +1464,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
@@ -1386,6 +1472,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 384
     Top = 112
@@ -1401,6 +1488,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioValue'
@@ -1409,12 +1497,14 @@ object Partner_PriceListForm: TPartner_PriceListForm
         ComponentItem = 'EdiOrdspr'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_ObjectBoolean_Partner_EdiOrdspr'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 744
@@ -1431,6 +1521,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioValue'
@@ -1439,12 +1530,14 @@ object Partner_PriceListForm: TPartner_PriceListForm
         ComponentItem = 'EdiInvoice'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_ObjectBoolean_Partner_EdiInvoice'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 744
@@ -1461,6 +1554,7 @@ object Partner_PriceListForm: TPartner_PriceListForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioValue'
@@ -1469,12 +1563,14 @@ object Partner_PriceListForm: TPartner_PriceListForm
         ComponentItem = 'EdiDesadv'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_ObjectBoolean_Partner_EdiDesadv'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 744

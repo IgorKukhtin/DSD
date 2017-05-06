@@ -29,7 +29,12 @@ object PartnerGLNForm: TPartnerGLNForm
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = #1057#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = clName
+        end>
       DataController.Summary.SummaryGroups = <>
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
@@ -37,6 +42,7 @@ object PartnerGLNForm: TPartnerGLNForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
+      OptionsView.Footer = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -652,6 +658,7 @@ object PartnerGLNForm: TPartnerGLNForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -659,6 +666,7 @@ object PartnerGLNForm: TPartnerGLNForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -667,6 +675,7 @@ object PartnerGLNForm: TPartnerGLNForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -678,12 +687,14 @@ object PartnerGLNForm: TPartnerGLNForm
       FormName = 'TPriceListForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListPromoId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -691,6 +702,7 @@ object PartnerGLNForm: TPartnerGLNForm
           Component = MasterCDS
           ComponentItem = 'PriceListPromoName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -702,12 +714,14 @@ object PartnerGLNForm: TPartnerGLNForm
       FormName = 'TPriceListForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -715,6 +729,7 @@ object PartnerGLNForm: TPartnerGLNForm
           Component = MasterCDS
           ComponentItem = 'PriceListName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -773,6 +788,25 @@ object PartnerGLNForm: TPartnerGLNForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalTradeId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRouteId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -780,6 +814,7 @@ object PartnerGLNForm: TPartnerGLNForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 80
@@ -796,6 +831,7 @@ object PartnerGLNForm: TPartnerGLNForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 424
@@ -840,6 +876,7 @@ object PartnerGLNForm: TPartnerGLNForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGLNCode'
@@ -848,6 +885,7 @@ object PartnerGLNForm: TPartnerGLNForm
         ComponentItem = 'GLNCode'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGLNCodeJuridical_property'
@@ -856,6 +894,7 @@ object PartnerGLNForm: TPartnerGLNForm
         ComponentItem = 'GLNCodeJuridical_property'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGLNCodeRetail_property'
@@ -864,6 +903,7 @@ object PartnerGLNForm: TPartnerGLNForm
         ComponentItem = 'GLNCodeRetail_property'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGLNCodeCorporate_property'
@@ -872,6 +912,7 @@ object PartnerGLNForm: TPartnerGLNForm
         ComponentItem = 'GLNCodeCorporate_property'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outGLNCodeJuridical'
@@ -879,6 +920,7 @@ object PartnerGLNForm: TPartnerGLNForm
         Component = MasterCDS
         ComponentItem = 'GLNCodeJuridical'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outGLNCodeRetail'
@@ -886,6 +928,7 @@ object PartnerGLNForm: TPartnerGLNForm
         Component = MasterCDS
         ComponentItem = 'GLNCodeRetail'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outGLNCodeCorporate'
@@ -893,6 +936,7 @@ object PartnerGLNForm: TPartnerGLNForm
         Component = MasterCDS
         ComponentItem = 'GLNCodeCorporate'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 88
@@ -903,6 +947,7 @@ object PartnerGLNForm: TPartnerGLNForm
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -912,6 +957,7 @@ object PartnerGLNForm: TPartnerGLNForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -920,12 +966,14 @@ object PartnerGLNForm: TPartnerGLNForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 552
     Top = 32
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -941,6 +989,7 @@ object PartnerGLNForm: TPartnerGLNForm
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
@@ -948,6 +997,7 @@ object PartnerGLNForm: TPartnerGLNForm
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 384
     Top = 112
@@ -963,6 +1013,7 @@ object PartnerGLNForm: TPartnerGLNForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioValue'
@@ -971,12 +1022,14 @@ object PartnerGLNForm: TPartnerGLNForm
         ComponentItem = 'EdiOrdspr'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_ObjectBoolean_Partner_EdiOrdspr'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 744
@@ -993,6 +1046,7 @@ object PartnerGLNForm: TPartnerGLNForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioValue'
@@ -1001,12 +1055,14 @@ object PartnerGLNForm: TPartnerGLNForm
         ComponentItem = 'EdiInvoice'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_ObjectBoolean_Partner_EdiInvoice'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 744
@@ -1023,6 +1079,7 @@ object PartnerGLNForm: TPartnerGLNForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioValue'
@@ -1031,12 +1088,14 @@ object PartnerGLNForm: TPartnerGLNForm
         ComponentItem = 'EdiDesadv'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_ObjectBoolean_Partner_EdiDesadv'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 744
