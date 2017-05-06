@@ -4659,17 +4659,37 @@ procedure TfrmMain.ShowPromoPartnersByGoods;
 begin
   lCaption.Text := 'ТТ с акционными "' + DM.qryPromoGoodsGoodsName.AsString + '"';
   pPromoPartnerDate.Visible := false;
+//or
+//  DM.qryPromoPartners.SQL.Text := 'select J.VALUEDATA PartnerName, OP.ADDRESS, ' +
+//    'CASE WHEN PP.CONTRACTID = 0 THEN ''все договора'' ELSE C.CONTRACTTAGNAME || '' '' || C.VALUEDATA END ContractName, ' +
+//    'PP.PARTNERID, PP.CONTRACTID, group_concat(distinct PP.MOVEMENTID) PromoIds ' +
+//    'from MOVEMENTITEM_PROMOPARTNER PP ' +
+//    'LEFT JOIN OBJECT_PARTNER OP ON OP.ID = PP.PARTNERID AND (OP.CONTRACTID = PP.CONTRACTID OR PP.CONTRACTID = 0) ' +
+//    'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = OP.JURIDICALID AND J.CONTRACTID = OP.CONTRACTID ' +
+//    'LEFT JOIN OBJECT_CONTRACT C ON C.ID = PP.CONTRACTID ' +
+//    'WHERE PP.MOVEMENTID = :PROMOID ' +
+//    'GROUP BY PP.PARTNERID, PP.CONTRACTID ' +
+//    'ORDER BY J.VALUEDATA, OP.ADDRESS';
+//or
 
-  DM.qryPromoPartners.SQL.Text := 'select J.VALUEDATA PartnerName, OP.ADDRESS, ' +
-    'CASE WHEN PP.CONTRACTID = 0 THEN ''все договора'' ELSE C.CONTRACTTAGNAME || '' '' || C.VALUEDATA END ContractName, ' +
-    'PP.PARTNERID, PP.CONTRACTID, group_concat(distinct PP.MOVEMENTID) PromoIds ' +
-    'from MOVEMENTITEM_PROMOPARTNER PP ' +
-    'LEFT JOIN OBJECT_PARTNER OP ON OP.ID = PP.PARTNERID AND (OP.CONTRACTID = PP.CONTRACTID OR PP.CONTRACTID = 0) ' +
-    'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = OP.JURIDICALID AND J.CONTRACTID = OP.CONTRACTID ' +
-    'LEFT JOIN OBJECT_CONTRACT C ON C.ID = PP.CONTRACTID ' +
-    'WHERE PP.MOVEMENTID = :PROMOID ' +
-    'GROUP BY PP.PARTNERID, PP.CONTRACTID ' +
-    'ORDER BY J.VALUEDATA, OP.ADDRESS';
+
+  DM.qryPromoPartners.SQL.Text :=
+      ' select'
+    + '   Object_JurIdical.ValueData AS PartnerName'
+    + ' , Object_Partner.Address'
+    + ' , CASE WHEN MovementItem_PromoPartner.ContractId = 0 THEN ''все договора'' ELSE Object_Contract.ContractTagName || '' '' || Object_Contract.ValueData END AS ContractName'
+    + ' , MovementItem_PromoPartner.PartnerId'
+    + ' , MovementItem_PromoPartner.ContractId'
+    + ' , group_concat(distinct MovementItem_PromoPartner.MovementId) AS PromoIds '
+    + ' from MovementItem_PromoPartner '
+    + ' LEFT JOIN Object_Partner   ON Object_Partner.Id = MovementItem_PromoPartner.PartnerId '
+    + '                           AND (Object_Partner.ContractId = MovementItem_PromoPartner.ContractId OR MovementItem_PromoPartner.ContractId = 0) '
+    + ' LEFT JOIN Object_JurIdical ON Object_JurIdical.Id = Object_Partner.JurIdicalId '
+    + '                           AND Object_JurIdical.ContractId = Object_Partner.ContractId '
+    + ' LEFT JOIN Object_Contract  ON Object_Contract.Id = MovementItem_PromoPartner.ContractId '
+    + ' WHERE MovementItem_PromoPartner.MovementId = :PROMOId '
+    + ' GROUP BY MovementItem_PromoPartner.PartnerId, MovementItem_PromoPartner.ContractId '
+    + ' ORDER BY Object_JurIdical.ValueData, Object_Partner.Address';
   DM.qryPromoPartners.ParamByName('PROMOID').AsInteger := DM.qryPromoGoodsPromoId.AsInteger;
   DM.qryPromoPartners.Open;
 
