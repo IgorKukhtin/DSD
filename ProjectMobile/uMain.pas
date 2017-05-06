@@ -4549,16 +4549,39 @@ end;
 procedure TfrmMain.ShowPriceListItems;
 begin
   lCaption.Text := 'Прайс-лист "' + DM.qryPriceListValueData.AsString + '"';
+//or
+//  DM.qryGoodsForPriceList.Open('select G.ID, G.OBJECTCODE, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ' +
+//    'PLI.ORDERPRICE Price, M.VALUEDATA Measure, PLI.ORDERSTARTDATE StartDate, T.VALUEDATA TradeMarkName ' +
+//    'FROM OBJECT_PRICELISTITEMS PLI ' +
+//    'JOIN OBJECT_GOODS G ON G.ID = PLI.GOODSID AND G.ISERASED = 0 ' +
+//    'LEFT JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID ' +
+//    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID ' +
+//    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+//    'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
+//    'WHERE PLI.PRICELISTID = ' + DM.qryPriceListId.AsString + ' ORDER BY G.VALUEDATA');
+//or
 
-  DM.qryGoodsForPriceList.Open('select G.ID, G.OBJECTCODE, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ' +
-    'PLI.ORDERPRICE Price, M.VALUEDATA Measure, PLI.ORDERSTARTDATE StartDate, T.VALUEDATA TradeMarkName ' +
-    'FROM OBJECT_PRICELISTITEMS PLI ' +
-    'JOIN OBJECT_GOODS G ON G.ID = PLI.GOODSID AND G.ISERASED = 0 ' +
-    'LEFT JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID ' +
-    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID ' +
-    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-    'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
-    'WHERE PLI.PRICELISTID = ' + DM.qryPriceListId.AsString + ' ORDER BY G.VALUEDATA');
+
+  DM.qryGoodsForPriceList.Open(
+      'select '
+    + '   Object_Goods.ID'
+    + ' , Object_Goods.ObjectCode'
+    + ' , Object_Goods.ValueData AS GoodsName'
+    + ' , Object_GoodsKind.ValueData AS KindName'
+    + ' , Object_PriceListItems.OrderPrice AS Price'
+    + ' , Object_Measure.ValueData AS Measure'
+    + ' , Object_PriceListItems.OrderStartDate AS StartDate'
+    + ' , Object_TradeMark.ValueData AS TradeMarkName'
+    + 'FROM Object_PriceListItems'
+    + '    JOIN Object_Goods ON Object_Goods.ID = Object_PriceListItems.GoodsId'
+    + '                     AND Object_Goods.isErased = 0'
+    + '    LEFT JOIN Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.GoodsId = Object_Goods.ID'
+    + '    LEFT JOIN Object_GoodsKind ON Object_GoodsKind.ID = Object_GoodsByGoodsKind.GoodsKindId'
+    + '    LEFT JOIN Object_Measure ON Object_Measure.ID = Object_Goods.MeasureId'
+    + '    LEFT JOIN Object_TradeMark ON Object_TradeMark.ID = Object_Goods.TradeMarkId'
+    + 'WHERE Object_PriceListItems.PriceListId = ' + DM.qryPriceListId.AsString
+    + 'ORDER BY Object_Goods.ValueData'
+    );
 
   lwPriceListGoods.ScrollViewPos := 0;
   SwitchToForm(tiPriceListItems, DM.qryGoodsForPriceList);
@@ -4612,7 +4635,7 @@ begin
     + '    LEFT JOIN Object_Goods ON Object_Goods.Id = MovementItem_PromoGoods.GoodsId'
     + '    LEFT JOIN Object_Measure ON Object_Measure.Id = Object_Goods.MeasureId'
     + '    LEFT JOIN Object_TradeMark ON Object_TradeMark.Id = Object_Goods.TradeMarkId'
-    + '   LEFT JOIN Object_GoodsKind ON Object_GoodsKind.Id = MovementItem_PromoGoods.GoodsKindId'
+    + '    LEFT JOIN Object_GoodsKind ON Object_GoodsKind.Id = MovementItem_PromoGoods.GoodsKindId'
     + 'WHERE MovementItem_PromoGoods.MovementId IN (' + DM.qryPromoPartnersPromoIds.AsString + ')'
     + 'ORDER BY Object_Goods.ValueData, Movement_Promo.EndSale';
   DM.qryPromoGoods.Open;
