@@ -1,7 +1,7 @@
 -- Function: gpSelect_Object_Partner()
 
 -- DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner(
@@ -400,11 +400,11 @@ BEGIN
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
            OR Object_PersonalTrade.BranchId = vbBranchId_Constraint
            OR vbIsConstraint = FALSE)
-      AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
-      AND (ObjectLink_Partner_Route.ChildObjectId = inRouteId OR inRouteId = 0)
-      AND (ObjectLink_Partner_Route_30201.ChildObjectId = inRouteId_30201 OR inRouteId_30201 = 0)
-      AND (ObjectLink_Partner_Personal.ChildObjectId = inPersonalId OR inPersonalId = 0)      
-      AND (ObjectLink_Partner_PersonalTrade.ChildObjectId = inPersonalTradeId OR inPersonalTradeId = 0)
+      AND (ObjectLink_Juridical_Retail.ChildObjectId      = inRetailId        OR COALESCE (inRetailId, 0)        = 0)
+      AND (ObjectLink_Partner_Route.ChildObjectId         = inRouteId         OR COALESCE (inRouteId, 0)         = 0)
+      AND (ObjectLink_Partner_Route_30201.ChildObjectId   = inRouteId_30201   OR COALESCE (inRouteId_30201, 0)   = 0)
+      AND (ObjectLink_Partner_Personal.ChildObjectId      = inPersonalId      OR COALESCE (inPersonalId, 0)      = 0)      
+      AND (ObjectLink_Partner_PersonalTrade.ChildObjectId = inPersonalTradeId OR COALESCE (inPersonalTradeId, 0) = 0)
    ;
 
 END;
