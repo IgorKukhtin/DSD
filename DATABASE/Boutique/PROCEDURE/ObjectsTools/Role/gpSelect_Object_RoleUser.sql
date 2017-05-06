@@ -5,8 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_RoleUser (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_RoleUser(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, RoleId Integer, UserRoleId Integer
-             , BranchCode Integer, BranchName TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, RoleId Integer, UserRoleId Integer             
              , UnitCode Integer, UnitName TVarChar
              , PositionName TVarChar
              , isErased Boolean) AS
@@ -31,8 +30,6 @@ $BODY$BEGIN
        , ObjectLink_UserRole_Role.ChildObjectId AS RoleId
        , ObjectLink_UserRole_User.ObjectId      AS UserRoleId
 
-       , Object_Branch.ObjectCode  AS BranchCode
-       , Object_Branch.ValueData   AS BranchName
        , Object_Unit.ObjectCode    AS UnitCode
        , Object_Unit.ValueData     AS UnitName
        , Object_Position.ValueData AS PositionName
@@ -52,10 +49,6 @@ $BODY$BEGIN
         LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
         LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
-        LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
-                             ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
-                            AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-        LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
 
 
    WHERE ObjectLink_UserRole_Role.DescId = zc_ObjectLink_UserRole_Role();        
@@ -64,14 +57,13 @@ END;$BODY$
 
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_RoleUser(TVarChar)
-  OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
+ 06.05.17                                                          *
  23.09.13                         *
 
 */

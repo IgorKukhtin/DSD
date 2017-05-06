@@ -4549,16 +4549,39 @@ end;
 procedure TfrmMain.ShowPriceListItems;
 begin
   lCaption.Text := 'Прайс-лист "' + DM.qryPriceListValueData.AsString + '"';
+//or
+//  DM.qryGoodsForPriceList.Open('select G.ID, G.OBJECTCODE, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ' +
+//    'PLI.ORDERPRICE Price, M.VALUEDATA Measure, PLI.ORDERSTARTDATE StartDate, T.VALUEDATA TradeMarkName ' +
+//    'FROM OBJECT_PRICELISTITEMS PLI ' +
+//    'JOIN OBJECT_GOODS G ON G.ID = PLI.GOODSID AND G.ISERASED = 0 ' +
+//    'LEFT JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID ' +
+//    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID ' +
+//    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+//    'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
+//    'WHERE PLI.PRICELISTID = ' + DM.qryPriceListId.AsString + ' ORDER BY G.VALUEDATA');
+//or
 
-  DM.qryGoodsForPriceList.Open('select G.ID, G.OBJECTCODE, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ' +
-    'PLI.ORDERPRICE Price, M.VALUEDATA Measure, PLI.ORDERSTARTDATE StartDate, T.VALUEDATA TradeMarkName ' +
-    'FROM OBJECT_PRICELISTITEMS PLI ' +
-    'JOIN OBJECT_GOODS G ON G.ID = PLI.GOODSID AND G.ISERASED = 0 ' +
-    'LEFT JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID ' +
-    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID ' +
-    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-    'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
-    'WHERE PLI.PRICELISTID = ' + DM.qryPriceListId.AsString + ' ORDER BY G.VALUEDATA');
+
+  DM.qryGoodsForPriceList.Open(
+      'select '
+    + '   Object_Goods.ID'
+    + ' , Object_Goods.ObjectCode'
+    + ' , Object_Goods.ValueData AS GoodsName'
+    + ' , Object_GoodsKind.ValueData AS KindName'
+    + ' , Object_PriceListItems.OrderPrice AS Price'
+    + ' , Object_Measure.ValueData AS Measure'
+    + ' , Object_PriceListItems.OrderStartDate AS StartDate'
+    + ' , Object_TradeMark.ValueData AS TradeMarkName'
+    + 'FROM Object_PriceListItems'
+    + '    JOIN Object_Goods ON Object_Goods.ID = Object_PriceListItems.GoodsId'
+    + '                     AND Object_Goods.isErased = 0'
+    + '    LEFT JOIN Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.GoodsId = Object_Goods.ID'
+    + '    LEFT JOIN Object_GoodsKind ON Object_GoodsKind.ID = Object_GoodsByGoodsKind.GoodsKindId'
+    + '    LEFT JOIN Object_Measure ON Object_Measure.ID = Object_Goods.MeasureId'
+    + '    LEFT JOIN Object_TradeMark ON Object_TradeMark.ID = Object_Goods.TradeMarkId'
+    + 'WHERE Object_PriceListItems.PriceListId = ' + DM.qryPriceListId.AsString
+    + 'ORDER BY Object_Goods.ValueData'
+    );
 
   lwPriceListGoods.ScrollViewPos := 0;
   SwitchToForm(tiPriceListItems, DM.qryGoodsForPriceList);
@@ -4579,20 +4602,42 @@ procedure TfrmMain.ShowPromoGoodsByPartner;
 begin
   lCaption.Text := 'Акционные товары для ' + DM.qryPromoPartnersPartnerName.AsString;
   pPromoGoodsDate.Visible := false;
+//or
+//  DM.qryPromoGoods.SQL.Text := 'select G.OBJECTCODE, G.VALUEDATA GoodsName, T.VALUEDATA TradeMarkName, ' +
+//    'CASE WHEN PG.GOODSKINDID = 0 THEN ''все виды'' ELSE GK.VALUEDATA END KindName, ' +
+//    '''Скидка '' || PG.TAXPROMO || ''%'' Tax, ' +
+//    '''Акционная цена: '' || PG.PRICEWITHOUTVAT || '' (с НДС '' || PG.PRICEWITHVAT || '') за '' || M.VALUEDATA Price, ' +
+//    '''Акция заканчивается '' || strftime(''%d.%m.%Y'',P.ENDSALE) Termin, P.ID PromoId ' +
+//    'from MOVEMENTITEM_PROMOGOODS PG ' +
+//    'JOIN MOVEMENT_PROMO P ON P.ID = PG.MOVEMENTID ' +
+//    'LEFT JOIN OBJECT_GOODS G ON G.ID = PG.GOODSID ' +
+//    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+//    'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
+//    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = PG.GOODSKINDID ' +
+//    'WHERE PG.MOVEMENTID IN (' + DM.qryPromoPartnersPromoIds.AsString + ') ' +
+//    'ORDER BY G.VALUEDATA, P.ENDSALE';
+//or
 
-  DM.qryPromoGoods.SQL.Text := 'select G.OBJECTCODE, G.VALUEDATA GoodsName, T.VALUEDATA TradeMarkName, ' +
-    'CASE WHEN PG.GOODSKINDID = 0 THEN ''все виды'' ELSE GK.VALUEDATA END KindName, ' +
-    '''Скидка '' || PG.TAXPROMO || ''%'' Tax, ' +
-    '''Акционная цена: '' || PG.PRICEWITHOUTVAT || '' (с НДС '' || PG.PRICEWITHVAT || '') за '' || M.VALUEDATA Price, ' +
-    '''Акция заканчивается '' || strftime(''%d.%m.%Y'',P.ENDSALE) Termin, P.ID PromoId ' +
-    'from MOVEMENTITEM_PROMOGOODS PG ' +
-    'JOIN MOVEMENT_PROMO P ON P.ID = PG.MOVEMENTID ' +
-    'LEFT JOIN OBJECT_GOODS G ON G.ID = PG.GOODSID ' +
-    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-    'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
-    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = PG.GOODSKINDID ' +
-    'WHERE PG.MOVEMENTID IN (' + DM.qryPromoPartnersPromoIds.AsString + ') ' +
-    'ORDER BY G.VALUEDATA, P.ENDSALE';
+
+  DM.qryPromoGoods.SQL.Text :=
+      'select '
+    + '   Object_Goods.ObjectCode'
+    + ' , Object_Goods.ValueData AS GoodsName'
+    + ' , Object_TradeMark.ValueData AS TradeMarkName'
+    + ' , CASE WHEN MovementItem_PromoGoods.GoodsKindId = 0 THEN ''все виды'' ELSE Object_GoodsKind.ValueData END AS KindName'
+    + ' , ''Скидка '' || MovementItem_PromoGoods.TaxPromo || ''%'' AS Tax'
+    + ' , ''Акционная цена: '' || MovementItem_PromoGoods.PriceWithOutVAT || '' (с НДС '' || MovementItem_PromoGoods.PriceWithVAT || '') за '' || Object_Measure.ValueData AS Price'
+    + ' , ''Акция заканчивается '' || strftime(''%d.%m.%Y'', Movement_Promo.EndSale) AS Termin'
+    + ' , Movement_Promo.Id AS PromoId'
+    + 'from'
+    + '         MovementItem_PromoGoods'
+    + '    JOIN Movement_Promo ON Movement_Promo.Id = MovementItem_PromoGoods.MovementId'
+    + '    LEFT JOIN Object_Goods ON Object_Goods.Id = MovementItem_PromoGoods.GoodsId'
+    + '    LEFT JOIN Object_Measure ON Object_Measure.Id = Object_Goods.MeasureId'
+    + '    LEFT JOIN Object_TradeMark ON Object_TradeMark.Id = Object_Goods.TradeMarkId'
+    + '    LEFT JOIN Object_GoodsKind ON Object_GoodsKind.Id = MovementItem_PromoGoods.GoodsKindId'
+    + 'WHERE MovementItem_PromoGoods.MovementId IN (' + DM.qryPromoPartnersPromoIds.AsString + ')'
+    + 'ORDER BY Object_Goods.ValueData, Movement_Promo.EndSale';
   DM.qryPromoGoods.Open;
 
   lwPromoGoods.ScrollViewPos := 0;
@@ -4614,17 +4659,37 @@ procedure TfrmMain.ShowPromoPartnersByGoods;
 begin
   lCaption.Text := 'ТТ с акционными "' + DM.qryPromoGoodsGoodsName.AsString + '"';
   pPromoPartnerDate.Visible := false;
+//or
+//  DM.qryPromoPartners.SQL.Text := 'select J.VALUEDATA PartnerName, OP.ADDRESS, ' +
+//    'CASE WHEN PP.CONTRACTID = 0 THEN ''все договора'' ELSE C.CONTRACTTAGNAME || '' '' || C.VALUEDATA END ContractName, ' +
+//    'PP.PARTNERID, PP.CONTRACTID, group_concat(distinct PP.MOVEMENTID) PromoIds ' +
+//    'from MOVEMENTITEM_PROMOPARTNER PP ' +
+//    'LEFT JOIN OBJECT_PARTNER OP ON OP.ID = PP.PARTNERID AND (OP.CONTRACTID = PP.CONTRACTID OR PP.CONTRACTID = 0) ' +
+//    'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = OP.JURIDICALID AND J.CONTRACTID = OP.CONTRACTID ' +
+//    'LEFT JOIN OBJECT_CONTRACT C ON C.ID = PP.CONTRACTID ' +
+//    'WHERE PP.MOVEMENTID = :PROMOID ' +
+//    'GROUP BY PP.PARTNERID, PP.CONTRACTID ' +
+//    'ORDER BY J.VALUEDATA, OP.ADDRESS';
+//or
 
-  DM.qryPromoPartners.SQL.Text := 'select J.VALUEDATA PartnerName, OP.ADDRESS, ' +
-    'CASE WHEN PP.CONTRACTID = 0 THEN ''все договора'' ELSE C.CONTRACTTAGNAME || '' '' || C.VALUEDATA END ContractName, ' +
-    'PP.PARTNERID, PP.CONTRACTID, group_concat(distinct PP.MOVEMENTID) PromoIds ' +
-    'from MOVEMENTITEM_PROMOPARTNER PP ' +
-    'LEFT JOIN OBJECT_PARTNER OP ON OP.ID = PP.PARTNERID AND (OP.CONTRACTID = PP.CONTRACTID OR PP.CONTRACTID = 0) ' +
-    'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = OP.JURIDICALID AND J.CONTRACTID = OP.CONTRACTID ' +
-    'LEFT JOIN OBJECT_CONTRACT C ON C.ID = PP.CONTRACTID ' +
-    'WHERE PP.MOVEMENTID = :PROMOID ' +
-    'GROUP BY PP.PARTNERID, PP.CONTRACTID ' +
-    'ORDER BY J.VALUEDATA, OP.ADDRESS';
+
+  DM.qryPromoPartners.SQL.Text :=
+      ' select'
+    + '   Object_JurIdical.ValueData AS PartnerName'
+    + ' , Object_Partner.Address'
+    + ' , CASE WHEN MovementItem_PromoPartner.ContractId = 0 THEN ''все договора'' ELSE Object_Contract.ContractTagName || '' '' || Object_Contract.ValueData END AS ContractName'
+    + ' , MovementItem_PromoPartner.PartnerId'
+    + ' , MovementItem_PromoPartner.ContractId'
+    + ' , group_concat(distinct MovementItem_PromoPartner.MovementId) AS PromoIds '
+    + ' from MovementItem_PromoPartner '
+    + ' LEFT JOIN Object_Partner   ON Object_Partner.Id = MovementItem_PromoPartner.PartnerId '
+    + '                           AND (Object_Partner.ContractId = MovementItem_PromoPartner.ContractId OR MovementItem_PromoPartner.ContractId = 0) '
+    + ' LEFT JOIN Object_JurIdical ON Object_JurIdical.Id = Object_Partner.JurIdicalId '
+    + '                           AND Object_JurIdical.ContractId = Object_Partner.ContractId '
+    + ' LEFT JOIN Object_Contract  ON Object_Contract.Id = MovementItem_PromoPartner.ContractId '
+    + ' WHERE MovementItem_PromoPartner.MovementId = :PROMOId '
+    + ' GROUP BY MovementItem_PromoPartner.PartnerId, MovementItem_PromoPartner.ContractId '
+    + ' ORDER BY Object_JurIdical.ValueData, Object_Partner.Address';
   DM.qryPromoPartners.ParamByName('PROMOID').AsInteger := DM.qryPromoGoodsPromoId.AsInteger;
   DM.qryPromoPartners.Open;
 

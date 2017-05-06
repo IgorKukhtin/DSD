@@ -136,14 +136,6 @@ object RoleForm: TRoleForm
           HeaderAlignmentVert = vaCenter
           Width = 167
         end
-        object BranchName: TcxGridDBColumn
-          Caption = #1060#1080#1083#1080#1072#1083
-          DataBinding.FieldName = 'BranchName'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 64
-        end
         object UnitName: TcxGridDBColumn
           Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
           DataBinding.FieldName = 'UnitName'
