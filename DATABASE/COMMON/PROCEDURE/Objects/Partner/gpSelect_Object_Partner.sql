@@ -3,14 +3,13 @@
 -- DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner(
     IN inJuridicalId       Integer  , 
     IN inRetailId          Integer  , 
-    IN inPersonalId        Integer  , 
     IN inPersonalTradeId   Integer  , 
     IN inRouteId           Integer  , 
-    IN inRouteId_30201     Integer  , 
     IN inShowAll           Boolean  ,
     IN inSession           TVarChar   -- сессия пользователя
 )
@@ -402,8 +401,6 @@ BEGIN
            OR vbIsConstraint = FALSE)
       AND (ObjectLink_Juridical_Retail.ChildObjectId      = inRetailId        OR COALESCE (inRetailId, 0)        = 0)
       AND (ObjectLink_Partner_Route.ChildObjectId         = inRouteId         OR COALESCE (inRouteId, 0)         = 0)
-      AND (ObjectLink_Partner_Route_30201.ChildObjectId   = inRouteId_30201   OR COALESCE (inRouteId_30201, 0)   = 0)
-      AND (ObjectLink_Partner_Personal.ChildObjectId      = inPersonalId      OR COALESCE (inPersonalId, 0)      = 0)      
       AND (ObjectLink_Partner_PersonalTrade.ChildObjectId = inPersonalTradeId OR COALESCE (inPersonalTradeId, 0) = 0)
    ;
 

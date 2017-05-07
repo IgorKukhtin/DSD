@@ -2273,18 +2273,39 @@ end;
 procedure TfrmMain.dePromoGoodsDateChange(Sender: TObject);
 begin
   DM.qryPromoGoods.Close;
-  DM.qryPromoGoods.SQL.Text := 'select G.OBJECTCODE, G.VALUEDATA GoodsName, T.VALUEDATA TradeMarkName, ' +
-    'CASE WHEN PG.GOODSKINDID = 0 THEN ''все виды'' ELSE GK.VALUEDATA END KindName, ' +
-    '''Скидка '' || PG.TAXPROMO || ''%'' Tax, ' +
-    '''Акционная цена: '' || PG.PRICEWITHOUTVAT || '' (с НДС '' || PG.PRICEWITHVAT || '') за '' || M.VALUEDATA Price, ' +
-    '''Акция заканчивается '' || strftime(''%d.%m.%Y'',P.ENDSALE) Termin, P.ID PromoId ' +
-    'from MOVEMENTITEM_PROMOGOODS PG ' +
-    'JOIN MOVEMENT_PROMO P ON P.ID = PG.MOVEMENTID AND :PROMODATE BETWEEN P.STARTSALE AND P.ENDSALE ' +
-    'LEFT JOIN OBJECT_GOODS G ON G.ID = PG.GOODSID ' +
-    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-    'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
-    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = PG.GOODSKINDID ' +
-    'ORDER BY G.VALUEDATA, P.ENDSALE';
+//or
+//  DM.qryPromoGoods.SQL.Text := 'select G.OBJECTCODE, G.VALUEDATA GoodsName, T.VALUEDATA TradeMarkName, ' +
+//    'CASE WHEN PG.GOODSKINDID = 0 THEN ''все виды'' ELSE GK.VALUEDATA END KindName, ' +
+//    '''Скидка '' || PG.TAXPROMO || ''%'' Tax, ' +
+//    '''Акционная цена: '' || PG.PRICEWITHOUTVAT || '' (с НДС '' || PG.PRICEWITHVAT || '') за '' || M.VALUEDATA Price, ' +
+//    '''Акция заканчивается '' || strftime(''%d.%m.%Y'',P.ENDSALE) Termin, P.ID PromoId ' +
+//    'from MOVEMENTITEM_PROMOGOODS PG ' +
+//    'JOIN MOVEMENT_PROMO P ON P.ID = PG.MOVEMENTID AND :PROMODATE BETWEEN P.STARTSALE AND P.ENDSALE ' +
+//    'LEFT JOIN OBJECT_GOODS G ON G.ID = PG.GOODSID ' +
+//    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+//    'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
+//    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = PG.GOODSKINDID ' +
+//    'ORDER BY G.VALUEDATA, P.ENDSALE';
+//or
+
+
+  DM.qryPromoGoods.SQL.Text :=
+      ' select'
+    + '   Object_Goods.ObjectCode'
+    + ' , Object_Goods.ValueData AS GoodsName'
+    + ' , Object_TradeMark.ValueData AS TradeMarkName'
+    + ' , CASE WHEN MovementItem_PromoGoods.GoodsKindId = 0 THEN ''все виды'' ELSE Object_GoodsKind.ValueData END AS KindName'
+    + ' , ''Скидка '' || MovementItem_PromoGoods.TaxPromo || ''%'' AS Tax'
+    + ' , ''Акционная цена: '' || MovementItem_PromoGoods.PriceWithOutVAT || '' (с НДС '' || MovementItem_PromoGoods.PriceWithVAT || '') за '' || Object_Measure.ValueData AS Price'
+    + ' , ''Акция заканчивается '' || strftime(''%d.%m.%Y'',Movement_Promo.EndSale) AS Termin'
+    + ' , Movement_Promo.Id AS PromoId '
+    + ' from MovementItem_PromoGoods  '
+    + ' JOIN Movement_Promo ON Movement_Promo.Id = MovementItem_PromoGoods.MovementId AND :PROMODATE BETWEEN Movement_Promo.StartSale AND Movement_Promo.EndSale '
+    + ' LEFT JOIN Object_Goods ON Object_Goods.Id = MovementItem_PromoGoods.GoodsId '
+    + ' LEFT JOIN Object_Measure ON Object_Measure.Id = Object_Goods.MeasureId '
+    + ' LEFT JOIN Object_TradeMark ON Object_TradeMark.Id = Object_Goods.TradeMarkId '
+    + ' LEFT JOIN Object_GoodsKind ON Object_GoodsKind.Id = MovementItem_PromoGoods.GoodsKindId '
+    + ' ORDER BY Object_Goods.ValueData, Movement_Promo.EndSale';
   DM.qryPromoGoods.ParamByName('PROMODATE').AsDate := dePromoGoodsDate.Date;
   DM.qryPromoGoods.Open;
 

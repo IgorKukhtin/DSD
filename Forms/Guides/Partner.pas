@@ -136,18 +136,12 @@ type
     edRetail: TcxButtonEdit;
     cxLabel3: TcxLabel;
     GuidesRetail: TdsdGuides;
-    edPersonal: TcxButtonEdit;
-    cxLabel1: TcxLabel;
-    GuidesPersonal: TdsdGuides;
     cxLabel2: TcxLabel;
     edPersonalTrade: TcxButtonEdit;
     GuidesPersonalTrade: TdsdGuides;
     cxLabel4: TcxLabel;
     edRoute: TcxButtonEdit;
-    cxLabel5: TcxLabel;
-    edRoute_30201: TcxButtonEdit;
     GuidesRoute: TdsdGuides;
-    GuidesRoute_30201: TdsdGuides;
   private
     { Private declarations }
   public

@@ -3,7 +3,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1095#1077#1082' '#1076#1086#1089#1090#1072#1074#1082#1080'>'
   ClientHeight = 464
-  ClientWidth = 915
+  ClientWidth = 999
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,11 +19,14 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 91
-    Width = 915
-    Height = 373
+    Top = 61
+    Width = 999
+    Height = 403
     Align = alClient
     TabOrder = 0
+    ExplicitTop = 91
+    ExplicitWidth = 915
+    ExplicitHeight = 373
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -376,13 +379,13 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
   object Panel: TPanel
     Left = 0
     Top = 0
-    Width = 915
-    Height = 65
+    Width = 999
+    Height = 35
     Align = alTop
     TabOrder = 1
     object edRetail: TcxButtonEdit
-      Left = 93
-      Top = 32
+      Left = 644
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
@@ -390,20 +393,20 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         end>
       Properties.ReadOnly = True
       TabOrder = 1
-      Width = 247
+      Width = 139
     end
     object cxLabel1: TcxLabel
-      Left = 11
-      Top = 33
+      Left = 564
+      Top = 6
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100':'
     end
     object cxLabel6: TcxLabel
-      Left = 353
+      Left = 316
       Top = 6
-      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
+      Caption = #1070#1088'.'#1083#1080#1094#1086':'
     end
     object edJuridical: TcxButtonEdit
-      Left = 459
+      Left = 366
       Top = 5
       Properties.Buttons = <
         item
@@ -429,16 +432,16 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 247
+      Width = 221
     end
     object cxLabel4: TcxLabel
-      Left = 404
-      Top = 32
+      Left = 785
+      Top = 6
       Caption = #1052#1072#1088#1096#1088#1091#1090':'
     end
     object edRoute: TcxButtonEdit
-      Left = 459
-      Top = 32
+      Left = 840
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
@@ -446,7 +449,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 194
+      Width = 154
     end
   end
   object DataSource: TDataSource
@@ -956,7 +959,8 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Value = '149831'
         MultiSelectSeparator = ','
       end>
-    Left = 127
+    Left = 263
+    Top = 8
   end
   object spGet_PersonalTrade: TdsdStoredProc
     StoredProcName = 'gpGetMobile_Object_Const'
@@ -1168,8 +1172,8 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 216
-    Top = 16
+    Left = 696
+    Top = 8
   end
   object GuidesRoute: TdsdGuides
     KeyField = 'Id'
@@ -1202,8 +1206,8 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Value = '149831'
         MultiSelectSeparator = ','
       end>
-    Left = 535
-    Top = 32
+    Left = 855
+    Top = 8
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -1256,12 +1260,6 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPersonalId'
-        Value = '0'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inPersonalTradeId'
         Value = '0'
         Component = PersonalTradeGuides
@@ -1274,12 +1272,6 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Value = ''
         Component = GuidesRoute
         ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inRouteId_30201'
-        Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

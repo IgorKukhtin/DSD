@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Object_MedicSP()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MedicSP (Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MedicSP (Integer, Integer, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MedicSP(
  INOUT ioId	             Integer   ,    -- ключ объекта <Торговельна назва лікарського засобу (Соц. проект)> 
     IN inCode                Integer   ,    -- код объекта 
     IN inName                TVarChar  ,    -- Название объекта <>
+    IN inPartnerMedicalId    Integer   ,    -- Медицинское учреждение
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -33,6 +35,9 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_MedicSP(), vbCode_calc, inName);
 
+    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_MedicSP_PartnerMedical(), ioId, inPartnerMedicalId);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
@@ -44,6 +49,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.05.17         * add PartnerMedical
  14.02.17         * 
 */
 

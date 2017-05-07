@@ -24,7 +24,7 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter, dxBarExtItems,
   dsdAddOn, cxCheckBox, dxSkinscxPCPainter, cxButtonEdit, cxContainer,
   cxTextEdit, dsdGuides, cxLabel, Vcl.ComCtrls, dxCore, cxDateUtils,
-  cxDropDownEdit, cxCalendar, ChoicePeriod;
+  cxDropDownEdit, cxCalendar, ChoicePeriod, Vcl.ExtCtrls;
 
 type
   TPartnerAddressForm = class(TParentForm)
@@ -143,6 +143,23 @@ type
     bbShowAll: TdxBarButton;
     actInsertMask: TdsdInsertUpdateAction;
     bbInsertMask: TdxBarButton;
+    Panel: TPanel;
+    edRetail: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    cxLabel2: TcxLabel;
+    edPersonalTrade: TcxButtonEdit;
+    cxLabel4: TcxLabel;
+    edRoute: TcxButtonEdit;
+    GuidesRetail: TdsdGuides;
+    GuidesPersonalTrade: TdsdGuides;
+    GuidesRoute: TdsdGuides;
+    spCheck: TdsdStoredProc;
+    actShowCurPartnerOnMap: TdsdPartnerMapAction;
+    actCheckShowAllPartnerOnMap: TdsdExecStoredProc;
+    actShowAllPartnerOnMap: TdsdPartnerMapAction;
+    mactShowAllPartnerOnMap: TMultiAction;
+    bbShowCurPartnerOnMap: TdxBarButton;
+    bbShowAllPartnerOnMap: TdxBarButton;
   private
     { Private declarations }
   public
