@@ -1,85 +1,69 @@
-/*
-  Создание 
-    - таблицы MovementItemContainer (перемещения)
-    - связей
-    - индексов
-*/
-/*-------------------------------------------------------------------------------*/
+-- Создание - таблицы MovementItemContainer + связей + индексов
+
+-------------------------------------------------------------------------------
 
 CREATE TABLE MovementItemContainer(
    Id             BIGSERIAL NOT NULL PRIMARY KEY, 
-   DescId         INTEGER,
-   MovementId     INTEGER,
-   ContainerId    INTEGER,
-   Amount         TFloat, 
-   OperDate       TDateTime,
-   MovementItemId Integer,
-   ParentId       BigInt,
-   isActive       Boolean,  
+   DescId         Integer   NOT NULL,
+   MovementId     Integer   NOT NULL,
+   ContainerId    Integer   NOT NULL,
+   Amount         TFloat    NOT NULL,
+   OperDate       TDateTime NOT NULL,
+   MovementItemId Integer   NOT NULL,
+   ParentId       BigInt        NULL,
+   isActive       Boolean   NOT NULL,
 
-   MovementDescId integer,
-   AnalyzerId integer,
-   AccountId integer,
-   ObjectId_analyzer integer,
-   WhereObjectId_analyzer integer,
-   ContainerId_analyzer integer,
-   AccountId_analyzer integer,
+   MovementDescId          Integer NOT NULL, -- Вид документа
+   AnalyzerId              Integer     NULL, -- Типы аналитик (проводки)
+   AccountId               Integer     NULL, -- Счет
+   ObjectId_analyzer       Integer NOT NULL, -- MovementItem.ObjectId
+   PartionId               Integer     NULL, -- MovementItem.PartionId
+   WhereObjectId_analyzer  Integer     NULL, -- Место учета
+   AccountId_analyzer      Integer     NULL, -- Счет - корреспондент
 
-   ContainerIntId_analyzer integer,
+   ContainerId_analyzer    Integer     NULL, -- Контейнер ОПиУ - статья ОПиУ
+   ContainerIntId_analyzer Integer     NULL, -- Контейнер - Корреспондент
 
-   ObjectIntId_analyzer integer,
-   ObjectExtId_analyzer integer,
+   ObjectIntId_analyzer    Integer     NULL, -- Аналитический справочник (Размер, УП статья или что-то особенное - т.е. все то что не вписалось в аналитику выше)
+   ObjectExtId_analyzer    Integer     NULL, -- Аналитический справочник (Подразделение - корреспондент, Подразделение ЗП, ФИО, Контрагент и т.д. - т.е. все то что не вписалось в анадитики выше)
    
-   CONSTRAINT fk_MovementItemContainer_DescId FOREIGN KEY(DescId) REFERENCES MovementItemContainerDesc(Id),
-   CONSTRAINT fk_MovementItemContainer_MovementId FOREIGN KEY(MovementId) REFERENCES Movement(Id),
-   CONSTRAINT fk_MovementItemContainer_ContainerId FOREIGN KEY(ContainerId) REFERENCES Container(Id),
-   CONSTRAINT fk_MovementItemContainer_ParentId FOREIGN KEY(ParentId) REFERENCES MovementItemContainer(Id),
-   CONSTRAINT fk_MovementItemContainer_MovementItemId FOREIGN KEY (MovementItemId) REFERENCES MovementItem(id),
-   CONSTRAINT fk_MovementItemContainer_MovementDescId FOREIGN KEY(MovementDescId) REFERENCES MovementDesc(Id)
+   CONSTRAINT fk_MovementItemContainer_DescId            FOREIGN KEY (DescId)             REFERENCES MovementItemContainerDesc(Id),
+   CONSTRAINT fk_MovementItemContainer_MovementDescId    FOREIGN KEY (MovementDescId)     REFERENCES MovementDesc(Id),
+   CONSTRAINT fk_MovementItemContainer_MovementId        FOREIGN KEY (MovementId)         REFERENCES Movement(Id),
+   CONSTRAINT fk_MovementItemContainer_MovementItemId    FOREIGN KEY (MovementItemId)     REFERENCES MovementItem(Id),
+   CONSTRAINT fk_MovementItemContainer_ContainerId       FOREIGN KEY (ContainerId)        REFERENCES Container(Id),
+   CONSTRAINT fk_MovementItemContainer_ParentId          FOREIGN KEY (ParentId)           REFERENCES MovementItemContainer(Id)
+   CONSTRAINT fk_MovementItemContainer_ObjectId_analyzer FOREIGN KEY (ObjectId_analyzer)  REFERENCES Object(Id),
+   CONSTRAINT fk_MovementItemContainer_PartionId         FOREIGN KEY (PartionId)          REFERENCES Object_PartionGoods(MovementItemId),
 );
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 
-/*                                  Индексы                                      */
-
-CREATE INDEX idx_MovementItemContainer_MovementId_DescId ON MovementItemContainer (MovementId, DescId);
+-- Индексы
+CREATE INDEX idx_MovementItemContainer_MovementId_DescId             ON MovementItemContainer (MovementId, DescId);
+CREATE INDEX idx_MovementItemContainer_ContainerId_OperDate          ON MovementItemContainer (ContainerId, OperDate);
 CREATE INDEX idx_MovementItemContainer_ContainerId_Analyzer_OperDate ON MovementItemContainer (ContainerId_Analyzer, OperDate);
-CREATE INDEX idx_MovementItemContainer_AnalyzerId_OperDate ON MovementItemContainer (AnalyzerId, OperDate);
-CREATE INDEX idx_MovementItemContainer_ContainerId_OperDate ON MovementItemContainer (ContainerId, OperDate);
--- "idx_movementitemcontainer_operdate_descid_movementdescid_whereo"
+CREATE INDEX idx_MovementItemContainer_AnalyzerId_OperDate           ON MovementItemContainer (AnalyzerId, OperDate);
+
 CREATE INDEX idx_MovementItemContainer_OperDate_DescId_MovementDescId_WhereObjectId_Analyzer ON MovementItemContainer (OperDate,DescId,MovementDescId,WhereObjectId_Analyzer);
 -- !!! CREATE INDEX idx_MovementItemContainer_ContainerId_OperDate_DescId ON MovementItemContainer (ContainerId, OperDate, DescId);
 -- !!! CREATE INDEX idx_MovementItemContainer_ContainerId_DescId_OperDate ON MovementItemContainer (ContainerId, DescId, OperDate);
-CREATE INDEX idx_MovementItemContainer_MovementItemId ON MovementItemContainer (MovementItemId);
-CREATE INDEX idx_MovementItemContainer_ParentId ON MovementItemContainer (ParentId);
 -- CREATE INDEX idx_MovementItemContainer_ContainerId_DescId_OperDate_Amount ON MovementItemContainer (ContainerId, DescId, OperDate, Amount);
--- 15.05.2016
-CREATE INDEX idx_MovementItemContainer_ObjectId_Analyzer_AnalyzerId ON MovementItemContainer (ObjectId_Analyzer, AnalyzerId);
--- ???18.05.2016???
 -- CREATE INDEX idx_MovementItemContainer_ObjectId_Analyzer_OperDate_AnalyzerId ON MovementItemContainer (ObjectId_Analyzer_OperDate, AnalyzerId);
+
+CREATE INDEX idx_MovementItemContainer_MovementItemId    ON MovementItemContainer (MovementItemId);
+CREATE INDEX idx_MovementItemContainer_ParentId          ON MovementItemContainer (ParentId);
+CREATE INDEX idx_MovementItemContainer_PartionId         ON MovementItemContainer (PartionId);
+
+-- CREATE INDEX idx_MovementItemContainer_ObjectId_analyzer ON MovementItemContainer (ObjectId_analyzer);
+CREATE INDEX idx_MovementItemContainer_ObjectId_Analyzer_AnalyzerId ON MovementItemContainer (ObjectId_Analyzer, AnalyzerId);
+
 -- 
 -- !!!FARMACY!!!!
 -- CREATE INDEX idx_MovementItemContainer_ObjectIntId_analyzer ON MovementItemContainer (ObjectIntId_analyzer);
 -- !!!FARMACY!!!!
 -- CREATE INDEX idx_MovementItemContainer_AnalyzerId ON MovementItemContainer (AnalyzerId);
 -- 
-
-
-                                                                         
-DO $$ 
-    BEGIN
-
-      IF       (EXISTS(SELECT c.relname 
-                       FROM pg_catalog.pg_class AS c 
-                  LEFT JOIN pg_catalog.pg_namespace AS n ON n.oid = c.relnamespace
-                      WHERE c.relkind = 'i' AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
-                        AND c.relname = lower('idx_movementitemcontainer_containerid_descid_operdate_amount'))) THEN
-             DROP INDEX idx_movementitemcontainer_containerid_descid_operdate_amount;
-      END IF;
-    END;
-$$;
-   
-/*-------------------------------------------------------------------------------*/
 
 
 /*-------------------------------------------------------------------------------

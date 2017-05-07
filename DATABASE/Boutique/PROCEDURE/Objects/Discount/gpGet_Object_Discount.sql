@@ -1,4 +1,4 @@
-﻿-- Function: gpGet_Object_Discount()
+﻿-- Названия накопительных скидок
 
 DROP FUNCTION IF EXISTS gpGet_Object_Discount (Integer, TVarChar);
 

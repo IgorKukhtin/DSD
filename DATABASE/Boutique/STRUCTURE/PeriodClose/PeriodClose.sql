@@ -18,7 +18,6 @@ CREATE TABLE PeriodClose(
    Code                  INTEGER,
    DescId                INTEGER,
    DescId_excl           INTEGER,
-   BranchId              INTEGER,
    PaidKindId            INTEGER,
    UserId_excl           INTEGER,
    CloseDate_excl        TDateTime,

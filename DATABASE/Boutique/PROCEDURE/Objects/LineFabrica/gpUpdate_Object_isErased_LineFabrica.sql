@@ -1,4 +1,4 @@
--- Function: gpUpdate_Object_isErased_LineFabrica (Integer, TVarChar)
+-- Линия коллекции
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_LineFabrica (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_LineFabrica (Integer, Boolean, TVarChar);

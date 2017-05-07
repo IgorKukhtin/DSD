@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_LineFabrica (Integer, Integer, TVarChar, TVarChar)
+-- Линия коллекции
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_LineFabrica (Integer, Integer, TVarChar, TVarChar);
 

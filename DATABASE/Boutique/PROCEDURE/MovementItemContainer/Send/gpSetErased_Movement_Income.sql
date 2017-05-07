@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpSetErased_Movement_Send (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSetErased_Movement_Send(
     IN inMovementId        Integer               , -- ключ ƒокумента
-    IN inSession           TVarChar DEFAULT ''     -- сесси€ пользовател€
+    IN inSession           TVarChar                -- сесси€ пользовател€
 )
 RETURNS VOID
 AS
@@ -13,7 +13,7 @@ $BODY$
 BEGIN
     -- проверка прав пользовател€ на вызов процедуры
     --vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_Send());
-    vbUserId := inSession::Integer; 
+    vbUserId:= lpGetUserBySession (inSession);
 
     -- убираем ссылки на этот док в продажах
     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Child(), MLM_Child.MovementId, Null)

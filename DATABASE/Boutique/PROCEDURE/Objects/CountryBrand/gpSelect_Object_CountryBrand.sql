@@ -1,4 +1,4 @@
-﻿-- Function: gpSelect_Object_CountryBrand()
+﻿-- Страна производитель
 
 DROP FUNCTION IF EXISTS gpSelect_Object_CountryBrand (TVarChar);
 

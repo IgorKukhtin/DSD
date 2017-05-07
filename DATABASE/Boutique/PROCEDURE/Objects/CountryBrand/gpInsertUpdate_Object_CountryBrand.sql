@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_CountryBrand (Integer, Integer, TVarChar, TVarChar)
+-- Страна производитель
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CountryBrand (Integer, Integer, TVarChar, TVarChar);
 

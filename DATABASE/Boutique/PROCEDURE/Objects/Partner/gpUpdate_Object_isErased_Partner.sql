@@ -1,4 +1,4 @@
--- Function: gpUpdate_Object_isErased_Partner (Integer, TVarChar) 
+-- Поcтавщики
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Partner (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Partner (Integer, Boolean, TVarChar);

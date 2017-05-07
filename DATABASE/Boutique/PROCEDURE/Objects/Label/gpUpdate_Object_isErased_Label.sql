@@ -1,4 +1,4 @@
--- Function: gpUpdate_Object_isErased_Label (Integer, TVarChar)
+-- Название для ценника
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Label (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Label (Integer, Boolean, TVarChar);

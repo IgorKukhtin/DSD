@@ -1,4 +1,4 @@
-﻿-- Function: gpSelect_Object_City()
+﻿-- Населенные пункты
 
 DROP FUNCTION IF EXISTS gpSelect_Object_City (TVarChar);
 

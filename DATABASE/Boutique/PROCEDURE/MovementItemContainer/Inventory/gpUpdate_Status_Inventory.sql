@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_Status_Inventory(
     IN inStatusCode          Integer   , -- Статус документа. Возвращается который должен быть
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS VOID AS
+RETURNS VOID
+AS
 $BODY$
 BEGIN
      CASE inStatusCode

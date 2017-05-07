@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_GoodsInfo (Integer, Integer, TVarChar, TVarChar)
+-- Описание товара
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsInfo (Integer, Integer, TVarChar, TVarChar);
 
@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsInfo(
     IN inName         TVarChar,      -- Название объекта <Описание товара>        
     IN inSession      TVarChar       -- сессия пользователя
 )
-RETURNS integer
+RETURNS Integer
 AS
 $BODY$
   DECLARE vbUserId Integer;

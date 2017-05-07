@@ -6,25 +6,21 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Personal(
     IN inIsShowAll   Boolean,       --  признак показать удаленные да/нет
     IN inSession     TVarChar       --  сессия пользователя
 )
-RETURNS TABLE (
-             Id                   Integer
-           , Code                 Integer
-           , Name                 TVarChar
-           , MemberName           TVarChar
-           , PositionName         TVarChar
-           , UnitName             TVarChar
-           , isErased             boolean
- ) 
+RETURNS TABLE (Id                   Integer
+             , Code                 Integer
+             , Name                 TVarChar
+             , MemberName           TVarChar
+             , PositionName         TVarChar
+             , UnitName             TVarChar
+             , isErased             boolean
+              ) 
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbAccessKeyAll Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Personal());
      vbUserId:= lpGetUserBySession (inSession);
-     -- определяется - может ли пользовать видеть весь справочник
-     -- vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
 
      -- Результат
      RETURN QUERY 
@@ -54,14 +50,12 @@ BEGIN
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
 
      WHERE Object_Personal.DescId = zc_Object_Personal()
-              AND (Object_Personal.isErased = FALSE OR inIsShowAll = TRUE)
-
+       AND (Object_Personal.isErased = FALSE OR inIsShowAll = TRUE)
     ;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

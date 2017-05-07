@@ -1,4 +1,4 @@
-﻿-- Function: gpGet_Object_Fabrika()
+﻿-- Фабрика производитель
 
 DROP FUNCTION IF EXISTS gpGet_Object_Fabrika (Integer, TVarChar);
 

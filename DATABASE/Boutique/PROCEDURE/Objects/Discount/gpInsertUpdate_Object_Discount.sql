@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_Discount (Integer, Integer, TVarChar, Integer,  TVarChar)
+-- Названия накопительных скидок
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Discount (Integer, Integer, TVarChar, Integer, TVarChar);
 

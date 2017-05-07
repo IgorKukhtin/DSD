@@ -1,4 +1,4 @@
-﻿-- Function: gpGet_Object_Brand()
+﻿-- Торговая марка
 
 DROP FUNCTION IF EXISTS gpGet_Object_Brand (Integer, TVarChar);
 
@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Brand(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, CountryBrandId Integer, CountryBrandName TVarChar) 
-  AS
+AS
 $BODY$
 BEGIN
 
@@ -43,8 +43,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-
-
+ 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

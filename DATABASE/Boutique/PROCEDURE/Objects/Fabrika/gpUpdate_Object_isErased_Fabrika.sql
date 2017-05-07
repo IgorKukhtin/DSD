@@ -1,4 +1,4 @@
--- Function: gpUpdate_Object_isErased_Fabrika (Integer, TVarChar)
+-- Фабрика производитель
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Fabrika (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Fabrika (Integer, Boolean, TVarChar);

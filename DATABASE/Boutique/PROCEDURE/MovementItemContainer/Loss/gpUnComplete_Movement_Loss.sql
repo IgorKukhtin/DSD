@@ -4,18 +4,16 @@ DROP FUNCTION IF EXISTS gpUnComplete_Movement_Loss (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUnComplete_Movement_Loss(
     IN inMovementId        Integer               , -- ключ Документа
-    IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
+    IN inSession           TVarChar                -- сессия пользователя
 )
 RETURNS VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
-  DECLARE vbUnitId Integer;
-  DECLARE vbOperDate  TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    --vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Loss());
-    vbUserId := inSession::Integer;
+    -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Loss());
+    vbUserId:= lpGetUserBySession (inSession);
 
     -- Распроводим Документ
     PERFORM lpUnComplete_Movement (inMovementId := inMovementId

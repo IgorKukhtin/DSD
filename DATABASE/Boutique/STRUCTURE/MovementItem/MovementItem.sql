@@ -1,39 +1,35 @@
-/*
-  Создание 
-    - таблицы MovementItem
-    - связей
-    - индексов
-*/
+-- Создание - таблицы MovementItem + связей + индексов
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 
 CREATE TABLE MovementItem(
-   Id           SERIAL NOT NULL PRIMARY KEY, 
-   DescId       INTEGER NOT NULL,
-   MovementId   INTEGER NOT NULL,
-   ObjectId     INTEGER,
-   PartionId    INTEGER,
-   Amount       TFloat, 
-   isErased     Boolean NOT NULL DEFAULT false,
-   ParentId     Integer,
+   Id           SERIAL  NOT NULL PRIMARY KEY, 
+   DescId       Integer NOT NULL,
+   MovementId   Integer NOT NULL,
+   ObjectId     Integer NOT NULL,
+   PartionId    Integer     NULL,
+   Amount       TFloat  NOT NULL, 
+   isErased     Boolean NOT NULL DEFAULT FALSE,
+   ParentId     Integer     NULL,
 
-   CONSTRAINT fk_MovementItem_DescId FOREIGN KEY(DescId) REFERENCES MovementItemDesc(Id),
-   CONSTRAINT fk_MovementItem_MovementId FOREIGN KEY(MovementId) REFERENCES Movement(Id),
-   CONSTRAINT fk_MovementItem_ObjectId FOREIGN KEY(ObjectId) REFERENCES Object(Id),
-   CONSTRAINT fk_MovementItem_PartionId FOREIGN KEY(PartionId) REFERENCES Object_PartionGoods(MovementItemId),
-   CONSTRAINT fk_MovementItem_ParentId FOREIGN KEY(ParentId) REFERENCES MovementItem(Id)      
+   CONSTRAINT fk_MovementItem_DescId     FOREIGN KEY (DescId)     REFERENCES MovementItemDesc(Id),
+   CONSTRAINT fk_MovementItem_MovementId FOREIGN KEY (MovementId) REFERENCES Movement(Id),
+   CONSTRAINT fk_MovementItem_ObjectId   FOREIGN KEY (ObjectId)   REFERENCES Object(Id),
+   CONSTRAINT fk_MovementItem_PartionId  FOREIGN KEY (PartionId)  REFERENCES Object_PartionGoods(MovementItemId),
+   CONSTRAINT fk_MovementItem_ParentId   FOREIGN KEY (ParentId)   REFERENCES MovementItem(Id)      
 );
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 
-/*                                  Индексы                                      */
-
+-- Индексы
 -- CREATE INDEX idx_MovementItem_Id ON MovementItem (Id);
 CREATE INDEX idx_MovementItem_ParentId ON MovementItem (ParentId);
 CREATE INDEX idx_MovementItem_MovementId ON MovementItem (MovementId);
 CREATE INDEX idx_MovementItem_ObjectId ON MovementItem (ObjectId); -- констрейнт
 CREATE INDEX idx_MovementItem_PartionId ON MovementItem (PartionId); -- констрейнт
 -- CREATE INDEX idx_MovementItem_MovementId_DescId ON MovementItem (MovementId, DescId);
+
+-- !!! CLUSTER !!!
 CLUSTER idx_MovementItem_MovementId ON MovementItem;
 
 /*-------------------------------------------------------------------------------
@@ -45,5 +41,4 @@ CLUSTER idx_MovementItem_MovementId ON MovementItem;
 11.04.17                                                *
 06.11.13              * add idx_MovementItem_Id
 29.06.13              *
-
 */

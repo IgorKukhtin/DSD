@@ -56,15 +56,8 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_SetErased_Send()
                                   , inCode:= 3
                                   , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Send())||'> - Удаление.'
                                   , inEnumName:= 'zc_Enum_Process_SetErased_Send');
-                                  
-PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_CompletePeriod_Send()
-                                  , inDescId:= zc_Object_Process()
-                                  , inCode:= 4
-                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Send())||'> - Проведение за период.'
-                                  , inEnumName:= 'zc_Enum_Process_CompletePeriod_Send');                                  
 
 END $$;
-
 
 /*-------------------------------------------------------------------------------*/
 /*

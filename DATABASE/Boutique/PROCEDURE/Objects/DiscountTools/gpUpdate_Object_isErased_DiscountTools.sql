@@ -1,4 +1,4 @@
--- Function: gpUpdate_Object_isErased_DiscountTools (Integer, TVarChar)
+-- Настройка процентов по накопительным скидкам
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_DiscountTools (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_DiscountTools (Integer, Boolean, TVarChar);

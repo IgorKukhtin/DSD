@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpUnComplete_Movement_Currency (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUnComplete_Movement_Currency(
     IN inMovementId        Integer               , -- ключ Документа
-    IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
+    IN inSession           TVarChar                -- сессия пользователя
 )
 RETURNS VOID
 AS
@@ -12,7 +12,8 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Currency());
+     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Currency());
+     vbUserId:= lpGetUserBySession (inSession);
 
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId

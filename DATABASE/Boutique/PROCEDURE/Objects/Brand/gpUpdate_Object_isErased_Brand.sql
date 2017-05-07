@@ -1,4 +1,4 @@
--- Function: gpUpdate_Object_isErased_Brand (Integer, TVarChar)
+-- Торговая марка
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Brand (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Brand (Integer, Boolean,  TVarChar);

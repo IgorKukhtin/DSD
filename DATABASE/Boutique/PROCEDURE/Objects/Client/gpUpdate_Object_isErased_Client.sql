@@ -1,4 +1,4 @@
--- Function: gpUpdate_Object_isErased_Client (Integer, TVarChar) 
+-- Покупатели
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Client (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Client (Integer, Boolean, TVarChar);

@@ -1,4 +1,4 @@
--- Function: gpSelect_Object_Client (Bolean, TVarChar)
+-- Покупатели
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Client (Bolean, TVarChar);
 

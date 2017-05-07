@@ -1,4 +1,4 @@
-﻿-- Function: gpSelect_Object_LineFabrica()
+﻿-- Линия коллекции
 
 DROP FUNCTION IF EXISTS gpSelect_Object_LineFabrica (TVarChar);
 

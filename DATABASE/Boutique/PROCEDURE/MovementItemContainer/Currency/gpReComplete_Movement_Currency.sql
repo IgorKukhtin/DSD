@@ -6,12 +6,14 @@ CREATE OR REPLACE FUNCTION gpReComplete_Movement_Currency(
     IN inMovementId        Integer              , -- ключ Документа
     IN inSession           TVarChar               -- сессия пользователя
 )
-  RETURNS void AS
+RETURNS VOID
+AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Currency());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Currency());
+     vbUserId:= lpGetUserBySession (inSession);
 
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId

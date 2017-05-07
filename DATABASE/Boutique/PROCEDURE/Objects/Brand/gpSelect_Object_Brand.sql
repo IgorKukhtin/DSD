@@ -1,4 +1,4 @@
-﻿-- Function: gpSelect_Object_Brand (Boolean, TVarChar);
+﻿-- Торговая марка
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Brand (Boolean, TVarChar);
 

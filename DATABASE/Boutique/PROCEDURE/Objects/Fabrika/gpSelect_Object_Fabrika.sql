@@ -1,4 +1,4 @@
-﻿-- Function: gpSelect_Object_Fabrika()
+﻿-- Фабрика производитель
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Fabrika (TVarChar);
 

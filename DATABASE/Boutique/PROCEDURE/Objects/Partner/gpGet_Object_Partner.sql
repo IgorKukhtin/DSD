@@ -1,4 +1,4 @@
-﻿-- Function: gpGet_Object_Partner (Integer, TVarChar)
+﻿-- Поcтавщики
 
 DROP FUNCTION IF EXISTS gpGet_Object_Partner (Integer, TVarChar);
 

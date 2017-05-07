@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_Label (Integer, Integer, TVarChar, TVarChar)
+-- Название для ценника
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Label (Integer, Integer, TVarChar, TVarChar);
 

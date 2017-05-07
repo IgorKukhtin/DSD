@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_Brand (Integer, Integer, TVarChar, Integer, TVarChar)
+-- Торговая марка
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Brand (Integer, Integer, TVarChar, Integer, TVarChar);
 
@@ -9,12 +9,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Brand(
     IN inCountryBrandId  Integer,       -- ключ объекта <Страна производитель> 
     IN inSession         TVarChar       -- сессия пользователя
 )
-RETURNS integer
+RETURNS Integer
 AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Brand());
    vbUserId:= lpGetUserBySession (inSession);
@@ -37,8 +36,7 @@ BEGIN
 
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*

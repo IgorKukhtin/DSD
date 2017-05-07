@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpSetErased_Movement_Income (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSetErased_Movement_Income(
     IN inMovementId        Integer               , -- ключ ƒокумента
-    IN inSession           TVarChar DEFAULT ''     -- сесси€ пользовател€
+    IN inSession           TVarChar                -- сесси€ пользовател€
 )
 RETURNS VOID
 AS
@@ -12,8 +12,8 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
     -- проверка прав пользовател€ на вызов процедуры
-    --vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_Income());
-    vbUserId := inSession::Integer; 
+    -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_Income());
+    vbUserId:= lpGetUserBySession (inSession);
 
     -- убираем ссылки на этот док в продажах
     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Child(), MLM_Child.MovementId, Null)

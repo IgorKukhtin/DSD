@@ -1,4 +1,4 @@
--- Function: gpSelect_Object_Partner (Bolean, TVarChar)
+-- Поcтавщики
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Bolean, TVarChar);
 

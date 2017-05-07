@@ -1,4 +1,4 @@
-﻿-- Function: gpSelect_Object_Discount(Boolean, TVarChar)
+﻿-- Названия накопительных скидок
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Discount (Boolean, TVarChar);
 

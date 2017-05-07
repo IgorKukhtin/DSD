@@ -1,4 +1,4 @@
--- Function: gpUpdate_Object_isErased_GoodsInfo (Integer, TVarChar)
+-- Описание товара
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_GoodsInfo (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_GoodsInfo (Integer, Boolean, TVarChar);

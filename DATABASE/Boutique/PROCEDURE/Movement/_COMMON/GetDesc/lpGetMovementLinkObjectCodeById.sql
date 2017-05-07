@@ -1,4 +1,4 @@
-﻿-- Function: gpGet_DefaultValue()
+﻿-- Function: lpGetMovementLinkObjectCodeById()
 
 DROP FUNCTION IF EXISTS lpGetMovementLinkObjectCodeById(Integer);
 
@@ -27,4 +27,4 @@ ALTER FUNCTION lpGetMovementLinkObjectCodeById(Integer) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Role('2')
+-- SELECT * FROM lpGetMovementLinkObjectCodeById (2)

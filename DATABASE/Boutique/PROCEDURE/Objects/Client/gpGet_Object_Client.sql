@@ -1,4 +1,4 @@
-﻿-- Function: gpGet_Object_Client (Integer, TVarChar)
+﻿-- Покупатели
 
 DROP FUNCTION IF EXISTS gpGet_Object_Client (Integer, TVarChar);
 

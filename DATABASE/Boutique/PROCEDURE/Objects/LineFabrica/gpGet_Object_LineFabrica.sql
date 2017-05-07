@@ -1,4 +1,4 @@
-﻿-- Function: gpGet_Object_LineFabrica()
+﻿-- Линия коллекции
 
 DROP FUNCTION IF EXISTS gpGet_Object_LineFabrica (Integer, TVarChar);
 

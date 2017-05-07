@@ -1,4 +1,4 @@
-﻿-- Function: gpGet_Object_Label()
+﻿-- Название для ценника
 
 DROP FUNCTION IF EXISTS gpGet_Object_Label (Integer, TVarChar);
 

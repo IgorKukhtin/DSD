@@ -1,4 +1,4 @@
-﻿-- Function: gpSelect_Object_DiscountTools()
+﻿-- Настройка процентов по накопительным скидкам
 
 DROP FUNCTION IF EXISTS gpSelect_Object_DiscountTools(Boolean, TVarChar);
 

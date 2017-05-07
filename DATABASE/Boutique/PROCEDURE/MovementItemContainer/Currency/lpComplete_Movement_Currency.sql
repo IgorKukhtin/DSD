@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_Currency(
     IN inMovementId        Integer  , -- ключ Документа
     IN inUserId            Integer    -- Пользователь
 )
- RETURNS VOID
+RETURNS VOID
 AS
 $BODY$
   DECLARE vbOperDate TDateTime;

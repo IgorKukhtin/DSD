@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpReComplete_Movement_Inventory (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReComplete_Movement_Inventory(
     IN inMovementId        Integer               , -- ключ ƒокумента
-    IN inSession           TVarChar DEFAULT ''     -- сесси€ пользовател€
+    IN inSession           TVarChar                -- сесси€ пользовател€
 )
 RETURNS VOID
 AS
@@ -12,8 +12,8 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
     -- проверка прав пользовател€ на вызов процедуры
-    --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Inventory());
-    vbUserId := inSession;
+    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Inventory());
+    vbUserId:= lpGetUserBySession (inSession);
     
     -- только если документ проведен
     IF EXISTS(

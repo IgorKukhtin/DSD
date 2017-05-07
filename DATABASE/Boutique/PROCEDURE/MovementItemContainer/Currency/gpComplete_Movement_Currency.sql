@@ -4,16 +4,17 @@ DROP FUNCTION IF EXISTS gpComplete_Movement_Currency (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Currency(
     IN inMovementId        Integer               , -- ключ ƒокумента
-    IN inSession           TVarChar DEFAULT ''     -- сесси€ пользовател€
+    IN inSession           TVarChar                -- сесси€ пользовател€
 )
- RETURNS void
+RETURNS VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Currency());
-
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Currency());
+     vbUserId:= lpGetUserBySession (inSession);
+     
 
      -- создаютс€ временные таблицы - дл€ формирование данных дл€ проводок
      --PERFORM lpComplete_Movement_Finance_CreateTemp();

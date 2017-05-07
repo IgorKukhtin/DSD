@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_Fabrika (Integer, Integer, TVarChar, TVarChar)
+-- Фабрика производитель
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Fabrika (Integer, Integer, TVarChar, TVarChar);
 

@@ -1,4 +1,4 @@
--- Function: gpUpdate_Object_isErased_CountryBrand (Integer, TVarChar)
+-- Страна производитель
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_CountryBrand (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_CountryBrand (Integer, Boolean, TVarChar);

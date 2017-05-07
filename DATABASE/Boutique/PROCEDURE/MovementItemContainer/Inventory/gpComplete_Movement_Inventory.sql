@@ -4,14 +4,15 @@ DROP FUNCTION IF EXISTS gpComplete_Movement_Inventory  (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Inventory(
     IN inMovementId        Integer               , -- ключ Документа
-    IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
+    IN inSession           TVarChar                -- сессия пользователя
 )                              
 RETURNS VOID
 AS
 $BODY$
-  DECLARE vbUserId    Integer;
+  DECLARE vbUserId Integer;
 BEGIN
-    vbUserId:= inSession;
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpGetUserBySession (inSession);
  
     -- собственно проводки
     PERFORM lpComplete_Movement_Inventory(inMovementId, -- ключ Документа

@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpReComplete_Movement_ReturnOut (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReComplete_Movement_ReturnOut(
     IN inMovementId        Integer               , -- ключ ƒокумента
-    IN inSession           TVarChar DEFAULT ''     -- сесси€ пользовател€
+    IN inSession           TVarChar                -- сесси€ пользовател€
 )
 RETURNS VOID
 AS
@@ -13,7 +13,7 @@ $BODY$
 BEGIN
     -- проверка прав пользовател€ на вызов процедуры
     --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ReturnOut());
-    vbUserId := inSession;
+    vbUserId:= lpGetUserBySession (inSession);
     
     -- только если документ проведен
     IF EXISTS(

@@ -1,4 +1,4 @@
--- Function: gpUpdate_Object_isErased_Discount (Integer, TVarChar)
+-- Названия накопительных скидок
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Discount (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Discount (Integer, Boolean, TVarChar);

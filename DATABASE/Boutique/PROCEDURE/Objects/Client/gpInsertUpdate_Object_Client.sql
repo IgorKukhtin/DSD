@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_Client (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar)
+-- Покупатели
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar);
 
@@ -15,8 +15,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
     IN inPhone                    TVarChar  ,    -- Телефон
     IN inMail                     TVarChar  ,    -- Электронная почта
     IN inComment                  TVarChar  ,    -- Примечание
-    IN inCityId                   Integer   ,    -- ключ объекта <Город> 
-    IN inDiscountKindId           Integer   ,    -- ключ объекта <Виды скидок> 
+    IN inCityId                   Integer   ,    -- Населенный пункт
+    IN inDiscountKindId           Integer   ,    -- Вид накопительной скидки
     IN inSession                  TVarChar       -- сессия пользователя
 )
 RETURNS Integer
@@ -57,10 +57,10 @@ BEGIN
    -- сохранили Примечание
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Client_Comment(), ioId, inComment);
 
-   -- сохранили связь с <Город>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Client_City(), ioId, inCityId);
-   -- сохранили связь с <Виды скидок>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Client_DiscountKind(), ioId, inDiscountKindId);
+   -- сохранили связь с <Населенный пункт>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_City(), ioId, inCityId);
+   -- сохранили связь с <Вид накопительной скидки>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_DiscountKind(), ioId, inDiscountKindId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -68,7 +68,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-
 
 /*-------------------------------------------------------------------------------*/
 /*

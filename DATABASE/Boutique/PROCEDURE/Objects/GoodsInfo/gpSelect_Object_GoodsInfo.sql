@@ -1,4 +1,4 @@
-﻿-- Function: gpSelect_Object_GoodsInfo()
+﻿-- Описание товара
 
 DROP FUNCTION IF EXISTS gpSelect_Object_GoodsInfo (TVarChar);
 
@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsInfo(
    
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean)
-  AS
+AS
 $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры

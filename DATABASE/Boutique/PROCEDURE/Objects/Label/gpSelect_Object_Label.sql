@@ -1,4 +1,4 @@
-﻿-- Function: gpSelect_Object_Label()
+﻿-- Название для ценника
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Label (Boolean, TVarChar);
 

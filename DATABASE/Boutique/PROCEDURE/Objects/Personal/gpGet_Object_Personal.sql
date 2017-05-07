@@ -58,12 +58,12 @@ BEGIN
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
 
       WHERE Object_Personal.Id = inId;
+
    END IF;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-
 
 /*-------------------------------------------------------------------------------*/
 /*

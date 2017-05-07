@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_DiscountTools (Integer,  TFloat, TFloat, TTFloat, Integer, TVarChar)
+-- Настройка процентов по накопительным скидкам
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiscountTools (Integer,  TFloat, TFloat, TTFloat, Integer, TVarChar);
 
