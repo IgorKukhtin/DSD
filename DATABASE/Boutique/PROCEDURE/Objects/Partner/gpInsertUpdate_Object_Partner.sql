@@ -15,28 +15,31 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbName TVarChar;
+   DECLARE vbName   TVarChar;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Partner());
    vbUserId:= lpGetUserBySession (inSession);
 
-   select coalesce(vbName,'')|| coalesce(valuedata,'') into vbName from object where id = inBrandId;
-   select coalesce(vbName,'')|| coalesce('-'||valuedata,'') into vbName from object where id = inPeriodId;
-   select coalesce(vbName,'')|| coalesce('-'||inPeriodYear::integer::Tvarchar,'') into vbName;
+
+   -- Расчетное свойство
+   vbName:=    COALESCE ((SELECT Object.ValueData FROM Object WHERE Object.Id = inBrandId), '')
+     || '-' || COALESCE ((SELECT Object.ValueData FROM Object WHERE Object.Id = inPeriodId), '')
+     || '-' || COALESCE ((inPeriodYear :: Integer) :: TVarChar, '');
+
 
    -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_Partner_seq'); END IF; 
+   IF inCode = 0 THEN inCode := NEXTVAL ('Object_Partner_seq'); END IF; 
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Partner(), inCode, vbName);
 
    -- сохранили связь с <Торговая марка>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Partner_Brand(), ioId, inBrandId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_Brand(), ioId, inBrandId);
    -- сохранили связь с <Фабрика производитель>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Partner_Fabrika(), ioId, inFabrikaId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_Fabrika(), ioId, inFabrikaId);
    -- сохранили связь с <Период>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Partner_Period(), ioId, inPeriodId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_Period(), ioId, inPeriodId);
 
    -- сохранили <Год периода>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Partner_PeriodYear(), ioId, inPeriodYear);

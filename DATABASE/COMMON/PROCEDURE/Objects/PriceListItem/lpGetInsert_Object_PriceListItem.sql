@@ -31,10 +31,10 @@ BEGIN
      --
      PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PriceListItem_PriceList(), vbId, inPriceListId);
      PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PriceListItem_Goods(), vbId, inGoodsId);
-     -- сохранили свойство <Дата создания>
-     PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), vbId, CURRENT_TIMESTAMP);
-     -- сохранили свойство <Пользователь (создание)>
-     PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Insert(), vbId, inUserId);
+     -- сохранили свойство <Дата создания> - убрал т.к. сохраняется в протоколе истории
+     -- PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), vbId, CURRENT_TIMESTAMP);
+     -- сохранили свойство <Пользователь (создание)> - убрал т.к. сохраняется в протоколе истории
+     -- PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Insert(), vbId, inUserId);
 
   END IF;
 
@@ -43,8 +43,6 @@ BEGIN
 
 END;$BODY$
  LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpGetInsert_Object_PriceListItem (Integer, Integer, Integer) OWNER TO postgres;  
-
 
 /*-------------------------------------------------------------------------------*/
 /*

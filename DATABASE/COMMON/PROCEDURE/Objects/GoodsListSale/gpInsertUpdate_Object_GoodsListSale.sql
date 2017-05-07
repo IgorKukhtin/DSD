@@ -67,11 +67,11 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsListSale_Partner(), ioId, inPartnerId);
  
-   -- сохранили свойство <Дата создания/изменений>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), ioId, CURRENT_TIMESTAMP);
-
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsListSale_GoodsKind(), ioId, inGoodsKindId_List);
+
+   -- сохранили свойство <Дата создания/изменений> - убрал т.к. сохраняется в протоколе
+   -- PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), ioId, CURRENT_TIMESTAMP);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -85,9 +85,7 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  10.10.16         * 
-
 */
 
 -- тест
--- select * from gpInsertUpdate_Object_GoodsListSale(ioId := 0 , inCode := 1 , inName := 'Белов' , inPhone := '4444' , Mail := 'выа@kjjkj' , Comment := '' , inGoodsId := 258441 , inJuridicalId := 0 , inContractId := 0 , inGoodsListSaleKindId := 153272 ,  inSession := '5');
---select * from gpInsertUpdate_Object_GoodsListSale(ioId := 737011 , inGoodsId := 5005 , inContractId := 439611 , inJuridicalId := 15158 , inPartnerId := 313098 , inGoodsKindId_List := '8339,8351,8333,8329' ,  inSession := '5');
+-- SELECT * FROM gpInsertUpdate_Object_GoodsListSale (ioId := 737011 , inGoodsId := 5005 , inContractId := 439611 , inJuridicalId := 15158 , inPartnerId := 313098 , inGoodsKindId_List := '8339,8351,8333,8329' ,  inSession := '5');

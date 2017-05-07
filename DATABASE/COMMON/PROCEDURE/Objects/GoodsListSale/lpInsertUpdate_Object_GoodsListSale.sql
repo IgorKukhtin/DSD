@@ -47,8 +47,8 @@ BEGIN
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsListSale_GoodsKind(), inId, inGoodsKindId_max);
 
-         -- сохранили свойство <ƒата создани€/изменений>
-         PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), inId, CURRENT_TIMESTAMP);
+         -- сохранили свойство <ƒата создани€/изменений> - убрал т.к. сохран€етс€ в протоколе
+         -- PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), inId, CURRENT_TIMESTAMP);
 
          -- сохранили протокол
          PERFORM lpInsert_ObjectProtocol (vbId, inUserId);
@@ -78,8 +78,8 @@ BEGIN
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsListSale_GoodsKind(), vbId, inGoodsKindId_List);
  
-       -- сохранили свойство <ƒата создани€/изменений>
-       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), vbId, CURRENT_TIMESTAMP);
+       -- сохранили свойство <ƒата создани€/изменений> - убрал т.к. сохран€етс€ в протоколе
+       -- PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), vbId, CURRENT_TIMESTAMP);
 
        -- сохранили протокол
        PERFORM lpInsert_ObjectProtocol (vbId, inUserId);
@@ -100,4 +100,4 @@ $BODY$
 */
 
 -- тест
--- select * from lpInsertUpdate_Object_GoodsListSale(ioId := 0 , inCode := 1 , inName := 'Ѕелов' , inPhone := '4444' , Mail := 'выа@kjjkj' , Comment := '' , inGoodsId := 258441 , inJuridicalId := 0 , inContractId := 0 , inGoodsListSaleKindId := 153272 ,  inSession := '5');
+-- SELECT * FROM lpInsertUpdate_Object_GoodsListSale(ioId := 0 , inCode := 1 , inName := 'Ѕелов' , inPhone := '4444' , Mail := 'выа@kjjkj' , Comment := '' , inGoodsId := 258441 , inJuridicalId := 0 , inContractId := 0 , inGoodsListSaleKindId := 153272 ,  inSession := '5');

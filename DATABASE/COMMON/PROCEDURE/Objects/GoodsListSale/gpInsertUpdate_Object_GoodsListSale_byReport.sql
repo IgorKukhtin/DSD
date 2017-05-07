@@ -268,4 +268,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpInsertUpdate_Object_GoodsListSale_byReport (inPeriod_1:= 12, inPeriod_2:= 3, inPeriod_3:= 6, inInfoMoneyId_1:= 8963, inInfoMoneyDestinationId_1:= 0, inInfoMoneyId_2:= 0, inInfoMoneyDestinationId_2:= 8879,  inSession := '5');
+-- SELECT * FROM gpInsertUpdate_Object_GoodsListSale_byReport (inPeriod_1:= 12, inPeriod_2:= 3, inPeriod_3:= 6, inInfoMoneyId_1:= 8963, inInfoMoneyDestinationId_1:= 0, inInfoMoneyId_2:= 0, inInfoMoneyDestinationId_2:= 8879,  inSession := '5');

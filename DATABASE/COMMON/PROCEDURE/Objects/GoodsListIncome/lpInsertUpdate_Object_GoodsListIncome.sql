@@ -49,9 +49,8 @@ BEGIN
            -- сохранили свойство <Последняя Дата прихода>
            PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_GoodsListIncome_Last(), inId, inLastDate);
   
-  
-           -- сохранили свойство <Дата создания/изменений>
-           PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), inId, CURRENT_TIMESTAMP);
+           -- сохранили свойство <Дата создания/изменений> - убрал т.к. сохраняется в протоколе
+           -- PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), inId, CURRENT_TIMESTAMP);
   
            -- сохранили протокол
            PERFORM lpInsert_ObjectProtocol (vbId, inUserId);
@@ -86,8 +85,8 @@ BEGIN
            -- сохранили свойство <Последняя Дата прихода>
            PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_GoodsListIncome_Last(), vbId, inLastDate);
     
-           -- сохранили свойство <Дата создания/изменений>
-           PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), vbId, CURRENT_TIMESTAMP);
+           -- сохранили свойство <Дата создания/изменений> - убрал т.к. сохраняется в протоколе
+           -- PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), vbId, CURRENT_TIMESTAMP);
     
            -- сохранили протокол
            PERFORM lpInsert_ObjectProtocol (vbId, inUserId);
@@ -108,4 +107,4 @@ $BODY$
 */
 
 -- тест
--- select * from lpInsertUpdate_Object_GoodsListIncome(ioId := 0 , inCode := 1 , inName := 'Белов' , inPhone := '4444' , Mail := 'выа@kjjkj' , Comment := '' , inGoodsId := 258441 , inJuridicalId := 0 , inContractId := 0 , inGoodsListIncomeKindId := 153272 ,  inSession := '5');
+-- SELECT * FROM lpInsertUpdate_Object_GoodsListIncome (ioId := 0 , inCode := 1 , inName := 'Белов' , inPhone := '4444' , Mail := 'выа@kjjkj' , Comment := '' , inGoodsId := 258441 , inJuridicalId := 0 , inContractId := 0 , inGoodsListIncomeKindId := 153272 ,  inSession := '5');
