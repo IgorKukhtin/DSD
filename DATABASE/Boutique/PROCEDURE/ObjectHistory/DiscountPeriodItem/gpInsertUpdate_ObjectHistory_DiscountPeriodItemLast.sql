@@ -76,3 +76,6 @@ END;$BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  28.04.17         * 
 */
+
+--test
+--select * from gpInsertUpdate_ObjectHistory_DiscountPeriodItemLast(ioId := 0 , inUnitId := 311 , inGoodsId := 271 , inOperDate := ('08.05.2017')::TDateTime , inValue := 0 , inIsLast := 'False' ,  inSession := '2');
