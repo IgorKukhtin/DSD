@@ -2,12 +2,19 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, TVarChar,  Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar,  Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                       Integer   ,    -- Ключ объекта <Подразделения> 
  INOUT ioCode                     Integer   ,    -- Код объекта <Подразделения> 
     IN inName                     TVarChar  ,    -- Название объекта <Подразделения>
+    IN inAddress                  TVarChar  ,    -- Адрес
+    IN inPhone                    TVarChar  ,    -- Телефон
+    IN inDiscountTax              TFloat    ,    -- % скидки ВИНТАЖ
     IN inJuridicalId              Integer   ,    -- ключ объекта <Юридические лица> 
+    IN inParentlId                Integer   ,    -- ключ объекта <Група> 
+    IN inChildId                  Integer   ,    -- ключ объекта <Склад> 
     IN inSession                  TVarChar       -- сессия пользователя
 )
 RETURNS record
@@ -35,8 +42,20 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Unit(), ioCode, inName);
 
+   -- сохранили Адрес
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Address(), ioId, inAddress);
+   -- сохранили Телефон
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Phone(), ioId, inPhone);
+
+   -- сохранили % скидки ВИНТАЖ
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Unit_DiscountTax(), ioId, inDiscountTax);
+
    -- сохранили связь с <Юридические лица>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Juridical(), ioId, inJuridicalId);
+   -- сохранили связь с <Група>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Parent(), ioId, inParentlId);
+   -- сохранили связь с <Склад>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Child(), ioId, inChildId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

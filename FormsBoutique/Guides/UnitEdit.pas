@@ -41,6 +41,18 @@ type
     cxLabel3: TcxLabel;
     ceJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
+    edDiscountTax: TcxCurrencyEdit;
+    edAddress: TcxTextEdit;
+    cxLabel4: TcxLabel;
+    edPhone: TcxTextEdit;
+    cxLabel5: TcxLabel;
+    cxLabel6: TcxLabel;
+    cxLabel7: TcxLabel;
+    ceParent: TcxButtonEdit;
+    ParentGuides: TdsdGuides;
+    cxLabel8: TcxLabel;
+    ceChild: TcxButtonEdit;
+    ChildGuides: TdsdGuides;
   private
     { Private declarations }
   public
