@@ -10,7 +10,9 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, ExternalLoad;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, ExternalLoad,
+  cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel,
+  Vcl.ExtCtrls;
 
 type
   TMedicSPForm = class(TParentForm)
@@ -52,6 +54,11 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     actGetImportSetting: TdsdExecStoredProc;
     actStartLoad: TMultiAction;
+    Panel: TPanel;
+    cxLabel6: TcxLabel;
+    edPartnerMedical: TcxButtonEdit;
+    PartnerMedicalGuides: TdsdGuides;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

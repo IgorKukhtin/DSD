@@ -3,7 +3,7 @@ object MedicSPForm: TMedicSPForm
   Top = 0
   Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
   ClientHeight = 318
-  ClientWidth = 633
+  ClientWidth = 680
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,16 +19,17 @@ object MedicSPForm: TMedicSPForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 633
-    Height = 292
+    Top = 61
+    Width = 680
+    Height = 257
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 600
-    ExplicitHeight = 283
+    ExplicitTop = 26
+    ExplicitWidth = 633
+    ExplicitHeight = 292
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -62,7 +63,7 @@ object MedicSPForm: TMedicSPForm
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 285
+        Width = 203
       end
       object PartnerMedicalName: TcxGridDBColumn
         Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077
@@ -70,7 +71,7 @@ object MedicSPForm: TMedicSPForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 343
+        Width = 416
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -84,6 +85,36 @@ object MedicSPForm: TMedicSPForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel: TPanel
+    Left = 0
+    Top = 0
+    Width = 680
+    Height = 35
+    Align = alTop
+    TabOrder = 5
+    ExplicitLeft = -16
+    ExplicitTop = -22
+    object cxLabel6: TcxLabel
+      Left = 6
+      Top = 9
+      AutoSize = False
+      Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077':'
+      Height = 17
+      Width = 141
+    end
+    object edPartnerMedical: TcxButtonEdit
+      Left = 147
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 0
+      Width = 450
     end
   end
   object DataSource: TDataSource
@@ -427,7 +458,15 @@ object MedicSPForm: TMedicSPForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inPartnerMedicalId'
+        Value = Null
+        Component = PartnerMedicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 40
     Top = 208
@@ -497,6 +536,21 @@ object MedicSPForm: TMedicSPForm
         Name = 'ImportSettingIsSpecConditionId'
         Value = Null
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPartnerMedicalId'
+        Value = Null
+        Component = PartnerMedicalGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPartnerMedicalName'
+        Value = Null
+        Component = PartnerMedicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 512
     Top = 136
@@ -532,5 +586,44 @@ object MedicSPForm: TMedicSPForm
     PackSize = 1
     Left = 400
     Top = 104
+  end
+  object PartnerMedicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartnerMedical
+    FormNameParam.Value = 'TPartnerMedicalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartnerMedicalForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PartnerMedicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PartnerMedicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 296
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = PartnerMedicalGuides
+      end>
+    Left = 624
+    Top = 120
   end
 end
