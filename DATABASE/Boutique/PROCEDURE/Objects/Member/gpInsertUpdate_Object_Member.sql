@@ -25,7 +25,7 @@ BEGIN
    IF COALESCE (ioId, 0) = 0
    THEN ioId := (SELECT Id FROM Object WHERE Valuedata = inName AND DescId = zc_Object_Member());
         -- пытаемся найти код
-        inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId);
+        inCode := coalesce((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
    END IF;
    -- !!!ВРЕМЕННО!!! - для загрузки из Sybase т.к. там код = 0 
 
@@ -35,8 +35,6 @@ BEGIN
    
    -- проверка уникальности для свойства <Наименование>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Member(), inName); 
-   -- проверка уникальности для свойства <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Member(), inCode);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Member(), inCode, inName);
