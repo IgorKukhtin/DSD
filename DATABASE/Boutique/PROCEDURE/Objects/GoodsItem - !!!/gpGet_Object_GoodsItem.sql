@@ -20,7 +20,7 @@ BEGIN
        SELECT
               0 :: Integer                             AS Id
            ,  0 :: Integer                             AS GoodsId        
-           , NEXTVAL ('Object_Goods_seq') :: Integer   AS GoodsCode
+           , lfGet_ObjectCode(0, zc_Object_Goods())    AS GoodsCode
            , '' :: TVarChar                            AS GoodsName
            ,  0 :: Integer                             AS GoodsGroupId        
            , '' :: TVarChar                            AS GoodsGroupName      
@@ -112,6 +112,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+08.05.17                                                          *
 10.03.17                                                          *
 */
 

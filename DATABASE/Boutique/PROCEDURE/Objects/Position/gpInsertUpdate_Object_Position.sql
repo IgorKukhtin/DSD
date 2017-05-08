@@ -4,11 +4,11 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Position (Integer, Integer, TVarCh
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Position(
  INOUT ioId           Integer,       -- Ключ объекта <Должности>    
-    IN inCode         Integer,       -- Код объекта <Должности>     
+ INOUT ioCode         Integer,       -- Код объекта <Должности>     
     IN inName         TVarChar,      -- Название объекта <Должности>
     IN inSession      TVarChar       -- сессия пользователя
 )
-RETURNS Integer
+RETURNS record
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -19,13 +19,20 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_Position_seq'); END IF; 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_Position_seq'); 
+   ELSEIF ioCode = 0
+         THEN ioCode := coalesce((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
+   END IF; 
+
+   -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
+   IF COALESCE (ioId, 0) = 0 THEN  ioCode := NEXTVAL ('Object_Position_seq'); 
+   END IF; 
 
    -- проверка уникальности для свойства <Наименование Должности>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Position(), inName); 
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Position(), inCode, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_Position(), ioCode, inName);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -39,6 +46,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+08.05.17                                                          *
 28.03.17                                                          *
 */
 

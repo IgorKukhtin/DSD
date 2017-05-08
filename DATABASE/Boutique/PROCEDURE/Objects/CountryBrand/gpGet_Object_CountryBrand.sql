@@ -19,7 +19,7 @@ BEGIN
        RETURN QUERY
        SELECT
               0 :: Integer     AS Id
-           , NEXTVAL ('Object_CountryBrand_seq') :: Integer AS Code
+           , lfGet_ObjectCode(0, zc_Object_CountryBrand())   AS Code
            , '' :: TVarChar    AS Name
        ;
    ELSE
@@ -42,6 +42,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+08.05.17                                                           *
 06.03.17                                                           *
 17.02.17                                                           *
 

@@ -124,6 +124,13 @@ object UnitEditForm: TUnitEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioCode'
+        Value = Null
+        Component = edCode
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inName'
         Value = ''
         Component = edName
@@ -168,17 +175,17 @@ object UnitEditForm: TUnitEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Name'
-        Value = ''
-        Component = edName
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = edCode
         DataType = ftUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Name'
+        Value = ''
+        Component = edName
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item

@@ -4,13 +4,13 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Measure (Integer, Integer, TVarCha
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Measure(
  INOUT ioId           Integer,       -- Ключ объекта <Единицы измерения>    
-    IN inCode         Integer,       -- Код объекта <Единицы измерения>     
+ INOUT ioCode         Integer,       -- Код объекта <Единицы измерения>     
     IN inName         TVarChar,      -- Название объекта <Единицы измерения>
     IN inInternalCode TVarChar,      -- Международный код
     IN inInternalName TVarChar,      -- Международное наименование
     IN inSession      TVarChar       -- сессия пользователя
 )
-RETURNS Integer
+RETURNS record
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -21,13 +21,20 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_Measure_seq'); END IF; 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_Measure_seq'); 
+   ELSEIF ioCode = 0
+         THEN ioCode := coalesce((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
+   END IF; 
+
+   -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
+   IF COALESCE (ioId, 0) = 0 THEN  ioCode := NEXTVAL ('Object_Measure_seq'); 
+   END IF; 
 
    -- проверка уникальности для свойства <Наименование Единицы измерения>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Measure(), inName); 
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Measure(), inCode, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_Measure(), ioCode, inName);
    -- сохранили Международный код
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Measure_InternalCode(), ioId, inInternalCode);
    -- сохранили Международное наименование
@@ -45,6 +52,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+08.05.17                                                          *
 02.03.17                                                          *
 16.02.17                                                          *
 */
