@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , StartDate TDateTime, EndDate TDateTime
              , ContractTagId Integer, ContractTagName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
-             , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar, GLNCode TVarChar
+             , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar, GLNCode TVarChar, Address TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractStateKindCode Integer
              , ContractComment TVarChar
@@ -79,15 +79,16 @@ BEGIN
        , Object_Contract_View.EndDate         :: TDateTime AS EndDate
        , Object_Contract_View.ContractTagId   :: Integer   AS ContractTagId
        , Object_Contract_View.ContractTagName :: TVarChar  AS ContractTagName
-       , Object_Juridical.Id           AS JuridicalId
-       , Object_Juridical.ObjectCode   AS JuridicalCode
-       , Object_Juridical.ValueData    AS JuridicalName
-       , Object_Partner.Id             AS PartnerId
-       , Object_Partner.ObjectCode     AS PartnerCode
-       , Object_Partner.ValueData      AS PartnerName
-       , ObjectString_GLNCode.ValueData AS GLNCode
-       , Object_PaidKind.Id            AS PaidKindId
-       , Object_PaidKind.ValueData     AS PaidKindName
+       , Object_Juridical.Id             AS JuridicalId
+       , Object_Juridical.ObjectCode     AS JuridicalCode
+       , Object_Juridical.ValueData      AS JuridicalName
+       , Object_Partner.Id               AS PartnerId
+       , Object_Partner.ObjectCode       AS PartnerCode
+       , Object_Partner.ValueData        AS PartnerName
+       , ObjectString_GLNCode.ValueData  AS GLNCode
+       , ObjectString_Address.ValueData  AS Address
+       , Object_PaidKind.Id              AS PaidKindId
+       , Object_PaidKind.ValueData       AS PaidKindName
        , Object_Contract_View.ContractStateKindCode AS ContractStateKindCode
        , ObjectString_Comment.ValueData AS ContractComment 
 
@@ -259,6 +260,9 @@ BEGIN
                              AND ObjectLink_Partner_Route.DescId = CASE WHEN Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30201() THEN zc_ObjectLink_Partner_Route30201() ELSE zc_ObjectLink_Partner_Route() END
          LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
 
+         LEFT JOIN ObjectString AS ObjectString_Address
+                                ON ObjectString_Address.ObjectId = Object_Partner.Id
+                               AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
    WHERE Object_Partner.DescId = zc_Object_Partner()
      AND ((Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
            AND vbBranchId_Constraint > 0)
@@ -314,15 +318,16 @@ BEGIN
        , Object_Contract_View.EndDate         :: TDateTime AS EndDate
        , Object_Contract_View.ContractTagId   :: Integer   AS ContractTagId
        , Object_Contract_View.ContractTagName :: TVarChar  AS ContractTagName
-       , Object_Juridical.Id           AS JuridicalId
-       , Object_Juridical.ObjectCode   AS JuridicalCode
-       , Object_Juridical.ValueData    AS JuridicalName
-       , Object_Partner.Id             AS PartnerId
-       , Object_Partner.ObjectCode     AS PartnerCode
-       , Object_Partner.ValueData      AS PartnerName
-       , ObjectString_GLNCode.ValueData AS GLNCode
-       , Object_PaidKind.Id            AS PaidKindId
-       , Object_PaidKind.ValueData     AS PaidKindName
+       , Object_Juridical.Id             AS JuridicalId
+       , Object_Juridical.ObjectCode     AS JuridicalCode
+       , Object_Juridical.ValueData      AS JuridicalName
+       , Object_Partner.Id               AS PartnerId
+       , Object_Partner.ObjectCode       AS PartnerCode
+       , Object_Partner.ValueData        AS PartnerName
+       , ObjectString_GLNCode.ValueData  AS GLNCode
+       , ObjectString_Address.ValueData  AS Address
+       , Object_PaidKind.Id              AS PaidKindId
+       , Object_PaidKind.ValueData       AS PaidKindName
        , Object_Contract_View.ContractStateKindCode AS ContractStateKindCode
        , ObjectString_Comment.ValueData AS ContractComment 
 
@@ -494,6 +499,10 @@ BEGIN
                               ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 
                              AND ObjectLink_Partner_Route.DescId = CASE WHEN Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30201() THEN zc_ObjectLink_Partner_Route30201() ELSE zc_ObjectLink_Partner_Route() END
          LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
+
+         LEFT JOIN ObjectString AS ObjectString_Address
+                                ON ObjectString_Address.ObjectId = Object_Partner.Id
+                               AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
 
    WHERE Object_Partner.DescId = zc_Object_Partner()
      AND Object_Partner.isErased = FALSE

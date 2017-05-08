@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalCountRemains TFloat
              , TotalSummPriceList TFloat, TotalSummRemainsPriceList TFloat
-             , FromName TVarChar
+             , FromName TVarChar, ToName TVarChar
              , Comment TVarChar
              )
 AS
@@ -44,6 +44,7 @@ BEGIN
            , MovementFloat_TotalSummRemainsPriceList.ValueData AS TotalSummRemainsPriceList
 
            , Object_From.ValueData                             AS FromName
+           , Object_To.ValueData                               AS ToName
            , MovementString_Comment.ValueData                  AS Comment
          
        FROM (SELECT Movement.id
@@ -78,6 +79,12 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
      ;
   
 END;
@@ -87,6 +94,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 08.05.17         * add To
  02.05.17         *
 */
 

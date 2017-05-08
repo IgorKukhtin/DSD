@@ -227,11 +227,19 @@ object InventoryJournalForm: TInventoryJournalForm
         Width = 82
       end
       object colFromName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1084#1072#1075#1072#1079#1080#1085')'
         DataBinding.FieldName = 'FromName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 163
+      end
+      object colToName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1089#1082#1083#1072#1076')'
+        DataBinding.FieldName = 'ToName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 159
       end
       object colTotalCount: TcxGridDBColumn
         Caption = #1054#1089#1090#1072#1090#1086#1082' '#1092#1072#1082#1090'.'

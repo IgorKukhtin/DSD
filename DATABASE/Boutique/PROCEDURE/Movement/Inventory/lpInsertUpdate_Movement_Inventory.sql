@@ -1,12 +1,14 @@
 -- Function: lpInsertUpdate_Movement_Inventory()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Inventory(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
     IN inInvNumber            TVarChar  , -- Номер документа
     IN inOperDate             TDateTime , -- Дата документа
-    IN inFromId               Integer   , -- От кого (в документе)
+    IN inFromId               Integer   , -- Магазин
+    IN inToId                 Integer   , -- Склад
     IN inComment              TVarChar  , -- Примечание
     IN inUserId               Integer     -- пользователь
 )
@@ -31,8 +33,10 @@ BEGIN
      -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
-     -- сохранили связь с <Подразделение>
+     -- сохранили связь с <Подразделение(магазин)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
+     -- сохранили связь с <Подразделение (склад)>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
    
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
@@ -51,4 +55,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_Movement_Inventory (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inFromId:= 1, inToId:= 2, inSession:= '2')
+-- SELECT * FROM lpInsertUpdate_Movement_Inventory (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inFromId:= 1, inToId:= 2, inComment:= '', inSession:= '2')

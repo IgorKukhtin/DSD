@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_Movement_Inventory()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Inventory(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
     IN inInvNumber            TVarChar  , -- Номер документа
     IN inOperDate             TDateTime , -- Дата документа
     IN inFromId               Integer   , -- Подразделения
+    IN inToId                 Integer   , -- Склад
     IN inComment              TVarChar  , -- Примечание
     IN inSession              TVarChar    -- сессия пользователя
 )                              
@@ -24,6 +26,7 @@ BEGIN
                                               , inInvNumber         := inInvNumber
                                               , inOperDate          := inOperDate
                                               , inFromId            := inFromId
+                                              , inToId              := inToId
                                               , inComment           := inComment
                                               , inUserId            := vbUserId
                                               );

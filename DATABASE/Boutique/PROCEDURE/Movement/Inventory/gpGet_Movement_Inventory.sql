@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Inventory(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , FromId Integer, FromName TVarChar
+             , ToId Integer, ToName TVarChar
              , Comment TVarChar 
                )
 AS
@@ -32,6 +33,9 @@ BEGIN
 
              , 0                     AS FromId
              , CAST ('' as TVarChar) AS FromName
+
+             , 0                     AS ToId
+             , CAST ('' as TVarChar) AS ToName
            
              , CAST ('' as TVarChar) AS Comment
            
@@ -47,6 +51,9 @@ BEGIN
 
              , Object_From.Id            AS FromId
              , Object_From.ValueData     AS FromName
+
+             , Object_To.Id              AS ToId
+             , Object_To.ValueData       AS ToName
              
              , MovementString_Comment.ValueData  AS Comment
           
@@ -62,6 +69,11 @@ BEGIN
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_Inventory();
      END IF;
@@ -72,6 +84,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .». 
+ 08.05.17         * add To
  02.05.17         *
 */
 

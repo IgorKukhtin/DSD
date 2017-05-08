@@ -16,11 +16,14 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , LineFabricaName TVarChar
              , LabelName TVarChar
              , GoodsSizeName TVarChar
-             , Amount TFloat, AmountRemains TFloat
+             , Amount TFloat, AmountSecond TFloat, AmountRemains TFloat, AmountSecondRemains TFloat
              , CountForPrice TFloat
              , OperPrice TFloat, OperPriceList TFloat
              , AmountSumm TFloat, AmountSummRemains TFloat
              , AmountPriceListSumm TFloat, AmountPriceListSummRemains TFloat
+             , AmountSecondSumm TFloat, AmountSecondRemainsSumm TFloat
+             , AmountSecondPriceListSumm TFloat, AmountSecondRemainsPLSumm TFloat
+             , Comment TVarChar
              , isErased Boolean
               )
 AS
@@ -41,28 +44,42 @@ BEGIN
                            , MovementItem.ObjectId AS GoodsId
                            , MovementItem.PartionId
                            , MovementItem.Amount 
+                           , COALESCE (MIFloat_AmountSecond.ValueData, 0)    AS AmountSecond
                            , COALESCE (MIFloat_AmountRemains.ValueData, 0)   AS AmountRemains
+                           , COALESCE (MIFloat_AmountSecondRemains.ValueData, 0) AS AmountSecondRemains
                            , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
                            , COALESCE (MIFloat_OperPrice.ValueData, 0)       AS OperPrice
                            , COALESCE (MIFloat_OperPriceList.ValueData, 0)   AS OperPriceList
+                           , COALESCE (MIString_Comment.ValueData,'')        AS Comment
                            , MovementItem.isErased
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.DescId     = zc_MI_Master()
                                              AND MovementItem.isErased   = tmpIsErased.isErased
+                            LEFT JOIN MovementItemString AS MIString_Comment
+                                                        ON MIString_Comment.MovementItemId = MovementItem.Id
+                                                       AND MIString_Comment.DescId = zc_MIString_Comment()
+
                             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+
                             LEFT JOIN MovementItemFloat AS MIFloat_AmountRemains
                                                         ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
                                                        AND MIFloat_AmountRemains.DescId = zc_MIFloat_AmountRemains()
+                            LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                        ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                            LEFT JOIN MovementItemFloat AS MIFloat_AmountSecondRemains
+                                                        ON MIFloat_AmountSecondRemains.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountSecondRemains.DescId = zc_MIFloat_AmountSecondRemains()
+
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                                         ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
                                                        AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                         ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                                        AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
-
                        )
 
        -- результат
@@ -83,15 +100,23 @@ BEGIN
            , Object_GoodsSize.ValueData     AS GoodsSizeName 
 
            , tmpMI.Amount
-           , tmpMI.AmountRemains  ::TFloat
-           , tmpMI.CountForPrice  ::TFloat
-           , tmpMI.OperPrice      ::TFloat
-           , tmpMI.OperPriceList      ::TFloat
+           , tmpMI.AmountSecond         ::TFloat
+           , tmpMI.AmountRemains        ::TFloat
+           , tmpMI.AmountSecondRemains  ::TFloat
+           , tmpMI.CountForPrice        ::TFloat
+           , tmpMI.OperPrice            ::TFloat
+           , tmpMI.OperPriceList        ::TFloat
            , CASE WHEN tmpMI.CountForPrice <> 0 THEN (tmpMI.Amount * tmpMI.OperPrice / tmpMI.CountForPrice) ELSE (tmpMI.Amount * tmpMI.OperPrice) END                       ::TFloat AS AmountSumm
            , CASE WHEN tmpMI.CountForPrice <> 0 THEN (tmpMI.AmountRemains * tmpMI.OperPrice / tmpMI.CountForPrice) ELSE (tmpMI.AmountRemains * tmpMI.OperPrice) END         ::TFloat AS AmountSummRemains
            , CASE WHEN tmpMI.CountForPrice <> 0 THEN (tmpMI.Amount * tmpMI.OperPriceList / tmpMI.CountForPrice) ELSE (tmpMI.Amount * tmpMI.OperPriceList) END               ::TFloat AS AmountPriceListSumm
            , CASE WHEN tmpMI.CountForPrice <> 0 THEN (tmpMI.AmountRemains * tmpMI.OperPriceList / tmpMI.CountForPrice) ELSE (tmpMI.AmountRemains * tmpMI.OperPriceList) END ::TFloat AS AmountPriceListSummRemains
 
+           , CASE WHEN tmpMI.CountForPrice <> 0 THEN (tmpMI.AmountSecond * tmpMI.OperPrice / tmpMI.CountForPrice) ELSE (tmpMI.AmountSecond * tmpMI.OperPrice) END                       ::TFloat AS AmountSecondSumm
+           , CASE WHEN tmpMI.CountForPrice <> 0 THEN (tmpMI.AmountSecondRemains * tmpMI.OperPrice / tmpMI.CountForPrice) ELSE (tmpMI.AmountSecondRemains * tmpMI.OperPrice) END         ::TFloat AS AmountSecondRemainsSumm
+           , CASE WHEN tmpMI.CountForPrice <> 0 THEN (tmpMI.AmountSecond * tmpMI.OperPriceList / tmpMI.CountForPrice) ELSE (tmpMI.AmountSecond * tmpMI.OperPriceList) END               ::TFloat AS AmountSecondPriceListSumm
+           , COALESCE( CASE WHEN tmpMI.CountForPrice <> 0 THEN (tmpMI.AmountSecondRemains * tmpMI.OperPriceList / tmpMI.CountForPrice) ELSE (tmpMI.AmountSecondRemains * tmpMI.OperPriceList) END, 0) ::TFloat AS AmountSecondRemainsPLSumm
+                                                                                                                                                                                                   -- AmountSecondRemainsPLSumm
+           , tmpMI.Comment              ::TVarChar
            , tmpMI.isErased
 
        FROM tmpMI
@@ -123,5 +148,4 @@ $BODY$
 */
 
 -- тест
---select * from gpSelect_MovementItem_Inventory(inMovementId := 7 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '2');
---select * from gpSelect_MovementItem_Inventory(inMovementId := 7 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '2');
+--select * from gpSelect_MovementItem_Inventory(inMovementId := 23 , inIsErased := 'False' ,  inSession := '2');
