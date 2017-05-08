@@ -1,4 +1,4 @@
-unit Units;
+unit Unit_Object;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TUnitForm = class(TParentForm)
+  TUnit_ObjectForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -35,15 +35,7 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
-    bbInsert: TdxBarButton;
     spSelect: TdsdStoredProc;
-    actUpdate: TdsdInsertUpdateAction;
-    bbEdit: TdxBarButton;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
-    bbSetErased: TdxBarButton;
-    bbSetUnErased: TdxBarButton;
     dsdGridToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
@@ -78,6 +70,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TUnitForm);
+  RegisterClass(TUnit_ObjectForm);
 
 end.

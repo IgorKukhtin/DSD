@@ -4554,8 +4554,14 @@ begin
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('ioCode',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inAddress',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inPhone',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inDiscountTax',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inParentlId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inChildId',ftInteger,ptInput, 0);
         //
         HideCurGrid(True);
         while not EOF do
