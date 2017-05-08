@@ -323,7 +323,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_ObjectHistory_DiscountPeriodItem (zc_Unit_ProductionSeparate(), CURRENT_TIMESTAMP, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_ObjectHistory_DiscountPeriodItem (zc_Unit_Basis(), CURRENT_TIMESTAMP, inSession:= zfCalc_UserAdmin())
-
---select * from gpSelect_ObjectHistory_DiscountPeriodItem(inUnitId := 18879 , inOperDate := ('11.11.2015')::TDateTime , inShowAll := 'False' ,  inSession := '5');
+-- select * from gpSelect_ObjectHistory_DiscountPeriodItem(inUnitId := 311 , inOperDate := ('12.05.2017')::TDateTime , inShowAll := 'False' ,  inSession := '2');

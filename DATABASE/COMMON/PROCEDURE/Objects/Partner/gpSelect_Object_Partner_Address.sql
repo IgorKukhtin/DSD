@@ -371,4 +371,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Partner_Address (null, null, true, FALSE, 0, 0, zfCalc_UserAdmin())
+--select * from gpSelect_Object_Partner_Address(inStartDate := ('01.02.2015')::TDateTime , inEndDate := ('28.02.2015')::TDateTime , inIsPeriod := 'False' , inShowAll := 'False' , inJuridicalId := 15029 , inInfoMoneyId := 0 , inPersonalTradeId := 0 , inRetailId := 0 , inRouteId := 0 ,  inSession := '5');

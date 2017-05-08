@@ -56,5 +56,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lfSelect_ObjectHistory_PriceListItem (zc_PriceList_ProductionSeparate(), CURRENT_TIMESTAMP)
--- SELECT * FROM lfSelect_ObjectHistory_PriceListItem (zc_PriceList_Basis(), CURRENT_TIMESTAMP)
+-- select * from gpGet_ObjectHistory_PriceListItem(inOperDate := ('01.09.2015')::TDateTime , inPriceListId := 372 , inGoodsId := 406 ,  inSession := '2');

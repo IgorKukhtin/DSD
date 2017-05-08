@@ -59,5 +59,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lfSelect_ObjectHistory_DiscountPeriodItem (zc_Unit_ProductionSeparate(), CURRENT_TIMESTAMP)
--- SELECT * FROM lfSelect_ObjectHistory_DiscountPeriodItem (zc_Unit_Basis(), CURRENT_TIMESTAMP)
+-- select * from gpGet_ObjectHistory_DiscountPeriodItem(inOperDate := ('01.09.2015')::TDateTime , inUnitId := 311 , inGoodsId := 271 ,  inSession := '2');
