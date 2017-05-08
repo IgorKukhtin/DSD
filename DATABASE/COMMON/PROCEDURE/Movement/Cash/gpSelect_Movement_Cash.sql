@@ -34,6 +34,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , isLoad Boolean
              , PartionMovementName TVarChar
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
+             , InsertDate TDateTime
+             , InsertMobileDate TDateTime
+             , InsertName TVarChar
+             , GUID TVarChar
               )
 AS
 $BODY$
@@ -142,8 +146,28 @@ BEGIN
            , Movement_Invoice.Id                 AS MovementId_Invoice
            , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, COALESCE (MovementString_InvNumberPartner.ValueData,'') || '/' || Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
            , MS_Comment_Invoice.ValueData        AS Comment_Invoice
+
+           , MovementDate_Insert.ValueData          AS InsertDate
+           , MovementDate_InsertMobile.ValueData    AS InsertMobileDate
+           , Object_User.ValueData                  AS InsertName
+           , MovementString_GUID.ValueData          AS GUID
            
        FROM tmpMovement
+
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = tmpMovement.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+            LEFT JOIN MovementDate AS MovementDate_InsertMobile
+                                   ON MovementDate_InsertMobile.MovementId = tmpMovement.Id
+                                  AND MovementDate_InsertMobile.DescId = zc_MovementDate_InsertMobile()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
+                                         ON MovementLinkObject_Insert.MovementId = tmpMovement.Id
+                                        AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_Insert.ObjectId
+            LEFT JOIN MovementString AS MovementString_GUID
+                                     ON MovementString_GUID.MovementId = tmpMovement.Id
+                                    AND MovementString_GUID.DescId = zc_MovementString_GUID()
+
             LEFT JOIN MovementLinkMovement AS MLM_Invoice
                                            ON MLM_Invoice.MovementId = tmpMovement.Id
                                           AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()

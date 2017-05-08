@@ -1,22 +1,26 @@
 inherited CashJournalUserForm: TCashJournalUserForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
+  ClientHeight = 565
   ClientWidth = 982
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -209
   ExplicitWidth = 998
+  ExplicitHeight = 603
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 982
+    Height = 508
     TabOrder = 3
     ExplicitWidth = 982
+    ClientRectBottom = 508
     ClientRectRight = 982
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 982
       inherited cxGrid: TcxGrid
         Width = 982
+        Height = 508
         ExplicitWidth = 982
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -331,6 +335,38 @@ inherited CashJournalUserForm: TCashJournalUserForm
             VisibleForCustomization = False
             Width = 60
           end
+          object clGUID: TcxGridDBColumn
+            DataBinding.FieldName = 'GUID'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
+          end
+          object clInsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1080#1085#1093#1088'. '#1089' '#1084#1086#1073'.'#1091#1089#1090#1088')'
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
+          end
+          object clInsertMobileDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1084#1086#1073'.'#1091#1089#1090#1088')'
+            DataBinding.FieldName = 'InsertMobileDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object clInsertName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
+          end
         end
       end
     end
@@ -622,8 +658,8 @@ inherited CashJournalUserForm: TCashJournalUserForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 96
-    Top = 96
+    Left = 504
+    Top = 128
   end
   inherited BarManager: TdxBarManager
     Left = 160
@@ -719,6 +755,10 @@ inherited CashJournalUserForm: TCashJournalUserForm
     Left = 472
     Top = 248
   end
+  inherited PeriodChoice: TPeriodChoice
+    Left = 216
+    Top = 184
+  end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
       item
@@ -742,6 +782,8 @@ inherited CashJournalUserForm: TCashJournalUserForm
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_Cash'
+    Left = 152
+    Top = 184
   end
   inherited FormParams: TdsdFormParams
     Params = <
