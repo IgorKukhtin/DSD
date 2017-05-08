@@ -107,10 +107,10 @@ object KassaEditForm: TKassaEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCode'
+        Name = 'ioCode'
         Value = 0.000000000000000000
         Component = edCode
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -150,17 +150,16 @@ object KassaEditForm: TKassaEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'Code'
+        Value = 0.000000000000000000
+        Component = edCode
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Code'
-        Value = 0.000000000000000000
-        Component = edCode
-        DataType = ftUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1

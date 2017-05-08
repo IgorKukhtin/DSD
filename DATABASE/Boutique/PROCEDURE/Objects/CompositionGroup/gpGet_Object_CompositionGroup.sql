@@ -19,7 +19,7 @@ BEGIN
        RETURN QUERY
        SELECT
               0 :: Integer     AS Id
-           ,  NEXTVAL ('Object_CompositionGroup_seq') :: Integer AS Code
+           , lfGet_ObjectCode(0, zc_Object_CompositionGroup())   AS Code
            , '' :: TVarChar    AS Name
        ;
    ELSE

@@ -19,7 +19,7 @@ BEGIN
        RETURN QUERY
        SELECT
                0 :: Integer                       AS Id
-           , NEXTVAL ('Object_Juridical_seq') :: Integer AS Code
+           , lfGet_ObjectCode(0, zc_Object_Juridical())   AS Code
            , '' :: TVarChar                       AS Name
            , FALSE :: Boolean                     AS isCorporate
            , '' :: TVarChar                       AS FullName

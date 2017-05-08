@@ -22,7 +22,7 @@ BEGIN
        RETURN QUERY
        SELECT
               0 :: Integer    AS Id
-           , NEXTVAL ('Object_Client_seq') :: Integer AS Code
+           , lfGet_ObjectCode(0, zc_Object_Client())   AS Code
            , '' :: TVarChar  AS Name
            , '' :: TVarChar  AS DiscountCard             
            ,  0 :: TFloat     AS DiscountTax              

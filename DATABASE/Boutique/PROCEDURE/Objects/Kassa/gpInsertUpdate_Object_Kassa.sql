@@ -4,11 +4,11 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Kassa (Integer, Integer, TVarChar,
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Kassa(
  INOUT ioId           Integer,       -- Ключ объекта <Касса>         
-    IN inCode         Integer,       -- Код объекта <Касса>          
+ INOUT ioCode         Integer,       -- Код объекта <Касса>          
     IN inName         TVarChar,      -- Название объекта <Касса>     
     IN inSession      TVarChar       -- сессия пользователя
 )
-RETURNS integer
+RETURNS record
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -19,15 +19,22 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_Measure_seq'); END IF; 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_Kassa_seq'); 
+   ELSEIF ioCode = 0
+         THEN ioCode := coalesce((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
+   END IF; 
+
+   -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
+   IF COALESCE (ioId, 0) = 0 THEN  ioCode := NEXTVAL ('Object_Kassa_seq'); 
+   END IF; 
 
    -- проверка уникальности для свойства <Наименование Kassa>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Kassa(), inName); 
    -- проверка уникальности для свойства <Код Kassa>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Kassa(), inCode);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Kassa(), ioCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Kassa(), inCode, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_Kassa(), ioCode, inName);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

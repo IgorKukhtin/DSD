@@ -4,12 +4,12 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceList (Integer, Integer, TVarC
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PriceList(
  INOUT ioId              Integer,       -- ключ объекта <Прайс лист>
-    IN inCode            Integer,       -- свойство <Код>
+ INOUT ioCode            Integer,       -- свойство <Код>
     IN inName            TVarChar,      -- главное Название
     IN inCurrencyId      Integer,       -- ключ объекта <Валюта> 
     IN inSession         TVarChar       -- сессия пользователя
 )
-RETURNS integer
+RETURNS record
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -20,14 +20,20 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_PriceList_seq'); END IF; 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_PriceList_seq'); 
+   ELSEIF ioCode = 0
+         THEN ioCode := coalesce((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
+   END IF; 
 
+   -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
+   IF COALESCE (ioId, 0) = 0 THEN  ioCode := NEXTVAL ('Object_PriceList_seq'); 
+   END IF; 
 
    -- проверка уникальности для свойства <Наименование>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_PriceList(), inName); 
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_PriceList(), inCode, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_PriceList(), ioCode, inName);
 
    -- сохранили связь с <СВАлюта>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PriceList_Currency(), ioId, inCurrencyId);
@@ -44,6 +50,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+08.05.17                                                          *
 28.04.17          *
 */
 

@@ -19,7 +19,7 @@ BEGIN
        RETURN QUERY
        SELECT
               0 :: Integer                          AS Id
-           , NEXTVAL ('Object_Unit_seq') :: Integer AS Code
+           , lfGet_ObjectCode(0, zc_Object_Unit())  AS Code
            , '' :: TVarChar                         AS Name
            ,  0 :: Integer                          AS JuridicalId
            , '' :: TVarChar                         AS JuridicalName
@@ -51,6 +51,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+08.05.17                                                          *
 06.03.17                                                          *
 28.02.17                                                          *
  

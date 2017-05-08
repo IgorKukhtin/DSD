@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, Integer, TVarChar,
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                       Integer   ,    -- Ключ объекта <Товары> 
-    IN inCode                     Integer   ,    -- Код объекта <Товары>     
+ INOUT ioCode                     Integer   ,    -- Код объекта <Товары>     
     IN inName                     TVarChar  ,    -- Название объекта <Товары>
     IN inGoodsGroupId             Integer   ,    -- ключ объекта <Группы товаров> 
     IN inMeasureId                Integer   ,    -- ключ объекта <Единицы измерения> 
@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inLabelId                  Integer   ,    -- ключ объекта <Название для ценника> 
     IN inSession                  TVarChar       -- сессия пользователя
 )
-RETURNS Integer
+RETURNS record
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -25,16 +25,23 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_Goods_seq'); END IF; 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_Goods_seq'); 
+   ELSEIF ioCode = 0
+         THEN ioCode := coalesce((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
+   END IF; 
+
+   -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
+   IF COALESCE (ioId, 0) = 0 THEN  ioCode := NEXTVAL ('Object_Goods_seq'); 
+   END IF; 
 
    -- проверка прав уникальности для свойства <Наименование>
    --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Goods(), inName);
 
    -- проверка уникальности для свойства <Код>
-   --PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), inCode);
+   --PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), ioCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Goods(), inCode, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Goods(), ioCode, inName);
 
    vbGroupNameFull:= lfGet_Object_TreeNameFull (inGoodsGroupId, zc_ObjectLink_GoodsGroup_Parent());
  

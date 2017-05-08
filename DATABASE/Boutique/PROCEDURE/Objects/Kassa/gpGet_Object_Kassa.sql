@@ -19,7 +19,7 @@ BEGIN
        RETURN QUERY
        SELECT
               0 :: Integer                             AS Id
-           , NEXTVAL ('Object_Kassa_seq') :: Integer   AS Code
+           , lfGet_ObjectCode(0, zc_Object_Kassa())    AS Code
            , '' :: TVarChar                            AS Name
        ;
    ELSE
@@ -41,6 +41,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+08.05.17                                                          *
 06.03.17                                                          *
 20.02.17                                                          *
 */

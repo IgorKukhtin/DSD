@@ -4,12 +4,12 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Composition (Integer,Integer,TVarC
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Composition(
  INOUT ioId                       Integer   ,    -- Ключ объекта <Состав товара> 
-    IN inCode                     Integer   ,    -- Код объекта <Состав товара>
+ INOUT ioCode                     Integer   ,    -- Код объекта <Состав товара>
     IN inName                     TVarChar  ,    -- Название объекта <Состав товара>
     IN inCompositionGroupId       Integer   ,    -- ключ объекта <Группа для состава товара> 
     IN inSession                  TVarChar       -- сессия пользователя
 )
-RETURNS Integer
+RETURNS record
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -20,14 +20,22 @@ BEGIN
 
 
    -- !!!ВРЕМЕННО!!! - пытаемся найти Id  для Загрузки из Sybase - !!!но если в Sybase нет уникальности - НАДО УБРАТЬ!!!
-   IF COALESCE (ioId, 0) = 0
+   IF COALESCE (ioId, 0) = 0  AND COALESCE(ioCode,0) = 0 
    THEN ioId := (SELECT Id FROM Object WHERE Valuedata = inName AND DescId = zc_Object_Composition());
         -- пытаемся найти код
-        inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId);
+        ioCode := (SELECT ObjectCode FROM Object WHERE Id = ioId);
    END IF;
    -- !!!ВРЕМЕННО!!! - для загрузки из Sybase т.к. там код = 0 
-   IF COALESCE (inCode, 0) = 0 THEN  inCode := NEXTVAL ('Object_Composition_seq'); END IF; 
+  
+   -- Нужен для загрузки из Sybase т.к. там код = 0 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_Composition_seq'); 
+   ELSEIF ioCode = 0
+         THEN ioCode := coalesce((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
+   END IF; 
 
+   -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
+   IF COALESCE (ioId, 0) = 0 THEN  ioCode := NEXTVAL ('Object_Composition_seq'); 
+   END IF; 
    
    -- проверка - свойство должно быть установлено
    -- IF COALESCE (inCompositionGroupId, 0) = 0 THEN
@@ -35,7 +43,7 @@ BEGIN
    -- END IF;
 
    -- проверка уникальности свойства <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Composition(), inCode);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Composition(), ioCode);
    -- проверка уникальности свойства <Название> для !!!одной!! <Группа для состава товара>
    IF TRIM (inName) <> '' AND COALESCE (inCompositionGroupId, 0) <> 0 
    THEN
@@ -56,7 +64,7 @@ BEGIN
 
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Composition(), inCode, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Composition(), ioCode, inName);
 
    -- сохранили связь с <Группа для состава товара>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Composition_CompositionGroup(), ioId, inCompositionGroupId);

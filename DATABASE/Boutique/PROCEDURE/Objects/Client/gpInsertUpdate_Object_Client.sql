@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client (Integer, Integer, TVarChar
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
  INOUT ioId                       Integer   ,    -- Ключ объекта <Покупатели> 
-    IN inCode                     Integer   ,    -- Код объекта <Покупатели>     
+ INOUT ioCode                     Integer   ,    -- Код объекта <Покупатели>     
     IN inName                     TVarChar  ,    -- Название объекта <Покупатели>
     IN inDiscountCard             TVarChar  ,    -- Номер карты
     IN inDiscountTax              TFloat    ,    -- Процент скидки
@@ -19,7 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
     IN inDiscountKindId           Integer   ,    -- Вид накопительной скидки
     IN inSession                  TVarChar       -- сессия пользователя
 )
-RETURNS Integer
+RETURNS record
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -29,14 +29,21 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_Client_seq'); END IF; 
+   IF COALESCE (ioId, 0) = 0 AND ioCode = 0  THEN  ioCode := NEXTVAL ('Object_Client_seq'); 
+   ELSEIF ioCode = 0
+         THEN ioCode := coalesce((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
+   END IF; 
+
+   -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
+   IF COALESCE (ioId, 0) = 0 THEN  ioCode := NEXTVAL ('Object_Client_seq'); 
+   END IF; 
 
    -- проверка прав уникальности для свойства <Наименование >
    --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Client(), inName);
 
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Client(), inCode, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Client(), ioCode, inName);
  
    -- сохранили Номер карты
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Client_DiscountCard(), ioId, inDiscountCard);

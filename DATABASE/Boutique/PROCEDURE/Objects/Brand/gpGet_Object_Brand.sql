@@ -19,7 +19,7 @@ BEGIN
        RETURN QUERY
        SELECT
               0 :: Integer                             AS Id
-           , NEXTVAL ('Object_Brand_seq') :: Integer   AS Code
+           , lfGet_ObjectCode(0, zc_Object_Brand())   AS Code
            , '' :: TVarChar                            AS Name
            ,  0 :: Integer                             AS CountryBrandId
            , '' :: TVarChar                            AS CountryBrandName

@@ -14,20 +14,11 @@ RETURNS integer
 AS
 $BODY$
   DECLARE UserId Integer;
-  DECLARE Code_max Integer;
-
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_DiscountTools());
    UserId := inSession;
-
-
-
-   -- проверка уникальности для свойства <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_DiscountTools(), Code_max);
-
-
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_DiscountTools(), 0, '');
