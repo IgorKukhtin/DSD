@@ -29,8 +29,8 @@ BEGIN
      RETURN QUERY 
        SELECT
              0 AS Id
-           , CAST (NEXTVAL ('Movement_currency_seq') AS TVarChar) AS InvNumber
---           , CAST (CURRENT_DATE AS TDateTime) AS OperDate
+           --, CAST (NEXTVAL ('Movement_currency_seq') AS TVarChar) AS InvNumber
+             , CAST (lfGet_InvNumber (0, zc_Movement_Currency()) AS TVarChar) AS InvNumber
            , inOperDate AS OperDate
            , lfObject_Status.Code             AS StatusCode
            , lfObject_Status.Name             AS StatusName
@@ -48,7 +48,7 @@ BEGIN
      RETURN QUERY 
        SELECT
              inMovementId as Id
-           , CASE WHEN inMovementId = 0 THEN CAST (NEXTVAL ('Movement_currency_seq') AS TVarChar) ELSE Movement.InvNumber END AS InvNumber
+           , CASE WHEN inMovementId = 0 THEN CAST (lfGet_InvNumber (0, zc_Movement_Currency()) AS TVarChar) ELSE Movement.InvNumber END AS InvNumber
            , CASE WHEN inMovementId = 0 THEN inOperDate ELSE Movement.OperDate END AS OperDate
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
@@ -96,6 +96,7 @@ ALTER FUNCTION gpGet_Movement_Currency (Integer, Integer, TDateTime, TVarChar) O
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.05.17         *
  27.04.17         * бутики
  11.11.14                                        * add PaidKind...
  10.11.14                                        * add ParValue

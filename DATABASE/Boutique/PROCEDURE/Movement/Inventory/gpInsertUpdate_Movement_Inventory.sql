@@ -5,14 +5,14 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Inventory (Integer, TVarChar, TD
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Inventory(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
-    IN inInvNumber            TVarChar  , -- Номер документа
+ INOUT ioInvNumber            TVarChar  , -- Номер документа
     IN inOperDate             TDateTime , -- Дата документа
     IN inFromId               Integer   , -- Подразделения
     IN inToId                 Integer   , -- Склад
     IN inComment              TVarChar  , -- Примечание
     IN inSession              TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -21,9 +21,13 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Inventory());
      
+     IF COALESCE (ioId, 0) = 0 THEN
+         ioInvNumber:= CAST (NEXTVAL ('movement_inventory_seq') AS TVarChar);  
+     END IF;
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_Inventory (ioId                := ioId
-                                              , inInvNumber         := inInvNumber
+                                              , inInvNumber         := ioInvNumber
                                               , inOperDate          := inOperDate
                                               , inFromId            := inFromId
                                               , inToId              := inToId
@@ -42,4 +46,4 @@ $BODY$
  */
 
 -- тест
--- 
+-- select * from gpInsertUpdate_Movement_Inventory(ioId := 25 , ioInvNumber := '3' , inOperDate := ('01.01.2017')::TDateTime , inFromId := 311 , inToId := 0 , inComment := 'sdfgh' ,  inSession := '2');

@@ -1708,11 +1708,11 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inInvNumber'
+        Name = 'ioInvNumber'
         Value = ''
         Component = edInvNumber
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

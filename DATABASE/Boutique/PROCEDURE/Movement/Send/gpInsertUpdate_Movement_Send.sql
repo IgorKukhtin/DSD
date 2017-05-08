@@ -5,14 +5,14 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTi
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Send(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
-    IN inInvNumber            TVarChar  , -- Номер документа
+ INOUT ioInvNumber            TVarChar  , -- Номер документа
     IN inOperDate             TDateTime , -- Дата документа
     IN inFromId               Integer   , -- От кого (в документе)
     IN inToId                 Integer   , -- Кому (в документе)
     IN inComment              TVarChar  , -- Примечание
     IN inSession              TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -22,9 +22,13 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Send());
      
+     IF COALESCE (ioId, 0) = 0 THEN
+         ioInvNumber:= CAST (NEXTVAL ('movement_send_seq') AS TVarChar);  
+     END IF;
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_Send (ioId                := ioId
-                                         , inInvNumber         := inInvNumber
+                                         , inInvNumber         := ioInvNumber
                                          , inOperDate          := inOperDate
                                          , inFromId            := inFromId
                                          , inToId              := inToId
@@ -43,4 +47,4 @@ $BODY$
  */
 
 -- тест
--- select * from gpInsertUpdate_Movement_Send(ioId := 12 , inInvNumber := '14' , inOperDate := ('20.01.2017')::TDateTime , inFromId := 230 , inToId := 311 ,  inSession := '2');
+-- select * from gpInsertUpdate_Movement_Send(ioId := 14 , ioInvNumber := '1' , inOperDate := ('01.01.2017')::TDateTime , inFromId := 230 , inToId := 0 , inComment := 'c' ,  inSession := '2');

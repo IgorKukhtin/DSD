@@ -168,11 +168,11 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ininvnumber'
+        Name = 'ioinvnumber'
         Value = '0'
         Component = edInvNumber
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

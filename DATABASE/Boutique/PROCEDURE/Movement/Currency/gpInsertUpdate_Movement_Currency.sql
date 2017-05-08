@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Currency (Integer, TVarChar, TDa
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Currency(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ Курсовая разница>
-    IN inInvNumber                TVarChar  , -- Номер документа
+ INOUT ioInvNumber                TVarChar  , -- Номер документа
     IN inOperDate                 TDateTime , -- Дата документа
     IN inAmount                   TFloat    , -- курс
     IN inParValue                 TFloat    , -- Номинал валюты для которой вводится курс
@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Currency(
     IN inCurrencyToId             Integer   , -- валюта для которой вводится курс
     IN inSession                  TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer AS
+RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMovementItemId Integer;
@@ -40,6 +40,9 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.<Валюта (значение)> должно соответствовать <%>.', lfGet_Object_ValueData (zc_Enum_Currency_Basis());
      END IF;
 
+     IF COALESCE (ioId, 0) = 0 THEN
+         ioInvNumber:= CAST (NEXTVAL ('movement_currency_seq') AS TVarChar);  
+     END IF;
 
      -- 1. Распроводим Документ
      IF ioId > 0 AND vbUserId = lpCheckRight (inSession, zc_Enum_Process_UnComplete_Currency())
@@ -50,7 +53,7 @@ BEGIN
 
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Currency(), inInvNumber, inOperDate, NULL, NULL);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Currency(), ioInvNumber, inOperDate, NULL, NULL);
 
      -- определяем <Элемент документа>
      SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
@@ -92,10 +95,11 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 08.05.17         *
  27.04.17         * бутики
  10.11.14                                        * add inParValue
  28.07.14         *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_Currency (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inAmount:= 20, inCurrencyFromId:= 1, inCurrencyFromBasisId:= 1, inBusinessId:= 2, inPaidKindId:= 1,  inInfoMoneyId:= 0, inCurrencyFromId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_Movement_Currency (ioId:= 0, ioInvNumber:= '-1', inOperDate:= '01.01.2013', inAmount:= 20, inCurrencyFromId:= 1, inCurrencyFromBasisId:= 1, inBusinessId:= 2, inPaidKindId:= 1,  inInfoMoneyId:= 0, inCurrencyFromId:= 0, inSession:= '2')
