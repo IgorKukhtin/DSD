@@ -1,9 +1,11 @@
 -- Function: gpSelect_Object_MedicSP(TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_MedicSP(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_MedicSP(Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_MedicSP(
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inPartnerMedicalId   Integer  ,     -- мед. учреждение
+    IN inSession            TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PartnerMedicalId Integer, PartnerMedicalName TVarChar
@@ -28,13 +30,13 @@ BEGIN
                               ON ObjectLink_MedicSP_PartnerMedical.ObjectId = Object_MedicSP.Id
                              AND ObjectLink_MedicSP_PartnerMedical.DescId = zc_ObjectLink_MedicSP_PartnerMedical()
          LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = ObjectLink_MedicSP_PartnerMedical.ChildObjectId
-     WHERE Object_MedicSP.DescId = zc_Object_MedicSP();
+     WHERE Object_MedicSP.DescId = zc_Object_MedicSP()
+       AND (ObjectLink_MedicSP_PartnerMedical.ChildObjectId = inPartnerMedicalId OR inPartnerMedicalId = 0);
   
 END;
 $BODY$
  
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_MedicSP(TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
@@ -46,4 +48,4 @@ ALTER FUNCTION gpSelect_Object_MedicSP(TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_MedicSP('2')
+-- SELECT * FROM gpSelect_Object_MedicSP(0,'2')

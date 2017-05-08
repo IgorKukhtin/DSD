@@ -1599,6 +1599,21 @@ inherited SaleForm: TSaleForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPartnerMedicalId'
+        Value = Null
+        Component = PartnerMedicalGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPartnerMedicalName'
+        Value = Null
+        Component = PartnerMedicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 80
