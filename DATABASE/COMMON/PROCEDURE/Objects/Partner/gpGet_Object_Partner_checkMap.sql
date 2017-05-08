@@ -43,4 +43,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_Partner_checkMap (0, zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Object_Partner_checkMap (inJuridicalId:=1, inRetailId:= 0, inPersonalTradeId:= 0, inRouteId:= 0, inSession:= zfCalc_UserAdmin())

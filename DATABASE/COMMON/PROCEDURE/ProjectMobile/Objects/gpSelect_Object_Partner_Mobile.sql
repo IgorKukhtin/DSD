@@ -53,24 +53,16 @@ RETURNS TABLE (Id              Integer
 AS 
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbMemberId Integer;
-   DECLARE calcSession TVarChar;
+
+   DECLARE vbUserId_Mobile   Integer;
 BEGIN
       -- проверка прав пользовател€ на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
      
-     --vbMemberId:= inMemberId;
-     vbMemberId:= (SELECT tmp.MemberId FROM gpGetMobile_Object_Const (inSession) AS tmp);
-     IF (COALESCE(inMemberId,0) <> 0 AND COALESCE(vbMemberId,0) <> inMemberId)
-        THEN
-            RAISE EXCEPTION 'ќшибка.Ќе достаточно прав доступа.'; 
-     END IF;
+      -- !!!мен€ем значение!!! - с какими параметрами пользователь может просматривать данные с мобильного устройства
+      SELECT lfGet.MemberId, lfGet.UserId INTO inMemberId, vbUserId_Mobile FROM lfGet_User_MobileCheck (inMemberId:= inMemberId, inUserId:= vbUserId) AS lfGet;
 
-     calcSession := (SELECT CAST (ObjectLink_User_Member.ObjectId AS TVarChar) 
-                       FROM ObjectLink AS ObjectLink_User_Member
-                       WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-                         AND ObjectLink_User_Member.ChildObjectId = vbMemberId);
 
       RETURN QUERY
           SELECT tmpMobilePartner.Id
@@ -122,7 +114,7 @@ BEGIN
                , Object_PersonalTrade.UnitName     
                , Object_PersonalTrade.PositionName 
 
-          FROM gpSelectMobile_Object_Partner (zc_DateStart(), calcSession) AS tmpMobilePartner
+          FROM gpSelectMobile_Object_Partner (zc_DateStart(), vbUserId_Mobile :: TVarChar) AS tmpMobilePartner
                LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpMobilePartner.JuridicalId 
                LEFT JOIN Object AS Object_Route ON Object_Route.Id = tmpMobilePartner.RouteId 
                LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpMobilePartner.ContractId 

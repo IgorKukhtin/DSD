@@ -51,53 +51,22 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbIsXleb Boolean;
-   DECLARE vbIsProjectMobile Boolean;
-   DECLARE vbUserId_Member   Integer;
+   DECLARE vbUserId        Integer;
+
+   DECLARE vbUserId_Mobile Integer;
+   DECLARE vbIsXleb        Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ReturnIn());
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- Только так определяется что пользователь inSession - Торговый агент - т.е. у него есть моб телефон, может потом для этого заведем спец роль и захардкодим
-     vbIsProjectMobile:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = vbUserId AND ObjectBoolean.DescId = zc_ObjectBoolean_User_ProjectMobile());
-
-     IF inMemberId > 0
-     THEN
-         -- Определяется для <Физическое лицо> - его UserId
-         vbUserId_Member:= (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_User_Member() AND OL.ChildObjectId = inMemberId);
-         -- Проверка
-         IF COALESCE (vbUserId_Member, 0) = 0
-         THEN
-             RAISE EXCEPTION 'Ошибка.Для ФИО <%> не определно значение <Пользователь>.', lfGet_Object_ValueData (inMemberId);
-         END IF;
-
-     ELSEIF vbIsProjectMobile = TRUE
-     THEN
-         -- в этом случае - видит только себя
-         vbUserId_Member:= vbUserId;
-         -- !!!меняем значение!!! - Определяется для UserId - его <Физическое лицо>
-         inMemberId:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_User_Member() AND OL.ObjectId = vbUserId);
-     ELSE
-         -- в этом случае - видит ВСЕ
-         vbUserId_Member:= 0;
-         -- !!!меняем значение!!!
-         inMemberId:= 0;
-     END IF;
-
-
-     -- Проверка - Торговый агент видит только себя
-     IF vbIsProjectMobile = TRUE AND vbUserId_Member <> vbUserId
-     THEN
-         RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.';
-     END IF;
-
-
-
-     -- !!!Хлеб!!!
+     -- !!!Хлеб!!! - определяется уровень доступа
      vbIsXleb:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 131936  AND UserId = vbUserId);
+
+     -- !!!меняем значение!!! - с какими параметрами пользователь может просматривать данные с мобильного устройства
+     SELECT lfGet.MemberId, lfGet.UserId INTO inMemberId, vbUserId_Mobile FROM lfGet_User_MobileCheck (inMemberId:= inMemberId, inUserId:= vbUserId) AS lfGet;
+
 
      -- Результат
      RETURN QUERY
@@ -115,33 +84,6 @@ BEGIN
                          UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
                          UNION SELECT zc_Enum_Process_AccessKey_DocumentDnepr() AS AccessKeyId WHERE vbIsXleb = TRUE
                               )
-
-        , tmpMovement AS (SELECT tmp.*, MovementLinkObject_Insert.ObjectId AS UserId_insert
-                          FROM (SELECT Movement.id
-                                FROM tmpStatus
-                                     JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
-                                                  AND Movement.DescId = zc_Movement_ReturnIn() 
-                                                  AND Movement.StatusId = tmpStatus.StatusId
-                                     JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
-                                WHERE inIsPartnerDate = FALSE
-                               UNION ALL
-                                SELECT MovementDate_OperDatePartner.MovementId  AS Id
-                                FROM MovementDate AS MovementDate_OperDatePartner
-                                     JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId = zc_Movement_ReturnIn()
-                                     JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
-                                     JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
-                                WHERE inIsPartnerDate = TRUE
-                                  AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
-                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-                                ) AS tmp
-                                INNER JOIN MovementLinkObject AS MovementLinkObject_Insert
-                                                              ON MovementLinkObject_Insert.MovementId = tmp.Id
-                                                             AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
-                                                             AND MovementLinkObject_Insert.ObjectId > 0
-                          WHERE MovementLinkObject_Insert.ObjectId = vbUserId_Member
-                             OR vbUserId_Member = 0
-                          )
-
          , tmpPersonal AS (SELECT lfSelect.MemberId
                                 , lfSelect.PersonalId
                                 , lfSelect.UnitId
@@ -219,13 +161,32 @@ BEGIN
            , Object_Unit.ObjectCode                 AS UnitCode
            , Object_Unit.ValueData                  AS UnitName
            , Object_Position.ValueData              AS PositionName
+       FROM (SELECT Movement.*
+             FROM tmpStatus
+                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
+                               AND Movement.DescId   = zc_Movement_ReturnIn()
+                               AND Movement.StatusId = tmpStatus.StatusId
+                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+             /*WHERE inIsPartnerDate = FALSE
+            UNION ALL
+             SELECT Movement.*
+             FROM MovementDate AS MovementDate_OperDatePartner
+                  JOIN Movement ON Movement.Id     = MovementDate_OperDatePartner.MovementId
+                               AND Movement.DescId = zc_Movement_ReturnIn()
+                  JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+             WHERE inIsPartnerDate = TRUE
+               AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
+               AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()*/
+            ) AS Movement
 
-       FROM tmpMovement
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
+                                         ON MovementLinkObject_Insert.MovementId = Movement.Id
+                                        AND MovementLinkObject_Insert.DescId     = zc_MovementLinkObject_Insert()
 
-            LEFT JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.id = Movement.ParentId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-            LEFT JOIN Object AS Object_User ON Object_User.Id = tmpMovement.UserId_insert
+            LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_Insert.ObjectId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Error
                                       ON MovementBoolean_Error.MovementId =  Movement.Id
@@ -266,7 +227,7 @@ BEGIN
                                      ON MovementString_InvNumberMark.MovementId =  Movement.Id
                                     AND MovementString_InvNumberMark.DescId = zc_MovementString_InvNumberMark()
 
-            LEFT JOIN MovementString AS MovementString_Comment 
+            LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
@@ -369,7 +330,7 @@ BEGIN
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_MasterEDI
-                                           ON MovementLinkMovement_MasterEDI.MovementId = Movement.Id 
+                                           ON MovementLinkMovement_MasterEDI.MovementId = Movement.Id
                                           AND MovementLinkMovement_MasterEDI.DescId = zc_MovementLinkMovement_MasterEDI()
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Promo
@@ -393,19 +354,19 @@ BEGIN
             LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
 
-     WHERE vbIsXleb = FALSE OR (View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_30103() -- Хлеб
-                                AND vbIsXleb = TRUE)
-    ;
+       WHERE (MovementLinkObject_Insert.ObjectId  = vbUserId_Mobile
+           OR vbUserId_Mobile = 0)
+      ;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpSelect_Movement_ReturnIn_Mobile (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  22.04.17         *
 */
+
 -- тест
--- SELECT * FROM gpSelect_Movement_ReturnIn_Mobile(instartdate := ('01.02.2017')::TDateTime , inenddate := ('28.02.2017')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 , inMemberId := 274610 ,  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_ReturnIn_Mobile (instartdate:= '21.04.2017', inenddate:= '25.04.2017', inIsPartnerDate:= FALSE, inIsErased:= FALSE, inJuridicalBasisId:= 9399, inMemberId:= 974195, inSession:= zfCalc_UserAdmin());

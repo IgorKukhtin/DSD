@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_Partner()
 
--- DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, Integer, Integer, Integer, Boolean, TVarChar);

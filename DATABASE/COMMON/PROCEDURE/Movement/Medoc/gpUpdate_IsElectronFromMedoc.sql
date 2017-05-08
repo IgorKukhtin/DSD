@@ -184,7 +184,7 @@ return;
                                   LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS JuridicalFrom
                                                                                       ON JuridicalFrom.JuridicalId = MovementLinkObject_From.ObjectId
                                                                                      AND Movement.OperDate >= JuridicalFrom.StartDate AND Movement.OperDate < JuridicalFrom.EndDate
-                             WHERE JuridicalFrom.INN = inFromINN AND JuridicalTo.INN = inToINN
+                             WHERE TRIM (JuridicalFrom.INN) = TRIM (inFromINN) AND TRIM (JuridicalTo.INN) = TRIM (inToINN)
                                AND ABS (inTotalSumm) = ABS (MovementFloat_TotalSumm.ValueData)
                                AND COALESCE (MovementString_InvNumberBranch.ValueData, '') = COALESCE (inInvNumberBranch, '')
 --                             AND (inInvNumberRegistered = '' OR COALESCE(MovementString_InvNumberRegistered.ValueData, '') = '')
@@ -232,7 +232,7 @@ return;
                                                                                       ON JuridicalFrom.JuridicalId = MovementLinkObject_From.ObjectId
                                                                                      AND COALESCE (Movement_child.OperDate, Movement.OperDate) >= JuridicalFrom.StartDate AND COALESCE (Movement_child.OperDate, Movement.OperDate) < JuridicalFrom.EndDate
 
-                             WHERE JuridicalFrom.INN = inToINN AND JuridicalTo.INN = inFromINN
+                             WHERE TRIM (JuridicalFrom.INN) = TRIM (inToINN) AND TRIM (JuridicalTo.INN) = TRIM (inFromINN)
                                AND ABS (inTotalSumm) = ABS (MovementFloat_TotalSumm.ValueData)
                                AND COALESCE (MovementString_InvNumberBranch.ValueData, '') = COALESCE (inInvNumberBranch, '')
 --                             AND (inInvNumberRegistered = '' OR COALESCE(MovementString_InvNumberRegistered.ValueData, '') = '')

@@ -52,7 +52,10 @@ BEGIN
      RETURN QUERY 
        WITH tmpMovement AS (SELECT Movement.Id AS MovementId, Movement.DescId AS MovementDescId, Movement.InvNumber, inIsDestination AS isDestination, inIsParentDetail AS isParentDetail, inIsInfoMoneyDetail AS isInfoMoneyDetail FROM Movement WHERE Movement.Id = inMovementId
                            UNION ALL
-                            SELECT Movement.Id AS MovementId, Movement.DescId AS MovementDescId, Movement.InvNumber, inIsDestination AS isDestination, inIsParentDetail AS isParentDetail, inIsInfoMoneyDetail AS isInfoMoneyDetail FROM Movement WHERE Movement.ParentId = inMovementId
+                            SELECT Movement.Id AS MovementId, Movement.DescId AS MovementDescId, Movement.InvNumber, inIsDestination AS isDestination, inIsParentDetail AS isParentDetail, inIsInfoMoneyDetail AS isInfoMoneyDetail
+                            FROM Movement
+                            WHERE Movement.ParentId = inMovementId
+                              AND NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_PersonalService())
                            )
                     -- все проводки: количественные + суммовые
                   , tmpMIContainer_all AS (SELECT MIContainer.DescId AS MIContainerDescId
