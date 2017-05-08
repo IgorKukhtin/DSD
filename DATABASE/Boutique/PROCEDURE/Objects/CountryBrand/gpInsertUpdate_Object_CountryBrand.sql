@@ -4,11 +4,11 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CountryBrand (Integer, Integer, TV
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CountryBrand(
  INOUT ioId           Integer,       -- Ключ объекта <Страна производитель>
-    IN inCode         Integer,       -- Код Объекта <Страна производитель>
+ INOUT ioCode         Integer,       -- Код Объекта <Страна производитель>
     IN inName         TVarChar,      -- Название объекта <Страна производитель>
     IN inSession      TVarChar       -- сессия пользователя
 )
-RETURNS integer 
+RETURNS record 
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -19,15 +19,22 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_CountryBrand_seq'); END IF; 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_CountryBrand_seq'); 
+   ELSEIF ioCode = 0
+         THEN ioCode := coalesce((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
+   END IF; 
+
+   -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
+   IF COALESCE (ioId, 0) = 0 THEN  ioCode := NEXTVAL ('Object_CountryBrand_seq'); 
+   END IF; 
 
    -- проверка уникальности для свойства <Наименование Страна производитель>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_CountryBrand(), inName);
    -- проверка уникальности для свойства <Код Страна производитель>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_CountryBrand(), inCode);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_CountryBrand(), ioCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_CountryBrand(), inCode, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_CountryBrand(), ioCode, inName);
 
 
    -- сохранили протокол

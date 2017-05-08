@@ -73,3 +73,5 @@ END;$BODY$
  20.08.15         * lpInsert_ObjectHistoryProtocol
  09.12.14                                        *
 */
+
+-- select * from gpInsertUpdate_ObjectHistory_PriceListItemLast(ioId := 0 , inPriceListId := 372 , inGoodsId := 406 , inOperDate := ('20.08.2015')::TDateTime , inValue := 59 , inIsLast := 'False' ,  inSession := '2');

@@ -121,6 +121,10 @@ type
     actUpdateAmountRemains: TdsdExecStoredProc;
     spUpdate_MI_Inventory_AmountRemains: TdsdStoredProc;
     bb: TdxBarButton;
+    cxLabel4: TcxLabel;
+    edTo: TcxButtonEdit;
+    GuidesTo: TdsdGuides;
+    clComment: TcxGridDBColumn;
   private
   public
   end;

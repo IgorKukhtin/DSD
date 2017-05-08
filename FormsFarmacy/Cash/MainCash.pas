@@ -271,6 +271,11 @@ type
     miOpenGoodsSP_UserForm: TMenuItem;
     lblPrice: TLabel;
     edPrice: TcxCurrencyEdit;
+    spGet_JuridicalList: TdsdStoredProc;
+    actGetJuridicalList: TAction;
+    N16: TMenuItem;
+    lblAmount: TLabel;
+    edAmount: TcxCurrencyEdit;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -319,7 +324,9 @@ type
     procedure btnCheckClick(Sender: TObject);
     procedure ParentFormDestroy(Sender: TObject);
     procedure ceScanerKeyPress(Sender: TObject; var Key: Char);
-    procedure actSetSPExecute(Sender: TObject); //***10.08.16
+    procedure actSetSPExecute(Sender: TObject);
+    procedure actGetJuridicalListExecute(Sender: TObject);
+    procedure actGetJuridicalListUpdate(Sender: TObject); //***10.08.16
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -538,7 +545,10 @@ begin
   pnlVIP.Visible := False;
   edPrice.Value := 0.0;
   edPrice.Visible := False;
+  edAmount.Value := 0.0;
+  edAmount.Visible := False;
   lblPrice.Visible := False;
+  lblAmount.Visible := False;
   pnlDiscount.Visible := False;
   pnlSP.Visible := False;
   lblCashMember.Caption := '';
@@ -632,6 +642,21 @@ begin
     SaveLocalData(VIPListCDS,vipList_lcl);
     ReleaseMutex(MutexVip);
   End;
+end;
+
+procedure TMainCashForm.actGetJuridicalListExecute(Sender: TObject);
+begin
+  if edAmount.Visible and (edAmount.Value > 0.0) then
+  begin
+    spGet_JuridicalList.ParamByName('inGoodsId').Value := RemainsCDS.FieldByName('Id').AsInteger;
+    spGet_JuridicalList.ParamByName('inAmount').Value := edAmount.Value;
+    ShowMessage(spGet_JuridicalList.Execute());
+  end;
+end;
+
+procedure TMainCashForm.actGetJuridicalListUpdate(Sender: TObject);
+begin
+  actGetJuridicalList.Enabled := edAmount.Visible and (edAmount.Value > 0);
 end;
 
 procedure TMainCashForm.actGetMoneyInCashExecute(Sender: TObject);
@@ -1153,6 +1178,8 @@ begin
   lblDiscountCardNumber.Caption  := '  ' + DiscountCardNumber + '  ';
   lblPrice.Visible := (DiscountServiceForm.gCode = 2);
   edPrice.Visible := lblPrice.Visible;
+  lblAmount.Visible := lblPrice.Visible;
+  edAmount.Visible := lblAmount.Visible;
 end;
 
 //***20.04.17

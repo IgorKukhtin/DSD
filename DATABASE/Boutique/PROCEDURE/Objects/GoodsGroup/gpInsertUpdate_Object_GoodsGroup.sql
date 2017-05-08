@@ -4,12 +4,12 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer,Integer,TVarCh
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsGroup(
  INOUT ioId                       Integer   ,    -- Ключ объекта <Группа товара> 
-    IN inCode                     Integer   ,    -- Код объекта <Группа товара>
+ INOUT ioCode                     Integer   ,    -- Код объекта <Группа товара>
     IN inName                     TVarChar  ,    -- Название объекта <Группа товара>
     IN inParentId                 Integer   ,    -- ключ объекта <Группа товара> 
     IN inSession                  TVarChar       -- сессия пользователя  
 )
-RETURNS Integer
+RETURNS record
 AS
 $BODY$
    DECLARE vbUserId Integer;   
@@ -18,8 +18,15 @@ BEGIN
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsGroup());
    vbUserId:= lpGetUserBySession (inSession);
 
-    -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_GoodsGroup_seq'); END IF; 
+   -- Нужен для загрузки из Sybase т.к. там код = 0 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_GoodsGroup_seq'); 
+   ELSEIF ioCode = 0
+         THEN ioCode := coalesce((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
+   END IF; 
+
+   -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
+   IF COALESCE (ioId, 0) = 0 THEN  ioCode := NEXTVAL ('Object_GoodsGroup_seq'); 
+   END IF; 
    
    -- проверка прав уникальности для свойства <Наименование >
    --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_GoodsGroup(), inName);
@@ -43,10 +50,10 @@ BEGIN
 */
 
    -- проверка прав уникальности для свойства <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_GoodsGroup(), inCode);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_GoodsGroup(), ioCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_GoodsGroup(), inCode, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_GoodsGroup(), ioCode, inName);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsGroup_Parent(), ioId, inParentId);
 

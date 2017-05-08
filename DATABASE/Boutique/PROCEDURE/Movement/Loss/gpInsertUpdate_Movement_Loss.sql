@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Loss (Integer, TVarChar, TDateTi
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Loss(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
-    IN inInvNumber            TVarChar  , -- Номер документа
+ INOUT ioInvNumber            TVarChar  , -- Номер документа
     IN inOperDate             TDateTime , -- Дата документа
     IN inFromId               Integer   , -- От кого (в документе)
     IN inToId                 Integer   , -- Кому (в документе)
@@ -25,12 +25,16 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Loss());
      
+     IF COALESCE (ioId, 0) = 0 THEN
+         ioInvNumber:= CAST (NEXTVAL ('movement_loss_seq') AS TVarChar);  
+     END IF;
+
      outCurrencyValue := 1;
      outParValue := 0;
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_Loss (ioId                := ioId
-                                         , inInvNumber         := inInvNumber
+                                         , inInvNumber         := ioInvNumber
                                          , inOperDate          := inOperDate
                                          , inFromId            := inFromId
                                          , inToId              := inToId
@@ -48,8 +52,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 08.05.17         *
  25.04.17         *
  */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_Loss (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inFromId:= 1, inToId:= 2, inSession:= '2')
+-- select * from gpInsertUpdate_Movement_Loss(ioId := 17 , ioInvNumber := '4' , inOperDate := ('01.01.2017')::TDateTime , inFromId := 311 , inToId := 311 , inCurrencyDocumentId := 353 , inComment := 'rfff' ,  inSession := '2');

@@ -4,11 +4,11 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsInfo (Integer, Integer, TVarC
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsInfo(
  INOUT ioId           Integer,       -- Ключ объекта <Описание товара>            
-    IN inCode         Integer,       -- Код объекта <Описание товара>             
+ INOUT ioCode         Integer,       -- Код объекта <Описание товара>             
     IN inName         TVarChar,      -- Название объекта <Описание товара>        
     IN inSession      TVarChar       -- сессия пользователя
 )
-RETURNS Integer
+RETURNS record
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -19,15 +19,22 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_GoodsInfo_seq'); END IF; 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_GoodsInfo_seq'); 
+   ELSEIF ioCode = 0
+         THEN ioCode := coalesce((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
+   END IF; 
+
+   -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
+   IF COALESCE (ioId, 0) = 0 THEN  ioCode := NEXTVAL ('Object_GoodsInfo_seq'); 
+   END IF; 
    
    -- проверка уникальности для свойства <Наименование>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_GoodsInfo(), inName); 
    -- проверка уникальности для свойства <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_GoodsInfo(), inCode);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_GoodsInfo(), ioCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_GoodsInfo(), inCode, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_GoodsInfo(), ioCode, inName);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

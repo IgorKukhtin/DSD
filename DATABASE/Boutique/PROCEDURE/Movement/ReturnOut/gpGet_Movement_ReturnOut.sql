@@ -29,7 +29,8 @@ BEGIN
          RETURN QUERY 
          SELECT
                0 AS Id
-             , CAST (NEXTVAL ('Movement_ReturnOut_seq') AS TVarChar) AS InvNumber
+             --, CAST (NEXTVAL ('Movement_ReturnOut_seq') AS TVarChar) AS InvNumber
+             , CAST (lfGet_InvNumber (0, zc_Movement_ReturnOut()) AS TVarChar) AS InvNumber
              , inOperDate                       AS OperDate
              , Object_Status.Code               AS StatusCode
              , Object_Status.Name               AS StatusName
@@ -134,6 +135,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. 
+ 08.05.17         *
  24.04.17         *
 */
 

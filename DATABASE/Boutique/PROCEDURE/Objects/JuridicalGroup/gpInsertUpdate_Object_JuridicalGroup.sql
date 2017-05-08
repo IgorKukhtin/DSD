@@ -4,12 +4,12 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalGroup (Integer,Integer,TV
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalGroup(
  INOUT ioId                       Integer   ,    -- Ключ объекта <Группы юридических лиц> 
-    IN inCode                     Integer   ,    -- Код объекта <Группы юридических лиц>
+ INOUT ioCode                     Integer   ,    -- Код объекта <Группы юридических лиц>
     IN inName                     TVarChar  ,    -- Название объекта <Группы юридических лиц>
     IN inParentId                 Integer   ,    -- ключ объекта <Группы юридических лиц> 
     IN inSession                  TVarChar       -- сессия пользователя  
 )
-RETURNS Integer
+RETURNS record
 AS
 $BODY$
    DECLARE vbUserId Integer; 
@@ -19,7 +19,14 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_JuridicalGroup_seq'); END IF;  
+   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_JuridicalGroup_seq'); 
+   ELSEIF ioCode = 0
+         THEN ioCode := coalesce((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
+   END IF; 
+
+   -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
+   IF COALESCE (ioId, 0) = 0 THEN  ioCode := NEXTVAL ('Object_JuridicalGroup_seq'); 
+   END IF; 
  
    -- проверка прав уникальности для свойства <Наименование >
    --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_JuridicalGroup(), inName);
@@ -43,10 +50,10 @@ BEGIN
 
 
    -- проверка прав уникальности для свойства <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_JuridicalGroup(), inCode);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_JuridicalGroup(), ioCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_JuridicalGroup(), inCode, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_JuridicalGroup(), ioCode, inName);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalGroup_Parent(), ioId, inParentId);
 

@@ -124,10 +124,10 @@ object GoodsGroupEditForm: TGoodsGroupEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCode'
+        Name = 'ioCode'
         Value = 0.000000000000000000
         Component = edCode
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

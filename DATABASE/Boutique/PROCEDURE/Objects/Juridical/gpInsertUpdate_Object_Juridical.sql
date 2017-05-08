@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarC
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
  INOUT ioId                       Integer   ,    -- Ключ объекта <Юридические лица> 
-    IN inCode                     Integer   ,    -- Код объекта <Юридические лица>  
+ INOUT ioCode                     Integer   ,    -- Код объекта <Юридические лица>  
     IN inName                     TVarChar  ,    -- Название объекта <Юридические лица>
     IN inIsCorporate              Boolean   ,    -- Признак главное юридическое лицо (наша ли собственность это юр.лицо)
     IN inFullName                 TVarChar  ,    -- Юр. лицо полное название
@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
     IN inJuridicalGroupId         Integer   ,    -- ключ объекта <Группы юридических лиц> 
     IN inSession                  TVarChar       -- сессия пользователя
 )
-RETURNS Integer
+RETURNS record
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -23,8 +23,15 @@ BEGIN
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Juridical());
    vbUserId:= lpGetUserBySession (inSession);
 
-    -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_Juridical_seq'); END IF; 
+   -- Нужен для загрузки из Sybase т.к. там код = 0 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_Juridical_seq'); 
+   ELSEIF ioCode = 0
+         THEN ioCode := coalesce((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
+   END IF; 
+
+   -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
+   IF COALESCE (ioId, 0) = 0 THEN  ioCode := NEXTVAL ('Object_Juridical_seq'); 
+   END IF; 
   
    -- проверка прав уникальности для свойства <Наименование >
    --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Juridical(), inName);
@@ -48,10 +55,10 @@ BEGIN
 
 
    -- проверка прав уникальности для свойства <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Juridical(), inCode);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Juridical(), ioCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Juridical(), inCode, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Juridical(), ioCode, inName);
 
    -- сохранили Признак главное юридическое лицо (наша ли собственность это юр.лицо)
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Juridical_isCorporate(), ioId, inisCorporate);

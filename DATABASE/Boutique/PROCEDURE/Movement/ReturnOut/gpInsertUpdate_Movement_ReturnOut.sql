@@ -7,7 +7,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnOut
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnOut(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
-    IN inInvNumber            TVarChar  , -- Номер документа
+ INOUT ioInvNumber            TVarChar  , -- Номер документа
     IN inOperDate             TDateTime , -- Дата документа
     IN inFromId               Integer   , -- От кого (в документе)
     IN inToId                 Integer   , -- Кому (в документе)
@@ -30,12 +30,16 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnOut());
 
+     IF COALESCE (ioId, 0) = 0 THEN
+         ioInvNumber:= CAST (NEXTVAL ('movement_returnout_seq') AS TVarChar);  
+     END IF;
+
      outCurrencyValue := 1;
      outParValue := 0;
      
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_ReturnOut (ioId                := ioId
-                                              , inInvNumber         := inInvNumber
+                                              , inInvNumber         := ioInvNumber
                                               , inOperDate          := inOperDate
                                               , inFromId            := inFromId
                                               , inToId              := inToId
@@ -56,8 +60,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 08.05.17         *
  24.04.17         *
  */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_ReturnOut (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')
+-- select * from gpInsertUpdate_Movement_ReturnOut(ioId := 7 , ioInvNumber := '4' , inOperDate := ('01.01.2017')::TDateTime , inFromId := 230 , inToId := 229 , inCurrencyDocumentId := 0 , inCurrencyPartnerId := 0 , inCurrencyPartnerValue := 1 , inParPartnerValue := 0 , inComment := 'df' ,  inSession := '2');

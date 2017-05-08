@@ -20,7 +20,7 @@ BEGIN
        RETURN QUERY
        SELECT
               0 :: Integer    AS Id
-           , NEXTVAL ('Object_Measure_seq') :: Integer AS Code
+           , lfGet_ObjectCode(0, zc_Object_Partner())   AS Code
            , '' :: TVarChar   AS Name
            ,  0 :: Integer    AS BrandId
            , '' :: TVarChar   AS BrandName
@@ -78,6 +78,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+08.05.17                                                          *
 06.03.17                                                          *
 24.02.17                                                          *
  

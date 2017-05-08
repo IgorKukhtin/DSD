@@ -20,11 +20,11 @@ BEGIN
    THEN
        RETURN QUERY
        SELECT
-              0 :: Integer                             AS Id    
-           , NEXTVAL ('Object_PriceList_seq') :: Integer   AS Code
-           , '' :: TVarChar                            AS Name
-           ,  0 :: Integer                             AS CurrencyId
-           , '' :: TVarChar                            AS CurrencyName
+              0 :: Integer                              AS Id    
+           , lfGet_ObjectCode(0, zc_Object_PriceList()) AS Code
+           , '' :: TVarChar                             AS Name
+           ,  0 :: Integer                              AS CurrencyId
+           , '' :: TVarChar                             AS CurrencyName
        ;
    ELSE
        RETURN QUERY
@@ -51,6 +51,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+08.05.17                                                          *
 28.04.17          *
 */
 

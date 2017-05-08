@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ContractPartner(
 RETURNS TABLE (Id Integer, Code Integer
              , ContractId Integer, ContractCode Integer, InvNumber TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
+             , Address TVarChar
              , isConnected Boolean
              , isErased Boolean
         
@@ -33,6 +34,8 @@ BEGIN
            , Object_Partner.ObjectCode AS PartnerCode
            , Object_Partner.ValueData  AS PartnerName
        
+           , ObjectString_Address.ValueData      AS Address
+
            , NOT Object_ContractPartner.isErased AS isConnected
            , Object_ContractPartner.isErased     AS isErased
            
@@ -48,6 +51,10 @@ BEGIN
                                 AND ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_ContractPartner_Partner.ChildObjectId
 
+            LEFT JOIN ObjectString AS ObjectString_Address
+                                   ON ObjectString_Address.ObjectId = Object_Partner.Id
+                                  AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
+
      WHERE Object_ContractPartner.DescId = zc_Object_ContractPartner()
 
    UNION ALL
@@ -59,12 +66,13 @@ BEGIN
            , View_Contract.ContractCode
            , View_Contract.InvNumber
 
-           , Object_Partner.Id         AS PartnerId
-           , Object_Partner.ObjectCode AS PartnerCode
-           , Object_Partner.ValueData  AS PartnerName
-       
-           , FALSE AS isConnected
-           , Object_Partner.isErased   AS isErased
+           , Object_Partner.Id               AS PartnerId
+           , Object_Partner.ObjectCode       AS PartnerCode
+           , Object_Partner.ValueData        AS PartnerName
+           , ObjectString_Address.ValueData  AS Address
+
+           , FALSE                           AS isConnected
+           , Object_Partner.isErased         AS isErased
            
        FROM Object AS Object_Partner
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
@@ -80,6 +88,10 @@ BEGIN
                                  ON ObjectLink_ContractPartner_Partner.ChildObjectId = Object_Partner.Id
                                 AND ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
 
+            LEFT JOIN ObjectString AS ObjectString_Address
+                                   ON ObjectString_Address.ObjectId = Object_Partner.Id
+                                  AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
+
        WHERE Object_Partner.DescId = zc_Object_Partner()
          AND Object_Partner.isErased = FALSE
          /*AND View_ContractPartner.ContractId IS NULL*/
@@ -94,6 +106,7 @@ ALTER FUNCTION gpSelect_Object_ContractPartner (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 08.05.17         *
  05.02.15         * 
 */
 

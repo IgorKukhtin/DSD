@@ -175,10 +175,10 @@ object JuridicalEditForm: TJuridicalEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCode'
+        Name = 'ioCode'
         Value = Null
         Component = edCode
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

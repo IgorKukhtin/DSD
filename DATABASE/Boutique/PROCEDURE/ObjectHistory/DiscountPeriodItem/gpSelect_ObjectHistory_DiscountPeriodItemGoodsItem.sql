@@ -50,5 +50,4 @@ ALTER FUNCTION gpSelect_ObjectHistory_DiscountPeriodGoodsItem (Integer, Integer,
 */
 
 -- тест
--- SELECT * FROM lfSelect_ObjectHistory_DiscountPeriodItem (zc_Unit_ProductionSeparate(), CURRENT_TIMESTAMP)
--- SELECT * FROM lfSelect_ObjectHistory_DiscountPeriodItem (zc_Unit_Basis(), CURRENT_TIMESTAMP)
+-- select * from gpSelect_ObjectHistory_DiscountPeriodGoodsItem(inUnitId := 311 , inGoodsId := 271 ,  inSession := '2');

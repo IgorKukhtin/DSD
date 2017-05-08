@@ -329,6 +329,10 @@
 				<Form>UnitsEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\Unit_Object.pas">
+				<Form>UnitsEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\City.pas">
 				<Form>CityForm</Form>
 				<DesignClass>TParentForm</DesignClass>

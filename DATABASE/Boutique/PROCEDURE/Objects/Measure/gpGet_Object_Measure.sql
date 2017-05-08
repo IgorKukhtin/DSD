@@ -19,7 +19,7 @@ BEGIN
        RETURN QUERY
        SELECT
               0 :: Integer                             AS Id
-           , NEXTVAL ('Object_Measure_seq') :: Integer AS Code
+           , lfGet_ObjectCode(0, zc_Object_Measure())  AS Code
            , '' :: TVarChar                            AS Name
            , '' :: TVarChar                            AS InternalCode
            , '' :: TVarChar                            AS InternalName
@@ -51,6 +51,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+08.05.17                                                          *
 16.02.17                                                          *
 */
 

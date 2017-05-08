@@ -37,7 +37,8 @@ BEGIN
 
      -- вставить рассчет остатка на конец дня
      -- сохранили
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountRemains(), MovementItem.Id, 5)
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountRemains(), MovementItem.Id, 1)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecondRemains(), MovementItem.Id, 1)
      FROM MovementItem
      WHERE MovementId = inMovementId;
      

@@ -1,4 +1,4 @@
-object UnitForm: TUnitForm
+object Unit_ObjectForm: TUnit_ObjectForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
@@ -185,23 +185,6 @@ object UnitForm: TUnitForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErased'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -250,22 +233,6 @@ object UnitForm: TUnitForm
       Action = actRefresh
       Category = 0
     end
-    object bbInsert: TdxBarButton
-      Action = actInsert
-      Category = 0
-    end
-    object bbEdit: TdxBarButton
-      Action = actUpdate
-      Category = 0
-    end
-    object bbSetErased: TdxBarButton
-      Action = dsdSetErased
-      Category = 0
-    end
-    object bbSetUnErased: TdxBarButton
-      Action = dsdSetUnErased
-      Category = 0
-    end
     object bbToExcel: TdxBarButton
       Action = dsdGridToExcel
       Category = 0
@@ -307,85 +274,6 @@ object UnitForm: TUnitForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
-    end
-    object actInsert: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
-      ImageIndex = 0
-      FormName = 'TUnitEditForm'
-      FormNameParam.Value = 'TUnitEditForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = '0'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
-    object actUpdate: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
-      ShortCut = 115
-      ImageIndex = 1
-      FormName = 'TUnitEditForm'
-      FormNameParam.Value = 'TUnitEditForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      ActionType = acUpdate
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
-    object dsdSetErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErased
-      StoredProcList = <
-        item
-          StoredProc = spErased
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 2
-      ShortCut = 8238
-      ErasedFieldName = 'isErased'
-      DataSource = DataSource
-    end
-    object dsdSetUnErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spUnErased
-      StoredProcList = <
-        item
-          StoredProc = spUnErased
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 8238
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-      DataSource = DataSource
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -527,7 +415,6 @@ object UnitForm: TUnitForm
         Action = dsdChoiceGuides
       end
       item
-        Action = actUpdate
       end>
     ActionItemList = <
       item
@@ -535,7 +422,6 @@ object UnitForm: TUnitForm
         ShortCut = 13
       end
       item
-        Action = actUpdate
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList

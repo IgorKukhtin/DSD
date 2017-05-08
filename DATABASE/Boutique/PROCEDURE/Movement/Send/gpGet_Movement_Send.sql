@@ -25,7 +25,8 @@ BEGIN
          RETURN QUERY 
          SELECT
                0 AS Id
-             , CAST (NEXTVAL ('Movement_Send_seq') AS TVarChar) AS InvNumber
+             --, CAST (NEXTVAL ('Movement_Send_seq') AS TVarChar) AS InvNumber
+             , CAST (lfGet_InvNumber (0, zc_Movement_Send()) AS TVarChar) AS InvNumber
              , inOperDate                       AS OperDate
              , Object_Status.Code               AS StatusCode
              , Object_Status.Name               AS StatusName

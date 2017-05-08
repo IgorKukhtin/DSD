@@ -20,14 +20,14 @@ object InventoryForm: TInventoryForm
   TextHeight = 13
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 75
+    Top = 119
     Width = 810
-    Height = 391
+    Height = 347
     Align = alClient
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 391
+    ClientRectBottom = 347
     ClientRectRight = 810
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -37,7 +37,7 @@ object InventoryForm: TInventoryForm
         Left = 0
         Top = 0
         Width = 810
-        Height = 367
+        Height = 323
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -106,6 +106,36 @@ object InventoryForm: TInventoryForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountPriceListSummRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountSecondRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountSecondRemainsPLSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountSecondPriceListSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountSecondRemainsSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountSecondSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -178,6 +208,36 @@ object InventoryForm: TInventoryForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountPriceListSummRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountSecondRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountSecondRemainsPLSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountSecondPriceListSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountSecondRemainsSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountSecondSumm
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -286,7 +346,7 @@ object InventoryForm: TInventoryForm
             Width = 62
           end
           object colAmount: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1092#1072#1082#1090
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1092#1072#1082#1090' ('#1084#1072#1075'.)'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -295,9 +355,30 @@ object InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 71
           end
+          object colAmountSecond: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1092#1072#1082#1090' ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'AmountSecond'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 71
+          end
           object colAmountRemains: TcxGridDBColumn
-            Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
+            Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' ('#1084#1072#1075'.)'
             DataBinding.FieldName = 'AmountRemains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object colAmountSecondRemains: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'AmountSecondRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -341,7 +422,7 @@ object InventoryForm: TInventoryForm
             Width = 80
           end
           object colAmountSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' ('#1086#1089#1090'. '#1092#1072#1082#1090')'
+            Caption = #1057#1091#1084#1084#1072' ('#1086#1089#1090'. '#1092#1072#1082#1090' '#1084#1072#1075'.)'
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -353,7 +434,7 @@ object InventoryForm: TInventoryForm
             Width = 91
           end
           object colAmountSummRemains: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' ('#1088#1072#1089#1095'. '#1086#1089#1090'.)'
+            Caption = #1057#1091#1084#1084#1072' ('#1088#1072#1089#1095'. '#1086#1089#1090'. '#1084#1072#1075'.)'
             DataBinding.FieldName = 'AmountSummRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -365,7 +446,7 @@ object InventoryForm: TInventoryForm
             Width = 91
           end
           object colAmountPriceListSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' ('#1086#1089#1090'. '#1092#1072#1082#1090')'
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' ('#1086#1089#1090'. '#1092#1072#1082#1090' '#1084#1072#1075'.)'
             DataBinding.FieldName = 'AmountPriceListSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -377,8 +458,56 @@ object InventoryForm: TInventoryForm
             Width = 91
           end
           object colAmountPriceListSummRemains: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' ('#1088#1072#1089#1095'. '#1086#1089#1090'.)'
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' ('#1088#1072#1089#1095'. '#1086#1089#1090'. '#1084#1072#1075'.)'
             DataBinding.FieldName = 'AmountPriceListSummRemains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object colAmountSecondSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' ('#1086#1089#1090'. '#1092#1072#1082#1090' '#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'AmountSecondSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object colAmountSecondRemainsSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' ('#1088#1072#1089#1095'. '#1086#1089#1090'. '#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'AmountSecondRemainsSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object colAmountSecondPriceListSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' ('#1086#1089#1090'. '#1092#1072#1082#1090' '#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'AmountSecondPriceListSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object colAmountSecondRemainsPLSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' ('#1088#1072#1089#1095'. '#1086#1089#1090'. '#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'AmountSecondRemainsPLSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -403,6 +532,13 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 50
           end
+          object clComment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 130
+          end
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView
@@ -414,24 +550,24 @@ object InventoryForm: TInventoryForm
     Left = 0
     Top = 0
     Width = 810
-    Height = 49
+    Height = 93
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 5
     object edInvNumber: TcxTextEdit
-      Left = 177
+      Left = 9
       Top = 23
       Properties.ReadOnly = True
       TabOrder = 0
       Width = 70
     end
     object cxLabel1: TcxLabel
-      Left = 177
+      Left = 9
       Top = 5
       Caption = #8470' '#1076#1086#1082'.'
     end
     object edOperDate: TcxDateEdit
-      Left = 255
+      Left = 87
       Top = 23
       EditValue = 42160d
       Properties.SaveTime = False
@@ -440,12 +576,12 @@ object InventoryForm: TInventoryForm
       Width = 82
     end
     object cxLabel2: TcxLabel
-      Left = 255
+      Left = 87
       Top = 5
       Caption = #1044#1072#1090#1072
     end
     object edFrom: TcxButtonEdit
-      Left = 345
+      Left = 177
       Top = 23
       Properties.Buttons = <
         item
@@ -454,21 +590,21 @@ object InventoryForm: TInventoryForm
         end>
       Properties.ReadOnly = True
       TabOrder = 2
-      Width = 233
+      Width = 250
     end
     object cxLabel3: TcxLabel
-      Left = 345
+      Left = 177
       Top = 5
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1084#1072#1075#1072#1079#1080#1085')'
     end
     object cxLabel11: TcxLabel
       Left = 9
-      Top = 5
+      Top = 46
       Caption = #1057#1090#1072#1090#1091#1089
     end
     object ceStatus: TcxButtonEdit
       Left = 9
-      Top = 23
+      Top = 64
       Properties.Buttons = <
         item
           Action = CompleteMovement
@@ -489,15 +625,31 @@ object InventoryForm: TInventoryForm
       Width = 160
     end
     object cxLabel16: TcxLabel
-      Left = 587
-      Top = 5
+      Left = 177
+      Top = 46
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 587
-      Top = 23
+      Left = 177
+      Top = 64
       TabOrder = 9
-      Width = 216
+      Width = 509
+    end
+    object cxLabel4: TcxLabel
+      Left = 436
+      Top = 5
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1089#1082#1083#1072#1076')'
+    end
+    object edTo: TcxButtonEdit
+      Left = 436
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 11
+      Width = 250
     end
   end
   object FormParams: TdsdFormParams
@@ -1382,10 +1534,28 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountSecond'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSecond'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmountRemains'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountRemains'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountSecondRemains'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSecondRemains'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1417,10 +1587,26 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outAmountSecondSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSecondSumm'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outAmountSummRemains'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountSummRemains'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountSecondRemainsSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSecondRemainsSumm'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -1442,11 +1628,36 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outAmountSecondPriceListSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSecondPriceListSumm'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outAmountPriceListSummRemains'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPriceListSummRemains'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountSecondRemainsPLSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSecondRemainsPLSumm'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -1497,11 +1708,11 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inInvNumber'
+        Name = 'ioInvNumber'
         Value = ''
         Component = edInvNumber
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -1516,6 +1727,14 @@ object InventoryForm: TInventoryForm
         Name = 'inFromId'
         Value = ''
         Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = Null
+        Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1565,6 +1784,7 @@ object InventoryForm: TInventoryForm
       item
       end
       item
+        Control = edTo
       end
       item
       end
@@ -1649,6 +1869,21 @@ object InventoryForm: TInventoryForm
         Name = 'Comment'
         Value = Null
         Component = ceComment
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ToId'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ToName'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -1740,8 +1975,8 @@ object InventoryForm: TInventoryForm
     FormNameParam.MultiSelectSeparator = ','
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 55
-    Top = 16
+    Left = 79
+    Top = 48
   end
   object spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Inventory'
@@ -1769,8 +2004,8 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 116
-    Top = 8
+    Left = 108
+    Top = 48
   end
   object spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TotalSumm'
@@ -1931,5 +2166,35 @@ object InventoryForm: TInventoryForm
     PackSize = 1
     Left = 704
     Top = 168
+  end
+  object GuidesTo: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edTo
+    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnitForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 536
+    Top = 32
   end
 end

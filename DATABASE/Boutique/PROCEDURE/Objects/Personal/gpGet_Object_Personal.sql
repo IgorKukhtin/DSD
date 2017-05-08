@@ -18,8 +18,8 @@ BEGIN
    THEN
        RETURN QUERY
        SELECT
-              0 :: Integer                              AS Id
-           , NEXTVAL ('Object_Personal_seq') :: Integer AS Code
+              0 :: Integer                             AS Id
+           , lfGet_ObjectCode(0, zc_Object_Personal()) AS Code
            , '' :: TVarChar                            AS Name
            ,  0 :: Integer                             AS MemberId        
            , '' :: TVarChar                            AS MemberName      
@@ -69,6 +69,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+08.05.17                                                          *
 28.03.17                                                          *
 */
 

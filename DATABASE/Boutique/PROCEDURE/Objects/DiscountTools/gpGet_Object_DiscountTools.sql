@@ -23,7 +23,7 @@ BEGIN
            , 0 :: TFloat     AS EndSumm
            , 0 :: TFloat     AS DiscountTax
            , 0 :: Integer    AS DiscountId
-           ,'' :: TVarChar  AS DiscountName
+           ,'' :: TVarChar   AS DiscountName
        ;
    ELSE
        RETURN QUERY

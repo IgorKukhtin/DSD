@@ -482,14 +482,6 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbProtocol'
         end
         item

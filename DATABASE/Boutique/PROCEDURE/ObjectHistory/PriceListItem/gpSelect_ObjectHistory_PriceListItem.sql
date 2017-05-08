@@ -293,7 +293,4 @@ ALTER FUNCTION gpSelect_ObjectHistory_PriceListItem (Integer, TDateTime, Boolean
 */
 
 -- тест
--- SELECT * FROM gpSelect_ObjectHistory_PriceListItem (zc_PriceList_ProductionSeparate(), CURRENT_TIMESTAMP, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_ObjectHistory_PriceListItem (zc_PriceList_Basis(), CURRENT_TIMESTAMP, inSession:= zfCalc_UserAdmin())
-
---select * from gpSelect_ObjectHistory_PriceListItem(inPriceListId := 18879 , inOperDate := ('11.11.2015')::TDateTime , inShowAll := 'False' ,  inSession := '5');
+--select * from gpSelect_ObjectHistory_PriceListItem(inPriceListId := 0 , inOperDate := ('11.05.2017')::TDateTime , inShowAll := 'False' ,  inSession := '2');

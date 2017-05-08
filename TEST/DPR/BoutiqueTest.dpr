@@ -98,6 +98,7 @@ uses
   JuridicalBasis in '..\..\FormsBoutique\Guides\JuridicalBasis.pas' {JuridicalBasis: TParentForm},
   Units in '..\..\FormsBoutique\Guides\Units.pas' {UnitsForm: TParentForm},
   UnitEdit in '..\..\FormsBoutique\Guides\UnitEdit.pas' {UnitsEditForm: TParentForm},
+  Unit_Object in '..\..\FormsBoutique\Guides\Unit_Object.pas' {UnitsEditForm: TParentForm},
   City in '..\..\FormsBoutique\Guides\City.pas' {CityForm: TParentForm},
   CityEdit in '..\..\FormsBoutique\Guides\CityEdit.pas' {CityEditForm: TParentForm},
   Client in '..\..\FormsBoutique\Guides\Client.pas' {ClientForm: TParentForm},

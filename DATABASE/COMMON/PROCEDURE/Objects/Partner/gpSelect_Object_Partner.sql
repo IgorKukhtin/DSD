@@ -485,4 +485,4 @@ order by  coalesce (Object_Retail.ValueData, '€€€€€€€')
 where aaa.Id = Object.Id
 */
 -- тест
--- SELECT * FROM gpSelect_Object_Partner (0, FALSE, zfCalc_UserAdmin())
+-- select * from gpSelect_Object_Partner(inJuridicalId := 0 , inRetailId := 0 , inPersonalTradeId := 0 , inRouteId := 0 , inShowAll := 'False' ,  inSession := '5');
