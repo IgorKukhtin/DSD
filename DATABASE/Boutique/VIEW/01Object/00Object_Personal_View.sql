@@ -14,17 +14,12 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
        , COALESCE (ObjectLink_Personal_Position.ChildObjectId, 0) AS PositionId
        , Object_Position.ObjectCode                 AS PositionCode
        , Object_Position.ValueData                  AS PositionName
-       , COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId, 0) AS PositionLevelId
-       , Object_PositionLevel.ObjectCode                 AS PositionLevelCode
-       , Object_PositionLevel.ValueData                  AS PositionLevelName
 
        , COALESCE (ObjectLink_Personal_Unit.ChildObjectId, 0) AS UnitId
        , Object_Unit.ObjectCode                    AS UnitCode
        , Object_Unit.ValueData                     AS UnitName
 
-       , ObjectLink_Personal_PersonalGroup.ChildObjectId  AS PersonalGroupId
-       , Object_PersonalGroup.ObjectCode                  AS PersonalGroupCode
-       , Object_PersonalGroup.ValueData                   AS PersonalGroupName
+
  
        , ObjectDate_DateIn.ValueData   AS DateIn
        , ObjectDate_DateOut.ValueData  AS DateOut
@@ -43,20 +38,10 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
                            AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
        LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
  
-       LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
-                            ON ObjectLink_Personal_PositionLevel.ObjectId = Object_Personal.Id
-                           AND ObjectLink_Personal_PositionLevel.DescId = zc_ObjectLink_Personal_PositionLevel()
-       LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
-
        LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
                             ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
                            AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
-
-       LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
-                            ON ObjectLink_Personal_PersonalGroup.ObjectId = Object_Personal.Id
-                           AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
-       LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
            
        LEFT JOIN ObjectDate AS ObjectDate_DateIn
                             ON ObjectDate_DateIn.ObjectId = Object_Personal.Id
@@ -74,12 +59,11 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
  WHERE Object_Personal.DescId = zc_Object_Personal();
 
 
-ALTER TABLE Object_Personal_View  OWNER TO postgres;
-
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
+ 09.05.17                                                          *
  20.01.15                                        * add Branch...
  12.09.14                                        * add isOffical and isDateOut and isMain
  21.05.14                        * add Offical

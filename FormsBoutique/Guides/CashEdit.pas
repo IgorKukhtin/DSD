@@ -1,4 +1,4 @@
-unit KassaEdit;
+unit CashEdit;
 
 interface
 
@@ -18,10 +18,11 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  dsdGuides, cxMaskEdit, cxButtonEdit;
 
 type
-  TKassaEditForm = class(TParentForm)
+  TCashEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -37,6 +38,12 @@ type
     edCode: TcxCurrencyEdit;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    cxLabel8: TcxLabel;
+    ceUnit: TcxButtonEdit;
+    UnitGuides: TdsdGuides;
+    cxLabel3: TcxLabel;
+    ceCurrency: TcxButtonEdit;
+    CurrencyGuides: TdsdGuides;
   private
     { Private declarations }
   public
@@ -48,6 +55,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TKassaEditForm);
+  RegisterClass(TCashEditForm);
 
 end.

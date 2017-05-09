@@ -88,7 +88,7 @@ type
     procedure CreateInfoMoneyGroup;
     procedure CreateJuridicalGroup;
     procedure CreateJuridical;
-    procedure CreateKassa;
+    procedure CreateCash;
     procedure CreateLabel;
     procedure CreateLineFabrica;
     procedure CreateMeasure;
@@ -101,6 +101,7 @@ type
     procedure CreatePersonal;
     procedure CreateStatus;
     procedure CreateUnit;
+    procedure CreateBank;
 
   end;
 
@@ -199,6 +200,11 @@ end;
 procedure TdbObjectProcedureTest.CreateAccountKind;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\AccountKind\');
+end;
+
+procedure TdbObjectProcedureTest.CreateBank;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Bank\');
 end;
 
 procedure TdbObjectProcedureTest.CreateBrand;
@@ -320,9 +326,9 @@ begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\JuridicalGroup\');
 end;
 
-procedure TdbObjectProcedureTest.CreateKassa;
+procedure TdbObjectProcedureTest.CreateCash;
 begin
-   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Kassa\');
+   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Cash\');
 end;
 
 procedure TdbObjectProcedureTest.CreateLabel;

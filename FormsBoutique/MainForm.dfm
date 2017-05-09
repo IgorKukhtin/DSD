@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 600
   KeyPreview = True
   ExplicitWidth = 616
-  ExplicitHeight = 226
+  ExplicitHeight = 227
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -258,17 +258,6 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actKassa: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1050#1072#1089#1089#1072
-      FormName = 'TKassaForm'
-      FormNameParam.Value = 'TKassaForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
     object actCurrency: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
@@ -503,6 +492,28 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actCash: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1050#1072#1089#1089#1072
+      FormName = 'TCashForm'
+      FormNameParam.Value = 'TCashForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actBank: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1041#1072#1085#1082
+      FormName = 'TBankForm'
+      FormNameParam.Value = 'TBankForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 152
@@ -604,10 +615,13 @@ inherited MainForm: TMainForm
         Action = actPeriod
       end
       object N13: TMenuItem
-        Action = actKassa
+        Action = actCash
       end
       object N14: TMenuItem
         Action = actCurrency
+      end
+      object N55: TMenuItem
+        Action = actBank
       end
       object N51: TMenuItem
         Action = actPriceList

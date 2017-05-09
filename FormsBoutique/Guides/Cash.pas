@@ -1,4 +1,4 @@
-unit Kassa;
+unit Cash;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TKassaForm = class(TParentForm)
+  TCashForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -61,6 +61,8 @@ type
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     spUnErased: TdsdStoredProc;
+    clCurrencyName: TcxGridDBColumn;
+    clUnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -72,6 +74,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TKassaForm);
+  RegisterClass(TCashForm);
 
 end.

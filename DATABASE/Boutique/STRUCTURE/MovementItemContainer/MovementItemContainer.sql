@@ -32,9 +32,9 @@ CREATE TABLE MovementItemContainer(
    CONSTRAINT fk_MovementItemContainer_MovementId        FOREIGN KEY (MovementId)         REFERENCES Movement(Id),
    CONSTRAINT fk_MovementItemContainer_MovementItemId    FOREIGN KEY (MovementItemId)     REFERENCES MovementItem(Id),
    CONSTRAINT fk_MovementItemContainer_ContainerId       FOREIGN KEY (ContainerId)        REFERENCES Container(Id),
-   CONSTRAINT fk_MovementItemContainer_ParentId          FOREIGN KEY (ParentId)           REFERENCES MovementItemContainer(Id)
+   CONSTRAINT fk_MovementItemContainer_ParentId          FOREIGN KEY (ParentId)           REFERENCES MovementItemContainer(Id),
    CONSTRAINT fk_MovementItemContainer_ObjectId_analyzer FOREIGN KEY (ObjectId_analyzer)  REFERENCES Object(Id),
-   CONSTRAINT fk_MovementItemContainer_PartionId         FOREIGN KEY (PartionId)          REFERENCES Object_PartionGoods(MovementItemId),
+   CONSTRAINT fk_MovementItemContainer_PartionId         FOREIGN KEY (PartionId)          REFERENCES Object_PartionGoods(MovementItemId)
 );
 
 -------------------------------------------------------------------------------
