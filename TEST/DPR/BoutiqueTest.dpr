@@ -196,9 +196,9 @@ uses
   InventoryJournal in '..\..\FormsBoutique\Document\InventoryJournal.pas' {InventoryJournalForm: TParentForm},
   Role in '..\..\FormsBoutique\Guides\Role.pas' {RoleForm: TParentForm},
   RoleEdit in '..\..\FormsBoutique\Guides\RoleEdit.pas' {RoleEditForm: TParentForm},
-  Action in '..\..\Forms\Action.pas' {ActionForm: TParentForm}
-
-
+  Action in '..\..\Forms\Action.pas' {ActionForm: TParentForm},
+  Bank in '..\..\FormsBoutique\Guides\Bank.pas' {BankForm: TParentForm},
+  BankEdit in '..\..\FormsBoutique\Guides\BankEdit.pas' {BankEditForm: TParentForm}
 
   ;
 

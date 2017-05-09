@@ -91,6 +91,7 @@ type
     procedure LoadPersonalFormTest;
     procedure LoadPriceListFormTest;
     procedure LoadJuridicalBasisFormTest;
+    procedure LoadBankFormTest;
 
 
 
@@ -219,6 +220,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TAccount_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountEditForm');
+end;
+
+procedure TLoadFormTest.LoadBankFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankEditForm');
 end;
 
 procedure TLoadFormTest.LoadBrandFormTest;

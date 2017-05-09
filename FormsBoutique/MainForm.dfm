@@ -503,6 +503,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actBank: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1041#1072#1085#1082
+      FormName = 'TBankForm'
+      FormNameParam.Value = 'TBankForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 152
@@ -608,6 +619,9 @@ inherited MainForm: TMainForm
       end
       object N14: TMenuItem
         Action = actCurrency
+      end
+      object N55: TMenuItem
+        Action = actBank
       end
       object N51: TMenuItem
         Action = actPriceList

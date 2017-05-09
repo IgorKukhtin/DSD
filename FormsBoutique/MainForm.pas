@@ -111,6 +111,8 @@ type
     N54: TMenuItem;
     actCash: TdsdOpenForm;
     N13: TMenuItem;
+    actBank: TdsdOpenForm;
+    N55: TMenuItem;
   private
     { Private declarations }
   public
