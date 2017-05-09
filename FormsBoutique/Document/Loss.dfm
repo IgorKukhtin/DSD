@@ -1381,12 +1381,11 @@ object LossForm: TLossForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperPriceList'
+        Name = 'outOperPriceList'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'OperPriceList'
         DataType = ftFloat
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -1398,7 +1397,7 @@ object LossForm: TLossForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 150
+    Left = 158
     Top = 287
   end
   object MasterViewAddOn: TdsdDBViewAddOn
@@ -1927,6 +1926,32 @@ object LossForm: TLossForm
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioCountForPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountForPrice'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperPriceList'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPriceList'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

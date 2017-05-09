@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_Client_Sybase (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client_Sybase (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client_Sybase (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client_Sybase(
  INOUT ioId                       Integer   ,    -- Ключ объекта <Покупатели> 
@@ -12,35 +13,36 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client_Sybase(
     IN inLastSumm                 TFloat    ,    -- Сумма последней покупки
     IN inLastSummDiscount         TFloat    ,    -- Сумма скидки в последней покупке
     IN inLastDate                 TDateTime ,    -- Последняя дата покупки
+    IN inLastUserID               Integer   ,    -- Пользователь кто формировал последнюю покупку
     IN inSession                  TVarChar       -- сессия пользователя
 )
 RETURNS Integer
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbCode_max Integer;   
+   DECLARE vbUserId Integer; 
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Client());
    vbUserId:= lpGetUserBySession (inSession);
 
- -- сохранили 
+   -- сохранили 
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Client_TotalCount(), ioId, inTotalCount);
- -- сохранили 
+   -- сохранили 
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Client_TotalSumm(), ioId, inTotalSumm);
- -- сохранили 
+   -- сохранили 
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Client_TotalSummDiscount(), ioId, inTotalSummDiscount);
- -- сохранили 
+   -- сохранили 
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Client_TotalSummPay(), ioId, inTotalSummPay);
- -- сохранили 
+   -- сохранили 
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Client_LastCount(), ioId, inLastCount);
- -- сохранили 
+   -- сохранили 
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Client_LastSumm(), ioId, inLastSumm);
- -- сохранили 
+   -- сохранили 
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Client_LastSummDiscount(), ioId, inLastSummDiscount);
- -- сохранили 
+   -- сохранили 
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Client_LastDate(), ioId, inLastDate);
-
+   -- сохранили связь с <Пользователь кто формировал последнюю покупку>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Client_LastUser(), ioId, inLastUserID);
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
@@ -53,6 +55,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятикин А.А.
+09.05.17                                                           *
 01.03.17                                                           *
 
 */

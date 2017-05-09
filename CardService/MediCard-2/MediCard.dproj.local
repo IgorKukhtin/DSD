@@ -1,9 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.303,D:\work\MediCard\uMain.dfm=C:\Users\1\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.303,D:\work\MediCard\uMain.pas=C:\Users\1\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.525,D:\work\MediCard\MediCard.dproj=C:\Users\1\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.525,C:\Users\1\Documents\Embarcadero\Studio\Projects\Project1.dproj=D:\work\MediCard\MediCard.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.303,C:\Users\1\Documents\Embarcadero\Studio\Projects\Unit1.dfm=D:\work\MediCard\uMain.dfm</Transaction>
     <Transaction>1899.12.30 00:00:00.000.180,=C:\Users\1\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.303,C:\Users\1\Documents\Embarcadero\Studio\Projects\Unit1.pas=D:\work\MediCard\uMain.pas</Transaction>
+    <Transaction>2017.05.09 13:36:03.584,=C:\DSD\DSD.GIT\CardService\MediCard-2\Unit1.pas</Transaction>
+    <Transaction>2017.05.09 13:58:51.512,C:\DSD\DSD.GIT\CardService\MediCard-2\MediCard.Classes.pas=C:\DSD\DSD.GIT\CardService\MediCard-2\Unit1.pas</Transaction>
+    <Transaction>2017.05.09 14:01:11.617,=C:\DSD\DSD.GIT\CardService\MediCard-2\Unit1.pas</Transaction>
+    <Transaction>2017.05.09 14:03:00.209,C:\DSD\DSD.GIT\CardService\MediCard-2\MediCard.Intf.pas=C:\DSD\DSD.GIT\CardService\MediCard-2\Unit1.pas</Transaction>
+    <Transaction>2017.05.09 14:28:34.751,=C:\DSD\DSD.GIT\CardService\MediCard-2\Unit1.pas</Transaction>
+    <Transaction>2017.05.09 14:37:43.678,C:\DSD\DSD.GIT\CardService\MediCard-2\MediCard.Dsgn.pas=C:\DSD\DSD.GIT\CardService\MediCard-2\Unit1.pas</Transaction>
   </Transactions>
 </BorlandProject>

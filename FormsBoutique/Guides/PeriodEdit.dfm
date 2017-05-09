@@ -142,7 +142,7 @@ object PeriodEditForm: TPeriodEditForm
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'

@@ -1,8 +1,8 @@
-object KassaEditForm: TKassaEditForm
+object CashEditForm: TCashEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1072#1089#1089#1072'>'
-  ClientHeight = 200
+  ClientHeight = 266
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,22 +29,22 @@ object KassaEditForm: TKassaEditForm
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 144
+    Top = 216
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
-    TabOrder = 2
+    TabOrder = 3
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 144
+    Top = 216
     Width = 75
     Height = 25
     Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    TabOrder = 3
+    TabOrder = 4
   end
   object cxLabel2: TcxLabel
     Left = 10
@@ -58,7 +58,41 @@ object KassaEditForm: TKassaEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
-    TabOrder = 5
+    TabOrder = 7
+    Width = 273
+  end
+  object cxLabel8: TcxLabel
+    Left = 12
+    Top = 136
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+  end
+  object ceUnit: TcxButtonEdit
+    Left = 10
+    Top = 152
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 2
+    Width = 273
+  end
+  object cxLabel3: TcxLabel
+    Left = 12
+    Top = 96
+    Caption = #1042#1072#1083#1102#1090#1072
+  end
+  object ceCurrency: TcxButtonEdit
+    Left = 10
+    Top = 112
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 1
     Width = 273
   end
   object ActionList: TActionList
@@ -94,7 +128,7 @@ object KassaEditForm: TKassaEditForm
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Kassa'
+    StoredProcName = 'gpInsertUpdate_Object_Cash'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -120,6 +154,22 @@ object KassaEditForm: TKassaEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyId'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96
@@ -137,12 +187,12 @@ object KassaEditForm: TKassaEditForm
     Top = 8
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Kassa'
+    StoredProcName = 'gpGet_Object_Cash'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
@@ -161,9 +211,39 @@ object KassaEditForm: TKassaEditForm
         Component = edName
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 184
+    Left = 232
     Top = 16
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -182,7 +262,65 @@ object KassaEditForm: TKassaEditForm
     Top = 104
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 104
-    Top = 104
+    Left = 32
+    Top = 16
+  end
+  object UnitGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceUnit
+    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnitForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 218
+    Top = 133
+  end
+  object CurrencyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceCurrency
+    FormNameParam.Value = 'TCurrencyForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCurrencyForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 226
+    Top = 77
   end
 end

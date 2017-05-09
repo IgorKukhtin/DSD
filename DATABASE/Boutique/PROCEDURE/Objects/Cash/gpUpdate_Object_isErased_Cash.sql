@@ -1,9 +1,9 @@
--- Function: gpUpdate_Object_isErased_Kassa (Integer, TVarChar)
+-- Function: gpUpdate_Object_isErased_Cash (Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Kassa (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Kassa (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Cash (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Cash (Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_Object_isErased_Kassa(
+CREATE OR REPLACE FUNCTION gpUpdate_Object_isErased_Cash(
     IN inObjectId Integer,
     IN inIsErased Boolean,
     IN inSession  TVarChar
@@ -14,7 +14,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_isErased_Kassa());
+   -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_isErased_Cash());
    vbUserId:= lpGetUserBySession (inSession);
 
    -- изменили
@@ -27,6 +27,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+09.05.17                                                          *
 04.05.17                                                          *
 19.02.17                                                          *
 */

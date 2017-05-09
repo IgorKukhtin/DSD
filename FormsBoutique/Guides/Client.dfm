@@ -2,8 +2,8 @@ object ClientForm: TClientForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1082#1091#1087#1072#1090#1077#1083#1080'>'
-  ClientHeight = 376
-  ClientWidth = 722
+  ClientHeight = 392
+  ClientWidth = 787
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,18 +20,38 @@ object ClientForm: TClientForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 722
-    Height = 350
+    Width = 787
+    Height = 366
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 722
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1090#1088#1086#1082': 0'
+          Kind = skCount
+          Column = Name
+        end
+        item
+          Format = ',0.####;-,0.####; ;'
+          Kind = skSum
+          Column = TotalSumm
+        end
+        item
+          Kind = skSum
+          Column = TotalSummPay
+        end
+        item
+          Kind = skSum
+          Column = TotalSummDiscount
+        end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsCustomize.ColumnHiding = True
@@ -40,6 +60,7 @@ object ClientForm: TClientForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -49,6 +70,7 @@ object ClientForm: TClientForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Width = 59
       end
       object Name: TcxGridDBColumn
@@ -64,6 +86,7 @@ object ClientForm: TClientForm
         DataBinding.FieldName = 'DiscountKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Width = 65
       end
       object DiscountCard: TcxGridDBColumn
@@ -71,6 +94,7 @@ object ClientForm: TClientForm
         DataBinding.FieldName = 'DiscountCard'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Width = 94
       end
       object HappyDate: TcxGridDBColumn
@@ -78,6 +102,7 @@ object ClientForm: TClientForm
         DataBinding.FieldName = 'HappyDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Width = 81
       end
       object DiscountTax: TcxGridDBColumn
@@ -85,6 +110,7 @@ object ClientForm: TClientForm
         DataBinding.FieldName = 'DiscountTax'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Width = 68
       end
       object DiscountTaxTwo: TcxGridDBColumn
@@ -92,6 +118,7 @@ object ClientForm: TClientForm
         DataBinding.FieldName = 'DiscountTaxTwo'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Width = 119
       end
       object TotalCount: TcxGridDBColumn
@@ -99,27 +126,40 @@ object ClientForm: TClientForm
         DataBinding.FieldName = 'TotalCount'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Width = 65
       end
       object TotalSumm: TcxGridDBColumn
         Caption = #1048#1090#1086#1075#1086' '#1057#1091#1084#1084#1072
         DataBinding.FieldName = 'TotalSumm'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Width = 65
       end
       object TotalSummDiscount: TcxGridDBColumn
         Caption = #1048#1090#1086#1075#1086' '#1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080
         DataBinding.FieldName = 'TotalSummDiscount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Width = 65
       end
       object TotalSummPay: TcxGridDBColumn
         Caption = #1048#1090#1086#1075#1086' '#1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'TotalSummPay'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Width = 65
       end
       object LastCount: TcxGridDBColumn
@@ -127,6 +167,7 @@ object ClientForm: TClientForm
         DataBinding.FieldName = 'LastCount'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Width = 124
       end
       object LastSumm: TcxGridDBColumn
@@ -134,6 +175,7 @@ object ClientForm: TClientForm
         DataBinding.FieldName = 'LastSumm'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Width = 122
       end
       object LastSummDiscount: TcxGridDBColumn
@@ -141,6 +183,7 @@ object ClientForm: TClientForm
         DataBinding.FieldName = 'LastSummDiscount'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Width = 125
       end
       object LastDate: TcxGridDBColumn
@@ -148,6 +191,7 @@ object ClientForm: TClientForm
         DataBinding.FieldName = 'LastDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Width = 92
       end
       object CityName: TcxGridDBColumn
@@ -155,6 +199,7 @@ object ClientForm: TClientForm
         DataBinding.FieldName = 'CityName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Width = 65
       end
       object Address: TcxGridDBColumn
@@ -162,6 +207,7 @@ object ClientForm: TClientForm
         DataBinding.FieldName = 'Address'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Width = 65
       end
       object clPhoneMobile: TcxGridDBColumn
@@ -169,6 +215,7 @@ object ClientForm: TClientForm
         DataBinding.FieldName = 'PhoneMobile'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Width = 88
       end
       object Phone: TcxGridDBColumn
@@ -176,6 +223,7 @@ object ClientForm: TClientForm
         DataBinding.FieldName = 'Phone'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Width = 65
       end
       object Mail: TcxGridDBColumn
@@ -183,6 +231,7 @@ object ClientForm: TClientForm
         DataBinding.FieldName = 'Mail'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Width = 100
       end
       object Comment: TcxGridDBColumn
@@ -190,7 +239,16 @@ object ClientForm: TClientForm
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Width = 80
+      end
+      object LastUserName: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+        DataBinding.FieldName = 'LastUserName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 100
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -199,6 +257,7 @@ object ClientForm: TClientForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Width = 78
       end
     end

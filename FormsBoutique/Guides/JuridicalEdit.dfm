@@ -258,7 +258,7 @@ object JuridicalEditForm: TJuridicalEditForm
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'

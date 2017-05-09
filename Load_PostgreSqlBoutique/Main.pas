@@ -58,7 +58,7 @@ type
     cbLineFabrica: TCheckBox;
     cbGoodsInfo: TCheckBox;
     cbGoodsSize: TCheckBox;
-    cbKassa: TCheckBox;
+    cbCash: TCheckBox;
     cbValuta: TCheckBox;
     cbPeriod: TCheckBox;
     cbGoodsGroup: TCheckBox;
@@ -199,7 +199,7 @@ type
     procedure pLoadGuide_LineFabrica;
     procedure pLoadGuide_GoodsInfo;
     procedure pLoadGuide_GoodsSize;
-    procedure pLoadGuide_Kassa;
+    procedure pLoadGuide_Cash;
     procedure pLoadGuide_Valuta;
     procedure pLoadGuide_Period;
     procedure pLoadGuide_GoodsGroup;
@@ -1744,8 +1744,8 @@ begin
      if not fStop then pLoadGuide_LineFabrica;
      if not fStop then pLoadGuide_GoodsInfo;
      if not fStop then pLoadGuide_GoodsSize;
-     if not fStop then pLoadGuide_Kassa;
      if not fStop then pLoadGuide_Valuta;
+     if not fStop then pLoadGuide_Cash;
      if not fStop then pLoadGuide_Period;
      if not fStop then
      Begin
@@ -1760,12 +1760,11 @@ begin
      if not fStop then pLoadGuide_Goods;
      if not fStop then pLoadGuide_GoodsItem;
      if not fStop then pLoadGuide_City;
-     if not fStop then pLoadGuide_Client;
      if not fStop then pLoadGuide_Juridical;
      if not fStop then pLoadGuide_PriceList;
      if not fStop then pLoadGuide_Member;
      if not fStop then pLoadGuide_User;
-
+     if not fStop then pLoadGuide_Client;
 
 
 
@@ -1885,7 +1884,7 @@ begin
         try fExecSqFromQuery_noErr('alter table dba.Period add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Measure add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.LineFabrica add Id_Postgres integer null;'); except end;
-        try fExecSqFromQuery_noErr('alter table dba.Kassa add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.KassaProperty add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.GoodsSize add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.GoodsInfo add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Goods add Id_Postgres integer null;'); except end;
@@ -1941,10 +1940,10 @@ begin
       fExecSqFromQuery('update dba.GoodsInfo set Id_Postgres = null');
       //if cbGoodsSize.Checked then
       fExecSqFromQuery('update dba.GoodsSize set Id_Postgres = null');
-      //if cbKassa.Checked then
-      fExecSqFromQuery('update dba.Kassa set Id_Postgres = null');
       //if cbValuta.Checked then
       fExecSqFromQuery('update dba.Valuta set Id_Postgres = null');
+      //if cbCash.Checked then
+      fExecSqFromQuery('update dba.KassaProperty set Id_Postgres = null');
       //if cbPeriod.Checked then
       fExecSqFromQuery('update dba.Period set Id_Postgres = null');
       //if cbGoodsGroup.Checked then
@@ -2907,7 +2906,10 @@ begin
         Add(', DiscountKlient.CommentInfo as  Comments');
         Add(', DiscountKlient.City as CityName');
         Add(', DiscountKlient.KindDiscount as KindDiscount');
-        Add('from Unit inner join DiscountKlient on DiscountKlient.ClientId = Unit.id  where KindUnit = zc_kuClient()');
+        Add(', users.userId_postgres as LastUserID');
+        Add('from Unit inner join DiscountKlient on DiscountKlient.ClientId = Unit.id');
+        Add('left join Users on users.id = DiscountKlient.LastUserID');
+        Add('where KindUnit = zc_kuClient()');
         Add('order by  ObjectId');
         Open;
         //
@@ -2947,6 +2949,7 @@ begin
         toStoredProc_two.Params.AddParam ('inLastSumm',ftFloat,ptInput, 0);
         toStoredProc_two.Params.AddParam ('inLastSummDiscount',ftFloat,ptInput, 0);
         toStoredProc_two.Params.AddParam ('inLastDate',ftDateTime,ptInput, '');
+        toStoredProc_two.Params.AddParam ('inLastUserID',ftInteger,ptInput, 0);
         while not EOF do
         begin
 
@@ -2993,6 +2996,7 @@ begin
              toStoredProc_two.Params.ParamByName('inLastSumm').Value:=FieldByName('LastSumm').AsFloat;
              toStoredProc_two.Params.ParamByName('inLastSummDiscount').Value:=FieldByName('LastSummDiscount').AsFloat;
              toStoredProc_two.Params.ParamByName('inLastDate').Value:=FieldByName('LastDate').AsDateTime;
+             toStoredProc_two.Params.ParamByName('inLastUserID').Value:=FieldByName('LastUserID').AsInteger;
 
              if not myExecToStoredProc_two then ;//exit;
 
@@ -3857,22 +3861,24 @@ begin
      myDisabledCB(cbJuridical);
 end;
 
-procedure TMainForm.pLoadGuide_Kassa;
+procedure TMainForm.pLoadGuide_Cash;
 begin
-     if (not cbKassa.Checked)or(not cbKassa.Enabled) then exit;
+     if (not cbCash.Checked)or(not cbCash.Enabled) then exit;
      //
-     myEnabledCB(cbKassa);
+     myEnabledCB(cbCash);
      //
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select Kassa.Id as ObjectId');
+        Add('select KassaProperty.KassaId as ObjectId');
         Add('     , 0 as ObjectCode');
-        Add('     , Kassa.KassaName as ObjectName');
+        Add('     , KassaProperty.KassaPropertyName as ObjectName');
         Add('     , zc_erasedDel() as zc_erasedDel');
-        Add('     , Kassa.Erased as Erased');
-        Add('     , Kassa.Id_Postgres');
-        Add('from dba.Kassa');
+        Add('     , KassaProperty.Erased as Erased');
+        Add('     , KassaProperty.Id_Postgres');
+        Add('     , Valuta.Id_Postgres as CurrencyId');
+        Add('from dba.KassaProperty');
+        Add('left join Valuta on Valuta.Id = KassaProperty.ValutaId');
         Add('order by ObjectId');
         Open;
         //
@@ -3882,12 +3888,14 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpinsertupdate_object_Kassa';
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_Cash';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inCurrencyId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inUnitId',ftInteger,ptInput, 0);
         //
         HideCurGrid(True);
         while not EOF do
@@ -3898,11 +3906,12 @@ begin
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inCurrencyId').Value:=FieldByName('CurrencyId').AsInteger;
              if not myExecToStoredProc then ;//exit;
              if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.Kassa set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then fExecSqFromQuery('update dba.KassaProperty set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -3912,7 +3921,7 @@ begin
         HideCurGrid(False);
      end;
      //
-     myDisabledCB(cbKassa);
+     myDisabledCB(cbCash);
 end;
 
 procedure TMainForm.pLoadGuide_Label;

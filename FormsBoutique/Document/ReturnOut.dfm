@@ -476,6 +476,7 @@ object ReturnOutForm: TReturnOutForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object colAmountPriceListSumm: TcxGridDBColumn
@@ -1411,12 +1412,11 @@ object ReturnOutForm: TReturnOutForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperPriceList'
+        Name = 'outOperPriceList'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'OperPriceList'
         DataType = ftFloat
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -2100,12 +2100,11 @@ object ReturnOutForm: TReturnOutForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperPriceList'
+        Name = 'outOperPriceList'
         Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'OperPriceList'
         DataType = ftFloat
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item

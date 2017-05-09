@@ -63,7 +63,8 @@ BEGIN
            , Object_Currency.ValueData           AS CurrencyName
            , Object_PartionGoods.Amount          AS Amount
            , Object_PartionGoods.OperPrice       AS OperPrice
-           , Object_PartionGoods.PriceSale       AS PriceSale
+           --, Object_PartionGoods.PriceSale       AS PriceSale
+           , OH_PriceListItem.ValuePrice         AS PriceSale
            , Object_Brand.ValueData              AS BrandName
            , Object_Period.ValueData             AS PeriodName
            , Object_PartionGoods.PeriodYear      AS PeriodYear
@@ -104,6 +105,9 @@ BEGIN
 
            LEFT JOIN  Movement ON Movement.Id = Object_PartionGoods.MovementId
 
+           LEFT JOIN  lpGet_ObjectHistory_PriceListItem(zc_DateEnd() - interval '1 day', zc_PriceList_Basis(), Object_PartionGoods.GoodsId) AS OH_PriceListItem
+                  ON OH_PriceListItem.GoodsId = Object_PartionGoods.GoodsId
+
      WHERE (Object_PartionGoods.isErased = FALSE OR inIsShowAll = TRUE)
         AND (Object_PartionGoods.UnitId = inUnitId OR inUnitId = 0)
 
@@ -117,9 +121,10 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
+09.05.17          *
 25.04.17          * _Choice
 15.03.17                                                           *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_PartionGoods_Choice (TRUE, zfCalc_UserAdmin())
+--SELECT * FROM gpSelect_Object_PartionGoods_Choice (0,TRUE, zfCalc_UserAdmin())

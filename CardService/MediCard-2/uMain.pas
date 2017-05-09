@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,
-  idHTTP, IdSSLOpenSSL, Soap.EncdDecd, HTTPApp, IdURI, httpsend;
+  idHTTP, IdSSLOpenSSL, Soap.EncdDecd, HTTPApp, IdURI, httpsend,
+  MediCard.Intf;
 
 const
   cURL = 'http://medicard.in.ua/api/api.php';
@@ -13,7 +14,9 @@ const
 type
   TfrmMain = class(TForm)
     Button1: TButton;
+    Button2: TButton;
     procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -115,7 +118,8 @@ begin
       ReqBase64.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Req.Base64');
       ReqBase64.Position := 0;
       ReqURLData.LoadFromStream(ReqBase64);
-      S := UTF8ToAnsi(HTTPEncode(ReqURLData.DataString));
+      //S := UTF8ToAnsi(HTTPEncode(ReqURLData.DataString));
+      S := HTTPEncode(ReqURLData.DataString);
       ReqURLData.Clear;
       ReqURLData.WriteString('medicard=' + S);
       ReqURLData.SaveToFile(ExtractFilePath(ParamStr(0)) + 'Req.URL');
@@ -161,6 +165,55 @@ begin
 
     if SendXML2(sData, sResp, err) then
       sResp.SaveToFile(ExtractFilePath(Application.ExeName) + 'resp.txt');
+  finally
+    FreeAndNil(sData);
+    FreeAndNil(sResp);
+  end;
+end;
+
+procedure TfrmMain.Button2Click(Sender: TObject);
+var
+  sData, sResp: TStringStream;
+  Response: string;
+  MCData: IMCData;
+  GUID: TGUID;
+  CasualId, XML: string;
+begin
+  sData := TStringStream.Create;
+  sResp := TStringStream.Create;
+  try
+    //sData.LoadFromFile(ExtractFilePath(Application.ExeName) + '1.txt');
+
+    MCDesigner.CreateObject(IMCRequestDiscount).GetInterface(IMCData, MCData);
+
+    CreateGUID(GUID);
+    CasualId := StringReplace(LowerCase(GUIDToString(GUID)), '-', '', [rfReplaceAll, rfIgnoreCase]);
+    CasualId := StringReplace(CasualId, '{', '', [rfReplaceAll, rfIgnoreCase]);
+    CasualId := StringReplace(CasualId, '}', '', [rfReplaceAll, rfIgnoreCase]);
+
+  	MCData.Params.ParamByName('id_casual').AsString := CasualId;
+    MCData.Params.ParamByName('inside_code').AsInteger := 679;
+    MCData.Params.ParamByName('card_code').AsString := 'MD00030026441';
+  	MCData.Params.ParamByName('product_code').AsString := '134965';
+	  MCData.Params.ParamByName('qty').AsFloat := 3;
+
+    MCData.SaveToXML(XML);
+
+    MCData := nil;
+
+    sData.WriteString(XML);
+
+    if MCDesigner.HTTPPost(MCURL, sData.DataString, Response) = 200 then
+    begin
+      MCDesigner.CreateObject(IMCResponseDiscount).GetInterface(IMCData, MCData);
+      MCData.LoadFromXML(Response);
+
+      if MCData.Params.ParamByName('id_casual').AsString <> CasualId then
+        raise EMCException.Create('Ответ не соответствует запросу');      
+
+      sResp.WriteString(Response);
+      sResp.SaveToFile(ExtractFilePath(Application.ExeName) + 'resp.txt');
+    end;
   finally
     FreeAndNil(sData);
     FreeAndNil(sResp);

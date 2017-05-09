@@ -1,4 +1,4 @@
--- Function: gpSelect_Object_Composition (Bolean, TVarChar)
+-- Function: gpSelect_Object_Composition (Boolean, TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Composition (Boolean, TVarChar);
 
