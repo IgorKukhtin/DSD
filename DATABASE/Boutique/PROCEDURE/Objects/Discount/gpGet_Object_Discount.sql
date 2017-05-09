@@ -19,7 +19,7 @@ BEGIN
        RETURN QUERY
        SELECT
               0 :: Integer                              AS Id
-           , lfGet_ObjectCode(0, zc_Object_Discount())    AS Code
+           , lfGet_ObjectCode(0, zc_Object_Discount())  AS Code
            , '' :: TVarChar                             AS Name
            ,  0 :: Integer                              AS DiscountKindId
            , '' :: TVarChar                             AS DiscountKindName

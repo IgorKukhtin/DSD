@@ -167,18 +167,11 @@ object DiscountEditForm: TDiscountEditForm
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Name'
-        Value = ''
-        Component = edName
-        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -189,8 +182,25 @@ object DiscountEditForm: TDiscountEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'KindDiscount'
+        Name = 'Name'
+        Value = ''
+        Component = edName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountKindId'
         Value = Null
+        Component = DiscountKindGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountKindName'
+        Value = Null
+        Component = DiscountKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
