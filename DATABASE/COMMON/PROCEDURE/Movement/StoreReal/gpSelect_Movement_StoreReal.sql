@@ -28,44 +28,16 @@ RETURNS TABLE (Id Integer
               )
 AS
 $BODY$
-   DECLARE vbUserId          Integer;
-
-   DECLARE vbIsProjectMobile Boolean;
-   DECLARE vbUserId_Member   Integer;
+   DECLARE vbUserId        Integer;
+   DECLARE vbUserId_Mobile Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_StoreReal());
      vbUserId := lpGetUserBySession(inSession);
 
 
-     -- Только так определяется что пользователь inSession - Торговый агент - т.е. у него есть моб телефон, может потом для этого заведем спец роль и захардкодим
-     vbIsProjectMobile:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = vbUserId AND ObjectBoolean.DescId = zc_ObjectBoolean_User_ProjectMobile());
-
-     IF inMemberId > 0
-     THEN
-         -- Определяется для <Физическое лицо> - его UserId
-         vbUserId_Member:= (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_User_Member() AND OL.ChildObjectId = inMemberId);
-         -- Проверка
-         IF COALESCE (vbUserId_Member, 0) = 0
-         THEN
-             RAISE EXCEPTION 'Ошибка.Для ФИО <%> не определно значение <Пользователь>.', lfGet_Object_ValueData (inMemberId);
-         END IF;
-
-     ELSEIF vbIsProjectMobile = TRUE
-     THEN
-         -- в этом случае - видит только себя
-         vbUserId_Member:= vbUserId;
-     ELSE
-         -- в этом случае - видит ВСЕ
-         vbUserId_Member:= 0;
-     END IF;
-
-
-     -- Проверка - Торговый агент видит только себя
-     IF vbIsProjectMobile = TRUE AND vbUserId_Member <> vbUserId
-     THEN
-         RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.';
-     END IF;
+     -- !!!меняем значение!!! - с какими параметрами пользователь может просматривать данные с мобильного устройства
+     SELECT lfGet.MemberId, lfGet.UserId INTO inMemberId, vbUserId_Mobile FROM lfGet_User_MobileCheck (inMemberId:= inMemberId, inUserId:= vbUserId) AS lfGet;
 
 
      -- Результат
@@ -139,8 +111,8 @@ BEGIN
              LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
 
-        WHERE MovementLinkObject_Insert.ObjectId = vbUserId_Member
-           OR vbUserId_Member = 0
+        WHERE MovementLinkObject_Insert.ObjectId = vbUserId_Mobile
+           OR vbUserId_Mobile = 0
        ;
 
 END;

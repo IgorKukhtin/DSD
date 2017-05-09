@@ -52,7 +52,6 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
 AS
 $BODY$
    DECLARE vbUserId        Integer;
-
    DECLARE vbUserId_Mobile Integer;
    DECLARE vbIsXleb        Boolean;
 BEGIN
