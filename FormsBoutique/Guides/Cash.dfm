@@ -1,9 +1,9 @@
-object KassaForm: TKassaForm
+object CashForm: TCashForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1072#1089#1089#1072'>'
   ClientHeight = 376
-  ClientWidth = 403
+  ClientWidth = 469
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object KassaForm: TKassaForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 403
+    Width = 469
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 403
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -59,6 +60,20 @@ object KassaForm: TKassaForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Width = 243
+      end
+      object clCurrencyName: TcxGridDBColumn
+        Caption = #1042#1072#1083#1102#1090#1072
+        DataBinding.FieldName = 'CurrencyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
+      object clUnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -268,8 +283,8 @@ object KassaForm: TKassaForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TKassaEditForm'
-      FormNameParam.Value = 'TKassaEditForm'
+      FormName = 'TCashEditForm'
+      FormNameParam.Value = 'TCashEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -290,8 +305,8 @@ object KassaForm: TKassaForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TKassaEditForm'
-      FormNameParam.Value = 'TKassaEditForm'
+      FormName = 'TCashEditForm'
+      FormNameParam.Value = 'TCashEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -425,7 +440,7 @@ object KassaForm: TKassaForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Kassa'
+    StoredProcName = 'gpSelect_Object_Cash'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -445,7 +460,7 @@ object KassaForm: TKassaForm
     Top = 128
   end
   object spErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_Kassa'
+    StoredProcName = 'gpUpdate_Object_isErased_Cash'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -501,7 +516,7 @@ object KassaForm: TKassaForm
     Top = 248
   end
   object spUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_Kassa'
+    StoredProcName = 'gpUpdate_Object_isErased_Cash'
     DataSets = <>
     OutputType = otResult
     Params = <

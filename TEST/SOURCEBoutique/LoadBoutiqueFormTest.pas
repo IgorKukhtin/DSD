@@ -69,7 +69,7 @@ type
     procedure LoadGoodsInfoFormTest;
     procedure LoadGoodsSizeFormTest;
     procedure LoadGoodsGroupFormTest;
-    procedure LoadKassaFormTest;
+    procedure LoadCashFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadMemberFormTest;
     procedure LoadPeriodFormTest;
@@ -387,12 +387,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalGroup_ObjectForm');
 end;
 
-procedure TLoadFormTest.LoadKassaFormTest;
+procedure TLoadFormTest.LoadCashFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TKassaForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TKassaForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TKassaEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TKassaEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCashForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCashEditForm');
 end;
 
 procedure TLoadFormTest.LoadLabelFormTest;
@@ -1441,8 +1441,8 @@ begin
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalSettingsForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TJuridicalSettingsForm');
 //  exit;
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TActionForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TActionForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TActionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TActionForm');
 //
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserProtocolForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TUserProtocolForm');

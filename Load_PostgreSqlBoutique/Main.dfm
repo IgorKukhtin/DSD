@@ -329,13 +329,13 @@
           ParentFont = False
           TabOrder = 11
         end
-        object cbKassa: TCheckBox
+        object cbCash: TCheckBox
           Tag = 10
           Left = 15
-          Top = 160
+          Top = 176
           Width = 194
           Height = 17
-          Caption = '1.10. '#1050#1072#1089#1089#1072
+          Caption = '1.11. '#1050#1072#1089#1089#1072
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -347,10 +347,10 @@
         object cbValuta: TCheckBox
           Tag = 10
           Left = 15
-          Top = 176
+          Top = 160
           Width = 194
           Height = 17
-          Caption = '1.11. '#1042#1072#1083#1102#1090#1072
+          Caption = '1.10. '#1042#1072#1083#1102#1090#1072
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11

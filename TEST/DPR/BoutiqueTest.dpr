@@ -76,8 +76,8 @@ uses
   GoodsGroup in '..\..\FormsBoutique\Guides\GoodsGroup.pas' {GoodsGroupForm: TParentForm},
   GoodsGroupEdit in '..\..\FormsBoutique\Guides\GoodsGroupEdit.pas' {GoodsGroupEditForm: TParentForm},
   GoodsGroup_Object in '..\..\FormsBoutique\Guides\GoodsGroup_Object.pas' {GoodsGroup_ObjectForm: TParentForm},
-  Kassa in '..\..\FormsBoutique\Guides\Kassa.pas' {KassaForm: TParentForm},
-  KassaEdit in '..\..\FormsBoutique\Guides\KassaEdit.pas' {KassaEditForm: TParentForm},
+  Cash in '..\..\FormsBoutique\Guides\Cash.pas' {CashForm: TParentForm},
+  CashEdit in '..\..\FormsBoutique\Guides\CashEdit.pas' {CashEditForm: TParentForm},
   Currency in '..\..\FormsBoutique\Guides\Currency.pas' {CurrencyForm: TParentForm},
   CurrencyEdit in '..\..\FormsBoutique\Guides\CurrencyEdit.pas' {CurrencyEditForm: TParentForm},
   Member in '..\..\FormsBoutique\Guides\Member.pas' {MemberForm: TParentForm},
@@ -195,7 +195,9 @@ uses
   Inventory in '..\..\FormsBoutique\Document\Inventory.pas' {InventoryForm: TParentForm},
   InventoryJournal in '..\..\FormsBoutique\Document\InventoryJournal.pas' {InventoryJournalForm: TParentForm},
   Role in '..\..\FormsBoutique\Guides\Role.pas' {RoleForm: TParentForm},
-  RoleEdit in '..\..\FormsBoutique\Guides\RoleEdit.pas' {RoleEditForm: TParentForm}
+  RoleEdit in '..\..\FormsBoutique\Guides\RoleEdit.pas' {RoleEditForm: TParentForm},
+  Action in '..\..\Forms\Action.pas' {ActionForm: TParentForm}
+
 
 
   ;

@@ -1,13 +1,13 @@
 DO $$
 BEGIN
-  IF (SELECT COUNT(*) from pg_statio_all_sequences where relname = LOWER('Object_Kassa_seq')) = 0 THEN 
-    CREATE SEQUENCE Object_Kassa_seq 
+  IF (SELECT COUNT(*) from pg_statio_all_sequences where relname = LOWER('Object_Cash_seq')) = 0 THEN 
+    CREATE SEQUENCE Object_Cash_seq 
     INCREMENT 1
     MINVALUE 1
     MAXVALUE 9223372036854775807
     START 1
     CACHE 1;  
-    ALTER SEQUENCE Object_Kassa_seq
+    ALTER SEQUENCE Object_Cash_seq
       OWNER TO postgres;
   END IF;
 END $$;
@@ -16,5 +16,6 @@ END $$;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+09.05.17                                                          *
 06.03.17                                                          *
 */

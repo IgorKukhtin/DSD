@@ -241,12 +241,12 @@
 				<Form>GoodsGroup_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Guides\Kassa.pas">
-				<Form>KassaForm</Form>
+			<DCCReference Include="..\..\FormsBoutique\Guides\Cash.pas">
+				<Form>CashForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Guides\KassaEdit.pas">
-				<Form>KassaEditForm</Form>
+			<DCCReference Include="..\..\FormsBoutique\Guides\CashEdit.pas">
+				<Form>CashEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\Currency.pas">
@@ -645,6 +645,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\RoleEdit.pas">
 				<Form>RoleEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Action.pas">
+				<Form>ActionForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

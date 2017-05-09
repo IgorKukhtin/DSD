@@ -88,7 +88,7 @@ type
     procedure CreateInfoMoneyGroup;
     procedure CreateJuridicalGroup;
     procedure CreateJuridical;
-    procedure CreateKassa;
+    procedure CreateCash;
     procedure CreateLabel;
     procedure CreateLineFabrica;
     procedure CreateMeasure;
@@ -320,9 +320,9 @@ begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\JuridicalGroup\');
 end;
 
-procedure TdbObjectProcedureTest.CreateKassa;
+procedure TdbObjectProcedureTest.CreateCash;
 begin
-   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Kassa\');
+   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Cash\');
 end;
 
 procedure TdbObjectProcedureTest.CreateLabel;
