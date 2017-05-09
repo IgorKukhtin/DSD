@@ -80,6 +80,7 @@ type
     CityName: TcxGridDBColumn;
     DiscountKindName: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
+    LastUserName: TcxGridDBColumn;
   private
     { Private declarations }
   public

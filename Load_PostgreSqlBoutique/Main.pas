@@ -1760,12 +1760,11 @@ begin
      if not fStop then pLoadGuide_Goods;
      if not fStop then pLoadGuide_GoodsItem;
      if not fStop then pLoadGuide_City;
-     if not fStop then pLoadGuide_Client;
      if not fStop then pLoadGuide_Juridical;
      if not fStop then pLoadGuide_PriceList;
      if not fStop then pLoadGuide_Member;
      if not fStop then pLoadGuide_User;
-
+     if not fStop then pLoadGuide_Client;
 
 
 
@@ -2907,7 +2906,10 @@ begin
         Add(', DiscountKlient.CommentInfo as  Comments');
         Add(', DiscountKlient.City as CityName');
         Add(', DiscountKlient.KindDiscount as KindDiscount');
-        Add('from Unit inner join DiscountKlient on DiscountKlient.ClientId = Unit.id  where KindUnit = zc_kuClient()');
+        Add(', users.userId_postgres as LastUserID');
+        Add('from Unit inner join DiscountKlient on DiscountKlient.ClientId = Unit.id');
+        Add('left join Users on users.id = DiscountKlient.LastUserID');
+        Add('where KindUnit = zc_kuClient()');
         Add('order by  ObjectId');
         Open;
         //
@@ -2947,6 +2949,7 @@ begin
         toStoredProc_two.Params.AddParam ('inLastSumm',ftFloat,ptInput, 0);
         toStoredProc_two.Params.AddParam ('inLastSummDiscount',ftFloat,ptInput, 0);
         toStoredProc_two.Params.AddParam ('inLastDate',ftDateTime,ptInput, '');
+        toStoredProc_two.Params.AddParam ('inLastUserID',ftInteger,ptInput, 0);
         while not EOF do
         begin
 
@@ -2993,6 +2996,7 @@ begin
              toStoredProc_two.Params.ParamByName('inLastSumm').Value:=FieldByName('LastSumm').AsFloat;
              toStoredProc_two.Params.ParamByName('inLastSummDiscount').Value:=FieldByName('LastSummDiscount').AsFloat;
              toStoredProc_two.Params.ParamByName('inLastDate').Value:=FieldByName('LastDate').AsDateTime;
+             toStoredProc_two.Params.ParamByName('inLastUserID').Value:=FieldByName('LastUserID').AsInteger;
 
              if not myExecToStoredProc_two then ;//exit;
 

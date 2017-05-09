@@ -423,7 +423,7 @@
         object cbPartner: TCheckBox
           Tag = 10
           Left = 15
-          Top = 265
+          Top = 264
           Width = 178
           Height = 24
           Caption = '1.16. '#1055#1086'c'#1090#1072#1074#1097#1080#1082#1080
@@ -439,7 +439,7 @@
         object cbUnit: TCheckBox
           Tag = 10
           Left = 15
-          Top = 284
+          Top = 282
           Width = 178
           Height = 24
           Caption = '1.17. '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
@@ -455,7 +455,7 @@
         object cbLabel: TCheckBox
           Tag = 10
           Left = 15
-          Top = 302
+          Top = 300
           Width = 178
           Height = 24
           Caption = '1.18. '#1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072
@@ -472,7 +472,7 @@
         object cbGoods: TCheckBox
           Tag = 10
           Left = 15
-          Top = 321
+          Top = 318
           Width = 178
           Height = 24
           Caption = '1.19. '#1058#1086#1074#1072#1088#1099
@@ -489,7 +489,7 @@
         object cbGoodsItem: TCheckBox
           Tag = 10
           Left = 15
-          Top = 339
+          Top = 336
           Width = 178
           Height = 24
           Caption = '1.20. '#1058#1086#1074#1072#1088#1099' c '#1088#1072#1079#1084#1077#1088#1072#1084#1080
@@ -506,10 +506,10 @@
         object cbClient: TCheckBox
           Tag = 10
           Left = 15
-          Top = 379
+          Top = 445
           Width = 178
           Height = 24
-          Caption = '1.22. '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1080
+          Caption = '1.26. '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1080
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -522,7 +522,7 @@
         object cbCity: TCheckBox
           Tag = 10
           Left = 15
-          Top = 359
+          Top = 354
           Width = 178
           Height = 24
           Caption = '1.21. '#1043#1086#1088#1086#1076
@@ -538,10 +538,10 @@
         object cbJuridical: TCheckBox
           Tag = 10
           Left = 15
-          Top = 398
+          Top = 372
           Width = 178
           Height = 24
-          Caption = '1.23. '#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
+          Caption = '1.22. '#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -554,10 +554,10 @@
         object cbPriceList: TCheckBox
           Tag = 10
           Left = 15
-          Top = 417
+          Top = 390
           Width = 178
           Height = 24
-          Caption = '1.24. '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099
+          Caption = '1.23. '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -570,10 +570,10 @@
         object cbMember: TCheckBox
           Tag = 10
           Left = 15
-          Top = 436
+          Top = 408
           Width = 178
           Height = 24
-          Caption = '1.25. '#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
+          Caption = '1.24. '#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -586,10 +586,10 @@
         object cbUser: TCheckBox
           Tag = 10
           Left = 15
-          Top = 454
+          Top = 426
           Width = 178
           Height = 24
-          Caption = '1.26.  '#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
+          Caption = '1.25.  '#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11

@@ -1,12 +1,12 @@
--- Покупатели
+-- Покупатели  Function: gpSelect_Object_Client (Boolean, TVarChar)  
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Client (Bolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Client (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Client(
     IN inIsShowAll   Boolean,       -- признак показать удаленные да / нет 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, DiscountCard TVarChar, DiscountTax TFloat, DiscountTaxTwo TFloat, TotalCount TFloat, TotalSumm TFloat, TotalSummDiscount TFloat, TotalSummPay TFloat, LastCount TFloat, LastSumm TFloat, LastSummDiscount TFloat, LastDate TDateTime, Address TVarChar, HappyDate TDateTime, PhoneMobile TVarChar, Phone TVarChar, Mail TVarChar, Comment TVarChar, CityName TVarChar, DiscountKindName TVarChar, isErased boolean) 
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, DiscountCard TVarChar, DiscountTax TFloat, DiscountTaxTwo TFloat, TotalCount TFloat, TotalSumm TFloat, TotalSummDiscount TFloat, TotalSummPay TFloat, LastCount TFloat, LastSumm TFloat, LastSummDiscount TFloat, LastDate TDateTime, Address TVarChar, HappyDate TDateTime, PhoneMobile TVarChar, Phone TVarChar, Mail TVarChar, Comment TVarChar, CityName TVarChar, DiscountKindName TVarChar, LastUserName TVarChar, isErased boolean) 
   AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -43,6 +43,7 @@ BEGIN
            , ObjectString_Comment.ValueData          AS Comment
            , Object_City.ValueData                   AS CityName
            , Object_DiscountKind.ValueData           AS DiscountKindName
+           , Object_LastUser.ValueData               AS LastUserName
            , Object_Client.isErased                  AS isErased
            
        FROM Object AS Object_Client
@@ -124,6 +125,11 @@ BEGIN
             LEFT JOIN ObjectString AS  ObjectString_Comment 
                                    ON  ObjectString_Comment.ObjectId = Object_Client.Id 
                                   AND  ObjectString_Comment.DescId = zc_ObjectString_Client_Comment()
+            LEFT JOIN ObjectLink AS ObjectLink_Client_LastUser
+                                 ON ObjectLink_Client_LastUser.ObjectId = Object_Client.Id
+                                AND ObjectLink_Client_LastUser.DescId = zc_ObjectLink_Client_LastUser()
+            LEFT JOIN Object AS Object_LastUser ON Object_LastUser.Id = ObjectLink_Client_LastUser.ChildObjectId
+
       
      WHERE Object_Client.DescId = zc_Object_Client()
               AND (Object_Client.isErased = FALSE OR inIsShowAll = TRUE)
@@ -138,6 +144,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
+09.05.2017                                                           *
 28.02.2017                                                           *
 */
 
