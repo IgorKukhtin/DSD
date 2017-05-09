@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat,TFloat,TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat,TFloat,TFloat, TFloat,TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat,TFloat,TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory(
  INOUT ioId                                 Integer   , -- Ключ объекта <Элемент документа>
@@ -18,7 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory(
    OUT outAmountSecondSumm                  TFloat    , -- Сумма расчетная (склад)
    OUT outAmountSummRemains                 TFloat    , -- Сумма расчетная остатка
    OUT outAmountSecondRemainsSumm           TFloat    , -- Сумма расчетная остатка (склад)
-    IN inOperPriceList                      TFloat    , -- Цена по прайсу
+   OUT outOperPriceList                     TFloat    , -- Цена по прайсу
    OUT outAmountPriceListSumm               TFloat    , -- Сумма по прайсу
    OUT outAmountSecondPriceListSumm         TFloat    , -- Сумма по прайсу
    OUT outAmountPriceListSummRemains        TFloat    , -- Сумма по прайсу остатка 
@@ -32,12 +33,17 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPartionId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
 
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
+
+     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);    
+     -- получили цену из прайса на дату док. 
+     outOperPriceList := COALESCE ((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem(vbOperDate, zc_PriceList_Basis(), inGoodsId) AS tmp), 0);
 
      -- Заменили свойство <Цена за количество>
      IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
@@ -50,7 +56,7 @@ BEGIN
      -- сохранили свойство <Цена за количество>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, ioCountForPrice);
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), ioId, inOperPriceList);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), ioId, outOperPriceList);
      -- сохранили свойство <Остаток магазин>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountRemains(), ioId, inAmountRemains);
      -- сохранили свойство <кол-во факт cклад>
@@ -81,20 +87,20 @@ BEGIN
                                    END;
      -- расчитали сумму по прайсу по элементу, для грида
      outAmountPriceListSumm := CASE WHEN ioCountForPrice > 0
-                                         THEN CAST (inAmount * inOperPriceList / ioCountForPrice AS NUMERIC (16, 2))
-                                    ELSE CAST (inAmount * inOperPriceList AS NUMERIC (16, 2))
+                                         THEN CAST (inAmount * outOperPriceList / ioCountForPrice AS NUMERIC (16, 2))
+                                    ELSE CAST (inAmount * outOperPriceList AS NUMERIC (16, 2))
                                END;
      outAmountSecondPriceListSumm := CASE WHEN ioCountForPrice > 0
-                                               THEN CAST (inAmountSecond * inOperPriceList / ioCountForPrice AS NUMERIC (16, 2))
-                                          ELSE CAST (inAmountSecond * inOperPriceList AS NUMERIC (16, 2))
+                                               THEN CAST (inAmountSecond * outOperPriceList / ioCountForPrice AS NUMERIC (16, 2))
+                                          ELSE CAST (inAmountSecond * outOperPriceList AS NUMERIC (16, 2))
                                      END;
      outAmountPriceListSummRemains := CASE WHEN ioCountForPrice > 0
-                                                THEN CAST (inAmountRemains * inOperPriceList / ioCountForPrice AS NUMERIC (16, 2))
-                                           ELSE CAST (inAmountRemains * inOperPriceList AS NUMERIC (16, 2))
+                                                THEN CAST (inAmountRemains * outOperPriceList / ioCountForPrice AS NUMERIC (16, 2))
+                                           ELSE CAST (inAmountRemains * outOperPriceList AS NUMERIC (16, 2))
                                       END;
      outAmountSecondRemainsPLSumm := CASE WHEN ioCountForPrice > 0
-                                               THEN CAST (inAmountSecondRemains * inOperPriceList / ioCountForPrice AS NUMERIC (16, 2))
-                                          ELSE CAST (inAmountSecondRemains * inOperPriceList AS NUMERIC (16, 2))
+                                               THEN CAST (inAmountSecondRemains * outOperPriceList / ioCountForPrice AS NUMERIC (16, 2))
+                                          ELSE CAST (inAmountSecondRemains * outOperPriceList AS NUMERIC (16, 2))
                                      END;
 
      -- пересчитали Итоговые суммы по накладной
@@ -110,8 +116,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.05.17         *
  02.05.17         *
 */
 
 -- тест
--- 
+-- select * from gpInsertUpdate_MovementItem_Inventory(ioId := 52 , inMovementId := 23 , inGoodsId := 406 , inPartionId := 49 , inAmount := 2 , inAmountSecond := 3 , inAmountRemains := 1 , inAmountSecondRemains := 1 , ioCountForPrice := 1 , inOperPrice := 87 , inComment := '' ,  inSession := '2');

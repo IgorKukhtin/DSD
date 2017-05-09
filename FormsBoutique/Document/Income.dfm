@@ -1450,12 +1450,11 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperPriceList'
+        Name = 'outOperPriceList'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'OperPriceList'
         DataType = ftFloat
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
