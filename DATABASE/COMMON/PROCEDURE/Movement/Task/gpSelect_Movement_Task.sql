@@ -28,53 +28,16 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
               )
 AS
 $BODY$
-   DECLARE vbUserId          Integer;
-
-   DECLARE vbIsProjectMobile Boolean;
-   DECLARE vbUserId_Member   Integer;
+   DECLARE vbUserId        Integer;
+   DECLARE vbUserId_Mobile Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Task());
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- Только так определяется что пользователь inSession - Торговый агент - т.е. у него есть моб телефон, может потом для этого заведем спец роль и захардкодим
-     vbIsProjectMobile:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = vbUserId AND ObjectBoolean.DescId = zc_ObjectBoolean_User_ProjectMobile());
-
-     IF inMemberId > 0
-     THEN
-         -- Определяется для <Физическое лицо> - его UserId
-         vbUserId_Member:= (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_User_Member() AND OL.ChildObjectId = inMemberId);
-         -- Проверка
-         IF COALESCE (vbUserId_Member, 0) = 0
-         THEN
-             RAISE EXCEPTION 'Ошибка.Для ФИО <%> не определно значение <Пользователь>.', lfGet_Object_ValueData (inMemberId);
-         END IF;
-
-     ELSEIF vbIsProjectMobile = TRUE
-     THEN
-         -- в этом случае - видит только себя
-         vbUserId_Member:= vbUserId;
-         -- !!!меняем значение!!! - Определяется для UserId - его <Физическое лицо>
-         inMemberId:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_User_Member() AND OL.ObjectId = vbUserId);
-         -- Проверка
-         IF COALESCE (inMemberId, 0) = 0
-         THEN
-             RAISE EXCEPTION 'Ошибка.Для Пользователя <%> не определно значение <Физ.лицо>.', lfGet_Object_ValueData (vbUserId);
-         END IF;
-     ELSE
-         -- в этом случае - видит ВСЕ
-         vbUserId_Member:= 0;
-         -- !!!меняем значение!!!
-         inMemberId:= 0;
-     END IF;
-
-
-     -- Проверка - Торговый агент видит только себя
-     IF vbIsProjectMobile = TRUE AND vbUserId_Member <> vbUserId
-     THEN
-         RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.';
-     END IF;
+     -- !!!меняем значение!!! - с какими параметрами пользователь может просматривать данные с мобильного устройства
+     SELECT lfGet.MemberId, lfGet.UserId INTO inMemberId, vbUserId_Mobile FROM lfGet_User_MobileCheck (inMemberId:= inMemberId, inUserId:= vbUserId) AS lfGet;
 
 
      -- Результат
@@ -176,7 +139,7 @@ BEGIN
                                          AND MIBoolean_Close.DescId = zc_MIBoolean_Close()
 
         WHERE MovementLinkObject_PersonalTrade.ObjectId = inMemberId
-           OR vbUserId_Member = 0
+           OR vbUserId_Mobile = 0
      ;
 
 END;
