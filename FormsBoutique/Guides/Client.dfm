@@ -2,8 +2,8 @@ object ClientForm: TClientForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1082#1091#1087#1072#1090#1077#1083#1080'>'
-  ClientHeight = 376
-  ClientWidth = 722
+  ClientHeight = 392
+  ClientWidth = 787
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,18 +20,38 @@ object ClientForm: TClientForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 722
-    Height = 350
+    Width = 787
+    Height = 366
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 722
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1090#1088#1086#1082': 0'
+          Kind = skCount
+          Column = Name
+        end
+        item
+          Format = ',0.####;-,0.####; ;'
+          Kind = skSum
+          Column = TotalSumm
+        end
+        item
+          Kind = skSum
+          Column = TotalSummPay
+        end
+        item
+          Kind = skSum
+          Column = TotalSummDiscount
+        end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsCustomize.ColumnHiding = True
@@ -40,6 +60,7 @@ object ClientForm: TClientForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -111,6 +132,9 @@ object ClientForm: TClientForm
       object TotalSumm: TcxGridDBColumn
         Caption = #1048#1090#1086#1075#1086' '#1057#1091#1084#1084#1072
         DataBinding.FieldName = 'TotalSumm'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -119,6 +143,9 @@ object ClientForm: TClientForm
       object TotalSummDiscount: TcxGridDBColumn
         Caption = #1048#1090#1086#1075#1086' '#1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080
         DataBinding.FieldName = 'TotalSummDiscount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -127,6 +154,9 @@ object ClientForm: TClientForm
       object TotalSummPay: TcxGridDBColumn
         Caption = #1048#1090#1086#1075#1086' '#1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'TotalSummPay'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
