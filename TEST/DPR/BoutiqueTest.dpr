@@ -198,9 +198,9 @@ uses
   RoleEdit in '..\..\FormsBoutique\Guides\RoleEdit.pas' {RoleEditForm: TParentForm},
   Action in '..\..\Forms\Action.pas' {ActionForm: TParentForm},
   Bank in '..\..\FormsBoutique\Guides\Bank.pas' {BankForm: TParentForm},
-  BankEdit in '..\..\FormsBoutique\Guides\BankEdit.pas' {BankEditForm: TParentForm}
-
-  ;
+  BankEdit in '..\..\FormsBoutique\Guides\BankEdit.pas' {BankEditForm: TParentForm},
+  SaleJournal in '..\..\FormsBoutique\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
+  Sale in '..\..\FormsBoutique\Document\Sale.pas' {SaleForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
