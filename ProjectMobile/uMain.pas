@@ -681,6 +681,10 @@ type
     Panel42: TPanel;
     Label85: TLabel;
     deCashDate: TDateEdit;
+    Panel43: TPanel;
+    eCashInvNumber: TEdit;
+    Label88: TLabel;
+    Panel44: TPanel;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -2446,6 +2450,7 @@ begin
   if New then
   begin
     FOldCashId := -1;
+    eCashInvNumber.Text := '';
     deCashDate.Date := Date();
     eCashAmount.Text := '';
     eCashComment.Text := '';
@@ -2454,6 +2459,7 @@ begin
   else
   begin
     FOldCashId := DM.qryCashId.AsInteger;
+    eCashInvNumber.Text := DM.qryCashInvNumber.AsString;
     deCashDate.Date := DM.qryCashOperDate.AsDateTime;
     eCashAmount.Text := FormatFloat(',0.##', DM.qryCashAmount.AsFloat);
     eCashComment.Text := DM.qryCashComment.AsString;
@@ -3207,7 +3213,7 @@ begin
       exit;
     end;
 
-    DM.SaveCash(FOldCashId, deCashDate.Date, StrToFloat(eCashAmount.Text), eCashComment.Text);
+    DM.SaveCash(FOldCashId, eCashInvNumber.Text, deCashDate.Date, StrToFloat(eCashAmount.Text), eCashComment.Text);
 
     DM.qryCash.Refresh;
 
