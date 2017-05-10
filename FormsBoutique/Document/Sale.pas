@@ -112,7 +112,6 @@ type
     spInsertMaskMIMaster: TdsdStoredProc;
     actAddMask: TdsdExecStoredProc;
     bbAddMask: TdxBarButton;
-    actGoodsChoiceForm: TOpenChoiceForm;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
     bbInsertRecord: TdxBarButton;
@@ -127,11 +126,7 @@ type
     cxLabel7: TcxLabel;
     edTotalDebt: TcxCurrencyEdit;
     bbUpdateRecord1: TdxBarButton;
-    actInsertAction1: TdsdInsertUpdateAction;
-    actUpdateAction1: TdsdInsertUpdateAction;
-    macInsertAction: TMultiAction;
     actRefreshMI: TdsdDataSetRefresh;
-    macUpdateAction: TMultiAction;
     colPartionId: TcxGridDBColumn;
     edHappyDate: TcxDateEdit;
     cxLabel8: TcxLabel;
@@ -155,6 +150,8 @@ type
     cxGridLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
     spSelectBarCode: TdsdStoredProc;
+    actGoodsChoiceForm: TOpenChoiceForm;
+    InsertRecord: TInsertRecord;
   private
   public
   end;
