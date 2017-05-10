@@ -1,27 +1,28 @@
 inherited InventoryForm: TInventoryForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
-  ClientHeight = 658
-  ClientWidth = 898
+  ClientHeight = 643
+  ClientWidth = 878
   AddOnFormData.RefreshAction = actRefreshStart
-  ExplicitWidth = 914
-  ExplicitHeight = 697
+  ExplicitWidth = 894
+  ExplicitHeight = 681
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 77
-    Width = 898
-    Height = 581
+    Width = 878
+    Height = 566
+    Properties.ActivePage = cxTabSheetChild
     ExplicitTop = 77
     ExplicitWidth = 898
     ExplicitHeight = 581
-    ClientRectBottom = 581
-    ClientRectRight = 898
+    ClientRectBottom = 566
+    ClientRectRight = 878
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 898
       ExplicitHeight = 557
       inherited cxGrid: TcxGrid
-        Width = 898
-        Height = 557
+        Width = 878
+        Height = 542
         ExplicitWidth = 898
         ExplicitHeight = 557
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -427,13 +428,16 @@ inherited InventoryForm: TInventoryForm
     object cxTabSheetChild: TcxTabSheet
       Caption = #1048#1089#1090#1086#1088#1080#1103
       ImageIndex = 2
+      ExplicitWidth = 898
+      ExplicitHeight = 557
       object cxGridChild: TcxGrid
         Left = 0
         Top = 83
-        Width = 898
-        Height = 474
+        Width = 878
+        Height = 459
         Align = alClient
         TabOrder = 0
+        ExplicitTop = 81
         object cxGridChildDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -591,11 +595,12 @@ inherited InventoryForm: TInventoryForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
-        Width = 898
+        Width = 878
         Height = 75
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 898
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -729,17 +734,18 @@ inherited InventoryForm: TInventoryForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 75
-        Width = 898
+        Width = 878
         Height = 8
         HotZoneClassName = 'TcxXPTaskBarStyle'
         HotZone.Visible = False
         AlignSplitter = salTop
         Control = cxGrid1
+        ExplicitWidth = 898
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 898
+    Width = 878
     Height = 51
     TabOrder = 3
     ExplicitWidth = 898
@@ -804,8 +810,8 @@ inherited InventoryForm: TInventoryForm
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 83
-    Top = 144
+    Left = 107
+    Top = 136
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 24
@@ -818,7 +824,6 @@ inherited InventoryForm: TInventoryForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetChild
       MoveParams = <>
-      Enabled = False
       StoredProc = spSelect_MI_Child
       StoredProcList = <
         item
@@ -834,6 +839,7 @@ inherited InventoryForm: TInventoryForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spGet
       StoredProcList = <
         item
@@ -859,6 +865,7 @@ inherited InventoryForm: TInventoryForm
     end
     inherited actRefresh: TdsdDataSetRefresh
       TabSheet = tsMain
+      Enabled = False
       StoredProcList = <
         item
           StoredProc = spGet
@@ -872,6 +879,9 @@ inherited InventoryForm: TInventoryForm
         item
           StoredProc = spSelect_MI_Child
         end>
+    end
+    inherited actGridToExcel: TdsdGridToExcel
+      Enabled = False
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -1377,8 +1387,8 @@ inherited InventoryForm: TInventoryForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 5
       end>
-    Left = 774
-    Top = 329
+    Left = 758
+    Top = 225
   end
   inherited PopupMenu: TPopupMenu
     Left = 568
@@ -1447,7 +1457,7 @@ inherited InventoryForm: TInventoryForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 120
+    Left = 160
     Top = 144
   end
   inherited StatusGuides: TdsdGuides
@@ -1819,7 +1829,7 @@ inherited InventoryForm: TInventoryForm
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
     Left = 640
-    Top = 216
+    Top = 224
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Inventory_SetErased'
@@ -1974,8 +1984,8 @@ inherited InventoryForm: TInventoryForm
   end
   inherited spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TotalSummInventory'
-    Left = 420
-    Top = 188
+    Left = 612
+    Top = 300
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -2019,7 +2029,7 @@ inherited InventoryForm: TInventoryForm
       end>
     PackSize = 1
     Left = 319
-    Top = 208
+    Top = 184
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -2064,7 +2074,7 @@ inherited InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 330
+    Left = 322
     Top = 384
   end
   object spGetImportSettingId: TdsdStoredProc
@@ -2125,8 +2135,8 @@ inherited InventoryForm: TInventoryForm
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
-    Left = 352
-    Top = 560
+    Left = 336
+    Top = 552
   end
   object spSelect_MI_Child: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Inventory_Child'
@@ -2260,7 +2270,7 @@ inherited InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 336
+    Left = 352
     Top = 123
   end
 end

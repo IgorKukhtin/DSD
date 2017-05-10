@@ -113,6 +113,8 @@ type
     N13: TMenuItem;
     actBank: TdsdOpenForm;
     N55: TMenuItem;
+    actSale: TdsdOpenForm;
+    N56: TMenuItem;
   private
     { Private declarations }
   public

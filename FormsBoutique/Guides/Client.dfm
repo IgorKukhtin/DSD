@@ -26,8 +26,6 @@ object ClientForm: TClientForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 722
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -549,6 +547,78 @@ object ClientForm: TClientForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'HappyDate'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'HappyDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountTax'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'DiscountTax'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LastDate'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'LastDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CityName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CityName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Address'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Address'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PhoneMobile'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PhoneMobile'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Phone'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Phone'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TotalSumm'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TotalSumm'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TotalSummPay'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TotalSummPay'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
