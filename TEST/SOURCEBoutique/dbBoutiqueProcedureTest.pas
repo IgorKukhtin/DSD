@@ -104,6 +104,7 @@ type
     procedure CreateStatus;
     procedure CreateUnit;
     procedure CreateBank;
+    procedure CreateBankAccount;
 
   end;
 
@@ -211,6 +212,11 @@ end;
 procedure TdbObjectProcedureTest.CreateBank;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Bank\');
+end;
+
+procedure TdbObjectProcedureTest.CreateBankAccount;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\BankAccount\');
 end;
 
 procedure TdbObjectProcedureTest.CreateBrand;

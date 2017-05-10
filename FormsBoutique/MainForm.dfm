@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 600
   KeyPreview = True
   ExplicitWidth = 616
-  ExplicitHeight = 226
+  ExplicitHeight = 227
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -526,6 +526,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actBankAccount: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072
+      FormName = 'TBankAccountForm'
+      FormNameParam.Value = 'TBankAccountForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 152
@@ -637,6 +648,9 @@ inherited MainForm: TMainForm
       end
       object N55: TMenuItem
         Action = actBank
+      end
+      object N57: TMenuItem
+        Action = actBankAccount
       end
       object N51: TMenuItem
         Action = actPriceList
