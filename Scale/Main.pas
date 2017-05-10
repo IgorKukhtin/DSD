@@ -201,7 +201,7 @@ type
     PanelInvNumberTransport: TPanel;
     isBarCode: TcxGridDBColumn;
     isPromo: TcxGridDBColumn;
-    SpeedButton1: TSpeedButton;
+    bbUpdateUnit: TSpeedButton;
     spProtocol_isExit: TdsdStoredProc;
     FormParams: TdsdFormParams;
     TimerProtocol_isProcess: TTimer;
@@ -212,8 +212,9 @@ type
     actReestrRemakeIn: TdsdOpenForm;
     SpeedButton2: TSpeedButton;
     SpeedButton3: TSpeedButton;
-    SpeedButton4: TSpeedButton;
+    bbReestrReturn: TSpeedButton;
     actReestrReturnStart: TdsdOpenForm;
+    bbUpdatePartner: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -241,9 +242,10 @@ type
     procedure EditBarCodeTransportExit(Sender: TObject);
     procedure EditBarCodeTransportPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
-    procedure SpeedButton1Click(Sender: TObject);
+    procedure bbUpdateUnitClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TimerProtocol_isProcessTimer(Sender: TObject);
+    procedure bbUpdatePartnerClick(Sender: TObject);
   private
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
@@ -275,7 +277,7 @@ var
 
 implementation
 {$R *.dfm}
-uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc, GuideGoods,GuideGoodsPartner,GuideGoodsMovement,GuideMovement,GuideMovementTransport
+uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc, GuideGoods,GuideGoodsPartner,GuideGoodsMovement,GuideMovement,GuideMovementTransport, GuidePartner
     ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint,GuidePersonal
     ,IdIPWatch;
 //------------------------------------------------------------------------------------------------
@@ -529,7 +531,50 @@ begin
      end;
 end;
 //------------------------------------------------------------------------------------------------
-procedure TMainForm.SpeedButton1Click(Sender: TObject);
+procedure TMainForm.bbUpdatePartnerClick(Sender: TObject);
+var ParamsMovement_local:TParams;
+begin
+    if ParamsMovement.ParamByName('MovementDescId').AsInteger <> zc_Movement_Income
+    then begin
+      ShowMessage('Ошибка.Измение возможно только для документа <Приход от Поставщика>.');
+      exit;
+    end;
+
+    //
+    Create_ParamsMovement(ParamsMovement_local);
+    //
+    try
+        CopyValuesParamsFrom(ParamsMovement,ParamsMovement_local);
+        if GuidePartnerForm.Execute(ParamsMovement_local)
+        then begin
+               ParamsMovement.ParamByName('FromId').AsInteger:= ParamsMovement_local.ParamByName('calcPartnerId').AsInteger;
+               ParamsMovement.ParamByName('FromCode').AsInteger:= ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger;
+               ParamsMovement.ParamByName('FromName').asString:= ParamsMovement_local.ParamByName('calcPartnerName').asString;
+
+               ParamsMovement.ParamByName('calcPartnerId').AsInteger:= ParamsMovement_local.ParamByName('calcPartnerId').AsInteger;
+               ParamsMovement.ParamByName('calcPartnerCode').AsInteger:= ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger;
+               ParamsMovement.ParamByName('calcPartnerName').asString:= ParamsMovement_local.ParamByName('calcPartnerName').asString;
+
+               ParamsMovement.ParamByName('PaidKindId').AsInteger:= ParamsMovement_local.ParamByName('PaidKindId').AsInteger;
+               ParamsMovement.ParamByName('PaidKindName').asString:= ParamsMovement_local.ParamByName('PaidKindName').asString;
+
+               ParamsMovement.ParamByName('ContractId').AsInteger    := ParamsMovement_local.ParamByName('ContractId').AsInteger;
+               ParamsMovement.ParamByName('ContractCode').AsInteger  := ParamsMovement_local.ParamByName('ContractCode').AsInteger;
+               ParamsMovement.ParamByName('ContractNumber').asString := ParamsMovement_local.ParamByName('ContractNumber').asString;
+               ParamsMovement.ParamByName('ContractTagName').asString:= ParamsMovement_local.ParamByName('ContractTagName').asString;
+               //
+               //Сохранили
+               if gpFind_MovementDesc (ParamsMovement)
+               then DMMainScaleForm.gpUpdate_Scale_Movement(ParamsMovement);
+               //
+               WriteParamsMovement;
+        end;
+    finally
+            ParamsMovement_local.Free;
+    end;
+end;
+
+procedure TMainForm.bbUpdateUnitClick(Sender: TObject);
 begin
      if DialogMovementDescForm.Execute('isUpdateUnit') then
      begin
@@ -1165,6 +1210,9 @@ begin
   bbChangePartionGoods.Visible:=HeadCountPanel.Visible;
 
   bbChangeCountPack.Visible:=not bbChangeHeadCount.Visible;
+  //
+  bbUpdatePartner.Visible:= SettingMain.BranchCode = 301;
+  bbUpdateUnit.Visible:= not bbUpdatePartner.Visible;
   //
   with spSelect do
   begin

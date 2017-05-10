@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemFloat (Integer, Integer, TFlo
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemFloat(
     IN inDescId                Integer           , -- ключ класса свойства
     IN inMovementItemId        Integer           , -- ключ 
-    IN inValueData             TFloat              -- свойство
+    IN inValueData             TFloat              -- Значение
 )
 RETURNS Boolean
 AS
@@ -23,7 +23,7 @@ BEGIN
      -- изменить <свойство>
      UPDATE MovementItemFloat SET ValueData = inValueData WHERE MovementItemId = inMovementItemId AND DescId = inDescId;
 
-     -- если не нашли
+     -- если не нашли + попробуем 0 НЕ вставлять
      IF NOT FOUND AND inValueData <> 0
      THEN
         -- вставить <свойство>

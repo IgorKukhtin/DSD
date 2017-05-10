@@ -59,6 +59,7 @@ type
   function gpInitialize_Ini: Boolean;   // Scale
   function gpInitialize_SettingMain_Default: Boolean;//Scale + ScaleCeh
   function gpInitialize_MovementDesc: Boolean; // !!!Scale + ScaleCeh!!!
+  function gpFind_MovementDesc (execParamsMovement : TParams): Boolean; // !!!Scale!!!
 
 var
   DMMainScaleForm: TDMMainScaleForm;
@@ -448,6 +449,9 @@ begin
        Params.AddParam('inMovementDescId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescId').AsInteger);
        Params.AddParam('inFromId', ftInteger, ptInput, execParamsMovement.ParamByName('FromId').AsInteger);
        Params.AddParam('inToId', ftInteger, ptInput, execParamsMovement.ParamByName('ToId').AsInteger);
+       Params.AddParam('inContractId', ftInteger, ptInput, execParamsMovement.ParamByName('ContractId').AsInteger);
+       Params.AddParam('inPaidKindId', ftInteger, ptInput, execParamsMovement.ParamByName('PaidKindId').AsInteger);
+       Params.AddParam('inMovementDescNumber', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescNumber').AsInteger);
        //try
          Execute;
        {except
@@ -1313,6 +1317,43 @@ begin
   Result:=true;
 end;
 {------------------------------------------------------------------------}
+function gpFind_MovementDesc (execParamsMovement : TParams): Boolean; //
+begin
+   Result:= false;
+   with DialogMovementDescForm do
+   begin
+        if execParamsMovement.ParamByName('MovementDescNumber').asInteger<>0 then
+        begin
+             CDS.Filter:=' MovementDescId='+IntToStr(ParamsMovement.ParamByName('MovementDescId').AsInteger)
+                       + ' and PaidKindId = ' + IntToStr(ParamsMovement.ParamByName('PaidKindId').AsInteger)
+                       + ' and ToId = ' + IntToStr(ParamsMovement.ParamByName('ToId').AsInteger)
+                          ;
+             CDS.Filtered:=true;
+             if CDS.RecordCount<>1
+             then ShowMessage('Ошибка.Код операции не определен.')
+             else begin execParamsMovement.ParamByName('MovementDescNumber').asInteger:= CDS.FieldByName('Number').asInteger;
+                        execParamsMovement.ParamByName('MovementDescName_master').asString:= CDS.FieldByName('MovementDescName_master').asString;
+                        execParamsMovement.ParamByName('GoodsKindWeighingGroupId').asInteger:=CDS.FieldByName('GoodsKindWeighingGroupId').asInteger;
+                        execParamsMovement.ParamByName('InfoMoneyId').AsInteger  := CDS.FieldByName('InfoMoneyId').asInteger;
+                        execParamsMovement.ParamByName('InfoMoneyCode').AsInteger:= CDS.FieldByName('InfoMoneyCode').asInteger;
+                        execParamsMovement.ParamByName('InfoMoneyName').asString := CDS.FieldByName('InfoMoneyName').asString;
+                        execParamsMovement.ParamByName('isSendOnPriceIn').asBoolean:= CDS.FieldByName('isSendOnPriceIn').asBoolean;
+                        execParamsMovement.ParamByName('isPartionGoodsDate').asBoolean:= CDS.FieldByName('isPartionGoodsDate').asBoolean;
+                        execParamsMovement.ParamByName('isTransport_link').asBoolean:= CDS.FieldByName('isTransport_link').asBoolean;
+                        //
+                        if CDS.FieldByName('isSendOnPriceIn').asBoolean = TRUE
+                        then execParamsMovement.ParamByName('ChangePercentAmount').asFloat := 0;
+                        //
+                        Result:= true;
+                  end;
+        end
+        else execParamsMovement.ParamByName('MovementDescName_master').AsString:='Для <Нового взвешивания> нажмите на клавиатуре клавишу <F2>.';
+        //
+        CDS.Filtered:=false;
+        CDS.Filter:='';
+   end;
+end;
+{------------------------------------------------------------------------}
 function gpInitialize_MovementDesc: Boolean;
 begin
    with DialogMovementDescForm do
@@ -1339,6 +1380,9 @@ begin
                   end;
         end
         else ParamsMovement.ParamByName('MovementDescName_master').AsString:='Для <Нового взвешивания> нажмите на клавиатуре клавишу <F2>.';
+        //
+        CDS.Filtered:=false;
+        CDS.Filter:='';
    end;
 end;
 {------------------------------------------------------------------------}

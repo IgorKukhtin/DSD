@@ -1,12 +1,18 @@
 -- Function: gpUpdate_Scale_Movement()
 
-DROP FUNCTION IF EXISTS gpUpdate_Scale_Movement (Integer, Integer, Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpUpdate_Scale_Movement (Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Scale_Movement (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Scale_Movement (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Scale_Movement (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Scale_Movement(
     IN inId                   Integer   , -- Ключ объекта <Документ>
     IN inMovementDescId       Integer   , -- Вид документа
     IN inFromId               Integer   , -- От кого (в документе)
     IN inToId                 Integer   , -- Кому (в документе)
+    IN inContractId           Integer   , -- Договор
+    IN inPaidKindId           Integer   , -- Форма оплаты
+    IN inMovementDescNumber   Integer   , -- Код операции (взвешивание)
     IN inSession              TVarChar    -- сессия пользователя
 )                              
 RETURNS VOID
@@ -17,6 +23,13 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Scale_Movement());
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- Проверка
+     IF NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inId)
+     THEN
+         RAISE EXCEPTION 'Ошибка. В Документе нет товаров.';
+     END IF;
 
 
      -- Проверка
@@ -31,12 +44,28 @@ BEGIN
      THEN
          -- сохранили связь с <От кого (в документе)>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), inId, inFromId);
+
      ELSEIF inMovementDescId = zc_Movement_ReturnIn()
      THEN
           -- сохранили связь с <Кому (в документе)>
           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), inId, inToId);
+
+     ELSEIF inMovementDescId = zc_Movement_Income()
+     THEN
+          -- сохранили связь с <От кого (в документе)>
+          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), inId, inFromId);
+          -- сохранили связь с <Договор>
+          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), inId, inContractId);
+          -- сохранили связь с <Форма оплаты>
+          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), inId, inPaidKindId);
+
+          -- сохранили свойство <Вид документа>
+          -- PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementDesc(), inId, inMovementDescId);
+          -- сохранили свойство <Код операции (взвешивание)>
+          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementDescNumber(), inId, inMovementDescNumber);
+
      ELSE
-         RAISE EXCEPTION 'Ошибка. Вид документа <%> не может быть изменен', inMovementDescId;
+         RAISE EXCEPTION 'Ошибка. Нет прав изменять Вид документа <%>', (SELECT MovementDesc.ItemName  FROM MovementDesc WHERE MovementDesc.Id = inMovementDescId);
      END IF;
 
      -- сохранили протокол

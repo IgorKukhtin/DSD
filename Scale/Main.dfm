@@ -105,7 +105,7 @@ object MainForm: TMainForm
         ShowHint = True
       end
       object bbRefresh: TSpeedButton
-        Left = 466
+        Left = 471
         Top = 2
         Width = 31
         Height = 29
@@ -199,7 +199,7 @@ object MainForm: TMainForm
         Visible = False
       end
       object bbChoice_UnComlete: TSpeedButton
-        Left = 384
+        Left = 393
         Top = 2
         Width = 31
         Height = 29
@@ -227,7 +227,7 @@ object MainForm: TMainForm
         OnClick = bbChoice_UnComleteClick
       end
       object bbView_all: TSpeedButton
-        Left = 415
+        Left = 422
         Top = 2
         Width = 31
         Height = 29
@@ -373,8 +373,8 @@ object MainForm: TMainForm
         ShowHint = True
         OnClick = bbSale_Order_diffClick
       end
-      object SpeedButton1: TSpeedButton
-        Left = 336
+      object bbUpdateUnit: TSpeedButton
+        Left = 332
         Top = 2
         Width = 31
         Height = 29
@@ -390,7 +390,7 @@ object MainForm: TMainForm
           8888888777778888888888888888888888888888888888888888}
         ParentShowHint = False
         ShowHint = True
-        OnClick = SpeedButton1Click
+        OnClick = bbUpdateUnitClick
       end
       object bbReestrKind_PartnerOut: TSpeedButton
         Left = 748
@@ -524,7 +524,7 @@ object MainForm: TMainForm
         ParentShowHint = False
         ShowHint = True
       end
-      object SpeedButton4: TSpeedButton
+      object bbReestrReturn: TSpeedButton
         Left = 15
         Top = 2
         Width = 31
@@ -567,6 +567,25 @@ object MainForm: TMainForm
           FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00}
         ParentShowHint = False
         ShowHint = True
+      end
+      object bbUpdatePartner: TSpeedButton
+        Left = 350
+        Top = 2
+        Width = 31
+        Height = 29
+        Hint = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1058#1054#1051#1068#1050#1054' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          8888888888888888888873333333333333387BBBBBBBBBBBBB387BBBBBBBBBBB
+          BB387BBBBBBBBBBBBB387BBBBBBBBBBBBB387BBBBBBBBBBBBB387BBBBBBBBBBB
+          BB387BBBBBBBBBBBBB387BBBBBBBBBBBBB387BBBBBBBBBBBBBB888BBBBBB0888
+          8888888777778888888888888888888888888888888888888888}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbUpdatePartnerClick
       end
     end
     object infoPanelTotalSumm: TPanel

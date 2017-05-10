@@ -10,11 +10,12 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementLinkMovement(
   RETURNS Boolean AS
 $BODY$
 BEGIN
+    -- заменили
     IF inMovementChildId = 0 THEN
        inMovementChildId := NULL;
     END IF;
 
-    -- проверка - если входит в сводную, то она должна быть распроведена
+    -- проверка - если сам с собой
     IF inMovementId = inMovementChildId
     THEN
         RAISE EXCEPTION 'Ошибка.Документ № <%> от <%> не может быть связан сам с собой.', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId));
@@ -22,13 +23,16 @@ BEGIN
 
     -- изменить данные по значению <ключ объекта>
     UPDATE MovementLinkMovement SET MovementChildId = inMovementChildId WHERE MovementId = inMovementId AND DescId = inDescId;
-    IF NOT FOUND THEN            
-       -- вставить <ключ свойства> , <ключ главного объекта> и <ключ подчиненного объекта>
+
+    -- если не нашли
+    IF NOT FOUND THEN
+       -- вставить <свойство>
        INSERT INTO MovementLinkMovement (DescId, MovementId, MovementChildId)
                                  VALUES (inDescId, inMovementId, inMovementChildId);
     END IF;             
-    RETURN TRUE;
 
+    RETURN TRUE;
+    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION lpInsertUpdate_MovementLinkMovement (Integer, Integer, Integer) OWNER TO postgres;

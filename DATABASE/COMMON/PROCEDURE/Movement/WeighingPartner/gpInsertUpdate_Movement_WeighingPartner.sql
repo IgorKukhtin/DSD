@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingPartner(
     IN inWeighingNumber       Integer   , -- Номер взвешивания
     IN inFromId               Integer   , -- От кого (в документе)
     IN inToId                 Integer   , -- Кому (в документе)
-    IN inContractId           Integer   , -- Договора
+    IN inContractId           Integer   , -- Договор
     IN inPaidKindId           Integer   , -- Форма оплаты
     IN inPriceListId          Integer   , -- 
     IN inMovementId_Order     Integer   , -- ключ Документа заявка
@@ -102,7 +102,7 @@ BEGIN
      -- сохранили связь с <Кому (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
 
-     -- сохранили связь с <Договора>
+     -- сохранили связь с <Договор>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
      -- сохранили связь с <Форма оплаты>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);

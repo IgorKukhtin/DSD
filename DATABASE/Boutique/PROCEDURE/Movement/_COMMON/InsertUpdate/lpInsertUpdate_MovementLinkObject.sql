@@ -11,7 +11,7 @@ RETURNS Boolean
 AS
 $BODY$
 BEGIN
-    -- меняется значение
+    -- заменили
     IF inObjectId = 0
     THEN
         inObjectId := NULL;
@@ -20,7 +20,7 @@ BEGIN
     -- изменить <свойство>
     UPDATE MovementLinkObject SET ObjectId = inObjectId WHERE MovementId = inMovementId AND DescId = inDescId;
 
-    -- если не нашли
+    -- если не нашли + попробуем NULL НЕ вставлять
     IF NOT FOUND AND inObjectId IS NOT NULL
     THEN
         -- вставить <свойство>
@@ -41,5 +41,3 @@ ALTER FUNCTION lpInsertUpdate_MovementLinkObject (Integer, Integer, Integer) OWN
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  22.03.15                                        * IF ... AND inObjectId IS NOT NULL
 */
-
--- тест

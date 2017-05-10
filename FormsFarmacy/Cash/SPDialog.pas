@@ -16,7 +16,6 @@ type
     cePartnerMedical: TcxButtonEdit;
     PartnerMedicalGuides: TdsdGuides;
     Label1: TLabel;
-    edMedicSP: TcxTextEdit;
     Label2: TLabel;
     cxLabel13: TcxLabel;
     edOperDateSP: TcxDateEdit;
@@ -24,6 +23,8 @@ type
     edInvNumberSP: TcxTextEdit;
     cxLabel17: TcxLabel;
     edAmbulance: TcxTextEdit;
+    edMedicSP: TcxButtonEdit;
+    MedicSPGuides: TdsdGuides;
     procedure bbOkClick(Sender: TObject);
     procedure DiscountExternalGuidesAfterChoice(Sender: TObject);
   private

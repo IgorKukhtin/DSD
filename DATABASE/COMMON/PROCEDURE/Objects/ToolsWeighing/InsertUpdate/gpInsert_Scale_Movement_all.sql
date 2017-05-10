@@ -34,10 +34,12 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Scale_Movement());
      vbUserId:= lpGetUserBySession (inSession);
 
-IF inMovementId in (5712201 , 5716456)
+/*
+--для теста
+if inMovementId in (5712201 , 5716456)
 then
     update Movement set statusId = zc_Enum_Status_UnComplete() where  Id = inMovementId;
-end if;
+end if;*/
 
 
      -- проверка
@@ -45,6 +47,7 @@ end if;
      THEN
          RAISE EXCEPTION 'Ошибка.Нет данных для документа.';
      END IF;
+
      -- проверка - договор не Маркетинг
      IF (SELECT 1
          FROM MovementLinkMovement AS MovementLinkMovement_Order
@@ -1333,11 +1336,13 @@ end if;
           END IF;
      END IF;
 
+/*
+--для теста
 if inMovementId in (5712201 , 5716456)
 then
     RAISE EXCEPTION 'inSession  - Errr _end <%>', vbMovementId_begin;
     -- 'Повторите действие через 3 мин.'
-end if;
+end if;*/
 
 if inSession = '5' AND 1=1
 then

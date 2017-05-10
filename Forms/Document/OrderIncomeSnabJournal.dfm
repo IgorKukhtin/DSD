@@ -25,11 +25,10 @@ object OrderIncomeSnabJournalForm: TOrderIncomeSnabJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 809
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 42370d
+      EditValue = 42736d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -39,7 +38,7 @@ object OrderIncomeSnabJournalForm: TOrderIncomeSnabJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 42370d
+      EditValue = 42736d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -66,8 +65,6 @@ object OrderIncomeSnabJournalForm: TOrderIncomeSnabJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 809
-    ExplicitHeight = 324
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -233,6 +230,14 @@ object OrderIncomeSnabJournalForm: TOrderIncomeSnabJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 53
+      end
+      object colisClose: TcxGridDBColumn
+        Caption = #1042#1099#1087#1086#1083#1085#1077#1085' '#1079#1072#1082#1072#1079
+        DataBinding.FieldName = 'isClosed'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
       object colInvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'.'
@@ -459,14 +464,6 @@ object OrderIncomeSnabJournalForm: TOrderIncomeSnabJournalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 163
-      end
-      object colisClose: TcxGridDBColumn
-        Caption = #1042#1099#1087#1086#1083#1085#1077#1085#1086
-        DataBinding.FieldName = 'isClosed'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 50
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -1205,8 +1202,8 @@ object OrderIncomeSnabJournalForm: TOrderIncomeSnabJournalForm
         item
           StoredProc = spisClose
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1087#1086#1083#1085#1077#1085#1086' '#1044#1072'/'#1053#1077#1090'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1087#1086#1083#1085#1077#1085#1086' '#1044#1072'/'#1053#1077#1090'"'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1087#1086#1083#1085#1077#1085' '#1079#1072#1082#1072#1079' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1087#1086#1083#1085#1077#1085' '#1079#1072#1082#1072#1079' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
     end
   end

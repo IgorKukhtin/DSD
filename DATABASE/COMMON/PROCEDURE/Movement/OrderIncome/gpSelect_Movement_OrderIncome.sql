@@ -118,7 +118,7 @@ BEGIN
                        END
                   ELSE FALSE
              END AS isNotOne
-           , COALESCE (MovementBoolean_Closed.ValueData, false)::Boolean AS isClosed
+           , COALESCE (MovementBoolean_Closed.ValueData, FALSE) :: Boolean AS isClosed
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_OrderIncome() AND Movement.StatusId = tmpStatus.StatusId
@@ -234,7 +234,7 @@ BEGIN
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
             LEFT JOIN Object AS Object_JuridicalFromIncome ON Object_JuridicalFromIncome.Id = ObjectLink_Partner_Juridical.ChildObjectId
 
-        WHERE (inisSnab = TRUE AND COALESCE (MovementLinkObject_Unit.ObjectId,0) <> 0)
+        WHERE (inisSnab = TRUE  AND COALESCE (MovementLinkObject_Unit.ObjectId,0) <> 0)
            OR (inisSnab = FALSE AND COALESCE (MovementLinkObject_Unit.ObjectId,0) = 0)
 /*         WHERE (Object_Contract.Id = inFromId or inFromId=0)
            AND (Object_Juridical.Id = inJuridicalId or inJuridicalId=0)
@@ -255,4 +255,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderIncome (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderIncome (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inisSnab:=FALSE, inJuridicalBasisId:= 0, inSession:= '2')

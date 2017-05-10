@@ -1,25 +1,38 @@
 -- Function: lpinsertupdate_objectFloat()
 
--- DROP FUNCTION lpinsertupdate_objectFloat();
+DROP FUNCTION IF EXISTS lpinsertupdate_objectFloat (Integer, Integer, TFloat);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_ObjectFloat(
- inDescId                    Integer           ,  /* код класса свойства  */
- inObjectId                  Integer           ,  /* ключ объекта         */
- inValueData                 TFloat               /* данные свойства      */
+    IN inDescId                Integer           , -- ключ класса свойства
+    IN inObjectId              Integer           , -- ключ 
+    IN inValueData             TFloat              -- Значение
 )
-  RETURNS boolean AS
-$BODY$BEGIN
+RETURNS Boolean
+AS
+$BODY$
+BEGIN
 
-    /* изменить данные по значению <ключ свойства> и <ключ объекта> */
+     -- изменить <свойство>
     UPDATE ObjectFloat SET ValueData = inValueData WHERE ObjectId = inObjectId AND DescId = inDescId;
-    IF NOT found THEN            
-       /* вставить <ключ свойства> , <ключ объекта> и <данные> */
-       INSERT INTO ObjectFloat (DescId, ObjectId, ValueData)
-           VALUES (inDescId, inObjectId, inValueData);
-    END IF;             
-    RETURN true;
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION lpInsertUpdate_ObjectFloat(Integer, Integer, TFloat)
-  OWNER TO postgres;
+
+     -- если не нашли + попробуем 0 НЕ вставлять
+     IF NOT FOUND AND inValueData <> 0
+     THEN
+        -- вставить <свойство>
+        INSERT INTO ObjectFloat (DescId, ObjectId, ValueData)
+                         VALUES (inDescId, inObjectId, inValueData);
+     END IF;
+
+     RETURN (TRUE);
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION lpInsertUpdate_ObjectFloat (Integer, Integer, TFloat) OWNER TO postgres;
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.05.17                                        * IF ... AND inValueData <> 0
+*/

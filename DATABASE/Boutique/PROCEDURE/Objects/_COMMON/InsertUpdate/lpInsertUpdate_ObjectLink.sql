@@ -1,28 +1,45 @@
--- Function: lpInsertUpdate_ObjectLink()
+-- Function: lpInsertUpdate_ObjectLink
 
--- DROP FUNCTION lpInsertUpdate_ObjectLink();
+DROP FUNCTION IF EXISTS lpInsertUpdate_ObjectLink (Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_ObjectLink(
- inDescId                    Integer           ,  /* код класса свойства       */
- inObjectId                  Integer           ,  /* ключ главного объекта     */
- inChildObjectId             Integer              /* ключ подчиненного объекта */
+    IN inDescId                Integer           , -- ключ класса свойства
+    IN inObjectId              Integer           , -- ключ главного объекта
+    IN inChildObjectId         Integer             -- ключ подчиненного объекта
 )
-  RETURNS boolean AS
-$BODY$BEGIN
-    IF inChildObjectId = 0 THEN
-       inChildObjectId := NULL;
+RETURNS Boolean
+
+AS
+$BODY$
+BEGIN
+    -- заменили
+    IF inChildObjectId = 0
+    THEN
+        inChildObjectId := NULL;
     END IF;
 
-    /* изменить данные по значению <ключ свойства> и <ключ объекта> */
+
+    -- изменить <свойство>
     UPDATE ObjectLink SET ChildObjectId = inChildObjectId WHERE ObjectId = inObjectId AND DescId = inDescId;
-    IF NOT found THEN            
-       /* вставить <ключ свойства> , <ключ главного объекта> и <ключ подчиненного объекта> */
-       INSERT INTO ObjectLink (DescId, ObjectId, ChildObjectId)
-           VALUES (inDescId, inObjectId, inChildObjectId);
+
+    -- если не нашли + попробуем NULL НЕ вставлять
+    IF NOT FOUND AND inChildObjectId IS NOT NULL
+    THEN
+        -- вставить <свойство>
+        INSERT INTO ObjectLink (DescId, ObjectId, ChildObjectId)
+                        VALUES (inDescId, inObjectId, inChildObjectId);
     END IF;             
-    RETURN true;
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION lpInsertUpdate_ObjectLink(Integer, Integer, Integer)
-  OWNER TO postgres;
+
+    RETURN (TRUE);
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION lpInsertUpdate_ObjectLink (Integer, Integer, Integer) OWNER TO postgres;
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.03.15                                        * IF ... AND inChildObjectId IS NOT NULL
+*/

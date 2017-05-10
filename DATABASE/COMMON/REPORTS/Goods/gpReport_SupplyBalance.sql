@@ -67,42 +67,66 @@ BEGIN
                      UNION
                       SELECT 981821 AS UnitId     -- шприцевание          
                      )
-    -- заявки по Юр Лицам - !!!только если под них еще нет прихода!!!
-  , tmpOrderIncome AS (SELECT MILinkObject_Goods.ObjectId AS GoodsId
-                            , STRING_AGG (Object.ValueData :: TVarChar, '; ') AS PartnerName -- на самом деле это Юр лицо, но его будем использовать если вдруг другой инфі не окажется
-                            , SUM (MovementItem.Amount) AS Amount
-                       FROM Movement
-                            INNER JOIN MovementLinkObject AS MovementLinkObject_Juridical
-                                                          ON MovementLinkObject_Juridical.MovementId = Movement.Id
-                                                         AND MovementLinkObject_Juridical.DescId     = zc_MovementLinkObject_Juridical()
-                                                         -- !!!ограничили!!!
-                                                         AND (MovementLinkObject_Juridical.ObjectId = inJuridicalId OR inJuridicalId = 0)
-                            LEFT JOIN Object ON Object.Id = MovementLinkObject_Juridical.ObjectId
-
-                            INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                         AND MovementLinkObject_Unit.ObjectId > 0 -- !!!значит это заявка "снабжения"!!!
-                            LEFT JOIN MovementItem ON MovementItem.MovementId  = Movement.Id
-                                                  AND MovementItem.isErased    = False
-                                                  AND MovementItem.DescId      = zc_MI_Master()
-                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
-                                                             ON MILinkObject_Goods.MovementItemId = MovementItem.Id
-                                                            AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-                            INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MILinkObject_Goods.ObjectId
-
-                            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Income
-                                                           ON MovementLinkMovement_Income.MovementChildId = Movement.Id
-                                                          AND MovementLinkMovement_Income.DescId = zc_MovementLinkMovement_Order()
-                            LEFT JOIN Movement AS Movement_Income
-                                               ON Movement_Income.Id       = MovementLinkMovement_Income.MovementId
-                                              AND Movement_Income.StatusId = zc_Enum_Status_Complete()
-
-                       WHERE Movement.DescId     = zc_Movement_OrderIncome()
-                         AND Movement.StatusId   = zc_Enum_Status_Complete()
-                         AND Movement_Income.Id IS NULL -- т.е. у заявки еще нет ПРОВЕДЕННОГО прихода
-                       GROUP BY MILinkObject_Goods.ObjectId
-                       )
+    -- заявки по Юр Лицам - !!!только если заявка НЕ закрыта!!! -- !!!вместо - только если под них еще нет прихода!!!
+  , tmpOrderIncome_all AS (SELECT MILinkObject_Goods.ObjectId           AS GoodsId
+                                , MovementLinkObject_Juridical.ObjectId AS JuridicalId -- на самом деле это Юр лицо, но его будем использовать если вдруг другой инфы не окажется
+                                , MovementItem.Amount                   AS Amount
+                                , COALESCE (MI_Income.Amount, 0)        AS Amount_Income
+                                , ROW_NUMBER() OVER (PARTITION BY Movement.Id, MILinkObject_Goods.ObjectId) AS Ord
+                           FROM Movement
+                                LEFT JOIN MovementBoolean AS MovementBoolean_Closed
+                                                          ON MovementBoolean_Closed.MovementId = Movement.Id
+                                                         AND MovementBoolean_Closed.DescId     = zc_MovementBoolean_Closed()
+                                                         AND MovementBoolean_Closed.ValueData  = TRUE
+                                INNER JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                                              ON MovementLinkObject_Juridical.MovementId = Movement.Id
+                                                             AND MovementLinkObject_Juridical.DescId     = zc_MovementLinkObject_Juridical()
+                                                             -- !!!ограничили!!!
+                                                             AND (MovementLinkObject_Juridical.ObjectId = inJuridicalId OR inJuridicalId = 0)
+    
+                                INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                              ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                             AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                             AND MovementLinkObject_Unit.ObjectId > 0 -- !!!значит это заявка "снабжения"!!!
+                                LEFT JOIN MovementItem ON MovementItem.MovementId  = Movement.Id
+                                                      AND MovementItem.isErased    = FALSE
+                                                      AND MovementItem.DescId      = zc_MI_Master()
+                                LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                                 ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                                AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                                INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MILinkObject_Goods.ObjectId
+    
+                                LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Income
+                                                               ON MovementLinkMovement_Income.MovementChildId = Movement.Id
+                                                              AND MovementLinkMovement_Income.DescId = zc_MovementLinkMovement_Order()
+                                LEFT JOIN Movement AS Movement_Income
+                                                   ON Movement_Income.Id       = MovementLinkMovement_Income.MovementId
+                                                  AND Movement_Income.StatusId = zc_Enum_Status_Complete()
+                                LEFT JOIN MovementItem AS MI_Income
+                                                       ON MI_Income.MovementId  = Movement.Id
+                                                      AND MI_Income.ObjectId    = MILinkObject_Goods.ObjectId
+                                                      AND MI_Income.isErased    = FALSE
+                                                      AND MI_Income.DescId      = zc_MI_Master()
+    
+                           WHERE Movement.DescId     = zc_Movement_OrderIncome()
+                             AND Movement.StatusId   = zc_Enum_Status_Complete()
+                             AND MovementBoolean_Closed.MovementId IS NULL -- т.е. заявка НЕ закрыта
+                             -- AND Movement_Income.Id IS NULL -- т.е. у заявки еще нет ПРОВЕДЕННОГО прихода
+                           )
+        -- заявки по Юр Лицам - вычитаем: Заявка - Приход
+      , tmpOrderIncome AS (SELECT tmp.GoodsId
+                                , tmp.PartnerName
+                                , tmp.Amount - tmp.Amount_Income AS Amount
+                           FROM (SELECT tmpOrderIncome_all.GoodsId
+                                      , STRING_AGG (Object.ValueData :: TVarChar, '; ') AS PartnerName -- на самом деле это Юр лицо, но его будем использовать если вдруг другой инфі не окажется
+                                      , SUM (CASE WHEN tmpOrderIncome_all.Ord = 1 THEN tmpOrderIncome_all.Amount ELSE 0 END) AS Amount
+                                      , SUM (tmpOrderIncome_all.Amount_Income) AS Amount_Income
+                                 FROM tmpOrderIncome_all
+                                      LEFT JOIN Object ON Object.Id = tmpOrderIncome_all.JuridicalId
+                                 GROUP BY tmpOrderIncome_all.GoodsId
+                                ) AS tmp
+                           WHERE tmp.Amount > tmp.Amount_Income
+                          )
     -- список товаров по поставщикам из прихода (кол-во прихода возьмем из проводок - потом)
   , tmpContainerIncome AS (SELECT DISTINCT
                                   MIContainer.ObjectId_Analyzer    AS GoodsId

@@ -53,50 +53,59 @@ inherited SPDialogForm: TSPDialogForm
     Text = '<'#1044#1083#1103' '#1074#1099#1073#1086#1088#1072' '#1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1075#1086' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1103' '#1085#1072#1078#1084#1080#1090#1077' [Ctrl+Enter]>'
     Width = 265
   end
-  object edMedicSP: TcxTextEdit [5]
-    Left = 16
-    Top = 74
-    TabOrder = 3
-    Width = 265
-  end
-  object cxLabel13: TcxLabel [6]
+  object cxLabel13: TcxLabel [5]
     Left = 433
     Top = 54
     Caption = #1044#1072#1090#1072' '#1088#1077#1094#1077#1087#1090#1072
   end
-  object edOperDateSP: TcxDateEdit [7]
+  object edOperDateSP: TcxDateEdit [6]
     Left = 433
     Top = 74
     EditValue = 42261d
     Properties.ReadOnly = False
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 5
+    TabOrder = 4
     Width = 90
   end
-  object cxLabel14: TcxLabel [8]
+  object cxLabel14: TcxLabel [7]
     Left = 297
     Top = 56
     Caption = #1053#1086#1084#1077#1088' '#1088#1077#1094#1077#1087#1090#1072
   end
-  object edInvNumberSP: TcxTextEdit [9]
+  object edInvNumberSP: TcxTextEdit [8]
     Left = 297
     Top = 74
     Properties.ReadOnly = False
-    TabOrder = 7
+    TabOrder = 6
     Width = 116
   end
-  object cxLabel17: TcxLabel [10]
+  object cxLabel17: TcxLabel [9]
     Left = 297
     Top = 8
     Caption = #8470' '#1072#1084#1073#1091#1083#1072#1090#1086#1088#1080#1080' '
   end
-  object edAmbulance: TcxTextEdit [11]
+  object edAmbulance: TcxTextEdit [10]
     Left = 297
     Top = 27
     Properties.ReadOnly = False
-    TabOrder = 9
+    TabOrder = 8
     Width = 116
+  end
+  object edMedicSP: TcxButtonEdit [11]
+    Left = 16
+    Top = 74
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.Nullstring = '<'#1044#1083#1103' '#1074#1099#1073#1086#1088#1072' '#1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1075#1086' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1103' '#1085#1072#1078#1084#1080#1090#1077' [Ctrl+Enter]>'
+    Properties.ReadOnly = False
+    Properties.UseNullString = True
+    TabOrder = 9
+    Text = '<'#1044#1083#1103' '#1074#1099#1073#1086#1088#1072' '#1060#1048#1054' '#1074#1088#1072#1095#1072' [Ctrl+Enter]>'
+    Width = 265
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Top = 104
@@ -175,5 +184,49 @@ inherited SPDialogForm: TSPDialogForm
       end>
     Left = 192
     Top = 8
+  end
+  object MedicSPGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMedicSP
+    FormNameParam.Value = 'TMedicSPForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMedicSPForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = MedicSPGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = MedicSPGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPartnerMedicalId'
+        Value = ''
+        Component = PartnerMedicalGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPartnerMedicalName'
+        Value = ''
+        Component = PartnerMedicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 216
+    Top = 56
   end
 end

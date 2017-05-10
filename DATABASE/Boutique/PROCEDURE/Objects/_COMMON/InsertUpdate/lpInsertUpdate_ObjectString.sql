@@ -1,25 +1,38 @@
--- Function: lpinsertupdate_objectstring()
+-- Function: lpInsertUpdate_MovementString
 
--- DROP FUNCTION lpinsertupdate_objectstring();
+DROP FUNCTION IF EXISTS lpInsertUpdate_ObjectString (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_ObjectString(
- inDescId                    Integer           ,  /* код класса свойства  */
- inObjectId                  Integer           ,  /* ключ объекта         */
- inValueData                 TVarChar             /* данные свойства      */
+    IN inDescId                Integer           , -- ключ класса свойства
+    IN inObjectId              Integer           , -- ключ 
+    IN inValueData             TVarChar            -- Значение
 )
-  RETURNS boolean AS
-$BODY$BEGIN
+RETURNS Boolean
+AS
+$BODY$
+BEGIN
 
-    /* изменить данные по значению <ключ свойства> и <ключ объекта> */
-    UPDATE ObjectString SET ValueData = inValueData WHERE ObjectId = inObjectId AND DescId = inDescId;
-    IF NOT found THEN            
-       /* вставить <ключ свойства> , <ключ объекта> и <данные> */
-       INSERT INTO ObjectString (DescId, ObjectId, ValueData)
-           VALUES (inDescId, inObjectId, inValueData);
-    END IF;             
-    RETURN true;
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION lpInsertUpdate_ObjectString(Integer, Integer, TVarChar)
-  OWNER TO postgres;
+     -- изменить <свойство>
+     UPDATE ObjectString SET ValueData = inValueData WHERE ObjectId = inObjectId AND DescId = inDescId;
+    
+     -- если не нашли + попробуем ПУСТО НЕ вставлять
+     IF NOT FOUND AND inValueData <> ''
+     THEN
+        -- вставить <свойство>
+        INSERT INTO ObjectString (DescId, ObjectId, ValueData)
+                          VALUES (inDescId, inObjectId, inValueData);
+     END IF;
+
+     RETURN (TRUE);
+     
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION lpInsertUpdate_ObjectString (Integer, Integer, TVarChar) OWNER TO postgres;
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.05.17                                        * IF ... AND inValueData <> ''
+*/
