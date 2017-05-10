@@ -107,6 +107,22 @@ object Unit_ObjectForm: TUnit_ObjectForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 165
       end
+      object clBankAccountName: TcxGridDBColumn
+        Caption = #1053#1086#1084#1077#1088' '#1089#1095#1077#1090#1072
+        DataBinding.FieldName = 'BankAccountName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 100
+      end
+      object clBankName: TcxGridDBColumn
+        Caption = #1041#1072#1085#1082
+        DataBinding.FieldName = 'BankName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 100
+      end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'

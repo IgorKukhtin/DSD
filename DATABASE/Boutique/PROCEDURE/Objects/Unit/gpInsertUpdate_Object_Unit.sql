@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, TVarChar,  Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar,  Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, Integer, Integer, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
@@ -14,7 +15,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inDiscountTax              TFloat    ,    -- % скидки ВИНТАЖ
     IN inJuridicalId              Integer   ,    -- ключ объекта <Юридические лица> 
     IN inParentlId                Integer   ,    -- ключ объекта <Група> 
-    IN inChildId                  Integer   ,    -- ключ объекта <Склад> 
+    IN inChildId                  Integer   ,    -- ключ объекта <Склад>
+    IN inBankAccountId            Integer   ,    -- ключ объекта <Расчетный счет>
     IN inSession                  TVarChar       -- сессия пользователя
 )
 RETURNS record
@@ -56,6 +58,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Parent(), ioId, inParentlId);
    -- сохранили связь с <Склад>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Child(), ioId, inChildId);
+   -- сохранили связь с <Расчетный счет>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_BankAccount(), ioId, inBankAccountId);
+
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -69,6 +74,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятикин А.А.
+10.05.17                                                           *
 08.05.17                                                           *
 28.02.17                                                           *
 

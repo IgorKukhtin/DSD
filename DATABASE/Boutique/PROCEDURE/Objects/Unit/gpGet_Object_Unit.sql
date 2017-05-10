@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Unit(
     IN inId          Integer,       -- Подразделения
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Address TVarChar, Phone TVarChar, DiscountTax TFloat, JuridicalId Integer, JuridicalName TVarChar,  ParentId Integer, ParentName TVarChar,  ChildId Integer, ChildName  TVarChar) 
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Address TVarChar, Phone TVarChar, DiscountTax TFloat, JuridicalId Integer, JuridicalName TVarChar,  ParentId Integer, ParentName TVarChar,  ChildId Integer, ChildName  TVarChar, BankAccountId Integer, BankAccountName  TVarChar) 
 AS
 $BODY$
 BEGIN
@@ -30,6 +30,8 @@ BEGIN
            , '' :: TVarChar                         AS ParentName       
            ,  0 :: Integer                          AS ChildId          
            , '' :: TVarChar                         AS ChildName        
+           ,  0 :: Integer                          AS BankAccountId          
+           , '' :: TVarChar                         AS BankAccountName        
 
        ;
    ELSE
@@ -47,6 +49,8 @@ BEGIN
            , Object_Parent.ValueData         AS ParentName
            , Object_Child.Id                 AS ChildId
            , Object_Child.ValueData          AS ChildName
+           , Object_BankAccount.Id           AS BankAccountId
+           , Object_BankAccount.ValueData    AS BankAccountName
        
        FROM Object AS Object_Unit
             LEFT JOIN ObjectString AS OS_Unit_Address
@@ -70,6 +74,11 @@ BEGIN
                                  ON ObjectLink_Unit_Child.ObjectId = Object_Unit.Id
                                 AND ObjectLink_Unit_Child.DescId = zc_ObjectLink_Unit_Child()
             LEFT JOIN Object AS Object_Child ON Object_Child.Id = ObjectLink_Unit_Child.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_BankAccount
+                                 ON ObjectLink_Unit_BankAccount.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_BankAccount.DescId = zc_ObjectLink_Unit_BankAccount()
+            LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = ObjectLink_Unit_BankAccount.ChildObjectId
+
 
       WHERE Object_Unit.Id = inId;
 
@@ -84,6 +93,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+10.05.17                                                          *
 08.05.17                                                          *
 06.03.17                                                          *
 28.02.17                                                          *
@@ -91,4 +101,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Unit(1,'2')
+-- SELECT * FROM gpGet_Object_Unit(1,'2')

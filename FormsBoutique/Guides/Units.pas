@@ -67,6 +67,8 @@ type
     clDiscountTax: TcxGridDBColumn;
     clParentName: TcxGridDBColumn;
     clChildName: TcxGridDBColumn;
+    clBankAccountName: TcxGridDBColumn;
+    clBankName: TcxGridDBColumn;
   private
     { Private declarations }
   public
