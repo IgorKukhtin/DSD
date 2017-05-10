@@ -4,7 +4,7 @@
     - связей
     - индексов
 */
-
+--drop TABLE Object_PartionGoods
 
 /*-------------------------------------------------------------------------------*/
 
@@ -20,6 +20,7 @@ CREATE TABLE Object_PartionGoods(
    GoodsItemId         Integer ,
    CurrencyId          Integer ,
    Amount              TFloat  NOT NULL,
+   CountForPrice       TFloat  ,
    OperPrice	       TFloat  NOT NULL,
    PriceSale           TFloat  NOT NULL,
    BrandId             Integer ,
@@ -54,7 +55,8 @@ CREATE INDEX idx_Object_PartionGoods_MovementId	 ON Object_PartionGoods(Movement
  ИСТОРИЯ РАЗРАБОТКИ:
  ДАТА         АВТОР
  ----------------
-                 Климентьев К.И.   Кухтин И.В. Полятыкин А.А.
+                 Климентьев К.И.   Кухтин И.В. Полятыкин А.А.       Фелонюк И.В.    
+10.05.17                                                               * add CountForPrice
 24.04.17                                           *  add  JuridicalId
 15.03.17                                           *
 

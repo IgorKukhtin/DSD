@@ -608,6 +608,9 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_TotalPayReturn() RETURNS Integer AS $BODY$
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_TotalPayReturn', 'Итого сумма возврата оплаты (в ГРН)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_TotalPayReturn');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_AmountClient() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountClient'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_AmountClient', 'Количество у покупателя - Расчетный остаток' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountClient');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

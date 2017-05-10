@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpinsertupdate_movementitem_loss (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Loss(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -10,8 +11,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Loss(
     IN inGoodsId             Integer   , -- Товары
     IN inPartionId           Integer   , -- Партия
     IN inAmount              TFloat    , -- Количество
- INOUT ioCountForPrice       TFloat    , -- Цена за количество
-    IN inOperPrice           TFloat    , -- Цена
+   OUT outCountForPrice      TFloat    , -- Цена за количество
+   OUT outOperPrice          TFloat    , -- Цена
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
    OUT outOperPriceList      TFloat    , -- Цена по прайсу
    OUT outAmountPriceListSumm TFloat    , -- Сумма по прайсу
@@ -34,29 +35,35 @@ BEGIN
      vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
      -- цена продажи из прайса 
      outOperPriceList := COALESCE ((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem(vbOperDate, zc_PriceList_Basis(), inGoodsId) AS tmp), 0);
+     -- данные из партии : OperPrice и CountForPrice
+     SELECT COALESCE (Object_PartionGoods.CountForPrice,1)
+          , COALESCE (Object_PartionGoods.OperPrice,0)
+    INTO outCountForPrice, outOperPrice
+     FROM Object_PartionGoods
+     WHERE Object_PartionGoods.MovementItemId = inPartionId;
 
      -- Заменили свойство <Цена за количество>
-     IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
+     --IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, CASE WHEN inPartionId > 0 THEN inPartionId ELSE NULL END, inMovementId, inAmount, NULL);
       
-      -- сохранили свойство <Цена>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice(), ioId, inOperPrice);
+     -- сохранили свойство <Цена>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice(), ioId, outOperPrice);
      -- сохранили свойство <Цена за количество>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, ioCountForPrice);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, outCountForPrice);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), ioId, outOperPriceList);
 
 
      -- расчитали сумму по элементу, для грида
      outAmountSumm := CASE WHEN ioCountForPrice > 0
-                                THEN CAST (inAmount * inOperPrice / ioCountForPrice AS NUMERIC (16, 2))
-                           ELSE CAST (inAmount * inOperPrice AS NUMERIC (16, 2))
+                                THEN CAST (inAmount * outOperPrice / outCountForPrice AS NUMERIC (16, 2))
+                           ELSE CAST (inAmount * outOperPrice AS NUMERIC (16, 2))
                       END;
      -- расчитали сумму по прайсу по элементу, для грида
      outAmountPriceListSumm := CASE WHEN ioCountForPrice > 0
-                                         THEN CAST (inAmount * outOperPriceList / ioCountForPrice AS NUMERIC (16, 2))
+                                         THEN CAST (inAmount * outOperPriceList / outCountForPrice AS NUMERIC (16, 2))
                                     ELSE CAST (inAmount * outOperPriceList AS NUMERIC (16, 2))
                                END;
 
