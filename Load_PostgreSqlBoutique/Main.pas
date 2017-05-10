@@ -2141,9 +2141,9 @@ begin
         Add('    , BillItemsIncome.Id_Postgres as PartionId  ');
         Add('    , DiscountMovementItemInventory_byBarCode.EnterOperCount as Amount ');
         Add('    , DiscountMovementItemInventory_byBarCode.EnterOperCount_two as AmountSecond ');
-        Add('    , DiscountMovementItemInventory_byBarCode.CalcOperCount as AmountRemains ');
-        Add('    , DiscountMovementItemInventory_byBarCode.CalcOperCount_two as AmountSecondRemains ');
-        Add('    , DiscountMovementItemInventory_byBarCode.DolgOperCount as AmountDolg ');
+//        Add('    , DiscountMovementItemInventory_byBarCode.CalcOperCount as AmountRemains ');
+//        Add('    , DiscountMovementItemInventory_byBarCode.CalcOperCount_two as AmountSecondRemains ');
+//        Add('    , DiscountMovementItemInventory_byBarCode.DolgOperCount as AmountDolg ');
         Add('    , DiscountMovementItemInventory_byBarCode.Id_Postgres ');
         Add('from dba.DiscountMovementItemInventory_byBarCode    ');
         Add('    join DiscountMovementInventory on DiscountMovementInventory.id = DiscountMovementItemInventory_byBarCode.DiscountMovementId ');
@@ -2169,10 +2169,6 @@ begin
         toStoredProc.Params.AddParam ('inPartionId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountSecond',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inAmountRemains',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inAmountSecondRemains',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('ioCountForPrice',ftFloat,ptInputOutput, 0);
-        toStoredProc.Params.AddParam ('inOperPrice',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
 
 
@@ -2195,7 +2191,7 @@ begin
              if not myExecToStoredProc then ;//exit;
              //
              if FieldByName('Id_Postgres').AsInteger=0 then
-               fExecSqFromQuery('update dba.BillItems set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+               fExecSqFromQuery('update dba.DiscountMovementItemInventory_byBarCode set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
 
              Next;

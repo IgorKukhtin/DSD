@@ -72,7 +72,7 @@ BEGIN
          THEN
              -- Создание
              vbLineFabricaId := gpInsertUpdate_Object_LineFabrica (ioId     := 0
-                                                                 , inCode   := 0
+                                                                 , ioCode   := 0
                                                                  , inName   := inLineFabricaName
                                                                  , inSession:= inSession
                                                                   );
@@ -90,7 +90,7 @@ BEGIN
          THEN
              -- Создание
              vbCompositionId := gpInsertUpdate_Object_Composition (ioId                 := 0
-                                                                 , inCode               := 0
+                                                                 , ioCode               := 0
                                                                  , inName               := inCompositionName
                                                                  , inCompositionGroupId := 0 -- сохраняем с пустой группой
                                                                  , inSession            := inSession
@@ -109,7 +109,7 @@ BEGIN
          THEN
              -- Создание
              vbGoodsInfoId := gpInsertUpdate_Object_GoodsInfo (ioId     := 0
-                                                             , inCode   := 0
+                                                             , ioCode   := 0
                                                              , inName   := inGoodsInfoName
                                                              , inSession:= inSession
                                                               );
@@ -127,7 +127,7 @@ BEGIN
          THEN
              -- Создание
              vbLabelId := gpInsertUpdate_Object_Label (ioId     := 0
-                                                     , inCode   := 0
+                                                     , ioCode   := 0
                                                      , inName   := inLabelName
                                                      , inSession:= inSession
                                                       );
@@ -148,7 +148,7 @@ BEGIN
      THEN
          -- Создание
          vbGoodsSizeId := gpInsertUpdate_Object_GoodsSize (ioId     := 0
-                                                         , inCode   := 0
+                                                         , ioCode   := 0
                                                          , inName   := inGoodsSizeName
                                                          , inSession:= inSession
                                                           );
@@ -183,7 +183,7 @@ BEGIN
      THEN
          -- Создание
          vbGoodsId := gpInsertUpdate_Object_Goods (ioId            := vbGoodsId
-                                                 , inCode          := 0
+                                                 , ioCode          := 0
                                                  , inName          := inGoodsName
                                                  , inGoodsGroupId  := inGoodsGroupId
                                                  , inMeasureId     := inMeasureId
@@ -305,6 +305,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Полятыкин А.А.
+ 10.05.17                                                        *
  24.04.17                                                        *
  10.04.17         *
 */
