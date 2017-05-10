@@ -152,6 +152,8 @@ type
     spSelectBarCode: TdsdStoredProc;
     actGoodsChoiceForm: TOpenChoiceForm;
     InsertRecord: TInsertRecord;
+    cbCalcAmountPartner: TcxCheckBox;
+    colDiscountSaleKindName: TcxGridDBColumn;
   private
   public
   end;

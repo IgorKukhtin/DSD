@@ -57,12 +57,12 @@ BEGIN
 
 
      -- расчитали сумму по элементу, для грида
-     outAmountSumm := CASE WHEN ioCountForPrice > 0
+     outAmountSumm := CASE WHEN outCountForPrice > 0
                                 THEN CAST (inAmount * outOperPrice / outCountForPrice AS NUMERIC (16, 2))
                            ELSE CAST (inAmount * outOperPrice AS NUMERIC (16, 2))
                       END;
      -- расчитали сумму по прайсу по элементу, для грида
-     outAmountPriceListSumm := CASE WHEN ioCountForPrice > 0
+     outAmountPriceListSumm := CASE WHEN outCountForPrice > 0
                                          THEN CAST (inAmount * outOperPriceList / outCountForPrice AS NUMERIC (16, 2))
                                     ELSE CAST (inAmount * outOperPriceList AS NUMERIC (16, 2))
                                END;
