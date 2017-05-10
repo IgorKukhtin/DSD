@@ -54,7 +54,7 @@ object BankAccountForm: TBankAccountForm
         Width = 55
       end
       object clName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        Caption = #1053#1086#1084#1077#1088' '#1089#1095#1077#1090#1072
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

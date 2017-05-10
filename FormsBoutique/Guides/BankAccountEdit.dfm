@@ -25,7 +25,7 @@ object BankAccountEditForm: TBankAccountEditForm
   object cxLabel1: TcxLabel
     Left = 10
     Top = 54
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+    Caption = #1053#1086#1084#1077#1088' '#1089#1095#1077#1090#1072
   end
   object cxButton1: TcxButton
     Left = 41
