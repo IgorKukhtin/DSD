@@ -208,9 +208,14 @@ CREATE OR REPLACE FUNCTION zc_Object_Bank() RETURNS Integer AS $BODY$BEGIN RETUR
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Bank', 'Банки' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Bank');
 
+CREATE OR REPLACE FUNCTION zc_Object_BankAccount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_BankAccount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_BankAccount', 'Расчетные счета' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_BankAccount');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.   Воробкало А. А.
+10.05.17                                                          *
 09.05.17                                                          *
 28.04.17          * add zc_Object_PriceList
                         zc_Object_PriceListItem

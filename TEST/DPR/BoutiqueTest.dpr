@@ -200,7 +200,10 @@ uses
   Bank in '..\..\FormsBoutique\Guides\Bank.pas' {BankForm: TParentForm},
   BankEdit in '..\..\FormsBoutique\Guides\BankEdit.pas' {BankEditForm: TParentForm},
   SaleJournal in '..\..\FormsBoutique\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
-  Sale in '..\..\FormsBoutique\Document\Sale.pas' {SaleForm: TParentForm};
+  Sale in '..\..\FormsBoutique\Document\Sale.pas' {SaleForm: TParentForm},
+  BankAccount in '..\..\FormsBoutique\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
+  BankAccountEdit in '..\..\FormsBoutique\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm};
+
 
 {$R *.res}
 {$R DevExpressRus.res}
