@@ -126,6 +126,7 @@ type
     cbPriceListItem: TCheckBox;
     cbMember: TCheckBox;
     cbUser: TCheckBox;
+    cbInventory: TCheckBox;
 
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
@@ -228,6 +229,8 @@ type
     procedure pLoadDocumentItem_Loss(SaveCount:Integer);
     procedure pLoadDocuments_PriceListItem;
     procedure pLoadDocuments_DiscountPeriodItem;
+    function  pLoadDocument_Inventory:Integer;
+    procedure pLoadDocumentItem_Inventory(SaveCount:Integer);
 
 
 // Load from files *.dat
@@ -1832,6 +1835,8 @@ begin
      if not fStop then pLoadDocumentItem_Loss(myRecordCount1);
      if not fStop then pLoadDocuments_PriceListItem;
      if not fStop then pLoadDocuments_DiscountPeriodItem;
+     if not fStop then myRecordCount1:=pLoadDocument_Inventory;
+     if not fStop then pLoadDocumentItem_Inventory(myRecordCount1);
 
 
      //
@@ -1917,6 +1922,8 @@ begin
         try fExecSqFromQuery_noErr('alter table dba.BillItemsIncome add GoodsId_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.PriceListItems add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.DiscountTaxItems add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.DiscountMovementInventory add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.DiscountMovementItemInventory_byBarCode add Id_Postgres integer null;'); except end;
      end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1982,7 +1989,8 @@ begin
      fExecSqFromQuery('update dba.BillItemsIncome set GoodsId_Postgres = null where GoodsId_Postgres is not null');
      fExecSqFromQuery('update dba.PriceListItems set Id_Postgres = null ');
      fExecSqFromQuery('update dba.DiscountTaxItems set Id_Postgres = null ');
-//     fExecSqFromQuery('update dba.BillItemsReceipt set Id_Postgres = null where Id_Postgres is not null');
+     fExecSqFromQuery('update dba.DiscountMovementInventory set Id_Postgres = null');
+     fExecSqFromQuery('update dba.DiscountMovementItemInventory_byBarCode set Id_Postgres = null');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocumentItem_Income(SaveCount: Integer);
@@ -2115,6 +2123,91 @@ begin
      end;
      //
      myDisabledCB(cbIncome);
+end;
+
+procedure TMainForm.pLoadDocumentItem_Inventory(SaveCount: Integer);
+begin
+     if (not cbInventory.Checked)or(not cbInventory.Enabled) then exit;
+     //
+     myEnabledCB(cbInventory);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select ');
+        Add('      DiscountMovementItemInventory_byBarCode.Id as ObjectId   ');
+        Add('    , DiscountMovementInventory.Id_Postgres as MovementId   ');
+        Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId  ');
+        Add('    , BillItemsIncome.Id_Postgres as PartionId  ');
+        Add('    , DiscountMovementItemInventory_byBarCode.EnterOperCount as Amount ');
+        Add('    , DiscountMovementItemInventory_byBarCode.EnterOperCount_two as AmountSecond ');
+        Add('    , DiscountMovementItemInventory_byBarCode.CalcOperCount as AmountRemains ');
+        Add('    , DiscountMovementItemInventory_byBarCode.CalcOperCount_two as AmountSecondRemains ');
+        Add('    , DiscountMovementItemInventory_byBarCode.DolgOperCount as AmountDolg ');
+        Add('    , DiscountMovementItemInventory_byBarCode.Id_Postgres ');
+        Add('from dba.DiscountMovementItemInventory_byBarCode    ');
+        Add('    join DiscountMovementInventory on DiscountMovementInventory.id = DiscountMovementItemInventory_byBarCode.DiscountMovementId ');
+        Add('    left join BillItemsIncome on BillItemsIncome.id = DiscountMovementItemInventory_byBarCode.BillItemsIncomeId ');
+        Add('where  DiscountMovementInventory.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add('order by ObjectId  ');
+        Open;
+
+        cbInventory.Caption:='1.5. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Инвентаризация ';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_MovementItem_Inventory';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPartionId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountSecond',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountRemains',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountSecondRemains',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('ioCountForPrice',ftFloat,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inOperPrice',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
+
+
+
+        //
+        HideCurGrid(True);
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin HideCurGrid(False);  exit; end;
+
+              //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
+             toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
+             toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+             toStoredProc.Params.ParamByName('inAmountSecond').Value:=FieldByName('AmountSecond').AsFloat;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             if FieldByName('Id_Postgres').AsInteger=0 then
+               fExecSqFromQuery('update dba.BillItems set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        HideCurGrid(False);
+     end;
+     //
+     myDisabledCB(cbInventory);
+
 end;
 
 procedure TMainForm.pLoadDocumentItem_Loss(SaveCount: Integer);
@@ -2473,6 +2566,88 @@ end;
 
 
 
+
+function TMainForm.pLoadDocument_Inventory: Integer;
+begin
+     Result:=0;
+     //
+     if (not cbInventory.Checked)or(not cbInventory.Enabled) then exit;
+     //
+     myEnabledCB(cbInventory);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select ');
+        Add('      DiscountMovementInventory.Id as ObjectId ');
+        Add('    , 0 as InvNumber ');
+        Add('    , DiscountMovementInventory.OperDate as OperDate ');
+        Add('    , DiscountMovementInventory_From.Id_Postgres as FromId  ');
+        Add('    , DiscountMovementInventory_From.UnitName as UnitNameFrom ');
+        Add('    , DiscountMovementInventory_To.Id_Postgres as ToId ');
+        Add('    , DiscountMovementInventory_To.UnitName as UnitNameTo ');
+        Add('    , DiscountMovementInventory.Id_Postgres ');
+        Add('from DBA.DiscountMovementInventory ');
+        Add('    left outer join DBA.Unit as DiscountMovementInventory_From on DiscountMovementInventory_From.Id = DiscountMovementInventory.UnitID ');
+        Add('    left outer join DBA.Unit as DiscountMovementInventory_To on DiscountMovementInventory_To.Id = DiscountMovementInventory.UnitID_two ');
+        Add('where  DiscountMovementInventory.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add('order by ObjectId ');
+        Open;
+
+        Result:=RecordCount;
+        cbInventory.Caption:='1.5. ('+IntToStr(RecordCount)+') Инвентаризация';
+        //
+        //
+        //
+        //
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Movement_Inventory';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('ioInvNumber',ftString,ptInputOutput, '');
+        toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
+        //
+        HideCurGrid(True);
+        while not EOF do
+        begin
+             //!!!
+            if fStop then begin HideCurGrid(False);  exit; end;
+             //
+
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('ioInvNumber').Value:=FieldByName('InvNumber').AsString;
+             toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
+             toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
+             toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId').AsInteger;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             if FieldByName('Id_Postgres').AsInteger=0 then
+               fExecSqFromQuery('update dba.DiscountMovementInventory set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        HideCurGrid(False);
+     end;
+     //
+     myDisabledCB(cbInventory);
+
+end;
 
 function TMainForm.pLoadDocument_Loss: Integer;
 begin

@@ -757,6 +757,21 @@
           TabOrder = 9
           WordWrap = True
         end
+        object cbInventory: TCheckBox
+          Tag = 20
+          Left = 6
+          Top = 118
+          Width = 235
+          Height = 17
+          Caption = '1.5. '#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 10
+        end
       end
     end
     object TabSheet2: TTabSheet
