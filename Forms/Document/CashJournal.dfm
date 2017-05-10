@@ -6,7 +6,7 @@ inherited CashJournalForm: TCashJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 991
-  ExplicitHeight = 589
+  ExplicitHeight = 586
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -340,7 +340,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 55
           end
-          object clUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             FooterAlignmentHorz = taCenter
@@ -442,16 +442,8 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 100
           end
-          object clGUID: TcxGridDBColumn
-            DataBinding.FieldName = 'GUID'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 82
-          end
           object clInsertDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1080#1085#1093#1088'. '#1089' '#1084#1086#1073'.'#1091#1089#1090#1088')'
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -461,6 +453,7 @@ inherited CashJournalForm: TCashJournalForm
           object clInsertMobileDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1084#1086#1073'.'#1091#1089#1090#1088')'
             DataBinding.FieldName = 'InsertMobileDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -474,6 +467,32 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 101
           end
+          object UnitName_Mobile: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1086#1083#1100#1079'. '#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'UnitName_Mobile'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object PositionName_Mobile: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1084#1086#1073'. '#1072#1075#1077#1085#1090')'
+            DataBinding.FieldName = 'PositionName_Mobile'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object clGUID: TcxGridDBColumn
+            DataBinding.FieldName = 'GUID'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
+          end
         end
       end
     end
@@ -482,11 +501,11 @@ inherited CashJournalForm: TCashJournalForm
     Width = 975
     ExplicitWidth = 975
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42736d
     end
     inherited deEnd: TcxDateEdit
       Left = 305
-      EditValue = 42005d
+      EditValue = 42736d
       ExplicitLeft = 305
     end
     inherited cxLabel1: TcxLabel

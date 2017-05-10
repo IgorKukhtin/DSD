@@ -1,21 +1,23 @@
 -- Function: gpInsertUpdateMobile_Movement_Cash()
 
-DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Movement_Cash (TVarChar, TVarChar, TDateTime, Integer, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Movement_Cash (TVarChar, TVarChar, TDateTime, Integer, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdateMobile_Movement_Cash (TVarChar, TVarChar, TDateTime, Integer, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdateMobile_Movement_Cash (
-    IN inGUID       TVarChar  , -- Глобальный уникальный идентификатор для синхронизации с мобильными устройствами
-    IN inInvNumber  TVarChar  , -- Номер документа
-    IN inOperDate   TDateTime , -- Дата документа
-    IN inStatusId   Integer   , -- Виды статусов
-    IN inInsertDate TDateTime , -- Дата/время создания документа
-    IN inAmount     TFloat    , -- Итого сумма
-    IN inPaidKindId Integer   , -- Вид формы оплаты
-    IN inPartnerId  Integer   , -- Контрагент - От кого
-    IN inCashId     Integer   , -- В какую кассу будет приход
-    IN inMemberId   Integer   , -- Торговый агент
-    IN inContractId Integer   , -- Договор
-    IN inComment    TVarChar  , -- Примечание
-    IN inSession    TVarChar    -- сессия пользователя
+    IN inGUID          TVarChar  , -- Глобальный уникальный идентификатор для синхронизации с мобильными устройствами
+    IN inInvNumber     TVarChar  , -- Номер документа
+    IN inOperDate      TDateTime , -- Дата документа
+    IN inStatusId      Integer   , -- Виды статусов
+    IN inInsertDate    TDateTime , -- Дата/время создания документа
+    IN inAmount        TFloat    , -- Итого сумма
+    IN inPaidKindId    Integer   , -- Вид формы оплаты
+    IN inPartnerId     Integer   , -- Контрагент - От кого
+    IN inCashId        Integer   , -- В какую кассу будет приход
+    IN inMemberId      Integer   , -- Торговый агент
+    IN inContractId    Integer   , -- Договор
+    IN inComment       TVarChar  , -- Примечание
+    IN inInvNumberSale TVarChar  , -- Основание №, Номер накладной продажи
+    IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS Integer 
 AS
@@ -24,6 +26,8 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStatusId Integer;
    DECLARE vbisInsert Boolean;
+   DECLARE vbSaleId Integer;
+   DECLARE vbCommentIfSaleAbsent TVarChar;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -48,6 +52,40 @@ BEGIN
            PERFORM lpUnComplete_Movement (inMovementId:= vbId, inUserId:= vbUserId);
       END IF;
 
+      -- попытка найти документ основания по номеру накладной продажи
+      IF COALESCE (inInvNumberSale, '') <> ''
+      THEN
+           IF zfConvert_StringToNumber (inInvNumberSale) <> 0
+           THEN
+                -- если номер чисто цифровой (подхватывает индекс)
+                SELECT Movement_Sale.Id
+                INTO vbSaleId
+                FROM Movement AS Movement_Sale
+                     JOIN MovementLinkObject AS MovementLinkObject_From
+                                             ON MovementLinkObject_From.MovementId = Movement_Sale.Id
+                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From() 
+                                            AND MovementLinkObject_From.ObjectId = inPartnerId
+                WHERE Movement_Sale.DescId = zc_Movement_Sale()
+                  AND zfConvert_StringToNumber (Movement_Sale.InvNumber) = zfConvert_StringToNumber (inInvNumberSale);
+           ELSE
+                -- если в номере присутствуют буквы и другие символы
+                SELECT Movement_Sale.Id
+                INTO vbSaleId
+                FROM Movement AS Movement_Sale
+                     JOIN MovementLinkObject AS MovementLinkObject_From
+                                             ON MovementLinkObject_From.MovementId = Movement_Sale.Id
+                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From() 
+                                            AND MovementLinkObject_From.ObjectId = inPartnerId
+                WHERE Movement_Sale.DescId = zc_Movement_Sale()
+                  AND Movement_Sale.InvNumber = inInvNumberSale;
+           END IF;
+
+           IF COALESCE (vbSaleId, 0) = 0
+           THEN
+                vbCommentIfSaleAbsent:= ' (Основание №' || inInvNumberSale || ' отсутствует)';
+           END IF; 
+      END IF;
+
       vbId:= lpInsertUpdate_Movement_Cash (ioId                   := vbId
                                          , inParentId             := NULL
                                          , inInvNumber            := (zfConvert_StringToNumber (inInvNumber) + lfGet_User_BillNumberMobile (vbUserId)) :: TVarChar
@@ -57,7 +95,7 @@ BEGIN
                                          , inAmountOut            := 0.0
                                          , inAmountSumm           := inAmount
                                          , inAmountCurrency       := inAmount
-                                         , inComment              := inComment
+                                         , inComment              := COALESCE (inComment, '') || COALESCE (vbCommentIfSaleAbsent, '')
                                          , inCashId               := inCashId
                                          , inMoneyPlaceId         := inPartnerId
                                          , inPositionId           := 0
@@ -70,7 +108,7 @@ BEGIN
                                          , inParValue             := 1.0
                                          , inCurrencyPartnerValue := 1.0
                                          , inParPartnerValue      := 1.0
-                                         , inMovementId_Partion   := 0
+                                         , inMovementId_Partion   := COALESCE (vbSaleId, 0)
                                          , inUserId               := vbUserId
                                           );
 
@@ -96,18 +134,37 @@ $BODY$
 
 -- тест
 /* 
-  SELECT * FROM gpInsertUpdateMobile_Movement_Cash (inGUID       := '{88E07827-BCC3-41E7-A574-E0837AD2E17A}'
-                                                  , inInvNumber  := '-30'
-                                                  , inOperDate   := CURRENT_DATE
-                                                  , inStatusId   := zc_Enum_Status_UnComplete()
-                                                  , inInsertDate := CURRENT_TIMESTAMP
-                                                  , inAmount     := 6456.45
-                                                  , inPaidKindId := zc_Enum_PaidKind_SecondForm()
-                                                  , inPartnerId  := 17819
-                                                  , inCashId     := 280296
-                                                  , inMemberId   := 274610
-                                                  , inContractId := 16687
-                                                  , inComment    := 'Приход конкретный'
-                                                  , inSession    := zfCalc_UserAdmin()
+  SELECT * FROM gpInsertUpdateMobile_Movement_Cash (inGUID          := '{88E07827-BCC3-41E7-A574-E0837AD2E17A}'
+                                                  , inInvNumber     := '-30'
+                                                  , inOperDate      := CURRENT_DATE
+                                                  , inStatusId      := zc_Enum_Status_UnComplete()
+                                                  , inInsertDate    := CURRENT_TIMESTAMP
+                                                  , inAmount        := 6456.45
+                                                  , inPaidKindId    := zc_Enum_PaidKind_SecondForm()
+                                                  , inPartnerId     := 17819
+                                                  , inCashId        := 280296
+                                                  , inMemberId      := 274610
+                                                  , inContractId    := 16687
+                                                  , inComment       := 'Приход конкретный'
+                                                  , inInvNumberSale := '364957'
+                                                  , inSession       := zfCalc_UserAdmin()
                                                    );
+*/
+/*
+  SELECT * FROM gpInsertUpdateMobile_Movement_Cash (inGUID          := '{88E07827-BCC3-41E7-A574-E0837AD2E17A}'
+                                                  , inInvNumber     := '-30'
+                                                  , inOperDate      := CURRENT_DATE
+                                                  , inStatusId      := zc_Enum_Status_UnComplete()
+                                                  , inInsertDate    := CURRENT_TIMESTAMP
+                                                  , inAmount        := 6456.45
+                                                  , inPaidKindId    := zc_Enum_PaidKind_SecondForm()
+                                                  , inPartnerId     := 298605
+                                                  , inCashId        := 280296
+                                                  , inMemberId      := 301532
+                                                  , inContractId    := 80339
+                                                  , inComment       := 'Приход конкретный'
+                                                  , inInvNumberSale := 'АЛ-0000817'
+                                                  , inSession       := '351808'
+                                                   );
+
 */

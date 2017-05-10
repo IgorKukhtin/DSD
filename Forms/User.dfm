@@ -165,10 +165,12 @@ object UserForm: TUserForm
       object clUpdateMobileFrom: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1089#1080#1085#1093#1088'. '#1089' '#1084#1086#1073'. '#1091#1089#1090'-'#1074#1072
         DataBinding.FieldName = 'UpdateMobileFrom'
+        Options.Editing = False
       end
       object clUpdateMobileTo: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1089#1080#1085#1093#1088'. '#1085#1072' '#1084#1086#1073'. '#1091#1089#1090'-'#1074#1072
         DataBinding.FieldName = 'UpdateMobileTo'
+        Options.Editing = False
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

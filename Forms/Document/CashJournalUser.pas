@@ -48,6 +48,8 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    UnitName_Mobile: TcxGridDBColumn;
+    PositionName_Mobile: TcxGridDBColumn;
   private
     { Private declarations }
   public

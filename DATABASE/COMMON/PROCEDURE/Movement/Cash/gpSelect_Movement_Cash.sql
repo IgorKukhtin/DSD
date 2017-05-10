@@ -15,8 +15,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Cash(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , AmountIn TFloat 
-             , AmountOut TFloat 
+             , AmountIn TFloat
+             , AmountOut TFloat
              , AmountCurrency TFloat
              , ServiceDate TDateTime
              , Comment TVarChar
@@ -37,6 +37,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , InsertDate TDateTime
              , InsertMobileDate TDateTime
              , InsertName TVarChar
+             , UnitName_Mobile TVarChar
+             , PositionName_Mobile TVarChar
              , GUID TVarChar
               )
 AS
@@ -68,7 +70,7 @@ BEGIN
 
 
      -- Результат
-     RETURN QUERY 
+     RETURN QUERY
        WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId, inStartDate AS StartDate, inEndDate AS EndDate
                          UNION
                           SELECT zc_Enum_Status_UnComplete() AS StatusId, inStartDate AS StartDate, inEndDate AS EndDate
@@ -94,6 +96,15 @@ BEGIN
                                                  AND Movement.AccessKeyId = tmpAll.AccessKeyId
                               LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpAll.StatusId
                         )
+         , tmpPersonal AS (SELECT lfSelect.MemberId
+                                , lfSelect.PersonalId
+                                , lfSelect.UnitId
+                                , lfSelect.PositionId
+                                , lfSelect.BranchId
+                           FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                           WHERE lfSelect.Ord = 1
+                          )
+       -- Результат
        SELECT
              tmpMovement.Id
            , tmpMovement.InvNumber
@@ -133,7 +144,7 @@ BEGIN
            , Object_Unit.ObjectCode             AS UnitCode
            , Object_Unit.ValueData              AS UnitName
 
-           , Object_Currency.ValueData                     AS CurrencyName 
+           , Object_Currency.ValueData                     AS CurrencyName
            , MovementFloat_CurrencyValue.ValueData         AS CurrencyValue
            , MovementFloat_ParValue.ValueData              AS ParValue
            , MovementFloat_CurrencyPartnerValue.ValueData  AS CurrencyPartnerValue
@@ -150,8 +161,10 @@ BEGIN
            , MovementDate_Insert.ValueData          AS InsertDate
            , MovementDate_InsertMobile.ValueData    AS InsertMobileDate
            , Object_User.ValueData                  AS InsertName
+           , Object_Unit_mobile.ValueData           AS UnitName_Mobile
+           , CASE WHEN MovementString_GUID.ValueData <> '' THEN Object_Position_mobile.ValueData ELSE '' END :: TVarChar AS PositionName_Mobile
            , MovementString_GUID.ValueData          AS GUID
-           
+
        FROM tmpMovement
 
             LEFT JOIN MovementDate AS MovementDate_Insert
@@ -164,6 +177,15 @@ BEGIN
                                          ON MovementLinkObject_Insert.MovementId = tmpMovement.Id
                                         AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_Insert.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                 ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                                AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                                -- AND MovementString_GUID.ValueData <> ''
+            LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
+            LEFT JOIN Object AS Object_Position_mobile ON Object_Position_mobile.Id = tmpPersonal.PositionId
+            LEFT JOIN Object AS Object_Unit_mobile ON Object_Unit_mobile.Id = tmpPersonal.UnitId
+
             LEFT JOIN MovementString AS MovementString_GUID
                                      ON MovementString_GUID.MovementId = tmpMovement.Id
                                     AND MovementString_GUID.DescId = zc_MovementString_GUID()
@@ -179,13 +201,13 @@ BEGIN
             LEFT JOIN MovementString AS MS_Comment_Invoice
                                      ON MS_Comment_Invoice.MovementId = Movement_Invoice.Id
                                     AND MS_Comment_Invoice.DescId = zc_MovementString_Comment()
-                                    
+
             INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
                                    AND MovementItem.DescId = zc_MI_Master()
                                    AND MovementItem.ObjectId = inCashId
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
 
-            LEFT JOIN MovementBoolean AS MovementBoolean_isLoad 
+            LEFT JOIN MovementBoolean AS MovementBoolean_isLoad
                                       ON MovementBoolean_isLoad.MovementId = tmpMovement.Id
                                      AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
 
@@ -270,10 +292,8 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
                                     ON MovementFloat_ParPartnerValue.MovementId = tmpMovement.Id
                                    AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
-            
-                                       
        ;
-  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -284,9 +304,9 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  06.10.16         * add inJuridicalBasisId
  26.07.16         * invoice
- 17.04.16         * add inCurrencyid 
+ 17.04.16         * add inCurrencyid
  27.04.15         * add InvNumber_Sale
- 06.03.15         * add Currency... 
+ 06.03.15         * add Currency...
  30.08.14                                        * all
  14.01.14                                        * add Object_Contract_InvNumber_View
  26.12.13                                        * add View_InfoMoney
@@ -296,5 +316,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inCashId:= 14462, inCurrencyId:= zc_Enum_Currency_Basis(), inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '30.01.2016', inEndDate:= '30.01.2016', inCashId:= 14462, inCurrencyId:= zc_Enum_Currency_Basis(), inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inCashId:= 14462, inCurrencyId:= zc_Enum_Currency_Basis(), inJuridicalBasisId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '30.01.2016', inEndDate:= '30.01.2016', inCashId:= 14462, inCurrencyId:= zc_Enum_Currency_Basis(), inJuridicalBasisId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
