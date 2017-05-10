@@ -480,6 +480,26 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
             Visible = False
             Width = 55
           end
+          object GPSN: TcxGridDBColumn
+        Caption = 'GPS '#1096#1080#1088#1086#1090#1072
+        DataBinding.FieldName = 'GPSN'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = '0.##;-0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object GPSE: TcxGridDBColumn
+        Caption = 'GPS '#1076#1086#1083#1075#1086#1090#1072
+        DataBinding.FieldName = 'GPSE'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = '0.##;-0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
           object colisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'

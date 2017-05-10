@@ -1959,6 +1959,10 @@ object DM: TDM
     object qryCashId: TIntegerField
       FieldName = 'Id'
     end
+    object qryCashInvNumber: TStringField
+      FieldName = 'InvNumber'
+      Size = 255
+    end
     object qryCashAmount: TFloatField
       FieldName = 'Amount'
     end

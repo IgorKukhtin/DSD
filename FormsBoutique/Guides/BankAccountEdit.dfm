@@ -1,9 +1,9 @@
-object UnitEditForm: TUnitEditForm
+object BankAccountEditForm: TBankAccountEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
-  ClientHeight = 440
-  ClientWidth = 302
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090'>'
+  ClientHeight = 290
+  ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -25,26 +25,26 @@ object UnitEditForm: TUnitEditForm
   object cxLabel1: TcxLabel
     Left = 10
     Top = 54
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+    Caption = #1053#1086#1084#1077#1088' '#1089#1095#1077#1090#1072
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 400
+    Top = 240
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
-    TabOrder = 8
+    TabOrder = 4
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 400
+    Top = 240
     Width = 75
     Height = 25
     Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    TabOrder = 9
+    TabOrder = 5
   end
   object cxLabel2: TcxLabel
     Left = 10
@@ -58,116 +58,63 @@ object UnitEditForm: TUnitEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
-    TabOrder = 10
+    TabOrder = 8
     Width = 273
   end
-  object cxLabel3: TcxLabel
-    Left = 10
-    Top = 219
-    Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+  object cxLabel8: TcxLabel
+    Left = 12
+    Top = 136
+    Caption = #1041#1072#1085#1082
   end
-  object ceJuridical: TcxButtonEdit
-    Left = 8
-    Top = 235
+  object ceBank: TcxButtonEdit
+    Left = 10
+    Top = 152
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 4
-    Width = 275
+    TabOrder = 2
+    Width = 273
   end
-  object edDiscountTax: TcxCurrencyEdit
+  object cxLabel3: TcxLabel
+    Left = 12
+    Top = 176
+    Caption = #1042#1072#1083#1102#1090#1072
+  end
+  object ceCurrency: TcxButtonEdit
     Left = 10
-    Top = 195
-    EditValue = 0.000000000000000000
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = '0'
+    Top = 192
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
     TabOrder = 3
     Width = 273
   end
-  object edAddress: TcxTextEdit
+  object ceJuridical: TcxButtonEdit
     Left = 10
-    Top = 112
+    Top = 109
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
     TabOrder = 1
     Width = 273
   end
   object cxLabel4: TcxLabel
-    Left = 10
-    Top = 94
-    Caption = #1040#1076#1088#1077#1089
-  end
-  object edPhone: TcxTextEdit
-    Left = 10
-    Top = 152
-    TabOrder = 2
-    Width = 273
-  end
-  object cxLabel5: TcxLabel
-    Left = 10
-    Top = 134
-    Caption = #1058#1077#1083#1077#1092#1086#1085
-  end
-  object cxLabel6: TcxLabel
-    Left = 10
-    Top = 175
-    Caption = '% '#1089#1082#1080#1076#1082#1080' OUTLET'
-  end
-  object cxLabel7: TcxLabel
-    Left = 10
-    Top = 261
-    Caption = #1043#1088#1091#1087#1087#1072
-  end
-  object ceParent: TcxButtonEdit
-    Left = 8
-    Top = 277
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 5
-    Width = 275
-  end
-  object cxLabel8: TcxLabel
-    Left = 10
-    Top = 304
-    Caption = #1057#1082#1083#1072#1076
-  end
-  object ceChild: TcxButtonEdit
-    Left = 8
-    Top = 320
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 6
-    Width = 275
-  end
-  object cxLabel9: TcxLabel
-    Left = 10
-    Top = 344
-    Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
-  end
-  object ceBankAccount: TcxButtonEdit
-    Left = 8
-    Top = 360
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 7
-    Width = 275
+    Left = 12
+    Top = 93
+    Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object ActionList: TActionList
-    Left = 176
-    Top = 8
+    Left = 152
+    Top = 56
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -198,7 +145,7 @@ object UnitEditForm: TUnitEditForm
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Unit'
+    StoredProcName = 'gpInsertUpdate_Object_BankAccount'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -212,7 +159,7 @@ object UnitEditForm: TUnitEditForm
       end
       item
         Name = 'ioCode'
-        Value = Null
+        Value = 0.000000000000000000
         Component = edCode
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -226,30 +173,6 @@ object UnitEditForm: TUnitEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAddress'
-        Value = Null
-        Component = edAddress
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPhone'
-        Value = Null
-        Component = edPhone
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDiscountTax'
-        Value = Null
-        Component = edDiscountTax
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inJuridicalId'
         Value = Null
         Component = JuridicalGuides
@@ -258,25 +181,17 @@ object UnitEditForm: TUnitEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inParentId'
+        Name = 'inBankId'
         Value = Null
-        Component = ParentGuides
+        Component = BankGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inChildId'
+        Name = 'inCurrencyId'
         Value = Null
-        Component = ChildGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBankAccountId'
-        Value = Null
-        Component = BankAccountGuides
+        Component = CurrencyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -297,7 +212,7 @@ object UnitEditForm: TUnitEditForm
     Top = 8
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Unit'
+    StoredProcName = 'gpGet_Object_BankAccount'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -313,7 +228,6 @@ object UnitEditForm: TUnitEditForm
         Name = 'Code'
         Value = 0.000000000000000000
         Component = edCode
-        DataType = ftUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -324,32 +238,10 @@ object UnitEditForm: TUnitEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Address'
-        Value = Null
-        Component = edAddress
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Phone'
-        Value = Null
-        Component = edPhone
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'DiscountTax'
-        Value = Null
-        Component = edDiscountTax
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'JuridicalId'
         Value = Null
         Component = JuridicalGuides
         ComponentItem = 'Key'
-        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -361,53 +253,38 @@ object UnitEditForm: TUnitEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ParentId'
+        Name = 'BankId'
         Value = Null
-        Component = ParentGuides
+        Component = BankGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ParentName'
+        Name = 'BankName'
         Value = Null
-        Component = ParentGuides
+        Component = BankGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ChildId'
+        Name = 'CurrencyId'
         Value = Null
-        Component = ChildGuides
+        Component = CurrencyGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ChildName'
+        Name = 'CurrencyName'
         Value = Null
-        Component = ChildGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BankAccountId'
-        Value = Null
-        Component = BankAccountGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BankAccountName'
-        Value = Null
-        Component = BankAccountGuides
+        Component = CurrencyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 240
-    Top = 8
+    Left = 232
+    Top = 16
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -421,12 +298,70 @@ object UnitEditForm: TUnitEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 176
-    Top = 56
+    Left = 160
+    Top = 104
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 200
-    Top = 104
+    Left = 32
+    Top = 16
+  end
+  object BankGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceBank
+    FormNameParam.Value = 'TBankForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBankForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BankGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BankGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 218
+    Top = 133
+  end
+  object CurrencyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceCurrency
+    FormNameParam.Value = 'TCurrencyForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCurrencyForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 218
+    Top = 181
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -454,94 +389,7 @@ object UnitEditForm: TUnitEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 200
-    Top = 216
-  end
-  object ParentGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceParent
-    FormNameParam.Value = 'TUnit_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = ParentGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = ParentGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 192
-    Top = 250
-  end
-  object ChildGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceChild
-    FormNameParam.Value = 'TUnit_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = ChildGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = ChildGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 192
-    Top = 293
-  end
-  object BankAccountGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceBankAccount
-    FormNameParam.Value = 'TBankAccountForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TBankAccountForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = BankAccountGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = BankAccountGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 184
-    Top = 325
+    Left = 218
+    Top = 98
   end
 end

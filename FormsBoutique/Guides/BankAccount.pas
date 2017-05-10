@@ -1,4 +1,4 @@
-unit Unit_Object;
+unit BankAccount;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TUnit_ObjectForm = class(TParentForm)
+  TBankAccountForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -35,7 +35,15 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
+    actInsert: TdsdInsertUpdateAction;
+    bbInsert: TdxBarButton;
     spSelect: TdsdStoredProc;
+    actUpdate: TdsdInsertUpdateAction;
+    bbEdit: TdxBarButton;
+    dsdSetErased: TdsdUpdateErased;
+    dsdSetUnErased: TdsdUpdateErased;
+    bbSetErased: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
     dsdGridToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
@@ -52,15 +60,10 @@ type
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    clJuridicalName: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
-    clAddress: TcxGridDBColumn;
-    clPhone: TcxGridDBColumn;
-    clDiscountTax: TcxGridDBColumn;
-    clParentName: TcxGridDBColumn;
-    clChildName: TcxGridDBColumn;
-    clBankAccountName: TcxGridDBColumn;
+    clJuridicalName: TcxGridDBColumn;
     clBankName: TcxGridDBColumn;
+    clCurrencyName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -72,6 +75,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TUnit_ObjectForm);
+  RegisterClass(TBankAccountForm);
 
 end.

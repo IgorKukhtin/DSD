@@ -68,14 +68,14 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
             Options.Editing = False
             Width = 250
           end
-                object clAddress: TcxGridDBColumn
-        Caption = #1040#1076#1088#1077#1089
-        DataBinding.FieldName = 'Address'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 134
-      end
+          object clAddress: TcxGridDBColumn
+            Caption = #1040#1076#1088#1077#1089
+            DataBinding.FieldName = 'Address'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 134
+          end
           object colPaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
@@ -449,6 +449,26 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object GPSN: TcxGridDBColumn
+            Caption = 'GPS '#1096#1080#1088#1086#1090#1072
+            DataBinding.FieldName = 'GPSN'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.##;-0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object GPSE: TcxGridDBColumn
+            Caption = 'GPS '#1076#1086#1083#1075#1086#1090#1072
+            DataBinding.FieldName = 'GPSE'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.##;-0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object clItemName: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090

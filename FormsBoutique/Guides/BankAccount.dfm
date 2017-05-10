@@ -1,9 +1,9 @@
-object Unit_ObjectForm: TUnit_ObjectForm
+object BankAccountForm: TBankAccountForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072'>'
   ClientHeight = 376
-  ClientWidth = 608
+  ClientWidth = 469
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 608
+    Width = 469
     Height = 350
     Align = alClient
     TabOrder = 0
@@ -40,6 +40,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -49,67 +50,20 @@ object Unit_ObjectForm: TUnit_ObjectForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 90
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 55
       end
       object clName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        Caption = #1053#1086#1084#1077#1088' '#1089#1095#1077#1090#1072
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 339
-      end
-      object clAddress: TcxGridDBColumn
-        Caption = #1040#1076#1088#1077#1089
-        DataBinding.FieldName = 'Address'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 100
-      end
-      object clPhone: TcxGridDBColumn
-        Caption = #1058#1077#1083#1077#1092#1086#1085
-        DataBinding.FieldName = 'Phone'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 100
-      end
-      object clDiscountTax: TcxGridDBColumn
-        Caption = '% '#1089#1082#1080#1076#1082#1080' OUTLET'
-        DataBinding.FieldName = 'DiscountTax'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 120
+        Width = 243
       end
       object clJuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 165
-      end
-      object clParentName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072
-        DataBinding.FieldName = 'ParentName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 165
-      end
-      object clChildName: TcxGridDBColumn
-        Caption = #1057#1082#1083#1072#1076
-        DataBinding.FieldName = 'ChildName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 165
-      end
-      object clBankAccountName: TcxGridDBColumn
-        Caption = #1053#1086#1084#1077#1088' '#1089#1095#1077#1090#1072
-        DataBinding.FieldName = 'BankAccountName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -123,6 +77,14 @@ object Unit_ObjectForm: TUnit_ObjectForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 100
       end
+      object clCurrencyName: TcxGridDBColumn
+        Caption = #1042#1072#1083#1102#1090#1072
+        DataBinding.FieldName = 'CurrencyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 70
+      end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -130,6 +92,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Width = 78
       end
     end
@@ -201,6 +164,23 @@ object Unit_ObjectForm: TUnit_ObjectForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErased'
+        end
+        item
+          BeginGroup = True
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -249,6 +229,22 @@ object Unit_ObjectForm: TUnit_ObjectForm
       Action = actRefresh
       Category = 0
     end
+    object bbInsert: TdxBarButton
+      Action = actInsert
+      Category = 0
+    end
+    object bbEdit: TdxBarButton
+      Action = actUpdate
+      Category = 0
+    end
+    object bbSetErased: TdxBarButton
+      Action = dsdSetErased
+      Category = 0
+    end
+    object bbSetUnErased: TdxBarButton
+      Action = dsdSetUnErased
+      Category = 0
+    end
     object bbToExcel: TdxBarButton
       Action = dsdGridToExcel
       Category = 0
@@ -290,6 +286,85 @@ object Unit_ObjectForm: TUnit_ObjectForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actInsert: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 0
+      FormName = 'TBankAccountEditForm'
+      FormNameParam.Value = 'TBankAccountEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TBankAccountEditForm'
+      FormNameParam.Value = 'TBankAccountEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object dsdSetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErased
+      StoredProcList = <
+        item
+          StoredProc = spErased
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 8238
+      ErasedFieldName = 'isErased'
+      DataSource = DataSource
+    end
+    object dsdSetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUnErased
+      StoredProcList = <
+        item
+          StoredProc = spUnErased
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 8238
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = DataSource
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -376,7 +451,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Unit'
+    StoredProcName = 'gpSelect_Object_BankAccount'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -396,7 +471,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
     Top = 128
   end
   object spErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_Unit'
+    StoredProcName = 'gpUpdate_Object_isErased_BankAccount'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -416,8 +491,8 @@ object Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 464
-    Top = 96
+    Left = 304
+    Top = 72
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
@@ -431,6 +506,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
         Action = dsdChoiceGuides
       end
       item
+        Action = actUpdate
       end>
     ActionItemList = <
       item
@@ -438,6 +514,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
         ShortCut = 13
       end
       item
+        Action = actUpdate
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
@@ -450,7 +527,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
     Top = 248
   end
   object spUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_Unit'
+    StoredProcName = 'gpUpdate_Object_isErased_BankAccount'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -464,13 +541,13 @@ object Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inIsErased'
-        Value = False
+        Value = 'false'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 464
-    Top = 144
+    Left = 304
+    Top = 136
   end
 end

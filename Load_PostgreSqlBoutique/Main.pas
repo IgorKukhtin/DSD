@@ -4571,6 +4571,7 @@ begin
         toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inParentlId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inChildId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inBankAccountId',ftInteger,ptInput, 0);
         //
         HideCurGrid(True);
         while not EOF do
