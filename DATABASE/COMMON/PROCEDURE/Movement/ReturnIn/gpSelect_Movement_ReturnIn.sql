@@ -87,6 +87,7 @@ BEGIN
                            FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                            WHERE lfSelect.Ord = 1
                           )
+       -- Результат
        SELECT
              Movement.Id                                AS Id
            , Movement.InvNumber                         AS InvNumber

@@ -37,6 +37,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , InsertDate TDateTime
              , InsertMobileDate TDateTime
              , InsertName TVarChar
+             , UnitName TVarChar
+             , PositionName TVarChar
              , GUID TVarChar
               )
 AS
@@ -94,6 +96,15 @@ BEGIN
                                                  AND Movement.AccessKeyId = tmpAll.AccessKeyId
                               LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpAll.StatusId
                         )
+         , tmpPersonal AS (SELECT lfSelect.MemberId
+                                , lfSelect.PersonalId
+                                , lfSelect.UnitId
+                                , lfSelect.PositionId
+                                , lfSelect.BranchId
+                           FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                           WHERE lfSelect.Ord = 1
+                          )
+       -- Результат
        SELECT
              tmpMovement.Id
            , tmpMovement.InvNumber
@@ -150,6 +161,8 @@ BEGIN
            , MovementDate_Insert.ValueData          AS InsertDate
            , MovementDate_InsertMobile.ValueData    AS InsertMobileDate
            , Object_User.ValueData                  AS InsertName
+           , Object_Unit.ValueData                  AS UnitName_Mobile
+           , CASE WHEN MovementString_GUID.ValueData <> '' THEN Object_Position.ValueData ELSE '' END :: TVarChar AS PositionName_Mobile
            , MovementString_GUID.ValueData          AS GUID
            
        FROM tmpMovement
@@ -164,6 +177,15 @@ BEGIN
                                          ON MovementLinkObject_Insert.MovementId = tmpMovement.Id
                                         AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_Insert.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                 ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                                AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                                -- AND MovementString_GUID.ValueData <> ''
+            LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
+            LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
+
             LEFT JOIN MovementString AS MovementString_GUID
                                      ON MovementString_GUID.MovementId = tmpMovement.Id
                                     AND MovementString_GUID.DescId = zc_MovementString_GUID()

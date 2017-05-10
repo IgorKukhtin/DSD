@@ -255,6 +255,14 @@ BEGIN
      -- сохранили свойство <id документа продажи>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), vbMovementItemId, inMovementId_Partion);
 
+     IF vbIsInsert = TRUE
+     THEN
+         -- сохранили свойство <Дата создания> - при загрузке с моб устр., здесь дата загрузки
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
+         -- сохранили связь с <Пользователь>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
+     END IF;
+
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, inUserId, vbIsInsert);
 
