@@ -11,7 +11,8 @@ RETURNS TABLE (Id Integer, Code Integer
              , StartDate TDateTime, EndDate TDateTime
              , ContractTagId Integer, ContractTagName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
-             , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar, GLNCode TVarChar, Address TVarChar
+             , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar, GLNCode TVarChar
+             , Address TVarChar, GPSN TFloat, GPSE TFloat
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractStateKindCode Integer
              , ContractComment TVarChar
@@ -87,6 +88,8 @@ BEGIN
        , Object_Partner.ValueData        AS PartnerName
        , ObjectString_GLNCode.ValueData  AS GLNCode
        , ObjectString_Address.ValueData  AS Address
+       , COALESCE (Partner_GPSN.ValueData,0) ::Tfloat  AS GPSN
+       , COALESCE (Partner_GPSE.ValueData,0) ::Tfloat  AS GPSE 
        , Object_PaidKind.Id              AS PaidKindId
        , Object_PaidKind.ValueData       AS PaidKindName
        , Object_Contract_View.ContractStateKindCode AS ContractStateKindCode
@@ -263,6 +266,13 @@ BEGIN
          LEFT JOIN ObjectString AS ObjectString_Address
                                 ON ObjectString_Address.ObjectId = Object_Partner.Id
                                AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
+         LEFT JOIN ObjectFloat AS Partner_GPSN 
+                               ON Partner_GPSN.ObjectId = Object_Partner.Id
+                              AND Partner_GPSN.DescId = zc_ObjectFloat_Partner_GPSN()  
+         LEFT JOIN ObjectFloat AS Partner_GPSE
+                               ON Partner_GPSE.ObjectId = Object_Partner.Id
+                              AND Partner_GPSE.DescId = zc_ObjectFloat_Partner_GPSE() 
+
    WHERE Object_Partner.DescId = zc_Object_Partner()
      AND ((Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
            AND vbBranchId_Constraint > 0)
@@ -326,6 +336,9 @@ BEGIN
        , Object_Partner.ValueData        AS PartnerName
        , ObjectString_GLNCode.ValueData  AS GLNCode
        , ObjectString_Address.ValueData  AS Address
+       , COALESCE (Partner_GPSN.ValueData,0) ::Tfloat  AS GPSN
+       , COALESCE (Partner_GPSE.ValueData,0) ::Tfloat  AS GPSE
+
        , Object_PaidKind.Id              AS PaidKindId
        , Object_PaidKind.ValueData       AS PaidKindName
        , Object_Contract_View.ContractStateKindCode AS ContractStateKindCode
@@ -503,6 +516,12 @@ BEGIN
          LEFT JOIN ObjectString AS ObjectString_Address
                                 ON ObjectString_Address.ObjectId = Object_Partner.Id
                                AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
+         LEFT JOIN ObjectFloat AS Partner_GPSN 
+                               ON Partner_GPSN.ObjectId = Object_Partner.Id
+                              AND Partner_GPSN.DescId = zc_ObjectFloat_Partner_GPSN()  
+         LEFT JOIN ObjectFloat AS Partner_GPSE
+                               ON Partner_GPSE.ObjectId = Object_Partner.Id
+                              AND Partner_GPSE.DescId = zc_ObjectFloat_Partner_GPSE() 
 
    WHERE Object_Partner.DescId = zc_Object_Partner()
      AND Object_Partner.isErased = FALSE
@@ -548,7 +567,8 @@ ALTER FUNCTION gpSelect_Object_ContractPartnerChoice (Boolean, TVarChar) OWNER T
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.+
+ 10.05.17         *  add Address, GPSE, GPSN
  12.09.15         * add MemberTake1...7
  08.09.14                                        * add Object_RoleAccessKeyGuide_View
  21.08.14                                        * add ContractComment

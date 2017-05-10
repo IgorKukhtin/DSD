@@ -26,7 +26,6 @@ object SaleForm: TSaleForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1091
     object edInvNumber: TcxTextEdit
       Left = 177
       Top = 23
@@ -178,17 +177,12 @@ object SaleForm: TSaleForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 123
-    ExplicitWidth = 811
-    ExplicitHeight = 343
     ClientRectBottom = 310
     ClientRectRight = 1054
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 811
-      ExplicitHeight = 319
       object cxGrid: TcxGrid
         Left = 0
         Top = 83
@@ -196,7 +190,6 @@ object SaleForm: TSaleForm
         Height = 203
         Align = alClient
         TabOrder = 0
-        ExplicitTop = 89
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -341,7 +334,7 @@ object SaleForm: TSaleForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actGoodsChoiceForm
+                Caption = 'GoodsForm'
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -507,7 +500,6 @@ object SaleForm: TSaleForm
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 898
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -679,7 +671,7 @@ object SaleForm: TSaleForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0.'
     Properties.ReadOnly = True
-    TabOrder = 9
+    TabOrder = 7
     Width = 85
   end
   object cxLabel9: TcxLabel
@@ -691,7 +683,7 @@ object SaleForm: TSaleForm
     Left = 342
     Top = 63
     Properties.ReadOnly = True
-    TabOrder = 11
+    TabOrder = 9
     Width = 215
   end
   object cxLabel10: TcxLabel
@@ -703,7 +695,7 @@ object SaleForm: TSaleForm
     Left = 566
     Top = 63
     Properties.ReadOnly = True
-    TabOrder = 13
+    TabOrder = 11
     Width = 484
   end
   object cxLabel13: TcxLabel
@@ -715,7 +707,7 @@ object SaleForm: TSaleForm
     Left = 8
     Top = 103
     Properties.ReadOnly = True
-    TabOrder = 15
+    TabOrder = 13
     Width = 117
   end
   object cxLabel17: TcxLabel
@@ -727,7 +719,7 @@ object SaleForm: TSaleForm
     Left = 130
     Top = 103
     Properties.ReadOnly = True
-    TabOrder = 17
+    TabOrder = 16
     Width = 117
   end
   object cxLabel14: TcxLabel
@@ -863,6 +855,10 @@ object SaleForm: TSaleForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertRecord'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -976,7 +972,7 @@ object SaleForm: TSaleForm
       Category = 0
     end
     object bbInsertRecord: TdxBarButton
-      Action = macInsertAction
+      Action = InsertRecord
       Category = 0
     end
     object bbCompleteCost: TdxBarButton
@@ -1012,8 +1008,12 @@ object SaleForm: TSaleForm
       ImageIndex = 64
     end
     object bbUpdateRecord1: TdxBarButton
-      Action = macUpdateAction
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Visible = ivAlways
+      ImageIndex = 1
+      ShortCut = 115
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -1374,13 +1374,28 @@ object SaleForm: TSaleForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'GoodsForm'
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
+      FormName = 'TPartionGoodsChoiceForm'
+      FormNameParam.Value = 'TPartionGoodsChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Key'
+          Name = 'MasterUnitId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterUnitName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsId'
@@ -1395,99 +1410,98 @@ object SaleForm: TSaleForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'Code'
+          Name = 'PartionId'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsCode'
+          ComponentItem = 'PartionId'
           MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actUpdateAction1: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actInsertAction1'
-      ImageIndex = 1
-      FormName = 'TIncomeItemEditForm'
-      FormNameParam.Value = 'TIncomeItemEditForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
+        end
         item
-          Name = 'Id'
-          Value = '0'
+          Name = 'GroupNameFull'
+          Value = Null
           Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
+          ComponentItem = 'GoodsGroupNamefull'
+          DataType = ftString
           MultiSelectSeparator = ','
         end
         item
-          Name = 'MovementId'
+          Name = 'MeasureName'
           Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'MeasureName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CompositionName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CompositionName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CompositionGroupName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CompositionGroupName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsInfoName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsInfoName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LineFabricaName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'LineFabricaName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LabelName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'LabelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsSizeName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsSizeName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceSale'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperPriceList'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       isShowModal = True
-      IdFieldName = 'Id'
     end
-    object macUpdateAction: TMultiAction
+    object InsertRecord: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
-      ActionList = <
-        item
-          Action = actUpdateAction1
-        end
-        item
-          Action = actRefreshMI
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      ImageIndex = 1
-      ShortCut = 115
-    end
-    object actInsertAction1: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      View = cxGridDBTableView
+      Action = actGoodsChoiceForm
+      Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      ImageIndex = 0
-      FormName = 'TIncomeItemEditForm'
-      FormNameParam.Value = 'TIncomeItemEditForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = '0'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MovementId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      IdFieldName = 'Id'
-    end
-    object macInsertAction: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actInsertAction1
-        end
-        item
-          Action = actRefreshMI
-        end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      ImageIndex = 0
       ShortCut = 45
+      ImageIndex = 0
     end
   end
   object MasterDS: TDataSource
@@ -1859,6 +1873,7 @@ object SaleForm: TSaleForm
       end
       item
         Name = 'LastDate'
+        Value = 'NULL'
         Component = edLastDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
