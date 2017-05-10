@@ -387,6 +387,17 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 80
           end
+          object colAmountClient: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' ('#1087#1086#1082#1091#1087'.)'
+            DataBinding.FieldName = 'AmountClient'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'OperPrice'
@@ -436,6 +447,30 @@ object InventoryForm: TInventoryForm
           object colAmountSummRemains: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1088#1072#1089#1095'. '#1086#1089#1090'. '#1084#1072#1075'.)'
             DataBinding.FieldName = 'AmountSummRemains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object colAmountClientSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' ('#1088#1072#1089#1095'. '#1086#1089#1090'. '#1087#1086#1082#1091#1087'.)'
+            DataBinding.FieldName = 'AmountClientSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object colAmountClientPriceListSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' ('#1088#1072#1089#1095'. '#1086#1089#1090'. '#1087#1086#1082#1091#1087'.)'
+            DataBinding.FieldName = 'AmountClientPriceListSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -1543,39 +1578,35 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountRemains'
+        Name = 'outAmountRemains'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountRemains'
         DataType = ftFloat
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountSecondRemains'
+        Name = 'outAmountSecondRemains'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountSecondRemains'
         DataType = ftFloat
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioCountForPrice'
+        Name = 'outCountForPrice'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
-        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperPrice'
+        Name = 'outOperPrice'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'OperPrice'
         DataType = ftFloat
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -1647,6 +1678,30 @@ object InventoryForm: TInventoryForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountSecondRemainsPLSumm'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountClient'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountClient'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountClientSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountClientSumm'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountClientPriceListSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountClientPriceListSumm'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -2110,30 +2165,27 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountRemains'
+        Name = 'outAmountRemains'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountRemains'
         DataType = ftFloat
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioCountForPrice'
+        Name = 'outCountForPrice'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
-        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperPrice'
+        Name = 'outOperPrice'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'OperPrice'
         DataType = ftFloat
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -2141,6 +2193,30 @@ object InventoryForm: TInventoryForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'OperPriceList'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountClient'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountClient'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountClientSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountClientSumm'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountClientPriceListSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountClientPriceListSumm'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

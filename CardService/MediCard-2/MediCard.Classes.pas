@@ -3,7 +3,7 @@ unit MediCard.Classes;
 interface
 
 uses
-  Data.DB,
+  Data.DB, System.SysUtils,
   MediCard.Intf;
 
 type
@@ -29,6 +29,18 @@ type
   TMCResponse = class(TMCData)
   protected
     procedure CreateParams; override;
+  end;
+
+  TMCSession = class(TInterfacedObject, IMCSession)
+  private
+    function GenerateCasual: string;
+  protected
+    function GetRequest: IMCData; virtual;
+    function GetResponse: IMCData; virtual;
+  public
+    function Post: Integer;
+    property Request: IMCData read GetRequest;
+    property Response: IMCData read GetResponse;
   end;
 
   TMCRequestDiscount = class(TMCRequest, IMCRequestDiscount)
@@ -141,7 +153,7 @@ end;
 procedure TMCRequestDiscount.CreateParams;
 begin
   inherited CreateParams;
-  Params.ParamByName('request_type').AsInteger := Integer(rtDiscount);
+  Params.ParamByName('request_type').AsInteger := MC_DISCOUNT;
 
   Params.CreateParam(ftInteger, 'inside_code',  ptInputOutput);
   Params.CreateParam(ftString,  'card_code',    ptInputOutput);
@@ -160,6 +172,46 @@ begin
   Params.CreateParam(ftFloat,   'qty',              ptInputOutput);
   Params.CreateParam(ftFloat,   'discont',          ptInputOutput);
   Params.CreateParam(ftFloat,   'discont_absolute', ptInputOutput);
+end;
+
+{ TMCSession }
+
+function TMCSession.GenerateCasual: string;
+var
+  GUID: TGUID;
+begin
+  CreateGUID(GUID);
+  Result := StringReplace(LowerCase(GUIDToString(GUID)), '-', '', [rfReplaceAll, rfIgnoreCase]);
+  Result := StringReplace(Result, '{', '', [rfReplaceAll, rfIgnoreCase]);
+  Result := StringReplace(Result, '}', '', [rfReplaceAll, rfIgnoreCase]);
+end;
+
+function TMCSession.GetRequest: IMCData;
+begin
+  Result := nil;
+end;
+
+function TMCSession.GetResponse: IMCData;
+begin
+  Result := nil;
+end;
+
+function TMCSession.Post: Integer;
+var
+  RequestXML, ResponseXML: string;
+begin
+  Request.Params.ParamByName('id_casual').AsString := GenerateCasual;
+  Request.SaveToXML(RequestXML);
+
+  Result := MCDesigner.HTTPPost(MCURL, RequestXML, ResponseXML);
+
+  if Result = 200 then
+  begin
+    Response.LoadFromXML(ResponseXML);
+
+    if Response.Params.ParamByName('id_casual').AsString <> Request.Params.ParamByName('id_casual').AsString then
+      raise EMCException.Create('Ответ не соответствует запросу');
+  end;
 end;
 
 initialization

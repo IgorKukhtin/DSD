@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_Sale()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,8 +9,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
     IN inGoodsId             Integer   , -- Товары
     IN inPartionId           Integer   , -- Партия
     IN inAmount              TFloat    , -- Количество
-    IN inOperPrice           TFloat    , -- Цена
- INOUT ioCountForPrice       TFloat    , -- Цена за количество
+   OUT outOperPrice          TFloat    , -- Цена
+   OUT outCountForPrice      TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
    OUT outOperPriceList      TFloat    , -- Цена по прайсу
    OUT outAmountPriceListSumm TFloat    , -- Сумма по прайсу
@@ -42,30 +43,37 @@ BEGIN
      -- цена продажи из прайса 
      outOperPriceList := COALESCE ((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem(vbOperDate, zc_PriceList_Basis(), inGoodsId) AS tmp), 0);
 
+     -- данные из партии : OperPrice и CountForPrice
+     SELECT COALESCE (Object_PartionGoods.CountForPrice,1)
+          , COALESCE (Object_PartionGoods.OperPrice,0)
+    INTO outCountForPrice, outOperPrice
+     FROM Object_PartionGoods
+     WHERE Object_PartionGoods.MovementItemId = inPartionId;
+
      -- Заменили свойство <Цена за количество>
-     IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
+     --IF COALESCE (outCountForPrice, 0) = 0 THEN outCountForPrice := 1; END IF;
 
 
      -- сохранили
-     ioId:= lpInsertUpdate_MovementItem_Sale (ioId                 := ioId
+     ioId:= lpInsertUpdate_MovementItem_Sale   (ioId                 := ioId
                                               , inMovementId         := inMovementId
                                               , inGoodsId            := inGoodsId
                                               , inPartionId          := COALESCE(inPartionId,0)
                                               , inAmount             := inAmount
-                                              , inOperPrice          := inOperPrice
-                                              , inCountForPrice      := ioCountForPrice
+                                              , inOperPrice          := outOperPrice
+                                              , inCountForPrice      := outCountForPrice
                                               , inOperPriceList      := outOperPriceList
                                               , inUserId             := vbUserId
                                                );
 
      -- расчитали сумму по элементу, для грида
      outAmountSumm := CASE WHEN ioCountForPrice > 0
-                                THEN CAST (inAmount * inOperPrice / ioCountForPrice AS NUMERIC (16, 2))
-                           ELSE CAST (inAmount * inOperPrice AS NUMERIC (16, 2))
+                                THEN CAST (inAmount * outOperPrice / outCountForPrice AS NUMERIC (16, 2))
+                           ELSE CAST (inAmount * outOperPrice AS NUMERIC (16, 2))
                       END;
      -- расчитали сумму по прайсу по элементу, для грида
      outAmountPriceListSumm := CASE WHEN ioCountForPrice > 0
-                                         THEN CAST (inAmount * outOperPriceList / ioCountForPrice AS NUMERIC (16, 2))
+                                         THEN CAST (inAmount * outOperPriceList / outCountForPrice AS NUMERIC (16, 2))
                                     ELSE CAST (inAmount * outOperPriceList AS NUMERIC (16, 2))
                                END;
 
@@ -81,4 +89,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpInsertUpdate_MovementItem_Sale(ioId := 0 , inMovementId := 8 , inGoodsId := 446 , inPartionId := 50 , inAmount := 4 , inOperPrice := 100 , ioCountForPrice := 1 ,  inSession := '2');
+-- select * from gpInsertUpdate_MovementItem_Sale(ioId := 0 , inMovementId := 8 , inGoodsId := 446 , inPartionId := 50 , inAmount := 4 , outOperPrice := 100 , ioCountForPrice := 1 ,  inSession := '2');

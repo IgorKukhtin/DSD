@@ -1916,6 +1916,10 @@ object DM: TDM
       FieldName = 'InvNumber'
       Size = 255
     end
+    object tblMovement_CashInvNumberSale: TStringField
+      FieldName = 'InvNumberSale'
+      Size = 255
+    end
     object tblMovement_CashOperDate: TDateField
       FieldName = 'OperDate'
     end
@@ -1959,8 +1963,8 @@ object DM: TDM
     object qryCashId: TIntegerField
       FieldName = 'Id'
     end
-    object qryCashInvNumber: TStringField
-      FieldName = 'InvNumber'
+    object qryCashInvNumberSale: TStringField
+      FieldName = 'InvNumberSale'
       Size = 255
     end
     object qryCashAmount: TFloatField

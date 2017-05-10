@@ -1386,21 +1386,19 @@ object ReturnOutForm: TReturnOutForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperPrice'
+        Name = 'outOperPrice'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'OperPrice'
         DataType = ftFloat
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioCountForPrice'
+        Name = 'outCountForPrice'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
-        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -2074,21 +2072,19 @@ object ReturnOutForm: TReturnOutForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperPrice'
+        Name = 'outOperPrice'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'OperPrice'
         DataType = ftFloat
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioCountForPrice'
+        Name = 'outCountForPrice'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
-        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

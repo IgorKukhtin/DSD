@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , AmountPriceListSumm TFloat, AmountPriceListSummRemains TFloat
              , AmountSecondSumm TFloat, AmountSecondRemainsSumm TFloat
              , AmountSecondPriceListSumm TFloat, AmountSecondRemainsPLSumm TFloat
+             , AmountClient TFloat, AmountClientSumm TFloat, AmountClientPriceListSumm TFloat
              , Comment TVarChar
              , isErased Boolean
               )
@@ -47,6 +48,7 @@ BEGIN
                            , COALESCE (MIFloat_AmountSecond.ValueData, 0)    AS AmountSecond
                            , COALESCE (MIFloat_AmountRemains.ValueData, 0)   AS AmountRemains
                            , COALESCE (MIFloat_AmountSecondRemains.ValueData, 0) AS AmountSecondRemains
+                           , COALESCE (MIFloat_AmountClient.ValueData, 0)    AS AmountClient
                            , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
                            , COALESCE (MIFloat_OperPrice.ValueData, 0)       AS OperPrice
                            , COALESCE (MIFloat_OperPriceList.ValueData, 0)   AS OperPriceList
@@ -80,6 +82,10 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                         ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                                        AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
+
+                            LEFT JOIN MovementItemFloat AS MIFloat_AmountClient
+                                                        ON MIFloat_AmountClient.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountClient.DescId = zc_MIFloat_AmountClient()
                        )
 
        -- результат
@@ -115,7 +121,10 @@ BEGIN
            , CASE WHEN tmpMI.CountForPrice <> 0 THEN (tmpMI.AmountSecondRemains * tmpMI.OperPrice / tmpMI.CountForPrice) ELSE (tmpMI.AmountSecondRemains * tmpMI.OperPrice) END         ::TFloat AS AmountSecondRemainsSumm
            , CASE WHEN tmpMI.CountForPrice <> 0 THEN (tmpMI.AmountSecond * tmpMI.OperPriceList / tmpMI.CountForPrice) ELSE (tmpMI.AmountSecond * tmpMI.OperPriceList) END               ::TFloat AS AmountSecondPriceListSumm
            , COALESCE( CASE WHEN tmpMI.CountForPrice <> 0 THEN (tmpMI.AmountSecondRemains * tmpMI.OperPriceList / tmpMI.CountForPrice) ELSE (tmpMI.AmountSecondRemains * tmpMI.OperPriceList) END, 0) ::TFloat AS AmountSecondRemainsPLSumm
-                                                                                                                                                                                                   -- AmountSecondRemainsPLSumm
+
+           , tmpMI.AmountClient        ::TFloat
+           , CASE WHEN tmpMI.CountForPrice <> 0 THEN (tmpMI.AmountClient * tmpMI.OperPrice / tmpMI.CountForPrice) ELSE (tmpMI.AmountClient * tmpMI.OperPrice) END                       ::TFloat AS AmountClientSumm         
+           , CASE WHEN tmpMI.CountForPrice <> 0 THEN (tmpMI.AmountClient * tmpMI.OperPriceList / tmpMI.CountForPrice) ELSE (tmpMI.AmountClient * tmpMI.OperPriceList) END               ::TFloat AS AmountClientPriceListSumm
            , tmpMI.Comment              ::TVarChar
            , tmpMI.isErased
 
