@@ -45,6 +45,13 @@ CREATE OR REPLACE FUNCTION zc_Color_White() RETURNS Integer AS $BODY$BEGIN RETUR
 CREATE OR REPLACE FUNCTION zc_Color_Blue() RETURNS Integer AS $BODY$BEGIN RETURN (14614528); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 */
 
+
+/*
+CREATE OR REPLACE FUNCTION zc_Currency_Basis() RETURNS TVarChar AS $BODY$BEGIN RETURN ((select Id from object where ValueData = 'грн' and DescId = zc_object_Currency())); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Currency_GRN() RETURNS TVarChar AS $BODY$BEGIN RETURN ((select Id from object where ValueData = 'грн' and DescId = zc_object_Currency())); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Currency_EUR() RETURNS TVarChar AS $BODY$BEGIN RETURN ((select Id from object where ValueData = 'евро' and DescId = zc_object_Currency())); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Currency_DOL() RETURNS TVarChar AS $BODY$BEGIN RETURN ((select Id from object where ValueData = 'долар' and DescId = zc_object_Currency())); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+*/
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
