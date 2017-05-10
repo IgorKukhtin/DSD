@@ -394,10 +394,10 @@ inherited CashJournalUserForm: TCashJournalUserForm
     Width = 982
     ExplicitWidth = 982
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42736d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42736d
     end
     inherited cxLabel1: TcxLabel
       Top = 7

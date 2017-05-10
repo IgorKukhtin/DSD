@@ -501,11 +501,11 @@ inherited CashJournalForm: TCashJournalForm
     Width = 975
     ExplicitWidth = 975
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42736d
     end
     inherited deEnd: TcxDateEdit
       Left = 305
-      EditValue = 42005d
+      EditValue = 42736d
       ExplicitLeft = 305
     end
     inherited cxLabel1: TcxLabel
