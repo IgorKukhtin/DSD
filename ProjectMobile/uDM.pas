@@ -661,7 +661,8 @@ type
     qryCashAddress: TWideStringField;
     qryCashContractId: TIntegerField;
     qryCashContractName: TWideStringField;
-    qryCashInvNumber: TStringField;
+    qryCashInvNumberSale: TStringField;
+    tblMovement_CashInvNumberSale: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
@@ -730,7 +731,7 @@ type
     procedure LoadPhotoGroups;
     procedure LoadAllPhotoGroups(AStartDate, AEndDate: TDate);
 
-    procedure SaveCash(AId: integer; AInvNumber: string; AOperDate: TDate; AAmount: Double; AComment: string);
+    procedure SaveCash(AId: integer; AInvNumberSale: string; AOperDate: TDate; AAmount: Double; AComment: string);
     procedure LoadCash;
     procedure LoadAllCash(AStartDate, AEndDate: TDate);
 
@@ -1430,6 +1431,7 @@ begin
           UploadStoredProc.Params.AddParam('inMemberId', ftInteger, ptInput, FieldByName('MEMBERID').AsInteger);
           UploadStoredProc.Params.AddParam('inContractId', ftInteger, ptInput, FieldByName('CONTRACTID').AsInteger);
           UploadStoredProc.Params.AddParam('inComment', ftString, ptInput, FieldByName('COMMENT').AsString);
+          UploadStoredProc.Params.AddParam('inInvNumberSale', ftString, ptInput, FieldByName('INVNUMBERSALE').AsString);
 
           try
             UploadStoredProc.Execute(false, false, false);
@@ -4704,14 +4706,14 @@ begin
 end;
 
 { сохранение прихода денег в БД }
-procedure TDM.SaveCash(AId: integer; AInvNumber: string; AOperDate: TDate; AAmount: Double; AComment: string);
+procedure TDM.SaveCash(AId: integer; AInvNumberSale: string; AOperDate: TDate; AAmount: Double; AComment: string);
 var
   GlobalId: TGUID;
   NewInvNumber: string;
 begin
   if AId = -1 then // сохранение нового прихода денег
   begin
-    //NewInvNumber := GetInvNumber('MOVEMENT_CASH');
+    NewInvNumber := GetInvNumber('MOVEMENT_CASH');
 
     try
       tblMovement_Cash.Open;
@@ -4720,7 +4722,8 @@ begin
 
       CreateGUID(GlobalId);
       tblMovement_CashGUID.AsString := GUIDToString(GlobalId);
-      tblMovement_CashInvNumber.AsString := AInvNumber;
+      tblMovement_CashInvNumber.AsString := NewInvNumber;
+      tblMovement_CashInvNumberSale.AsString := AInvNumberSale;
       tblMovement_CashOperDate.AsDateTime := AOperDate;
       tblMovement_CashStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
       tblMovement_CashInsertDate.AsDateTime := Now();
@@ -4752,7 +4755,7 @@ begin
       begin
         tblMovement_Cash.Edit;
 
-        tblMovement_CashInvNumber.AsString := AInvNumber;
+        tblMovement_CashInvNumberSale.AsString := AInvNumberSale;
         tblMovement_CashOperDate.AsDateTime := AOperDate;
         tblMovement_CashAmount.AsFloat := AAmount;
         tblMovement_CashComment.AsString := AComment;
@@ -4781,7 +4784,7 @@ end;
 procedure TDM.LoadCash;
 begin
   qryCash.Close;
-  qryCash.Open('select Id, InvNumber, Amount, Comment, StatusId, OperDate, isSync, ' +
+  qryCash.Open('select Id, InvNumberSale, Amount, Comment, StatusId, OperDate, isSync, ' +
     'PartnerId, '''' PartnerName, '''' Address, ContractId, '''' ContractName ' +
     'from Movement_Cash where PartnerId = ' + qryPartnerId.AsString);
 end;
@@ -4790,7 +4793,7 @@ procedure TDM.LoadAllCash(AStartDate, AEndDate: TDate);
 begin
   qryCash.Close;
 
-  qryCash.SQL.Text := 'select MC.ID, MC.InvNumber, MC.OPERDATE, MC.COMMENT, MC.AMOUNT, MC.ISSYNC, MC.STATUSID, ' +
+  qryCash.SQL.Text := 'select MC.ID, MC.InvNumberSale, MC.OPERDATE, MC.COMMENT, MC.AMOUNT, MC.ISSYNC, MC.STATUSID, ' +
     'P.Id PartnerId, '''' || J.VALUEDATA PartnerName, '''' || P.ADDRESS Address, ' +
     'P.CONTRACTID, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName ' +
     'FROM Movement_Cash MC ' +
