@@ -25,7 +25,7 @@ object BankAccountEditForm: TBankAccountEditForm
   object cxLabel1: TcxLabel
     Left = 10
     Top = 54
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+    Caption = #1053#1086#1084#1077#1088' '#1089#1095#1077#1090#1072
   end
   object cxButton1: TcxButton
     Left = 41
@@ -34,7 +34,7 @@ object BankAccountEditForm: TBankAccountEditForm
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
-    TabOrder = 3
+    TabOrder = 4
   end
   object cxButton2: TcxButton
     Left = 185
@@ -44,7 +44,7 @@ object BankAccountEditForm: TBankAccountEditForm
     Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    TabOrder = 4
+    TabOrder = 5
   end
   object cxLabel2: TcxLabel
     Left = 10
@@ -58,7 +58,7 @@ object BankAccountEditForm: TBankAccountEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 8
     Width = 273
   end
   object cxLabel8: TcxLabel
@@ -92,7 +92,7 @@ object BankAccountEditForm: TBankAccountEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 1
+    TabOrder = 3
     Width = 273
   end
   object ceJuridical: TcxButtonEdit
@@ -104,7 +104,7 @@ object BankAccountEditForm: TBankAccountEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 10
+    TabOrder = 1
     Width = 273
   end
   object cxLabel4: TcxLabel
