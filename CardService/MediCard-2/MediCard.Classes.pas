@@ -33,11 +33,15 @@ type
 
   TMCSession = class(TInterfacedObject, IMCSession)
   private
-    function GenerateCasual: string;
+    FRequest: IMCData;
+    FResponse: IMCData;
+    function GetRequest: IMCData;
+    function GetResponse: IMCData;
   protected
-    function GetRequest: IMCData; virtual;
-    function GetResponse: IMCData; virtual;
+    function RequestIntf: TGUID; virtual; abstract;
+    function ResponseIntf: TGUID; virtual; abstract;
   public
+    function GenerateCasual: string;
     function Post: Integer;
     property Request: IMCData read GetRequest;
     property Response: IMCData read GetResponse;
@@ -51,6 +55,12 @@ type
   TMCResponseDiscount = class(TMCResponse, IMCResponseDiscount)
   protected
     procedure CreateParams; override;
+  end;
+
+  TMCSessionDiscount = class(TMCSession, IMCSessionDiscount)
+  protected
+    function RequestIntf: TGUID; override;
+    function ResponseIntf: TGUID; override;
   end;
 
 implementation
@@ -188,19 +198,24 @@ end;
 
 function TMCSession.GetRequest: IMCData;
 begin
-  Result := nil;
+  if FRequest = nil then
+    MCDesigner.CreateObject(RequestIntf).GetInterface(IMCData, FRequest);
+
+  Result := FRequest;
 end;
 
 function TMCSession.GetResponse: IMCData;
 begin
-  Result := nil;
+  if FResponse = nil then
+    MCDesigner.CreateObject(ResponseIntf).GetInterface(IMCData, FResponse);
+
+  Result := FResponse;
 end;
 
 function TMCSession.Post: Integer;
 var
   RequestXML, ResponseXML: string;
 begin
-  Request.Params.ParamByName('id_casual').AsString := GenerateCasual;
   Request.SaveToXML(RequestXML);
 
   Result := MCDesigner.HTTPPost(MCURL, RequestXML, ResponseXML);
@@ -214,9 +229,24 @@ begin
   end;
 end;
 
+{ TMCSessionDiscount }
+
+{ TMCSessionDiscount }
+
+function TMCSessionDiscount.RequestIntf: TGUID;
+begin
+  Result := IMCRequestDiscount;
+end;
+
+function TMCSessionDiscount.ResponseIntf: TGUID;
+begin
+  Result := IMCResponseDiscount;
+end;
+
 initialization
   MCDesigner.RegisterClasses([
     TMCRequestDiscount,
-    TMCResponseDiscount
+    TMCResponseDiscount,
+    TMCSessionDiscount
   ]);
 end.

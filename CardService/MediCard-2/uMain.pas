@@ -15,8 +15,10 @@ type
   TfrmMain = class(TForm)
     Button1: TButton;
     Button2: TButton;
+    Button3: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -209,10 +211,48 @@ begin
       MCData.LoadFromXML(Response);
 
       if MCData.Params.ParamByName('id_casual').AsString <> CasualId then
-        raise EMCException.Create('Ответ не соответствует запросу');      
+        raise EMCException.Create('Ответ не соответствует запросу');
 
       sResp.WriteString(Response);
       sResp.SaveToFile(ExtractFilePath(Application.ExeName) + 'resp.txt');
+    end;
+  finally
+    FreeAndNil(sData);
+    FreeAndNil(sResp);
+  end;
+end;
+
+procedure TfrmMain.Button3Click(Sender: TObject);
+var
+  sData, sResp: TStringStream;
+  Session: IMCSession;
+  CasualId, XML: string;
+begin
+  sData := TStringStream.Create;
+  sResp := TStringStream.Create;
+  try
+    MCDesigner.CreateObject(IMCSessionDiscount).GetInterface(IMCSession, Session);
+
+    CasualId := Session.GenerateCasual;
+
+  	with Session.Request.Params do
+    begin
+      ParamByName('id_casual').AsString := CasualId;
+      ParamByName('inside_code').AsInteger := 679;
+      ParamByName('card_code').AsString := 'MD00030026441';
+      ParamByName('product_code').AsString := '134965';
+      ParamByName('qty').AsFloat := 3;
+    end;
+
+    Session.Request.SaveToXML(XML);
+    sData.WriteString(XML);
+    sData.SaveToFile(ExtractFilePath(Application.ExeName) + 'request.xml');
+
+    if Session.Post = 200 then
+    begin
+      Session.Response.SaveToXML(XML);
+      sResp.WriteString(XML);
+      sResp.SaveToFile(ExtractFilePath(Application.ExeName) + 'response.xml');
     end;
   finally
     FreeAndNil(sData);
