@@ -44,13 +44,16 @@ type
     ['{8CFA3CE2-F522-44C0-B984-8238157DABF7}']
     function GetRequest: IMCData;
     function GetResponse: IMCData;
+    function GenerateCasual: string;
     function Post: Integer;
     property Request: IMCData read GetRequest;
     property Response: IMCData read GetResponse;
   end;
 
+  // Интерфейсы для запроса скидки на товар
   IMCRequestDiscount  = interface ['{DDA3B308-90E9-4537-8A3C-5815B2726794}'] end;
   IMCResponseDiscount = interface ['{C229D58E-20FF-4526-9328-9BB27822EDF7}'] end;
+  IMCSessionDiscount  = interface ['{2473D20F-81EE-4FF0-8620-CF70E436E897}'] end;
 
 var
   MCDesigner: IMCDesigner;
