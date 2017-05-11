@@ -253,6 +253,38 @@ begin
       Session.Response.SaveToXML(XML);
       sResp.WriteString(XML);
       sResp.SaveToFile(ExtractFilePath(Application.ExeName) + 'response.xml');
+
+      MCDesigner.CreateObject(IMCSessionSale).GetInterface(IMCSession, Session);
+
+      with Session.Request.Params do
+      begin
+        ParamByName('id_casual').AsString := CasualId;
+        ParamByName('inside_code').AsInteger := 679;;
+        ParamByName('supplier').AsInteger := 45643;
+        ParamByName('id_alter').AsString := '5678';
+        ParamByName('sale_status').AsInteger := MC_SALE_COMPLETE;
+        ParamByName('card_code').AsString := 'MD00030026441';
+        ParamByName('product_code').AsString := '134965';
+        ParamByName('price').AsFloat := 34.67;
+        ParamByName('qty').AsFloat := 3;
+        ParamByName('rezerv').AsFloat := 51;
+        ParamByName('discont_percent').AsFloat := 15;
+        ParamByName('discont_value').AsFloat := 0;
+        ParamByName('sale_date').AsString := '2017-05-11 17:26:45';
+      end;
+
+      Session.Request.SaveToXML(XML);
+      sData.Clear;
+      sData.WriteString(XML);
+      sData.SaveToFile(ExtractFilePath(Application.ExeName) + 'request_sale.xml');
+
+      if Session.Post = 200 then
+      begin
+        Session.Response.SaveToXML(XML);
+        sResp.Clear;
+        sResp.WriteString(XML);
+        sResp.SaveToFile(ExtractFilePath(Application.ExeName) + 'response_sale.xml');
+      end;
     end;
   finally
     FreeAndNil(sData);

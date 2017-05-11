@@ -47,6 +47,8 @@ type
     property Response: IMCData read GetResponse;
   end;
 
+  // Классы для запроса скидки на товар
+
   TMCRequestDiscount = class(TMCRequest, IMCRequestDiscount)
   protected
     procedure CreateParams; override;
@@ -58,6 +60,24 @@ type
   end;
 
   TMCSessionDiscount = class(TMCSession, IMCSessionDiscount)
+  protected
+    function RequestIntf: TGUID; override;
+    function ResponseIntf: TGUID; override;
+  end;
+
+  // Классы для подтверждения продажи товара
+
+  TMCRequestSale = class(TMCRequest, IMCRequestSale)
+  protected
+    procedure CreateParams; override;
+  end;
+
+  TMCResponseSale = class(TMCResponse, IMCResponseSale)
+  protected
+    procedure CreateParams; override;
+  end;
+
+  TMCSessionSale = class(TMCSession, IMCSessionSale)
   protected
     function RequestIntf: TGUID; override;
     function ResponseIntf: TGUID; override;
@@ -243,10 +263,54 @@ begin
   Result := IMCResponseDiscount;
 end;
 
+{ TMCRequestSale }
+
+procedure TMCRequestSale.CreateParams;
+begin
+  inherited CreateParams;
+  Params.ParamByName('request_type').AsInteger := MC_SALE;
+
+  Params.CreateParam(ftInteger, 'inside_code',     ptInputOutput);
+  Params.CreateParam(ftInteger, 'supplier',        ptInputOutput);
+  Params.CreateParam(ftString,  'id_alter',        ptInputOutput);
+  Params.CreateParam(ftInteger, 'sale_status',     ptInputOutput);
+  Params.CreateParam(ftString,  'card_code',       ptInputOutput);
+  Params.CreateParam(ftString,  'product_code',    ptInputOutput);
+  Params.CreateParam(ftFloat,   'price',           ptInputOutput);
+  Params.CreateParam(ftFloat,   'qty',             ptInputOutput);
+  Params.CreateParam(ftFloat,   'rezerv',          ptInputOutput);
+  Params.CreateParam(ftFloat,   'discont_percent', ptInputOutput);
+  Params.CreateParam(ftFloat,   'discont_value',   ptInputOutput);
+  Params.CreateParam(ftString,  'sale_date',       ptInputOutput);
+end;
+
+{ TMCResponseSale }
+
+procedure TMCResponseSale.CreateParams;
+begin
+  inherited CreateParams;
+  Params.CreateParam(ftInteger, 'request_status', ptInputOutput);
+end;
+
+{ TMCSessionSale }
+
+function TMCSessionSale.RequestIntf: TGUID;
+begin
+  Result := IMCRequestSale;
+end;
+
+function TMCSessionSale.ResponseIntf: TGUID;
+begin
+  Result := IMCResponseSale;
+end;
+
 initialization
   MCDesigner.RegisterClasses([
     TMCRequestDiscount,
     TMCResponseDiscount,
-    TMCSessionDiscount
+    TMCSessionDiscount,
+    TMCRequestSale,
+    TMCResponseSale,
+    TMCSessionSale
   ]);
 end.

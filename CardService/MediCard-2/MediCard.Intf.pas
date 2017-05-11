@@ -16,6 +16,16 @@ const
   // Получение статуса дисконтной карты
   MC_STATUS = 3;
 
+  // Продажа товара совершена
+  MC_SALE_COMPLETE = 1;
+  // Продажа товара не совершена
+  MC_SALE_UNCOMPLETE = 2;
+
+  // Запрос принят
+  MC_REQUEST_ACCEPTED = 1;
+  // Запрос не принят
+  MC_REQUEST_NOT_ACCEPTED = 2;
+
 type
   EMCException = class(Exception);
 
@@ -54,6 +64,11 @@ type
   IMCRequestDiscount  = interface ['{DDA3B308-90E9-4537-8A3C-5815B2726794}'] end;
   IMCResponseDiscount = interface ['{C229D58E-20FF-4526-9328-9BB27822EDF7}'] end;
   IMCSessionDiscount  = interface ['{2473D20F-81EE-4FF0-8620-CF70E436E897}'] end;
+
+  // Интерфейсы для подтверждения продажи товара
+  IMCRequestSale  = interface ['{F6D99C5F-DEAA-43F9-94F8-6DD57E98213C}'] end;
+  IMCResponseSale = interface ['{3FC24168-53DB-4F68-9A23-4350130FC811}'] end;
+  IMCSessionSale  = interface ['{9DEC8249-DC56-4251-AE4C-9EEEA5612D8A}'] end;
 
 var
   MCDesigner: IMCDesigner;
