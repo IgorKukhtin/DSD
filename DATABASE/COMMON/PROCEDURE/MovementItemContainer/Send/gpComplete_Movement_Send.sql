@@ -1,8 +1,9 @@
--- Function: gpComplete_Movement_Send222()
+-- Function: gpComplete_Movement_Send()
 
 DROP FUNCTION IF EXISTS gpComplete_Movement_Send222 (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_Send (Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpComplete_Movement_Send222(
+CREATE OR REPLACE FUNCTION gpComplete_Movement_Send(
     IN inMovementId        Integer              , -- ключ Документа
     IN inIsLastComplete    Boolean DEFAULT False, -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
@@ -52,7 +53,7 @@ BEGIN
                          , OperCount
                          , AccountDirectionId_From, AccountDirectionId_To, InfoMoneyDestinationId, InfoMoneyId
                          , JuridicalId_basis_To, BusinessId_To
-                         , UnitId_Item, StorageId_Item, PartionGoodsId_Item, UnitId_Partion, Price_Partion
+                         , StorageId_Item, PartionGoodsId_Item
                          , isPartionCount, isPartionSumm, isPartionDate_From, isPartionDate_To, isPartionGoodsKind_From, isPartionGoodsKind_To
                          , PartionGoodsId_From, PartionGoodsId_To
                          , ProfitLossGroupId, ProfitLossDirectionId, UnitId_ProfitLoss, BranchId_ProfitLoss, BusinessId_ProfitLoss
@@ -97,14 +98,8 @@ BEGIN
             , _tmp.JuridicalId_basis_To
             , _tmp.BusinessId_To
 
-             , _tmp.UnitId_Item
              , _tmp.StorageId_Item
              , _tmp.PartionGoodsId_Item
-             , CASE WHEN _tmp.MemberId_From <> 0 AND _tmp.MemberId_To <> 0 THEN _tmp.UnitId_Partion
-                    WHEN _tmp.UnitId_From <> 0   AND _tmp.MemberId_To <> 0 THEN _tmp.UnitId_From
-                    ELSE 0
-               END AS UnitId_Partion
-             , _tmp.Price_Partion
 
             , _tmp.isPartionCount
             , _tmp.isPartionSumm
@@ -115,7 +110,7 @@ BEGIN
               -- Партии товара, сформируем позже
             , 0 AS PartionGoodsId_From
             , 0 AS PartionGoodsId_To
-            
+
               -- Группы ОПиУ
             , _tmp.ProfitLossGroupId
               -- Аналитики ОПиУ - направления
@@ -146,11 +141,8 @@ BEGIN
                          ELSE 0
                     END AS GoodsKindId
                   , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
-                  , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId_Item
                   , COALESCE (MILinkObject_Storage.ObjectId, 0) AS StorageId_Item
                   , COALESCE (MILinkObject_PartionGoods.ObjectId, 0) AS PartionGoodsId_Item
-                  , COALESCE (ObjectFloat_PartionGoods_Price.ValueData, 0) AS Price_Partion
-                  , COALESCE (ObjectLink_PartionGoods_Unit.ChildObjectId, 0) AS UnitId_Partion
                   , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate_From
                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate_To
@@ -162,13 +154,13 @@ BEGIN
                                        THEN ObjectLink_UnitFrom_AccountDirection.ChildObjectId
                                    WHEN Object_From.DescId = zc_Object_Member()
                                        THEN CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100() -- "Основное сырье"; 10100; "Мясное сырье"
-                                                                                                  , zc_Enum_InfoMoneyDestination_20700() -- "Общефирменные"; 20700; "Товары"
-                                                                                                  , zc_Enum_InfoMoneyDestination_20900() -- "Общефирменные"; 20900; "Ирна"
-                                                                                                  , zc_Enum_InfoMoneyDestination_21000() -- "Общефирменные"; 21000; "Чапли"
-                                                                                                  , zc_Enum_InfoMoneyDestination_21100() -- "Общефирменные"; 21100; "Дворкин"
-                                                                                                  , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
-                                                                                                  , zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
-                                                                                                   )
+                                                                                              , zc_Enum_InfoMoneyDestination_20700() -- "Общефирменные"; 20700; "Товары"
+                                                                                              , zc_Enum_InfoMoneyDestination_20900() -- "Общефирменные"; 20900; "Ирна"
+                                                                                              , zc_Enum_InfoMoneyDestination_21000() -- "Общефирменные"; 21000; "Чапли"
+                                                                                              , zc_Enum_InfoMoneyDestination_21100() -- "Общефирменные"; 21100; "Дворкин"
+                                                                                              , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                                                              , zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+                                                                                               )
                                                      THEN 0 -- !!!всё в сотрудники (МО), а здесь ошибка!!! zc_Enum_AccountDirection_20600() -- "Запасы"; 20600; "сотрудники (экспедиторы)"
                                                  ELSE zc_Enum_AccountDirection_20500() -- "Запасы"; 20500; "сотрудники (МО)"
                                             END
@@ -178,13 +170,13 @@ BEGIN
                                        THEN ObjectLink_UnitTo_AccountDirection.ChildObjectId
                                    WHEN Object_To.DescId = zc_Object_Member()
                                        THEN CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100() -- "Основное сырье"; 10100; "Мясное сырье"
-                                                                                                  , zc_Enum_InfoMoneyDestination_20700() -- "Общефирменные"; 20700; "Товары"
-                                                                                                  , zc_Enum_InfoMoneyDestination_20900() -- "Общефирменные"; 20900; "Ирна"
-                                                                                                  , zc_Enum_InfoMoneyDestination_21000() -- "Общефирменные"; 21000; "Чапли"
-                                                                                                  , zc_Enum_InfoMoneyDestination_21100() -- "Общефирменные"; 21100; "Дворкин"
-                                                                                                  , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
-                                                                                                  , zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
-                                                                                                   )
+                                                                                              , zc_Enum_InfoMoneyDestination_20700() -- "Общефирменные"; 20700; "Товары"
+                                                                                              , zc_Enum_InfoMoneyDestination_20900() -- "Общефирменные"; 20900; "Ирна"
+                                                                                              , zc_Enum_InfoMoneyDestination_21000() -- "Общефирменные"; 21000; "Чапли"
+                                                                                              , zc_Enum_InfoMoneyDestination_21100() -- "Общефирменные"; 21100; "Дворкин"
+                                                                                              , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                                                              , zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+                                                                                               )
                                                      THEN 0 -- !!!всё в сотрудники (МО), а здесь ошибка!!! zc_Enum_AccountDirection_20600() -- "Запасы"; 20600; "сотрудники (экспедиторы)"
                                                  ELSE zc_Enum_AccountDirection_20500() -- "Запасы"; 20500; "сотрудники (МО)"
                                             END
@@ -234,21 +226,12 @@ BEGIN
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                                     ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                    ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Storage
                                                     ON MILinkObject_Storage.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_Storage.DescId = zc_MILinkObject_Storage()
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
                                                     ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
-                   LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_Price
-                                         ON ObjectFloat_PartionGoods_Price.ObjectId = MILinkObject_PartionGoods.ObjectId
-                                        AND ObjectFloat_PartionGoods_Price.DescId = zc_ObjectFloat_PartionGoods_Price()
-                   LEFT JOIN ObjectLink AS ObjectLink_PartionGoods_Unit
-                                        ON ObjectLink_PartionGoods_Unit.ObjectId = MILinkObject_PartionGoods.ObjectId
-                                       AND ObjectLink_PartionGoods_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
 
                    LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                 ON MIString_PartionGoods.MovementItemId = MovementItem.Id
@@ -288,7 +271,7 @@ BEGIN
                                        AND ObjectLink_Personal_Member_to.DescId = zc_ObjectLink_Personal_Member()
                    LEFT JOIN Object AS Object_To ON Object_To.Id = COALESCE (ObjectLink_Personal_Member_to.ChildObjectId, MovementLinkObject_To.ObjectId)
                    LEFT JOIN Object AS Object_To_find ON Object_To_find.Id = MovementLinkObject_To.ObjectId
-                   
+
                    -- для затрат
                    LEFT JOIN tmpMember AS tmpMemberTo ON tmpMemberTo.MemberId = MovementLinkObject_To.ObjectId
                    LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfSelect ON lfSelect.UnitId = tmpMemberTo.UnitId
@@ -364,7 +347,8 @@ BEGIN
                                                                                            , zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
                                                         THEN 0
 
-                                                    WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                    WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                      OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
                                                         THEN _tmpItem.PartionGoodsId_Item
@@ -383,19 +367,35 @@ BEGIN
                                                                                            , zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
                                                         THEN 0
 
-                                                    WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                    WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                      OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
-                                                        THEN lpInsertFind_Object_PartionGoods (inUnitId_Partion:= CASE WHEN _tmpItem.MemberId_To <> 0 THEN _tmpItem.UnitId_Partion ELSE NULL END
-                                                                                             , inGoodsId       := CASE WHEN _tmpItem.MemberId_To <> 0 THEN _tmpItem.GoodsId ELSE NULL END
-                                                                                             , inStorageId     := CASE WHEN _tmpItem.MemberId_To <> 0 THEN _tmpItem.StorageId_Item ELSE NULL END
-                                                                                             , inInvNumber     := CASE WHEN _tmpItem.MemberId_To <> 0 THEN _tmpItem.PartionGoods ELSE NULL END
-                                                                                             , inOperDate      := CASE WHEN _tmpItem.MemberId_To <> 0 THEN _tmpItem.PartionGoodsDate_To ELSE NULL END
-                                                                                             , inPrice         := CASE WHEN _tmpItem.MemberId_To <> 0 THEN _tmpItem.Price_Partion ELSE NULL END
-                                                                                              )
+                                                        THEN CASE WHEN _tmpItem.UnitId_From <> 0 AND _tmpItem.MemberId_To <> 0
+                                                                       THEN -- !!!Партия создается, потом надо будет залить цену
+                                                                            lpInsertFind_Object_PartionGoods (inUnitId_Partion:= _tmpItem.UnitId_From
+                                                                                                            , inGoodsId       := _tmpItem.GoodsId
+                                                                                                            , inStorageId     := _tmpItem.StorageId_Item
+                                                                                                            , inInvNumber     := ''
+                                                                                                            , inOperDate      := _tmpItem.OperDate
+                                                                                                            , inPrice         := 0
+                                                                                                             )
+                                                                  WHEN _tmpItem.MemberId_To <> 0
+                                                                       THEN -- !!!Партия создается - вдруг изменился StorageId
+                                                                            lpInsertFind_Object_PartionGoods (inUnitId_Partion:= 0 -- (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem.PartionGoodsId_Item AND OL.DescId = zc_ObjectLink_PartionGoods_Unit())
+                                                                                                            , inGoodsId       := 1 -- CASE WHEN _tmpItem.PartionGoodsId_Item > 0 THEN _tmpItem.GoodsId ELSE 0 END
+                                                                                                            , inStorageId     := _tmpItem.StorageId_Item
+                                                                                                            , inInvNumber     := (SELECT Object.ObjectCode FROM Object WHERE Object.Id = _tmpItem.PartionGoodsId_Item) :: TVarChar
+                                                                                                            , inOperDate      := (SELECT OD.ValueData  FROM ObjectDate  AS OD  WHERE OD.ObjectId  = _tmpItem.PartionGoodsId_Item AND OD.DescId  = zc_ObjectDate_PartionGoods_Value())
+                                                                                                            , inPrice         := (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = _tmpItem.PartionGoodsId_Item AND OFl.DescId = zc_ObjectFloat_PartionGoods_Price())
+                                                                                                             )
+                                                                  -- !!!Партия не меняется - т.е. как в расходе, хотя надо бы отследить
+                                                                  ELSE _tmpItem.PartionGoodsId_Item
+                                                             END
                                                     ELSE lpInsertFind_Object_PartionGoods ('')
                                                END
      WHERE _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Прочие ТМЦ
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
@@ -417,7 +417,7 @@ BEGIN
 
      -- 1.1.1. определяется для количественного учета
      UPDATE _tmpItem SET ContainerId_GoodsFrom = lpInsertUpdate_ContainerCount_Goods (inOperDate               := _tmpItem.OperDate
-                                                                                    , inUnitId                 := CASE WHEN _tmpItem.MemberId_From <> 0 THEN _tmpItem.UnitId_Item ELSE _tmpItem.UnitId_From END
+                                                                                    , inUnitId                 := CASE WHEN _tmpItem.MemberId_From <> 0 THEN 0 /*_tmpItem.UnitId_Item*/ ELSE _tmpItem.UnitId_From END
                                                                                     , inCarId                  := NULL
                                                                                     , inMemberId               := _tmpItem.MemberId_From
                                                                                     , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
@@ -430,7 +430,7 @@ BEGIN
                                                                                     , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                      )
                        , ContainerId_GoodsTo   = lpInsertUpdate_ContainerCount_Goods (inOperDate               := _tmpItem.OperDate
-                                                                                    , inUnitId                 := CASE WHEN _tmpItem.MemberId_To <> 0 THEN _tmpItem.UnitId_Item ELSE _tmpItem.UnitId_To END
+                                                                                    , inUnitId                 := CASE WHEN _tmpItem.MemberId_To <> 0 THEN 0 /*_tmpItem.UnitId_Item*/ ELSE _tmpItem.UnitId_To END
                                                                                     , inCarId                  := NULL
                                                                                     , inMemberId               := _tmpItem.MemberId_To
                                                                                     , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
@@ -557,7 +557,7 @@ BEGIN
                                                                      )
                                END
                            , ContainerId_To = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := _tmpItem.OperDate
-                                                                                , inUnitId                 := CASE WHEN _tmpItem.MemberId_To <> 0 THEN _tmpItem.UnitId_Item ELSE _tmpItem.UnitId_To END
+                                                                                , inUnitId                 := CASE WHEN _tmpItem.MemberId_To <> 0 THEN 0 /*_tmpItem.UnitId_Item*/ ELSE _tmpItem.UnitId_To END
                                                                                 , inCarId                  := NULL
                                                                                 , inMemberId               := _tmpItem.MemberId_To
                                                                                 , inBranchId               := _tmpItem.BranchId_To
@@ -721,15 +721,17 @@ BEGIN
        WHERE _tmpItemSumm.ContainerId_ProfitLoss <> 0;
 
 
-     -- !!!формируется свойство <Цена>!!!
+     -- !!!формируется свойство <Цена> - у партии ТМЦ!!!
      PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_Price(), tmp.PartionGoodsId, tmp.Price)
      FROM (SELECT _tmpItem.PartionGoodsId_To AS PartionGoodsId, SUM (tmp.OperSumm) / SUM (_tmpItem.OperCount) AS Price
            FROM _tmpItem
                 INNER JOIN (SELECT _tmpItemSumm.MovementItemId, SUM (_tmpItemSumm.OperSumm) AS OperSumm FROM _tmpItemSumm GROUP BY _tmpItemSumm.MovementItemId
                            ) AS tmp ON tmp.MovementItemId = _tmpItem.MovementItemId
-           WHERE _tmpItem.PartionGoodsId_To > 0
+           WHERE _tmpItem.UnitId_From <> 0 AND _tmpItem.MemberId_To <> 0 -- Только если переместили на МО
+             AND _tmpItem.PartionGoodsId_To > 0
              AND _tmpItem.OperCount > 0
-             AND (_tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+             AND (_tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                    , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                     , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                     , zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
                                                      )
@@ -781,5 +783,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 579, inSession:= '2')
--- SELECT * FROM gpComplete_Movement_Send222 (inMovementId:= 579, inIsLastComplete:= FALSE, inSession:= '2')
+-- SELECT * FROM gpComplete_Movement_Send (inMovementId:= 579, inIsLastComplete:= FALSE, inSession:= '2')
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 579, inSession:= '2')

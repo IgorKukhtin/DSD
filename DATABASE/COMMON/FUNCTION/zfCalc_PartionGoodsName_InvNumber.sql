@@ -14,10 +14,10 @@ RETURNS TVarChar AS
 $BODY$
 BEGIN
      -- возвращаем результат
-     RETURN (TRIM (CASE WHEN inInvNumber <> '' THEN '№ <' || inInvNumber || '>' ELSE '' END
-                || CASE WHEN inOperDate <> zc_DateStart() THEN ' <' || DATE (inOperDate) :: TVarChar || '>' ELSE '' END
-                || ' цена : <'|| COALESCE (inPrice, 0) :: TVarChar || '>'
-                || ' от : <'|| COALESCE (inUnitName_Partion, '') || '>'
+     RETURN (TRIM (CASE WHEN inInvNumber <> '' AND inInvNumber <> '0'  THEN '№ <' || inInvNumber || '>' ELSE '' END
+                || ' цена : <'|| zfConvert_FloatToString (COALESCE (inPrice, 0)) || '>'
+                || ' от : <' || zfConvert_DateToString (COALESCE (inOperDate, zc_DateStart())) || '>'
+                || '  <'|| COALESCE (inUnitName_Partion, '') || '>'
                 || CASE WHEN inStorageName <> '' THEN ' место хранениия : <'|| COALESCE (inStorageName, '') || '>' ELSE '' END
                   ));
 
