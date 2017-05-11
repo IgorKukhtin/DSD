@@ -84,9 +84,9 @@ BEGIN
         FROM (
              SELECT DISTINCT
                     DATE_TRUNC ('DAY', Movement.OperDate) AS OperDate, tmpGoodsAll.GoodsMainId
-                  , CASE WHEN MovementLinkObject_Juridical.ObjectId = inJuridicalId_1 THEN MovementItem.Amount  ELSE 0 END ::TFloat AS Price_1   -- оптима
-                  , CASE WHEN MovementLinkObject_Juridical.ObjectId = inJuridicalId_2 THEN MovementItem.Amount  ELSE 0 END ::TFloat AS Price_2   -- бадм
-                  , CASE WHEN MovementLinkObject_Juridical.ObjectId = inJuridicalId_3 THEN MovementItem.Amount  ELSE 0 END ::TFloat AS Price_3   -- вента
+                  , CASE WHEN MovementLinkObject_Juridical.ObjectId = inJuridicalId_1 THEN COALESCE (MovementItem.Amount,0) ELSE 0 END ::TFloat AS Price_1   -- оптима
+                  , CASE WHEN MovementLinkObject_Juridical.ObjectId = inJuridicalId_2 THEN COALESCE (MovementItem.Amount,0) ELSE 0 END ::TFloat AS Price_2   -- бадм
+                  , CASE WHEN MovementLinkObject_Juridical.ObjectId = inJuridicalId_3 THEN COALESCE (MovementItem.Amount,0) ELSE 0 END ::TFloat AS Price_3   -- вента
              FROM Movement
                   INNER JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                                 ON MovementLinkObject_Juridical.MovementId = Movement.Id
@@ -111,7 +111,8 @@ BEGIN
                 AND DATE_TRUNC ('DAY', Movement.OperDate) >= inStartDate AND DATE_TRUNC ('DAY', Movement.OperDate) < inEndDate + interval '1 day'  -- '01.12.2016' --
               --  and MovementItem.ObjectId = 324
                 ) AS tmp
-        GROUP BY tmp.OperDate, tmp.GoodsMainId;
+        GROUP BY tmp.OperDate, tmp.GoodsMainId
+        HAVING MAX(tmp.Price_1) + MAX(tmp.Price_2) + MAX(tmp.Price_3) > 0;
 
             
   CREATE TEMP TABLE _tmpGoodsReport (CommonCode integer, GoodsMainId integer, GoodsCode integer, GoodsName TVarChar) ON COMMIT DROP;
@@ -121,6 +122,7 @@ BEGIN
                      , Object_Goods.ObjectCode AS GoodsCode
                      , Object_Goods.ValueData  AS GoodsName
                 FROM _tmpGoods
+                     INNER JOIN (SELECT DISTINCT _tmpPriceList.GoodsMainId FROM _tmpPriceList) AS tmp ON tmp.GoodsMainId = _tmpGoods.GoodsMainId
                      LEFT JOIN Object AS Object_Goods 
                                       ON Object_Goods.Id = _tmpGoods.GoodsMainId
                                      AND Object_Goods.isErased = False
@@ -318,8 +320,7 @@ BEGIN
                , tmp.CommonCode
                , tmp.GoodsCode
                , tmp.GoodsName
-
-   ;
+        ;
   RETURN NEXT Cursor1;
 
 
