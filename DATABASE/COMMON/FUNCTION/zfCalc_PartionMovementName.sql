@@ -12,7 +12,16 @@ RETURNS TVarChar AS
 $BODY$
 BEGIN
      -- возвращаем результат
-     RETURN ('№ ' || inInvNumber || ' oт '|| DATE (inOperDate) :: TVarChar || COALESCE ((SELECT ' <' || CASE WHEN inDescId = -1 * zc_Movement_ProductionUnion() THEN 'Пересортица' ELSE ItemName END || '>' FROM MovementDesc WHERE Id = ABS (inDescId)), ''));
+     RETURN TRIM ('№ ' || inInvNumber -- CASE WHEN inInvNumber <> '' AND inInvNumber <> '0' THEN '№ ' || inInvNumber ELSE '' END
+               || ' oт '|| zfConvert_DateToString (inOperDate)
+               || COALESCE ((SELECT ' <' || CASE WHEN inDescId = -1 * zc_Movement_ProductionUnion()
+                                                      THEN 'Пересортица'
+                                                 ELSE ItemName
+                                            END
+                                         || '>'
+                             FROM MovementDesc WHERE Id = ABS (inDescId)
+                            ), '')
+                 );
 
 END;
 $BODY$

@@ -47,7 +47,7 @@ BEGIN
      -- Результат такой
      RETURN QUERY
        WITH tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
-                                , Container.Amount                            AS Amount
+                                , SUM (Container.Amount)                      AS Amount
                                 , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
                            FROM ContainerLinkObject AS CLO_Unit
                                 INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId AND Container.DescId = zc_Container_Count() AND Container.Amount <> 0
@@ -60,6 +60,8 @@ BEGIN
                            WHERE CLO_Unit.ObjectId = vbUnitId
                              AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                              AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
+                           GROUP BY Container.ObjectId
+                                  , COALESCE (CLO_GoodsKind.ObjectId, 0)
                           )
        SELECT
              0                          AS Id
@@ -225,20 +227,14 @@ BEGIN
                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
-
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Storage
-                                             ON MILinkObject_Storage.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_Storage.DescId = zc_MILinkObject_Storage()
-            LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = MILinkObject_Storage.ObjectId
-
             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
                                              ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
             LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = MILinkObject_PartionGoods.ObjectId
+
+
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
+            LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = MILinkObject_Storage.ObjectId
     
             LEFT JOIN ObjectFloat AS ObjectFloat_Price ON ObjectFloat_Price.ObjectId = Object_PartionGoods.Id                      -- цена
                                                       AND ObjectFloat_Price.DescId = zc_ObjectFloat_PartionGoods_Price()   
@@ -247,6 +243,7 @@ BEGIN
             LEFT JOIN Object AS Object_Storage_Partion ON Object_Storage_Partion.Id = ObjectLink_Storage.ChildObjectId 
             LEFT JOIN ObjectDate as objectdate_value ON objectdate_value.ObjectId = Object_PartionGoods.Id                    -- дата
                                                     AND objectdate_value.DescId = zc_ObjectDate_PartionGoods_Value()  
+
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -280,23 +277,24 @@ BEGIN
                                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                           )
           , tmpRemains AS (SELECT tmpMI_Goods.MovementItemId
-                                , Container.Amount                            AS Amount
+                                , SUM (Container.Amount) AS Amount
                            FROM tmpMI_Goods
                                 INNER JOIN Container ON Container.ObjectId = tmpMI_Goods.GoodsId
-                                                    AND Container.DescId = zc_Container_Count()
-                                                    AND Container.Amount <> 0
+                                                    AND Container.DescId   = zc_Container_Count()
+                                                    AND Container.Amount   <> 0
                                 INNER JOIN ContainerLinkObject AS CLO_Unit
                                                                ON CLO_Unit.ContainerId = Container.Id
-                                                              AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                                              AND CLO_Unit.ObjectId = vbUnitId
+                                                              AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                                              AND CLO_Unit.ObjectId    = vbUnitId
                                 LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                               ON CLO_GoodsKind.ContainerId = Container.Id
-                                                             AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                                             AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
                                 LEFT JOIN ContainerLinkObject AS CLO_Account
                                                               ON CLO_Account.ContainerId = Container.Id
-                                                             AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                                                             AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
                            WHERE COALESCE (CLO_GoodsKind.ObjectId, 0) = tmpMI_Goods.GoodsKindId
                              AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
+                           GROUP BY tmpMI_Goods.MovementItemId
                           )
        SELECT
              tmpMI_Goods.MovementItemId         AS Id

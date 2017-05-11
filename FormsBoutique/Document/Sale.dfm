@@ -167,7 +167,7 @@ object SaleForm: TSaleForm
       Top = 45
       Caption = #1044#1077#1085#1100' '#1088#1086#1078#1076#1077#1085#1080#1103
     end
-    object cbCalcAmountPartner: TcxCheckBox
+    object cbisPay: TcxCheckBox
       Left = 918
       Top = 103
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089' '#1086#1087#1083#1072#1090#1086#1081
@@ -557,6 +557,7 @@ object SaleForm: TSaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 70
           end
           object colTotalPay_Grn: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1043#1056#1053')'
@@ -1761,6 +1762,14 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisPay'
+        Value = Null
+        Component = cbisPay
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmount'
         Value = Null
         Component = MasterCDS
@@ -1834,6 +1843,86 @@ object SaleForm: TSaleForm
         ComponentItem = 'BarCode'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCurrencyValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CurrencyValue'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outParValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ParValue'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalChangePercent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalChangePercent'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalChangePercentPay'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalChangePercentPay'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalPay'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalPay'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalPayOth'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalPayOth'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalCountReturn'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalCountReturn'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalReturn'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalReturn'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalPayReturn'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalPayReturn'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDiscountSaleKindName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DiscountSaleKindName'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
