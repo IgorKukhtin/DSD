@@ -2,16 +2,36 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer);
 
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, Integer
+                                                        , TFloat, TFloat, TFloat, TFloat, TFloat
+                                                        , TFloat, TFloat, TFloat, TFloat, TFloat
+                                                        , TFloat, TFloat, TFloat, TFloat, TFloat
+                                                        , TVarChar, Integer);
+
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Sale(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , -- Товары
-    IN inPartionId           Integer   , -- Партия
-    IN inAmount              TFloat    , -- Количество
-    IN inOperPrice           TFloat    , -- Цена
-    IN inCountForPrice       TFloat    , -- Цена за количество
-    IN inOperPriceList       TFloat    , -- Цена по прайсу
-    IN inUserId              Integer     -- пользователь
+ INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId            Integer   , -- Ключ объекта <Документ>
+    IN inGoodsId               Integer   , -- Товары
+    IN inPartionId             Integer   , -- Партия
+    IN inDiscountSaleKindId    Integer   , -- Вид скидки при продаже
+    IN inAmount                TFloat    , -- Количество
+    IN inChangePercent         TFloat    , -- % Скидки
+    IN inSummChangePercent     TFloat    , -- Сумма дополнительной Скидки (в ГРН)
+    IN inOperPrice             TFloat    , -- Цена
+    IN inCountForPrice         TFloat    , -- Цена за количество
+    IN inOperPriceList         TFloat    , -- Цена по прайсу
+    IN inCurrencyValue         TFloat    , -- 
+    IN inParValue              TFloat    , -- 
+    IN inTotalChangePercent    TFloat    , -- 
+    IN inTotalChangePercentPay TFloat    , -- 
+    IN inTotalPay              TFloat    , -- 
+    IN inTotalPayOth           TFloat    , -- 
+    IN inTotalCountReturn      TFloat    , -- 
+    IN inTotalReturn           TFloat    , -- 
+    IN inTotalPayReturn        TFloat    , -- 
+
+    IN inBarCode               TVarChar  , -- Штрих-код поставщика
+    IN inUserId                Integer     -- пользователь
 )
 RETURNS Integer
 AS
@@ -36,7 +56,31 @@ BEGIN
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), ioId, inOperPriceList);
-     
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValue(), ioId, inCurrencyValue);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(), ioId, inParValue);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalChangePercent(), ioId, inTotalChangePercent);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalChangePercentPay(), ioId, inTotalChangePercentPay);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), ioId, inTotalPay);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPayOth(), ioId, inTotalPayOth);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalCountReturn(), ioId, inTotalCountReturn);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalReturn(), ioId, inTotalReturn);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPayReturn(), ioId, inTotalPayReturn);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_BarCode(), ioId, inBarCode);
+
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_DiscountSaleKind(), ioId, inDiscountSaleKindId);
+
+
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
@@ -50,8 +94,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 10.04.17         *
+ 10.05.17         *
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_MovementItem_Sale (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+-- 

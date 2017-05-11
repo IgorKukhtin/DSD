@@ -2,25 +2,41 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , -- Товары
-    IN inPartionId           Integer   , -- Партия
-    IN inAmount              TFloat    , -- Количество
-   OUT outOperPrice          TFloat    , -- Цена
-   OUT outCountForPrice      TFloat    , -- Цена за количество
-   OUT outAmountSumm         TFloat    , -- Сумма расчетная
-   OUT outOperPriceList      TFloat    , -- Цена по прайсу
+ INOUT ioId                   Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId           Integer   , -- Ключ объекта <Документ>
+    IN inGoodsId              Integer   , -- Товары
+    IN inPartionId            Integer   , -- Партия
+    IN inAmount               TFloat    , -- Количество
+    IN inChangePercent        TFloat    , -- % Скидки
+    IN inSummChangePercent    TFloat    , -- Сумма дополнительной Скидки (в ГРН)
+   OUT outOperPrice           TFloat    , -- Цена
+   OUT outCountForPrice       TFloat    , -- Цена за количество
+   OUT outAmountSumm          TFloat    , -- Сумма расчетная
+   OUT outOperPriceList       TFloat    , -- Цена по прайсу
    OUT outAmountPriceListSumm TFloat    , -- Сумма по прайсу
-    IN inSession             TVarChar    -- сессия пользователя
+
+   OUT outCurrencyValue         TFloat    , -- 
+   OUT outParValue              TFloat    , -- 
+   OUT outTotalChangePercent    TFloat    , -- 
+   OUT outTotalChangePercentPay TFloat    , -- 
+   OUT outTotalPay              TFloat    , -- 
+   OUT outTotalPayOth           TFloat    , -- 
+   OUT outTotalCountReturn      TFloat    , -- 
+   OUT outTotalReturn           TFloat    , -- 
+   OUT outTotalPayReturn        TFloat    , -- 
+   OUT outDiscountSaleKindName  TVarChar  , -- Вид скидки при продаже
+    IN inBarCode                TVarChar  , -- Штрих-код поставщика
+    IN inSession                TVarChar    -- сессия пользователя
 )                              
 RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPartionId Integer;
+   DECLARE vbDiscountSaleKindId Integer;
    DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -46,33 +62,52 @@ BEGIN
      -- данные из партии : OperPrice и CountForPrice
      SELECT COALESCE (Object_PartionGoods.CountForPrice,1)
           , COALESCE (Object_PartionGoods.OperPrice,0)
-    INTO outCountForPrice, outOperPrice
+          , CurrencyId
+    INTO outCountForPrice, outOperPrice, outCurrencyValue
      FROM Object_PartionGoods
      WHERE Object_PartionGoods.MovementItemId = inPartionId;
+     
+     -- 
+     /*IF vbCurrencyId <> zc_Currency_Basis() 
+        THEN
 
-     -- Заменили свойство <Цена за количество>
-     --IF COALESCE (outCountForPrice, 0) = 0 THEN outCountForPrice := 1; END IF;
+     END IF;*/
 
+     outCurrencyValue := 1;
+     outParValue := 0;
 
      -- сохранили
      ioId:= lpInsertUpdate_MovementItem_Sale   (ioId                 := ioId
                                               , inMovementId         := inMovementId
                                               , inGoodsId            := inGoodsId
                                               , inPartionId          := COALESCE(inPartionId,0)
+                                              , inDiscountSaleKindId := vbDiscountSaleKindId
                                               , inAmount             := inAmount
+                                              , inChangePercent      := COALESCE(inChangePercent,0)        ::TFloat
+                                              , inSummChangePercent  := COALESCE(inSummChangePercent,0)    ::TFloat
                                               , inOperPrice          := outOperPrice
                                               , inCountForPrice      := outCountForPrice
                                               , inOperPriceList      := outOperPriceList
-                                              , inUserId             := vbUserId
+                                              , inCurrencyValue         := outCurrencyValue 
+                                              , inParValue              := outParValue 
+                                              , inTotalChangePercent    := COALESCE(outTotalChangePercent,0)    ::TFloat     
+                                              , inTotalChangePercentPay := COALESCE(outTotalChangePercentPay,0) ::TFloat
+                                              , inTotalPay              := COALESCE(outTotalPay,0)              ::TFloat              
+                                              , inTotalPayOth           := COALESCE(outTotalPayOth,0)           ::TFloat           
+                                              , inTotalCountReturn      := COALESCE(outTotalCountReturn,0)      ::TFloat      
+                                              , inTotalReturn           := COALESCE(outTotalReturn,0)           ::TFloat   
+                                              , inTotalPayReturn        := COALESCE(outTotalPayReturn,0)        ::TFloat
+                                              , inBarCode               := COALESCE(inBarCode,'')               ::TVarChar
+                                              , inUserId                := vbUserId
                                                );
 
      -- расчитали сумму по элементу, для грида
-     outAmountSumm := CASE WHEN ioCountForPrice > 0
+     outAmountSumm := CASE WHEN outCountForPrice > 0
                                 THEN CAST (inAmount * outOperPrice / outCountForPrice AS NUMERIC (16, 2))
                            ELSE CAST (inAmount * outOperPrice AS NUMERIC (16, 2))
                       END;
      -- расчитали сумму по прайсу по элементу, для грида
-     outAmountPriceListSumm := CASE WHEN ioCountForPrice > 0
+     outAmountPriceListSumm := CASE WHEN outCountForPrice > 0
                                          THEN CAST (inAmount * outOperPriceList / outCountForPrice AS NUMERIC (16, 2))
                                     ELSE CAST (inAmount * outOperPriceList AS NUMERIC (16, 2))
                                END;
