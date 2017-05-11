@@ -663,6 +663,7 @@ type
     qryCashContractName: TWideStringField;
     qryCashInvNumberSale: TStringField;
     tblMovement_CashInvNumberSale: TStringField;
+    qryCashPAIDKINDID: TIntegerField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
@@ -707,7 +708,7 @@ type
     procedure LoadStoreRealItems(AId: integer);
     procedure GenerateStoreRealItemsList;
 
-    function SaveOrderExternal(OperDate: TDate; Comment: string;
+    function SaveOrderExternal(OperDate: TDate; PaidKindId: integer; Comment: string;
       ToralPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
     procedure NewOrderExternal;
     procedure LoadOrderExternal;
@@ -717,7 +718,7 @@ type
     procedure LoadOrderExtrenalItems(AId: integer);
     procedure GenerateOrderExtrenalItemsList;
 
-    function SaveReturnIn(OperDate: TDate; Comment : string;
+    function SaveReturnIn(OperDate: TDate; PaidKindId: integer; Comment : string;
       ToralPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
     procedure NewReturnIn;
     procedure LoadReturnIn;
@@ -731,7 +732,7 @@ type
     procedure LoadPhotoGroups;
     procedure LoadAllPhotoGroups(AStartDate, AEndDate: TDate);
 
-    procedure SaveCash(AId: integer; AInvNumberSale: string; AOperDate: TDate; AAmount: Double; AComment: string);
+    procedure SaveCash(AId: integer; APaidKind: integer; AInvNumberSale: string; AOperDate: TDate; AAmount: Double; AComment: string);
     procedure LoadCash;
     procedure LoadAllCash(AStartDate, AEndDate: TDate);
 
@@ -3456,7 +3457,7 @@ begin
 end;
 
 { сохранение заявки на товары в БД }
-function TDM.SaveOrderExternal(OperDate: TDate; Comment: string;
+function TDM.SaveOrderExternal(OperDate: TDate; PaidKindId: integer; Comment: string;
   ToralPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
 var
   GlobalId: TGUID;
@@ -3515,7 +3516,7 @@ begin
         tblMovement_OrderExternalStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
       tblMovement_OrderExternalPartnerId.AsInteger := cdsOrderExternalPartnerId.AsInteger;
       tblMovement_OrderExternalUnitId.AsInteger := tblObject_ConstUnitId.AsInteger;
-      tblMovement_OrderExternalPaidKindId.AsInteger := cdsOrderExternalPaidKindId.AsInteger;
+      tblMovement_OrderExternalPaidKindId.AsInteger := PaidKindId;
       tblMovement_OrderExternalContractId.AsInteger := cdsOrderExternalCONTRACTID.AsInteger;
       tblMovement_OrderExternalPriceListId.AsInteger := cdsOrderExternalPRICELISTID.AsInteger;
       tblMovement_OrderExternalPriceWithVAT.AsBoolean := cdsOrderExternalPriceWithVAT.AsBoolean;
@@ -3546,6 +3547,7 @@ begin
         else
           tblMovement_OrderExternalStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
         tblMovement_OrderExternalUnitId.AsInteger := tblObject_ConstUnitId.AsInteger;
+        tblMovement_OrderExternalPaidKindId.AsInteger := PaidKindId;
         tblMovement_OrderExternalPriceWithVAT.AsBoolean := cdsOrderExternalPriceWithVAT.AsBoolean;
         tblMovement_OrderExternalVATPercent.AsFloat := cdsOrderExternalVATPercent.AsFloat;
         tblMovement_OrderExternalChangePercent.AsFloat := cdsOrderExternalChangePercent.AsFloat;
@@ -3622,6 +3624,7 @@ begin
       cdsOrderExternalId.AsInteger := MovementId;
 
       cdsOrderExternalOperDate.AsDateTime := OperDate;
+      cdsOrderExternalPaidKindId.AsInteger := PaidKindId;
       cdsOrderExternalComment.AsString := Comment;
       cdsOrderExternalName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', OperDate);
       cdsOrderExternalPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', ToralPrice);
@@ -3708,7 +3711,7 @@ begin
   qryOrderExternal := TFDQuery.Create(nil);
   try
     qryOrderExternal.Connection := conMain;
-    qryOrderExternal.SQL.Text := 'select ID, OPERDATE, COMMENT, TOTALCOUNTKG, TOTALSUMM, ISSYNC, STATUSID' +
+    qryOrderExternal.SQL.Text := 'select ID, OPERDATE, PAIDKINDID, COMMENT, TOTALCOUNTKG, TOTALSUMM, ISSYNC, STATUSID' +
       ' from MOVEMENT_ORDEREXTERNAL' +
       ' where PARTNERID = ' + qryPartnerId.AsString + ' and CONTRACTID = ' + qryPartnerCONTRACTID.AsString +
       ' order by OPERDATE desc';
@@ -3741,7 +3744,7 @@ begin
       cdsOrderExternalisSync.AsBoolean := qryOrderExternal.FieldByName('ISSYNC').AsBoolean;
 
       cdsOrderExternalPartnerId.AsInteger := qryPartnerId.AsInteger;
-      cdsOrderExternalPaidKindId.AsInteger := qryPartnerPaidKindId.AsInteger;
+      cdsOrderExternalPaidKindId.AsInteger := qryOrderExternal.FieldByName('PAIDKINDID').AsInteger;
       cdsOrderExternalContractId.AsInteger := qryPartnerCONTRACTID.AsInteger;
       cdsOrderExternalPriceListId.AsInteger := qryPartnerPRICELISTID.AsInteger;
       cdsOrderExternalPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT.AsBoolean;
@@ -3781,9 +3784,9 @@ begin
   try
 
     qryOrderExternal.Connection := conMain;
-    qryOrderExternal.SQL.Text := 'select MOE.ID, MOE.OPERDATE, MOE.COMMENT, MOE.TOTALCOUNTKG, MOE.TOTALSUMM, MOE.ISSYNC, MOE.STATUSID, ' +
+    qryOrderExternal.SQL.Text := 'select MOE.ID, MOE.OPERDATE, MOE.PAIDKINDID, MOE.COMMENT, MOE.TOTALCOUNTKG, MOE.TOTALSUMM, MOE.ISSYNC, MOE.STATUSID, ' +
       'P.Id PartnerId, J.VALUEDATA PartnerName, P.ADDRESS, PL.ID PRICELISTID, PL.PRICEWITHVAT, PL.VATPERCENT, ' +
-      'P.CONTRACTID, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, C.PAIDKINDID, C.CHANGEPERCENT, ' +
+      'P.CONTRACTID, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, C.CHANGEPERCENT, ' +
       'P.CalcDayCount, P.OrderDayCount, P.isOperDateOrder ' +
       'from MOVEMENT_ORDEREXTERNAL MOE ' +
       'JOIN OBJECT_PARTNER P ON P.ID = MOE.PARTNERID AND P.CONTRACTID = MOE.CONTRACTID ' +
@@ -4110,7 +4113,7 @@ begin
 end;
 
 { сохранение возвратов в БД }
-function TDM.SaveReturnIn(OperDate: TDate; Comment : string;
+function TDM.SaveReturnIn(OperDate: TDate; PaidKindId: integer; Comment : string;
   ToralPrice, TotalWeight: Currency; DelItems : string; Complete: boolean; var ErrorMessage : string) : boolean;
 var
   GlobalId: TGUID;
@@ -4168,7 +4171,7 @@ begin
         tblMovement_ReturnInStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
       tblMovement_ReturnInPartnerId.AsInteger := cdsReturnInPartnerId.AsInteger;
       tblMovement_ReturnInUnitId.AsInteger := tblObject_ConstUnitId_ret.AsInteger;
-      tblMovement_ReturnInPaidKindId.AsInteger := cdsReturnInPaidKindId.AsInteger;
+      tblMovement_ReturnInPaidKindId.AsInteger := PaidKindId;
       tblMovement_ReturnInContractId.AsInteger := cdsReturnInCONTRACTID.AsInteger;
       tblMovement_ReturnInPriceWithVAT.AsBoolean := cdsReturnInPriceWithVAT.AsBoolean;
       tblMovement_ReturnInVATPercent.AsFloat := cdsReturnInVATPercent.AsFloat;
@@ -4198,6 +4201,7 @@ begin
         else
           tblMovement_ReturnInStatusId.AsInteger := tblObject_ConstStatusId_UnComplete.AsInteger;
         tblMovement_ReturnInUnitId.AsInteger := tblObject_ConstUnitId_ret.AsInteger;
+        tblMovement_ReturnInPaidKindId.AsInteger := PaidKindId;
         tblMovement_ReturnInPriceWithVAT.AsBoolean := cdsReturnInPriceWithVAT.AsBoolean;
         tblMovement_ReturnInVATPercent.AsFloat := cdsReturnInVATPercent.AsFloat;
         tblMovement_ReturnInChangePercent.AsFloat := cdsReturnInChangePercent.AsFloat;
@@ -4274,6 +4278,7 @@ begin
       cdsReturnInId.AsInteger := MovementId;
 
       cdsReturnInOperDate.AsDateTime := OperDate;
+      cdsReturnInPaidKindId.AsInteger := PaidKindId;
       cdsReturnInComment.AsString := Comment;
       cdsReturnInName.AsString := 'Возврат от ' + FormatDateTime('DD.MM.YYYY', OperDate);
       cdsReturnInPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', ToralPrice);
@@ -4359,7 +4364,7 @@ begin
   qryReturnIn := TFDQuery.Create(nil);
   try
     qryReturnIn.Connection := conMain;
-    qryReturnIn.SQL.Text := 'select ID, OPERDATE, TOTALCOUNTKG, TOTALSUMMPVAT, ISSYNC, STATUSID, COMMENT' +
+    qryReturnIn.SQL.Text := 'select ID, OPERDATE, PAIDKINDID, TOTALCOUNTKG, TOTALSUMMPVAT, ISSYNC, STATUSID, COMMENT' +
       ' from MOVEMENT_RETURNIN' +
       ' where PARTNERID = ' + qryPartnerId.AsString + ' and CONTRACTID = ' + qryPartnerCONTRACTID.AsString +
       ' order by OPERDATE desc';
@@ -4396,7 +4401,7 @@ begin
       cdsReturnInAddress.AsString := qryPartnerAddress.AsString;
       cdsReturnInContractId.AsInteger := qryPartnerCONTRACTID.AsInteger;
       cdsReturnInContractName.AsString := qryPartnerContractName.AsString;
-      cdsReturnInPaidKindId.AsInteger := qryPartnerPaidKindId.AsInteger;
+      cdsReturnInPaidKindId.AsInteger := qryReturnIn.FieldByName('PAIDKINDID').AsInteger;
       cdsReturnInPriceListId.AsInteger := qryPartnerPRICELISTID_RET.AsInteger;
       cdsReturnInPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT_RET.AsBoolean;
       cdsReturnInVATPercent.AsFloat := qryPartnerVATPercent_RET.AsFloat;
@@ -4428,9 +4433,9 @@ begin
   qryReturnIn := TFDQuery.Create(nil);
   try
     qryReturnIn.Connection := conMain;
-    qryReturnIn.SQL.Text := 'select MRI.ID, MRI.OPERDATE, MRI.COMMENT, MRI.TOTALCOUNTKG, MRI.TOTALSUMMPVAT, MRI.ISSYNC, MRI.STATUSID, ' +
+    qryReturnIn.SQL.Text := 'select MRI.ID, MRI.OPERDATE, MRI.PAIDKINDID, MRI.COMMENT, MRI.TOTALCOUNTKG, MRI.TOTALSUMMPVAT, MRI.ISSYNC, MRI.STATUSID, ' +
       'P.Id PartnerId, J.VALUEDATA PartnerName, P.ADDRESS, PL.ID PRICELISTID, PL.PRICEWITHVAT, PL.VATPERCENT, ' +
-      'P.CONTRACTID, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, C.PAIDKINDID, C.CHANGEPERCENT ' +
+      'P.CONTRACTID, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, C.CHANGEPERCENT ' +
       'from MOVEMENT_RETURNIN MRI ' +
       'JOIN OBJECT_PARTNER P ON P.ID = MRI.PARTNERID AND P.CONTRACTID = MRI.CONTRACTID ' +
       'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID AND J.CONTRACTID = P.CONTRACTID ' +
@@ -4706,7 +4711,7 @@ begin
 end;
 
 { сохранение прихода денег в БД }
-procedure TDM.SaveCash(AId: integer; AInvNumberSale: string; AOperDate: TDate; AAmount: Double; AComment: string);
+procedure TDM.SaveCash(AId: integer; APaidKind: integer; AInvNumberSale: string; AOperDate: TDate; AAmount: Double; AComment: string);
 var
   GlobalId: TGUID;
   NewInvNumber: string;
@@ -4728,7 +4733,7 @@ begin
       tblMovement_CashStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
       tblMovement_CashInsertDate.AsDateTime := Now();
       tblMovement_CashAmount.AsFloat := AAmount;
-      tblMovement_CashPaidKindId.AsInteger := qryPartnerPaidKindId.AsInteger;
+      tblMovement_CashPaidKindId.AsInteger := APaidKind;
       tblMovement_CashPartnerId.AsInteger := qryPartnerId.AsInteger;
       tblMovement_CashCashId.AsInteger := tblObject_ConstCashId.AsInteger;
       tblMovement_CashMemberId.AsInteger := tblObject_ConstMemberId.AsInteger;
@@ -4758,6 +4763,7 @@ begin
         tblMovement_CashInvNumberSale.AsString := AInvNumberSale;
         tblMovement_CashOperDate.AsDateTime := AOperDate;
         tblMovement_CashAmount.AsFloat := AAmount;
+        tblMovement_CashPaidKindId.AsInteger := APaidKind;
         tblMovement_CashComment.AsString := AComment;
         tblMovement_CashStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
         tblMovement_CashisSync.AsBoolean := false;
@@ -4784,7 +4790,7 @@ end;
 procedure TDM.LoadCash;
 begin
   qryCash.Close;
-  qryCash.Open('select Id, InvNumberSale, Amount, Comment, StatusId, OperDate, isSync, ' +
+  qryCash.Open('select Id, PAIDKINDID, InvNumberSale, Amount, Comment, StatusId, OperDate, isSync, ' +
     'PartnerId, '''' PartnerName, '''' Address, ContractId, '''' ContractName ' +
     'from Movement_Cash where PartnerId = ' + qryPartnerId.AsString);
 end;
@@ -4793,7 +4799,7 @@ procedure TDM.LoadAllCash(AStartDate, AEndDate: TDate);
 begin
   qryCash.Close;
 
-  qryCash.SQL.Text := 'select MC.ID, MC.InvNumberSale, MC.OPERDATE, MC.COMMENT, MC.AMOUNT, MC.ISSYNC, MC.STATUSID, ' +
+  qryCash.SQL.Text := 'select MC.ID, MC.PAIDKINDID, MC.InvNumberSale, MC.OPERDATE, MC.COMMENT, MC.AMOUNT, MC.ISSYNC, MC.STATUSID, ' +
     'P.Id PartnerId, '''' || J.VALUEDATA PartnerName, '''' || P.ADDRESS Address, ' +
     'P.CONTRACTID, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName ' +
     'FROM Movement_Cash MC ' +

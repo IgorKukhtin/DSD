@@ -685,6 +685,18 @@ type
     eCashInvNumber: TEdit;
     Label88: TLabel;
     Panel44: TPanel;
+    Panel45: TPanel;
+    swPaidKindO: TSwitch;
+    lPaidKindFO: TLabel;
+    lPaidKindSO: TLabel;
+    Panel46: TPanel;
+    swPaidKindR: TSwitch;
+    lPaidKindFR: TLabel;
+    lPaidKindSR: TLabel;
+    Panel47: TPanel;
+    swPaidKindC: TSwitch;
+    lPaidKindFC: TLabel;
+    lPaidKindSC: TLabel;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -871,7 +883,6 @@ type
     procedure tcPartnerInfoChange(Sender: TObject);
     procedure lwPhotoDocsItemClickEx(const Sender: TObject; ItemIndex: Integer;
       const LocalClickPos: TPointF; const ItemObject: TListItemDrawable);
-    procedure imCaptureClick(Sender: TObject);
     procedure lwPartnerFilter(Sender: TObject; const AFilter, AValue: string;
       var Accept: Boolean);
     procedure bPathonMapbyPhotoClick(Sender: TObject);
@@ -893,6 +904,10 @@ type
       const AItem: TListViewItem);
     procedure lwCashDocsItemClickEx(const Sender: TObject; ItemIndex: Integer;
       const LocalClickPos: TPointF; const ItemObject: TListItemDrawable);
+    procedure swPaidKindOClick(Sender: TObject);
+    procedure swPaidKindRClick(Sender: TObject);
+    procedure swPaidKindCClick(Sender: TObject);
+    procedure Label66Click(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -942,6 +957,10 @@ type
 
     FPhotoPath: boolean;
 
+    FPaidKindChangedO: boolean;
+    FPaidKindChangedR: boolean;
+    FPaidKindChangedC: boolean;
+
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure BackResult(const AResult: TModalResult);
     procedure SaveOrderExtrernal(const AResult: TModalResult);
@@ -958,6 +977,9 @@ type
     procedure CreateEditOrderExtrernal(New: boolean);
     procedure CreateEditReturnIn(New: boolean);
     procedure CreateEditMovementCash(New: boolean);
+    procedure ChangePaidKindOrderExtrernal(const AResult: TModalResult);
+    procedure ChangePaidKindReturnIn(const AResult: TModalResult);
+    procedure ChangePaidKindCash(const AResult: TModalResult);
     procedure SetPartnerCoordinates(const AResult: TModalResult);
 
     function GetAddress(const Latitude, Longitude: Double): string;
@@ -1016,6 +1038,7 @@ type
     procedure GetCurrentCoordinates;
 
     procedure AddComboItem(AComboBox: TComboBox; AText: string);
+    procedure MobileIdle(Sender: TObject; var Done: Boolean);
   public
     { Public declarations }
   end;
@@ -1070,6 +1093,50 @@ begin
   VisitTime := AVisitTime;
 end;
 
+procedure TfrmMain.MobileIdle(Sender: TObject; var Done: Boolean);
+var
+  NewPaidKindName: string;
+begin
+  if FPaidKindChangedO then
+  begin
+    FPaidKindChangedO := false;
+
+    if not swPaidKindO.IsChecked then
+      NewPaidKindName := lPaidKindFO.Text
+    else
+      NewPaidKindName := lPaidKindSO.Text;
+
+    TDialogService.MessageDialog('Изменить форму оплаты на " ' + NewPaidKindName + '"?',
+      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ChangePaidKindOrderExtrernal);
+  end;
+
+  if FPaidKindChangedR then
+  begin
+    FPaidKindChangedR := false;
+
+    if not swPaidKindR.IsChecked then
+      NewPaidKindName := lPaidKindFR.Text
+    else
+      NewPaidKindName := lPaidKindSR.Text;
+
+    TDialogService.MessageDialog('Изменить форму оплаты на " ' + NewPaidKindName + '"?',
+      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ChangePaidKindReturnIn);
+  end;
+
+  if FPaidKindChangedC then
+  begin
+    FPaidKindChangedC := false;
+
+    if not swPaidKindC.IsChecked then
+      NewPaidKindName := lPaidKindFC.Text
+    else
+      NewPaidKindName := lPaidKindSC.Text;
+
+    TDialogService.MessageDialog('Изменить форму оплаты на " ' + NewPaidKindName + '"?',
+      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ChangePaidKindCash);
+  end;
+end;
+
 { TfrmMain }
 procedure TfrmMain.FormCreate(Sender: TObject);
 var
@@ -1079,6 +1146,8 @@ var
   {$ENDIF}
   SettingsFile : TIniFile;
 begin
+  Application.OnIdle := MobileIdle;
+
   FormatSettings.DecimalSeparator := '.';
 
   // получение настроек из ini файла
@@ -1306,13 +1375,23 @@ end;
 procedure TfrmMain.LinkListControlToFieldOrderExternalItemsFilledListItem(Sender: TObject;
   const AEditor: IBindListEditorItem);
 begin
-  lwOrderExternalItems.Items[AEditor.CurrentIndex].Objects.FindDrawable('DeleteButton').Visible := FCanEditDocument;
+  if (AEditor.CurrentIndex > -1) and Assigned(lwOrderExternalItems) and
+    Assigned(lwOrderExternalItems.Items[AEditor.CurrentIndex]) and
+    Assigned(lwOrderExternalItems.Items[AEditor.CurrentIndex].Objects) and
+    Assigned(lwOrderExternalItems.Items[AEditor.CurrentIndex].Objects.FindDrawable('DeleteButton'))
+  then
+    lwOrderExternalItems.Items[AEditor.CurrentIndex].Objects.FindDrawable('DeleteButton').Visible := FCanEditDocument;
 end;
 
 procedure TfrmMain.LinkListControlToFieldReturnInItemsFilledListItem(Sender: TObject;
   const AEditor: IBindListEditorItem);
 begin
-  lwReturnInItems.Items[AEditor.CurrentIndex].Objects.FindDrawable('DeleteButton').Visible := FCanEditDocument;
+  if (AEditor.CurrentIndex > -1) and Assigned(lwReturnInItems) and
+    Assigned(lwReturnInItems.Items[AEditor.CurrentIndex]) and
+    Assigned(lwReturnInItems.Items[AEditor.CurrentIndex].Objects) and
+    Assigned(lwReturnInItems.Items[AEditor.CurrentIndex].Objects.FindDrawable('DeleteButton'))
+  then
+    lwReturnInItems.Items[AEditor.CurrentIndex].Objects.FindDrawable('DeleteButton').Visible := FCanEditDocument;
 end;
 
 procedure TfrmMain.LinkListControlToFieldCashFilledListItem(Sender: TObject;
@@ -1360,7 +1439,12 @@ end;
 procedure TfrmMain.LinkListControlToFieldStoreRealItemsFilledListItem(
   Sender: TObject; const AEditor: IBindListEditorItem);
 begin
-  lwStoreRealItems.Items[AEditor.CurrentIndex].Objects.FindDrawable('DeleteButton').Visible := FCanEditDocument;
+  if (AEditor.CurrentIndex > -1) and Assigned(lwStoreRealItems) and
+    Assigned(lwStoreRealItems.Items[AEditor.CurrentIndex]) and
+    Assigned(lwStoreRealItems.Items[AEditor.CurrentIndex].Objects) and
+    Assigned(lwStoreRealItems.Items[AEditor.CurrentIndex].Objects.FindDrawable('DeleteButton'))
+  then
+    lwStoreRealItems.Items[AEditor.CurrentIndex].Objects.FindDrawable('DeleteButton').Visible := FCanEditDocument;
 end;
 
 procedure TfrmMain.LinkListControlToFieldTasksFilledListItem(Sender: TObject;
@@ -2078,6 +2162,7 @@ var
   i : integer;
   ErrMes: string;
   DelItems: string;
+  PaidKindId: integer;
 begin
   if AResult <> mrNo then
   begin
@@ -2089,7 +2174,12 @@ begin
         DelItems := ',' + IntToStr(FDeletedOI[i]);
     end;
 
-    if DM.SaveOrderExternal(deOrderDate.Date, eOrderComment.Text,
+    if not swPaidKindO.IsChecked then
+      PaidKindId := DM.tblObject_ConstPaidKindId_First.AsInteger
+    else
+      PaidKindId := DM.tblObject_ConstPaidKindId_Second.AsInteger;
+
+    if DM.SaveOrderExternal(deOrderDate.Date, PaidKindId, eOrderComment.Text,
       FOrderTotalPrice, FOrderTotalCountKg, DelItems, AResult = mrNone ,ErrMes) then
     begin
       if FEditDocuments then
@@ -2139,6 +2229,7 @@ var
   i: integer;
   ErrMes: string;
   DelItems: string;
+  PaidKindId: integer;
 begin
   if AResult <> mrNo then
   begin
@@ -2150,7 +2241,12 @@ begin
         DelItems := ',' + IntToStr(FDeletedRI[i]);
     end;
 
-    if DM.SaveReturnIn(deReturnDate.Date, eReturnComment.Text,
+    if not swPaidKindR.IsChecked then
+      PaidKindId := DM.tblObject_ConstPaidKindId_First.AsInteger
+    else
+      PaidKindId := DM.tblObject_ConstPaidKindId_Second.AsInteger;
+
+    if DM.SaveReturnIn(deReturnDate.Date, PaidKindId, eReturnComment.Text,
       FReturnInTotalPrice, FReturnInTotalCountKg, DelItems, AResult = mrNone, ErrMes) then
     begin
       if FEditDocuments then
@@ -2396,6 +2492,10 @@ begin
   else
     lOrderPrice.Text := 'Цена (без НДС)';
 
+  lPaidKindFO.Text := DM.tblObject_ConstPaidKindName_First.AsString;
+  lPaidKindSO.Text := DM.tblObject_ConstPaidKindName_Second.AsString;
+  swPaidKindO.IsChecked := not (DM.cdsOrderExternalPaidKindId.AsInteger = DM.tblObject_ConstPaidKindId_First.AsInteger);
+
   FCanEditDocument := not DM.cdsOrderExternalisSync.AsBoolean;
 
   RecalculateTotalPriceAndWeight;
@@ -2404,6 +2504,7 @@ begin
   bAddOrderItem.Visible := FCanEditDocument;
   eOrderComment.ReadOnly := not FCanEditDocument;
   deOrderDate.ReadOnly := not FCanEditDocument;
+  swPaidKindO.Enabled := FCanEditDocument;
 
   lwOrderExternalItems.ScrollViewPos := 0;
 
@@ -2439,10 +2540,15 @@ begin
   else
     lReturnInPrice.Text := 'Цена (без НДС)';
 
+  lPaidKindFR.Text := DM.tblObject_ConstPaidKindName_First.AsString;
+  lPaidKindSR.Text := DM.tblObject_ConstPaidKindName_Second.AsString;
+  swPaidKindR.IsChecked := not (DM.cdsReturnInPaidKindId.AsInteger = DM.tblObject_ConstPaidKindId_First.AsInteger);
+
   pSaveReturnIn.Visible := FCanEditDocument;
   bAddReturnInItem.Visible := FCanEditDocument;
   eReturnComment.ReadOnly := not FCanEditDocument;
   deReturnDate.ReadOnly := not FCanEditDocument;
+  swPaidKindR.Enabled := FCanEditDocument;
 
   lwReturnInItems.ScrollViewPos := 0;
   SwitchToForm(tiReturnIn, nil);
@@ -2461,6 +2567,7 @@ begin
     eCashAmount.Text := '';
     eCashComment.Text := '';
     FCanEditDocument := true;
+    swPaidKindC.IsChecked := not (DM.qryPartnerPaidKindId.AsInteger = DM.tblObject_ConstPaidKindId_First.AsInteger);
   end
   else
   begin
@@ -2470,10 +2577,15 @@ begin
     eCashAmount.Text := FormatFloat(',0.##', DM.qryCashAmount.AsFloat);
     eCashComment.Text := DM.qryCashComment.AsString;
     FCanEditDocument := not DM.qryCashisSync.AsBoolean;
+    swPaidKindC.IsChecked := not (DM.qryCashPAIDKINDID.AsInteger = DM.tblObject_ConstPaidKindId_First.AsInteger);
   end;
+
+  lPaidKindFC.Text := DM.tblObject_ConstPaidKindName_First.AsString;
+  lPaidKindSC.Text := DM.tblObject_ConstPaidKindName_Second.AsString;
 
   eCashAmount.ReadOnly := not FCanEditDocument;
   eCashComment.ReadOnly := not FCanEditDocument;
+  swPaidKindC.Enabled := FCanEditDocument;
   if FCanEditDocument then
   begin
     bCancelCash.Visible := true;
@@ -2488,6 +2600,23 @@ begin
   pEnterMovmentCash.Visible := true;
 end;
 
+procedure TfrmMain.ChangePaidKindOrderExtrernal(const AResult: TModalResult);
+begin
+  if AResult = mrNo then
+    swPaidKindO.IsChecked := not swPaidKindO.IsChecked;
+end;
+
+procedure TfrmMain.ChangePaidKindReturnIn(const AResult: TModalResult);
+begin
+  if AResult = mrNo then
+    swPaidKindR.IsChecked := not swPaidKindR.IsChecked;
+end;
+
+procedure TfrmMain.ChangePaidKindCash(const AResult: TModalResult);
+begin
+  if AResult = mrNo then
+    swPaidKindC.IsChecked := not swPaidKindC.IsChecked;
+end;
 
 // проверка и корректировка введенной координаты GPS
 procedure TfrmMain.eCashAmountValidate(Sender: TObject; var Text: string);
@@ -3204,6 +3333,8 @@ begin
 end;
 
 procedure TfrmMain.bSaveCashClick(Sender: TObject);
+var
+  PaidKindId: integer;
 begin
   if FCanEditDocument then
   begin
@@ -3219,7 +3350,12 @@ begin
       exit;
     end;
 
-    DM.SaveCash(FOldCashId, eCashInvNumber.Text, deCashDate.Date, StrToFloat(eCashAmount.Text), eCashComment.Text);
+    if not swPaidKindC.IsChecked then
+      PaidKindId := DM.tblObject_ConstPaidKindId_First.AsInteger
+    else
+      PaidKindId := DM.tblObject_ConstPaidKindId_Second.AsInteger;
+
+    DM.SaveCash(FOldCashId, PaidKindId, eCashInvNumber.Text, deCashDate.Date, StrToFloat(eCashAmount.Text), eCashComment.Text);
 
     DM.qryCash.Refresh;
 
@@ -3820,7 +3956,7 @@ end;
 // обработка изменения закладки (формы)
 procedure TfrmMain.ChangeMainPageUpdate(Sender: TObject);
 var
-  i, TaskCount : integer;
+  TaskCount : integer;
 begin
   if Assigned(FWebGMap) then
   try
@@ -4127,7 +4263,7 @@ begin
   EnterNewPartner;
 end;
 
-procedure TfrmMain.imCaptureClick(Sender: TObject);
+procedure TfrmMain.Label66Click(Sender: TObject);
 begin
 
 end;
@@ -4171,9 +4307,10 @@ end;
 // переход на форму отображения списка ТТ, которые необходимо посетить в указаный день
 procedure TfrmMain.ShowPartners(Day : integer; Caption : string);
 var
-  i: integer;
   sQuery, CurGPSN, CurGPSE : string;
 begin
+  ClearListSearch(lwPartner);
+
   GetCurrentCoordinates;
 
   lDayInfo.Text := 'МАРШРУТ: ' + Caption;
@@ -4204,8 +4341,7 @@ begin
   DM.qryPartner.ParamByName('DefaultPriceList').AsInteger := DM.tblObject_ConstPriceListId_def.AsInteger;
   DM.qryPartner.Open;
 
-  ClearListSearch(lwPartner);
-
+  lwPartner.ScrollViewPos := 0;
   SwitchToForm(tiPartners, DM.qryPartner);
 end;
 
@@ -5013,6 +5149,21 @@ begin
   Item.Data := Data;
   FFormsStack.Push(Item);
   tcMain.ActiveTab := TabItem;
+end;
+
+procedure TfrmMain.swPaidKindCClick(Sender: TObject);
+begin
+  FPaidKindChangedC := true;
+end;
+
+procedure TfrmMain.swPaidKindOClick(Sender: TObject);
+begin
+  FPaidKindChangedO := true;
+end;
+
+procedure TfrmMain.swPaidKindRClick(Sender: TObject);
+begin
+  FPaidKindChangedR := true;
 end;
 
 // возврат на предидущую форму из стэка открываемых форм, с удалением её из стэка
