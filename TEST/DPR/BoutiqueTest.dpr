@@ -202,7 +202,14 @@ uses
   SaleJournal in '..\..\FormsBoutique\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
   Sale in '..\..\FormsBoutique\Document\Sale.pas' {SaleForm: TParentForm},
   BankAccount in '..\..\FormsBoutique\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
-  BankAccountEdit in '..\..\FormsBoutique\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm};
+  BankAccountEdit in '..\..\FormsBoutique\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm},
+  InfoMoneyGroup in '..\..\FormsBoutique\Guides\InfoMoneyGroup.pas' {InfoMoneyGroupForm: TParentForm},
+  InfoMoneyGroup_Object in '..\..\FormsBoutique\Guides\InfoMoneyGroup_Object.pas' {InfoMoneyGroup_ObjectForm: TParentForm},
+  InfoMoneyGroupEdit in '..\..\FormsBoutique\Guides\InfoMoneyGroupEdit.pas' {InfoMoneyGroupEditForm: TParentForm},
+  InfoMoneyDestination in '..\..\FormsBoutique\Guides\InfoMoneyDestination.pas' {InfoMoneyDestinationForm: TParentForm},
+  InfoMoneyDestination_Object in '..\..\FormsBoutique\Guides\InfoMoneyDestination_Object.pas' {InfoMoneyDestination_ObjectForm: TParentForm},
+  InfoMoneyDestinationEdit in '..\..\FormsBoutique\Guides\InfoMoneyDestinationEdit.pas' {InfoMoneyDestinationEditForm: TParentForm}
+;
 
 
 {$R *.res}
