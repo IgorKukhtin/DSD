@@ -71,11 +71,11 @@ BEGIN
          IF COALESCE (vbLineFabricaId, 0) = 0
          THEN
              -- Создание
-             vbLineFabricaId := gpInsertUpdate_Object_LineFabrica (ioId     := 0
-                                                                 , ioCode   := 0
-                                                                 , inName   := inLineFabricaName
-                                                                 , inSession:= inSession
-                                                                  );
+             vbLineFabricaId := (SELECT tmp.ioId FROM gpInsertUpdate_Object_LineFabrica (ioId     := 0
+                                                                                       , ioCode   := 0
+                                                                                       , inName   := inLineFabricaName
+                                                                                       , inSession:= inSession
+                                                                                         ) AS tmp);
          END IF;
      END IF;
 
@@ -89,12 +89,12 @@ BEGIN
          IF COALESCE (vbCompositionId,0) = 0
          THEN
              -- Создание
-             vbCompositionId := gpInsertUpdate_Object_Composition (ioId                 := 0
-                                                                 , ioCode               := 0
-                                                                 , inName               := inCompositionName
-                                                                 , inCompositionGroupId := 0 -- сохраняем с пустой группой
-                                                                 , inSession            := inSession
-                                                                  );
+             vbCompositionId := (SELECT tmp.ioId FROM gpInsertUpdate_Object_Composition (ioId                 := 0
+                                                                                       , ioCode               := 0
+                                                                                       , inName               := inCompositionName
+                                                                                       , inCompositionGroupId := 0 -- сохраняем с пустой группой
+                                                                                       , inSession            := inSession
+                                                                                         ) AS tmp);
          END IF;
      END IF;
 
@@ -108,11 +108,11 @@ BEGIN
          IF COALESCE (vbGoodsInfoId, 0) = 0
          THEN
              -- Создание
-             vbGoodsInfoId := gpInsertUpdate_Object_GoodsInfo (ioId     := 0
-                                                             , ioCode   := 0
-                                                             , inName   := inGoodsInfoName
-                                                             , inSession:= inSession
-                                                              );
+             vbGoodsInfoId := (SELECT tmp.ioId FROM gpInsertUpdate_Object_GoodsInfo (ioId     := 0
+                                                                                   , ioCode   := 0
+                                                                                   , inName   := inGoodsInfoName
+                                                                                   , inSession:= inSession
+                                                                                     ) AS tmp);
          END IF;
      END IF;
 
@@ -126,11 +126,11 @@ BEGIN
          IF COALESCE (vbLabelId, 0) = 0
          THEN
              -- Создание
-             vbLabelId := gpInsertUpdate_Object_Label (ioId     := 0
-                                                     , ioCode   := 0
-                                                     , inName   := inLabelName
-                                                     , inSession:= inSession
-                                                      );
+             vbLabelId := (SELECT tmp.ioId FROM gpInsertUpdate_Object_Label (ioId     := 0
+                                                                           , ioCode   := 0
+                                                                           , inName   := inLabelName
+                                                                           , inSession:= inSession
+                                                                             ) AS tmp);
          END IF;
      END IF;
 
@@ -147,11 +147,11 @@ BEGIN
      IF COALESCE (vbGoodsSizeId, 0) = 0
      THEN
          -- Создание
-         vbGoodsSizeId := gpInsertUpdate_Object_GoodsSize (ioId     := 0
-                                                         , ioCode   := 0
-                                                         , inName   := inGoodsSizeName
-                                                         , inSession:= inSession
-                                                          );
+         vbGoodsSizeId := (SELECT tmp.ioId FROM gpInsertUpdate_Object_GoodsSize (ioId     := 0
+                                                                               , ioCode   := 0
+                                                                               , inName   := inGoodsSizeName
+                                                                               , inSession:= inSession
+                                                                                 ) AS tmp);
      END IF;
 
      -- Товары
@@ -182,17 +182,17 @@ BEGIN
      IF COALESCE (vbGoodsId, 0) = 0
      THEN
          -- Создание
-         vbGoodsId := gpInsertUpdate_Object_Goods (ioId            := vbGoodsId
-                                                 , ioCode          := 0
-                                                 , inName          := inGoodsName
-                                                 , inGoodsGroupId  := inGoodsGroupId
-                                                 , inMeasureId     := inMeasureId
-                                                 , inCompositionId := vbCompositionId
-                                                 , inGoodsInfoId   := vbGoodsInfoId
-                                                 , inLineFabricaId := vbLineFabricaId
-                                                 , inLabelId       := vbLabelId
-                                                 , inSession       := inSession
-                                                  );
+         vbGoodsId := (SELECT tmp.ioId FROM gpInsertUpdate_Object_Goods (ioId            := vbGoodsId
+                                                                       , ioCode          := 0
+                                                                       , inName          := inGoodsName
+                                                                       , inGoodsGroupId  := inGoodsGroupId
+                                                                       , inMeasureId     := inMeasureId
+                                                                       , inCompositionId := vbCompositionId
+                                                                       , inGoodsInfoId   := vbGoodsInfoId
+                                                                       , inLineFabricaId := vbLineFabricaId
+                                                                       , inLabelId       := vbLabelId
+                                                                       , inSession       := inSession
+                                                                         ) AS tmp);
 
      ELSE
          -- если изменился - Группы товаров
@@ -305,6 +305,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Полятыкин А.А.
+ 11.05.17                                                        *
  10.05.17                                                        *
  24.04.17                                                        *
  10.04.17         *

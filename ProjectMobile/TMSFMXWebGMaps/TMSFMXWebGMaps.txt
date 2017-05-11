@@ -1,0 +1,211 @@
+**********************************************************************
+Author: TMS Software
+        Copyright © 1996-2017
+        E-mail: info@tmssoftware.com
+        Web: http://www.tmssoftware.com
+**********************************************************************
+
+
+TMS FMX WebGMaps
+
+
+Release 2.7.1.1:
+-----------------
+
+Google Maps component for FireMonkey designed to render a variety of maps in a web-browser
+
+
+History :
+---------
+  v1.0.0.0 : first release
+  v1.5.0.0 : New : XE5 support
+           : New : Mac OSX support
+           : New : Public property APIKey
+           : New : Function Distance() added
+           : New : Procedure GetDirections() overload to use coordinates instead of string values as origin/destination
+  v1.6.0.0 : New : Android support
+  v1.6.0.1 : Fixed : Issue with Parent and Visibility
+  v1.6.0.2 : Fixed : Issue with click detection when visible is false on Android
+           : Fixed : Issue with statusbar height offset on iOS
+  v1.6.0.3 : Fixed : Issue with parsing marker Javascript 
+  v1.6.0.4 : Improved : Published Visible property
+  v1.6.0.5 : Improved : Enabled and Visible property behavior
+  V1.7.0.0 : New : XE6 support
+  v1.8.0.0 : New : Windows 32 bit support
+  v1.8.0.1 : Fixed : Issue with Android visibility
+  v1.8.0.2 : Fixed : Issue with Android backbutton and iOS positioning
+  v1.8.0.3 : Improved: Allow interception of URL redirection, blocking navigation
+           : Fixed: Issue with keyboard input on Android in TTMSFMXWebGMapsWebBrowser
+  v1.9.0.0 : New: function DegreesToLonLat added
+           : New: Directions extended with WayPoints, avoid Tolls/Highways
+           : New: OnStreetViewChange event
+           : New: Markers.Bounds to retrieve outer bounds of markers
+           : New: PolyLines.Bounds to retrieve outer bounds of all poly lines
+           : New: PolyLines[].Paths[].PathBounds to retrieve outer bounds of a single polyline
+           : New: Polygon.Bounds to retrieve outer bounds of all polygons
+           : New: Polygon[].Paths[].PathBounds to retrieve outer bounds of a single polygon
+           : New: RenderDirections overload added with long/lat parameters
+           : New: KML Layer support: AddMapKMLLayer, DeleteMapKMLLayer, DeleteMapAllKMLLayer functions and OnKMLLayerClick event added
+           : New: MapOptions.DisablePOI to disable the display of points of interest icons on the map
+           : Improved: Polygons and Polylines are automatically displayed when added via the Object Inspector
+           : Improved: In OpenMarkerInfoWindowHTML double quotes are now accepted
+           : Improved: Trial version compiled in release mode
+  v1.9.0.1 : Fixed: Issue parsing javascript when navigating to streetview from POI
+  v1.9.1.0 : New: XE7 support
+  v1.9.1.1 : Fixed: Issue with duplicate GUIDs
+  v1.9.1.2 : Fixed: interaction events not working when linking against iOS 8
+  v1.9.1.3 : Fixed: Browser issues on Mac OSX
+  v1.9.1.4 : Fixed: Issue with duplicate browser interfaces when combined with TTMSFMXWebOSMaps
+           : Fixed: Issue with rendering on Mac   
+  v1.9.1.5 : Fixed: Issue with URL Encoding
+           : Fixed: Issue with painting if Width / Height is not a whole number (please download the latest ChromiumFMX.zip file)  
+  v1.9.1.6 : Fixed: Issue with URL Decoding
+  v1.9.1.7 : Fixed: Issue with parsing nodes
+  v1.9.1.8 : Fixed: Issue rendering on Mac
+  v1.9.2.0 : New : Support for Delphi XE8 Prof, Ent. Architect added
+  v1.9.2.1 : Fixed: Issue with ':' in Marker title
+  v1.9.3.0 : New: Replaced TChromiumFMX implementation with default FireMonkey TWebBrowser implementation for XE8 and newer
+           : New: Windows 64 bit support for XE8 and newer
+  v1.9.4.0 : New: Support for Delphi 10 Seattle Prof, Ent. Architect added
+  v1.9.4.1 : Fixed: Issue with webbrowser creation in RAD Studio 10 Seattle
+  v1.9.5.0 : New: Support for C++Builder XE8 and 10 Seattle
+  v1.9.5.1 : Fixed: Issue with GoToAddress method
+           : Fixed: Issue with blank webbrowser due to incorrect HTML
+  v1.9.5.2 : Fixed: Issue with blank webbrowser due to underlying API changes in TTMSFMXWebGMaps
+  v2.0.0.0 : New: LoadGPSRoute function added to load routes from GPX files
+           : Fixed: Issue with NSURLConnection bad system call with no active internet connection in TTMSFMXWebGMapsGeocoding
+  v2.0.1.0 : New : Language property for TTMSFMXWebGMapsReverseGeocoding component
+           : Fixed : Issue with changing language
+  v2.0.1.1 : Fixed: Repainting issues on Mac OS
+  v2.0.1.2 : Fixed: Repainting issues on Mac OS in XE8 and older
+           : Fixed: Issue with toggling visibility
+  v2.0.1.3 : Fixed: Missing C++Builder header files for OSX32 platform target
+  v2.0.1.4 : Fixed: Issue with reinitializing the map when it is loading
+  v2.0.1.5 : Fixed: Issue with TMarkers.Bounds
+  v2.0.1.6 : Fixed: Initialization issue on Windows
+           : Fixed: Issue with toggling visibility on iOS
+  v2.4.0.0 : New : RAD Studio 10.1 Berlin support
+           : New : Cluster support
+           : New : XYToLonLat function to convert XY to LonLat coordinates
+           : New : OnPolylineChanged event
+           : New : OnPolygonChanged event
+           : New : LonLatToXY function to convert LonLat to XY coordinates
+           : New : GetModifiedMapPolyline function to retrieve modified polyline coordinates
+           : New : GetModifiedMapPolygon function to retrieve modified polygon coordinates
+           : New : WayPointIndex property for each Leg of a Direction
+           : New : LoadGPSRoute() function added to load routes from GPX files
+           : New : The GetDirections call will use the APIKey value when available
+           : New : Function GetElevation and property Elevations
+           : New : Event added OnInitHTML
+           : New : Support for Google Maps for Work with new public properties APIClientID and APISignature
+  v2.4.0.1 : Fixed : Issue with latitude and longitude conversion on iOS / Android
+  v2.4.0.2 : Fixed : Issue with OnMapDblClick event
+           : Fixed : Issue with executing javascript on a nil referenced webbrowser instance in Android
+           : Fixed : Issues with marker clusters due to changes in the Google API
+  v2.5.0.0 : New : MapOptions.ZoomMarker property
+           : New : IconColor, IconState properties for Markers
+           : New : IconWidth, IconZoomWidth, IconHeight, IconZoomHeight properties for Markers
+           : New : Events OnMarkerZoomIn, OnMarkerZoomOut added
+           : Fixed : Issue with OnPolygonChanged event after updating a polygon
+           : Fixed : Issue with OnPolylineChanged event after updating a polyline
+  v2.5.0.1 : Fixed : Installation issue
+  v2.5.0.2 : Fixed : Issue with IconColor property default value  
+  v2.5.5.0 : New : LoadMarkersFromPOI method added
+           : New : OnMapTilesLoad event added
+           : New : APIChannel property added
+           : Fixed: Issue with APISignature
+  v2.6.0.0 : New: SaveMarkersToPOI method added
+           : New: SaveMapBounds, LoadMapBounds methods added
+           : New: RenderDirections parameter added: RouteColor
+           : New: Markers[].MapLabel.OffsetLeft/OffsetTop properties added
+           : New: Markers.Text property added
+           : New: MapOptions.DisableTilt property added
+           : New: Design-time markers editor
+           : New: ControlsOptions.RotateControl property added
+           : New: Added support to update the Markers[].MapLabel settings on the map
+           : Improved : Google Maps Premium compatibility
+           : Fixed: Issue with Android class memory limitation
+  v2.6.0.1 : Fixed: Issue installing through subscription manager
+  v2.6.0.2 : Fixed: Issue with executing javascript on Android
+  v2.6.1.0 : New : APIClientAuthURL property
+             Improved : Timeout handler for browser initialization to prevent hanging app
+             Fixed : Possible issue with the default browser location
+             Fixed : Issue with installation through subscription manager
+             Fixed : Issue with executing javascript on Android
+             Fixed : Handling Google API key setting via URL
+
+  v2.7.0.0 : New : Routing property added
+             New : OnRoutingWaypointAdded event added
+             New : Overload Path.Add(Location: TLocation) added
+             New : Method FillRouteList() added
+             New : Parameter ZoomToRoute added in LoadGPSRoute() method
+             Fixed : Map events compatibility in iOS 10
+
+  v2.7.1.0 : New : Published property APIKey
+             New : Public property ShowDebugConsole
+             New : OnAfterRoutingWaypointAdded event added
+	     New : TTMSFMXWebGMapsGeocoding: Published property APIKey
+	     New : TTMSFMXWebGMapsReverseGeocoding: Published property APIKey
+             Fixed : Issue with assigning APIKey property on Android
+             Fixed : Issue with switching focus to other controls on Android
+
+  v2.7.1.1 : Fixed : Issue with hiding the Debug Console
+
+  
+2.7.1.1: New : Routing property added
+: New : OnRoutingWaypointAdded event added
+: New : SavePathToGPSRoute method added
+: New : Overload Path.Add(Location: TLocation) added
+: New : Method FillRouteList() added
+: New : Parameter ZoomToRoute added in LoadFromGPS() method
+: Fixed : Map events compatibility in iOS 10
+
+
+  
+2.7.1.1: Fixed : Issue with hiding the Debug Console
+
+Usage:
+------
+ Use of TMS software components in applications requires a license.
+ A license can be obtained by registration. A single developer license
+ registration is available as well as a site license.
+ With the purchase of one single developer license, one developer in
+ the company is entitled to:
+ - use of registered version that contains full source code and no
+   limitations 
+ - free updates for a full version cycle
+ - free email priority support & access to support newsgroups
+ - discounts to purchases of other products
+
+ With a site license, multiple developers in the company are entitled
+ to:
+ - use of registered version that contains full source code and no
+   limitations 
+ - add additional developers at any time who make use of the components
+ - free updates for a full version cycle
+ - free email priority support & access to support newsgroups
+ - discounts to purchases of other products
+
+ Online order information can be found at:
+ http://www.tmssoftware.com/site/orders.asp
+
+Note: 
+-----
+
+ The components are also part of the TMS Component Pack bundle, see 
+ http://www.tmssoftware.com/site/tmspack.asp
+
+
+Help, hints, tips, bug reports:
+-------------------------------
+ Send any questions/remarks/suggestions to : help@tmssoftware.com
+
+ Before contacting support about a possible issue with the component
+ you encounter, make sure that you are using the latest version of the 
+ component.
+ If a problem persists with the latest version, provide information 
+ about which Delphi or C++Builder version you are using as well as
+ the operating system and if possible, steps to reproduce the problem
+ you encounter. That will guarantee the fastest turnaround times for
+ your support case. 
+

@@ -2019,5 +2019,8 @@ object DM: TDM
       FieldName = 'ContractName'
       Size = 400
     end
+    object qryCashPAIDKINDID: TIntegerField
+      FieldName = 'PAIDKINDID'
+    end
   end
 end

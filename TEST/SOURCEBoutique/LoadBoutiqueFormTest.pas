@@ -46,9 +46,9 @@ type
 //    procedure LoadGoodsFormTest;
 //    procedure LoadImportSettingsFormTest;
 //    procedure LoadImportTypeFormTest;
-      procedure LoadIncomeFormTest;
-//    procedure LoadInfoMoneyGroupFormTest;
-//    procedure LoadInfoMoneyDestinationFormTest;
+    procedure LoadIncomeFormTest;
+    procedure LoadInfoMoneyGroupFormTest;
+    procedure LoadInfoMoneyDestinationFormTest;
 //    procedure LoadInfoMoneyFormTest;
     procedure LoadInventoryFormTest;
 //    procedure LoadJuridicalFormTest;
@@ -1215,15 +1215,15 @@ end;
 //  TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalChoiceForm');
 //end;
 //
-//procedure TLoadFormTest.LoadInfoMoneyGroupFormTest;
-//begin
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyGroupForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyGroupForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyGroup_ObjectForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyGroup_ObjectForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyGroupEditForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyGroupEditForm');
-//end;
+procedure TLoadFormTest.LoadInfoMoneyGroupFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyGroup_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyGroup_ObjectForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyGroupEditForm');
+end;
 //
 //
 procedure TLoadFormTest.LoadInventoryFormTest;
@@ -1257,15 +1257,15 @@ end;
 //  TdsdFormStorageFactory.GetStorage.Load('TArticleLossEditForm');
 //end;
 //
-//procedure TLoadFormTest.LoadInfoMoneyDestinationFormTest;
-//begin
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyDestinationForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDestinationForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyDestination_ObjectForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDestination_ObjectForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyDestinationEditForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDestinationEditForm');
-//end;
+procedure TLoadFormTest.LoadInfoMoneyDestinationFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyDestinationForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDestinationForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyDestination_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDestination_ObjectForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyDestinationEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDestinationEditForm');
+end;
 //
 //procedure TLoadFormTest.LoadInfoMoneyFormTest;
 //begin
