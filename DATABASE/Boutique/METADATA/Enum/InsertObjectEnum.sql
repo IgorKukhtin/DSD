@@ -61,10 +61,16 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Status_UnComplete(), inDescId:= zc_Object_Status(), inCode:= zc_Enum_StatusCode_UnComplete(), inName:= 'Не проведен', inEnumName:= 'zc_Enum_Status_UnComplete');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Status_Complete(), inDescId:= zc_Object_Status(), inCode:= zc_Enum_StatusCode_Complete(), inName:= 'Проведен', inEnumName:= 'zc_Enum_Status_Complete');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Status_Erased(), inDescId:= zc_Object_Status(), inCode:= zc_Enum_StatusCode_Erased(), inName:= 'Удален', inEnumName:= 'zc_Enum_Status_Erased');
-
-
-
 END $$;
+
+DO $$
+BEGIN
+ -- !!! Виды форм оплаты
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DiscountSaleKind_Period(), inDescId:= zc_Object_DiscountSaleKind(), inCode:= 1, inName:= 'сезонная скидка' , inEnumName:= 'zc_Enum_DiscountSaleKind_Period');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DiscountSaleKind_Client(), inDescId:= zc_Object_DiscountSaleKind(), inCode:= 3, inName:= 'скидка клиента' , inEnumName:= 'zc_Enum_DiscountSaleKind_Client');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DiscountSaleKind_Outlet(), inDescId:= zc_Object_DiscountSaleKind(), inCode:= 2, inName:= 'скидка outlet' , inEnumName:= 'zc_Enum_DiscountSaleKind_Outlet');
+END $$;
+
 /*
 DO $$
 

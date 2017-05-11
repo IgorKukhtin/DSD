@@ -3,12 +3,14 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
  INOUT ioId                   Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId           Integer   , -- Ключ объекта <Документ>
     IN inGoodsId              Integer   , -- Товары
     IN inPartionId            Integer   , -- Партия
+    IN inisPay                Boolean   , -- добавить с оплатой
     IN inAmount               TFloat    , -- Количество
     IN inChangePercent        TFloat    , -- % Скидки
     IN inSummChangePercent    TFloat    , -- Сумма дополнительной Скидки (в ГРН)
@@ -76,6 +78,19 @@ BEGIN
      outCurrencyValue := 1;
      outParValue := 0;
 
+     -- расчитали сумму по элементу, для грида
+     outAmountSumm := CASE WHEN outCountForPrice > 0
+                                THEN CAST (inAmount * outOperPrice / outCountForPrice AS NUMERIC (16, 2))
+                           ELSE CAST (inAmount * outOperPrice AS NUMERIC (16, 2))
+                      END;
+     -- расчитали сумму по прайсу по элементу, для грида
+     outAmountPriceListSumm := CASE WHEN outCountForPrice > 0
+                                         THEN CAST (inAmount * outOperPriceList / outCountForPrice AS NUMERIC (16, 2))
+                                    ELSE CAST (inAmount * outOperPriceList AS NUMERIC (16, 2))
+                               END;
+
+     outTotalChangePercent := outAmountPriceListSumm / 100 * COALESCE(inChangePercent,0) + COALESCE(inSummChangePercent,0) ;
+
      -- сохранили
      ioId:= lpInsertUpdate_MovementItem_Sale   (ioId                 := ioId
                                               , inMovementId         := inMovementId
@@ -101,16 +116,10 @@ BEGIN
                                               , inUserId                := vbUserId
                                                );
 
-     -- расчитали сумму по элементу, для грида
-     outAmountSumm := CASE WHEN outCountForPrice > 0
-                                THEN CAST (inAmount * outOperPrice / outCountForPrice AS NUMERIC (16, 2))
-                           ELSE CAST (inAmount * outOperPrice AS NUMERIC (16, 2))
-                      END;
-     -- расчитали сумму по прайсу по элементу, для грида
-     outAmountPriceListSumm := CASE WHEN outCountForPrice > 0
-                                         THEN CAST (inAmount * outOperPriceList / outCountForPrice AS NUMERIC (16, 2))
-                                    ELSE CAST (inAmount * outOperPriceList AS NUMERIC (16, 2))
-                               END;
+    IF inisPay THEN
+       
+    END IF;
+
 
 END;
 $BODY$
