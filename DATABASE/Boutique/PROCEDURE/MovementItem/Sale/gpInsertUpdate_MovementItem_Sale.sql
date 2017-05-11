@@ -40,6 +40,8 @@ $BODY$
    DECLARE vbPartionId Integer;
    DECLARE vbDiscountSaleKindId Integer;
    DECLARE vbOperDate TDateTime;
+   DECLARE vbCurrencyId Integer;
+
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
@@ -64,19 +66,18 @@ BEGIN
      -- данные из партии : OperPrice и CountForPrice
      SELECT COALESCE (Object_PartionGoods.CountForPrice,1)
           , COALESCE (Object_PartionGoods.OperPrice,0)
-          , CurrencyId
-    INTO outCountForPrice, outOperPrice, outCurrencyValue
+          , COALESCE (Object_PartionGoods.CurrencyId, zc_Currency_Basis())
+    INTO outCountForPrice, outOperPrice, vbCurrencyId
      FROM Object_PartionGoods
      WHERE Object_PartionGoods.MovementItemId = inPartionId;
      
-     -- 
-     /*IF vbCurrencyId <> zc_Currency_Basis() 
-        THEN
-
-     END IF;*/
-
-     outCurrencyValue := 1;
-     outParValue := 0;
+    IF vbCurrencyId <> zc_Currency_Basis() THEN
+        SELECT COALESCE (tmp.Amount,1) , COALESCE (tmp.ParValue,0)
+       INTO outCurrencyValue, outParValue
+        FROM lfSelect_Movement_Currency_byDate (inOperDate:= vbOperDate, inCurrencyFromId:= zc_Currency_Basis(), inCurrencyToId:= vbCurrencyId ) AS tmp;
+    END IF;
+    outCurrencyValue := COALESCE(outCurrencyValue,1);
+    outParValue      := COALESCE(outParValue,0);
 
      -- расчитали сумму по элементу, для грида
      outAmountSumm := CASE WHEN outCountForPrice > 0

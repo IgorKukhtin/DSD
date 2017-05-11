@@ -1,8 +1,9 @@
--- Function: lpInsertUpdate_MovementItem_Sale_Child()
+-- Function: lpInsertUpdate_MI_Sale_Child()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale_Child (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_Sale_Child (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer);
 
-CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Sale_Child(
+CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_Sale_Child(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
     IN inParentId              Integer   , -- Ключ

@@ -173,7 +173,7 @@ object SaleForm: TSaleForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089' '#1086#1087#1083#1072#1090#1086#1081
       Properties.ReadOnly = False
       TabOrder = 18
-      Width = 220
+      Width = 127
     end
   end
   object cxPageControl: TcxPageControl
@@ -595,9 +595,9 @@ object SaleForm: TSaleForm
             Options.Editing = False
             Width = 91
           end
-          object colTotalPay_Bank: TcxGridDBColumn
+          object colTotalPay_Card: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1075#1088#1085'. '#1082#1072#1088#1090#1072')'
-            DataBinding.FieldName = 'TotalPay_Bank'
+            DataBinding.FieldName = 'TotalPay_Card'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -902,7 +902,7 @@ object SaleForm: TSaleForm
     Left = 130
     Top = 103
     Properties.ReadOnly = True
-    TabOrder = 15
+    TabOrder = 14
     Width = 117
   end
   object cxLabel14: TcxLabel
@@ -1038,6 +1038,18 @@ object SaleForm: TSaleForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMIChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMIChildTotal'
+        end
+        item
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -1185,6 +1197,16 @@ object SaleForm: TSaleForm
       Visible = ivAlways
       ImageIndex = 1
       ShortCut = 115
+    end
+    object bbInsertUpdateMIChild: TdxBarButton
+      Action = MacInsertUpdateMIChild
+      Category = 0
+      ImageIndex = 47
+    end
+    object bbInsertUpdateMIChildTotal: TdxBarButton
+      Action = MacInsertUpdateMIChildTotal
+      Category = 0
+      ImageIndex = 50
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -1674,6 +1696,100 @@ object SaleForm: TSaleForm
       ShortCut = 45
       ImageIndex = 0
     end
+    object actInsertUpdateMIChildTotal: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actInsertAction1'
+      ImageIndex = 1
+      FormName = 'TSaleItemEditForm'
+      FormNameParam.Value = 'TSaleItemEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPayTotal'
+          Value = 'TRUE'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      IdFieldName = 'Id'
+    end
+    object actInsertUpdateMIChild: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actInsertAction1'
+      ImageIndex = 1
+      FormName = 'TSaleItemEditForm'
+      FormNameParam.Value = 'TSaleItemEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPayTotal'
+          Value = 'False'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      IdFieldName = 'Id'
+    end
+    object MacInsertUpdateMIChildTotal: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdateMIChildTotal
+        end
+        item
+          Action = actRefreshMI
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091' '#1080#1090#1086#1075#1086'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091' '#1080#1090#1086#1075#1086'>'
+      ImageIndex = 0
+      ShortCut = 45
+    end
+    object MacInsertUpdateMIChild: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdateMIChild
+        end
+        item
+          Action = actRefreshMI
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091'>'
+      ImageIndex = 0
+      ShortCut = 45
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1874,14 +1990,6 @@ object SaleForm: TSaleForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'TotalChangePercentPay'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTotalPay'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TotalPay'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -2532,6 +2640,14 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisPay'
+        Value = Null
+        Component = cbisPay
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmount'
         Value = 0.000000000000000000
         DataType = ftFloat
@@ -2539,21 +2655,37 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperPrice'
+        Name = 'inChangePercent'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'OperPrice'
+        ComponentItem = 'ChangePercent'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioCountForPrice'
+        Name = 'inSummChangePercent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummChangePercent'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPrice'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCountForPrice'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
-        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -2578,6 +2710,15 @@ object SaleForm: TSaleForm
         Component = MasterCDS
         ComponentItem = 'AmountPriceListSumm'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBarCode'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BarCode'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1

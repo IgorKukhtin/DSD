@@ -1295,8 +1295,8 @@ object IncomeForm: TIncomeForm
     object actInsertAction1: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091'>'
       ImageIndex = 0
       FormName = 'TIncomeItemEditForm'
       FormNameParam.Value = 'TIncomeItemEditForm'

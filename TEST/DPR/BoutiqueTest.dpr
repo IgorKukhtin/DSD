@@ -202,8 +202,8 @@ uses
   SaleJournal in '..\..\FormsBoutique\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
   Sale in '..\..\FormsBoutique\Document\Sale.pas' {SaleForm: TParentForm},
   BankAccount in '..\..\FormsBoutique\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
-  BankAccountEdit in '..\..\FormsBoutique\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm};
-
+  BankAccountEdit in '..\..\FormsBoutique\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm},
+  SaleItemEdit in '..\..\FormsBoutique\Document\SaleItemEdit.pas' {SaleItemEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

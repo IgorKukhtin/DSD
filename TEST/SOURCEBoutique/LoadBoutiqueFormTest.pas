@@ -1006,6 +1006,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleItemEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSaleItemEditForm');
 end;
 //
 //procedure TLoadFormTest.LoadReturnTypeFormTest;

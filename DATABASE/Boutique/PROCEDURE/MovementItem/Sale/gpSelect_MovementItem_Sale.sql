@@ -22,12 +22,12 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , BarCode TVarChar
              , DiscountSaleKindId Integer, DiscountSaleKindName TVarChar
              , Amount TFloat
-             , AmountSumm TFloat, AmountPriceListSumm TFloat
              , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
+             , AmountSumm TFloat, AmountPriceListSumm TFloat
              , CurrencyValue TFloat, ParValue TFloat
              , ChangePercent TFloat, SummChangePercent TFloat
              , TotalChangePercent TFloat, TotalChangePercentPay TFloat
-             , TotalPay_Grn TFloat, TotalPay_Dol TFloat, TotalPay_Eur TFloat, TotalPay_Bank TFloat
+             , TotalPay_Grn TFloat, TotalPay_Dol TFloat, TotalPay_Eur TFloat, TotalPay_Card TFloat
 --             , TotalPay TFloat
              , TotalPayOth TFloat
              , TotalCountReturn TFloat, TotalReturn TFloat
@@ -190,7 +190,7 @@ BEGIN
            , tmpMI_Child.Amount_GRN         ::TFloat AS TotalPay_Grn 
            , tmpMI_Child.Amount_DOL         ::TFloat AS TotalPay_DOL
            , tmpMI_Child.Amount_EUR         ::TFloat AS TotalPay_EUR
-           , tmpMI_Child.Amount_Bank        ::TFloat AS TotalPay_Bank
+           , tmpMI_Child.Amount_Bank        ::TFloat AS TotalPay_Card
            , tmpMI.TotalPayOth              ::TFloat
            , tmpMI.TotalCountReturn         ::TFloat
            , tmpMI.TotalReturn              ::TFloat
