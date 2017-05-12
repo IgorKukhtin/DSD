@@ -102,6 +102,8 @@ type
     N1: TMenuItem;
     ExecuteDialog: TExecuteDialog;
     actRefreshStart: TdsdDataSetRefresh;
+    actPrintIn: TdsdPrintAction;
+    dxBarButton1: TdxBarButton;
   private
   public
   end;
