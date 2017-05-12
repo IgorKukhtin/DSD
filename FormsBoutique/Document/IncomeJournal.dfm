@@ -454,6 +454,14 @@ object IncomeJournalForm: TIncomeJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -529,6 +537,10 @@ object IncomeJournalForm: TIncomeJournalForm
       Action = actShowErased
       Category = 0
     end
+    object dxBarButton1: TdxBarButton
+      Action = actPrintIn
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -586,7 +598,7 @@ object IncomeJournalForm: TIncomeJournalForm
         end
         item
           DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
+          UserName = 'frxDBDItems'
         end>
       Params = <
         item
@@ -600,6 +612,32 @@ object IncomeJournalForm: TIncomeJournalForm
       ReportNameParam.Value = 'PrintMovement_Income'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintIn: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1074#1093'.'#1094#1077#1085#1072#1084
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1074#1093'.'#1094#1077#1085#1072#1084
+      ImageIndex = 16
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <>
+      ReportName = 'PrintMovement_IncomeIn'
+      ReportNameParam.Value = 'PrintMovement_IncomeIn'
+      ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
     object actInsert: TdsdInsertUpdateAction
