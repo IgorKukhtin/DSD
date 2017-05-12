@@ -34,8 +34,9 @@ BEGIN
     INTO vbOperDate
      FROM Movement
      WHERE Movement.Id = inMovementId;
-
-     SELECT CAST (COALESCE(MovementItem.Amount,0) *  COALESCE(MIFloat_OperPriceList.ValueData,0) / COALESCE(MIFloat_CountForPrice.ValueData,1) AS NUMERIC (16, 2)) 
+     -- сумма к оплате
+     SELECT CAST ((COALESCE(MovementItem.Amount,0) *  COALESCE(MIFloat_OperPriceList.ValueData,0) / COALESCE(MIFloat_CountForPrice.ValueData,1) 
+                 - COALESCE(MIFloat_TotalChangePercent.ValueData,0)) AS NUMERIC (16, 2)) 
     INTO vbSumm
      FROM MovementItem
           LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
@@ -44,6 +45,9 @@ BEGIN
           LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                       ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                      AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+          LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
+                                      ON MIFloat_TotalChangePercent.MovementItemId = MovementItem.Id
+                                     AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
      WHERE (MovementItem.Id = inId OR inId = 0)
        AND MovementItem.MovementId = inMovementId
        AND MovementItem.DescId     = zc_MI_Master()

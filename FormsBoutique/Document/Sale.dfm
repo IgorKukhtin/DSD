@@ -254,6 +254,61 @@ object SaleForm: TSaleForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalSummPay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummChangePercent
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalChangePercent
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalChangePercentPay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalPay_Grn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalPay_Dol
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalPay_Eur
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalPay_Card
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalPayOth
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalCountReturn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalReturn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalPayReturn
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -316,6 +371,56 @@ object SaleForm: TSaleForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalSummPay
+            end
+            item
+              Format = ',0.####'
+              Column = colSummChangePercent
+            end
+            item
+              Format = ',0.####'
+              Column = colTotalChangePercent
+            end
+            item
+              Format = ',0.####'
+              Column = colTotalChangePercentPay
+            end
+            item
+              Format = ',0.####'
+              Column = colTotalPay_Grn
+            end
+            item
+              Format = ',0.####'
+              Column = colTotalPay_Dol
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalPay_Eur
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalPay_Card
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalPayOth
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalCountReturn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalReturn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalPayReturn
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -2774,13 +2879,13 @@ object SaleForm: TSaleForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 912
-    Top = 251
+    Left = 792
+    Top = 339
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 984
-    Top = 251
+    Top = 347
   end
   object spSelectBarCode: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_BarCode'
