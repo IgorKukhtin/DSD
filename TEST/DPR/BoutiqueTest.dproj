@@ -677,8 +677,8 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Document\SaleItemEdit.pas">
 				<Form>SaleItemEditForm</Form>
-            <DesignClass>TParentForm</DesignClass>
-            </DCCReference>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\InfoMoneyGroup.pas">
 				<Form>InfoMoneyGroupForm</Form>
 				<DesignClass>TParentForm</DesignClass>

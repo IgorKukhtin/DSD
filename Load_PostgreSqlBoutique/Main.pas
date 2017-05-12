@@ -2251,11 +2251,6 @@ begin
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPartionId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('ioCountForPrice',ftFloat,ptInputOutput, 0);
-        toStoredProc.Params.AddParam ('inOperPrice',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('outAmountSumm',ftFloat,ptOutput, 0);
-        toStoredProc.Params.AddParam ('inOperPriceList',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('outAmountPriceListSumm',ftFloat,ptOutput, 0);
         //
         HideCurGrid(True);
         while not EOF do
@@ -2269,9 +2264,6 @@ begin
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
              toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
-             toStoredProc.Params.ParamByName('ioCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
-             toStoredProc.Params.ParamByName('inOperPrice').Value:=FieldByName('OperPrice').AsFloat;
-             toStoredProc.Params.ParamByName('inOperPriceList').Value:=FieldByName('OperPriceList').AsFloat;
 
              if not myExecToStoredProc then ;//exit;
              //
@@ -2305,7 +2297,7 @@ begin
         Add('     , BillItems.Id as SybaseId  ');
         Add('     , Goods.GoodsName as GoodsName ');
         Add('     , BillItemsIncome.Id_Postgres as PartionId ');
-        Add('     , BillItems.OperCount as Amount  ');
+        Add('     , abs(BillItems.OperCount) as Amount  ');
         Add('     , BillItems.OperPrice as OperPrice  ');
         Add('     , 1 as CountForPrice  ');
         Add('     , BillItems.PriceListPrice as OperPriceList  ');
@@ -2335,11 +2327,6 @@ begin
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPartionId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inOperPrice',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('ioCountForPrice',ftFloat,ptInputOutput, 0);
-        toStoredProc.Params.AddParam ('outAmountSumm',ftFloat,ptOutput, 0);
-        toStoredProc.Params.AddParam ('inOperPriceList',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('outAmountPriceListSumm',ftFloat,ptOutput, 0);
         //
         HideCurGrid(True);
         while not EOF do
@@ -2353,8 +2340,6 @@ begin
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
              toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
-             toStoredProc.Params.ParamByName('inOperPrice').Value:=FieldByName('OperPrice').AsFloat;
-             toStoredProc.Params.ParamByName('inOperPriceList').Value:=FieldByName('OperPriceList').AsFloat;
 
              if not myExecToStoredProc then ;//exit;
              //
@@ -2418,7 +2403,6 @@ begin
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPartionId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inOperPriceList',ftFloat,ptInput, 0);
         //
         HideCurGrid(True);
         while not EOF do
@@ -2432,7 +2416,6 @@ begin
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
              toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
-             toStoredProc.Params.ParamByName('inOperPriceList').Value:=FieldByName('OperPriceList').AsFloat;
 
              if not myExecToStoredProc then ;//exit;
              //
