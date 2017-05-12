@@ -249,6 +249,11 @@ object SaleForm: TSaleForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountPriceListSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummPay
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -306,6 +311,11 @@ object SaleForm: TSaleForm
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = colName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummPay
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -471,6 +481,18 @@ object SaleForm: TSaleForm
           object colAmountPriceListSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1087#1088#1072#1081#1089')'
             DataBinding.FieldName = 'AmountPriceListSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object colTotalSummPay: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1082' '#1086#1087#1083#1072#1090#1077
+            DataBinding.FieldName = 'TotalSummPay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -2386,8 +2408,8 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 654
-    Top = 264
+    Left = 646
+    Top = 320
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Sale_SetUnErased'
