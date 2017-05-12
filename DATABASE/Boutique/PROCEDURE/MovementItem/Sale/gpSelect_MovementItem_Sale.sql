@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , CurrencyValue TFloat, ParValue TFloat
              , ChangePercent TFloat, SummChangePercent TFloat
              , TotalChangePercent TFloat, TotalChangePercentPay TFloat
+             , TotalSummPay TFloat
              , TotalPay_Grn TFloat, TotalPay_Dol TFloat, TotalPay_Eur TFloat, TotalPay_Card TFloat
 --             , TotalPay TFloat
              , TotalPayOth TFloat
@@ -187,6 +188,13 @@ BEGIN
            , tmpMI.SummChangePercent        ::TFloat
            , tmpMI.TotalChangePercent       ::TFloat
            , tmpMI.TotalChangePercentPay    ::TFloat
+
+           , CAST ((CASE WHEN tmpMI.CountForPrice <> 0
+                           THEN CAST (COALESCE (tmpMI.Amount, 0) * tmpMI.OperPriceList / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                        ELSE CAST ( COALESCE (tmpMI.Amount, 0) * tmpMI.OperPriceList AS NUMERIC (16, 2))
+                   END) - tmpMI.TotalChangePercent
+                 AS TFloat) AS TotalSummPay
+
            , tmpMI_Child.Amount_GRN         ::TFloat AS TotalPay_Grn 
            , tmpMI_Child.Amount_DOL         ::TFloat AS TotalPay_DOL
            , tmpMI_Child.Amount_EUR         ::TFloat AS TotalPay_EUR
