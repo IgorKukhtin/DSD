@@ -143,6 +143,8 @@ type
     dxBarStatic1: TdxBarStatic;
     dxBarButton1: TdxBarButton;
     actPrintIn: TdsdPrintAction;
+    actPrintSticker: TdsdPrintAction;
+    dxBarButton2: TdxBarButton;
   private
   public
   end;
