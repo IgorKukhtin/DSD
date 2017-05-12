@@ -24,8 +24,8 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Income());
@@ -34,8 +34,27 @@ BEGIN
          ioInvNumber:= CAST (NEXTVAL ('movement_income_seq') AS TVarChar);  
      END IF;
 
-     outCurrencyValue := 1;
-     outParValue := 0;
+     -- данные из шапки
+     SELECT Movement.OperDate
+    INTO vbOperDate
+     FROM Movement 
+     WHERE Movement.Id = ioId;
+
+    IF inCurrencyDocumentId <> zc_Currency_Basis() THEN
+        SELECT COALESCE (tmp.Amount,1), COALESCE (tmp.ParValue,0)
+       INTO outCurrencyValue, outParValue
+        FROM lfSelect_Movement_Currency_byDate (inOperDate:= vbOperDate, inCurrencyFromId:= zc_Currency_Basis(), inCurrencyToId:= inCurrencyDocumentId ) AS tmp;
+    END IF;
+
+  /*  IF inCurrencyPartnerId <> zc_Currency_Basis() THEN
+        SELECT COALESCE (tmp.Amount,1), COALESCE (tmp.ParValue,0)
+       INTO outCurrencyValue, outParValue
+        FROM lfSelect_Movement_Currency_byDate (inOperDate:= vbOperDate, inCurrencyFromId:= zc_Currency_Basis(), inCurrencyToId:= inCurrencyPartnerId ) AS tmp;
+    END IF;
+*/
+    outCurrencyValue := COALESCE(outCurrencyValue,1);
+    outParValue      := COALESCE(outParValue,0);
+
      
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_Income (ioId                := ioId

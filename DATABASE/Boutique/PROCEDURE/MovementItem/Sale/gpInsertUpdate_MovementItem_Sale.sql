@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Inte
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
  INOUT ioId                   Integer   , -- Ключ объекта <Элемент документа>
@@ -12,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
     IN inPartionId            Integer   , -- Партия
     IN inisPay                Boolean   , -- добавить с оплатой
     IN inAmount               TFloat    , -- Количество
-    IN inChangePercent        TFloat    , -- % Скидки
+   OUT outChangePercent       TFloat    , -- % Скидки
     IN inSummChangePercent    TFloat    , -- Сумма дополнительной Скидки (в ГРН)
    OUT outOperPrice           TFloat    , -- Цена
    OUT outCountForPrice       TFloat    , -- Цена за количество
@@ -29,6 +30,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
    OUT outTotalCountReturn      TFloat    , -- 
    OUT outTotalReturn           TFloat    , -- 
    OUT outTotalPayReturn        TFloat    , -- 
+   OUT outTotalSummPay          TFloat    , -- 
    OUT outDiscountSaleKindName  TVarChar  , -- Вид скидки при продаже
     IN inBarCode                TVarChar  , -- Штрих-код поставщика
     IN inSession                TVarChar    -- сессия пользователя
@@ -41,7 +43,8 @@ $BODY$
    DECLARE vbDiscountSaleKindId Integer;
    DECLARE vbOperDate TDateTime;
    DECLARE vbCurrencyId Integer;
-
+   DECLARE vbUnitId Integer;
+   DECLARE vbClientId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
@@ -59,7 +62,20 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Партия>.';
      END IF;
 
-     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+     -- данные из шапки
+     SELECT Movement.OperDate
+          , MovementLinkObject_From.ObjectId
+          , MovementLinkObject_To.ObjectId
+    INTO vbOperDate, vbUnitId, vbClientId
+     FROM Movement 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                         ON MovementLinkObject_From.MovementId = Movement.Id
+                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+     WHERE Movement.Id = inMovementId;
+
      -- цена продажи из прайса 
      outOperPriceList := COALESCE ((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem(vbOperDate, zc_PriceList_Basis(), inGoodsId) AS tmp), 0);
 
@@ -79,6 +95,11 @@ BEGIN
     outCurrencyValue := COALESCE(outCurrencyValue,1);
     outParValue      := COALESCE(outParValue,0);
 
+    -- определяем скидку
+    SELECT tmp.ChangePercent, tmp.DiscountSaleKindId, tmp.DiscountSaleKindName
+   INTO outChangePercent, vbDiscountSaleKindId, outDiscountSaleKindName
+    FROM zfSelect_DiscountSaleKind (vbOperDate, vbUnitId, inGoodsId, vbClientId, vbUserId) AS tmp;
+
      -- расчитали сумму по элементу, для грида
      outAmountSumm := CASE WHEN outCountForPrice > 0
                                 THEN CAST (inAmount * outOperPrice / outCountForPrice AS NUMERIC (16, 2))
@@ -90,7 +111,9 @@ BEGIN
                                     ELSE CAST (inAmount * outOperPriceList AS NUMERIC (16, 2))
                                END;
 
-     outTotalChangePercent := outAmountPriceListSumm / 100 * COALESCE(inChangePercent,0) + COALESCE(inSummChangePercent,0) ;
+     outTotalChangePercent := outAmountPriceListSumm / 100 * COALESCE(outChangePercent,0) + COALESCE(inSummChangePercent,0) ;
+
+     outTotalSummPay := COALESCE(outAmountPriceListSumm,0) - COALESCE(outTotalChangePercent,0) ;
 
      -- сохранили
      ioId:= lpInsertUpdate_MovementItem_Sale   (ioId                 := ioId
@@ -99,7 +122,7 @@ BEGIN
                                               , inPartionId          := COALESCE(inPartionId,0)
                                               , inDiscountSaleKindId := vbDiscountSaleKindId
                                               , inAmount             := inAmount
-                                              , inChangePercent      := COALESCE(inChangePercent,0)        ::TFloat
+                                              , inChangePercent      := COALESCE(outChangePercent,0)        ::TFloat
                                               , inSummChangePercent  := COALESCE(inSummChangePercent,0)    ::TFloat
                                               , inOperPrice          := outOperPrice
                                               , inCountForPrice      := outCountForPrice

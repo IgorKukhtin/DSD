@@ -2,7 +2,7 @@ object SaleForm: TSaleForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
-  ClientHeight = 466
+  ClientHeight = 469
   ClientWidth = 1054
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -180,24 +180,27 @@ object SaleForm: TSaleForm
     Left = 0
     Top = 156
     Width = 1054
-    Height = 310
+    Height = 313
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 310
+    ExplicitHeight = 310
+    ClientRectBottom = 313
     ClientRectRight = 1054
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 286
       object cxGrid: TcxGrid
         Left = 0
         Top = 83
         Width = 1054
-        Height = 203
+        Height = 206
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 203
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -640,6 +643,7 @@ object SaleForm: TSaleForm
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 91
           end
           object colSummChangePercent: TcxGridDBColumn
@@ -2022,12 +2026,11 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inChangePercent'
+        Name = 'outChangePercent'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ChangePercent'
         DataType = ftFloat
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -2149,6 +2152,14 @@ object SaleForm: TSaleForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'TotalPayReturn'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalSummPay'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalSummPay'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -2782,7 +2793,7 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inChangePercent'
+        Name = 'outChangePercent'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ChangePercent'

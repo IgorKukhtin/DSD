@@ -24,7 +24,7 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbAccessKeyId Integer;
+   DECLARE vbOperDate TDateTime;
    DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -34,8 +34,17 @@ BEGIN
          ioInvNumber:= CAST (NEXTVAL ('movement_returnout_seq') AS TVarChar);  
      END IF;
 
-     outCurrencyValue := 1;
-     outParValue := 0;
+     -- данные из шапки
+     SELECT Movement.OperDate
+    INTO vbOperDate
+     FROM Movement 
+     WHERE Movement.Id = ioId;
+
+    IF inCurrencyDocumentId <> zc_Currency_Basis() THEN
+        SELECT COALESCE (tmp.Amount,1), COALESCE (tmp.ParValue,0)
+       INTO outCurrencyValue, outParValue
+        FROM lfSelect_Movement_Currency_byDate (inOperDate:= vbOperDate, inCurrencyFromId:= zc_Currency_Basis(), inCurrencyToId:= inCurrencyDocumentId ) AS tmp;
+    END IF;
      
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_ReturnOut (ioId                := ioId
