@@ -8,12 +8,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIOrder(
     IN inGLN                 TVarChar  , -- Код GLN - Покупатель
     IN inGLNPlace            TVarChar  , -- Код GLN - место доставки
     IN inSession             TVarChar    -- сессия пользователя
-)                              
-RETURNS TABLE (MovementId Integer, GoodsPropertyID Integer) -- Классификатор товаров) 
+)
+RETURNS TABLE (MovementId Integer, GoodsPropertyID Integer) -- Классификатор товаров)
 AS
 $BODY$
+   DECLARE vbUserId   Integer;
+   DECLARE vbIsInsert Boolean;
+
    DECLARE vbMovementId Integer;
-   DECLARE vbUserId Integer;
    DECLARE vbGoodsPropertyId Integer;
    DECLARE vbPartnerId Integer;
    DECLARE vbJuridicalId Integer;
@@ -21,7 +23,8 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDI());
-     vbUserId := inSession;
+     vbUserId:= lpGetUserBySession (inSession);
+
 /*
 if inSession <> '5' and 1=0
 then
@@ -46,11 +49,11 @@ end if;
      THEN
          -- попробуем исправить ... закомментил, т.к. не проверил как оно работает
          /**/
-         UPDATE Movement SET StatusId = zc_Enum_Status_Erased() 
+         UPDATE Movement SET StatusId = zc_Enum_Status_Erased()
          WHERE Movement.DescId = zc_Movement_EDI()
            AND Movement.OperDate = inOrderOperDate
            AND Movement.Id IN (SELECT tmp.Id
-                               FROM 
+                               FROM
                                    (SELECT Movement.*
                                          , Movement_Order.Id AS MovementId_find
                                          , ROW_NUMBER() OVER (PARTITION BY MovementString_GLNPlaceCode.ValueData, Movement.InvNumber
@@ -61,7 +64,7 @@ end if;
                                                                   AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
                                                                   -- AND MovementString_GLNPlaceCode.ValueData = '4820141820833'
                                          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
-                                                                        ON MovementLinkMovement_Order.MovementChildId = Movement.Id 
+                                                                        ON MovementLinkMovement_Order.MovementChildId = Movement.Id
                                                                        AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
                                          LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementId
                                                                              -- AND Movement_Order.StatusId = zc_Enum_Status_Complete()
@@ -87,7 +90,7 @@ end if;
                   AND Movement.StatusId <> zc_Enum_Status_Erased()
                )
         THEN
-            -- 
+            --
             RAISE EXCEPTION 'Ошибка.Документ EDI № <%> от <%> для точки доставки с GLN = <%> загружен больше 1 раза.', inOrderInvNumber, DATE (inOrderOperDate), inGLNPlace;
         END IF;
 
@@ -114,19 +117,25 @@ end if;
      END IF;
 
 
-     -- сохранили <Документ>
-     IF COALESCE(vbMovementId, 0) = 0 THEN
-        vbMovementId := lpInsertUpdate_Movement (vbMovementId, zc_Movement_EDI(), inOrderInvNumber, inOrderOperDate, NULL);
+     -- если не нашли
+     IF COALESCE (vbMovementId, 0) = 0
+     THEN
+         -- будем проверять на УНИКАЛЬНОСТЬ
+         vbIsInsert:= TRUE;
+         -- сохранили <Документ>
+         vbMovementId := lpInsertUpdate_Movement (vbMovementId, zc_Movement_EDI(), inOrderInvNumber, inOrderOperDate, NULL);
+     ELSE
+         vbIsInsert:= FALSE;
      END IF;
 
      -- сохранили
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Desc(), vbMovementId, vbDescCode);
 
-     IF inGLN <> '' THEN 
+     IF inGLN <> '' THEN
         PERFORM lpInsertUpdate_MovementString (zc_MovementString_GLNCode(), vbMovementId, inGLN);
      END IF;
 
-     IF inGLNPlace <> '' THEN 
+     IF inGLNPlace <> '' THEN
         PERFORM lpInsertUpdate_MovementString (zc_MovementString_GLNPlaceCode(), vbMovementId, inGLNPlace);
         -- Пытаемся установить связь с точкой доставки
         vbPartnerId := COALESCE((SELECT MIN (ObjectId)
@@ -177,7 +186,20 @@ end if;
          RAISE EXCEPTION 'Ошибка.Документ EDI № <%> от <%> для точки доставки с GLN = <%> загружен больше 1 раза. Повторите действие через 25 сек.', inOrderInvNumber, DATE (inOrderOperDate), inGLNPlace;
      END IF;
 
-     RETURN QUERY 
+
+     -- Проверка через УНИКАЛЬНОСТЬ
+     IF vbIsInsert = TRUE
+     THEN
+         PERFORM lpInsert_LockUnique (inKeyData:= 'Movement'
+                                        || ';' || zc_Movement_EDI() :: TVarChar
+                                        || ';' || inOrderInvNumber
+                                        || ';' || zfConvert_DateToString (inOrderOperDate)
+                                        || ';' || inGLNPlace
+                                    , inUserId:= vbUserId);
+     END IF;
+
+
+     RETURN QUERY
      SELECT vbMovementId, vbGoodsPropertyID;
 
      -- сохранили протокол

@@ -14,14 +14,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_EDIOrder(
 )                              
 RETURNS VOID AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbGoodsId Integer;
-   DECLARE vbGoodsKindId Integer;
+   DECLARE vbUserId   Integer;
+   DECLARE vbIsInsert Boolean;
+
+   DECLARE vbGoodsId        Integer;
+   DECLARE vbGoodsKindId    Integer;
    DECLARE vbMovementItemId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_EDI());
-     vbUserId := inSession;
+     vbUserId:= lpGetUserBySession (inSession);
 
 
      -- Проверка
@@ -93,19 +95,22 @@ BEGIN
                 INTO vbGoodsId, vbGoodsKindId
          FROM ObjectString AS ObjectString_ArticleGLN
               JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
-                              ON ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId = ObjectString_ArticleGLN.objectid
-                             AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                              ON ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId      = ObjectString_ArticleGLN.objectid
+                             AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId        = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
                              AND ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = inGoodsPropertyId
               LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                                    ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectString_ArticleGLN.objectid
-                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId   = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
               LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                    ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectString_ArticleGLN.objectid
-                                  AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
-         WHERE ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()           
+                                  AND ObjectLink_GoodsPropertyValue_Goods.DescId   = zc_ObjectLink_GoodsPropertyValue_Goods()
+         WHERE ObjectString_ArticleGLN.DescId    = zc_ObjectString_GoodsPropertyValue_ArticleGLN()           
            AND ObjectString_ArticleGLN.ValueData = inGLNCode;
      END IF;
 
+
+     -- определяем признак Создание/Корректировка
+     vbIsInsert:= COALESCE (vbMovementItemId, 0) = 0;
 
      -- сохранили <Элемент документа>
      vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), vbGoodsId, inMovementId, inAmountOrder, NULL);
@@ -124,7 +129,7 @@ BEGIN
 
      -- Проверка
      IF 1 < (SELECT COUNT (*)
-             FROM MovementItemString 
+             FROM MovementItemString
                   INNER JOIN MovementItem ON MovementItem.Id = MovementItemString.MovementItemId 
                                          AND MovementItem.MovementId = inMovementId
                                          AND MovementItem.DescId = zc_MI_Master() 
@@ -138,8 +143,24 @@ BEGIN
                                                                                               , inGLNCode;
      END IF;
 
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
+
+     -- Проверка через УНИКАЛЬНОСТЬ
+     IF vbIsInsert = TRUE
+     THEN
+         PERFORM lpInsert_LockUnique (inKeyData:= 'MI'
+                                        || ';' || zc_Movement_EDI() :: TVarChar
+                                        || ';' || inMovementId :: TVarChar
+                                        || ';' || inGLNCode
+                                    , inUserId:= vbUserId);
+     END IF;
+
+
+     -- только 1 раз
+     IF vbIsInsert = TRUE
+     THEN
+         -- сохранили протокол
+         PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
+     END iF;
 
 END;
 $BODY$

@@ -102,8 +102,9 @@ BEGIN
                                 LEFT JOIN Movement AS Movement_Income
                                                    ON Movement_Income.Id       = MovementLinkMovement_Income.MovementId
                                                   AND Movement_Income.StatusId = zc_Enum_Status_Complete()
+                                                  AND Movement_Income.DescId   = zc_Movement_Income()
                                 LEFT JOIN MovementItem AS MI_Income
-                                                       ON MI_Income.MovementId  = Movement.Id
+                                                       ON MI_Income.MovementId  = Movement_Income.Id
                                                       AND MI_Income.ObjectId    = MILinkObject_Goods.ObjectId
                                                       AND MI_Income.isErased    = FALSE
                                                       AND MI_Income.DescId      = zc_MI_Master()
@@ -339,7 +340,7 @@ BEGIN
                              HAVING tmpContainer_Oth.Amount - SUM (COALESCE (MIContainer.Amount, 0))  <> 0
                                  OR tmpContainer_Oth.Amount - SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) <> 0
                             ) AS tmp
-                       GROUP BY tmp.GoodsId, tmp.ContainerId
+                       GROUP BY tmp.GoodsId
                       )
        -- Результат
        SELECT

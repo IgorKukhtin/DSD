@@ -2,7 +2,7 @@ inherited MainCashForm: TMainCashForm
   ActiveControl = lcName
   Caption = #1055#1088#1086#1076#1072#1078#1072
   ClientHeight = 415
-  ClientWidth = 960
+  ClientWidth = 743
   PopupMenu = PopupMenu
   OnCloseQuery = ParentFormCloseQuery
   OnCreate = FormCreate
@@ -11,27 +11,27 @@ inherited MainCashForm: TMainCashForm
   OnShow = ParentFormShow
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
-  ExplicitWidth = 976
-  ExplicitHeight = 454
+  ExplicitWidth = 759
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
     Left = 0
     Top = 219
-    Width = 960
+    Width = 743
     Height = 196
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 867
+    ExplicitWidth = 960
     object CheckGrid: TcxGrid
       Left = 0
       Top = 0
-      Width = 706
+      Width = 489
       Height = 196
       Align = alClient
       TabOrder = 0
-      ExplicitWidth = 613
+      ExplicitWidth = 706
       object CheckGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = CheckDS
@@ -120,13 +120,13 @@ inherited MainCashForm: TMainCashForm
       end
     end
     object AlternativeGrid: TcxGrid
-      Left = 709
+      Left = 492
       Top = 0
       Width = 251
       Height = 196
       Align = alRight
       TabOrder = 1
-      ExplicitLeft = 616
+      ExplicitLeft = 709
       object AlternativeGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = AlternativeDS
@@ -195,41 +195,41 @@ inherited MainCashForm: TMainCashForm
       end
     end
     object cxSplitter1: TcxSplitter
-      Left = 706
+      Left = 489
       Top = 0
       Width = 3
       Height = 196
       AlignSplitter = salRight
       Control = AlternativeGrid
-      ExplicitLeft = 613
+      ExplicitLeft = 706
     end
   end
   object cxSplitter2: TcxSplitter [1]
     Left = 0
     Top = 216
-    Width = 960
+    Width = 743
     Height = 3
     AlignSplitter = salBottom
     Control = BottomPanel
-    ExplicitWidth = 867
+    ExplicitWidth = 960
   end
   object MainPanel: TPanel [2]
     Left = 0
     Top = 77
-    Width = 960
+    Width = 743
     Height = 139
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 867
+    ExplicitWidth = 960
     object MainGrid: TcxGrid
       Left = 0
       Top = 0
-      Width = 960
+      Width = 743
       Height = 106
       Align = alClient
       TabOrder = 0
-      ExplicitWidth = 867
+      ExplicitWidth = 960
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = MainGridDBTableViewFocusedRecordChanged
@@ -662,11 +662,11 @@ inherited MainCashForm: TMainCashForm
     object SearchPanel: TPanel
       Left = 0
       Top = 106
-      Width = 960
+      Width = 743
       Height = 33
       Align = alBottom
       TabOrder = 1
-      ExplicitWidth = 867
+      ExplicitWidth = 960
       object ShapeState: TShape
         Left = 751
         Top = 13
@@ -882,14 +882,14 @@ inherited MainCashForm: TMainCashForm
   object pnlVIP: TPanel [3]
     Left = 0
     Top = 21
-    Width = 960
+    Width = 743
     Height = 17
     Align = alTop
     Color = 15656679
     ParentBackground = False
     TabOrder = 3
     Visible = False
-    ExplicitWidth = 867
+    ExplicitWidth = 960
     object Label1: TLabel
       Left = 1
       Top = 1
@@ -908,7 +908,7 @@ inherited MainCashForm: TMainCashForm
     object lblCashMember: TLabel
       Left = 72
       Top = 1
-      Width = 555
+      Width = 338
       Height = 15
       Align = alClient
       Caption = '...'
@@ -922,7 +922,7 @@ inherited MainCashForm: TMainCashForm
       ExplicitHeight = 13
     end
     object Label2: TLabel
-      Left = 627
+      Left = 410
       Top = 1
       Width = 64
       Height = 15
@@ -934,11 +934,11 @@ inherited MainCashForm: TMainCashForm
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      ExplicitLeft = 534
+      ExplicitLeft = 627
       ExplicitHeight = 13
     end
     object lblBayer: TLabel
-      Left = 691
+      Left = 474
       Top = 1
       Width = 268
       Height = 15
@@ -957,14 +957,14 @@ inherited MainCashForm: TMainCashForm
   object pnlDiscount: TPanel [4]
     Left = 0
     Top = 38
-    Width = 960
+    Width = 743
     Height = 21
     Align = alTop
     Color = 15656679
     ParentBackground = False
     TabOrder = 4
     Visible = False
-    ExplicitWidth = 867
+    ExplicitWidth = 960
     object Label3: TLabel
       Left = 1
       Top = 1
@@ -983,7 +983,7 @@ inherited MainCashForm: TMainCashForm
     object lblDiscountExternalName: TLabel
       Left = 56
       Top = 1
-      Width = 337
+      Width = 209
       Height = 19
       Align = alLeft
       AutoSize = False
@@ -994,10 +994,9 @@ inherited MainCashForm: TMainCashForm
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentFont = False
-      ExplicitHeight = 16
     end
     object Label5: TLabel
-      Left = 393
+      Left = 265
       Top = 1
       Width = 114
       Height = 19
@@ -1009,12 +1008,13 @@ inherited MainCashForm: TMainCashForm
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitLeft = 393
       ExplicitHeight = 13
     end
     object lblDiscountCardNumber: TLabel
-      Left = 507
+      Left = 379
       Top = 1
-      Width = 154
+      Width = 110
       Height = 19
       Align = alLeft
       AutoSize = False
@@ -1025,10 +1025,9 @@ inherited MainCashForm: TMainCashForm
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentFont = False
-      ExplicitHeight = 16
     end
     object lblPrice: TLabel
-      Left = 661
+      Left = 489
       Top = 1
       Width = 74
       Height = 19
@@ -1040,11 +1039,11 @@ inherited MainCashForm: TMainCashForm
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      ExplicitHeight = 13
+      ExplicitTop = 2
     end
     object lblAmount: TLabel
-      Left = 827
-      Top = 1
+      Left = 650
+      Top = 2
       Width = 35
       Height = 13
       Caption = #1050#1086#1083'-'#1074#1086
@@ -1056,28 +1055,28 @@ inherited MainCashForm: TMainCashForm
       ParentFont = False
     end
     object edPrice: TcxCurrencyEdit
-      Left = 741
-      Top = 0
+      Left = 567
+      Top = -1
       Properties.DisplayFormat = ',0.00;-,0.00'
       TabOrder = 0
-      Width = 80
+      Width = 60
     end
     object edAmount: TcxCurrencyEdit
-      Left = 866
-      Top = 0
+      Left = 691
+      Top = -1
       Properties.DisplayFormat = ',0.000;-,0.000'
       TabOrder = 1
-      Width = 80
+      Width = 38
     end
   end
   object Panel1: TPanel [5]
     Left = 0
     Top = 0
-    Width = 960
+    Width = 743
     Height = 21
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 867
+    ExplicitWidth = 960
     object lbScaner: TLabel
       Left = 185
       Top = 2
@@ -1104,14 +1103,14 @@ inherited MainCashForm: TMainCashForm
   object pnlSP: TPanel [6]
     Left = 0
     Top = 59
-    Width = 960
+    Width = 743
     Height = 18
     Align = alTop
     Color = 15656679
     ParentBackground = False
     TabOrder = 6
     Visible = False
-    ExplicitWidth = 867
+    ExplicitWidth = 960
     object Label4: TLabel
       Left = 1
       Top = 1
@@ -1130,7 +1129,7 @@ inherited MainCashForm: TMainCashForm
     object lblPartnerMedicalName: TLabel
       Left = 64
       Top = 1
-      Width = 507
+      Width = 290
       Height = 16
       Align = alClient
       Caption = '...'
@@ -1144,7 +1143,7 @@ inherited MainCashForm: TMainCashForm
       ExplicitHeight = 14
     end
     object Label7: TLabel
-      Left = 571
+      Left = 354
       Top = 1
       Width = 26
       Height = 16
@@ -1156,11 +1155,11 @@ inherited MainCashForm: TMainCashForm
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      ExplicitLeft = 478
+      ExplicitLeft = 571
       ExplicitHeight = 13
     end
     object lblMedicSP: TLabel
-      Left = 597
+      Left = 380
       Top = 1
       Width = 362
       Height = 16
@@ -1814,7 +1813,7 @@ inherited MainCashForm: TMainCashForm
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
-    Left = 736
+    Left = 632
     Top = 88
   end
   object spSelectRemains: TdsdStoredProc
