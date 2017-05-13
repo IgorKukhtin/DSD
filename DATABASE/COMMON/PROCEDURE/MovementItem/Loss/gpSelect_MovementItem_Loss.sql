@@ -125,9 +125,15 @@ BEGIN
 
             -- Остатки
           , tmpDescWhereObject AS (SELECT zc_ContainerLinkObject_Unit() AS DescId UNION SELECT zc_ContainerLinkObject_Member() AS DescId)
-          , tmpRemains AS (SELECT Container.Id                                AS ContainerId
+          , tmpRemains AS (SELECT CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                                                    , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                                                    , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                                     )
+                                            THEN 0
+                                       ELSE Container.Id
+                                  END AS ContainerId
                                 , Container.ObjectId                          AS GoodsId
-                                , Container.Amount                            AS Amount
+                                , SUM (Container.Amount)                      AS Amount
                                 , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
                            FROM tmpDescWhereObject
                                 INNER JOIN ContainerLinkObject AS CLO_Unit
@@ -140,7 +146,20 @@ BEGIN
                                 LEFT JOIN ContainerLinkObject AS CLO_Account
                                                               ON CLO_Account.ContainerId = CLO_Unit.ContainerId
                                                              AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                                LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                     ON ObjectLink_Goods_InfoMoney.ObjectId = Container.ObjectId
+                                                    AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                                LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
                            WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
+                           GROUP BY CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                                                      , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                                                      , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                                       )
+                                              THEN 0
+                                         ELSE Container.Id
+                                    END
+                                  , Container.ObjectId
+                                  , COALESCE (CLO_GoodsKind.ObjectId, 0)
                           )
 
        -- Результат
@@ -188,7 +207,7 @@ BEGIN
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId 
+                                 ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpGoods.GoodsId
@@ -246,21 +265,21 @@ BEGIN
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-    
+
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = tmpMI.AssetId
             LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMI.PartionGoodsId
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Price ON ObjectFloat_Price.ObjectId = tmpMI.PartionGoodsId                      -- цена
-                                                      AND ObjectFloat_Price.DescId = zc_ObjectFloat_PartionGoods_Price()   
+                                                      AND ObjectFloat_Price.DescId = zc_ObjectFloat_PartionGoods_Price()
             LEFT JOIN ObjectLink AS ObjectLink_Storage ON ObjectLink_Storage.ObjectId = tmpMI.PartionGoodsId 		        -- склад
-                                                      AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage() 
-            LEFT JOIN Object AS Object_Storage_Partion ON Object_Storage_Partion.Id = ObjectLink_Storage.ChildObjectId 
+                                                      AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
+            LEFT JOIN Object AS Object_Storage_Partion ON Object_Storage_Partion.Id = ObjectLink_Storage.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit ON ObjectLink_Unit.ObjectId = tmpMI.PartionGoodsId		        -- подразделение
                                                    AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
             LEFT JOIN ObjectDate as objectdate_value ON objectdate_value.ObjectId = tmpMI.PartionGoodsId                    -- дата
-                                                    AND objectdate_value.DescId = zc_ObjectDate_PartionGoods_Value()  
+                                                    AND objectdate_value.DescId = zc_ObjectDate_PartionGoods_Value()
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
@@ -287,9 +306,15 @@ BEGIN
      RETURN QUERY
      WITH   -- Остатки
             tmpDescWhereObject AS (SELECT zc_ContainerLinkObject_Unit() AS DescId UNION SELECT zc_ContainerLinkObject_Member() AS DescId)
-          , tmpRemains AS (SELECT Container.Id                                AS ContainerId
+          , tmpRemains AS (SELECT CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                                                    , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                                                    , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                                     )
+                                            THEN 0
+                                       ELSE Container.Id
+                                  END AS ContainerId
                                 , Container.ObjectId                          AS GoodsId
-                                , Container.Amount                            AS Amount
+                                , SUM (Container.Amount)                      AS Amount
                                 , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
                            FROM tmpDescWhereObject
                                 INNER JOIN ContainerLinkObject AS CLO_Unit
@@ -302,7 +327,20 @@ BEGIN
                                 LEFT JOIN ContainerLinkObject AS CLO_Account
                                                               ON CLO_Account.ContainerId = CLO_Unit.ContainerId
                                                              AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                                LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                     ON ObjectLink_Goods_InfoMoney.ObjectId = Container.ObjectId
+                                                    AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                                LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
                            WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
+                           GROUP BY CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                                                      , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                                                      , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                                       )
+                                              THEN 0
+                                         ELSE Container.Id
+                                    END
+                                  , Container.ObjectId
+                                  , COALESCE (CLO_GoodsKind.ObjectId, 0)
                           )
        -- Результат
        SELECT
@@ -378,27 +416,27 @@ BEGIN
                                              ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
             LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = MILinkObject_PartionGoods.ObjectId
-    
+
             LEFT JOIN ObjectFloat AS ObjectFloat_Price ON ObjectFloat_Price.ObjectId = Object_PartionGoods.Id                      -- цена
-                                                      AND ObjectFloat_Price.DescId = zc_ObjectFloat_PartionGoods_Price()   
+                                                      AND ObjectFloat_Price.DescId = zc_ObjectFloat_PartionGoods_Price()
             LEFT JOIN ObjectLink AS ObjectLink_Storage ON ObjectLink_Storage.ObjectId = Object_PartionGoods.Id 		        -- склад
-                                                      AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage() 
-            LEFT JOIN Object AS Object_Storage_Partion ON Object_Storage_Partion.Id = ObjectLink_Storage.ChildObjectId 
+                                                      AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
+            LEFT JOIN Object AS Object_Storage_Partion ON Object_Storage_Partion.Id = ObjectLink_Storage.ChildObjectId
             LEFT JOIN ObjectLink AS ObjectLink_Unit ON ObjectLink_Unit.ObjectId = Object_PartionGoods.Id		        -- подразделение
                                                    AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
-       
+
             LEFT JOIN ObjectDate as objectdate_value ON objectdate_value.ObjectId = Object_PartionGoods.Id                    -- дата
-                                                    AND objectdate_value.DescId = zc_ObjectDate_PartionGoods_Value() 
-         
+                                                    AND objectdate_value.DescId = zc_ObjectDate_PartionGoods_Value()
+
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-                                  
+
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId 
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = Object_Goods.Id
                                 AND tmpRemains.GoodsKindId = CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901() -- Ирна
@@ -423,7 +461,7 @@ ALTER FUNCTION gpSelect_MovementItem_Loss (Integer, Boolean, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 28.07.16         * 
+ 28.07.16         *
  31.03.15         * add GoodsGroupNameFull, MeasureName
  17.10.14         * add св-ва PartionGoods
  08.10.14                                        * add Object_InfoMoney_View

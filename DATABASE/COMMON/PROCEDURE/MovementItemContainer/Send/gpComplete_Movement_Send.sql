@@ -333,6 +333,27 @@ BEGIN
              ) AS _tmp;
 
 
+     -- Проверка - т.к.для этих УП-статей могли искать партии - надо что б товар был уникальным
+     IF EXISTS (SELECT _tmpItem.GoodsId FROM _tmpItem
+                WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                        , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                        , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                         )
+                GROUP BY _tmpItem.GoodsId
+                HAVING COUNT(*) > 1)
+     THEN
+          RAISE EXCEPTION 'Ошибка.В документе нельзя дублировать товар <%>.'
+              , lfGet_Object_ValueData (
+               (SELECT _tmpItem.GoodsId FROM _tmpItem
+                WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                        , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                        , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                         )
+                GROUP BY _tmpItem.GoodsId
+                HAVING COUNT(*) > 1));
+     END IF;
+
+
      -- формируются Партии товара, ЕСЛИ надо ...
      UPDATE _tmpItem SET PartionGoodsId_From = CASE WHEN _tmpItem.OperDate >= zc_DateStart_PartionGoods()
                                                      AND _tmpItem.AccountDirectionId_From = zc_Enum_AccountDirection_20200() -- Запасы + на складах
@@ -382,8 +403,8 @@ BEGIN
                                                                                                              )
                                                                   WHEN _tmpItem.MemberId_To <> 0
                                                                        THEN -- !!!Партия создается - вдруг изменился StorageId
-                                                                            lpInsertFind_Object_PartionGoods (inUnitId_Partion:= 0 -- (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem.PartionGoodsId_Item AND OL.DescId = zc_ObjectLink_PartionGoods_Unit())
-                                                                                                            , inGoodsId       := 1 -- CASE WHEN _tmpItem.PartionGoodsId_Item > 0 THEN _tmpItem.GoodsId ELSE 0 END
+                                                                            lpInsertFind_Object_PartionGoods (inUnitId_Partion:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem.PartionGoodsId_Item AND OL.DescId = zc_ObjectLink_PartionGoods_Unit())
+                                                                                                            , inGoodsId       := CASE WHEN _tmpItem.PartionGoodsId_Item > 0 THEN _tmpItem.GoodsId ELSE 0 END
                                                                                                             , inStorageId     := _tmpItem.StorageId_Item
                                                                                                             , inInvNumber     := (SELECT Object.ObjectCode FROM Object WHERE Object.Id = _tmpItem.PartionGoodsId_Item) :: TVarChar
                                                                                                             , inOperDate      := (SELECT OD.ValueData  FROM ObjectDate  AS OD  WHERE OD.ObjectId  = _tmpItem.PartionGoodsId_Item AND OD.DescId  = zc_ObjectDate_PartionGoods_Value())

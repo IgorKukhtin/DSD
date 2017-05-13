@@ -570,6 +570,14 @@ end if;*/
              RAISE EXCEPTION 'Ошибка.Нельзя сохранить данный тип документа.';
          END IF;
 
+        -- дописали св-во - Заявка - т.к. в Приходе криво
+        IF vbMovementDescId = zc_Movement_Income()
+        THEN
+            PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Order(), vbMovementId_begin
+                                                       , (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Order())
+                                                        );
+        END IF;
+
         -- дописали св-во - Через кого поступил возврат
         IF vbMovementDescId = zc_Movement_ReturnIn()
         THEN
