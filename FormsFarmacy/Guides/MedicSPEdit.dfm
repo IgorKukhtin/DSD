@@ -199,7 +199,7 @@
         Name = 'PartnerMedicalName'
         Value = Null
         Component = PartnerMedicalGuides
-        ComponentItem = 'Key'
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>

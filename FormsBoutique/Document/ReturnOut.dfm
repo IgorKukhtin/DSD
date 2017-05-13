@@ -966,7 +966,7 @@ object ReturnOutForm: TReturnOutForm
         end
         item
           DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
+          UserName = 'frxDBDItems'
         end>
       Params = <
         item

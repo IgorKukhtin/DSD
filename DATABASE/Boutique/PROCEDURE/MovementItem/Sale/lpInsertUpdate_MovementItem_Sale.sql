@@ -74,6 +74,12 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalReturn(), ioId, inTotalReturn);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPayReturn(), ioId, inTotalPayReturn);
+
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, inChangePercent);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, inSummChangePercent);
+
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_BarCode(), ioId, inBarCode);
 

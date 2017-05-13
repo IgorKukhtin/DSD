@@ -687,6 +687,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       Left = 942
       Top = 5
       TabOrder = 9
+      Text = '0'
       Width = 79
     end
     object cxLabel7: TcxLabel
@@ -862,7 +863,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'UnitName;HospitalName;IntenalSPName'
+          IndexFieldNames = 'HospitalName;NumLine'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -882,7 +883,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         end
         item
           Name = 'Invoice'
-          Value = Null
+          Value = '0'
           Component = edInvoice
           DataType = ftString
           MultiSelectSeparator = ','
