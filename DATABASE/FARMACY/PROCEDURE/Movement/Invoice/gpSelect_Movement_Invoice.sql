@@ -35,6 +35,7 @@ RETURNS TABLE (Id Integer
              , PartnerMedical_BankAccount TVarChar
              , PartnerMedical_BankName    TVarChar
              , isDocument  Boolean
+             , SPName TVarChar
 
               )
 
@@ -111,6 +112,10 @@ BEGIN
 
       , COALESCE(MovementBoolean_Document.ValueData, False) :: Boolean  AS isDocument
 
+      , CASE WHEN COALESCE(MovementFloat_SP.ValueData,0) = 1 THEN 'Cоц.проект' 
+             WHEN COALESCE(MovementFloat_SP.ValueData,0) = 2 THEN 'Приказ 1303' 
+             ELSE ''
+        END  :: TVarChar AS SPName
     FROM tmpStatus
         INNER JOIN Movement ON Movement.StatusId = tmpStatus.StatusId
                            AND Movement.DescId = zc_Movement_Invoice()
@@ -168,6 +173,10 @@ BEGIN
         LEFT JOIN tmpBankAccount AS tmpPartnerMedicalBankAccount 
                                  ON tmpPartnerMedicalBankAccount.JuridicalId = ObjectLink_PartnerMedical_Juridical.ChildObjectId  --ObjectLink_PartnerMedical_Juridical.ChildObjectId
                                 AND tmpPartnerMedicalBankAccount.BankAccount = ObjectHistory_PartnerMedicalDetails.BankAccount
+        
+        LEFT JOIN MovementFloat AS MovementFloat_SP
+                                ON MovementFloat_SP.MovementId = Movement.Id
+                               AND MovementFloat_SP.DescId = zc_MovementFloat_SP()
 
 
 ;
@@ -180,6 +189,7 @@ ALTER FUNCTION gpSelect_Movement_Invoice (TDateTime, TDateTime, Boolean, TVarCha
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 13.05.17         * add SPName
  21.04.17         *
  22.03.17         *
 */
