@@ -4665,10 +4665,10 @@ begin
              if fStop then begin HideCurGrid(False); exit;end;
 
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inPriceListId').Value:=FieldByName('PriceListId').AsString;
-             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsString;
-             toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsString;
-             toStoredProc.Params.ParamByName('inValue').Value:=FieldByName('Value').AsString;
+             toStoredProc.Params.ParamByName('inPriceListId').Value:=FieldByName('PriceListId').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
+             toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
+             toStoredProc.Params.ParamByName('inValue').Value:=FieldByName('Value').AsFloat;
              //
 
              if not myExecToStoredProc then ;//exit;
