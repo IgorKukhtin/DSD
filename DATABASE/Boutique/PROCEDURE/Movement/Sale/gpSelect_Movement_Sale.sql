@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSummBalance TFloat, TotalSummPriceList TFloat
-             , TotalSummChange TFloat, TotalSummPay TFloat, TotalSummPayOth TFloat
+             , TotalSummChange TFloat, TotalSummChangePay TFloat, TotalSummPay TFloat, TotalSummPayOth TFloat
              , TotalCountReturn TFloat, TotalSummReturn TFloat, TotalSummPayReturn TFloat
              , FromName TVarChar, ToName TVarChar
              , Comment TVarChar
@@ -43,6 +43,7 @@ BEGIN
            , MovementFloat_TotalSummPriceList.ValueData  AS TotalSummPriceList
 
            , MovementFloat_TotalSummChange.ValueData     AS TotalSummChange
+           , MovementFloat_TotalSummChangePay.ValueData  AS TotalSummChangePay
            , MovementFloat_TotalSummPay.ValueData        AS TotalSummPay
            , MovementFloat_TotalSummPayOth.ValueData     AS TotalSummPayOth
            , MovementFloat_TotalCountReturn.ValueData    AS TotalCountReturn
@@ -78,6 +79,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummChange
                                     ON MovementFloat_TotalSummChange.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummChange.DescId = zc_MovementFloat_TotalSummChange()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummChangePay
+                                    ON MovementFloat_TotalSummChangePay.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummChangePay.DescId = zc_MovementFloat_TotalSummChangePay()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPay
                                     ON MovementFloat_TotalSummPay.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummPay.DescId = zc_MovementFloat_TotalSummPay()

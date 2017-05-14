@@ -56,6 +56,7 @@ type
     procedure CreateLoss;
     procedure CreateCurrency;
     procedure CreateInventory;
+    procedure CreateSale;
 end;
 
 type
@@ -477,6 +478,10 @@ end;
 procedure TdbMovementItemContainerProcedureTest.CreateInventory;
 begin
   DirectoryLoad(CommonProcedurePath + 'MovementItemContainer\Inventory\');
+end;
+procedure TdbMovementItemContainerProcedureTest.CreateSale;
+begin
+  DirectoryLoad(CommonProcedurePath + 'MovementItemContainer\Sale\');
 end;
 initialization
 
