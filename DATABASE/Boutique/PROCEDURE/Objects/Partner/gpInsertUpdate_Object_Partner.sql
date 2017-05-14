@@ -27,14 +27,14 @@ BEGIN
      || '-' || COALESCE ((SELECT Object.ValueData FROM Object WHERE Object.Id = inPeriodId), '')
      || '-' || COALESCE ((inPeriodYear :: Integer) :: TVarChar, '');
 
+   -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
+   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) <> 0 THEN  ioCode := NEXTVAL ('Object_Partner_seq'); 
+   END IF; 
+
    -- Нужен для загрузки из Sybase т.к. там код = 0 
    IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_Partner_seq'); 
    ELSEIF ioCode = 0
-         THEN ioCode := coalesce((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
-   END IF; 
-
-   -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
-   IF COALESCE (ioId, 0) = 0 THEN  ioCode := NEXTVAL ('Object_Partner_seq'); 
+         THEN ioCode := COALESCE((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
    END IF; 
 
    -- сохранили <Объект>
@@ -62,6 +62,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятикин А.А.
+13.05.17                                                           *
 08.05.17                                                           *
 06.03.17                                                           *
 27.02.17                                                           *
