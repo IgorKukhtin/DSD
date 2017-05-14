@@ -84,7 +84,7 @@ BEGIN
      IF inCompositionName <> ''
      THEN
          -- Поиск !!!без Группы!!!
-         vbCompositionId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Composition() AND UPPER (Object.ValueData) LIKE UPPER (inCompositionName) limit 1);   -- limit 1 так как ошибка  LIKE UPPER ('100%шерсть')
+         vbCompositionId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Composition() AND TRIM (UPPER (Object.ValueData), '\%')  LIKE TRIM (UPPER (inCompositionName), '\%') limit 1);   -- limit 1 так как ошибка  для inCompositionName = '100%шерсть'  возвращает 2 строки       
          --
          IF COALESCE (vbCompositionId,0) = 0
          THEN
@@ -103,7 +103,7 @@ BEGIN
      IF COALESCE (TRIM (inGoodsInfoName), '') <> ''
      THEN
          -- Поиск !!!без Группы!!!
-         vbGoodsInfoId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsInfo() AND UPPER (Object.ValueData) LIKE UPPER (inGoodsInfoName));
+         vbGoodsInfoId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsInfo() AND TRIM (UPPER (Object.ValueData), '\%') LIKE TRIM (UPPER (inGoodsInfoName), '\%'));   --  '\%'  так как ошибка для  inGoodsInfoName = '\текст  '   так как обратный слеше не экранирован в параметре постгреса 
          --
          IF COALESCE (vbGoodsInfoId, 0) = 0
          THEN
