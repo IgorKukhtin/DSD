@@ -112,6 +112,8 @@ type
     Price4_cost: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    actPrint_Calc_PriceListExcel: TdsdPrintAction;
+    bbPrint_Calc_PriceListExcel: TdxBarButton;
   private
     { Private declarations }
   public

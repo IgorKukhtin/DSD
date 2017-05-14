@@ -35,6 +35,7 @@ type
     InvNumberRegistered: TcxGridDBColumn;
     UpdateDataSet: TdsdUpdateDataSet;
     clisDocument: TcxGridDBColumn;
+    clSPName: TcxGridDBColumn;
   private
     { Private declarations }
   public

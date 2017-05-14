@@ -80,23 +80,23 @@ BEGIN
 */
 
     IF inEndDate >= DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAl '3 DAY') AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 15 AND inSession NOT IN ('9463', '106593', '106594', '140094')
-         AND ((1+4)  < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%')
-           OR (10+5) < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active'))
+         AND ((1+7)  < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%')
+           OR (10+8) < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active'))
     THEN
         RAISE EXCEPTION 'Кол-во АП = <%> / <%>.Повторите действие через 30 мин.'
                       , (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active') - 1
                       , (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%') - 1
                        ;
     ELSEIF inEndDate >= DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAl '3 DAY') AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 15
-         AND ((1+4) < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%')
-           OR (15+5) < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active'))
+         AND ((1+7) < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%')
+           OR (15+8) < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active'))
     THEN
         RAISE EXCEPTION 'Кол-во АП = <%> / <%>.Повторите действие через 5 мин.'
                       , (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active') - 1
                       , (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%') - 1
                        ;
     ELSEIF inEndDate >= DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAl '3 DAY')
-         AND ((2+7)  < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%')
+         AND ((2+10)  < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active' AND query LIKE '%gpReport_GoodsMI_SaleReturnIn%')
            OR (15+5) < (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active'))
     THEN
         RAISE EXCEPTION 'Кол-во АП = <%> / <%>.Повторите действие через 3 мин.'

@@ -77,6 +77,14 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 303
           end
+          object clSPName: TcxGridDBColumn [1]
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072
+            DataBinding.FieldName = 'SPName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             Options.Editing = False

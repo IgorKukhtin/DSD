@@ -47,6 +47,10 @@ BEGIN
      END IF;
 
 
+     -- меняем параметр - !!!ВРЕМЕННО будет 1 партия в Месяц - последним днем!!!
+     inOperDate:= DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY';
+
+
      IF COALESCE (inStorageId, 0) = 0
      THEN
          -- Находим по св-вам: Товар + Дата перемещения + Инвентарный номер + Место учета + Место хранения=NULL

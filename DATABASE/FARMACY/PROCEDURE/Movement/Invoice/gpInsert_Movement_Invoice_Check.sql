@@ -99,6 +99,7 @@ BEGIN
                                            , inStartDate       := inStartDate
                                            , inEndDate         := inEndDate
                                            , inTotalSumm       := SUM(tmpReport.SummaComp):: Tfloat
+                                           , inValueSP         := 1 :: Tfloat
                                            , inUserId          := vbUserId
                                            )
      FROM tmpReport
@@ -164,5 +165,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.
+ 13.05.17         * add inValueSP
  18.04.17         *
 */

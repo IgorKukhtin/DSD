@@ -379,6 +379,8 @@ BEGIN
                       , MovementItem.Amount                                    AS Amount
                       , 0                                                      AS AmountSecond
                       , COALESCE (lfObjectHistory_PriceListItem.ValuePrice, 0) AS Price
+                      , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                           ORDER BY MovementItem.Amount DESC) AS Ord
                  FROM MovementItem
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -387,8 +389,8 @@ BEGIN
                              AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = MovementItem.ObjectId
 
                  WHERE MovementItem.MovementId = inMovementId
-                   AND MovementItem.DescId =  zc_MI_Master()
-                   AND MovementItem.isErased = FALSE
+                   AND MovementItem.DescId     =  zc_MI_Master()
+                   AND MovementItem.isErased   = FALSE
                 UNION ALL
                  SELECT MovementItem.Id                                     AS MovementItemId
                       , 0                                                   AS MovementItemId_EDI
@@ -397,6 +399,7 @@ BEGIN
                       , 0                                                   AS Amount
                       , COALESCE (MIFloat_AmountSecond.ValueData, 0)        AS AmountSecond
                       , COALESCE (MIFloat_Price.ValueData, 0)               AS Price
+                      , 1 AS Ord
                  FROM MovementItem
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -411,6 +414,7 @@ BEGIN
                    AND MovementItem.DescId =  zc_MI_Master()
                    AND MovementItem.isErased = FALSE
                 ) AS tmpMI
+           WHERE tmpMI.Ord = 1
            GROUP BY tmpMI.GoodsId
                   , tmpMI.GoodsKindId
                   -- , tmpMI.Price
