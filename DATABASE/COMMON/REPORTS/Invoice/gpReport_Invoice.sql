@@ -154,9 +154,9 @@ BEGIN
                       )
                      
       , tmpIncome AS (SELECT MIFloat_Income.ValueData :: Integer AS MovementItemId_Invoice
-                           , MIContainer.OperDate AS OperDate
-                           , CASE WHEN MIContainer.OperDate < inStartDate THEN -1 * MIContainer.Amount ELSE 0  END AS IncomeSumma_Before
-                           , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -1 * MIContainer.Amount ELSE 0 END AS IncomeSumma
+                           -- , MIContainer.OperDate AS OperDate
+                           , SUM (CASE WHEN MIContainer.OperDate < inStartDate                     THEN -1 * MIContainer.Amount ELSE 0 END) AS IncomeSumma_Before
+                           , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -1 * MIContainer.Amount ELSE 0 END) AS IncomeSumma
                       FROM MovementItemFloat AS MIFloat_Income
                            INNER JOIN MovementItem ON MovementItem.Id = MIFloat_Income.MovementItemId 
                            INNER JOIN MovementItemContainer AS MIContainer
@@ -167,6 +167,8 @@ BEGIN
                                                            AND MIContainer.isActive       = FALSE
                       WHERE MIFloat_Income.ValueData IN (SELECT tmpMIInvoice.MovementItemId FROM tmpMIInvoice)
                         AND MIFloat_Income.DescId = zc_MIFloat_MovementItemId()
+                      GROUP BY MIFloat_Income.ValueData
+                             -- , MIContainer.OperDate
                      )
           
   , tmpIncomeGroup AS (SELECT tmpMIInvoice.MovementId            AS MovementId_Invoice

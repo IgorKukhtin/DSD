@@ -48,9 +48,15 @@ begin
           ModalResult:=mrNone; // не надо закрывать
           exit;
     end;
-    if StrToDate(edOperDateSP.Text) < NOW - 31 then
+    if StrToDate(edOperDateSP.Text) < NOW - 30 then
     begin ActiveControl:=edOperDateSP;
-          ShowMessage ('Ошибка.Значение <Дата рецепта> не может быть раньше чем <'+DateToStr(NOW - 31)+'>');
+          ShowMessage ('Ошибка.Значение <Дата рецепта> не может быть раньше чем <'+DateToStr(NOW - 30)+'>');
+          ModalResult:=mrNone; // не надо закрывать
+          exit;
+    end;
+    if StrToDate(edOperDateSP.Text) > NOW then
+    begin ActiveControl:=edOperDateSP;
+          ShowMessage ('Ошибка.Значение <Дата рецепта> не может быть позже чем <'+DateToStr(NOW)+'>');
           ModalResult:=mrNone; // не надо закрывать
           exit;
     end;
