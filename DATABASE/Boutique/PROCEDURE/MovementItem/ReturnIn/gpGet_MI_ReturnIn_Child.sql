@@ -1,10 +1,9 @@
 -- Function: gpGet_Movement_Income()
 
-DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_ReturnIn_Child (Integer, Integer, TVarChar);
 
 
-CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child(
+CREATE OR REPLACE FUNCTION gpGet_MI_ReturnIn_Child(
     IN inId             Integer  , -- ключ
     IN inMovementId     Integer  , --
     IN inSession        TVarChar   -- сессия пользователя
@@ -185,8 +184,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
- 10.04.17         *
+ 15.05.17         *
 */
 
 -- тест
--- select * from gpGet_MI_Sale_Child(inId := 92 , inMovementId := 28 ,  inSession := '2');
+-- SELECT * FROM gpGet_MI_ReturnIn_Child (inId := 92 , inMovementId := 28 ,  inSession := '2');

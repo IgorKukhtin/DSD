@@ -28,6 +28,7 @@ type
     procedure CreateIncome;
     procedure CreateReturnOut;
     procedure CreateSale;
+    procedure CreateReturnIn;
     procedure CreateSend;
     procedure CreateLoss;
     procedure CreateCurrency;
@@ -41,6 +42,7 @@ type
     procedure CreateIncome;
     procedure CreateReturnOut;
     procedure CreateSale;
+    procedure CreateReturnIn;
     procedure CreateSend;
     procedure CreateLoss;
     procedure CreateInventory;
@@ -52,11 +54,12 @@ type
     procedure CreateCOMMON;
     procedure CreateIncome;
     procedure CreateReturnOut;
+    procedure CreateSale;
+    procedure CreateReturnIn;
     procedure CreateSend;
     procedure CreateLoss;
     procedure CreateCurrency;
     procedure CreateInventory;
-    procedure CreateSale;
 end;
 
 type
@@ -172,6 +175,10 @@ end;
 procedure TdbMovementProcedureTest.CreateReturnOut;
 begin
   DirectoryLoad(CommonProcedurePath + 'Movement\ReturnOut\');
+end;
+procedure TdbMovementProcedureTest.CreateReturnIn;
+begin
+  DirectoryLoad(CommonProcedurePath + 'Movement\ReturnIn\');
 end;
 procedure TdbMovementProcedureTest.CreateSale;
 begin
@@ -431,6 +438,11 @@ procedure TdbMovementItemProcedureTest.CreateReturnOut;
 begin
   DirectoryLoad(CommonProcedurePath + 'MovementItem\ReturnOut\');
 end;
+procedure TdbMovementItemProcedureTest.CreateReturnIn;
+begin
+  DirectoryLoad(CommonProcedurePath + 'MovementItem\ReturnIn\');
+end;
+
 procedure TdbMovementItemProcedureTest.CreateSale;
 begin
   DirectoryLoad(CommonProcedurePath + 'MovementItem\Sale\');
@@ -462,6 +474,11 @@ procedure TdbMovementItemContainerProcedureTest.CreateReturnOut;
 begin
   DirectoryLoad(CommonProcedurePath + 'MovementItemContainer\ReturnOut\');
 end;
+procedure TdbMovementItemContainerProcedureTest.CreateReturnIn;
+begin
+  DirectoryLoad(CommonProcedurePath + 'MovementItemContainer\ReturnIn\');
+end;
+
 procedure TdbMovementItemContainerProcedureTest.CreateSend;
 begin
   DirectoryLoad(CommonProcedurePath + 'MovementItemContainer\Send\');

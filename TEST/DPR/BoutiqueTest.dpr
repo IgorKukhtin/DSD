@@ -209,8 +209,10 @@ uses
   InfoMoneyGroupEdit in '..\..\FormsBoutique\Guides\InfoMoneyGroupEdit.pas' {InfoMoneyGroupEditForm: TParentForm},
   InfoMoneyDestination in '..\..\FormsBoutique\Guides\InfoMoneyDestination.pas' {InfoMoneyDestinationForm: TParentForm},
   InfoMoneyDestination_Object in '..\..\FormsBoutique\Guides\InfoMoneyDestination_Object.pas' {InfoMoneyDestination_ObjectForm: TParentForm},
-  InfoMoneyDestinationEdit in '..\..\FormsBoutique\Guides\InfoMoneyDestinationEdit.pas' {InfoMoneyDestinationEditForm: TParentForm}
-;
+  InfoMoneyDestinationEdit in '..\..\FormsBoutique\Guides\InfoMoneyDestinationEdit.pas' {InfoMoneyDestinationEditForm: TParentForm},
+  ReturnInJournal in '..\..\FormsBoutique\Document\ReturnInJournal.pas' {ReturnInJournalForm: TParentForm},
+  ReturnIn in '..\..\FormsBoutique\Document\ReturnIn.pas' {ReturnInForm: TParentForm},
+  ReturnInItemEdit in '..\..\FormsBoutique\Document\ReturnInItemEdit.pas' {ReturnInItemEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

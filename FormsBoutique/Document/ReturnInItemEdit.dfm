@@ -1,7 +1,7 @@
-object SaleItemEditForm: TSaleItemEditForm
+object ReturnInItemEditForm: TReturnInItemEditForm
   Left = 0
   Top = 0
-  Caption = #1054#1087#1083#1072#1090#1072
+  Caption = #1054#1087#1083#1072#1090#1072'/'#1074#1086#1079#1074#1088#1072#1090
   ClientHeight = 335
   ClientWidth = 438
   Color = clBtnFace
@@ -242,7 +242,7 @@ object SaleItemEditForm: TSaleItemEditForm
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_Sale_Child'
+    StoredProcName = 'gpInsertUpdate_MI_ReturnIn_Child'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -380,7 +380,7 @@ object SaleItemEditForm: TSaleItemEditForm
     Top = 40
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_MI_Sale_Child'
+    StoredProcName = 'gpGet_MI_ReturnIn_Child'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -483,7 +483,7 @@ object SaleItemEditForm: TSaleItemEditForm
     Top = 120
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 40
+    Left = 64
     Top = 288
   end
   object RefreshDispatcher: TRefreshDispatcher
