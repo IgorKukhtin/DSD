@@ -130,6 +130,7 @@ type
 //    procedure LoadRetailFormTest;
 //    procedure LoadReturnTypeFormTest;
     procedure LoadReturnOutFormTest;
+    procedure LoadReturnInFormTest;
     procedure LoadSaleFormTest;
     procedure LoadServiceFormTest;
     procedure LoadSendFormTest;
@@ -1009,6 +1010,16 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleItemEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleItemEditForm');
+end;
+procedure TLoadFormTest.LoadReturnInFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInItemEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnInItemEditForm');
 end;
 //
 //procedure TLoadFormTest.LoadReturnTypeFormTest;

@@ -216,9 +216,15 @@ CREATE OR REPLACE FUNCTION zc_Object_DiscountSaleKind() RETURNS Integer AS $BODY
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_DiscountSaleKind', 'Виды скидок при продаже' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_DiscountSaleKind');
 
+CREATE OR REPLACE FUNCTION zc_Object_PartionMI() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_PartionMI'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_PartionMI', 'Партии элементов продажи/возврата' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PartionMI');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.   Воробкало А. А.
+15.05.17          * zc_Object_PartionMI
 10.05.17                                                          *
 09.05.17                                                          *
 28.04.17          * add zc_Object_PriceList

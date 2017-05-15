@@ -1,4 +1,4 @@
-unit Income;
+unit ReturnIn;
 
 interface
 
@@ -24,10 +24,10 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox;
+  cxImageComboBox, cxSplitter;
 
 type
-  TIncomeForm = class(TParentForm)
+  TReturnInForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -99,13 +99,7 @@ type
     GuidesFrom: TdsdGuides;
     spGetTotalSumm: TdsdStoredProc;
     cxLabel12: TcxLabel;
-    edCurrencyValue: TcxCurrencyEdit;
-    cxLabel14: TcxLabel;
-    edCurrencyDocument: TcxButtonEdit;
-    CurrencyDocumentGuides: TdsdGuides;
-    cxLabel15: TcxLabel;
-    edCurrencyPartner: TcxButtonEdit;
-    CurrencyPartnerGuides: TdsdGuides;
+    edDiscountTax: TcxCurrencyEdit;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
     MovementItemProtocolOpenForm: TdsdOpenForm;
@@ -118,7 +112,6 @@ type
     spInsertMaskMIMaster: TdsdStoredProc;
     actAddMask: TdsdExecStoredProc;
     bbAddMask: TdxBarButton;
-    actGoodsChoiceForm: TOpenChoiceForm;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
     bbInsertRecord: TdxBarButton;
@@ -127,25 +120,51 @@ type
     bbactSetErasedCost: TdxBarButton;
     bbShowErasedCost: TdxBarButton;
     cxLabel5: TcxLabel;
-    edCurrencyPartnerValue: TcxCurrencyEdit;
+    edTotalLastSumm: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
-    ceParPartnerValue: TcxCurrencyEdit;
+    edTotalSummPay: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
-    ceParValue: TcxCurrencyEdit;
+    edTotalDebt: TcxCurrencyEdit;
     bbUpdateRecord1: TdxBarButton;
-    actInsertAction1: TdsdInsertUpdateAction;
-    actUpdateAction1: TdsdInsertUpdateAction;
-    macInsertAction: TMultiAction;
     actRefreshMI: TdsdDataSetRefresh;
-    macUpdateAction: TMultiAction;
     colPartionId: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
-    dxBarStatic1: TdxBarStatic;
-    dxBarButton1: TdxBarButton;
-    actPrintIn: TdsdPrintAction;
-    actPrintSticker: TdsdPrintAction;
-    dxBarButton2: TdxBarButton;
-    spSelectPrintSticker: TdsdStoredProc;
+    edHappyDate: TcxDateEdit;
+    cxLabel8: TcxLabel;
+    cxLabel9: TcxLabel;
+    ceCity: TcxTextEdit;
+    cxLabel10: TcxLabel;
+    ceAddress: TcxTextEdit;
+    cxLabel13: TcxLabel;
+    cePhoneMobile: TcxTextEdit;
+    cxLabel17: TcxLabel;
+    cePhone: TcxTextEdit;
+    cxLabel14: TcxLabel;
+    edLastDate: TcxDateEdit;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    ClientDataSet: TClientDataSet;
+    DataSource: TDataSource;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    BarCode: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    spSelectBarCode: TdsdStoredProc;
+    actGoodsChoiceForm: TOpenChoiceForm;
+    InsertRecord: TInsertRecord;
+    cbisPay: TcxCheckBox;
+    actInsertUpdateMIChild: TdsdInsertUpdateAction;
+    MacInsertUpdateMIChild: TMultiAction;
+    bbInsertUpdateMIChild: TdxBarButton;
+    actInsertUpdateMIChildTotal: TdsdInsertUpdateAction;
+    MacInsertUpdateMIChildTotal: TMultiAction;
+    bbInsertUpdateMIChildTotal: TdxBarButton;
+    cxLabel15: TcxLabel;
+    edStartDate: TcxDateEdit;
+    edEndDate: TcxDateEdit;
+    colPartionMI_Id: TcxGridDBColumn;
+    colSaleMI_Id: TcxGridDBColumn;
+    RefreshDispatcher: TRefreshDispatcher;
   private
   public
   end;
@@ -155,6 +174,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TIncomeForm);
+  RegisterClass(TReturnInForm);
 
 end.
