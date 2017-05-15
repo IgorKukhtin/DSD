@@ -145,6 +145,7 @@ type
     actPrintIn: TdsdPrintAction;
     actPrintSticker: TdsdPrintAction;
     dxBarButton2: TdxBarButton;
+    spSelectPrintSticker: TdsdStoredProc;
   private
   public
   end;
