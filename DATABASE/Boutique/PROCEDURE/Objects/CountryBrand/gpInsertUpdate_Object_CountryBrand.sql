@@ -18,14 +18,14 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_CountryBrand());
    vbUserId:= lpGetUserBySession (inSession);
 
+   -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
+   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) <> 0 THEN  ioCode := NEXTVAL ('Object_CountryBrand_seq'); 
+   END IF; 
+
    -- Нужен для загрузки из Sybase т.к. там код = 0 
    IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_CountryBrand_seq'); 
    ELSEIF ioCode = 0
-         THEN ioCode := coalesce((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
-   END IF; 
-
-   -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
-   IF COALESCE (ioId, 0) = 0 THEN  ioCode := NEXTVAL ('Object_CountryBrand_seq'); 
+         THEN ioCode := COALESCE((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
    END IF; 
 
    -- проверка уникальности для свойства <Наименование Страна производитель>
@@ -50,9 +50,8 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+13.05.17                                                          *
 17.02.17                                                          *
-
-
 */
 
 -- тест

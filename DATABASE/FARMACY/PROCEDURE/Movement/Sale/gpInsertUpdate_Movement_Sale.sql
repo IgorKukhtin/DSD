@@ -34,7 +34,7 @@ BEGIN
       THEN
           inMemberSP:= TRIM (COALESCE (inMemberSP, ''));
 
-          vbMemberSPId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_MemberSP() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inMemberSP));
+          vbMemberSPId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_MemberSP() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inMemberSP) LIMIT 1);
           IF COALESCE (vbMemberSPId,0) = 0
              THEN 
                  -- не нашли Сохраняем
@@ -50,7 +50,7 @@ BEGIN
       THEN
           inMedicSP:= TRIM (COALESCE (inMedicSP, ''));
 
-          vbMedicSPId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_MedicSP() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inMedicSP));
+          vbMedicSPId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_MedicSP() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inMedicSP) LIMIT 1);
           IF COALESCE (vbMedicSPId,0) = 0
              THEN 
                  -- не нашли Сохраняем

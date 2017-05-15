@@ -22,6 +22,17 @@ $BODY$
   DECLARE vbTotalSummSecondPriceList TFloat;
   DECLARE vbTotalSummSecondRemainsPriceList TFloat;
 
+  DECLARE vbTotalSummChange TFloat;
+  DECLARE vbTotalSummPay TFloat;
+ 
+  DECLARE vbTotalSummChangePay TFloat;
+  DECLARE vbTotalSummPayOth TFloat;
+  DECLARE vbTotalCountReturn TFloat;
+  DECLARE vbTotalSummReturn TFloat;
+  DECLARE vbTotalSummPayReturn TFloat;
+/*  DECLARE vbTotalCountSecond TFloat;
+  DECLARE vbTotalCountSecond TFloat;
+*/
 BEGIN
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -62,8 +73,18 @@ BEGIN
                      ELSE CAST (COALESCE(MIFloat_AmountSecondRemains.ValueData, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2))
                 END)  AS TotalSummSecondRemainsPriceList
 
+          , SUM (COALESCE (MIFloat_TotalChangePercent.ValueData, 0)) ::TFloat  AS TotalSummChange
+          , SUM (COALESCE (MIFloat_TotalPay.ValueData,0))            ::TFloat  AS TotalSummPay
+
+          , SUM (COALESCE (MIFloat_TotalChangePercentPay.ValueData,0)) ::TFloat AS TotalSummChangePay
+          , SUM (COALESCE (MIFloat_TotalPayOth.ValueData,0))           ::TFloat AS TotalSummPayOth
+          , SUM (COALESCE (MIFloat_TotalCountReturn.ValueData,0))      ::TFloat AS TotalCountReturn
+          , SUM (COALESCE (MIFloat_TotalReturn.ValueData,0))           ::TFloat AS TotalSummReturn
+          , SUM (COALESCE (MIFloat_TotalPayReturn.ValueData,0))        ::TFloat AS TotalSummPayReturn
+
     INTO vbTotalCount, vbTotalCountRemains, vbTotalSumm, vbTotalSummPriceList, vbTotalSummRemainsPriceList
        , vbTotalCountSecond, vbTotalCountSecondRemains, vbTotalSummSecondPriceList, vbTotalSummSecondRemainsPriceList
+       , vbTotalSummChange, vbTotalSummPay, vbTotalSummChangePay, vbTotalSummPayOth, vbTotalCountReturn, vbTotalSummReturn, vbTotalSummPayReturn
        FROM MovementItem
             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
@@ -85,6 +106,28 @@ BEGIN
                                         ON MIFloat_AmountSecondRemains.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountSecondRemains.DescId = zc_MIFloat_AmountSecondRemains()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
+                                        ON MIFloat_TotalChangePercent.MovementItemId = MovementItem.Id
+                                       AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()    
+            LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercentPay
+                                        ON MIFloat_TotalChangePercentPay.MovementItemId = MovementItem.Id
+                                       AND MIFloat_TotalChangePercentPay.DescId         = zc_MIFloat_TotalChangePercentPay()    
+            LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
+                                        ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
+                                       AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()    
+            LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth
+                                        ON MIFloat_TotalPayOth.MovementItemId = MovementItem.Id
+                                       AND MIFloat_TotalPayOth.DescId         = zc_MIFloat_TotalPayOth()    
+            LEFT JOIN MovementItemFloat AS MIFloat_TotalCountReturn
+                                        ON MIFloat_TotalCountReturn.MovementItemId = MovementItem.Id
+                                       AND MIFloat_TotalCountReturn.DescId         = zc_MIFloat_TotalCountReturn()    
+            LEFT JOIN MovementItemFloat AS MIFloat_TotalReturn
+                                        ON MIFloat_TotalReturn.MovementItemId = MovementItem.Id
+                                       AND MIFloat_TotalReturn.DescId         = zc_MIFloat_TotalReturn()    
+            LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
+                                        ON MIFloat_TotalPayReturn.MovementItemId = MovementItem.Id
+                                       AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()    
+
       WHERE MovementItem.MovementId = inMovementId 
         AND MovementItem.DescId     = zc_MI_Master()
         AND MovementItem.isErased = false;
@@ -102,7 +145,6 @@ BEGIN
              -- Сохранили свойство <Итого Сумма реализации остатка>
              PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummRemainsPriceList(), inMovementId, vbTotalSummRemainsPriceList + vbTotalSummSecondRemainsPriceList);
       ELSE
-
              -- Сохранили свойство <Итого количество("главные элементы")>
              PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbTotalCount);
              -- Сохранили свойство <Итого Сумма>
@@ -114,6 +156,22 @@ BEGIN
              PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCountRemains(), inMovementId, vbTotalCountRemains);
              -- Сохранили свойство <Итого Сумма реализации остатка>
              PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummRemainsPriceList(), inMovementId, vbTotalSummRemainsPriceList);
+
+             -- Сохранили свойство <Итого сумма скидки в ГРН>
+             PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummChange(), inMovementId, vbTotalSummChange);
+             -- Сохранили свойство <Итого сумма оплаты (в ГРН)>
+             PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPay(), inMovementId, vbTotalSummPay);
+             -- Сохранили свойство <Итого сумма скидки в ГРН>
+             PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummChangePay(), inMovementId, vbTotalSummChangePay);
+             -- Сохранили свойство <Итого сумма оплаты (в ГРН)>
+             PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPayOth(), inMovementId, vbTotalSummPayOth);
+             -- Сохранили свойство <Итого количество возврата>
+             PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCountReturn(), inMovementId, vbTotalCountReturn);
+             -- Сохранили свойство <Итого сумма возврата со скидкой (в ГРН)>
+             PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummReturn(), inMovementId, vbTotalSummReturn);
+             -- Сохранили свойство <Итого сумма возврата оплаты (в ГРН)>
+             PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPayReturn(), inMovementId, vbTotalSummPayReturn);
+
       END IF;
 
 
