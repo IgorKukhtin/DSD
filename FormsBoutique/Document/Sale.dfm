@@ -185,14 +185,12 @@ object SaleForm: TSaleForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 310
     ClientRectBottom = 313
     ClientRectRight = 1054
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 286
       object cxGrid: TcxGrid
         Left = 0
         Top = 83
@@ -200,7 +198,6 @@ object SaleForm: TSaleForm
         Height = 206
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 203
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -281,7 +278,7 @@ object SaleForm: TSaleForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalPay_Dol
+              Column = colTotalPay_Usd
             end
             item
               Format = ',0.####'
@@ -393,7 +390,7 @@ object SaleForm: TSaleForm
             end
             item
               Format = ',0.####'
-              Column = colTotalPay_Dol
+              Column = colTotalPay_Usd
             end
             item
               Format = ',0.####'
@@ -702,9 +699,9 @@ object SaleForm: TSaleForm
             Options.Editing = False
             Width = 91
           end
-          object colTotalPay_Dol: TcxGridDBColumn
+          object colTotalPay_Usd: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' ($)'
-            DataBinding.FieldName = 'TotalPay_Dol'
+            DataBinding.FieldName = 'TotalPay_Usd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'

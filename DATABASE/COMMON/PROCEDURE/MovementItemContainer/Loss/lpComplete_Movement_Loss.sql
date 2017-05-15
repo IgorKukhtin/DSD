@@ -242,8 +242,8 @@ BEGIN
                             , tmpMI.OperCount   AS Amount
                             , Container.Id      AS ContainerId
                             , Container.Amount  AS Amount_container
-                            , SUM (Container.Amount) OVER (PARTITION BY tmpMI.GoodsId ORDER BY COALESCE (ObjectDate_Value.ValueData, zc_DateStart()), Container.Id)        AS AmountSUM -- 
-                            , ROW_NUMBER() OVER (PARTITION BY tmpMI.MovementItemId ORDER BY COALESCE (ObjectDate_Value.ValueData, zc_DateStart()) DESC, Container.Id DESC) AS Ord       -- !!!Надо отловить ПОСЛЕДНИЙ!!!
+                            , SUM (Container.Amount) OVER (PARTITION BY tmpMI.GoodsId ORDER BY COALESCE (ObjectDate_Value.ValueData, zc_DateStart()), Container.Id) AS AmountSUM --
+                            , ROW_NUMBER() OVER (PARTITION BY tmpMI.GoodsId ORDER BY COALESCE (ObjectDate_Value.ValueData, zc_DateStart()) DESC, Container.Id DESC) AS Ord       -- !!!Надо отловить ПОСЛЕДНИЙ!!!
                             , CLO_PartionGoods.ObjectId AS PartionGoodsId
                        FROM tmpMI
                             INNER JOIN Container ON Container.ObjectId = tmpMI.GoodsId
@@ -285,7 +285,7 @@ BEGIN
             , tmpMI.PartionGoodsDate
             , COALESCE (tmpRes.PartionGoodsId, 0) AS PartionGoodsId_Item
 
-            , tmpMI.OperCount
+            , COALESCE (tmpRes.Amount, tmpMI.OperCount) AS OperCount
 
             , tmpMI.InfoMoneyGroupId       -- Управленческая группа
             , tmpMI.InfoMoneyDestinationId -- Управленческие назначения
@@ -329,7 +329,7 @@ BEGIN
      END IF;
 
      -- формируются Партии товара, ЕСЛИ надо ...
-     UPDATE _tmpItem SET PartionGoodsId      = CASE WHEN _tmpItem.ContainerId_Goods > 0 
+     UPDATE _tmpItem SET PartionGoodsId      = CASE WHEN _tmpItem.ContainerId_Goods > 0
                                                         THEN _tmpItem.PartionGoodsId_Item -- !!!Партию уже нашли из остатка!!!
 
                                                     WHEN vbOperDate >= zc_DateStart_PartionGoods()
@@ -391,9 +391,10 @@ BEGIN
 
 
      -- 1.2.1. самое интересное: заполняем таблицу - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItemSumm (MovementItemId, ContainerId_ProfitLoss, ContainerId, AccountId, OperSumm)
+     INSERT INTO _tmpItemSumm (MovementItemId, ContainerId_Goods, ContainerId_ProfitLoss, ContainerId, AccountId, OperSumm)
         SELECT
               _tmpItem.MovementItemId
+            , _tmpItem.ContainerId_Goods
             , 0 AS ContainerId_ProfitLoss
             , COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ.Id, 0))     AS ContainerId
             , COALESCE (lfContainerSumm_20901.AccountId, COALESCE (Container_Summ.ObjectId, 0)) AS AccountId
@@ -411,12 +412,13 @@ BEGIN
                                                                                  AND _tmpItem.InfoMoneyDestinationId         = zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
              -- так находим для остальных
              LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
-                                                  AND Container_Summ.DescId = zc_Container_Summ()
+                                                  AND Container_Summ.DescId   = zc_Container_Summ()
              LEFT JOIN HistoryCost ON HistoryCost.ContainerId = COALESCE (lfContainerSumm_20901.ContainerId, Container_Summ.Id)
                                   AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
         WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
           AND _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) <> 0 -- здесь нули !!!НЕ НУЖНЫ!!!
         GROUP BY _tmpItem.MovementItemId
+               , _tmpItem.ContainerId_Goods
                , Container_Summ.Id
                , Container_Summ.ObjectId
                , lfContainerSumm_20901.ContainerId
@@ -457,10 +459,12 @@ BEGIN
                         END AS ProfitLossId
 
                       , _tmpItem_group.InfoMoneyDestinationId
-                 FROM (SELECT _tmpItem.InfoMoneyDestinationId_calc
+                 FROM (SELECT DISTINCT
+                              _tmpItem.InfoMoneyDestinationId_calc
                             , _tmpItem.InfoMoneyDestinationId
                             , _tmpItem.InfoMoneyId
-                       FROM (SELECT  _tmpItem.InfoMoneyDestinationId
+                       FROM (SELECT  DISTINCT
+                                     _tmpItem.InfoMoneyDestinationId
                                    , _tmpItem.InfoMoneyId
                                    , _tmpItem.GoodsKindId
                                    , CASE WHEN vbInfoMoneyId_ArticleLoss > 0
@@ -482,20 +486,14 @@ BEGIN
                                      END AS InfoMoneyDestinationId_calc
                              FROM _tmpItemSumm
                                   JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
-                             GROUP BY _tmpItem.InfoMoneyDestinationId
-                                    , _tmpItem.InfoMoneyId
-                                    , _tmpItem.GoodsKindId
                             ) AS _tmpItem
-                       GROUP BY _tmpItem.InfoMoneyDestinationId_calc
-                              , _tmpItem.InfoMoneyDestinationId
-                              , _tmpItem.InfoMoneyId
                       ) AS _tmpItem_group
                 ) AS _tmpItem_byProfitLoss
           ) AS _tmpItem_byDestination ON _tmpItem_byDestination.InfoMoneyDestinationId = _tmpItem.InfoMoneyDestinationId
      WHERE _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
 
      -- 2.1.2. проверка контейнеры для Проводки - Прибыль должен быть один
-     IF EXISTS (SELECT 1 FROM (SELECT _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId_ProfitLoss FROM _tmpItemSumm GROUP BY _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId_ProfitLoss) AS tmp GROUP BY tmp.MovementItemId HAVING COUNT(*) > 1)
+     IF EXISTS (SELECT 1 FROM (SELECT DISTINCT _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId_ProfitLoss FROM _tmpItemSumm) AS tmp GROUP BY tmp.MovementItemId HAVING COUNT(*) > 1)
      THEN
          RAISE EXCEPTION 'Ошибка. COUNT > 1 by ContainerId_ProfitLoss';
      END IF;
@@ -523,7 +521,8 @@ BEGIN
                   , _tmpItem.GoodsKindId
                   , SUM (_tmpItemSumm.OperSumm) AS OperSumm
              FROM _tmpItemSumm
-                  INNER JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
+                  INNER JOIN _tmpItem ON _tmpItem.MovementItemId    = _tmpItemSumm.MovementItemId
+                                     AND _tmpItem.ContainerId_Goods = _tmpItemSumm.ContainerId_Goods
              GROUP BY _tmpItemSumm.MovementItemId
                     , _tmpItemSumm.ContainerId_ProfitLoss
                     , _tmpItem.GoodsId
@@ -570,13 +569,13 @@ BEGIN
             , vbOperDate
             , FALSE
        FROM _tmpItem
-            JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
-
-
+            JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId    = _tmpItem.MovementItemId
+                             AND _tmpItemSumm.ContainerId_Goods = _tmpItem.ContainerId_Goods
+      ;
 
 
      -- убрал, т.к. св-во пишется теперь в ОПиУ
-     DELETE FROM MovementItemLinkObject WHERE DescId = zc_MILinkObject_Branch() AND MovementItemId IN (SELECT MovementItemId FROM _tmpItem);
+     -- DELETE FROM MovementItemLinkObject WHERE DescId = zc_MILinkObject_Branch() AND MovementItemId IN (SELECT MovementItemId FROM _tmpItem);
      -- !!!6.0. формируются свойства в элементах документа из данных для проводок!!!
      /*PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), tmp.MovementItemId, vbBranchId_Unit_ProfitLoss)
      FROM (SELECT _tmpItem.MovementItemId

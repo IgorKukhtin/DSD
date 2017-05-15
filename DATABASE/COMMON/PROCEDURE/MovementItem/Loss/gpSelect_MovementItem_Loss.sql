@@ -15,9 +15,6 @@ RETURNS TABLE (Id Integer, ContainerId Integer, GoodsId Integer, GoodsCode Integ
              , GoodsKindId Integer, GoodsKindName  TVarChar
              , AssetId Integer, AssetName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
-             , PartionGoodsId Integer, PartionGoodsName TVarChar, PartionGoodsOperDate TDateTime
-             , Price TFloat, StorageName_Partion TVarChar
-             , UnitName TVarChar
              , isErased Boolean
               )
 AS
@@ -56,7 +53,6 @@ BEGIN
                            , MIString_PartionGoods.ValueData    AS PartionGoods
 
                            , MILinkObject_Asset.ObjectId        AS AssetId
-                           , MILinkObject_PartionGoods.ObjectId AS PartionGoodsId
 
                            , MovementItem.isErased                         AS isErased
                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -83,9 +79,6 @@ BEGIN
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
-                                                            ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
                      )
             -- Ограничение для ГП - какие товары показать
           , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
@@ -161,7 +154,6 @@ BEGIN
                                   , Container.ObjectId
                                   , COALESCE (CLO_GoodsKind.ObjectId, 0)
                           )
-
        -- Результат
        SELECT
              0                          AS Id
@@ -186,12 +178,6 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
-           , 0 ::Integer                AS PartionGoodsId
-           , CAST (NULL AS TVarChar)    AS PartionGoodsName
-           , CAST (NULL AS TDateTime)   AS PartionGoodsOperDate
-           , CAST (NULL AS TFloat)      AS Price
-           , CAST (NULL AS TVarChar)    AS StorageName_Partion
-           , CAST (NULL AS TVarChar)    AS UnitName
 
            , FALSE                      AS isErased
 
@@ -247,13 +233,6 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
 
-           , Object_PartionGoods.Id             AS PartionGoodsId
-           , Object_PartionGoods.ValueData      AS PartionGoodsName
-           , ObjectDate_Value.ValueData         AS PartionGoodsOperDate
-           , ObjectFloat_Price.ValueData        AS Price
-           , Object_Storage_Partion.ValueData   AS StorageName_Partion
-           , Object_Unit.ValueData              AS UnitName
-
            , tmpMI.isErased
 
        FROM tmpMI
@@ -265,21 +244,7 @@ BEGIN
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = tmpMI.AssetId
-            LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMI.PartionGoodsId
-
-            LEFT JOIN ObjectFloat AS ObjectFloat_Price ON ObjectFloat_Price.ObjectId = tmpMI.PartionGoodsId                      -- цена
-                                                      AND ObjectFloat_Price.DescId = zc_ObjectFloat_PartionGoods_Price()
-            LEFT JOIN ObjectLink AS ObjectLink_Storage ON ObjectLink_Storage.ObjectId = tmpMI.PartionGoodsId 		        -- склад
-                                                      AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
-            LEFT JOIN Object AS Object_Storage_Partion ON Object_Storage_Partion.Id = ObjectLink_Storage.ChildObjectId
-
-            LEFT JOIN ObjectLink AS ObjectLink_Unit ON ObjectLink_Unit.ObjectId = tmpMI.PartionGoodsId		        -- подразделение
-                                                   AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
-            LEFT JOIN ObjectDate as objectdate_value ON objectdate_value.ObjectId = tmpMI.PartionGoodsId                    -- дата
-                                                    AND objectdate_value.DescId = zc_ObjectDate_PartionGoods_Value()
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
@@ -367,13 +332,6 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
 
-           , Object_PartionGoods.Id             AS PartionGoodsId
-           , Object_PartionGoods.ValueData      AS PartionGoodsName
-           , ObjectDate_Value.ValueData         AS PartionGoodsOperDate
-           , ObjectFloat_Price.ValueData        AS Price
-           , Object_Storage_Partion.ValueData   AS StorageName_Partion
-           , Object_Unit.ValueData              AS UnitName
-
            , MovementItem.isErased              AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -411,23 +369,6 @@ BEGIN
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
-
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
-                                             ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
-            LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = MILinkObject_PartionGoods.ObjectId
-
-            LEFT JOIN ObjectFloat AS ObjectFloat_Price ON ObjectFloat_Price.ObjectId = Object_PartionGoods.Id                      -- цена
-                                                      AND ObjectFloat_Price.DescId = zc_ObjectFloat_PartionGoods_Price()
-            LEFT JOIN ObjectLink AS ObjectLink_Storage ON ObjectLink_Storage.ObjectId = Object_PartionGoods.Id 		        -- склад
-                                                      AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
-            LEFT JOIN Object AS Object_Storage_Partion ON Object_Storage_Partion.Id = ObjectLink_Storage.ChildObjectId
-            LEFT JOIN ObjectLink AS ObjectLink_Unit ON ObjectLink_Unit.ObjectId = Object_PartionGoods.Id		        -- подразделение
-                                                   AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
-
-            LEFT JOIN ObjectDate as objectdate_value ON objectdate_value.ObjectId = Object_PartionGoods.Id                    -- дата
-                                                    AND objectdate_value.DescId = zc_ObjectDate_PartionGoods_Value()
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id

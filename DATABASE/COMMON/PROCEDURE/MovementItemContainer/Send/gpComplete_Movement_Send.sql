@@ -397,7 +397,7 @@ BEGIN
                                                                             lpInsertFind_Object_PartionGoods (inUnitId_Partion:= _tmpItem.UnitId_From
                                                                                                             , inGoodsId       := _tmpItem.GoodsId
                                                                                                             , inStorageId     := _tmpItem.StorageId_Item
-                                                                                                            , inInvNumber     := ''
+                                                                                                            , inInvNumber     := '' -- хотя задумывался PartionGoods - String
                                                                                                             , inOperDate      := _tmpItem.OperDate
                                                                                                             , inPrice         := 0
                                                                                                              )
@@ -406,7 +406,7 @@ BEGIN
                                                                             lpInsertFind_Object_PartionGoods (inUnitId_Partion:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem.PartionGoodsId_Item AND OL.DescId = zc_ObjectLink_PartionGoods_Unit())
                                                                                                             , inGoodsId       := CASE WHEN _tmpItem.PartionGoodsId_Item > 0 THEN _tmpItem.GoodsId ELSE 0 END
                                                                                                             , inStorageId     := _tmpItem.StorageId_Item
-                                                                                                            , inInvNumber     := (SELECT Object.ObjectCode FROM Object WHERE Object.Id = _tmpItem.PartionGoodsId_Item) :: TVarChar
+                                                                                                            , inInvNumber     := (SELECT Object.ValueData FROM Object WHERE Object.Id = _tmpItem.PartionGoodsId_Item)
                                                                                                             , inOperDate      := (SELECT OD.ValueData  FROM ObjectDate  AS OD  WHERE OD.ObjectId  = _tmpItem.PartionGoodsId_Item AND OD.DescId  = zc_ObjectDate_PartionGoods_Value())
                                                                                                             , inPrice         := (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = _tmpItem.PartionGoodsId_Item AND OFl.DescId = zc_ObjectFloat_PartionGoods_Price())
                                                                                                              )

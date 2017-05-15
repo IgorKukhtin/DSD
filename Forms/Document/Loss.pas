@@ -44,12 +44,6 @@ type
     cxLabel5: TcxLabel;
     edArticleLoss: TcxButtonEdit;
     GuidesArticleLoss: TdsdGuides;
-    actPartionGoodsChoiceForm: TOpenChoiceForm;
-    colPartionGoodsName: TcxGridDBColumn;
-    colPartionGoodsOperDate: TcxGridDBColumn;
-    colStorageName_Partion: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
     clMeasureName: TcxGridDBColumn;
     clGoodsGroupNameFull: TcxGridDBColumn;
     actGoodsChoiceForm: TOpenChoiceForm;

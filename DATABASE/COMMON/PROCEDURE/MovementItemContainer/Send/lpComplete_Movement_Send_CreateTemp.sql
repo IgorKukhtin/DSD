@@ -27,7 +27,7 @@ BEGIN
                                    , ProfitLossGroupId Integer, ProfitLossDirectionId Integer, UnitId_ProfitLoss Integer, BranchId_ProfitLoss Integer, BusinessId_ProfitLoss Integer
                                     ) ON COMMIT DROP;
          -- таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
-         CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, MIContainerId_To BigInt, ContainerId_To Integer, AccountId_To Integer, ContainerId_ProfitLoss Integer, ContainerId_From Integer, AccountId_From Integer, InfoMoneyId_Detail_From Integer, OperSumm TFloat) ON COMMIT DROP;
+         CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_Goods Integer, MIContainerId_To BigInt, ContainerId_To Integer, AccountId_To Integer, ContainerId_ProfitLoss Integer, ContainerId_From Integer, AccountId_From Integer, InfoMoneyId_Detail_From Integer, OperSumm TFloat) ON COMMIT DROP;
      END IF;
 
 

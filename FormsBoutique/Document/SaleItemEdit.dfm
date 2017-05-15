@@ -40,7 +40,7 @@ object SaleItemEditForm: TSaleItemEditForm
     Top = 34
     Caption = #1050#1091#1088#1089' ('#1075#1088#1085'/1 $)'
   end
-  object ceCurrencyValue_DOL: TcxCurrencyEdit
+  object ceCurrencyValue_USD: TcxCurrencyEdit
     Left = 316
     Top = 50
     Properties.DecimalPlaces = 4
@@ -73,8 +73,8 @@ object SaleItemEditForm: TSaleItemEditForm
     TabOrder = 6
     Width = 104
   end
-  object cbisPayDOL: TcxCheckBox
-    Left = 16
+  object cbisPayUSD: TcxCheckBox
+    Left = 8
     Top = 50
     Caption = #1054#1087#1083#1072#1090#1072' - $'
     Properties.ReadOnly = False
@@ -147,7 +147,7 @@ object SaleItemEditForm: TSaleItemEditForm
     TabOrder = 16
     Width = 85
   end
-  object ceAmountDOL: TcxCurrencyEdit
+  object ceAmountUSD: TcxCurrencyEdit
     Left = 173
     Top = 50
     Properties.DecimalPlaces = 4
@@ -279,9 +279,9 @@ object SaleItemEditForm: TSaleItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPayDOL'
+        Name = 'inisPayUSD'
         Value = Null
-        Component = cbisPayDOL
+        Component = cbisPayUSD
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -319,9 +319,9 @@ object SaleItemEditForm: TSaleItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountDOL'
+        Name = 'inAmountUSD'
         Value = Null
-        Component = ceAmountDOL
+        Component = ceAmountUSD
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -401,9 +401,9 @@ object SaleItemEditForm: TSaleItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CurrencyValue_DOL'
+        Name = 'CurrencyValue_USD'
         Value = Null
-        Component = ceCurrencyValue_DOL
+        Component = ceCurrencyValue_USD
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -422,9 +422,9 @@ object SaleItemEditForm: TSaleItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountDOL'
+        Name = 'AmountUSD'
         Value = Null
-        Component = ceAmountDOL
+        Component = ceAmountUSD
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -498,7 +498,7 @@ object SaleItemEditForm: TSaleItemEditForm
         Component = cbisPayCard
       end
       item
-        Component = cbisPayDOL
+        Component = cbisPayUSD
       end
       item
         Component = cbisPayEUR
@@ -516,7 +516,7 @@ object SaleItemEditForm: TSaleItemEditForm
         Component = ceAmountEUR
       end
       item
-        Component = ceAmountDOL
+        Component = ceAmountUSD
       end
       item
         Component = ceAmountGRN

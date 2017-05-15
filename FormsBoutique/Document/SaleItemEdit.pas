@@ -35,11 +35,11 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel18: TcxLabel;
-    ceCurrencyValue_DOL: TcxCurrencyEdit;
+    ceCurrencyValue_USD: TcxCurrencyEdit;
     ceAmountGRN: TcxCurrencyEdit;
     cbisPayTotal: TcxCheckBox;
     cbisPayGRN: TcxCheckBox;
-    cbisPayDOL: TcxCheckBox;
+    cbisPayUSD: TcxCheckBox;
     cbisPayEUR: TcxCheckBox;
     cbisPayCard: TcxCheckBox;
     cbisDiscount: TcxCheckBox;
@@ -49,7 +49,7 @@ type
     ceAmountRemains: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
     ceAmountChange: TcxCurrencyEdit;
-    ceAmountDOL: TcxCurrencyEdit;
+    ceAmountUSD: TcxCurrencyEdit;
     ceAmountEUR: TcxCurrencyEdit;
     ceAmountCARD: TcxCurrencyEdit;
     ceAmountDiscount: TcxCurrencyEdit;

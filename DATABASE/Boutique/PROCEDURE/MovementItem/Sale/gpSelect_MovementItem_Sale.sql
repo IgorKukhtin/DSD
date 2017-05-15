@@ -28,7 +28,7 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , ChangePercent TFloat, SummChangePercent TFloat
              , TotalChangePercent TFloat, TotalChangePercentPay TFloat
              , TotalSummPay TFloat
-             , TotalPay_Grn TFloat, TotalPay_Dol TFloat, TotalPay_Eur TFloat, TotalPay_Card TFloat
+             , TotalPay_Grn TFloat, TotalPay_USD TFloat, TotalPay_Eur TFloat, TotalPay_Card TFloat
 --             , TotalPay TFloat
              , TotalPayOth TFloat
              , TotalCountReturn TFloat, TotalReturn TFloat
@@ -129,7 +129,7 @@ BEGIN
     , tmpMI_Child AS (SELECT MovementItem.ParentId
                          --, MILinkObject_Currency.ObjectId                AS CurrencyId
                            , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_GRN() THEN MovementItem.Amount ELSE 0 END) AS Amount_GRN
-                           , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_DOL() THEN MovementItem.Amount ELSE 0 END) AS Amount_DOL          
+                           , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_USD() THEN MovementItem.Amount ELSE 0 END) AS Amount_USD
                            , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN MovementItem.Amount ELSE 0 END) AS Amount_EUR
                            , SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() THEN MovementItem.Amount ELSE 0 END) AS Amount_Bank
                            --, MovementItem.isErased
@@ -196,7 +196,7 @@ BEGIN
                  AS TFloat) AS TotalSummPay
 
            , tmpMI_Child.Amount_GRN         ::TFloat AS TotalPay_Grn 
-           , tmpMI_Child.Amount_DOL         ::TFloat AS TotalPay_DOL
+           , tmpMI_Child.Amount_USD         ::TFloat AS TotalPay_USD
            , tmpMI_Child.Amount_EUR         ::TFloat AS TotalPay_EUR
            , tmpMI_Child.Amount_Bank        ::TFloat AS TotalPay_Card
            , tmpMI.TotalPayOth              ::TFloat

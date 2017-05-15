@@ -3,25 +3,26 @@ inherited LossForm: TLossForm
   ClientHeight = 668
   ClientWidth = 984
   ExplicitWidth = 1000
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 113
     Width = 984
     Height = 555
+    ExplicitTop = 113
     ExplicitWidth = 984
-    ExplicitHeight = 582
+    ExplicitHeight = 555
     ClientRectBottom = 555
     ClientRectRight = 984
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 984
-      ExplicitHeight = 558
+      ExplicitHeight = 531
       inherited cxGrid: TcxGrid
         Width = 984
         Height = 531
         ExplicitWidth = 984
-        ExplicitHeight = 558
+        ExplicitHeight = 531
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -220,58 +221,6 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 155
           end
-          object colPartionGoodsName: TcxGridDBColumn [16]
-            Caption = #1055#1072#1088#1090#1080#1103' ('#1080#1085#1074'.'#1085#1086#1084#1077#1088')'
-            DataBinding.FieldName = 'PartionGoodsName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actPartionGoodsChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 96
-          end
-          object colPartionGoodsOperDate: TcxGridDBColumn [17]
-            Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072' '#1058#1052#1062')'
-            DataBinding.FieldName = 'PartionGoodsOperDate'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 75
-          end
-          object colStorageName_Partion: TcxGridDBColumn [18]
-            Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1087#1072#1088#1090#1080#1103' '#1088#1072#1089#1093'.)'
-            DataBinding.FieldName = 'StorageName_Partion'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object colUnitName: TcxGridDBColumn [19]
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1072#1088#1090#1080#1103' '#1058#1052#1062')'
-            DataBinding.FieldName = 'UnitName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object colPrice: TcxGridDBColumn [20]
-            Caption = #1055#1072#1088#1090#1080#1103' '#1088#1072#1089#1093'. ('#1094#1077#1085#1072')'
-            DataBinding.FieldName = 'Price'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 68
-          end
         end
       end
     end
@@ -391,8 +340,8 @@ inherited LossForm: TLossForm
     Top = 552
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 40
-    Top = 640
+    Left = 48
+    Top = 440
   end
   inherited ActionList: TActionList
     Left = 55
@@ -582,92 +531,6 @@ inherited LossForm: TLossForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
-    end
-    object actPartionGoodsChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'PartionGoodsForm'
-      FormName = 'TPartionGoodsChoiceForm'
-      FormNameParam.Value = 'TPartionGoodsChoiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inGoodsId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inGoodsName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inUnitId'
-          Value = ''
-          Component = GuidesFrom
-          ComponentItem = 'Key'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inUnitName'
-          Value = Null
-          Component = GuidesFrom
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PartionGoodsId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PartionGoodsName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Price'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Price'
-          DataType = ftFloat
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OperDatePartion'
-          Value = 'NULL'
-          Component = MasterCDS
-          ComponentItem = 'PartionGoodsOperDate'
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'UnitName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
     end
     object actChecked: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1370,9 +1233,7 @@ inherited LossForm: TLossForm
       end
       item
         Name = 'inPartionGoodsId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PartionGoodsId'
+        Value = 0
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1461,9 +1322,7 @@ inherited LossForm: TLossForm
       end
       item
         Name = 'inPartionGoodsId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PartionGoodsId'
+        Value = 0
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

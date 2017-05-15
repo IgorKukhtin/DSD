@@ -12,12 +12,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Sale_Child(
     IN inParentId              Integer   , -- Ключ
     IN inisPayTotal            Boolean   ,
     IN inisPayGRN              Boolean   ,
-    IN inisPayDOL              Boolean   ,
+    IN inisPayUSD              Boolean   ,
     IN inisPayEUR              Boolean   ,
     IN inisPayCard             Boolean   ,
     IN inisDiscount            Boolean   ,
     IN inAmountGRN            TFloat    , -- сумма оплаты
-    IN inAmountDOL            TFloat    , -- сумма оплаты
+    IN inAmountUSD            TFloat    , -- сумма оплаты
     IN inAmountEUR            TFloat    , -- сумма оплаты
     IN inAmountCard           TFloat    , -- сумма оплаты
     IN inAmountDiscount       TFloat    , -- сумма скидки
@@ -43,7 +43,7 @@ BEGIN
 
     SELECT Amount, ParValue
   INTO outCurrencyValue, outParValue
-    FROM lfSelect_Movement_Currency_byDate (inOperDate:= '11.05.2017', inCurrencyFromId:= zc_Currency_Basis(), inCurrencyToId:= zc_Currency_DOL());
+    FROM lfSelect_Movement_Currency_byDate (inOperDate:= '11.05.2017', inCurrencyFromId:= zc_Currency_Basis(), inCurrencyToId:= zc_Currency_USD());
 */
      IF inisPayTotal = FALSE
         THEN
@@ -61,7 +61,7 @@ BEGIN
              INSERT INTO _tmpPay (CurrencyId, Amount)
                    SELECT zc_Currency_GRN(), COALESCE(inAmountGRN,0) WHERE inisPayGRN = TRUE
                  UNION
-                   SELECT zc_Currency_DOL(), COALESCE(inAmountDOL,0) WHERE inisPayDOL = TRUE
+                   SELECT zc_Currency_USD(), COALESCE(inAmountUSD,0) WHERE inisPayUSD = TRUE
                  UNION
                    SELECT zc_Currency_EUR(), COALESCE(inAmountEUR,0) WHERE inisPayEUR = TRUE;
    
