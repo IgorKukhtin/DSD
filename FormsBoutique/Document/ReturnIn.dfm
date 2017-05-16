@@ -540,6 +540,17 @@ object ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 46
           end
+          object colAmount_Sale: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1076#1086#1082'.'#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'Amount_Sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
+          end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'OperPrice'
@@ -977,7 +988,7 @@ object ReturnInForm: TReturnInForm
     EditValue = 42864d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 18
+    TabOrder = 16
     Width = 104
   end
   object cxLabel15: TcxLabel

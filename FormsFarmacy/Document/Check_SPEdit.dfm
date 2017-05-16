@@ -4,7 +4,7 @@ object Check_SPEditForm: TCheck_SPEditForm
   BorderStyle = bsDialog
   Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1055
   ClientHeight = 253
-  ClientWidth = 323
+  ClientWidth = 320
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -79,9 +79,9 @@ object Check_SPEditForm: TCheck_SPEditForm
     TabOrder = 8
     Width = 160
   end
-  object edMedicSP: TcxTextEdit
-    Left = 124
-    Top = 87
+  object edMedicSP1: TcxTextEdit
+    Left = 241
+    Top = 8
     TabOrder = 9
     Width = 160
   end
@@ -101,6 +101,18 @@ object Check_SPEditForm: TCheck_SPEditForm
     Properties.ReadOnly = True
     TabOrder = 11
     Width = 250
+  end
+  object edMedicSP: TcxButtonEdit
+    Left = 124
+    Top = 87
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 12
+    Width = 163
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 263
@@ -138,9 +150,18 @@ object Check_SPEditForm: TCheck_SPEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMedicSPId'
+        Value = Null
+        Component = MedicSPGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMedicSPName'
         Value = Null
-        Component = edMedicSP
+        Component = MedicSPGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -170,13 +191,13 @@ object Check_SPEditForm: TCheck_SPEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 39
-    Top = 65
+    Left = 23
+    Top = 1
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deOperDateSP
-    Left = 96
-    Top = 67
+    Left = 16
+    Top = 51
   end
   object PartnerMedicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -206,5 +227,49 @@ object Check_SPEditForm: TCheck_SPEditForm
       end>
     Left = 176
     Top = 176
+  end
+  object MedicSPGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMedicSP
+    FormNameParam.Value = 'TMedicSPForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMedicSPForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = MedicSPGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = MedicSPGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPartnerMedicalId'
+        Value = ''
+        Component = PartnerMedicalGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPartnerMedicalName'
+        Value = ''
+        Component = PartnerMedicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 168
+    Top = 72
   end
 end

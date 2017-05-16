@@ -26,10 +26,12 @@ type
     cxLabel16: TcxLabel;
     cxLabel17: TcxLabel;
     edAmbulance: TcxTextEdit;
-    edMedicSP: TcxTextEdit;
+    edMedicSP1: TcxTextEdit;
     cxLabel12: TcxLabel;
     edPartnerMedical: TcxButtonEdit;
     PartnerMedicalGuides: TdsdGuides;
+    edMedicSP: TcxButtonEdit;
+    MedicSPGuides: TdsdGuides;
   private
     { Private declarations }
   public

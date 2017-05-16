@@ -54,6 +54,7 @@ type
     DiscountExternalName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    cExternalUnit: TcxGridDBColumn;
   private
     { Private declarations }
   public
