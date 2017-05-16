@@ -6,6 +6,12 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Object_PartionGoods (Integer, Integer, In
                                                           , Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                            );
 
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_PartionGoods (Integer, Integer, Integer, Integer, Integer
+                                                          , TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat
+                                                          , Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                          , Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                           );
+
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_PartionGoods(
     IN inMovementItemId         Integer,       -- Ключ партии
     IN inMovementId             Integer,       -- Ключ Документа
@@ -18,6 +24,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_PartionGoods(
     IN inCurrencyId             Integer,       -- Валюта для цены прихода
     IN inAmount                 TFloat,        -- Кол-во приход
     IN inOperPrice              TFloat,        -- Цена прихода
+    IN inCountForPrice          TFloat,        -- Цена за количество
     IN inPriceSale              TFloat,        -- Цена продажи, !!!грн!!!
     IN inBrandId                Integer,       -- Торговая марка
     IN inPeriodId               Integer,       -- Сезон
@@ -38,6 +45,9 @@ RETURNS VOID
 AS
 $BODY$
 BEGIN
+       -- заменили
+       IF COALESCE (inCountForPrice, 0) = 0 THEN inCountForPrice:= 1; END IF;
+
        -- изменили элемент - по значению <Ключ партии>
        UPDATE Object_PartionGoods
               SET MovementId           = inMovementId
@@ -50,6 +60,7 @@ BEGIN
                 , CurrencyId           = inCurrencyId
                 , Amount               = inAmount
                 , OperPrice            = inOperPrice
+                , CountForPrice        = inCountForPrice
                 , PriceSale            = inPriceSale
                 , BrandId              = inBrandId
                 , PeriodId             = inPeriodId
@@ -71,12 +82,12 @@ BEGIN
        IF NOT FOUND THEN             
           -- добавили новый элемент
           INSERT INTO Object_PartionGoods (MovementItemId, MovementId, SybaseId, PartnerId, UnitId, OperDate, GoodsId, GoodsItemId
-                                         , CurrencyId, Amount, OperPrice, PriceSale, BrandId, PeriodId, PeriodYear
+                                         , CurrencyId, Amount, OperPrice, CountForPrice, PriceSale, BrandId, PeriodId, PeriodYear
                                          , FabrikaId, GoodsGroupId, MeasureId
                                          , CompositionId, GoodsInfoId, LineFabricaId
                                          , LabelId, CompositionGroupId, GoodsSizeId, JuridicalId)
                                    VALUES (inMovementItemId, inMovementId, inSybaseId, inPartnerId, inUnitId, inOperDate, inGoodsId, inGoodsItemId
-                                         , inCurrencyId, inAmount, inOperPrice, inPriceSale, inBrandId, inPeriodId, inPeriodYear
+                                         , inCurrencyId, inAmount, inOperPrice, inCountForPrice, inPriceSale, inBrandId, inPeriodId, inPeriodYear
                                          , zfConvert_IntToNull (inFabrikaId), inGoodsGroupId, inMeasureId
                                          , zfConvert_IntToNull (inCompositionId), zfConvert_IntToNull (inGoodsInfoId), zfConvert_IntToNull (inLineFabricaId)
                                          , inLabelId, zfConvert_IntToNull (inCompositionGroupId), inGoodsSizeId, zfConvert_IntToNull (inJuridicalId));
@@ -92,9 +103,10 @@ BEGIN
                                     , LabelId                = inLabelId
                                     , CompositionGroupId     = zfConvert_IntToNull (inCompositionGroupId)
                                       -- только для документа inMovementId
-                                    , JuridicalId            = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN zfConvert_IntToNull (inJuridicalId) ELSE Object_PartionGoods.JuridicalId END
-                                    , OperPrice              = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inOperPrice                         ELSE Object_PartionGoods.OperPrice   END
-                                    , PriceSale              = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inPriceSale                         ELSE Object_PartionGoods.PriceSale   END
+                                    , JuridicalId            = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN zfConvert_IntToNull (inJuridicalId) ELSE Object_PartionGoods.JuridicalId   END
+                                    , OperPrice              = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inOperPrice                         ELSE Object_PartionGoods.OperPrice     END
+                                    , CountForPrice          = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inCountForPrice                     ELSE Object_PartionGoods.CountForPrice END
+                                    , PriceSale              = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inPriceSale                         ELSE Object_PartionGoods.PriceSale     END
        WHERE Object_PartionGoods.MovementItemId <> inMovementItemId
          AND Object_PartionGoods.GoodsId        = inGoodsId;
                                      

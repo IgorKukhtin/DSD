@@ -237,7 +237,7 @@ BEGIN
                        WHERE Movement.Id = inMovementId
                          AND Movement.StatusId = zc_Enum_Status_UnComplete()
                       )
-    , tmpContainer AS (SELECT tmpMI.MovementItemId
+, tmpContainer_all AS (SELECT tmpMI.MovementItemId
                             , tmpMI.GoodsId
                             , tmpMI.OperCount   AS Amount
                             , Container.Id      AS ContainerId
@@ -263,7 +263,7 @@ BEGIN
                                                             , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                              )
                       )
-          , tmpRes AS (SELECT DD.ContainerId
+    , tmpContainer AS (SELECT DD.ContainerId
                             , DD.GoodsId
                             , DD.MovementItemId
                             , DD.PartionGoodsId
@@ -271,21 +271,21 @@ BEGIN
                                         THEN DD.Amount_container
                                    ELSE DD.Amount - DD.AmountSUM + DD.Amount_container
                               END AS Amount
-                       FROM (SELECT * FROM tmpContainer) AS DD
+                       FROM (SELECT * FROM tmpContainer_all) AS DD
                        WHERE DD.Amount - (DD.AmountSUM - DD.Amount_container) > 0
                       )
         -- Результат
         SELECT
               tmpMI.MovementItemId
-            , COALESCE (tmpRes.ContainerId, 0) AS ContainerId_Goods -- сформируем позже - !!!или подбор партий!!!
+            , COALESCE (tmpContainer.ContainerId, 0) AS ContainerId_Goods -- сформируем позже - !!!или подбор партий!!!
             , tmpMI.GoodsId
             , tmpMI.GoodsKindId
             , 0 AS AssetId -- tmpMI.AssetId -- !!!временно отключил, т.к. не должно участвовать в партии!!!
             , tmpMI.PartionGoods
             , tmpMI.PartionGoodsDate
-            , COALESCE (tmpRes.PartionGoodsId, 0) AS PartionGoodsId_Item
+            , COALESCE (tmpContainer.PartionGoodsId, 0) AS PartionGoodsId_Item
 
-            , COALESCE (tmpRes.Amount, tmpMI.OperCount) AS OperCount
+            , COALESCE (tmpContainer.Amount, tmpMI.OperCount) AS OperCount
 
             , tmpMI.InfoMoneyGroupId       -- Управленческая группа
             , tmpMI.InfoMoneyDestinationId -- Управленческие назначения
@@ -300,7 +300,7 @@ BEGIN
             , 0 AS PartionGoodsId -- Партии товара, сформируем позже
 
         FROM tmpMI
-             LEFT JOIN tmpRes ON tmpRes.MovementItemId = tmpMI.MovementItemId
+             LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = tmpMI.MovementItemId
        ;
 
      -- Проверка - т.к.для этих УП-статей могли искать партии - надо что б товар был уникальным

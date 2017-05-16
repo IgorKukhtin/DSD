@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PartionGoods(
     IN inCurrencyId             Integer,       -- Валюта для цены прихода
     IN inAmount                 TFloat,        -- Кол-во приход
     IN inOperPrice              TFloat,        -- Цена прихода
+    IN inCountForPrice          TFloat,        -- Цена за количество
     IN inPriceSale              TFloat,        -- Цена продажи, !!!грн!!!
     IN inBrandId                Integer,       -- Торговая марка
     IN inPeriodId               Integer,       -- Сезон
@@ -39,44 +40,39 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsInfo());
    vbUserId:= lpGetUserBySession (inSession);
    
-   IF COALESCE (ioMovementItemId, 0) = 0 THEN
+   IF NOT EXISTS (SELECT 1 FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId := ioMovementItemId) THEN
       -- добавили новый элемент справочника и вернули значение <Ключ объекта>
-      INSERT INTO Object_PartionGoods (MovementId, SybaseId, PartnerId, UnitId, OperDate, GoodsId, GoodsItemId, CurrencyId, Amount, OperPrice, PriceSale, BrandId, PeriodId, PeriodYear, FabrikaId, GoodsGroupId, MeasureId, CompositionId, GoodsInfoId, LineFabricaId, LabelId, CompositionGroupId, GoodsSizeId )
-                  VALUES (inMovementId, inSybaseId, inPartnerId, inUnitId, inOperDate, inGoodsId, inGoodsItemId, inCurrencyId, inAmount, inOperPrice, inPriceSale, inBrandId, inPeriodId, inPeriodYear, inFabrikaId, inGoodsGroupId, inMeasureId, inCompositionId, inGoodsInfoId, inLineFabricaId, inLabelId, inCompositionGroupId, inGoodsSizeId) RETURNING Id INTO ioMovementItemId;
+      RAISE EXCEPTION 'добавили новый элемент справочника и вернули значение <Ключ объекта>';
    ELSE
-       -- изменили элемент справочника по значению <Ключ объекта>
-       UPDATE Object_PartionGoods 
-          SET MovementId = inMovementId
-            , SybaseId = inSybaseId
-            , PartnerId = inPartnerId
-            , UnitId = inUnitId
-            , OperDate = inOperDate
-            , GoodsId = inGoodsId
-            , GoodsItemId = inGoodsItemId
-            , CurrencyId = inCurrencyId
-            , Amount = inAmount
-            , OperPrice = inOperPrice
-            , PriceSale = inPriceSale
-            , BrandId = inBrandId
-            , PeriodId = inPeriodId
-            , PeriodYear = inPeriodYear
-            , FabrikaId = inFabrikaId
-            , GoodsGroupId = inGoodsGroupId
-            , MeasureId = inMeasureId
-            , CompositionId = inCompositionId
-            , GoodsInfoId = inGoodsInfoId
-            , LineFabricaId = inLineFabricaId
-            , LabelId = inLabelId
-            , CompositionGroupId = inCompositionGroupId
-            , GoodsSizeId = inGoodsSizeId 
-       WHERE MovementItemId = ioMovementItemId ;
-
-       -- если такой элемент не был найден
-       IF NOT FOUND THEN
-          -- добавили новый элемент справочника со значением <Ключ объекта>
-          INSERT INTO Object_PartionGoods (MovementItemId, MovementId, SybaseId, PartnerId, UnitId, OperDate, GoodsId, GoodsItemId, CurrencyId, Amount, OperPrice, PriceSale, BrandId, PeriodId, PeriodYear, FabrikaId, GoodsGroupId, MeasureId, CompositionId, GoodsInfoId, LineFabricaId, LabelId, CompositionGroupId, GoodsSizeId)
-                     VALUES (ioMovementItemId, inMovementId, inSybaseId, inPartnerId, inUnitId, inOperDate, inGoodsId, inGoodsItemId, inCurrencyId, inAmount, inOperPrice, inPriceSale, inBrandId, inPeriodId, inPeriodYear, inFabrikaId, inGoodsGroupId, inMeasureId, inCompositionId, inGoodsInfoId, inLineFabricaId, inLabelId, inCompositionGroupId, inGoodsSizeId);
-       END IF; -- if NOT FOUND
+     -- cохраняем Object_PartionGoods + Update св-ва у остальных партий этого vbGoodsId
+     PERFORM lpInsertUpdate_Object_PartionGoods (inMovementItemId := ioMovementItemId
+                                               , inMovementId     := inMovementId
+                                               , inSybaseId       := NULL -- !!!если что - оставим без изменения!!!
+                                               , inPartnerId      := vbPartnerId
+                                               , inUnitId         := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
+                                               , inOperDate       := vbOperDate
+                                               , inGoodsId        := vbGoodsId
+                                               , inGoodsItemId    := vbGoodsItemId
+                                               , inCurrencyId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_CurrencyDocument())
+                                               , inAmount         := inAmount
+                                               , inOperPrice      := inOperPrice
+                                               , inCountForPrice  := inCountForPrice
+                                               , inPriceSale      := inOperPriceList
+                                               , inBrandId        := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbPartnerId AND OL.DescId = zc_ObjectLink_Partner_Brand())
+                                               , inPeriodId       := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbPartnerId AND OL.DescId = zc_ObjectLink_Partner_Period())
+                                               , inPeriodYear     := (SELECT ObF.ValueData FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbPartnerId AND ObF.DescId = zc_ObjectFloat_Partner_PeriodYear()) :: Integer
+                                               , inFabrikaId      := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbPartnerId AND OL.DescId = zc_ObjectLink_Partner_Fabrika())
+                                               , inGoodsGroupId   := inGoodsGroupId
+                                               , inMeasureId      := inMeasureId
+                                               , inCompositionId  := vbCompositionId
+                                               , inGoodsInfoId    := vbGoodsInfoId
+                                               , inLineFabricaId  := vbLineFabricaId
+                                               , inLabelId        := vbLabelId
+                                               , inCompositionGroupId := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbCompositionId AND OL.DescId = zc_ObjectLink_Composition_CompositionGroup())
+                                               , inGoodsSizeId    := vbGoodsSizeId
+                                               , inJuridicalId    := inJuridicalId
+                                               , inUserId         := vbUserId
+                                                );
 
    END IF; -- if COALESCE (ioMovementItemId, 0) = 0  
 

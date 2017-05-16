@@ -83,15 +83,15 @@ BEGIN
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
 
-     -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
+     -- сохранили связь с <Основные средства (для которых закупается ТМЦ)> - почти не используется, т.к. в приходе от пост. этой партии нет
+     -- PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
 
-     -- сохранили связь с <Подразделение (для МО)>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
-     -- сохранили связь с <Место хранения>
+     -- сохранили связь с <Подразделение (для МО)> - теперь НЕ надо
+     -- PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
+     -- сохранили связь с <Место хранения> - для партии прихода на МО
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Storage(), ioId, inStorageId);
-     -- сохранили связь с <Партии товаров (для партии расхода если с МО)>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionGoods(), ioId, inPartionGoodsId);
+     -- сохранили связь с <Партии товаров (для партии расхода если с МО)> - пока НЕ надо
+     -- PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionGoods(), ioId, inPartionGoodsId);
 
 
      IF inGoodsId <> 0 AND inGoodsKindId <> 0
@@ -105,7 +105,7 @@ BEGIN
 
      -- сохранили протокол
      -- !!! времнно откл.!!!
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
+     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 
 END;
 $BODY$

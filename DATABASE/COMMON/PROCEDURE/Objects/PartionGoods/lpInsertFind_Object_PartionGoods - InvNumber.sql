@@ -59,9 +59,9 @@ BEGIN
                                   INNER JOIN ObjectDate ON ObjectDate.ObjectId  = ObjectLink_Goods.ObjectId
                                                        AND ObjectDate.DescId    = zc_ObjectDate_PartionGoods_Value()
                                                        AND ObjectDate.ValueData = inOperDate
-                                  -- ???зачем-то по Инвентарный номер???
-                                  -- INNER JOIN Object ON Object.Id        = ObjectLink_Goods.ObjectId
-                                  --                  AND Object.ValueData = inInvNumber
+                                  -- по Инвентарный номер
+                                  INNER JOIN Object ON Object.Id        = ObjectLink_Goods.ObjectId
+                                                   AND Object.ValueData = inInvNumber
                                   INNER JOIN ObjectLink AS ObjectLink_Unit
                                                         ON ObjectLink_Unit.ObjectId      = ObjectLink_Goods.ObjectId
                                                        AND ObjectLink_Unit.DescId        = zc_ObjectLink_PartionGoods_Unit()
@@ -80,9 +80,9 @@ BEGIN
                                   INNER JOIN ObjectDate ON ObjectDate.ObjectId  = ObjectLink_Goods.ObjectId
                                                        AND ObjectDate.DescId    = zc_ObjectDate_PartionGoods_Value()
                                                        AND ObjectDate.ValueData = inOperDate
-                                  -- ???зачем-то по Инвентарный номер???
-                                  -- INNER JOIN Object ON Object.Id        = ObjectLink_Goods.ObjectId
-                                  --                  AND Object.ValueData = inInvNumber
+                                  -- по Инвентарный номер
+                                  INNER JOIN Object ON Object.Id        = ObjectLink_Goods.ObjectId
+                                                   AND Object.ValueData = inInvNumber
                                   INNER JOIN ObjectLink AS ObjectLink_Unit
                                                         ON ObjectLink_Unit.ObjectId      = ObjectLink_Goods.ObjectId
                                                        AND ObjectLink_Unit.DescId        = zc_ObjectLink_PartionGoods_Unit()

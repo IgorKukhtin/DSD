@@ -39,17 +39,13 @@ type
     PrintItemsSverkaCDS: TClientDataSet;
     colCount: TcxGridDBColumn;
     colHeadCount: TcxGridDBColumn;
-    colAssetName: TcxGridDBColumn;
     colUnitName: TcxGridDBColumn;
     colStorageName: TcxGridDBColumn;
-    colPartionGoodsName: TcxGridDBColumn;
     actUnitChoiceForm: TOpenChoiceForm;
     actStorageChoiceForm: TOpenChoiceForm;
     actPartionGoodsChoiceForm: TOpenChoiceForm;
     colPrice: TcxGridDBColumn;
-    colStorageName_Partion: TcxGridDBColumn;
     colPartionGoodsDate: TcxGridDBColumn;
-    colPartionGoodsOperDate: TcxGridDBColumn;
     clGoodsGroupNameFull: TcxGridDBColumn;
     clMeasureName: TcxGridDBColumn;
     actGoodsChoiceForm: TOpenChoiceForm;
