@@ -275,7 +275,7 @@ BEGIN
              , tmpMI.AmountForecast ::TFloat
              , tmpMI.AmountIn       ::TFloat
              , tmpMI.AmountOut      ::TFloat
-             , tmpMI.AmountOrder    ::TFloat
+             , (COALESCE (tmpMI.AmountOrder,0) + COALESCE (tmpMI.Amount,0))  ::TFloat AS AmountOrder
 
              , (CASE WHEN vbCountDays <> 0 THEN tmpMI.AmountForecast/vbCountDays ELSE 0 END)  :: TFloat AS CountOnDay
              , CASE WHEN tmpMI.AmountForecast <=0 AND tmpMI.AmountRemainsEnd <> 0 THEN 365
@@ -293,7 +293,7 @@ BEGIN
              , CASE WHEN tmpMI.AmountForecast <= 0 AND tmpMI.AmountRemainsEnd <> 0
                     THEN 365
                     WHEN (tmpMI.AmountForecast/vbCountDays) <> 0
-                    THEN (COALESCE(tmpMI.AmountRemainsEnd,0) + COALESCE(tmpMI.AmountIncome,0))/ (tmpMI.AmountForecast/vbCountDays)
+                    THEN (COALESCE(tmpMI.AmountRemainsEnd,0) + COALESCE(tmpMI.AmountIncome,0) + COALESCE (tmpMI.Amount,0))/ (tmpMI.AmountForecast/vbCountDays)
                     ELSE 0
                END  :: TFloat AS RemainsDaysWithOrder
 
@@ -445,7 +445,7 @@ BEGIN
              , tmpMI.AmountForecast   ::TFloat
              , tmpMI.AmountIn         ::TFloat
              , tmpMI.AmountOut        ::TFloat
-             , tmpMI.AmountOrder      ::TFloat
+             , (COALESCE (tmpMI.AmountOrder,0) + COALESCE (tmpMI.Amount,0))      ::TFloat   AS AmountOrder
 
              , (CASE WHEN vbCountDays <> 0 THEN tmpMI.AmountForecast/vbCountDays ELSE 0 END)  :: TFloat AS CountOnDay
              , CASE WHEN tmpMI.AmountForecast <=0 AND tmpMI.AmountRemainsEnd <> 0 THEN 365
@@ -463,7 +463,7 @@ BEGIN
              , CASE WHEN tmpMI.AmountForecast <= 0 AND tmpMI.AmountRemainsEnd <> 0
                     THEN 365
                     WHEN (tmpMI.AmountForecast/vbCountDays) <> 0
-                    THEN (COALESCE(tmpMI.AmountRemainsEnd,0) + COALESCE(tmpMI.AmountOrder,0))/ (tmpMI.AmountForecast/vbCountDays)
+                    THEN (COALESCE(tmpMI.AmountRemainsEnd,0) + COALESCE(tmpMI.AmountOrder,0) + COALESCE (tmpMI.Amount,0))/ (tmpMI.AmountForecast/vbCountDays)
                     ELSE 0
                END  :: TFloat AS RemainsDaysWithOrder
 
@@ -508,6 +508,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 16.05.17         *
  03.05.17         * 
  14.04.17         * 
 */

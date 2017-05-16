@@ -18,6 +18,7 @@ RETURNS TABLE (GoodsId              Integer
              , GoodsGroupNameFull   TVarChar
              , GoodsGroupName       TVarChar
              , PartnerName          TVarChar
+             , Comment              TVarChar
              , CountDays            Integer
              , RemainsStart         TFloat
              , RemainsEnd           TFloat
@@ -73,6 +74,7 @@ BEGIN
                                 , MovementItem.Amount                   AS Amount
                                 , COALESCE (MI_Income.Amount, 0)        AS Amount_Income
                                 , ROW_NUMBER() OVER (PARTITION BY Movement.Id, MILinkObject_Goods.ObjectId) AS Ord
+                                , COALESCE (MovementString_Comment.ValueData,'') AS Comment
                            FROM Movement
                                 LEFT JOIN MovementBoolean AS MovementBoolean_Closed
                                                           ON MovementBoolean_Closed.MovementId = Movement.Id
@@ -88,6 +90,11 @@ BEGIN
                                                               ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                              AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                                              AND MovementLinkObject_Unit.ObjectId > 0 -- !!!значит это заявка "снабжения"!!!
+
+                                LEFT JOIN MovementString AS MovementString_Comment 
+                                                         ON MovementString_Comment.MovementId = Movement.Id
+                                                        AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
                                 LEFT JOIN MovementItem ON MovementItem.MovementId  = Movement.Id
                                                       AND MovementItem.isErased    = FALSE
                                                       AND MovementItem.DescId      = zc_MI_Master()
@@ -117,9 +124,11 @@ BEGIN
         -- заявки по Юр Лицам - вычитаем: Заявка - Приход
       , tmpOrderIncome AS (SELECT tmp.GoodsId
                                 , tmp.PartnerName
+                                , tmp.Comment
                                 , tmp.Amount - tmp.Amount_Income AS Amount
                            FROM (SELECT tmpOrderIncome_all.GoodsId
                                       , STRING_AGG (Object.ValueData :: TVarChar, '; ') AS PartnerName -- на самом деле это Юр лицо, но его будем использовать если вдруг другой инфі не окажется
+                                      , STRING_AGG (tmpOrderIncome_all.Comment :: TVarChar, '; ') AS Comment
                                       , SUM (CASE WHEN tmpOrderIncome_all.Ord = 1 THEN tmpOrderIncome_all.Amount ELSE 0 END) AS Amount
                                       , SUM (tmpOrderIncome_all.Amount_Income) AS Amount_Income
                                  FROM tmpOrderIncome_all
@@ -353,7 +362,9 @@ BEGIN
 
            , tmpGoodsList.PartnerName :: TVarChar AS PartnerName
 
-           , vbCountDays                 AS CountDays
+           , tmpOrderIncome.Comment   :: TVarChar
+
+           , vbCountDays                        AS CountDays
 
            , tmpContainer.RemainsStart        :: TFloat AS RemainsStart
            , tmpContainer.RemainsEnd          :: TFloat AS RemainsEnd
@@ -433,6 +444,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 16.05.17         *
  30.03.17         *
 */
 
