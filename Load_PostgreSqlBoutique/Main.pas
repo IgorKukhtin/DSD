@@ -907,6 +907,29 @@ begin
  Gauge.Visible:=true;
     myEnabledCB(cbGoods2);
      //
+
+     //создаем вьюху, т.к. подзапрос не пашет
+     try fExecSqFromQuery('create view dba._ViewLoadPG6 as select distinct code, ParentId2, ''Sop'' as Name from Sop '
+            + ' union '
+            + '   select distinct code, ParentId2, ''Vint'' as Name from Vint '
+            + ' union '
+            + '   select distinct code, ParentId2, ''Tl'' as Name from Tl '
+            + ' union '
+            + '   select distinct code, ParentId2, ''Esc'' as Name from Esc '
+            + ' union '
+            + '   select distinct code, ParentId2, ''Mm'' as Name from Mm '
+            + ' union '
+            + '   select distinct code, ParentId2, ''Sav_out'' as Name from Sav_out '
+            + ' union '
+            + '   select distinct code, ParentId2, ''Ter_out'' as Name from Ter_out '
+            + ' union '
+            + '   select distinct code, ParentId2, ''Sav'' as Name from Sav '
+            + ' union '
+            + '   select distinct code, ParentId2, ''Chado'' as Name from Chado'
+            );
+     except end;
+
+     //
      with fromQuery,Sql do begin
         Close;
         Clear;
@@ -928,26 +951,7 @@ begin
           with fromQuery_two,Sql do begin
             Close;
             Clear;
-            Add('select parentid2 as ParentId from  ');
-            Add('( ');
-            Add('select distinct code, ParentId2, ''Sop'' as Name from Sop ');
-            Add('union ');
-            Add('select distinct code, ParentId2, ''Vint'' as Name from Vint ');
-            Add('union ');
-            Add('select distinct code, ParentId2, ''Tl'' as Name from Tl ');
-            Add('union ');
-            Add('select distinct code, ParentId2, ''Esc'' as Name from Esc ');
-            Add('union ');
-            Add('select distinct code, ParentId2, ''Mm'' as Name from Mm ');
-            Add('union ');
-            Add('select distinct code, ParentId2, ''Sav_out'' as Name from Sav_out ');
-            Add('union ');
-            Add('select distinct code, ParentId2, ''Ter_out'' as Name from Ter_out ');
-            Add('union ');
-            Add('select distinct code, ParentId2, ''Sav'' as Name from Sav ');
-            Add('union ');
-            Add('select distinct code, ParentId2, ''Chado'' as Name from Chado ');
-            Add(') a  ');
+            Add('select parentid2 as ParentId from  _ViewLoadPG6 as a  ');
             Add('where a.code = '+fromQuery.FieldByName('cashcode').AsString+'');
             Open;
             //if fromQuery_two.RecordCount > 0 then
@@ -1018,16 +1022,19 @@ begin
     Close;
   end;
 
-  fExecSqFromQuery(
-       ' update goods2 set ParentId =  tmp.ParentId'
-      +' from goodsProperty'
-      +'      inner join'
-      +'     (select  goodsProperty.GroupsName, max (goods2.ParentId) AS ParentId'
+  //создаем вьюху, т.к. подзапрос не пашет
+  try fExecSqFromQuery('create view dba._ViewLoadPG1 as select  goodsProperty.GroupsName, max (goods2.ParentId) AS ParentId'
       +'       from goodsProperty'
       +'            join goods2 on goods2.Id = goodsProperty.GoodsId'
       +'                       and goods2.ParentId <> 500000'
-      +'      group by goodsProperty.GroupsName'
-      +'      ) as tmp  on tmp.GroupsName = goodsProperty.GroupsName'
+      +'      group by goodsProperty.GroupsName');
+  except end;
+
+  fExecSqFromQuery(
+       ' update goods2 set ParentId =  tmp.ParentId'
+      +' from goodsProperty'
+             //через вьюху, т.к. подзапрос не пашет
+      +'      inner join _ViewLoadPG1 as tmp on tmp.GroupsName = goodsProperty.GroupsName'
       +' where goods2.ParentId = 500000'
       +'   and goods2.Id = goodsProperty.GoodsId'
        );
@@ -1094,8 +1101,27 @@ begin
     Gauge.Visible:=true;
      //
      myEnabledCB(cbGoods2);
-     //
-     with fromQuery,Sql do begin
+
+      //
+      //создаем вьюху, т.к. подзапрос не пашет
+      try fExecSqFromQuery('create view dba._ViewLoadPG2 as select BillItemsIncome.goodsid '
+           +'                     , sum(BillItemsIncome.OperCount) as OperCount '
+           +'                     , sum(BillItemsIncome.RemainsCount) as RemainsCount '
+           +'                     , max(BillItemsIncome.OperPrice) as OperPrice '
+           +'                     , max(BillItemsIncome.PriceListPrice) as PriceListPrice  '
+           +'                     , max(BillItemsIncome.UnitID) as UnitID'
+           +'                     , max(BillItemsIncome.clientid)  as  clientid '
+           +'                     , max(BillItemsIncome.ValutaID)  as  ValutaID '
+           +'                     , max(BillItemsIncome.DateIn)    as  DateIn '
+           +'                 from BillItemsIncome  '
+           +'                 group by goodsid');
+      except end;
+      //создаем вьюху, т.к. подзапрос не пашет
+      try fExecSqFromQuery('create view dba._ViewLoadPG3 as select DISTINCT goodsid, GroupsName from goodsproperty');
+      except end;
+      //
+
+       with fromQuery,Sql do begin
         Close;
         Clear;
         Add(' select goods2.CashCode as CashCode');
@@ -1110,19 +1136,11 @@ begin
         Add('      , Shop.UnitName as Shop  ');
         Add('      , BillItemsIncome.DateIn as DateIn  ');
         Add(' from goods2  ');
-        Add('     left outer join (select BillItemsIncome.goodsid ');
-        Add('                     , sum(BillItemsIncome.OperCount) as OperCount ');
-        Add('                     , sum(BillItemsIncome.RemainsCount) as RemainsCount ');
-        Add('                     , max(BillItemsIncome.OperPrice) as OperPrice ');
-        Add('                     , max(BillItemsIncome.PriceListPrice) as PriceListPrice  ');
-        Add('                     , max(BillItemsIncome.UnitID) as UnitID ');
-        Add('                     , max(BillItemsIncome.clientid)  as  clientid ');
-        Add('                     , max(BillItemsIncome.ValutaID)  as  ValutaID ');
-        Add('                     , max(BillItemsIncome.DateIn)    as  DateIn ');
-        Add('                 from BillItemsIncome  ');
-        Add('                 group by goodsid');
-        Add('                ) as BillItemsIncome on BillItemsIncome.goodsid = goods2.id ');
-        Add('     left outer join (select DISTINCT goodsid, GroupsName from goodsproperty) as grGoods on grGoods.goodsid = goods2.id');
+                  //через вьюху, т.к. подзапрос не пашет
+        Add('     left outer join _ViewLoadPG2 as BillItemsIncome on BillItemsIncome.goodsid = goods2.id ');
+                  //через вьюху, т.к. подзапрос не пашет
+        Add('     left outer join _ViewLoadPG3 as grGoods on grGoods.goodsid = goods2.id');
+
         Add('     left outer join  Unit as Shop on shop.id = BillItemsIncome.UnitID ');
         Add('     left outer join  Unit as Partner on Partner.id = BillItemsIncome.clientid ');
         Add('     left outer join valuta on valuta.id = BillItemsIncome.ValutaID ');
@@ -1203,19 +1221,11 @@ begin
         Add('      , Shop.UnitName as Shop  ');
         Add('      , max (BillItemsIncome.DateIn) as DateIn');
         Add(' from goods2');
-        Add('     left outer join (select BillItemsIncome.goodsid ');
-        Add('                     , sum(BillItemsIncome.OperCount) as OperCount ');
-        Add('                     , sum(BillItemsIncome.RemainsCount) as RemainsCount ');
-        Add('                     , max(BillItemsIncome.OperPrice) as OperPrice ');
-        Add('                     , max(BillItemsIncome.PriceListPrice) as PriceListPrice  ');
-        Add('                     , max(BillItemsIncome.UnitID) as UnitID ');
-        Add('                     , max(BillItemsIncome.clientid)  as  clientid ');
-        Add('                     , max(BillItemsIncome.ValutaID)  as  ValutaID ');
-        Add('                     , max(BillItemsIncome.DateIn)    as  DateIn ');
-        Add('                 from BillItemsIncome  ');
-        Add('                 group by goodsid');
-        Add('                ) as BillItemsIncome on BillItemsIncome.goodsid = goods2.id ');
-        Add('     left outer join (select DISTINCT goodsid, GroupsName from goodsproperty) as grGoods on grGoods.goodsid = goods2.id');
+                  //через вьюху, т.к. подзапрос не пашет
+        Add('     left outer join _ViewLoadPG2 as BillItemsIncome on BillItemsIncome.goodsid = goods2.id ');
+                 //через вьюху, т.к. подзапрос не пашет
+        Add('     left outer join _ViewLoadPG3 as grGoods on grGoods.goodsid = goods2.id');
+
         Add('     left outer join Unit as Shop on shop.id = BillItemsIncome.UnitID ');
         Add(' where goods2.ParentId = 500000 ');
         Add('   and goods2.HasChildren = -1  ');
@@ -1999,6 +2009,15 @@ begin
      //
      myEnabledCB(cbIncome);
      //
+     //создаем вьюху, т.к. подзапрос не пашет
+     try fExecSqFromQuery('create view dba._ViewLoadPG4 as select goods_group.goodsName AS LabelName'
+           +'                           , GoodsProperty.goodsId '
+           +'              from GoodsProperty '
+           +'              join goods on goods.Id = GoodsProperty.goodsId '
+           +'              join goods as goods_group on goods_group.Id = goods.ParentId '
+           +'              group by  GoodsProperty.goodsId, goods_group.goodsName');
+     except end;
+     //
      with fromQuery,Sql do begin
         Close;
         Clear;
@@ -2036,13 +2055,7 @@ begin
         Add('     left outer join DBA.Composition on Composition.Id = GoodsProperty.CompositionId ');
         Add('     left outer join DBA.CompositionGroup on CompositionGroup.Id = Composition.CompositionGroupId  ');
         Add('     left outer join DBA.LineFabrica on LineFabrica.Id = GoodsProperty.LineFabricaId ');
-        Add('     left outer join  ');
-        Add('          ( select goods_group.goodsName AS LabelName ');
-        Add('            , GoodsProperty.goodsId ');
-        Add('              from GoodsProperty ');
-        Add('              join goods on goods.Id = GoodsProperty.goodsId ');
-        Add('              join goods as goods_group on goods_group.Id = goods.ParentId ');
-        Add('              group by  GoodsProperty.goodsId, goods_group.goodsName) as Label on label.goodsId = GoodsProperty.goodsId ');
+        Add('     left outer join _ViewLoadPG4 as Label on label.goodsId = GoodsProperty.goodsId ');
         Add('      left outer join  dba.Firma as Firma on  Firma.id = BillItemsIncome.FirmaId ');
         //    !!!последнюю группу не загружаем, но кроме ј–’»¬ј
         Add('      left outer join  dba.Goods as GoodsGroup1 on  GoodsGroup1.id = Goods.ParentId ');
@@ -3673,6 +3686,17 @@ begin
      //
      myEnabledCB(cbGoodsGroup);
      //
+     //создаем вьюху, т.к. подзапрос не пашет
+     try fExecSqFromQuery('create view dba._ViewLoadPG5 as select distinct Goods_find.ParentId'
+           +'                      from dba.Goods as Goods_find'
+           +'                           left outer join dba.Goods as Goods_parent1 on Goods_parent1.Id = Goods_find.ParentId'
+           +'                           left outer join dba.Goods as Goods_parent2 on Goods_parent2.Id = Goods_parent1.ParentId'
+           +'                      where Goods_find.HasChildren = zc_hsLeaf()'
+           +'                         and Goods_find.ParentId <> 500000'
+           +'                         and Goods_parent1.ParentId <> 500000'
+           +'                         and Goods_parent2.ParentId <> 500000');
+     except end;
+     //
      with fromQuery,Sql do begin
         Close;
         Clear;
@@ -3689,15 +3713,7 @@ begin
         Add('     left outer join dba.Goods as Goods_child on Goods_child.ParentId    = Goods.Id');
         Add('                                             and Goods_child.HasChildren <> zc_hsLeaf()');
         //        !!!последнюю группу не загружаем, но кроме ј–’»¬ј
-        Add('     left outer join (select distinct Goods_find.ParentId');
-        Add('                      from dba.Goods as Goods_find');
-        Add('                           left outer join dba.Goods as Goods_parent1 on Goods_parent1.Id = Goods_find.ParentId');
-        Add('                           left outer join dba.Goods as Goods_parent2 on Goods_parent2.Id = Goods_parent1.ParentId');
-        Add('                      where Goods_find.HasChildren = zc_hsLeaf()');
-        Add('                         and Goods_find.ParentId <> 500000');
-        Add('                         and Goods_parent1.ParentId <> 500000');
-        Add('                         and Goods_parent2.ParentId <> 500000');
-        Add('                     ) as Goods_find on Goods_find.ParentId = Goods.Id');
+        Add('     left outer join _ViewLoadPG5 as Goods_find on Goods_find.ParentId = Goods.Id');
         Add('where Goods.HasChildren <> zc_hsLeaf()');
         Add('  and (Goods_find.ParentId is null'); // !!!последнюю группу не загружаем, но кроме ј–’»¬ј
         Add('    or Goods_child.Id > 0)');

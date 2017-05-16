@@ -95,10 +95,10 @@ BEGIN
                                                           AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
                                  WHERE MIContainer.MovementId             = inMovementId
                                    AND MIContainer.DescId                 = zc_MIContainer_Count()
-                                   AND MIContainer.WhereObjectId_Analyzer = (SELECT MAX (CASE WHEN MLO.DescId = zc_MovementLinkObject_From() AND Object.DescId = zc_Object_Member() THEN  1 * MLO.ObjectId
-                                                                                              WHEN MLO.DescId = zc_MovementLinkObject_To()   AND Object.DescId = zc_Object_Member() THEN -1 * MLO.ObjectId
-                                                                                              ELSE NULL
-                                                                                         END)
+                                   AND MIContainer.WhereObjectId_Analyzer = (SELECT ABS (MAX (CASE WHEN MLO.DescId = zc_MovementLinkObject_From() AND Object.DescId = zc_Object_Member() THEN  1 * MLO.ObjectId
+                                                                                                   WHEN MLO.DescId = zc_MovementLinkObject_To()   AND Object.DescId = zc_Object_Member() THEN -1 * MLO.ObjectId
+                                                                                                   ELSE NULL
+                                                                                              END))
                                                                              FROM MovementLinkObject AS MLO
                                                                                   INNER JOIN Object ON Object.Id = MLO.ObjectId
                                                                              WHERE MLO.MovementId = inMovementId AND MLO.DescId IN (zc_MovementLinkObject_From(), zc_MovementLinkObject_To())
@@ -355,10 +355,10 @@ BEGIN
                                                           AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
                                  WHERE MIContainer.MovementId             = inMovementId
                                    AND MIContainer.DescId                 = zc_MIContainer_Count()
-                                   AND MIContainer.WhereObjectId_Analyzer = (SELECT MAX (CASE WHEN MLO.DescId = zc_MovementLinkObject_From() AND Object.DescId = zc_Object_Member() THEN  1 * MLO.ObjectId
-                                                                                              WHEN MLO.DescId = zc_MovementLinkObject_To()   AND Object.DescId = zc_Object_Member() THEN -1 * MLO.ObjectId
-                                                                                              ELSE NULL
-                                                                                         END)
+                                   AND MIContainer.WhereObjectId_Analyzer = (SELECT ABS (MAX (CASE WHEN MLO.DescId = zc_MovementLinkObject_From() AND Object.DescId = zc_Object_Member() THEN  1 * MLO.ObjectId
+                                                                                                   WHEN MLO.DescId = zc_MovementLinkObject_To()   AND Object.DescId = zc_Object_Member() THEN -1 * MLO.ObjectId
+                                                                                                   ELSE NULL
+                                                                                              END))
                                                                              FROM MovementLinkObject AS MLO
                                                                                   INNER JOIN Object ON Object.Id = MLO.ObjectId
                                                                              WHERE MLO.MovementId = inMovementId AND MLO.DescId IN (zc_MovementLinkObject_From(), zc_MovementLinkObject_To())

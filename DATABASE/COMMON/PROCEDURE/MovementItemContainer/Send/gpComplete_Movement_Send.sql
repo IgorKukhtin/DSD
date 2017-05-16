@@ -313,9 +313,11 @@ BEGIN
             , _tmp.MemberId_To
             , _tmp.BranchId_To
 
+              -- сформируем позже
             , 0 AS MIContainerId_To
-            , 0 AS ContainerId_GoodsFrom
+            , COALESCE (tmpContainer.ContainerId, 0) AS ContainerId_Goods -- !!!или подбор партий!!!
             , 0 AS ContainerId_GoodsTo
+            
             , _tmp.GoodsId
             , _tmp.GoodsKindId
             , _tmp.AssetId
@@ -323,7 +325,7 @@ BEGIN
             , _tmp.PartionGoodsDate_From
             , _tmp.PartionGoodsDate_To
 
-            , _tmp.OperCount
+            , COALESCE (tmpContainer.Amount, _tmp.OperCount) AS OperCount
 
               -- Аналитики счетов - направления (От Кого)
             , _tmp.AccountDirectionId_From
@@ -470,7 +472,9 @@ BEGIN
 
 
      -- 1.1.1. определяется для количественного учета
-     UPDATE _tmpItem SET ContainerId_GoodsFrom = lpInsertUpdate_ContainerCount_Goods (inOperDate               := _tmpItem.OperDate
+     UPDATE _tmpItem SET ContainerId_GoodsFrom = CASE WHEN _tmpItem.ContainerId_GoodsFrom > 0 THEN _tmpItem.ContainerId_GoodsFrom
+                                                  ELSE
+                                                 lpInsertUpdate_ContainerCount_Goods (inOperDate               := _tmpItem.OperDate
                                                                                     , inUnitId                 := CASE WHEN _tmpItem.MemberId_From <> 0 THEN 0 /*_tmpItem.UnitId_Item*/ ELSE _tmpItem.UnitId_From END
                                                                                     , inCarId                  := NULL
                                                                                     , inMemberId               := _tmpItem.MemberId_From
@@ -483,6 +487,7 @@ BEGIN
                                                                                     , inBranchId               := _tmpItem.BranchId_From
                                                                                     , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                      )
+                                                 END
                        , ContainerId_GoodsTo   = lpInsertUpdate_ContainerCount_Goods (inOperDate               := _tmpItem.OperDate
                                                                                     , inUnitId                 := CASE WHEN _tmpItem.MemberId_To <> 0 THEN 0 /*_tmpItem.UnitId_Item*/ ELSE _tmpItem.UnitId_To END
                                                                                     , inCarId                  := NULL
@@ -500,13 +505,14 @@ BEGIN
 
 
      -- 1.2. самое интересное: заполняем таблицу - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках !!!(кроме Тары)!!!
-     INSERT INTO _tmpItemSumm (MovementItemId, MIContainerId_To, ContainerId_To, AccountId_To, ContainerId_ProfitLoss, ContainerId_From, AccountId_From, InfoMoneyId_Detail_From, OperSumm)
+     INSERT INTO _tmpItemSumm (MovementItemId, MIContainerId_To, ContainerId_To, AccountId_To, ContainerId_ProfitLoss, ContainerId_GoodsFrom, ContainerId_From, AccountId_From, InfoMoneyId_Detail_From, OperSumm)
         SELECT
               _tmpItem.MovementItemId
             , 0 AS MIContainerId_To
             , 0 AS ContainerId_To
             , 0 AS AccountId_To
             , 0 AS ContainerId_ProfitLoss
+            , _tmpItem.ContainerId_GoodsFrom
             , Container_Summ.Id AS ContainerId_From
             , Container_Summ.ObjectId AS AccountId_From
             , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail_From
@@ -533,6 +539,7 @@ BEGIN
           AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
           AND vbIsHistoryCost= TRUE -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
         GROUP BY _tmpItem.MovementItemId
+               , _tmpItem.ContainerId_GoodsFrom
                , Container_Summ.Id
                , Container_Summ.ObjectId
                , ContainerLinkObject_InfoMoneyDetail.ObjectId
@@ -584,9 +591,10 @@ BEGIN
                       FROM _tmpItem
                       WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
                      ) AS _tmpItem_group
-               ) AS _tmpItem_byAccount ON _tmpItem_byAccount.AccountDirectionId_To = _tmpItem.AccountDirectionId_To
+               ) AS _tmpItem_byAccount ON _tmpItem_byAccount.AccountDirectionId_To  = _tmpItem.AccountDirectionId_To
                                       AND _tmpItem_byAccount.InfoMoneyDestinationId = _tmpItem.InfoMoneyDestinationId
-     WHERE _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
+     WHERE _tmpItemSumm.MovementItemId        = _tmpItem.MovementItemId
+       AND _tmpItemSumm.ContainerId_GoodsFrom = _tmpItem.ContainerId_GoodsFrom;
 
 
      -- 1.3.2. определяется ContainerId для проводок по суммовому учету - Кому  + определяется контейнер для Проводки - Прибыль
@@ -629,7 +637,9 @@ BEGIN
                                                                                 , inAssetId                := _tmpItem.AssetId
                                                                                  )
      FROM _tmpItem
-     WHERE _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
+     WHERE _tmpItemSumm.MovementItemId        = _tmpItem.MovementItemId
+       AND _tmpItemSumm.ContainerId_GoodsFrom = _tmpItem.ContainerId_GoodsFrom
+       ;
 
 
 
@@ -695,7 +705,9 @@ BEGIN
                                                                                     , inIsActive       := TRUE
                                                                                      )
      FROM _tmpItem
-     WHERE _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
+     WHERE _tmpItemSumm.MovementItemId        = _tmpItem.MovementItemId
+       AND _tmpItemSumm.ContainerId_GoodsFrom = _tmpItem.ContainerId_GoodsFrom
+       ;
 
      -- 1.3.4. формируются Проводки для суммового учета - От кого
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
@@ -716,7 +728,9 @@ BEGIN
             , _tmpItem.OperDate
             , FALSE
        FROM _tmpItem
-            JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
+            JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId        = _tmpItem.MovementItemId
+                             AND _tmpItemSumm.ContainerId_GoodsFrom = _tmpItem.ContainerId_GoodsFrom
+                             ;
 
 
      -- 1.3.5. формируются Проводки - Прибыль
@@ -745,7 +759,8 @@ BEGIN
                   , _tmpItem.OperDate
                   , SUM (_tmpItemSumm.OperSumm) AS OperSumm
              FROM _tmpItemSumm
-                  INNER JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
+                  INNER JOIN _tmpItem ON _tmpItem.MovementItemId        = _tmpItemSumm.MovementItemId
+                                     AND _tmpItem.ContainerId_GoodsFrom = _tmpItemSumm.ContainerId_GoodsFrom
              WHERE _tmpItemSumm.ContainerId_ProfitLoss <> 0
              GROUP BY _tmpItemSumm.MovementItemId
                     , _tmpItemSumm.ContainerId_ProfitLoss
@@ -771,7 +786,8 @@ BEGIN
             , _tmpItem.OperDate
             , FALSE
        FROM _tmpItem
-            JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
+            JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId        = _tmpItem.MovementItemId
+                             AND _tmpItemSumm.ContainerId_GoodsFrom = _tmpItem.ContainerId_GoodsFrom
        WHERE _tmpItemSumm.ContainerId_ProfitLoss <> 0;
 
 

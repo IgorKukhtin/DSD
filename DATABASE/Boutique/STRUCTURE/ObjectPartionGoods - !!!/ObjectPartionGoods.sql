@@ -21,7 +21,7 @@ CREATE TABLE Object_PartionGoods(
    CurrencyId          Integer ,
    Amount              TFloat  NOT NULL,
    OperPrice	       TFloat  NOT NULL,
-   CountForPrice       TFloat  ,
+   CountForPrice       TFloat  NOT NULL DEFAULT 1,
    PriceSale           TFloat  NOT NULL,
    BrandId             Integer ,
    PeriodId            Integer ,
@@ -46,8 +46,6 @@ CREATE TABLE Object_PartionGoods(
 /*                                  Индексы                                      */
 CREATE INDEX idx_Object_PartionGoods_MovementItemId ON Object_PartionGoods(MovementItemId);
 CREATE INDEX idx_Object_PartionGoods_MovementId	 ON Object_PartionGoods(MovementId);
-
-
 
 /*-------------------------------------------------------------------------------*/
 /*
