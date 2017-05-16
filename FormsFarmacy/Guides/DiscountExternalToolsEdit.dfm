@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100'  <'#1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1055#1088#1086#1077#1082#1090#1086#1074' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099')>'
-  ClientHeight = 302
+  ClientHeight = 363
   ClientWidth = 388
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -23,7 +23,7 @@
   end
   object cxButton1: TcxButton
     Left = 90
-    Top = 268
+    Top = 320
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -33,7 +33,7 @@
   end
   object cxButton2: TcxButton
     Left = 240
-    Top = 268
+    Top = 320
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -104,6 +104,17 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 11
+    Width = 296
+  end
+  object cxLabel2: TcxLabel
+    Left = 40
+    Top = 260
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1087#1088#1086#1077#1082#1090#1072' ('#1080#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088')'
+  end
+  object ceExternalUnit: TcxTextEdit
+    Left = 40
+    Top = 280
+    TabOrder = 13
     Width = 296
   end
   object ActionList: TActionList
@@ -190,6 +201,14 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inExternalUnit'
+        Value = Null
+        Component = ceExternalUnit
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 328
@@ -266,6 +285,13 @@
         Value = Null
         Component = GuidesDiscountExternal
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ExternalUnit'
+        Value = ''
+        Component = ceExternalUnit
         DataType = ftString
         MultiSelectSeparator = ','
       end>

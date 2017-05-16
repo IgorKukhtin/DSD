@@ -204,8 +204,62 @@ BEGIN
 
                , COALESCE (ObjectFloat_Goods_PriceRetSP.ValueData,0) ::TFloat  AS PriceRetSP
                , COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) ::TFloat  AS PriceOptSP
-               , COALESCE (ObjectFloat_Goods_PriceSP.ValueData,0)    ::TFloat  AS PriceSP
-               , COALESCE (ObjectFloat_Goods_PaymentSP.ValueData,0)  ::TFloat  AS PaymentSP
+              /* , CASE WHEN COALESCE (Object_Price_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData,0) 
+                           THEN COALESCE (Object_Price_View.Price,0)
+                      ELSE
+                          ::TFloat  AS PriceSP*/
+               , CASE WHEN COALESCE (Object_Price_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
+                      THEN COALESCE (Object_Price_View.Price,0) -- по нашей цене, т.к. она меньше чем цена возмещения
+
+                 ELSE
+
+                 CASE WHEN COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0) = 0
+                      THEN 0 -- по 0, т.к. цена доплаты = 0
+
+                 WHEN COALESCE (Object_Price_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
+                      THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
+
+                 WHEN COALESCE (Object_Price_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
+                   AND 0 > COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
+                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (Object_Price_View.Price,0) 
+                           ) -- разница с ценой возмещения и "округлили в большую"
+                      THEN 0
+
+                 WHEN COALESCE (Object_Price_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
+                      THEN COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
+                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (Object_Price_View.Price,0) 
+                           ) -- разница с ценой возмещения и "округлили в большую"
+
+                 ELSE COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
+                 
+            END
+          + COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
+
+            END :: TFloat  AS PriceSP
+               --, COALESCE (ObjectFloat_Goods_PaymentSP.ValueData,0)  ::TFloat  AS PaymentSP
+            , CASE WHEN COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0) = 0
+                      THEN 0 -- по 0, т.к. цена доплаты = 0
+
+                 WHEN COALESCE (Object_Price_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
+                      THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
+
+                 -- WHEN COALESCE (Object_Price_View.Price,0) < COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0)
+                 --      THEN COALESCE (Object_Price_View.Price,0) -- по нашей цене, т.к. она меньше чем цена доплаты
+
+                 WHEN COALESCE (Object_Price_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
+                   AND 0 > COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
+                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (Object_Price_View.Price,0) 
+                           ) -- разница с ценой возмещения и "округлили в большую"
+                      THEN 0
+
+                 WHEN COALESCE (Object_Price_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
+                      THEN COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
+                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (Object_Price_View.Price,0) 
+                           ) -- разница с ценой возмещения и "округлили в большую"
+
+                 ELSE COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
+                 
+               END   ::TFloat  AS PaymentSP
 
                , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
                , Object_Goods_View.isErased                      AS isErased 
@@ -379,8 +433,61 @@ BEGIN
                               
                , COALESCE (ObjectFloat_Goods_PriceRetSP.ValueData,0) ::TFloat  AS PriceRetSP
                , COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) ::TFloat  AS PriceOptSP
-               , COALESCE (ObjectFloat_Goods_PriceSP.ValueData,0)    ::TFloat  AS PriceSP
-               , COALESCE (ObjectFloat_Goods_PaymentSP.ValueData,0)  ::TFloat  AS PaymentSP
+              -- , COALESCE (ObjectFloat_Goods_PriceSP.ValueData,0)    ::TFloat  AS PriceSP
+              -- , COALESCE (ObjectFloat_Goods_PaymentSP.ValueData,0)  ::TFloat  AS PaymentSP
+
+               , CASE WHEN COALESCE (Object_Price_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
+                      THEN COALESCE (Object_Price_View.Price,0) -- по нашей цене, т.к. она меньше чем цена возмещения
+
+                 ELSE
+
+                 CASE WHEN COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0) = 0
+                      THEN 0 -- по 0, т.к. цена доплаты = 0
+
+                 WHEN COALESCE (Object_Price_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
+                      THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
+
+                 WHEN COALESCE (Object_Price_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
+                   AND 0 > COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
+                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (Object_Price_View.Price,0) 
+                           ) -- разница с ценой возмещения и "округлили в большую"
+                      THEN 0
+
+                 WHEN COALESCE (Object_Price_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
+                      THEN COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
+                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (Object_Price_View.Price,0) 
+                           ) -- разница с ценой возмещения и "округлили в большую"
+
+                 ELSE COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
+                 
+            END
+          + COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
+
+            END :: TFloat  AS PriceSP
+               --, COALESCE (ObjectFloat_Goods_PaymentSP.ValueData,0)  ::TFloat  AS PaymentSP
+            , CASE WHEN COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0) = 0
+                      THEN 0 -- по 0, т.к. цена доплаты = 0
+
+                 WHEN COALESCE (Object_Price_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
+                      THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
+
+                 -- WHEN COALESCE (Object_Price_View.Price,0) < COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0)
+                 --      THEN COALESCE (Object_Price_View.Price,0) -- по нашей цене, т.к. она меньше чем цена доплаты
+
+                 WHEN COALESCE (Object_Price_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
+                   AND 0 > COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
+                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (Object_Price_View.Price,0) 
+                           ) -- разница с ценой возмещения и "округлили в большую"
+                      THEN 0
+
+                 WHEN COALESCE (Object_Price_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
+                      THEN COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
+                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (Object_Price_View.Price,0) 
+                           ) -- разница с ценой возмещения и "округлили в большую"
+
+                 ELSE COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
+                 
+               END   ::TFloat  AS PaymentSP
 
                , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
                , Object_Goods_View.isErased                AS isErased 

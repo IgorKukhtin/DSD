@@ -452,13 +452,13 @@ BEGIN
              , COALESCE (tmpParam.PartnerMedical_FullName, Object_PartnerMedical.ValueData) :: TVarChar AS PartnerMedical_FullName
              , tmpParam.PartnerMedical_JuridicalAddress
              , tmpParam.PartnerMedical_Phone
-             , tmpParam.PartnerMedical_ContractId                      AS ContractId
-             , tmpParam.PartnerMedical_ContractName                    AS ContractName
-             , tmpParam.PartnerMedical_Contract_StartDate :: TDateTime AS Contract_StartDate
+             , tmpParam.PartnerMedical_ContractId                                       AS ContractId
+             , COALESCE (tmpParam.PartnerMedical_ContractName, '')         ::TVarChar   AS ContractName
+             , (CASE WHEN COALESCE (tmpParam.PartnerMedical_Contract_StartDate, Null) <> '01.01.2100' THEN COALESCE (tmpParam.PartnerMedical_Contract_StartDate, Null) ELSE NULL END) :: TDateTime AS Contract_StartDate
 
              , tmpData.MedicSPName
              , tmpData.InvNumberSP
-             , tmpData.OperDate     ::TDateTime
+             , date_trunc('day', tmpData.OperDate)  :: TDateTime as OperDate
 
              , tmpData.InvNumber_Invoice
              , tmpData.InvNumber_Invoice_Full

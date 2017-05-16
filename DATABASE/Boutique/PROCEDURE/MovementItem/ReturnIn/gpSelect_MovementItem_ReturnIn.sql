@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , LabelName TVarChar
              , GoodsSizeName TVarChar
              --, BarCode TVarChar
-             , Amount TFloat
+             , Amount TFloat, Amount_Sale TFloat
              , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
              , AmountSumm TFloat, AmountPriceListSumm TFloat
              , CurrencyValue TFloat, ParValue TFloat
@@ -63,7 +63,7 @@ BEGIN
                              , COALESCE (MIFloat_CurrencyValue.ValueData, 0) AS CurrencyValue
                              , COALESCE (MIFloat_ParValue.ValueData, 0)      AS ParValue
                         FROM Movement
-                             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                            INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                     ON MovementLinkObject_To.MovementId = Movement.Id
                                    AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                    AND MovementLinkObject_To.ObjectId = vbClientId
@@ -94,6 +94,7 @@ BEGIN
                            , MovementItem.ObjectId                                 AS GoodsId
                            , MovementItem.PartionId
                            , MILinkObject_PartionMI.ObjectId                       AS PartionMI_Id
+                           , Object_PartionMI.ObjectCode                           AS SaleMI_ID
                            , MovementItem.Amount 
                            , COALESCE (MIFloat_OperPrice.ValueData, 0)             AS OperPrice
                            , COALESCE (MIFloat_CountForPrice.ValueData, 1)         AS CountForPrice 
@@ -141,13 +142,15 @@ BEGIN
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
                                                              ON MILinkObject_PartionMI.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_PartionMI.DescId = zc_MILinkObject_PartionMI()
+                            LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
                        )
           , tmpMI AS (SELECT COALESCE (tmpMI_Master.Id,0) AS Id
                            , COALESCE (tmpMI_Master.GoodsId, tmpMI_Sale.GoodsId)     AS GoodsId
                            , COALESCE (tmpMI_Master.PartionId, tmpMI_Sale.PartionId) AS PartionId
                            , COALESCE (tmpMI_Master.PartionMI_Id, 0)                 AS PartionMI_Id
-                           , COALESCE (tmpMI_Sale.MI_Id,0)                           AS SaleMI_Id
+                           , COALESCE (tmpMI_Sale.MI_Id, tmpMI_Master.SaleMI_ID)     AS SaleMI_Id
                            , COALESCE (tmpMI_Master.Amount,0)                        AS Amount
+                           , COALESCE (tmpMI_Sale.Amount,0)                          AS Amount_Sale
                            , COALESCE (tmpMI_Master.OperPrice, tmpMI_Sale.OperPrice) AS OperPrice
                            , COALESCE (tmpMI_Master.CountForPrice, tmpMI_Sale.CountForPrice) AS CountForPrice 
                            , COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList) AS OperPriceList
@@ -161,7 +164,7 @@ BEGIN
 --                           , AS InvNumber_Sale
                 FROM tmpMI_Sale
                      FULL JOIN tmpMI_Master ON tmpMI_Master.GoodsId = tmpMI_Sale.GoodsId
-                                      --     AND tmpMI_Master.PartionMI_Id = tmpMI_Sale.MI_Id-- не правтильно - нужна правильная связь
+                                           AND tmpMI_Master.SaleMI_ID = tmpMI_Sale.MI_Id  -- уточнить правильную связь
                 )
 
     , tmpMI_Child AS (SELECT MovementItem.ParentId
@@ -200,7 +203,7 @@ BEGIN
            --, tmpMI.PartionId                AS BarCode
 
            , tmpMI.Amount         ::TFloat
-
+           , tmpMI.Amount_Sale    ::TFloat
            , tmpMI.OperPrice      ::TFloat
            , tmpMI.CountForPrice  ::TFloat
            , tmpMI.OperPriceList  ::TFloat
@@ -355,7 +358,7 @@ BEGIN
           -- , tmpMI.PartionId                AS BarCode
 
            , tmpMI.Amount         ::TFloat
-
+           , MI_Sale.Amount       ::TFloat
            , tmpMI.OperPrice      ::TFloat
            , tmpMI.CountForPrice  ::TFloat
            , tmpMI.OperPriceList  ::TFloat

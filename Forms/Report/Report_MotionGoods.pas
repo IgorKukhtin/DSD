@@ -222,6 +222,8 @@ type
     bbPrint_MO: TdxBarButton;
     bbPrint_Auto: TdxBarButton;
     LocationName_inf: TcxGridDBColumn;
+    actPrint_Goods: TdsdPrintAction;
+    bbPrint_Goods: TdxBarButton;
   private
   public
   end;

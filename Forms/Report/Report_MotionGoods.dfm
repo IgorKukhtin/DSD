@@ -809,6 +809,54 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Options.Editing = False
         Width = 40
       end
+      object InvNumber_Partion: TcxGridDBColumn
+        Caption = #1048#1085#1074#1077#1085#1090'. '#1085#1086#1084#1077#1088' '#1087#1072#1088#1090#1080#1080
+        DataBinding.FieldName = 'InvNumber_Partion'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
+      end
+      object OperDate_Partion: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
+        DataBinding.FieldName = 'OperDate_Partion'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
+      end
+      object Price_Partion: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1087#1072#1088#1090#1080#1080
+        DataBinding.FieldName = 'Price_Partion'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
+      end
+      object Storage_Partion: TcxGridDBColumn
+        Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1087#1072#1088#1090#1080#1103')'
+        DataBinding.FieldName = 'Storage_Partion'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
+      end
+      object Unit_Partion: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1072#1088#1090#1080#1103' '#1087#1088#1080#1093#1086#1076#1072')'
+        DataBinding.FieldName = 'Unit_Partion'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
+      end
       object AssetToCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1054#1057
         DataBinding.FieldName = 'AssetToCode'
@@ -2505,6 +2553,14 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Goods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -2586,6 +2642,10 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Action = actPrint_Total
       Category = 0
       ImageIndex = 16
+    end
+    object bbPrint_Goods: TdxBarButton
+      Action = actPrint_Goods
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -2788,6 +2848,102 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actPrint_Goods: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1072#1088#1090#1080#1080' '#1058#1052#1062'+'#1052#1053#1052#1040')'
+      Hint = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1072#1088#1090#1080#1080' '#1058#1052#1062'+'#1052#1053#1052#1040')'
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKindName;Partio' +
+            'nGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyName_all_Detai' +
+            'l'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = GuidesUnitGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationName'
+          Value = ''
+          Component = GuidesLocation
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GuidesGoodsGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = ''
+          Component = GuidesGoods
+          ComponentItem = 'TextValue'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGoodsKind'
+          Value = 'False'
+          Component = cbGoodsKind
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartionGoods'
+          Value = 'False'
+          Component = cbPartionGoods
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAmount'
+          Value = 'False'
+          Component = cbAmount
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isInfoMoney'
+          Value = 'False'
+          Component = cbInfoMoney
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1072#1088#1090#1080#1080' '#1058#1052#1062'+'#1052#1053#1052#1040')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1072#1088#1090#1080#1080' '#1058#1052#1062'+'#1052#1053#1052#1040')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'

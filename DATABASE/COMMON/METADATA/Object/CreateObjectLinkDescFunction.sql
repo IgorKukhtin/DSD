@@ -1614,6 +1614,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_DiscountExternalTools_Unit() RETURNS In
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_DiscountExternalTools_Unit', 'Подразделение', zc_Object_DiscountExternalTools(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_DiscountExternalTools_Unit');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_DiscountExternalJuridical_DiscountExternal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_DiscountExternalJuridical_DiscountExternal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_DiscountExternalJuridical_DiscountExternal', 'Проект (дисконтные карты)', zc_Object_DiscountExternalJuridical(), zc_Object_DiscountExternal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_DiscountExternalJuridical_DiscountExternal');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_DiscountExternalJuridical_Juridical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_DiscountExternalJuridical_Juridical'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_DiscountExternalJuridical_Juridical', 'Юридическое лицо', zc_Object_DiscountExternalJuridical(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_DiscountExternalJuridical_Juridical');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_OrderShedule_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderShedule_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)

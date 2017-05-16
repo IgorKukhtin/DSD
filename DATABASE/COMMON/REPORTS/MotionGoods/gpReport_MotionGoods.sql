@@ -24,7 +24,14 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, GoodsKindName_complete TVarChar, MeasureName TVarChar
              , Weight TFloat
-             , PartionGoodsId Integer, PartionGoodsName TVarChar, AssetToCode Integer, AssetToName TVarChar
+             , PartionGoodsId Integer, PartionGoodsName TVarChar
+             , InvNumber_Partion  TVarChar
+             , OperDate_Partion TDateTime
+             , Price_Partion TFloat
+             , Storage_Partion TVarChar
+             , Unit_Partion TVarChar
+
+             , AssetToCode Integer, AssetToName TVarChar
 
              , CountStart TFloat
              , CountStart_Weight TFloat
@@ -377,6 +384,12 @@ BEGIN
                                                            )
                ELSE COALESCE (Object_PartionGoods.ValueData, '')
           END :: TVarChar AS PartionGoodsName
+
+        , Object_PartionGoods.ValueData            :: TVarChar  AS InvNumber_Partion
+        , ObjectDate_PartionGoods_Value.ValueData  :: TDateTime AS OperDate_Partion
+        , ObjectFloat_PartionGoods_Price.ValueData :: TFloat    AS Price_Partion
+        , Object_Storage.ValueData                 :: TVarChar  AS Storage_Partion
+        , Object_Unit.ValueData                    :: TVarChar  AS Unit_Partion
 
         , Object_AssetTo.ObjectCode      AS AssetToCode
         , Object_AssetTo.ValueData       AS AssetToName
