@@ -44,6 +44,7 @@ type
     JuridicalName: TcxGridDBColumn;
     DiscountExternalCode: TcxGridDBColumn;
     DiscountExternalName: TcxGridDBColumn;
+    cExternalUnit: TcxGridDBColumn;
   private
     { Private declarations }
   public

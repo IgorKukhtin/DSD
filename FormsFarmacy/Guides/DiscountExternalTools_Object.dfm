@@ -3,7 +3,7 @@ object DiscountExternalTools_ObjectForm: TDiscountExternalTools_ObjectForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082'  <'#1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1055#1088#1086#1077#1082#1090#1086#1074' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099')>'
   ClientHeight = 332
-  ClientWidth = 778
+  ClientWidth = 878
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,14 @@ object DiscountExternalTools_ObjectForm: TDiscountExternalTools_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 778
+    Width = 878
     Height = 306
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 778
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -111,6 +112,14 @@ object DiscountExternalTools_ObjectForm: TDiscountExternalTools_ObjectForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
+      end
+      object cExternalUnit: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1087#1088#1086#1077#1082#1090#1072' ('#1048#1044')'
+        DataBinding.FieldName = 'ExternalUnit'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
       end
       object Id: TcxGridDBColumn
         DataBinding.FieldName = 'Id'
