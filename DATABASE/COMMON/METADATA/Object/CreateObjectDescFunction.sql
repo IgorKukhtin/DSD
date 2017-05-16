@@ -864,6 +864,10 @@ CREATE OR REPLACE FUNCTION zc_Object_DiscountExternalTools() RETURNS Integer AS 
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_DiscountExternalTools', 'Настройки Проектов (дисконтные карты)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_DiscountExternalTools');
 
+CREATE OR REPLACE FUNCTION zc_Object_DiscountExternalJuridical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_DiscountExternalJuridical'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_DiscountExternalJuridical', 'Настройки Проектов (дисконтные карты, юридические лица)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_DiscountExternalJuridical');
+
 CREATE OR REPLACE FUNCTION zc_Object_DiscountCard() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_DiscountCard'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_DiscountCard', 'Дисконтные карты' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_DiscountCard');

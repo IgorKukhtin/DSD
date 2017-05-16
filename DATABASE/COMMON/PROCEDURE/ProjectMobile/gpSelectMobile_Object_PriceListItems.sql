@@ -6,21 +6,26 @@ CREATE OR REPLACE FUNCTION gpSelectMobile_Object_PriceListItems (
     IN inSyncDateIn TDateTime, -- Дата/время последней синхронизации - когда "успешно" загружалась входящая информация - актуальные справочники, цены, акции, долги, остатки и т.д
     IN inSession    TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id             Integer
-             , GoodsId        Integer   -- Товар
-             , PriceListId    Integer   -- Прайс-лист
-             , OrderStartDate TDateTime -- Дата с которой действует цена заявки
-             , OrderEndDate   TDateTime -- Дата до которой действует цена заявки
-             , OrderPrice     TFloat    -- Цена заявки
-             , SaleStartDate  TDateTime -- Дата с которой действует цена отгрузки
-             , SaleEndDate    TDateTime -- Дата до которой действует цена отгрузки
-             , SalePrice      TFloat    -- Цена отгрузки
-             , isSync         Boolean   -- Синхронизируется (да/нет)
+RETURNS TABLE (Id              Integer
+             , GoodsId         Integer   -- Товар
+             , PriceListId     Integer   -- Прайс-лист
+             , OrderStartDate  TDateTime -- Дата с которой действует цена заявки
+             , OrderEndDate    TDateTime -- Дата до которой действует цена заявки
+             , OrderPrice      TFloat    -- Цена заявки
+             , SaleStartDate   TDateTime -- Дата с которой действует цена отгрузки
+             , SaleEndDate     TDateTime -- Дата до которой действует цена отгрузки
+             , SalePrice       TFloat    -- Цена отгрузки
+             , ReturnStartDate TDateTime -- Дата с которой действует цена возврата
+             , ReturnEndDate   TDateTime -- Дата до которой действует цена возврата
+             , ReturnPrice     TFloat    -- Цена возврата
+             , isSync          Boolean   -- Синхронизируется (да/нет)
               )
 AS 
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPersonalId Integer;
+   DECLARE vbReturnDayCount Integer;
+   DECLARE vbReturnDate TDateTime;
 BEGIN
       -- !!! ВРЕМЕННО будем выгружать все
       inSyncDateIn:= zc_DateStart();
@@ -30,7 +35,9 @@ BEGIN
       vbUserId:= lpGetUserBySession (inSession);
 
       -- определяем идентификатор торгового агента
-      vbPersonalId:= (SELECT PersonalId FROM gpGetMobile_Object_Const (inSession));
+      SELECT PersonalId, ReturnDayCount INTO vbPersonalId, vbReturnDayCount FROM gpGetMobile_Object_Const (inSession);
+      
+      vbReturnDate:= CURRENT_DATE - COALESCE (vbReturnDayCount, 14)::Integer;
 
       -- если торговый агент не определен, то возвращать нечего
       IF vbPersonalId IS NOT NULL 
@@ -199,9 +206,13 @@ BEGIN
                        , ObjectHistory_PriceListItem_Sale.StartDate             AS SaleStartDate
                        , ObjectHistory_PriceListItem_Sale.EndDate               AS SaleEndDate
                        , COALESCE (ObjectHistoryFloat_PriceListItem_Value_Sale.ValueData, 0.0)::TFloat  AS SalePrice
+                       , ObjectHistory_PriceListItem_Return.StartDate            AS ReturnStartDate
+                       , ObjectHistory_PriceListItem_Return.EndDate              AS ReturnEndDate
+                       , COALESCE (ObjectHistoryFloat_PriceListItem_Value_Return.ValueData, 0.0)::TFloat AS ReturnPrice
                        , tmpPriceList.PriceListId IS NOT NULL
                          AND ((ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Order.ValueData, 0.0)) 
-                             + ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Sale.ValueData, 0.0))) <> 0.0) AS isSync
+                             + ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Sale.ValueData, 0.0))
+                             + ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Return.ValueData, 0.0))) <> 0.0) AS isSync
                   FROM Object AS Object_PriceListItem
                        JOIN tmpProtocol ON tmpProtocol.PriceListItemId = Object_PriceListItem.Id
                        JOIN ObjectLink AS ObjectLink_PriceListItem_Goods 
@@ -211,6 +222,7 @@ BEGIN
                                        ON ObjectLink_PriceListItem_PriceList.ObjectId = Object_PriceListItem.Id
                                       AND ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
                        LEFT JOIN tmpPriceList ON tmpPriceList.PriceListId = ObjectLink_PriceListItem_PriceList.ChildObjectId
+                       -- Цены заявки
                        LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem_Order
                                                ON ObjectHistory_PriceListItem_Order.ObjectId = Object_PriceListItem.Id
                                               AND ObjectHistory_PriceListItem_Order.DescId = zc_ObjectHistory_PriceListItem() 
@@ -218,6 +230,7 @@ BEGIN
                        LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value_Order
                                                     ON ObjectHistoryFloat_PriceListItem_Value_Order.ObjectHistoryId = ObjectHistory_PriceListItem_Order.Id
                                                    AND ObjectHistoryFloat_PriceListItem_Value_Order.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                       -- Цены отгрузки
                        LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem_Sale
                                                ON ObjectHistory_PriceListItem_Sale.ObjectId = Object_PriceListItem.Id
                                               AND ObjectHistory_PriceListItem_Sale.DescId = zc_ObjectHistory_PriceListItem() 
@@ -225,19 +238,30 @@ BEGIN
                        LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value_Sale
                                                     ON ObjectHistoryFloat_PriceListItem_Value_Sale.ObjectHistoryId = ObjectHistory_PriceListItem_Sale.Id
                                                    AND ObjectHistoryFloat_PriceListItem_Value_Sale.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                       -- Цены возврата
+                       LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem_Return
+                                               ON ObjectHistory_PriceListItem_Return.ObjectId = Object_PriceListItem.Id
+                                              AND ObjectHistory_PriceListItem_Return.DescId = zc_ObjectHistory_PriceListItem() 
+                                              AND vbReturnDate BETWEEN ObjectHistory_PriceListItem_Return.StartDate AND ObjectHistory_PriceListItem_Return.EndDate
+                       LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value_Return
+                                                    ON ObjectHistoryFloat_PriceListItem_Value_Return.ObjectHistoryId = ObjectHistory_PriceListItem_Return.Id
+                                                   AND ObjectHistoryFloat_PriceListItem_Value_Return.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
                   WHERE Object_PriceListItem.DescId = zc_Object_PriceListItem();
            ELSE
                 -- Результат
                 RETURN QUERY
                   SELECT Object_PriceListItem.Id
-                       , ObjectLink_PriceListItem_Goods.ChildObjectId           AS GoodsId
-                       , ObjectLink_PriceListItem_PriceList.ChildObjectId       AS PriceListId
-                       , ObjectHistory_PriceListItem_Order.StartDate            AS OrderStartDate
-                       , ObjectHistory_PriceListItem_Order.EndDate              AS OrderEndDate
-                       , ObjectHistoryFloat_PriceListItem_Value_Order.ValueData AS OrderPrice
-                       , ObjectHistory_PriceListItem_Sale.StartDate             AS SaleStartDate
-                       , ObjectHistory_PriceListItem_Sale.EndDate               AS SaleEndDate
-                       , ObjectHistoryFloat_PriceListItem_Value_Sale.ValueData  AS SalePrice
+                       , ObjectLink_PriceListItem_Goods.ChildObjectId            AS GoodsId
+                       , ObjectLink_PriceListItem_PriceList.ChildObjectId        AS PriceListId
+                       , ObjectHistory_PriceListItem_Order.StartDate             AS OrderStartDate
+                       , ObjectHistory_PriceListItem_Order.EndDate               AS OrderEndDate
+                       , ObjectHistoryFloat_PriceListItem_Value_Order.ValueData  AS OrderPrice
+                       , ObjectHistory_PriceListItem_Sale.StartDate              AS SaleStartDate
+                       , ObjectHistory_PriceListItem_Sale.EndDate                AS SaleEndDate
+                       , ObjectHistoryFloat_PriceListItem_Value_Sale.ValueData   AS SalePrice
+                       , ObjectHistory_PriceListItem_Return.StartDate            AS ReturnStartDate
+                       , ObjectHistory_PriceListItem_Return.EndDate              AS ReturnEndDate
+                       , ObjectHistoryFloat_PriceListItem_Value_Return.ValueData AS ReturnPrice
                        , CAST(true AS Boolean) AS isSync
                   FROM Object AS Object_PriceListItem
                        JOIN ObjectLink AS ObjectLink_PriceListItem_Goods 
@@ -247,6 +271,7 @@ BEGIN
                                        ON ObjectLink_PriceListItem_PriceList.ObjectId = Object_PriceListItem.Id
                                       AND ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
                        JOIN tmpPriceList ON tmpPriceList.PriceListId = ObjectLink_PriceListItem_PriceList.ChildObjectId
+                       -- Цены заявки
                        LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem_Order
                                                ON ObjectHistory_PriceListItem_Order.ObjectId = Object_PriceListItem.Id
                                               AND ObjectHistory_PriceListItem_Order.DescId = zc_ObjectHistory_PriceListItem() 
@@ -254,6 +279,7 @@ BEGIN
                        LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value_Order
                                                     ON ObjectHistoryFloat_PriceListItem_Value_Order.ObjectHistoryId = ObjectHistory_PriceListItem_Order.Id
                                                    AND ObjectHistoryFloat_PriceListItem_Value_Order.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                       -- Цены отгрузки
                        LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem_Sale
                                                ON ObjectHistory_PriceListItem_Sale.ObjectId = Object_PriceListItem.Id
                                               AND ObjectHistory_PriceListItem_Sale.DescId = zc_ObjectHistory_PriceListItem() 
@@ -261,6 +287,14 @@ BEGIN
                        LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value_Sale
                                                     ON ObjectHistoryFloat_PriceListItem_Value_Sale.ObjectHistoryId = ObjectHistory_PriceListItem_Sale.Id
                                                    AND ObjectHistoryFloat_PriceListItem_Value_Sale.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                       -- Цены возврата
+                       LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem_Return
+                                               ON ObjectHistory_PriceListItem_Return.ObjectId = Object_PriceListItem.Id
+                                              AND ObjectHistory_PriceListItem_Return.DescId = zc_ObjectHistory_PriceListItem() 
+                                              AND vbReturnDate BETWEEN ObjectHistory_PriceListItem_Return.StartDate AND ObjectHistory_PriceListItem_Return.EndDate
+                       LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value_Return
+                                                    ON ObjectHistoryFloat_PriceListItem_Value_Return.ObjectHistoryId = ObjectHistory_PriceListItem_Return.Id
+                                                   AND ObjectHistoryFloat_PriceListItem_Value_Return.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
                   WHERE Object_PriceListItem.DescId = zc_Object_PriceListItem()
                     AND ((ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Order.ValueData, 0.0)) 
                         + ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Sale.ValueData, 0.0))) <> 0.0);

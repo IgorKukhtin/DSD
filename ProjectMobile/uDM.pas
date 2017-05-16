@@ -20,18 +20,55 @@ CONST
   DataBaseFileName = 'aMobile.sdb';
 
   { базовый запрос на получение информации по ТТ }
-  BasePartnerQuery = 'select P.Id, P.CONTRACTID, P.JURIDICALID, J.VALUEDATA Name, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, ' +
-    'P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE, C.PAIDKINDID, C.CHANGEPERCENT, ' +
-    'P.DEBTSUM, P.OVERSUM, P.OVERDAYS, J.DEBTSUM DEBTSUMJ, J.OVERSUM OVERSUMJ, J.OVERDAYS OVERDAYSJ, ' +
-    'PL.ID PRICELISTID, PL.PRICEWITHVAT, PL.VATPERCENT, ' +
-    'PLR.ID PRICELISTID_RET, PLR.PRICEWITHVAT PRICEWITHVAT_RET, PLR.VATPERCENT VATPERCENT_RET, ' +
-    'P.CalcDayCount, P.OrderDayCount, P.isOperDateOrder ' +
-    'from OBJECT_PARTNER P ' +
-    'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID AND J.CONTRACTID = P.CONTRACTID ' +
-    'LEFT JOIN Object_PriceList PL ON PL.ID = IFNULL(P.PRICELISTID, :DefaultPriceList) ' +
-    'LEFT JOIN Object_PriceList PLR ON PLR.ID = IFNULL(P.PRICELISTID_RET, :DefaultPriceList) ' +
-    'LEFT JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID ' +
-    'where P.ISERASED = 0 ';
+//or
+//  BasePartnerQuery = 'select P.Id, P.CONTRACTID, P.JURIDICALID, J.VALUEDATA Name, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, ' +
+//    'P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE, C.PAIDKINDID, C.CHANGEPERCENT, ' +
+//    'P.DEBTSUM, P.OVERSUM, P.OVERDAYS, J.DEBTSUM DEBTSUMJ, J.OVERSUM OVERSUMJ, J.OVERDAYS OVERDAYSJ, ' +
+//    'PL.ID PRICELISTID, PL.PRICEWITHVAT, PL.VATPERCENT, ' +
+//    'PLR.ID PRICELISTID_RET, PLR.PRICEWITHVAT PRICEWITHVAT_RET, PLR.VATPERCENT VATPERCENT_RET, ' +
+//    'P.CalcDayCount, P.OrderDayCount, P.isOperDateOrder ' +
+//    'from OBJECT_PARTNER P ' +
+//    'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID AND J.CONTRACTID = P.CONTRACTID ' +
+//    'LEFT JOIN Object_PriceList PL ON PL.ID = IFNULL(P.PRICELISTID, :DefaultPriceList) ' +
+//    'LEFT JOIN Object_PriceList PLR ON PLR.ID = IFNULL(P.PRICELISTID_RET, :DefaultPriceList) ' +
+//    'LEFT JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID ' +
+//    'where P.ISERASED = 0 ';
+//or
+  BasePartnerQuery =
+     ' SELECT '
+   + '         Object_Partner.Id '
+   + '       , Object_Partner.ContractId '
+   + '       , Object_Partner.JuridicalId '
+   + '       , Object_Juridical.ValueData    AS Name '
+   + '       , Object_Contract.ContractTagName || '' '' || Object_Contract.ValueData AS ContractName '
+   + '       , Object_Partner.Address '
+   + '       , Object_Partner.GPSN '
+   + '       , Object_Partner.GPSE '
+   + '       , Object_Partner.Schedule '
+   + '       , Object_Contract.PaidKindId '
+   + '       , Object_Contract.ChangePercent '
+   + '       , Object_Partner.DebtSum '
+   + '       , Object_Partner.OverSum '
+   + '       , Object_Partner.OverDays '
+   + '       , Object_Juridical.DebtSum      AS DebtSumJ '
+   + '       , Object_Juridical.OverSum      AS OverSumJ '
+   + '       , Object_Juridical.OverDays     AS OverDaysJ '
+   + '       , Object_PL.Id                  AS PriceListId '
+   + '       , Object_PL.PriceWithVAT '
+   + '       , Object_PL.VATPercent '
+   + '       , Object_PLR.Id                 AS PriceListId_ret '
+   + '       , Object_PLR.PriceWithVAT       AS PriceWithVAT_RET '
+   + '       , Object_PLR.VATPercent         AS VATPercent_RET '
+   + '       , Object_Partner.CalcDayCount '
+   + '       , Object_Partner.OrderDayCount '
+   + '       , Object_Partner.isOperDateOrder  '
+   + ' FROM  Object_Partner  '
+   + '       LEFT JOIN Object_Juridical            ON Object_Juridical.Id         = Object_Partner.JuridicalId  '
+   + '                                            AND Object_Juridical.ContractId = Object_Partner.ContractId  '
+   + '       LEFT JOIN Object_PriceList Object_PL  ON Object_PL.Id                = IFNULL(Object_Partner.PriceListId, :DefaultPriceList)  '
+   + '       LEFT JOIN Object_PriceList Object_PLR ON Object_PLR.Id               = IFNULL(Object_Partner.PriceListId_ret, :DefaultPriceList)  '
+   + '       LEFT JOIN Object_Contract             ON Object_Contract.Id          = Object_Partner.ContractId  '
+   + ' WHERE Object_Partner.isErased = 0  ';
 
 type
   { состояния задания контрагента }
@@ -3277,14 +3314,36 @@ begin
   qryStoreReals := TFDQuery.Create(nil);
   try
     qryStoreReals.Connection := conMain;
-    qryStoreReals.SQL.Text := 'select MSR.ID, MSR.OPERDATE, MSR.COMMENT, MSR.ISSYNC, MSR.STATUSID, ' +
-      'P.Id PartnerId, J.VALUEDATA PartnerName, P.ADDRESS, PL.ID PRICELISTID ' +
-      'from Movement_StoreReal MSR ' +
-      'JOIN OBJECT_PARTNER P ON P.ID = MSR.PARTNERID ' +
-      'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID AND J.CONTRACTID = P.CONTRACTID ' +
-      'LEFT JOIN Object_PriceList PL ON PL.ID = IFNULL(P.PRICELISTID, :DefaultPriceList) ' +
-      'WHERE DATE(MSR.OPERDATE) BETWEEN :STARTDATE AND :ENDDATE ' +
-      'GROUP BY MSR.ID, MSR.PARTNERID order by PartnerName, Address asc, OPERDATE desc';
+//or
+//    qryStoreReals.SQL.Text := 'select MSR.ID, MSR.OPERDATE, MSR.COMMENT, MSR.ISSYNC, MSR.STATUSID, ' +
+//      'P.Id PartnerId, J.VALUEDATA PartnerName, P.ADDRESS, PL.ID PRICELISTID ' +
+//      'from Movement_StoreReal MSR ' +
+//      'JOIN OBJECT_PARTNER P ON P.ID = MSR.PARTNERID ' +
+//      'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID AND J.CONTRACTID = P.CONTRACTID ' +
+//      'LEFT JOIN Object_PriceList PL ON PL.ID = IFNULL(P.PRICELISTID, :DefaultPriceList) ' +
+//      'WHERE DATE(MSR.OPERDATE) BETWEEN :STARTDATE AND :ENDDATE ' +
+//      'GROUP BY MSR.ID, MSR.PARTNERID order by PartnerName, Address asc, OPERDATE desc';
+//or
+    qryStoreReals.SQL.Text :=
+       ' SELECT '
+     + '         Movement_StoreReal.Id '
+     + '       , Movement_StoreReal.OperDate '
+     + '       , Movement_StoreReal.Comment '
+     + '       , Movement_StoreReal.isSync '
+     + '       , Movement_StoreReal.StatusId '
+     + '       , Object_Partner.Id            AS PartnerId '
+     + '       , Object_Juridical.ValueData   AS PartnerName '
+     + '       , Object_Partner.Address '
+     + '       , Object_PriceList.Id          AS PriceListId '
+     + ' FROM  Movement_StoreReal '
+     + '       JOIN Object_Partner          ON Object_Partner.Id           = Movement_StoreReal.PartnerId '
+     + '       LEFT JOIN Object_Juridical   ON Object_Juridical.Id         = Object_Partner.JuridicalId  '
+     + '                                   AND Object_Juridical.ContractId = Object_Partner.ContractId '
+     + '       LEFT JOIN Object_PriceList   ON Object_PriceList.Id         = IFNULL(Object_Partner.PriceListId, :DefaultPriceList) '
+     + ' WHERE DATE(Movement_StoreReal.OperDate) BETWEEN :STARTDATE AND :ENDDATE '
+     + ' GROUP BY Movement_StoreReal.Id, Movement_StoreReal.PartnerId  '
+     + ' ORDER BY PartnerName, Address asc, OperDate desc ';
+
     qryStoreReals.ParamByName('STARTDATE').AsDate := AStartDate;
     qryStoreReals.ParamByName('ENDDATE').AsDate := AEndDate;
     qryStoreReals.ParamByName('DefaultPriceList').AsInteger := DM.tblObject_ConstPriceListId_def.AsInteger;
@@ -3367,15 +3426,30 @@ begin
   qryGoodsListSale := TFDQuery.Create(nil);
   try
     qryGoodsListSale.Connection := conMain;
-    qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || ' +
-      'CAST(G.OBJECTCODE as varchar)  || '' '' || G.VALUEDATA || '';'' || IFNULL(GK.VALUEDATA, ''-'') || '';'' || ' +
-      'IFNULL(M.VALUEDATA, ''-'') || '';'' || IFNULL(T.VALUEDATA, '''') || '';0'' ' +
-      'from OBJECT_GOODSLISTSALE GLS ' +
-      'JOIN OBJECT_GOODS G ON GLS.GOODSID = G.ID ' +
-      'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID ' +
-      'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-      'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
-      'WHERE GLS.PARTNERID = ' + cdsStoreRealsPartnerId.AsString + ' and GLS.ISERASED = 0 order by G.VALUEDATA ';
+//or
+//    qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || ' +
+//      'CAST(G.OBJECTCODE as varchar)  || '' '' || G.VALUEDATA || '';'' || IFNULL(GK.VALUEDATA, ''-'') || '';'' || ' +
+//      'IFNULL(M.VALUEDATA, ''-'') || '';'' || IFNULL(T.VALUEDATA, '''') || '';0'' ' +
+//      'from OBJECT_GOODSLISTSALE GLS ' +
+//      'JOIN OBJECT_GOODS G ON GLS.GOODSID = G.ID ' +
+//      'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID ' +
+//      'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+//      'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
+//      'WHERE GLS.PARTNERID = ' + cdsStoreRealsPartnerId.AsString + ' and GLS.ISERASED = 0 order by G.VALUEDATA ';
+//or
+    qryGoodsListSale.SQL.Text :=
+       ' SELECT '
+     + '       ''-1;'' || Object_Goods.ID || '';'' || IFNULL(Object_GoodsKind.ID, 0) || '';'' ||  '
+     + '       CAST(Object_Goods.ObjectCode as varchar)  || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' ||  '
+     + '       IFNULL(Object_Measure.ValueData, ''-'') || '';'' || IFNULL(Object_TradeMark.ValueData, '''') || '';0''  '
+     + ' FROM  Object_GoodsListSale '
+     + '       JOIN Object_Goods          ON Object_GoodsListSale.GoodsId = Object_Goods.ID '
+     + '       LEFT JOIN Object_GoodsKind ON Object_GoodsKind.ID          = Object_GoodsListSale.GoodsKindId '
+     + '       LEFT JOIN Object_Measure   ON Object_Measure.ID            = Object_Goods.MeasureId '
+     + '       LEFT JOIN Object_TradeMark ON Object_TradeMark.ID          = Object_Goods.TradeMarkId '
+     + ' WHERE Object_GoodsListSale.PartnerId = ' + cdsStoreRealsPartnerId.AsString
+     + '       AND Object_GoodsListSale.isErased = 0 '
+     + ' ORDER BY Object_Goods.ValueData ' ;
 
     qryGoodsListSale.Open;
 
@@ -3407,15 +3481,29 @@ begin
   qryGoodsListSale := TFDQuery.Create(nil);
   try
     qryGoodsListSale.Connection := conMain;
-    qryGoodsListSale.SQL.Text := 'select ISR.ID || '';'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || ' +
-      'CAST(G.OBJECTCODE as varchar)  || '' '' || G.VALUEDATA || '';'' || IFNULL(GK.VALUEDATA, ''-'') || '';'' || ' +
-      'IFNULL(M.VALUEDATA, ''-'') || '';'' || IFNULL(T.VALUEDATA, '''') || '';'' || ISR.AMOUNT ' +
-      'from MOVEMENTITEM_STOREREAL ISR ' +
-      'JOIN OBJECT_GOODS G ON ISR.GOODSID = G.ID ' +
-      'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = ISR.GOODSKINDID ' +
-      'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-      'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
-      'WHERE ISR.MOVEMENTID = ' + IntToStr(AId) + ' order by G.VALUEDATA ';
+//or
+//    qryGoodsListSale.SQL.Text := 'select ISR.ID || '';'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || ' +
+//      'CAST(G.OBJECTCODE as varchar)  || '' '' || G.VALUEDATA || '';'' || IFNULL(GK.VALUEDATA, ''-'') || '';'' || ' +
+//      'IFNULL(M.VALUEDATA, ''-'') || '';'' || IFNULL(T.VALUEDATA, '''') || '';'' || ISR.AMOUNT ' +
+//      'from MOVEMENTITEM_STOREREAL ISR ' +
+//      'JOIN OBJECT_GOODS G ON ISR.GOODSID = G.ID ' +
+//      'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = ISR.GOODSKINDID ' +
+//      'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+//      'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
+//      'WHERE ISR.MOVEMENTID = ' + IntToStr(AId) + ' order by G.VALUEDATA ';
+//or
+    qryGoodsListSale.SQL.Text :=
+       ' SELECT  '
+     + '       MovementItem_StoreReal.Id || '';'' || Object_Goods.Id || '';'' || IFNULL(Object_GoodsKind.Id, 0) || '';'' ||  '
+     + '       CAST(Object_Goods.ObjectCode as varchar)  || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' ||  '
+     + '       IFNULL(Object_Measure.ValueData, ''-'') || '';'' || IFNULL(Object_TradeMark.ValueData, '''') || '';'' || MovementItem_StoreReal.Amount  '
+     + ' FROM MovementItem_StoreReal '
+     + '      JOIN Object_Goods          ON MovementItem_StoreReal.GoodsId = Object_Goods.Id '
+     + '      LEFT JOIN Object_GoodsKind ON Object_GoodsKind.Id            = MovementItem_StoreReal.GoodsKindId '
+     + '      LEFT JOIN Object_Measure   ON Object_Measure.Id              = Object_Goods.MeasureId '
+     + '      LEFT JOIN Object_TradeMark ON Object_TradeMark.Id            = Object_Goods.TradeMarkId '
+     + ' WHERE MovementItem_StoreReal.MovementId = ' + IntToStr(AId)
+     + ' ORDER BY Object_Goods.ValueData ';
 
     qryGoodsListSale.Open;
 
@@ -3438,19 +3526,47 @@ end;
 { начитка новых товаров по которым можно ввести остатки }
 procedure TDM.GenerateStoreRealItemsList;
 begin
-  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.OBJECTCODE, G.VALUEDATA GoodsName, ' +
-    'GK.VALUEDATA KindName, ''-'' PromoPrice, T.VALUEDATA TradeMarkName, ' +
-    'GLK.REMAINS, PI.ORDERPRICE PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || ' +
-    'G.OBJECTCODE || '' '' || G.VALUEDATA || '';'' || IFNULL(GK.VALUEDATA, ''-'') || '';'' || ' +
-    'IFNULL(M.VALUEDATA, ''-'') || '';'' || IFNULL(T.VALUEDATA, ''-'') || '';0'' FullInfo, ' +
-    'G.VALUEDATA || '';0'' SearchName ' +
-    'from OBJECT_GOODS G ' +
-    'LEFT JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID ' +
-    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID ' +
-    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-    'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
-    'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
-    'WHERE G.ISERASED = 0 order by GoodsName';
+//or
+//  qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.OBJECTCODE, G.VALUEDATA GoodsName, ' +
+//    'GK.VALUEDATA KindName, ''-'' PromoPrice, T.VALUEDATA TradeMarkName, ' +
+//    'GLK.REMAINS, PI.ORDERPRICE PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || ' +
+//    'G.OBJECTCODE || '' '' || G.VALUEDATA || '';'' || IFNULL(GK.VALUEDATA, ''-'') || '';'' || ' +
+//    'IFNULL(M.VALUEDATA, ''-'') || '';'' || IFNULL(T.VALUEDATA, ''-'') || '';0'' FullInfo, ' +
+//    'G.VALUEDATA || '';0'' SearchName ' +
+//    'from OBJECT_GOODS G ' +
+//    'LEFT JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID ' +
+//    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID ' +
+//    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+//    'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
+//    'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+//    'WHERE G.ISERASED = 0 order by GoodsName';
+//or
+
+  qryGoodsItems.SQL.Text :=
+       ' SELECT '
+     + '         Object_Goods.ID                  AS GoodsID '
+     + '       , Object_GoodsKind.ID              AS KindID '
+     + '       , Object_Goods.ObjectCode '
+     + '       , Object_Goods.ValueData           AS GoodsName '
+     + '       , Object_GoodsKind.ValueData       AS KindName '
+     + '       , ''-''                            AS PromoPrice '
+     + '       , Object_TradeMark.ValueData       AS TradeMarkName '
+     + '       , Object_GoodsByGoodsKind.Remains '
+     + '       , Object_PriceListItems.OrderPrice AS Price '
+     + '       , Object_Measure.ValueData         AS Measure '
+     + '       , ''-1;'' || Object_Goods.ID || '';'' || IFNULL(Object_GoodsKind.ID, 0) || '';'' ||  '
+     + '         Object_Goods.ObjectCode || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' ||  '
+     + '         IFNULL(Object_Measure.ValueData, ''-'') || '';'' || IFNULL(Object_TradeMark.ValueData, ''-'') || '';0'' AS FullInfo '
+     + '       , Object_Goods.ValueData || '';0'' AS SearchName '
+     + ' FROM  Object_Goods '
+     + '       LEFT JOIN Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.GoodsId   = Object_Goods.ID '
+     + '       LEFT JOIN Object_GoodsKind        ON Object_GoodsKind.ID               = Object_GoodsByGoodsKind.GoodsKindId '
+     + '       LEFT JOIN Object_Measure          ON Object_Measure.ID                 = Object_Goods.MeasureId '
+     + '       LEFT JOIN Object_TradeMark        ON Object_TradeMark.ID               = Object_Goods.TradeMarkId '
+     + '       LEFT JOIN Object_PriceListItems   ON Object_PriceListItems.GoodsId     = Object_Goods.ID  '
+     + '                                        AND Object_PriceListItems.PriceListId = :PRICELISTID '
+     + ' WHERE Object_Goods.isErased = 0  '
+     + ' ORDER BY GoodsName ';
 
   qryGoodsItems.ParamByName('PRICELISTID').AsInteger := cdsStoreRealsPriceListId.AsInteger;
   qryGoodsItems.Open;
@@ -3784,17 +3900,52 @@ begin
   try
 
     qryOrderExternal.Connection := conMain;
-    qryOrderExternal.SQL.Text := 'select MOE.ID, MOE.OPERDATE, MOE.PAIDKINDID, MOE.COMMENT, MOE.TOTALCOUNTKG, MOE.TOTALSUMM, MOE.ISSYNC, MOE.STATUSID, ' +
-      'P.Id PartnerId, J.VALUEDATA PartnerName, P.ADDRESS, PL.ID PRICELISTID, PL.PRICEWITHVAT, PL.VATPERCENT, ' +
-      'P.CONTRACTID, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, C.CHANGEPERCENT, ' +
-      'P.CalcDayCount, P.OrderDayCount, P.isOperDateOrder ' +
-      'from MOVEMENT_ORDEREXTERNAL MOE ' +
-      'JOIN OBJECT_PARTNER P ON P.ID = MOE.PARTNERID AND P.CONTRACTID = MOE.CONTRACTID ' +
-      'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID AND J.CONTRACTID = P.CONTRACTID ' +
-      'LEFT JOIN Object_PriceList PL ON PL.ID = IFNULL(P.PRICELISTID, :DefaultPriceList) ' +
-      'LEFT JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID ' +
-      'WHERE DATE(MOE.OPERDATE) BETWEEN :STARTDATE AND :ENDDATE ' +
-      'GROUP BY MOE.ID, MOE.PARTNERID, MOE.CONTRACTID order by PartnerName, P.Address, P.ContractId asc, MOE.OPERDATE desc';
+//or
+//    qryOrderExternal.SQL.Text := 'select MOE.ID, MOE.OPERDATE, MOE.PAIDKINDID, MOE.COMMENT, MOE.TOTALCOUNTKG, MOE.TOTALSUMM, MOE.ISSYNC, MOE.STATUSID, ' +
+//      'P.Id PartnerId, J.VALUEDATA PartnerName, P.ADDRESS, PL.ID PRICELISTID, PL.PRICEWITHVAT, PL.VATPERCENT, ' +
+//      'P.CONTRACTID, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, C.CHANGEPERCENT, ' +
+//      'P.CalcDayCount, P.OrderDayCount, P.isOperDateOrder ' +
+//      'from MOVEMENT_ORDEREXTERNAL MOE ' +
+//      'JOIN OBJECT_PARTNER P ON P.ID = MOE.PARTNERID AND P.CONTRACTID = MOE.CONTRACTID ' +
+//      'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID AND J.CONTRACTID = P.CONTRACTID ' +
+//      'LEFT JOIN Object_PriceList PL ON PL.ID = IFNULL(P.PRICELISTID, :DefaultPriceList) ' +
+//      'LEFT JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID ' +
+//      'WHERE DATE(MOE.OPERDATE) BETWEEN :STARTDATE AND :ENDDATE ' +
+//      'GROUP BY MOE.ID, MOE.PARTNERID, MOE.CONTRACTID order by PartnerName, P.Address, P.ContractId asc, MOE.OPERDATE desc';
+//or
+
+    qryOrderExternal.SQL.Text :=
+       ' SELECT '
+     + '         Movement_OrderExternal.Id '
+     + '       , Movement_OrderExternal.OperDate '
+     + '       , Movement_OrderExternal.PaidKindId '
+     + '       , Movement_OrderExternal.Comment '
+     + '       , Movement_OrderExternal.TotalCountKg '
+     + '       , Movement_OrderExternal.TotalSumm '
+     + '       , Movement_OrderExternal.isSync '
+     + '       , Movement_OrderExternal.StatusId '
+     + '       , Object_Partner.Id                         AS PartnerId '
+     + '       , Object_Juridical.ValueData                AS PartnerName '
+     + '       , Object_Partner.Address '
+     + '       , Object_PriceList.Id                       AS PriceListId '
+     + '       , Object_PriceList.PriceWithVAT '
+     + '       , Object_PriceList.VATPercent '
+     + '       , Object_Partner.ContractId '
+     + '       , Object_Contract.ContractTagName || '' '' || Object_Contract.ValueData AS ContractName '
+     + '       , Object_Contract.ChangePercent '
+     + '       , Object_Partner.CalcDayCount '
+     + '       , Object_Partner.OrderDayCount '
+     + '       , Object_Partner.isOperDateOrder '
+     + ' FROM  Movement_OrderExternal '
+     + '       JOIN Object_Partner        ON Object_Partner.Id           = Movement_OrderExternal.PartnerId '
+     + '                                 AND Object_Partner.ContractId   = Movement_OrderExternal.ContractId '
+     + '       LEFT JOIN Object_Juridical ON Object_Juridical.Id         = Object_Partner.JuridicalId '
+     + '                                 AND Object_Juridical.ContractId = Object_Partner.ContractId '
+     + '       LEFT JOIN Object_PriceList ON Object_PriceList.Id         = IFNULL(Object_Partner.PriceListId, :DefaultPriceList) '
+     + '       LEFT JOIN Object_Contract  ON Object_Contract.Id          = Object_Partner.ContractId '
+     + ' WHERE DATE(Movement_OrderExternal.OperDate) BETWEEN :STARTDATE AND :ENDDATE '
+     + ' GROUP BY Movement_OrderExternal.Id, Movement_OrderExternal.PartnerId, Movement_OrderExternal.ContractId  '
+     + ' ORDER BY PartnerName, Object_Partner.Address, Object_Partner.ContractId asc, Movement_OrderExternal.OperDate desc ';
     qryOrderExternal.ParamByName('STARTDATE').AsDate := AStartDate;
     qryOrderExternal.ParamByName('ENDDATE').AsDate := AEndDate;
     qryOrderExternal.ParamByName('DefaultPriceList').AsInteger := DM.tblObject_ConstPriceListId_def.AsInteger;
@@ -3964,26 +4115,59 @@ begin
       PromoPriceField := 'PriceWithVAT'
     else
       PromoPriceField := 'PriceWithOutVAT';
-
-    qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || ' +
-      'CAST(G.OBJECTCODE as varchar)  || '' '' || G.VALUEDATA || '';'' || ' +
-      'IFNULL(GK.VALUEDATA, ''-'') || '';'' || GLS.AMOUNTCALC || '';'' || IFNULL(SRI.AMOUNT, 0) || '';'' || ' +
-      'IFNULL(PI.' + PriceField + ', 0) || '';'' || IFNULL(M.VALUEDATA, ''-'') || '';'' || G.WEIGHT || '';'' || ' +
-      'IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 1) || '';'' || ' +
-      'IFNULL(T.VALUEDATA, '''') || '';0''' +
-      'from OBJECT_GOODSLISTSALE GLS ' +
-      'JOIN OBJECT_GOODS G ON GLS.GOODSID = G.ID ' +
-      'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID ' +
-      'LEFT JOIN MOVEMENT_STOREREAL SR ON SR.PARTNERID = :PARTNERID ' +
-      'AND DATE(SR.OPERDATE) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', Date())) + ' AND SR.STATUSID <> ' + tblObject_ConstStatusId_Erased.AsString + ' ' +
-      'LEFT JOIN MOVEMENTITEM_STOREREAL SRI ON SRI.GOODSID = G.ID AND SRI.GOODSKINDID = GK.ID AND SRI.MOVEMENTID = SR.ID ' +
-      'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-      'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
-      'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
-      'LEFT JOIN MOVEMENTITEM_PROMOPARTNER PP ON PP.PARTNERID = :PARTNERID  and (PP.CONTRACTID = :CONTRACTID or PP.CONTRACTID = 0) ' +
-      'LEFT JOIN MOVEMENTITEM_PROMOGOODS PG ON PG.MOVEMENTID = PP.MOVEMENTID and PG.GOODSID = G.ID and (PG.GOODSKINDID = GK.ID or PG.GOODSKINDID = 0) ' +
-      'LEFT JOIN MOVEMENT_PROMO P ON P.ID = PP.MOVEMENTID ' +
-      'WHERE GLS.PARTNERID = :PARTNERID and GLS.ISERASED = 0 order by G.VALUEDATA ';
+//or
+//    qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || ' +
+//      'CAST(G.OBJECTCODE as varchar)  || '' '' || G.VALUEDATA || '';'' || ' +
+//      'IFNULL(GK.VALUEDATA, ''-'') || '';'' || GLS.AMOUNTCALC || '';'' || IFNULL(SRI.AMOUNT, 0) || '';'' || ' +
+//      'IFNULL(PI.' + PriceField + ', 0) || '';'' || IFNULL(M.VALUEDATA, ''-'') || '';'' || G.WEIGHT || '';'' || ' +
+//      'IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 1) || '';'' || ' +
+//      'IFNULL(T.VALUEDATA, '''') || '';0''' +
+//      'from OBJECT_GOODSLISTSALE GLS ' +
+//      'JOIN OBJECT_GOODS G ON GLS.GOODSID = G.ID ' +
+//      'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID ' +
+//      'LEFT JOIN MOVEMENT_STOREREAL SR ON SR.PARTNERID = :PARTNERID ' +
+//      'AND DATE(SR.OPERDATE) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', Date())) + ' AND SR.STATUSID <> ' + tblObject_ConstStatusId_Erased.AsString + ' ' +
+//      'LEFT JOIN MOVEMENTITEM_STOREREAL SRI ON SRI.GOODSID = G.ID AND SRI.GOODSKINDID = GK.ID AND SRI.MOVEMENTID = SR.ID ' +
+//      'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+//      'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
+//      'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+//      'LEFT JOIN MOVEMENTITEM_PROMOPARTNER PP ON PP.PARTNERID = :PARTNERID  and (PP.CONTRACTID = :CONTRACTID or PP.CONTRACTID = 0) ' +
+//      'LEFT JOIN MOVEMENTITEM_PROMOGOODS PG ON PG.MOVEMENTID = PP.MOVEMENTID and PG.GOODSID = G.ID and (PG.GOODSKINDID = GK.ID or PG.GOODSKINDID = 0) ' +
+//      'LEFT JOIN MOVEMENT_PROMO P ON P.ID = PP.MOVEMENTID ' +
+//      'WHERE GLS.PARTNERID = :PARTNERID and GLS.ISERASED = 0 order by G.VALUEDATA ';
+//or
+    qryGoodsListSale.SQL.Text :=
+       ' SELECT '
+     + '       ''-1;'' || Object_Goods.Id || '';'' || IFNULL(Object_GoodsKind.Id, 0) || '';'' ||  '
+     + '       CAST(Object_Goods.ObjectCode as varchar)  || '' '' || Object_Goods.ValueData || '';'' ||  '
+     + '       IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' || Object_GoodsListSale.AmountCalc || '';'' || IFNULL(MovementItem_StoreReal.Amount, 0) || '';'' ||  '
+     + '       IFNULL(Object_PriceListItems.' + PriceField + ', 0) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || Object_Goods.Weight || '';'' ||  '
+     + '       IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(Movement_Promo.isChangePercent, 1) || '';'' ||  '
+     + '       IFNULL(Object_TradeMark.ValueData, '''') || '';0'' '
+     + ' FROM  Object_GoodsListSale  '
+     + '       JOIN Object_Goods                   ON Object_GoodsListSale.GoodsId           = Object_Goods.Id  '
+     + '       LEFT JOIN Object_GoodsKind          ON Object_GoodsKind.Id                    = Object_GoodsListSale.GoodsKindId  '
+     + '       LEFT JOIN Movement_StoreReal        ON Movement_StoreReal.PartnerId           = :PARTNERID  '
+     + '                                          AND DATE(Movement_StoreReal.OperDate)      = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', Date()))
+     + '                                          AND Movement_StoreReal.StatusId           <> ' + tblObject_ConstStatusId_Erased.AsString
+     + '       LEFT JOIN MovementItem_StoreReal    ON MovementItem_StoreReal.GoodsId         = Object_Goods.Id  '
+     + '                                          AND MovementItem_StoreReal.GoodsKindId     = Object_GoodsKind.Id  '
+     + '                                          AND MovementItem_StoreReal.MovementId      = Movement_StoreReal.Id '
+     + '       LEFT JOIN Object_Measure            ON Object_Measure.Id                      = Object_Goods.MeasureId '
+     + '       LEFT JOIN Object_TradeMark          ON Object_TradeMark.Id                    = Object_Goods.TradeMarkId '
+     + '       LEFT JOIN Object_PriceListItems     ON Object_PriceListItems.GoodsId          = Object_Goods.Id  '
+     + '                                          AND Object_PriceListItems.PriceListId      = :PRICELISTID '
+     + '       LEFT JOIN MovementItem_PromoPartner ON MovementItem_PromoPartner.PartnerId    = :PARTNERID  '
+     + '                                          AND (MovementItem_PromoPartner.ContractId  = :CONTRACTID  '
+     + '                                             or MovementItem_PromoPartner.ContractId = 0) '
+     + '       LEFT JOIN MovementItem_PromoGoods   ON MovementItem_PromoGoods.MovementId     = MovementItem_PromoPartner.MovementId '
+     + '                                          AND MovementItem_PromoGoods.GoodsId        = Object_Goods.Id  '
+     + '                                          AND (MovementItem_PromoGoods.GoodsKindId   = Object_GoodsKind.Id  '
+     + '                                             or MovementItem_PromoGoods.GoodsKindId  = 0) '
+     + '       LEFT JOIN Movement_Promo            ON Movement_Promo.Id                      = MovementItem_PromoPartner.MovementId '
+     + ' WHERE    Object_GoodsListSale.PartnerId = :PARTNERID  '
+     + '      AND Object_GoodsListSale.isErased  = 0  '
+     + ' ORDER BY Object_Goods.ValueData ';
 
     qryGoodsListSale.ParamByName('PARTNERID').AsInteger := cdsOrderExternalPartnerId.AsInteger;
     qryGoodsListSale.ParamByName('CONTRACTID').AsInteger := cdsOrderExternalCONTRACTID.AsInteger;
@@ -4029,8 +4213,29 @@ begin
       PromoPriceField := 'PriceWithVAT'
     else
       PromoPriceField := 'PriceWithOutVAT';
-
-    qryGoodsListOrder.SQL.Text := 'select IEO.ID || '';'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || ' +
+//or
+//    qryGoodsListOrder.SQL.Text := 'select IEO.ID || '';'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || ' +
+//      'CAST(G.OBJECTCODE as varchar)  || '' '' || G.VALUEDATA || '';'' || ' +
+//      'IFNULL(GK.VALUEDATA, ''-'') || '';'' || 0 || '';'' || IFNULL(SRI.AMOUNT, 0) || '';'' || ' +
+//      'IFNULL(PI.' + PriceField + ', 0) || '';'' || IFNULL(M.VALUEDATA, ''-'') || '';'' || G.WEIGHT || '';'' || ' +
+//      'IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(P.ISCHANGEPERCENT, 1) || '';'' || ' +
+//      'IFNULL(T.VALUEDATA, '''') || '';'' || IEO.AMOUNT ' +
+//      'from MOVEMENTITEM_ORDEREXTERNAL IEO ' +
+//      'JOIN OBJECT_GOODS G ON IEO.GOODSID = G.ID ' +
+//      'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = IEO.GOODSKINDID ' +
+//      'LEFT JOIN MOVEMENT_STOREREAL SR ON SR.PARTNERID = :PARTNERID' +
+//      ' AND DATE(SR.OPERDATE) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', Date())) + ' AND SR.STATUSID <> ' + tblObject_ConstStatusId_Erased.AsString + ' ' +
+//      'LEFT JOIN MOVEMENTITEM_STOREREAL SRI ON SRI.GOODSID = G.ID AND SRI.GOODSKINDID = GK.ID AND SRI.MOVEMENTID = SR.ID ' +
+//      'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+//      'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
+//      'LEFT JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+//      'LEFT JOIN MOVEMENTITEM_PROMOPARTNER PP ON PP.PARTNERID = :PARTNERID  and (PP.CONTRACTID = :CONTRACTID or PP.CONTRACTID = 0) ' +
+//      'LEFT JOIN MOVEMENTITEM_PROMOGOODS PG ON PG.MOVEMENTID = PP.MOVEMENTID and PG.GOODSID = G.ID and (PG.GOODSKINDID = GK.ID or PG.GOODSKINDID = 0) ' +
+//      'LEFT JOIN MOVEMENT_PROMO P ON P.ID = PP.MOVEMENTID ' +
+//      'WHERE IEO.MOVEMENTID = ' + IntToStr(AId) + ' order by G.VALUEDATA ';
+//or
+    qryGoodsListOrder.SQL.Text :=
+      'select IEO.ID || '';'' || G.ID || '';'' || IFNULL(GK.ID, 0) || '';'' || ' +
       'CAST(G.OBJECTCODE as varchar)  || '' '' || G.VALUEDATA || '';'' || ' +
       'IFNULL(GK.VALUEDATA, ''-'') || '';'' || 0 || '';'' || IFNULL(SRI.AMOUNT, 0) || '';'' || ' +
       'IFNULL(PI.' + PriceField + ', 0) || '';'' || IFNULL(M.VALUEDATA, ''-'') || '';'' || G.WEIGHT || '';'' || ' +

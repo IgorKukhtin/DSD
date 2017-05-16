@@ -2418,16 +2418,37 @@ end;
 procedure TfrmMain.dePromoPartnerDateChange(Sender: TObject);
 begin
   DM.qryPromoPartners.Close;
-  DM.qryPromoPartners.SQL.Text := 'SELECT J.VALUEDATA PartnerName, OP.ADDRESS, ' +
-    'CASE WHEN PP.CONTRACTID = 0 THEN ''все договора'' ELSE C.CONTRACTTAGNAME || '' '' || C.VALUEDATA END ContractName, ' +
-    'PP.PARTNERID, PP.CONTRACTID, group_concat(distinct PP.MOVEMENTID) PromoIds ' +
-    'from MOVEMENTITEM_PROMOPARTNER PP ' +
-    'JOIN MOVEMENT_PROMO P ON P.ID = PP.MOVEMENTID AND :PROMODATE BETWEEN P.STARTSALE AND P.ENDSALE ' +
-    'LEFT JOIN OBJECT_PARTNER OP ON OP.ID = PP.PARTNERID AND (OP.CONTRACTID = PP.CONTRACTID OR PP.CONTRACTID = 0) ' +
-    'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = OP.JURIDICALID AND J.CONTRACTID = OP.CONTRACTID ' +
-    'LEFT JOIN OBJECT_CONTRACT C ON C.ID = PP.CONTRACTID ' +
-    'GROUP BY PP.PARTNERID, PP.CONTRACTID ' +
-    'ORDER BY J.VALUEDATA, OP.ADDRESS';
+//or
+//  DM.qryPromoPartners.SQL.Text := 'SELECT J.VALUEDATA PartnerName, OP.ADDRESS, ' +
+//    'CASE WHEN PP.CONTRACTID = 0 THEN ''все договора'' ELSE C.CONTRACTTAGNAME || '' '' || C.VALUEDATA END ContractName, ' +
+//    'PP.PARTNERID, PP.CONTRACTID, group_concat(distinct PP.MOVEMENTID) PromoIds ' +
+//    'from MOVEMENTITEM_PROMOPARTNER PP ' +
+//    'JOIN MOVEMENT_PROMO P ON P.ID = PP.MOVEMENTID AND :PROMODATE BETWEEN P.STARTSALE AND P.ENDSALE ' +
+//    'LEFT JOIN OBJECT_PARTNER OP ON OP.ID = PP.PARTNERID AND (OP.CONTRACTID = PP.CONTRACTID OR PP.CONTRACTID = 0) ' +
+//    'LEFT JOIN OBJECT_JURIDICAL J ON J.ID = OP.JURIDICALID AND J.CONTRACTID = OP.CONTRACTID ' +
+//    'LEFT JOIN OBJECT_CONTRACT C ON C.ID = PP.CONTRACTID ' +
+//    'GROUP BY PP.PARTNERID, PP.CONTRACTID ' +
+//    'ORDER BY J.VALUEDATA, OP.ADDRESS';
+//or
+  DM.qryPromoPartners.SQL.Text :=
+     ' SELECT  '
+   + '        Object_Juridical.ValueData AS PartnerName '
+   + '       , Object_Partner.Address '
+   + '       , CASE WHEN MovementItem_PromoPartner.ContractId = 0 THEN ''все договора'' ELSE Object_Contract.ContractTagName || '' '' || Object_Contract.ValueData END AS ContractName '
+   + '       , MovementItem_PromoPartner.PartnerId '
+   + '       , MovementItem_PromoPartner.ContractId '
+   + '       , group_concat(distinct MovementItem_PromoPartner.MovementId) AS PromoIds  '
+   + ' FROM  MovementItem_PromoPartner  '
+   + '       JOIN Movement_Promo ON Movement_Promo.Id = MovementItem_PromoPartner.MovementId  '
+   + '                          AND :PROMODATE BETWEEN Movement_Promo.StartSale AND Movement_Promo.EndSale  '
+   + '       LEFT JOIN Object_Partner   ON Object_Partner.Id           = MovementItem_PromoPartner.PartnerId  '
+   + '                                 AND (Object_Partner.ContractId  = MovementItem_PromoPartner.ContractId  '
+   + '                                  OR MovementItem_PromoPartner.ContractId = 0)  '
+   + '       LEFT JOIN Object_Juridical ON Object_Juridical.Id         = Object_Partner.JuridicalId  '
+   + '                                 AND Object_Juridical.ContractId = Object_Partner.ContractId  '
+   + '       LEFT JOIN Object_Contract  ON Object_Contract.Id          = MovementItem_PromoPartner.ContractId  '
+   + ' GROUP BY MovementItem_PromoPartner.PartnerId, MovementItem_PromoPartner.ContractId  '
+   + ' ORDER BY Object_Juridical.ValueData, Object_Partner.Address ';
   DM.qryPromoPartners.ParamByName('PROMODATE').AsDate := dePromoPartnerDate.Date;
   DM.qryPromoPartners.Open;
 
@@ -4155,7 +4176,8 @@ begin
 
   with DM.qryPartner do
   begin
-    SQL.Text := BasePartnerQuery + ' GROUP BY P.Id';
+//or    SQL.Text := BasePartnerQuery + ' GROUP BY P.Id';
+    SQL.Text := BasePartnerQuery + ' GROUP BY Object_Partner.Id';
     ParamByName('DefaultPriceList').AsInteger := DM.tblObject_ConstPriceListId_def.AsInteger;
     Open;
 
@@ -4319,7 +4341,8 @@ begin
   sQuery := BasePartnerQuery;
 
   if Day < 8 then
-    sQuery := sQuery + ' and lower(substr(P.SCHEDULE, ' + IntToStr(2 * Day - 1) + ', 1)) = ''t''';
+//or    sQuery := sQuery + ' and lower(substr(P.SCHEDULE, ' + IntToStr(2 * Day - 1) + ', 1)) = ''t''';
+    sQuery := sQuery + ' and lower(substr(Object_Partner.Schedule, ' + IntToStr(2 * Day - 1) + ', 1)) = ''t''';
 
   if FCurCoordinatesSet then
   begin
@@ -4327,12 +4350,21 @@ begin
     CurGPSE := FloatToStr(FCurCoordinates.Longitude);
     CurGPSN := StringReplace(CurGPSN, ',', '.', [rfReplaceAll]);
     CurGPSE := StringReplace(CurGPSE, ',', '.', [rfReplaceAll]);
-
-    sQuery := sQuery + ' order by ((IFNULL(P.GPSN, 0) - ' + CurGPSN + ') * ' + LatitudeRatio + ') * ' +
-      '((IFNULL(P.GPSN, 0) - ' + CurGPSN + ') * ' + LatitudeRatio + ') + ' +
-      '((IFNULL(P.GPSE, 0) - ' + CurGPSE + ') * ' + LongitudeRatio + ') * ' +
-      '((IFNULL(P.GPSE, 0) - ' + CurGPSE + ') * ' + LongitudeRatio + ')' +
+//or
+//    sQuery := sQuery + ' order by ((IFNULL(P.GPSN, 0) - ' + CurGPSN + ') * ' + LatitudeRatio + ') * ' +
+//      '((IFNULL(P.GPSN, 0) - ' + CurGPSN + ') * ' + LatitudeRatio + ') + ' +
+//      '((IFNULL(P.GPSE, 0) - ' + CurGPSE + ') * ' + LongitudeRatio + ') * ' +
+//      '((IFNULL(P.GPSE, 0) - ' + CurGPSE + ') * ' + LongitudeRatio + ')' +
+//      ', Name';
+//or
+    sQuery := sQuery + ' order by ((IFNULL(Object_Partner.GPSN, 0) - ' + CurGPSN + ') * ' + LatitudeRatio + ') * ' +
+      '((IFNULL(Object_Partner.GPSN, 0) - ' + CurGPSN + ') * ' + LatitudeRatio + ') + ' +
+      '((IFNULL(Object_Partner.GPSE, 0) - ' + CurGPSE + ') * ' + LongitudeRatio + ') * ' +
+      '((IFNULL(Object_Partner.GPSE, 0) - ' + CurGPSE + ') * ' + LongitudeRatio + ')' +
       ', Name';
+
+
+
   end
   else
     sQuery := sQuery + ' order by Name';
@@ -5280,11 +5312,23 @@ begin
 
       AddComboItem(cbPartners, 'все');
       FPartnerList.Add(TPartnerItem.Create(0, ''));
-
-      Open('SELECT P.ID, P.ADDRESS, group_concat(distinct C.ID) ContractIds from OBJECT_PARTNER P ' +
-           'LEFT JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID ' +
-           'WHERE P.JURIDICALID = ' + IntToStr(FJuridicalList[cbJuridicals.ItemIndex].Id) +
-           ' AND P.ISERASED = 0 GROUP BY ADDRESS');
+//or
+//      Open('SELECT P.ID, P.ADDRESS, group_concat(distinct C.ID) ContractIds from OBJECT_PARTNER P ' +
+//           'LEFT JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID ' +
+//           'WHERE P.JURIDICALID = ' + IntToStr(FJuridicalList[cbJuridicals.ItemIndex].Id) +
+//           ' AND P.ISERASED = 0 GROUP BY ADDRESS');
+//or
+      Open(
+            ' SELECT '
+          + '         Object_Partner.Id '
+          + '       , Object_Partner.Address '
+          + '       , group_concat(distinct Object_Contract.Id) AS ContractIds  '
+          + ' FROM  Object_Partner  '
+          + '       LEFT JOIN Object_Contract  ON Object_Contract.Id = Object_Partner.ContractId  '
+          + ' WHERE Object_Partner.JuridicalId = ' + IntToStr(FJuridicalList[cbJuridicals.ItemIndex].Id)
+          + '      AND Object_Partner.isErased = 0 '
+          + ' GROUP BY Address '
+           );
 
       First;
       while not Eof do

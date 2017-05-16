@@ -38,6 +38,8 @@ type
     GuidesUnit: TdsdGuides;
     edDiscountExternal: TcxButtonEdit;
     GuidesDiscountExternal: TdsdGuides;
+    cxLabel2: TcxLabel;
+    ceExternalUnit: TcxTextEdit;
   private
     { Private declarations }
   public
