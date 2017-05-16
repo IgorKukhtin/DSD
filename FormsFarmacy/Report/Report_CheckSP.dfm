@@ -161,6 +161,8 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
           object clOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1074#1110#1076#1087#1091#1089#1082#1091
             DataBinding.FieldName = 'OperDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'DD.MM.YYYY'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
