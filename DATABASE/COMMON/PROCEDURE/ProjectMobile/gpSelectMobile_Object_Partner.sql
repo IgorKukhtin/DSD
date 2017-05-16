@@ -182,7 +182,7 @@ BEGIN
                   , ObjectLink_Partner_Route.ChildObjectId AS RouteId
                   , tmpContract.ContractId
                   , COALESCE (ObjectLink_Partner_PriceList.ChildObjectId, zc_PriceList_Basis()) AS PriceListId
-                  , COALESCE (ObjectLink_Partner_PriceListPrior.ChildObjectId, zc_PriceList_BasisPrior()) AS PriceListId_ret
+                  , COALESCE (ObjectLink_Partner_PriceListPrior.ChildObjectId, zc_PriceList_Basis() /*zc_PriceList_BasisPrior()*/) AS PriceListId_ret
                   , Object_Partner.isErased
                   , CAST(true AS Boolean) AS isSync
              FROM Object AS Object_Partner

@@ -18,6 +18,10 @@ BEGIN
      END IF;
 
  
+     -- Удаление того что вчера
+     DELETE FROM LockUnique WHERE OperDate < CURRENT_DATE; -- - INTERVAL '1 DAY';
+
+
      -- Если запись вставится - значит Уникальность соблюдается
      INSERT INTO LockUnique (KeyData, UserId, OperDate)
                      VALUES (inKeyData, inUserId, CURRENT_TIMESTAMP);

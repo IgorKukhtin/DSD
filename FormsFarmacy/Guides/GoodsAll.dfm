@@ -4,6 +4,8 @@ inherited GoodsAllForm: TGoodsAllForm
   ClientWidth = 1079
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  ExplicitLeft = -306
+  ExplicitTop = -70
   ExplicitWidth = 1095
   ExplicitHeight = 527
   PixelsPerInch = 96
@@ -102,6 +104,49 @@ inherited GoodsAllForm: TGoodsAllForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120
+          end
+          object CodeMarion_1: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1052#1040#1056#1048#1054#1053
+            DataBinding.FieldName = 'CodeMarion'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object CodeMarionStr_1: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1052#1040#1056#1048#1054#1053' '#1089#1090#1088#1086#1095#1085#1099#1081
+            DataBinding.FieldName = 'CodeMarionStr'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object NameMarion_1: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1052#1040#1056#1048#1054#1053
+            DataBinding.FieldName = 'NameMarion'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object MeasureName_1: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -365,6 +410,48 @@ inherited GoodsAllForm: TGoodsAllForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120
+          end
+          object CodeMarion_2: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1052#1040#1056#1048#1054#1053
+            DataBinding.FieldName = 'CodeMarion'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object CodeMarionStr_2: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1052#1040#1056#1048#1054#1053' '#1089#1090#1088#1086#1095#1085#1099#1081
+            DataBinding.FieldName = 'CodeMarionStr'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object NameMarion_2: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1052#1040#1056#1048#1054#1053
+            DataBinding.FieldName = 'NameMarion'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object MeasureName_2: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -649,6 +736,48 @@ inherited GoodsAllForm: TGoodsAllForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120
+          end
+          object CodeMarion_3: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1052#1040#1056#1048#1054#1053
+            DataBinding.FieldName = 'CodeMarion'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object CodeMarionStr_3: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1052#1040#1056#1048#1054#1053' '#1089#1090#1088#1086#1095#1085#1099#1081
+            DataBinding.FieldName = 'CodeMarionStr'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object NameMarion_3: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1052#1040#1056#1048#1054#1053
+            DataBinding.FieldName = 'NameMarion'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object MeasureName_3: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'

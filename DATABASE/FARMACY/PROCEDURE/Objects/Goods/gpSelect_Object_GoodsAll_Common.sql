@@ -17,7 +17,8 @@ RETURNS TABLE (Id Integer, Code Integer, CodeStr TVarChar, Name TVarChar, isEras
                ReferCode TFloat, ReferPrice TFloat,
                ObjectDescName TVarChar, ObjectName TVarChar,
                MakerName TVarChar, MakerLinkName TVarChar,
-               ConditionsKeepName TVarChar
+               ConditionsKeepName TVarChar,
+               CodeMarion Integer, CodeMarionStr TVarChar, NameMarion TVarChar
               ) AS
 $BODY$ 
   DECLARE vbUserId Integer;
@@ -29,6 +30,24 @@ BEGIN
 
    -- для остальных...
    RETURN QUERY 
+    WITH tmpMarion AS (SELECT ObjectLink_Main.ChildObjectId AS GoodsMainId
+                            , Object_Goods.ObjectCode       AS GoodsCode
+                            , Object_Goods.ValueData        AS GoodsName
+                            , ObjectString.ValueData        AS GoodsCodeStr
+                       FROM ObjectLink AS ObjectLink_Goods_Object -- связь с Юридические лица или Торговая сеть или ...
+                            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId
+                            -- получается GoodsMainId
+                            LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods.Id
+                                                                     AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+                            LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                    AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                            LEFT JOIN ObjectString ON ObjectString.ObjectId = Object_Goods.Id
+                                                  AND ObjectString.DescId   = zc_ObjectString_Goods_Code()
+                       WHERE ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
+                         AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_Marion()
+                         AND ObjectLink_Main.ChildObjectId > 0 -- !!!убрали безликие!!!
+                      )
+   -- Результат
    SELECT 
              ObjectLink_Main.ChildObjectId      AS Id
            , Object_Goods.ObjectCode            AS Code
@@ -69,6 +88,10 @@ BEGIN
            , ObjectString_Goods_Maker.ValueData AS MakerName
            , Object_Maker.ValueData             AS MakerLinkName
            , Object_ConditionsKeep.ValueData    AS ConditionsKeepName
+           
+           , tmpMarion.GoodsCode
+           , tmpMarion.GoodsCodeStr
+           , tmpMarion.GoodsName
 
     FROM Object AS Object_Goods
 
@@ -172,6 +195,8 @@ BEGIN
                                ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
           LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
+          
+          LEFT JOIN tmpMarion ON tmpMarion.GoodsMainId = Object_Goods.Id
 
     WHERE Object_Goods.DescId = zc_Object_Goods()
    ;

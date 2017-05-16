@@ -35,12 +35,6 @@ BEGIN
 
      --
      RETURN QUERY
-WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
-                       UNION
-                        SELECT zc_Enum_Status_UnComplete() AS StatusId
-                       UNION
-                        SELECT zc_Enum_Status_Erased() AS StatusId 
-                       )
      SELECT
              Movement.Id                                AS Id
            , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
@@ -106,23 +100,20 @@ WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
            , View_InfoMoney.InfoMoneyDestinationName
            , View_InfoMoney.InfoMoneyCode
            , View_InfoMoney.InfoMoneyName
-           , MovementString_InvNumberBranch.ValueData   AS InvNumberBranch
+           , MovementString_InvNumberBranch.ValueData AS InvNumberBranch
 
            , COALESCE (MovementLinkMovement_ChildEDI.MovementId, 0) <> 0     AS isEDI
            , COALESCE (MovementBoolean_Electron.ValueData, FALSE) :: Boolean AS isElectron
-           , COALESCE (MovementBoolean_Medoc.ValueData, FALSE) :: Boolean    AS isMedoc
+           , COALESCE (MovementBoolean_Medoc.ValueData, FALSE)    :: Boolean AS isMedoc
 
-       FROM (SELECT Movement.id FROM  tmpStatus
-               JOIN Movement ON Movement.DescId = zc_Movement_TaxCorrective() AND Movement.StatusId = tmpStatus.StatusId
-               --WHERE inIsRegisterDate = FALSE
-            ) AS tmpMovement
-            JOIN Movement ON Movement.id = tmpMovement.id
+       FROM Movement
+            INNER JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                           ON MovementLinkMovement_Master.MovementId      = Movement.Id
+                                          AND MovementLinkMovement_Master.DescId          = zc_MovementLinkMovement_Master()
+                                          AND MovementLinkMovement_Master.MovementChildId = inDocumentMasterId
+
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            join MovementLinkMovement AS MovementLinkMovement_Master
-                                           ON MovementLinkMovement_Master.MovementId = Movement.Id
-                                          AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
-                                          AND MovementLinkMovement_Master.MovementChildId = inDocumentMasterId  --327828 ---
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id
@@ -251,6 +242,7 @@ WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ChildEDI
                                            ON MovementLinkMovement_ChildEDI.MovementId = Movement.Id 
                                           AND MovementLinkMovement_ChildEDI.DescId = zc_MovementLinkMovement_ChildEDI()
+       WHERE Movement.DescId = zc_Movement_TaxCorrective()
            ;
 
 END;

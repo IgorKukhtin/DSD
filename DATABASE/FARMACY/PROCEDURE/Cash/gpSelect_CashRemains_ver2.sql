@@ -36,6 +36,9 @@ BEGIN
        vbUnitKey := '0';
     END IF;
     vbUnitId := vbUnitKey::Integer;
+    
+    -- для Теста
+    -- IF inSession = '3' then vbUnitId:= 1781716; END IF;
 
     vbObjectId := COALESCE(lpGet_DefaultValue('zc_Object_Retail', vbUserId), '0');
 

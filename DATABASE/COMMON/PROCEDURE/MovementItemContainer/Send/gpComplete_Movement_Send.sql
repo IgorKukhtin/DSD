@@ -63,7 +63,6 @@ BEGIN
                            WHERE lfSelect.Ord = 1
                           )
            , tmpMI AS (SELECT MovementItem.Id AS MovementItemId
-                              MovementItem.Id AS MovementItemId
                             , MovementItem.MovementId
                             , Movement.OperDate
                             , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS UnitId_From
@@ -364,7 +363,7 @@ BEGIN
             , _tmp.BusinessId_ProfitLoss
 
         FROM tmpMI AS _tmp
-             LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = tmpMI.MovementItemId
+             LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = _tmp.MovementItemId
        ;
 
 
@@ -852,6 +851,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUnComplete_Movement (inMovementId:= 579, inSession:= '2')
--- SELECT * FROM gpComplete_Movement_Send (inMovementId:= 579, inIsLastComplete:= FALSE, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 579, inSession:= '2')
+-- SELECT * FROM gpUnComplete_Movement (inMovementId:= 579, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpComplete_Movement_Send (inMovementId:= 5854348, inIsLastComplete:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 579, inSession:= zfCalc_UserAdmin())

@@ -6,8 +6,8 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Mobile (Integer, Integer, Intege
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner_Mobile (
     IN inMemberId          Integer  , -- физ.лицо
-    IN inJuridicalId       Integer  , 
     IN inRetailId          Integer  , 
+    IN inJuridicalId       Integer  , 
     IN inRouteId           Integer  , 
     IN inisShowAll         Boolean  , --
     IN inSession           TVarChar   -- сессия пользователя

@@ -51,6 +51,9 @@ type
     Protocol3OpenForm: TdsdOpenForm;
     bbProtocol2OpenForm: TdxBarButton;
     bbProtocol3OpenForm: TdxBarButton;
+    CodeMarion_1: TcxGridDBColumn;
+    CodeMarionStr_1: TcxGridDBColumn;
+    NameMarion_1: TcxGridDBColumn;
   private
     { Private declarations }
   public

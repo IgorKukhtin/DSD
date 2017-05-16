@@ -40,7 +40,7 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsInfo());
    vbUserId:= lpGetUserBySession (inSession);
    
-   IF NOT EXISTS (SELECT 1 FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId := ioMovementItemId) THEN
+   IF NOT EXISTS (SELECT 1 FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = ioMovementItemId) THEN
       -- добавили новый элемент справочника и вернули значение <Ключ объекта>
       RAISE EXCEPTION 'добавили новый элемент справочника и вернули значение <Ключ объекта>';
    ELSE

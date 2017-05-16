@@ -7,13 +7,13 @@ CREATE OR REPLACE FUNCTION gpMovementItem_Sale_SetUnErased(
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
 )
-  RETURNS Boolean
+RETURNS Boolean
 AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
   -- проверка прав пользователя на вызов процедуры
-  vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetUnErased_MI_Sale_Partner());
+  vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetUnErased_MI_Sale_Partner());
 
   -- устанавливаем новое значение
   outIsErased:= lpSetUnErased_MovementItem (inMovementItemId:= inMovementItemId, inUserId:= vbUserId);

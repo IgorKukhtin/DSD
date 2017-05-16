@@ -909,7 +909,7 @@ begin
      //
 
      //создаем вьюху, т.к. подзапрос не пашет
-     try fExecSqFromQuery('create view dba._ViewLoadPG6 as select distinct code, ParentId2, ''Sop'' as Name from Sop '
+     try fExecSqFromQuery_noErr('create view dba._ViewLoadPG6 as select distinct code, ParentId2, ''Sop'' as Name from Sop '
             + ' union '
             + '   select distinct code, ParentId2, ''Vint'' as Name from Vint '
             + ' union '
@@ -1023,7 +1023,7 @@ begin
   end;
 
   //создаем вьюху, т.к. подзапрос не пашет
-  try fExecSqFromQuery('create view dba._ViewLoadPG1 as select  goodsProperty.GroupsName, max (goods2.ParentId) AS ParentId'
+  try fExecSqFromQuery_noErr('create view dba._ViewLoadPG1 as select  goodsProperty.GroupsName, max (goods2.ParentId) AS ParentId'
       +'       from goodsProperty'
       +'            join goods2 on goods2.Id = goodsProperty.GoodsId'
       +'                       and goods2.ParentId <> 500000'
@@ -1103,8 +1103,29 @@ begin
      myEnabledCB(cbGoods2);
 
       //
-      //создаем вьюху, т.к. подзапрос не пашет
-      try fExecSqFromQuery('create view dba._ViewLoadPG2 as select BillItemsIncome.goodsid '
+      //создаем Таблицу, т.к. подзапрос не пашет
+      try fExecSqFromQuery_noErr('create table dba._TableLoadPG2 (goodsid integer primary key'
+           +'                     , OperCount TSumm'
+           +'                     , RemainsCount TSumm'
+           +'                     , OperPrice TSumm'
+           +'                     , PriceListPrice  TSumm'
+           +'                     , UnitID Integer'
+           +'                     , clientid Integer'
+           +'                     , ValutaID Integer'
+           +'                     , DateIn date)');
+      except end;
+      //
+      fExecSqFromQuery('delete from dba._TableLoadPG2');
+      fExecSqFromQuery('insert into dba._TableLoadPG2 (goodsid'
+           +'                     , OperCount '
+           +'                     , RemainsCount '
+           +'                     , OperPrice '
+           +'                     , PriceListPrice  '
+           +'                     , UnitID '
+           +'                     , clientid '
+           +'                     , ValutaID '
+           +'                     , DateIn)'
+           +'                     select BillItemsIncome.goodsid '
            +'                     , sum(BillItemsIncome.OperCount) as OperCount '
            +'                     , sum(BillItemsIncome.RemainsCount) as RemainsCount '
            +'                     , max(BillItemsIncome.OperPrice) as OperPrice '
@@ -1115,12 +1136,14 @@ begin
            +'                     , max(BillItemsIncome.DateIn)    as  DateIn '
            +'                 from BillItemsIncome  '
            +'                 group by goodsid');
+      //создаем Таблицу, т.к. подзапрос не пашет
+      try fExecSqFromQuery_noErr('create table dba._TableLoadPG3 (goodsid integer primary key'
+           +'                     , GroupsName TVarCharLong)');
       except end;
-      //создаем вьюху, т.к. подзапрос не пашет
-      try fExecSqFromQuery('create view dba._ViewLoadPG3 as select DISTINCT goodsid, GroupsName from goodsproperty');
-      except end;
+      fExecSqFromQuery('delete from dba._TableLoadPG3');
+      fExecSqFromQuery('insert into dba._TableLoadPG3 (goodsid, GroupsName)'
+                      +'  select DISTINCT goodsid, GroupsName from goodsproperty');
       //
-
        with fromQuery,Sql do begin
         Close;
         Clear;
@@ -1137,9 +1160,9 @@ begin
         Add('      , BillItemsIncome.DateIn as DateIn  ');
         Add(' from goods2  ');
                   //через вьюху, т.к. подзапрос не пашет
-        Add('     left outer join _ViewLoadPG2 as BillItemsIncome on BillItemsIncome.goodsid = goods2.id ');
+        Add('     left outer join _TableLoadPG2 as BillItemsIncome on BillItemsIncome.goodsid = goods2.id ');
                   //через вьюху, т.к. подзапрос не пашет
-        Add('     left outer join _ViewLoadPG3 as grGoods on grGoods.goodsid = goods2.id');
+        Add('     left outer join _TableLoadPG3 as grGoods on grGoods.goodsid = goods2.id');
 
         Add('     left outer join  Unit as Shop on shop.id = BillItemsIncome.UnitID ');
         Add('     left outer join  Unit as Partner on Partner.id = BillItemsIncome.clientid ');
@@ -1205,7 +1228,48 @@ begin
     Gauge.Visible:=true;
      //
      myEnabledCB(cbGoods2);
-     //
+      //
+      //создаем Таблицу, т.к. подзапрос не пашет
+      try fExecSqFromQuery_noErr('create table dba._TableLoadPG2 (goodsid integer primary key'
+           +'                     , OperCount TSumm'
+           +'                     , RemainsCount TSumm'
+           +'                     , OperPrice TSumm'
+           +'                     , PriceListPrice  TSumm'
+           +'                     , UnitID Integer'
+           +'                     , clientid Integer'
+           +'                     , ValutaID Integer'
+           +'                     , DateIn date)');
+      except end;
+      //
+      fExecSqFromQuery('delete from dba._TableLoadPG2');
+      fExecSqFromQuery('insert into dba._TableLoadPG2 (goodsid'
+           +'                     , OperCount '
+           +'                     , RemainsCount '
+           +'                     , OperPrice '
+           +'                     , PriceListPrice  '
+           +'                     , UnitID '
+           +'                     , clientid '
+           +'                     , ValutaID '
+           +'                     , DateIn)'
+           +'                     select BillItemsIncome.goodsid '
+           +'                     , sum(BillItemsIncome.OperCount) as OperCount '
+           +'                     , sum(BillItemsIncome.RemainsCount) as RemainsCount '
+           +'                     , max(BillItemsIncome.OperPrice) as OperPrice '
+           +'                     , max(BillItemsIncome.PriceListPrice) as PriceListPrice  '
+           +'                     , max(BillItemsIncome.UnitID) as UnitID'
+           +'                     , max(BillItemsIncome.clientid)  as  clientid '
+           +'                     , max(BillItemsIncome.ValutaID)  as  ValutaID '
+           +'                     , max(BillItemsIncome.DateIn)    as  DateIn '
+           +'                 from BillItemsIncome  '
+           +'                 group by goodsid');
+      //создаем Таблицу, т.к. подзапрос не пашет
+      try fExecSqFromQuery_noErr('create table dba._TableLoadPG3 (goodsid integer primary key'
+           +'                     , GroupsName TVarCharLong)');
+      except end;
+      fExecSqFromQuery('delete from dba._TableLoadPG3');
+      fExecSqFromQuery('insert into dba._TableLoadPG3 (goodsid, GroupsName)'
+                      +'  select DISTINCT goodsid, GroupsName from goodsproperty');
+      //
      with fromQuery,Sql do begin
         Close;
         Clear;
@@ -1222,9 +1286,9 @@ begin
         Add('      , max (BillItemsIncome.DateIn) as DateIn');
         Add(' from goods2');
                   //через вьюху, т.к. подзапрос не пашет
-        Add('     left outer join _ViewLoadPG2 as BillItemsIncome on BillItemsIncome.goodsid = goods2.id ');
+        Add('     left outer join _TableLoadPG2 as BillItemsIncome on BillItemsIncome.goodsid = goods2.id ');
                  //через вьюху, т.к. подзапрос не пашет
-        Add('     left outer join _ViewLoadPG3 as grGoods on grGoods.goodsid = goods2.id');
+        Add('     left outer join _TableLoadPG3 as grGoods on grGoods.goodsid = goods2.id');
 
         Add('     left outer join Unit as Shop on shop.id = BillItemsIncome.UnitID ');
         Add(' where goods2.ParentId = 500000 ');
@@ -2010,7 +2074,7 @@ begin
      myEnabledCB(cbIncome);
      //
      //создаем вьюху, т.к. подзапрос не пашет
-     try fExecSqFromQuery('create view dba._ViewLoadPG4 as select goods_group.goodsName AS LabelName'
+     try fExecSqFromQuery_noErr('create view dba._ViewLoadPG4 as select goods_group.goodsName AS LabelName'
            +'                           , GoodsProperty.goodsId '
            +'              from GoodsProperty '
            +'              join goods on goods.Id = GoodsProperty.goodsId '
@@ -3686,8 +3750,12 @@ begin
      //
      myEnabledCB(cbGoodsGroup);
      //
-     //создаем вьюху, т.к. подзапрос не пашет
-     try fExecSqFromQuery('create view dba._ViewLoadPG5 as select distinct Goods_find.ParentId'
+      //создаем Таблицу, т.к. подзапрос не пашет
+      try fExecSqFromQuery_noErr('create table dba._TableLoadPG5 (ParentId integer primary key)');
+      except end;
+      fExecSqFromQuery('delete from dba._TableLoadPG5');
+      fExecSqFromQuery('insert into dba._TableLoadPG5 (ParentId)'
+                      +'           select distinct Goods_find.ParentId'
            +'                      from dba.Goods as Goods_find'
            +'                           left outer join dba.Goods as Goods_parent1 on Goods_parent1.Id = Goods_find.ParentId'
            +'                           left outer join dba.Goods as Goods_parent2 on Goods_parent2.Id = Goods_parent1.ParentId'
@@ -3695,7 +3763,6 @@ begin
            +'                         and Goods_find.ParentId <> 500000'
            +'                         and Goods_parent1.ParentId <> 500000'
            +'                         and Goods_parent2.ParentId <> 500000');
-     except end;
      //
      with fromQuery,Sql do begin
         Close;
@@ -3713,7 +3780,7 @@ begin
         Add('     left outer join dba.Goods as Goods_child on Goods_child.ParentId    = Goods.Id');
         Add('                                             and Goods_child.HasChildren <> zc_hsLeaf()');
         //        !!!последнюю группу не загружаем, но кроме АРХИВА
-        Add('     left outer join _ViewLoadPG5 as Goods_find on Goods_find.ParentId = Goods.Id');
+        Add('     left outer join _TableLoadPG5 as Goods_find on Goods_find.ParentId = Goods.Id');
         Add('where Goods.HasChildren <> zc_hsLeaf()');
         Add('  and (Goods_find.ParentId is null'); // !!!последнюю группу не загружаем, но кроме АРХИВА
         Add('    or Goods_child.Id > 0)');

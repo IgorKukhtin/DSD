@@ -1283,7 +1283,21 @@ end if;*/
 
      -- !!!Проверка что документ один!!!
      IF vbMovementDescId = zc_Movement_Inventory()
-     THEN IF EXISTS (SELECT Movement.Id
+     THEN 
+          -- !!!проверка уникальности!!!
+          /*PERFORM lpInsert_LockUnique (inKeyData:= 'Movement'
+                                         || ';' || Movement.DescId :: TVarChar
+                                         || ';' || COALESCE (MovementLinkObject_From.ObjectId, 0) :: TVarChar
+                                         || ';' || (DATE (Movement.OperDate)) :: TVarChar
+                                     , inUserId:= vbUserId
+                                      )
+          FROM Movement
+               INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                             ON MovementLinkObject_From.MovementId = Movement.Id
+                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+          WHERE Movement.Id = vbMovementId_begin*/
+
+          IF EXISTS (SELECT Movement.Id
                      FROM Movement
                           INNER JOIN MovementLinkObject AS MovementLinkObject_From_find
                                                         ON MovementLinkObject_From_find.MovementId = inMovementId
@@ -1315,12 +1329,36 @@ end if;*/
                     )
                   , DATE (inOperDate - INTERVAL '1 DAY');
           END IF;
+          
      END IF;
 
      -- проверка когда суммирование
      -- IF vbMovementDescId NOT IN (zc_Movement_Send()) OR inBranchCode <> 201 -- если Обвалка
      IF vbMovementDescId = zc_Movement_Inventory()
      THEN
+          -- !!!Проверка что элемент один - проверка уникальности!!!
+          /*PERFORM lpInsert_LockUnique (inKeyData:= 'MI'
+                                         || ';' || MovementItem.MovementId :: TVarChar
+                                         || ';' || MovementItem.ObjectId   :: TVarChar
+                                         || ';' || COALESCE (MILinkObject_GoodsKind.ObjectId, 0) :: TVarChar
+                                         || ';' || (DATE (COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()))) :: TVarChar
+                                         || ';' || COALESCE (MIString_PartionGoods.ValueData, '')
+                                     , inUserId:= vbUserId
+                                      )
+          FROM MovementItem
+               LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                               AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+               LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                          ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                         AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+               LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                            ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                           AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+           WHERE MovementItem.MovementId = vbMovementId_begin
+             AND MovementItem.isErased = FALSE
+             AND (MovementItem.Amount <> 0 OR vbMovementDescId <> zc_Movement_Inventory())
+          ;*/
           -- !!!Проверка что элемент один!!!
           IF EXISTS (SELECT 1
                      FROM MovementItem
@@ -1342,6 +1380,7 @@ end if;*/
           THEN
               RAISE EXCEPTION 'Ошибка.Документ за <%> заблокирован другим пользователем.Повторите действие через 25 сек.', DATE (inOperDate - INTERVAL '1 DAY');
           END IF;
+          
      END IF;
 
 /*
