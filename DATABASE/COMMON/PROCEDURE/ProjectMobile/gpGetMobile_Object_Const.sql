@@ -35,6 +35,7 @@ RETURNS TABLE (PaidKindId_First      Integer   -- Форма оплаты - БН
              , PriceListId_def       Integer   -- Прайс-лист для "безликих" ТТ, т.е. добавленных на мобильном устройстве
              , PriceListName_def     TVarChar  -- Прайс-лист для "безликих" ТТ, т.е. добавленных на мобильном устройстве
              , OperDate_diff         Integer   -- на сколько дней позже создавать док Возврат и Приход денег, т.е. при создании документов дата документа по умолчанию будет идти не сегодняшним числом а например - завтрашним
+             , ReturnDayCount        Integer   -- сколько дней принимаются возвраты по старым ценам
 )
 AS
 $BODY$
@@ -162,7 +163,8 @@ BEGIN
             , Object_PriceList_def.Id        AS PriceListId_def
             , Object_PriceList_def.ValueData AS PriceListName_def
 
-            , 1::Integer AS OperDate_diff -- пока на один день позже для всех, потом будет для каждого филиала отдельно задаваться
+            , 1::Integer  AS OperDate_diff  -- пока на один день позже для всех, потом будет для каждого филиала отдельно задаваться
+            , 14::Integer AS ReturnDayCount -- пока 14 дней
 
        FROM tmpPersonal
             LEFT JOIN Object AS Object_PaidKind_FirstForm  ON Object_PaidKind_FirstForm.Id = zc_Enum_PaidKind_FirstForm()
