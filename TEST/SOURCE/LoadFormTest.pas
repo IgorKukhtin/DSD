@@ -706,6 +706,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderIncomeSnabJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderIncomeSnabJournalForm');
   //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderIncomeSnabJournal_byReportForm'));
+  TdsdFormStorageFactory.GetStorage.Load('OrderIncomeSnabJournal_byReportFormForm');
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderIncomeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderIncomeJournalForm'));

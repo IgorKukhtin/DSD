@@ -19,6 +19,7 @@ RETURNS TABLE (GoodsId              Integer
              , GoodsGroupName       TVarChar
              , PartnerName          TVarChar
              , Comment              TVarChar
+             , MovementId_List      TVarChar
              , CountDays            Integer
              , RemainsStart         TFloat
              , RemainsEnd           TFloat
@@ -75,6 +76,7 @@ BEGIN
                                 , COALESCE (MI_Income.Amount, 0)        AS Amount_Income
                                 , ROW_NUMBER() OVER (PARTITION BY Movement.Id, MILinkObject_Goods.ObjectId) AS Ord
                                 , COALESCE (MovementString_Comment.ValueData,'') AS Comment
+                                , Movement.Id                           AS MovementId
                            FROM Movement
                                 LEFT JOIN MovementBoolean AS MovementBoolean_Closed
                                                           ON MovementBoolean_Closed.MovementId = Movement.Id
@@ -95,9 +97,10 @@ BEGIN
                                                          ON MovementString_Comment.MovementId = Movement.Id
                                                         AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
-                                LEFT JOIN MovementItem ON MovementItem.MovementId  = Movement.Id
-                                                      AND MovementItem.isErased    = FALSE
-                                                      AND MovementItem.DescId      = zc_MI_Master()
+                                INNER JOIN MovementItem ON MovementItem.MovementId  = Movement.Id
+                                                       AND MovementItem.isErased    = FALSE
+                                                       AND MovementItem.DescId      = zc_MI_Master()
+                                                       AND COALESCE (MovementItem.Amount,0) <> 0
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
                                                                  ON MILinkObject_Goods.MovementItemId = MovementItem.Id
                                                                 AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
@@ -125,10 +128,12 @@ BEGIN
       , tmpOrderIncome AS (SELECT tmp.GoodsId
                                 , tmp.PartnerName
                                 , tmp.Comment
+                                , tmp.MovementId_List
                                 , tmp.Amount - tmp.Amount_Income AS Amount
                            FROM (SELECT tmpOrderIncome_all.GoodsId
                                       , STRING_AGG (Object.ValueData :: TVarChar, '; ') AS PartnerName -- на самом деле это ёр лицо, но его будем использовать если вдруг другой инф≥ не окажетс€
                                       , STRING_AGG (tmpOrderIncome_all.Comment :: TVarChar, '; ') AS Comment
+                                      , STRING_AGG (tmpOrderIncome_all.MovementId :: TVarChar, '; ') AS MovementId_List
                                       , SUM (CASE WHEN tmpOrderIncome_all.Ord = 1 THEN tmpOrderIncome_all.Amount ELSE 0 END) AS Amount
                                       , SUM (tmpOrderIncome_all.Amount_Income) AS Amount_Income
                                  FROM tmpOrderIncome_all
@@ -362,7 +367,8 @@ BEGIN
 
            , tmpGoodsList.PartnerName :: TVarChar AS PartnerName
 
-           , tmpOrderIncome.Comment   :: TVarChar
+           , tmpOrderIncome.Comment           :: TVarChar
+           , tmpOrderIncome.MovementId_List   :: TVarChar
 
            , vbCountDays                        AS CountDays
 

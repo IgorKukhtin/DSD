@@ -5,7 +5,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -248
+  ExplicitLeft = -244
   ExplicitWidth = 1382
   ExplicitHeight = 572
   PixelsPerInch = 96
@@ -868,6 +868,14 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Options.Editing = False
             Width = 140
           end
+          object colMovementId_List: TcxGridDBColumn
+            DataBinding.FieldName = 'MovementId_List'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
         end
       end
     end
@@ -1375,8 +1383,8 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'OrderJournal'
-      FormName = 'TMovementJournalForm'
-      FormNameParam.Value = 'TMovementJournalForm'
+      FormName = 'TOrderIncomeSnabJournal_byReportForm'
+      FormNameParam.Value = 'TOrderIncomeSnabJournal_byReportForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1395,115 +1403,25 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'AccountId'
+          Name = 'GoodsId'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'AccountId'
+          ComponentItem = 'GoodsId'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'JuridicalId'
+          Name = 'GoodsName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'JuridicalId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PartnerId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PartnerId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InfoMoneyId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ContractId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ContractId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PaidKindId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PaidKindId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'DescSet'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'SaleDesc'
+          ComponentItem = 'GoodsName'
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
-          Name = 'AccountName'
+          Name = 'MovementId_List'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'AccountName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'JuridicalName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PartnerName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PartnerName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InfoMoneyName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ContractNumber'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ContractNumber'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PaidKindName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PaidKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'BranchId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'BranchId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'BranchName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'BranchName'
+          ComponentItem = 'MovementId_List'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
