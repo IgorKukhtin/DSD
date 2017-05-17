@@ -434,7 +434,7 @@ uses
   Color in '..\..\FormsFarmacy\System\Color.pas' {ColorForm: TParentForm},
   OverSettingsEdit in '..\..\FormsFarmacy\Guides\OverSettingsEdit.pas' {OverSettingsEditForm: TParentForm},
   OverSettings in '..\..\FormsFarmacy\Guides\OverSettings.pas' {OverSettingsForm: TParentForm},
-  DiscountExternalToolsEdit in '..\..\FormsFarmacy\Guides\DiscountExternalToolsEdit.pas' {DiscountExternalToolsEditForm: TParentForm},
+  DiscountExternalJuridicalEdit in '..\..\FormsFarmacy\Guides\DiscountExternalJuridicalEdit.pas' {DiscountExternalJuridicalEditForm: TParentForm},
   DiscountCard in '..\..\FormsFarmacy\Guides\DiscountCard.pas' {DiscountCardForm: TParentForm},
   BarCodeEdit in '..\..\FormsFarmacy\Guides\BarCodeEdit.pas' {BarCodeEditForm: TParentForm},
   BarCode in '..\..\FormsFarmacy\Guides\BarCode.pas' {BarCodeForm: TParentForm},
@@ -444,7 +444,7 @@ uses
   ConfirmedKind in '..\..\FormsFarmacy\Kind\ConfirmedKind.pas' {ConfirmedKindForm: TParentForm},
   DiscountExternal in '..\..\FormsFarmacy\Guides\DiscountExternal.pas' {DiscountExternalForm: TParentForm},
   DiscountExternalEdit in '..\..\FormsFarmacy\Guides\DiscountExternalEdit.pas' {DiscountExternalEditForm: TParentForm},
-  DiscountExternalTools in '..\..\FormsFarmacy\Guides\DiscountExternalTools.pas' {DiscountExternalToolsForm: TParentForm},
+  DiscountExternalJuridical in '..\..\FormsFarmacy\Guides\DiscountExternalJuridical.pas' {DiscountExternalJuridicalForm: TParentForm},
   PriceGroupSettingsTOP in '..\..\FormsFarmacy\Guides\PriceGroupSettingsTOP.pas' {PriceGroupSettingsTopForm: TParentForm},
   Report_MovementCheck_UnLiquid in '..\..\FormsFarmacy\Report\Report_MovementCheck_UnLiquid.pas' {Report_MovementCheck_UnLiquidForm: TParentForm},
   Report_MovementCheck_UnLiquidDialog in '..\..\FormsFarmacy\Report\Report_MovementCheck_UnLiquidDialog.pas' {Report_MovementCheck_UnLiquidDialogForm: TParentForm},
@@ -505,7 +505,9 @@ uses
   Check_SPEdit in '..\..\FormsFarmacy\Document\Check_SPEdit.pas' {Check_SPEditForm: TParentForm},
   Report_MovementPriceList_Cross in '..\..\FormsFarmacy\Report\Report_MovementPriceList_Cross.pas' {Report_MovementPriceList_CrossForm: TParentForm},
   Report_MovementPriceList_Dialog in '..\..\FormsFarmacy\Report\Report_MovementPriceList_Dialog.pas' {Report_MovementPriceList_DialogForm: TParentForm},
-  Report_MovementPriceList in '..\..\FormsFarmacy\Report\Report_MovementPriceList.pas' {Report_MovementPriceListForm: TParentForm};
+  Report_MovementPriceList in '..\..\FormsFarmacy\Report\Report_MovementPriceList.pas' {Report_MovementPriceListForm: TParentForm},
+  DiscountExternalTools in '..\..\FormsFarmacy\Guides\DiscountExternalTools.pas' {DiscountExternalToolsForm: TParentForm},
+  DiscountExternalToolsEdit in '..\..\FormsFarmacy\Guides\DiscountExternalToolsEdit.pas' {DiscountExternalToolsEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

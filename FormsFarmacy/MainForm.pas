@@ -355,6 +355,8 @@ type
     actReport_MovementPriceList_Cross: TdsdOpenForm;
     N137: TMenuItem;
     N138: TMenuItem;
+    actDiscountExternalJuridical: TdsdOpenForm;
+    miDiscountExternalJuridical: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

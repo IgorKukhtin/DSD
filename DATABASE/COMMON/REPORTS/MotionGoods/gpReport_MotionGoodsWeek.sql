@@ -92,7 +92,8 @@ BEGIN
                            GROUP BY tmpContainer.GoodsId
                                   , tmpContainer.GoodsKindId
                                   , tmpContainer.Amount
-                           HAVING (tmpContainer.Amount - COALESCE(SUM (MIContainer.Amount), 0)) <>0 ) AS tmp
+                          -- HAVING (tmpContainer.Amount - COALESCE(SUM (MIContainer.Amount), 0)) <>0 
+                           ) AS tmp
                      GROUP BY tmp.GoodsId, tmp.goodskindid
                      )
 
@@ -196,6 +197,11 @@ BEGIN
                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+       WHERE tmpRemains.RemainsStart <> 0 OR tmpRemains.RemainsEnd   <> 0
+          OR tmpData.CountIn1  <> 0 OR tmpData.CountIn2  <> 0 OR tmpData.CountIn3  <> 0 OR tmpData.CountIn4 <> 0
+          OR tmpData.CountIn5  <> 0 OR tmpData.CountIn6  <> 0 OR tmpData.CountIn7  <> 0
+          OR tmpData.CountOut1 <> 0 OR tmpData.CountOut2 <> 0 OR tmpData.CountOut3 <> 0 OR tmpData.CountOut4 <> 0
+          OR tmpData.CountOut5 <> 0 OR tmpData.CountOut6 <> 0 OR tmpData.CountOut7 <> 0
        ORDER BY Object_Goods.ValueData    
           ;
 
