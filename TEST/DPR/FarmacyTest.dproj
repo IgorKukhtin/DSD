@@ -1373,8 +1373,8 @@
 				<Form>OverSettingsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternalToolsEdit.pas">
-				<Form>DiscountExternalToolsEditForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternalJuridicalEdit.pas">
+				<Form>DiscountExternalJuridicalEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountCard.pas">
@@ -1413,8 +1413,8 @@
 				<Form>DiscountExternalEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternalTools.pas">
-				<Form>DiscountExternalToolsForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternalJuridical.pas">
+				<Form>DiscountExternalJuridicalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\PriceGroupSettingsTOP.pas">
@@ -1659,6 +1659,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementPriceList.pas">
 				<Form>Report_MovementPriceListForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternalTools.pas">
+				<Form>DiscountExternalToolsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternalToolsEdit.pas">
+				<Form>DiscountExternalToolsEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
