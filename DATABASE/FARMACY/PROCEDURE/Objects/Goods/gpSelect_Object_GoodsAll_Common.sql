@@ -34,6 +34,9 @@ BEGIN
                             , Object_Goods.ObjectCode       AS GoodsCode
                             , Object_Goods.ValueData        AS GoodsName
                             , ObjectString.ValueData        AS GoodsCodeStr
+                              --  № п/п
+                            , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Main.ChildObjectId ORDER BY Object_Goods.ObjectCode DESC) AS Ord
+
                        FROM ObjectLink AS ObjectLink_Goods_Object -- связь с Юридические лица или Торговая сеть или ...
                             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId
                             -- получается GoodsMainId
@@ -197,6 +200,7 @@ BEGIN
           LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
           
           LEFT JOIN tmpMarion ON tmpMarion.GoodsMainId = Object_Goods.Id
+                             -- AND tmpMarion.Ord         = 1
 
     WHERE Object_Goods.DescId = zc_Object_Goods()
    ;
