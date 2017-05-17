@@ -1022,19 +1022,24 @@ begin
     Close;
   end;
 
-  //создаем вьюху, т.к. подзапрос не пашет
-  try fExecSqFromQuery_noErr('create view dba._ViewLoadPG1 as select  goodsProperty.GroupsName, max (goods2.ParentId) AS ParentId'
+      //создаем Таблицу, т.к. подзапрос не пашет
+      try fExecSqFromQuery_noErr('create table dba._TableLoadPG1 (GroupsName TVarCharLongLong primary key, ParentId integer)');
+      except end;
+
+      fExecSqFromQuery('delete from dba._TableLoadPG1');
+      fExecSqFromQuery('insert into dba._TableLoadPG1 (GroupsName, ParentId)'
+      +'       select goodsProperty.GroupsName, max (goods2.ParentId) AS ParentId'
       +'       from goodsProperty'
       +'            join goods2 on goods2.Id = goodsProperty.GoodsId'
       +'                       and goods2.ParentId <> 500000'
       +'      group by goodsProperty.GroupsName');
-  except end;
-
+  //
+  //
   fExecSqFromQuery(
        ' update goods2 set ParentId =  tmp.ParentId'
       +' from goodsProperty'
              //через вьюху, т.к. подзапрос не пашет
-      +'      inner join _ViewLoadPG1 as tmp on tmp.GroupsName = goodsProperty.GroupsName'
+      +'      inner join _TableLoadPG1 as tmp on tmp.GroupsName = goodsProperty.GroupsName'
       +' where goods2.ParentId = 500000'
       +'   and goods2.Id = goodsProperty.GoodsId'
        );
@@ -1048,6 +1053,9 @@ begin
     Close;
   end;
 
+      //создаем Таблицу, т.к. подзапрос не пашет
+      try fExecSqFromQuery_noErr('create table dba._TableLoadPG11 (GroupsName TVarCharLongLong primary key, Id integer)');
+      except end;
   //остальным товарам их группу затянем в 1 поле
 {
 Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID)
@@ -1057,19 +1065,20 @@ Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCod
                    and goods2.ParentId = 500000
                    and goods2.HasChildren = -1;
 
+ delete from dba._TableLoadPG11;
+ insert into dba._TableLoadPG11 (Id, GroupsName)
+         select goods2.Id, goods2.GoodsName as GroupsName
+         from goods2
+         where goods2.ParentId = 500000 and goods2.HasChildren <> -1;
+
 update goods2 set ParentId = tmp.Id
 from goodsProperty
-    join (select goods2.Id, goods2.GoodsName as GroupsName
-          from goods2
-           where goods2.ParentId = 500000 and goods2.HasChildren <> -1
-         ) as tmp on tmp.GroupsName = cast (goodsProperty.GroupsName as TVarCharMedium)
+    join _TableLoadPG11 as tmp on tmp.GroupsName = cast (goodsProperty.GroupsName as TVarCharMedium)
 where goods2.ParentId = 500000
   and goods2.HasChildren = -1
   and goods2.Id = goodsProperty.GoodsId;
 
 select *  from goods2 where ParentId = 500000 and HasChildren = -1 -- 14384
-
-
 select count(*) from goods2 where ParentId = 500000 and HasChildren = -1 -- 14384
 select count(*) from goods2 where ParentId = 500000 and HasChildren <> -1 -- 2425
 commit

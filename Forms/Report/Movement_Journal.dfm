@@ -1,28 +1,28 @@
 inherited MovementJournalForm: TMovementJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1086#1087#1077#1088#1072#1094#1080#1081
-  ClientHeight = 396
+  ClientHeight = 556
   ClientWidth = 1164
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1180
-  ExplicitHeight = 431
+  ExplicitHeight = 594
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
     Width = 1164
-    Height = 316
+    Height = 476
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1164
     ExplicitHeight = 316
-    ClientRectBottom = 316
+    ClientRectBottom = 476
     ClientRectRight = 1164
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1164
       ExplicitHeight = 316
       inherited cxGrid: TcxGrid
         Width = 1164
-        Height = 316
+        Height = 476
         ExplicitWidth = 1164
         ExplicitHeight = 316
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -484,29 +484,34 @@ inherited MovementJournalForm: TMovementJournalForm
       FormNameParam.Component = FormParams
       FormNameParam.ComponentItem = 'FormName'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'inOperDate'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Id'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inMovementId_Value'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inChangePercentAmount'
           Value = '0'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -537,6 +542,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -544,6 +550,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountId'
@@ -551,6 +558,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = AccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -558,6 +566,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartnerId'
@@ -565,6 +574,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchId'
@@ -572,6 +582,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = BranchGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
@@ -579,6 +590,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
@@ -586,6 +598,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
@@ -593,6 +606,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescSet'
@@ -601,6 +615,7 @@ inherited MovementJournalForm: TMovementJournalForm
         ComponentItem = 'DescSet'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 123
   end
@@ -711,53 +726,62 @@ inherited MovementJournalForm: TMovementJournalForm
         Value = 41640d
         Component = deStart
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountId'
         Value = ''
         Component = AccountGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerId'
         Value = ''
         Component = PartnerGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractId'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindId'
         Value = ''
         Component = PaidKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'DescSet'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountName'
@@ -765,6 +789,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = AccountGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -772,6 +797,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -779,6 +805,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = PartnerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
@@ -786,6 +813,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractNumber'
@@ -793,6 +821,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
@@ -800,18 +829,21 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchId'
         Value = ''
         Component = BranchGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchName'
         Value = ''
         Component = BranchGuides
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end>
   end
   object getMovementForm: TdsdStoredProc
@@ -825,6 +857,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FormName'
@@ -832,16 +865,18 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = FormParams
         ComponentItem = 'FormName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 344
-    Top = 128
+    Left = 440
+    Top = 192
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -851,6 +886,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -859,6 +895,7 @@ inherited MovementJournalForm: TMovementJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 400
   end
@@ -867,6 +904,7 @@ inherited MovementJournalForm: TMovementJournalForm
     LookupControl = edPartner
     FormNameParam.Value = 'TPartner_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPartner_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -876,6 +914,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -884,12 +923,14 @@ inherited MovementJournalForm: TMovementJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
@@ -897,6 +938,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 456
     Top = 32
@@ -906,6 +948,7 @@ inherited MovementJournalForm: TMovementJournalForm
     LookupControl = ceInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -914,6 +957,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -921,6 +965,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 720
     Top = 29
@@ -930,6 +975,7 @@ inherited MovementJournalForm: TMovementJournalForm
     LookupControl = edAccount
     FormNameParam.Value = 'TAccount_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccount_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -939,6 +985,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = AccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValueAll'
@@ -947,6 +994,7 @@ inherited MovementJournalForm: TMovementJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 720
     Top = 65528
@@ -956,6 +1004,7 @@ inherited MovementJournalForm: TMovementJournalForm
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -966,6 +1015,7 @@ inherited MovementJournalForm: TMovementJournalForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -974,6 +1024,7 @@ inherited MovementJournalForm: TMovementJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 952
     Top = 152
@@ -983,6 +1034,7 @@ inherited MovementJournalForm: TMovementJournalForm
     LookupControl = ceContract
     FormNameParam.Value = 'TContractChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -992,6 +1044,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1000,6 +1053,7 @@ inherited MovementJournalForm: TMovementJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
@@ -1007,6 +1061,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -1015,6 +1070,7 @@ inherited MovementJournalForm: TMovementJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
@@ -1022,6 +1078,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
@@ -1030,6 +1087,7 @@ inherited MovementJournalForm: TMovementJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindId'
@@ -1037,6 +1095,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
@@ -1044,12 +1103,14 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
@@ -1057,6 +1118,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerId'
@@ -1064,6 +1126,7 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -1072,6 +1135,7 @@ inherited MovementJournalForm: TMovementJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 944
     Top = 110
@@ -1081,6 +1145,7 @@ inherited MovementJournalForm: TMovementJournalForm
     LookupControl = edBranch
     FormNameParam.Value = 'TBranch_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranch_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1091,6 +1156,7 @@ inherited MovementJournalForm: TMovementJournalForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1099,6 +1165,7 @@ inherited MovementJournalForm: TMovementJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 1056
     Top = 80

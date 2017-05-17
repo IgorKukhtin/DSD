@@ -377,7 +377,7 @@ BEGIN
 
                           -- расчетный счет из договора
                           LEFT JOIN ObjectLink AS ObjectLink_Contract_BankAccount
-                                 ON ObjectLink_Contract_BankAccount.ObjectId = Object_PartnerMedical_Contract.Id
+                                 ON ObjectLink_Contract_BankAccount.ObjectId = tmpContract.PartnerMedical_ContractId
                                 AND ObjectLink_Contract_BankAccount.DescId = zc_ObjectLink_Contract_BankAccount()
                           LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = ObjectLink_Contract_BankAccount.ChildObjectId 
                           LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
@@ -428,7 +428,7 @@ BEGIN
              , tmpData.SummOriginal      :: TFloat
              , (tmpData.SummOriginal - tmpData.SummSale) :: TFloat  AS SummaComp
 
-             , CAST (ROW_NUMBER() OVER (PARTITION BY Object_PartnerMedical.ValueData ORDER BY Object_PartnerMedical.ValueData,Object_Unit.ValueData, Object_Goods.ValueData ) AS Integer) AS NumLine
+             , CAST (ROW_NUMBER() OVER (PARTITION BY Object_PartnerMedical.ValueData, Object_Contract.Id   ORDER BY tmpData.OperDate, Object_Goods.ValueData ) AS Integer) AS NumLine
              , CAST (tmpCountR.CountSP AS Integer) AS CountSP
 
            , COALESCE (tmpMovDetails.JuridicalFullName,Object_Juridical.ValueData)

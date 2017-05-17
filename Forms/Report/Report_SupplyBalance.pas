@@ -59,6 +59,8 @@ type
     edJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
     colComment: TcxGridDBColumn;
+    OrderJournal: TdsdOpenForm;
+    colMovementId_List: TcxGridDBColumn;
   private
     { Private declarations }
   public

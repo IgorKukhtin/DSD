@@ -446,7 +446,17 @@ begin
                  PanelHost.Caption:= 'Start Mail (2) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                  //подключаемся к ящику
                  //***IdPOP3.Connect;          //POP3
-                 IdPOP3.Connect(TRUE);         //IMAP
+
+                 try IdPOP3.Connect(TRUE);     //IMAP
+                 except
+                      on E: Exception do begin
+                         ShowMessage(' ERROR - IdPOP3.Connect(TRUE)  : ' + E.Message);
+                       exit;
+                      end;
+                 end;
+
+
+
                  PanelHost.Caption:= 'Start Mail (3.1) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                  IdPOP3.SelectMailBox('INBOX');//IMAP
                  PanelHost.Caption:= 'Start Mail (3.2) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);

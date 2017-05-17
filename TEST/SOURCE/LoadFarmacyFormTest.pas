@@ -148,6 +148,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountExternalTools_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalTools_ObjectForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountExternalJuridicalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalJuridicalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountExternalJuridicalEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalJuridicalEditForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBarCodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBarCodeForm');
@@ -1190,14 +1194,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMemberSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSPEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberSPEditForm');
-
+  }
   // отчет реестр по постановлению 1303
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPDialogForm');
   exit;
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMemberSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGroupMemberSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMemberSPEditForm'));

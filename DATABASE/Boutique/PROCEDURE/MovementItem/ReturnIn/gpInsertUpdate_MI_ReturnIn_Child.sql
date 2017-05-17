@@ -45,12 +45,12 @@ BEGIN
      IF inisPayTotal = FALSE
         THEN
             SELECT Movement.OperDate 
-                 , MovementLinkObject_From.ObjectId
+                 , MovementLinkObject_To.ObjectId
            INTO vbOperDate, vbUnitId
             FROM Movement
-                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                              ON MovementLinkObject_From.MovementId = Movement.Id
-                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                 LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                              ON MovementLinkObject_To.MovementId = Movement.Id
+                                             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             WHERE Movement.Id = inMovementId;
 
 
@@ -118,7 +118,7 @@ BEGIN
                       
 
             -- сохранили
-            PERFORM lpInsertUpdate_MI_ReturnIn_Child       (ioId                 := COALESCE (_tmpMI.Id,0)
+            PERFORM lpInsertUpdate_MI_ReturnIn_Child  (ioId                 := COALESCE (_tmpMI.Id,0)
                                                      , inMovementId         := inMovementId
                                                      , inParentId           := inParentId
                                                      , inCashId             := COALESCE (_tmpCash.CashId, _tmpMI.CashId)
