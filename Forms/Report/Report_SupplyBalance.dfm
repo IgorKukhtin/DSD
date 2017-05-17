@@ -5,7 +5,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -286
+  ExplicitLeft = -248
   ExplicitWidth = 1382
   ExplicitHeight = 572
   PixelsPerInch = 96
@@ -605,7 +605,6 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -617,6 +616,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 150
           end
           object GoodsGroupName: TcxGridDBColumn
@@ -625,6 +625,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object clGoodsCode: TcxGridDBColumn
@@ -635,11 +636,14 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 35
           end
           object clGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
+            PropertiesClassName = 'TcxTextEditProperties'
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 151
@@ -650,6 +654,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             VisibleForCustomization = False
             Width = 60
           end
@@ -658,6 +663,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 35
           end
           object PartnerCode: TcxGridDBColumn
@@ -666,6 +672,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object PartnerName: TcxGridDBColumn
@@ -674,6 +681,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 152
           end
           object CountDays: TcxGridDBColumn
@@ -684,6 +692,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object RemainsStart: TcxGridDBColumn
@@ -694,6 +703,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object RemainsEnd: TcxGridDBColumn
@@ -704,6 +714,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object RemainsStart_Oth: TcxGridDBColumn
@@ -714,6 +725,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object RemainsEnd_Oth: TcxGridDBColumn
@@ -724,6 +736,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object CountIncome: TcxGridDBColumn
@@ -734,6 +747,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object CountProductionOut: TcxGridDBColumn
@@ -744,6 +758,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object CountIn_oth: TcxGridDBColumn
@@ -755,6 +770,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object CountOut_oth: TcxGridDBColumn
@@ -766,6 +782,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object CountOnDay: TcxGridDBColumn
@@ -776,6 +793,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object RemainsDays: TcxGridDBColumn
@@ -786,6 +804,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object ReserveDays: TcxGridDBColumn
@@ -796,6 +815,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object PlanOrder: TcxGridDBColumn
@@ -806,6 +826,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object CountOrder: TcxGridDBColumn
@@ -816,6 +837,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object RemainsDaysWithOrder: TcxGridDBColumn
@@ -826,6 +848,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object Color_RemainsDays: TcxGridDBColumn
@@ -833,6 +856,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             VisibleForCustomization = False
             Width = 70
           end
@@ -1347,6 +1371,144 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
+    object OrderJournal: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'OrderJournal'
+      FormName = 'TMovementJournalForm'
+      FormNameParam.Value = 'TMovementJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42736d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42736d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PaidKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DescSet'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SaleDesc'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AccountName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PaidKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PaidKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BranchId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BranchName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -1526,6 +1688,13 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
       item
         ValueColumn = Color_RemainsDays
         ColorValueList = <>
+      end>
+    ColumnAddOnList = <
+      item
+        Column = clGoodsName
+        Action = OrderJournal
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
       end>
     Left = 320
     Top = 232
