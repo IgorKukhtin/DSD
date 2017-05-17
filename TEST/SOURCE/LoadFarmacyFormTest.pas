@@ -148,6 +148,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountExternalTools_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalTools_ObjectForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountExternalJuridicalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalJuridicalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountExternalJuridicalEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalJuridicalEditForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBarCodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBarCodeForm');
