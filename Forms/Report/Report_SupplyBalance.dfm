@@ -5,8 +5,9 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -286
   ExplicitWidth = 1382
-  ExplicitHeight = 569
+  ExplicitHeight = 572
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -834,6 +835,14 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 70
+          end
+          object colComment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1079#1072#1082#1072#1079')'
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 140
           end
         end
       end

@@ -1761,6 +1761,22 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outAmountOrder'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountOrder'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outRemainsDaysWithOrder'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RemainsDaysWithOrder'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = MasterCDS

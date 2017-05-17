@@ -58,6 +58,7 @@ type
     cxLabel5: TcxLabel;
     edJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
+    colComment: TcxGridDBColumn;
   private
     { Private declarations }
   public
