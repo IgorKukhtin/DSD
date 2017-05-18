@@ -115,7 +115,14 @@ BEGIN
                              , tmpContainer.GoodsId
                              , tmpContainer.GoodsKindId
                              , tmpContainer.Amount
-                      HAVING SUM (COALESCE(MIContainer.Amount, 0)) <> 0
+                      HAVING SUM (CASE WHEN MIContainer.isActive = TRUE
+                                       THEN COALESCE (MIContainer.Amount, 0)
+                                       ELSE 0
+                                  END) <> 0
+                          OR SUM (CASE WHEN MIContainer.isActive = FALSE
+                                       THEN -1 * MIContainer.Amount
+                                       ELSE 0
+                                  END) <> 0
                       )
     , tmpGoods AS (SELECT DISTINCT tmpRemains.GoodsId, tmpRemains.GoodsKindId
                    FROM tmpRemains
