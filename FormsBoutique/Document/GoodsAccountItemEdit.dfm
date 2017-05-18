@@ -242,7 +242,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_ReturnIn_Child'
+    StoredProcName = 'gpInsertUpdate_MI_GoodsAccount_Child'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -380,7 +380,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
     Top = 40
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_MI_ReturnIn_Child'
+    StoredProcName = 'gpGet_MI_GoodsAccount_Child'
     DataSets = <>
     OutputType = otResult
     Params = <

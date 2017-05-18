@@ -29,19 +29,19 @@ object GoodsAccountForm: TGoodsAccountForm
     BevelOuter = bvNone
     TabOrder = 0
     object edInvNumber: TcxTextEdit
-      Left = 177
+      Left = 9
       Top = 23
       Properties.ReadOnly = True
       TabOrder = 0
-      Width = 70
+      Width = 149
     end
     object cxLabel1: TcxLabel
-      Left = 177
+      Left = 9
       Top = 5
       Caption = #8470' '#1076#1086#1082'.'
     end
     object edOperDate: TcxDateEdit
-      Left = 252
+      Left = 165
       Top = 23
       EditValue = '09.05.2017'
       Properties.SaveTime = False
@@ -50,23 +50,12 @@ object GoodsAccountForm: TGoodsAccountForm
       Width = 82
     end
     object cxLabel2: TcxLabel
-      Left = 250
+      Left = 165
       Top = 5
       Caption = #1044#1072#1090#1072
     end
     object edFrom: TcxButtonEdit
-      Left = 9
-      Top = 63
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 3
-      Width = 238
-    end
-    object edTo: TcxButtonEdit
-      Left = 340
+      Left = 252
       Top = 23
       Properties.Buttons = <
         item
@@ -74,26 +63,21 @@ object GoodsAccountForm: TGoodsAccountForm
           Kind = bkEllipsis
         end>
       TabOrder = 2
-      Width = 217
-    end
-    object cxLabel3: TcxLabel
-      Left = 340
-      Top = 5
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      Width = 305
     end
     object cxLabel4: TcxLabel
-      Left = 9
-      Top = 45
+      Left = 252
+      Top = 5
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
     end
     object cxLabel11: TcxLabel
       Left = 9
-      Top = 5
+      Top = 45
       Caption = #1057#1090#1072#1090#1091#1089
     end
     object ceStatus: TcxButtonEdit
       Left = 9
-      Top = 23
+      Top = 63
       Properties.Buttons = <
         item
           Action = CompleteMovement
@@ -110,8 +94,8 @@ object GoodsAccountForm: TGoodsAccountForm
         end>
       Properties.Images = dmMain.ImageList
       Properties.ReadOnly = True
-      TabOrder = 9
-      Width = 157
+      TabOrder = 7
+      Width = 238
     end
     object cxLabel12: TcxLabel
       Left = 971
@@ -126,7 +110,7 @@ object GoodsAccountForm: TGoodsAccountForm
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Properties.ReadOnly = True
-      TabOrder = 11
+      TabOrder = 9
       Width = 79
     end
     object cxLabel16: TcxLabel
@@ -137,7 +121,7 @@ object GoodsAccountForm: TGoodsAccountForm
     object ceComment: TcxTextEdit
       Left = 252
       Top = 103
-      TabOrder = 13
+      TabOrder = 11
       Width = 305
     end
     object cxLabel6: TcxLabel
@@ -151,7 +135,7 @@ object GoodsAccountForm: TGoodsAccountForm
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.'
       Properties.ReadOnly = True
-      TabOrder = 15
+      TabOrder = 13
       Width = 92
     end
     object edHappyDate: TcxDateEdit
@@ -161,7 +145,7 @@ object GoodsAccountForm: TGoodsAccountForm
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 16
+      TabOrder = 14
       Width = 82
     end
     object cxLabel8: TcxLabel
@@ -174,17 +158,8 @@ object GoodsAccountForm: TGoodsAccountForm
       Top = 103
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089' '#1086#1087#1083#1072#1090#1086#1081
       Properties.ReadOnly = False
-      TabOrder = 18
+      TabOrder = 16
       Width = 127
-    end
-    object edEndDate: TcxDateEdit
-      Left = 656
-      Top = 103
-      EditValue = '09.05.2017'
-      Properties.SaveTime = False
-      Properties.ShowTime = False
-      TabOrder = 19
-      Width = 82
     end
   end
   object cxPageControl: TcxPageControl
@@ -202,9 +177,6 @@ object GoodsAccountForm: TGoodsAccountForm
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 83
@@ -895,7 +867,7 @@ object GoodsAccountForm: TGoodsAccountForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 75
-        Width = 8
+        Width = 1054
         Height = 8
         HotZoneClassName = 'TcxXPTaskBarStyle'
         HotZone.Visible = False
@@ -935,16 +907,16 @@ object GoodsAccountForm: TGoodsAccountForm
     Width = 85
   end
   object cxLabel9: TcxLabel
-    Left = 342
+    Left = 339
     Top = 45
     Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
   end
   object ceCity: TcxTextEdit
-    Left = 342
+    Left = 339
     Top = 63
     Properties.ReadOnly = True
     TabOrder = 8
-    Width = 215
+    Width = 218
   end
   object cxLabel10: TcxLabel
     Left = 566
@@ -959,12 +931,12 @@ object GoodsAccountForm: TGoodsAccountForm
     Width = 484
   end
   object cxLabel13: TcxLabel
-    Left = 8
+    Left = 9
     Top = 85
     Caption = #1058#1077#1083#1077#1092#1086#1085' ('#1084#1086#1073#1080#1083#1100#1085#1099#1081')'
   end
   object cePhoneMobile: TcxTextEdit
-    Left = 8
+    Left = 9
     Top = 103
     Properties.ReadOnly = True
     TabOrder = 12
@@ -993,22 +965,8 @@ object GoodsAccountForm: TGoodsAccountForm
     EditValue = 42864d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 16
+    TabOrder = 15
     Width = 104
-  end
-  object cxLabel15: TcxLabel
-    Left = 566
-    Top = 85
-    Caption = #1044#1072#1090#1072' '#1085#1072#1095'. / '#1044#1072#1090#1072' '#1086#1082#1086#1085#1095'. '#1087#1088#1086#1076#1072#1078
-  end
-  object edStartDate: TcxDateEdit
-    Left = 566
-    Top = 103
-    EditValue = '09.05.2017'
-    Properties.SaveTime = False
-    Properties.ShowTime = False
-    TabOrder = 21
-    Width = 83
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1030,7 +988,7 @@ object GoodsAccountForm: TGoodsAccountForm
     Top = 351
   end
   object spSelectMI: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_ReturnIn'
+    StoredProcName = 'gpSelect_MovementItem_GoodsAccount'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -1048,7 +1006,6 @@ object GoodsAccountForm: TGoodsAccountForm
       item
         Name = 'inStartDate'
         Value = 'NULL'
-        Component = edStartDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1056,7 +1013,6 @@ object GoodsAccountForm: TGoodsAccountForm
       item
         Name = 'inEndDate'
         Value = 'NULL'
-        Component = edEndDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1690,15 +1646,11 @@ object GoodsAccountForm: TGoodsAccountForm
         item
           Name = 'MasterUnitId'
           Value = ''
-          Component = GuidesTo
-          ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end
         item
           Name = 'MasterUnitName'
           Value = ''
-          Component = GuidesTo
-          ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -1847,8 +1799,8 @@ object GoodsAccountForm: TGoodsAccountForm
       MoveParams = <>
       Caption = 'actInsertAction1'
       ImageIndex = 1
-      FormName = 'TReturnInItemEditForm'
-      FormNameParam.Value = 'TReturnInItemEditForm'
+      FormName = 'TGoodsAccountItemEditForm'
+      FormNameParam.Value = 'TGoodsAccountItemEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1917,36 +1869,6 @@ object GoodsAccountForm: TGoodsAccountForm
     Left = 16
     Top = 303
   end
-  object GuidesTo: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edTo
-    FormNameParam.Value = 'TUnitForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnitForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 408
-    Top = 8
-  end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
     Left = 456
@@ -1956,7 +1878,7 @@ object GoodsAccountForm: TGoodsAccountForm
     end
   end
   object spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_ReturnIn'
+    StoredProcName = 'gpInsertUpdate_MovementItem_GoodsAccount'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2026,74 +1948,10 @@ object GoodsAccountForm: TGoodsAccountForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outOperPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'OperPrice'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outCountForPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CountForPrice'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAmountSumm'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountSumm'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outOperPriceList'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'OperPriceList'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAmountPriceListSumm'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountPriceListSumm'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outCurrencyValue'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CurrencyValue'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outParValue'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'ParValue'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'outTotalChangePercent'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'TotalChangePercent'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTotalPayOth'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TotalPayOth'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -2140,7 +1998,7 @@ object GoodsAccountForm: TGoodsAccountForm
     Top = 287
   end
   object spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_ReturnIn'
+    StoredProcName = 'gpInsertUpdate_Movement_GoodsAccount'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2171,16 +2029,6 @@ object GoodsAccountForm: TGoodsAccountForm
       item
         Name = 'inFromId'
         Value = ''
-        Component = GuidesTo
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inToId'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2215,7 +2063,6 @@ object GoodsAccountForm: TGoodsAccountForm
         Control = edFrom
       end
       item
-        Control = edTo
       end
       item
         Control = edTotalDebt
@@ -2249,7 +2096,7 @@ object GoodsAccountForm: TGoodsAccountForm
     Top = 201
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_ReturnIn'
+    StoredProcName = 'gpGet_Movement_GoodsAccount'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2294,21 +2141,6 @@ object GoodsAccountForm: TGoodsAccountForm
         Name = 'StatusName'
         Value = ''
         Component = StatusGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ToId'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ToName'
-        Value = ''
-        Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2404,20 +2236,6 @@ object GoodsAccountForm: TGoodsAccountForm
         Component = cePhone
         DataType = ftString
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'StartDate'
-        Value = 'NULL'
-        Component = edStartDate
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'EndDate'
-        Value = 'NULL'
-        Component = edEndDate
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 200
@@ -2438,7 +2256,6 @@ object GoodsAccountForm: TGoodsAccountForm
     IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
-        Guides = GuidesTo
       end
       item
         Guides = GuidesFrom
@@ -2451,7 +2268,7 @@ object GoodsAccountForm: TGoodsAccountForm
     Top = 224
   end
   object spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Sale_SetErased'
+    StoredProcName = 'gpMovementItem_GoodsAccount_SetErased'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2476,7 +2293,7 @@ object GoodsAccountForm: TGoodsAccountForm
     Top = 320
   end
   object spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Sale_SetUnErased'
+    StoredProcName = 'gpMovementItem_GoodsAccount_SetUnErased'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2508,11 +2325,11 @@ object GoodsAccountForm: TGoodsAccountForm
     FormNameParam.MultiSelectSeparator = ','
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 63
-    Top = 8
+    Left = 55
+    Top = 48
   end
   object spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_Sale'
+    StoredProcName = 'gpUpdate_Status_GoodsAccount'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -2537,7 +2354,8 @@ object GoodsAccountForm: TGoodsAccountForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 116
+    Left = 76
+    Top = 48
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -2626,8 +2444,7 @@ object GoodsAccountForm: TGoodsAccountForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 112
-    Top = 40
+    Left = 424
   end
   object spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TotalSumm'
@@ -2667,7 +2484,7 @@ object GoodsAccountForm: TGoodsAccountForm
     Top = 350
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    StoredProcName = 'gpSelect_Movement_GoodsAccount_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -2691,7 +2508,7 @@ object GoodsAccountForm: TGoodsAccountForm
     Top = 200
   end
   object spInsertMaskMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_ReturnIn'
+    StoredProcName = 'gpInsertUpdate_MovementItem_GoodsAccount'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2864,10 +2681,8 @@ object GoodsAccountForm: TGoodsAccountForm
     RefreshAction = actRefreshMI
     ComponentList = <
       item
-        Component = edStartDate
       end
       item
-        Component = edEndDate
       end
       item
       end

@@ -111,7 +111,7 @@ BEGIN
            , Object_Insert.ValueData                AS InsertName
 
            , COALESCE (tmpMI.Amount,0)                                        :: TFloat AS Amount
-           , (COALESCE (tmpMI.AmountOrder,0) + COALESCE (tmpMI.Amount,0) )    :: TFloat AS AmountOrder
+           , (COALESCE (tmpMI.AmountOrder,0) + COALESCE (tmpMI.Amount,0) - COALESCE (Movement_Income.Amount,0) )    :: TFloat AS AmountOrder
            , COALESCE (Movement_Income.Amount,0)                              :: TFloat AS AmountIncome
 
            , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT

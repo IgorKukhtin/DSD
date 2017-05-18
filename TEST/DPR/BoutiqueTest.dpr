@@ -213,9 +213,9 @@ uses
   ReturnIn in '..\..\FormsBoutique\Document\ReturnIn.pas' {ReturnInForm: TParentForm},
   ReturnInItemEdit in '..\..\FormsBoutique\Document\ReturnInItemEdit.pas' {ReturnInItemEditForm: TParentForm},
   CurrencyJournal in '..\..\FormsBoutique\Document\CurrencyJournal.pas' {CurrencyJournalForm: TParentForm},
-  GoodsAccountJournal in '..\..\FormsBoutique\Document\GoodsAccountJournal.pas' {GoodsAccountJournalForm: TParentForm},
   GoodsAccountItemEdit in '..\..\FormsBoutique\Document\GoodsAccountItemEdit.pas' {GoodsAccountItemEditForm: TParentForm},
-  GoodsAccount in '..\..\FormsBoutique\Document\GoodsAccount.pas' {GoodsAccountForm: TParentForm};
+  GoodsAccount in '..\..\FormsBoutique\Document\GoodsAccount.pas' {GoodsAccountForm: TParentForm},
+  GoodsAccountJournal in '..\..\FormsBoutique\Document\GoodsAccountJournal.pas' {GoodsAccountJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

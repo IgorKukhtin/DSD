@@ -44,10 +44,7 @@ type
     edOperDate: TcxDateEdit;
     cxLabel2: TcxLabel;
     edFrom: TcxButtonEdit;
-    edTo: TcxButtonEdit;
-    cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
-    GuidesTo: TdsdGuides;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
     cxPageControl: TcxPageControl;
@@ -159,9 +156,6 @@ type
     actInsertUpdateMIChildTotal: TdsdInsertUpdateAction;
     MacInsertUpdateMIChildTotal: TMultiAction;
     bbInsertUpdateMIChildTotal: TdxBarButton;
-    cxLabel15: TcxLabel;
-    edStartDate: TcxDateEdit;
-    edEndDate: TcxDateEdit;
     colPartionMI_Id: TcxGridDBColumn;
     colSaleMI_Id: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;

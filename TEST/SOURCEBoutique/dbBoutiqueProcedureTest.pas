@@ -204,6 +204,11 @@ begin
   DirectoryLoad(CommonProcedurePath + 'Movement\Inventory\');
 end;
 
+procedure TdbMovementProcedureTest.CreateGoodsAccount;
+begin
+  DirectoryLoad(CommonProcedurePath + 'Movement\GoodsAccount\');
+end;
+
 { TdbObjectProcedureTest }
 procedure TdbObjectProcedureTest.CreateAccountDirection;
 begin
@@ -462,6 +467,11 @@ procedure TdbMovementItemProcedureTest.CreateInventory;
 begin
   DirectoryLoad(CommonProcedurePath + 'MovementItem\Inventory\');
 end;
+
+procedure TdbMovementItemProcedureTest.CreateGoodsAccount;
+begin
+  DirectoryLoad(CommonProcedurePath + 'MovementItem\GoodsAccount\');
+end;
 { TdbMovementItemContainerProcedureTest }
 
 procedure TdbMovementItemContainerProcedureTest.CreateCOMMON;
@@ -502,6 +512,11 @@ end;
 procedure TdbMovementItemContainerProcedureTest.CreateSale;
 begin
   DirectoryLoad(CommonProcedurePath + 'MovementItemContainer\Sale\');
+end;
+
+procedure TdbMovementItemContainerProcedureTest.CreateGoodsAccount;
+begin
+  DirectoryLoad(CommonProcedurePath + 'MovementItemContainer\GoodsAccount\');
 end;
 initialization
 

@@ -80,58 +80,6 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         item
           Format = ',0.####'
           Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
           Column = colAmount
         end
         item
@@ -146,66 +94,9 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         end>
       DataController.Summary.FooterSummaryItems = <
         item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
           Format = #1057#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = JuridicalName
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colAmount
         end
         item
           Format = ',0.####'
@@ -216,6 +107,11 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
           Format = ',0.####'
           Kind = skSum
           Column = colAmountIncome
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colAmount
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList

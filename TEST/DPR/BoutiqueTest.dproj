@@ -715,16 +715,16 @@
 				<Form>CurrencyJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Document\GoodsAccountJournal.pas">
-				<Form>GoodsAccountJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Document\GoodsAccountItemEdit.pas">
 				<Form>GoodsAccountItemEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Document\GoodsAccount.pas">
 				<Form>GoodsAccountForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Document\GoodsAccountJournal.pas">
+				<Form>GoodsAccountJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

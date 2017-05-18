@@ -49,7 +49,6 @@ type
     colInvNumber: TcxGridDBColumn;
     colOperDate: TcxGridDBColumn;
     colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;

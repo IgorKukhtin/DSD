@@ -227,13 +227,6 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 163
       end
-      object colToName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'ToName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 159
-      end
       object colTotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
@@ -605,8 +598,8 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'TReturnInForm'
-      FormNameParam.Value = 'TReturnInForm'
+      FormName = 'TGoodsAccountForm'
+      FormNameParam.Value = 'TGoodsAccountForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -668,8 +661,8 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TReturnInForm'
-      FormNameParam.Value = 'TReturnInForm'
+      FormName = 'TGoodsAccountForm'
+      FormNameParam.Value = 'TGoodsAccountForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -997,7 +990,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ReturnIn'
+    StoredProcName = 'gpSelect_Movement_GoodsAccount'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -1033,7 +1026,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
     Top = 192
   end
   object spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_ReturnIn'
+    StoredProcName = 'gpComplete_Movement_GoodsAccount'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1170,7 +1163,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
     Top = 56
   end
   object spMovementReCompleteAll: TdsdStoredProc
-    StoredProcName = 'gpCompletePeriod_Movement_ReturnIn'
+    StoredProcName = 'gpCompletePeriod_Movement_GoodsAccount'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1195,7 +1188,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
     Top = 288
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ReturnIn_Print'
+    StoredProcName = 'gpSelect_Movement_GoodsAccount_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1249,7 +1242,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
     Top = 200
   end
   object spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_ReturnIn'
+    StoredProcName = 'gpReComplete_Movement_GoodsAccount'
     DataSets = <>
     OutputType = otResult
     Params = <
