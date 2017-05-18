@@ -127,6 +127,7 @@ type
     cbMember: TCheckBox;
     cbUser: TCheckBox;
     cbInventory: TCheckBox;
+    cbSale: TCheckBox;
 
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
@@ -231,6 +232,8 @@ type
     procedure pLoadDocuments_DiscountPeriodItem;
     function  pLoadDocument_Inventory:Integer;
     procedure pLoadDocumentItem_Inventory(SaveCount:Integer);
+    function  pLoadDocument_Sale:Integer;
+    procedure pLoadDocumentItem_Sale(SaveCount:Integer);
 
 
 // Load from files *.dat
@@ -1920,6 +1923,8 @@ begin
      if not fStop then pLoadDocuments_DiscountPeriodItem;
      if not fStop then myRecordCount1:=pLoadDocument_Inventory;
      if not fStop then pLoadDocumentItem_Inventory(myRecordCount1);
+     if not fStop then myRecordCount1:=pLoadDocument_Sale;
+     if not fStop then pLoadDocumentItem_Sale(myRecordCount1);
 
 
      //
@@ -2007,6 +2012,7 @@ begin
         try fExecSqFromQuery_noErr('alter table dba.DiscountTaxItems add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.DiscountMovementInventory add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.DiscountMovementItemInventory_byBarCode add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.DiscountMovement add Id_Postgres integer null;'); except end;
      end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2074,6 +2080,7 @@ begin
      fExecSqFromQuery('update dba.DiscountTaxItems set Id_Postgres = null ');
      fExecSqFromQuery('update dba.DiscountMovementInventory set Id_Postgres = null');
      fExecSqFromQuery('update dba.DiscountMovementItemInventory_byBarCode set Id_Postgres = null');
+     fExecSqFromQuery('update dba.DiscountMovement set Id_Postgres = null');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocumentItem_Income(SaveCount: Integer);
@@ -2444,6 +2451,11 @@ begin
      end;
      //
      myDisabledCB(cbReturnOut);
+end;
+
+procedure TMainForm.pLoadDocumentItem_Sale(SaveCount: Integer);
+begin
+
 end;
 
 procedure TMainForm.pLoadDocumentItem_Send(SaveCount: Integer);
@@ -2919,6 +2931,89 @@ begin
      end;
      //
      myDisabledCB(cbReturnOut);
+
+end;
+
+function TMainForm.pLoadDocument_Sale: Integer;
+begin
+     Result:=0;
+     //
+     if (not cbSale.Checked)or(not cbSale.Enabled) then exit;
+     //
+     myEnabledCB(cbSale);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select');
+        Add('      DiscountMovement.Id as ObjectId');
+        Add('    , 0 as InvNumber');
+        Add('    , date(DiscountMovement.OperDate) as OperDate');   // Со времене ошибка неверный формат даты
+        Add('    , DiscountMovement_From.Id_Postgres as FromId ');
+        Add('    , DiscountMovement_From.UnitName as UnitNameFrom');
+        Add('    , DiscountMovement_To.Id_Postgres as ToId');
+        Add('    , DiscountMovement_To.UnitName as UnitNameTo');
+        Add('    , DiscountMovement.Id_Postgres');
+        Add('from DBA.DiscountMovement');
+        Add('    left join DBA.Unit as DiscountMovement_From on DiscountMovement_From.Id = DiscountMovement.UnitID');
+        Add('    left join DBA.DiscountKlient as DiscountKlient on DiscountKlient.Id = DiscountMovement.DiscountKlientID');
+        Add('    left join DBA.Unit as DiscountMovement_To on DiscountKlient.ClientId = DiscountMovement_To.id');
+        Add('where descId = 1  and DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add('order by ObjectId');
+        Open;
+
+        Result:=RecordCount;
+        cbSale.Caption:='1.6. ('+IntToStr(RecordCount)+') Продажа покупателю';
+        //
+        //
+        //
+        //
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Movement_Sale';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('ioInvNumber',ftString,ptInputOutput, '');
+        toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
+        //
+        HideCurGrid(True);
+        while not EOF do
+        begin
+             //!!!
+            if fStop then begin HideCurGrid(False);  exit; end;
+             //
+
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('ioInvNumber').Value:=FieldByName('InvNumber').AsString;
+             toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
+             toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
+             toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId').AsInteger;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             if FieldByName('Id_Postgres').AsInteger=0 then
+               fExecSqFromQuery('update dba.DiscountMovement set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        HideCurGrid(False);
+     end;
+     //
+     myDisabledCB(cbSale);
 
 end;
 
