@@ -92,7 +92,8 @@ BEGIN
                            GROUP BY tmpContainer.GoodsId
                                   , tmpContainer.GoodsKindId
                                   , tmpContainer.Amount
-                          -- HAVING (tmpContainer.Amount - COALESCE(SUM (MIContainer.Amount), 0)) <>0 
+                          HAVING tmpContainer.Amount - SUM (COALESCE (MIContainer.Amount, 0))  <> 0
+                              OR tmpContainer.Amount - SUM (CASE WHEN MIContainer.OperDate > vbEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) <> 0
                            ) AS tmp
                      GROUP BY tmp.GoodsId, tmp.goodskindid
                      )
@@ -114,7 +115,6 @@ BEGIN
                       GROUP BY MIContainer.OperDate
                              , tmpContainer.GoodsId
                              , tmpContainer.GoodsKindId
-                             , tmpContainer.Amount
                       HAVING SUM (CASE WHEN MIContainer.isActive = TRUE
                                        THEN COALESCE (MIContainer.Amount, 0)
                                        ELSE 0
