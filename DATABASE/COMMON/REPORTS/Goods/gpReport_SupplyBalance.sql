@@ -59,15 +59,15 @@ BEGIN
 
      RETURN QUERY
      WITH -- подразделени€ дл€ "остатки впроизводстве"
-          tmpUnit AS (SELECT 8448 AS UnitId       --цех деликатесов+   
+          tmpUnit AS (SELECT 8448 AS UnitId       --цех деликатесов+
                      UNION
-                      SELECT 8447 AS UnitId       -- колбасный+           
+                      SELECT 8447 AS UnitId       -- колбасный+
                      UNION
-                      SELECT 8451 AS UnitId       -- упаковка+            
+                      SELECT 8451 AS UnitId       -- упаковка+
                      UNION
-                      SELECT 951601 AS UnitId     -- упаковка м€со+       
+                      SELECT 951601 AS UnitId     -- упаковка м€со+
                      UNION
-                      SELECT 981821 AS UnitId     -- шприцевание          
+                      SELECT 981821 AS UnitId     -- шприцевание
                      )
     -- за€вки по ёр Ћицам - !!!только если за€вка Ќ≈ закрыта!!! -- !!!вместо - только если под них еще нет прихода!!!
   , tmpOrderIncome_all AS (SELECT MILinkObject_Goods.ObjectId           AS GoodsId
@@ -76,7 +76,7 @@ BEGIN
                                 , COALESCE (MI_Income.Amount, 0)        AS Amount_Income
                                 , ROW_NUMBER() OVER (PARTITION BY Movement.Id, MILinkObject_Goods.ObjectId) AS Ord
                                 , COALESCE (MovementString_Comment.ValueData,'') AS Comment
-                                , Movement.Id                           AS MovementId
+                                , Movement.Id AS MovementId
                            FROM Movement
                                 LEFT JOIN MovementBoolean AS MovementBoolean_Closed
                                                           ON MovementBoolean_Closed.MovementId = Movement.Id
@@ -87,25 +87,25 @@ BEGIN
                                                              AND MovementLinkObject_Juridical.DescId     = zc_MovementLinkObject_Juridical()
                                                              -- !!!ограничили!!!
                                                              AND (MovementLinkObject_Juridical.ObjectId = inJuridicalId OR inJuridicalId = 0)
-    
+
                                 INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                               ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                              AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                                              AND MovementLinkObject_Unit.ObjectId > 0 -- !!!значит это за€вка "снабжени€"!!!
 
-                                LEFT JOIN MovementString AS MovementString_Comment 
+                                LEFT JOIN MovementString AS MovementString_Comment
                                                          ON MovementString_Comment.MovementId = Movement.Id
                                                         AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
                                 INNER JOIN MovementItem ON MovementItem.MovementId  = Movement.Id
                                                        AND MovementItem.isErased    = FALSE
                                                        AND MovementItem.DescId      = zc_MI_Master()
-                                                       AND COALESCE (MovementItem.Amount,0) <> 0
+                                                       AND MovementItem.Amount      <> 0
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
                                                                  ON MILinkObject_Goods.MovementItemId = MovementItem.Id
                                                                 AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
                                 INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MILinkObject_Goods.ObjectId
-    
+
                                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Income
                                                                ON MovementLinkMovement_Income.MovementChildId = Movement.Id
                                                               AND MovementLinkMovement_Income.DescId = zc_MovementLinkMovement_Order()
@@ -118,7 +118,7 @@ BEGIN
                                                       AND MI_Income.ObjectId    = MILinkObject_Goods.ObjectId
                                                       AND MI_Income.isErased    = FALSE
                                                       AND MI_Income.DescId      = zc_MI_Master()
-    
+
                            WHERE Movement.DescId     = zc_Movement_OrderIncome()
                              AND Movement.StatusId   = zc_Enum_Status_Complete()
                              AND MovementBoolean_Closed.MovementId IS NULL -- т.е. за€вка Ќ≈ закрыта
@@ -229,40 +229,13 @@ BEGIN
                        WHERE CLO_Unit.ObjectId = inUnitId
                          AND CLO_Unit.DescId   = zc_ContainerLinkObject_Unit()
                       )
-    -- движение + остатки
-  , tmpContainer AS (SELECT tmp.GoodsId 
-                          , SUM (tmp.StartAmount)        AS RemainsStart
-                          , SUM (tmp.EndAmount)          AS RemainsEnd
-                          , SUM (CASE -- если надо по всем поставщикам - тогда весь приход
-                                      WHEN inJuridicalId = 0
-                                           THEN tmp.CountIncome
-                                      -- если надо только по одному поставщику
-                                      WHEN ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId AND inJuridicalId > 0
-                                           THEN tmp.CountIncome
-                                      -- иначе это "другой" приход/расход
-                                      ELSE 0
-                                END) AS CountIncome
-                          , SUM (tmp.CountSendOut)       AS CountProductionOut
-                          , SUM (tmp.CountIn_oth
-                               + CASE -- иначе это "другой" приход
-                                      WHEN ObjectLink_Partner_Juridical.ChildObjectId <> inJuridicalId AND inJuridicalId > 0
-                                           AND tmp.CountIncome > 0
-                                           THEN tmp.CountIncome
-                                      ELSE 0
-                                END) AS CountIn_oth
-                          , SUM (tmp.CountOut_oth
-                               + CASE -- иначе это "другой" расход
-                                      WHEN ObjectLink_Partner_Juridical.ChildObjectId <> inJuridicalId AND inJuridicalId > 0
-                                           AND tmp.CountIncome < 0
-                                           THEN -1 * tmp.CountIncome
-                                      ELSE 0
-                                END) AS CountOut_oth
-
-                     FROM (SELECT CASE WHEN MIContainer.MovementDescId in (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MIContainer.ObjectExtId_Analyzer ELSE 0 END AS ObjectExtId_Analyzer
+     -- остатки
+   , tmpMIContainerAll AS (SELECT CASE WHEN MIContainer.MovementDescId in (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MIContainer.ObjectExtId_Analyzer ELSE 0 END AS ObjectExtId_Analyzer
+                                , tmpContainerAll.ContainerId
                                 , tmpContainerAll.GoodsId
                                 , tmpContainerAll.Amount
-                                , tmpContainerAll.Amount - SUM (COALESCE (MIContainer.Amount, 0))  AS StartAmount
-                                , tmpContainerAll.Amount - SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS EndAmount
+                                , SUM (COALESCE (MIContainer.Amount, 0))  AS StartAmountSum
+                                , SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS EndAmountSum
 
                                 , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                              AND MIContainer.MovementDescId in (zc_Movement_Income(), zc_Movement_ReturnOut())
@@ -316,14 +289,73 @@ BEGIN
                                 LEFT JOIN MovementItemContainer AS MIContainer
                                                                 ON MIContainer.Containerid = tmpContainerAll.ContainerId
                                                                AND MIContainer.OperDate >= inStartDate
-                           WHERE tmpContainerAll.UnitId = inUnitId
                            GROUP BY CASE WHEN MIContainer.MovementDescId in (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MIContainer.ObjectExtId_Analyzer ELSE 0 END
                                   , tmpContainerAll.ContainerId, tmpContainerAll.GoodsId, tmpContainerAll.Amount
+                          )
+    -- движение + остатки
+  , tmpContainer AS (SELECT tmp.GoodsId
+                          , (tmp.StartAmount)        AS RemainsStart
+                          , (tmp.EndAmount)          AS RemainsEnd
+                          , (tmpIncome.CountIncome)  AS CountIncome
+                          , (tmp.CountSendOut)       AS CountProductionOut
+                          , (tmp.CountIn_oth   + COALESCE (tmpIncome.CountIn_oth, 0))  AS CountIn_oth
+                          , (tmp.CountOut_oth  + COALESCE (tmpIncome.CountOut_oth, 0)) AS CountOut_oth
+
+                     FROM (SELECT tmp.GoodsId
+                                , SUM (tmp.StartAmount)  AS StartAmount
+                                , SUM (tmp.EndAmount)    AS EndAmount
+
+                                , SUM (tmp.CountSendOut) AS CountSendOut
+
+                                , SUM (tmp.CountOut_oth) AS CountOut_oth
+
+                                , SUM (tmp.CountIn_oth) AS CountIn_oth
+                           FROM
+                          (SELECT tmpMIContainerAll.GoodsId
+                                , tmpMIContainerAll.Amount - SUM (tmpMIContainerAll.StartAmountSum)  AS StartAmount
+                                , tmpMIContainerAll.Amount - SUM (tmpMIContainerAll.EndAmountSum)    AS EndAmount
+
+                                , SUM (tmpMIContainerAll.CountSendOut) AS CountSendOut
+
+                                , SUM (tmpMIContainerAll.CountOut_oth) AS CountOut_oth
+
+                                , SUM (tmpMIContainerAll.CountIn_oth) AS CountIn_oth
+
+                           FROM tmpMIContainerAll
+                           GROUP BY tmpMIContainerAll.ContainerId, tmpMIContainerAll.GoodsId, tmpMIContainerAll.Amount
                           ) AS tmp
-                          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                               ON ObjectLink_Partner_Juridical.ObjectId = tmp.ObjectExtId_Analyzer
-                                              AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
-                     GROUP BY tmp.GoodsId
+                           GROUP BY tmp.GoodsId
+                          ) AS tmp
+                          LEFT JOIN (SELECT tmpMIContainerAll.GoodsId
+                                          , SUM (CASE -- если надо по всем поставщикам - тогда весь приход
+                                                      WHEN inJuridicalId = 0
+                                                           THEN tmpMIContainerAll.CountIncome
+                                                      -- если надо только по одному поставщику
+                                                      WHEN ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId AND inJuridicalId > 0
+                                                           THEN tmpMIContainerAll.CountIncome
+                                                      -- иначе это "другой" приход/расход
+                                                      ELSE 0
+                                                END) AS CountIncome
+
+                                          , SUM (CASE -- иначе это "другой" приход
+                                                      WHEN ObjectLink_Partner_Juridical.ChildObjectId <> inJuridicalId AND inJuridicalId > 0
+                                                           AND tmpMIContainerAll.CountIncome > 0
+                                                           THEN tmpMIContainerAll.CountIncome
+                                                      ELSE 0
+                                                END) AS CountIn_oth
+                                          , SUM (CASE -- иначе это "другой" расход
+                                                      WHEN ObjectLink_Partner_Juridical.ChildObjectId <> inJuridicalId AND inJuridicalId > 0
+                                                           AND tmpMIContainerAll.CountIncome < 0
+                                                           THEN -1 * tmpMIContainerAll.CountIncome
+                                                      ELSE 0
+                                                END) AS CountOut_oth
+
+                                     FROM tmpMIContainerAll
+                                          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                               ON ObjectLink_Partner_Juridical.ObjectId = tmpMIContainerAll.ObjectExtId_Analyzer
+                                                              AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                     GROUP BY tmpMIContainerAll.GoodsId
+                                    ) AS tmpIncome ON tmpIncome.GoodsId = tmp.GoodsId
                      )
    -- контейнеры - дл€ "остатки в производстве"
  , tmpContainer_Oth AS (SELECT Container.Id       AS ContainerId
@@ -365,10 +397,10 @@ BEGIN
            , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
            , Object_GoodsGroup.ValueData                AS GoodsGroupName
 
-           , tmpGoodsList.PartnerName :: TVarChar AS PartnerName
+           , tmpGoodsList.PartnerName       :: TVarChar AS PartnerName
 
-           , tmpOrderIncome.Comment           :: TVarChar
-           , tmpOrderIncome.MovementId_List   :: TVarChar
+           , tmpOrderIncome.Comment         :: TVarChar AS Comment
+           , tmpOrderIncome.MovementId_List :: TVarChar AS MovementId_List
 
            , vbCountDays                        AS CountDays
 
@@ -414,7 +446,7 @@ BEGIN
                               THEN zc_Color_Black()
 
                          ELSE zc_Color_Red()
-                    END 
+                    END
               END :: Integer AS Color_RemainsDays
 
        FROM tmpGoodsList
@@ -435,7 +467,7 @@ BEGIN
                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-          
+
        WHERE tmpContainer.RemainsStart   <> 0 OR tmpContainer.RemainsEnd         <> 0 OR tmpOrderIncome.Amount  <> 0
           OR tmpContainer.CountIncome    <> 0 OR tmpContainer.CountProductionOut <> 0
           OR tmpContainer.CountIn_oth    <> 0 OR tmpContainer.CountOut_oth       <> 0
