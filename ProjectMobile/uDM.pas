@@ -63,12 +63,12 @@ CONST
    + '       , Object_Partner.OrderDayCount '
    + '       , Object_Partner.isOperDateOrder  '
    + ' FROM  Object_Partner  '
-   + '       LEFT JOIN Object_Juridical            ON Object_Juridical.Id         = Object_Partner.JuridicalId  '
-   + '                                            AND Object_Juridical.ContractId = Object_Partner.ContractId  '
-   + '       LEFT JOIN Object_PriceList Object_PL  ON Object_PL.Id                = IFNULL(Object_Partner.PriceListId, :DefaultPriceList)  '
-   + '       LEFT JOIN Object_PriceList Object_PLR ON Object_PLR.Id               = IFNULL(Object_Partner.PriceListId_ret, :DefaultPriceList)  '
-   + '       LEFT JOIN Object_Contract             ON Object_Contract.Id          = Object_Partner.ContractId  '
-   + ' WHERE Object_Partner.isErased = 0  ';
+   + '       LEFT JOIN Object_Juridical            ON Object_Juridical.Id         = Object_Partner.JuridicalId '
+   + '                                            AND Object_Juridical.ContractId = Object_Partner.ContractId '
+   + '       LEFT JOIN Object_PriceList Object_PL  ON Object_PL.Id                = IFNULL(Object_Partner.PriceListId, :DefaultPriceList) '
+   + '       LEFT JOIN Object_PriceList Object_PLR ON Object_PLR.Id               = IFNULL(Object_Partner.PriceListId_ret, :DefaultPriceList) '
+   + '       LEFT JOIN Object_Contract             ON Object_Contract.Id          = Object_Partner.ContractId '
+   + ' WHERE Object_Partner.isErased = 0 ';
 
 type
   { состояния задания контрагента }
@@ -1846,7 +1846,7 @@ begin
           UploadStoredProc.Params.Clear;
           UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
 
-          DM.qrySelect.Open('select GUID from Movement_Visit where Id = ' + FieldByName('MOVEMENTID').AsString);
+          DM.qrySelect.Open('SELECT GUID FROM Movement_Visit WHERE Id = ' + FieldByName('MOVEMENTID').AsString);
           if DM.qrySelect.RecordCount = 1 then
           begin
             MainGUID := DM.qrySelect.Fields[0].AsString;
@@ -3026,7 +3026,7 @@ begin
   try
     qryMaxInvNumber.Connection := conMain;
     try
-      qryMaxInvNumber.Open('select Max(cast(invNumber as Integer)) from ' + ATableName + ' where strftime(''%Y'', InsertDate) = ' + QuotedStr(FormatDateTime('YYYY', Date())));
+      qryMaxInvNumber.Open('SELECT Max(cast(invNumber as Integer)) FROM ' + ATableName + ' WHERE strftime(''%Y'', InsertDate) = ' + QuotedStr(FormatDateTime('YYYY', Date())));
       if qryMaxInvNumber.RecordCount > 0 then
         NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1;
     except
@@ -3254,10 +3254,22 @@ begin
   qryStoreReals := TFDQuery.Create(nil);
   try
     qryStoreReals.Connection := conMain;
-    qryStoreReals.SQL.Text := 'select ID, OPERDATE, COMMENT, ISSYNC, STATUSID' +
-      ' from Movement_StoreReal' +
-      ' where PARTNERID = ' + qryPartnerId.AsString +
-      ' order by OPERDATE desc';
+//or
+//    qryStoreReals.SQL.Text := 'select ID, OPERDATE, COMMENT, ISSYNC, STATUSID' +
+//      ' from Movement_StoreReal' +
+//      ' where PARTNERID = ' + qryPartnerId.AsString +
+//      ' order by OPERDATE desc';
+//or
+    qryStoreReals.SQL.Text :=
+       ' SELECT '
+     + '         Id '
+     + '       , OperDate '
+     + '       , Comment '
+     + '       , isSync '
+     + '       , StatusId '
+     + ' FROM  Movement_StoreReal '
+     + ' WHERE PartnerId = ' + qryPartnerId.AsString
+     + ' ORDER BY OperDate desc ';
 
     qryStoreReals.Open;
 
@@ -3827,10 +3839,26 @@ begin
   qryOrderExternal := TFDQuery.Create(nil);
   try
     qryOrderExternal.Connection := conMain;
-    qryOrderExternal.SQL.Text := 'select ID, OPERDATE, PAIDKINDID, COMMENT, TOTALCOUNTKG, TOTALSUMM, ISSYNC, STATUSID' +
-      ' from MOVEMENT_ORDEREXTERNAL' +
-      ' where PARTNERID = ' + qryPartnerId.AsString + ' and CONTRACTID = ' + qryPartnerCONTRACTID.AsString +
-      ' order by OPERDATE desc';
+//or
+//    qryOrderExternal.SQL.Text := 'select ID, OPERDATE, PAIDKINDID, COMMENT, TOTALCOUNTKG, TOTALSUMM, ISSYNC, STATUSID' +
+//      ' from MOVEMENT_ORDEREXTERNAL' +
+//      ' where PARTNERID = ' + qryPartnerId.AsString + ' and CONTRACTID = ' + qryPartnerCONTRACTID.AsString +
+//      ' order by OPERDATE desc';
+//or
+    qryOrderExternal.SQL.Text :=
+       ' SELECT '
+     + '         ID '
+     + '       , OperDate '
+     + '       , PaidKindId '
+     + '       , Comment '
+     + '       , TotalCountKg '
+     + '       , TotalSumm '
+     + '       , isSync '
+     + '       , StatusId '
+     + ' FROM  Movement_OrderExternal '
+     + ' WHERE PartnerId = ' + qryPartnerId.AsString
+     + '   AND ContractId = ' + qryPartnerContractId.AsString
+     + ' ORDER BY OperDate desc ';
 
     qryOrderExternal.Open;
 
@@ -4616,10 +4644,26 @@ begin
   qryReturnIn := TFDQuery.Create(nil);
   try
     qryReturnIn.Connection := conMain;
-    qryReturnIn.SQL.Text := 'select ID, OPERDATE, PAIDKINDID, TOTALCOUNTKG, TOTALSUMMPVAT, ISSYNC, STATUSID, COMMENT' +
-      ' from MOVEMENT_RETURNIN' +
-      ' where PARTNERID = ' + qryPartnerId.AsString + ' and CONTRACTID = ' + qryPartnerCONTRACTID.AsString +
-      ' order by OPERDATE desc';
+//or
+//    qryReturnIn.SQL.Text := 'select ID, OPERDATE, PAIDKINDID, TOTALCOUNTKG, TOTALSUMMPVAT, ISSYNC, STATUSID, COMMENT' +
+//      ' from MOVEMENT_RETURNIN' +
+//      ' where PARTNERID = ' + qryPartnerId.AsString + ' and CONTRACTID = ' + qryPartnerCONTRACTID.AsString +
+//      ' order by OPERDATE desc';
+//or
+    qryReturnIn.SQL.Text :=
+       ' SELECT  '
+     + '         ID '
+     + '       , OperDate '
+     + '       , PaidKindId '
+     + '       , TotalCountKg '
+     + '       , TotalSummPVAT '
+     + '       , isSync '
+     + '       , StatusId '
+     + '       , Comment '
+     + ' FROM  Movement_ReturnIn '
+     + ' WHERE PartnerId = ' + qryPartnerId.AsString
+     + '   AND ContractId = ' + qryPartnerContractId.AsString
+     + ' ORDER BY OperDate desc ';
 
     qryReturnIn.Open;
 
@@ -5037,9 +5081,23 @@ end;
 procedure TDM.LoadPhotoGroups;
 begin
   qryPhotoGroups.Close;
-  qryPhotoGroups.Open('select Id, Comment, StatusId, OperDate, isSync ' +
-    ' from Movement_Visit where PartnerId = ' + qryPartnerId.AsString +
-    ' and StatusId <> ' + tblObject_ConstStatusId_Erased.AsString);
+//or
+//  qryPhotoGroups.Open('select Id, Comment, StatusId, OperDate, isSync ' +
+//    ' from Movement_Visit where PartnerId = ' + qryPartnerId.AsString +
+//    ' and StatusId <> ' + tblObject_ConstStatusId_Erased.AsString);
+//or
+
+  qryPhotoGroups.Open(
+       ' SELECT  '
+     + '         Id '
+     + '       , Comment '
+     + '       , StatusId '
+     + '       , OperDate '
+     + '       , isSync '
+     + ' FROM  Movement_Visit  '
+     + ' WHERE PartnerId = ' + qryPartnerId.AsString
+     + '   AND StatusId <> ' + tblObject_ConstStatusId_Erased.AsString
+                     );
 end;
 
 { начитка групп фотографий из БД для всех ТТ }
@@ -5159,9 +5217,29 @@ end;
 procedure TDM.LoadCash;
 begin
   qryCash.Close;
-  qryCash.Open('select Id, PAIDKINDID, InvNumberSale, Amount, Comment, StatusId, OperDate, isSync, ' +
-    'PartnerId, '''' PartnerName, '''' Address, ContractId, '''' ContractName ' +
-    'from Movement_Cash where PartnerId = ' + qryPartnerId.AsString);
+//or
+//  qryCash.Open('select Id, PAIDKINDID, InvNumberSale, Amount, Comment, StatusId, OperDate, isSync, ' +
+//    'PartnerId, '''' PartnerName, '''' Address, ContractId, '''' ContractName ' +
+//    'from Movement_Cash where PartnerId = ' + qryPartnerId.AsString);
+//or
+  qryCash.Open(
+       ' SELECT '
+     + '         Id '
+     + '       , PaidKindId '
+     + '       , InvNumberSale '
+     + '       , Amount '
+     + '       , Comment '
+     + '       , StatusId '
+     + '       , OperDate '
+     + '       , isSync '
+     + '       , PartnerId '
+     + '       , '''' AS PartnerName '
+     + '       , '''' AS Address '
+     + '       , ContractId '
+     + '       , '''' AS ContractName  '
+     + ' FROM  Movement_Cash  '
+     + ' WHERE PartnerId = ' + qryPartnerId.AsString
+              );
 end;
 
 procedure TDM.LoadAllCash(AStartDate, AEndDate: TDate);
@@ -5232,29 +5310,61 @@ function TDM.LoadTasks(Active: TActiveMode; SaveData: boolean = true; ADate: TDa
 var
   DateSql, WhereSql : string;
 begin
+//or
+//  if ADate = 0 then
+//    DateSql := 'JOIN MOVEMENT_TASK TM ON TM.ID = TI.MOVEMENTID '
+//  else
+//    DateSql := 'JOIN MOVEMENT_TASK TM ON TM.ID = TI.MOVEMENTID AND DATE(TM.OPERDATE) = :TASKDATE ';
+//
+//  if tblObject_ConstPersonalId.AsString <> '' then
+//    WhereSql := 'WHERE PERSONALID = ' + tblObject_ConstPersonalId.AsString + ' '
+//  else
+//    WhereSql := 'WHERE 1 = 1 ';
+//
+//  if Active <> amAll then
+//    WhereSql := WhereSql + 'AND TI.CLOSED = :CLOSED ';
+//
+//  if APartnerId <> 0 then
+//    WhereSql := WhereSql + 'AND TI.PARTNERID = ' + IntToStr(APartnerId) + ' ';
+//or
   if ADate = 0 then
-    DateSql := 'JOIN MOVEMENT_TASK TM ON TM.ID = TI.MOVEMENTID '
+    DateSql := 'JOIN Movement_Task ON Movement_Task.ID = MovementItem_Task.MovementId '
   else
-    DateSql := 'JOIN MOVEMENT_TASK TM ON TM.ID = TI.MOVEMENTID AND DATE(TM.OPERDATE) = :TASKDATE ';
+    DateSql := 'JOIN Movement_Task ON Movement_Task.ID = MovementItem_Task.MovementId AND DATE(Movement_Task.OperDate) = :TASKDATE ';
 
   if tblObject_ConstPersonalId.AsString <> '' then
-    WhereSql := 'WHERE PERSONALID = ' + tblObject_ConstPersonalId.AsString + ' '
+    WhereSql := 'WHERE PersonalId = ' + tblObject_ConstPersonalId.AsString + ' '
   else
     WhereSql := 'WHERE 1 = 1 ';
 
   if Active <> amAll then
-    WhereSql := WhereSql + 'AND TI.CLOSED = :CLOSED ';
+    WhereSql := WhereSql + 'AND MovementItem_Task.Closed = :CLOSED ';
 
   if APartnerId <> 0 then
-    WhereSql := WhereSql + 'AND TI.PARTNERID = ' + IntToStr(APartnerId) + ' ';
-
-  qrySelect.SQL.Text := 'SELECT TI.ID, TI.PARTNERID, TI.CLOSED, TI.DESCRIPTION, TI.COMMENT, ' +
-    'TM.OPERDATE, TM.INVNUMBER, P.VALUEDATA PartnerName ' +
-    'FROM MOVEMENTITEM_TASK TI ' +
-    DateSql +
-    'LEFT JOIN OBJECT_PARTNER P ON P.ID = TI.PARTNERID ' +
-    WhereSql+
-    'GROUP BY TI.ID ORDER BY TM.OPERDATE DESC';
+    WhereSql := WhereSql + 'AND MovementItem_Task.PartnerId = ' + IntToStr(APartnerId) + ' ';
+//or
+//  qrySelect.SQL.Text := 'SELECT TI.ID, TI.PARTNERID, TI.CLOSED, TI.DESCRIPTION, TI.COMMENT, ' +
+//    'TM.OPERDATE, TM.INVNUMBER, P.VALUEDATA PartnerName ' +
+//    'FROM MOVEMENTITEM_TASK TI ' +
+//    DateSql +
+//    'LEFT JOIN OBJECT_PARTNER P ON P.ID = TI.PARTNERID ' +
+//    WhereSql+
+//    'GROUP BY TI.ID ORDER BY TM.OPERDATE DESC';
+//or
+  qrySelect.SQL.Text :=
+       ' SELECT '
+     + '         MovementItem_Task.ID '
+     + '       , MovementItem_Task.PartnerId '
+     + '       , MovementItem_Task.CLOSED '
+     + '       , MovementItem_Task.DESCRIPTION '
+     + '       , MovementItem_Task.COMMENT '
+     + '       , Movement_Task.OperDate '
+     + '       , Movement_Task.InvNumber '
+     + '       , Object_Partner.ValueData PartnerName  '
+     + ' FROM  MovementItem_Task	 ' + DateSql
+     + '       LEFT JOIN Object_Partner ON Object_Partner.ID = MovementItem_Task.PartnerId ' + WhereSql
+     + ' GROUP BY MovementItem_Task.ID  '
+     + ' ORDER BY Movement_Task.OperDate DESC ';
 
   if ADate <> 0 then
     qrySelect.ParamByName('TASKDATE').AsDate := ADate;
@@ -5306,8 +5416,8 @@ end;
 function TDM.CloseTask(ATasksId: integer; ATaskComment: string): boolean;
 begin
   try
-    conMain.ExecSQL('update MovementItem_Task set Closed = 1, Comment = ' + QuotedStr(ATaskComment) +
-      ', ISSYNC = 0 where Id = ' + IntToStr(ATasksId));
+    conMain.ExecSQL('UPDATE MovementItem_Task SET Closed = 1, Comment = ' + QuotedStr(ATaskComment) +
+      ', isSync = 0 WHERE Id = ' + IntToStr(ATasksId));
     ShowMessage('Задание отмечено закрытым');
     Result := true;
   except
@@ -5334,7 +5444,7 @@ begin
     try
       qryNewId.Connection := conMain;
 
-      qryNewId.Open('select Min(ID) from OBJECT_JURIDICAL');
+      qryNewId.Open('SELECT Min(ID) FROM Object_Juridical');
       if (qryNewId.RecordCount > 0) and (qryNewId.Fields[0].AsInteger < 0) then
         NewJuridicalId := qryNewId.Fields[0].AsInteger - 1;
     finally
@@ -5348,7 +5458,7 @@ begin
   try
     qryNewId.Connection := conMain;
 
-    qryNewId.Open('select Min(ID) from OBJECT_PARTNER');
+    qryNewId.Open('SELECT Min(ID) FROM Object_Partner');
     if (qryNewId.RecordCount > 0) and (qryNewId.Fields[0].AsInteger < 0) then
       NewPartnerId := qryNewId.Fields[0].AsInteger - 1;
   finally

@@ -667,7 +667,6 @@ type
     pEnterMovmentCash: TPanel;
     bSaveCash: TButton;
     bCancelCash: TButton;
-    eCashAmount: TEdit;
     Panel38: TPanel;
     Panel39: TPanel;
     Label86: TLabel;
@@ -697,6 +696,9 @@ type
     swPaidKindC: TSwitch;
     lPaidKindFC: TLabel;
     lPaidKindSC: TLabel;
+    eCashAmount: TLabel;
+    Panel48: TPanel;
+    Line1: TLine;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -897,7 +899,6 @@ type
     procedure LinkListControlToFieldCashFilledListItem(Sender: TObject;
       const AEditor: IBindListEditorItem);
     procedure bDotClick(Sender: TObject);
-    procedure eCashAmountValidate(Sender: TObject; var Text: string);
     procedure lwCashListItemClickEx(const Sender: TObject; ItemIndex: Integer;
       const LocalClickPos: TPointF; const ItemObject: TListItemDrawable);
     procedure lwCashDocsUpdateObjects(const Sender: TObject;
@@ -908,6 +909,8 @@ type
     procedure swPaidKindRClick(Sender: TObject);
     procedure swPaidKindCClick(Sender: TObject);
     procedure Label66Click(Sender: TObject);
+    procedure eCashAmountClick(Sender: TObject);
+    procedure ppEnterAmountClosePopup(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -955,11 +958,16 @@ type
 
     FEditDocuments: boolean;
 
+    FEditCashAmount: boolean;
+    FCashAmountValue: Double;
+
     FPhotoPath: boolean;
 
     FPaidKindChangedO: boolean;
     FPaidKindChangedR: boolean;
     FPaidKindChangedC: boolean;
+
+    procedure SetCashAmountValue(Value: Double);
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure BackResult(const AResult: TModalResult);
@@ -1039,6 +1047,8 @@ type
 
     procedure AddComboItem(AComboBox: TComboBox; AText: string);
     procedure MobileIdle(Sender: TObject; var Done: Boolean);
+
+    property CashAmountValue: Double read FCashAmountValue write SetCashAmountValue;
   public
     { Public declarations }
   end;
@@ -1203,6 +1213,8 @@ begin
   FAllContractList := TList<TContractItem>.Create;
   FContractIdList := TList<integer>.Create;
   FPaidKindIdList := TList<integer>.Create;
+
+  FEditCashAmount := false;
 
   SwitchToForm(tiStart, nil);
   ChangeMainPageUpdate(tcMain);
@@ -2124,6 +2136,12 @@ begin
   lAmount.Text := lAmount.Text + TButton(Sender).Text;
 end;
 
+procedure TfrmMain.SetCashAmountValue(Value: Double);
+begin
+  FCashAmountValue := Value;
+  eCashAmount.Text := FormatFloat(',0.##', FCashAmountValue);
+end;
+
 procedure TfrmMain.OnCloseDialog(const AResult: TModalResult);
 begin
   if AResult = mrOK then
@@ -2392,22 +2410,23 @@ begin
 
 
   DM.qryPromoGoods.SQL.Text :=
-      ' SELECT'
-    + '         Object_Goods.ObjectCode'
-    + '       , Object_Goods.ValueData       AS GoodsName'
-    + '       , Object_TradeMark.ValueData   AS TradeMarkName'
-    + '       , CASE WHEN MovementItem_PromoGoods.GoodsKindId = 0 THEN ''все виды'' ELSE Object_GoodsKind.ValueData END AS KindName'
-    + '       , ''Скидка '' || MovementItem_PromoGoods.TaxPromo || ''%''                    AS Tax'
-    + '       , ''Акционная цена: '' || MovementItem_PromoGoods.PriceWithOutVAT || '' (с НДС '' || MovementItem_PromoGoods.PriceWithVAT || '') за '' || Object_Measure.ValueData AS Price'
-    + '       , ''Акция заканчивается '' || strftime(''%d.%m.%Y'',Movement_Promo.EndSale)   AS Termin'
+      ' SELECT '
+    + '         Object_Goods.ObjectCode '
+    + '       , Object_Goods.ValueData       AS GoodsName '
+    + '       , Object_TradeMark.ValueData   AS TradeMarkName '
+    + '       , CASE WHEN MovementItem_PromoGoods.GoodsKindId = 0 THEN ''все виды'' ELSE Object_GoodsKind.ValueData END AS KindName '
+    + '       , ''Скидка '' || MovementItem_PromoGoods.TaxPromo || ''%''                    AS Tax '
+    + '       , ''Акционная цена: '' || MovementItem_PromoGoods.PriceWithOutVAT || '' (с НДС '' || MovementItem_PromoGoods.PriceWithVAT || '') за '' || Object_Measure.ValueData AS Price '
+    + '       , ''Акция заканчивается '' || strftime(''%d.%m.%Y'',Movement_Promo.EndSale)   AS Termin '
     + '       , Movement_Promo.Id            AS PromoId '
-    + ' FROM MovementItem_PromoGoods  '
-    + '      JOIN Movement_Promo ON Movement_Promo.Id = MovementItem_PromoGoods.MovementId AND :PROMODATE BETWEEN Movement_Promo.StartSale AND Movement_Promo.EndSale '
-    + '      LEFT JOIN Object_Goods     ON Object_Goods.Id     = MovementItem_PromoGoods.GoodsId '
-    + '      LEFT JOIN Object_Measure   ON Object_Measure.Id   = Object_Goods.MeasureId '
-    + '      LEFT JOIN Object_TradeMark ON Object_TradeMark.Id = Object_Goods.TradeMarkId '
-    + '      LEFT JOIN Object_GoodsKind ON Object_GoodsKind.Id = MovementItem_PromoGoods.GoodsKindId '
-    + ' ORDER BY Object_Goods.ValueData, Movement_Promo.EndSale';
+    + ' FROM  MovementItem_PromoGoods  '
+    + '       JOIN Movement_Promo ON Movement_Promo.Id = MovementItem_PromoGoods.MovementId '
+    + '                          AND :PROMODATE BETWEEN Movement_Promo.StartSale AND Movement_Promo.EndSale '
+    + '       LEFT JOIN Object_Goods     ON Object_Goods.Id     = MovementItem_PromoGoods.GoodsId '
+    + '       LEFT JOIN Object_Measure   ON Object_Measure.Id   = Object_Goods.MeasureId '
+    + '       LEFT JOIN Object_TradeMark ON Object_TradeMark.Id = Object_Goods.TradeMarkId '
+    + '       LEFT JOIN Object_GoodsKind ON Object_GoodsKind.Id = MovementItem_PromoGoods.GoodsKindId '
+    + ' ORDER BY Object_Goods.ValueData, Movement_Promo.EndSale ';
   DM.qryPromoGoods.ParamByName('PROMODATE').AsDate := dePromoGoodsDate.Date;
   DM.qryPromoGoods.Open;
 
@@ -2585,7 +2604,7 @@ begin
     FOldCashId := -1;
     eCashInvNumber.Text := '';
     deCashDate.Date := Date();
-    eCashAmount.Text := '';
+    CashAmountValue := 0;
     eCashComment.Text := '';
     FCanEditDocument := true;
     swPaidKindC.IsChecked := not (DM.qryPartnerPaidKindId.AsInteger = DM.tblObject_ConstPaidKindId_First.AsInteger);
@@ -2595,7 +2614,7 @@ begin
     FOldCashId := DM.qryCashId.AsInteger;
     eCashInvNumber.Text := DM.qryCashInvNumberSale.AsString;
     deCashDate.Date := DM.qryCashOperDate.AsDateTime;
-    eCashAmount.Text := FormatFloat(',0.##', DM.qryCashAmount.AsFloat);
+    CashAmountValue := DM.qryCashAmount.AsFloat;
     eCashComment.Text := DM.qryCashComment.AsString;
     FCanEditDocument := not DM.qryCashisSync.AsBoolean;
     swPaidKindC.IsChecked := not (DM.qryCashPAIDKINDID.AsInteger = DM.tblObject_ConstPaidKindId_First.AsInteger);
@@ -2604,7 +2623,6 @@ begin
   lPaidKindFC.Text := DM.tblObject_ConstPaidKindName_First.AsString;
   lPaidKindSC.Text := DM.tblObject_ConstPaidKindName_Second.AsString;
 
-  eCashAmount.ReadOnly := not FCanEditDocument;
   eCashComment.ReadOnly := not FCanEditDocument;
   swPaidKindC.Enabled := FCanEditDocument;
   if FCanEditDocument then
@@ -2639,32 +2657,21 @@ begin
     swPaidKindC.IsChecked := not swPaidKindC.IsChecked;
 end;
 
-// проверка и корректировка введенной координаты GPS
-procedure TfrmMain.eCashAmountValidate(Sender: TObject; var Text: string);
-var
-  str : string;
+procedure TfrmMain.eCashAmountClick(Sender: TObject);
 begin
-  try
-    Text := Trim(Text);
-    if Text.Length > 0 then
-      StrToFloat(Text);
-  except
-    ShowMessage('Неправильный формат суммы (n.nn)');
+  // вызов формы для редактирования суммы оплаты
+  if FCanEditDocument then
+  begin
+    FEditCashAmount := true;
+    pEnterMovmentCash.Visible := false;
+    lAmount.Text := '0';
+    lMeasure.Text := '';
 
-    // пытаемся исправить на правильное значение
-    str := StringReplace(Text, ',', '.', [rfReplaceAll]);
-    str := StringReplace(str, '-', '', [rfReplaceAll]);
-    str := StringReplace(str, ' ', '', [rfReplaceAll]);
-    str := StringReplace(str, '.', ';', []);
-    str := StringReplace(str, '.', '', [rfReplaceAll]);
-    str := StringReplace(str, ';', '.', []);
-    if (str.Length > 0) and (str[Low(str)] = '.') then
-      str := '0' + str;
-
-    Text := str;
+    ppEnterAmount.IsOpen := true;
   end;
 end;
 
+// проверка и корректировка введенной координаты GPS
 procedure TfrmMain.eNewPartnerGPSNValidate(Sender: TObject; var Text: string);
 var
   str : string;
@@ -2860,6 +2867,11 @@ end;
 // присвоение количества товаров
 procedure TfrmMain.bEnterAmountClick(Sender: TObject);
 begin
+  if FEditCashAmount then
+  begin
+    CashAmountValue := StrToFloatDef(lAmount.Text, 0);
+  end
+  else
   if tcMain.ActiveTab = tiOrderExternal then
   begin
     DM.cdsOrderItems.Edit;
@@ -2908,6 +2920,11 @@ end;
 // добавление количества товаров к введенным ранее
 procedure TfrmMain.bAddAmountClick(Sender: TObject);
 begin
+  if FEditCashAmount then
+  begin
+    CashAmountValue := CashAmountValue + StrToFloatDef(lAmount.Text, 0);
+  end
+  else
   if tcMain.ActiveTab = tiOrderExternal then
   begin
     DM.cdsOrderItems.Edit;
@@ -2938,12 +2955,24 @@ end;
 
 // отнимание количества товаров от введенных ранее
 procedure TfrmMain.bMinusAmountClick(Sender: TObject);
+var
+  NewVal: Double;
 begin
+  if FEditCashAmount then
+  begin
+    NewVal := CashAmountValue - StrToFloatDef(lAmount.Text, 0);
+    if NewVal > 0 then
+      CashAmountValue := NewVal
+    else
+      CashAmountValue := 0;
+  end
+  else
   if tcMain.ActiveTab = tiOrderExternal then
   begin
     DM.cdsOrderItems.Edit;
-    if DM.cdsOrderItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0) > 0 then
-      DM.cdsOrderItemsCount.AsFloat := DM.cdsOrderItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0)
+    NewVal := DM.cdsOrderItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0);
+    if NewVal > 0 then
+      DM.cdsOrderItemsCount.AsFloat := NewVal
     else
       DM.cdsOrderItemsCount.AsFloat := 0;
     DM.cdsOrderItems.Post;
@@ -2954,8 +2983,9 @@ begin
   if tcMain.ActiveTab = tiStoreReal then
   begin
     DM.cdsStoreRealItems.Edit;
-    if DM.cdsStoreRealItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0) > 0 then
-      DM.cdsStoreRealItemsCount.AsFloat := DM.cdsStoreRealItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0)
+    NewVal := DM.cdsStoreRealItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0);
+    if NewVal > 0 then
+      DM.cdsStoreRealItemsCount.AsFloat := NewVal
     else
       DM.cdsStoreRealItemsCount.AsFloat := 0;
     DM.cdsStoreRealItems.Post;
@@ -2964,8 +2994,9 @@ begin
   if tcMain.ActiveTab = tiReturnIn then
   begin
     DM.cdsReturnInItems.Edit;
-    if DM.cdsReturnInItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0) > 0 then
-      DM.cdsReturnInItemsCount.AsFloat := DM.cdsReturnInItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0)
+    NewVal := DM.cdsReturnInItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0);
+    if NewVal > 0 then
+      DM.cdsReturnInItemsCount.AsFloat := NewVal
     else
       DM.cdsReturnInItemsCount.AsFloat := 0;
     DM.cdsReturnInItems.Post;
@@ -3202,9 +3233,9 @@ begin
     RouteQuery.Connection := DM.conMain;
     try
       if cbShowAllPath.IsChecked then
-        RouteQuery.Open('SELECT * from ' + TableName)
+        RouteQuery.Open('SELECT * FROM ' + TableName)
       else
-        RouteQuery.Open('SELECT * from ' + TableName + ' where date(InsertDate) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', deDatePath.Date)));
+        RouteQuery.Open('SELECT * FROM ' + TableName + ' WHERE date(InsertDate) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', deDatePath.Date)));
     except
       on E: Exception do
         Showmessage(E.Message);
@@ -3295,8 +3326,20 @@ begin
 
   with DM.qrySelect do
   begin
-    Open('SELECT Id, ValueData, group_concat(distinct CONTRACTID) ContractIds from OBJECT_JURIDICAL ' +
-      'where ISERASED = 0 GROUP BY ID order by ValueData');
+//or
+//    Open('SELECT Id, ValueData, group_concat(distinct CONTRACTID) ContractIds from OBJECT_JURIDICAL ' +
+//      'where ISERASED = 0 GROUP BY ID order by ValueData');
+//or
+    Open(
+       ' SELECT '
+     + '         Id '
+     + '       , ValueData '
+     + '       , group_concat(distinct ContractId) AS ContractIds '
+     + ' FROM  Object_Juridical '
+     + ' WHERE isErased = 0 '
+     + ' GROUP BY Id  '
+     + ' ORDER BY ValueData '
+        );
     First;
 
     while not Eof do
@@ -3359,15 +3402,9 @@ var
 begin
   if FCanEditDocument then
   begin
-    if Trim(eCashAmount.Text) = '' then
+    if CashAmountValue = 0 then
     begin
       ShowMessage('Необходимо ввести сумму оплаты');
-      exit;
-    end;
-
-    if StrToFloatDef(eCashAmount.Text, 0) = 0 then
-    begin
-      ShowMessage('Необходимо ввести корректную сумму оплаты больше 0');
       exit;
     end;
 
@@ -3376,7 +3413,7 @@ begin
     else
       PaidKindId := DM.tblObject_ConstPaidKindId_Second.AsInteger;
 
-    DM.SaveCash(FOldCashId, PaidKindId, eCashInvNumber.Text, deCashDate.Date, StrToFloat(eCashAmount.Text), eCashComment.Text);
+    DM.SaveCash(FOldCashId, PaidKindId, eCashInvNumber.Text, deCashDate.Date, CashAmountValue, eCashComment.Text);
 
     DM.qryCash.Refresh;
 
@@ -4308,8 +4345,20 @@ begin
 
   with DM.qrySelect do
   begin
-    Open('SELECT Id, ValueData, group_concat(distinct CONTRACTID) ContractIds from OBJECT_JURIDICAL ' +
-      'where ISERASED = 0 GROUP BY ID order by ValueData');
+//or
+//    Open('SELECT Id, ValueData, group_concat(distinct CONTRACTID) ContractIds from OBJECT_JURIDICAL ' +
+//      'where ISERASED = 0 GROUP BY ID order by ValueData');
+//or
+    Open(
+       ' SELECT '
+     + '         Id '
+     + '       , ValueData '
+     + '       , group_concat(distinct ContractId) AS ContractIds '
+     + ' FROM  Object_Juridical '
+     + ' WHERE isErased = 0 '
+     + ' GROUP BY Id '
+     + ' ORDER BY ValueData '
+        );
     First;
 
     while not Eof do
@@ -4414,8 +4463,19 @@ begin
       lPartnerOverDay.Text := DM.qryPartnerOverDaysJ.AsString
     else
       lPartnerOverDay.Text := '-';
+//or
+//    DM.qrySelect.Open('SELECT SUM(DEBTSUM), SUM(OVERSUM), MAX(OVERDAYS) from OBJECT_JURIDICAL WHERE ID = ' + DM.qryPartnerJuridicalId.AsString + ' GROUP BY ID');
+//or
 
-    DM.qrySelect.Open('SELECT SUM(DEBTSUM), SUM(OVERSUM), MAX(OVERDAYS) from OBJECT_JURIDICAL WHERE ID = ' + DM.qryPartnerJuridicalId.AsString + ' GROUP BY ID');
+    DM.qrySelect.Open(
+       ' SELECT '
+     + '         SUM(DebtSum) '
+     + '       , SUM(OverSum) '
+     + '       , MAX(OverDays) '
+     + ' FROM  Object_Juridical '
+     + ' WHERE Id = ' + DM.qryPartnerJuridicalId.AsString
+     + ' GROUP BY Id '
+                     );
 
     gbPartnerAllDebt.Text := 'Долги юр.лица по всем контрактам';
     if not DM.qrySelect.Fields[0].IsNull then
@@ -4443,7 +4503,19 @@ begin
     lPartnerOver.Text := FormatFloat(',0.##', DM.qryPartnerOverSum.AsFloat);
     lPartnerOverDay.Text := DM.qryPartnerOverDays.AsString;
 
-    DM.qrySelect.Open('SELECT SUM(DEBTSUM), SUM(OVERSUM), MAX(OVERDAYS) from OBJECT_PARTNER WHERE ID = ' + DM.qryPartnerId.AsString + ' GROUP BY ID');
+//or
+//    DM.qrySelect.Open('SELECT SUM(DEBTSUM), SUM(OVERSUM), MAX(OVERDAYS) from OBJECT_PARTNER WHERE ID = ' + DM.qryPartnerId.AsString + ' GROUP BY ID');
+//or
+
+    DM.qrySelect.Open(
+       ' SELECT  '
+     + '         SUM(DebtSum) '
+     + '       , SUM(OverSum) '
+     + '       , MAX(OverDays) '
+     + ' FROM  Object_Partner '
+     + ' WHERE Id = ' + DM.qryPartnerId.AsString
+     + ' GROUP BY Id '
+                     );
 
     gbPartnerAllDebt.Text := 'Долги ТТ по всем контрактам';
     lPartnerAllDebt.Text := FormatFloat(',0.##', DM.qrySelect.Fields[0].AsFloat);
@@ -4750,7 +4822,18 @@ end;
 // начитка и отображение прайс-листов
 procedure TfrmMain.ShowPriceLists;
 begin
-  DM.qryPriceList.Open('SELECT ID, VALUEDATA, PRICEWITHVAT, VATPERCENT from OBJECT_PRICELIST where ISERASED = 0');
+//or
+//  DM.qryPriceList.Open('SELECT ID, VALUEDATA, PRICEWITHVAT, VATPERCENT from OBJECT_PRICELIST where ISERASED = 0');
+//or
+  DM.qryPriceList.Open(
+       ' SELECT  '
+     + '         Id '
+     + '       , ValueData '
+     + '       , PriceWithVAT '
+     + '       , VATPercent  '
+     + ' FROM  Object_PriceList '
+     + ' WHERE isErased = 0 '
+                      );
 
   lwPriceList.ScrollViewPos := 0;
   SwitchToForm(tiPriceList, DM.qryPriceList);
@@ -4776,24 +4859,24 @@ begin
 
   DM.qryGoodsForPriceList.Open(
       ' SELECT '
-    + '        Object_Goods.ID'
-    + '      , Object_Goods.ObjectCode'
-    + '      , Object_Goods.ValueData                 AS GoodsName'
-    + '      , Object_GoodsKind.ValueData             AS KindName'
-    + '      , Object_PriceListItems.OrderPrice       AS Price'
-    + '      , Object_Measure.ValueData               AS Measure'
-    + '      , Object_PriceListItems.OrderStartDate   AS StartDate'
-    + '      , Object_TradeMark.ValueData             AS TradeMarkName '
-    + ' FROM Object_PriceListItems'
-    + '      JOIN Object_Goods ON Object_Goods.ID       = Object_PriceListItems.GoodsId'
-    + '                       AND Object_Goods.isErased = 0'
-    + '      LEFT JOIN Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.GoodsId = Object_Goods.ID'
-    + '      LEFT JOIN Object_GoodsKind        ON Object_GoodsKind.ID             = Object_GoodsByGoodsKind.GoodsKindId'
-    + '      LEFT JOIN Object_Measure          ON Object_Measure.ID               = Object_Goods.MeasureId'
-    + '      LEFT JOIN Object_TradeMark        ON Object_TradeMark.ID             = Object_Goods.TradeMarkId '
-    + ' WHERE Object_PriceListItems.PriceListId = ' + DM.qryPriceListId.AsString + ' '
-    + ' ORDER BY Object_Goods.ValueData'
-    );
+    + '         Object_Goods.ID '
+    + '       , Object_Goods.ObjectCode '
+    + '       , Object_Goods.ValueData                 AS GoodsName '
+    + '       , Object_GoodsKind.ValueData             AS KindName '
+    + '       , Object_PriceListItems.OrderPrice       AS Price '
+    + '       , Object_Measure.ValueData               AS Measure '
+    + '       , Object_PriceListItems.OrderStartDate   AS StartDate '
+    + '       , Object_TradeMark.ValueData             AS TradeMarkName '
+    + ' FROM  Object_PriceListItems '
+    + '       JOIN Object_Goods                 ON Object_Goods.ID                 = Object_PriceListItems.GoodsId '
+    + '                                        AND Object_Goods.isErased           = 0 '
+    + '       LEFT JOIN Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.GoodsId = Object_Goods.ID '
+    + '       LEFT JOIN Object_GoodsKind        ON Object_GoodsKind.ID             = Object_GoodsByGoodsKind.GoodsKindId '
+    + '       LEFT JOIN Object_Measure          ON Object_Measure.ID               = Object_Goods.MeasureId '
+    + '       LEFT JOIN Object_TradeMark        ON Object_TradeMark.ID             = Object_Goods.TradeMarkId '
+    + ' WHERE Object_PriceListItems.PriceListId = ' + DM.qryPriceListId.AsString
+    + ' ORDER BY Object_Goods.ValueData '
+                              );
 
   lwPriceListGoods.ScrollViewPos := 0;
   SwitchToForm(tiPriceListItems, DM.qryGoodsForPriceList);
@@ -4834,22 +4917,22 @@ begin
 
   DM.qryPromoGoods.SQL.Text :=
       ' SELECT '
-    + '         Object_Goods.ObjectCode'
-    + '       , Object_Goods.ValueData         AS GoodsName'
-    + '       , Object_TradeMark.ValueData     AS TradeMarkName'
-    + '       , CASE WHEN MovementItem_PromoGoods.GoodsKindId = 0 THEN ''все виды'' ELSE Object_GoodsKind.ValueData END  AS KindName'
-    + '       , ''Скидка '' || MovementItem_PromoGoods.TaxPromo || ''%''                     AS Tax'
-    + '       , ''Акционная цена: '' || MovementItem_PromoGoods.PriceWithOutVAT || '' (с НДС '' || MovementItem_PromoGoods.PriceWithVAT || '') за '' || Object_Measure.ValueData   AS Price'
-    + '       , ''Акция заканчивается '' || strftime(''%d.%m.%Y'', Movement_Promo.EndSale)   AS Termin'
+    + '         Object_Goods.ObjectCode '
+    + '       , Object_Goods.ValueData         AS GoodsName '
+    + '       , Object_TradeMark.ValueData     AS TradeMarkName '
+    + '       , CASE WHEN MovementItem_PromoGoods.GoodsKindId = 0 THEN ''все виды'' ELSE Object_GoodsKind.ValueData END  AS KindName '
+    + '       , ''Скидка '' || MovementItem_PromoGoods.TaxPromo || ''%''                     AS Tax '
+    + '       , ''Акционная цена: '' || MovementItem_PromoGoods.PriceWithOutVAT || '' (с НДС '' || MovementItem_PromoGoods.PriceWithVAT || '') за '' || Object_Measure.ValueData   AS Price '
+    + '       , ''Акция заканчивается '' || strftime(''%d.%m.%Y'', Movement_Promo.EndSale)   AS Termin '
     + '       , Movement_Promo.Id              AS PromoId '
-    + ' FROM MovementItem_PromoGoods'
-    + '      JOIN Movement_Promo ON Movement_Promo.Id = MovementItem_PromoGoods.MovementId'
-    + '      LEFT JOIN Object_Goods     ON Object_Goods.Id     = MovementItem_PromoGoods.GoodsId'
-    + '      LEFT JOIN Object_Measure   ON Object_Measure.Id   = Object_Goods.MeasureId'
-    + '      LEFT JOIN Object_TradeMark ON Object_TradeMark.Id = Object_Goods.TradeMarkId'
-    + '      LEFT JOIN Object_GoodsKind ON Object_GoodsKind.Id = MovementItem_PromoGoods.GoodsKindId '
+    + ' FROM  MovementItem_PromoGoods '
+    + '       JOIN Movement_Promo        ON Movement_Promo.Id   = MovementItem_PromoGoods.MovementId '
+    + '       LEFT JOIN Object_Goods     ON Object_Goods.Id     = MovementItem_PromoGoods.GoodsId '
+    + '       LEFT JOIN Object_Measure   ON Object_Measure.Id   = Object_Goods.MeasureId '
+    + '       LEFT JOIN Object_TradeMark ON Object_TradeMark.Id = Object_Goods.TradeMarkId '
+    + '       LEFT JOIN Object_GoodsKind ON Object_GoodsKind.Id = MovementItem_PromoGoods.GoodsKindId '
     + ' WHERE MovementItem_PromoGoods.MovementId IN (' + DM.qryPromoPartnersPromoIds.AsString + ') '
-    + ' ORDER BY Object_Goods.ValueData, Movement_Promo.EndSale';
+    + ' ORDER BY Object_Goods.ValueData, Movement_Promo.EndSale ';
   DM.qryPromoGoods.Open;
 
   lwPromoGoods.ScrollViewPos := 0;
@@ -4886,23 +4969,23 @@ begin
 
 
   DM.qryPromoPartners.SQL.Text :=
-      ' SELECT'
-    + '        Object_JurIdical.ValueData AS PartnerName'
-    + '      , Object_Partner.Address'
-    + '      , CASE WHEN MovementItem_PromoPartner.ContractId = 0 THEN ''все договора'' ELSE Object_Contract.ContractTagName || '' '' || Object_Contract.ValueData END AS ContractName'
-    + '      , MovementItem_PromoPartner.PartnerId'
-    + '      , MovementItem_PromoPartner.ContractId'
-    + '      , group_concat(distinct MovementItem_PromoPartner.MovementId) AS PromoIds '
-    + ' FROM MovementItem_PromoPartner '
-    + '      LEFT JOIN Object_Partner   ON Object_Partner.Id = MovementItem_PromoPartner.PartnerId '
-    + '                                 AND (Object_Partner.ContractId = MovementItem_PromoPartner.ContractId '
-    + '                                   OR MovementItem_PromoPartner.ContractId = 0) '
-    + '      LEFT JOIN Object_JurIdical ON Object_JurIdical.Id = Object_Partner.JurIdicalId '
-    + '                                AND Object_JurIdical.ContractId = Object_Partner.ContractId '
-    + '      LEFT JOIN Object_Contract  ON Object_Contract.Id = MovementItem_PromoPartner.ContractId '
+      ' SELECT '
+    + '         Object_JurIdical.ValueData AS PartnerName '
+    + '       , Object_Partner.Address '
+    + '       , CASE WHEN MovementItem_PromoPartner.ContractId = 0 THEN ''все договора'' ELSE Object_Contract.ContractTagName || '' '' || Object_Contract.ValueData END AS ContractName '
+    + '       , MovementItem_PromoPartner.PartnerId '
+    + '       , MovementItem_PromoPartner.ContractId '
+    + '       , group_concat(distinct MovementItem_PromoPartner.MovementId) AS PromoIds '
+    + ' FROM  MovementItem_PromoPartner '
+    + '       LEFT JOIN Object_Partner   ON Object_Partner.Id                      = MovementItem_PromoPartner.PartnerId '
+    + '                                  AND (Object_Partner.ContractId            = MovementItem_PromoPartner.ContractId '
+    + '                                    OR MovementItem_PromoPartner.ContractId = 0) '
+    + '       LEFT JOIN Object_JurIdical ON Object_JurIdical.Id                    = Object_Partner.JurIdicalId '
+    + '                                 AND Object_JurIdical.ContractId            = Object_Partner.ContractId '
+    + '       LEFT JOIN Object_Contract  ON Object_Contract.Id                     = MovementItem_PromoPartner.ContractId '
     + ' WHERE MovementItem_PromoPartner.MovementId = :PROMOId '
     + ' GROUP BY MovementItem_PromoPartner.PartnerId, MovementItem_PromoPartner.ContractId '
-    + ' ORDER BY Object_JurIdical.ValueData, Object_Partner.Address';
+    + ' ORDER BY Object_JurIdical.ValueData, Object_Partner.Address ';
   DM.qryPromoPartners.ParamByName('PROMOID').AsInteger := DM.qryPromoGoodsPromoId.AsInteger;
   DM.qryPromoPartners.Open;
 
@@ -4923,8 +5006,21 @@ end;
 // начитка фотографий выбранной группы
 procedure TfrmMain.ShowPhotos(GroupId: integer);
 begin
-  DM.qryPhotos.Open('SELECT Id, Photo, Comment, isErased, isSync from MovementItem_Visit where MovementId = ' + IntToStr(GroupId) +
-    ' and isErased = 0');
+//or
+//  DM.qryPhotos.Open('SELECT Id, Photo, Comment, isErased, isSync from MovementItem_Visit where MovementId = ' + IntToStr(GroupId) +
+//    ' and isErased = 0');
+//or
+  DM.qryPhotos.Open(
+     ' SELECT '
+   + '         Id '
+   + '       , Photo '
+   + '       , Comment '
+   + '       , isErased '
+   + '       , isSync  '
+   + ' FROM  MovementItem_Visit '
+   + ' WHERE MovementId = ' + IntToStr(GroupId)
+   + '   and isErased = 0 '
+                   );
 
   pAddPhoto.Visible := not FEditDocuments;
 
@@ -5322,11 +5418,11 @@ begin
             ' SELECT '
           + '         Object_Partner.Id '
           + '       , Object_Partner.Address '
-          + '       , group_concat(distinct Object_Contract.Id) AS ContractIds  '
+          + '       , group_concat(distinct Object_Contract.Id) AS ContractIds '
           + ' FROM  Object_Partner  '
           + '       LEFT JOIN Object_Contract  ON Object_Contract.Id = Object_Partner.ContractId  '
           + ' WHERE Object_Partner.JuridicalId = ' + IntToStr(FJuridicalList[cbJuridicals.ItemIndex].Id)
-          + '      AND Object_Partner.isErased = 0 '
+          + '   AND Object_Partner.isErased    = 0 '
           + ' GROUP BY Address '
            );
 
@@ -5342,8 +5438,18 @@ begin
       // все договора юридического лица
       FAllContractList.Clear;
 
-      Open('SELECT distinct ID, CONTRACTTAGNAME || '' '' || VALUEDATA ContractName from OBJECT_CONTRACT ' +
-        'where ID in (' + FJuridicalList[cbJuridicals.ItemIndex].ContractIds + ')');
+//or
+//      Open('SELECT distinct ID, CONTRACTTAGNAME || '' '' || VALUEDATA ContractName from OBJECT_CONTRACT ' +
+//        'where ID in (' + FJuridicalList[cbJuridicals.ItemIndex].ContractIds + ')');
+//or
+
+      Open(
+         ' SELECT '
+       + '         distinct Id '
+       + '       , ContractTagName || '' '' || ValueData AS ContractName '
+       + ' FROM  Object_Contract '
+       + ' WHERE Id in (' + FJuridicalList[cbJuridicals.ItemIndex].ContractIds + ') '
+          );
 
       First;
       while not Eof do
@@ -5453,6 +5559,15 @@ begin
       end;
     end;
   except
+  end;
+end;
+
+procedure TfrmMain.ppEnterAmountClosePopup(Sender: TObject);
+begin
+  if FEditCashAmount then
+  begin
+    pEnterMovmentCash.Visible := true;
+    FEditCashAmount := false;
   end;
 end;
 
