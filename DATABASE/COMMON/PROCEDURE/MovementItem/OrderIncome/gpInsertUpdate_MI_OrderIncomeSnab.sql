@@ -34,6 +34,12 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderIncome());
 
+     -- проверка
+     IF COALESCE (inGoodsId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Товар не определен.';
+     END IF;
+
      -- замена
      IF COALESCE (ioMeasureId, 0) = 0
      THEN

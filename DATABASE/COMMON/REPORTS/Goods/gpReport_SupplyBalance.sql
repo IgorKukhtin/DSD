@@ -125,21 +125,31 @@ BEGIN
                              -- AND Movement_Income.Id IS NULL -- т.е. у заявки еще нет ПРОВЕДЕННОГО прихода
                            )
         -- заявки по Юр Лицам - вычитаем: Заявка - Приход
+   , tmpOrderIncome_gr AS (SELECT tmp.GoodsId
+                                , STRING_AGG (Object.ValueData :: TVarChar, '; ') AS PartnerName -- на самом деле это Юр лицо, но его будем использовать если вдруг другой инфі не окажется
+                                , STRING_AGG (tmp.Comment :: TVarChar, '; ') AS Comment
+                                , STRING_AGG (tmp.MovementId :: TVarChar, '; ') AS MovementId_List
+                           FROM (SELECT DISTINCT tmp.GoodsId, tmp.JuridicalId, tmp.Comment, tmp.MovementId FROM tmpOrderIncome_all AS tmp) AS tmp
+                                LEFT JOIN Object ON Object.Id = tmp.JuridicalId
+                           GROUP BY tmp.GoodsId
+                          )
+        -- заявки по Юр Лицам - вычитаем: Заявка - Приход
       , tmpOrderIncome AS (SELECT tmp.GoodsId
-                                , tmp.PartnerName
-                                , tmp.Comment
-                                , tmp.MovementId_List
+                                , tmpOrderIncome_gr.PartnerName
+                                , tmpOrderIncome_gr.Comment
+                                , tmpOrderIncome_gr.MovementId_List
                                 , tmp.Amount - tmp.Amount_Income AS Amount
                            FROM (SELECT tmpOrderIncome_all.GoodsId
-                                      , STRING_AGG (Object.ValueData :: TVarChar, '; ') AS PartnerName -- на самом деле это Юр лицо, но его будем использовать если вдруг другой инфі не окажется
-                                      , STRING_AGG (tmpOrderIncome_all.Comment :: TVarChar, '; ') AS Comment
-                                      , STRING_AGG (tmpOrderIncome_all.MovementId :: TVarChar, '; ') AS MovementId_List
+                                      -- , STRING_AGG (Object.ValueData :: TVarChar, '; ') AS PartnerName -- на самом деле это Юр лицо, но его будем использовать если вдруг другой инфі не окажется
+                                      -- , STRING_AGG (tmpOrderIncome_all.Comment :: TVarChar, '; ') AS Comment
+                                      -- , STRING_AGG (tmpOrderIncome_all.MovementId :: TVarChar, '; ') AS MovementId_List
                                       , SUM (CASE WHEN tmpOrderIncome_all.Ord = 1 THEN tmpOrderIncome_all.Amount ELSE 0 END) AS Amount
                                       , SUM (tmpOrderIncome_all.Amount_Income) AS Amount_Income
                                  FROM tmpOrderIncome_all
                                       LEFT JOIN Object ON Object.Id = tmpOrderIncome_all.JuridicalId
                                  GROUP BY tmpOrderIncome_all.GoodsId
                                 ) AS tmp
+                                LEFT JOIN tmpOrderIncome_gr ON tmpOrderIncome_gr.GoodsId = tmp.GoodsId
                            WHERE tmp.Amount > tmp.Amount_Income
                           )
     -- список товаров по поставщикам из прихода (кол-во прихода возьмем из проводок - потом)
@@ -487,4 +497,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_SupplyBalance (inStartDate:= '01.04.2017', inEndDate:= '30.04.2017', inUnitId:= 8455, inGoodsGroupId:= 1941, inJuridicalId:= 0, inSession := '5'); -- Склад специй
+-- SELECT * FROM gpReport_SupplyBalance (inStartDate:= '01.05.2017', inEndDate:= '30.05.2017', inUnitId:= 8455, inGoodsGroupId:= 1941, inJuridicalId:= 0, inSession := '5'); -- Склад специй
