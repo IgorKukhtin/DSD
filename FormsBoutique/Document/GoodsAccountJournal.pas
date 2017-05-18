@@ -1,4 +1,4 @@
-unit OrderIncomeSnabJournal_byReport;
+unit GoodsAccountJournal;
 
 interface
 
@@ -28,7 +28,7 @@ uses
   dsdGuides, cxButtonEdit;
 
 type
-  TOrderIncomeSnabJournal_byReportForm = class(TParentForm)
+  TGoodsAccountJournalForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -48,7 +48,8 @@ type
     colStatus: TcxGridDBColumn;
     colInvNumber: TcxGridDBColumn;
     colOperDate: TcxGridDBColumn;
-    JuridicalName: TcxGridDBColumn;
+    colFromName: TcxGridDBColumn;
+    colToName: TcxGridDBColumn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
@@ -63,8 +64,8 @@ type
     bbDelete: TdxBarButton;
     actSetErased: TdsdChangeMovementStatus;
     spMovementSetErased: TdsdStoredProc;
-    colPaidKindName: TcxGridDBColumn;
-    colContractName: TcxGridDBColumn;
+    colTotalCount: TcxGridDBColumn;
+    colTotalSummPriceList: TcxGridDBColumn;
     bbStatic: TdxBarStatic;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
@@ -74,13 +75,13 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
-    colInsertDate: TcxGridDBColumn;
-    colInsertName: TcxGridDBColumn;
+    actReCompleteAll: TdsdExecStoredProc;
+    bbReCompleteAll: TdxBarButton;
+    spMovementReCompleteAll: TdsdStoredProc;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
     MovementProtocolOpenForm: TdsdOpenForm;
     bbMovementProtocol: TdxBarButton;
-    colContractCode: TcxGridDBColumn;
     spSelectPrint: TdsdStoredProc;
     bbPrint: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
@@ -91,32 +92,12 @@ type
     bbShowErased: TdxBarButton;
     Comment: TcxGridDBColumn;
     spMovementReComplete: TdsdStoredProc;
-    ContractId: TcxGridDBColumn;
     spReCompete: TdsdExecStoredProc;
     actSimpleReCompleteList: TMultiAction;
     actReCompleteList: TMultiAction;
     N1: TMenuItem;
     ExecuteDialog: TExecuteDialog;
-    dsdChoiceGuides: TdsdChoiceGuides;
-    bbChoiceGuides: TdxBarButton;
-    cxLabel27: TcxLabel;
-    edJuridicalBasis: TcxButtonEdit;
-    JuridicalBasisGuides: TdsdGuides;
-    spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    clUnitName: TcxGridDBColumn;
-    isNotOne: TcxGridDBColumn;
-    colisClose: TcxGridDBColumn;
-    spisClose: TdsdStoredProc;
-    actClose: TdsdExecStoredProc;
-    cxLabel3: TcxLabel;
-    edGoods: TcxButtonEdit;
-    GoodsGuides: TdsdGuides;
-    getMovementForm: TdsdStoredProc;
-    actMovementForm: TdsdExecStoredProc;
-    actOpenForm: TdsdOpenForm;
-    actOpenDocument: TMultiAction;
-    bbOpenDocument: TdxBarButton;
   private
   public
   end;
@@ -126,6 +107,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TOrderIncomeSnabJournal_byReportForm);
+  RegisterClass(TGoodsAccountJournalForm);
 
 end.

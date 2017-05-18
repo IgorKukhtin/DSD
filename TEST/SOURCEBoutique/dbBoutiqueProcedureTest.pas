@@ -33,6 +33,7 @@ type
     procedure CreateLoss;
     procedure CreateCurrency;
     procedure CreateInventory;
+    procedure CreateGoodsAccount;
   end;
 
 type
@@ -46,6 +47,7 @@ type
     procedure CreateSend;
     procedure CreateLoss;
     procedure CreateInventory;
+    procedure CreateGoodsAccount;
   end;
 
 type
@@ -60,6 +62,7 @@ type
     procedure CreateLoss;
     procedure CreateCurrency;
     procedure CreateInventory;
+    procedure CreateGoodsAccount;
 end;
 
 type
