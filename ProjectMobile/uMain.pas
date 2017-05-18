@@ -667,7 +667,6 @@ type
     pEnterMovmentCash: TPanel;
     bSaveCash: TButton;
     bCancelCash: TButton;
-    eCashAmount: TEdit;
     Panel38: TPanel;
     Panel39: TPanel;
     Label86: TLabel;
@@ -697,6 +696,9 @@ type
     swPaidKindC: TSwitch;
     lPaidKindFC: TLabel;
     lPaidKindSC: TLabel;
+    eCashAmount: TLabel;
+    Panel48: TPanel;
+    Line1: TLine;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -897,7 +899,6 @@ type
     procedure LinkListControlToFieldCashFilledListItem(Sender: TObject;
       const AEditor: IBindListEditorItem);
     procedure bDotClick(Sender: TObject);
-    procedure eCashAmountValidate(Sender: TObject; var Text: string);
     procedure lwCashListItemClickEx(const Sender: TObject; ItemIndex: Integer;
       const LocalClickPos: TPointF; const ItemObject: TListItemDrawable);
     procedure lwCashDocsUpdateObjects(const Sender: TObject;
@@ -908,6 +909,8 @@ type
     procedure swPaidKindRClick(Sender: TObject);
     procedure swPaidKindCClick(Sender: TObject);
     procedure Label66Click(Sender: TObject);
+    procedure eCashAmountClick(Sender: TObject);
+    procedure ppEnterAmountClosePopup(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -955,11 +958,16 @@ type
 
     FEditDocuments: boolean;
 
+    FEditCashAmount: boolean;
+    FCashAmountValue: Double;
+
     FPhotoPath: boolean;
 
     FPaidKindChangedO: boolean;
     FPaidKindChangedR: boolean;
     FPaidKindChangedC: boolean;
+
+    procedure SetCashAmountValue(Value: Double);
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure BackResult(const AResult: TModalResult);
@@ -1039,6 +1047,8 @@ type
 
     procedure AddComboItem(AComboBox: TComboBox; AText: string);
     procedure MobileIdle(Sender: TObject; var Done: Boolean);
+
+    property CashAmountValue: Double read FCashAmountValue write SetCashAmountValue;
   public
     { Public declarations }
   end;
@@ -1203,6 +1213,8 @@ begin
   FAllContractList := TList<TContractItem>.Create;
   FContractIdList := TList<integer>.Create;
   FPaidKindIdList := TList<integer>.Create;
+
+  FEditCashAmount := false;
 
   SwitchToForm(tiStart, nil);
   ChangeMainPageUpdate(tcMain);
@@ -2124,6 +2136,12 @@ begin
   lAmount.Text := lAmount.Text + TButton(Sender).Text;
 end;
 
+procedure TfrmMain.SetCashAmountValue(Value: Double);
+begin
+  FCashAmountValue := Value;
+  eCashAmount.Text := FormatFloat(',0.##', FCashAmountValue);
+end;
+
 procedure TfrmMain.OnCloseDialog(const AResult: TModalResult);
 begin
   if AResult = mrOK then
@@ -2585,7 +2603,7 @@ begin
     FOldCashId := -1;
     eCashInvNumber.Text := '';
     deCashDate.Date := Date();
-    eCashAmount.Text := '';
+    CashAmountValue := 0;
     eCashComment.Text := '';
     FCanEditDocument := true;
     swPaidKindC.IsChecked := not (DM.qryPartnerPaidKindId.AsInteger = DM.tblObject_ConstPaidKindId_First.AsInteger);
@@ -2595,7 +2613,7 @@ begin
     FOldCashId := DM.qryCashId.AsInteger;
     eCashInvNumber.Text := DM.qryCashInvNumberSale.AsString;
     deCashDate.Date := DM.qryCashOperDate.AsDateTime;
-    eCashAmount.Text := FormatFloat(',0.##', DM.qryCashAmount.AsFloat);
+    CashAmountValue := DM.qryCashAmount.AsFloat;
     eCashComment.Text := DM.qryCashComment.AsString;
     FCanEditDocument := not DM.qryCashisSync.AsBoolean;
     swPaidKindC.IsChecked := not (DM.qryCashPAIDKINDID.AsInteger = DM.tblObject_ConstPaidKindId_First.AsInteger);
@@ -2604,7 +2622,6 @@ begin
   lPaidKindFC.Text := DM.tblObject_ConstPaidKindName_First.AsString;
   lPaidKindSC.Text := DM.tblObject_ConstPaidKindName_Second.AsString;
 
-  eCashAmount.ReadOnly := not FCanEditDocument;
   eCashComment.ReadOnly := not FCanEditDocument;
   swPaidKindC.Enabled := FCanEditDocument;
   if FCanEditDocument then
@@ -2639,32 +2656,21 @@ begin
     swPaidKindC.IsChecked := not swPaidKindC.IsChecked;
 end;
 
-// проверка и корректировка введенной координаты GPS
-procedure TfrmMain.eCashAmountValidate(Sender: TObject; var Text: string);
-var
-  str : string;
+procedure TfrmMain.eCashAmountClick(Sender: TObject);
 begin
-  try
-    Text := Trim(Text);
-    if Text.Length > 0 then
-      StrToFloat(Text);
-  except
-    ShowMessage('Неправильный формат суммы (n.nn)');
+  // вызов формы для редактирования суммы оплаты
+  if FCanEditDocument then
+  begin
+    FEditCashAmount := true;
+    pEnterMovmentCash.Visible := false;
+    lAmount.Text := '0';
+    lMeasure.Text := '';
 
-    // пытаемся исправить на правильное значение
-    str := StringReplace(Text, ',', '.', [rfReplaceAll]);
-    str := StringReplace(str, '-', '', [rfReplaceAll]);
-    str := StringReplace(str, ' ', '', [rfReplaceAll]);
-    str := StringReplace(str, '.', ';', []);
-    str := StringReplace(str, '.', '', [rfReplaceAll]);
-    str := StringReplace(str, ';', '.', []);
-    if (str.Length > 0) and (str[Low(str)] = '.') then
-      str := '0' + str;
-
-    Text := str;
+    ppEnterAmount.IsOpen := true;
   end;
 end;
 
+// проверка и корректировка введенной координаты GPS
 procedure TfrmMain.eNewPartnerGPSNValidate(Sender: TObject; var Text: string);
 var
   str : string;
@@ -2860,6 +2866,11 @@ end;
 // присвоение количества товаров
 procedure TfrmMain.bEnterAmountClick(Sender: TObject);
 begin
+  if FEditCashAmount then
+  begin
+    CashAmountValue := StrToFloatDef(lAmount.Text, 0);
+  end
+  else
   if tcMain.ActiveTab = tiOrderExternal then
   begin
     DM.cdsOrderItems.Edit;
@@ -2908,6 +2919,11 @@ end;
 // добавление количества товаров к введенным ранее
 procedure TfrmMain.bAddAmountClick(Sender: TObject);
 begin
+  if FEditCashAmount then
+  begin
+    CashAmountValue := CashAmountValue + StrToFloatDef(lAmount.Text, 0);
+  end
+  else
   if tcMain.ActiveTab = tiOrderExternal then
   begin
     DM.cdsOrderItems.Edit;
@@ -2938,12 +2954,24 @@ end;
 
 // отнимание количества товаров от введенных ранее
 procedure TfrmMain.bMinusAmountClick(Sender: TObject);
+var
+  NewVal: Double;
 begin
+  if FEditCashAmount then
+  begin
+    NewVal := CashAmountValue - StrToFloatDef(lAmount.Text, 0);
+    if NewVal > 0 then
+      CashAmountValue := NewVal
+    else
+      CashAmountValue := 0;
+  end
+  else
   if tcMain.ActiveTab = tiOrderExternal then
   begin
     DM.cdsOrderItems.Edit;
-    if DM.cdsOrderItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0) > 0 then
-      DM.cdsOrderItemsCount.AsFloat := DM.cdsOrderItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0)
+    NewVal := DM.cdsOrderItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0);
+    if NewVal > 0 then
+      DM.cdsOrderItemsCount.AsFloat := NewVal
     else
       DM.cdsOrderItemsCount.AsFloat := 0;
     DM.cdsOrderItems.Post;
@@ -2954,8 +2982,9 @@ begin
   if tcMain.ActiveTab = tiStoreReal then
   begin
     DM.cdsStoreRealItems.Edit;
-    if DM.cdsStoreRealItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0) > 0 then
-      DM.cdsStoreRealItemsCount.AsFloat := DM.cdsStoreRealItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0)
+    NewVal := DM.cdsStoreRealItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0);
+    if NewVal > 0 then
+      DM.cdsStoreRealItemsCount.AsFloat := NewVal
     else
       DM.cdsStoreRealItemsCount.AsFloat := 0;
     DM.cdsStoreRealItems.Post;
@@ -2964,8 +2993,9 @@ begin
   if tcMain.ActiveTab = tiReturnIn then
   begin
     DM.cdsReturnInItems.Edit;
-    if DM.cdsReturnInItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0) > 0 then
-      DM.cdsReturnInItemsCount.AsFloat := DM.cdsReturnInItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0)
+    NewVal := DM.cdsReturnInItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0);
+    if NewVal > 0 then
+      DM.cdsReturnInItemsCount.AsFloat := NewVal
     else
       DM.cdsReturnInItemsCount.AsFloat := 0;
     DM.cdsReturnInItems.Post;
@@ -3359,15 +3389,9 @@ var
 begin
   if FCanEditDocument then
   begin
-    if Trim(eCashAmount.Text) = '' then
+    if CashAmountValue = 0 then
     begin
       ShowMessage('Необходимо ввести сумму оплаты');
-      exit;
-    end;
-
-    if StrToFloatDef(eCashAmount.Text, 0) = 0 then
-    begin
-      ShowMessage('Необходимо ввести корректную сумму оплаты больше 0');
       exit;
     end;
 
@@ -3376,7 +3400,7 @@ begin
     else
       PaidKindId := DM.tblObject_ConstPaidKindId_Second.AsInteger;
 
-    DM.SaveCash(FOldCashId, PaidKindId, eCashInvNumber.Text, deCashDate.Date, StrToFloat(eCashAmount.Text), eCashComment.Text);
+    DM.SaveCash(FOldCashId, PaidKindId, eCashInvNumber.Text, deCashDate.Date, CashAmountValue, eCashComment.Text);
 
     DM.qryCash.Refresh;
 
@@ -5453,6 +5477,15 @@ begin
       end;
     end;
   except
+  end;
+end;
+
+procedure TfrmMain.ppEnterAmountClosePopup(Sender: TObject);
+begin
+  if FEditCashAmount then
+  begin
+    pEnterMovmentCash.Visible := true;
+    FEditCashAmount := false;
   end;
 end;
 
