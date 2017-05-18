@@ -181,7 +181,6 @@ uses
   PartionGoodsChoice in '..\..\FormsBoutique\Guides\PartionGoodsChoice.pas' {PartionGoodsChoiceForm: TParentForm},
   LossJournal in '..\..\FormsBoutique\Document\LossJournal.pas' {LossJournalForm: TParentForm},
   Loss in '..\..\FormsBoutique\Document\Loss.pas' {LossForm: TParentForm},
-  CurrencyJournal in '..\..\FormsBoutique\Document\CurrencyJournal.pas' {CurrencyJournalForm: TParentForm},
   CurrencyMovement in '..\..\FormsBoutique\Document\CurrencyMovement.pas' {CurrencyMovementForm: TParentForm},
   PriceList in '..\..\FormsBoutique\Guides\PriceList.pas' {PriceListForm: TParentForm},
   PriceListEdit in '..\..\FormsBoutique\Guides\PriceListEdit.pas' {PriceListEditForm: TParentForm},
@@ -212,7 +211,11 @@ uses
   InfoMoneyDestinationEdit in '..\..\FormsBoutique\Guides\InfoMoneyDestinationEdit.pas' {InfoMoneyDestinationEditForm: TParentForm},
   ReturnInJournal in '..\..\FormsBoutique\Document\ReturnInJournal.pas' {ReturnInJournalForm: TParentForm},
   ReturnIn in '..\..\FormsBoutique\Document\ReturnIn.pas' {ReturnInForm: TParentForm},
-  ReturnInItemEdit in '..\..\FormsBoutique\Document\ReturnInItemEdit.pas' {ReturnInItemEditForm: TParentForm};
+  ReturnInItemEdit in '..\..\FormsBoutique\Document\ReturnInItemEdit.pas' {ReturnInItemEditForm: TParentForm},
+  CurrencyJournal in '..\..\FormsBoutique\Document\CurrencyJournal.pas' {CurrencyJournalForm: TParentForm},
+  GoodsAccountJournal in '..\..\FormsBoutique\Document\GoodsAccountJournal.pas' {GoodsAccountJournalForm: TParentForm},
+  GoodsAccountItemEdit in '..\..\FormsBoutique\Document\GoodsAccountItemEdit.pas' {GoodsAccountItemEditForm: TParentForm},
+  GoodsAccount in '..\..\FormsBoutique\Document\GoodsAccount.pas' {GoodsAccountForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
