@@ -1,17 +1,18 @@
 -- Function: gpSelect_Movement_OrderIncome_byReport()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderIncome_byReport (TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderIncome_byReport (Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderIncome_byReport(
+    IN inGoodsId           Integer    , --
     IN inMovementId_List   TVarChar   , --
-    IN inSession           TVarChar    -- сессия пользователя
+    IN inSession           TVarChar     -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Full TVarChar
              , OperDate TDateTime, OperDatePartner TDateTime
              , StatusCode Integer, StatusName TVarChar
              , InsertDate TDateTime, InsertName TVarChar
-             , TotalCount TFloat--, TotalCountKg TFloat, TotalCountSh TFloat
-             , TotalSummMVAT TFloat , TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummCurrency TFloat
+             , Amount TFloat, AmountOrder TFloat, AmountIncome TFloat
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyDocumentId Integer, CurrencyDocumentName TVarChar
@@ -59,6 +60,7 @@ BEGIN
                              , Movement_Income.*
                              , MovementLinkObject_From.ObjectId           AS FromId
                              , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                             , MovementItem.Amount
                          FROM tmp_List
                               LEFT JOIN Movement ON Movement.Id = tmp_List.MovementId
                                                 AND Movement.DescId = zc_Movement_OrderIncome()
@@ -73,7 +75,28 @@ BEGIN
                               LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                    ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
                                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+ 
+                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement_Income.Id
+                                                     AND MovementItem.DescId     = zc_MI_Master()
+                                                     AND MovementItem.isErased   = False
+                                                     AND (MovementItem.ObjectId = inGoodsId OR inGoodsId = 0)
                        )
+      ,  tmpMI AS (SELECT tmp_List.MovementId
+                        , SUM (MovementItem.Amount) AS Amount
+                        , SUM (COALESCE (MIFloat_AmountOrder.ValueData, 0))  AS AmountOrder
+                   FROM tmp_List
+                        INNER JOIN MovementItem ON MovementItem.MovementId = tmp_List.MovementId
+                                               AND MovementItem.DescId     = zc_MI_Master()
+                                               AND MovementItem.isErased   = False
+                        INNER JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                         ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                        AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                                        AND (MILinkObject_Goods.ObjectId = inGoodsId OR inGoodsId = 0)
+                        LEFT JOIN MovementItemFloat AS MIFloat_AmountOrder
+                                                    ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
+                                                   AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
+                   GROUP BY tmp_List.MovementId
+                   )
 
        SELECT
              Movement.Id                            AS Id
@@ -86,12 +109,10 @@ BEGIN
            
            , MovementDate_Insert.ValueData          AS InsertDate
            , Object_Insert.ValueData                AS InsertName
-           
-           , MovementFloat_TotalCount.ValueData     AS TotalCount
-           , MovementFloat_TotalSummMVAT.ValueData  AS TotalSummMVAT
-           , MovementFloat_TotalSummPVAT.ValueData  AS TotalSummPVAT
-           , MovementFloat_TotalSumm.ValueData      AS TotalSumm
-           , MovementFloat_AmountCurrency.ValueData AS TotalSummCurrency
+
+           , COALESCE (tmpMI.Amount,0)                                        :: TFloat AS Amount
+           , (COALESCE (tmpMI.AmountOrder,0) + COALESCE (tmpMI.Amount,0) - COALESCE (Movement_Income.Amount,0) )    :: TFloat AS AmountOrder
+           , COALESCE (Movement_Income.Amount,0)                              :: TFloat AS AmountIncome
 
            , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData     AS VATPercent
@@ -171,23 +192,6 @@ BEGIN
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
-                                    ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
-                                    ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-            LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
-                                    ON MovementFloat_AmountCurrency.MovementId = Movement.Id
-                                   AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
-
             LEFT JOIN MovementFloat AS MovementFloat_DayCount
                                     ON MovementFloat_DayCount.MovementId = Movement.Id
                                    AND MovementFloat_DayCount.DescId = zc_MovementFloat_DayCount()
@@ -239,9 +243,8 @@ BEGIN
             LEFT JOIN Object AS Object_FromIncome          ON Object_FromIncome.Id          = Movement_Income.FromId
             LEFT JOIN Object AS Object_JuridicalFromIncome ON Object_JuridicalFromIncome.Id = Movement_Income.JuridicalId
 
---        WHERE ((inisSnab = TRUE  AND COALESCE (MovementLinkObject_Unit.ObjectId,0) <> 0)
---            OR (inisSnab = FALSE AND COALESCE (MovementLinkObject_Unit.ObjectId,0) = 0))
-            ;
+            LEFT JOIN tmpMI ON tmpMI.MovementId = Movement.Id
+           ;
 
 END;
 $BODY$
@@ -254,4 +257,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderIncome_byReport (inMovementId_List:= '1;2;3;5', inSession:= '2')
+-- select * from gpSelect_Movement_OrderIncome_byReport(inGoodsId := 2048 , inMovementId_List := '5604996' ,  inSession := '5');

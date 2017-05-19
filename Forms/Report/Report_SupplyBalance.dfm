@@ -5,7 +5,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -244
+  ExplicitLeft = -263
   ExplicitWidth = 1382
   ExplicitHeight = 572
   PixelsPerInch = 96
@@ -835,9 +835,9 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object RemainsDaysWithOrder: TcxGridDBColumn
@@ -1610,6 +1610,12 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
     ColumnAddOnList = <
       item
         Column = clGoodsName
+        Action = OrderJournal
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end
+      item
+        Column = CountOrder
         Action = OrderJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
