@@ -2013,6 +2013,7 @@ begin
         try fExecSqFromQuery_noErr('alter table dba.DiscountMovementInventory add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.DiscountMovementItemInventory_byBarCode add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.DiscountMovement add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.DiscountMovementItem_byBarCode add Id_Postgres integer null;'); except end;
      end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2081,6 +2082,7 @@ begin
      fExecSqFromQuery('update dba.DiscountMovementInventory set Id_Postgres = null');
      fExecSqFromQuery('update dba.DiscountMovementItemInventory_byBarCode set Id_Postgres = null');
      fExecSqFromQuery('update dba.DiscountMovement set Id_Postgres = null');
+     fExecSqFromQuery('update dba.DiscountMovementItem_byBarCode set Id_Postgres = null');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocumentItem_Income(SaveCount: Integer);
@@ -2455,6 +2457,82 @@ end;
 
 procedure TMainForm.pLoadDocumentItem_Sale(SaveCount: Integer);
 begin
+     if (not cbSale.Checked)or(not cbSale.Enabled) then exit;
+     //
+     myEnabledCB(cbSale);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('SELECT');
+        Add('      DiscountMovementItem_byBarCode.Id as ObjectId');
+        Add('    , DiscountMovement.Id_Postgres as MovementId');
+        Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
+        Add('    , BillItemsIncome.Id_Postgres as PartionId');
+        Add('    , DiscountMovementItem_byBarCode.OperCount as Amount');
+        Add('    , DiscountMovementItem_byBarCode.SummDiscountManual as SummChangePercent');
+        Add('    , DiscountMovementItem_byBarCode.BarCode_byClient as BarCode');
+        Add('    , DiscountMovementItem_byBarCode.Id_Postgres');
+        Add('FROM dba.DiscountMovementItem_byBarCode');
+        Add('    join DiscountMovement     on DiscountMovement.id = DiscountMovementItem_byBarCode.DiscountMovementId');
+        Add('    left join BillItemsIncome on BillItemsIncome.id  = DiscountMovementItem_byBarCode.BillItemsIncomeId');
+        Add('WHERE DiscountMovement.descId = 1  AND DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add('ORDER BY ObjectId ');
+        Open;
+
+        cbSale.Caption:='1.6. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Продажа покупателю';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_MovementItem_Sale';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPartionId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inisPay',ftBoolean,ptInput, False);
+        toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inSummChangePercent',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inBarCode',ftString,ptInput, '');
+
+
+
+        //
+        HideCurGrid(True);
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin HideCurGrid(False);  exit; end;
+
+              //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
+             toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
+             toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+             toStoredProc.Params.ParamByName('inSummChangePercent').Value:=FieldByName('SummChangePercent').AsFloat;
+             toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode').AsString;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             if FieldByName('Id_Postgres').AsInteger=0 then
+               fExecSqFromQuery('update dba.DiscountMovementItem_byBarCode set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        HideCurGrid(False);
+     end;
+     //
+     myDisabledCB(cbSale);
 
 end;
 
@@ -2958,7 +3036,7 @@ begin
         Add('    left join DBA.Unit as DiscountMovement_From on DiscountMovement_From.Id = DiscountMovement.UnitID');
         Add('    left join DBA.DiscountKlient as DiscountKlient on DiscountKlient.Id = DiscountMovement.DiscountKlientID');
         Add('    left join DBA.Unit as DiscountMovement_To on DiscountKlient.ClientId = DiscountMovement_To.id');
-        Add('where descId = 1  and DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add('where DiscountMovement.descId = 1  and DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add('order by ObjectId');
         Open;
 
