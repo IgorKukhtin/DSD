@@ -128,6 +128,7 @@ type
     cbUser: TCheckBox;
     cbInventory: TCheckBox;
     cbSale: TCheckBox;
+    cbReturnIn: TCheckBox;
 
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
@@ -234,6 +235,8 @@ type
     procedure pLoadDocumentItem_Inventory(SaveCount:Integer);
     function  pLoadDocument_Sale:Integer;
     procedure pLoadDocumentItem_Sale(SaveCount:Integer);
+    function  pLoadDocument_ReturnIn:Integer;
+    procedure pLoadDocumentItem_ReturnIn(SaveCount:Integer);
 
 
 // Load from files *.dat
@@ -1925,6 +1928,8 @@ begin
      if not fStop then pLoadDocumentItem_Inventory(myRecordCount1);
      if not fStop then myRecordCount1:=pLoadDocument_Sale;
      if not fStop then pLoadDocumentItem_Sale(myRecordCount1);
+     if not fStop then myRecordCount1:=pLoadDocument_ReturnIn;
+     if not fStop then pLoadDocumentItem_ReturnIn(myRecordCount1);
 
 
      //
@@ -2014,6 +2019,7 @@ begin
         try fExecSqFromQuery_noErr('alter table dba.DiscountMovementItemInventory_byBarCode add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.DiscountMovement add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.DiscountMovementItem_byBarCode add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.DiscountMovementItemReturn_byBarCode add Id_Postgres integer null;'); except end;
      end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2083,6 +2089,7 @@ begin
      fExecSqFromQuery('update dba.DiscountMovementItemInventory_byBarCode set Id_Postgres = null');
      fExecSqFromQuery('update dba.DiscountMovement set Id_Postgres = null');
      fExecSqFromQuery('update dba.DiscountMovementItem_byBarCode set Id_Postgres = null');
+     fExecSqFromQuery('update dba.DiscountMovementItemReturn_byBarCode set Id_Postgres = null');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocumentItem_Income(SaveCount: Integer);
@@ -2375,6 +2382,86 @@ begin
      end;
      //
      myDisabledCB(cbLoss);
+end;
+
+procedure TMainForm.pLoadDocumentItem_ReturnIn(SaveCount: Integer);
+begin
+     if (not cbReturnIn.Checked)or(not cbReturnIn.Enabled) then exit;
+     //
+     myEnabledCB(cbReturnIn);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('SELECT');
+        Add('      DiscountMovementItemReturn_byBarCode.Id as ObjectId');
+        Add('    , DiscountMovement.Id_Postgres as MovementId');
+        Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
+        Add('    , BillItemsIncome.Id_Postgres as PartionId');
+        Add('    , DiscountMovementItem_byBarCode.Id_Postgres as SaleMI_Id');
+        Add('    , DiscountMovementItemReturn_byBarCode.OperCount as Amount');
+        Add('    , DiscountMovementItemReturn_byBarCode.Id_Postgres');
+        Add('FROM dba.DiscountMovementItemReturn_byBarCode');
+        Add('    join DiscountMovement     on DiscountMovement.id = DiscountMovementItemReturn_byBarCode.DiscountMovementId');
+        Add('    left join BillItemsIncome on BillItemsIncome.id  = DiscountMovementItemReturn_byBarCode.BillItemsIncomeId');
+        Add('    left join DiscountMovementItem_byBarCode  on DiscountMovementItem_byBarCode.Id = DiscountMovementItemReturn_byBarCode.DiscountMovementItemId ');
+        Add('WHERE DiscountMovement.descId = 2  AND DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add('ORDER BY ObjectId ');
+        Open;
+
+        cbReturnIn.Caption:='1.7. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Возврат от покупателя';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_MovementItem_ReturnIn';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPartionId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPartionMI_Id',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inSaleMI_Id',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inisPay',ftBoolean,ptInput, False);
+        toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
+
+
+
+        //
+        HideCurGrid(True);
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin HideCurGrid(False);  exit; end;
+
+              //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
+             toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
+             toStoredProc.Params.ParamByName('inSaleMI_Id').Value:=FieldByName('SaleMI_Id').AsInteger;
+             toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             if FieldByName('Id_Postgres').AsInteger=0 then
+               fExecSqFromQuery('update dba.DiscountMovementItemReturn_byBarCode set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        HideCurGrid(False);
+     end;
+     //
+     myDisabledCB(cbReturnIn);
+
 end;
 
 procedure TMainForm.pLoadDocumentItem_ReturnOut(SaveCount: Integer);
@@ -2902,6 +2989,89 @@ begin
      end;
      //
      myDisabledCB(cbLoss);
+
+end;
+
+function TMainForm.pLoadDocument_ReturnIn: Integer;
+begin
+     Result:=0;
+     //
+     if (not cbReturnIn.Checked)or(not cbReturnIn.Enabled) then exit;
+     //
+     myEnabledCB(cbReturnIn);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select');
+        Add('      DiscountMovement.Id as ObjectId');
+        Add('    , 0 as InvNumber');
+        Add('    , date(DiscountMovement.OperDate) as OperDate');   // Со времене ошибка неверный формат даты
+        Add('    , DiscountMovement_From.Id_Postgres as FromId ');
+        Add('    , DiscountMovement_From.UnitName as UnitNameFrom');
+        Add('    , DiscountMovement_To.Id_Postgres as ToId');
+        Add('    , DiscountMovement_To.UnitName as UnitNameTo');
+        Add('    , DiscountMovement.Id_Postgres');
+        Add('from DBA.DiscountMovement');
+        Add('    left join DBA.Unit as DiscountMovement_To on DiscountMovement_To.Id = DiscountMovement.UnitID');
+        Add('    left join DBA.DiscountKlient as DiscountKlient on DiscountKlient.Id = DiscountMovement.DiscountKlientID');
+        Add('    left join DBA.Unit as DiscountMovement_From on DiscountKlient.ClientId = DiscountMovement_From.id');
+        Add('where DiscountMovement.descId = 2  and DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add('order by ObjectId');
+        Open;
+
+        Result:=RecordCount;
+        cbReturnIn.Caption:='1.7. ('+IntToStr(RecordCount)+') Возврат от покупателя';
+        //
+        //
+        //
+        //
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Movement_ReturnIn';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('ioInvNumber',ftString,ptInputOutput, '');
+        toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
+        //
+        HideCurGrid(True);
+        while not EOF do
+        begin
+             //!!!
+            if fStop then begin HideCurGrid(False);  exit; end;
+             //
+
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('ioInvNumber').Value:=FieldByName('InvNumber').AsString;
+             toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
+             toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
+             toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId').AsInteger;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             if FieldByName('Id_Postgres').AsInteger=0 then
+               fExecSqFromQuery('update dba.DiscountMovement set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        HideCurGrid(False);
+     end;
+     //
+     myDisabledCB(cbReturnIn);
 
 end;
 
