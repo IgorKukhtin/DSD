@@ -105,6 +105,7 @@ type
     procedure CreatePeriod;
     procedure CreatePartner;
     procedure CreatePartionGoods;
+    procedure CreatePartionMI;
     procedure CreatePosition;
     procedure CreatePriceList;
     procedure CreatePersonal;
@@ -382,6 +383,11 @@ end;
 procedure TdbObjectProcedureTest.CreatePartionGoods;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\PartionGoods - !!!\');
+end;
+
+procedure TdbObjectProcedureTest.CreatePartionMI;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\PartionMI\');
 end;
 
 procedure TdbObjectProcedureTest.CreatePartner;

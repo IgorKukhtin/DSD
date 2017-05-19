@@ -728,7 +728,7 @@
         object cbDiscountPeriodItem: TCheckBox
           Tag = 20
           Left = 6
-          Top = 176
+          Top = 213
           Width = 178
           Height = 17
           Caption = '2.2. '#1048#1089#1090#1086#1088#1080#1103' '#1089#1082#1080#1076#1086#1082
@@ -744,7 +744,7 @@
         object cbPriceListItem: TCheckBox
           Tag = 20
           Left = 6
-          Top = 160
+          Top = 197
           Width = 178
           Height = 17
           Caption = '2.1. '#1048#1089#1090#1086#1088#1080#1103' '#1094#1077#1085#1099
@@ -786,6 +786,21 @@
           Font.Style = []
           ParentFont = False
           TabOrder = 11
+        end
+        object cbReturnIn: TCheckBox
+          Tag = 20
+          Left = 6
+          Top = 155
+          Width = 235
+          Height = 17
+          Caption = '1.7. '#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 12
         end
       end
     end
