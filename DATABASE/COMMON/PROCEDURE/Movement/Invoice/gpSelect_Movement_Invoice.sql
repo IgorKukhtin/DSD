@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , Comment TVarChar
+             , isClosed Boolean
               )
 AS
 $BODY$
@@ -77,6 +78,7 @@ BEGIN
 
            , MovementString_Comment.ValueData       AS Comment
 
+           , COALESCE (MovementBoolean_Closed.ValueData, FALSE) :: Boolean AS isClosed
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Invoice() AND Movement.StatusId = tmpStatus.StatusId
@@ -85,7 +87,11 @@ BEGIN
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-            
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Closed
+                                      ON MovementBoolean_Closed.MovementId = Movement.Id
+                                     AND MovementBoolean_Closed.DescId = zc_MovementBoolean_Closed()
+                        
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId =  Movement.Id
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -161,6 +167,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.05.17         * add Closed
  06.10.16         * add inJuridicalBasisId
  25.07.16         * InvNumberPartner
  15.07.16         *

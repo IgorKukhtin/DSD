@@ -3,7 +3,7 @@ object InvoiceForm: TInvoiceForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'>'
   ClientHeight = 477
-  ClientWidth = 964
+  ClientWidth = 967
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,11 +20,12 @@ object InvoiceForm: TInvoiceForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 964
+    Width = 967
     Height = 97
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 964
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -69,7 +70,7 @@ object InvoiceForm: TInvoiceForm
     end
     object edPriceWithVAT: TcxCheckBox
       Left = 271
-      Top = 64
+      Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       State = cbsChecked
       TabOrder = 6
@@ -210,7 +211,7 @@ object InvoiceForm: TInvoiceForm
       Left = 560
       Top = 63
       TabOrder = 22
-      Width = 198
+      Width = 113
     end
     object cxLabel24: TcxLabel
       Left = 915
@@ -238,29 +239,40 @@ object InvoiceForm: TInvoiceForm
       TabOrder = 26
       Width = 81
     end
+    object edisClosed: TcxCheckBox
+      Left = 880
+      Top = 63
+      Caption = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Properties.ReadOnly = True
+      TabOrder = 27
+      Width = 79
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 123
-    Width = 964
+    Width = 967
     Height = 242
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 964
     ClientRectBottom = 242
-    ClientRectRight = 964
+    ClientRectRight = 967
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 964
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 964
+        Width = 967
         Height = 218
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 964
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -565,12 +577,12 @@ object InvoiceForm: TInvoiceForm
     end
   end
   object cxLabel19: TcxLabel
-    Left = 764
+    Left = 681
     Top = 45
     Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#8470' ('#1079#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097'.)'
   end
   object edInvNumberOrderIncome: TcxButtonEdit
-    Left = 764
+    Left = 681
     Top = 63
     Properties.Buttons = <
       item
@@ -584,19 +596,21 @@ object InvoiceForm: TInvoiceForm
   object cxSplitter1: TcxSplitter
     Left = 0
     Top = 365
-    Width = 964
+    Width = 967
     Height = 3
     AlignSplitter = salBottom
     Control = cxGrid
+    ExplicitWidth = 964
   end
   object cxGrid1: TcxGrid
     Left = 0
     Top = 368
-    Width = 964
+    Width = 967
     Height = 109
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 9
+    ExplicitWidth = 964
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ChildDS
@@ -907,6 +921,14 @@ object InvoiceForm: TInvoiceForm
         end
         item
           Visible = True
+          ItemName = 'bbClosed'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -1048,6 +1070,10 @@ object InvoiceForm: TInvoiceForm
     end
     object bbUpdateAsset_toGoods: TdxBarButton
       Action = actUpdateAsset_toGoods
+      Category = 0
+    end
+    object bbClosed: TdxBarButton
+      Action = actClosed
       Category = 0
     end
   end
@@ -1851,6 +1877,19 @@ object InvoiceForm: TInvoiceForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actClosed: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spisClosed
+      StoredProcList = <
+        item
+          StoredProc = spisClosed
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1086#1083#1085#1086#1089#1090#1100#1102' '#1086#1087#1083#1072#1095#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1086#1083#1085#1086#1089#1090#1100#1102' '#1086#1087#1083#1072#1095#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 58
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -2374,6 +2413,13 @@ object InvoiceForm: TInvoiceForm
         Component = OrderIncomeGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isClosed'
+        Value = Null
+        Component = edisClosed
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -2965,8 +3011,8 @@ object InvoiceForm: TInvoiceForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 812
-    Top = 40
+    Left = 788
+    Top = 56
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
@@ -3144,5 +3190,30 @@ object InvoiceForm: TInvoiceForm
     PackSize = 1
     Left = 622
     Top = 384
+  end
+  object spisClosed: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Close'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisClosed'
+        Value = 'False'
+        Component = edisClosed
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 680
+    Top = 185
   end
 end

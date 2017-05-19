@@ -109,6 +109,9 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    spisClose: TdsdStoredProc;
+    actClose: TdsdExecStoredProc;
+    bbClose: TdxBarButton;
   private
   public
   end;

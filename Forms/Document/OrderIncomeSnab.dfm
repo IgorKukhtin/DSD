@@ -2,7 +2,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1089#1085#1072#1073#1078#1077#1085#1080'e>'
-  ClientHeight = 429
+  ClientHeight = 669
   ClientWidth = 1253
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -327,24 +327,27 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
     Left = 0
     Top = 123
     Width = 1253
-    Height = 306
+    Height = 546
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 306
+    ExplicitHeight = 306
+    ClientRectBottom = 546
     ClientRectRight = 1253
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 282
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 1253
-        Height = 282
+        Height = 522
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 282
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS

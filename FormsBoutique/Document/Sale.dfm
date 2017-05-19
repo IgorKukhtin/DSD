@@ -191,6 +191,9 @@ object SaleForm: TSaleForm
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 83
@@ -751,6 +754,18 @@ object SaleForm: TSaleForm
             Options.Editing = False
             Width = 91
           end
+          object colTotalPay: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1074' '#1043#1056#1053')'
+            DataBinding.FieldName = 'TotalPay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
           object colTotalCountReturn: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090#1072
             DataBinding.FieldName = 'TotalCountReturn'
@@ -950,7 +965,7 @@ object SaleForm: TSaleForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 75
-        Width = 1054
+        Width = 8
         Height = 8
         HotZoneClassName = 'TcxXPTaskBarStyle'
         HotZone.Visible = False

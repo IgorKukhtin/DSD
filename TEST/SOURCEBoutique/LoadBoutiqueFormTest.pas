@@ -46,6 +46,7 @@ type
 //    procedure LoadGoodsFormTest;
 //    procedure LoadImportSettingsFormTest;
 //    procedure LoadImportTypeFormTest;
+    procedure LoadGoodsAccountFormTest;
     procedure LoadIncomeFormTest;
     procedure LoadInfoMoneyGroupFormTest;
     procedure LoadInfoMoneyDestinationFormTest;
@@ -1288,6 +1289,16 @@ end;
 //  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyEditForm');
 //end;
 //
+
+procedure TLoadFormTest.LoadGoodsAccountFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAccountForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsAccountForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAccountJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsAccountJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAccountItemEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsAccountItemEditForm');
+end;
 procedure TLoadFormTest.LoadIncomeFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));

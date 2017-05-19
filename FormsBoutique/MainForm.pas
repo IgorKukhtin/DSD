@@ -1,3 +1,4 @@
+
 unit MainForm;
 
 interface
@@ -119,6 +120,8 @@ type
     N57: TMenuItem;
     actReturnIn: TdsdOpenForm;
     N58: TMenuItem;
+    actGoodsAccount: TdsdOpenForm;
+    N59: TMenuItem;
   private
     { Private declarations }
   public

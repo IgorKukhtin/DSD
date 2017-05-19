@@ -3,6 +3,9 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_GoodsAccount (Integer, Integer, Integer, Integer, Integer, Integer
                                                                 , TFloat, TFloat, TFloat
                                                                 , Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_GoodsAccount (Integer, Integer, Integer, Integer, Integer, Integer
+                                                                , TFloat, TFloat
+                                                                , Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_GoodsAccount(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -13,7 +16,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_GoodsAccount(
     IN inSaleMI_Id             Integer   , -- строка док. продажи
     IN inAmount                TFloat    , -- Количество
     IN inSummChangePercent     TFloat    , -- 
-    IN inTotalPay              TFloat    , -- 
+ --   IN inTotalPay              TFloat    , -- 
     IN inUserId                Integer     -- пользователь
 )
 RETURNS Integer
@@ -34,7 +37,7 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, inSummChangePercent);
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), ioId, inTotalPay);
+     --PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), ioId, inTotalPay);
     
      IF COALESCE (inPartionMI_Id) = 0 
         THEN 
