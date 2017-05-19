@@ -657,7 +657,11 @@ begin
                    //удаление письма
                    //***if flag then IdPOP3.Delete(i);   //POP3
                    PanelHost.Caption:= 'Start Mail (5.4.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
-                   if flag then IdIMAP4.DeleteMsgs(i);    //IMAP
+                   if flag then
+                   begin
+                        IdIMAP4.DeleteMsgs(i);    //IMAP
+                        IdIMAP4.ExpungeMailBox;
+                   end;
                    PanelHost.Caption:= 'Start Mail (5.5.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                    //
 
