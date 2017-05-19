@@ -442,9 +442,9 @@ begin
 
               try
                  PanelHost.Caption:= 'Start Mail (2) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
-                 //подключаемся к ящику
-                 //***IdIMAP4.Connect;          //POP3
 
+                 //подключаемся к ящику
+                 //***IdPOP3.Connect;          //POP3
                  try IdIMAP4.Connect(TRUE);     //IMAP
                  except
                       on E: Exception do begin
@@ -456,10 +456,10 @@ begin
 
 
                  PanelHost.Caption:= 'Start Mail (3.1) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
-                 IdIMAP4.SelectMailBox('INBOX');//IMAP
+                 IdIMAP4.SelectMailBox('INBOX');//only IMAP
                  PanelHost.Caption:= 'Start Mail (3.2) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                  //количество писем
-                 //***msgcnt:= IdIMAP4.CheckMessages;  //POP3
+                 //***msgcnt:= IdPOP3.CheckMessages;   //POP3
                  msgcnt:= IdIMAP4.MailBox.TotalMsgs;   //IMAP
                  PanelHost.Caption:= 'Start Mail (3.4) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                  //
@@ -651,7 +651,7 @@ begin
                    then fBeginMMO (vbArrayMail[ii].UserName, vbArrayImportSettings[JurPos].Id,msgDate_save);
 
                    //удаление письма
-                   //***if flag then IdIMAP4.Delete(i);   //POP3
+                   //***if flag then IdPOP3.Delete(i);   //POP3
                    PanelHost.Caption:= 'Start Mail (5.4.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                    if flag then IdIMAP4.DeleteMsgs(i);    //IMAP
                    PanelHost.Caption:= 'Start Mail (5.5.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
@@ -674,7 +674,7 @@ begin
                  Application.ProcessMessages;
               finally
                  PanelHost.Caption:= 'End Mail (6.1.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime)+' to '+FormatDateTime('dd.mm.yyyy hh:mm:ss',NOW)+' and Next - ' + FormatDateTime('dd.mm.yyyy hh:mm:ss',vbArrayMail[ii].BeginTime + vbArrayMail[ii].onTime / 24 / 60);
-                 //***IdIMAP4.Disconnect;    // POP3
+                 //***IdPOP3.Disconnect;     // POP3
                  IdIMAP4.Disconnect();       //IMAP
                  PanelHost.Caption:= 'End Mail (6.2.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime)+' to '+FormatDateTime('dd.mm.yyyy hh:mm:ss',NOW)+' and Next - ' + FormatDateTime('dd.mm.yyyy hh:mm:ss',vbArrayMail[ii].BeginTime + vbArrayMail[ii].onTime / 24 / 60);
                  IdIMAP4.Free;               //IMAP
