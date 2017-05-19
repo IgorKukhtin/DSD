@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, Code Integer, IdBarCode TVarChar, Name TVarChar, isEr
              , InsertName TVarChar, InsertDate TDateTime 
              , UpdateName TVarChar, UpdateDate TDateTime
              , ConditionsKeepName TVarChar
+             , MorionCode Integer, BarCode TVarChar 
               ) AS
 $BODY$ 
   DECLARE vbUserId Integer;
@@ -138,34 +139,63 @@ BEGIN
 */
 
    RETURN QUERY 
-  -- Маркетинговый контракт
-  WITH  GoodsPromo AS (SELECT DISTINCT ObjectLink_Child_retail.ChildObjectId AS GoodsId  -- здесь товар "сети"
-                         --   , tmp.ChangePercent
-                       FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp   --CURRENT_DATE
-                                    INNER JOIN ObjectLink AS ObjectLink_Child
-                                                          ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
-                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
-                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                                    INNER JOIN ObjectLink AS ObjectLink_Main_retail ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_Main.ChildObjectId
-                                                                                   AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                                    INNER JOIN ObjectLink AS ObjectLink_Child_retail ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
-                                                                                    AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
-                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
-                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                                                         AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
-                         )
+     -- Маркетинговый контракт
+      WITH GoodsPromo AS (SELECT DISTINCT ObjectLink_Child_retail.ChildObjectId AS GoodsId  -- здесь товар "сети"
+                            --   , tmp.ChangePercent
+                          FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp   --CURRENT_DATE
+                                       INNER JOIN ObjectLink AS ObjectLink_Child
+                                                             ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
+                                                            AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                       INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                                AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                       INNER JOIN ObjectLink AS ObjectLink_Main_retail ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                                      AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                       INNER JOIN ObjectLink AS ObjectLink_Child_retail ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
+                                                                                       AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                       INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                             ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
+                                                            AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                            AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
+                            )
 
-  /*   , tmpLoadPriceList AS (SELECT DISTINCT LoadPriceListItem.GoodsId AS MainGoodsId
-                            FROM LoadPriceList  
-                                 INNER JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
-                            WHERE LoadPriceList.OperDate >= CURRENT_DATE AND LoadPriceList.OperDate < CURRENT_DATE + INTERVAL '1 DAY'
-                            
-  */
+     /*   , tmpLoadPriceList AS (SELECT DISTINCT LoadPriceListItem.GoodsId AS MainGoodsId
+                               FROM LoadPriceList  
+                                    INNER JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
+                               WHERE LoadPriceList.OperDate >= CURRENT_DATE AND LoadPriceList.OperDate < CURRENT_DATE + INTERVAL '1 DAY'
+                               
+     */
 
-   SELECT 
-             Object_Goods_View.Id
+         , tmpGoodsMorion AS (SELECT ObjectLink_Main_Morion.ChildObjectId          AS GoodsMainId
+                                   , MAX (Object_Goods_Morion.ObjectCode)::Integer AS MorionCode
+                              FROM ObjectLink AS ObjectLink_Main_Morion
+                                   JOIN ObjectLink AS ObjectLink_Child_Morion
+                                                   ON ObjectLink_Child_Morion.ObjectId = ObjectLink_Main_Morion.ObjectId
+                                                  AND ObjectLink_Child_Morion.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                   JOIN ObjectLink AS ObjectLink_Goods_Object_Morion
+                                                   ON ObjectLink_Goods_Object_Morion.ObjectId = ObjectLink_Child_Morion.ChildObjectId
+                                                  AND ObjectLink_Goods_Object_Morion.DescId = zc_ObjectLink_Goods_Object()
+                                                  AND ObjectLink_Goods_Object_Morion.ChildObjectId = zc_Enum_GlobalConst_Marion()
+                                   LEFT JOIN Object AS Object_Goods_Morion ON Object_Goods_Morion.Id = ObjectLink_Goods_Object_Morion.ObjectId
+                              WHERE ObjectLink_Main_Morion.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                                AND ObjectLink_Main_Morion.ChildObjectId > 0
+                              GROUP BY ObjectLink_Main_Morion.ChildObjectId
+                             )
+         , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId          AS GoodsMainId
+                                    , MAX (Object_Goods_BarCode.ValueData)::TVarChar AS BarCode
+                               FROM ObjectLink AS ObjectLink_Main_BarCode
+                                    JOIN ObjectLink AS ObjectLink_Child_BarCode
+                                                    ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
+                                                   AND ObjectLink_Child_BarCode.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                    JOIN ObjectLink AS ObjectLink_Goods_Object_BarCode
+                                                    ON ObjectLink_Goods_Object_BarCode.ObjectId = ObjectLink_Child_BarCode.ChildObjectId
+                                                   AND ObjectLink_Goods_Object_BarCode.DescId = zc_ObjectLink_Goods_Object()
+                                                   AND ObjectLink_Goods_Object_BarCode.ChildObjectId = zc_Enum_GlobalConst_BarCode()
+                                    LEFT JOIN Object AS Object_Goods_BarCode ON Object_Goods_BarCode.Id = ObjectLink_Goods_Object_BarCode.ObjectId
+                               WHERE ObjectLink_Main_BarCode.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                                 AND ObjectLink_Main_BarCode.ChildObjectId > 0
+                               GROUP BY ObjectLink_Main_BarCode.ChildObjectId
+                              )                  
+      SELECT Object_Goods_View.Id
            , Object_Goods_View.GoodsCodeInt
 --           , ObjectString.ValueData                           AS GoodsCode
            , zfFormat_BarCode(zc_BarCodePref_Object(), ObjectLink_Main.ChildObjectId) AS IdBarCode         --ObjectLink_Main.ChildObjectId
@@ -205,53 +235,61 @@ BEGIN
            , COALESCE(Object_Update.ValueData, '')         ::TVarChar  AS UpdateName
            , COALESCE(ObjectDate_Update.ValueData, Null)   ::TDateTime AS UpdateDate
            , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
+
+           , tmpGoodsMorion.MorionCode
+           , tmpGoodsBarCode.BarCode
  
-    FROM Object_Goods_View
-         LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = Object_Goods_View.ObjectId
-         LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id 
+      FROM Object_Goods_View
+           LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = Object_Goods_View.ObjectId
+           LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id 
 
-         LEFT JOIN ObjectDate AS ObjectDate_Insert
-                              ON ObjectDate_Insert.ObjectId = Object_Goods_View.Id
-                             AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
-         LEFT JOIN ObjectLink AS ObjectLink_Insert
-                              ON ObjectLink_Insert.ObjectId = Object_Goods_View.Id
-                             AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
-         LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId 
+           LEFT JOIN ObjectDate AS ObjectDate_Insert
+                                ON ObjectDate_Insert.ObjectId = Object_Goods_View.Id
+                               AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
+           LEFT JOIN ObjectLink AS ObjectLink_Insert
+                                ON ObjectLink_Insert.ObjectId = Object_Goods_View.Id
+                               AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
+           LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId 
 
-         LEFT JOIN ObjectDate AS ObjectDate_Update
-                              ON ObjectDate_Update.ObjectId = Object_Goods_View.Id
-                             AND ObjectDate_Update.DescId = zc_ObjectDate_Protocol_Update()
-         LEFT JOIN ObjectLink AS ObjectLink_Update
-                              ON ObjectLink_Update.ObjectId = Object_Goods_View.Id
-                             AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
-         LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId 
+           LEFT JOIN ObjectDate AS ObjectDate_Update
+                                ON ObjectDate_Update.ObjectId = Object_Goods_View.Id
+                               AND ObjectDate_Update.DescId = zc_ObjectDate_Protocol_Update()
+           LEFT JOIN ObjectLink AS ObjectLink_Update
+                                ON ObjectLink_Update.ObjectId = Object_Goods_View.Id
+                               AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
+           LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId 
 
-        -- получается GoodsMainId
-        LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods_View.Id --Object_Goods.Id
-                                                 AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
-        LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+           -- получается GoodsMainId
+           LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods_View.Id --Object_Goods.Id
+                                                    AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+           LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                   AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
 
-        LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
-                                 ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
-                                AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+           LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
+                                    ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                   AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
 
-        LEFT JOIN ObjectDate AS ObjectDate_LastPrice
-                             ON ObjectDate_LastPrice.ObjectId = ObjectLink_Main.ChildObjectId
-                            AND ObjectDate_LastPrice.DescId = zc_ObjectDate_Goods_LastPrice()
+           LEFT JOIN ObjectDate AS ObjectDate_LastPrice
+                                ON ObjectDate_LastPrice.ObjectId = ObjectLink_Main.ChildObjectId
+                               AND ObjectDate_LastPrice.DescId = zc_ObjectDate_Goods_LastPrice()
 
-        LEFT JOIN ObjectFloat AS ObjectFloat_CountPrice
-                              ON ObjectFloat_CountPrice.ObjectId = ObjectLink_Main.ChildObjectId
-                             AND ObjectFloat_CountPrice.DescId = zc_ObjectFloat_Goods_CountPrice()
+           LEFT JOIN ObjectFloat AS ObjectFloat_CountPrice
+                                 ON ObjectFloat_CountPrice.ObjectId = ObjectLink_Main.ChildObjectId
+                                AND ObjectFloat_CountPrice.DescId = zc_ObjectFloat_Goods_CountPrice()
 
-        -- условия хранения
-        LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
-                             ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
-                            AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
-        LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
+           -- условия хранения
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                                ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
+                               AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+           LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
-        --LEFT JOIN tmpLoadPriceList ON tmpLoadPriceList.MainGoodsId = ObjectLink_Main.ChildObjectId
-    WHERE Object_Goods_View.ObjectId = vbObjectId
+           --LEFT JOIN tmpLoadPriceList ON tmpLoadPriceList.MainGoodsId = ObjectLink_Main.ChildObjectId
+
+           -- определяем код Мориона
+           LEFT JOIN tmpGoodsMorion ON tmpGoodsMorion.GoodsMainId = ObjectLink_Main.ChildObjectId
+           -- определяем штрих-код производителя
+           LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = ObjectLink_Main.ChildObjectId
+      WHERE Object_Goods_View.ObjectId = vbObjectId
 ;
 
   -- END IF;
@@ -264,7 +302,8 @@ ALTER FUNCTION gpSelect_Object_Goods_Retail(TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
+ 19.05.17                                                       * MorionCode, BarCode
  21.04.17         *
  19.04.17         * add zc_ObjectDate_Goods_LastPrice
  06.04.17         *
