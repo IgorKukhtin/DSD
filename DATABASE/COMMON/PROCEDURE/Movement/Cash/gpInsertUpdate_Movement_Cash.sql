@@ -21,22 +21,29 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
     IN inUnitId              Integer   , -- Подразделения
     IN inMovementId_Invoice  Integer   , -- документ счет
 
-    IN inCurrencyId           Integer   , -- Валюта 
+    IN inCurrencyId           Integer   , -- Валюта
    OUT outCurrencyValue       TFloat    , -- Курс для перевода в валюту баланса
    OUT outParValue            TFloat    , -- Номинал для перевода в валюту баланса
     IN inCurrencyPartnerValue TFloat    , -- Курс для расчета суммы операции
     IN inParPartnerValue      TFloat    , -- Номинал для расчета суммы операции
-    IN inMovementId_Partion   Integer   , -- Id документа продажи 
+    IN inMovementId_Partion   Integer   , -- Id документа продажи
     IN inSession              TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS record as--Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+
+   DECLARE vbCurrencyId_move   Integer;    -- Валюта для обмена
+
    DECLARE vbAmount TFloat;
    DECLARE vbAmountIn TFloat;
    DECLARE vbAmountOut TFloat;
    DECLARE vbAmountCurrency TFloat;
 BEGIN
+
+     -- !!!ВРЕМЕННО!!!
+     vbCurrencyId_move:= zc_Enum_Currency_Basis();
+
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
 
@@ -66,30 +73,74 @@ BEGIN
                                       , inUserId     := vbUserId);
      END IF;
 
-     -- расчет курса для баланса
-     IF inCurrencyId <> zc_Enum_Currency_Basis()
-     THEN SELECT Amount, ParValue, Amount, ParValue
-                 INTO outCurrencyValue, outParValue
-                    , inCurrencyPartnerValue, inParPartnerValue -- !!!меняется значение!!!
-          FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDate, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= inCurrencyId,  inPaidKindId:= zc_Enum_PaidKind_FirstForm());
+
+     -- проверка
+     IF COALESCE (inCurrencyId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Значение <Валюта> не определено.';
      END IF;
+     -- проверка
+     IF (COALESCE (vbCurrencyId_move, 0) = 0 OR vbCurrencyId_move = inCurrencyId) AND inAmountSumm <> 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Значение <Валюта> для суммы обмена не определено.';
+     END IF;
+
+     -- НЕТ расчета курса для баланса
+     IF inCurrencyId <> zc_Enum_Currency_Basis()
+     THEN
+         -- проверка
+         IF COALESCE (inCurrencyPartnerValue, 0) <= 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Значение <Курс> не определено.';
+         END IF;
+
+         -- !!!Замена!!!
+         inParPartnerValue:= CASE WHEN inParPartnerValue > 0 THEN inParPartnerValue ELSE 1 END;
+
+         -- если обмен
+         IF inAmountSumm <> 0 AND
+
+          -- !!!определяется ТАК значение!!!
+          outCurrencyValue      := inCurrencyPartnerValue;
+          outParValue           := inParPartnerValue;
+     ELSE
+         -- !!!обнуляется!!!
+         outCurrencyValue      := 0;
+         outParValue           := 0;
+         inCurrencyPartnerValue:= 0;
+         inParPartnerValue     := 0;
+     END IF;
+
 
      -- !!!очень важный расчет!!!
      IF inAmountIn <> 0 THEN
         IF inCurrencyId <> zc_Enum_Currency_Basis()
-        THEN vbAmountCurrency:= inAmountIn;
-             vbAmount := CAST (inAmountIn * outCurrencyValue / outParValue AS NUMERIC (16, 2));
-             vbAmountIn := vbAmount;
-        ELSE vbAmount := inAmountIn;
-             vbAmountIn := inAmountIn;
+        THEN
+             -- запишем оригинал - сумму в валюте
+             vbAmountCurrency := inAmountIn;
+             -- сумму в ГРН - посчитаем
+             vbAmount         := CAST (inAmountIn * outCurrencyValue / outParValue AS NUMERIC (16, 2));
+             -- это значение в ГРН - сохраним
+             vbAmountIn       := vbAmount;
+
+        ELSE -- ВСЕ в ГРН
+             vbAmount         := inAmountIn;
+             vbAmountIn       := inAmountIn;
         END IF;
+
      ELSE
         IF inCurrencyId <> zc_Enum_Currency_Basis()
-        THEN vbAmountCurrency:= -1 * inAmountOut;
-             vbAmount := CAST (-1 * inAmountOut * outCurrencyValue / outParValue AS NUMERIC (16, 2));
-             vbAmountOut := -1 * vbAmount;
-        ELSE vbAmount := -1 * inAmountOut;
-             vbAmountOut := inAmountOut;
+        THEN
+             -- запишем оригинал - сумму в валюте
+             vbAmountCurrency := -1 * inAmountOut;
+             -- сумму в ГРН - посчитаем
+             vbAmount         := -1 * CAST (inAmountOut * outCurrencyValue / outParValue AS NUMERIC (16, 2));
+             -- это значение в ГРН - сохраним
+             vbAmountOut      := ABS (vbAmount);
+
+        ELSE -- ВСЕ в ГРН
+             vbAmount         := -1 * inAmountOut;
+             vbAmountOut      := inAmountOut;
         END IF;
      END IF;
 
@@ -165,9 +216,9 @@ $BODY$
  14.01.14                                        *
  26.12.13                                        * add lpComplete_Movement_Cash
  26.12.13                                        * add lpGetAccessKey
- 23.12.13                        *                
- 19.11.13                        *                
- 06.08.13                        *                
+ 23.12.13                        *
+ 19.11.13                        *
+ 06.08.13                        *
 */
 
 -- тест

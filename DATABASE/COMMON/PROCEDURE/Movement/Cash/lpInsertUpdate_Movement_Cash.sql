@@ -20,16 +20,16 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Cash(
     IN inInfoMoneyId         Integer   , -- Управленческие статьи
     IN inMemberId            Integer   , -- Физ лицо (через кого)
     IN inUnitId              Integer   , -- Подразделения
-   
-    IN inCurrencyId            Integer   , -- Валюта 
+
+    IN inCurrencyId            Integer   , -- Валюта
     IN inCurrencyValue         TFloat    , -- Курс для перевода в валюту баланса
     IN inParValue              TFloat    , -- Номинал для перевода в валюту баланса
     IN inCurrencyPartnerValue  TFloat    , -- Курс для расчета суммы операции
     IN inParPartnerValue       TFloat    , -- Номинал для расчета суммы операции
-    IN inMovementId_Partion    Integer   , -- Id документа продажи 
-    
+    IN inMovementId_Partion    Integer   , -- Id документа продажи
+
     IN inUserId              Integer     -- Пользователь
-)                 
+)
 RETURNS Integer
 AS
 $BODY$
@@ -193,7 +193,7 @@ BEGIN
                                          INNER JOIN MovementLinkObject AS MLO_PersonalServiceList
                                                                        ON MLO_PersonalServiceList.MovementId = MovementDate_ServiceDate.MovementId
                                                                       AND MLO_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
-                                                                      -- AND MLO_PersonalServiceList.ObjectId <> 298695 
+                                                                      -- AND MLO_PersonalServiceList.ObjectId <> 298695
                                     ORDER BY MovementDate_ServiceDate.ValueData DESC, MovementItem.Amount DESC
                                     LIMIT 1
                                    );*/
@@ -233,7 +233,7 @@ BEGIN
 
      -- сохранили связь с <Объект>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_MoneyPlace(), vbMovementItemId, inMoneyPlaceId);
-    
+
      -- сохранили свойство <Дата начисления>
      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ServiceDate(), vbMovementItemId, inServiceDate);
      -- сохранили свойство <Примечание>
