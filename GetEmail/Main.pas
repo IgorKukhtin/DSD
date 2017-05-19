@@ -416,7 +416,11 @@ begin
            PanelHost.Caption:= 'Start Mail (0.2) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
            IdIMAP4.IOHandler:=IdSSLIOHandlerSocketOpenSSL;
            PanelHost.Caption:= 'Start Mail (0.3) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
-           IdIMAP4.UseTLS:=utUseRequireTLS;
+
+           if Pos(AnsiUpperCase('@mail.ru'), AnsiUpperCase(vbArrayMail[ii].UserName)) > 0
+           then IdIMAP4.UseTLS:=utUseRequireTLS   //для майл.ру
+           else IdIMAP4.UseTLS:=utUseImplicitTLS; //для других;
+
            PanelHost.Caption:= 'Start Mail (0.4) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
            IdIMAP4.AuthType:=iatUserPass;
            PanelHost.Caption:= 'Start Mail (0.5) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
