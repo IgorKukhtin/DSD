@@ -45,13 +45,25 @@ BEGIN
      IF inisPayTotal = FALSE
         THEN
             SELECT Movement.OperDate 
-                 , MovementLinkObject_To.ObjectId
-           INTO vbOperDate, vbUnitId
+           INTO vbOperDate
             FROM Movement
-                 LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                              ON MovementLinkObject_To.MovementId = Movement.Id
-                                             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             WHERE Movement.Id = inMovementId;
+
+            SELECT MovementLinkObject_Unit.ObjectId
+          INTO vbUnitId
+            FROM MovementItemLinkObject AS MILinkObject_PartionMI
+                 LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId 
+                 LEFT JOIN MovementItem AS MI_Sale ON MI_Sale.Id = Object_PartionMI.ObjectCode
+                 LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MI_Sale.MovementId
+
+                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                              ON MovementLinkObject_Unit.MovementId = Movement_Sale.Id
+                                             AND MovementLinkObject_Unit.DescId = CASE WHEN Movement_Sale.DescId = zc_Movement_Sale() THEN zc_MovementLinkObject_From()
+                                                                                       WHEN Movement_Sale.DescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_To()
+                                                                                  END
+
+            WHERE MILinkObject_PartionMI.MovementItemId = inParentId
+              AND MILinkObject_PartionMI.DescId = zc_MILinkObject_PartionMI();
 
 
            CREATE TEMP TABLE _tmpPay (CurrencyId Integer, Amount TFloat) ON COMMIT DROP;
@@ -139,6 +151,13 @@ BEGIN
                PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), inParentId, inAmountDiscount);
             END IF;
 
+            -- в мастер записать итого сумма оплаты грн
+            PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), inParentId, SUM (COALESCE (_tmpCash.Amount,0) * COALESCE (_tmpCash.CurrencyValue,1)) )
+            FROM _tmpCash
+                FULL JOIN _tmpMI ON _tmpMI.CashId = _tmpCash.CashId
+                                AND _tmpMI.CurrencyId = _tmpCash.CurrencyId
+             ; 
+
      END IF;
 
 END;
@@ -152,4 +171,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpInsertUpdate_MI_GoodsAccount_Child(ioId := 0 , inMovementId := 8 , inGoodsId := 446 , inPartionId := 50 , inAmount := 4 , outOperPrice := 100 , ioCountForPrice := 1 ,  inSession := '2');
+-- select * from gpInsertUpdate_MI_GoodsAccount_Child(inMovementId := 35 , inParentId := 112 , inisPayTotal := 'False' , inisPayGRN := 'True' , inisPayUSD := 'False' , inisPayEUR := 'False' , inisPayCard := 'False' , inisDiscount := 'False' , inAmountGRN := 100 , inAmountUSD := 0 , inAmountEUR := 0 , inAmountCARD := 0 , inAmountDiscount := 0 ,  inSession := '2');

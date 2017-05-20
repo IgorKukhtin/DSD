@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PaidKindId Integer, PaidKindName TVarChar
              , Comment TVarChar
              , OrderIncomeId Integer, OrderIncomeName TVarChar
+             , isClosed Boolean
               )
 AS
 $BODY$
@@ -63,7 +64,7 @@ BEGIN
              , CAST ('' as TVarChar) 	                  AS Comment
              , 0                                          AS OrderIncomeId
              , CAST ('' as TVarChar) 	                  AS OrderIncomeName
-
+             , FALSE                                      AS isClosed
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
                LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = zc_Enum_Currency_Basis()
@@ -117,13 +118,17 @@ BEGIN
            , MovementString_Comment.ValueData       AS Comment
            , tmpMI.MovementId                       AS OrderIncomeId
            , zfCalc_PartionMovementName (Movement_OrderIncome.DescId, MovementDesc_OrderIncome.ItemName, Movement_OrderIncome.InvNumber, Movement_OrderIncome.OperDate) AS OrderIncomeName
-
+           , COALESCE (MovementBoolean_Closed.ValueData, false)::Boolean AS isClosed
        FROM Movement
             LEFT JOIN tmpMI ON 1 = 1
             LEFT JOIN Movement AS Movement_OrderIncome ON Movement_OrderIncome.Id = tmpMI.MovementId
             LEFT JOIN MovementDesc AS MovementDesc_OrderIncome ON MovementDesc_OrderIncome.Id = Movement_OrderIncome.DescId
             
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Closed
+                                      ON MovementBoolean_Closed.MovementId = Movement.Id
+                                     AND MovementBoolean_Closed.DescId = zc_MovementBoolean_Closed()
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId =  Movement.Id
@@ -190,6 +195,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 19.05.17         * add Closed
  25.07.16         * InvNumberPartner
  15.07.16         *                                                      
 */

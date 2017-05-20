@@ -225,6 +225,14 @@ object InvoiceJournalForm: TInvoiceJournalForm
         Options.Editing = False
         Width = 53
       end
+      object colisClose: TcxGridDBColumn
+        Caption = #1042#1099#1087#1086#1083#1085#1077#1085' '#1079#1072#1082#1072#1079
+        DataBinding.FieldName = 'isClosed'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object colInvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'.'
         DataBinding.FieldName = 'InvNumber'
@@ -580,6 +588,14 @@ object InvoiceJournalForm: TInvoiceJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbClose'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowErased'
         end
         item
@@ -669,6 +685,10 @@ object InvoiceJournalForm: TInvoiceJournalForm
     end
     object bbShowErased: TdxBarButton
       Action = actShowErased
+      Category = 0
+    end
+    object bbClose: TdxBarButton
+      Action = actClose
       Category = 0
     end
   end
@@ -1118,6 +1138,19 @@ object InvoiceJournalForm: TInvoiceJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actClose: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spisClose
+      StoredProcList = <
+        item
+          StoredProc = spisClose
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1086#1083#1085#1086#1089#1090#1100#1102' '#1086#1087#1083#1072#1095#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1086#1083#1085#1086#1089#1090#1100#1102' '#1086#1087#1083#1072#1095#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 58
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Invoice'
@@ -1425,5 +1458,31 @@ object InvoiceJournalForm: TInvoiceJournalForm
     PackSize = 1
     Left = 664
     Top = 64
+  end
+  object spisClose: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Close'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisClosed'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isClosed'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 488
+    Top = 161
   end
 end

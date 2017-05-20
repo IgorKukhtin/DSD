@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_GoodsAccount()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_GoodsAccount (Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_GoodsAccount (Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_GoodsAccount(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
@@ -11,16 +12,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_GoodsAccount(
     IN inSaleMI_Id              Integer   , -- строка док. продажи
     IN inisPay                  Boolean   , -- добавить с оплатой
     IN inAmount                 TFloat    , -- Количество
-   OUT outOperPrice             TFloat    , -- Цена
-   OUT outCountForPrice         TFloat    , -- Цена за количество
-   OUT outAmountSumm            TFloat    , -- Сумма расчетная
-   OUT outOperPriceList         TFloat    , -- Цена по прайсу
-   OUT outAmountPriceListSumm   TFloat    , -- Сумма по прайсу
-   OUT outCurrencyValue         TFloat    , -- 
-   OUT outParValue              TFloat    , -- 
-   OUT outSummChangePercent     TFloat    , -- 
+    IN inSummChangePercent      TFloat    , -- Сумма дополнительной Скидки (в ГРН)
    OUT outTotalPay              TFloat    , -- 
-   OUT outTotalSummPay          TFloat    , -- 
     IN inSession                TVarChar    -- сессия пользователя
 )                              
 RETURNS RECORD
@@ -60,45 +53,6 @@ BEGIN
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
      WHERE Movement.Id = inMovementId;
 
-     -- цена продажи из прайса 
-     outOperPriceList := COALESCE ((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem(vbOperDate, zc_PriceList_Basis(), inGoodsId) AS tmp), 0);
-
-     -- данные из партии : OperPrice и CountForPrice
-     SELECT COALESCE (Object_PartionGoods.CountForPrice,1)
-          , COALESCE (Object_PartionGoods.OperPrice,0)
-          , COALESCE (Object_PartionGoods.CurrencyId, zc_Currency_Basis())
-    INTO outCountForPrice, outOperPrice, vbCurrencyId
-     FROM Object_PartionGoods
-     WHERE Object_PartionGoods.MovementItemId = inPartionId;
-     
-    IF vbCurrencyId <> zc_Currency_Basis() THEN
-        SELECT COALESCE (tmp.Amount,1) , COALESCE (tmp.ParValue,0)
-       INTO outCurrencyValue, outParValue
-        FROM lfSelect_Movement_Currency_byDate (inOperDate:= vbOperDate, inCurrencyFromId:= zc_Currency_Basis(), inCurrencyToId:= vbCurrencyId ) AS tmp;
-    END IF;
-    outCurrencyValue := COALESCE(outCurrencyValue,1);
-    outParValue      := COALESCE(outParValue,0);
-
-    -- определяем скидку
-  /*  SELECT tmp.ChangePercent, tmp.DiscountGoodsAccountKindId, tmp.DiscountGoodsAccountKindName
-   INTO outChangePercent, vbDiscountGoodsAccountKindId, outDiscountGoodsAccountKindName
-    FROM zfSelect_DiscountGoodsAccountKind (vbOperDate, vbUnitId, inGoodsId, vbClientId, vbUserId) AS tmp;
-*/
-     -- расчитали сумму по элементу, для грида
-     outAmountSumm := CASE WHEN outCountForPrice > 0
-                                THEN CAST (inAmount * outOperPrice / outCountForPrice AS NUMERIC (16, 2))
-                           ELSE CAST (inAmount * outOperPrice AS NUMERIC (16, 2))
-                      END;
-     -- расчитали сумму по прайсу по элементу, для грида
-     outAmountPriceListSumm := CASE WHEN outCountForPrice > 0
-                                         THEN CAST (inAmount * outOperPriceList / outCountForPrice AS NUMERIC (16, 2))
-                                    ELSE CAST (inAmount * outOperPriceList AS NUMERIC (16, 2))
-                               END;
-
-     --outTotalChangePercent := outAmountPriceListSumm / 100 * COALESCE(outChangePercent,0) + COALESCE(inSummChangePercent,0) ;
-
-     outTotalSummPay := COALESCE(outAmountPriceListSumm,0) - COALESCE(outTotalChangePercent,0) ;
-
      -- сохранили
      ioId:= lpInsertUpdate_MovementItem_GoodsAccount   (ioId                 := ioId
                                                       , inMovementId         := inMovementId
@@ -107,13 +61,25 @@ BEGIN
                                                       , inPartionMI_Id       := COALESCE(inPartionMI_Id,0)
                                                       , inSaleMI_Id          := COALESCE(inSaleMI_Id,0)
                                                       , inAmount             := inAmount
-                                                      , inSummChangePercent     := COALESCE(outSummChangePercent,0)    ::TFloat     
-                                                      , inTotalPay              := COALESCE(outTotalPay,0)              ::TFloat              
-                                                      , inUserId                := vbUserId
-                                               );
+                                                      , inSummChangePercent  := inSummChangePercent  
+                                                      , inUserId             := vbUserId
+                                                     );
 
     IF inisPay THEN
-       
+        -- сохранили оплату
+       /*     PERFORM lpInsertUpdate_MI_GoodsAccount_Child  (ioId             := COALESCE (_tmpMI.Id,0)
+                                                     , inMovementId         := inMovementId
+                                                     , inParentId           := inParentId
+                                                     , inCashId             := COALESCE (_tmpCash.CashId, _tmpMI.CashId)
+                                                     , inCurrencyId         := COALESCE (_tmpCash.CurrencyId, _tmpMI.CurrencyId)
+                                                     , inCashId_Exc         := Null
+                                                     , inAmount             := COALESCE (_tmpCash.Amount,0)
+                                                     , inCurrencyValue      := COALESCE (_tmpCash.CurrencyValue,1)
+                                                     , inParValue           := COALESCE (_tmpCash.ParValue,0)
+                                                     , inUserId             := vbUserId
+                                                      )
+             FROM _tmpCash
+*/
     END IF;
 
 

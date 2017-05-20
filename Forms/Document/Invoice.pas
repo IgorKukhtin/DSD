@@ -172,6 +172,10 @@ type
     actUpdateAsset_toGoods: TOpenChoiceForm;
     bbUpdateAsset_toGoods: TdxBarButton;
     AssetCode: TcxGridDBColumn;
+    spisClosed: TdsdStoredProc;
+    edisClosed: TcxCheckBox;
+    actClosed: TdsdExecStoredProc;
+    bbClosed: TdxBarButton;
   private
   public
   end;

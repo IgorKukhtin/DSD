@@ -159,6 +159,8 @@ type
     colPartionMI_Id: TcxGridDBColumn;
     colSaleMI_Id: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
+    colOperDate_Sale: TcxGridDBColumn;
+    colInvNumber_Sale_Full: TcxGridDBColumn;
   private
   public
   end;

@@ -7,6 +7,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, Boolean, Boolean, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
@@ -22,6 +23,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inIsClose             Boolean   ,    -- Код закрыт
     IN inTOP                 Boolean   ,    -- ТОП - позиция
     IN inPercentMarkup	     TFloat    ,    -- % наценки
+    IN inMorionCode          Integer   ,    -- Код Мориона
+    IN inBarCode             TVarChar  ,    -- Штрих-код производителя
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS Integer
@@ -32,15 +35,15 @@ $BODY$
    DECLARE vbObjectId Integer;
    DECLARE vbCode Integer;
    DECLARE vbMainGoodsId Integer;
+   DECLARE vbMorionGoodsId Integer;
+   DECLARE vbBarCodeGoodsId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_...());
      vbUserId:= lpGetUserBySession (inSession);
 
-
      -- определяется <Торговая сеть>
      vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
-
 
      -- проверка <inName>
      IF TRIM (COALESCE (inName, '')) = '' THEN
@@ -105,22 +108,22 @@ BEGIN
 
 
      -- !!!временно!!! - для сквозной синхронизации!!! со "всеми" Retail.Id (а не только vbObjectId)
-    PERFORM lpInsertUpdate_Object_Goods_Retail (ioId            := COALESCE (tmpGoods.GoodsId, ioId)
-                                              , inCode          := CASE WHEN ioId <> 0 THEN inCode ELSE vbCode :: TVarChar END
-                                              , inName          := inName
-                                              , inGoodsGroupId  := inGoodsGroupId
-                                              , inMeasureId     := inMeasureId
-                                              , inNDSKindId     := inNDSKindId
-                                              , inMinimumLot    := inMinimumLot
-                                              , inReferCode     := inReferCode
-                                              , inReferPrice    := inReferPrice
-                                              , inPrice         := inPrice
-                                              , inIsClose       := inIsClose
-                                              , inTOP           := inTOP
-                                              , inPercentMarkup	:= inPercentMarkup
-                                              , inObjectId      := Object_Retail.Id
-                                              , inUserId        := vbUserId
-                                               )
+     PERFORM lpInsertUpdate_Object_Goods_Retail (ioId            := COALESCE (tmpGoods.GoodsId, ioId)
+                                               , inCode          := CASE WHEN ioId <> 0 THEN inCode ELSE vbCode :: TVarChar END
+                                               , inName          := inName
+                                               , inGoodsGroupId  := inGoodsGroupId
+                                               , inMeasureId     := inMeasureId
+                                               , inNDSKindId     := inNDSKindId
+                                               , inMinimumLot    := inMinimumLot
+                                               , inReferCode     := inReferCode
+                                               , inReferPrice    := inReferPrice
+                                               , inPrice         := inPrice
+                                               , inIsClose       := inIsClose
+                                               , inTOP           := inTOP
+                                               , inPercentMarkup := inPercentMarkup
+                                               , inObjectId      := Object_Retail.Id
+                                               , inUserId        := vbUserId
+                                                )
      FROM Object AS Object_Retail
           LEFT JOIN (SELECT DISTINCT
                             COALESCE (ObjectLink_LinkGoods_Goods_find.ChildObjectId, Object_Goods.Id) AS GoodsId
@@ -166,14 +169,63 @@ BEGIN
      WHERE Object_Retail.DescId = zc_Object_Retail();
 
 
+     IF COALESCE (inMorionCode, 0) > 0 
+     THEN
+          -- Устанавливаем связь с кодом Мариона
+
+          SELECT Id INTO vbMorionGoodsId
+          FROM Object_Goods_View 
+          WHERE ObjectId = zc_Enum_GlobalConst_Marion() 
+            AND GoodsCodeInt = inMorionCode;
+
+          IF COALESCE (vbMorionGoodsId, 0) = 0 
+          THEN
+                -- Создаем общие коды, которых еще нет
+               vbMorionGoodsId:= lpInsertUpdate_Object (0, zc_Object_Goods(), inMorionCode, inName);
+               PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Object(), vbMorionGoodsId, zc_Enum_GlobalConst_Marion());
+          END IF;       
+                
+          IF NOT EXISTS (SELECT 1 FROM Object_LinkGoods_View 
+                         WHERE ObjectId = zc_Enum_GlobalConst_Marion() 
+                           AND GoodsId = vbMorionGoodsId 
+                           AND GoodsMainId = vbMainGoodsId) 
+          THEN
+               PERFORM gpInsertUpdate_Object_LinkGoods (0, vbMainGoodsId, vbMorionGoodsId, inSession);
+          END IF;     
+     END IF;          
+
+     IF COALESCE (inBarCode, '') <> '' 
+     THEN
+          -- Устанавливаем связь со штрих-кодом
+     
+          SELECT Id INTO vbBarCodeGoodsId
+          FROM Object_Goods_View 
+          WHERE ObjectId = zc_Enum_GlobalConst_BarCode() 
+            AND GoodsName = vbBarCode;
+
+          IF COALESCE (vbBarCodeGoodsId, 0) = 0 
+          THEN
+               -- Создаем штрих коды, которых еще нет
+               vbBarCodeGoodsId:= lpInsertUpdate_Object(0, zc_Object_Goods(), 0, vbBarCode);
+               PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Object(), vbBarCodeGoodsId, zc_Enum_GlobalConst_BarCode());
+          END IF;       
+
+          IF NOT EXISTS (SELECT 1 FROM Object_LinkGoods_View 
+                         WHERE ObjectId = zc_Enum_GlobalConst_BarCode() 
+                           AND GoodsId = vbBarCodeGoodsId 
+                           AND GoodsMainId = vbMainGoodsId) 
+          THEN
+               PERFORM gpInsertUpdate_Object_LinkGoods(0, vbMainGoodsId, vbBarCodeGoodsId, inSession);
+          END IF;     
+      END IF;          
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, TVarChar) OWNER TO postgres;
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
+ 19.05.17                                                       * MorionCode, BarCode
  25.03.16                                        *
  10.06.15                        *
  23.03.15                        *
