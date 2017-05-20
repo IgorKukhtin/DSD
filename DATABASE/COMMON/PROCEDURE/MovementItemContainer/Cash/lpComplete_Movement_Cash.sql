@@ -62,7 +62,7 @@ BEGIN
      DELETE FROM _tmpItem;
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm
+     INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm, OperSumm_Currency
                          , MovementItemId, ContainerId
                          , AccountGroupId, AccountDirectionId, AccountId
                          , ProfitLossGroupId, ProfitLossDirectionId
@@ -79,6 +79,7 @@ BEGIN
              , COALESCE (MovementItem.ObjectId, 0) AS ObjectId
              , COALESCE (Object.DescId, 0) AS ObjectDescId
              , MovementItem.Amount AS OperSumm
+             , COALESCE (MovementFloat_AmountCurrency.ValueData, 0) AS OperSumm_Currency
              , MovementItem.Id AS MovementItemId
 
              , 0 AS ContainerId                                                     -- сформируем позже
@@ -128,6 +129,9 @@ BEGIN
         FROM Movement
              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
+             LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
+                                     ON MovementFloat_AmountCurrency.MovementId = Movement.Id
+                                    AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
              LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                               ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                              AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
@@ -170,7 +174,7 @@ BEGIN
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      WITH tmpMI_Child AS (SELECT MI.* FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Child() AND MI.isErased = FALSE)
-     INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm
+     INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm, OperSumm_Currency
                          , MovementItemId, ContainerId
                          , AccountGroupId, AccountDirectionId, AccountId
                          , ProfitLossGroupId, ProfitLossDirectionId
@@ -179,6 +183,7 @@ BEGIN
                          , UnitId, PositionId, PersonalServiceListId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
                          , PartionMovementId
                          , AnalyzerId
+                         , CurrencyId
                          , IsActive, IsMaster
                           )
         SELECT _tmpItem.MovementDescId
@@ -186,11 +191,15 @@ BEGIN
              , COALESCE (MI_Child.ObjectId, COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, COALESCE (MILinkObject_MoneyPlace.ObjectId, 0))) AS ObjectId
              , COALESCE (Object.DescId, 0)                        AS ObjectDescId
              , COALESCE (MI_Child.Amount, -1 * _tmpItem.OperSumm) AS OperSumm
+             , CASE WHEN Object.DescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND COALESCE (MILinkObject_CurrencyPartner.ObjectId, zc_Enum_Currency_Basis()) <> zc_Enum_Currency_Basis()
+                         THEN -1 * _tmpItem.OperSumm_Currency
+                    ELSE 0
+               END AS OperSumm_Currency
              , COALESCE (MI_Child.Id, _tmpItem.MovementItemId)    AS MovementItemId
 
              , 0 AS ContainerId                                               -- сформируем позже
              , 0 AS AccountGroupId, 0 AS AccountDirectionId                   -- сформируем позже
-             , CASE WHEN Object.DescId IN (zc_Object_Cash())
+             , CASE WHEN Object.DescId IN (zc_Object_Cash()) AND _tmpItem.ObjectId <> COALESCE (MILinkObject_MoneyPlace.ObjectId, 0)
                          THEN zc_Enum_Account_110201() -- Транзит + деньги в пути
                     WHEN Object.DescId IN (zc_Object_BankAccount())
                          THEN zc_Enum_Account_110301() -- Транзит + расчетный счет
@@ -264,6 +273,9 @@ BEGIN
                     ELSE 0
                END AS AnalyzerId
 
+               -- Валюта
+             , COALESCE (MILinkObject_CurrencyPartner.ObjectId, zc_Enum_Currency_Basis()) AS CurrencyId
+
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
         FROM _tmpItem
@@ -295,6 +307,10 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
                                               ON MILinkObject_Position.MovementItemId = COALESCE (MI_Child.Id, _tmpItem.MovementItemId)
                                              AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_CurrencyPartner
+                                              ON MILinkObject_CurrencyPartner.MovementItemId = _tmpItem.MovementItemId
+                                             AND MILinkObject_CurrencyPartner.DescId = zc_MILinkObject_CurrencyPartner()
 
              /*LEFT JOIN ObjectLink AS ObjectLink_MoneyPlace_Branch ON ObjectLink_MoneyPlace_Branch.ObjectId = MILinkObject_MoneyPlace.ObjectId
                                                                  AND ObjectLink_MoneyPlace_Branch.DescId = zc_ObjectLink_Unit_Branch() -- !!!не ошибка!!!*/
