@@ -106,6 +106,7 @@ type
     cxLabel5: TcxLabel;
     edJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
+    isClosed: TcxGridDBColumn;
   private
   public
   end;

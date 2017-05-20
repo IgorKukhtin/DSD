@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_Invoice_Choice (TDateTime, TDateTime, 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Invoice_Choice(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
-    IN inJuridicalId   Integer  , 
+    IN inJuridicalId   Integer  ,
     IN inIsErased      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , Comment TVarChar
+             , isClosed Boolean
               )
 AS
 $BODY$
@@ -30,7 +31,7 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Invoice());
      vbUserId:= lpGetUserBySession (inSession);
      IF COALESCE (inJuridicalId,0) <>0 THEN
-         inJuridicalId:= (SELECT CASE WHEN Object.DescId <> zc_Object_Juridical() THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE inJuridicalId END  
+         inJuridicalId:= (SELECT CASE WHEN Object.DescId <> zc_Object_Juridical() THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE inJuridicalId END
                           FROM Object
                               LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                 ON ObjectLink_Partner_Juridical.ObjectId = Object.Id
@@ -38,14 +39,15 @@ BEGIN
                           WHERE Object.Id = inJuridicalId);
      END IF;
 
+
+     -- Результат
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
         , tmpUserAdmin AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
-
-
+       -- Результат
        SELECT
              Movement.Id                            AS Id
            , Movement.InvNumber                     AS InvNumber
@@ -54,10 +56,10 @@ BEGIN
            , Object_Status.ValueData                AS StatusName
            , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
            , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName, COALESCE (MovementString_InvNumberPartner.ValueData,'')||'/'||Movement.InvNumber, Movement.OperDate) AS InvNumber_Full
-           
+
            , MovementDate_Insert.ValueData          AS InsertDate
            , Object_Insert.ValueData                AS InsertName
-           
+
            , MovementFloat_TotalCount.ValueData     AS TotalCount
 
            , MovementFloat_TotalSummMVAT.ValueData  AS TotalSummMVAT
@@ -84,6 +86,7 @@ BEGIN
            , Object_PaidKind.ValueData              AS PaidKindName
 
            , MovementString_Comment.ValueData       AS Comment
+           , COALESCE (MovementBoolean_Closed.ValueData, FALSE) :: Boolean AS isClosed
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -94,7 +97,10 @@ BEGIN
             LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-            
+            LEFT JOIN MovementBoolean AS MovementBoolean_Closed
+                                      ON MovementBoolean_Closed.MovementId = Movement.Id
+                                     AND MovementBoolean_Closed.DescId = zc_MovementBoolean_Closed()
+
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId =  Movement.Id
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -106,9 +112,9 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MLO_Insert
                                          ON MLO_Insert.MovementId = Movement.Id
                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
-            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
-            LEFT JOIN MovementString AS MovementString_Comment 
+            LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 

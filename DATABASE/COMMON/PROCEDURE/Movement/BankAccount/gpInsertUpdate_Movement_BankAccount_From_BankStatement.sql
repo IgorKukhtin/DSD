@@ -15,7 +15,7 @@ BEGIN
 
 
      -- проверка
-     IF EXISTS (SELECT 1
+     /*IF EXISTS (SELECT 1
                 FROM Movement
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_InfoMoney
                                                   ON MovementLinkObject_InfoMoney.MovementId = Movement.Id
@@ -47,7 +47,7 @@ BEGIN
                   AND MLM_Invoice.MovementChildId IS NULL
                 LIMIT 1
                ));
-     END IF;
+     END IF;*/
 
      -- распроводим Документы
      IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_UnComplete_BankAccount())

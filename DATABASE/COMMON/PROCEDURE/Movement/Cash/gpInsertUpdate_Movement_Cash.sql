@@ -53,6 +53,18 @@ BEGIN
      END IF;
 
 
+     -- проверка
+     IF COALESCE (inMovementId_Invoice, 0) = 0 AND EXISTS (SELECT 1 FROM Object_InfoMoney_View AS View_InfoMoney WHERE View_InfoMoney.InfoMoneyId = inInfoMoneyId AND View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()) -- Инвестиции
+     THEN
+        RAISE EXCEPTION 'Ошибка.Для УП статьи <%> необходимо заполнить значение <№ док. Счет>.', lfGet_Object_ValueData (inInfoMoneyId);
+     END IF;
+     -- проверка что счет НЕ оплачен
+     IF COALESCE (ioId, 0) = 0 AND EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId_Invoice AND MB.DescId = zc_MovementBoolean_Closed() AND MB.ValueData = TRUE)
+     THEN
+        RAISE EXCEPTION 'Ошибка.Счет № <%> от <%> уже полность оплачен.Выберите другой.', (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId_Invoice), DATE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId_Invoice));
+     END IF;
+
+
      -- 1. если  update
      IF ioId > 0 AND vbUserId = lpCheckRight (inSession, zc_Enum_Process_UnComplete_Cash())
      THEN
@@ -77,6 +89,11 @@ BEGIN
      IF inCurrencyId = zc_Enum_Currency_Basis() AND inAmountSumm <> 0
      THEN
          RAISE EXCEPTION 'Ошибка.Значение <Валюта> для суммы обмена не определено.';
+     END IF;
+     -- проверка
+     IF inAmountSumm < 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Значение <Cумма грн, обмен> не определено.';
      END IF;
 
      -- курса для баланса и Клиента - почти НЕТ расчета
@@ -105,7 +122,12 @@ BEGIN
 
             -- Замена
             inContractId  := 0;
-            inInfoMoneyId := zc_Enm_InfoMoney_41001(); -- Покупка/продажа валюты
+            inInfoMoneyId := zc_Enum_InfoMoney_41001(); -- Покупка/продажа валюты
+
+         /*ELSEIF EXISTS (SELECT 1 FROM Object WHERE Object.Id = inMoneyPlaceId AND Object.DescId = zc_Object_Cash())
+         THEN
+            -- Замена - расчет по курсу
+            inAmountSumm  := inCurrencyPartnerValue * (inAmountIn + inAmountOut) / inParPartnerValue;*/
 
          END IF;
 

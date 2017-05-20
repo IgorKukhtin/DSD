@@ -47,10 +47,10 @@ BEGIN
            , Object_Status.ObjectCode               AS StatusCode
            , Object_Status.ValueData                AS StatusName
            , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
-           
+
            , MovementDate_Insert.ValueData          AS InsertDate
            , Object_Insert.ValueData                AS InsertName
-           
+
            , MovementFloat_TotalCount.ValueData     AS TotalCount
 
            , MovementFloat_TotalSummMVAT.ValueData  AS TotalSummMVAT
@@ -77,8 +77,8 @@ BEGIN
            , Object_PaidKind.ValueData              AS PaidKindName
 
            , MovementString_Comment.ValueData       AS Comment
-
            , COALESCE (MovementBoolean_Closed.ValueData, FALSE) :: Boolean AS isClosed
+
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Invoice() AND Movement.StatusId = tmpStatus.StatusId
@@ -91,7 +91,7 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Closed
                                       ON MovementBoolean_Closed.MovementId = Movement.Id
                                      AND MovementBoolean_Closed.DescId = zc_MovementBoolean_Closed()
-                        
+
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId =  Movement.Id
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -103,9 +103,9 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MLO_Insert
                                          ON MLO_Insert.MovementId = Movement.Id
                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
-            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
-            LEFT JOIN MovementString AS MovementString_Comment 
+            LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
@@ -174,4 +174,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Invoice (inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Invoice (inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inIsErased := FALSE, inJuridicalBasisId:= 0, inSession:= '2')

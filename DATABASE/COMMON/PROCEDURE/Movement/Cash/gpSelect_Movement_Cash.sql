@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , AmountIn TFloat
              , AmountOut TFloat
-             , AmountCurrency TFloat
+             , AmountCurrency TFloat, AmountSumm TFloat
              , ServiceDate TDateTime
              , Comment TVarChar
              , CashName TVarChar
@@ -120,6 +120,9 @@ BEGIN
                   ELSE 0
              END::TFloat AS AmountOut
            , MovementFloat_AmountCurrency.ValueData AS AmountCurrency
+           , CASE WHEN MovementFloat_AmountSumm.ValueData <> 0 THEN MovementFloat_AmountSumm.ValueData * CASE WHEN MovementItem.Amount < 0 THEN 1 ELSE -1 END
+                  WHEN ObjectDesc.Id = zc_Object_Cash() AND Object_Currency.Id <> zc_Enum_Currency_Basis() THEN -1 * MovementItem.Amount -- !!!с обратным знаком!!!
+             END :: TFloat AS AmountSumm
            , MIDate_ServiceDate.ValueData      AS ServiceDate
            , MIString_Comment.ValueData        AS Comment
            , Object_Cash.ValueData             AS CashName
@@ -279,6 +282,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
                                     ON MovementFloat_AmountCurrency.MovementId = tmpMovement.Id
                                    AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
+            LEFT JOIN MovementFloat AS MovementFloat_AmountSumm
+                                    ON MovementFloat_AmountSumm.MovementId = tmpMovement.Id
+                                   AND MovementFloat_AmountSumm.DescId = zc_MovementFloat_Amount()
+                                   
 
             LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
                                     ON MovementFloat_CurrencyValue.MovementId = tmpMovement.Id

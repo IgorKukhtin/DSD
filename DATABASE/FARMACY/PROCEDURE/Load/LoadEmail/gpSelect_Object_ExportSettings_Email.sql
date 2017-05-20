@@ -24,10 +24,15 @@ RETURNS TABLE (EmailId          Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   
+   DECLARE vbIsUkrNet Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
    vbUserId:= lpGetUserBySession (inSession);
+
+   -- временно
+   vbIsUkrNet:= EXISTS (select 1 from Object WHERE Id = vbUserId AND ObjectCode < 0);
 
 
    -- Результат
@@ -44,11 +49,12 @@ BEGIN
           , gpGet_Host.EmailKindId
           , gpGet_Host.EmailKindName
 
-          , gpGet_Host.Value      AS Host
-          , gpGet_Port.Value      AS Port
-          , gpGet_User.Value      AS UserName
-          , gpGet_Password.Value  AS PasswordValue
-          , gpGet_Mail.Value      AS MailFrom
+          , case when vbIsUkrNet = TRUE THEN 'smtp.ukr.net'          ELSE gpGet_Host.Value     END :: TVarChar AS Host
+          , case when vbIsUkrNet = TRUE THEN '465'                   ELSE gpGet_Port.Value     END :: TVarChar AS Port
+          , case when vbIsUkrNet = TRUE THEN 'zakaz_neboley@ukr.net' ELSE gpGet_User.Value     END :: TVarChar AS UserName
+          , case when vbIsUkrNet = TRUE THEN 'neboley2000'           ELSE gpGet_Password.Value END :: TVarChar AS PasswordValue
+          , case when vbIsUkrNet = TRUE THEN 'zakaz_neboley@ukr.net' ELSE gpGet_Mail.Value     END :: TVarChar AS MailFrom
+          
           , CASE WHEN tmp.Num = 1 THEN 'ashtu777@ua.fm' WHEN tmp.Num = 2 THEN COALESCE (ObjectString_ErrorTo.ValueData, 'pravda_6@i.ua') ELSE 'price@neboley.dp.ua' END :: TVarChar AS MailTo
 
           , CASE WHEN gpSelect.EmailKindId = zc_Enum_EmailKind_IncomeMMO()
@@ -103,3 +109,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Object_ExportSettings_Email (inObjectId:= 2367578, inContactPersonId:= 2324911, inByDate:= CURRENT_TIMESTAMP, inByMail:= 'info-fk.dp@framco.com.ua', inByFileName:= '', inSession:= zfCalc_UserAdmin()) order by 3
 -- SELECT * FROM gpSelect_Object_ExportSettings_Email (inObjectId:= 2367552, inContactPersonId:= 2324488, inByDate:= CURRENT_TIMESTAMP, inByMail:= 'info-fk.dp@framco.com.ua', inByFileName:= '', inSession:= zfCalc_UserAdmin()) order by 3
+-- SELECT * FROM gpSelect_Object_ExportSettings_Email (inObjectId:= 2357054, inContactPersonId:= 2325575, inByDate:= CURRENT_TIMESTAMP, inByMail:= 'info-fk.dp@framco.com.ua', inByFileName:= '', inSession:= zfCalc_UserAdmin()) order by 3

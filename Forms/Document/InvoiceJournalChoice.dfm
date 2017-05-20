@@ -227,6 +227,14 @@ object InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
         Options.Editing = False
         Width = 53
       end
+      object isClosed: TcxGridDBColumn
+        Caption = #1055#1086#1083#1085#1086#1089#1090#1100#1102' '#1086#1087#1083#1072#1095#1077#1085
+        DataBinding.FieldName = 'isClosed'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
       object colInvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'.'
         DataBinding.FieldName = 'InvNumber'
