@@ -71,6 +71,7 @@ BEGIN
                          , UnitId, PositionId, PersonalServiceListId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
                          , PartionMovementId
                          , AnalyzerId
+                         , CurrencyId
                          , IsActive, IsMaster
                           )
         SELECT Movement.DescId
@@ -117,6 +118,10 @@ BEGIN
              , 0 PartionMovementId -- не используется
 
              , 0 AS AnalyzerId
+
+               -- Валюта
+             , COALESCE (MILinkObject_Currency.ObjectId, zc_Enum_Currency_Basis()) AS CurrencyId
+
              , CASE WHEN MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END AS IsActive
              , TRUE AS IsMaster
 
@@ -126,6 +131,9 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                               ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                              AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
+                                              ON MILinkObject_Currency.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
 
              LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
              LEFT JOIN ObjectLink AS ObjectLink_Cash_JuridicalBasis ON ObjectLink_Cash_JuridicalBasis.ObjectId = MovementItem.ObjectId

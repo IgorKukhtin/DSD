@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS lpComplete_Movement_BankAccount (Integer, Integer);
 CREATE OR REPLACE FUNCTION lpComplete_Movement_BankAccount(
     IN inMovementId        Integer  , -- ключ Документа
     IN inUserId            Integer    -- Пользователь
-)                              
+)
 RETURNS VOID
 AS
 $BODY$
@@ -101,9 +101,9 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                               ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                              AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
-                                             ON MILinkObject_Currency.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
+                                              ON MILinkObject_Currency.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
 
              LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
              LEFT JOIN ObjectLink AS BankAccount_Juridical ON BankAccount_Juridical.ObjectId = MovementItem.ObjectId
@@ -120,7 +120,7 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.В документе не определен расчетный счет.Проведение невозможно.';
      END IF;
-   
+
      -- проверка
      IF EXISTS (SELECT _tmpItem.JuridicalId_Basis FROM _tmpItem WHERE _tmpItem.JuridicalId_Basis = 0)
      THEN
@@ -180,7 +180,7 @@ BEGIN
                          THEN 0
                     ELSE -1 * _tmpItem.OperSumm + 1 * /*CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END*/ CAST (CASE WHEN MovementFloat_ParPartnerValue.ValueData <> 0 THEN _tmpItem.OperSumm_Currency * MovementFloat_CurrencyPartnerValue.ValueData / MovementFloat_ParPartnerValue.ValueData ELSE 0 END AS NUMERIC (16, 2))
                END AS OperSumm_Diff
- 
+
              , COALESCE (MI_Child.Id, _tmpItem.MovementItemId) AS MovementItemId
 
              , 0 AS ContainerId                                               -- сформируем позже
