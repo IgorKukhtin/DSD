@@ -33,17 +33,11 @@ RETURNS record as--Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 
-   DECLARE vbCurrencyId_move   Integer;    -- Валюта для обмена
-
    DECLARE vbAmount TFloat;
    DECLARE vbAmountIn TFloat;
    DECLARE vbAmountOut TFloat;
    DECLARE vbAmountCurrency TFloat;
 BEGIN
-
-     -- !!!ВРЕМЕННО!!!
-     vbCurrencyId_move:= zc_Enum_Currency_Basis();
-
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
 
@@ -80,12 +74,12 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Значение <Валюта> не определено.';
      END IF;
      -- проверка
-     IF (COALESCE (vbCurrencyId_move, 0) = 0 OR vbCurrencyId_move = inCurrencyId) AND inAmountSumm <> 0
+     IF inCurrencyId = zc_Enum_Currency_Basis() AND inAmountSumm <> 0
      THEN
          RAISE EXCEPTION 'Ошибка.Значение <Валюта> для суммы обмена не определено.';
      END IF;
 
-     -- НЕТ расчета курса для баланса
+     -- курса для баланса и Клиента - почти НЕТ расчета
      IF inCurrencyId <> zc_Enum_Currency_Basis()
      THEN
          -- проверка
@@ -98,7 +92,22 @@ BEGIN
          inParPartnerValue:= CASE WHEN inParPartnerValue > 0 THEN inParPartnerValue ELSE 1 END;
 
          -- если обмен
-         IF inAmountSumm <> 0 AND
+         IF inAmountSumm <> 0 OR EXISTS (SELECT 1 FROM Object WHERE Object.Id = inMoneyPlaceId AND Object.DescId = zc_Object_Cash())
+         THEN
+            -- Замена - курс - расчет
+            inCurrencyPartnerValue:= CASE WHEN inAmountSumm > 0 THEN inAmountSumm / (inAmountIn + inAmountOut) ELSE inCurrencyPartnerValue END;
+            --
+            IF NOT EXISTS (SELECT 1 FROM Object WHERE Object.Id = inMoneyPlaceId AND Object.DescId = zc_Object_Cash())
+            THEN
+                -- Замена
+                inMoneyPlaceId:= inCashId;
+            END IF;
+
+            -- Замена
+            inContractId  := 0;
+            inInfoMoneyId := zc_Enm_InfoMoney_41001(); -- Покупка/продажа валюты
+
+         END IF;
 
           -- !!!определяется ТАК значение!!!
           outCurrencyValue      := inCurrencyPartnerValue;
@@ -118,8 +127,8 @@ BEGIN
         THEN
              -- запишем оригинал - сумму в валюте
              vbAmountCurrency := inAmountIn;
-             -- сумму в ГРН - посчитаем
-             vbAmount         := CAST (inAmountIn * outCurrencyValue / outParValue AS NUMERIC (16, 2));
+             -- сумму в ГРН - посчитаем - кроме обмена
+             vbAmount         := CASE WHEN inAmountSumm > 0 THEN inAmountSumm ELSE CAST (inAmountIn * outCurrencyValue / outParValue AS NUMERIC (16, 2)) END;
              -- это значение в ГРН - сохраним
              vbAmountIn       := vbAmount;
 
@@ -133,8 +142,8 @@ BEGIN
         THEN
              -- запишем оригинал - сумму в валюте
              vbAmountCurrency := -1 * inAmountOut;
-             -- сумму в ГРН - посчитаем
-             vbAmount         := -1 * CAST (inAmountOut * outCurrencyValue / outParValue AS NUMERIC (16, 2));
+             -- сумму в ГРН - посчитаем - кроме обмена
+             vbAmount         := -1 * CASE WHEN inAmountSumm > 0 THEN inAmountSumm ELSE CAST (inAmountOut * outCurrencyValue / outParValue AS NUMERIC (16, 2)) END;
              -- это значение в ГРН - сохраним
              vbAmountOut      := ABS (vbAmount);
 

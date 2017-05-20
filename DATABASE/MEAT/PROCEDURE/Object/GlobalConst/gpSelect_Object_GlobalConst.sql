@@ -19,6 +19,24 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- если Кто - то запустил эти отчеты - отключим его :)
+     IF EXISTS (SELECT 1
+                FROM gpSelect_Object_ReportExternal (inSession:= zfCalc_UserAdmin()) AS gpSelect
+                     JOIN pg_stat_activity AS pg_PROC ON pg_PROC.state = 'active' AND pg_PROC.query_start < CURRENT_TIMESTAMP - INTERVAL '1 MIN'
+                                                     AND LOWER (pg_PROC.query) LIKE LOWER ('%' || gpSelect.Name ||'%')
+               )
+        -- AND inSession = zfCalc_UserAdmin()
+
+     THEN -- !!! ОТКЛЮЧИЛИ !!!
+          PERFORM pg_cancel_backend (tmp.pId)
+          FROM (SELECT pg_PROC.pId
+                FROM gpSelect_Object_ReportExternal (inSession:= zfCalc_UserAdmin()) AS gpSelect
+                     JOIN pg_stat_activity AS pg_PROC ON pg_PROC.state = 'active' AND pg_PROC.query_start < CURRENT_TIMESTAMP - INTERVAL '1 MIN'
+                                                     AND LOWER (pg_PROC.query) LIKE LOWER ('%' || gpSelect.Name ||'%')
+               ) AS tmp;
+     END IF;
+
+
      -- если Пользователь "на связи" запишем что он "Работает"
      PERFORM lpInsert_LoginProtocol (inUserLogin  := (SELECT Object.ValueData FROM Object WHERE Object.Id = vbUserId)
                                    , inIP         := inIP
@@ -60,7 +78,7 @@ BEGIN
          WHERE tmp.Id_find_arc > 0 OR tmp.Id_find > 0
          ORDER BY tmp.OperDate
          LIMIT 1;
-                        
+
          --
          --
          UPDATE Object SET ValueData = COALESCE (vbValueData_new, 'Актуальность 100 %')
@@ -72,7 +90,7 @@ BEGIN
            AND ObjectDate.DescId = zc_ObjectDate_GlobalConst_ActualBankStatement();
      END IF;
 
-     RETURN QUERY 
+     RETURN QUERY
        WITH tmpProcess AS (SELECT * FROM pg_stat_activity WHERE state = 'active' /*and UseName = 'postgres'*/)
           , tmpProcess_All AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess)
           , tmpProcess_HistoryCost AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query LIKE '%gpInsertUpdate_HistoryCost%' OR query LIKE '%gpComplete_All_Sybase%')
@@ -94,7 +112,7 @@ BEGIN
               END :: TDateTime AS OperDate
             , CASE WHEN Object_GlobalConst.Id = zc_Enum_GlobalConst_PeriodClosePlan()
                         THEN 'План закрытия периода за ' || zfCalc_MonthName (ActualBankStatement.ValueData - INTERVAL '1 MONTH') || ' :'
-                        
+
                    WHEN Object_GlobalConst.Id = 418996 -- актуальность данных Integer
                         THEN 'Кол-во АП = <' || COALESCE ((SELECT Res FROM tmpProcess_All), '0') || '> из которых :'
 
@@ -142,7 +160,7 @@ BEGIN
               END :: TVarChar AS ValueText
             , ObjectString.ValueData AS EnumName
        FROM Object AS Object_GlobalConst
-            LEFT JOIN ObjectDate AS ActualBankStatement 
+            LEFT JOIN ObjectDate AS ActualBankStatement
                                  ON ActualBankStatement.DescId = zc_ObjectDate_GlobalConst_ActualBankStatement()
                                 AND ActualBankStatement.ObjectId = Object_GlobalConst.Id
             LEFT JOIN ObjectString ON ObjectString.ObjectId = Object_GlobalConst.Id
@@ -152,7 +170,7 @@ BEGIN
          AND Object_GlobalConst.Id NOT IN (zc_Enum_GlobalConst_ConnectParam(), zc_Enum_GlobalConst_ConnectReportParam())
        ORDER BY 1
       ;
-  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -167,11 +185,11 @@ ALTER FUNCTION gpSelect_Object_GlobalConst (TVarChar, TVarChar) OWNER TO postgre
 */
 
 -- тест
--- update Object set valuedata = 'http://integer-srv.alan.dp.ua' where Id = zc_Enum_GlobalConst_ConnectParam() 
--- update Object set valuedata = 'http://integer-srv2.alan.dp.ua' where Id = zc_Enum_GlobalConst_ConnectParam() 
+-- update Object set valuedata = 'http://integer-srv.alan.dp.ua' where Id = zc_Enum_GlobalConst_ConnectParam()
+-- update Object set valuedata = 'http://integer-srv2.alan.dp.ua' where Id = zc_Enum_GlobalConst_ConnectParam()
 --
--- update Object set valuedata = 'http://integer-srv-r.alan.dp.ua' where Id = zc_Enum_GlobalConst_ConnectReportParam() 
--- update Object set valuedata = 'http://integer-srv2-r.alan.dp.ua' where Id = zc_Enum_GlobalConst_ConnectReportParam() 
+-- update Object set valuedata = 'http://integer-srv-r.alan.dp.ua' where Id = zc_Enum_GlobalConst_ConnectReportParam()
+-- update Object set valuedata = 'http://integer-srv2-r.alan.dp.ua' where Id = zc_Enum_GlobalConst_ConnectReportParam()
 --
 -- SELECT * FROM Object where Id IN (zc_Enum_GlobalConst_ConnectParam(), zc_Enum_GlobalConst_ConnectReportParam())
 -- SELECT * FROM gpSelect_Object_GlobalConst ('', zfCalc_UserAdmin())
