@@ -114,7 +114,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 5
-    Width = 305
+    Width = 224
   end
   object cxLabel6: TcxLabel [14]
     Left = 245
@@ -327,6 +327,26 @@
     TabOrder = 41
     Width = 305
   end
+  object cxLabel20: TcxLabel [42]
+    Left = 475
+    Top = 140
+    Caption = #1042#1072#1083#1102#1090#1072' '#1082#1086#1085#1090#1088'.'
+  end
+  object ceCurrencyPartner: TcxButtonEdit [43]
+    Left = 475
+    Top = 160
+    ParentShowHint = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    ShowHint = False
+    TabOrder = 43
+    Width = 75
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
     Top = 318
@@ -484,6 +504,13 @@
         Name = 'inCurrencyId'
         Value = Null
         Component = CurrencyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyPartnerId'
+        Component = CurrencyPartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -955,6 +982,21 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = Null
+        Component = CurrencyPartnerGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = Null
+        Component = CurrencyPartnerGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 368
     Top = 140
@@ -1023,6 +1065,21 @@
         Name = 'InfoMoneyName_all'
         Value = ''
         Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = Null
+        Component = CurrencyPartnerGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = Null
+        Component = CurrencyPartnerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1292,5 +1349,56 @@
       end>
     Left = 148
     Top = 239
+  end
+  object CurrencyPartnerGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceCurrencyPartner
+    FormNameParam.Value = 'TCurrencyValue_ForCashForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCurrencyValue_ForCashForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CurrencyPartnerGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CurrencyPartnerGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42475d
+        Component = ceOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ParValue'
+        Value = 1.000000000000000000
+        Component = ceParPartnerValue
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyValue'
+        Value = 0.000000000000000000
+        Component = ceCurrencyPartnerValue
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 493
+    Top = 160
   end
 end

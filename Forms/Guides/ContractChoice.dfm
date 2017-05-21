@@ -108,6 +108,14 @@ inherited ContractChoiceForm: TContractChoiceForm
             Options.Editing = False
             Width = 70
           end
+          object clCurrencyName: TcxGridDBColumn
+            Caption = #1042#1072#1083#1102#1090#1072
+            DataBinding.FieldName = 'CurrencyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object colJuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1102#1088'. '#1083'.'
             DataBinding.FieldName = 'JuridicalCode'
@@ -345,6 +353,21 @@ inherited ContractChoiceForm: TContractChoiceForm
         item
           Name = 'PartnerName'
           Value = ''
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CurrencyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CurrencyName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

@@ -63,6 +63,9 @@ type
     cxLabel18: TcxLabel;
     ceComment_Invoice: TcxTextEdit;
     InvoiceGuides: TdsdGuides;
+    cxLabel20: TcxLabel;
+    ceCurrencyPartner: TcxButtonEdit;
+    CurrencyPartnerGuides: TdsdGuides;
   private
     { Private declarations }
   public

@@ -28,7 +28,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MemberName TVarChar, PositionName TVarChar, PersonalServiceListId Integer, PersonalServiceListCode Integer, PersonalServiceListName TVarChar
              , ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
              , UnitCode Integer, UnitName TVarChar
-             , CurrencyName TVarChar
+             , CurrencyName TVarChar, CurrencyPartnerName TVarChar
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
              , isLoad Boolean
@@ -148,6 +148,7 @@ BEGIN
            , Object_Unit.ValueData              AS UnitName
 
            , Object_Currency.ValueData                     AS CurrencyName
+           , Object_CurrencyPartner.ValueData              AS CurrencyPartnerName
            , MovementFloat_CurrencyValue.ValueData         AS CurrencyValue
            , MovementFloat_ParValue.ValueData              AS ParValue
            , MovementFloat_CurrencyPartnerValue.ValueData  AS CurrencyPartnerValue
@@ -279,13 +280,17 @@ BEGIN
                                              -- AND (MILinkObject_Currency.ObjectId = inCurrencyId OR inCurrencyId = 0)
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_CurrencyPartner
+                                             ON MILinkObject_CurrencyPartner.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_CurrencyPartner.DescId = zc_MILinkObject_CurrencyPartner()
+            LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MILinkObject_CurrencyPartner.ObjectId
+
             LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
                                     ON MovementFloat_AmountCurrency.MovementId = tmpMovement.Id
                                    AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
             LEFT JOIN MovementFloat AS MovementFloat_AmountSumm
                                     ON MovementFloat_AmountSumm.MovementId = tmpMovement.Id
                                    AND MovementFloat_AmountSumm.DescId = zc_MovementFloat_Amount()
-                                   
 
             LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
                                     ON MovementFloat_CurrencyValue.MovementId = tmpMovement.Id
@@ -309,6 +314,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 21.05.17         * add CurrencyPartner
  06.10.16         * add inJuridicalBasisId
  26.07.16         * invoice
  17.04.16         * add inCurrencyid

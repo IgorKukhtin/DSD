@@ -3,7 +3,7 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
   ClientHeight = 411
   ClientWidth = 881
   ExplicitWidth = 897
-  ExplicitHeight = 446
+  ExplicitHeight = 449
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -211,6 +211,14 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object clCurrencyName: TcxGridDBColumn
+            Caption = #1042#1072#1083#1102#1090#1072
+            DataBinding.FieldName = 'CurrencyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
@@ -279,6 +287,7 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -286,12 +295,14 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractName'
@@ -299,18 +310,21 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyCode'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyCode'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -318,6 +332,7 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName_all'
@@ -325,21 +340,25 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName_all'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PositionId'
           Value = 0
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PositionName'
           Value = ''
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MovementId_Partion'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MovementId_Partion'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartionMovementName'
@@ -347,13 +366,30 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
           Component = MasterCDS
           ComponentItem = 'PartionMovementName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaymentDate'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'PaymentDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CurrencyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CurrencyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
     end
   end

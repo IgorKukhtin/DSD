@@ -104,6 +104,7 @@ BEGIN
                                          , inMemberId             := inMemberId
                                          , inUnitId               := 0
                                          , inCurrencyId           := zc_Enum_Currency_Basis()
+                                         , inCurrencyPartnerId    := zc_Enum_Currency_Basis()
                                          , inCurrencyValue        := 1.0
                                          , inParValue             := 1.0
                                          , inCurrencyPartnerValue := 1.0
@@ -129,6 +130,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Ярошенко Р.Ф.
+ 21.05.17         *
  16.02.17                                                        *                                          
 */
 

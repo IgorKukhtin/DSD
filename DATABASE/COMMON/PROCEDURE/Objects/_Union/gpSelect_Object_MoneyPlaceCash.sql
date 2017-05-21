@@ -6,7 +6,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_MoneyPlaceCash(
     IN inSession           TVarChar     -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ItemName TVarChar, isErased Boolean
-             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar
+             , InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , ContractId Integer, ContractCode Integer, ContractNumber TVarChar, ContractStateKindCode Integer, StartDate TDateTime, EndDate TDateTime
              , ContractTagName TVarChar, ContractKindName TVarChar
              , MovementId_Partion Integer, PartionMovementName TVarChar, PaymentDate TDateTime
@@ -15,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ItemName TVarChar, isEra
              , AmountKredit TFloat
              , BranchName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
+             , CurrencyId Integer, CurrencyName TVarChar
               )
 AS
 $BODY$
@@ -86,6 +88,8 @@ BEGIN
           , ''::TVarChar AS BranchName
           , 0 :: Integer AS PaidKindId
           , ''::TVarChar AS PaidKindName
+          , 0 :: Integer AS CurrencyId 
+          , ''::TVarChar AS CurrencyName 
      FROM Object AS Object_Cash
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Cash.DescId
           LEFT JOIN View_InfoMoney_40801 AS View_InfoMoney ON 1 = 1
@@ -119,6 +123,8 @@ BEGIN
           , ''::TVarChar AS BranchName
           , 0 :: Integer AS PaidKindId
           , ''::TVarChar AS PaidKindName
+          , 0 :: Integer AS CurrencyId 
+          , ''::TVarChar AS CurrencyName 
      FROM Object_BankAccount_View
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_BankAccount()
           LEFT JOIN View_InfoMoney_40801 AS View_InfoMoney ON 1 = 1
@@ -153,6 +159,8 @@ BEGIN
           , ''::TVarChar AS BranchName
           , 0 :: Integer AS PaidKindId
           , ''::TVarChar AS PaidKindName
+          , 0 :: Integer AS CurrencyId 
+          , ''::TVarChar AS CurrencyName 
      FROM Object AS Object_Member
           LEFT JOIN tmpPersonal_Branch ON tmpPersonal_Branch.MemberId = Object_Member.Id
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Member.DescId
@@ -190,6 +198,8 @@ BEGIN
           , Object_Branch.ValueData   AS BranchName
           , Object_PaidKind.Id        AS PaidKindId
           , Object_PaidKind.ValueData AS PaidKindName
+          , Object_Currency.Id         AS CurrencyId 
+          , Object_Currency.ValueData  AS CurrencyName 
      FROM Object AS Object_Partner
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Partner.DescId
 
@@ -217,6 +227,11 @@ BEGIN
                                ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id 
                               AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
           LEFT JOIN Object_Personal_View AS Object_PersonalTrade ON Object_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
+                               ON ObjectLink_Contract_Currency.ObjectId = View_Contract.ContractId 
+                              AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
+          LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
 
      WHERE Object_Partner.DescId = zc_Object_Partner()
        AND Object_Partner.isErased = FALSE
@@ -254,12 +269,20 @@ BEGIN
           , ''::TVarChar AS BranchName
           , Object_PaidKind.Id            AS PaidKindId
           , Object_PaidKind.ValueData     AS PaidKindName
+          , Object_Currency.Id         AS CurrencyId 
+          , Object_Currency.ValueData  AS CurrencyName 
      FROM Object AS Object_Juridical
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
           LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.JuridicalId = Object_Juridical.Id 
           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
           LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
+
+          LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
+                               ON ObjectLink_Contract_Currency.ObjectId = View_Contract.ContractId 
+                              AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
+          LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
+
      WHERE Object_Juridical.DescId = zc_Object_Juridical()
        AND Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40900()
        AND View_Contract.isErased = FALSE
@@ -294,6 +317,8 @@ BEGIN
           , ''::TVarChar AS BranchName
           , 0 :: Integer AS PaidKindId
           , ''::TVarChar AS PaidKindName
+          , 0 :: Integer AS CurrencyId 
+          , ''::TVarChar AS CurrencyName 
      FROM Object AS Object_Founder
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Founder.DescId
           LEFT JOIN ObjectLink AS ObjectLink_Founder_InfoMoney
@@ -313,6 +338,7 @@ ALTER FUNCTION gpSelect_Object_MoneyPlaceCash (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 21.05.17         * 
  03.09.14                                        * add zc_Object_Founder
  28.08.14                                        *
 */

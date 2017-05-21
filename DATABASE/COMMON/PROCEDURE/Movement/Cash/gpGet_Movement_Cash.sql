@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ContractId Integer, ContractInvNumber TVarChar
              , UnitId Integer, UnitName TVarChar
              , CurrencyId Integer, CurrencyName TVarChar
+             , CurrencyPartnerId Integer, CurrencyPartnerName TVarChar
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
              , MovementId_Partion Integer, PartionMovementName TVarChar
@@ -71,8 +72,10 @@ BEGIN
            , 0                                                 AS UnitId
            , CAST ('' as TVarChar)                             AS UnitName
 
-           , Object_Currency.Id                AS CurrencyId
-           , Object_Currency.ValueData         AS CurrencyName
+           , Object_Currency.Id                                AS CurrencyId
+           , Object_Currency.ValueData                         AS CurrencyName
+           , 0                                                 AS CurrencyPartnerId
+           , CAST ('' as TVarChar)                             AS CurrencyPartnerName
            , 0 :: TFloat                                       AS CurrencyValue
            , 0 :: TFloat                                       AS ParValue
            , 0 :: TFloat                                       AS CurrencyPartnerValue
@@ -146,6 +149,8 @@ BEGIN
 
            , Object_Currency.Id                AS CurrencyId
            , Object_Currency.ValueData         AS CurrencyName
+           , Object_CurrencyPartner.Id                    AS CurrencyPartnerId
+           , Object_CurrencyPartner.ValueData             AS CurrencyPartnerName
            , MovementFloat_CurrencyValue.ValueData        AS CurrencyValue
            , MovementFloat_ParValue.ValueData             AS ParValue
            , MovementFloat_CurrencyPartnerValue.ValueData AS CurrencyPartnerValue
@@ -244,6 +249,11 @@ BEGIN
                                              ON MILinkObject_Currency.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_CurrencyPartner
+                                             ON MILinkObject_CurrencyPartner.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_CurrencyPartner.DescId = zc_MILinkObject_CurrencyPartner()
+            LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MILinkObject_CurrencyPartner.ObjectId
 
             LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
                                     ON MovementFloat_AmountCurrency.MovementId = Movement.Id

@@ -302,6 +302,15 @@ inherited CashJournalUserForm: TCashJournalUserForm
             VisibleForCustomization = False
             Width = 60
           end
+          object clCurrencyPartnerName: TcxGridDBColumn
+            Caption = #1042#1072#1083#1102#1090#1072' '#1082#1086#1085#1090#1088'.'
+            DataBinding.FieldName = 'CurrencyPartnerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1072#1083#1102#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 60
+          end
           object clCurrencyPartnerValue: TcxGridDBColumn
             Caption = #1050#1091#1088#1089
             DataBinding.FieldName = 'CurrencyPartnerValue'

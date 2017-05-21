@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , ContractStateKindCode Integer
              , ContractComment TVarChar
+             , CurrencyId Integer, CurrencyName TVarChar
              , OKPO TVarChar
              , ChangePercent TFloat
              , JuridicalBasisId Integer, JuridicalBasisName TVarChar
@@ -135,6 +136,9 @@ BEGIN
        , Object_Contract_View.ContractStateKindCode
        , ObjectString_Comment.ValueData AS ContractComment 
 
+       , Object_Currency.Id         AS CurrencyId 
+       , Object_Currency.ValueData  AS CurrencyName 
+
        , ObjectHistory_JuridicalDetails_View.OKPO
        , tmpChangePercent.ChangePercent :: TFloat  AS ChangePercent
 
@@ -184,6 +188,12 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
+                             ON ObjectLink_Contract_Currency.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
+        LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
+
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
            OR tmpListBranch_Constraint.JuridicalId > 0
            OR vbIsConstraint = FALSE
@@ -271,6 +281,9 @@ BEGIN
        , Object_Contract_View.ContractStateKindCode
        , ObjectString_Comment.ValueData AS ContractComment 
 
+       , Object_Currency.Id         AS CurrencyId 
+       , Object_Currency.ValueData  AS CurrencyName 
+
        , ObjectHistory_JuridicalDetails_View.OKPO
        , tmpChangePercent.ChangePercent :: TFloat  AS ChangePercent
 
@@ -322,6 +335,11 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
+                             ON ObjectLink_Contract_Currency.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
+        LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
 
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
            OR tmpListBranch_Constraint.JuridicalId > 0
@@ -389,6 +407,9 @@ BEGIN
        , Object_Contract_View.ContractStateKindCode
        , ObjectString_Comment.ValueData AS ContractComment 
 
+       , Object_Currency.Id         AS CurrencyId 
+       , Object_Currency.ValueData  AS CurrencyName 
+
        , ObjectHistory_JuridicalDetails_View.OKPO
        , tmpChangePercent.ChangePercent :: TFloat  AS ChangePercent
 
@@ -437,6 +458,12 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
+                             ON ObjectLink_Contract_Currency.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
+        LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
+
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
            OR tmpListBranch_Constraint.JuridicalId > 0
            OR vbIsConstraint = FALSE)
@@ -500,6 +527,9 @@ BEGIN
        , Object_Contract_View.ContractStateKindCode
        , ObjectString_Comment.ValueData AS ContractComment 
 
+       , Object_Currency.Id         AS CurrencyId 
+       , Object_Currency.ValueData  AS CurrencyName 
+
        , ObjectHistory_JuridicalDetails_View.OKPO
        , tmpChangePercent.ChangePercent :: TFloat  AS ChangePercent
 
@@ -552,6 +582,11 @@ BEGIN
                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
 
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
+                             ON ObjectLink_Contract_Currency.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
+        LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
+
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
            OR tmpListBranch_Constraint.JuridicalId > 0
            OR vbIsConstraint = FALSE
@@ -572,6 +607,7 @@ ALTER FUNCTION gpSelect_Object_ContractChoice (Integer, Boolean, Integer, TVarCh
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 21.05.17         * add Contract_Currency
  17.11.15                                                                     *
  08.09.14                                        * add Object_RoleAccessKeyGuide_View
  29.08.14                                        * add InfoMoneyName_all

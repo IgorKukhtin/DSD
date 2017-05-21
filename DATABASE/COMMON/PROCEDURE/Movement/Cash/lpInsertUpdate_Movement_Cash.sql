@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Movement_Cash()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Cash(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -22,6 +23,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Cash(
     IN inUnitId              Integer   , -- Подразделения
 
     IN inCurrencyId            Integer   , -- Валюта
+    IN inCurrencyPartnerId     Integer   , -- Валюта контрагента
     IN inCurrencyValue         TFloat    , -- Курс для перевода в валюту баланса
     IN inParValue              TFloat    , -- Номинал для перевода в валюту баланса
     IN inCurrencyPartnerValue  TFloat    , -- Курс для расчета суммы операции
@@ -251,6 +253,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, inUnitId);
      -- сохранили связь с <Валютой>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency(), vbMovementItemId, inCurrencyId);
+     -- сохранили связь с <Валютой контрагента>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_CurrencyPartner(), vbMovementItemId, inCurrencyPartnerId);
 
      -- сохранили свойство <id документа продажи>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), vbMovementItemId, inMovementId_Partion);
@@ -273,6 +277,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 21.05.17         * add inCurrencyPartnerId
  27.04.15         add MovementId_Partion
  29.08.14                                        *
 */
