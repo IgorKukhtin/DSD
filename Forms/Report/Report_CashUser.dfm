@@ -707,6 +707,14 @@ inherited Report_CashUserForm: TReport_CashUserForm
     TabOrder = 7
     Width = 68
   end
+  object cbCurrency: TcxCheckBox [4]
+    Left = 381
+    Top = 195
+    Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1074#1072#1083#1102#1090#1077' '#1076#1072'/'#1085#1077#1090
+    Properties.ReadOnly = False
+    TabOrder = 8
+    Width = 154
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 35
     Top = 328
@@ -2449,6 +2457,14 @@ inherited Report_CashUserForm: TReport_CashUserForm
         end
         item
           Visible = True
+          ItemName = 'bbCurrency'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -2495,6 +2511,13 @@ inherited Report_CashUserForm: TReport_CashUserForm
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
       Category = 0
+    end
+    object bbCurrency: TdxBarControlContainerItem
+      Caption = 'cbCurrency'
+      Category = 0
+      Hint = 'cbCurrency'
+      Visible = ivAlways
+      Control = cbCurrency
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

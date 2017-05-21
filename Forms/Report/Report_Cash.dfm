@@ -624,6 +624,14 @@ inherited Report_CashForm: TReport_CashForm
           end
         end
       end
+      object cbCurrency: TcxCheckBox
+        Left = 341
+        Top = 99
+        Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1074#1072#1083#1102#1090#1077' '#1076#1072'/'#1085#1077#1090
+        Properties.ReadOnly = False
+        TabOrder = 1
+        Width = 154
+      end
     end
   end
   inherited Panel: TPanel
@@ -863,6 +871,13 @@ inherited Report_CashForm: TReport_CashForm
           Value = #1082#1072#1089#1089#1077
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCurrency'
+          Value = Null
+          Component = cbCurrency
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077' ('#1087#1086' '#1101#1083#1077#1084#1077#1085#1090#1072#1084')'
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077' ('#1087#1086' '#1101#1083#1077#1084#1077#1085#1090#1072#1084')'
@@ -930,6 +945,13 @@ inherited Report_CashForm: TReport_CashForm
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCurrency'
+          Value = Null
+          Component = cbCurrency
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077
@@ -2459,6 +2481,14 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Visible = True
+          ItemName = 'bbcbCurrency'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -2505,6 +2535,13 @@ inherited Report_CashForm: TReport_CashForm
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
       Category = 0
+    end
+    object bbcbCurrency: TdxBarControlContainerItem
+      Caption = 'cbCurrency'
+      Category = 0
+      Hint = 'cbCurrency'
+      Visible = ivAlways
+      Control = cbCurrency
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

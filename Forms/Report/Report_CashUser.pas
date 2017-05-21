@@ -14,7 +14,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCurrencyEdit, DataModul, frxClass, frxDBSet, dsdGuides, cxButtonEdit,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxImageComboBox;
+  cxImageComboBox, cxCheckBox;
 
 type
   TReport_CashUserForm = class(TAncestorReportForm)
@@ -75,6 +75,8 @@ type
     cxLabel10: TcxLabel;
     edCurrency: TcxButtonEdit;
     CurrencyGuides: TdsdGuides;
+    cbCurrency: TcxCheckBox;
+    bbCurrency: TdxBarControlContainerItem;
   private
     { Private declarations }
   public
