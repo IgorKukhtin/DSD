@@ -544,6 +544,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCurrencyId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'inCurrencyId_top'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'InvNumber'
         Value = '0'
         Component = edInvNumber

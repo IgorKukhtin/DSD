@@ -6,7 +6,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 998
-  ExplicitHeight = 600
+  ExplicitHeight = 603
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -494,6 +494,13 @@ inherited CashJournalUserForm: TCashJournalUserForm
           Component = CashGuides
           ComponentItem = 'Key'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inCurrencyId_top'
+          Value = 0
+          Component = CurrencyGuides
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
@@ -524,6 +531,13 @@ inherited CashJournalUserForm: TCashJournalUserForm
           Name = 'inCashId_top'
           Value = ''
           Component = CashGuides
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inCurrencyId_top'
+          Value = Null
+          Component = CurrencyGuides
           ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end>
@@ -896,6 +910,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
   object CurrencyGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceCurrency
+    Key = '0'
     FormNameParam.Value = 'TCurrencyValue_ForCashForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -925,7 +940,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 680
+    Left = 736
     Top = 65532
   end
   object JuridicalBasisGuides: TdsdGuides

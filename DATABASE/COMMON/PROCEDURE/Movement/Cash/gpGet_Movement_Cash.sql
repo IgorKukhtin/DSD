@@ -1,11 +1,13 @@
 -- Function: gpGet_Movement_Cash()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Cash(
     IN inMovementId        Integer   , -- ключ Документа
     IN inOperDate          TDateTime , -- 
     IN inCashId            Integer   , -- 
+    IN inCurrencyId        Integer   , -- 
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -86,9 +88,9 @@ BEGIN
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = inCashId -- IN (SELECT MIN (Object.Id) FROM Object WHERE Object.AccessKeyId IN (SELECT MIN (lpGetAccessKey) FROM lpGetAccessKey (vbUserId, zc_Enum_Process_Get_Movement_Cash())))
             LEFT JOIN ObjectLink AS ObjectLink_Cash_Currency
-               ON ObjectLink_Cash_Currency.ObjectId = Object_Cash.Id
-              AND ObjectLink_Cash_Currency.DescId = zc_ObjectLink_Cash_Currency()
-        LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Cash_Currency.ChildObjectId
+                   ON ObjectLink_Cash_Currency.ObjectId = Object_Cash.Id
+                  AND ObjectLink_Cash_Currency.DescId = zc_ObjectLink_Cash_Currency()
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = CASE WHEN COALESCE (inCurrencyId,0) = 0 THEN ObjectLink_Cash_Currency.ChildObjectId ELSE inCurrencyId END
       ;
      ELSE
           -- проверка
@@ -254,11 +256,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_Cash (Integer, TDateTime, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpGet_Movement_Cash (Integer, TDateTime, Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 21.05.17         * add inCurrencyId
  26.07.16         * invoice
  27.04.15         * add MIFloat_MovementId (sale)
  06.03.15         * add Currency...
