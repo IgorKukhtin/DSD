@@ -51,6 +51,7 @@ BEGIN
                                                         , inEndDate      := inEndDate
                                                         , inAccountId    := inAccountId
                                                         , inCashId       := inCashId
+                                                        , inCurrencyId   := inCurrencyId
                                                         , inSession      := ''
                                                                          ) AS gpReport)
         , tmpResult AS (SELECT tmpReport_BankAccount.ContainerId 

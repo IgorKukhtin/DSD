@@ -5,7 +5,7 @@ inherited Report_CashForm: TReport_CashForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1036
-  ExplicitHeight = 590
+  ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -67,6 +67,51 @@ inherited Report_CashForm: TReport_CashForm
               Format = ',0.00##'
               Kind = skSum
               Column = EndAmountK
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Summ_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = StartAmount_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = StartAmountD_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = StartAmountK_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colDebetSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colKreditSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = EndAmount_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = EndAmountD_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = EndAmountK_Currency
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -108,6 +153,51 @@ inherited Report_CashForm: TReport_CashForm
               Format = ',0.00##'
               Kind = skSum
               Column = EndAmountK
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Summ_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = StartAmount_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = StartAmountD_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = StartAmountK_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colDebetSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colKreditSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = EndAmount_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = EndAmountD_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = EndAmountK_Currency
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -141,6 +231,14 @@ inherited Report_CashForm: TReport_CashForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object CurrencyName: TcxGridDBColumn
+            Caption = #1042#1072#1083#1102#1090#1072
+            DataBinding.FieldName = 'CurrencyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object MoneyPlaceCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -351,6 +449,124 @@ inherited Report_CashForm: TReport_CashForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object Summ_Currency: TcxGridDBColumn
+            Caption = #1050#1091#1088#1089#1086#1074#1072#1103' '#1088#1072#1079#1085#1080#1094#1072
+            DataBinding.FieldName = 'Summ_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object StartAmount_Currency: TcxGridDBColumn
+            Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'StartAmount_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object StartAmountD_Currency: TcxGridDBColumn
+            Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' '#1074' '#1074#1072#1083'. ('#1044#1077#1073#1077#1090')'
+            DataBinding.FieldName = 'StartAmountD_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object StartAmountK_Currency: TcxGridDBColumn
+            Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' '#1074' '#1074#1072#1083'. ('#1050#1088#1077#1076#1080#1090')'
+            DataBinding.FieldName = 'StartAmountK_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object colDebetSumm_Currency: TcxGridDBColumn
+            Caption = #1054#1073#1086#1088#1086#1090' '#1044#1077#1073#1077#1090' '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'DebetSumm_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object colKreditSumm_Currency: TcxGridDBColumn
+            Caption = #1054#1073#1086#1088#1086#1090' '#1050#1088#1077#1076#1080#1090' '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'KreditSumm_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object EndAmount_Currency: TcxGridDBColumn
+            Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'EndAmount_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object EndAmountD_Currency: TcxGridDBColumn
+            Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' '#1074' '#1074#1072#1083'. ('#1044#1077#1073#1077#1090')'
+            DataBinding.FieldName = 'EndAmountD_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object EndAmountK_Currency: TcxGridDBColumn
+            Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' '#1074' '#1074#1072#1083'. ('#1050#1088#1077#1076#1080#1090')'
+            DataBinding.FieldName = 'EndAmountK_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
@@ -473,6 +689,23 @@ inherited Report_CashForm: TReport_CashForm
       TabOrder = 7
       Width = 345
     end
+  end
+  object cxLabel10: TcxLabel [2]
+    Left = 871
+    Top = 6
+    Caption = #1042#1072#1083#1102#1090#1072':'
+  end
+  object edCurrency: TcxButtonEdit [3]
+    Left = 871
+    Top = 29
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 68
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 35
@@ -2118,6 +2351,23 @@ inherited Report_CashForm: TReport_CashForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyId'
+          Value = Null
+          Component = CurrencyGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyName'
+          Value = Null
+          Component = CurrencyGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -2162,6 +2412,14 @@ inherited Report_CashForm: TReport_CashForm
         Name = 'inCashId'
         Value = ''
         Component = GuidesCash
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyId'
+        Value = Null
+        Component = CurrencyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2283,6 +2541,7 @@ inherited Report_CashForm: TReport_CashForm
         Component = GuidesAccount
       end
       item
+        Component = CurrencyGuides
       end
       item
       end
@@ -2697,5 +2956,35 @@ inherited Report_CashForm: TReport_CashForm
     Params = <>
     Left = 724
     Top = 334
+  end
+  object CurrencyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCurrency
+    FormNameParam.Value = 'TCurrency_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCurrency_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 888
+    Top = 24
   end
 end

@@ -4,7 +4,7 @@ object Report_CashDialogForm: TReport_CashDialogForm
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077'>'
   ClientHeight = 181
-  ClientWidth = 381
+  ClientWidth = 434
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -77,7 +77,7 @@ object Report_CashDialogForm: TReport_CashDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 224
+    Width = 170
   end
   object cxLabel3: TcxLabel
     Left = 136
@@ -94,7 +94,24 @@ object Report_CashDialogForm: TReport_CashDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 224
+    Width = 286
+  end
+  object cxLabel10: TcxLabel
+    Left = 312
+    Top = 7
+    Caption = #1042#1072#1083#1102#1090#1072':'
+  end
+  object edCurrency: TcxButtonEdit
+    Left = 312
+    Top = 27
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 110
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -127,6 +144,7 @@ object Report_CashDialogForm: TReport_CashDialogForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
@@ -134,6 +152,7 @@ object Report_CashDialogForm: TReport_CashDialogForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountId'
@@ -141,6 +160,7 @@ object Report_CashDialogForm: TReport_CashDialogForm
         Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountName'
@@ -149,6 +169,7 @@ object Report_CashDialogForm: TReport_CashDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CashId'
@@ -156,6 +177,7 @@ object Report_CashDialogForm: TReport_CashDialogForm
         Component = GuidesCash
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CashName'
@@ -164,6 +186,24 @@ object Report_CashDialogForm: TReport_CashDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 120
@@ -173,6 +213,7 @@ object Report_CashDialogForm: TReport_CashDialogForm
     LookupControl = edAccount
     FormNameParam.Value = 'TAccount_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccount_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -182,6 +223,7 @@ object Report_CashDialogForm: TReport_CashDialogForm
         Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValueAll'
@@ -190,11 +232,13 @@ object Report_CashDialogForm: TReport_CashDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Cash'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 64
@@ -204,6 +248,7 @@ object Report_CashDialogForm: TReport_CashDialogForm
     LookupControl = ceCash
     FormNameParam.Value = 'TCash_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCash_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -212,6 +257,7 @@ object Report_CashDialogForm: TReport_CashDialogForm
         Value = ''
         Component = GuidesCash
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -219,41 +265,78 @@ object Report_CashDialogForm: TReport_CashDialogForm
         Component = GuidesCash
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
         Value = ''
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName_all'
         Value = ''
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractId'
         Value = ''
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
         Value = ''
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PositionId'
         Value = ''
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PositionName'
         Value = ''
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 248
     Top = 13
+  end
+  object CurrencyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCurrency
+    FormNameParam.Value = 'TCurrency_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCurrency_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 352
+    Top = 16
   end
 end

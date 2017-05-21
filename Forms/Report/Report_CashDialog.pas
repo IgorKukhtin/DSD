@@ -29,6 +29,9 @@ type
     edAccount: TcxButtonEdit;
     GuidesAccount: TdsdGuides;
     GuidesCash: TdsdGuides;
+    cxLabel10: TcxLabel;
+    edCurrency: TcxButtonEdit;
+    CurrencyGuides: TdsdGuides;
   private
     { Private declarations }
   public

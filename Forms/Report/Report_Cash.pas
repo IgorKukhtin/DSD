@@ -72,6 +72,9 @@ type
     ProfitLossDirectionName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    cxLabel10: TcxLabel;
+    edCurrency: TcxButtonEdit;
+    CurrencyGuides: TdsdGuides;
   private
     { Private declarations }
   public
