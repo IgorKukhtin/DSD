@@ -461,7 +461,6 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
     IdParam.MultiSelectSeparator = ','
-    RefreshAction = dsdDataSetRefresh
     ComponentList = <
       item
         Component = ceCurrencyValue_EUR

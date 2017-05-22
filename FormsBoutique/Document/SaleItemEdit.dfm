@@ -461,7 +461,6 @@ object SaleItemEditForm: TSaleItemEditForm
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
     IdParam.MultiSelectSeparator = ','
-    RefreshAction = dsdDataSetRefresh
     ComponentList = <
       item
       end
