@@ -17,7 +17,8 @@ RETURNS TABLE (Id Integer
              , AmountCard    TFloat
              , Amount        TFloat
              , AmountRemains TFloat
-             , AmountChange TFloat
+             , AmountChange  TFloat
+             , isPayTotal    Boolean
               )
 AS
 $BODY$
@@ -106,6 +107,8 @@ BEGIN
                                     + COALESCE(tmpMI.AmountCard,0) )) * (-1)
                       ELSE 0
                  END             ::TFloat AS AmountChange
+               
+                 , TRUE AS isPayTotal
 
            FROM tmpMI
                LEFT JOIN lfSelect_Movement_Currency_byDate (inOperDate:= vbOperDate, inCurrencyFromId:= zc_Currency_Basis(), inCurrencyToId:= zc_Currency_USD()) AS tmp_USD ON 1=1
@@ -120,11 +123,19 @@ BEGIN
                            , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_USD() THEN COALESCE(MovementItem.Amount,0) ELSE 0 END) AS AmountUSD
                            , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN COALESCE(MovementItem.Amount,0) ELSE 0 END) AS AmountEUR
                            , SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() THEN MovementItem.Amount ELSE 0 END) AS AmountCard
+                           , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_USD() THEN COALESCE(MIFloat_CurrencyValue.ValueData,0) ELSE 0 END) AS CurrencyValue_USD
+                           , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN COALESCE(MIFloat_CurrencyValue.ValueData,0) ELSE 0 END) AS CurrencyValue_EUR
                       FROM MovementItem
                             LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
                                                              ON MILinkObject_Currency.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
+                            LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
+                                                        ON MIFloat_CurrencyValue.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()    
+                            LEFT JOIN MovementItemFloat AS MIFloat_ParValue
+                                                        ON MIFloat_ParValue.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue() 
                       WHERE MovementItem.ParentId     = inId
                         AND MovementItem.MovementId = inMovementId
                         AND MovementItem.DescId     = zc_MI_Child()
@@ -133,9 +144,9 @@ BEGIN
            -- Результат
            SELECT
                  inId AS Id
-               , tmp_USD.Amount      ::TFloat    AS CurrencyValue_USD
+               , COALESCE (tmpMI.CurrencyValue_USD, tmp_USD.Amount)      ::TFloat    AS CurrencyValue_USD
                , tmp_USD.ParValue    ::TFloat    AS ParValue_USD
-               , tmp_EUR.Amount      ::TFloat    AS CurrencyValue_EUR
+               , COALESCE (tmpMI.CurrencyValue_EUR, tmp_EUR.Amount)      ::TFloat    AS CurrencyValue_EUR
                , tmp_EUR.ParValue    ::TFloat    AS ParValue_EUR
 
                , tmpMI.AmountGRN         ::TFloat
@@ -168,6 +179,8 @@ BEGIN
                                     + COALESCE(tmpMI.AmountCard,0) )) * (-1)
                       ELSE 0
                  END             ::TFloat AS AmountChange
+
+               , False AS isPayTotal
 
            FROM tmpMI
                 LEFT JOIN lfSelect_Movement_Currency_byDate (inOperDate:= vbOperDate, inCurrencyFromId:= zc_Currency_Basis(), inCurrencyToId:= zc_Currency_USD()) AS tmp_USD ON 1=1

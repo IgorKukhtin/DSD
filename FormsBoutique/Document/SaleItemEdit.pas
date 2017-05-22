@@ -38,11 +38,6 @@ type
     ceCurrencyValue_USD: TcxCurrencyEdit;
     ceAmountGRN: TcxCurrencyEdit;
     cbisPayTotal: TcxCheckBox;
-    cbisPayGRN: TcxCheckBox;
-    cbisPayUSD: TcxCheckBox;
-    cbisPayEUR: TcxCheckBox;
-    cbisPayCard: TcxCheckBox;
-    cbisDiscount: TcxCheckBox;
     cxLabel1: TcxLabel;
     ceAmount: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
@@ -57,6 +52,11 @@ type
     ceCurrencyValue_EUR: TcxCurrencyEdit;
     RefreshDispatcher: TRefreshDispatcher;
     dsdDataSetRefreshStart: TdsdDataSetRefresh;
+    cxLabel5: TcxLabel;
+    cxLabel6: TcxLabel;
+    cxLabel7: TcxLabel;
+    cxLabel8: TcxLabel;
+    cxLabel9: TcxLabel;
   private
     { Private declarations }
   public
