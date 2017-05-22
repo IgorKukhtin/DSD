@@ -3102,18 +3102,31 @@ begin
         Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
         Add('    , DiscountMovementItemReturn_byBarCode.Id_Postgres as ParentId');
-        Add('    , Kassa.Id_Postgres as KassaId');
-        Add('    , DiscountKlientAccountMoney.Summa as Amount');
-        Add('    , DiscountKlientAccountMoney.SummDiscountManual as AmountDiscount');
         Add('    , DiscountKlientAccountMoney.Id_Postgres');
+        Add('    , KassaProperty.valutaID ');
+        Add('    , if  Kassa.ID in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )   then 1 else 0 endif as isBNKassa');
+        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=1 then 1 else 0 endif as isPayGRN');
+        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=2 then 1 else 0 endif as isPayEUR');
+        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=5 then 1 else 0 endif as isPayUSD');
+        Add('    , if  isBNKassa = 1  then 1 else 0 endif as isPayCard');
+        Add('    , if  DiscountKlientAccountMoney.SummDiscountManual >0 then 1 else 0 endif as isDiscount');
+        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=1 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountGRN');
+        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=2 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountEUR');
+        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=5 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountUSD');
+        Add('    , if  isBNKassa = 1 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountCard');
+        Add('    , if  isDiscount= 1 then  DiscountKlientAccountMoney.SummDiscountManual else 0 endif as  AmountDiscount');
+        Add('');
         Add('FROM dba.DiscountMovementItemReturn_byBarCode');
         Add('    join DiscountMovement     on DiscountMovement.id = DiscountMovementItemReturn_byBarCode.DiscountMovementId');
         Add('    left join BillItemsIncome on BillItemsIncome.id  = DiscountMovementItemReturn_byBarCode.BillItemsIncomeId');
         Add('    join DiscountKlientAccountMoney  on DiscountKlientAccountMoney.DiscountMovementItemReturnId = DiscountMovementItemReturn_byBarCode.Id ');
         Add('                                and isCurrent = zc_rvYes()');
         Add('    join Kassa on Kassa.Id = DiscountKlientAccountMoney.KassaID');
-        Add('WHERE DiscountMovement.descId = 2 AND DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add('    join KassaProperty  on KassaProperty.KassaID = Kassa.ID');
+        Add('WHERE DiscountMovement.descId = 2  AND DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add('and  DiscountMovementItemReturn_byBarCode.Id_Postgres is not null  ');  // Только для тестирования, потом удалить строку
         Add('ORDER BY ObjectId ');
+
         Open;
 
         Result:=RecordCount;
@@ -3129,29 +3142,24 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpInsertUpdate_MI_ReturnIn_Child_Sybase';  //  _Sybase определяем валюту через кассу
+        toStoredProc.StoredProcName:='gpInsertUpdate_MI_ReturnIn_Child';  //  _Sybase определяем валюту через кассу
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
-//было
-//        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
-//        toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
-//        toStoredProc.Params.AddParam ('inisPayTotal',ftBoolean,ptInput, false);
-//        toStoredProc.Params.AddParam ('inisPayGRN',ftBoolean,ptInput, false);
-//        toStoredProc.Params.AddParam ('inisPayUSD',ftBoolean,ptInput, false);
-//        toStoredProc.Params.AddParam ('inisPayEUR',ftBoolean,ptInput, false);
-//        toStoredProc.Params.AddParam ('inisPayCard',ftBoolean,ptInput, false);
-//        toStoredProc.Params.AddParam ('inisDiscount',ftBoolean,ptInput, false);
-//        toStoredProc.Params.AddParam ('inAmountGRN',ftFloat,ptInput, false);
-//        toStoredProc.Params.AddParam ('inAmountUSD',ftFloat,ptInput, false);
-//        toStoredProc.Params.AddParam ('inAmountEUR',ftFloat,ptInput, false);
-//        toStoredProc.Params.AddParam ('inAmountCard',ftFloat,ptInput, false);
-//        toStoredProc.Params.AddParam ('inAmountDiscount',ftFloat,ptInput, false);
-//было
+//
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inKassaId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, false);
+        toStoredProc.Params.AddParam ('inisPayTotal',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inisPayGRN',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inisPayUSD',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inisPayEUR',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inisPayCard',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inisDiscount',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inAmountGRN',ftFloat,ptInput, false);
+        toStoredProc.Params.AddParam ('inAmountUSD',ftFloat,ptInput, false);
+        toStoredProc.Params.AddParam ('inAmountEUR',ftFloat,ptInput, false);
+        toStoredProc.Params.AddParam ('inAmountCard',ftFloat,ptInput, false);
         toStoredProc.Params.AddParam ('inAmountDiscount',ftFloat,ptInput, false);
+
 //
         //
         HideCurGrid(True);
@@ -3163,25 +3171,21 @@ begin
 
              //
 //             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;  //  ioId  не используестя gpInsertUpdate_MI_ReturnIn_Child - не поддерживается многократная загрузка
-//             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
-//             toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId').AsInteger;
-//             toStoredProc.Params.ParamByName('inisPayTotal').Value:=FieldByName('isPayTotal').AsBoolean;
-//             toStoredProc.Params.ParamByName('inisPayGRN').Value:=FieldByName('isPayGRN').AsBoolean;
-//             toStoredProc.Params.ParamByName('inisPayUSD').Value:=FieldByName('isPayUSD').AsBoolean;
-//             toStoredProc.Params.ParamByName('inisPayEUR').Value:=FieldByName('isPayEUR').AsBoolean;
-//             toStoredProc.Params.ParamByName('inisPayCard').Value:=FieldByName('isPayCard').AsBoolean;
-//             toStoredProc.Params.ParamByName('inisDiscount').Value:=FieldByName('inisDiscount').AsBoolean;
-//             toStoredProc.Params.ParamByName('inAmountGRN').Value:=FieldByName('AmountGRN').AsFloat;
-//             toStoredProc.Params.ParamByName('inAmountUSD').Value:=FieldByName('AmountUSD').AsFloat;
-//             toStoredProc.Params.ParamByName('inAmountEUR').Value:=FieldByName('AmountEUR').AsFloat;
-//             toStoredProc.Params.ParamByName('inAmountCard').Value:=FieldByName('AmountCard').AsFloat;
-//             toStoredProc.Params.ParamByName('inAmountDiscount').Value:=FieldByName('AmountDiscount').AsFloat;
-
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
              toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId').AsInteger;
-             toStoredProc.Params.ParamByName('inKassaId').Value:=FieldByName('KassaId').AsInteger;
-             toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+//             toStoredProc.Params.ParamByName('inisPayTotal').Value:=FieldByName('isPayTotal').AsString;
+             toStoredProc.Params.ParamByName('inisPayGRN').Value:= FieldByName('isPayGRN').AsString;
+             toStoredProc.Params.ParamByName('inisPayUSD').Value:=FieldByName('isPayUSD').AsString;
+             toStoredProc.Params.ParamByName('inisPayEUR').Value:=FieldByName('isPayEUR').AsString;
+             toStoredProc.Params.ParamByName('inisPayCard').Value:=FieldByName('isPayCard').AsString;
+             toStoredProc.Params.ParamByName('inisDiscount').Value:=FieldByName('isDiscount').AsString;
+             toStoredProc.Params.ParamByName('inAmountGRN').Value:=FieldByName('AmountGRN').AsFloat;
+             toStoredProc.Params.ParamByName('inAmountUSD').Value:=FieldByName('AmountUSD').AsFloat;
+             toStoredProc.Params.ParamByName('inAmountEUR').Value:=FieldByName('AmountEUR').AsFloat;
+             toStoredProc.Params.ParamByName('inAmountCard').Value:=FieldByName('AmountCard').AsFloat;
              toStoredProc.Params.ParamByName('inAmountDiscount').Value:=FieldByName('AmountDiscount').AsFloat;
+
+
 
 
              if not myExecToStoredProc then ;//exit;
@@ -3408,15 +3412,26 @@ begin
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
         Add('    , DiscountMovementItem_byBarCode.Id_Postgres as ParentId');
         Add('    , Kassa.Id_Postgres as KassaId');
-        Add('    , DiscountKlientAccountMoney.Summa as Amount');
-        Add('    , DiscountKlientAccountMoney.SummDiscountManual as AmountDiscount');
         Add('    , DiscountKlientAccountMoney.Id_Postgres');
+        Add('    , KassaProperty.valutaID ');
+        Add('    , if  Kassa.ID in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )   then 1 else 0 endif as isBNKassa');
+        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=1 then 1 else 0 endif as isPayGRN');
+        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=2 then 1 else 0 endif as isPayEUR');
+        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=5 then 1 else 0 endif as isPayUSD');
+        Add('    , if  isBNKassa = 1  then 1 else 0 endif as isPayCard');
+        Add('    , if  DiscountKlientAccountMoney.SummDiscountManual >0 then 1 else 0 endif as isDiscount');
+        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=1 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountGRN');
+        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=2 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountEUR');
+        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=5 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountUSD');
+        Add('    , if  isBNKassa = 1 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountCard');
+        Add('    , if  isDiscount= 1 then  DiscountKlientAccountMoney.SummDiscountManual else 0 endif as  AmountDiscount');
         Add('FROM dba.DiscountMovementItem_byBarCode');
         Add('    join DiscountMovement     on DiscountMovement.id = DiscountMovementItem_byBarCode.DiscountMovementId');
         Add('    left join BillItemsIncome on BillItemsIncome.id  = DiscountMovementItem_byBarCode.BillItemsIncomeId');
         Add('    join DiscountKlientAccountMoney  on DiscountKlientAccountMoney.DiscountMovementItemId = DiscountMovementItem_byBarCode.Id ');
         Add('                                and isCurrent = zc_rvYes() and discountMovementItemReturnId  is null');
         Add('    join Kassa on Kassa.Id = DiscountKlientAccountMoney.KassaID');
+        Add('    join KassaProperty  on KassaProperty.KassaID = Kassa.ID');
         Add('WHERE DiscountMovement.descId = 1  AND DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add(' and BillItemsIncome.Id_Postgres is not null '); // Тестовая строка - удалить в загрузке
         Add('ORDER BY ObjectId ');
@@ -3435,30 +3450,23 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpInsertUpdate_MI_Sale_Child_Sybase';  //  _Sybase определяем валюту через кассу
+        toStoredProc.StoredProcName:='gpInsertUpdate_MI_Sale_Child';  //  _Sybase определяем валюту через кассу
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
-//было
-//        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
-//        toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
-//        toStoredProc.Params.AddParam ('inisPayTotal',ftBoolean,ptInput, false);
-//        toStoredProc.Params.AddParam ('inisPayGRN',ftBoolean,ptInput, false);
-//        toStoredProc.Params.AddParam ('inisPayUSD',ftBoolean,ptInput, false);
-//        toStoredProc.Params.AddParam ('inisPayEUR',ftBoolean,ptInput, false);
-//        toStoredProc.Params.AddParam ('inisPayCard',ftBoolean,ptInput, false);
-//        toStoredProc.Params.AddParam ('inisDiscount',ftBoolean,ptInput, false);
-//        toStoredProc.Params.AddParam ('inAmountGRN',ftFloat,ptInput, false);
-//        toStoredProc.Params.AddParam ('inAmountUSD',ftFloat,ptInput, false);
-//        toStoredProc.Params.AddParam ('inAmountEUR',ftFloat,ptInput, false);
-//        toStoredProc.Params.AddParam ('inAmountCard',ftFloat,ptInput, false);
-//        toStoredProc.Params.AddParam ('inAmountDiscount',ftFloat,ptInput, false);
-//было
+        //
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inKassaId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, false);
+        toStoredProc.Params.AddParam ('inisPayTotal',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inisPayGRN',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inisPayUSD',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inisPayEUR',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inisPayCard',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inisDiscount',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inAmountGRN',ftFloat,ptInput, false);
+        toStoredProc.Params.AddParam ('inAmountUSD',ftFloat,ptInput, false);
+        toStoredProc.Params.AddParam ('inAmountEUR',ftFloat,ptInput, false);
+        toStoredProc.Params.AddParam ('inAmountCard',ftFloat,ptInput, false);
         toStoredProc.Params.AddParam ('inAmountDiscount',ftFloat,ptInput, false);
-//
         //
         HideCurGrid(True);
         while not EOF do
@@ -3469,26 +3477,19 @@ begin
 
              //
 //             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;  //  ioId  не используестя gpInsertUpdate_MI_Sale_Child - не поддерживается многократная загрузка
-//             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
-//             toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId').AsInteger;
-//             toStoredProc.Params.ParamByName('inisPayTotal').Value:=FieldByName('isPayTotal').AsBoolean;
-//             toStoredProc.Params.ParamByName('inisPayGRN').Value:=FieldByName('isPayGRN').AsBoolean;
-//             toStoredProc.Params.ParamByName('inisPayUSD').Value:=FieldByName('isPayUSD').AsBoolean;
-//             toStoredProc.Params.ParamByName('inisPayEUR').Value:=FieldByName('isPayEUR').AsBoolean;
-//             toStoredProc.Params.ParamByName('inisPayCard').Value:=FieldByName('isPayCard').AsBoolean;
-//             toStoredProc.Params.ParamByName('inisDiscount').Value:=FieldByName('inisDiscount').AsBoolean;
-//             toStoredProc.Params.ParamByName('inAmountGRN').Value:=FieldByName('AmountGRN').AsFloat;
-//             toStoredProc.Params.ParamByName('inAmountUSD').Value:=FieldByName('AmountUSD').AsFloat;
-//             toStoredProc.Params.ParamByName('inAmountEUR').Value:=FieldByName('AmountEUR').AsFloat;
-//             toStoredProc.Params.ParamByName('inAmountCard').Value:=FieldByName('AmountCard').AsFloat;
-//             toStoredProc.Params.ParamByName('inAmountDiscount').Value:=FieldByName('AmountDiscount').AsFloat;
-
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
              toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId').AsInteger;
-             toStoredProc.Params.ParamByName('inKassaId').Value:=FieldByName('KassaId').AsInteger;
-             toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+//             toStoredProc.Params.ParamByName('inisPayTotal').Value:=FieldByName('isPayTotal').AsString;
+             toStoredProc.Params.ParamByName('inisPayGRN').Value:= FieldByName('isPayGRN').AsString;
+             toStoredProc.Params.ParamByName('inisPayUSD').Value:=FieldByName('isPayUSD').AsString;
+             toStoredProc.Params.ParamByName('inisPayEUR').Value:=FieldByName('isPayEUR').AsString;
+             toStoredProc.Params.ParamByName('inisPayCard').Value:=FieldByName('isPayCard').AsString;
+             toStoredProc.Params.ParamByName('inisDiscount').Value:=FieldByName('isDiscount').AsString;
+             toStoredProc.Params.ParamByName('inAmountGRN').Value:=FieldByName('AmountGRN').AsFloat;
+             toStoredProc.Params.ParamByName('inAmountUSD').Value:=FieldByName('AmountUSD').AsFloat;
+             toStoredProc.Params.ParamByName('inAmountEUR').Value:=FieldByName('AmountEUR').AsFloat;
+             toStoredProc.Params.ParamByName('inAmountCard').Value:=FieldByName('AmountCard').AsFloat;
              toStoredProc.Params.ParamByName('inAmountDiscount').Value:=FieldByName('AmountDiscount').AsFloat;
-
 
              if not myExecToStoredProc then ;//exit;
 //             if FieldByName('Id_Postgres').AsInteger=0 then
