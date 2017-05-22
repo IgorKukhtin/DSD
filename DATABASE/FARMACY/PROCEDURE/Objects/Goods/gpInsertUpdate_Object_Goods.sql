@@ -150,6 +150,18 @@ BEGIN
                     ) AS tmpGoods ON tmpGoods.RetailId = Object_Retail.Id AND tmpGoods.GoodsId > 0
      WHERE Object_Retail.DescId = zc_Object_Retail();
 
+     IF COALESCE (ioId, 0) = 0
+     THEN
+       -- в случае вставки новой записи ищем созданный ИД товара
+       SELECT Object.Id
+       INTO ioId
+       FROM ObjectLink
+            JOIN Object ON Object.Id = ObjectLink.ObjectId 
+                       AND Object.DescId = zc_Object_Goods() 
+                       AND Object.ObjectCode = vbCode
+       WHERE ObjectLink.ChildObjectId = vbObjectId
+         AND ObjectLink.DescId = zc_ObjectLink_Goods_Object();
+     END IF; 
 
      -- Кусок ниже реализован !!!временно!!! пока работает одна сеть или много сетей !!!но со сквозной синхронизацией!!!
 
