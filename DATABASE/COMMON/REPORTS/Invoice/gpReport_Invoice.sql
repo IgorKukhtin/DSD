@@ -205,16 +205,16 @@ BEGIN
               THEN CAST (tmpMIInvoice.Amount * COALESCE (tmpMIInvoice.Price, 0) / tmpMIInvoice.CountForPrice AS NUMERIC (16, 2))
               ELSE CAST (tmpMIInvoice.Amount * COALESCE (tmpMIInvoice.Price, 0) AS NUMERIC (16, 2))
          END :: TFloat AS AmountSumm
-       , tmpMIInvoice.TotalSumm           ::TFloat AS TotalSumm
-       , tmpMLM.ServiceSumma              ::TFloat AS ServiceSumma
-       , (tmpMIInvoice.TotalSumm - COALESCE (tmpMLM.BankSumma_Before, 0))  ::TFloat  AS RemStart                 --ост.нач.счет
-       , tmpMLM.BankSumma                 ::TFloat AS BankSumma
+       , tmpMIInvoice.TotalSumm           :: TFloat AS TotalSumm
+       , tmpMLM.ServiceSumma              :: TFloat AS ServiceSumma
+       , (tmpMIInvoice.TotalSumm - COALESCE (tmpMLM.BankSumma_Before, 0)) :: TFloat AS RemStart                 --ост.нач.счет
+       , tmpMLM.BankSumma                 :: TFloat AS BankSumma
        , (tmpMIInvoice.TotalSumm - COALESCE (tmpMLM.BankSumma_Before, 0) - COALESCE (tmpMLM.BankSumma, 0))   ::TFloat  AS RemEnd
-       , tmpIncomeGroup.IncomeTotalSumma  ::TFloat AS IncomeTotalSumma
-       , tmpIncome.IncomeSumma            ::TFloat AS IncomeSumma
-       , (COALESCE (tmpMLM.BankSumma_Before, 0) - COALESCE (tmpIncomeGroup.IncomeTotalSumma_Before, 0) - COALESCE (tmpMLM.ServiceSumma_Before, 0))  ::TFloat AS DebetStart
-       , (COALESCE (tmpMLM.BankSumma_Before, 0) + COALESCE (tmpMLM.BankSumma, 0) - COALESCE (tmpIncomeGroup.IncomeTotalSumma_Before, 0) - COALESCE (tmpMLM.ServiceSumma_Before, 0) - COALESCE (tmpIncomeGroup.IncomeTotalSumma, 0) - COALESCE (tmpMLM.ServiceSumma, 0))  ::TFloat AS DebetEnd
-       , tmpMIInvoiceChild.AmountSumm     ::TFloat AS PaymentPlan
+       , tmpIncomeGroup.IncomeTotalSumma  :: TFloat AS IncomeTotalSumma
+       , tmpIncome.IncomeSumma            :: TFloat AS IncomeSumma
+       , (-1 * (COALESCE (tmpMLM.BankSumma_Before, 0) - COALESCE (tmpIncomeGroup.IncomeTotalSumma_Before, 0) - COALESCE (tmpMLM.ServiceSumma_Before, 0))) :: TFloat AS DebetStart
+       , (-1 * (COALESCE (tmpMLM.BankSumma_Before, 0) + COALESCE (tmpMLM.BankSumma, 0) - COALESCE (tmpIncomeGroup.IncomeTotalSumma_Before, 0) - COALESCE (tmpMLM.ServiceSumma_Before, 0) - COALESCE (tmpIncomeGroup.IncomeTotalSumma, 0) - COALESCE (tmpMLM.ServiceSumma, 0))) :: TFloat AS DebetEnd
+       , tmpMIInvoiceChild.AmountSumm     :: TFloat AS PaymentPlan
 
   FROM tmpMIInvoice
        LEFT JOIN tmpMLM         ON tmpMLM.MovementId_Invoice         = tmpMIInvoice.MovementId
