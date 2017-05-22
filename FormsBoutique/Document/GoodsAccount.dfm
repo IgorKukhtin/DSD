@@ -463,6 +463,17 @@ object GoodsAccountForm: TGoodsAccountForm
             HeaderAlignmentVert = vaCenter
             Width = 46
           end
+          object colSummChangePercent: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1057#1082#1080#1076#1082#1080' ('#1074' '#1043#1056#1053')'
+            DataBinding.FieldName = 'SummChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 91
+          end
           object colAmount_Sale: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1086#1076'./'#1074#1086#1079#1074#1088'.)'
             DataBinding.FieldName = 'Amount_Sale'
@@ -496,17 +507,6 @@ object GoodsAccountForm: TGoodsAccountForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
-          end
-          object colSummChangePercent: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1057#1082#1080#1076#1082#1080' ('#1074' '#1043#1056#1053')'
-            DataBinding.FieldName = 'SummChangePercent'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 91
           end
           object colAmountSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
@@ -543,6 +543,18 @@ object GoodsAccountForm: TGoodsAccountForm
             Options.Editing = False
             Width = 91
           end
+          object colTotalChangePercent: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1057#1082#1080#1076#1082#1080' ('#1074' '#1043#1056#1053')'
+            DataBinding.FieldName = 'TotalChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
           object colTotalSummPay: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1082' '#1086#1087#1083#1072#1090#1077
             DataBinding.FieldName = 'TotalSummPay'
@@ -570,18 +582,6 @@ object GoodsAccountForm: TGoodsAccountForm
           object colTotalPay_Return: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' ('#1074#1086#1079#1074#1088#1072#1090')'
             DataBinding.FieldName = 'TotalPay_Return'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 91
-          end
-          object colTotalChangePercent: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1057#1082#1080#1076#1082#1080' ('#1074' '#1043#1056#1053')'
-            DataBinding.FieldName = 'TotalChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -2248,8 +2248,8 @@ object GoodsAccountForm: TGoodsAccountForm
     KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 422
-    Top = 306
+    Left = 462
+    Top = 338
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -2292,7 +2292,7 @@ object GoodsAccountForm: TGoodsAccountForm
       end>
     PackSize = 1
     Left = 646
-    Top = 320
+    Top = 352
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_GoodsAccount_SetUnErased'
@@ -2470,14 +2470,14 @@ object GoodsAccountForm: TGoodsAccountForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 492
-    Top = 260
+    Left = 700
+    Top = 372
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 548
-    Top = 297
+    Left = 588
+    Top = 329
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
