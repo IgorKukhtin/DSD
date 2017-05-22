@@ -201,12 +201,12 @@ BEGIN
           SELECT Id INTO vbBarCodeGoodsId
           FROM Object_Goods_View 
           WHERE ObjectId = zc_Enum_GlobalConst_BarCode() 
-            AND GoodsName = vbBarCode;
+            AND GoodsName = inBarCode;
 
           IF COALESCE (vbBarCodeGoodsId, 0) = 0 
           THEN
                -- Создаем штрих коды, которых еще нет
-               vbBarCodeGoodsId:= lpInsertUpdate_Object(0, zc_Object_Goods(), 0, vbBarCode);
+               vbBarCodeGoodsId:= lpInsertUpdate_Object(0, zc_Object_Goods(), 0, inBarCode);
                PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Object(), vbBarCodeGoodsId, zc_Enum_GlobalConst_BarCode());
           END IF;       
 

@@ -139,6 +139,13 @@ BEGIN
                PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), inParentId, inAmountDiscount);
             END IF;
 
+            -- в мастер записать итого сумма оплаты грн
+            PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), inParentId, SUM (COALESCE (_tmpCash.Amount,0) * COALESCE (_tmpCash.CurrencyValue,1)) )
+            FROM _tmpCash
+                FULL JOIN _tmpMI ON _tmpMI.CashId = _tmpCash.CashId
+                                AND _tmpMI.CurrencyId = _tmpCash.CurrencyId
+             ; 
+
      END IF;
 
 END;

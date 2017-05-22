@@ -4,7 +4,7 @@ inherited GoodsForm: TGoodsForm
   ClientWidth = 883
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 899
-  ExplicitHeight = 481
+  ExplicitHeight = 482
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -44,7 +44,15 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 89
+            Width = 80
+          end
+          object cMorionCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1052#1086#1088#1080#1086#1085#1072
+            DataBinding.FieldName = 'MorionCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object colIdBarCode: TcxGridDBColumn
             Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076' ('#1072#1087#1090#1077#1082#1072')'
@@ -53,6 +61,14 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90
+          end
+          object cBarCode: TcxGridDBColumn
+            Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076' ('#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100')'
+            DataBinding.FieldName = 'BarCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 110
           end
           object clName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -788,6 +804,21 @@ inherited GoodsForm: TGoodsForm
         ComponentItem = 'PercentMarkup'
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MorionCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MorionCode'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BarCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BarCode'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -875,6 +906,21 @@ inherited GoodsForm: TGoodsForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'NDSKindName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MorionCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MorionCode'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BarCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BarCode'
         DataType = ftString
         MultiSelectSeparator = ','
       end>

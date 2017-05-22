@@ -945,6 +945,98 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actPrint1: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' <'#1044#1072#1085#1085#1099#1077' '#1090#1086#1083#1100#1082#1086' '#1087#1086' '#1089#1095#1077#1090#1072#1084'>'
+      Hint = #1055#1077#1095#1072#1090#1100' <'#1044#1072#1085#1085#1099#1077' '#1090#1086#1083#1100#1082#1086' '#1087#1086' '#1089#1095#1077#1090#1072#1084'>'
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'MovementId;NameBeforeName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName'
+          Value = ''
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inNumStr'
+          Value = '1'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1072#1084
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1072#1084
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint2: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' <'#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1076#1086#1083#1075#1072#1084'>'
+      Hint = #1055#1077#1095#1072#1090#1100' <'#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1076#1086#1083#1075#1072#1084'>'
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'MovementId;NameBeforeName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName'
+          Value = ''
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inNumStr'
+          Value = '3'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1072#1084
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1072#1084
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -979,6 +1071,11 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
           Value = ''
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inNumStr'
+          Value = '2'
           MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1072#1084
@@ -1073,6 +1170,22 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1087,6 +1200,16 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
+    end
+    object bbPrint1: TdxBarButton
+      Action = actPrint1
+      Category = 0
+      ImageIndex = 19
+    end
+    object bbPrint2: TdxBarButton
+      Action = actPrint2
+      Category = 0
+      ImageIndex = 21
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
