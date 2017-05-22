@@ -161,6 +161,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     colOperDate_Sale: TcxGridDBColumn;
     colInvNumber_Sale_Full: TcxGridDBColumn;
+    DescName: TcxGridDBColumn;
   private
   public
   end;

@@ -27,7 +27,7 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , TotalChangePercent TFloat
              , TotalSummPay TFloat
              , TotalPay_Grn TFloat, TotalPay_USD TFloat, TotalPay_Eur TFloat, TotalPay_Card TFloat
-             , TotalPayOth TFloat
+             , TotalPay TFloat, TotalPayOth TFloat
              , PartionMI_Id Integer, SaleMI_Id Integer, MovementId_Sale Integer, InvNumber_Sale_Full TVarChar
              , isErased Boolean
               )
@@ -232,8 +232,8 @@ BEGIN
            , tmpMI_Child.Amount_USD         ::TFloat AS TotalPay_USD
            , tmpMI_Child.Amount_EUR         ::TFloat AS TotalPay_EUR
            , tmpMI_Child.Amount_Bank        ::TFloat AS TotalPay_Card
+           , tmpMI.TotalPay                 ::TFloat
            , tmpMI.TotalPayOth              ::TFloat
-
 
            , tmpMI.PartionMI_Id
            , COALESCE (MI_Sale.Id, tmpMI.SaleMI_Id) AS SaleMI_Id
@@ -387,6 +387,7 @@ BEGIN
            , tmpMI_Child.Amount_USD         ::TFloat AS TotalPay_USD
            , tmpMI_Child.Amount_EUR         ::TFloat AS TotalPay_EUR
            , tmpMI_Child.Amount_Bank        ::TFloat AS TotalPay_Card
+           , tmpMI.TotalPay                 ::TFloat
            , tmpMI.TotalPayOth              ::TFloat
 
 

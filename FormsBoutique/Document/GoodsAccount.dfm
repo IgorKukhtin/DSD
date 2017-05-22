@@ -184,7 +184,6 @@ object GoodsAccountForm: TGoodsAccountForm
         Height = 203
         Align = alClient
         TabOrder = 0
-        ExplicitTop = 89
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -249,6 +248,21 @@ object GoodsAccountForm: TGoodsAccountForm
               Format = ',0.####'
               Kind = skSum
               Column = colSummDebt
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummChangePercent
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalPay_Sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalPay_Return
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -319,6 +333,21 @@ object GoodsAccountForm: TGoodsAccountForm
               Format = ',0.####'
               Kind = skSum
               Column = colSummDebt
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummChangePercent
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalPay_Sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalPay_Return
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -435,7 +464,7 @@ object GoodsAccountForm: TGoodsAccountForm
             Width = 46
           end
           object colAmount_Sale: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' ('#1076#1086#1082'.'#1087#1088#1086#1076#1072#1078#1072')'
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1086#1076'./'#1074#1086#1079#1074#1088'.)'
             DataBinding.FieldName = 'Amount_Sale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -529,6 +558,18 @@ object GoodsAccountForm: TGoodsAccountForm
           object colTotalPay_Sale: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1087#1088#1086#1076#1072#1078#1072')'
             DataBinding.FieldName = 'TotalPay_Sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object colTotalPay_Return: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' ('#1074#1086#1079#1074#1088#1072#1090')'
+            DataBinding.FieldName = 'TotalPay_Return'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -674,6 +715,14 @@ object GoodsAccountForm: TGoodsAccountForm
             Visible = False
             Options.Editing = False
             Width = 60
+          end
+          object DescName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'DescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object colOperDate_Sale: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1087#1088#1086#1076#1072#1078#1072') '
@@ -1945,8 +1994,8 @@ object GoodsAccountForm: TGoodsAccountForm
     Top = 337
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 326
-    Top = 287
+    Left = 302
+    Top = 327
   end
   object spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_GoodsAccount'
