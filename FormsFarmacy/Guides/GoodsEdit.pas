@@ -39,6 +39,10 @@ type
     ceSalePrice: TcxCurrencyEdit;
     cbIsFirst: TcxCheckBox;
     cbIsSecond: TcxCheckBox;
+    cxLabel10: TcxLabel;
+    ceMorionCode: TcxCurrencyEdit;
+    cxLabel11: TcxLabel;
+    ceBarCode: TcxTextEdit;
   private
     { Private declarations }
   public
