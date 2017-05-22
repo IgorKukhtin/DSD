@@ -57,6 +57,8 @@ type
     cxLabel7: TcxLabel;
     cxLabel8: TcxLabel;
     cxLabel9: TcxLabel;
+    spGet_Total: TdsdStoredProc;
+    actRefreshTotal: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

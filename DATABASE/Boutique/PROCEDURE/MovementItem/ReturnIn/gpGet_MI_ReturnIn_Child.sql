@@ -155,28 +155,28 @@ BEGIN
                , tmpMI.AmountCard        ::TFloat
 
                , ( COALESCE (tmpMI.AmountGRN,0) 
-               +  (COALESCE(tmpMI.AmountUSD,0) * COALESCE(tmp_USD.Amount,0))
-               +  (COALESCE(tmpMI.AmountEUR,0) * COALESCE(tmp_EUR.Amount,0)) 
-               +  COALESCE(tmpMI.AmountCard,0) )                            ::TFloat AS Amount
+               +  (COALESCE (tmpMI.AmountUSD,0) * COALESCE (tmpMI.CurrencyValue_USD, tmp_USD.Amount))
+               +  (COALESCE (tmpMI.AmountEUR,0) * COALESCE (tmpMI.CurrencyValue_EUR, tmp_EUR.Amount)) 
+               +   COALESCE (tmpMI.AmountCard,0) )                            ::TFloat AS Amount
 
-               , CASE WHEN vbSumm - ( COALESCE (tmpMI.AmountGRN,0) 
-                                    + (COALESCE(tmpMI.AmountUSD,0) * COALESCE(tmp_USD.Amount,0))
-                                    + (COALESCE(tmpMI.AmountEUR,0) * COALESCE(tmp_EUR.Amount,0)) 
-                                    + COALESCE(tmpMI.AmountCard,0) ) > 0 
+               , CASE WHEN vbSumm - (  COALESCE(tmpMI.AmountGRN,0) 
+                                    + (COALESCE(tmpMI.AmountUSD,0) * COALESCE (tmpMI.CurrencyValue_USD, tmp_USD.Amount))
+                                    + (COALESCE(tmpMI.AmountEUR,0) * COALESCE (tmpMI.CurrencyValue_EUR, tmp_EUR.Amount)) 
+                                    +  COALESCE(tmpMI.AmountCard,0) ) > 0 
                       THEN vbSumm - ( COALESCE (tmpMI.AmountGRN,0) 
-                                    + (COALESCE(tmpMI.AmountUSD,0) * COALESCE(tmp_USD.Amount,0))
-                                    + (COALESCE(tmpMI.AmountEUR,0) * COALESCE(tmp_EUR.Amount,0)) 
-                                    + COALESCE(tmpMI.AmountCard,0) )
+                                    + (COALESCE(tmpMI.AmountUSD,0) * COALESCE (tmpMI.CurrencyValue_USD, tmp_USD.Amount))
+                                    + (COALESCE(tmpMI.AmountEUR,0) * COALESCE (tmpMI.CurrencyValue_EUR, tmp_EUR.Amount)) 
+                                    +  COALESCE(tmpMI.AmountCard,0) )
                       ELSE 0
                  END            ::TFloat AS AmountRemains          
                , CASE WHEN vbSumm - ( COALESCE (tmpMI.AmountGRN,0) 
-                                    + (COALESCE(tmpMI.AmountUSD,0) * COALESCE(tmp_USD.Amount,0))
-                                    + (COALESCE(tmpMI.AmountEUR,0) * COALESCE(tmp_EUR.Amount,0)) 
-                                    + COALESCE(tmpMI.AmountCard,0) ) < 0 
-                      THEN (vbSumm - ( COALESCE (tmpMI.AmountGRN,0) 
-                                    + (COALESCE(tmpMI.AmountUSD,0) * COALESCE(tmp_USD.Amount,0))
-                                    + (COALESCE(tmpMI.AmountEUR,0) * COALESCE(tmp_EUR.Amount,0)) 
-                                    + COALESCE(tmpMI.AmountCard,0) )) * (-1)
+                                    + (COALESCE(tmpMI.AmountUSD,0) * COALESCE (tmpMI.CurrencyValue_USD, tmp_USD.Amount))
+                                    + (COALESCE(tmpMI.AmountEUR,0) * COALESCE (tmpMI.CurrencyValue_EUR, tmp_EUR.Amount)) 
+                                    + COALESCE (tmpMI.AmountCard,0) ) < 0 
+                      THEN (vbSumm - ( COALESCE(tmpMI.AmountGRN,0) 
+                                    + (COALESCE(tmpMI.AmountUSD,0) * COALESCE (tmpMI.CurrencyValue_USD, tmp_USD.Amount))
+                                    + (COALESCE(tmpMI.AmountEUR,0) * COALESCE (tmpMI.CurrencyValue_EUR, tmp_EUR.Amount)) 
+                                    +  COALESCE(tmpMI.AmountCard,0) )) * (-1)
                       ELSE 0
                  END             ::TFloat AS AmountChange
 

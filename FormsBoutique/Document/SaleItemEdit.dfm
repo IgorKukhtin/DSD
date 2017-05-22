@@ -192,6 +192,19 @@ object SaleItemEditForm: TSaleItemEditForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actRefreshTotal: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_Total
+      StoredProcList = <
+        item
+          StoredProc = spGet_Total
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -461,10 +474,13 @@ object SaleItemEditForm: TSaleItemEditForm
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
     IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefreshTotal
     ComponentList = <
       item
+        Component = ceCurrencyValue_EUR
       end
       item
+        Component = ceCurrencyValue_USD
       end
       item
       end
@@ -489,5 +505,107 @@ object SaleItemEditForm: TSaleItemEditForm
       end>
     Left = 392
     Top = 120
+  end
+  object spGet_Total: TdsdStoredProc
+    StoredProcName = 'gpGet_MI_Sale_Child_Total'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValueUSD'
+        Value = 0.000000000000000000
+        Component = ceCurrencyValue_USD
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValueEUR'
+        Value = 0.000000000000000000
+        Component = ceCurrencyValue_EUR
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountGRN'
+        Value = 0.000000000000000000
+        Component = ceAmountGRN
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountUSD'
+        Value = 0.000000000000000000
+        Component = ceAmountUSD
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountEUR'
+        Value = 0.000000000000000000
+        Component = ceAmountEUR
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountCard'
+        Value = 0.000000000000000000
+        Component = ceAmountCARD
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountDiscount'
+        Value = 0.000000000000000000
+        Component = ceAmountDiscount
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Amount'
+        Value = 0.000000000000000000
+        Component = ceAmount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountRemains'
+        Value = 0.000000000000000000
+        Component = ceAmountRemains
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountChange'
+        Value = 0.000000000000000000
+        Component = ceAmountChange
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 368
+    Top = 288
   end
 end
