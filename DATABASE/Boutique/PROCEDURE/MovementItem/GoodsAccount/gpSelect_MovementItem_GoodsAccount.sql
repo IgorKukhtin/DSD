@@ -264,7 +264,7 @@ BEGIN
                 FROM tmpMI_Sale
                      FULL JOIN tmpMI_Master ON tmpMI_Master.GoodsId = tmpMI_Sale.GoodsId
                                            AND tmpMI_Master.SaleMI_ID = tmpMI_Sale.MI_Id  -- уточнить правильную связь
---                WHERE tmpMI_Sale.SummDebt <> 0
+                WHERE tmpMI_Sale.SummDebt <> 0
                 )
 
     , tmpMI_Child AS (SELECT MovementItem.ParentId
