@@ -35,6 +35,10 @@ type
     edPaidKind: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
     PaidKindGuides: TdsdGuides;
+    actPrint1: TdsdPrintAction;
+    actPrint2: TdsdPrintAction;
+    bbPrint1: TdxBarButton;
+    bbPrint2: TdxBarButton;
   private
     { Private declarations }
   public
