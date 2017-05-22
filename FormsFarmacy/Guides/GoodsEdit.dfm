@@ -1,20 +1,20 @@
 ﻿inherited GoodsEditForm: TGoodsEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-  ClientHeight = 376
+  ClientHeight = 434
   ClientWidth = 351
   ExplicitWidth = 357
-  ExplicitHeight = 404
+  ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Top = 341
+    Top = 393
     TabOrder = 11
-    ExplicitTop = 341
+    ExplicitTop = 393
   end
   inherited bbCancel: TcxButton
-    Top = 341
+    Top = 393
     TabOrder = 12
-    ExplicitTop = 341
+    ExplicitTop = 393
   end
   object edName: TcxTextEdit [2]
     Left = 9
@@ -33,12 +33,12 @@
     Caption = #1043#1088#1091#1087#1087#1072' '#1088#1086#1076#1080#1090#1077#1083#1100
   end
   object ceCode: TcxCurrencyEdit [5]
-    Left = 7
+    Left = 9
     Top = 28
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 0
-    Width = 334
+    Width = 162
   end
   object Код: TcxLabel [6]
     Left = 9
@@ -143,7 +143,7 @@
     Caption = '% '#1085#1072#1094#1077#1085#1082#1080
   end
   object cePercentMarkup: TcxCurrencyEdit [20]
-    Left = 8
+    Left = 9
     Top = 273
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
@@ -185,6 +185,31 @@
     Properties.ReadOnly = True
     TabOrder = 25
     Width = 139
+  end
+  object cxLabel10: TcxLabel [26]
+    Left = 185
+    Top = 5
+    Caption = #1050#1086#1076' '#1052#1086#1088#1080#1086#1085#1072
+  end
+  object ceMorionCode: TcxCurrencyEdit [27]
+    Left = 183
+    Top = 28
+    EditValue = 0.000000000000000000
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 27
+    Width = 158
+  end
+  object cxLabel11: TcxLabel [28]
+    Left = 9
+    Top = 333
+    Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076' ('#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100')'
+  end
+  object ceBarCode: TcxTextEdit [29]
+    Left = 9
+    Top = 356
+    TabOrder = 29
+    Width = 332
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 155
@@ -305,6 +330,21 @@
         Value = Null
         Component = cePercentMarkup
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMorionCode'
+        Value = 0
+        Component = ceMorionCode
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBarCode'
+        Value = Null
+        Component = ceBarCode
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -438,6 +478,19 @@
         Value = Null
         Component = cbIsSecond
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MorionCode'
+        Value = Null
+        Component = ceMorionCode
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BarCode'
+        Value = Null
+        Component = ceBarCode
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 288

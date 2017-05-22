@@ -52,6 +52,8 @@ type
     clisSp: TcxGridDBColumn;
     clLastPriceDate: TcxGridDBColumn;
     clCountPrice: TcxGridDBColumn;
+    cMorionCode: TcxGridDBColumn;
+    cBarCode: TcxGridDBColumn;
   private
     { Private declarations }
   public
