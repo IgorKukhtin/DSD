@@ -91,8 +91,12 @@ BEGIN
         -- теперь следуюющий
         vbIndex := vbIndex + 1;
     END LOOP;
+
     -- !!!Временно!!!
     -- inUnitId:= (SELECT tmpList.UnitId FROM _tmpUnitMinPrice_List LIMIT 1);
+
+    -- !!!Временно!!!
+    -- INSERT INTO _tmpUnitMinPrice_List (UnitId) SELECT 0 WHERE NOT EXISTS (SELECT 1 FROM _tmpUnitMinPrice_List);
 
     -- парсим товары
     vbIndex := 1;
