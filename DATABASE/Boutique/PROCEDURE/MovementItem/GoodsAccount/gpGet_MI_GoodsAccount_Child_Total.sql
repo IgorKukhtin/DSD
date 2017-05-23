@@ -1,10 +1,10 @@
 -- Function: gpGet_Movement_Income()
 
-DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_Total (Integer,Integer,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_GoodsAccount_Child_Total (Integer,Integer,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
 
 
-CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_Total(
-    IN inId                Integer  , -- ключ  парамеметр что б понимать какой режим - общая оплата =0 
+CREATE OR REPLACE FUNCTION gpGet_MI_GoodsAccount_Child_Total(
+    IN inId                Integer  , -- ключ   парамеметр что б понимать какой режим - общая оплата =0 
     IN inMovementId        Integer  , --
     IN inCurrencyValueUSD  TFloat   , --
     IN inCurrencyValueEUR  TFloat   , --
@@ -93,4 +93,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpGet_MI_Sale_Child_Total(inId := 92 , inMovementId := 28 ,  inSession := '2');
+-- select * from gpGet_MI_GoodsAccount_Child_Total(inId := 92 , inMovementId := 28 ,  inSession := '2');

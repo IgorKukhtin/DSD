@@ -32,7 +32,7 @@ BEGIN
    END IF; 
 
    -- проверка уникальности для свойства <Наименование Cash>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Cash(), inName); 
+--   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Cash(), inName); 
    -- проверка уникальности для свойства <Код Cash>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Cash(), ioCode);
 
@@ -57,6 +57,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+23.05.17                                                          *
 13.05.17                                                          *
 09.05.17                                                          *
 06.03.17                                                          *

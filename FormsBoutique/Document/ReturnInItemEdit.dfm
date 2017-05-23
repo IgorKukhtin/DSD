@@ -2,7 +2,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
   Left = 0
   Top = 0
   Caption = #1054#1087#1083#1072#1090#1072'/'#1074#1086#1079#1074#1088#1072#1090
-  ClientHeight = 335
+  ClientHeight = 295
   ClientWidth = 438
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 108
-    Top = 291
+    Top = 254
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -27,7 +27,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
   end
   object cxButton2: TcxButton
     Left = 252
-    Top = 291
+    Top = 254
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -66,12 +66,12 @@ object ReturnInItemEditForm: TReturnInItemEditForm
   end
   object cxLabel1: TcxLabel
     Left = 17
-    Top = 218
+    Top = 181
     Caption = #1048#1090#1086#1075#1086', '#1075#1088#1085':'
   end
   object ceAmount: TcxCurrencyEdit
     Left = 83
-    Top = 217
+    Top = 180
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
@@ -80,12 +80,12 @@ object ReturnInItemEditForm: TReturnInItemEditForm
   end
   object cxLabel3: TcxLabel
     Left = 174
-    Top = 218
+    Top = 181
     Caption = #1054#1089#1090#1072#1090#1086#1082', '#1075#1088#1085':'
   end
   object ceAmountRemains: TcxCurrencyEdit
     Left = 249
-    Top = 217
+    Top = 180
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
@@ -94,12 +94,12 @@ object ReturnInItemEditForm: TReturnInItemEditForm
   end
   object cxLabel4: TcxLabel
     Left = 185
-    Top = 253
+    Top = 216
     Caption = #1057#1076#1072#1095#1072', '#1075#1088#1085':'
   end
   object ceAmountChange: TcxCurrencyEdit
     Left = 249
-    Top = 252
+    Top = 215
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
@@ -131,11 +131,12 @@ object ReturnInItemEditForm: TReturnInItemEditForm
     Width = 120
   end
   object ceAmountDiscount: TcxCurrencyEdit
-    Left = 173
-    Top = 170
+    Left = 31
+    Top = 154
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 15
+    Visible = False
     Width = 120
   end
   object cxLabel2: TcxLabel
@@ -172,13 +173,14 @@ object ReturnInItemEditForm: TReturnInItemEditForm
     Caption = #1054#1087#1083#1072#1090#1072' - '#1075#1088#1085' ('#1082#1072#1088#1090#1086#1095#1082#1072')'
   end
   object cxLabel9: TcxLabel
-    Left = 31
-    Top = 171
+    Left = 8
+    Top = 154
     Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1087#1088#1080' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1080
+    Visible = False
   end
   object ActionList: TActionList
     Left = 16
-    Top = 240
+    Top = 203
     object dsdDataSetRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -286,14 +288,6 @@ object ReturnInItemEditForm: TReturnInItemEditForm
         Name = 'inAmountCARD'
         Value = Null
         Component = ceAmountCARD
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountDiscount'
-        Value = '2'
-        Component = ceAmountDiscount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -421,13 +415,6 @@ object ReturnInItemEditForm: TReturnInItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountDiscount'
-        Value = Null
-        Component = ceAmountDiscount
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'Amount'
         Value = Null
         Component = ceAmount
@@ -457,7 +444,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
       end>
     PackSize = 1
     Left = 368
-    Top = 232
+    Top = 195
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -476,7 +463,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 64
-    Top = 288
+    Top = 251
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -514,7 +501,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
     Top = 120
   end
   object spGet_Total: TdsdStoredProc
-    StoredProcName = 'gpGet_MI_Return_Child_Total'
+    StoredProcName = 'gpGet_MI_ReturnIn_Child_Total'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -583,14 +570,6 @@ object ReturnInItemEditForm: TReturnInItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountDiscount'
-        Value = 'False'
-        Component = ceAmountDiscount
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'Amount'
         Value = 0.000000000000000000
         Component = ceAmount
@@ -613,6 +592,6 @@ object ReturnInItemEditForm: TReturnInItemEditForm
       end>
     PackSize = 1
     Left = 368
-    Top = 288
+    Top = 251
   end
 end

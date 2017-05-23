@@ -11,20 +11,21 @@ CREATE OR REPLACE FUNCTION gpGet_MI_ReturnIn_Child(
 RETURNS TABLE (Id Integer
              , CurrencyValue_USD TFloat, ParValue_USD TFloat
              , CurrencyValue_EUR TFloat, ParValue_EUR TFloat
-             , AmountGRN     TFloat
-             , AmountUSD     TFloat
-             , AmountEUR     TFloat
-             , AmountCard    TFloat
-             , Amount        TFloat
-             , AmountRemains TFloat
-             , AmountChange TFloat
-             , isPayTotal    Boolean
+             , AmountGRN      TFloat
+             , AmountUSD      TFloat
+             , AmountEUR      TFloat
+             , AmountCard     TFloat
+             , Amount         TFloat
+             , AmountRemains  TFloat
+             , AmountChange   TFloat
+             , isPayTotal     Boolean
               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbOperDate TDateTime;
    DECLARE vbSumm TFloat;
+   DECLARE vbSummChangePercent TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
@@ -35,7 +36,7 @@ BEGIN
      FROM Movement
      WHERE Movement.Id = inMovementId;
      -- сумма к оплате
-     SELECT CAST ((COALESCE(MovementItem.Amount,0) *  COALESCE(MIFloat_OperPriceList.ValueData,0) / COALESCE(MIFloat_CountForPrice.ValueData,1) 
+     SELECT CAST ( SUM (COALESCE(MovementItem.Amount,0) *  COALESCE(MIFloat_OperPriceList.ValueData,0) / COALESCE(MIFloat_CountForPrice.ValueData,1) 
                  - COALESCE(MIFloat_TotalChangePercent.ValueData,0)) AS NUMERIC (16, 2)) 
     INTO vbSumm
      FROM MovementItem
@@ -72,11 +73,11 @@ BEGIN
                         AND MovementItem.isErased   = FALSE
                      )
 
-          SELECT 0 :: Integer                    AS Id
-               , tmp_USD.Amount      ::TFloat    AS CurrencyValue_USD
-               , tmp_USD.ParValue    ::TFloat    AS ParValue_USD
-               , tmp_EUR.Amount      ::TFloat    AS CurrencyValue_EUR
-               , tmp_EUR.ParValue    ::TFloat    AS ParValue_EUR
+          SELECT 0                       :: Integer  AS Id
+               , tmp_USD.Amount          ::TFloat    AS CurrencyValue_USD
+               , tmp_USD.ParValue        ::TFloat    AS ParValue_USD
+               , tmp_EUR.Amount          ::TFloat    AS CurrencyValue_EUR
+               , tmp_EUR.ParValue        ::TFloat    AS ParValue_EUR
                , tmpMI.AmountGRN         ::TFloat
                , tmpMI.AmountUSD         ::TFloat
                , tmpMI.AmountEUR         ::TFloat
@@ -90,11 +91,11 @@ BEGIN
                , CASE WHEN vbSumm - ( COALESCE (tmpMI.AmountGRN,0) 
                                     + (COALESCE(tmpMI.AmountUSD,0) * COALESCE(tmp_USD.Amount,0))
                                     + (COALESCE(tmpMI.AmountEUR,0) * COALESCE(tmp_EUR.Amount,0)) 
-                                    + COALESCE(tmpMI.AmountCard,0) ) > 0 
+                                    + COALESCE(tmpMI.AmountCard,0)) > 0 
                       THEN vbSumm - ( COALESCE (tmpMI.AmountGRN,0) 
                                     + (COALESCE(tmpMI.AmountUSD,0) * COALESCE(tmp_USD.Amount,0))
                                     + (COALESCE(tmpMI.AmountEUR,0) * COALESCE(tmp_EUR.Amount,0)) 
-                                    + COALESCE(tmpMI.AmountCard,0) )
+                                    + COALESCE(tmpMI.AmountCard,0))
                       ELSE 0
                  END            ::TFloat AS AmountRemains          
                , CASE WHEN vbSumm - ( COALESCE (tmpMI.AmountGRN,0) 
@@ -162,7 +163,7 @@ BEGIN
                , CASE WHEN vbSumm - (  COALESCE(tmpMI.AmountGRN,0) 
                                     + (COALESCE(tmpMI.AmountUSD,0) * COALESCE (tmpMI.CurrencyValue_USD, tmp_USD.Amount))
                                     + (COALESCE(tmpMI.AmountEUR,0) * COALESCE (tmpMI.CurrencyValue_EUR, tmp_EUR.Amount)) 
-                                    +  COALESCE(tmpMI.AmountCard,0) ) > 0 
+                                    +  COALESCE(tmpMI.AmountCard,0)) > 0 
                       THEN vbSumm - ( COALESCE (tmpMI.AmountGRN,0) 
                                     + (COALESCE(tmpMI.AmountUSD,0) * COALESCE (tmpMI.CurrencyValue_USD, tmp_USD.Amount))
                                     + (COALESCE(tmpMI.AmountEUR,0) * COALESCE (tmpMI.CurrencyValue_EUR, tmp_EUR.Amount)) 

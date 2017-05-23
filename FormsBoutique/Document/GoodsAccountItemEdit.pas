@@ -29,7 +29,7 @@ type
     spInsertUpdate: TdsdStoredProc;
     FormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
-    dsdDataSetRefresh: TdsdDataSetRefresh;
+    actRefreshTotal: TdsdDataSetRefresh;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
     dsdFormClose: TdsdFormClose;
     cxPropertiesStore: TcxPropertiesStore;
@@ -57,6 +57,7 @@ type
     cxLabel7: TcxLabel;
     cxLabel8: TcxLabel;
     cxLabel9: TcxLabel;
+    spGet_Total: TdsdStoredProc;
   private
     { Private declarations }
   public

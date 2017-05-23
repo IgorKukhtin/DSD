@@ -156,6 +156,7 @@ object SaleForm: TSaleForm
       Left = 252
       Top = 63
       EditValue = 42864d
+      Properties.DisplayFormat = 'DD.MM'
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -191,9 +192,6 @@ object SaleForm: TSaleForm
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 83
@@ -965,7 +963,7 @@ object SaleForm: TSaleForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 75
-        Width = 8
+        Width = 1054
         Height = 8
         HotZoneClassName = 'TcxXPTaskBarStyle'
         HotZone.Visible = False
