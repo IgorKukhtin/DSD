@@ -131,6 +131,8 @@ type
     cbReturnIn: TCheckBox;
     cbSale_Child: TCheckBox;
     cbReturnIn_Child: TCheckBox;
+    cbGroup11: TCheckBox;
+    cbGroup22: TCheckBox;
 
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
@@ -291,6 +293,48 @@ end;
 procedure TMainForm.btnCreateTableDatClick(Sender: TObject);
 begin
  lCreateTableDat.Caption:= 'FALSE';
+
+     fExecSqFromQuery_noErr(
+       ' 	CREATE TABLE _Group11 (	 ' +
+       ' 	Code INTEGER ,	 ' +
+       ' 	Goodsgroup TVarCharMedium ,	 ' +
+       ' 	col1  TVarCharMedium ,	 ' +
+       ' 	col2  TVarCharMedium ,	 ' +
+       ' 	col3  TVarCharMedium ,	 ' +
+       ' 	col4  TVarCharMedium ,	 ' +
+       ' 	col5  TVarCharMedium ,	 ' +
+       ' 	col6  TVarCharMedium ,	 ' +
+       ' 	UnitName  TVarCharMedium )' );
+     fExecSqFromQuery_noErr(
+       ' 	CREATE TABLE _Group22 (	 ' +
+       ' 	Code INTEGER ,	 ' +
+       ' 	Goodsgroup TVarCharMedium ,	 ' +
+       ' 	col1  TVarCharMedium ,	 ' +
+       ' 	col2  TVarCharMedium ,	 ' +
+       ' 	col3  TVarCharMedium ,	 ' +
+       ' 	col4  TVarCharMedium ,	 ' +
+       ' 	col5  TVarCharMedium ,	 ' +
+       ' 	col6  TVarCharMedium ,	 ' +
+       ' 	UnitName  TVarCharMedium )' );
+
+      fExecSqFromQuery(
+     ' 	LOAD TABLE DBA._Group11	 ' +
+     ' 	 FROM '''+pathdatfiles.Text+'\Group1.csv''	 ' +
+     ' 	 QUOTES ON ESCAPES ON STRIP OFF	 ' +
+     ' 	 DELIMITED BY '',''	 '
+     );
+      fExecSqFromQuery(
+     ' 	LOAD TABLE DBA._Group22	 ' +
+     ' 	 FROM '''+pathdatfiles.Text+'\Group2.csv''	 ' +
+     ' 	 QUOTES ON ESCAPES ON STRIP OFF	 ' +
+     ' 	 DELIMITED BY '',''	 '
+     );
+fExecSqFromQuery(
+ ' update _Group11 set col2 = ''Детское'' where col2 = ''Детск'' or col2 = ''Детс''; '
++' update _Group22 set col2 = ''Детское'' where col2 = ''Детск'' or col2 = ''Детс''; '
+                );
+ fExecSqFromQuery_noErr('alter table dba._Group11 add ParentId2 integer null;');
+ fExecSqFromQuery_noErr('alter table dba._Group22 add ParentId2 integer null;');
 
 
  if cbChado.Checked then
@@ -1064,6 +1108,24 @@ begin
     Close;
   end;
 
+  fExecSqFromQuery(
+       ' update goods2 set ParentId =  tmp.ParentId'
+      +' from goodsProperty'
+             //через вьюху, т.к. подзапрос не пашет
+      +'      inner join _Group22 as tmp on tmp.GroupsName = goodsProperty.GroupsName'
+      +' where goods2.ParentId = 500000'
+      +'   and goodsProperty.Id = goodsProperty.GoodsId'
+       );
+
+  fExecSqFromQuery(
+       ' update goods2 set ParentId =  tmp.ParentId'
+      +' from goodsProperty'
+             //через вьюху, т.к. подзапрос не пашет
+      +'      inner join _Group11 as tmp on tmp.GroupsName = goodsProperty.GroupsName'
+      +' where goods2.ParentId = 500000'
+      +'   and goodsProperty.Id = goodsProperty.GoodsId'
+       );
+
       //создаем Таблицу, т.к. подзапрос не пашет
       try fExecSqFromQuery_noErr('create table dba._TableLoadPG11 (GroupsName TVarCharLongLong primary key, Id integer)');
       except end;
@@ -1496,6 +1558,9 @@ begin
  myEnabledCB(cbGoods2);
 // Правки полей
 fExecSqFromQuery(
+ ' update _Group11 set col2 = ''Детское'' where col2 = ''Детск'' or col2 = ''Детс''; '+
+ ' update _Group22 set col2 = ''Детское'' where col2 = ''Детск'' or col2 = ''Детс''; '+
+
  ' update sop set col1=''Детское'' where col1=''Детск''; ' +
  ' update sav_out  set col1=''Муж'' where col1=''муж''; ' +
  ' update sav_out  set col1=''Жен'' where col1=''жен''; ' +
@@ -1509,22 +1574,47 @@ fExecSqFromQuery(
         Close;
         Clear;
         Add('select distinct col1, col2, col3, col4, col5, col6, '+'''Sop'' as Name'+' from Sop');
+        Add(' where '+ BoolToStr(cbSop.Checked) + ' <> 0');
+
         Add('union');
         Add('select distinct col1, col2, col3, col4, col5, col6, '+'''Vint'' as Name'+' from Vint');
+        Add(' where '+ BoolToStr(cbVint.Checked) + ' <> 0');
+
         Add('union');
         Add('select distinct col1, col2, col3, col4, col5, col6, '+'''Tl'' as Name'+' from Tl');
+        Add(' where '+ BoolToStr(cbTl.Checked) + ' <> 0');
+
         Add('union');
         Add('select distinct col1, col2, col3, col4, col5, col6, '+'''Esc'' as Name'+' from Esc');
+        Add(' where '+ BoolToStr(cbEsc.Checked) + ' <> 0');
+
         Add('union');
         Add('select distinct col1, col2, col3, col4, col5, col6, '+'''Mm'' as Name'+' from Mm');
+        Add(' where '+ BoolToStr(cbMm.Checked) + ' <> 0');
+
         Add('union');
         Add('select distinct col1, col2, col3, col4, col5, col6, '+'''Sav_out'' as Name'+' from Sav_out');
+        Add(' where '+ BoolToStr(cbSav_out.Checked) + ' <> 0');
+
         Add('union');
         Add('select distinct col1, col2, col3, col4, col5, col6, '+'''Ter_out'' as Name'+' from Ter_out');
+        Add(' where '+ BoolToStr(cbTer_out.Checked) + ' <> 0');
+
         Add('union');
         Add('select distinct col1, col2, col3, col4, col5, col6, '+'''Sav'' as Name'+' from Sav');
+        Add(' where '+ BoolToStr(cbSav.Checked) + ' <> 0');
+
         Add('union');
         Add('select distinct col1, col2, col3, col4, col5, col6, '+'''Chado'' as Name'+' from Chado');
+        Add(' where '+ BoolToStr(cbChado.Checked) + ' <> 0');
+
+        Add('union');
+        Add('select distinct col1, col2, col3, col4, col5, col6, '+'''_Group11'' as Name'+' from _Group11');
+        Add(' where '+ BoolToStr(cbGroup11.Checked) + ' <> 0');
+
+        Add('union');
+        Add('select distinct col1, col2, col3, col4, col5, col6, '+'''_Group22'' as Name'+' from _Group22');
+        Add(' where '+ BoolToStr(cbGroup22.Checked) + ' <> 0');
 
         Open;
         //
@@ -2021,14 +2111,15 @@ begin
         try fExecSqFromQuery_noErr('alter table dba.BillItems add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.BillItemsIncome add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.BillItemsIncome add GoodsId_Postgres integer null;'); except end;
-        try fExecSqFromQuery_noErr('alter table dba.PriceListItems add Id_Postgres integer null;'); except end;
-        try fExecSqFromQuery_noErr('alter table dba.DiscountTaxItems add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.DiscountMovementInventory add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.DiscountMovementItemInventory_byBarCode add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.DiscountMovement add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.DiscountMovementItem_byBarCode add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.DiscountMovementItemReturn_byBarCode add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.DiscountKlientAccountMoney add Id_Postgres integer null;'); except end;
+        //История
+        try fExecSqFromQuery_noErr('alter table dba.PriceListItems add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.DiscountTaxItems add Id_Postgres integer null;'); except end;
      end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
