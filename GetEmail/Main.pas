@@ -659,6 +659,9 @@ begin
                    PanelHost.Caption:= 'Start Mail (5.4.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                    if flag then
                    begin
+                        if Pos(AnsiUpperCase('@ukr.net'), AnsiUpperCase(vbArrayMail[ii].UserName)) > 0 then
+                          IdIMAP4.CopyMsg(i, 'Удаленные');
+
                         IdIMAP4.DeleteMsgs(i);    //IMAP
                         IdIMAP4.ExpungeMailBox;
                    end;
