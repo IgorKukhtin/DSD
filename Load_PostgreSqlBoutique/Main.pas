@@ -1962,7 +1962,11 @@ begin
      if not fStop then pLoadGuide_GoodsInfo;
      if not fStop then pLoadGuide_GoodsSize;
      if not fStop then pLoadGuide_Valuta;
-     if not fStop then pLoadGuide_Unit;
+     if not fStop then
+     begin
+      pLoadGuide_Unit;
+      pLoadGuide_Unit;
+     end;
      if not fStop then pLoadGuide_Period;
      if not fStop then
      Begin
@@ -2129,7 +2133,7 @@ begin
         try fExecSqFromQuery_noErr('alter table dba.PriceList add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Users add MemberId_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Users add UserId_Postgres integer null;'); except end;
-        try fExecSqFromQuery_noErr('alter table dba.Unit add KassaId_Postgres integer null;'); except end;
+
 
      end;
 end;
@@ -2206,8 +2210,6 @@ begin
       fExecSqFromQuery('update dba.Users set MemberId_Postgres = null ');
       fExecSqFromQuery('update dba.Users set UserId_Postgres = null ');
       fExecSqFromQuery('update dba.Unit set Id_Postgres = null ');
-      fExecSqFromQuery('update dba.Unit set KassaId_Postgres = null ');
-
 
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -4831,19 +4833,63 @@ begin
         Clear;
         Add('select');
         Add('       KassaProperty.KassaId as ObjectId');
-        Add('     , Podr.id as KassaUnitObjectId');
         Add('     , 0 as ObjectCode');
         Add('     , KassaProperty.KassaPropertyName as ObjectName');
         Add('     , zc_erasedDel() as zc_erasedDel');
         Add('     , KassaProperty.Erased as Erased');
         Add('     , KassaProperty.Id_Postgres');
         Add('     , Valuta.Id_Postgres as CurrencyId');
-        Add('     , Podr.UnitName ');
-        Add('     , Podr.Id_Postgres As UnitID');
-        Add('     , Podr.KassaId_Postgres As KassaId_Postgres');
+        Add('     , case');
+        Add('       when ObjectId = 21 then 235');
+        Add('       when ObjectId = 25 then 235 ');
+        Add('       when ObjectId = 26 then 235 ');
+        Add('       when ObjectId = 27 then 235 ');
+        Add('       when ObjectId = 29 then 204');
+        Add('       when ObjectId = 30 then 234');
+        Add('       when ObjectId = 31 then 240 ');
+        Add('       when ObjectId = 32 then 240 ');
+        Add('       when ObjectId = 33 then 240');
+        Add('       when ObjectId = 34 then 240');
+        Add('       when ObjectId = 35 then 234 ');
+        Add('       when ObjectId = 36 then 234 ');
+        Add('       when ObjectId = 37 then 234 ');
+        Add('       when ObjectId = 38 then 204');
+        Add('       when ObjectId = 39 then 204');
+        Add('       when ObjectId = 40 then 204 ');
+        Add('       when ObjectId = 41 then 1121');
+        Add('       when ObjectId = 42 then 1121');
+        Add('       when ObjectId = 43 then 1121');
+        Add('       when ObjectId = 44 then 1121');
+        Add('       when ObjectId = 45 then 969');
+        Add('       when ObjectId = 46 then 969');
+        Add('       when ObjectId = 47 then 969');
+        Add('       when ObjectId = 48 then 969');
+        Add('       when ObjectId = 49 then 5727');
+        Add('       when ObjectId = 50 then 5727');
+        Add('       when ObjectId = 51 then 5727');
+        Add('       when ObjectId = 52 then 5727');
+        Add('       when ObjectId = 53 then 11772');
+        Add('       when ObjectId = 54 then 11772');
+        Add('       when ObjectId = 55 then 11772');
+        Add('       when ObjectId = 56 then 11772');
+        Add('       when ObjectId = 57 then 4646');
+        Add('       when ObjectId = 58 then 4646');
+        Add('       when ObjectId = 59 then 4646');
+        Add('       when ObjectId = 60 then 4646');
+        Add('       when ObjectId = 61 then 20484');
+        Add('       when ObjectId = 62 then 20484');
+        Add('       when ObjectId = 63 then 20484');
+        Add('       when ObjectId = 64 then 20484');
+        Add('       when ObjectId = 65 then 29018');
+        Add('       when ObjectId = 66 then 29018');
+        Add('       when ObjectId = 67 then 29018');
+        Add('       when ObjectId = 68 then 29018');
+        Add('       end   as IDUnitID');
+        Add('     , podr.Id_Postgres as UnitID    ');
         Add('from dba.KassaProperty');
-        Add('left join (select * from Unit where KindUnit = zc_kuUnit()) as podr  on podr.KassaId = KassaProperty.KassaId');
         Add('left join Valuta on Valuta.Id = KassaProperty.ValutaId');
+        Add('left join ');
+        Add('(select * from Unit where KindUnit = zc_kuUnit() or id = 4646) as Podr on podr.id = IDUnitID');
         Add('order by  ObjectId');
         Open;
         //
@@ -4868,11 +4914,7 @@ begin
              //!!!
              if fStop then begin  HideCurGrid(False); exit; end;
              //
-             if FieldByName('KassaUnitObjectId').AsInteger<>0 then
-               toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('KassaId_Postgres').AsInteger
-               else
-               toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              toStoredProc.Params.ParamByName('inCurrencyId').Value:=FieldByName('CurrencyId').AsInteger;
@@ -4880,13 +4922,9 @@ begin
              if not myExecToStoredProc then ;//exit;
              if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
              //
-             if (FieldByName('KassaUnitObjectId').AsInteger<>0) and (FieldByName('KassaId_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.Unit set KassaId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('KassaUnitObjectId').AsString);
 
-
-             if (FieldByName('KassaUnitObjectId').AsInteger=0) and(FieldByName('Id_Postgres').AsInteger=0)
+             if (FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.KassaProperty set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-
              //
              Next;
              Application.ProcessMessages;
@@ -5521,13 +5559,16 @@ begin
         Close;
         Clear;
         Add('select Unit.Id as ObjectId');
-        Add('     , 0 as ObjectCode');
-        Add('     , Unit.UnitName as ObjectName');
-        Add('     , zc_erasedDel() as zc_erasedDel');
-        Add('     , Unit.Erased as Erased');
-        Add('     , Unit.Id_Postgres');
+        Add('    , 0 as ObjectCode');
+        Add('    , Unit.UnitName as ObjectName');
+        Add('    , if Unit.ParentId<> 200 then  Unit.ParentId else 0 endif as  IDParentId ');
+        Add('    ,  Parent.Id_Postgres as ParentId ');
+        Add('    , zc_erasedDel() as zc_erasedDel');
+        Add('    , Unit.Erased as Erased');
+        Add('    , Unit.Id_Postgres');
         Add('from dba.Unit');
-        Add('where KindUnit =  zc_kuUnit()');
+        Add('left join Unit as Parent on Parent.id = IDParentId ');
+        Add('where Unit.KindUnit =  zc_kuUnit() or Unit.id = 4646');
         Add('order by ObjectId');
         Open;
         //
@@ -5547,7 +5588,7 @@ begin
         toStoredProc.Params.AddParam ('inPhone',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inDiscountTax',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inParentlId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inChildId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inBankAccountId',ftInteger,ptInput, 0);
         //
@@ -5562,6 +5603,7 @@ begin
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              toStoredProc.Params.ParamByName('inJuridicalId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId').AsInteger;
              if not myExecToStoredProc then ;//exit;
              if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
              //
