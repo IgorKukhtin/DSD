@@ -1932,7 +1932,7 @@ begin
      if not fStop then pLoadGuide_GoodsInfo;
      if not fStop then pLoadGuide_GoodsSize;
      if not fStop then pLoadGuide_Valuta;
-     if not fStop then pLoadGuide_Cash;
+     if not fStop then pLoadGuide_Unit;
      if not fStop then pLoadGuide_Period;
      if not fStop then
      Begin
@@ -1942,7 +1942,7 @@ begin
      if not fStop then pLoadGuide_Discount;
      if not fStop then pLoadGuide_DiscountTools;
      if not fStop then pLoadGuide_Partner;
-     if not fStop then pLoadGuide_Unit;
+     if not fStop then pLoadGuide_Cash;
      if not fStop then pLoadGuide_Label;
      if not fStop then pLoadGuide_Goods;
      if not fStop then pLoadGuide_GoodsItem;
@@ -2099,6 +2099,7 @@ begin
         try fExecSqFromQuery_noErr('alter table dba.PriceList add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Users add MemberId_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Users add UserId_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.Unit add KassaId_Postgres integer null;'); except end;
 
      end;
 end;
@@ -2150,15 +2151,16 @@ begin
       //if cbPeriod.Checked then
       fExecSqFromQuery('update dba.Period set Id_Postgres = null');
       //if cbGoodsGroup.Checked then
-      fExecSqFromQuery('update dba.Goods set Id_Postgres = null where Goods.HasChildren <> zc_hsLeaf()');
+//      fExecSqFromQuery('update dba.Goods set Id_Postgres = null where Goods.HasChildren <> zc_hsLeaf()');
+      fExecSqFromQuery('update dba.Goods set Id_Postgres = null');
       //if cbDiscount.Checked then
       fExecSqFromQuery('update dba.Discount set Id_Postgres = null');
       //if cbDiscountTools.Checked then
       fExecSqFromQuery('update dba.DiscountTools set Id_Postgres = null');
       //if cbPartner.Checked then
-      fExecSqFromQuery('update dba.Unit set Id_Postgres = null  where KindUnit = zc_kuIncome()');
+//      fExecSqFromQuery('update dba.Unit set Id_Postgres = null  where KindUnit = zc_kuIncome()');
       //if cbUnit.Checked then
-      fExecSqFromQuery('update dba.Unit set Id_Postgres = null  where KindUnit = zc_kuUnit()');
+//      fExecSqFromQuery('update dba.Unit set Id_Postgres = null  where KindUnit = zc_kuUnit()');
       //if cbLabel.Checked then
 //      fExecSqFromQuery('update dba.GoodsProperty set Id_pg_label = null');
       //if cbGoods.Checked then
@@ -2166,23 +2168,25 @@ begin
       //if cbGoodsItem.Checked then
       fExecSqFromQuery('update dba.GoodsProperty set Id_Pg_GoodsItem = null');
       //if cbClient.Checked then
-      fExecSqFromQuery('update dba.Unit set Id_Postgres = null  where KindUnit = zc_kuClient()');
+//      fExecSqFromQuery('update dba.Unit set Id_Postgres = null  where KindUnit = zc_kuClient()');
       //if cbJuridical.Checked then
       fExecSqFromQuery('update dba.Firma set Id_Postgres = null ');
       //
       fExecSqFromQuery('update dba.PriceList set Id_Postgres = null ');
       fExecSqFromQuery('update dba.Users set MemberId_Postgres = null ');
       fExecSqFromQuery('update dba.Users set UserId_Postgres = null ');
+      fExecSqFromQuery('update dba.Unit set Id_Postgres = null ');
+      fExecSqFromQuery('update dba.Unit set KassaId_Postgres = null ');
 
 
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pSetNullDocument_Id_Postgres;
 begin
-     fExecSqFromQuery('update dba.Bill set Id_Postgres = null where Id_Postgres is not null'); //
-     fExecSqFromQuery('update dba.BillItems set Id_Postgres = null where Id_Postgres is not null');
-     fExecSqFromQuery('update dba.BillItemsIncome set Id_Postgres = null where Id_Postgres is not null');
-     fExecSqFromQuery('update dba.BillItemsIncome set GoodsId_Postgres = null where GoodsId_Postgres is not null');
+     fExecSqFromQuery('update dba.Bill set Id_Postgres = null'); //
+     fExecSqFromQuery('update dba.BillItems set Id_Postgres = null');
+     fExecSqFromQuery('update dba.BillItemsIncome set Id_Postgres = null');
+     fExecSqFromQuery('update dba.BillItemsIncome set GoodsId_Postgres = null');
      fExecSqFromQuery('update dba.PriceListItems set Id_Postgres = null ');
      fExecSqFromQuery('update dba.DiscountTaxItems set Id_Postgres = null ');
      fExecSqFromQuery('update dba.DiscountMovementInventory set Id_Postgres = null');
@@ -4794,16 +4798,22 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select KassaProperty.KassaId as ObjectId');
+        Add('select');
+        Add('       KassaProperty.KassaId as ObjectId');
+        Add('     , Podr.id as KassaUnitObjectId');
         Add('     , 0 as ObjectCode');
         Add('     , KassaProperty.KassaPropertyName as ObjectName');
         Add('     , zc_erasedDel() as zc_erasedDel');
         Add('     , KassaProperty.Erased as Erased');
         Add('     , KassaProperty.Id_Postgres');
         Add('     , Valuta.Id_Postgres as CurrencyId');
+        Add('     , Podr.UnitName ');
+        Add('     , Podr.Id_Postgres As UnitID');
+        Add('     , Podr.KassaId_Postgres As KassaId_Postgres');
         Add('from dba.KassaProperty');
+        Add('left join (select * from Unit where KindUnit = zc_kuUnit()) as podr  on podr.KassaId = KassaProperty.KassaId');
         Add('left join Valuta on Valuta.Id = KassaProperty.ValutaId');
-        Add('order by ObjectId');
+        Add('order by  ObjectId');
         Open;
         //
         fStop:=cbOnlyOpen.Checked;
@@ -4827,15 +4837,25 @@ begin
              //!!!
              if fStop then begin  HideCurGrid(False); exit; end;
              //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             if FieldByName('KassaUnitObjectId').AsInteger<>0 then
+               toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('KassaId_Postgres').AsInteger
+               else
+               toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              toStoredProc.Params.ParamByName('inCurrencyId').Value:=FieldByName('CurrencyId').AsInteger;
+             toStoredProc.Params.ParamByName('inUnitId').Value:=FieldByName('UnitId').AsInteger;
              if not myExecToStoredProc then ;//exit;
              if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
              //
-             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             if (FieldByName('KassaUnitObjectId').AsInteger<>0) and (FieldByName('KassaId_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.Unit set KassaId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('KassaUnitObjectId').AsString);
+
+
+             if (FieldByName('KassaUnitObjectId').AsInteger=0) and(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.KassaProperty set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+
              //
              Next;
              Application.ProcessMessages;

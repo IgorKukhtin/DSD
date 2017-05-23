@@ -332,10 +332,10 @@
         object cbCash: TCheckBox
           Tag = 10
           Left = 15
-          Top = 176
+          Top = 288
           Width = 194
-          Height = 17
-          Caption = '1.11. '#1050#1072#1089#1089#1072
+          Height = 12
+          Caption = '1.17. '#1050#1072#1089#1089#1072
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -439,10 +439,10 @@
         object cbUnit: TCheckBox
           Tag = 10
           Left = 15
-          Top = 282
+          Top = 176
           Width = 178
-          Height = 24
-          Caption = '1.17. '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+          Height = 17
+          Caption = '1.11. '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -1176,7 +1176,6 @@
   end
   object toZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
-    UTF8StringsAsWideField = True
     Catalog = 'public'
     DesignConnection = True
     HostName = 'localhost'
