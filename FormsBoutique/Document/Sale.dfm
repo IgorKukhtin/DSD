@@ -156,6 +156,7 @@ object SaleForm: TSaleForm
       Left = 252
       Top = 63
       EditValue = 42864d
+      Properties.DisplayFormat = 'DD.MM'
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -198,8 +199,6 @@ object SaleForm: TSaleForm
         Height = 206
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 112
-        ExplicitTop = 80
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS

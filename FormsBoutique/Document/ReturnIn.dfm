@@ -156,6 +156,7 @@ object ReturnInForm: TReturnInForm
       Left = 252
       Top = 63
       EditValue = 42864d
+      Properties.DisplayFormat = 'DD.MM'
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
