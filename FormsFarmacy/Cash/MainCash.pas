@@ -276,6 +276,7 @@ type
     N16: TMenuItem;
     lblAmount: TLabel;
     edAmount: TcxCurrencyEdit;
+    BarCode: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -1319,19 +1320,28 @@ begin
    //
    if Key = #13 then
    begin
+       //
+       RemainsCDS.AfterScroll := nil;
+       RemainsCDS.DisableConstraints;
        try
+           // —начала ищем по внутреннему Ў/ 
            StrToInt(Copy(ceScaner.Text,4, 9));
-           //
-           RemainsCDS.AfterScroll := nil;
-           RemainsCDS.DisableConstraints;
            //нашли
            isFind:= RemainsCDS.Locate('GoodsId_main', StrToInt(Copy(ceScaner.Text,4, 9)), []);
            //еще проверили что равно...
            isFind:= (isFind) and (RemainsCDS.FieldByName('GoodsId_main').AsInteger = StrToInt(Copy(ceScaner.Text,4, 9)));
            //
-           if isFind
-           then lbScaner.Caption:='найдено ' + ceScaner.Text
-           else lbScaner.Caption:='не найдено ' + ceScaner.Text;
+           if not isFind then
+           begin
+             isFind:= RemainsCDS.Locate('BarCode', Trim(ceScaner.Text), []);
+             //еще проверили что равно...
+             isFind:= (isFind) and (Trim(RemainsCDS.FieldByName('BarCode').AsString) = Trim(ceScaner.Text));
+           end;
+           //
+           if isFind then
+             lbScaner.Caption:='найдено ' + ceScaner.Text
+           else
+             lbScaner.Caption:='не найдено ' + ceScaner.Text;
            //
            ceScaner.Text:='';
        except
