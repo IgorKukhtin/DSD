@@ -106,40 +106,40 @@ BEGIN
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
          
             LEFT JOIN ObjectLink AS ObjectLink_Client_City
-                                 ON ObjectLink_Client_City.ObjectId = Object_To.Id
+                                 ON ObjectLink_Client_City.ObjectId = Object_From.Id
                                 AND ObjectLink_Client_City.DescId = zc_ObjectLink_Client_City()
             LEFT JOIN Object AS Object_City ON Object_City.Id = ObjectLink_Client_City.ChildObjectId
 
             LEFT JOIN ObjectFloat AS ObjectFloat_DiscountTax 
-                                  ON ObjectFloat_DiscountTax.ObjectId = Object_To.Id 
+                                  ON ObjectFloat_DiscountTax.ObjectId = Object_From.Id 
                                  AND ObjectFloat_DiscountTax.DescId = zc_ObjectFloat_Client_DiscountTax()
 
             LEFT JOIN ObjectFloat AS ObjectFloat_TotalSummPay 
-                                  ON ObjectFloat_TotalSummPay.ObjectId = Object_To.Id 
+                                  ON ObjectFloat_TotalSummPay.ObjectId = Object_From.Id 
                                  AND ObjectFloat_TotalSummPay.DescId = zc_ObjectFloat_Client_TotalSummPay()
 
             LEFT JOIN ObjectFloat AS ObjectFloat_LastSumm 
-                                  ON ObjectFloat_LastSumm.ObjectId = Object_To.Id 
+                                  ON ObjectFloat_LastSumm.ObjectId = Object_From.Id 
                                  AND ObjectFloat_LastSumm.DescId = zc_ObjectFloat_Client_LastSumm()
 
             LEFT JOIN ObjectDate AS ObjectDate_LastDate 
-                                 ON ObjectDate_LastDate.ObjectId = Object_To.Id 
+                                 ON ObjectDate_LastDate.ObjectId = Object_From.Id 
                                 AND ObjectDate_LastDate.DescId = zc_ObjectDate_Client_LastDate()
 
             LEFT JOIN ObjectString AS ObjectString_Address 
-                                   ON ObjectString_Address.ObjectId = Object_To.Id 
+                                   ON ObjectString_Address.ObjectId = Object_From.Id 
                                   AND ObjectString_Address.DescId = zc_ObjectString_Client_Address()
 
             LEFT JOIN ObjectDate AS ObjectDate_HappyDate 
-                                 ON ObjectDate_HappyDate.ObjectId = Object_To.Id 
+                                 ON ObjectDate_HappyDate.ObjectId = Object_From.Id 
                                 AND ObjectDate_HappyDate.DescId = zc_ObjectDate_Client_HappyDate()
 
             LEFT JOIN ObjectString AS ObjectString_PhoneMobile 
-                                   ON ObjectString_PhoneMobile.ObjectId = Object_To.Id 
+                                   ON ObjectString_PhoneMobile.ObjectId = Object_From.Id 
                                   AND ObjectString_PhoneMobile.DescId = zc_ObjectString_Client_PhoneMobile()
 
             LEFT JOIN ObjectString AS ObjectString_Phone 
-                                   ON ObjectString_Phone.ObjectId = Object_To.Id 
+                                   ON ObjectString_Phone.ObjectId = Object_From.Id 
                                   AND ObjectString_Phone.DescId = zc_ObjectString_Client_Phone()
           
        WHERE Movement.Id = inMovementId

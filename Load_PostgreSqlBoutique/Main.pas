@@ -585,6 +585,13 @@ fExecSqFromQuery(
      //
      // !!!не ошибка - так надо!!!
      fExecSqFromQuery(' insert into Goods2 (id, GoodsName, Erased, ParentID, HasChildren, isPrinted)'
+                    + '   select 93, ''Аксессуары'',zc_erasedVis(), null, 2, zc_rvYes()');
+     fExecSqFromQuery(' insert into Goods2 (id, GoodsName, Erased, ParentID, HasChildren, isPrinted)'
+                    + '   select 113, ''Обувь'',zc_erasedVis(), null, 2, zc_rvYes()');
+     fExecSqFromQuery(' insert into Goods2 (id, GoodsName, Erased, ParentID, HasChildren, isPrinted)'
+                    + '   select 94, ''Одежда'',zc_erasedVis(), null, 2, zc_rvYes()');
+     // !!!не ошибка - так надо!!!
+     fExecSqFromQuery(' insert into Goods2 (id, GoodsName, Erased, ParentID, HasChildren, isPrinted)'
                     + '   select 500000, ''АРХИВ'',zc_erasedVis(), null, 2, zc_rvYes()');
      // !!!не ошибка - так надо!!!
      // fExecSqFromQuery(' 	delete from Goods2 where id = 500000');
@@ -1064,7 +1071,7 @@ begin
 end;
 
 procedure TMainForm.btnUpdateGoods2Click(Sender: TObject);
-var Res1, Res2 :Integer;
+var Res1, Res2, Res3 :Integer;
 begin
   lUpdateGoods2.Caption:= 'FALSE';
 
@@ -1109,22 +1116,32 @@ begin
   end;
 
   fExecSqFromQuery(
-       ' update goods2 set ParentId =  tmp.ParentId'
+       ' update goods2 set ParentId =  tmp.ParentId2'
       +' from goodsProperty'
              //через вьюху, т.к. подзапрос не пашет
-      +'      inner join _Group22 as tmp on tmp.GroupsName = goodsProperty.GroupsName'
+      +'      inner join _Group22 as tmp on tmp.Goodsgroup = goodsProperty.GroupsName'
       +' where goods2.ParentId = 500000'
       +'   and goodsProperty.Id = goodsProperty.GoodsId'
        );
 
   fExecSqFromQuery(
-       ' update goods2 set ParentId =  tmp.ParentId'
+       ' update goods2 set ParentId =  tmp.ParentId2'
       +' from goodsProperty'
              //через вьюху, т.к. подзапрос не пашет
-      +'      inner join _Group11 as tmp on tmp.GroupsName = goodsProperty.GroupsName'
+      +'      inner join _Group11 as tmp on tmp.Goodsgroup = goodsProperty.GroupsName'
       +' where goods2.ParentId = 500000'
       +'   and goodsProperty.Id = goodsProperty.GoodsId'
        );
+
+  with fromQuery_two,Sql do begin
+    Close;
+    Clear;
+    Add('select count(*) as res from goods2 where ParentId = 500000');
+    Open;
+    Res3:= fromQuery_two.FieldByName('res').AsInteger;
+    Close;
+  end;
+
 
       //создаем Таблицу, т.к. подзапрос не пашет
       try fExecSqFromQuery_noErr('create table dba._TableLoadPG11 (GroupsName TVarCharLongLong primary key, Id integer)');
@@ -1158,7 +1175,7 @@ commit
 rollback
 }
 
- lUpdateGoods2.Caption:= 'TRUE ('+IntToStr(Res1)+') - ('+IntToStr(Res2)+')';
+ lUpdateGoods2.Caption:= 'TRUE ('+IntToStr(Res1)+') - ('+IntToStr(Res2)+') - ('+IntToStr(Res3)+')';
 
 end;
 
@@ -1562,12 +1579,25 @@ fExecSqFromQuery(
  ' update _Group22 set col2 = ''Детское'' where col2 = ''Детск'' or col2 = ''Детс''; '+
 
  ' update sop set col1=''Детское'' where col1=''Детск''; ' +
+ ' update sop set col2=''Детское'' where col2=''Детск''; ' +
+
  ' update sav_out  set col1=''Муж'' where col1=''муж''; ' +
+ ' update sav_out  set col2=''Муж'' where col2=''муж''; ' +
+
  ' update sav_out  set col1=''Жен'' where col1=''жен''; ' +
+ ' update sav_out  set col2=''Жен'' where col2=''жен''; ' +
+
  ' update ter_out  set col1=''Муж'' where col1=''муж''; ' +
+ ' update ter_out  set col2=''Муж'' where col2=''муж''; ' +
+
  ' update ter_out  set col1=''Жен'' where col1=''жен''; ' +
+ ' update ter_out  set col2=''Жен'' where col2=''жен''; ' +
+
  ' update tl  set col1=''Муж'' where col1=''муж''; ' +
- ' update tl  set col1=''Жен'' where col1=''жен''; '
+ ' update tl  set col2=''Муж'' where col2=''муж''; ' +
+
+ ' update tl  set col1=''Жен'' where col1=''жен''; ' +
+ ' update tl  set col2=''Жен'' where col2=''жен''; '
 );
 
   with fromQuery,Sql do begin

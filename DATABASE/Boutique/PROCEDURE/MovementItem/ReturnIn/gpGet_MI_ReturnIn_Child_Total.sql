@@ -1,9 +1,9 @@
 -- Function: gpGet_Movement_Income()
 
-DROP FUNCTION IF EXISTS gpGet_MI_Sale_Child_Total (Integer,Integer,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_ReturnIn_Child_Total (Integer,Integer,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_ReturnIn_Child_Total (Integer,Integer,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar);
 
-
-CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_Total(
+CREATE OR REPLACE FUNCTION gpGet_MI_ReturnIn_Child_Total(
     IN inId                Integer  , -- ключ  парамеметр что б понимать какой режим - общая оплата =0 
     IN inMovementId        Integer  , --
     IN inCurrencyValueUSD  TFloat   , --
@@ -12,7 +12,6 @@ CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_Total(
     IN inAmountUSD         TFloat   , --
     IN inAmountEUR         TFloat   , --
     IN inAmountCard        TFloat   , --
-    IN inAmountDiscount    TFloat   , --
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Amount        TFloat
@@ -51,31 +50,26 @@ BEGIN
           SELECT ( COALESCE (inAmountGRN,0) 
                +  (COALESCE (inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
                +  (COALESCE (inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1)) 
-               +   COALESCE (inAmountCard,0) 
-               +   COALESCE (inAmountDiscount,0)  )             ::TFloat AS Amount
+               +   COALESCE (inAmountCard,0)   )             ::TFloat AS Amount
 
                , CASE WHEN vbSumm - (  COALESCE(inAmountGRN,0) 
                                     + (COALESCE(inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
                                     + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1)) 
-                                    +  COALESCE(inAmountCard,0)
-                                    +  COALESCE(inAmountDiscount,0) ) > 0 
+                                    +  COALESCE(inAmountCard,0) ) > 0 
                       THEN vbSumm - (  COALESCE(inAmountGRN,0) 
                                     + (COALESCE(inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
                                     + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1)) 
-                                    +  COALESCE(inAmountCard,0) 
-                                    +  COALESCE(inAmountDiscount,0) )
+                                    +  COALESCE(inAmountCard,0) )
                       ELSE 0
                  END                                            ::TFloat AS AmountRemains          
                , CASE WHEN vbSumm - (  COALESCE(inAmountGRN,0) 
                                     + (COALESCE(inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
                                     + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1)) 
-                                    +  COALESCE(inAmountCard,0)
-                                    +  COALESCE(inAmountDiscount,0) ) < 0 
+                                    +  COALESCE(inAmountCard,0) ) < 0 
                       THEN (vbSumm - ( COALESCE(inAmountGRN,0) 
                                     + (COALESCE(inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
                                     + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1)) 
-                                    +  COALESCE(inAmountCard,0) 
-                                    +  COALESCE(inAmountDiscount,0) )) * (-1)
+                                    +  COALESCE(inAmountCard,0) )) * (-1)
                       ELSE 0
                  END                                            ::TFloat AS AmountChange
                 ;
@@ -93,4 +87,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpGet_MI_Sale_Child_Total(inId := 92 , inMovementId := 28 ,  inSession := '2');
+-- select * from gpGet_MI_ReturnIn_Child_Total(inId := 92 , inMovementId := 28 ,  inSession := '2');

@@ -142,6 +142,7 @@ object GoodsAccountForm: TGoodsAccountForm
       Left = 252
       Top = 63
       EditValue = 42864d
+      Properties.DisplayFormat = 'DD.MM'
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -1775,8 +1776,8 @@ object GoodsAccountForm: TGoodsAccountForm
       MoveParams = <>
       Caption = 'actInsertAction1'
       ImageIndex = 1
-      FormName = 'TReturnInItemEditForm'
-      FormNameParam.Value = 'TReturnInItemEditForm'
+      FormName = 'TGoodsAccountItemEditForm'
+      FormNameParam.Value = 'TGoodsAccountItemEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

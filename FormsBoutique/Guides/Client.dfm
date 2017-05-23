@@ -98,6 +98,8 @@ object ClientForm: TClientForm
       object HappyDate: TcxGridDBColumn
         Caption = #1044#1077#1085#1100' '#1088#1086#1078#1076#1077#1085#1080#1103
         DataBinding.FieldName = 'HappyDate'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'DD.MM'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter

@@ -445,8 +445,6 @@ begin
                       end;
                  end;
 
-
-
                  PanelHost.Caption:= 'Start Mail (3.1) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                  IdIMAP4.SelectMailBox('INBOX');//IMAP
                  PanelHost.Caption:= 'Start Mail (3.2) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
@@ -517,6 +515,7 @@ begin
                    //удаление письма
                    //***if flag then IdIMAP4.Delete(i);   //POP3
                    PanelHost.Caption:= 'Start Mail (5.4.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
+                   IdIMAP4.CopyMsg(i, 'Удаленные');
                    IdIMAP4.DeleteMsgs(i);    //IMAP
                    IdIMAP4.ExpungeMailBox;
                    PanelHost.Caption:= 'Start Mail (5.5.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);

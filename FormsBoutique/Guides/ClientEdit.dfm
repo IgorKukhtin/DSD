@@ -154,6 +154,7 @@ object ClientEditForm: TClientEditForm
     Left = 148
     Top = 117
     EditValue = 42796d
+    Properties.DisplayFormat = 'DD.MM'
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 2
