@@ -86,22 +86,22 @@ BEGIN
                     UNION
                      SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Unit() AND inFromId = 0 AND vbIsBranch = FALSE -- AND vbIsGroup = TRUE
                     UNION
-                     SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Member() AND vbIsBranch = FALSE AND (inIsMO_all = TRUE OR Id = inFromId)
+                     SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Member() AND vbIsBranch = FALSE AND (inIsMO_all = TRUE OR Id = inFromId) AND inDescId IN (zc_Movement_Loss(), zc_Movement_Send())
                     UNION
-                     SELECT Id AS UnitId FROM Object  WHERE DescId = zc_Object_Car() AND vbIsBranch = FALSE AND (inIsMO_all = TRUE OR Id = inFromId)
+                     SELECT Id AS UnitId FROM Object  WHERE DescId = zc_Object_Car() AND vbIsBranch = FALSE AND (inIsMO_all = TRUE OR Id = inFromId) AND inDescId IN (zc_Movement_Loss(), zc_Movement_Send())
                     )
          , tmpTo AS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (inToId) AS lfSelect WHERE inToId > 0
-                    -- UNION
-                    --  SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Unit() AND inToId = 0 AND inDescId <> zc_Movement_Loss() -- AND (vbIsGroup = TRUE OR inDescId = zc_Movement_Loss())
                     UNION
-                     SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Member() AND (/*inIsMO_all = TRUE OR*/ Id = inToId) -- AND inDescId IN (/*zc_Movement_Loss(),*/ zc_Movement_Send())
+                     SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Unit() AND inToId = 0 AND inDescId <> zc_Movement_Loss() -- AND (vbIsGroup = TRUE OR inDescId = zc_Movement_Loss())
                     UNION
-                     SELECT Id AS UnitId FROM Object  WHERE DescId = zc_Object_Car() AND (/*inIsMO_all = TRUE OR*/ Id = inToId) -- AND inDescId IN (/*zc_Movement_Loss(),*/ zc_Movement_Send())
+                     SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Member() AND (inIsMO_all = TRUE OR Id = inToId) AND inDescId IN (/*zc_Movement_Loss(),*/ zc_Movement_Send())
+                    UNION
+                     SELECT Id AS UnitId FROM Object  WHERE DescId = zc_Object_Car() AND (inIsMO_all = TRUE OR Id = inToId) AND inDescId IN (/*zc_Movement_Loss(),*/ zc_Movement_Send())
                    )
     INSERT INTO _tmpUnit (UnitId, UnitId_by, isActive)
-       SELECT tmpFrom.UnitId, COALESCE (tmpTo.UnitId, 0), FALSE FROM tmpFrom LEFT JOIN tmpTo ON tmpTo.UnitId > 0 WHERE tmpFrom.UnitId <> COALESCE (tmpTo.UnitId, 0) OR inDescId <> zc_Movement_Send()
-      -- UNION
-       -- SELECT tmpTo.UnitId, COALESCE (tmpFrom.UnitId, 0), TRUE FROM tmpTo LEFT JOIN tmpFrom ON tmpFrom.UnitId > 0 WHERE vbIsBranch = FALSE AND (tmpTo.UnitId <> COALESCE (tmpFrom.UnitId, 0) OR inDescId <> zc_Movement_Send())
+       SELECT tmpFrom.UnitId, COALESCE (tmpTo.UnitId, 0), FALSE FROM tmpFrom LEFT JOIN tmpTo ON tmpTo.UnitId > 0
+      UNION
+       SELECT tmpTo.UnitId, COALESCE (tmpFrom.UnitId, 0), TRUE FROM tmpTo LEFT JOIN tmpFrom ON tmpFrom.UnitId > 0 WHERE vbIsBranch = FALSE
       ;
 
     -- !!!!!!!!!!!!!!!!!!!!!!!
@@ -221,7 +221,7 @@ BEGIN
                             , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ObjectIntId_Analyzer END AS GoodsKindId
                             , COALESCE (MIContainer.AccountId, 0)  AS AccountId
                             , CASE WHEN inDescId = zc_Movement_Loss() THEN COALESCE (MIContainer.AnalyzerId, 0) ELSE 0 END AS ArticleLossId
-                            , COALESCE (MIContainer.ContainerId_Analyzer, 0) AS ContainerId_Analyzer
+                            , COALESCE (MIContainer.ContainerId_Analyzer, 0) AS ContainerId_Analyzer -- !!!äëÿ ÎÏèÓ!!!
 
                             , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Count() THEN -1 * MIContainer.Amount ELSE 0 END) AS AmountOut
                             , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Summ()  THEN -1 * MIContainer.Amount ELSE 0 END) AS SummOut
@@ -233,7 +233,6 @@ BEGIN
 
                        FROM MovementItemContainer AS MIContainer
                             INNER JOIN _tmpUnit ON _tmpUnit.UnitId    = MIContainer.WhereObjectId_analyzer
-                                               -- AND (_tmpUnit.UnitId_by = COALESCE (MIContainer.ObjectExtId_Analyzer, 0) OR _tmpUnit.UnitId_by = 0)
                                                AND (_tmpUnit.UnitId_by = COALESCE (MIContainer.ObjectExtId_Analyzer, 0) OR _tmpUnit.UnitId_by = 0)
                                                AND _tmpUnit.isActive  = MIContainer.isActive
                        WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate  

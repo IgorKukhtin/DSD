@@ -238,7 +238,7 @@ var
 begin
   Request.SaveToXML(RequestXML);
 
-  Result := MCDesigner.HTTPPost(MCURL, RequestXML, ResponseXML);
+  Result := MCDesigner.HTTPPost(RequestXML, ResponseXML);
 
   if Result = 200 then
   begin

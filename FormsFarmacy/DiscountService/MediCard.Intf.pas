@@ -6,9 +6,6 @@ uses
   Data.DB, System.Contnrs, System.SysUtils;
 
 const
-  // Адрес сервиса Медикард
-  MCURL = 'http://medicard.in.ua/api/api.php';
-
   // Запрос скидки на товар
   MC_DISCOUNT = 1;
   // Подтверждение продажи товара
@@ -32,13 +29,16 @@ type
   IMCDesigner = interface
     ['{042F744C-4B1F-4E43-BCB1-2191ACEC3B09}']
     function GetClasses: TClassList;
+    function GetURL: string;
+    procedure SetURL(const Value: string);
 
     procedure RegisterClasses(AClasses: array of TInterfacedClass);
     function FindClass(const IID: TGUID): TInterfacedClass;
-    function CreateObject(const IID: TGUID): TInterfacedObject; overload;
+    function CreateObject(const IID: TGUID): TInterfacedObject;
 
-    function HTTPPost(const AURL, ABody: string; var AResponse: string): Integer;
+    function HTTPPost(const ABody: string; var AResponse: string): Integer;
 
+    property URL: string read GetURL write SetURL;
     property Classes: TClassList read GetClasses;
   end;
 
