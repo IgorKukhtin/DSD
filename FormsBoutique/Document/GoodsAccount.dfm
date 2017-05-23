@@ -1775,8 +1775,8 @@ object GoodsAccountForm: TGoodsAccountForm
       MoveParams = <>
       Caption = 'actInsertAction1'
       ImageIndex = 1
-      FormName = 'TReturnInItemEditForm'
-      FormNameParam.Value = 'TReturnInItemEditForm'
+      FormName = 'TGoodsAccountItemEditForm'
+      FormNameParam.Value = 'TGoodsAccountItemEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

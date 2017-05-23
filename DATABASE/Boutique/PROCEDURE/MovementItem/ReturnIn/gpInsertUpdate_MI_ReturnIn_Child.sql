@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ReturnIn_Child (Integer, Integer, Bool
                                                          ,TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ReturnIn_Child (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ReturnIn_Child (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ReturnIn_Child (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ReturnIn_Child(
@@ -13,7 +14,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ReturnIn_Child(
     IN inAmountUSD             TFloat    , -- сумма оплаты
     IN inAmountEUR             TFloat    , -- сумма оплаты
     IN inAmountCard            TFloat    , -- сумма оплаты
-    IN inAmountDiscount        TFloat    , -- сумма скидки
     IN inCurrencyValueUSD      TFloat    , --    
     IN inParValueUSD           TFloat    , --
     IN inCurrencyValueEUR      TFloat    , --
@@ -122,10 +122,6 @@ BEGIN
              FROM _tmpCash
                  FULL JOIN _tmpMI ON _tmpMI.CashId = _tmpCash.CashId
                                  AND _tmpMI.CurrencyId = _tmpCash.CurrencyId;
-
-            -- скидку записываем в мастер
-            -- сохранили свойство <>
-            PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), inParentId, inAmountDiscount);
 
             -- в мастер записать итого сумма оплаты грн
             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), inParentId, SUM (COALESCE (_tmpCash.Amount,0) * COALESCE (_tmpCash.CurrencyValue,1)) )
