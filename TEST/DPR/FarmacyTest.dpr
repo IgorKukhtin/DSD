@@ -507,7 +507,8 @@ uses
   Report_MovementPriceList_Dialog in '..\..\FormsFarmacy\Report\Report_MovementPriceList_Dialog.pas' {Report_MovementPriceList_DialogForm: TParentForm},
   Report_MovementPriceList in '..\..\FormsFarmacy\Report\Report_MovementPriceList.pas' {Report_MovementPriceListForm: TParentForm},
   DiscountExternalTools in '..\..\FormsFarmacy\Guides\DiscountExternalTools.pas' {DiscountExternalToolsForm: TParentForm},
-  DiscountExternalToolsEdit in '..\..\FormsFarmacy\Guides\DiscountExternalToolsEdit.pas' {DiscountExternalToolsEditForm: TParentForm};
+  DiscountExternalToolsEdit in '..\..\FormsFarmacy\Guides\DiscountExternalToolsEdit.pas' {DiscountExternalToolsEditForm: TParentForm},
+  SPKind in '..\..\FormsFarmacy\Kind\SPKind.pas' {SPKindForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

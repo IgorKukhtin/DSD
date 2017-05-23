@@ -254,6 +254,9 @@ BEGIN
      -- !!!
      -- PERFORM lpUpdate_Object_Enum_byCode (inCode:= 1,  inDescId:= zc_Object_GoodsKind(), inEnumName:= 'zc_Enum_GoodsKind_Main');
 
+     -- !!! Виды соц.проектов
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SPKind_SP(),   inDescId:= zc_Object_SPKind(), inCode:= 1, inName:= 'Соц. проект',        inEnumName:= 'zc_Enum_SPKind_SP');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SPKind_1303(), inDescId:= zc_Object_SPKind(), inCode:= 2, inName:= 'Постановление 1303', inEnumName:= 'zc_Enum_SPKind_1303');
 
 
 END $$;
@@ -2184,6 +2187,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.    Воробкало А.А.
+ 23.05.17         * Виды соц.проектов
  06.05.17         * Загрузка ФИО врача по Соц.проекту
  04.02.17         * Загрузка данных по Маркетинговому контракту по подразделению
  07.01.17         * Загрузка Признака <Условия хранения>
