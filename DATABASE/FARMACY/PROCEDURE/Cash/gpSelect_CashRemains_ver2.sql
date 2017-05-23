@@ -17,7 +17,8 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                MinExpirationDate TDateTime,
                Color_ExpirationDate Integer,
                ConditionsKeepName TVarChar,
-               AmountIncome TFloat, PriceSaleIncome TFloat
+               AmountIncome TFloat, PriceSaleIncome TFloat,
+               BarCode TVarChar
                )
 AS
 $BODY$
@@ -136,7 +137,7 @@ BEGIN
 
     RETURN QUERY
       -- Маркетинговый контракт
-    WITH  GoodsPromo AS (SELECT DISTINCT ObjectLink_Child_retail.ChildObjectId AS GoodsId  -- здесь товар "сети"
+      WITH GoodsPromo AS (SELECT DISTINCT ObjectLink_Child_retail.ChildObjectId AS GoodsId  -- здесь товар "сети"
                          --   , tmp.ChangePercent
                        FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp   --CURRENT_DATE
                                     INNER JOIN ObjectLink AS ObjectLink_Child
@@ -177,6 +178,22 @@ BEGIN
                                  GROUP BY MI_Income.ObjectId
                                         , MovementLinkObject_To.ObjectId
                               )
+           -- Штрих-коды производителя  
+         , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId          AS GoodsMainId
+                                    , MAX (Object_Goods_BarCode.ValueData)::TVarChar AS BarCode
+                               FROM ObjectLink AS ObjectLink_Main_BarCode
+                                    JOIN ObjectLink AS ObjectLink_Child_BarCode
+                                                    ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
+                                                   AND ObjectLink_Child_BarCode.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                    JOIN ObjectLink AS ObjectLink_Goods_Object_BarCode
+                                                    ON ObjectLink_Goods_Object_BarCode.ObjectId = ObjectLink_Child_BarCode.ChildObjectId
+                                                   AND ObjectLink_Goods_Object_BarCode.DescId = zc_ObjectLink_Goods_Object()
+                                                   AND ObjectLink_Goods_Object_BarCode.ChildObjectId = zc_Enum_GlobalConst_BarCode()
+                                    LEFT JOIN Object AS Object_Goods_BarCode ON Object_Goods_BarCode.Id = ObjectLink_Goods_Object_BarCode.ObjectId
+                               WHERE ObjectLink_Main_BarCode.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                                 AND ObjectLink_Main_BarCode.ChildObjectId > 0
+                               GROUP BY ObjectLink_Main_BarCode.ChildObjectId
+                              )                  
         -- Результат
         SELECT
             Goods.Id,
@@ -367,7 +384,8 @@ BEGIN
             COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName,
 
             COALESCE(tmpIncome.AmountIncome,0)            :: TFloat   AS AmountIncome,
-            CASE WHEN COALESCE(tmpIncome.AmountIncome,0) <> 0 THEN COALESCE(tmpIncome.SummSale,0) / COALESCE(tmpIncome.AmountIncome,0) ELSE 0 END  :: TFloat AS PriceSaleIncome
+            CASE WHEN COALESCE(tmpIncome.AmountIncome,0) <> 0 THEN COALESCE(tmpIncome.SummSale,0) / COALESCE(tmpIncome.AmountIncome,0) ELSE 0 END  :: TFloat AS PriceSaleIncome,
+            COALESCE (tmpGoodsBarCode.BarCode, '')::TVarChar AS BarCode
          FROM
             CashSessionSnapShot
             JOIN OBJECT AS Goods ON Goods.Id = CashSessionSnapShot.ObjectId
@@ -424,7 +442,8 @@ BEGIN
                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = Goods.Id
                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-
+            -- штрих-код производителя
+            LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = ObjectLink_Main.ChildObjectId
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId
         ORDER BY
@@ -436,7 +455,8 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.
+ 23.05.17                                                                                      * BarCode
  25.01.16         *
  24.01.17         * add ConditionsKeepName
  06.09.16         *
