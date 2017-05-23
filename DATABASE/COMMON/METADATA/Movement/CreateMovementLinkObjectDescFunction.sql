@@ -326,6 +326,9 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_MedicSP() RETURNS Integer AS $B
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_MedicSP', 'ФИО врача(Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_MedicSP');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_SPKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_SPKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_SPKind', 'Вид Соц. проекта' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_SPKind');
 
 
 /*-------------------------------------------------------------------------------

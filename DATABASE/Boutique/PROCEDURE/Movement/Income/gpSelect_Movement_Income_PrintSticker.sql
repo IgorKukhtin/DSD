@@ -10,29 +10,9 @@ RETURNS SETOF refcursor
 AS
 $BODY$
     DECLARE vbUserId Integer;
-
     DECLARE Cursor1 refcursor;
-    DECLARE Cursor2 refcursor;
-
     DECLARE vbDescId Integer;
     DECLARE vbStatusId Integer;
-    DECLARE vbPriceWithVAT Boolean;
-    DECLARE vbVATPercent TFloat;
-    DECLARE vbDiscountPercent TFloat;
-    DECLARE vbExtraChargesPercent TFloat;
-    DECLARE vbChangePercentTo TFloat;
-    DECLARE vbPaidKindId Integer;
-
-    DECLARE vbOperSumm_MVAT TFloat;
-    DECLARE vbOperSumm_PVAT TFloat;
-    DECLARE vbTotalCountKg  TFloat;
-    DECLARE vbTotalCountSh  TFloat;
-
-    DECLARE vbGoodsPropertyId Integer;
-    DECLARE vbGoodsPropertyId_basis Integer;
-    DECLARE vbContractId Integer;
-    DECLARE vbIsProcess_BranchIn Boolean;
-
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income_Print());
@@ -59,94 +39,8 @@ BEGIN
 
 
       --
+
     OPEN Cursor1 FOR
-      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
-                  UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
-                  UNION SELECT zc_Enum_Status_Erased()     AS StatusId 
-                       )
-
-       SELECT
-             Movement.Id
-           , Movement.InvNumber
-           , Movement.OperDate
-           , Object_Status.ObjectCode                    AS StatusCode
-           , Object_Status.ValueData                     AS StatusName
-
-           , MovementFloat_TotalCount.ValueData          AS TotalCount
-           , MovementFloat_TotalSumm.ValueData           AS TotalSumm
-           , MovementFloat_TotalSummPriceList.ValueData  AS TotalSummPriceList
-
-           , CAST (COALESCE (MovementFloat_CurrencyValue.ValueData, 0) AS TFloat)  AS CurrencyValue
-           , MovementFloat_ParValue.ValueData   AS ParValue
-
-           , CAST (COALESCE (MovementFloat_CurrencyPartnerValue.ValueData, 0) AS TFloat)  AS CurrencyPartnerValue
-           , MovementFloat_ParPartnerValue.ValueData   AS ParPartnerValue
-
-
-           , Object_From.ValueData                       AS FromName
-           , Object_To.ValueData                         AS ToName
-           , Object_CurrencyDocument.ValueData           AS CurrencyDocumentName
-           , Object_CurrencyPartner.ValueData            AS CurrencyPartnerName
-           , MovementString_Comment.ValueData            AS Comment
-         
-       FROM  Movement
-           
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-
-            LEFT JOIN MovementString AS MovementString_Comment 
-                                     ON MovementString_Comment.MovementId = Movement.Id
-                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId = Movement.Id
-                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId = Movement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPriceList
-                                    ON MovementFloat_TotalSummPriceList.MovementId = Movement.Id
-                                   AND MovementFloat_TotalSummPriceList.DescId = zc_MovementFloat_TotalSummPriceList()
-
-            LEFT JOIN MovementFloat AS MovementFloat_ParValue
-                                    ON MovementFloat_ParValue.MovementId = Movement.Id
-                                   AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
-            LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
-                                    ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
-                                   AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
-
-            LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
-                                    ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
-                                   AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
-            LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
-                                    ON MovementFloat_CurrencyPartnerValue.MovementId =  Movement.Id
-                                   AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
-                                         ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
-                                        AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
-            LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
-                                         ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
-                                        AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
-            LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
-
-
-      WHERE Movement.Id = inMovementId
-         AND Movement.DescId = zc_Movement_Income();
-     
-    RETURN NEXT Cursor1;
-
-
-    OPEN Cursor2 FOR
        WITH tmpMI AS (SELECT MovementItem.Id
                            , MovementItem.ObjectId AS GoodsId
                            , MovementItem.PartionId
@@ -190,7 +84,9 @@ BEGIN
            , Object_GoodsSize.ValueData     AS GoodsSizeName
            , Object_Brand.ValueData         AS BrandName
            , Object_CountryBrand.ValueData  AS CountryBrandName
-           ,zfFormat_BarCode(zc_BarCodePref_Object(), tmpMI.PartionId) AS IdBarCode
+           , zfFormat_BarCode(zc_BarCodePref_Object(), tmpMI.PartionId) AS IdBarCode
+           , Object_PartionGoods.PeriodYear AS PeriodYear
+           , Object_Period.ValueData        AS PeriodName
            , tmpMI.Amount
 
            , tmpMI.OperPrice      ::TFloat
@@ -235,14 +131,14 @@ BEGIN
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   =  zc_ObjectString_Goods_GroupNameFull()
 
-           
+            LEFT JOIN Object AS Object_Period          ON Object_Period.Id     = Object_PartionGoods.PeriodId           
 
        WHERE tmpMI.Amount <> 0
        ORDER BY tmpMI.PartionId
 
        ;
 
-    RETURN NEXT Cursor2;
+    RETURN NEXT Cursor1;
 
 END;
 $BODY$
@@ -251,7 +147,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
-15.05.17                                                          *   
+23.05.17                                                          *
+15.05.17                                                          *
 05.06.15         * 
 */
 

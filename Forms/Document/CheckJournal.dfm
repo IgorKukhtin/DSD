@@ -262,6 +262,14 @@ inherited CheckJournalForm: TCheckJournalForm
             Options.Editing = False
             Width = 105
           end
+          object clSPKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1089#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072
+            DataBinding.FieldName = 'SPKindName'
+            FooterAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 124
+          end
           object clInvNumber_Invoice_Full: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' ('#1057#1055')'
             DataBinding.FieldName = 'InvNumber_Invoice_Full'

@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Soap.InvokeRegistry, Vcl.StdCtrls,
-  Soap.Rio, Soap.SOAPHTTPClient, uCardService, dsdDB, Datasnap.DBClient, Data.DB;
+  Soap.Rio, Soap.SOAPHTTPClient, uCardService, dsdDB, Datasnap.DBClient, Data.DB,
+  MediCard.Intf;
 
 type
   TDiscountServiceForm = class(TForm)
@@ -309,6 +310,9 @@ begin
                gUserName   := ParamByName('UserName').Value;
                gPassword   := ParamByName('Password').Value;
                gCardNumber := lCardNumber;
+               // для проекта Медикард
+               if lCode = 3 then
+                 MCDesigner.URL := gURL;
          end
          else begin
                gURL        := '';

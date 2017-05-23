@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InvNumberSP TVarChar
              , MedicSPName TVarChar
              , Ambulance TVarChar
+             , SPKindName TVarChar
              , InvNumber_Invoice_Full TVarChar
               )
 AS
@@ -96,6 +97,7 @@ BEGIN
            , Movement_Check.InvNumberSP
            , Movement_Check.MedicSPName
            , Movement_Check.Ambulance
+           , Movement_Check.SPKindName 
            , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full 
 
         FROM Movement_Check_View AS Movement_Check 

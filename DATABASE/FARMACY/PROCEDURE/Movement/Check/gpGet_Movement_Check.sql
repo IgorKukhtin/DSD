@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , InvNumberSP TVarChar
              , MedicSPName TVarChar
              , Ambulance TVarChar
+             , SPKindId   Integer, SPKindName TVarChar
 )
 AS
 $BODY$
@@ -62,6 +63,8 @@ BEGIN
            , Movement_Check.InvNumberSP
            , Movement_Check.MedicSPName
            , Movement_Check.Ambulance
+           , Movement_Check.SPKindId
+           , Movement_Check.SPKindName 
 
         FROM Movement_Check_View AS Movement_Check
              LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
@@ -69,7 +72,7 @@ BEGIN
                                  AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountCard_Object()
              LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = ObjectLink_DiscountExternal.ChildObjectId
 
-       WHERE Movement_Check.Id =  inMovementId;
+       WHERE Movement_Check.Id = inMovementId;
 
 END;
 $BODY$

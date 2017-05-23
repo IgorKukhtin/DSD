@@ -44,6 +44,8 @@ SELECT
            , Object_PartnerMedical.Id                        AS PartnerMedicalId
            , Object_PartnerMedical.ValueData                 AS PartnerMedicalName
            , MovementString_Ambulance.ValueData              AS Ambulance
+           , Object_SPKind.Id                                AS SPKindId
+           , Object_SPKind.ValueData                         AS SPKindName
        FROM Movement 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -142,6 +144,11 @@ SELECT
                                         AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
             LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = MovementLinkObject_PartnerMedical.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SPKind
+                                         ON MovementLinkObject_SPKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
+            LEFT JOIN Object AS Object_SPKind ON Object_SPKind.Id = MovementLinkObject_SPKind.ObjectId
+
         WHERE Movement.DescId = zc_Movement_Check();
 
 ALTER TABLE Movement_Check_View
@@ -151,6 +158,7 @@ ALTER TABLE Movement_Check_View
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 23.05.17         *
  07.04.17         *
  07.05.15                        * 
 */

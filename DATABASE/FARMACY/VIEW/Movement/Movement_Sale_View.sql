@@ -34,6 +34,9 @@ CREATE OR REPLACE VIEW Movement_Sale_View AS
       , Object_GroupMemberSP.Id                         AS GroupMemberSPId
       , Object_GroupMemberSP.ValueData                  AS GroupMemberSPName
 
+      , Object_SPKind.Id                                AS SPKindId
+      , Object_SPKind.ValueData                         AS SPKindName
+
     FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -107,6 +110,11 @@ CREATE OR REPLACE VIEW Movement_Sale_View AS
                                          ON MovementLinkObject_MemberSP.MovementId = Movement.Id
                                         AND MovementLinkObject_MemberSP.DescId = zc_MovementLinkObject_MemberSP()
             LEFT JOIN Object AS Object_MemberSP ON Object_MemberSP.Id = MovementLinkObject_MemberSP.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SPKind
+                                         ON MovementLinkObject_SPKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
+            LEFT JOIN Object AS Object_SPKind ON Object_SPKind.Id = MovementLinkObject_SPKind.ObjectId
 
     WHERE Movement.DescId = zc_Movement_Sale();
 

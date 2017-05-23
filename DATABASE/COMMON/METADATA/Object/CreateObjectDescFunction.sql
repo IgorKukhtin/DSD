@@ -916,6 +916,9 @@ CREATE OR REPLACE FUNCTION zc_Object_MedicSP() RETURNS Integer AS $BODY$BEGIN RE
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_MedicSP', 'ФИО врача(Соц. проект)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MedicSP');
 
+CREATE OR REPLACE FUNCTION zc_Object_SPKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_SPKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_SPKind', 'Виды соц.проектов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_SPKind');
 
 
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -934,6 +937,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.
+ 23.05.17         * zc_Object_SPKind
  30.03.17         * zc_Object_GoodsListIncome
  26.03.17         * zc_Object_PhotoMobile
  19.12.16         * zc_Object_BrandSP

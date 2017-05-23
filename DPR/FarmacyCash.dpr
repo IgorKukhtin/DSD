@@ -78,7 +78,10 @@ uses
   uCardService in '..\FormsFarmacy\DiscountService\uCardService.pas',
   MainCash2 in '..\FormsFarmacy\Cash\MainCash2.pas' {MainCashForm2: TParentForm},
   LoginFormInh in '..\FormsFarmacy\Cash\LoginFormInh.pas' {LoginForm1},
-  DiscountDialog in '..\FormsFarmacy\Cash\DiscountDialog.pas' {DiscountDialogForm: TParentForm};
+  DiscountDialog in '..\FormsFarmacy\Cash\DiscountDialog.pas' {DiscountDialogForm: TParentForm},
+  MediCard.Intf in '..\FormsFarmacy\DiscountService\MediCard.Intf.pas',
+  MediCard.Dsgn in '..\FormsFarmacy\DiscountService\MediCard.Dsgn.pas',
+  MediCard.Classes in '..\FormsFarmacy\DiscountService\MediCard.Classes.pas';
 
 {$R *.res}
 
@@ -130,8 +133,7 @@ begin
         gc_isSetDefault := True;
       //
       Application.CreateForm(TdmMain, dmMain);
-
-      if MForm then  // определяет главную форму
+  if MForm then  // определяет главную форму
        Application.CreateForm(TMainCashForm, MainCash.MainCashForm) // имя модуля обязательно
       else  // Форма работате в связке с FarmacyCashServise.exe
        Application.CreateForm(TMainCashForm2, MainCash2.MainCashForm); // имя модуля обязательно
