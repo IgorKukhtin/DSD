@@ -159,6 +159,9 @@ BEGIN
     THEN
        -- сохранили <>
        PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateSP(), ioId, inOperDateSP);
+       
+       -- сохранили связь с <вид соц.проекта>
+       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SPKind(), ioId, zc_Enum_SPKind_SP());
     END IF;
 
 
@@ -188,6 +191,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 23.05.17         * add zc_Enum_SPKind_SP
  06.10.16         * add сохранение св-в дата/польз. создания
  20.07.16                                        *
  03.11.15                                                                       *

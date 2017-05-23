@@ -80,6 +80,9 @@ type
     PrintDialog: TExecuteDialog;
     macPrintCheck: TMultiAction;
     bbPrintCheck: TdxBarButton;
+    cxLabel10: TcxLabel;
+    edSPKind: TcxButtonEdit;
+    SPKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

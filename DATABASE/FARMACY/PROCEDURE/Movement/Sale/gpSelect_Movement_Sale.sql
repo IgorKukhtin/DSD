@@ -32,6 +32,8 @@ RETURNS TABLE (Id Integer
              , MemberSPId   Integer
              , MemberSPName TVarChar
              , GroupMemberSPName TVarChar
+             , SPKindId   Integer
+             , SPKindName TVarChar
              , isSP Boolean
              , InvNumber_Invoice_Full TVarChar
               )
@@ -99,6 +101,10 @@ BEGIN
           , Movement_Sale.MemberSPId
           , Movement_Sale.MemberSPName 
           , Movement_Sale.GroupMemberSPName
+
+          , Movement_Sale.SPKindId
+          , Movement_Sale.SPKindName 
+
           , CASE WHEN COALESCE (Movement_Sale.PartnerMedicalName,'') <> '' OR
                       COALESCE (Movement_Sale.InvNumberSP,'') <> '' OR
                       COALESCE (Movement_Sale.MedicSPName,'') <> '' OR

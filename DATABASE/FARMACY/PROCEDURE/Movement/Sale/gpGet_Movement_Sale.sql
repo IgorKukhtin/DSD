@@ -33,6 +33,8 @@ RETURNS TABLE (Id Integer
              , MemberSPName TVarChar
              , GroupMemberSPId Integer
              , GroupMemberSPName TVarChar
+             , SPKindId   Integer
+             , SPKindName TVarChar
              )
 AS
 $BODY$
@@ -73,6 +75,9 @@ BEGIN
           , NULL::Integer                                    AS GroupMemberSPId
           , NULL::TVarChar                                   AS GroupMemberSPName
 
+          , NULL::Integer                                    AS SPKindId
+          , NULL::TVarChar                                   AS SPKindName 
+
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
     ELSE
         RETURN QUERY
@@ -104,6 +109,9 @@ BEGIN
 
           , Movement_Sale.GroupMemberSPId
           , Movement_Sale.GroupMemberSPName
+
+          , Movement_Sale.SPKindId
+          , Movement_Sale.SPKindName 
         FROM
             Movement_Sale_View AS Movement_Sale
         WHERE Movement_Sale.Id =  inMovementId;

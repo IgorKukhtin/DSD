@@ -74,6 +74,8 @@ type
     ExecuteDialogSP: TExecuteDialog;
     macUpdateSpParam: TMultiAction;
     bb: TdxBarButton;
+    cxLabel18: TcxLabel;
+    edSPKind: TcxTextEdit;
   private
     { Private declarations }
   public

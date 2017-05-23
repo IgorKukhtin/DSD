@@ -26,6 +26,8 @@ inherited SaleJournalForm: TSaleJournalForm
       inherited cxGrid: TcxGrid
         Width = 745
         Height = 434
+        ExplicitLeft = 144
+        ExplicitTop = -3
         ExplicitWidth = 745
         ExplicitHeight = 434
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -206,6 +208,14 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90
+          end
+          object clSPKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1089#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072
+            DataBinding.FieldName = 'SPKindName'
+            FooterAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
         end
       end

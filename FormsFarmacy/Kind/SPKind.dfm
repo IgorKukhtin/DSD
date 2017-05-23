@@ -94,8 +94,8 @@ inherited SPKindForm: TSPKindForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 56
-    Top = 64
+    Left = 64
+    Top = 104
   end
   inherited MasterCDS: TClientDataSet
     Top = 64

@@ -18,9 +18,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
     IN inMedicSP               TVarChar   , -- ФИО врача (Соц. проект)
     IN inMemberSP              TVarChar   , -- ФИО пациента (Соц. проект)
     IN inComment               TVarChar   , -- Примечание
+   OUT outSPKindName           TVarChar   , -- вид соц.проекта
     IN inSession               TVarChar     -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS Record AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMedicSPId Integer;
@@ -89,9 +90,18 @@ BEGIN
      FROM MovementItem
      WHERE MovementItem.MovementId = ioId
        AND MovementItem.DescId = zc_MI_Master();
+
+    -- сохранили связь с <вид соц.проекта>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SPKind(), ioId, zc_Enum_SPKind_1303());
+ 
    END IF;
 
 
+   outSPKindName := (SELECT Object.ValueData 
+                     FROM MovementLinkObject AS MLO
+                          LEFT JOIN Object ON Object.Id = MLO.ObjectId
+                     WHERE MLO.DescId = zc_MovementLinkObject_SPKind() AND MLO.MovementId = ioId);
+   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

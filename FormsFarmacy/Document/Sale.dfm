@@ -362,16 +362,16 @@ inherited SaleForm: TSaleForm
       Width = 98
     end
     object cxLabel7: TcxLabel
-      Left = 8
+      Left = 270
       Top = 77
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object edComment: TcxTextEdit
-      Left = 8
+      Left = 270
       Top = 92
       Properties.ReadOnly = False
       TabOrder = 19
-      Width = 646
+      Width = 384
     end
     object cxLabel12: TcxLabel
       Left = 8
@@ -420,6 +420,24 @@ inherited SaleForm: TSaleForm
       Properties.ReadOnly = True
       TabOrder = 26
       Width = 184
+    end
+    object cxLabel10: TcxLabel
+      Left = 8
+      Top = 77
+      Caption = #1042#1080#1076' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072
+    end
+    object edSPKind: TcxButtonEdit
+      Left = 8
+      Top = 92
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 28
+      Width = 252
     end
   end
   object cxLabel8: TcxLabel [2]
@@ -987,6 +1005,21 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SPKindId'
+        Value = Null
+        Component = SPKindGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SPKindName'
+        Value = Null
+        Component = SPKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 272
@@ -1096,6 +1129,14 @@ inherited SaleForm: TSaleForm
         Component = edComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSPKindName'
+        Value = Null
+        Component = SPKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     NeedResetData = True
@@ -1351,8 +1392,8 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 72
-    Top = 56
+    Left = 64
+    Top = 40
   end
   object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
@@ -1380,8 +1421,8 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 264
-    Top = 48
+    Left = 472
+    Top = 40
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_SaleExactly_Print'
@@ -1641,5 +1682,34 @@ inherited SaleForm: TSaleForm
     PackSize = 1
     Left = 672
     Top = 200
+  end
+  object SPKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edSPKind
+    FormNameParam.Value = 'TSPKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TSPKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = SPKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = SPKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 128
+    Top = 88
   end
 end
