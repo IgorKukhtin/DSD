@@ -4887,9 +4887,8 @@ begin
         Add('       end   as IDUnitID');
         Add('     , podr.Id_Postgres as UnitID    ');
         Add('from dba.KassaProperty');
-        Add('left join Valuta on Valuta.Id = KassaProperty.ValutaId');
-        Add('left join ');
-        Add('(select * from Unit where KindUnit = zc_kuUnit() or id = 4646) as Podr on podr.id = IDUnitID');
+        Add('     left join Valuta on Valuta.Id = KassaProperty.ValutaId');
+        Add('     left join Unit as Podr on podr.id = IDUnitID');
         Add('order by  ObjectId');
         Open;
         //
