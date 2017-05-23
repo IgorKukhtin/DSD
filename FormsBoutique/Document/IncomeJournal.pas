@@ -104,6 +104,9 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     actPrintIn: TdsdPrintAction;
     dxBarButton1: TdxBarButton;
+    actPrintSticker: TdsdPrintAction;
+    spSelectPrintSticker: TdsdStoredProc;
+    dxBarButton2: TdxBarButton;
   private
   public
   end;
