@@ -10,22 +10,26 @@ uses
 type
   TMCDesigner = class(TInterfacedObject, IMCDesigner)
   private
+    FURL: string;
     FClasses: TClassList;
     function GetClasses: TClassList;
 
+    function GetURL: string;
+    procedure SetURL(const Value: string);
     procedure HTTPSetHeader(AHTTP: THTTPSend);
-    procedure HTTPCheckResult(const AResult: Integer; AURL: string);
-    function HTTPMethod(const AMethod, AURL, ABody: string; var AResponse: string): Integer;
+    procedure HTTPCheckResult(const AResult: Integer);
+    function HTTPMethod(const AMethod, ABody: string; var AResponse: string): Integer;
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
 
     procedure RegisterClasses(AClasses: array of TInterfacedClass);
     function FindClass(const IID: TGUID): TInterfacedClass;
-    function CreateObject(const IID: TGUID): TInterfacedObject; overload;
+    function CreateObject(const IID: TGUID): TInterfacedObject;
 
-    function HTTPPost(const AURL, ABody: string; var AResponse: string): Integer;
+    function HTTPPost(const ABody: string; var AResponse: string): Integer;
 
+    property URL: string read GetURL write SetURL;
     property Classes: TClassList read GetClasses;
   end;
 
@@ -36,6 +40,7 @@ implementation
 procedure TMCDesigner.AfterConstruction;
 begin
   inherited AfterConstruction;
+  FURL := '';
   FClasses := TClassList.Create;
 end;
 
@@ -80,20 +85,28 @@ begin
   Result := FClasses;
 end;
 
-procedure TMCDesigner.HTTPCheckResult(const AResult: Integer; AURL: string);
+function TMCDesigner.GetURL: string;
+begin
+  if FURL = '' then
+    raise EMCException.Create('Адрес сервиса Медикард не установлен');
+
+  Result := FURL;
+end;
+
+procedure TMCDesigner.HTTPCheckResult(const AResult: Integer);
 var
   ErrorText: string;
 begin
   ErrorText := '';
 
   if AResult <> 200 then
-    ErrorText := Format('Ошибка выполнения запроса к сервису %s (%d)', [AURL, AResult]);
+    ErrorText := Format('Ошибка выполнения запроса к сервису %s (%d)', [URL, AResult]);
 
   if ErrorText <> '' then
     raise EMCException.Create(ErrorText);
 end;
 
-function TMCDesigner.HTTPMethod(const AMethod, AURL, ABody: string; var AResponse: string): Integer;
+function TMCDesigner.HTTPMethod(const AMethod, ABody: string; var AResponse: string): Integer;
 var
   HTTP: THTTPSend;
   TryCount, TryIndex, TryTimeOut: Integer;
@@ -125,7 +138,7 @@ begin
       HTTP.Clear;
       HTTPSetHeader(HTTP);
       HTTP.Document.Write(Body.Memory^, Body.Size);
-      HTTP.HTTPMethod(AMethod, AURL);
+      HTTP.HTTPMethod(AMethod, URL);
       Result := HTTP.ResultCode;
 
       if (Result = 0) or (Result = 500) then
@@ -144,7 +157,7 @@ begin
       DecodeStream(RespBase64, Resp);
       AResponse := Resp.DataString;
     end else
-      HTTPCheckResult(Result, AURL);
+      HTTPCheckResult(Result);
   finally
     RespBase64.Free;
     BodyBase64.Free;
@@ -154,9 +167,9 @@ begin
   end;
 end;
 
-function TMCDesigner.HTTPPost(const AURL, ABody: string; var AResponse: string): Integer;
+function TMCDesigner.HTTPPost(const ABody: string; var AResponse: string): Integer;
 begin
-  Result := HTTPMethod('POST', AURL, ABody, AResponse);
+  Result := HTTPMethod('POST', ABody, AResponse);
 end;
 
 procedure TMCDesigner.HTTPSetHeader(AHTTP: THTTPSend);
@@ -171,6 +184,11 @@ begin
   for I := Low(AClasses) to High(AClasses) do
     if Assigned(AClasses[I]) then
       Classes.Add(AClasses[I]);
+end;
+
+procedure TMCDesigner.SetURL(const Value: string);
+begin
+  FURL := Value;
 end;
 
 initialization

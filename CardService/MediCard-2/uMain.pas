@@ -186,6 +186,7 @@ begin
   try
     //sData.LoadFromFile(ExtractFilePath(Application.ExeName) + '1.txt');
 
+    MCDesigner.URL := cURL;
     MCDesigner.CreateObject(IMCRequestDiscount).GetInterface(IMCData, MCData);
 
     CreateGUID(GUID);
@@ -205,7 +206,7 @@ begin
 
     sData.WriteString(XML);
 
-    if MCDesigner.HTTPPost(MCURL, sData.DataString, Response) = 200 then
+    if MCDesigner.HTTPPost(sData.DataString, Response) = 200 then
     begin
       MCDesigner.CreateObject(IMCResponseDiscount).GetInterface(IMCData, MCData);
       MCData.LoadFromXML(Response);
@@ -231,6 +232,7 @@ begin
   sData := TStringStream.Create;
   sResp := TStringStream.Create;
   try
+    MCDesigner.URL := cURL;
     MCDesigner.CreateObject(IMCSessionDiscount).GetInterface(IMCSession, Session);
 
     CasualId := Session.GenerateCasual;
