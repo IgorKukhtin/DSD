@@ -1121,6 +1121,28 @@
           TabOrder = 19
           OnClick = btnResultGroupCSVClick
         end
+        object cbGroup11: TCheckBox
+          Tag = 11
+          Left = 218
+          Top = 8
+          Width = 63
+          Height = 17
+          Caption = 'Group11'
+          Checked = True
+          State = cbChecked
+          TabOrder = 20
+        end
+        object cbGroup22: TCheckBox
+          Tag = 11
+          Left = 290
+          Top = 8
+          Width = 71
+          Height = 17
+          Caption = 'Group22'
+          Checked = True
+          State = cbChecked
+          TabOrder = 21
+        end
       end
     end
   end
@@ -1154,6 +1176,7 @@
   end
   object toZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
+    UTF8StringsAsWideField = True
     Catalog = 'public'
     DesignConnection = True
     HostName = 'localhost'
