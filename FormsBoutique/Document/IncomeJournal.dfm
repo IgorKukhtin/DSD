@@ -646,7 +646,14 @@ object IncomeJournalForm: TIncomeJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDItems'
         end>
-      Params = <>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
       ReportName = 'PrintMovement_IncomeIn'
       ReportNameParam.Value = 'PrintMovement_IncomeIn'
       ReportNameParam.DataType = ftString
@@ -665,10 +672,6 @@ object IncomeJournalForm: TIncomeJournalForm
       ImageIndex = 18
       DataSets = <
         item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDItems'
         end>
@@ -678,13 +681,6 @@ object IncomeJournalForm: TIncomeJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'JuridicalName'
-          Value = Null
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
           MultiSelectSeparator = ','
         end
         item
@@ -1374,11 +1370,8 @@ object IncomeJournalForm: TIncomeJournalForm
   end
   object spSelectPrintSticker: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Income_PrintSticker'
-    DataSet = PrintHeaderCDS
+    DataSet = PrintItemsCDS
     DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
       item
         DataSet = PrintItemsCDS
       end>
@@ -1387,7 +1380,7 @@ object IncomeJournalForm: TIncomeJournalForm
       item
         Name = 'inMovementId'
         Value = Null
-        Component = FormParams
+        Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','

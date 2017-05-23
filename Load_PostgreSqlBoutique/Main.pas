@@ -2256,6 +2256,7 @@ begin
         Add('      left outer join  dba.Goods as GoodsGroup2 on  GoodsGroup2.id = GoodsGroup1.ParentId ');
 
         Add(' where  Bill.BillKind = 2 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add('  and GoodsGroupId  is not null '); // для Долги нет GoodsGroupId
         Add(' order by Bill.Id ');
         Open;
 

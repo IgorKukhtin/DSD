@@ -1051,7 +1051,30 @@ object IncomeForm: TIncomeForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDItems'
         end>
-      Params = <>
+      Params = <
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = edInvNumber
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'From'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 'NULL'
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
       ReportName = 'PrintMovement_IncomeIn'
       ReportNameParam.Value = 'PrintMovement_IncomeIn'
       ReportNameParam.DataType = ftString
@@ -1070,35 +1093,10 @@ object IncomeForm: TIncomeForm
       ImageIndex = 18
       DataSets = <
         item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDItems'
         end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'JuridicalName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isPrice'
-          Value = 'True'
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end>
+      Params = <>
       ReportName = 'PrintMovement_IncomeSticker'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
       ReportNameParam.Value = 'PrintMovement_IncomeSticker'
@@ -2264,11 +2262,8 @@ object IncomeForm: TIncomeForm
   end
   object spSelectPrintSticker: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Income_PrintSticker'
-    DataSet = PrintHeaderCDS
+    DataSet = PrintItemsCDS
     DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
       item
         DataSet = PrintItemsCDS
       end>
