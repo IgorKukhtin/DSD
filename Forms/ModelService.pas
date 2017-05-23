@@ -116,6 +116,10 @@ type
     ToGoodsKindChoiceForm: TOpenChoiceForm;
     FromGoodsKindCompleteChoiceForm: TOpenChoiceForm;
     ToGoodsKindCompleteChoiceForm: TOpenChoiceForm;
+    GoodsGroupFromChoiceForm: TOpenChoiceForm;
+    bbGroupFromChoice: TdxBarButton;
+    GoodsGroupToChoiceForm: TOpenChoiceForm;
+    bbGoodsGroupToChoice: TdxBarButton;
   private
     { Private declarations }
   public

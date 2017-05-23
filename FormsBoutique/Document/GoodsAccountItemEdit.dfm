@@ -45,13 +45,12 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
     Top = 50
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    Properties.ReadOnly = True
     TabOrder = 3
     Width = 89
   end
   object ceAmountGRN: TcxCurrencyEdit
     Left = 173
-    Top = 8
+    Top = 10
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 4
@@ -65,46 +64,6 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
     TabOrder = 5
     Width = 104
   end
-  object cbisPayGRN: TcxCheckBox
-    Left = 16
-    Top = 10
-    Caption = #1054#1087#1083#1072#1090#1072' - '#1075#1088#1085
-    Properties.ReadOnly = False
-    TabOrder = 6
-    Width = 104
-  end
-  object cbisPayUSD: TcxCheckBox
-    Left = 16
-    Top = 50
-    Caption = #1054#1087#1083#1072#1090#1072' - $'
-    Properties.ReadOnly = False
-    TabOrder = 7
-    Width = 104
-  end
-  object cbisPayEUR: TcxCheckBox
-    Left = 16
-    Top = 90
-    Caption = #1054#1087#1083#1072#1090#1072' - EUR'
-    Properties.ReadOnly = False
-    TabOrder = 8
-    Width = 104
-  end
-  object cbisPayCard: TcxCheckBox
-    Left = 16
-    Top = 130
-    Caption = #1054#1087#1083#1072#1090#1072' - '#1075#1088#1085' ('#1082#1072#1088#1090#1086#1095#1082#1072')'
-    Properties.ReadOnly = False
-    TabOrder = 9
-    Width = 148
-  end
-  object cbisDiscount: TcxCheckBox
-    Left = 16
-    Top = 170
-    Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1087#1088#1080' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1080
-    Properties.ReadOnly = False
-    TabOrder = 10
-    Width = 156
-  end
   object cxLabel1: TcxLabel
     Left = 17
     Top = 218
@@ -116,7 +75,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
-    TabOrder = 12
+    TabOrder = 7
     Width = 85
   end
   object cxLabel3: TcxLabel
@@ -130,7 +89,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
-    TabOrder = 14
+    TabOrder = 9
     Width = 85
   end
   object cxLabel4: TcxLabel
@@ -144,7 +103,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
-    TabOrder = 16
+    TabOrder = 11
     Width = 85
   end
   object ceAmountUSD: TcxCurrencyEdit
@@ -152,7 +111,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
     Top = 50
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 17
+    TabOrder = 12
     Width = 120
   end
   object ceAmountEUR: TcxCurrencyEdit
@@ -160,7 +119,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
     Top = 90
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 18
+    TabOrder = 13
     Width = 120
   end
   object ceAmountCARD: TcxCurrencyEdit
@@ -168,7 +127,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
     Top = 130
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 19
+    TabOrder = 14
     Width = 120
   end
   object ceAmountDiscount: TcxCurrencyEdit
@@ -176,7 +135,7 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
     Top = 170
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 20
+    TabOrder = 15
     Width = 120
   end
   object cxLabel2: TcxLabel
@@ -189,9 +148,33 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
     Top = 90
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    Properties.ReadOnly = True
-    TabOrder = 22
+    TabOrder = 17
     Width = 89
+  end
+  object cxLabel5: TcxLabel
+    Left = 34
+    Top = 11
+    Caption = #1054#1087#1083#1072#1090#1072' - '#1075#1088#1085
+  end
+  object cxLabel6: TcxLabel
+    Left = 34
+    Top = 51
+    Caption = #1054#1087#1083#1072#1090#1072' - $'
+  end
+  object cxLabel7: TcxLabel
+    Left = 34
+    Top = 91
+    Caption = #1054#1087#1083#1072#1090#1072' - EUR'
+  end
+  object cxLabel8: TcxLabel
+    Left = 34
+    Top = 131
+    Caption = #1054#1087#1083#1072#1090#1072' - '#1075#1088#1085' ('#1082#1072#1088#1090#1086#1095#1082#1072')'
+  end
+  object cxLabel9: TcxLabel
+    Left = 34
+    Top = 171
+    Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1087#1088#1080' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1080
   end
   object ActionList: TActionList
     Left = 16
@@ -263,54 +246,6 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPayTotal'
-        Value = Null
-        Component = cbisPayTotal
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisPayGRN'
-        Value = Null
-        Component = cbisPayGRN
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisPayUSD'
-        Value = Null
-        Component = cbisPayUSD
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisPayEUR'
-        Value = Null
-        Component = cbisPayEUR
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisPayCard'
-        Value = Null
-        Component = cbisPayCard
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisDiscount'
-        Value = Null
-        Component = cbisDiscount
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inAmountGRN'
         Value = Null
         Component = ceAmountGRN
@@ -346,6 +281,36 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
         Name = 'inAmountDiscount'
         Value = '2'
         Component = ceAmountDiscount
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValueUSD'
+        Value = Null
+        Component = ceCurrencyValue_USD
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParValueUSD'
+        Value = '1'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValueEUR'
+        Value = Null
+        Component = ceCurrencyValue_EUR
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParValueEUR'
+        Value = '1'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -462,6 +427,13 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
         Component = ceAmountChange
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPayTotal'
+        Value = Null
+        Component = cbisPayTotal
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 368
@@ -489,22 +461,18 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
     IdParam.MultiSelectSeparator = ','
-    RefreshAction = dsdDataSetRefresh
     ComponentList = <
       item
-        Component = cbisDiscount
+        Component = ceCurrencyValue_EUR
       end
       item
-        Component = cbisPayCard
+        Component = ceCurrencyValue_USD
       end
       item
-        Component = cbisPayUSD
       end
       item
-        Component = cbisPayEUR
       end
       item
-        Component = cbisPayGRN
       end
       item
         Component = ceAmountCARD

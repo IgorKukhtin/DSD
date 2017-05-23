@@ -542,6 +542,18 @@ object ModelServiceForm: TModelServiceForm
         end
         item
           Visible = True
+          ItemName = 'bbGroupFromChoice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoodsGroupToChoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoiceGuides'
         end
         item
@@ -615,6 +627,18 @@ object ModelServiceForm: TModelServiceForm
       Action = dsdSetUnErasedChild
       Category = 0
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086#1076#1095#1080#1085#1077#1085#1085#1099#1081' '#1101#1083#1077#1084#1077#1085#1090
+    end
+    object bbGroupFromChoice: TdxBarButton
+      Action = GoodsGroupFromChoiceForm
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1075#1088#1091#1087#1087#1091' '#1090#1086#1074'. '#1088#1072#1089#1093#1086#1076
+      Category = 0
+      ImageIndex = 76
+    end
+    object bbGoodsGroupToChoice: TdxBarButton
+      Action = GoodsGroupToChoiceForm
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1075#1088#1091#1087#1087#1091' '#1090#1086#1074'. '#1087#1088#1080#1093#1086#1076
+      Category = 0
+      ImageIndex = 77
     end
   end
   object ActionList: TActionList
@@ -1125,8 +1149,64 @@ object ModelServiceForm: TModelServiceForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'GoodsFromChoiceForm'
-      FormName = 'TGoodsTree_ObjectForm'
-      FormNameParam.Value = ''
+      FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = 'TGoods_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = ModelServiceItemChildCDS
+          ComponentItem = 'FromId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ModelServiceItemChildCDS
+          ComponentItem = 'FromName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object GoodsGroupToChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsGroupToChoiceForm'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1075#1088#1091#1087#1087#1091' '#1090#1086#1074'. '#1087#1088#1080#1093#1086#1076
+      FormName = 'TGoodsGroup_ObjectForm'
+      FormNameParam.Value = 'TGoodsGroup_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ModelServiceItemChildCDS
+          ComponentItem = 'ToId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ModelServiceItemChildCDS
+          ComponentItem = 'ToName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object GoodsGroupFromChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsGroupFromChoiceForm'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1075#1088#1091#1087#1087#1091' '#1090#1086#1074'. '#1088#1072#1089#1093#1086#1076
+      FormName = 'TGoodsGroup_ObjectForm'
+      FormNameParam.Value = 'TGoodsGroup_ObjectForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1152,8 +1232,8 @@ object ModelServiceForm: TModelServiceForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'GoodsToChoiceForm'
-      FormName = 'TGoodsTree_ObjectForm'
-      FormNameParam.Value = ''
+      FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = 'TGoods_ObjectForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
