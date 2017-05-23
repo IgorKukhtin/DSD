@@ -268,6 +268,7 @@ inherited CheckJournalForm: TCheckJournalForm
             FooterAlignmentHorz = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 124
           end
           object clInvNumber_Invoice_Full: TcxGridDBColumn

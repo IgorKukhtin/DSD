@@ -852,6 +852,20 @@ inherited CheckForm: TCheckForm
           Component = FormParams
           ComponentItem = 'inPartnerMedicalId'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inSPKindName'
+          Value = Null
+          Component = edSPKind
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InSPKindId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InSPKindId'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -1422,6 +1436,14 @@ inherited CheckForm: TCheckForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSPKindId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inSPKindId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
