@@ -84,7 +84,9 @@ BEGIN
            , Object_GoodsSize.ValueData     AS GoodsSizeName
            , Object_Brand.ValueData         AS BrandName
            , Object_CountryBrand.ValueData  AS CountryBrandName
-           ,zfFormat_BarCode(zc_BarCodePref_Object(), tmpMI.PartionId) AS IdBarCode
+           , zfFormat_BarCode(zc_BarCodePref_Object(), tmpMI.PartionId) AS IdBarCode
+           , Object_PartionGoods.PeriodYear AS PeriodYear
+           , Object_Period.ValueData        AS PeriodName
            , tmpMI.Amount
 
            , tmpMI.OperPrice      ::TFloat
@@ -129,7 +131,7 @@ BEGIN
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   =  zc_ObjectString_Goods_GroupNameFull()
 
-           
+            LEFT JOIN Object AS Object_Period          ON Object_Period.Id     = Object_PartionGoods.PeriodId           
 
        WHERE tmpMI.Amount <> 0
        ORDER BY tmpMI.PartionId
