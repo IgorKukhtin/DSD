@@ -5601,7 +5601,6 @@ begin
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Params.ParamByName('inJuridicalId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId').AsInteger;
              if not myExecToStoredProc then ;//exit;
              if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
