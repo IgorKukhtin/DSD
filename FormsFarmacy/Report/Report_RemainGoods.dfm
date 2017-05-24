@@ -23,6 +23,8 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
       inherited cxGrid: TcxGrid
         Width = 1009
         Height = 308
+        ExplicitLeft = 627
+        ExplicitTop = 3
         ExplicitWidth = 1009
         ExplicitHeight = 308
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -418,6 +420,15 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 75
+          end
+          object clisSP: TcxGridDBColumn
+            Caption = #1057#1086#1094'. '#1087#1088#1086#1077#1082#1090
+            DataBinding.FieldName = 'isSP'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
           end
         end
       end

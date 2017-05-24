@@ -33,4 +33,4 @@ END;$BODY$ LANGUAGE plpgsql;
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_SPKind()
+-- select * from gpUpdate_Object_SPKind(ioId := 3690840 , inTax := 100 ,  inSession := '3');
