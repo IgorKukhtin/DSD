@@ -1121,18 +1121,18 @@ begin
              //через вьюху, т.к. подзапрос не пашет
       +'      inner join _Group22 as tmp on tmp.Goodsgroup = goodsProperty.GroupsName'
       +' where goods2.ParentId = 500000'
-      +'   and goodsProperty.Id = goodsProperty.GoodsId'
+      +'   and goods2.Id = goodsProperty.GoodsId'
        );
-
+{
   fExecSqFromQuery(
        ' update goods2 set ParentId =  tmp.ParentId2'
       +' from goodsProperty'
              //через вьюху, т.к. подзапрос не пашет
       +'      inner join _Group11 as tmp on tmp.Goodsgroup = goodsProperty.GroupsName'
       +' where goods2.ParentId = 500000'
-      +'   and goodsProperty.Id = goodsProperty.GoodsId'
+      +'   and goods2.Id = goodsProperty.GoodsId'
        );
-
+}
   with fromQuery_two,Sql do begin
     Close;
     Clear;
@@ -5584,8 +5584,8 @@ begin
         Add('       end   as IDChildId');
         Add(', Child.Id_Postgres as ChildId');
         Add('from dba.Unit');
-        Add('left join Unit as Parent on Parent.id = IDParentId ');
-        Add('left join Unit as Child on Child.Id = IDChildId');
+        Add('     left join Unit as Parent on Parent.id = IDParentId ');
+        Add('     left join Unit as Child on Child.Id = IDChildId');
         Add('where Unit.KindUnit =  zc_kuUnit() or Unit.id = 4646');
         Add('order by ObjectId');
         Open;

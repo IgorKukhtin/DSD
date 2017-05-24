@@ -611,9 +611,12 @@ begin
     end;
     //
     if FormParams.ParamByName('InvNumberSP').Value = ''
-    then
+    then begin
         // Update Дисконт в CDS - по всем "обновим" Дисконт
         DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
+        //
+        CalcTotalSumm;
+    end;
 
     //***20.07.16
     lblDiscountExternalName.Caption:= '  ' + FormParams.ParamByName('DiscountExternalName').Value + '  ';
@@ -1173,6 +1176,8 @@ begin
   FormParams.ParamByName('DiscountCardNumber').Value := DiscountCardNumber;
   // update DataSet - еще раз по всем "обновим" Дисконт
   DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
+  //
+  CalcTotalSumm;
   //
   pnlDiscount.Visible    := DiscountExternalId > 0;
   lblDiscountExternalName.Caption:= '  ' + DiscountExternalName + '  ';
