@@ -40,6 +40,7 @@ type
     ContainerId: TcxGridDBColumn;
     actRefreshJuridical: TdsdDataSetRefresh;
     cbJuridical: TcxCheckBox;
+    clisSP: TcxGridDBColumn;
   private
     { Private declarations }
   public
