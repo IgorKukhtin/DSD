@@ -51,6 +51,70 @@ RETURNS TABLE (GoodsId              Integer
              , CountProductionOut6 TFloat
              , CountProductionOut7 TFloat
 
+             , CountIncome_1   TFloat
+             , CountIncome_2   TFloat
+             , CountIncome_3   TFloat
+             , CountIncome_4   TFloat
+             , CountIncome_5   TFloat
+             , CountIncome_6   TFloat
+             , CountIncome_7   TFloat
+             , CountIncome_8   TFloat
+             , CountIncome_9   TFloat
+             , CountIncome_10  TFloat
+             , CountIncome_11  TFloat
+             , CountIncome_12  TFloat
+             , CountIncome_13  TFloat
+             , CountIncome_14  TFloat
+             , CountIncome_15  TFloat
+             , CountIncome_16  TFloat
+             , CountIncome_17  TFloat
+             , CountIncome_18  TFloat
+             , CountIncome_19  TFloat
+             , CountIncome_20  TFloat
+             , CountIncome_21  TFloat
+             , CountIncome_22  TFloat
+             , CountIncome_23  TFloat
+             , CountIncome_24  TFloat
+             , CountIncome_25  TFloat
+             , CountIncome_26  TFloat
+             , CountIncome_27  TFloat
+             , CountIncome_28  TFloat
+             , CountIncome_29  TFloat
+             , CountIncome_30  TFloat
+             , CountIncome_31  TFloat
+
+             , CountProductionOut_1   TFloat
+             , CountProductionOut_2   TFloat
+             , CountProductionOut_3   TFloat
+             , CountProductionOut_4   TFloat
+             , CountProductionOut_5   TFloat
+             , CountProductionOut_6   TFloat
+             , CountProductionOut_7   TFloat
+             , CountProductionOut_8   TFloat
+             , CountProductionOut_9   TFloat
+             , CountProductionOut_10  TFloat
+             , CountProductionOut_11  TFloat
+             , CountProductionOut_12  TFloat
+             , CountProductionOut_13  TFloat
+             , CountProductionOut_14  TFloat
+             , CountProductionOut_15  TFloat
+             , CountProductionOut_16  TFloat
+             , CountProductionOut_17  TFloat
+             , CountProductionOut_18  TFloat
+             , CountProductionOut_19  TFloat
+             , CountProductionOut_20  TFloat
+             , CountProductionOut_21  TFloat
+             , CountProductionOut_22  TFloat
+             , CountProductionOut_23  TFloat
+             , CountProductionOut_24  TFloat
+             , CountProductionOut_25  TFloat
+             , CountProductionOut_26  TFloat
+             , CountProductionOut_27  TFloat
+             , CountProductionOut_28  TFloat
+             , CountProductionOut_29  TFloat
+             , CountProductionOut_30  TFloat
+             , CountProductionOut_31  TFloat
+
              , Color_RemainsDays    Integer
               )
 AS
@@ -423,8 +487,73 @@ BEGIN
                                 , SUM (CASE WHEN tmpWeekDay.Number = 6 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut6
                                 , SUM (CASE WHEN tmpWeekDay.Number = 7 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut7 
 
+                                , SUM (CASE WHEN tmp.NumDay = 1 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_1
+                                , SUM (CASE WHEN tmp.NumDay = 2 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_2
+                                , SUM (CASE WHEN tmp.NumDay = 3 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_3
+                                , SUM (CASE WHEN tmp.NumDay = 4 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_4
+                                , SUM (CASE WHEN tmp.NumDay = 5 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_5
+                                , SUM (CASE WHEN tmp.NumDay = 6 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_6
+                                , SUM (CASE WHEN tmp.NumDay = 7 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_7
+                                , SUM (CASE WHEN tmp.NumDay = 8 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_8
+                                , SUM (CASE WHEN tmp.NumDay = 9 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_9
+                                , SUM (CASE WHEN tmp.NumDay = 10 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_10
+                                , SUM (CASE WHEN tmp.NumDay = 11 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_11
+                                , SUM (CASE WHEN tmp.NumDay = 12 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_12
+                                , SUM (CASE WHEN tmp.NumDay = 13 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_13
+                                , SUM (CASE WHEN tmp.NumDay = 14 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_14
+                                , SUM (CASE WHEN tmp.NumDay = 15 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_15
+                                , SUM (CASE WHEN tmp.NumDay = 16 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_16
+                                , SUM (CASE WHEN tmp.NumDay = 17 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_17
+                                , SUM (CASE WHEN tmp.NumDay = 18 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_18
+                                , SUM (CASE WHEN tmp.NumDay = 19 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_19
+                                , SUM (CASE WHEN tmp.NumDay = 20 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_20
+                                , SUM (CASE WHEN tmp.NumDay = 21 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_21
+                                , SUM (CASE WHEN tmp.NumDay = 22 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_22
+                                , SUM (CASE WHEN tmp.NumDay = 23 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_23
+                                , SUM (CASE WHEN tmp.NumDay = 24 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_24
+                                , SUM (CASE WHEN tmp.NumDay = 25 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_25
+                                , SUM (CASE WHEN tmp.NumDay = 26 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_26
+                                , SUM (CASE WHEN tmp.NumDay = 27 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_27
+                                , SUM (CASE WHEN tmp.NumDay = 28 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_28
+                                , SUM (CASE WHEN tmp.NumDay = 29 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_29
+                                , SUM (CASE WHEN tmp.NumDay = 30 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_30
+                                , SUM (CASE WHEN tmp.NumDay = 31 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_31
+
+                                , SUM (CASE WHEN tmp.NumDay = 1 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_1
+                                , SUM (CASE WHEN tmp.NumDay = 2 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_2
+                                , SUM (CASE WHEN tmp.NumDay = 3 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_3
+                                , SUM (CASE WHEN tmp.NumDay = 4 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_4
+                                , SUM (CASE WHEN tmp.NumDay = 5 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_5
+                                , SUM (CASE WHEN tmp.NumDay = 6 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_6
+                                , SUM (CASE WHEN tmp.NumDay = 7 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_7
+                                , SUM (CASE WHEN tmp.NumDay = 8 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_8
+                                , SUM (CASE WHEN tmp.NumDay = 9 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_9
+                                , SUM (CASE WHEN tmp.NumDay = 10 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_10
+                                , SUM (CASE WHEN tmp.NumDay = 11 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_11
+                                , SUM (CASE WHEN tmp.NumDay = 12 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_12
+                                , SUM (CASE WHEN tmp.NumDay = 13 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_13
+                                , SUM (CASE WHEN tmp.NumDay = 14 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_14
+                                , SUM (CASE WHEN tmp.NumDay = 15 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_15
+                                , SUM (CASE WHEN tmp.NumDay = 16 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_16
+                                , SUM (CASE WHEN tmp.NumDay = 17 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_17
+                                , SUM (CASE WHEN tmp.NumDay = 18 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_18
+                                , SUM (CASE WHEN tmp.NumDay = 19 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_19
+                                , SUM (CASE WHEN tmp.NumDay = 20 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_20
+                                , SUM (CASE WHEN tmp.NumDay = 21 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_21
+                                , SUM (CASE WHEN tmp.NumDay = 22 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_22
+                                , SUM (CASE WHEN tmp.NumDay = 23 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_23
+                                , SUM (CASE WHEN tmp.NumDay = 24 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_24
+                                , SUM (CASE WHEN tmp.NumDay = 25 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_25
+                                , SUM (CASE WHEN tmp.NumDay = 26 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_26
+                                , SUM (CASE WHEN tmp.NumDay = 27 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_27
+                                , SUM (CASE WHEN tmp.NumDay = 28 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_28
+                                , SUM (CASE WHEN tmp.NumDay = 29 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_29
+                                , SUM (CASE WHEN tmp.NumDay = 30 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_30
+                                , SUM (CASE WHEN tmp.NumDay = 31 THEN tmp.CountProductionOut ELSE 0 END) AS CountProductionOut_31
+
                            FROM (SELECT tmpOnDaysAll.GoodsId
                                       , tmpOnDaysAll.OperDate
+                                      , EXTRACT(DAY FROM tmpOnDaysAll.OperDate) AS NumDay
                                       , SUM (CASE -- если надо по всем поставщикам - тогда весь приход
                                                   WHEN inJuridicalId = 0
                                                   THEN tmpOnDaysAll.CountIncome
@@ -538,6 +667,69 @@ BEGIN
            , tmpOnDays.CountProductionOut6  :: TFloat
            , tmpOnDays.CountProductionOut7  :: TFloat
 
+           , tmpOnDays.CountIncome_1          :: TFloat
+           , tmpOnDays.CountIncome_2          :: TFloat
+           , tmpOnDays.CountIncome_3          :: TFloat
+           , tmpOnDays.CountIncome_4          :: TFloat
+           , tmpOnDays.CountIncome_5          :: TFloat
+           , tmpOnDays.CountIncome_6          :: TFloat
+           , tmpOnDays.CountIncome_7          :: TFloat
+           , tmpOnDays.CountIncome_8          :: TFloat
+           , tmpOnDays.CountIncome_9          :: TFloat
+           , tmpOnDays.CountIncome_10         :: TFloat
+           , tmpOnDays.CountIncome_11         :: TFloat
+           , tmpOnDays.CountIncome_12         :: TFloat
+           , tmpOnDays.CountIncome_13         :: TFloat
+           , tmpOnDays.CountIncome_14         :: TFloat
+           , tmpOnDays.CountIncome_15         :: TFloat
+           , tmpOnDays.CountIncome_16         :: TFloat
+           , tmpOnDays.CountIncome_17         :: TFloat
+           , tmpOnDays.CountIncome_18         :: TFloat
+           , tmpOnDays.CountIncome_19         :: TFloat
+           , tmpOnDays.CountIncome_20         :: TFloat
+           , tmpOnDays.CountIncome_21         :: TFloat
+           , tmpOnDays.CountIncome_22         :: TFloat
+           , tmpOnDays.CountIncome_23         :: TFloat
+           , tmpOnDays.CountIncome_24         :: TFloat
+           , tmpOnDays.CountIncome_25         :: TFloat
+           , tmpOnDays.CountIncome_26         :: TFloat
+           , tmpOnDays.CountIncome_27         :: TFloat
+           , tmpOnDays.CountIncome_28         :: TFloat
+           , tmpOnDays.CountIncome_29         :: TFloat
+           , tmpOnDays.CountIncome_30         :: TFloat
+           , tmpOnDays.CountIncome_31         :: TFloat
+
+           , tmpOnDays.CountProductionOut_1          :: TFloat
+           , tmpOnDays.CountProductionOut_2          :: TFloat
+           , tmpOnDays.CountProductionOut_3          :: TFloat
+           , tmpOnDays.CountProductionOut_4          :: TFloat
+           , tmpOnDays.CountProductionOut_5          :: TFloat
+           , tmpOnDays.CountProductionOut_6          :: TFloat
+           , tmpOnDays.CountProductionOut_7          :: TFloat
+           , tmpOnDays.CountProductionOut_8          :: TFloat
+           , tmpOnDays.CountProductionOut_9          :: TFloat
+           , tmpOnDays.CountProductionOut_10         :: TFloat
+           , tmpOnDays.CountProductionOut_11         :: TFloat
+           , tmpOnDays.CountProductionOut_12         :: TFloat
+           , tmpOnDays.CountProductionOut_13         :: TFloat
+           , tmpOnDays.CountProductionOut_14         :: TFloat
+           , tmpOnDays.CountProductionOut_15         :: TFloat
+           , tmpOnDays.CountProductionOut_16         :: TFloat
+           , tmpOnDays.CountProductionOut_17         :: TFloat
+           , tmpOnDays.CountProductionOut_18         :: TFloat
+           , tmpOnDays.CountProductionOut_19         :: TFloat
+           , tmpOnDays.CountProductionOut_20         :: TFloat
+           , tmpOnDays.CountProductionOut_21         :: TFloat
+           , tmpOnDays.CountProductionOut_22         :: TFloat
+           , tmpOnDays.CountProductionOut_23         :: TFloat
+           , tmpOnDays.CountProductionOut_24         :: TFloat
+           , tmpOnDays.CountProductionOut_25         :: TFloat
+           , tmpOnDays.CountProductionOut_26         :: TFloat
+           , tmpOnDays.CountProductionOut_27         :: TFloat
+           , tmpOnDays.CountProductionOut_28         :: TFloat
+           , tmpOnDays.CountProductionOut_29         :: TFloat
+           , tmpOnDays.CountProductionOut_30         :: TFloat
+           , tmpOnDays.CountProductionOut_31         :: TFloat
 
            , CASE WHEN COALESCE (tmpOrderIncome.Amount, 0) > 0 THEN 25088  -- зеленый
                   ELSE

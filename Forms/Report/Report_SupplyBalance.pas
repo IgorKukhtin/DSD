@@ -13,7 +13,7 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxCheckBox;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxCheckBox, cxSplitter;
 
 type
   TReport_SupplyBalanceForm = class(TAncestorReportForm)
@@ -61,6 +61,14 @@ type
     colComment: TcxGridDBColumn;
     OrderJournal: TdsdOpenForm;
     colMovementId_List: TcxGridDBColumn;
+    ChildCDS: TClientDataSet;
+    ChildDS: TDataSource;
+    ChildViewAddOn: TdsdDBViewAddOn;
+    cxGridReceiptChild: TcxGrid;
+    cxGridDBTableViewReceiptChild: TcxGridDBTableView;
+    cxGridLevel2: TcxGridLevel;
+    cxBottomSplitter: TcxSplitter;
+    spSelectChild: TdsdStoredProc;
   private
     { Private declarations }
   public

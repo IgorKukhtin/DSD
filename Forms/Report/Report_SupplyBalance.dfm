@@ -5,7 +5,6 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -211
   ExplicitWidth = 1382
   ExplicitHeight = 572
   PixelsPerInch = 96
@@ -13,21 +12,21 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
   inherited PageControl: TcxPageControl
     Top = 59
     Width = 1366
-    Height = 475
+    Height = 360
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1366
-    ExplicitHeight = 475
-    ClientRectBottom = 475
+    ExplicitHeight = 360
+    ClientRectBottom = 360
     ClientRectRight = 1366
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1366
-      ExplicitHeight = 475
+      ExplicitHeight = 360
       inherited cxGrid: TcxGrid
         Width = 1366
-        Height = 475
+        Height = 360
         ExplicitWidth = 1366
-        ExplicitHeight = 475
+        ExplicitHeight = 360
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1255,6 +1254,1300 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
       Width = 192
     end
   end
+  object cxGridReceiptChild: TcxGrid [2]
+    Left = 0
+    Top = 424
+    Width = 1366
+    Height = 110
+    Align = alBottom
+    TabOrder = 6
+    LookAndFeel.Kind = lfStandard
+    LookAndFeel.NativeStyle = False
+    LookAndFeel.SkinName = ''
+    object cxGridDBTableViewReceiptChild: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = MasterDS
+      DataController.Filter.Options = [fcoCaseInsensitive]
+      DataController.Filter.Active = True
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_2
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_3
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_4
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_5
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_6
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_7
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_8
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_9
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_10
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_11
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_12
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_13
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_14
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_15
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_16
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_17
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_18
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_19
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_20
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_21
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_22
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_23
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_24
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_25
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_26
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_27
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_28
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_29
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_30
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_31
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_2
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_3
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_4
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_5
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_6
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_7
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_8
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_9
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_10
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_11
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_12
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_13
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_14
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_15
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_16
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_17
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_18
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_19
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_20
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_21
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_22
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_23
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_24
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_25
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_26
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_27
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_28
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_29
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_30
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_31
+        end>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_2
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_3
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_4
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_5
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_6
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_7
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_8
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_9
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_10
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_11
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_12
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_13
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_14
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_15
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_16
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_17
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_18
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_19
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_20
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_21
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_22
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_23
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_24
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_25
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_26
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_27
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_28
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_29
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_30
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountIncome_31
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_2
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_3
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_4
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_5
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_6
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_7
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_8
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_9
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_10
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_11
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_12
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_13
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_14
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_15
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_16
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_17
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_18
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_19
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_20
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_21
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_22
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_23
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_24
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_25
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_26
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_27
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_28
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_29
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_30
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = cCountProductionOut_31
+        end>
+      DataController.Summary.SummaryGroups = <>
+      Images = dmMain.SortImageList
+      OptionsBehavior.IncSearch = True
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Inserting = False
+      OptionsView.Footer = True
+      OptionsView.GroupByBox = False
+      OptionsView.GroupSummaryLayout = gslAlignWithColumns
+      OptionsView.HeaderHeight = 40
+      OptionsView.Indicator = True
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object cCountIncome_1: TcxGridDBColumn
+        Caption = '1 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_2: TcxGridDBColumn
+        Caption = '2 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_3: TcxGridDBColumn
+        Caption = '3 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_4: TcxGridDBColumn
+        Caption = '4 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_4'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_5: TcxGridDBColumn
+        Caption = '5 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_5'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_6: TcxGridDBColumn
+        Caption = '6 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_6'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_7: TcxGridDBColumn
+        Caption = '7 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_7'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_8: TcxGridDBColumn
+        Caption = '8 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_8'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_9: TcxGridDBColumn
+        Caption = '9 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_9'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_10: TcxGridDBColumn
+        Caption = '10 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_10'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_11: TcxGridDBColumn
+        Caption = '11 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_11'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_12: TcxGridDBColumn
+        Caption = '12 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_12'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_13: TcxGridDBColumn
+        Caption = '13 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_13'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_14: TcxGridDBColumn
+        Caption = '14 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_14'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_15: TcxGridDBColumn
+        Caption = '15 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_15'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_16: TcxGridDBColumn
+        Caption = '16 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_16'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_17: TcxGridDBColumn
+        Caption = '17 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_17'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_18: TcxGridDBColumn
+        Caption = '18 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_18'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_19: TcxGridDBColumn
+        Caption = '19 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_19'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_20: TcxGridDBColumn
+        Caption = '20 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_20'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_21: TcxGridDBColumn
+        Caption = '21 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_21'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_22: TcxGridDBColumn
+        Caption = '22 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_22'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_23: TcxGridDBColumn
+        Caption = '23 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_23'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_24: TcxGridDBColumn
+        Caption = '24 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_24'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_25: TcxGridDBColumn
+        Caption = '25 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_25'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_26: TcxGridDBColumn
+        Caption = '26 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_26'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_27: TcxGridDBColumn
+        Caption = '27 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_27'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_28: TcxGridDBColumn
+        Caption = '28 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_28'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_29: TcxGridDBColumn
+        Caption = '29 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_29'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_30: TcxGridDBColumn
+        Caption = '30 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_30'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountIncome_31: TcxGridDBColumn
+        Caption = '31 ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'CountIncome_31'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_1: TcxGridDBColumn
+        Caption = '1 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_2: TcxGridDBColumn
+        Caption = '2 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_3: TcxGridDBColumn
+        Caption = '3 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_4: TcxGridDBColumn
+        Caption = '4 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_4'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_5: TcxGridDBColumn
+        Caption = '5 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_5'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_6: TcxGridDBColumn
+        Caption = '6 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_6'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_7: TcxGridDBColumn
+        Caption = '7 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_7'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_8: TcxGridDBColumn
+        Caption = '8 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_8'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_9: TcxGridDBColumn
+        Caption = '9 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_9'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_10: TcxGridDBColumn
+        Caption = '10 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_10'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_11: TcxGridDBColumn
+        Caption = '11 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_11'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_12: TcxGridDBColumn
+        Caption = '12 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_12'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_13: TcxGridDBColumn
+        Caption = '13 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_13'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_14: TcxGridDBColumn
+        Caption = '14 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_14'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_15: TcxGridDBColumn
+        Caption = '15 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_15'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_16: TcxGridDBColumn
+        Caption = '16 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_16'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_17: TcxGridDBColumn
+        Caption = '17 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_17'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_18: TcxGridDBColumn
+        Caption = '18 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_18'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_19: TcxGridDBColumn
+        Caption = '19 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_19'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_20: TcxGridDBColumn
+        Caption = '20 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_20'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_21: TcxGridDBColumn
+        Caption = '21 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_21'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_22: TcxGridDBColumn
+        Caption = '22 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_22'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_23: TcxGridDBColumn
+        Caption = '23 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_23'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_24: TcxGridDBColumn
+        Caption = '24 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_24'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_25: TcxGridDBColumn
+        Caption = '25 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_25'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_26: TcxGridDBColumn
+        Caption = '26 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_26'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_27: TcxGridDBColumn
+        Caption = '27 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_27'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_28: TcxGridDBColumn
+        Caption = '28 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_28'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_29: TcxGridDBColumn
+        Caption = '29 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_29'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_30: TcxGridDBColumn
+        Caption = '30 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_30'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object cCountProductionOut_31: TcxGridDBColumn
+        Caption = '31 ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'CountProductionOut_31'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+    end
+    object cxGridLevel2: TcxGridLevel
+      GridView = cxGridDBTableViewReceiptChild
+    end
+  end
+  object cxBottomSplitter: TcxSplitter [3]
+    Left = 0
+    Top = 419
+    Width = 1366
+    Height = 5
+    AlignSplitter = salBottom
+    Control = cxGridReceiptChild
+    ShowHint = False
+    ParentShowHint = False
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -1281,6 +2574,14 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
       end>
   end
   inherited ActionList: TActionList
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+        end>
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -1773,8 +3074,8 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 112
-    Top = 192
+    Left = 208
+    Top = 280
   end
   inherited BarManager: TdxBarManager
     Left = 160
@@ -2072,5 +3373,126 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         MultiSelectSeparator = ','
       end>
     Left = 1152
+  end
+  object ChildCDS: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'GoodsId'
+    MasterFields = 'GoodsId'
+    MasterSource = MasterDS
+    PacketRecords = 0
+    Params = <>
+    Left = 713
+    Top = 365
+  end
+  object ChildDS: TDataSource
+    DataSet = ChildCDS
+    Left = 662
+    Top = 365
+  end
+  object ChildViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewReceiptChild
+    OnDblClickActionList = <
+      item
+      end
+      item
+      end>
+    ActionItemList = <
+      item
+        ShortCut = 13
+      end
+      item
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 766
+    Top = 366
+  end
+  object spSelectChild: TdsdStoredProc
+    StoredProcName = 'gpReport_SupplyBalance'
+    DataSet = ChildCDS
+    DataSets = <
+      item
+        DataSet = ChildCDS
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 42736d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42736d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = '0'
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsGroupId'
+        Value = '0'
+        Component = GoodsGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 960
+    Top = 376
   end
 end
