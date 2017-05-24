@@ -85,6 +85,9 @@ type
     SheetWorkTimeName: TcxGridDBColumn;
     BranchCode: TcxGridDBColumn;
     BranchName: TcxGridDBColumn;
+    CardSecond: TcxGridDBColumn;
+    BankName: TcxGridDBColumn;
+    BankSecondName: TcxGridDBColumn;
   private
     { Private declarations }
   public

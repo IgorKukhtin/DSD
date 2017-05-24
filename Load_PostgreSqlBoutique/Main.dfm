@@ -131,7 +131,7 @@
     Top = 0
     Width = 484
     Height = 507
-    ActivePage = TabSheet1
+    ActivePage = TabSheet2
     Align = alRight
     TabOrder = 2
     object TabSheet1: TTabSheet
@@ -1176,6 +1176,7 @@
   end
   object toZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
+    UTF8StringsAsWideField = True
     Catalog = 'public'
     DesignConnection = True
     HostName = 'localhost'

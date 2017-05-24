@@ -297,7 +297,7 @@ begin
      fExecSqFromQuery_noErr(
        ' 	CREATE TABLE _Group11 (	 ' +
        ' 	Code INTEGER ,	 ' +
-       ' 	Goodsgroup TVarCharMedium ,	 ' +
+       ' 	Goodsgroup TVarCharLongLong ,	 ' +
        ' 	col1  TVarCharMedium ,	 ' +
        ' 	col2  TVarCharMedium ,	 ' +
        ' 	col3  TVarCharMedium ,	 ' +
@@ -308,7 +308,7 @@ begin
      fExecSqFromQuery_noErr(
        ' 	CREATE TABLE _Group22 (	 ' +
        ' 	Code INTEGER ,	 ' +
-       ' 	Goodsgroup TVarCharMedium ,	 ' +
+       ' 	Goodsgroup TVarCharLongLong ,	 ' +
        ' 	col1  TVarCharMedium ,	 ' +
        ' 	col2  TVarCharMedium ,	 ' +
        ' 	col3  TVarCharMedium ,	 ' +
@@ -316,6 +316,9 @@ begin
        ' 	col5  TVarCharMedium ,	 ' +
        ' 	col6  TVarCharMedium ,	 ' +
        ' 	UnitName  TVarCharMedium )' );
+
+      fExecSqFromQuery(' delete from DBA._Group11');
+      fExecSqFromQuery(' delete from DBA._Group22');
 
       fExecSqFromQuery(
      ' 	LOAD TABLE DBA._Group11	 ' +
@@ -1566,6 +1569,7 @@ end;
 
 procedure TMainForm.btnInsertGoods2Click(Sender: TObject);
 var  inGoodsName,  inParentID, inHasChildren , upWhere : string;
+     fErr : Boolean;
 begin
  lInsertGoods2.Caption:= 'FALSE';
 // if not cbGoods2.Checked then Exit;
@@ -1659,6 +1663,8 @@ fExecSqFromQuery(
         begin
          //!!!
          if fStop then begin exit;end;
+
+         fErr:= false;
          //
            inParentID:='null';
            inHasChildren:='2';
@@ -1681,17 +1687,20 @@ fExecSqFromQuery(
             Close;
             Clear;
             //поиск Ёлемента-1
-            Add('select id from goods2 where lower(goodsname) = lower(trim('''+lowercase(fromQuery.FieldByName('Col1').AsString)+'''))');
+            Add('select id from goods as goods2 where lower(goodsname) = lower(trim('''+lowercase(fromQuery.FieldByName('Col1').AsString)+'''))');
             Add('   and isnull(ParentId,0) = 0');
+            Add('   and HasChildren <> -1');
             Open;
             //если не нашли Ёлемент-1 - тогда Insert
-            if fromQuery_two.RecordCount <> 1 then
+            if (fromQuery_two.RecordCount <> 1) and (fErr = false) then
             begin
                 inGoodsName:= fromQuery.FieldByName('Col1').AsString;
                 inParentID:='null';
                 inHasChildren:='2';
                 //
-                if inGoodsName<>'' then
+            fErr:=true;
+            ShowMessage ('1 ' + trim(inGoodsName) + '   and ParentId = ' + inParentID);
+                {if inGoodsName<>'' then
                 fExecSqFromQuery(
                   ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
                   ' select distinct ''' + trim(inGoodsName) + ''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
@@ -1701,7 +1710,7 @@ fExecSqFromQuery(
                 Open;
                 if fromQuery_two.RecordCount <> 1
                 then ShowMessage('ќшибка - не найден Id - col1')
-                else inParentID:=fromQuery_two.FieldByName('Id').AsString;
+                else inParentID:=fromQuery_two.FieldByName('Id').AsString;}
             end
             //иначе сразу получили ParentID дл€ !!!следующего!!! уровн€
             else inParentID:=fromQuery_two.FieldByName('Id').AsString;
@@ -1716,17 +1725,20 @@ fExecSqFromQuery(
             Close;
             Clear;
             //поиск Ёлемента-2
-            Add('select id from goods2 where lower(goodsname) = lower(trim('''+lowercase(fromQuery.FieldByName('Col2').AsString)+'''))');
+            Add('select id from goods as goods2 where lower(goodsname) = lower(trim('''+lowercase(fromQuery.FieldByName('Col2').AsString)+'''))');
             Add('   and ParentId = ' + inParentID);
+            Add('   and HasChildren <> -1');
             Open;
 
             //если не нашли Ёлемент-2 - тогда Insert
-            if fromQuery_two.RecordCount <> 1 then
+            if (fromQuery_two.RecordCount <> 1) and (fErr = false) then
             begin
                 inGoodsName := fromQuery.FieldByName('Col2').AsString;
                 inHasChildren := '2';
+            fErr:=true;
+            ShowMessage ('2 ' + trim(inGoodsName) + '   and ParentId = ' + inParentID);
                 //
-                fExecSqFromQuery(
+            {    fExecSqFromQuery(
                   ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
                   ' select distinct ''' + trim(inGoodsName) + ''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
                   );
@@ -1735,7 +1747,7 @@ fExecSqFromQuery(
                 Open;
                 if fromQuery_two.RecordCount <> 1
                 then ShowMessage('ќшибка - не найден Id - col2')
-                else inParentID:=fromQuery_two.FieldByName('Id').AsString;
+                else inParentID:=fromQuery_two.FieldByName('Id').AsString;}
             end
             //иначе сразу получили ParentID дл€ !!!следующего!!! уровн€
             else inParentID:=fromQuery_two.FieldByName('Id').AsString;
@@ -1749,17 +1761,20 @@ fExecSqFromQuery(
            begin
             Close;
             Clear;
-            Add('select id from goods2 where  lower(goodsname) = lower(trim('''+lowercase(fromQuery.FieldByName('Col3').AsString)+'''))');
+            Add('select id from goods as goods2 where  lower(goodsname) = lower(trim('''+lowercase(fromQuery.FieldByName('Col3').AsString)+'''))');
             Add('   and ParentId = ' + inParentID);
+            Add('   and HasChildren <> -1');
             Open;
 
             //если не нашли Ёлемент-3 - тогда Insert
-            if fromQuery_two.RecordCount <> 1 then
+            if (fromQuery_two.RecordCount <> 1) and (fErr = false) then
             begin
                 inGoodsName := fromQuery.FieldByName('Col3').AsString;
                 inHasChildren := '2';
                 //
-                fExecSqFromQuery(
+            fErr:=true;
+            ShowMessage ('3 ' + trim(inGoodsName) + '   and ParentId = ' + inParentID);
+                {fExecSqFromQuery(
                   ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
                   ' select distinct '''+ trim(inGoodsName) +''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
                   );
@@ -1768,7 +1783,7 @@ fExecSqFromQuery(
                 Open;
                 if fromQuery_two.RecordCount <> 1
                 then ShowMessage('ќшибка - не найден Id - col3')
-                else inParentID:=fromQuery_two.FieldByName('Id').AsString;
+                else inParentID:=fromQuery_two.FieldByName('Id').AsString;}
             end
             //иначе сразу получили ParentID дл€ !!!следующего!!! уровн€
             else inParentID:=fromQuery_two.FieldByName('Id').AsString;
@@ -1782,17 +1797,20 @@ fExecSqFromQuery(
            begin
             Close;
             Clear;
-            Add('select id from goods2 where  lower(goodsname) = lower(trim('''+lowercase(fromQuery.FieldByName('Col4').AsString)+'''))');
+            Add('select id from goods as goods2 where  lower(goodsname) = lower(trim('''+lowercase(fromQuery.FieldByName('Col4').AsString)+'''))');
             Add('   and ParentId = ' + inParentID);
+            Add('   and HasChildren <> -1');
             Open;
 
             //если не нашли Ёлемент-4 - тогда Insert
-             if fromQuery_two.RecordCount <> 1 then
+            if (fromQuery_two.RecordCount <> 1) and (fErr = false) then
              begin
                 inGoodsName := fromQuery.FieldByName('Col4').AsString;
                 inHasChildren := '2';
                 //
-                fExecSqFromQuery(
+            fErr:=true;
+            ShowMessage ('4 ' + trim(inGoodsName) + '   and ParentId = ' + inParentID);
+                {fExecSqFromQuery(
                   ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
                   ' select distinct '''+ trim(inGoodsName) +''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
                   );
@@ -1801,7 +1819,7 @@ fExecSqFromQuery(
                 Open;
                 if fromQuery_two.RecordCount <> 1
                 then ShowMessage('ќшибка - не найден Id - col4')
-                else inParentID:=fromQuery_two.FieldByName('Id').AsString;
+                else inParentID:=fromQuery_two.FieldByName('Id').AsString;   }
             end
             //иначе сразу получили ParentID дл€ !!!следующего!!! уровн€
             else inParentID:=fromQuery_two.FieldByName('Id').AsString;
@@ -1815,17 +1833,20 @@ fExecSqFromQuery(
            begin
             Close;
             Clear;
-            Add('select id from goods2 where lower(goodsname) = lower(trim('''+lowercase(fromQuery.FieldByName('Col5').AsString)+'''))');
+            Add('select id from goods as goods2 where lower(goodsname) = lower(trim('''+lowercase(fromQuery.FieldByName('Col5').AsString)+'''))');
             Add('   and ParentId = ' + inParentID);
+            Add('   and HasChildren <> -1');
             Open;
 
             //если не нашли Ёлемент-5 - тогда Insert
-            if fromQuery_two.RecordCount <> 1 then
+            if (fromQuery_two.RecordCount <> 1) and (fErr = false) then
             begin
                 inGoodsName := fromQuery.FieldByName('Col5').AsString;
                 inHasChildren := '2';
                 //
-                fExecSqFromQuery(
+            fErr:=true;
+            ShowMessage ('5 ' + trim(inGoodsName) + '   and ParentId = ' + inParentID);
+                {fExecSqFromQuery(
                   ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
                   ' select distinct '''+ trim(inGoodsName) +''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
                   );
@@ -1834,7 +1855,7 @@ fExecSqFromQuery(
                 Open;
                 if fromQuery_two.RecordCount <> 1
                 then ShowMessage('ќшибка - не найден Id - col5')
-                else inParentID:=fromQuery_two.FieldByName('Id').AsString;
+                else inParentID:=fromQuery_two.FieldByName('Id').AsString;}
             end
             //иначе сразу получили ParentID дл€ !!!следующего!!! уровн€
             else inParentID:=fromQuery_two.FieldByName('Id').AsString;
@@ -1848,17 +1869,29 @@ fExecSqFromQuery(
            begin
             Close;
             Clear;
-            Add('select id from goods2 where lower(goodsname) = lower(trim('''+lowercase(fromQuery.FieldByName('Col6').AsString)+'''))');
+            Add('select id from goods as goods2 where lower(goodsname) = lower(trim('''+lowercase(fromQuery.FieldByName('Col6').AsString)+'''))');
             Add('   and ParentId = ' + inParentID);
+            Add('   and HasChildren <> -1');
             Open;
 
             //если не нашли Ёлемент-6 - тогда Insert
-            if fromQuery_two.RecordCount <> 1 then
+            if (fromQuery_two.RecordCount <> 1) and (fErr = false) then
             begin
                 inGoodsName := fromQuery.FieldByName('Col6').AsString;
                 inHasChildren := '1';
                 //
-                fExecSqFromQuery(
+            fErr:=true;
+            ShowMessage ('6 '
+                               + ' <' + fromQuery.FieldByName('Col1').AsString +  '>'
+                               + ' <' + fromQuery.FieldByName('Col2').AsString +  '>'
+                               + ' <' + fromQuery.FieldByName('Col3').AsString +  '>'
+                               + ' <' + fromQuery.FieldByName('Col4').AsString +  '>'
+                               + ' <' + fromQuery.FieldByName('Col5').AsString +  '>'
+                               + ' <' + fromQuery.FieldByName('Col6').AsString +  '>'
+                               + ' <' + fromQuery.FieldByName('Name').AsString +  '>'
+                               + ' <' + inParentID +  '>'
+                                );
+                {fExecSqFromQuery(
                   ' Insert into goods2 (GoodsName, Erased, ParentID, HasChildren, isPrinted, CashCode,  CountryBrandID) ' +
                   ' select distinct '''+ trim(inGoodsName) +''' as GoodsName , 0 as Erased, '+inParentID+' as ParentID,  '+inHasChildren+' as HasChildren, 0 as isPrinted, 0 as CashCode  , null as CountryBrand '
                   );
@@ -1876,7 +1909,7 @@ fExecSqFromQuery(
                                + ' <' + fromQuery.FieldByName('Name').AsString +  '>'
                                + ' <' + inParentID +  '>'
                                 )
-                else inParentID:=fromQuery_two.FieldByName('Id').AsString;
+                else inParentID:=fromQuery_two.FieldByName('Id').AsString;}
             end
             //иначе сразу получили ParentID дл€ !!!следующего!!! уровн€
             else inParentID:=fromQuery_two.FieldByName('Id').AsString;
@@ -1885,6 +1918,8 @@ fExecSqFromQuery(
 
           // ќбновление ParentId2 дл€ целевой таблыцы
 
+          if fErr = false then
+          begin
           upWhere:=' update  '+fromQuery.FieldByName('Name').AsString +'  set ParentId2 = '+ inParentID +' where ';
           upWhere:=upWhere + '     lower(trim(isnull (col1, ''''))) = lower(trim('''+fromQuery.FieldByName('Col1').AsString+''')) ';
           upWhere:=upWhere + ' and lower(trim(isnull (col2, ''''))) = lower(trim('''+fromQuery.FieldByName('Col2').AsString+''')) ';
@@ -1895,6 +1930,8 @@ fExecSqFromQuery(
             fExecSqFromQuery(
             upWhere
             );
+
+          end;
 
           //  онец ќбновлени€ ParentId2 дл€ целевой таблыцы
              //
@@ -4840,50 +4877,51 @@ begin
         Add('     , KassaProperty.Id_Postgres');
         Add('     , Valuta.Id_Postgres as CurrencyId');
         Add('     , case');
-        Add('       when ObjectId = 21 then 235');
-        Add('       when ObjectId = 25 then 235 ');
-        Add('       when ObjectId = 26 then 235 ');
-        Add('       when ObjectId = 27 then 235 ');
-        Add('       when ObjectId = 29 then 204');
-        Add('       when ObjectId = 30 then 234');
-        Add('       when ObjectId = 31 then 240 ');
-        Add('       when ObjectId = 32 then 240 ');
-        Add('       when ObjectId = 33 then 240');
-        Add('       when ObjectId = 34 then 240');
-        Add('       when ObjectId = 35 then 234 ');
-        Add('       when ObjectId = 36 then 234 ');
-        Add('       when ObjectId = 37 then 234 ');
-        Add('       when ObjectId = 38 then 204');
-        Add('       when ObjectId = 39 then 204');
-        Add('       when ObjectId = 40 then 204 ');
-        Add('       when ObjectId = 41 then 1121');
-        Add('       when ObjectId = 42 then 1121');
-        Add('       when ObjectId = 43 then 1121');
-        Add('       when ObjectId = 44 then 1121');
-        Add('       when ObjectId = 45 then 969');
-        Add('       when ObjectId = 46 then 969');
-        Add('       when ObjectId = 47 then 969');
-        Add('       when ObjectId = 48 then 969');
-        Add('       when ObjectId = 49 then 5727');
-        Add('       when ObjectId = 50 then 5727');
-        Add('       when ObjectId = 51 then 5727');
-        Add('       when ObjectId = 52 then 5727');
-        Add('       when ObjectId = 53 then 11772');
-        Add('       when ObjectId = 54 then 11772');
-        Add('       when ObjectId = 55 then 11772');
-        Add('       when ObjectId = 56 then 11772');
-        Add('       when ObjectId = 57 then 4646');
-        Add('       when ObjectId = 58 then 4646');
-        Add('       when ObjectId = 59 then 4646');
-        Add('       when ObjectId = 60 then 4646');
-        Add('       when ObjectId = 61 then 20484');
-        Add('       when ObjectId = 62 then 20484');
-        Add('       when ObjectId = 63 then 20484');
-        Add('       when ObjectId = 64 then 20484');
-        Add('       when ObjectId = 65 then 29018');
-        Add('       when ObjectId = 66 then 29018');
-        Add('       when ObjectId = 67 then 29018');
-        Add('       when ObjectId = 68 then 29018');
+        Add('       when ObjectId = 21 then 235');     // MaxMara грн   - магазин MaxMara
+        Add('       when ObjectId = 25 then 235');     // MaxMara $     - магазин MaxMara
+        Add('       when ObjectId = 26 then 235');     // MaxMara бн    - магазин MaxMara
+        Add('       when ObjectId = 27 then 235');     // MaxMara EUR   - магазин MaxMara
+        Add('       when ObjectId = 28 then 0');       // ѕоставщики    -
+        Add('       when ObjectId = 29 then 204');     // Terry - L грн - магазин Terri-Luxury
+        Add('       when ObjectId = 30 then 234');     // —авой грн     - магазин SAVOY
+        Add('       when ObjectId = 31 then 240');     // 5 Ёлемент грн - магазин 5 Ёлемент
+        Add('       when ObjectId = 32 then 240');     // 5 Ёлемент $   - магазин 5 Ёлемент
+        Add('       when ObjectId = 33 then 240');     // 5 Ёлемент EUR - магазин 5 Ёлемент
+        Add('       when ObjectId = 34 then 240');     // 5 Ёлемент бн  - магазин 5 Ёлемент
+        Add('       when ObjectId = 35 then 234');     // —авой $       - магазин SAVOY
+        Add('       when ObjectId = 36 then 234');     // —авой EUR     - магазин SAVOY
+        Add('       when ObjectId = 37 then 234');     // —авой бн      - магазин SAVOY
+        Add('       when ObjectId = 38 then 204');     // Terry - L $   - магазин Terri-Luxury
+        Add('       when ObjectId = 39 then 204');     // Terry - L EUR - магазин Terri-Luxury
+        Add('       when ObjectId = 40 then 204');     // Terry - L бн  - магазин Terri-Luxury
+        Add('       when ObjectId = 41 then 1121');    // „адо грн      - магазин CHADO
+        Add('       when ObjectId = 42 then 1121');    // „адо $        - магазин CHADO
+        Add('       when ObjectId = 43 then 1121');    // „адо EUR      - магазин CHADO
+        Add('       when ObjectId = 44 then 1121');    // „адо бн       - магазин CHADO
+        Add('       when ObjectId = 45 then 969');     // —опра грн     - магазин Sopra
+        Add('       when ObjectId = 46 then 969');     // —опра $       - магазин Sopra
+        Add('       when ObjectId = 47 then 969');     // —опра EUR     - магазин Sopra
+        Add('       when ObjectId = 48 then 969');     // —опра бн      - магазин Sopra
+        Add('       when ObjectId = 49 then 5727');    // PZ грн        - магазин Savoy-P.Z.
+        Add('       when ObjectId = 50 then 5727');    // PZ $          - магазин Savoy-P.Z.
+        Add('       when ObjectId = 51 then 5727');    // PZ бн         - магазин Savoy-P.Z.
+        Add('       when ObjectId = 52 then 5727');    // PZ EUR        - магазин Savoy-P.Z.
+        Add('       when ObjectId = 53 then 11772');   // “ерри  грн    - магазин “ерри-Out
+        Add('       when ObjectId = 54 then 11772');   // “ерри  $      - магазин “ерри-Out
+        Add('       when ObjectId = 55 then 11772');   // “ерри  EUR    - магазин “ерри-Out
+        Add('       when ObjectId = 56 then 11772');   // “ерри  бн     - магазин “ерри-Out
+        Add('       when ObjectId = 57 then 4646');    // Vintag grn    - гр.Vintag
+        Add('       when ObjectId = 58 then 4646');    // Vintag dol    - гр.Vintag
+        Add('       when ObjectId = 59 then 4646');    // Vintag EUR    - гр.Vintag
+        Add('       when ObjectId = 60 then 4646');    // Vintag BN     - гр.Vintag
+        Add('       when ObjectId = 61 then 20484');   // ESCADA грн    - магазин ESCADA
+        Add('       when ObjectId = 62 then 20484');   // ESCADA $      - магазин ESCADA
+        Add('       when ObjectId = 63 then 20484');   // ESCADA EUR    - магазин ESCADA
+        Add('       when ObjectId = 64 then 20484');   // ESCADA бн     - магазин ESCADA
+        Add('       when ObjectId = 65 then 29018');   // Savoy-O грн   - магазин Savoy-O
+        Add('       when ObjectId = 66 then 29018');   // Savoy-O EUR   - магазин Savoy-O
+        Add('       when ObjectId = 67 then 29018');   // Savoy-O бн    - магазин Savoy-O
+        Add('       when ObjectId = 68 then 29018');   // Savoy-O $     - магазин Savoy-O
         Add('       end   as IDUnitID');
         Add('     , podr.Id_Postgres as UnitID    ');
         Add('from dba.KassaProperty');
@@ -5566,21 +5604,21 @@ begin
         Add('    , Unit.Erased as Erased');
         Add('    , Unit.Id_Postgres');
         Add('     , case');
-        Add('       when ObjectId = 204 then 979');
-        Add('       when ObjectId = 234 then 980 ');
-        Add('       when ObjectId = 235 then 0 -- не знаю что ');
-        Add('       when ObjectId = 240 then 6383');
-        Add('       when ObjectId = 969 then 0 -- не знаю что ');
-        Add('       when ObjectId = 978 then 981');
-        Add('       when ObjectId = 1121 then 5438 ');
-        Add('       when ObjectId = 4646 then 981');
-        Add('       when ObjectId = 4647 then 981');
-        Add('       when ObjectId = 5727 then 980');
-        Add('       when ObjectId = 7360 then 981');
-        Add('       when ObjectId = 11425 then 981 ');
-        Add('       when ObjectId = 11772 then 979 ');
-        Add('       when ObjectId = 20484 then 0 -- не знаю что ');
-        Add('       when ObjectId = 29018 then 980');
+        Add('       when ObjectId = 204 then 979');    //магазин Terri-Luxury- —клад Terri
+        Add('       when ObjectId = 234 then 980');    //магазин SAVOY       - склад SAVOY
+        Add('       when ObjectId = 235 then 0');      //магазин MaxMara     -
+        Add('       when ObjectId = 240 then 6383');   //магазин 5 Ёлемент   - склад 5Ёлемент
+        Add('       when ObjectId = 969 then 0');      //магазин Sopra       -
+        Add('       when ObjectId = 978 then 0');      //магазин Vintag      -
+        Add('       when ObjectId = 1121 then 5438');  //магазин CHADO       - склад CHADO
+        Add('       when ObjectId = 4646 then 981');   //гр.Vintag           - склад Vintag
+        Add('       when ObjectId = 4647 then 0');     //магазин Vintag 50   -
+        Add('       when ObjectId = 5727 then 0');     //магазин Savoy-P.Z.  -
+        Add('       when ObjectId = 7360 then 0');     //магазин Vintag 90   -
+        Add('       when ObjectId = 11425 then 0');    //магазин Vintag 80   -
+        Add('       when ObjectId = 11772 then 979');  //магазин “ерри-Out   - —клад Terri
+        Add('       when ObjectId = 20484 then 0');    //магазин ESCADA      -
+        Add('       when ObjectId = 29018 then 0')  ;  //магазин Savoy-O     -
         Add('       end   as IDChildId');
         Add(', Child.Id_Postgres as ChildId');
         Add('from dba.Unit');

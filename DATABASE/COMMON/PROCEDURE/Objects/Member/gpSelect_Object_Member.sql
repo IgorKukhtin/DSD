@@ -46,7 +46,7 @@ BEGIN
    vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0;
 
    -- Результат
-   RETURN QUERY 
+   RETURN QUERY
       WITH tmpPersonal AS (SELECT lfSelect.MemberId
                                 , lfSelect.PersonalId
                                 , lfSelect.UnitId
@@ -60,19 +60,19 @@ BEGIN
       , tmpCar AS (SELECT MAX (ObjectLink_Car_PersonalDriver.ObjectId) AS CarId
                         , View_PersonalDriver.PersonalId
                         , View_PersonalDriver.MemberId
-                   FROM ObjectLink AS ObjectLink_Car_PersonalDriver 
-                       Inner JOIN Object_Personal_View AS View_PersonalDriver 
+                   FROM ObjectLink AS ObjectLink_Car_PersonalDriver
+                       Inner JOIN Object_Personal_View AS View_PersonalDriver
                                                        ON View_PersonalDriver.PersonalId = ObjectLink_Car_PersonalDriver.ChildObjectId
-                   WHERE  ObjectLink_Car_PersonalDriver.DescId = zc_ObjectLink_Car_PersonalDriver() 
+                   WHERE  ObjectLink_Car_PersonalDriver.DescId = zc_ObjectLink_Car_PersonalDriver()
                    GROUP BY View_PersonalDriver.PersonalId
                           , View_PersonalDriver.MemberId
                    )
-                   
-     SELECT 
+
+     SELECT
            Object_Member.Id         AS Id
          , Object_Member.ObjectCode AS Code
          , Object_Member.ValueData  AS Name
-         
+
          , ObjectString_INN.ValueData               AS INN
          , ObjectString_DriverCertificate.ValueData AS DriverCertificate
          , ObjectString_Card.ValueData              AS Card
@@ -81,7 +81,7 @@ BEGIN
          , ObjectString_Comment.ValueData           AS Comment
 
          , ObjectBoolean_Official.ValueData         AS isOfficial
- 
+
          , Object_Bank.Id               AS BankId
          , Object_Bank.ValueData        AS BankName
          , Object_BankSecond.Id         AS BankSecondId
@@ -106,7 +106,7 @@ BEGIN
          , (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarNameAll
          , Object_Car.ValueData       AS CarName
          , Object_CarModel.ValueData  AS CarModelName
-         
+
          , Object_Branch.ObjectCode   AS BranchCode
          , Object_Branch.ValueData    AS BranchName
          , Object_Unit.ObjectCode     AS UnitCode
@@ -151,22 +151,22 @@ BEGIN
                                   ON ObjectBoolean_Official.ObjectId = Object_Member.Id
                                  AND ObjectBoolean_Official.DescId = zc_ObjectBoolean_Member_Official()
           LEFT JOIN ObjectString AS ObjectString_INN
-                                 ON ObjectString_INN.ObjectId = Object_Member.Id 
+                                 ON ObjectString_INN.ObjectId = Object_Member.Id
                                 AND ObjectString_INN.DescId = zc_ObjectString_Member_INN()
           LEFT JOIN ObjectString AS ObjectString_Card
-                                 ON ObjectString_Card.ObjectId = Object_Member.Id 
+                                 ON ObjectString_Card.ObjectId = Object_Member.Id
                                 AND ObjectString_Card.DescId = zc_ObjectString_Member_Card()
           LEFT JOIN ObjectString AS ObjectString_CardSecond
-                                 ON ObjectString_CardSecond.ObjectId = Object_Member.Id 
+                                 ON ObjectString_CardSecond.ObjectId = Object_Member.Id
                                 AND ObjectString_CardSecond.DescId = zc_ObjectString_Member_CardSecond()
           LEFT JOIN ObjectString AS ObjectString_CardChild
-                                 ON ObjectString_CardChild.ObjectId = Object_Member.Id 
+                                 ON ObjectString_CardChild.ObjectId = Object_Member.Id
                                 AND ObjectString_CardChild.DescId = zc_ObjectString_Member_CardChild()
           LEFT JOIN ObjectString AS ObjectString_DriverCertificate
-                                 ON ObjectString_DriverCertificate.ObjectId = Object_Member.Id 
+                                 ON ObjectString_DriverCertificate.ObjectId = Object_Member.Id
                                 AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
           LEFT JOIN ObjectString AS ObjectString_Comment
-                                 ON ObjectString_Comment.ObjectId = Object_Member.Id 
+                                 ON ObjectString_Comment.ObjectId = Object_Member.Id
                                 AND ObjectString_Comment.DescId = zc_ObjectString_Member_Comment()
          LEFT JOIN ObjectLink AS ObjectLink_Member_InfoMoney
                               ON ObjectLink_Member_InfoMoney.ObjectId = Object_Member.Id
@@ -178,7 +178,7 @@ BEGIN
                              AND ObjectLink_Member_ObjectTo.DescId = zc_ObjectLink_Member_ObjectTo()
          LEFT JOIN Object AS ObjectTo ON ObjectTo.Id = ObjectLink_Member_ObjectTo.ChildObjectId
          LEFT JOIN ObjectDesc ON ObjectDesc.Id = ObjectTo.DescId
-         
+
          LEFT JOIN ObjectDate AS ObjectDate_StartSummer
                               ON ObjectDate_StartSummer.ObjectId = Object_Member.Id
                              AND ObjectDate_StartSummer.DescId = zc_ObjectDate_Member_StartSummer()
@@ -202,13 +202,13 @@ BEGIN
          LEFT JOIN ObjectFloat AS ObjectFloat_Limit
                                ON ObjectFloat_Limit.ObjectId = Object_Member.Id
                               AND ObjectFloat_Limit.DescId = zc_ObjectFloat_Member_Limit()
-                              
+
          LEFT JOIN ObjectFloat AS ObjectFloat_LimitDistance
                                ON ObjectFloat_LimitDistance.ObjectId = Object_Member.Id
                               AND ObjectFloat_LimitDistance.DescId = zc_ObjectFloat_Member_LimitDistance()
 
          LEFT JOIN tmpCar ON tmpCar.MemberId = Object_Member.Id
-         
+
          LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = Object_Member.Id AND tmpPersonal.Ord = 1
          LEFT JOIN Object AS Object_Branch   ON Object_Branch.Id   = tmpPersonal.BranchId
          LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = tmpPersonal.UnitId
@@ -218,7 +218,7 @@ BEGIN
          LEFT JOIN ObjectLink AS Car_CarModel ON Car_CarModel.ObjectId = Object_Car.Id
                                                 AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
          LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
-                         
+
          LEFT JOIN ObjectLink AS ObjectLink_Member_Bank
                               ON ObjectLink_Member_Bank.ObjectId = Object_Member.Id
                              AND ObjectLink_Member_Bank.DescId = zc_ObjectLink_Member_Bank()
@@ -233,7 +233,7 @@ BEGIN
                               ON ObjectLink_Member_BankChild.ObjectId = Object_Member.Id
                              AND ObjectLink_Member_BankChild.DescId = zc_ObjectLink_Member_BankChild()
          LEFT JOIN Object AS Object_BankChild ON Object_BankChild.Id = ObjectLink_Member_BankChild.ChildObjectId
-     
+
      WHERE Object_Member.DescId = zc_Object_Member()
        AND (Object_Member.isErased = FALSE
             OR (Object_Member.isErased = TRUE AND inIsShowAll = TRUE)
@@ -258,15 +258,15 @@ BEGIN
            , FALSE                  AS isOfficial
 
            , CAST (0 as Integer)    AS BankId
-           , CAST ('' as TVarChar)  AS BankName 
+           , CAST ('' as TVarChar)  AS BankName
            , CAST (0 as Integer)    AS BankSecondId
-           , CAST ('' as TVarChar)  AS BankSecondName 
+           , CAST ('' as TVarChar)  AS BankSecondName
            , CAST (0 as Integer)    AS BankChildId
-           , CAST ('' as TVarChar)  AS BankChildName 
+           , CAST ('' as TVarChar)  AS BankChildName
 
            , CAST (0 as Integer)    AS InfoMoneyId
            , CAST (0 as Integer)    AS InfoMoneyCode
-           , CAST ('' as TVarChar)  AS InfoMoneyName   
+           , CAST ('' as TVarChar)  AS InfoMoneyName
            , CAST ('' as TVarChar)  AS InfoMoneyName_all
 
            , CAST (Null as TDateTime) AS StartSummerDate
@@ -299,7 +299,7 @@ BEGIN
 
 
     ;
-  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -312,7 +312,7 @@ ALTER FUNCTION gpSelect_Object_Member (Boolean, TVarChar) OWNER TO postgres;
  20.02.17         * add CardSecond
  02.02.17         * add ObjectTo
  25.03.16         * add Card
- 14.01.16         * add Car, StartSummerDate, EndSummerDate 
+ 14.01.16         * add Car, StartSummerDate, EndSummerDate
                            , SummerFuel, WinterFuel, Reparation, LimitMoney, LimitDistance
  19.02.15         * add InfoMoney
  24.09.13                                        * add vbIsAllUnit
@@ -320,8 +320,8 @@ ALTER FUNCTION gpSelect_Object_Member (Boolean, TVarChar) OWNER TO postgres;
  12.09.13                                        * add inIsShowAll
  13.12.13                                        * del Object_RoleAccessKey_View
  08.12.13                                        * add Object_RoleAccessKey_View
- 01.10.13         *  add DriverCertificate, Comment             
- 01.07.13         *              
+ 01.10.13         *  add DriverCertificate, Comment
+ 01.07.13         *
 */
 
 -- тест
