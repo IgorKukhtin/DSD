@@ -699,6 +699,30 @@ type
     eCashAmount: TLabel;
     Panel48: TPanel;
     Line1: TLine;
+    Panel49: TPanel;
+    cbFullGoodsInfo: TCheckBox;
+    tiPriceListItemsFull: TTabItem;
+    lwPriceListFullGoods: TListView;
+    Popup4: TPopup;
+    Panel50: TPanel;
+    Label89: TLabel;
+    Button43: TButton;
+    Button44: TButton;
+    Button45: TButton;
+    Button46: TButton;
+    Button47: TButton;
+    Button48: TButton;
+    Button49: TButton;
+    Button50: TButton;
+    Button51: TButton;
+    Button52: TButton;
+    Button53: TButton;
+    Button54: TButton;
+    Button55: TButton;
+    Button56: TButton;
+    Label90: TLabel;
+    BindSourceDB1: TBindSourceDB;
+    LinkListControlToField5: TLinkListControlToField;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -1017,7 +1041,7 @@ type
     procedure BuildCashDocsList;
     procedure ShowDocuments;
     procedure ShowPriceLists;
-    procedure ShowPriceListItems;
+    procedure ShowPriceListItems(FullInfo: boolean);
     procedure ShowPromoPartners;
     procedure ShowPromoGoodsByPartner;
     procedure ShowPromoGoods;
@@ -1869,7 +1893,7 @@ procedure TfrmMain.lwPriceListItemClick(const Sender: TObject;
   const AItem: TListViewItem);
 begin
   // начитка и отображение товаров выбранного прайс-листа
-  ShowPriceListItems;
+  ShowPriceListItems(cbFullGoodsInfo.IsChecked);
 end;
 
 // условия фильтра для акционных товаров
@@ -3672,6 +3696,9 @@ end;
 // переход на форму синхронизации
 procedure TfrmMain.bSyncClick(Sender: TObject);
 begin
+  cbLoadData.IsChecked := false;
+  cbUploadData.IsChecked := true;
+
   SwitchToForm(tiSync, nil);
 end;
 
@@ -4840,46 +4867,73 @@ begin
 end;
 
 // начитка и отображение товаров по выбраному працс-листу
-procedure TfrmMain.ShowPriceListItems;
+procedure TfrmMain.ShowPriceListItems(FullInfo: boolean);
 begin
   lCaption.Text := 'Прайс-лист "' + DM.qryPriceListValueData.AsString + '"';
-  ClearListSearch(lwPriceListGoods);
-//or
-//  DM.qryGoodsForPriceList.Open('select G.ID, G.OBJECTCODE, G.VALUEDATA GoodsName, GK.VALUEDATA KindName, ' +
-//    'PLI.ORDERPRICE Price, M.VALUEDATA Measure, PLI.ORDERSTARTDATE StartDate, T.VALUEDATA TradeMarkName ' +
-//    'FROM OBJECT_PRICELISTITEMS PLI ' +
-//    'JOIN OBJECT_GOODS G ON G.ID = PLI.GOODSID AND G.ISERASED = 0 ' +
-//    'LEFT JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID ' +
-//    'LEFT JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID ' +
-//    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-//    'LEFT JOIN OBJECT_TRADEMARK T ON T.ID = G.TRADEMARKID ' +
-//    'WHERE PLI.PRICELISTID = ' + DM.qryPriceListId.AsString + ' ORDER BY G.VALUEDATA');
-//or
 
+  if FullInfo then
+  begin
+    ClearListSearch(lwPriceListFullGoods);
 
-  DM.qryGoodsForPriceList.Open(
-      ' SELECT '
-    + '         Object_Goods.ID '
-    + '       , Object_Goods.ObjectCode '
-    + '       , Object_Goods.ValueData                 AS GoodsName '
-    + '       , Object_GoodsKind.ValueData             AS KindName '
-    + '       , Object_PriceListItems.OrderPrice       AS Price '
-    + '       , Object_Measure.ValueData               AS Measure '
-    + '       , Object_PriceListItems.OrderStartDate   AS StartDate '
-    + '       , Object_TradeMark.ValueData             AS TradeMarkName '
-    + ' FROM  Object_PriceListItems '
-    + '       JOIN Object_Goods                 ON Object_Goods.ID                 = Object_PriceListItems.GoodsId '
-    + '                                        AND Object_Goods.isErased           = 0 '
-    + '       LEFT JOIN Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.GoodsId = Object_Goods.ID '
-    + '       LEFT JOIN Object_GoodsKind        ON Object_GoodsKind.ID             = Object_GoodsByGoodsKind.GoodsKindId '
-    + '       LEFT JOIN Object_Measure          ON Object_Measure.ID               = Object_Goods.MeasureId '
-    + '       LEFT JOIN Object_TradeMark        ON Object_TradeMark.ID             = Object_Goods.TradeMarkId '
-    + ' WHERE Object_PriceListItems.PriceListId = ' + DM.qryPriceListId.AsString
-    + ' ORDER BY Object_Goods.ValueData '
+    DM.qryGoodsFullForPriceList.Open(
+        ' SELECT '
+      + '         Object_Goods.ID '
+      + '       , Object_Goods.ObjectCode '
+      + '       , Object_Goods.ValueData                 AS GoodsName '
+      + '       , Object_GoodsKind.ValueData             AS KindName '
+      + '       , Object_PriceListItems.OrderPrice       AS OrderPrice '
+      + '       , Object_PriceListItems.SalePrice        AS SalePrice '
+      + '       , Object_PriceListItems.ReturnPrice      AS ReturnPrice '
+      + '       , Object_Measure.ValueData               AS Measure '
+      + '       , Object_PriceListItems.OrderStartDate   AS OrderStartDate '
+      + '       , Object_PriceListItems.OrderEndDate     AS OrderEndDate '
+      + '       , Object_PriceListItems.SaleStartDate    AS SaleStartDate '
+      + '       , Object_PriceListItems.SaleEndDate      AS SaleEndDate '
+      + '       , Object_PriceListItems.ReturnStartDate  AS ReturnStartDate '
+      + '       , Object_PriceListItems.ReturnEndDate    AS ReturnEndDate '
+      + '       , Object_TradeMark.ValueData             AS TradeMarkName '
+      + ' FROM  Object_PriceListItems '
+      + '       JOIN Object_Goods                 ON Object_Goods.ID                 = Object_PriceListItems.GoodsId '
+      + '                                        AND Object_Goods.isErased           = 0 '
+      + '       LEFT JOIN Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.GoodsId = Object_Goods.ID '
+      + '       LEFT JOIN Object_GoodsKind        ON Object_GoodsKind.ID             = Object_GoodsByGoodsKind.GoodsKindId '
+      + '       LEFT JOIN Object_Measure          ON Object_Measure.ID               = Object_Goods.MeasureId '
+      + '       LEFT JOIN Object_TradeMark        ON Object_TradeMark.ID             = Object_Goods.TradeMarkId '
+      + ' WHERE Object_PriceListItems.PriceListId = ' + DM.qryPriceListId.AsString
+      + ' ORDER BY Object_Goods.ValueData '
                               );
 
-  lwPriceListGoods.ScrollViewPos := 0;
-  SwitchToForm(tiPriceListItems, DM.qryGoodsForPriceList);
+    lwPriceListFullGoods.ScrollViewPos := 0;
+    SwitchToForm(tiPriceListItemsFull, DM.qryGoodsFullForPriceList);
+  end
+  else
+  begin
+    ClearListSearch(lwPriceListGoods);
+
+    DM.qryGoodsForPriceList.Open(
+        ' SELECT '
+      + '         Object_Goods.ID '
+      + '       , Object_Goods.ObjectCode '
+      + '       , Object_Goods.ValueData                 AS GoodsName '
+      + '       , Object_GoodsKind.ValueData             AS KindName '
+      + '       , Object_PriceListItems.OrderPrice       AS Price '
+      + '       , Object_Measure.ValueData               AS Measure '
+      + '       , Object_PriceListItems.OrderStartDate   AS StartDate '
+      + '       , Object_TradeMark.ValueData             AS TradeMarkName '
+      + ' FROM  Object_PriceListItems '
+      + '       JOIN Object_Goods                 ON Object_Goods.ID                 = Object_PriceListItems.GoodsId '
+      + '                                        AND Object_Goods.isErased           = 0 '
+      + '       LEFT JOIN Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.GoodsId = Object_Goods.ID '
+      + '       LEFT JOIN Object_GoodsKind        ON Object_GoodsKind.ID             = Object_GoodsByGoodsKind.GoodsKindId '
+      + '       LEFT JOIN Object_Measure          ON Object_Measure.ID               = Object_Goods.MeasureId '
+      + '       LEFT JOIN Object_TradeMark        ON Object_TradeMark.ID             = Object_Goods.TradeMarkId '
+      + ' WHERE Object_PriceListItems.PriceListId = ' + DM.qryPriceListId.AsString
+      + ' ORDER BY Object_Goods.ValueData '
+                              );
+
+    lwPriceListGoods.ScrollViewPos := 0;
+    SwitchToForm(tiPriceListItems, DM.qryGoodsForPriceList);
+  end;
 end;
 
 // начитка и отображение ТТ, участвующих в акциях

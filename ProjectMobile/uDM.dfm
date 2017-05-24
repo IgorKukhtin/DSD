@@ -507,6 +507,15 @@ object DM: TDM
     object tblObject_PriceListItemsSalePrice: TFloatField
       FieldName = 'SalePrice'
     end
+    object tblObject_PriceListItemsReturnStartDate: TDateTimeField
+      FieldName = 'ReturnStartDate'
+    end
+    object tblObject_PriceListItemsReturnEndDate: TDateTimeField
+      FieldName = 'ReturnEndDate'
+    end
+    object tblObject_PriceListItemsReturnPrice: TFloatField
+      FieldName = 'ReturnPrice'
+    end
   end
   object qryPartner: TFDQuery
     OnCalcFields = qryPartnerCalcFields
@@ -629,7 +638,7 @@ object DM: TDM
   object qryGoodsForPriceList: TFDQuery
     OnCalcFields = qryGoodsForPriceListCalcFields
     Connection = conMain
-    Left = 128
+    Left = 136
     Top = 512
     object qryGoodsForPriceListId: TIntegerField
       FieldName = 'Id'
@@ -1216,7 +1225,7 @@ object DM: TDM
     Connection = conMain
     SQL.Strings = (
       '')
-    Left = 216
+    Left = 224
     Top = 456
     object qryPhotosId: TIntegerField
       FieldName = 'Id'
@@ -1611,8 +1620,8 @@ object DM: TDM
   end
   object qryPromoPartners: TFDQuery
     Connection = conMain
-    Left = 216
-    Top = 512
+    Left = 40
+    Top = 568
     object qryPromoPartnersPartnerName: TStringField
       FieldName = 'PartnerName'
       Size = 255
@@ -1638,8 +1647,8 @@ object DM: TDM
   object qryPromoGoods: TFDQuery
     OnCalcFields = qryPromoGoodsCalcFields
     Connection = conMain
-    Left = 304
-    Top = 512
+    Left = 128
+    Top = 568
     object qryPromoGoodsGoodsName: TStringField
       FieldName = 'GoodsName'
       Size = 255
@@ -1740,7 +1749,7 @@ object DM: TDM
     IndexFieldNames = 'DocType;DocDate'
     Params = <>
     Left = 40
-    Top = 600
+    Top = 624
     object cdsJuridicalCollationDocNum: TStringField
       FieldName = 'DocNum'
       Size = 200
@@ -1792,7 +1801,7 @@ object DM: TDM
     Aggregates = <>
     Params = <>
     Left = 128
-    Top = 600
+    Top = 624
     object cdsTasksId: TIntegerField
       FieldName = 'Id'
     end
@@ -1835,7 +1844,7 @@ object DM: TDM
     Connection = conMain
     SQL.Strings = (
       '')
-    Left = 128
+    Left = 136
     Top = 456
     object qryPhotoGroupDocsId: TIntegerField
       FieldName = 'Id'
@@ -2021,6 +2030,103 @@ object DM: TDM
     end
     object qryCashPAIDKINDID: TIntegerField
       FieldName = 'PAIDKINDID'
+    end
+  end
+  object qryGoodsFullForPriceList: TFDQuery
+    OnCalcFields = qryGoodsFullForPriceListCalcFields
+    Connection = conMain
+    Left = 256
+    Top = 512
+    object qryGoodsFullForPriceListId: TIntegerField
+      FieldName = 'Id'
+    end
+    object qryGoodsFullForPriceListObjectCode: TIntegerField
+      FieldName = 'ObjectCode'
+    end
+    object qryGoodsFullForPriceListGoodsName: TStringField
+      FieldName = 'GoodsName'
+      Size = 255
+    end
+    object qryGoodsFullForPriceListKindName: TStringField
+      FieldName = 'KindName'
+      Size = 255
+    end
+    object qryGoodsFullForPriceListTradeMarkName: TStringField
+      FieldName = 'TradeMarkName'
+      Size = 255
+    end
+    object qryGoodsFullForPriceListMeasure: TStringField
+      FieldName = 'Measure'
+      Size = 100
+    end
+    object qryGoodsFullForPriceListOrderPrice: TFloatField
+      FieldName = 'OrderPrice'
+    end
+    object qryGoodsFullForPriceListOrderStartDate: TDateTimeField
+      FieldName = 'OrderStartDate'
+    end
+    object qryGoodsFullForPriceListOrderEndDate: TDateTimeField
+      FieldName = 'OrderEndDate'
+    end
+    object qryGoodsFullForPriceListSalePrice: TFloatField
+      FieldName = 'SalePrice'
+    end
+    object qryGoodsFullForPriceListSaleStartDate: TDateTimeField
+      FieldName = 'SaleStartDate'
+    end
+    object qryGoodsFullForPriceListSaleEndDate: TDateTimeField
+      FieldName = 'SaleEndDate'
+    end
+    object qryGoodsFullForPriceListReturnPrice: TFloatField
+      FieldName = 'ReturnPrice'
+    end
+    object qryGoodsFullForPriceListReturnStartDate: TDateTimeField
+      FieldName = 'ReturnStartDate'
+    end
+    object qryGoodsFullForPriceListReturnEndDate: TDateTimeField
+      FieldName = 'ReturnEndDate'
+    end
+    object qryGoodsFullForPriceListOrderFullPrice: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'OrderFullPrice'
+      Size = 200
+      Calculated = True
+    end
+    object qryGoodsFullForPriceListOrderTermin: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'OrderTermin'
+      Size = 255
+      Calculated = True
+    end
+    object qryGoodsFullForPriceListSaleFullPrice: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'SaleFullPrice'
+      Size = 200
+      Calculated = True
+    end
+    object qryGoodsFullForPriceListSaleTermin: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'SaleTermin'
+      Size = 255
+      Calculated = True
+    end
+    object qryGoodsFullForPriceListReturnFullPrice: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'ReturnFullPrice'
+      Size = 200
+      Calculated = True
+    end
+    object qryGoodsFullForPriceListReturnTermin: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'ReturnTermin'
+      Size = 255
+      Calculated = True
+    end
+    object qryGoodsFullForPriceListFullGoodsName: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'FullGoodsName'
+      Size = 600
+      Calculated = True
     end
   end
 end

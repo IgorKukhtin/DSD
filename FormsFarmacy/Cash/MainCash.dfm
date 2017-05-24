@@ -12,7 +12,7 @@ inherited MainCashForm: TMainCashForm
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
   ExplicitWidth = 759
-  ExplicitHeight = 454
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
@@ -241,7 +241,7 @@ inherited MainCashForm: TMainCashForm
         OptionsData.Inserting = False
         OptionsView.GridLineColor = clBtnFace
         OptionsView.GroupByBox = False
-        OptionsView.HeaderHeight = 30
+        OptionsView.HeaderAutoHeight = True
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
         object MainColIsSP: TcxGridDBColumn
@@ -648,6 +648,14 @@ inherited MainCashForm: TMainCashForm
           DataBinding.FieldName = 'GoodsId_main'
           Visible = False
           Width = 76
+        end
+        object MorionCode: TcxGridDBColumn
+          Caption = #1050#1086#1076' '#1052#1086#1088#1080#1086#1085#1072
+          DataBinding.FieldName = 'MorionCode'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 73
         end
         object BarCode: TcxGridDBColumn
           Caption = #1064'/'#1050' '#1087#1088#1086#1080#1079#1074'.'

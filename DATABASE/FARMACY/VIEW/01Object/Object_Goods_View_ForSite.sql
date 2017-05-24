@@ -16,7 +16,7 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSite AS
        , ObjectLink_Goods_Appointment.ChildObjectId              as appointment_id
        , Object_Goods.GoodsGroupId                               as category_id
        , NULL::TFloat                                            AS Price
-       , ROUND (LoadPriceListItem.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) * (1 + COALESCE (MarginCategory_site.MarginPercent, 0) / 100), 2) :: TFloat  AS PriceBADM
+       , NULL::TFloat                                            AS PriceBADM
        , NULL::Integer                                           AS supplier_id
        , NULL::TVarChar                                          AS common_name
        , NULL::TDateTime                                         AS dateadd
@@ -24,8 +24,6 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSite AS
        , CASE WHEN COALESCE(ObjectBoolean_Goods_Published.ValueData,FALSE)=TRUE THEN 1::Integer ELSE 0::Integer END AS published
        , CASE WHEN Object_Goods.isErased=TRUE THEN 1::Integer ELSE 0::Integer END                                   AS deleted
        , Object_Goods.ObjectId                                   AS ObjectId
-       , ObjectFloat_NDSKind_NDS.ValueData                       AS NDS
-       , MarginCategory_site.MarginPercent                       AS MarginPercent
     FROM Object_Goods_View AS Object_Goods
         LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Goods_Site
                                     ON ObjectFloat_Goods_Site.ObjectId = Object_Goods.Id
@@ -48,50 +46,6 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSite AS
         LEFT OUTER JOIN ObjectLink AS ObjectLink_Goods_Appointment
                                    ON ObjectLink_Goods_Appointment.ObjectId = Object_Goods.ObjectId
                                   AND ObjectLink_Goods_Appointment.DescId = zc_ObjectLink_Goods_Appointment()
-
-        LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
-                             ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
-                            AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
-        LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                              ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
-                             AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
-                             
-        LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods.Id
-                                                 AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
-        LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-        -- [15:32] Александр: конкретно для данного случая делать расчет минимальной цены не нужно , нужно отдавать цену для доставки по Украине от поставщика БАДМ отсрочка
-        LEFT JOIN LoadPriceListItem ON LoadPriceListItem.GoodsId         = ObjectLink_Main.ChildObjectId
-                                   AND LoadPriceListItem.LoadPriceListId = (SELECT LoadPriceList.Id FROM LoadPriceList WHERE LoadPriceList.JuridicalId = 59610 AND LoadPriceList.ContractId = 183257)
-        LEFT JOIN (WITH MarginCategory_all AS (SELECT DISTINCT
-                                                      ObjectFloat_MarginPercent.ValueData AS MarginPercent
-                                                    , ObjectFloat_MinPrice.ValueData      AS MinPrice
-                                                    , ROW_NUMBER() OVER (PARTITION BY ObjectLink_MarginCategoryItem_MarginCategory.ChildObjectId ORDER BY ObjectFloat_MinPrice.ValueData) AS ORD
-                                               FROM ObjectLink AS ObjectLink_MarginCategoryItem_MarginCategory
-                                                    LEFT JOIN ObjectFloat AS ObjectFloat_MinPrice
-                                                                          ON ObjectFloat_MinPrice.ObjectId =ObjectLink_MarginCategoryItem_MarginCategory.ObjectId
-                                                                         AND ObjectFloat_MinPrice.DescId = zc_ObjectFloat_MarginCategoryItem_MinPrice()
-                                                    LEFT JOIN ObjectFloat AS ObjectFloat_MarginPercent
-                                                                          ON ObjectFloat_MarginPercent.ObjectId = ObjectLink_MarginCategoryItem_MarginCategory.ObjectId
-                                                                         AND ObjectFloat_MarginPercent.DescId = zc_ObjectFloat_MarginCategoryItem_MarginPercent()
-                                               WHERE  ObjectLink_MarginCategoryItem_MarginCategory.ChildObjectId = (SELECT ObjectBoolean.ObjectId
-                                                                                                                             FROM ObjectBoolean
-                                                                                                                             WHERE ObjectBoolean.ValueData = TRUE
-                                                                                                                               AND ObjectBoolean.DescId = zc_ObjectBoolean_MarginCategory_Site()
-                                                                                                                             LIMIT 1
-                                                                                                                            )
-                                                                         AND ObjectLink_MarginCategoryItem_MarginCategory.DescId = zc_ObjectLink_MarginCategoryItem_MarginCategory()
-                                              )
-                   --
-                   SELECT DISTINCT
-                          MarginCategory_all.MarginPercent
-                        , MarginCategory_all.MinPrice
-                        , COALESCE (MarginCategory_all_next.MinPrice, 1000000) AS MaxPrice
-                   FROM MarginCategory_all
-                        LEFT JOIN MarginCategory_all AS MarginCategory_all_next ON MarginCategory_all_next.ORD = MarginCategory_all.ORD + 1
-                  ) AS MarginCategory_site ON LoadPriceListItem.Price >= MarginCategory_site.MinPrice
-                                          AND LoadPriceListItem.Price < MarginCategory_site.MaxPrice
-
 
     WHERE Object_Goods.ObjectId = 4 -- !!!ВРЕМЕННО!!!
       -- AND (ObjectBoolean_Goods_Published.ValueData = TRUE OR ObjectBoolean_Goods_Published.ValueData IS NULL)

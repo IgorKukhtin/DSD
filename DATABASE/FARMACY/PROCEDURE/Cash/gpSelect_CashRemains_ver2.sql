@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                Color_ExpirationDate Integer,
                ConditionsKeepName TVarChar,
                AmountIncome TFloat, PriceSaleIncome TFloat,
-               BarCode TVarChar
+               MorionCode Integer, BarCode TVarChar
                )
 AS
 $BODY$
@@ -178,6 +178,22 @@ BEGIN
                                  GROUP BY MI_Income.ObjectId
                                         , MovementLinkObject_To.ObjectId
                               )
+           -- Коды Мориона
+         , tmpGoodsMorion AS (SELECT ObjectLink_Main_Morion.ChildObjectId          AS GoodsMainId
+                                   , MAX (Object_Goods_Morion.ObjectCode)::Integer AS MorionCode
+                              FROM ObjectLink AS ObjectLink_Main_Morion
+                                   JOIN ObjectLink AS ObjectLink_Child_Morion
+                                                   ON ObjectLink_Child_Morion.ObjectId = ObjectLink_Main_Morion.ObjectId
+                                                  AND ObjectLink_Child_Morion.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                   JOIN ObjectLink AS ObjectLink_Goods_Object_Morion
+                                                   ON ObjectLink_Goods_Object_Morion.ObjectId = ObjectLink_Child_Morion.ChildObjectId
+                                                  AND ObjectLink_Goods_Object_Morion.DescId = zc_ObjectLink_Goods_Object()
+                                                  AND ObjectLink_Goods_Object_Morion.ChildObjectId = zc_Enum_GlobalConst_Marion()
+                                   LEFT JOIN Object AS Object_Goods_Morion ON Object_Goods_Morion.Id = ObjectLink_Goods_Object_Morion.ObjectId
+                              WHERE ObjectLink_Main_Morion.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                                AND ObjectLink_Main_Morion.ChildObjectId > 0
+                              GROUP BY ObjectLink_Main_Morion.ChildObjectId
+                             )
            -- Штрих-коды производителя  
          , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId          AS GoodsMainId
                                     , MAX (Object_Goods_BarCode.ValueData)::TVarChar AS BarCode
@@ -385,6 +401,7 @@ BEGIN
 
             COALESCE(tmpIncome.AmountIncome,0)            :: TFloat   AS AmountIncome,
             CASE WHEN COALESCE(tmpIncome.AmountIncome,0) <> 0 THEN COALESCE(tmpIncome.SummSale,0) / COALESCE(tmpIncome.AmountIncome,0) ELSE 0 END  :: TFloat AS PriceSaleIncome,
+            COALESCE (tmpGoodsMorion.MorionCode, 0)::Integer AS MorionCode,
             COALESCE (tmpGoodsBarCode.BarCode, '')::TVarChar AS BarCode
          FROM
             CashSessionSnapShot
@@ -444,6 +461,8 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
             -- штрих-код производителя
             LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = ObjectLink_Main.ChildObjectId
+            -- код Мориона
+            LEFT JOIN tmpGoodsMorion ON tmpGoodsMorion.GoodsMainId = ObjectLink_Main.ChildObjectId
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId
         ORDER BY
@@ -456,6 +475,7 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.
+ 24.05.17                                                                                      * MorionCode
  23.05.17                                                                                      * BarCode
  25.01.16         *
  24.01.17         * add ConditionsKeepName

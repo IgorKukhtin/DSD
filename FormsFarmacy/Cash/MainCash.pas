@@ -277,6 +277,7 @@ type
     lblAmount: TLabel;
     edAmount: TcxCurrencyEdit;
     BarCode: TcxGridDBColumn;
+    MorionCode: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -611,9 +612,12 @@ begin
     end;
     //
     if FormParams.ParamByName('InvNumberSP').Value = ''
-    then
+    then begin
         // Update Дисконт в CDS - по всем "обновим" Дисконт
         DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
+        //
+        CalcTotalSumm;
+    end;
 
     //***20.07.16
     lblDiscountExternalName.Caption:= '  ' + FormParams.ParamByName('DiscountExternalName').Value + '  ';
@@ -1173,6 +1177,8 @@ begin
   FormParams.ParamByName('DiscountCardNumber').Value := DiscountCardNumber;
   // update DataSet - еще раз по всем "обновим" Дисконт
   DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
+  //
+  CalcTotalSumm;
   //
   pnlDiscount.Visible    := DiscountExternalId > 0;
   lblDiscountExternalName.Caption:= '  ' + DiscountExternalName + '  ';
@@ -2018,6 +2024,11 @@ begin
         //***10.08.16
         checkCDS.FieldByName('List_UID').AsString := GenerateGUID;
         checkCDS.Post;
+
+        if (FormParams.ParamByName('DiscountExternalId').Value > 0) and
+          (SourceClientDataSet.FindField('MorionCode') <> nil) then
+          DiscountServiceForm.SaveMorionCode(SourceClientDataSet.FieldByName('Id').AsInteger,
+            SourceClientDataSet.FieldByName('MorionCode').AsInteger);
       End;
     finally
       CheckCDS.Filtered := True;
