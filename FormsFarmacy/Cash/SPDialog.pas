@@ -25,6 +25,9 @@ type
     edAmbulance: TcxTextEdit;
     edMedicSP: TcxButtonEdit;
     MedicSPGuides: TdsdGuides;
+    Label3: TLabel;
+    ceSPKind: TcxButtonEdit;
+    SPKindGuides: TdsdGuides;
     procedure bbOkClick(Sender: TObject);
     procedure DiscountExternalGuidesAfterChoice(Sender: TObject);
   private

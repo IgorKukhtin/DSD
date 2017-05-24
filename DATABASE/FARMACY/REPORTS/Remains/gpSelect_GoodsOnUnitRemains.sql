@@ -12,7 +12,9 @@ CREATE OR REPLACE FUNCTION gpSelect_GoodsOnUnitRemains(
     IN inisJuridical      Boolean,    --
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (ContainerId Integer, Id Integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupName TVarChar, NDSKindName TVarChar
+RETURNS TABLE (ContainerId Integer
+             , Id Integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupName TVarChar
+             , NDSKindName TVarChar, isSP Boolean
              , ConditionsKeepName TVarChar
              , Amount TFloat, Price TFloat, PriceWithVAT TFloat, PriceWithOutVAT TFloat, PriceSale  TFloat
              
@@ -144,8 +146,33 @@ BEGIN
                                 , CASE WHEN inisPartionPrice = TRUE THEN MovementLinkObject_To.ObjectId ELSE 0 END                                                              
                                 , CASE WHEN inIsPartion = TRUE THEN tmpData_all.ContainerId ELSE 0 END
                          HAVING SUM (tmpData_all.Amount) <> 0
-
                         )
+
+  , tmpGoods AS (SELECT tmp.GoodsId
+                      , ObjectLink_Goods_GoodsGroup.ChildObjectId                     AS GoodsGroupId
+                      , ObjectLink_Goods_ConditionsKeep.ChildObjectId                 AS ConditionsKeepId
+                      , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
+                 FROM (SELECT DISTINCT tmpData.GoodsId
+                       FROM tmpData) AS tmp
+
+                      LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                             ON ObjectLink_Goods_GoodsGroup.ObjectId = tmp.GoodsId
+                            AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+                      -- условия хранения
+                      LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                             ON ObjectLink_Goods_ConditionsKeep.ObjectId = tmp.GoodsId
+                            AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+                      -- получается GoodsMainId
+                      LEFT JOIN ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
+                            AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+                      LEFT JOIN ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                            AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+
+                      LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SP 
+                             ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
+                            AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+                 )
+
 , SelectMinPrice_AllGoods AS (SELECT tmp.*
                               FROM lpSelectMinPrice_AllGoods(inUnitId := inUnitId,
                                                              inObjectId := vbObjectId, 
@@ -165,65 +192,61 @@ BEGIN
                    )
 
         -- Результат
-        SELECT tmpData.ContainerId :: Integer AS ContainerId
-             , Object_Goods.Id                         AS Id
-             , Object_Goods.ObjectCode ::Integer       AS GoodsCode
-             , Object_Goods.ValueData                  AS GoodsName
-             , Object_GoodsGroup.ValueData             AS GoodsGroupName
-             , Object_NDSKind_Income.ValueData         AS NDSKindName
+        SELECT tmpData.ContainerId                           :: Integer   AS ContainerId
+             , Object_Goods.Id                                            AS Id
+             , Object_Goods.ObjectCode                       ::Integer    AS GoodsCode
+             , Object_Goods.ValueData                                     AS GoodsName
+             , Object_GoodsGroup.ValueData                                AS GoodsGroupName
+             , Object_NDSKind_Income.ValueData                            AS NDSKindName
+             , tmpGoods.isSP                                 :: Boolean   AS isSP
              , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar   AS ConditionsKeepName
              
-           , tmpData.Amount :: TFloat AS Amount
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.Summa           / tmpData.Amount ELSE 0 END :: TFloat AS Price
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaWithVAT    / tmpData.Amount ELSE 0 END :: TFloat AS PriceWithVAT
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaWithOutVAT / tmpData.Amount ELSE 0 END :: TFloat AS PriceWithOutVAT
-           , COALESCE (ObjectHistoryFloat_Price.ValueData, 0)                 :: TFloat AS PriceSale
+             , tmpData.Amount :: TFloat AS Amount
+             , CASE WHEN tmpData.Amount <> 0 THEN tmpData.Summa           / tmpData.Amount ELSE 0 END :: TFloat AS Price
+             , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaWithVAT    / tmpData.Amount ELSE 0 END :: TFloat AS PriceWithVAT
+             , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaWithOutVAT / tmpData.Amount ELSE 0 END :: TFloat AS PriceWithOutVAT
+             , COALESCE (ObjectHistoryFloat_Price.ValueData, 0)                 :: TFloat AS PriceSale
            
-           , tmpData.Summa           :: TFloat AS Summa
-           , tmpData.SummaWithVAT    :: TFloat AS SummaWithVAT
-           , tmpData.SummaWithOutVAT :: TFloat AS SummaWithOutVAT
-           , (tmpData.Amount * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)) :: TFloat AS SummaSale
+             , tmpData.Summa                                 :: TFloat    AS Summa
+             , tmpData.SummaWithVAT                          :: TFloat    AS SummaWithVAT
+             , tmpData.SummaWithOutVAT                       :: TFloat    AS SummaWithOutVAT
+             , (tmpData.Amount * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)) :: TFloat AS SummaSale
 
-           -- , CAST (NULL  AS TDateTime)                 AS MinExpirationDate
-           , SelectMinPrice_AllGoods.MinExpirationDate    AS MinExpirationDate
+             , SelectMinPrice_AllGoods.MinExpirationDate                  AS MinExpirationDate
 
-           , MovementDesc_Income.ItemName AS PartionDescName
-           , Movement_Income.InvNumber    AS PartionInvNumber
-           , Movement_Income.OperDate     AS PartionOperDate
-           , COALESCE (MovementDesc_Price.ItemName, MovementDesc_Income.ItemName) AS PartionPriceDescName
-           , COALESCE (Movement_Price.InvNumber, Movement_Income.InvNumber)       AS PartionPriceInvNumber
-           , COALESCE (Movement_Price.OperDate, Movement_Income.OperDate)         AS PartionPriceOperDate
+             , MovementDesc_Income.ItemName                               AS PartionDescName
+             , Movement_Income.InvNumber                                  AS PartionInvNumber
+             , Movement_Income.OperDate                                   AS PartionOperDate
+             , COALESCE (MovementDesc_Price.ItemName, MovementDesc_Income.ItemName) AS PartionPriceDescName
+             , COALESCE (Movement_Price.InvNumber, Movement_Income.InvNumber)       AS PartionPriceInvNumber
+             , COALESCE (Movement_Price.OperDate, Movement_Income.OperDate)         AS PartionPriceOperDate
 
-           , Object_To_Income.ValueData              AS UnitName
-           , Object_OurJuridical_Income.ValueData    AS OurJuridicalName
+             , Object_To_Income.ValueData                                 AS UnitName
+             , Object_OurJuridical_Income.ValueData                       AS OurJuridicalName
              
-           , Object_From_Income.ObjectCode           AS JuridicalCode
-           , Object_From_Income.ValueData            AS JuridicalName
-/*
-           , CAST ('' AS Tvarchar)  AS MP_JuridicalName
-           , CAST ('' AS Tvarchar)  AS MP_ContractName
-           , CAST (0  AS TFloat)    AS MinPriceOnDate
-           , CAST (0  AS TFloat)    AS MP_Summa
-           , CAST (0  AS TFloat)    AS MinPriceOnDateVAT
-           , CAST (0  AS TFloat)    AS MP_SummaVAT
-*/
-           , SelectMinPrice_AllGoods_onDate.JuridicalName AS MP_JuridicalName
-           , Object_Contract.ValueData                    AS MP_ContractName
-           , SelectMinPrice_AllGoods_onDate.Price         AS MinPriceOnDate
-           , (SelectMinPrice_AllGoods_onDate.Price * tmpData.Amount) :: TFloat    AS MP_Summa
-           , (SelectMinPrice_AllGoods_onDate.Price * (1 + ObjectFloat_NDSKind_NDS.ValueData / 100)) :: TFloat                     AS MinPriceOnDateVAT
-           , (SelectMinPrice_AllGoods_onDate.Price * tmpData.Amount * (1 + ObjectFloat_NDSKind_NDS.ValueData / 100)) :: TFloat    AS MP_SummaVAT
+             , Object_From_Income.ObjectCode                              AS JuridicalCode
+             , Object_From_Income.ValueData                               AS JuridicalName
+
+             , SelectMinPrice_AllGoods_onDate.JuridicalName               AS MP_JuridicalName
+             , Object_Contract.ValueData                                  AS MP_ContractName
+             , SelectMinPrice_AllGoods_onDate.Price                       AS MinPriceOnDate
+             , (SelectMinPrice_AllGoods_onDate.Price * tmpData.Amount) :: TFloat    AS MP_Summa
+             , (SelectMinPrice_AllGoods_onDate.Price * (1 + ObjectFloat_NDSKind_NDS.ValueData / 100)) :: TFloat                     AS MinPriceOnDateVAT
+             , (SelectMinPrice_AllGoods_onDate.Price * tmpData.Amount * (1 + ObjectFloat_NDSKind_NDS.ValueData / 100)) :: TFloat    AS MP_SummaVAT
 
         FROM tmpData
-            LEFT OUTER JOIN ObjectLink AS ObjectLink_Goods_NDSKind
-                                       ON ObjectLink_Goods_NDSKind.ObjectId = tmpData.GoodsId
-                                      AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
+             LEFT JOIN tmpGoods ON tmpGoods.GoodsId = tmpData.GoodsId
+             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = tmpGoods.GoodsGroupId
+             LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = tmpGoods.ConditionsKeepId
+             LEFT OUTER JOIN ObjectLink AS ObjectLink_Goods_NDSKind
+                                        ON ObjectLink_Goods_NDSKind.ObjectId = tmpData.GoodsId
+                                       AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
 
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+ /*           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpData.GoodsId
                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-
+*/
             LEFT JOIN Object AS Object_From_Income ON Object_From_Income.Id = tmpData.JuridicalId_Income
             LEFT JOIN Object AS Object_NDSKind_Income ON Object_NDSKind_Income.Id = COALESCE (tmpData.NDSKindId_Income, ObjectLink_Goods_NDSKind.ChildObjectId)
             LEFT JOIN Object AS Object_To_Income ON Object_To_Income.Id = tmpData.ToId_Income
@@ -256,10 +279,12 @@ BEGIN
             LEFT JOIN SelectMinPrice_AllGoods_onDate ON SelectMinPrice_AllGoods_onDate.GoodsId = tmpData.GoodsId
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = SelectMinPrice_AllGoods_onDate.ContractId
             -- условия хранения
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+            /*LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
                                  ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
             LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
+            */
+
          ;
 
 END;
@@ -270,6 +295,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.05.17         *
  12.01.17         *
  05.10.16         * add inisJuridical
  04.05.16         *

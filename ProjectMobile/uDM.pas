@@ -701,6 +701,32 @@ type
     qryCashInvNumberSale: TStringField;
     tblMovement_CashInvNumberSale: TStringField;
     qryCashPAIDKINDID: TIntegerField;
+    tblObject_PriceListItemsReturnPrice: TFloatField;
+    tblObject_PriceListItemsReturnStartDate: TDateTimeField;
+    tblObject_PriceListItemsReturnEndDate: TDateTimeField;
+    qryGoodsFullForPriceList: TFDQuery;
+    qryGoodsFullForPriceListId: TIntegerField;
+    qryGoodsFullForPriceListObjectCode: TIntegerField;
+    qryGoodsFullForPriceListGoodsName: TStringField;
+    qryGoodsFullForPriceListKindName: TStringField;
+    qryGoodsFullForPriceListOrderPrice: TFloatField;
+    qryGoodsFullForPriceListMeasure: TStringField;
+    qryGoodsFullForPriceListOrderStartDate: TDateTimeField;
+    qryGoodsFullForPriceListOrderFullPrice: TStringField;
+    qryGoodsFullForPriceListOrderTermin: TStringField;
+    qryGoodsFullForPriceListTradeMarkName: TStringField;
+    qryGoodsFullForPriceListFullGoodsName: TStringField;
+    qryGoodsFullForPriceListSalePrice: TFloatField;
+    qryGoodsFullForPriceListOrderEndDate: TDateTimeField;
+    qryGoodsFullForPriceListSaleStartDate: TDateTimeField;
+    qryGoodsFullForPriceListSaleEndDate: TDateTimeField;
+    qryGoodsFullForPriceListReturnPrice: TFloatField;
+    qryGoodsFullForPriceListReturnStartDate: TDateTimeField;
+    qryGoodsFullForPriceListReturnEndDate: TDateTimeField;
+    qryGoodsFullForPriceListSaleFullPrice: TStringField;
+    qryGoodsFullForPriceListSaleTermin: TStringField;
+    qryGoodsFullForPriceListReturnFullPrice: TStringField;
+    qryGoodsFullForPriceListReturnTermin: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
@@ -710,6 +736,7 @@ type
     procedure qryGoodsItemsCalcFields(DataSet: TDataSet);
     procedure qryCashCalcFields(DataSet: TDataSet);
     procedure qryCashDocsCalcFields(DataSet: TDataSet);
+    procedure qryGoodsFullForPriceListCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
     FConnected: Boolean;
@@ -2784,6 +2811,46 @@ begin
     ') за ' + DataSet.FieldByName('Measure').AsString;
 
   DataSet.FieldByName('Termin').AsString := 'Цена действительна с ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('StartDate').AsDateTime);
+
+  DataSet.FieldByName('FullGoodsName').AsString := DataSet.FieldByName('ObjectCode').AsString + ' ' +
+    DataSet.FieldByName('GoodsName').AsString;
+end;
+
+procedure TDM.qryGoodsFullForPriceListCalcFields(DataSet: TDataSet);
+var
+  OrderPriceWithoutVat, OrderPriceWithVat,
+  SalePriceWithoutVat, SalePriceWithVat,
+  ReturnPriceWithoutVat, ReturnPriceWithVat : string;
+begin
+  if qryPriceListPriceWithVAT.AsBoolean then
+  begin
+    OrderPriceWithoutVat := FormatFloat(',0.00', DataSet.FieldByName('OrderPrice').AsFloat * 100 / (100 + qryPriceListVATPercent.AsFloat));
+    OrderPriceWithVat := FormatFloat(',0.00', DataSet.FieldByName('OrderPrice').AsFloat);
+    SalePriceWithoutVat := FormatFloat(',0.00', DataSet.FieldByName('SalePrice').AsFloat * 100 / (100 + qryPriceListVATPercent.AsFloat));
+    SalePriceWithVat := FormatFloat(',0.00', DataSet.FieldByName('SalePrice').AsFloat);
+    ReturnPriceWithoutVat := FormatFloat(',0.00', DataSet.FieldByName('ReturnPrice').AsFloat * 100 / (100 + qryPriceListVATPercent.AsFloat));
+    ReturnPriceWithVat := FormatFloat(',0.00', DataSet.FieldByName('ReturnPrice').AsFloat);
+  end
+  else
+  begin
+    OrderPriceWithoutVat := FormatFloat(',0.00', DataSet.FieldByName('OrderPrice').AsFloat);
+    OrderPriceWithVat := FormatFloat(',0.00', DataSet.FieldByName('OrderPrice').AsFloat * (100 + qryPriceListVATPercent.AsFloat) / 100);
+    SalePriceWithoutVat := FormatFloat(',0.00', DataSet.FieldByName('SalePrice').AsFloat);
+    SalePriceWithVat := FormatFloat(',0.00', DataSet.FieldByName('SalePrice').AsFloat * (100 + qryPriceListVATPercent.AsFloat) / 100);
+    ReturnPriceWithoutVat := FormatFloat(',0.00', DataSet.FieldByName('ReturnPrice').AsFloat);
+    ReturnPriceWithVat := FormatFloat(',0.00', DataSet.FieldByName('ReturnPrice').AsFloat * (100 + qryPriceListVATPercent.AsFloat) / 100);
+  end;
+
+  DataSet.FieldByName('OrderFullPrice').AsString := 'Цена заявки: ' + OrderPriceWithoutVat +' (с НДС ' + OrderPriceWithVat +
+    ') за ' + DataSet.FieldByName('Measure').AsString;
+  DataSet.FieldByName('SaleFullPrice').AsString := 'Цена отгрузки: ' + SalePriceWithoutVat +' (с НДС ' + SalePriceWithVat +
+    ') за ' + DataSet.FieldByName('Measure').AsString;
+  DataSet.FieldByName('ReturnFullPrice').AsString := 'Цена возврата: ' + ReturnPriceWithoutVat +' (с НДС ' + ReturnPriceWithVat +
+    ') за ' + DataSet.FieldByName('Measure').AsString;
+
+  DataSet.FieldByName('OrderTermin').AsString := ' действительна с ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('OrderStartDate').AsDateTime) + ' по ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('OrderEndDate').AsDateTime);
+  DataSet.FieldByName('SaleTermin').AsString := ' действительна с ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('SaleStartDate').AsDateTime) + ' по ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('SaleEndDate').AsDateTime);
+  DataSet.FieldByName('ReturnTermin').AsString := ' действительна с ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('ReturnStartDate').AsDateTime) + ' по ' + FormatDateTime('DD.MM.YYYY', DataSet.FieldByName('ReturnEndDate').AsDateTime);
 
   DataSet.FieldByName('FullGoodsName').AsString := DataSet.FieldByName('ObjectCode').AsString + ' ' +
     DataSet.FieldByName('GoodsName').AsString;
@@ -4896,7 +4963,7 @@ begin
        ' SELECT '
      + '       ''-1;'' || Object_Goods.Id || '';'' || IFNULL(Object_GoodsKind.Id, 0) || '';'' || '
      + '       CAST(Object_Goods.ObjectCode as varchar)  || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' || '
-     + '       IFNULL(Object_PriceListItems.OrderPrice, 0) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || Object_Goods.Weight || '';'' || '
+     + '       IFNULL(Object_PriceListItems.ReturnPrice, 0) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || Object_Goods.Weight || '';'' || '
      + '       IFNULL(Object_TradeMark.ValueData, '''') || '';0'' '
      + ' FROM  Object_GoodsListSale  '
      + '       JOIN Object_Goods               ON Object_GoodsListSale.GoodsId      = Object_Goods.Id '
@@ -4959,7 +5026,7 @@ begin
        ' SELECT '
      + '       MovementItem_ReturnIn.Id || '';'' || Object_Goods.Id || '';'' || IFNULL(Object_GoodsKind.Id, 0) || '';'' || '
      + '       CAST(Object_Goods.ObjectCode as varchar)  || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' || '
-     + '       IFNULL(Object_PriceListItems.OrderPrice, 0) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || Object_Goods.Weight || '';'' || '
+     + '       IFNULL(Object_PriceListItems.ReturnPrice, 0) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || Object_Goods.Weight || '';'' || '
      + '       IFNULL(Object_TradeMark.ValueData, '''') || '';'' || MovementItem_ReturnIn.Amount '
      + ' FROM  MovementItem_ReturnIn  '
      + '       JOIN Object_Goods               ON Object_Goods.Id                   = MovementItem_ReturnIn.GoodsId '
@@ -5019,7 +5086,7 @@ begin
      + '       , ''-''                             AS PromoPrice '
      + '       , Object_TradeMark.ValueData        AS TradeMarkName '
      + '       , Object_GoodsByGoodsKind.Remains '
-     + '       , Object_PriceListItems.OrderPrice  AS PRICE '
+     + '       , Object_PriceListItems.ReturnPrice  AS PRICE '
      + '       , Object_Measure.ValueData          AS MEASURE '
      + '       , ''-1;'' || Object_Goods.ID || '';'' || IFNULL(Object_GoodsKind.ID, 0) || '';'' || '
      + '         Object_Goods.ObjectCode || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' || '

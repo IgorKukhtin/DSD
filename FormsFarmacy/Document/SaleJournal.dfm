@@ -26,8 +26,6 @@ inherited SaleJournalForm: TSaleJournalForm
       inherited cxGrid: TcxGrid
         Width = 745
         Height = 434
-        ExplicitLeft = 144
-        ExplicitTop = -3
         ExplicitWidth = 745
         ExplicitHeight = 434
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -215,6 +213,7 @@ inherited SaleJournalForm: TSaleJournalForm
             FooterAlignmentHorz = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
         end
