@@ -129,8 +129,8 @@ BEGIN
                               , tmpUnit.JuridicalId                          AS JuridicalId
                               , MovementLinkObject_PartnerMedical.ObjectId   AS HospitalId
                               , MovementString_InvNumberSP.ValueData         AS InvNumberSP
-                              , MovementLinkObject_MedicSP.ObjectId          AS MedicSPId
-                              , MovementLinkObject_MemberSP.ObjectId         AS MemberSPId
+                              , COALESCE (Object_MedicSP.ValueData, '')   :: TVarChar  AS MedicSP
+                              , COALESCE (Object_MemberSP.ValueData, '')  :: TVarChar  AS MemberSP
                               , COALESCE (MovementDate_OperDateSP.ValueData,Null) AS OperDateSP
                               , MovementLinkObject_GroupMemberSP.ObjectId         AS GroupMemberSPId
                               , Movement_Invoice.InvNumber  :: TVarChar           AS InvNumber_Invoice 
@@ -152,10 +152,13 @@ BEGIN
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicSP
                                      ON MovementLinkObject_MedicSP.MovementId = Movement_Sale.Id
                                     AND MovementLinkObject_MedicSP.DescId = zc_MovementLinkObject_MedicSP()
+                              LEFT JOIN Object AS Object_MedicSP ON Object_MedicSP.Id = MovementLinkObject_MedicSP.ObjectId AND Object_MedicSP.DescId = zc_Object_MedicSP()
+
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberSP
                                      ON MovementLinkObject_MemberSP.MovementId = Movement_Sale.Id
                                     AND MovementLinkObject_MemberSP.DescId = zc_MovementLinkObject_MemberSP()
-        
+                              LEFT JOIN Object AS Object_MemberSP ON Object_MemberSP.Id = MovementLinkObject_MemberSP.ObjectId AND Object_MemberSP.DescId = zc_Object_MemberSP()
+             
                               LEFT JOIN MovementDate AS MovementDate_OperDateSP
                                    ON MovementDate_OperDateSP.MovementId = Movement_Sale.Id
                                   AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
@@ -192,8 +195,8 @@ BEGIN
                               , tmpUnit.JuridicalId                          AS JuridicalId
                               , MovementLinkObject_PartnerMedical.ObjectId   AS HospitalId
                               , MovementString_InvNumberSP.ValueData         AS InvNumberSP
-                              , MovementLinkObject_MedicSP.ObjectId          AS MedicSPId
-                              , MovementLinkObject_MemberSP.ObjectId         AS MemberSPId
+                              , COALESCE (MovementString_MedicSP.ValueData, '') :: TVarChar  AS MedicSP
+                              , COALESCE (MovementString_Bayer.ValueData, '')   :: TVarChar  AS MemberSP
                               , COALESCE (MovementDate_OperDateSP.ValueData,Null) AS OperDateSP
                               , MovementLinkObject_GroupMemberSP.ObjectId         AS GroupMemberSPId
                               , Movement_Invoice.InvNumber  :: TVarChar           AS InvNumber_Invoice 
@@ -217,12 +220,12 @@ BEGIN
                                      ON MovementString_InvNumberSP.MovementId = Movement_Check.Id
                                     AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
 
-                              LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicSP
-                                     ON MovementLinkObject_MedicSP.MovementId = Movement_Check.Id
-                                    AND MovementLinkObject_MedicSP.DescId = zc_MovementLinkObject_MedicSP()
-                              LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberSP
-                                     ON MovementLinkObject_MemberSP.MovementId = Movement_Check.Id
-                                    AND MovementLinkObject_MemberSP.DescId = zc_MovementLinkObject_MemberSP()
+                             LEFT JOIN MovementString AS MovementString_MedicSP
+                                    ON MovementString_MedicSP.MovementId = Movement_Check.Id
+                                   AND MovementString_MedicSP.DescId = zc_MovementString_MedicSP()
+                             LEFT JOIN MovementString AS MovementString_Bayer
+                                    ON MovementString_Bayer.MovementId = Movement_Check.Id
+                                   AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
         
                               LEFT JOIN MovementDate AS MovementDate_OperDateSP
                                    ON MovementDate_OperDateSP.MovementId = Movement_Check.Id
@@ -242,8 +245,8 @@ BEGIN
                            AND ( COALESCE (MovementLinkObject_PartnerMedical.ObjectId,0) <> 0 OR
                                  COALESCE (MovementLinkObject_GroupMemberSP.ObjectId ,0) <> 0 OR
                                  COALESCE (MovementString_InvNumberSP.ValueData,'') <> '' OR
-                                 COALESCE (MovementLinkObject_MedicSP.ObjectId,0) <> 0 OR
-                                 COALESCE (MovementLinkObject_MemberSP.ObjectId,0) <> 0
+                                 COALESCE (MovementString_MedicSP.ValueData, '') <> '' OR
+                                 COALESCE (MovementString_Bayer.ValueData, '') <> ''
                                )
                            AND (MovementLinkObject_PartnerMedical.ObjectId = inHospitalId OR inHospitalId = 0)
                            AND (   (MovementLinkObject_GroupMemberSP.ObjectId =  inGroupMemberSPId AND inisGroupMemberSP = FALSE AND COALESCE(inGroupMemberSPId,0) <> 0) 
@@ -261,8 +264,8 @@ BEGIN
                               , Movement_Sale.JuridicalId
                               , Movement_Sale.HospitalId
                               , Movement_Sale.InvNumberSP
-                              , Movement_Sale.MedicSPId
-                              , Movement_Sale.MemberSPId
+                              , Movement_Sale.MedicSP
+                              , Movement_Sale.MemberSP
                               , Movement_Sale.OperDateSP
                               , Movement_Sale.GroupMemberSPId
                               , Movement_Sale.InvNumber_Invoice
@@ -280,7 +283,7 @@ BEGIN
                               LEFT JOIN MovementItemBoolean AS MIBoolean_SP
                                       ON MIBoolean_SP.MovementItemId = MI_Sale.Id
                                      AND MIBoolean_SP.DescId = zc_MIBoolean_SP()
-                                     --AND MIBoolean_SP.ValueData = TRUE
+                                     --AND MIBoolean_SP.ValueData = TRUE                        -- пока перенесла в where , т,к. в чеке это св-во не сохраняется
                               LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                       ON MIFloat_ChangePercent.MovementItemId = MI_Sale.Id
                                      AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
@@ -302,8 +305,8 @@ BEGIN
                                 , Movement_Sale.JuridicalId
                                 , Movement_Sale.HospitalId
                                 , Movement_Sale.InvNumberSP
-                                , Movement_Sale.MedicSPId
-                                , Movement_Sale.MemberSPId
+                                , Movement_Sale.MedicSP
+                                , Movement_Sale.MemberSP
                                 , Movement_Sale.OperDateSP
                                 , Movement_Sale.GroupMemberSPId
                                 , Movement_Sale.InvNumber_Invoice
@@ -377,8 +380,8 @@ BEGIN
                           , tmpSale.JuridicalId
                           , tmpSale.HospitalId
                           , tmpSale.InvNumberSP
-                          , tmpSale.MedicSPId
-                          , tmpSale.MemberSPId
+                          , tmpSale.MedicSP
+                          , tmpSale.MemberSP
                           , tmpSale.OperDateSP
                           , tmpSale.GroupMemberSPId
 
@@ -479,8 +482,8 @@ BEGIN
              , Object_PartnerMedical.Id            AS HospitalId
              , Object_PartnerMedical.ValueData     AS HospitalName
              , tmpData.InvNumberSP
-             , Object_MedicSP.ValueData            AS MedicSP
-             , Object_MemberSP.ValueData           AS MemberSP
+             , tmpData.MedicSP
+             , tmpData.MemberSP
              , Object_GroupMemberSP.ValueData      AS GroupMemberSPName
              , tmpData.OperDateSP        :: TDateTime
              , tmpData.OperDate          :: TDateTime
@@ -549,8 +552,8 @@ BEGIN
                                  AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
 
              LEFT JOIN Object AS Object_GroupMemberSP ON Object_GroupMemberSP.Id = tmpData.GroupMemberSPId AND Object_GroupMemberSP.DescId = zc_Object_GroupMemberSP()
-             LEFT JOIN Object AS Object_MemberSP ON Object_MemberSP.Id = tmpData.MemberSPId AND Object_MemberSP.DescId = zc_Object_MemberSP()
-             LEFT JOIN Object AS Object_MedicSP ON Object_MedicSP.Id = tmpData.MedicSPId AND Object_MedicSP.DescId = zc_Object_MedicSP()
+             --LEFT JOIN Object AS Object_MemberSP ON Object_MemberSP.Id = tmpData.MemberSPId AND Object_MemberSP.DescId = zc_Object_MemberSP()
+             --LEFT JOIN Object AS Object_MedicSP ON Object_MedicSP.Id = tmpData.MedicSPId AND Object_MedicSP.DescId = zc_Object_MedicSP()
 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId AND Object_Goods.DescId = zc_Object_Goods()
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
@@ -581,4 +584,3 @@ $BODY$
 
 -- тест
 --select * from gpReport_Sale_SP(inStartDate := ('01.12.2016')::TDateTime , inEndDate := ('31.12.2016')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inisGroupMemberSP := 'True'::Boolean ,  inSession := '3'::TVarChar);
-
