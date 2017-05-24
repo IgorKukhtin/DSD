@@ -237,7 +237,7 @@ begin
 
     CasualId := Session.GenerateCasual;
 
-  	with Session.Request.Params do
+    with Session.Request.Params do
     begin
       ParamByName('id_casual').AsString := CasualId;
       ParamByName('inside_code').AsInteger := 679;

@@ -277,6 +277,7 @@ type
     lblAmount: TLabel;
     edAmount: TcxCurrencyEdit;
     BarCode: TcxGridDBColumn;
+    MorionCode: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -2023,6 +2024,11 @@ begin
         //***10.08.16
         checkCDS.FieldByName('List_UID').AsString := GenerateGUID;
         checkCDS.Post;
+
+        if (FormParams.ParamByName('DiscountExternalId').Value > 0) and
+          (SourceClientDataSet.FindField('MorionCode') <> nil) then
+          DiscountServiceForm.SaveMorionCode(SourceClientDataSet.FieldByName('Id').AsInteger,
+            SourceClientDataSet.FieldByName('MorionCode').AsInteger);
       End;
     finally
       CheckCDS.Filtered := True;
