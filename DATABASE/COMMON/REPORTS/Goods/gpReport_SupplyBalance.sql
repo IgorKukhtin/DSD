@@ -35,6 +35,22 @@ RETURNS TABLE (GoodsId              Integer
              , PlanOrder            TFloat
              , CountOrder           TFloat
              , RemainsDaysWithOrder TFloat
+
+             , CountIncome1 TFloat
+             , CountIncome2 TFloat
+             , CountIncome3 TFloat
+             , CountIncome4 TFloat
+             , CountIncome5 TFloat
+             , CountIncome6 TFloat
+             , CountIncome7 TFloat
+             , CountProductionOut1 TFloat
+             , CountProductionOut2 TFloat
+             , CountProductionOut3 TFloat
+             , CountProductionOut4 TFloat
+             , CountProductionOut5 TFloat
+             , CountProductionOut6 TFloat
+             , CountProductionOut7 TFloat
+
              , Color_RemainsDays    Integer
               )
 AS
@@ -239,6 +255,7 @@ BEGIN
                        WHERE CLO_Unit.ObjectId = inUnitId
                          AND CLO_Unit.DescId   = zc_ContainerLinkObject_Unit()
                       )
+
      -- остатки
    , tmpMIContainerAll AS (SELECT CASE WHEN MIContainer.MovementDescId in (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MIContainer.ObjectExtId_Analyzer ELSE 0 END AS ObjectExtId_Analyzer
                                 , tmpContainerAll.ContainerId
@@ -299,6 +316,7 @@ BEGIN
                                 LEFT JOIN MovementItemContainer AS MIContainer
                                                                 ON MIContainer.Containerid = tmpContainerAll.ContainerId
                                                                AND MIContainer.OperDate >= inStartDate
+                                LEFT JOIN zfCalc_DayOfWeekName (MIContainer.OperDate) AS tmpWeekDay ON 1=1   
                            GROUP BY CASE WHEN MIContainer.MovementDescId in (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MIContainer.ObjectExtId_Analyzer ELSE 0 END
                                   , tmpContainerAll.ContainerId, tmpContainerAll.GoodsId, tmpContainerAll.Amount
                           )
@@ -359,7 +377,6 @@ BEGIN
                                                            THEN -1 * tmpMIContainerAll.CountIncome
                                                       ELSE 0
                                                 END) AS CountOut_oth
-
                                      FROM tmpMIContainerAll
                                           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                                ON ObjectLink_Partner_Juridical.ObjectId = tmpMIContainerAll.ObjectExtId_Analyzer
@@ -367,6 +384,69 @@ BEGIN
                                      GROUP BY tmpMIContainerAll.GoodsId
                                     ) AS tmpIncome ON tmpIncome.GoodsId = tmp.GoodsId
                      )
+
+        -- приход / расход по дням
+        , tmpOnDaysAll AS (SELECT CASE WHEN MIContainer.MovementDescId in (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MIContainer.ObjectExtId_Analyzer ELSE 0 END AS ObjectExtId_Analyzer
+                                , tmpContainerAll.GoodsId
+                                , MIContainer.OperDate
+                                , SUM (CASE WHEN MIContainer.MovementDescId in (zc_Movement_Income(), zc_Movement_ReturnOut())
+                                            THEN COALESCE (MIContainer.Amount, 0)
+                                            ELSE 0
+                                       END) CountIncome
+
+                                , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send()
+                                            THEN -1 * COALESCE (MIContainer.Amount, 0)
+                                            ELSE 0
+                                       END) AS CountProductionOut
+                           FROM tmpContainerAll
+                                LEFT JOIN MovementItemContainer AS MIContainer
+                                                                ON MIContainer.Containerid = tmpContainerAll.ContainerId
+                                                               AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                           GROUP BY CASE WHEN MIContainer.MovementDescId in (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MIContainer.ObjectExtId_Analyzer ELSE 0 END
+                                  , tmpContainerAll.GoodsId, MIContainer.OperDate
+                          )
+        -- приход / расход по дням
+           , tmpOnDays AS (SELECT tmp.GoodsId
+                                , SUM (CASE WHEN tmpWeekDay.Number = 1 THEN tmp.CountIncome ELSE 0 END) CountIncome1
+                                , SUM (CASE WHEN tmpWeekDay.Number = 2 THEN tmp.CountIncome ELSE 0 END) CountIncome2
+                                , SUM (CASE WHEN tmpWeekDay.Number = 3 THEN tmp.CountIncome ELSE 0 END) CountIncome3
+                                , SUM (CASE WHEN tmpWeekDay.Number = 4 THEN tmp.CountIncome ELSE 0 END) CountIncome4
+                                , SUM (CASE WHEN tmpWeekDay.Number = 5 THEN tmp.CountIncome ELSE 0 END) CountIncome5
+                                , SUM (CASE WHEN tmpWeekDay.Number = 6 THEN tmp.CountIncome ELSE 0 END) CountIncome6
+                                , SUM (CASE WHEN tmpWeekDay.Number = 7 THEN tmp.CountIncome ELSE 0 END) CountIncome7 
+
+                                , SUM (CASE WHEN tmpWeekDay.Number = 1 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut1
+                                , SUM (CASE WHEN tmpWeekDay.Number = 2 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut2
+                                , SUM (CASE WHEN tmpWeekDay.Number = 3 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut3
+                                , SUM (CASE WHEN tmpWeekDay.Number = 4 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut4
+                                , SUM (CASE WHEN tmpWeekDay.Number = 5 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut5
+                                , SUM (CASE WHEN tmpWeekDay.Number = 6 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut6
+                                , SUM (CASE WHEN tmpWeekDay.Number = 7 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut7 
+
+                           FROM (SELECT tmpOnDaysAll.GoodsId
+                                      , tmpOnDaysAll.OperDate
+                                      , SUM (CASE -- если надо по всем поставщикам - тогда весь приход
+                                                  WHEN inJuridicalId = 0
+                                                  THEN tmpOnDaysAll.CountIncome
+                                                  -- если надо только по одному поставщику
+                                                  WHEN ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId AND inJuridicalId > 0
+                                                  THEN tmpOnDaysAll.CountIncome
+                                                  -- иначе это "другой" приход/расход
+                                                  ELSE 0
+                                              END) AS CountIncome
+                                      , SUM (tmpOnDaysAll.CountProductionOut) AS CountProductionOut
+                                 FROM tmpOnDaysAll
+                                      LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                           ON ObjectLink_Partner_Juridical.ObjectId = tmpOnDaysAll.ObjectExtId_Analyzer
+                                                          AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                 GROUP BY tmpOnDaysAll.GoodsId
+                                        , tmpOnDaysAll.OperDate
+                                ) AS tmp
+                                LEFT JOIN zfCalc_DayOfWeekName (tmp.OperDate) AS tmpWeekDay ON 1=1 
+                           GROUP BY tmp.GoodsId 
+                           )
+
+
    -- контейнеры - для "остатки в производстве"
  , tmpContainer_Oth AS (SELECT Container.Id       AS ContainerId
                              , Container.ObjectId AS GoodsId
@@ -441,6 +521,24 @@ BEGIN
                   ELSE 0
              END  :: TFloat AS RemainsDaysWithOrder
 
+
+           , tmpOnDays.CountIncome1         :: TFloat
+           , tmpOnDays.CountIncome2         :: TFloat
+           , tmpOnDays.CountIncome3         :: TFloat
+           , tmpOnDays.CountIncome4         :: TFloat
+           , tmpOnDays.CountIncome5         :: TFloat
+           , tmpOnDays.CountIncome6         :: TFloat
+           , tmpOnDays.CountIncome7         :: TFloat
+
+           , tmpOnDays.CountProductionOut1  :: TFloat
+           , tmpOnDays.CountProductionOut2  :: TFloat
+           , tmpOnDays.CountProductionOut3  :: TFloat
+           , tmpOnDays.CountProductionOut4  :: TFloat
+           , tmpOnDays.CountProductionOut5  :: TFloat
+           , tmpOnDays.CountProductionOut6  :: TFloat
+           , tmpOnDays.CountProductionOut7  :: TFloat
+
+
            , CASE WHEN COALESCE (tmpOrderIncome.Amount, 0) > 0 THEN 25088  -- зеленый
                   ELSE
                     CASE WHEN tmpContainer.CountProductionOut <= 0 AND tmpContainer.RemainsEnd <> 0
@@ -478,6 +576,8 @@ BEGIN
                               AND ObjectLink_Goods_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
+          LEFT JOIN tmpOnDays ON tmpOnDays.GoodsId = tmpGoodsList.GoodsId
+
        WHERE tmpContainer.RemainsStart   <> 0 OR tmpContainer.RemainsEnd         <> 0 OR tmpOrderIncome.Amount  <> 0
           OR tmpContainer.CountIncome    <> 0 OR tmpContainer.CountProductionOut <> 0
           OR tmpContainer.CountIn_oth    <> 0 OR tmpContainer.CountOut_oth       <> 0
@@ -492,6 +592,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.05.17         *
  16.05.17         *
  30.03.17         *
 */

@@ -9,17 +9,17 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Personal(
     IN inIsShowAll   Boolean,    --
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, DriverCertificate TVarChar, Card TVarChar,
-               PositionId Integer, PositionCode Integer, PositionName TVarChar,
-               PositionLevelId Integer, PositionLevelCode Integer, PositionLevelName TVarChar,
-               UnitId Integer, UnitCode Integer, UnitName TVarChar, BranchCode Integer, BranchName TVarChar,
-               PersonalGroupId Integer, PersonalGroupCode Integer, PersonalGroupName TVarChar,
-               PersonalServiceListId Integer, PersonalServiceListName TVarChar,
-               PersonalServiceListOfficialId Integer, PersonalServiceListOfficialName TVarChar,
-               InfoMoneyId Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar,
-               SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
-               DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean, isOfficial Boolean,
-               isErased Boolean
+RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, DriverCertificate TVarChar, Card TVarChar, CardSecond TVarChar, BankName TVarChar, BankSecondName TVarChar
+             , PositionId Integer, PositionCode Integer, PositionName TVarChar
+             , PositionLevelId Integer, PositionLevelCode Integer, PositionLevelName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar, BranchCode Integer, BranchName TVarChar
+             , PersonalGroupId Integer, PersonalGroupCode Integer, PersonalGroupName TVarChar
+             , PersonalServiceListId Integer, PersonalServiceListName TVarChar
+             , PersonalServiceListOfficialId Integer, PersonalServiceListOfficialName TVarChar
+             , InfoMoneyId Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , SheetWorkTimeId Integer, SheetWorkTimeName TVarChar
+             , DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean, isOfficial Boolean
+             , isErased Boolean
               )
 AS
 $BODY$
@@ -52,14 +52,17 @@ BEGIN
 
 
    -- Результат
-   RETURN QUERY 
-     SELECT 
+   RETURN QUERY
+     SELECT
            Object_Personal_View.PersonalId   AS Id
          , Object_Personal_View.PersonalCode AS MemberCode
          , Object_Personal_View.PersonalName AS MemberName
 
          , ObjectString_DriverCertificate.ValueData AS DriverCertificate
          , ObjectString_Card.ValueData              AS Card
+         , ObjectString_CardSecond.ValueData        AS CardSecond
+         , Object_Bank.ValueData                    AS BankName
+         , Object_BankSecond.ValueData              AS BankSecondName
 
          , Object_Personal_View.PositionId
          , Object_Personal_View.PositionCode
@@ -80,17 +83,17 @@ BEGIN
          , Object_Personal_View.PersonalGroupCode
          , Object_Personal_View.PersonalGroupName
 
-         , Object_PersonalServiceList.Id           AS PersonalServiceListId 
-         , Object_PersonalServiceList.ValueData    AS PersonalServiceListName 
+         , Object_PersonalServiceList.Id           AS PersonalServiceListId
+         , Object_PersonalServiceList.ValueData    AS PersonalServiceListName
 
-         , Object_PersonalServiceListOfficial.Id           AS PersonalServiceListOfficialId 
-         , Object_PersonalServiceListOfficial.ValueData    AS PersonalServiceListOfficialName 
+         , Object_PersonalServiceListOfficial.Id           AS PersonalServiceListOfficialId
+         , Object_PersonalServiceListOfficial.ValueData    AS PersonalServiceListOfficialName
 
          , vbInfoMoneyId       AS InfoMoneyId
          , vbInfoMoneyName     AS InfoMoneyName
          , vbInfoMoneyName_all AS InfoMoneyName_all
- 
-         , COALESCE (Object_SheetWorkTime.Id, COALESCE (Object_Position_SheetWorkTime.Id, COALESCE (Object_Unit_SheetWorkTime.Id, 0)) )  AS SheetWorkTimeId 
+
+         , COALESCE (Object_SheetWorkTime.Id, COALESCE (Object_Position_SheetWorkTime.Id, COALESCE (Object_Unit_SheetWorkTime.Id, 0)) )  AS SheetWorkTimeId
          , COALESCE (Object_SheetWorkTime.ValueData, COALESCE ('* '||Object_Position_SheetWorkTime.ValueData, COALESCE ('** '||Object_Unit_SheetWorkTime.ValueData, '')) ) ::TVarChar     AS SheetWorkTimeName
 
          , Object_Personal_View.DateIn
@@ -98,20 +101,32 @@ BEGIN
          , Object_Personal_View.isDateOut
          , Object_Personal_View.isMain
          , Object_Personal_View.isOfficial
-         
+
          , Object_Personal_View.isErased
      FROM Object_Personal_View
           LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Object_Personal_View.AccessKeyId
           LEFT JOIN Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide ON View_RoleAccessKeyGuide.UserId = vbUserId AND View_RoleAccessKeyGuide.UnitId_PersonalService = Object_Personal_View.UnitId AND vbIsAllUnit = FALSE
 
           LEFT JOIN ObjectString AS ObjectString_DriverCertificate
-                                 ON ObjectString_DriverCertificate.ObjectId = Object_Personal_View.MemberId 
+                                 ON ObjectString_DriverCertificate.ObjectId = Object_Personal_View.MemberId
                                 AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
 
           LEFT JOIN ObjectString AS ObjectString_Card
-                                 ON ObjectString_Card.ObjectId = Object_Personal_View.MemberId 
+                                 ON ObjectString_Card.ObjectId = Object_Personal_View.MemberId
                                 AND ObjectString_Card.DescId = zc_ObjectString_Member_Card()
-      
+          LEFT JOIN ObjectString AS ObjectString_CardSecond
+                                 ON ObjectString_CardSecond.ObjectId = Object_Personal_View.MemberId
+                                AND ObjectString_CardSecond.DescId = zc_ObjectString_Member_CardSecond()
+          LEFT JOIN ObjectLink AS ObjectLink_Member_Bank
+                               ON ObjectLink_Member_Bank.ObjectId = Object_Personal_View.MemberId
+                              AND ObjectLink_Member_Bank.DescId = zc_ObjectLink_Member_Bank()
+          LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_Member_Bank.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Member_BankSecond
+                               ON ObjectLink_Member_BankSecond.ObjectId = Object_Personal_View.MemberId
+                              AND ObjectLink_Member_BankSecond.DescId = zc_ObjectLink_Member_BankSecond()
+          LEFT JOIN Object AS Object_BankSecond ON Object_BankSecond.Id = ObjectLink_Member_BankSecond.ChildObjectId
+
           LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                ON ObjectLink_Unit_Branch.ObjectId = Object_Personal_View.UnitId
                               AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
@@ -175,6 +190,9 @@ BEGIN
          , CAST ('УДАЛИТЬ' as TVarChar)  AS MemberName
          , CAST ('' as TVarChar) AS DriverCertificate
          , CAST ('' as TVarChar) AS Card
+         , CAST ('' as TVarChar) AS CardSecond
+         , CAST ('' as TVarChar) AS BankName
+         , CAST ('' as TVarChar) AS BankSecondName
          , 0 AS PositionId
          , 0 AS PositionCode
          , CAST ('' as TVarChar) AS PositionName
@@ -189,14 +207,14 @@ BEGIN
          , 0 AS PersonalGroupId
          , 0 AS PersonalGroupCode
          , CAST ('' as TVarChar) AS PersonalGroupName
-         , 0 AS PersonalServiceListId 
-         , CAST ('' as TVarChar) AS PersonalServiceListName 
-         , 0 AS PersonalServiceListOfficialId 
-         , CAST ('' as TVarChar) AS PersonalServiceListOfficialName 
+         , 0 AS PersonalServiceListId
+         , CAST ('' as TVarChar) AS PersonalServiceListName
+         , 0 AS PersonalServiceListOfficialId
+         , CAST ('' as TVarChar) AS PersonalServiceListOfficialName
          , 0 AS InfoMoneyId
          , CAST ('' as TVarChar) AS InfoMoneyName
          , CAST ('' as TVarChar) AS InfoMoneyName_all
-         , 0 AS SheetWorkTimeId 
+         , 0 AS SheetWorkTimeId
          , CAST ('' as TVarChar)    AS SheetWorkTimeName
          , CAST (NULL as TDateTime) AS DateIn
          , CAST (NULL as TDateTime) AS DateOut
@@ -205,7 +223,7 @@ BEGIN
          , FALSE AS isOfficial
          , FALSE AS isErased
     ;
-  
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -227,12 +245,12 @@ ALTER FUNCTION gpSelect_Object_Personal (TDateTime, TDateTime, Boolean, Boolean,
  14.12.13                                        * add vbAccessKeyAll
  08.12.13                                        * add Object_RoleAccessKey_View
  21.11.13                                        * add PositionLevel...
- 28.10.13                         * 
+ 28.10.13                         *
  30.09.13                                        * add Object_Personal_View
- 25.09.13         * add _PersonalGroup; remove _Juridical, _Business             
- 19.07.13         *    rename zc_ObjectDate...               
+ 25.09.13         * add _PersonalGroup; remove _Juridical, _Business
+ 19.07.13         *    rename zc_ObjectDate...
  06.07.13                                        * error zc_ObjectLink_Personal_Juridical
- 01.07.13         *              
+ 01.07.13         *
 */
 /*
 -- доступ
@@ -240,7 +258,7 @@ UPDATE Object SET AccessKeyId = COALESCE (Object_Branch.AccessKeyId, (SELECT zc_
 FROM ObjectLink LEFT JOIN ObjectLink AS ObjectLink2 ON ObjectLink2.ObjectId = ObjectLink.ChildObjectId AND ObjectLink2.DescId = zc_ObjectLink_Unit_Branch() LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink2.ChildObjectId WHERE ObjectLink.ObjectId = Object.Id AND ObjectLink.DescId = zc_ObjectLink_Personal_Unit() AND Object.DescId = zc_Object_Personal();
 -- синхронизируем удаленных
 update object set  isErased =  TRUE
-where id in (select PersonalId 
+where id in (select PersonalId
 FROM Object_Personal_View
      left join Object on Object.Id = Object_Personal_View.MemberId
 WHERE Object_Personal_View.isErased <> COALESCE (Object.isErased, TRUE)
@@ -273,9 +291,9 @@ with tmp as (            SELECT max (MovementItem.Id) AS MovementItemId
                                                           AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
 where Movement.DescId = zc_Movement_PersonalService()
  AND Movement.StatusId = zc_Enum_Status_Complete()
-group by COALESCE (MovementItem.ObjectId, 0)           
---       , COALESCE (MILinkObject_Unit.ObjectId, 0)      
-  --    , COALESCE (MILinkObject_Position.ObjectId, 0)  
+group by COALESCE (MovementItem.ObjectId, 0)
+--       , COALESCE (MILinkObject_Unit.ObjectId, 0)
+  --    , COALESCE (MILinkObject_Position.ObjectId, 0)
 )
 
 select  -- lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceList(), tmp.ObjectId, MovementLinkObject_PersonalServiceList.ObjectId)
@@ -292,7 +310,7 @@ from tmp
 
 select -- lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PersonalServiceList(), MovementItem.Id, ObjectLink_Personal_PersonalServiceList.ChildObjectId)
 -- *
-from MovementItem 
+from MovementItem
                                INNER JOIN Movement on Movement.DescId = zc_Movement_PersonalService()
                                                   AND Movement.Id = MovementItem.MovementId
                                INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
@@ -318,7 +336,7 @@ with tmp as (            SELECT max (MovementItem.Id) AS MovementItemId
                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                      AND MovementItem.DescId = zc_MI_Master()
                                                      AND MovementItem.isErased = FALSE
-                                                     AND MovementItem.Amount <> 0 
+                                                     AND MovementItem.Amount <> 0
                                INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
                                                              ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
                                                             AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
@@ -326,25 +344,25 @@ with tmp as (            SELECT max (MovementItem.Id) AS MovementItemId
                                                                                                                       , 413454 -- Ведомость карточки БН Пиреус
                                                                                                                        )
                                INNER JOIN Object on Object.Id = MovementLinkObject_PersonalServiceList.ObjectId
-                                          and Object.ObjectCode not in (105 
-                                                                        , 135 
-                                                                        , 136 
-                                                                        , 138 
-                                                                        , 156 
-                                                                        , 162 
-                                                                        , 164 
-                                                                        , 165 
-                                                                        , 166 
-                                                                        , 167 
-                                                                        , 168 
+                                          and Object.ObjectCode not in (105
+                                                                        , 135
+                                                                        , 136
+                                                                        , 138
+                                                                        , 156
+                                                                        , 162
+                                                                        , 164
+                                                                        , 165
+                                                                        , 166
+                                                                        , 167
+                                                                        , 168
                                                                          )
 
 where Movement.DescId = zc_Movement_PersonalService()
  AND Movement.StatusId = zc_Enum_Status_Complete()
-group by COALESCE (MovementItem.ObjectId, 0)           
+group by COALESCE (MovementItem.ObjectId, 0)
 
---       , COALESCE (MILinkObject_Unit.ObjectId, 0)      
-  --    , COALESCE (MILinkObject_Position.ObjectId, 0)  
+--       , COALESCE (MILinkObject_Unit.ObjectId, 0)
+  --    , COALESCE (MILinkObject_Position.ObjectId, 0)
 )
 
 select    -- lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceList(), tmp.ObjectId, MovementLinkObject_PersonalServiceList.ObjectId)
@@ -356,8 +374,8 @@ from tmp
                                INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
                                                              ON MovementLinkObject_PersonalServiceList.MovementId = MovementItem.MovementId
                                                             AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
-                                                            
-                               left JOIN MovementItemLinkObject 
+
+                               left JOIN MovementItemLinkObject
                                                              ON MovementItemLinkObject.MovementItemId = MovementItem.Id
                                                             AND MovementItemLinkObject.DescId = zc_MILinkObject_Position()
 

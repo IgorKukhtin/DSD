@@ -96,12 +96,38 @@ object PersonalForm: TPersonalForm
         Width = 133
       end
       object clCard: TcxGridDBColumn
-        Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' '#1047#1055
+        Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'1)'
         DataBinding.FieldName = 'Card'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 115
+      end
+      object BankName: TcxGridDBColumn
+        Caption = #1041#1072#1085#1082' ('#1060'1)'
+        DataBinding.FieldName = 'BankName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object CardSecond: TcxGridDBColumn
+        Caption = #8470' '#1082#1072#1088#1090'.'#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2)'
+        DataBinding.FieldName = 'CardSecond'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 115
+      end
+      object BankSecondName: TcxGridDBColumn
+        Caption = #1041#1072#1085#1082' ('#1060'2)'
+        DataBinding.FieldName = 'BankSecondName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
       end
       object clUnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
