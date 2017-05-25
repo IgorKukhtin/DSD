@@ -1,10 +1,13 @@
 -- Function: gpReport_OrderExternal()
 
 DROP FUNCTION IF EXISTS gpReport_OrderExternal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_OrderExternal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_OrderExternal(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
+    IN inJuridicalId        Integer   , -- юр.лицо
+    IN inRetailId           Integer   , -- торг. сеть
     IN inFromId             Integer   , -- От кого (в документе)
     IN inToId               Integer   , -- Кому (в документе)
     IN inRouteId            Integer   , -- Маршрут
@@ -79,6 +82,8 @@ BEGIN
        SELECT
              CASE WHEN inIsByDoc = TRUE THEN Movement.Id ELSE 0 END   AS MovementId
            , MovementLinkObject_Contract.ObjectId                     AS ContractId
+           , ObjectLink_Partner_Juridical.ChildObjectId               AS JuridicalId
+           , ObjectLink_Juridical_Retail.ChildObjectId                AS RetailId
            , MovementLinkObject_From.ObjectId                         AS FromId
            , MovementLinkObject_To.ObjectId                           AS ToId
            , MovementLinkObject_Route.ObjectId                        AS RouteId
@@ -134,6 +139,16 @@ BEGIN
            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
                                         ON MovementLinkObject_Personal.MovementId = Movement.Id
                                        AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                               ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+--          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                               ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+--          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
@@ -172,7 +187,6 @@ BEGIN
                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
-
        WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
          AND Movement.StatusId = zc_Enum_Status_Complete()
          AND Movement.DescId = zc_Movement_OrderExternal()
@@ -180,6 +194,8 @@ BEGIN
          AND (COALESCE (MovementLinkObject_From.ObjectId,0) = CASE WHEN inFromId <> 0 THEN inFromId ELSE COALESCE (MovementLinkObject_From.ObjectId,0) END)
          AND (COALESCE (MovementLinkObject_Route.ObjectId,0) = CASE WHEN inRouteId <> 0 THEN inRouteId ELSE COALESCE (MovementLinkObject_Route.ObjectId,0) END)
          AND (COALESCE (MovementLinkObject_RouteSorting.ObjectId,0) = CASE WHEN inRouteSortingId <> 0 THEN inRouteSortingId ELSE COALESCE (MovementLinkObject_RouteSorting.ObjectId,0) END)
+         AND (COALESCE (ObjectLink_Partner_Juridical.ChildObjectId,0) = CASE WHEN inJuridicalId <> 0 THEN inJuridicalId ELSE COALESCE (ObjectLink_Partner_Juridical.ChildObjectId,0) END)
+         AND (COALESCE (ObjectLink_Juridical_Retail.ChildObjectId,0) = CASE WHEN inRetailId <> 0 THEN inRetailId ELSE COALESCE (ObjectLink_Juridical_Retail.ChildObjectId,0) END)
        GROUP BY
              CASE WHEN inIsByDoc = TRUE THEN Movement.Id ELSE 0 END
            , MovementLinkObject_Contract.ObjectId
@@ -197,10 +213,14 @@ BEGIN
            , ObjectLink_Goods_InfoMoney.ChildObjectId
            , MIFloat_CountForPrice.ValueData
            , MIFloat_Price.ValueData
+           , ObjectLink_Partner_Juridical.ChildObjectId
+           , ObjectLink_Juridical_Retail.ChildObjectId 
          )
 
      , tmpMovement AS (
        SELECT tmpMovement2.MovementId
+            , tmpMovement2.JuridicalId
+            , tmpMovement2.RetailId
             , tmpMovement2.FromId
             , tmpMovement2.ToId
             , tmpMovement2.ContractId
@@ -248,6 +268,8 @@ BEGIN
               , tmpMovement2.GoodsKindId
               , tmpMovement2.GoodsId
               , tmpMovement2.InfoMoneyId
+              , tmpMovement2.JuridicalId
+              , tmpMovement2.RetailId
       )
        -- Результат
        SELECT
@@ -359,7 +381,10 @@ BEGIN
                                                              AND ObjectLink_Route_RouteGroup.DescId = zc_ObjectLink_Route_RouteGroup()
           LEFT JOIN Object AS Object_RouteGroup ON Object_RouteGroup.Id = COALESCE (ObjectLink_Route_RouteGroup.ChildObjectId, Object_Route.Id)
 
-          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpMovement.JuridicalId 
+          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = tmpMovement.RetailId
+
+          /*LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                ON ObjectLink_Partner_Juridical.ObjectId = tmpMovement.FromId
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
@@ -367,6 +392,7 @@ BEGIN
                                ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
           LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+          */
           LEFT JOIN tmpPartnerAddress AS View_Partner_Address ON View_Partner_Address.PartnerId = tmpMovement.FromId
 
           LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = tmpMovement.ContractId
@@ -378,11 +404,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpReport_OrderExternal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpReport_OrderExternal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.05.17         *
  29.06.15                                        * ALL
  02.09.14                                                        *
  29.08.14                                                        *
