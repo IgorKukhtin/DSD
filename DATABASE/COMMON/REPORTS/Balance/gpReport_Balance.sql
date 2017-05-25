@@ -3,11 +3,11 @@
 DROP FUNCTION IF EXISTS gpReport_Balance (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Balance(
-    IN inStartDate   TDateTime , -- 
+    IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (RootName TVarChar, AccountCode Integer, AccountGroupName TVarChar, AccountDirectionName TVarChar, AccountName  TVarChar 
+RETURNS TABLE (RootName TVarChar, AccountCode Integer, AccountGroupName TVarChar, AccountDirectionName TVarChar, AccountName  TVarChar
              , AccountGroupName_original TVarChar, AccountDirectionName_original TVarChar, AccountName_original  TVarChar
              , AccountOnComplete Boolean, InfoMoneyName TVarChar, InfoMoneyName_Detail TVarChar
              , ByObjectItemName TVarChar, ByObjectName TVarChar, GoodsItemName TVarChar, GoodsName TVarChar
@@ -43,12 +43,12 @@ end if;*/
 
 
      -- Результат
-     RETURN QUERY 
+     RETURN QUERY
 
        -- некоторые счета делим на Нал/Бн
        WITH tmpAccount AS (SELECT Object_Account_View.* FROM Object_Account_View)
 
-          , tmpAccountDirection AS (SELECT 30100 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ Дебиторы + покупатели 
+          , tmpAccountDirection AS (SELECT 30100 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ Дебиторы + покупатели
                                    UNION
                                     SELECT 30200 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ Дебиторы + наши компании
                                    UNION
@@ -171,7 +171,7 @@ end if;*/
            , CAST (tmpReportOperation.CountRemainsEnd AS TFloat) AS CountEnd
 
            , tmpReportOperation.ContainerId :: Integer AS ContainerId
-       FROM 
+       FROM
            tmpAccountAll AS Object_Account_View
            LEFT JOIN
            (SELECT tmpReportOperation_two.AccountId
@@ -331,7 +331,7 @@ end if;*/
            LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
 
           ;
-  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

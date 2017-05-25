@@ -231,7 +231,9 @@ BEGIN
                                         , MIContainer.isActive
                                 )
 
-         , tmpMI_Summ_group AS (SELECT tmpMI_Summ.MovementId, tmpMI_Summ.MovementItemId, tmpMI_Summ.ContainerId_Analyzer, tmpMI_Summ.isActive FROM tmpMI_Summ WHERE tmpMI_Summ.MovementItemId > 0 GROUP BY tmpMI_Summ.MovementId, tmpMI_Summ.MovementItemId, tmpMI_Summ.ContainerId_Analyzer, tmpMI_Summ.isActive)
+         , tmpMI_Summ_group AS (SELECT DISTINCT tmpMI_Summ.MovementId, tmpMI_Summ.MovementItemId, tmpMI_Summ.ContainerId_Analyzer, tmpMI_Summ.isActive FROM tmpMI_Summ WHERE tmpMI_Summ.MovementItemId > 0)
+         -- , tmpMI_SummBranch_group AS (SELECT DISTINCT tmpMI_Summ.MovementId FROM tmpMI_Summ WHERE tmpMI_Summ.MovementId > 0 AND tmpMI_Summ.MovementDescId = zc_Movement_SendOnPrice())
+         , tmpMI_SummBranch_group AS (SELECT DISTINCT tmpMI_Summ.MovementItemId FROM tmpMI_Summ WHERE tmpMI_Summ.MovementItemId > 0 AND tmpMI_Summ.MovementDescId = zc_Movement_SendOnPrice())
          , tmpMI_SummPartner AS (SELECT tmpMI_Summ_group.MovementItemId
                                       , SUM (CASE WHEN MIContainer.AccountId IN (zc_Enum_AnalyzerId_SummIn_110101(), zc_Enum_AnalyzerId_SummOut_110101()) THEN 0 ELSE MIContainer.Amount END * CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ReturnOut(), zc_Movement_Sale()) THEN 1 ELSE -1 END) AS Amount
                                  FROM tmpMI_Summ_group
@@ -241,6 +243,19 @@ BEGIN
                                                                                      AND MIContainer.ContainerId    = tmpMI_Summ_group.ContainerId_Analyzer
                                                                                      AND MIContainer.isActive      <> tmpMI_Summ_group.isActive
                                  GROUP BY tmpMI_Summ_group.MovementItemId
+                                UNION ALL
+                                 SELECT tmpMI_SummBranch_group.MovementItemId
+                                 -- SELECT MovementItem.Id          AS MovementItemId
+                                      , (MIF_SummFrom.ValueData) AS Amount
+                                 FROM tmpMI_SummBranch_group
+                                      INNER JOIN MovementItemFloat AS MIF_SummFrom
+                                                                   ON MIF_SummFrom.MovementItemId = tmpMI_SummBranch_group.MovementItemId
+                                                                  AND MIF_SummFrom.DescId         = zc_MIFloat_SummFrom()
+                                      /*INNER JOIN MovementItem ON MovementItem.MovementId = tmpMI_SummBranch_group.MovementId
+                                                             AND MovementItem.isErased   = FALSE
+                                      INNER JOIN MovementItemFloat AS MIF_SummFrom
+                                                                   ON MIF_SummFrom.MovementItemId = MovementItem.Id
+                                                                  AND MIF_SummFrom.DescId         = zc_MIFloat_SummFrom()*/
                                 )
                , tmpMI_Id AS (SELECT DISTINCT tmpMI_Count.MovementItemId FROM tmpMI_Count WHERE tmpMI_Count.MovementItemId > 0
                              UNION
@@ -697,4 +712,4 @@ ALTER FUNCTION gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, 
 */
 
 -- тест
--- SELECT * FROM gpReport_Goods (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 1826, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_Goods (inStartDate:= '01.01.2017', inEndDate:= '01.01.2017', inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 1826, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());
