@@ -39,6 +39,12 @@ type
     GuidesRouteSorting: TdsdGuides;
     GuidesTo: TdsdGuides;
     GuidesRoute: TdsdGuides;
+    cxLabel4: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edRetail: TcxButtonEdit;
+    GuidesRetail: TdsdGuides;
   private
     { Private declarations }
   public

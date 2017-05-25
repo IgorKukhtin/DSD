@@ -3,7 +3,7 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1047#1072#1103#1074#1082#1072' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
-  ClientHeight = 251
+  ClientHeight = 305
   ClientWidth = 478
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 114
-    Top = 214
+    Top = 272
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
   end
   object cxButton2: TcxButton
     Left = 288
-    Top = 214
+    Top = 272
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -54,7 +54,7 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
   end
   object edGoodsGroup: TcxButtonEdit
     Left = 11
-    Top = 176
+    Top = 234
     Properties.Buttons = <
       item
         Default = True
@@ -66,7 +66,7 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
   end
   object cxLabel1: TcxLabel
     Left = 11
-    Top = 153
+    Top = 211
     Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
   end
   object cxLabel6: TcxLabel
@@ -81,28 +81,29 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
   end
   object cxLabel3: TcxLabel
     Left = 11
-    Top = 60
+    Top = 118
     Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
   end
   object edPartner: TcxButtonEdit
     Left = 11
-    Top = 78
+    Top = 136
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 9
     Width = 224
   end
   object cxLabel13: TcxLabel
     Left = 11
-    Top = 105
+    Top = 163
     Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
   end
   object edRouteSorting: TcxButtonEdit
     Left = 11
-    Top = 124
+    Top = 182
     Properties.Buttons = <
       item
         Default = True
@@ -113,12 +114,12 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
   end
   object cxLabel2: TcxLabel
     Left = 253
-    Top = 106
+    Top = 164
     Caption = #1052#1072#1088#1096#1088#1091#1090
   end
   object edRoute: TcxButtonEdit
     Left = 253
-    Top = 124
+    Top = 182
     Properties.Buttons = <
       item
         Default = True
@@ -136,18 +137,52 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
   end
   object cxLabel8: TcxLabel
     Left = 253
-    Top = 60
-    Caption = #1057#1082#1083#1072#1076':'
+    Top = 118
+    Caption = #1057#1082#1083#1072#1076
   end
   object edTo: TcxButtonEdit
     Left = 253
-    Top = 78
+    Top = 136
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 16
+    Width = 180
+  end
+  object cxLabel4: TcxLabel
+    Left = 11
+    Top = 70
+    Caption = #1070#1088'. '#1083#1080#1094#1086
+  end
+  object edJuridical: TcxButtonEdit
+    Left = 11
+    Top = 88
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 18
+    Width = 224
+  end
+  object cxLabel5: TcxLabel
+    Left = 253
+    Top = 70
+    Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+  end
+  object edRetail: TcxButtonEdit
+    Left = 253
+    Top = 91
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 20
     Width = 180
   end
   object PeriodChoice: TPeriodChoice
@@ -181,6 +216,7 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
@@ -188,6 +224,7 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerId'
@@ -196,6 +233,7 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -204,6 +242,7 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsGroupId'
@@ -211,6 +250,7 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         Component = GuidesGoodsGroup
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsGroupName'
@@ -219,6 +259,7 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RouteSortingId'
@@ -226,6 +267,7 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         Component = GuidesRouteSorting
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RouteSortingName'
@@ -234,6 +276,7 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RouteId'
@@ -241,6 +284,7 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         Component = GuidesRoute
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RouteName'
@@ -249,6 +293,7 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsByDoc'
@@ -256,6 +301,7 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         Component = edByDoc
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToId'
@@ -263,6 +309,7 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToName'
@@ -271,15 +318,51 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailId'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailName'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 40
-    Top = 200
+    Top = 258
   end
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoodsGroup
     FormNameParam.Value = 'TGoodsGroupForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -290,6 +373,7 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -298,15 +382,17 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 136
-    Top = 160
+    Top = 218
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPartner
     FormNameParam.Value = 'TPartner_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPartner_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -315,6 +401,7 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         Value = ''
         Component = GuidesPartner
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -322,15 +409,17 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 144
-    Top = 64
+    Top = 122
   end
   object GuidesRouteSorting: TdsdGuides
     KeyField = 'Id'
     LookupControl = edRouteSorting
     FormNameParam.Value = 'TRouteSortingForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TRouteSortingForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -341,6 +430,7 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -349,15 +439,17 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 120
-    Top = 120
+    Top = 178
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
     FormNameParam.Value = 'TStoragePlace_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TStoragePlace_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -368,6 +460,7 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -376,15 +469,17 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 335
-    Top = 60
+    Top = 118
   end
   object GuidesRoute: TdsdGuides
     KeyField = 'Id'
     LookupControl = edRoute
     FormNameParam.Value = 'TRouteForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TRouteForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -395,6 +490,7 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -403,8 +499,63 @@ object Report_GoodsMI_OrderExternalDialogForm: TReport_GoodsMI_OrderExternalDial
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 320
-    Top = 128
+    Top = 186
+  end
+  object GuidesJuridical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 112
+    Top = 66
+  end
+  object GuidesRetail: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRetail
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 296
+    Top = 74
   end
 end
