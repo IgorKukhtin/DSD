@@ -32,6 +32,9 @@ type
     UnitGuides: TdsdGuides;
     PersonalGroupGuides: TdsdGuides;
     GuidesFiller: TGuidesFiller;
+    cxLabel7: TcxLabel;
+    ceStorageLine: TcxButtonEdit;
+    StorageLineGuides: TdsdGuides;
   private
     { Private declarations }
   public

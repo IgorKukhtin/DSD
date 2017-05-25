@@ -2,6 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar, INTEGER, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar, INTEGER, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar, INTEGER, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar, INTEGER, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SheetWorkTime(
     IN inMemberId            Integer   , -- Ключ физ. лицо
@@ -9,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SheetWorkTime(
     IN inPositionLevelId     Integer   , -- Разряд
     IN inUnitId              Integer   , -- Подразделение
     IN inPersonalGroupId     Integer   , -- Группировка Сотрудника
+    IN inStorageLineId       Integer   , -- линия произ-ва
     IN inOperDate            TDateTime , -- дата
  INOUT ioValue               TVarChar  , -- часы
  INOUT ioTypeId              Integer   , 
@@ -94,11 +97,15 @@ BEGIN
                               LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PersonalGroup
                                                                      ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
                                                                     AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
+                              LEFT OUTER JOIN MovementItemLinkObject AS MIObject_StorageLine
+                                                                     ON MIObject_StorageLine.MovementItemId = MI_SheetWorkTime.Id 
+                                                                    AND MIObject_StorageLine.DescId = zc_MILinkObject_StorageLine() 
                           WHERE MI_SheetWorkTime.MovementId = vbMovementId
                             AND MI_SheetWorkTime.ObjectId   = inMemberId
                             AND COALESCE (MIObject_Position.ObjectId, 0)      = COALESCE (inPositionId, 0)
                             AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (inPositionLevelId, 0)
                             AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inPersonalGroupId, 0)
+                            AND COALESCE (MIObject_StorageLine.ObjectId, 0)   = COALESCE (inStorageLineId, 0)
                          );
 
 
@@ -112,6 +119,7 @@ BEGIN
                                                      , inPositionId          := inPositionId      -- Должность
                                                      , inPositionLevelId     := inPositionLevelId -- Разряд
                                                      , inPersonalGroupId     := inPersonalGroupId -- Группировка Сотрудника
+                                                     , inStorageLineId       := inStorageLineId   -- линия производства
                                                      , inAmount              := vbValue           -- Количество часов факт
                                                      , inWorkTimeKindId      := ioTypeId          -- Типы рабочего времени
                                                       );
@@ -148,11 +156,15 @@ BEGIN
                         LEFT JOIN MovementItemLinkObject AS MIObject_PersonalGroup
                                                          ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
                                                         AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
+                        LEFT OUTER JOIN MovementItemLinkObject AS MIObject_StorageLine
+                                                               ON MIObject_StorageLine.MovementItemId = MI_SheetWorkTime.Id 
+                                                              AND MIObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
                        WHERE MovementLinkObject_Unit.ObjectId = inUnitId
                          AND MI_SheetWorkTime.ObjectId   = inMemberId
                          AND COALESCE (MIObject_Position.ObjectId, 0)      = COALESCE (inPositionId, 0)
                          AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (inPositionLevelId, 0)
                          AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inPersonalGroupId, 0)
+                         AND COALESCE (MIObject_StorageLine.ObjectId, 0)   = COALESCE (inStorageLineId, 0)
                        ); 
 
 
@@ -168,6 +180,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.05.17         * add StorageLine
  25.03.16         * add OutAmountHours
  07.01.14                         * Replace inPersonalId <> inMemberId
  25.11.13                         * Add inPositionLevelId

@@ -98,8 +98,8 @@ object StorageLineForm: TStorageLineForm
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 24
-    Top = 144
+    Left = 40
+    Top = 160
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <

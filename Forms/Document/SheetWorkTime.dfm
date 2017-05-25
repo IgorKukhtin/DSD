@@ -605,6 +605,11 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'StorageLineId'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'UnitId'
           Value = ''
           Component = GuidesUnit
@@ -635,6 +640,11 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         end
         item
           Name = 'oldPersonalGroupId'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'oldStorageLineId'
           Value = Null
           MultiSelectSeparator = ','
         end>
@@ -682,6 +692,13 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'StorageLineId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StorageLineId'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'UnitId'
           Value = ''
           Component = GuidesUnit
@@ -712,6 +729,11 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         end
         item
           Name = 'oldPersonalGroupId'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'oldStorageLineId'
           Value = Null
           MultiSelectSeparator = ','
         end>
@@ -759,6 +781,13 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'StorageLineId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StorageLineId'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'UnitId'
           Value = ''
           Component = GuidesUnit
@@ -798,6 +827,13 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PersonalGroupId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'oldStorageLineId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StorageLineId'
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -958,6 +994,14 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PersonalGroupId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageLineId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StorageLineId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

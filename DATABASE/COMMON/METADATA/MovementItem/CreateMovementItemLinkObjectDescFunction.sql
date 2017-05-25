@@ -254,11 +254,15 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_Buh() RETURNS Integer AS $BODY$BEGIN 
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_Buh', 'кто сформировал визу Бухгалтерия (Финиш)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Buh');
 
+CREATE OR REPLACE FUNCTION zc_MILinkObject_StorageLine() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_StorageLine'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_StorageLine', 'Линия производства' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_StorageLine');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.05.17         * zc_MILinkObject_StorageLine
  27.09.16         * zc_MILinkObject_Region
  12.07.16         *
  21.06.16         * zc_MILinkObject_StaffList

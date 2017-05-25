@@ -30,6 +30,7 @@ BEGIN
               inPositionLevelId := View_PersonalDriver.PositionLevelId , -- Разряд
               inUnitId          := inUnitId                            , -- Подразделение
               inPersonalGroupId := View_PersonalDriver.PersonalGroupId , -- Группировка Сотрудника
+              inStorageLineId   := View_PersonalDriver.StorageLineId   , -- линия произв-ва
               inOperDate        := Movement.OperDate                   , -- дата установки часов
               ioValue           := SUM (CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat))::TVarChar                    , -- часы
               ioTypeId          := zc_Enum_WorkTimeKind_Work()         , 
@@ -42,8 +43,8 @@ BEGIN
                                     ON MovementFloat_HoursAdd.MovementId =  Movement.Id
                                    AND MovementFloat_HoursAdd.DescId = zc_MovementFloat_HoursAdd()
             JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
-                                         ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
-                                        AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
+                                    ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
+                                   AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
             JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
        WHERE Movement.DescId = zc_Movement_Transport()
          AND Movement.OperDate BETWEEN vbStartDate AND vbEndDate 
@@ -54,7 +55,8 @@ BEGIN
            , View_PersonalDriver.memberid     
            , View_PersonalDriver.positionid
            , View_PersonalDriver.positionlevelid
-           , View_PersonalDriver.personalgroupid;
+           , View_PersonalDriver.personalgroupid
+           , View_PersonalDriver.StorageLineId;
 
     PERFORM                          
            gpInsertUpdate_MovementItem_SheetWorkTime(
@@ -63,6 +65,7 @@ BEGIN
               inPositionLevelId := View_PersonalDriver.PositionLevelId , -- Разряд
               inUnitId          := inUnitId                            , -- Подразделение
               inPersonalGroupId := View_PersonalDriver.PersonalGroupId , -- Группировка Сотрудника
+              inStorageLineId   := View_PersonalDriver.StorageLineId   , -- линия произв-ва
               inOperDate        := Movement.OperDate                   , -- дата установки часов
               ioValue           := SUM(CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat))::TVarChar                    , -- часы
               ioTypeId          := zc_Enum_WorkTimeKind_Work()         , 
@@ -75,8 +78,8 @@ BEGIN
                                     ON MovementFloat_HoursAdd.MovementId =  Movement.Id
                                    AND MovementFloat_HoursAdd.DescId = zc_MovementFloat_HoursAdd()
             JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
-                                         ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
-                                        AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriverMore()
+                                    ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
+                                   AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriverMore()
             JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
        WHERE Movement.DescId = zc_Movement_Transport()
          AND Movement.OperDate BETWEEN vbStartDate AND vbEndDate 
@@ -87,7 +90,8 @@ BEGIN
            , View_PersonalDriver.memberid     
            , View_PersonalDriver.positionid
            , View_PersonalDriver.positionlevelid
-           , View_PersonalDriver.personalgroupid;
+           , View_PersonalDriver.personalgroupid
+           , View_PersonalDriver.StorageLineId;
 
 
     PERFORM                          
@@ -97,6 +101,7 @@ BEGIN
               inPositionLevelId := View_PersonalDriver.PositionLevelId , -- Разряд
               inUnitId          := inUnitId                            , -- Подразделение
               inPersonalGroupId := View_PersonalDriver.PersonalGroupId , -- Группировка Сотрудника
+              inStorageLineId   := View_PersonalDriver.StorageLineId   , -- линия произв-ва
               inOperDate        := Movement.OperDate                   , -- дата установки часов
               ioValue           := SUM(CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat))::TVarChar                    , -- часы
               ioTypeId          := zc_Enum_WorkTimeKind_Work()         , 
@@ -109,8 +114,8 @@ BEGIN
                                     ON MovementFloat_HoursAdd.MovementId =  Movement.Id
                                    AND MovementFloat_HoursAdd.DescId = zc_MovementFloat_HoursAdd()
             JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
-                                         ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
-                                        AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_Personal()
+                                    ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
+                                   AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_Personal()
             JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
        WHERE Movement.DescId = zc_Movement_Transport()
          AND Movement.OperDate BETWEEN vbStartDate AND vbEndDate 
@@ -121,7 +126,8 @@ BEGIN
            , View_PersonalDriver.memberid     
            , View_PersonalDriver.positionid
            , View_PersonalDriver.positionlevelid
-           , View_PersonalDriver.personalgroupid;
+           , View_PersonalDriver.personalgroupid
+           , View_PersonalDriver.StorageLineId;
 
 END;
 $BODY$
@@ -131,6 +137,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.05.17         * add StorageLine
  25.02.14                         * Replace inPersonalId <> inMemberId
 
 */
