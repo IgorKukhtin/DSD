@@ -1537,7 +1537,9 @@ begin
   // сохранение координат при логине и запуск таймера
   tSavePathTimer(tSavePath);
 
-  DM.GetConfigurationInfo;
+  if not DM.GetConfigurationInfo then
+    exit;
+
   if (not gc_User.Local) and NeedSync then
   begin
     DM.SynchronizeWithMainDatabase;

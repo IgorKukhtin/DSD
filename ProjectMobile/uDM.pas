@@ -757,7 +757,7 @@ type
     procedure CheckUpdate;
     procedure UpdateProgram(const AResult: TModalResult);
 
-    procedure GetConfigurationInfo;
+    function GetConfigurationInfo: boolean;
     procedure SynchronizeWithMainDatabase(LoadData: boolean = true; UploadData: boolean = true);
 
     function GetInvNumber(ATableName: string): string;
@@ -3012,13 +3012,15 @@ begin
 end;
 
 { Загрузка с сервера констант и системной информации }
-procedure TDM.GetConfigurationInfo;
+function TDM.GetConfigurationInfo: boolean;
 var
   x, y : integer;
   GetStoredProc : TdsdStoredProc;
   Mapping : array of array[1..2] of integer;
   OldSyncDateIn, OldSyncDateOut: TDateTime;
 begin
+  Result := true;
+
   GetStoredProc := TdsdStoredProc.Create(nil);
   try
     GetStoredProc.StoredProcName := 'gpGetMobile_Object_Const';
@@ -3057,10 +3059,21 @@ begin
       tblObject_ConstSyncDateOut.AsDateTime := OldSyncDateOut;
 
       tblObject_Const.Post;
+
+      if tblObject_ConstStatusId_Complete.IsNull or tblObject_ConstUserLogin.IsNull or
+         tblObject_ConstMobileAPKFileName.IsNull or tblObject_ConstPaidKindId_First.IsNull or
+         tblObject_ConstPaidKindId_Second.IsNull or tblObject_ConstPriceListId_def.IsNull or
+         tblObject_ConstStatusId_UnComplete.IsNull or tblObject_ConstStatusId_Erased.IsNull or
+         tblObject_ConstMobileVersion.IsNull or tblObject_ConstPersonalId.IsNull then
+      begin
+        Result := false;
+        ShowMessage('Получена неполная системная информация. Работа не возможна.');
+      end;
     except
       on E : Exception do
       begin
-        raise Exception.Create(E.Message);
+        Result := false;
+        ShowMessage(E.Message);
       end;
     end;
   finally
