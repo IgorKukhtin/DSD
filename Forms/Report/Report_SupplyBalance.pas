@@ -68,7 +68,6 @@ type
     cxGridDBTableViewReceiptChild: TcxGridDBTableView;
     cxGridLevel2: TcxGridLevel;
     cxBottomSplitter: TcxSplitter;
-    spSelectChild: TdsdStoredProc;
   private
     { Private declarations }
   public

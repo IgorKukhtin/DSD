@@ -5,6 +5,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -167
   ExplicitWidth = 1382
   ExplicitHeight = 572
   PixelsPerInch = 96
@@ -1906,6 +1907,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
@@ -1918,7 +1920,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -1928,7 +1930,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -1938,7 +1940,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -1948,7 +1950,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_4'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -1958,7 +1960,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_5'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -1968,7 +1970,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_6'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -1978,7 +1980,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_7'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -1988,7 +1990,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_8'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -1998,7 +2000,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_9'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2008,7 +2010,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_10'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2018,7 +2020,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_11'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2028,7 +2030,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_12'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2038,7 +2040,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_13'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2048,7 +2050,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_14'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2058,7 +2060,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_15'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2068,7 +2070,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_16'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2078,7 +2080,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_17'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2088,7 +2090,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_18'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2098,7 +2100,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_19'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2108,7 +2110,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_20'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2118,7 +2120,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_21'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2128,7 +2130,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_22'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2138,7 +2140,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_23'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2148,7 +2150,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_24'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2158,7 +2160,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_25'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2168,7 +2170,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_26'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2178,7 +2180,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_27'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2188,7 +2190,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_28'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2198,7 +2200,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_29'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2208,7 +2210,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_30'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2218,7 +2220,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountIncome_31'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2228,7 +2230,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2238,7 +2240,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2248,7 +2250,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2258,7 +2260,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_4'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2268,7 +2270,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_5'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2278,7 +2280,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_6'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2288,7 +2290,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_7'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2298,7 +2300,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_8'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2308,7 +2310,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_9'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2318,7 +2320,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_10'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2328,7 +2330,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_11'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2338,7 +2340,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_12'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2348,7 +2350,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_13'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2358,7 +2360,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_14'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2368,7 +2370,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_15'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2378,7 +2380,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_16'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2388,7 +2390,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_17'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2398,7 +2400,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_18'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2408,7 +2410,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_19'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2418,7 +2420,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_20'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2428,7 +2430,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_21'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2438,7 +2440,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_22'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2448,7 +2450,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_23'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2458,7 +2460,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_24'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2468,7 +2470,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_25'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2478,7 +2480,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_26'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2488,7 +2490,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_27'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2498,7 +2500,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_28'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2508,7 +2510,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_29'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2518,7 +2520,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_30'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -2528,7 +2530,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         DataBinding.FieldName = 'CountProductionOut_31'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -3442,57 +3444,5 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
     SummaryItemList = <>
     Left = 766
     Top = 366
-  end
-  object spSelectChild: TdsdStoredProc
-    StoredProcName = 'gpReport_SupplyBalance'
-    DataSet = ChildCDS
-    DataSets = <
-      item
-        DataSet = ChildCDS
-      end>
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 42736d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDate'
-        Value = 42736d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUnitId'
-        Value = '0'
-        Component = UnitGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsGroupId'
-        Value = '0'
-        Component = GoodsGroupGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inJuridicalId'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 960
-    Top = 376
   end
 end
