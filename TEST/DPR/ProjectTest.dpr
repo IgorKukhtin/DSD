@@ -942,7 +942,9 @@ uses
   OrderIncomeSnabJournal in '..\..\Forms\Document\OrderIncomeSnabJournal.pas' {OrderIncomeSnabJournalForm: TParentForm},
   OrderIncomeSnab in '..\..\Forms\Document\OrderIncomeSnab.pas' {OrderIncomeSnabForm: TParentForm},
   MobileReturnInJournal in '..\..\Forms\Document\MobileReturnInJournal.pas' {MobileReturnInJournalForm: TParentForm},
-  OrderIncomeSnabJournal_byReport in '..\..\Forms\Document\OrderIncomeSnabJournal_byReport.pas' {OrderIncomeSnabJournal_byReportForm: TParentForm};
+  OrderIncomeSnabJournal_byReport in '..\..\Forms\Document\OrderIncomeSnabJournal_byReport.pas' {OrderIncomeSnabJournal_byReportForm: TParentForm},
+  StorageLineEdit in '..\..\Forms\Guides\StorageLineEdit.pas' {StorageLineEditForm: TParentForm},
+  StorageLine in '..\..\Forms\Guides\StorageLine.pas' {StorageLineForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

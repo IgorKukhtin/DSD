@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, DriverCertif
                PositionLevelId Integer, PositionLevelCode Integer, PositionLevelName TVarChar,
                UnitId Integer, UnitCode Integer, UnitName TVarChar,
                PersonalGroupId Integer, PersonalGroupCode Integer, PersonalGroupName TVarChar,
+               StorageLineId Integer, StorageLineCode Integer, StorageLineName TVarChar,
                PersonalServiceListId Integer, PersonalServiceListName TVarChar,
                PersonalServiceListOfficialId Integer, PersonalServiceListOfficialName TVarChar,
                InfoMoneyId Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar,
@@ -61,6 +62,10 @@ BEGIN
          , Object_Personal_View.PersonalGroupId
          , Object_Personal_View.PersonalGroupCode
          , Object_Personal_View.PersonalGroupName
+
+         , Object_Personal_View.StorageLineId
+         , Object_Personal_View.StorageLineCode
+         , Object_Personal_View.StorageLineName
 
          , Object_PersonalServiceList.Id           AS PersonalServiceListId 
          , Object_PersonalServiceList.ValueData    AS PersonalServiceListName 
@@ -166,6 +171,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.05.17         * add StorageLine
  28.11.16         *
 */
 -- тест

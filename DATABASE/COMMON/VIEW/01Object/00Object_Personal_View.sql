@@ -29,13 +29,17 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
        , ObjectLink_Personal_PersonalGroup.ChildObjectId  AS PersonalGroupId
        , Object_PersonalGroup.ObjectCode                  AS PersonalGroupCode
        , Object_PersonalGroup.ValueData                   AS PersonalGroupName
- 
+
        , ObjectDate_DateIn.ValueData   AS DateIn
        , ObjectDate_DateOut.ValueData  AS DateOut
        , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN NULL ELSE ObjectDate_DateOut.ValueData END :: TDateTime AS DateOut_user
        , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN FALSE ELSE TRUE END AS isDateOut
        , COALESCE (ObjectBoolean_Main.ValueData, FALSE)           AS isMain
        , COALESCE (ObjectBoolean_Official.ValueData, FALSE)       AS isOfficial
+
+       , Object_StorageLine.Id                            AS StorageLineId
+       , Object_StorageLine.ObjectCode                    AS StorageLineCode
+       , Object_StorageLine.ValueData                     AS StorageLineName
          
    FROM Object AS Object_Personal
        LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
@@ -66,7 +70,12 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
                             ON ObjectLink_Personal_PersonalGroup.ObjectId = Object_Personal.Id
                            AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
        LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
-           
+ 
+       LEFT JOIN ObjectLink AS ObjectLink_Personal_StorageLine
+                            ON ObjectLink_Personal_StorageLine.ObjectId = Object_Personal.Id
+                           AND ObjectLink_Personal_StorageLine.DescId = zc_ObjectLink_Personal_StorageLine()
+       LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = ObjectLink_Personal_StorageLine.ChildObjectId
+
        LEFT JOIN ObjectDate AS ObjectDate_DateIn
                             ON ObjectDate_DateIn.ObjectId = Object_Personal.Id
                            AND ObjectDate_DateIn.DescId = zc_ObjectDate_Personal_In()
@@ -82,13 +91,13 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
                               AND ObjectBoolean_Official.DescId = zc_ObjectBoolean_Member_Official()
  WHERE Object_Personal.DescId = zc_Object_Personal();
 
-
 ALTER TABLE Object_Personal_View  OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 25.05.17         * add StorageLine
  20.01.15                                        * add Branch...
  12.09.14                                        * add isOffical and isDateOut and isMain
  21.05.14                        * add Offical

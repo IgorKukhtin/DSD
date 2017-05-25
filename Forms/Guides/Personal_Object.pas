@@ -61,6 +61,7 @@ type
     clIsMain: TcxGridDBColumn;
     clDriverCertificate: TcxGridDBColumn;
     PersonalServiceListName: TcxGridDBColumn;
+    clStorageLineName: TcxGridDBColumn;
   private
     { Private declarations }
   public

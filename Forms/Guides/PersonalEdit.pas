@@ -68,6 +68,9 @@ type
     cxLabel10: TcxLabel;
     ceSheetWorkTime: TcxButtonEdit;
     SheetWorkTimeGuides: TdsdGuides;
+    cxLabel11: TcxLabel;
+    ceStorageLine: TcxButtonEdit;
+    StorageLineGuides: TdsdGuides;
   private
     { Private declarations }
   public

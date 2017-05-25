@@ -106,6 +106,14 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 150
       end
+      object clStorageLineName: TcxGridDBColumn
+        Caption = #1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
+        DataBinding.FieldName = 'StorageLineName'
+        GroupIndex = 0
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 120
+      end
       object clDateIn: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
         DataBinding.FieldName = 'DateIn'
