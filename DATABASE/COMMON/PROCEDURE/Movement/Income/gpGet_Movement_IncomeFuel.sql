@@ -353,7 +353,7 @@ $BODY$
  05.10.13                                        * add InvNumberPartner
  04.10.13                                        * add Route
  30.09.13                                        * add Object_Personal_View
- 29.09.13                                        * add lfGet_InvNumber
+ 29.09.13                                        * add lf?Get_InvNumber
  27.09.13                                        *
 */
 
