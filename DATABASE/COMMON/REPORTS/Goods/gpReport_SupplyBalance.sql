@@ -380,7 +380,7 @@ BEGIN
                                 LEFT JOIN MovementItemContainer AS MIContainer
                                                                 ON MIContainer.Containerid = tmpContainerAll.ContainerId
                                                                AND MIContainer.OperDate >= inStartDate
-                                LEFT JOIN zfCalc_DayOfWeekName (MIContainer.OperDate) AS tmpWeekDay ON 1=1   
+                                LEFT JOIN zfCalc_DayOfWeekName (MIContainer.OperDate) AS tmpWeekDay ON 1=1
                            GROUP BY CASE WHEN MIContainer.MovementDescId in (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MIContainer.ObjectExtId_Analyzer ELSE 0 END
                                   , tmpContainerAll.ContainerId, tmpContainerAll.GoodsId, tmpContainerAll.Amount
                           )
@@ -477,7 +477,7 @@ BEGIN
                                 , SUM (CASE WHEN tmpWeekDay.Number = 4 THEN tmp.CountIncome ELSE 0 END) CountIncome4
                                 , SUM (CASE WHEN tmpWeekDay.Number = 5 THEN tmp.CountIncome ELSE 0 END) CountIncome5
                                 , SUM (CASE WHEN tmpWeekDay.Number = 6 THEN tmp.CountIncome ELSE 0 END) CountIncome6
-                                , SUM (CASE WHEN tmpWeekDay.Number = 7 THEN tmp.CountIncome ELSE 0 END) CountIncome7 
+                                , SUM (CASE WHEN tmpWeekDay.Number = 7 THEN tmp.CountIncome ELSE 0 END) CountIncome7
 
                                 , SUM (CASE WHEN tmpWeekDay.Number = 1 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut1
                                 , SUM (CASE WHEN tmpWeekDay.Number = 2 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut2
@@ -485,7 +485,7 @@ BEGIN
                                 , SUM (CASE WHEN tmpWeekDay.Number = 4 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut4
                                 , SUM (CASE WHEN tmpWeekDay.Number = 5 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut5
                                 , SUM (CASE WHEN tmpWeekDay.Number = 6 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut6
-                                , SUM (CASE WHEN tmpWeekDay.Number = 7 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut7 
+                                , SUM (CASE WHEN tmpWeekDay.Number = 7 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut7
 
                                 , SUM (CASE WHEN tmp.NumDay = 1 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_1
                                 , SUM (CASE WHEN tmp.NumDay = 2 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_2
@@ -571,8 +571,8 @@ BEGIN
                                  GROUP BY tmpOnDaysAll.GoodsId
                                         , tmpOnDaysAll.OperDate
                                 ) AS tmp
-                                LEFT JOIN zfCalc_DayOfWeekName (tmp.OperDate) AS tmpWeekDay ON 1=1 
-                           GROUP BY tmp.GoodsId 
+                                LEFT JOIN zfCalc_DayOfWeekName (tmp.OperDate) AS tmpWeekDay ON 1=1
+                           GROUP BY tmp.GoodsId
                            )
 
 
