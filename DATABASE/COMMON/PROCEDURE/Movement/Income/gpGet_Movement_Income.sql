@@ -285,7 +285,7 @@ $BODY$
  07.10.13                                        * add lpCheckRight
  30.09.13                                        * add Object_Personal_View
  30.09.13                                        * del zc_MovementLinkObject_PersonalDriver
- 29.09.13                                        * add lfGet_InvNumber
+ 29.09.13                                        * add lf?Get_InvNumber
  27.09.13                                        * del zc_MovementLinkObject_Car
  04.09.13                       *              
  30.07.13                       * ToParentId Integer
