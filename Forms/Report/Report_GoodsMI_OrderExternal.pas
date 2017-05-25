@@ -87,6 +87,12 @@ type
     bbPrint_Dozakaz: TdxBarButton;
     actPrint_byType_Group: TdsdPrintAction;
     bbPrint_byType_Group: TdxBarButton;
+    cxLabel5: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
+    cxLabel6: TcxLabel;
+    edRetail: TcxButtonEdit;
+    GuidesRetail: TdsdGuides;
   private
     { Private declarations }
   public
