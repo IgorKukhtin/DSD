@@ -727,6 +727,8 @@ type
     qryGoodsFullForPriceListSaleTermin: TStringField;
     qryGoodsFullForPriceListReturnFullPrice: TStringField;
     qryGoodsFullForPriceListReturnTermin: TStringField;
+    tblObject_ConstOperDate_diff: TIntegerField;
+    tblObject_ConstReturnDayCount: TIntegerField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
@@ -3029,45 +3031,53 @@ begin
     try
       GetStoredProc.Execute(false, false, false);
 
-      tblObject_Const.First;
-      FOldLogin := tblObject_ConstUserLogin.AsString;
-      OldSyncDateIn := tblObject_ConstSyncDateIn.AsDateTime;
-      OldSyncDateOut := tblObject_ConstSyncDateOut.AsDateTime;
+      if GetStoredProc.DataSet.RecordCount > 0 then
+      begin
+        tblObject_Const.First;
+        FOldLogin := tblObject_ConstUserLogin.AsString;
+        OldSyncDateIn := tblObject_ConstSyncDateIn.AsDateTime;
+        OldSyncDateOut := tblObject_ConstSyncDateOut.AsDateTime;
 
-      while not tblObject_Const.Eof do
-        tblObject_Const.Delete;
+        while not tblObject_Const.Eof do
+          tblObject_Const.Delete;
 
-      SetLength(Mapping, 0);
-      for x := 0 to tblObject_Const.Fields.Count - 1 do
-        for y := 0 to GetStoredProc.DataSet.Fields.Count - 1 do
-          if CompareText(tblObject_Const.Fields[x].FieldName, GetStoredProc.DataSet.Fields[y].FieldName) = 0 then
-          begin
-            SetLength(Mapping, Length(Mapping) + 1);
+        SetLength(Mapping, 0);
+        for x := 0 to tblObject_Const.Fields.Count - 1 do
+          for y := 0 to GetStoredProc.DataSet.Fields.Count - 1 do
+            if CompareText(tblObject_Const.Fields[x].FieldName, GetStoredProc.DataSet.Fields[y].FieldName) = 0 then
+            begin
+              SetLength(Mapping, Length(Mapping) + 1);
 
-            Mapping[Length(Mapping) - 1][1] := x;
-            Mapping[Length(Mapping) - 1][2] := y;
+              Mapping[Length(Mapping) - 1][1] := x;
+              Mapping[Length(Mapping) - 1][2] := y;
 
-            break;
-          end;
+              break;
+            end;
 
-      tblObject_Const.Append;
+        tblObject_Const.Append;
 
-      for x := 0 to Length(Mapping) - 1 do
-        tblObject_Const.Fields[ Mapping[x][1] ].Value := GetStoredProc.DataSet.Fields[ Mapping[x][2] ].Value;
+        for x := 0 to Length(Mapping) - 1 do
+          tblObject_Const.Fields[ Mapping[x][1] ].Value := GetStoredProc.DataSet.Fields[ Mapping[x][2] ].Value;
 
-      tblObject_ConstSyncDateIn.AsDateTime := OldSyncDateIn;
-      tblObject_ConstSyncDateOut.AsDateTime := OldSyncDateOut;
+        tblObject_ConstSyncDateIn.AsDateTime := OldSyncDateIn;
+        tblObject_ConstSyncDateOut.AsDateTime := OldSyncDateOut;
 
-      tblObject_Const.Post;
+        tblObject_Const.Post;
 
-      if tblObject_ConstStatusId_Complete.IsNull or tblObject_ConstUserLogin.IsNull or
-         tblObject_ConstMobileAPKFileName.IsNull or tblObject_ConstPaidKindId_First.IsNull or
-         tblObject_ConstPaidKindId_Second.IsNull or tblObject_ConstPriceListId_def.IsNull or
-         tblObject_ConstStatusId_UnComplete.IsNull or tblObject_ConstStatusId_Erased.IsNull or
-         tblObject_ConstMobileVersion.IsNull or tblObject_ConstPersonalId.IsNull then
+        if tblObject_ConstStatusId_Complete.IsNull or tblObject_ConstUserLogin.IsNull or
+           tblObject_ConstMobileAPKFileName.IsNull or tblObject_ConstPaidKindId_First.IsNull or
+           tblObject_ConstPaidKindId_Second.IsNull or tblObject_ConstPriceListId_def.IsNull or
+           tblObject_ConstStatusId_UnComplete.IsNull or tblObject_ConstStatusId_Erased.IsNull or
+           tblObject_ConstMobileVersion.IsNull or tblObject_ConstPersonalId.IsNull then
+        begin
+          Result := false;
+          ShowMessage('Получена неполная системная информация. Работа невозможна.');
+        end;
+      end
+      else
       begin
         Result := false;
-        ShowMessage('Получена неполная системная информация. Работа не возможна.');
+        ShowMessage('Нет данных для Констант. Работа невозможна.');
       end;
     except
       on E : Exception do
@@ -3877,9 +3887,9 @@ begin
     cdsOrderExternal.Insert;
 
     cdsOrderExternalId.AsInteger := -1;
-    cdsOrderExternalOperDate.AsDateTime := Date();
+    cdsOrderExternalOperDate.AsDateTime := IncDay(Date(), tblObject_ConstOperDate_diff.AsInteger);
     cdsOrderExternalComment.AsString := '';
-    cdsOrderExternalName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', Date());
+    cdsOrderExternalName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', cdsOrderExternalOperDate.AsDateTime);
     cdsOrderExternalPrice.AsString :=  'Стоимость: 0';
     cdsOrderExternalWeight.AsString := 'Вес: 0';
     cdsOrderExternalStatus.AsString := tblObject_ConstStatusName_UnComplete.AsString;
@@ -4684,9 +4694,9 @@ begin
     cdsReturnIn.Insert;
 
     cdsReturnInId.AsInteger := -1;
-    cdsReturnInOperDate.AsDateTime := Date();
+    cdsReturnInOperDate.AsDateTime := IncDay(Date(), tblObject_ConstOperDate_diff.AsInteger);;
     cdsReturnInComment.AsString := '';
-    cdsReturnInName.AsString := 'Возврат от ' + FormatDateTime('DD.MM.YYYY', Date());
+    cdsReturnInName.AsString := 'Возврат от ' + FormatDateTime('DD.MM.YYYY', cdsReturnInOperDate.AsDateTime);
     cdsReturnInPrice.AsString :=  'Стоимость: 0';
     cdsReturnInWeight.AsString := 'Вес: 0';
     cdsReturnInStatus.AsString := tblObject_ConstStatusName_UnComplete.AsString;

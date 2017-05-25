@@ -141,6 +141,12 @@ object DM: TDM
       FieldName = 'PriceListName_def'
       Size = 255
     end
+    object tblObject_ConstOperDate_diff: TIntegerField
+      FieldName = 'OperDate_diff'
+    end
+    object tblObject_ConstReturnDayCount: TIntegerField
+      FieldName = 'ReturnDayCount'
+    end
   end
   object tblObject_Partner: TFDTable
     Connection = conMain

@@ -22,7 +22,7 @@ uses
   FMX.DateTimeCtrls, FMX.Controls3D, FMX.Layers3D, FMX.Menus, Generics.Collections,
   FMX.Gestures, System.Actions, FMX.ActnList, System.ImageList, FMX.ImgList,
   FMX.Grid.Style, FMX.Media, FMX.Surfaces, FMX.VirtualKeyboard, FMX.SearchBox, IniFiles,
-  FMX.Ani, FMX.DialogService, FMX.Utils, FMX.Styles, FMX.ComboEdit
+  FMX.Ani, FMX.DialogService, FMX.Utils, FMX.Styles, FMX.ComboEdit, DateUtils
   {$IFDEF ANDROID}
   ,FMX.Helpers.Android, Androidapi.Helpers,
   Androidapi.JNI.Location, Androidapi.JNIBridge,
@@ -390,7 +390,7 @@ type
     eMobileVersion: TEdit;
     lSyncDateOut: TLayout;
     Label32: TLabel;
-    SyncDateOut: TEdit;
+    eSyncDateOut: TEdit;
     bsStoreRealItems: TBindSourceDB;
     bsOrderExternalItems: TBindSourceDB;
     bsReturnInItems: TBindSourceDB;
@@ -544,7 +544,7 @@ type
     eNewPartnerGPSE: TEdit;
     bNewPartnerGPS: TButton;
     Label49: TLabel;
-    lPartnerKind: TLabel;
+    lOperDateOrder: TLabel;
     Label59: TLabel;
     lPartnerDebt: TLabel;
     Label61: TLabel;
@@ -723,6 +723,40 @@ type
     Label90: TLabel;
     BindSourceDB1: TBindSourceDB;
     LinkListControlToField5: TLinkListControlToField;
+    Panel51: TPanel;
+    GridPanelLayout15: TGridPanelLayout;
+    bBackup: TButton;
+    GridPanelLayout16: TGridPanelLayout;
+    Label91: TLabel;
+    Label92: TLabel;
+    bRestore: TButton;
+    GridPanelLayout17: TGridPanelLayout;
+    Label93: TLabel;
+    Label94: TLabel;
+    Panel52: TPanel;
+    pCashTotal: TPanel;
+    lTotalCash: TLabel;
+    bCashTotal: TButton;
+    tiReportTotalCash: TTabItem;
+    Panel53: TPanel;
+    bTotalCash: TButton;
+    Panel54: TPanel;
+    VertScrollBox10: TVertScrollBox;
+    Layout8: TLayout;
+    Label95: TLabel;
+    deStartTC: TDateEdit;
+    Layout9: TLayout;
+    Layout41: TLayout;
+    Label96: TLabel;
+    deEndTC: TDateEdit;
+    Layout42: TLayout;
+    Layout45: TLayout;
+    Label99: TLabel;
+    Layout48: TLayout;
+    cbPaidKindTC: TComboBox;
+    lReturnDayCount: TLayout;
+    Label97: TLabel;
+    eReturnDayCount: TEdit;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -935,6 +969,10 @@ type
     procedure Label66Click(Sender: TObject);
     procedure eCashAmountClick(Sender: TObject);
     procedure ppEnterAmountClosePopup(Sender: TObject);
+    procedure bBackupClick(Sender: TObject);
+    procedure bRestoreClick(Sender: TObject);
+    procedure bCashTotalClick(Sender: TObject);
+    procedure bTotalCashClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -1013,6 +1051,8 @@ type
     procedure ChangePaidKindReturnIn(const AResult: TModalResult);
     procedure ChangePaidKindCash(const AResult: TModalResult);
     procedure SetPartnerCoordinates(const AResult: TModalResult);
+    procedure BackupDB(const AResult: TModalResult);
+    procedure RestoreDB(const AResult: TModalResult);
 
     function GetAddress(const Latitude, Longitude: Double): string;
     function GetCoordinates(const Address: string; out Coordinates: TLocationCoord2D): Boolean;
@@ -1039,6 +1079,7 @@ type
     procedure BuildReturnInDocsList;
     procedure ChangeCashDoc;
     procedure BuildCashDocsList;
+    procedure CalculateDocCashTotal;
     procedure ShowDocuments;
     procedure ShowPriceLists;
     procedure ShowPriceListItems(FullInfo: boolean);
@@ -2304,6 +2345,48 @@ begin
   end;
 end;
 
+{ резервное копирование БД}
+procedure TfrmMain.BackupDB(const AResult: TModalResult);
+begin
+  if AResult <> mrNo then
+  begin
+    try
+      if FileExists(TPath.Combine(TPath.GetSharedDocumentsPath, DataBaseFileName)) then
+        TFile.Delete(TPath.Combine(TPath.GetSharedDocumentsPath, DataBaseFileName));
+
+      TFile.Copy(TPath.Combine(TPath.GetDocumentsPath, DataBaseFileName), TPath.Combine(TPath.GetSharedDocumentsPath, DataBaseFileName));
+
+      ShowMessage('Резервное копирование успешно выполнено');
+    except
+      TDialogService.MessageDialog('Не удалось удалить старую резервную копию. Возможно файл занят другим приложением.',
+        TMsgDlgType.mtError, [TMsgDlgBtn.mbOK], TMsgDlgBtn.mbOK, 0, nil);
+    end;
+  end;
+end;
+
+{ востановление БД из резервной копии}
+procedure TfrmMain.RestoreDB(const AResult: TModalResult);
+begin
+  if AResult <> mrNo then
+  begin
+    DM.conMain.Close;
+    try
+      try
+        TFile.Copy(TPath.Combine(TPath.GetSharedDocumentsPath, DataBaseFileName), TPath.Combine(TPath.GetDocumentsPath, DataBaseFileName), true);
+
+        ShowMessage('Востановление резервной копии успешно выполнено');
+      except
+
+        TDialogService.MessageDialog('Не удалось востановить резервную копию.',
+          TMsgDlgType.mtError, [TMsgDlgBtn.mbOK], TMsgDlgBtn.mbOK, 0, nil);
+      end;
+    finally
+      DM.conMain.Open;
+      DM.tblObject_Const.Open;
+    end;
+  end;
+end;
+
 { удаление заявки на товары }
 procedure TfrmMain.DeleteOrderExtrernal(const AResult: TModalResult);
 begin
@@ -2629,7 +2712,7 @@ begin
   begin
     FOldCashId := -1;
     eCashInvNumber.Text := '';
-    deCashDate.Date := Date();
+    deCashDate.Date := IncDay(Date(), DM.tblObject_ConstOperDate_diff.AsInteger);
     CashAmountValue := 0;
     eCashComment.Text := '';
     FCanEditDocument := true;
@@ -2843,6 +2926,19 @@ begin
   SwitchToForm(tiGoodsItems, DM.qryGoodsItems);
 end;
 
+procedure TfrmMain.bBackupClick(Sender: TObject);
+var
+  Mes: string;
+begin
+  if FileExists(TPath.Combine(TPath.GetSharedDocumentsPath, DataBaseFileName)) then
+    Mes := 'Резервная копия уже существует. Перезаписать резервную копию базы данных?'
+  else
+    Mes := 'Выполнить резервное копирование базы данных?';
+
+  TDialogService.MessageDialog(Mes,
+      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, BackupDB);
+end;
+
 // отмена выбора товаров
 procedure TfrmMain.bCancelCashClick(Sender: TObject);
 begin
@@ -3050,6 +3146,49 @@ begin
     ShowTasks(true);
 end;
 
+procedure TfrmMain.bTotalCashClick(Sender: TObject);
+var
+  TotalAmount: Currency;
+begin
+  TotalAmount := 0;
+
+  with DM.qrySelect do
+  begin
+    Close;
+
+    SQL.Text :=
+         ' SELECT '
+       + '         Movement_Cash.Amount '
+       + ' FROM  Movement_Cash '
+       + ' WHERE DATE(Movement_Cash.OperDate) BETWEEN :STARTDATE AND :ENDDATE '
+       + ' AND Movement_Cash.StatusId <> ' + DM.tblObject_ConstStatusId_Erased.AsString;
+
+    if cbPaidKindTC.ItemIndex > 0 then
+    begin
+      SQL.Text := SQL.Text
+        + ' AND Movement_Cash.PaidKindId = ' + IntToStr(FPaidKindIdList[cbPaidKindTC.ItemIndex]);
+    end;
+
+    ParamByName('STARTDATE').AsDate := deStartTC.Date;
+    ParamByName('ENDDATE').AsDate := deEndTC.Date;
+
+    Open;
+
+    First;
+    while not Eof do
+    begin
+      TotalAmount := TotalAmount + FieldByName('Amount').AsFloat;
+
+      Next;
+    end;
+
+    Close;
+  end;
+
+  TDialogService.MessageDialog('Оплата за период : ' + FormatFloat(',0.00', TotalAmount),
+        TMsgDlgType.mtInformation, [TMsgDlgBtn.mbOK], TMsgDlgBtn.mbOK, 0, nil);
+end;
+
 // вызов обновления программы
 procedure TfrmMain.bUpdateProgramClick(Sender: TObject);
 begin
@@ -3234,6 +3373,7 @@ begin
   // оплаты
   DM.LoadAllCash(deStartDoc.Date, deEndDoc.Date);
   BuildCashDocsList;
+  CalculateDocCashTotal;
 end;
 
 procedure TfrmMain.bRefreshMapScreenClick(Sender: TObject);
@@ -3414,6 +3554,16 @@ begin
   FFirstSet := false;
 end;
 
+procedure TfrmMain.bRestoreClick(Sender: TObject);
+begin
+  if FileExists(TPath.Combine(TPath.GetSharedDocumentsPath, DataBaseFileName)) then
+    TDialogService.MessageDialog('Востановить резервную копию базы данных? Текущая база данных будет потеряна!',
+      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, RestoreDB)
+  else
+    TDialogService.MessageDialog('Резервная копия не найдена',
+        TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbOK], TMsgDlgBtn.mbOK, 0, nil);
+end;
+
 // переход на форму отображение маршрутов
 procedure TfrmMain.bRouteClick(Sender: TObject);
 begin
@@ -3518,6 +3668,29 @@ begin
     imRevert.Visible := false;
     bSavePartnerPhoto.Enabled := false;
   end;
+end;
+
+procedure TfrmMain.bCashTotalClick(Sender: TObject);
+begin
+  lCaption.Text := bCashTotal.Text;
+
+  deStartTC.Date := IncDay(Date(), DM.tblObject_ConstOperDate_diff.AsInteger);
+  deEndTC.Date := IncDay(Date(), DM.tblObject_ConstOperDate_diff.AsInteger);
+
+  // заполнение списка форм оплаты
+  cbPaidKindTC.Items.Clear;
+  FPaidKindIdList.Clear;
+  AddComboItem(cbPaidKindTC, 'все');
+  FPaidKindIdList.Add(0);
+  AddComboItem(cbPaidKindTC, DM.tblObject_ConstPaidKindName_First.AsString);
+  FPaidKindIdList.Add(DM.tblObject_ConstPaidKindId_First.AsInteger);
+  AddComboItem(cbPaidKindTC, DM.tblObject_ConstPaidKindName_Second.AsString);
+  FPaidKindIdList.Add(DM.tblObject_ConstPaidKindId_Second.AsInteger);
+
+  // по умолчанию ставим Наличку
+  cbPaidKindTC.ItemIndex := 2;
+
+  SwitchToForm(tiReportTotalCash, nil);
 end;
 
 // ввод коментария к фотографии перед сохранением
@@ -4474,10 +4647,15 @@ begin
 
   lContractName.Text := DM.qryPartnerContractName.AsString;
 
+  if DM.qryPartnerisOperDateOrder.AsBoolean then
+    lOperDateOrder.Text := 'по дате заявки'
+  else
+    lOperDateOrder.Text := 'по дате отгрузки';
+
   // информация о долгах ТТ
   if DM.qryPartnerPaidKindId.AsInteger = DM.tblObject_ConstPaidKindId_First.AsInteger then // БН
   begin
-    lPartnerKind.Text := DM.tblObject_ConstPaidKindName_First.AsString;
+    lContractName.Text := DM.tblObject_ConstPaidKindName_First.AsString + ' - ' + DM.qryPartnerContractName.AsString;
 
     gbPartnerDebt.Text := 'Долги юр.лица по выбранному контракту';
     if not DM.qryPartnerDebtSumJ.IsNull then
@@ -4492,9 +4670,6 @@ begin
       lPartnerOverDay.Text := DM.qryPartnerOverDaysJ.AsString
     else
       lPartnerOverDay.Text := '-';
-//or
-//    DM.qrySelect.Open('SELECT SUM(DEBTSUM), SUM(OVERSUM), MAX(OVERDAYS) from OBJECT_JURIDICAL WHERE ID = ' + DM.qryPartnerJuridicalId.AsString + ' GROUP BY ID');
-//or
 
     DM.qrySelect.Open(
        ' SELECT '
@@ -4525,16 +4700,12 @@ begin
   else
   if DM.qryPartnerPaidKindId.AsInteger = DM.tblObject_ConstPaidKindId_Second.AsInteger then // Нал
   begin
-    lPartnerKind.Text := DM.tblObject_ConstPaidKindName_Second.AsString;
+    lContractName.Text := DM.tblObject_ConstPaidKindName_Second.AsString + ' - ' + DM.qryPartnerContractName.AsString;
 
     gbPartnerDebt.Text := 'Долги ТТ по выбранному контракту';
     lPartnerDebt.Text := FormatFloat(',0.##', DM.qryPartnerDebtSum.AsFloat);
     lPartnerOver.Text := FormatFloat(',0.##', DM.qryPartnerOverSum.AsFloat);
     lPartnerOverDay.Text := DM.qryPartnerOverDays.AsString;
-
-//or
-//    DM.qrySelect.Open('SELECT SUM(DEBTSUM), SUM(OVERSUM), MAX(OVERDAYS) from OBJECT_PARTNER WHERE ID = ' + DM.qryPartnerId.AsString + ' GROUP BY ID');
-//or
 
     DM.qrySelect.Open(
        ' SELECT  '
@@ -4555,7 +4726,7 @@ begin
   end
   else  // нет договора
   begin
-    lPartnerKind.Text := '-';
+    lContractName.Text := DM.qryPartnerContractName.AsString;
     lPartnerDebt.Text := '-';
     lPartnerOver.Text := '-';
     lPartnerOverDay.Text := '-';
@@ -4782,6 +4953,8 @@ begin
 
   ChangeStatusIcon(CurItem);
   DeleteButtonHide(CurItem);
+
+  CalculateDocCashTotal;
 end;
 
 { заполнение списка документов оплат за товары }
@@ -4834,13 +5007,32 @@ begin
   end;
 end;
 
+{ вычисление итоговой суммы оплат за товары }
+procedure TfrmMain.CalculateDocCashTotal;
+var
+  TotalAmount: Currency;
+begin
+  TotalAmount := 0;
+  DM.qryCash.First;
+
+  while not DM.qryCash.Eof do
+  begin
+    if DM.qryCashStatusId.AsInteger <> DM.tblObject_ConstStatusId_Erased.AsInteger then
+      TotalAmount := TotalAmount + DM.qryCashAmount.AsFloat;
+
+    DM.qryCash.Next;
+  end;
+
+  lTotalCash.Text := 'Итого : ' + FormatFloat(',0.00', TotalAmount);
+end;
+
 // переход на форму отображения документов
 procedure TfrmMain.ShowDocuments;
 begin
   FEditDocuments := true;
 
-  deStartDoc.Date := Date();
-  deEndDoc.Date := Date();
+  deStartDoc.Date := IncDay(Date(), DM.tblObject_ConstOperDate_diff.AsInteger);
+  deEndDoc.Date := IncDay(Date(), DM.tblObject_ConstOperDate_diff.AsInteger);
 
   bRefreshDocClick(bRefreshDoc);
 
@@ -5135,7 +5327,9 @@ begin
   else
     lCurWebService.Height := 0;
   eSyncDateIn.Text := FormatDateTime('DD.MM.YYYY hh:nn:ss', DM.tblObject_ConstSyncDateIn.AsDateTime);
-  SyncDateOut.Text := FormatDateTime('DD.MM.YYYY hh:nn:ss', DM.tblObject_ConstSyncDateOut.AsDateTime);
+  eSyncDateOut.Text := FormatDateTime('DD.MM.YYYY hh:nn:ss', DM.tblObject_ConstSyncDateOut.AsDateTime);
+
+  eReturnDayCount.Text :=  DM.tblObject_ConstReturnDayCount.AsString;
 
   SwitchToForm(tiInformation, nil);
 end;
