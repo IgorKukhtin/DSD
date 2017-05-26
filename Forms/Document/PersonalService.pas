@@ -108,6 +108,7 @@ type
     spUpdate_SetNULL: TdsdStoredProc;
     PersonalName_to: TcxGridDBColumn;
     PersonalCode_to: TcxGridDBColumn;
+    clStorageLineName: TcxGridDBColumn;
   private
     { Private declarations }
   public

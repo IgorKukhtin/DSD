@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , CountSkewer2 TFloat, WeightSkewer2 TFloat,  WeightOther TFloat
              , PartionGoodsDate TDateTime, PartionGoods TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
+             , StorageLineId Integer, StorageLineName TVarChar
              , isErased Boolean
               )
 AS
@@ -74,8 +75,11 @@ BEGIN
                     ELSE MIFloat_MovementItemId.ValueData :: TVarChar
                END :: TVarChar AS PartionGoods
 
-           , Object_GoodsKind.Id        AS GoodsKindId
-           , Object_GoodsKind.ValueData AS GoodsKindName
+           , Object_GoodsKind.Id          AS GoodsKindId
+           , Object_GoodsKind.ValueData   AS GoodsKindName
+ 
+           , Object_StorageLine.Id        AS StorageLineId
+           , Object_StorageLine.ValueData AS StorageLineName
 
            , MovementItem.isErased
 
@@ -152,6 +156,11 @@ BEGIN
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
+                                             ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
+            LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = MILinkObject_StorageLine.ObjectId
+
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
@@ -161,19 +170,19 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-                                 LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
-                                                             ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
-                                 LEFT JOIN MovementItem AS MI_Partion ON MI_Partion.Id = CASE WHEN MIFloat_MovementItemId.ValueData > 0 THEN MIFloat_MovementItemId.ValueData ELSE NULL END :: Integer
-                                 LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id       = MI_Partion.MovementId
-                                                                       AND Movement_Partion.DescId   = zc_Movement_ProductionUnion()
-                                 LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
-                                                                  ON MILO_GoodsKindComplete.MovementItemId = MI_Partion.Id
-                                                                 AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
-                                 LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
-                                 LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
-                                                             ON MIFloat_CuterCount.MovementItemId = MI_Partion.Id
-                                                            AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+            LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
+                                        ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
+                                       AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
+            LEFT JOIN MovementItem AS MI_Partion ON MI_Partion.Id = CASE WHEN MIFloat_MovementItemId.ValueData > 0 THEN MIFloat_MovementItemId.ValueData ELSE NULL END :: Integer
+            LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id       = MI_Partion.MovementId
+                                                  AND Movement_Partion.DescId   = zc_Movement_ProductionUnion()
+            LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
+                                             ON MILO_GoodsKindComplete.MovementItemId = MI_Partion.Id
+                                            AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+            LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
+            LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
+                                        ON MIFloat_CuterCount.MovementItemId = MI_Partion.Id
+                                       AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
 
 ;
 
@@ -185,6 +194,7 @@ ALTER FUNCTION gpSelect_MovementItem_WeighingProduction (Integer, Boolean, Boole
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 26.05.17         * add StorageLine
  27.06.15         * add CountPack
  11.03.14         *
 */

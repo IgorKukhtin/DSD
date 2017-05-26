@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, ParentId Integer, MemberId Integer, MemberName TVarCh
              , StaffListId Integer, StaffListCode Integer, StaffListName TVarChar
              , ModelServiceId Integer, ModelServiceName TVarChar
              , StaffListSummKindId Integer, StaffListSummKindName TVarChar
+             , StorageLineId Integer, StorageLineName TVarChar
              
              , Amount TFloat, MemberCount TFloat, DayCount TFloat, WorkTimeHoursOne TFloat, WorkTimeHours TFloat, Price TFloat
              , HoursPlan TFloat, HoursDay TFloat, PersonalCount TFloat, GrossOne TFloat
@@ -38,6 +39,7 @@ BEGIN
                            , MILinkObject_StaffList.ObjectId          AS StaffListId
                            , MILinkObject_ModelService.ObjectId       AS ModelServiceId
                            , MILinkObject_StaffListSummKind.ObjectId  AS StaffListSummKindId
+                           , MILinkObject_StorageLine.ObjectId        AS StorageLineId
                            
                            , MovementItem.isErased
                       FROM tmpIsErased
@@ -55,7 +57,10 @@ BEGIN
                                                            AND MILinkObject_ModelService.DescId = zc_MILinkObject_ModelService()
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_StaffListSummKind
                                                             ON MILinkObject_StaffListSummKind.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_StaffListSummKind.DescId = zc_MILinkObject_StaffListSummKind()                                                           
+                                                           AND MILinkObject_StaffListSummKind.DescId = zc_MILinkObject_StaffListSummKind()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
+                                                            ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
                        )
                        
        -- Результат
@@ -82,6 +87,9 @@ BEGIN
             , Object_StaffListSummKind.Id              AS StaffListSummKindId
             , Object_StaffListSummKind.ValueData       AS StaffListSummKindName
             
+            , Object_StorageLine.Id                    AS StorageLineId
+            , Object_StorageLine.ValueData             AS StorageLineName
+
             , tmpMI.Amount :: TFloat                   AS Amount
 
             , MIFloat_MemberCount.ValueData            AS MemberCount
@@ -131,11 +139,12 @@ BEGIN
             
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpMI .MemberId
             
-            LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = tmpMI .PositionLevelId
+            LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = tmpMI.PositionLevelId
             LEFT JOIN Object AS Object_StaffList ON Object_StaffList.Id = tmpMI.StaffListId
-            LEFT JOIN Object AS Object_ModelService ON Object_ModelService.Id = tmpMI .ModelServiceId
-            LEFT JOIN Object AS Object_StaffListSummKind ON Object_StaffListSummKind.Id = tmpMI .StaffListSummKindId
-  -- для штатного рпасписания
+            LEFT JOIN Object AS Object_ModelService ON Object_ModelService.Id = tmpMI.ModelServiceId
+            LEFT JOIN Object AS Object_StaffListSummKind ON Object_StaffListSummKind.Id = tmpMI.StaffListSummKindId
+            LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = tmpMI.StorageLineId
+ -- для штатного рпасписания
             LEFT JOIN ObjectLink AS ObjectLink_StaffList_Unit
                                  ON ObjectLink_StaffList_Unit.ObjectId = Object_StaffList.Id
                                 AND ObjectLink_StaffList_Unit.DescId = zc_ObjectLink_StaffList_Unit()
@@ -162,6 +171,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.05.17         * add StorageLine
  21.06.16         *
 */
 

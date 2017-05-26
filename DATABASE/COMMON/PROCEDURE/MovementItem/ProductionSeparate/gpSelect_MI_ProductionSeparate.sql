@@ -29,6 +29,9 @@ BEGIN
            , 0                                      AS GoodsKindId
            , CAST ('' AS TVarChar)                  AS GoodsKindName
 
+           , 0                                      AS StorageLineId
+           , CAST ('' AS TVarChar)                  AS StorageLineName
+
            , CAST (NULL AS TFloat)                  AS Amount
            , CAST (NULL AS TFloat)                  AS LiveWeight
            , CAST (NULL AS TFloat)                  AS HeadCount
@@ -72,6 +75,9 @@ BEGIN
            , Object_GoodsKind.Id                    AS GoodsKindId
            , Object_GoodsKind.ValueData             AS GoodsKindName
 
+           , Object_StorageLine.Id                  AS StorageLineId
+           , Object_StorageLine.ValueData           AS StorageLineName
+
            , MovementItem.Amount                    AS Amount
            , MIFloat_LiveWeight.ValueData           AS LiveWeight
            , MIFloat_HeadCount.ValueData            AS HeadCount
@@ -104,6 +110,11 @@ BEGIN
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
+                                             ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
+            LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = MILinkObject_StorageLine.ObjectId
+
        ORDER BY 2--MovementItem.Id
             ;
     RETURN NEXT Cursor1;
@@ -120,6 +131,9 @@ BEGIN
 
            , Object_GoodsKind.Id                         AS GoodsKindId
            , Object_GoodsKind.ValueData                  AS GoodsKindName
+
+           , Object_StorageLine.Id                       AS StorageLineId
+           , Object_StorageLine.ValueData                AS StorageLineName
 
            , MovementItem.Amount			 AS Amount
            , MIFloat_LiveWeight.ValueData                AS LiveWeight
@@ -153,6 +167,11 @@ BEGIN
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
+                                             ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
+            LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = MILinkObject_StorageLine.ObjectId
+
        ORDER BY MovementItem.Id
             ;
     RETURN NEXT Cursor1;
@@ -172,6 +191,9 @@ BEGIN
 
            , Object_GoodsKind.Id                         AS GoodsKindId
            , Object_GoodsKind.ValueData                  AS GoodsKindName
+
+           , Object_StorageLine.Id                       AS StorageLineId
+           , Object_StorageLine.ValueData                AS StorageLineName
 
            , MovementItem.Amount			 AS Amount
            , MIFloat_LiveWeight.ValueData                AS LiveWeight
@@ -205,6 +227,11 @@ BEGIN
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
+                                             ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
+            LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = MILinkObject_StorageLine.ObjectId
+
        ORDER BY MovementItem.Id
             ;
     RETURN NEXT Cursor2;
@@ -217,6 +244,7 @@ ALTER FUNCTION gpSelect_MI_ProductionSeparate (Integer, Boolean, Boolean, TVarCh
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 26.05.17         * add StorageLine
  11.03.17         *
  31.03.15         * 
  02.06.14                                                       *

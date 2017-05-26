@@ -141,6 +141,7 @@ type
     actUpdateDocument: TdsdInsertUpdateAction;
     MovementDescGuides: TdsdGuides;
     edMovementDescName: TcxButtonEdit;
+    clStorageLineName: TcxGridDBColumn;
   private
   public
   end;
