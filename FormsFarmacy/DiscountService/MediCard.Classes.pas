@@ -41,7 +41,6 @@ type
     function RequestIntf: TGUID; virtual; abstract;
     function ResponseIntf: TGUID; virtual; abstract;
   public
-    function GenerateCasual: string;
     function Post: Integer;
     property Request: IMCData read GetRequest;
     property Response: IMCData read GetResponse;
@@ -205,16 +204,6 @@ begin
 end;
 
 { TMCSession }
-
-function TMCSession.GenerateCasual: string;
-var
-  GUID: TGUID;
-begin
-  CreateGUID(GUID);
-  Result := StringReplace(LowerCase(GUIDToString(GUID)), '-', '', [rfReplaceAll, rfIgnoreCase]);
-  Result := StringReplace(Result, '{', '', [rfReplaceAll, rfIgnoreCase]);
-  Result := StringReplace(Result, '}', '', [rfReplaceAll, rfIgnoreCase]);
-end;
 
 function TMCSession.GetRequest: IMCData;
 begin

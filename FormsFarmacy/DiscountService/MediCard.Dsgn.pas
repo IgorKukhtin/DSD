@@ -8,11 +8,26 @@ uses
   MediCard.Intf;
 
 type
+  TMCCasualCache = class(TInterfacedObject, IMCCasualCache)
+  private
+    FCasualList: TObjectList;
+  public
+    procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
+    function GenerateCasual: string;
+    function Find(AMorionCode: Integer): string;
+    procedure Delete(AMorionCode: Integer);
+    procedure Save(AMorionCode: Integer; ACasual: string);
+    procedure Clear;
+  end;
+
   TMCDesigner = class(TInterfacedObject, IMCDesigner)
   private
     FURL: string;
     FClasses: TClassList;
+    FCasualCache: IMCCasualCache;
     function GetClasses: TClassList;
+    function GetCasualCache: IMCCasualCache;
 
     function GetURL: string;
     procedure SetURL(const Value: string);
@@ -31,9 +46,23 @@ type
 
     property URL: string read GetURL write SetURL;
     property Classes: TClassList read GetClasses;
+    property CasualCache: IMCCasualCache read GetCasualCache;
   end;
 
 implementation
+
+type
+  TMCCasualItem = class
+  private
+    FMorionCode: Integer;
+    FCasual: string;
+    function GetMorionCode: Integer;
+    function GetCasual: string;
+  public
+    constructor Create(AMorionCode: Integer; ACasual: string);
+    property MorionCode: Integer read GetMorionCode;
+    property Casual: string read GetCasual;
+  end;
 
 { TMCDesigner }
 
@@ -42,6 +71,7 @@ begin
   inherited AfterConstruction;
   FURL := '';
   FClasses := TClassList.Create;
+  FCasualCache := nil;
 end;
 
 procedure TMCDesigner.BeforeDestruction;
@@ -78,6 +108,14 @@ begin
 
       Result := nil;
     end;
+end;
+
+function TMCDesigner.GetCasualCache: IMCCasualCache;
+begin
+  if FCasualCache = nil then
+    TMCCasualCache.Create.GetInterface(IMCCasualCache, FCasualCache);
+
+  Result := FCasualCache;
 end;
 
 function TMCDesigner.GetClasses: TClassList;
@@ -189,6 +227,98 @@ end;
 procedure TMCDesigner.SetURL(const Value: string);
 begin
   FURL := Value;
+end;
+
+{ TMCCasualCache }
+
+procedure TMCCasualCache.AfterConstruction;
+begin
+  inherited AfterConstruction;
+  FCasualList := TObjectList.Create;
+end;
+
+procedure TMCCasualCache.BeforeDestruction;
+begin
+  FCasualList.Free;
+  inherited BeforeDestruction;
+end;
+
+procedure TMCCasualCache.Clear;
+begin
+  FCasualList.Clear;
+end;
+
+procedure TMCCasualCache.Delete(AMorionCode: Integer);
+var
+  I, Res: Integer;
+begin
+  Res := -1;
+
+  for I := 0 to Pred(FCasualList.Count) do
+    if (FCasualList[I] as TMCCasualItem).MorionCode = AMorionCode then
+    begin
+      Res := I;
+      Break;
+    end;
+
+  if Res <> -1 then
+    FCasualList.Delete(Res);
+end;
+
+function TMCCasualCache.Find(AMorionCode: Integer): string;
+var
+  I: Integer;
+  CasualItem: TMCCasualItem;
+begin
+  Result := '';
+
+  for I := 0 to Pred(FCasualList.Count) do
+  begin
+    CasualItem := FCasualList[I] as TMCCasualItem;
+    if CasualItem.MorionCode = AMorionCode then
+    begin
+      Result := CasualItem.Casual;
+      Break;
+    end;
+  end;
+end;
+
+function TMCCasualCache.GenerateCasual: string;
+var
+  GUID: TGUID;
+begin
+  CreateGUID(GUID);
+  Result := StringReplace(LowerCase(GUIDToString(GUID)), '-', '', [rfReplaceAll, rfIgnoreCase]);
+  Result := StringReplace(Result, '{', '', [rfReplaceAll, rfIgnoreCase]);
+  Result := StringReplace(Result, '}', '', [rfReplaceAll, rfIgnoreCase]);
+end;
+
+procedure TMCCasualCache.Save(AMorionCode: Integer; ACasual: string);
+begin
+  if (AMorionCode = 0) or (Trim(ACasual) = '') then
+    raise EMCException.CreateFmt('Invalid data (MorionCode: %d, Casual: "%s")', [AMorionCode, ACasual]);
+
+  Delete(AMorionCode);
+  FCasualList.Add(TMCCasualItem.Create(AMorionCode, ACasual));
+end;
+
+{ TMCCasualItem }
+
+constructor TMCCasualItem.Create(AMorionCode: Integer; ACasual: string);
+begin
+  inherited Create;
+  FMorionCode := AMorionCode;
+  FCasual := ACasual;
+end;
+
+function TMCCasualItem.GetCasual: string;
+begin
+  Result := FCasual;
+end;
+
+function TMCCasualItem.GetMorionCode: Integer;
+begin
+  Result := FMorionCode;
 end;
 
 initialization
