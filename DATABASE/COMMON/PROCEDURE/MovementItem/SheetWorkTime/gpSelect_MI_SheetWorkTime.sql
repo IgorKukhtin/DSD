@@ -36,6 +36,7 @@ BEGIN
                                                , COALESCE(MI_SheetWorkTime.ObjectId, 0) AS MemberId
                                                , COALESCE(MIObject_Position.ObjectId, 0) AS PositionId
                                                , COALESCE(MIObject_PositionLevel.ObjectId, 0) AS PositionLevelId
+                                               , COALESCE(MIObject_StorageLine.ObjectId, 0)   AS StorageLineId
                                                , COALESCE(MIObject_PersonalGroup.ObjectId, 0) AS PersonalGroupId
                                                , MIObject_WorkTimeKind.ObjectId
                                                , ObjectString_WorkTimeKind_ShortName.ValueData AS ShortName
@@ -53,6 +54,9 @@ BEGIN
                                                LEFT JOIN MovementItemLinkObject AS MIObject_PositionLevel
                                                                                 ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id 
                                                                                AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel() 
+                                               LEFT JOIN MovementItemLinkObject AS MIObject_StorageLine
+                                                                                ON MIObject_StorageLine.MovementItemId = MI_SheetWorkTime.Id 
+                                                                               AND MIObject_StorageLine.DescId = zc_MILinkObject_StorageLine() 
                                                LEFT JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
                                                                                 ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id 
                                                                                AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind() 
@@ -100,6 +104,8 @@ BEGIN
                , Object_PositionLevel.ValueData  AS PositionLevelName
                , Object_PersonalGroup.Id         AS PersonalGroupId
                , Object_PersonalGroup.ValueData  AS PersonalGroupName
+               , Object_StorageLine.Id           AS StorageLineId
+               , Object_StorageLine.ValueData    AS StorageLineName
                , CASE WHEN tmp.isErased = 0 THEN TRUE ELSE FALSE END AS isErased
                , tmp.Amount                      AS AmountHours'
                || vbFieldNameText ||
@@ -109,6 +115,7 @@ BEGIN
                                                , COALESCE (Movement_Data.PositionId, Object_Data.PositionId)           -- AS PositionId
                                                , COALESCE (Movement_Data.PositionLevelId, Object_Data.PositionLevelId) -- AS PositionLevelId
                                                , COALESCE (Movement_Data.PersonalGroupId, Object_Data.PersonalGroupId) -- AS PersonalGroupId
+                                               , COALESCE (Movement_Data.StorageLineId, Object_Data.StorageLineId) -- AS PositionLevelId
                                                 ] :: Integer[]
                                          , COALESCE (Movement_Data.OperDate, Object_Data.OperDate) AS OperDate
                                          , ARRAY[zfCalc_ViewWorkHour (COALESCE(Movement_Data.Amount, 0), Movement_Data.ShortName) :: VarChar
@@ -120,7 +127,8 @@ BEGIN
                                                  COALESCE(MemberId, 0) AS MemberId, 
                                                  COALESCE(ObjectLink_Personal_Position.ChildObjectId, 0) AS PositionId, 
                                                  COALESCE(ObjectLink_Personal_PositionLevel.ChildObjectId, 0) AS PositionLevelId, 
-                                                 COALESCE(ObjectLink_Personal_PersonalGroup.ChildObjectId, 0)  AS PersonalGroupId  
+                                                 COALESCE(ObjectLink_Personal_PersonalGroup.ChildObjectId, 0)  AS PersonalGroupId,  
+                                                 COALESCE(Object_Personal_View.StorageLineId, 0)              AS StorageLineId
                                             FROM tmpOperDate, Object_Personal_View 
                                                  LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
                                                                       ON ObjectLink_Personal_Position.ObjectId = Object_Personal_View.PersonalId
@@ -142,6 +150,7 @@ BEGIN
                                           AND Object_Data.PositionId = Movement_Data.PositionId
                                           AND Object_Data.PositionLevelId = Movement_Data.PositionLevelId
                                           AND Object_Data.PersonalGroupId = Movement_Data.PersonalGroupId
+                                          AND Object_Data.StorageLineId = Movement_Data.StorageLineId
                                   order by 1,2''
                                 , ''SELECT OperDate FROM tmpOperDate order by 1
                                   '') AS CT (' || vbCrossString || ')
@@ -150,14 +159,16 @@ BEGIN
          LEFT JOIN Object AS Object_Position ON Object_Position.Id = D.Key[2]
          LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = D.Key[3]
          LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = D.Key[4]
-         LEFT JOIN (SELECT tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.isErased , Sum (tmpMI.Amount) AS Amount
+         LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = D.Key[5]
+         LEFT JOIN (SELECT tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId, tmpMI.isErased , Sum (tmpMI.Amount) AS Amount
                     FROM tmpMI
                     WHERE tmpMI.isErased = 1 OR ' || inisErased :: TVarChar || ' = TRUE
-                    GROUP BY tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.isErased
+                    GROUP BY tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.isErased, tmpMI.StorageLineId
                    ) AS tmp ON tmp.MemberId = D.Key[1]
                            AND tmp.PositionId = D.Key[2]
                            AND tmp.PositionLevelId = D.Key[3]
                            AND tmp.PersonalGroupId = D.Key[4]
+                           AND tmp.StorageLineId = D.Key[5]
         ';
 
 
@@ -173,6 +184,7 @@ ALTER FUNCTION gpSelect_MovementItem_SheetWorkTime (TDateTime, Integer, Boolean,
 /*   
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 25.05.17         * StorageLineId
  25.03.16         * AmountHours
  20.01.16         * 
  07.01.14                         * Replace inPersonalId <> inMemberId

@@ -3,12 +3,14 @@
 DROP FUNCTION IF EXISTS gpUpdate_Object_Personal_Property (Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_Personal_Property (Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_Personal_Property (Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Personal_Property (Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Personal_Property(
     IN inId                  Integer   , -- ключ объекта <Сотрудники>
     IN inPositionId          Integer   , -- ссылка на Должность
     IN inUnitId              Integer   , -- ссылка на Подразделение
     IN inPersonalServiceListOfficialId Integer   , -- Ведомость начисления(БН)
+    IN inStorageLineId                 Integer   , -- ссылка на линию производства
     IN inIsMain              Boolean   , -- Основное место работы
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -31,6 +33,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_Unit(), inId, inUnitId);
    -- сохранили связь с <Ведомость начисления(БН)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceListOfficial(), inId, inPersonalServiceListOfficialId); 
+   -- сохранили связь с <линия производства>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_StorageLine(), inId, inStorageLineId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
@@ -38,11 +42,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpUpdate_Object_Personal_Property (Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpUpdate_Object_Personal_Property (Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.
+ 25.05.17         * add inStorageLineId
  26.08.15         * add inPersonalServiceListOfficialId
  15.09.14                                                       *
  12.09.14                                                       *

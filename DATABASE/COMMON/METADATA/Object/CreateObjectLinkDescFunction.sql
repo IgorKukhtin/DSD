@@ -555,6 +555,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Personal_SheetWorkTime() RETURNS Intege
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Personal_SheetWorkTime', 'Связь Сотрудники с Режим работы (Шаблон табеля р.вр.)', zc_Object_Personal(), zc_Object_SheetWorkTime() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Personal_SheetWorkTime');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Personal_StorageLine() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Personal_StorageLine'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Personal_StorageLine', 'Связь Сотрудники с линией производства', zc_Object_Personal(), zc_Object_StorageLine() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Personal_StorageLine');
 
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_AssetGroup_Parent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_AssetGroup_Parent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -1416,6 +1419,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ReportCollation_Buh() RETURNS Integer A
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ReportCollation_Buh', 'Пользователь (сдали в бухгалтерию)', zc_Object_ReportCollation(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportCollation_Buh');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_StorageLine_Unit() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StorageLine_Unit'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_StorageLine_Unit', 'Подразделение', zc_Object_StorageLine(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StorageLine_Unit');
 
 --!!! АПТЕКА
 

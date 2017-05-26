@@ -1,23 +1,23 @@
 inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
   ActiveControl = ceMember
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/ '#1080#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
-  ClientHeight = 219
+  ClientHeight = 247
   ClientWidth = 358
   ExplicitWidth = 364
-  ExplicitHeight = 244
+  ExplicitHeight = 275
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 66
-    Top = 176
+    Top = 213
     ExplicitLeft = 66
-    ExplicitTop = 176
+    ExplicitTop = 213
   end
   inherited bbCancel: TcxButton
     Left = 210
-    Top = 176
+    Top = 213
     ExplicitLeft = 210
-    ExplicitTop = 176
+    ExplicitTop = 213
   end
   object ceMember: TcxButtonEdit [2]
     Left = 11
@@ -29,11 +29,11 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
       end>
     Properties.ReadOnly = True
     TabOrder = 2
-    Width = 158
+    Width = 338
   end
   object cePosition: TcxButtonEdit [3]
     Left = 182
-    Top = 31
+    Top = 81
     Properties.Buttons = <
       item
         Default = True
@@ -57,7 +57,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
   end
   object ceUnit: TcxButtonEdit [5]
     Left = 182
-    Top = 81
+    Top = 131
     Properties.Buttons = <
       item
         Default = True
@@ -82,7 +82,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
   end
   object ceOperDate: TcxDateEdit [7]
     Left = 182
-    Top = 131
+    Top = 181
     EditValue = 42452d
     Properties.DisplayFormat = 'mmmm yyyy'
     Properties.ReadOnly = True
@@ -96,7 +96,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
   end
   object cxLabel2: TcxLabel [9]
     Left = 182
-    Top = 8
+    Top = 58
     Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
   end
   object cxLabel3: TcxLabel [10]
@@ -106,7 +106,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
   end
   object cxLabel4: TcxLabel [11]
     Left = 182
-    Top = 58
+    Top = 108
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object cxLabel5: TcxLabel [12]
@@ -116,17 +116,37 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
   end
   object cxLabel6: TcxLabel [13]
     Left = 184
-    Top = 109
+    Top = 159
     Caption = #1044#1072#1090#1072
   end
+  object cxLabel7: TcxLabel [14]
+    Left = 11
+    Top = 158
+    Caption = #1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
+  end
+  object ceStorageLine: TcxButtonEdit [15]
+    Left = 11
+    Top = 181
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 15
+    Width = 158
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Top = 168
+    Left = 315
+    Top = 160
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Top = 168
+    Left = 32
+    Top = 208
   end
   inherited ActionList: TActionList
-    Top = 167
+    Left = 39
+    Top = 95
     inherited actRefresh: TdsdDataSetRefresh
       Caption = ''
     end
@@ -137,49 +157,71 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Name = 'Id'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MemberId'
         Value = ''
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PositionId'
         Value = ''
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PositionLevelId'
         Value = ''
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalGroupId'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StorageLineId'
+        Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 'NULL'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'oldMemberId'
         Value = ''
+        MultiSelectSeparator = ','
       end
       item
         Name = 'oldPositionId'
         Value = ''
+        MultiSelectSeparator = ','
       end
       item
         Name = 'oldPositionLevelId'
         Value = ''
+        MultiSelectSeparator = ','
       end
       item
         Name = 'oldPersonalGroupId'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'oldStorageLineId'
+        Value = Null
+        MultiSelectSeparator = ','
       end>
-    Top = 136
+    Left = 192
+    Top = 8
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_SheetWorkTimeGroup'
@@ -190,6 +232,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = MemberGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPositionId'
@@ -197,6 +240,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = PositionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPositionLevelId'
@@ -204,6 +248,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = PositionLevelGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -211,6 +256,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalGroupId'
@@ -218,6 +264,15 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = PersonalGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageLineId'
+        Value = Null
+        Component = StorageLineGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOldMemberId'
@@ -225,6 +280,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = FormParams
         ComponentItem = 'oldMemberId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOldPositionId'
@@ -232,6 +288,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = FormParams
         ComponentItem = 'oldPositionId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOldPositionLevelId'
@@ -239,6 +296,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = FormParams
         ComponentItem = 'oldPositionLevelId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOldPersonalGroupId'
@@ -246,6 +304,15 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = FormParams
         ComponentItem = 'oldPersonalGroupId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inoldStorageLineId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'oldStorageLineId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -253,6 +320,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = ceOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 152
   end
@@ -265,6 +333,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = FormParams
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inmemberid'
@@ -272,6 +341,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = FormParams
         ComponentItem = 'MemberId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inpositionid'
@@ -279,6 +349,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = FormParams
         ComponentItem = 'PositionId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inpositionlevelid'
@@ -286,6 +357,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = FormParams
         ComponentItem = 'PositionLevelId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalGroupId'
@@ -293,6 +365,15 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = FormParams
         ComponentItem = 'PersonalGroupId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageLineId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'StorageLineId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inoperdate'
@@ -301,12 +382,14 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         ComponentItem = 'OperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'unitid'
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'unitname'
@@ -314,12 +397,14 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'memberid'
         Value = ''
         Component = MemberGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'membername'
@@ -327,12 +412,14 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = MemberGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'positionid'
         Value = ''
         Component = PositionGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'positionname'
@@ -340,12 +427,14 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = PositionGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'positionlevelid'
         Value = ''
         Component = PositionLevelGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'positionlevelname'
@@ -353,18 +442,21 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = PositionLevelGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'operdate'
         Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalGroupId'
         Value = ''
         Component = PersonalGroupGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalGroupName'
@@ -372,14 +464,32 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = PersonalGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StorageLineId'
+        Value = Null
+        Component = StorageLineGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StorageLineName'
+        Value = Null
+        Component = StorageLineGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Top = 152
+    Left = 208
+    Top = 104
   end
   object MemberGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceMember
     FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMember_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -388,6 +498,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Value = ''
         Component = MemberGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -395,6 +506,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = MemberGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 104
   end
@@ -403,6 +515,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
     LookupControl = cePosition
     FormNameParam.Value = 'TPositionForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPositionForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -411,6 +524,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Value = ''
         Component = PositionGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -418,6 +532,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = PositionGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 272
   end
@@ -426,6 +541,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
     LookupControl = cePositionLevel
     FormNameParam.Value = 'TPositionLevelForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPositionLevelForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -434,6 +550,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Value = ''
         Component = PositionLevelGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -441,6 +558,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = PositionLevelGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 104
     Top = 56
@@ -450,6 +568,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
     LookupControl = ceUnit
     FormNameParam.Value = 'TUnit_SheetWorkTimeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_SheetWorkTimeForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -458,6 +577,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -465,6 +585,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 264
     Top = 64
@@ -474,6 +595,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
     LookupControl = cepersonalgroup
     FormNameParam.Value = 'TPersonalGroupForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonalGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -482,6 +604,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Value = ''
         Component = PersonalGroupGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -489,14 +612,16 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Component = PersonalGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 80
-    Top = 152
+    Left = 104
+    Top = 112
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = ''
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'MemberId'
+    IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
         Guides = MemberGuides
@@ -507,5 +632,35 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
     ActionItemList = <>
     Left = 160
     Top = 152
+  end
+  object StorageLineGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceStorageLine
+    FormNameParam.Value = 'TStorageLineForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TStorageLineForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = StorageLineGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = StorageLineGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 63
+    Top = 163
   end
 end

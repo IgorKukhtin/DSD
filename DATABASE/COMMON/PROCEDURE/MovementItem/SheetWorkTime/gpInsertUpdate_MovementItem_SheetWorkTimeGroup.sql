@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTimeGroup (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTimeGroup (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTimeGroup (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SheetWorkTimeGroup(
     IN inMemberId            Integer   , -- Ключ физ. лицо
@@ -9,10 +10,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SheetWorkTimeGroup(
     IN inPositionLevelId     Integer   , -- Разряд
     IN inUnitId              Integer   , -- Подразделение
     IN inPersonalGroupId     Integer   , -- Группировка Сотрудника
+    IN inStorageLineId       Integer   , -- линия произ-ва
     IN inOldMemberId         Integer   , -- Ключ физ. лицо
     IN inOldPositionId       Integer   , -- Должность
     IN inOldPositionLevelId  Integer   , -- Разряд
     IN inOldPersonalGroupId  Integer   , -- Группировка Сотрудника
+    IN inOldStorageLineId    Integer   , -- линия произ-ва
     IN inOperDate            TDateTime , -- дата установки часов
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -61,10 +64,15 @@ BEGIN
                                              ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
                                             AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
 
+            LEFT OUTER JOIN MovementItemLinkObject AS MIObject_StorageLine
+                                                   ON MIObject_StorageLine.MovementItemId = MI_SheetWorkTime.Id 
+                                                  AND MIObject_StorageLine.DescId = zc_MILinkObject_StorageLine() 
+
        WHERE MI_SheetWorkTime.ObjectId = inMemberId
          AND COALESCE (MIObject_Position.ObjectId, 0)      = COALESCE (inPositionId, 0)
          AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (inPositionLevelId, 0)
          AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inPersonalGroupId, 0)
+         AND COALESCE (MIObject_StorageLine.ObjectId, 0)   = COALESCE (inStorageLineId, 0)
        ;
 
     -- проверка
@@ -95,17 +103,21 @@ BEGIN
                               LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PersonalGroup
                                                                      ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
                                                                     AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup()
+                              LEFT OUTER JOIN MovementItemLinkObject AS MIObject_StorageLine
+                                                                     ON MIObject_StorageLine.MovementItemId = MI_SheetWorkTime.Id 
+                                                                    AND MIObject_StorageLine.DescId = zc_MILinkObject_StorageLine() 
                          WHERE Movement.OperDate >= vbStartDate AND Movement.OperDate < vbEndDate
                            AND Movement.DescId = zc_Movement_SheetWorkTime()
                            AND COALESCE (MIObject_Position.ObjectId, 0)      = COALESCE (inOldPositionId, 0)
                            AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (inOldPositionLevelId, 0)
                            AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inOldPersonalGroupId, 0)
+                           AND COALESCE (MIObject_StorageLine.ObjectId, 0)   = COALESCE (inStorageLineId, 0)
                         ;
 
     IF inOldMemberId = 0 OR NOT EXISTS (SELECT 1 FROM _tmpMI)
     THEN
        -- Это просто добавление нового документа
-       PERFORM gpInsertUpdate_MovementItem_SheetWorkTime (inMemberId, inPositionId, inPositionLevelId, inUnitId, inPersonalGroupId, inOperDate, '0', NULL, inSession); -- zc_Enum_WorkTimeKind_Work()
+       PERFORM gpInsertUpdate_MovementItem_SheetWorkTime (inMemberId, inPositionId, inPositionLevelId, inUnitId, inPersonalGroupId, inStorageLineId, inOperDate, '0', NULL, inSession); -- zc_Enum_WorkTimeKind_Work()
     ELSE
        -- Изменение ВСЕХ документов
 
@@ -118,6 +130,8 @@ BEGIN
              , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Position(), MovementItemId, inPositionId)
                -- сохранили связь с <Разряд>
              , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PositionLevel(), MovementItemId, inPositionLevelId)
+               -- сохранили связь с <Линия пр-ва>
+             , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_StorageLine(), MovementItemId, inStorageLineId)
         FROM _tmpMI;     
 
         -- сохранили протокол
@@ -134,6 +148,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.05.17         * add StorageLine
  10.01.14                        *
 
 */

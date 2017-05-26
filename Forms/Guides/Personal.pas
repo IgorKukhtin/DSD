@@ -88,6 +88,8 @@ type
     CardSecond: TcxGridDBColumn;
     BankName: TcxGridDBColumn;
     BankSecondName: TcxGridDBColumn;
+    clStorageLineName: TcxGridDBColumn;
+    actStorageLine: TOpenChoiceForm;
   private
     { Private declarations }
   public

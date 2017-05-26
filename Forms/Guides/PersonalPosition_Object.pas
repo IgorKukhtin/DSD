@@ -54,6 +54,7 @@ type
     FormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    clStorageLineName: TcxGridDBColumn;
   private
     { Private declarations }
   public

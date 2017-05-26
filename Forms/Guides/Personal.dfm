@@ -233,6 +233,21 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 120
       end
+      object clStorageLineName: TcxGridDBColumn
+        Caption = #1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
+        DataBinding.FieldName = 'StorageLineName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actStorageLine
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 90
+      end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -862,6 +877,33 @@ object PersonalForm: TPersonalForm
         end>
       isShowModal = True
     end
+    object actStorageLine: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TStorageLineForm'
+      FormName = 'TStorageLineForm'
+      FormNameParam.Value = 'TStorageLineForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StorageLineId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StorageLineName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actPositionChoice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1072,6 +1114,14 @@ object PersonalForm: TPersonalForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'PersonalServiceListOfficialId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageLineId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'StorageLineId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

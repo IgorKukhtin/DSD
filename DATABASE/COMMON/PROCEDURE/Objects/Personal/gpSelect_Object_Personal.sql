@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, DriverCertif
              , PositionLevelId Integer, PositionLevelCode Integer, PositionLevelName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar, BranchCode Integer, BranchName TVarChar
              , PersonalGroupId Integer, PersonalGroupCode Integer, PersonalGroupName TVarChar
+             , StorageLineId Integer, StorageLineCode Integer, StorageLineName TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , PersonalServiceListOfficialId Integer, PersonalServiceListOfficialName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
@@ -82,6 +83,10 @@ BEGIN
          , Object_Personal_View.PersonalGroupId
          , Object_Personal_View.PersonalGroupCode
          , Object_Personal_View.PersonalGroupName
+
+         , Object_Personal_View.StorageLineId
+         , Object_Personal_View.StorageLineCode
+         , Object_Personal_View.StorageLineName
 
          , Object_PersonalServiceList.Id           AS PersonalServiceListId
          , Object_PersonalServiceList.ValueData    AS PersonalServiceListName
@@ -193,35 +198,38 @@ BEGIN
          , CAST ('' as TVarChar) AS CardSecond
          , CAST ('' as TVarChar) AS BankName
          , CAST ('' as TVarChar) AS BankSecondName
-         , 0 AS PositionId
-         , 0 AS PositionCode
+         , 0                     AS PositionId
+         , 0                     AS PositionCode
          , CAST ('' as TVarChar) AS PositionName
-         , 0 AS PositionLevelId
-         , 0 AS PositionLevelCode
+         , 0                     AS PositionLevelId
+         , 0                     AS PositionLevelCode
          , CAST ('' as TVarChar) AS PositionLevelName
-         , 0 AS UnitId
-         , 0 AS UnitCode
+         , 0                     AS UnitId
+         , 0                     AS UnitCode
          , CAST ('' as TVarChar) AS UnitName
-         , 0 AS BranchCode
+         , 0                     AS BranchCode
          , CAST ('' as TVarChar) AS BranchName
-         , 0 AS PersonalGroupId
-         , 0 AS PersonalGroupCode
+         , 0                     AS PersonalGroupId
+         , 0                     AS PersonalGroupCode
          , CAST ('' as TVarChar) AS PersonalGroupName
-         , 0 AS PersonalServiceListId
+         , 0                     AS StorageLineId
+         , 0                     AS StorageLineCode
+         , CAST ('' as TVarChar) AS StorageLineName
+         , 0                     AS PersonalServiceListId
          , CAST ('' as TVarChar) AS PersonalServiceListName
-         , 0 AS PersonalServiceListOfficialId
+         , 0                     AS PersonalServiceListOfficialId
          , CAST ('' as TVarChar) AS PersonalServiceListOfficialName
-         , 0 AS InfoMoneyId
+         , 0                     AS InfoMoneyId
          , CAST ('' as TVarChar) AS InfoMoneyName
          , CAST ('' as TVarChar) AS InfoMoneyName_all
-         , 0 AS SheetWorkTimeId
+         , 0                     AS SheetWorkTimeId
          , CAST ('' as TVarChar)    AS SheetWorkTimeName
          , CAST (NULL as TDateTime) AS DateIn
          , CAST (NULL as TDateTime) AS DateOut
-         , FALSE AS isDateOut
-         , FALSE AS isMain
-         , FALSE AS isOfficial
-         , FALSE AS isErased
+         , FALSE                    AS isDateOut
+         , FALSE                    AS isMain
+         , FALSE                    AS isOfficial
+         , FALSE                    AS isErased
     ;
 
 END;

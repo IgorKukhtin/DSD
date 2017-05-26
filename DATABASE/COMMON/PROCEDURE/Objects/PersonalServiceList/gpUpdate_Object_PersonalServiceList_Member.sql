@@ -46,4 +46,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_PersonalServiceList(ioId:=null, inCode:=null, inName:='Торговая сеть 1', inSession:='2')
+-- SELECT * FROM gpUpdate_Object_PersonalServiceList_Member(ioId:=null, inCode:=null, inName:='Торговая сеть 1', inSession:='2')

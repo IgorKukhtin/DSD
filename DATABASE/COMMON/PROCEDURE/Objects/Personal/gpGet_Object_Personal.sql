@@ -15,6 +15,7 @@ RETURNS TABLE (MemberId Integer, MemberCode Integer, MemberName TVarChar,
                PersonalServiceListId Integer, PersonalServiceListName TVarChar,
                PersonalServiceListOfficialId Integer, PersonalServiceListOfficialName TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
+               StorageLineId Integer, StorageLineName TVarChar,
                DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean) AS
 $BODY$
 BEGIN
@@ -49,6 +50,9 @@ BEGIN
 
          , Object_SheetWorkTime.Id           AS SheetWorkTimeId 
          , Object_SheetWorkTime.ValueData    AS SheetWorkTimeName
+
+         , Object_Personal_View.StorageLineId
+         , Object_Personal_View.StorageLineName
 
          , Object_Personal_View.DateIn
          -- , Object_Personal_View.DateOut
@@ -105,6 +109,9 @@ BEGIN
            , CAST (0 as Integer)   AS SheetWorkTimeId 
            , CAST ('' as TVarChar) AS SheetWorkTimeName
 
+           , CAST (0 as Integer)   AS StorageLineId
+           , CAST ('' as TVarChar) AS StorageLineName
+
            , CURRENT_DATE :: TDateTime AS DateIn
            , CURRENT_DATE :: TDateTime AS DateOut
            , FALSE AS isDateOut
@@ -139,6 +146,9 @@ BEGIN
 
          , Object_SheetWorkTime.Id           AS SheetWorkTimeId 
          , Object_SheetWorkTime.ValueData    AS SheetWorkTimeName
+
+         , Object_Personal_View.StorageLineId
+         , Object_Personal_View.StorageLineName
 
          , Object_Personal_View.DateIn
          -- , Object_Personal_View.DateOut
@@ -176,6 +186,7 @@ ALTER FUNCTION gpGet_Object_Personal (Integer, Integer, TVarChar) OWNER TO postg
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 25.05.17         * add StorageLine
  16.11.16         * add SheetWorkTime
  07.05.15         * add ObjectLink_Personal_PersonalServiceList
  15.09.14                                                        *
