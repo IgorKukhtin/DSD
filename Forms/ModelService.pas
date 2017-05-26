@@ -120,6 +120,8 @@ type
     bbGroupFromChoice: TdxBarButton;
     GoodsGroupToChoiceForm: TOpenChoiceForm;
     bbGoodsGroupToChoice: TdxBarButton;
+    ToStorageLineChoiceForm: TOpenChoiceForm;
+    FromStorageLineChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

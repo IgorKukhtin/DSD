@@ -15,7 +15,11 @@ RETURNS TABLE (Id Integer
              , FromGoodsKindCompleteId Integer, FromGoodsKindCompleteName TVarChar                
              , ToGoodsKindCompleteId Integer, ToGoodsKindCompleteName TVarChar  
 
-             , ModelServiceItemMasterId Integer, ModelServiceItemMasterName TVarChar                
+             , ModelServiceItemMasterId Integer, ModelServiceItemMasterName TVarChar 
+
+             , FromStorageLineId Integer, FromStorageLineName TVarChar                
+             , ToStorageLineId Integer, ToStorageLineName TVarChar 
+
              , isErased boolean
              ) AS
 $BODY$
@@ -50,6 +54,11 @@ BEGIN
 
          , Object_ModelServiceItemMaster.Id         AS ModelServiceItemMasterId
          , Object_ModelServiceItemMaster.ValueData  AS ModelServiceItemMasterName
+
+         , Object_FromStorageLine.Id                AS FromStorageLineId
+         , Object_FromStorageLine.ValueData         AS FromStorageLineName
+         , Object_ToStorageLine.Id                  AS ToStorageLineId
+         , Object_ToStorageLine.ValueData           AS ToStorageLineName
 
          , Object_ModelServiceItemChild.isErased AS isErased
          
@@ -89,6 +98,16 @@ BEGIN
                               AND ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.DescId = zc_ObjectLink_ModelServiceItemChild_ModelServiceItemMaster()
           LEFT JOIN Object AS Object_ModelServiceItemMaster ON Object_ModelServiceItemMaster.Id = ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_FromStorageLine
+                               ON ObjectLink_ModelServiceItemChild_FromStorageLine.ObjectId = Object_ModelServiceItemChild.Id
+                              AND ObjectLink_ModelServiceItemChild_FromStorageLine.DescId = zc_ObjectLink_ModelServiceItemChild_FromStorageLine()
+          LEFT JOIN Object AS Object_FromStorageLine ON Object_FromStorageLine.Id = ObjectLink_ModelServiceItemChild_FromStorageLine.ChildObjectId
+ 
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_ToStorageLine
+                               ON ObjectLink_ModelServiceItemChild_ToStorageLine.ObjectId = Object_ModelServiceItemChild.Id
+                              AND ObjectLink_ModelServiceItemChild_ToStorageLine.DescId = zc_ObjectLink_ModelServiceItemChild_ToStorageLine()
+          LEFT JOIN Object AS Object_ToStorageLine ON Object_ToStorageLine.Id = ObjectLink_ModelServiceItemChild_ToStorageLine.ChildObjectId
+
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ModelServiceItemChild.Id 
                                 AND ObjectString_Comment.DescId = zc_ObjectString_ModelServiceItemChild_Comment()
@@ -102,6 +121,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 26.05.17         * add StorageLine
  27.12.16         *
  20.10.13         * 
 */

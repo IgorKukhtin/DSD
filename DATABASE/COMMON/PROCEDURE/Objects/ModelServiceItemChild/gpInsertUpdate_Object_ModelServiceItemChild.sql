@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ModelServiceItemChild(Integer, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ModelServiceItemChild(Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ModelServiceItemChild(Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ModelServiceItemChild(
  INOUT ioId                       Integer   , -- ключ объекта <Подчиненные элементы Модели начисления>
@@ -13,6 +14,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ModelServiceItemChild(
     IN inFromGoodsKindCompleteId  Integer   , -- Вид товара(От кого, готовая продукция)
     IN inToGoodsKindCompleteId    Integer   , -- Вид товара(Кому, готовая продукция)	
     IN inModelServiceItemMasterId Integer   , -- главный элемент
+    IN inFromStorageLineId        Integer   , -- линия пр-ва (От кого)
+    IN inToStorageLineId          Integer   , -- линия пр-ва (Кому)
     IN inSession                  TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -53,7 +56,10 @@ BEGIN
       -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ModelServiceItemChild_ModelServiceItemMaster(), ioId, inModelServiceItemMasterId);
 
-
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ModelServiceItemChild_FromStorageLine(), ioId, inFromStorageLineId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ModelServiceItemChild_ToStorageLine(), ioId, inToStorageLineId);
 
    -- сохранили протокол 
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -68,6 +74,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+26.05.17         * add StorageLine
 27.12.16         *
 20.10.13         * 
 
