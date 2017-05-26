@@ -235,7 +235,7 @@ begin
     MCDesigner.URL := cURL;
     MCDesigner.CreateObject(IMCSessionDiscount).GetInterface(IMCSession, Session);
 
-    CasualId := Session.GenerateCasual;
+    CasualId := MCDesigner.CasualCache.GenerateCasual;
 
     with Session.Request.Params do
     begin
@@ -256,11 +256,13 @@ begin
       sResp.WriteString(XML);
       sResp.SaveToFile(ExtractFilePath(Application.ExeName) + 'response.xml');
 
+      MCDesigner.CasualCache.Save(134965, CasualId);
+
       MCDesigner.CreateObject(IMCSessionSale).GetInterface(IMCSession, Session);
 
       with Session.Request.Params do
       begin
-        ParamByName('id_casual').AsString := CasualId;
+        ParamByName('id_casual').AsString := MCDesigner.CasualCache.Find(134965);
         ParamByName('inside_code').AsInteger := 679;;
         ParamByName('supplier').AsInteger := 45643;
         ParamByName('id_alter').AsString := '5678';
