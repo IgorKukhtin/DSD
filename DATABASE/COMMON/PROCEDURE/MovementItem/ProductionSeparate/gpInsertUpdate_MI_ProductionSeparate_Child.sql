@@ -51,4 +51,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MI_ProductionSeparate_Child (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inParentId:= NULL, inHeadCount:= 1, inComment:= '', inSession:= '2')
+-- select * from gpInsertUpdate_MI_ProductionSeparate_Child(ioId := 71593051 , inMovementId := 5264082 , inParentId := 0 , inGoodsId := 4261 , inGoodsKindId := 0 , inStorageLineId := 0 , inAmount := 157.6 , inLiveWeight := 0 , inHeadCount := 0 ,  inSession := '5');

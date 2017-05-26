@@ -47,4 +47,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MI_ProductionSeparate_Master (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inSession:= '2')
+--select * from gpInsertUpdate_MI_ProductionSeparate_Master(ioId := 71587375 , inMovementId := 5264082 , inGoodsId := 5225 , inGoodsKindId := 8331 , inStorageLineId := 0 , inAmount := 0.2 , inLiveWeight := 0 , inHeadCount := 0 ,  inSession := '5');
