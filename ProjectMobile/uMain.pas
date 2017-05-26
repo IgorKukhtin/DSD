@@ -721,7 +721,7 @@ type
     Button55: TButton;
     Button56: TButton;
     Label90: TLabel;
-    BindSourceDB1: TBindSourceDB;
+    dsGoodsFullForPrice: TBindSourceDB;
     LinkListControlToField5: TLinkListControlToField;
     Panel51: TPanel;
     GridPanelLayout15: TGridPanelLayout;

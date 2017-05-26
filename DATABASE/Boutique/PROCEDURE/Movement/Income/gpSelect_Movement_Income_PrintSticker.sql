@@ -28,7 +28,6 @@ BEGIN
                            , MovementItem.PartionId  AS PartionId
                            , MovementItem.Amount
                            , COALESCE (MIFloat_OperPriceList.ValueData, 0) AS OperPriceList
-                           , MovementItem.isErased
                       FROM MovementItem
                            LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                        ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
@@ -60,7 +59,7 @@ BEGIN
            , tmpMI.OperPriceList  :: TFloat AS OperPriceList
 
            , (SUBSTR ((Object_PartionGoods.PeriodYear :: Integer) :: TVarChar, 3, 1)
-           || CASE WHEN Object_Period.ObjectCode = 1 THEN 'O' ELSE 'L' END
+           || CASE WHEN Object_Period.ObjectCode = 1 THEN 'L' ELSE 'Z' END
            || SUBSTR ((Object_PartionGoods.PeriodYear :: Integer) :: TVarChar, 4, 1)
              ) AS PeriodName
 
