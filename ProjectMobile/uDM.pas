@@ -2498,6 +2498,9 @@ begin
   if not conMain.Connected then
     Exit(False);
 
+  if tblObject_Const.Active then
+    tblObject_Const.Close;
+
   if not CheckStructure then
   begin
     conMain.Connected := False;
