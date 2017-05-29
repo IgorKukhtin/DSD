@@ -1091,7 +1091,7 @@ object ModelServiceForm: TModelServiceForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
     end
     object FromStorageLineChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -1118,7 +1118,7 @@ object ModelServiceForm: TModelServiceForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
     end
     object ToStorageLineChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -1145,7 +1145,7 @@ object ModelServiceForm: TModelServiceForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
     end
     object ToGoodsKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -1172,7 +1172,7 @@ object ModelServiceForm: TModelServiceForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
     end
     object FromGoodsKindCompleteChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -1199,7 +1199,7 @@ object ModelServiceForm: TModelServiceForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
     end
     object ToGoodsKindCompleteChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -1226,7 +1226,7 @@ object ModelServiceForm: TModelServiceForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
     end
     object GoodsFromChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -1253,7 +1253,7 @@ object ModelServiceForm: TModelServiceForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
     end
     object GoodsGroupToChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -1336,7 +1336,7 @@ object ModelServiceForm: TModelServiceForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
     end
     object MovementDescChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
