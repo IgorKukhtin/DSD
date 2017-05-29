@@ -52,12 +52,12 @@ type
     ceCurrencyValue_EUR: TcxCurrencyEdit;
     RefreshDispatcher: TRefreshDispatcher;
     dsdDataSetRefreshStart: TdsdDataSetRefresh;
-    cxLabel5: TcxLabel;
-    cxLabel6: TcxLabel;
-    cxLabel7: TcxLabel;
-    cxLabel8: TcxLabel;
-    cxLabel9: TcxLabel;
     spGet_Total: TdsdStoredProc;
+    cbisGRN: TcxCheckBox;
+    cbisUSD: TcxCheckBox;
+    cbisEUR: TcxCheckBox;
+    cbisCARD: TcxCheckBox;
+    cbisDiscount: TcxCheckBox;
   private
     { Private declarations }
   public

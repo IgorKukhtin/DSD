@@ -65,46 +65,46 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
     Width = 104
   end
   object cxLabel1: TcxLabel
-    Left = 17
-    Top = 218
+    Left = 34
+    Top = 213
     Caption = #1048#1090#1086#1075#1086', '#1075#1088#1085':'
   end
   object ceAmount: TcxCurrencyEdit
-    Left = 83
-    Top = 217
+    Left = 34
+    Top = 236
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 85
+    Width = 100
   end
   object cxLabel3: TcxLabel
     Left = 174
-    Top = 218
+    Top = 213
     Caption = #1054#1089#1090#1072#1090#1086#1082', '#1075#1088#1085':'
   end
   object ceAmountRemains: TcxCurrencyEdit
-    Left = 249
-    Top = 217
+    Left = 174
+    Top = 236
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 85
+    Width = 100
   end
   object cxLabel4: TcxLabel
-    Left = 185
-    Top = 253
+    Left = 316
+    Top = 213
     Caption = #1057#1076#1072#1095#1072', '#1075#1088#1085':'
   end
   object ceAmountChange: TcxCurrencyEdit
-    Left = 249
-    Top = 252
+    Left = 316
+    Top = 236
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
     TabOrder = 11
-    Width = 85
+    Width = 100
   end
   object ceAmountUSD: TcxCurrencyEdit
     Left = 173
@@ -151,34 +151,49 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
     TabOrder = 17
     Width = 89
   end
-  object cxLabel5: TcxLabel
-    Left = 34
-    Top = 11
+  object cbisGRN: TcxCheckBox
+    Left = 17
+    Top = 8
     Caption = #1054#1087#1083#1072#1090#1072' - '#1075#1088#1085
+    Properties.ReadOnly = False
+    TabOrder = 18
+    Width = 104
   end
-  object cxLabel6: TcxLabel
-    Left = 34
-    Top = 51
+  object cbisUSD: TcxCheckBox
+    Left = 17
+    Top = 50
     Caption = #1054#1087#1083#1072#1090#1072' - $'
+    Properties.ReadOnly = False
+    TabOrder = 19
+    Width = 104
   end
-  object cxLabel7: TcxLabel
-    Left = 34
-    Top = 91
+  object cbisEUR: TcxCheckBox
+    Left = 17
+    Top = 90
     Caption = #1054#1087#1083#1072#1090#1072' - EUR'
+    Properties.ReadOnly = False
+    TabOrder = 20
+    Width = 104
   end
-  object cxLabel8: TcxLabel
-    Left = 34
-    Top = 131
+  object cbisCARD: TcxCheckBox
+    Left = 17
+    Top = 130
     Caption = #1054#1087#1083#1072#1090#1072' - '#1075#1088#1085' ('#1082#1072#1088#1090#1086#1095#1082#1072')'
+    Properties.ReadOnly = False
+    TabOrder = 21
+    Width = 147
   end
-  object cxLabel9: TcxLabel
-    Left = 32
-    Top = 171
+  object cbisDiscount: TcxCheckBox
+    Left = 17
+    Top = 170
     Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1087#1088#1080' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1080
+    Properties.ReadOnly = False
+    TabOrder = 22
+    Width = 156
   end
   object ActionList: TActionList
     Left = 16
-    Top = 240
+    Top = 288
     object dsdDataSetRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>

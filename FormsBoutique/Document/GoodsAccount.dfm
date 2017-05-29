@@ -1101,14 +1101,6 @@ object GoodsAccountForm: TGoodsAccountForm
         end
         item
           Visible = True
-          ItemName = 'bbAddMask'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbErased'
         end
         item
