@@ -58,6 +58,16 @@ type
     cbisEUR: TcxCheckBox;
     cbisCARD: TcxCheckBox;
     cbisDiscount: TcxCheckBox;
+    spGet_isGRN: TdsdStoredProc;
+    spGet_isUSD: TdsdStoredProc;
+    spGet_isEUR: TdsdStoredProc;
+    spGet_isCard: TdsdStoredProc;
+    spGet_isDiscount: TdsdStoredProc;
+    actRefreshDiscount: TdsdDataSetRefresh;
+    actRefreshCard: TdsdDataSetRefresh;
+    actRefreshEUR: TdsdDataSetRefresh;
+    actRefreshUSD: TdsdDataSetRefresh;
+    actRefreshGRN: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

@@ -67,7 +67,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
   object cxLabel1: TcxLabel
     Left = 31
     Top = 181
-    Caption = #1048#1090#1086#1075#1086', '#1075#1088#1085':'
+    Caption = #1050' '#1074#1086#1079#1074#1088#1072#1090#1091', '#1075#1088#1085':'
   end
   object ceAmount: TcxCurrencyEdit
     Left = 31
@@ -161,7 +161,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
   object cbisGRN: TcxCheckBox
     Left = 27
     Top = 10
-    Caption = #1054#1087#1083#1072#1090#1072' - '#1075#1088#1085
+    Action = actRefreshGRN
     Properties.ReadOnly = False
     TabOrder = 19
     Width = 104
@@ -169,7 +169,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
   object cbisUSD: TcxCheckBox
     Left = 27
     Top = 50
-    Caption = #1054#1087#1083#1072#1090#1072' - $'
+    Action = actRefreshUSD
     Properties.ReadOnly = False
     TabOrder = 20
     Width = 104
@@ -177,7 +177,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
   object cbisEUR: TcxCheckBox
     Left = 25
     Top = 90
-    Caption = #1054#1087#1083#1072#1090#1072' - EUR'
+    Action = actRefreshEUR
     Properties.ReadOnly = False
     TabOrder = 21
     Width = 104
@@ -185,7 +185,7 @@ object ReturnInItemEditForm: TReturnInItemEditForm
   object cbisCARD: TcxCheckBox
     Left = 25
     Top = 130
-    Caption = #1054#1087#1083#1072#1090#1072' - '#1075#1088#1085' ('#1082#1072#1088#1090#1086#1095#1082#1072')'
+    Action = actRefreshCard
     Properties.ReadOnly = False
     TabOrder = 22
     Width = 147
@@ -249,6 +249,58 @@ object ReturnInItemEditForm: TReturnInItemEditForm
     object dsdFormClose: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
+    end
+    object actRefreshCard: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_isCard
+      StoredProcList = <
+        item
+          StoredProc = spGet_isCard
+        end>
+      Caption = #1054#1087#1083#1072#1090#1072' - '#1075#1088#1085' ('#1082#1072#1088#1090#1086#1095#1082#1072')'
+      Hint = #1054#1087#1083#1072#1090#1072' - '#1075#1088#1085' ('#1082#1072#1088#1090#1086#1095#1082#1072')'
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshEUR: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_isEUR
+      StoredProcList = <
+        item
+          StoredProc = spGet_isEUR
+        end>
+      Caption = #1054#1087#1083#1072#1090#1072' - EUR'
+      Hint = #1054#1087#1083#1072#1090#1072' - EUR'
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshUSD: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_isUSD
+      StoredProcList = <
+        item
+          StoredProc = spGet_isUSD
+        end>
+      Caption = #1054#1087#1083#1072#1090#1072' - $'
+      Hint = #1054#1087#1083#1072#1090#1072' - $'
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshGRN: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_isGRN
+      StoredProcList = <
+        item
+          StoredProc = spGet_isGRN
+        end>
+      Caption = #1054#1087#1083#1072#1090#1072' - '#1075#1088#1085
+      Hint = #1054#1087#1083#1072#1090#1072' - '#1075#1088#1085
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -453,6 +505,34 @@ object ReturnInItemEditForm: TReturnInItemEditForm
         Component = cbisPayTotal
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isGRN'
+        Value = Null
+        Component = cbisGRN
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isUSD'
+        Value = Null
+        Component = cbisUSD
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isEUR'
+        Value = Null
+        Component = cbisEUR
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isCARD'
+        Value = Null
+        Component = cbisCARD
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 368
@@ -534,66 +614,6 @@ object ReturnInItemEditForm: TReturnInItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioisGRN'
-        Value = Null
-        Component = cbisGRN
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioisUSD'
-        Value = Null
-        Component = cbisUSD
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioisEUR'
-        Value = Null
-        Component = cbisEUR
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioisCARD'
-        Value = Null
-        Component = cbisCARD
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioisGRN'
-        Value = Null
-        Component = cbisGRN
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioisUSD'
-        Value = Null
-        Component = cbisUSD
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioisEUR'
-        Value = Null
-        Component = cbisEUR
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioisCARD'
-        Value = Null
-        Component = cbisCARD
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inCurrencyValueUSD'
         Value = 0.000000000000000000
         Component = ceCurrencyValue_USD
@@ -607,6 +627,13 @@ object ReturnInItemEditForm: TReturnInItemEditForm
         Component = ceCurrencyValue_EUR
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = 0.000000000000000000
+        Component = ceAmount
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
@@ -642,13 +669,6 @@ object ReturnInItemEditForm: TReturnInItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Amount'
-        Value = 0.000000000000000000
-        Component = ceAmount
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'AmountRemains'
         Value = 0.000000000000000000
         Component = ceAmountRemains
@@ -665,5 +685,381 @@ object ReturnInItemEditForm: TReturnInItemEditForm
     PackSize = 1
     Left = 368
     Top = 251
+  end
+  object spGet_isGRN: TdsdStoredProc
+    StoredProcName = 'gpGet_MI_Sale_Child_isGRN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inisGRN'
+        Value = 'False'
+        Component = cbisGRN
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValueUSD'
+        Value = 0.000000000000000000
+        Component = ceCurrencyValue_USD
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValueEUR'
+        Value = 0.000000000000000000
+        Component = ceCurrencyValue_EUR
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = 0.000000000000000000
+        Component = ceAmount
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountUSD'
+        Value = 0.000000000000000000
+        Component = ceAmountUSD
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountEUR'
+        Value = 0.000000000000000000
+        Component = ceAmountEUR
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountCard'
+        Value = 0.000000000000000000
+        Component = ceAmountCARD
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountDiscount'
+        Value = 0.000000000000000000
+        Component = ceAmountDiscount
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountRemains'
+        Value = 0.000000000000000000
+        Component = ceAmountRemains
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountChange'
+        Value = 0.000000000000000000
+        Component = ceAmountChange
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountGRN'
+        Value = 0.000000000000000000
+        Component = ceAmountGRN
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 72
+    Top = 8
+  end
+  object spGet_isUSD: TdsdStoredProc
+    StoredProcName = 'gpGet_MI_Sale_Child_isUSD'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inisUSD'
+        Value = 'False'
+        Component = cbisUSD
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValueUSD'
+        Value = 0.000000000000000000
+        Component = ceCurrencyValue_USD
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValueEUR'
+        Value = 0.000000000000000000
+        Component = ceCurrencyValue_EUR
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = 0.000000000000000000
+        Component = ceAmount
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountGRN'
+        Value = 0.000000000000000000
+        Component = ceAmountGRN
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountEUR'
+        Value = 0.000000000000000000
+        Component = ceAmountEUR
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountCard'
+        Value = 0.000000000000000000
+        Component = ceAmountCARD
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountDiscount'
+        Value = 0.000000000000000000
+        Component = ceAmountDiscount
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountRemains'
+        Value = 0.000000000000000000
+        Component = ceAmountRemains
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountChange'
+        Value = 0.000000000000000000
+        Component = ceAmountChange
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountUSD'
+        Value = 0.000000000000000000
+        Component = ceAmountUSD
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 48
+    Top = 48
+  end
+  object spGet_isEUR: TdsdStoredProc
+    StoredProcName = 'gpGet_MI_Sale_Child_isEUR'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inisEUR'
+        Value = 'False'
+        Component = cbisEUR
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValueUSD'
+        Value = 0.000000000000000000
+        Component = ceCurrencyValue_USD
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValueEUR'
+        Value = 0.000000000000000000
+        Component = ceCurrencyValue_EUR
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = 0.000000000000000000
+        Component = ceAmount
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountGRN'
+        Value = 0.000000000000000000
+        Component = ceAmountGRN
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountUSD'
+        Value = 0.000000000000000000
+        Component = ceAmountUSD
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountCard'
+        Value = 0.000000000000000000
+        Component = ceAmountCARD
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountDiscount'
+        Value = 0.000000000000000000
+        Component = ceAmountDiscount
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountRemains'
+        Value = 0.000000000000000000
+        Component = ceAmountRemains
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountChange'
+        Value = 0.000000000000000000
+        Component = ceAmountChange
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountEUR'
+        Value = 0.000000000000000000
+        Component = ceAmountEUR
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 112
+    Top = 80
+  end
+  object spGet_isCard: TdsdStoredProc
+    StoredProcName = 'gpGet_MI_Sale_Child_isCard'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inisCARD'
+        Value = 'False'
+        Component = cbisCARD
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValueUSD'
+        Value = 0.000000000000000000
+        Component = ceCurrencyValue_USD
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValueEUR'
+        Value = 0.000000000000000000
+        Component = ceCurrencyValue_EUR
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = 0.000000000000000000
+        Component = ceAmount
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountGRN'
+        Value = 0.000000000000000000
+        Component = ceAmountGRN
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountUSD'
+        Value = 0.000000000000000000
+        Component = ceAmountUSD
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountEUR'
+        Value = 0.000000000000000000
+        Component = ceAmountEUR
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountDiscount'
+        Value = 0.000000000000000000
+        Component = ceAmountDiscount
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountRemains'
+        Value = 0.000000000000000000
+        Component = ceAmountRemains
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountChange'
+        Value = 0.000000000000000000
+        Component = ceAmountChange
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountCARD'
+        Value = 0.000000000000000000
+        Component = ceAmountCARD
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 88
+    Top = 116
   end
 end

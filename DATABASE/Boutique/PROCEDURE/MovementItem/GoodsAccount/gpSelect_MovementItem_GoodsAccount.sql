@@ -245,13 +245,13 @@ BEGIN
                            , tmpMI_Sale.InvNumber                                    AS InvNumber_Sale
                            , COALESCE (tmpMI_Master.Amount,0)                        AS Amount
                            , COALESCE (tmpMI_Sale.Amount,0)                          AS Amount_Sale
-                           , COALESCE (tmpMI_Sale.OperPrice,0)     AS OperPrice
-                           , COALESCE (tmpMI_Sale.CountForPrice,1) AS CountForPrice 
-                           , COALESCE (tmpMI_Sale.OperPriceList,0) AS OperPriceList
-                           , COALESCE (tmpMI_Sale.AmountSumm,0)          AS AmountSumm
-                           , COALESCE (tmpMI_Sale.AmountPriceListSumm,0) AS AmountPriceListSumm
-                           , COALESCE (tmpMI_Sale.CurrencyValue,1) AS CurrencyValue
-                           , COALESCE (tmpMI_Sale.ParValue,0)      AS ParValue
+                           , COALESCE (tmpMI_Sale.OperPrice,0)                AS OperPrice
+                           , COALESCE (tmpMI_Sale.CountForPrice,1)            AS CountForPrice 
+                           , COALESCE (tmpMI_Sale.OperPriceList,0)            AS OperPriceList
+                           , COALESCE (tmpMI_Sale.AmountSumm,0)               AS AmountSumm
+                           , COALESCE (tmpMI_Sale.AmountPriceListSumm,0)      AS AmountPriceListSumm
+                           , COALESCE (tmpMI_Sale.CurrencyValue,1)            AS CurrencyValue
+                           , COALESCE (tmpMI_Sale.ParValue,0)                 AS ParValue
                            , COALESCE (tmpMI_Master.SummChangePercent, 0)     AS SummChangePercent
                            , COALESCE (tmpMI_Sale.TotalSummPay,0)             AS TotalSummPay
                            , COALESCE (tmpMI_Sale.TotalChangePercent,0)       AS TotalChangePercent
@@ -314,7 +314,7 @@ BEGIN
            , tmpMI.ParValue             ::TFloat
            , tmpMI.TotalPay_Sale        ::TFloat AS TotalPay_Sale
            , tmpMI.TotalPay_Return      ::TFloat AS TotalPay_Return
-           , tmpMI.SummDebt             ::TFloat
+           , (tmpMI.SummDebt * (CASE WHEN Movement_Sale.DescId = zc_Movement_Sale() THEN 1 ELSE -1 END))  ::TFloat AS SummDebt
            , tmpMI.TotalChangePercent   ::TFloat
            , tmpMI.TotalSummPay         ::TFloat
 
@@ -327,8 +327,8 @@ BEGIN
            , tmpMI.SummChangePercent        ::TFloat
 
            , tmpMI.PartionMI_Id
-           , COALESCE (MI_Sale.Id, tmpMI.SaleMI_Id) AS SaleMI_Id
-           , Movement_Sale.Id               AS MovementId_Sale
+           , COALESCE (MI_Sale.Id, tmpMI.SaleMI_Id)                    AS SaleMI_Id
+           , Movement_Sale.Id                                          AS MovementId_Sale
            , COALESCE (Movement_Sale.InvNumber, tmpMI.InvNumber_Sale)  AS InvNumber_Sale_Full
            , COALESCE (Movement_Sale.OperDate, tmpMI.OperDate_Sale)    AS OperDate_Sale
            , MovementDesc.ItemName AS DescName 
@@ -441,13 +441,14 @@ BEGIN
            , COALESCE (MIFloat_ParValue.ValueData, 0)        ::TFloat AS ParValue
            , CASE WHEN Movement_Sale.DescId = zc_Movement_Sale() THEN COALESCE (MIFloat_TotalPay.ValueData, 0) ELSE 0 END        ::TFloat AS TotalPay_Sale
            , CASE WHEN Movement_Sale.DescId = zc_Movement_Sale() THEN COALESCE (MIFloat_TotalPayReturn.ValueData, 0) ELSE COALESCE (MIFloat_TotalPay.ValueData, 0) END  ::TFloat AS TotalPay_Return
-           , CAST ((CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0
+           , CAST (((CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0
                               THEN CAST (COALESCE (MI_Sale.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
                          ELSE CAST ( COALESCE (MI_Sale.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2))
                     END) * COALESCE (MIFloat_CurrencyValue.ValueData, 1)
                     - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
                     - COALESCE (MIFloat_TotalPay.ValueData, 0)
-                    - COALESCE (MIFloat_TotalReturn.ValueData, 0)
+                    - COALESCE (MIFloat_TotalReturn.ValueData, 0))
+                * (CASE WHEN Movement_Sale.DescId = zc_Movement_Sale() THEN 1 ELSE -1 END)
                AS TFloat) AS SummDebt         
            , COALESCE (MIFloat_TotalChangePercent.ValueData, 0) ::TFloat AS TotalChangePercent
 

@@ -36,6 +36,7 @@ $BODY$
    DECLARE vbCurrencyId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbClientId Integer;
+   DECLARE vbTotalPay_Sale TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReturnIn());
@@ -86,11 +87,6 @@ BEGIN
     outCurrencyValue := COALESCE(outCurrencyValue,1);
     outParValue      := COALESCE(outParValue,0);
 
-    -- определяем скидку
-  /*  SELECT tmp.ChangePercent, tmp.DiscountReturnInKindId, tmp.DiscountReturnInKindName
-   INTO outChangePercent, vbDiscountReturnInKindId, outDiscountReturnInKindName
-    FROM zfSelect_DiscountReturnInKind (vbOperDate, vbUnitId, inGoodsId, vbClientId, vbUserId) AS tmp;
-*/
      -- расчитали сумму по элементу, для грида
      outAmountSumm := CASE WHEN outCountForPrice > 0
                                 THEN CAST (inAmount * outOperPrice / outCountForPrice AS NUMERIC (16, 2))
@@ -104,26 +100,37 @@ BEGIN
 
      --outTotalChangePercent := outAmountPriceListSumm / 100 * COALESCE(outChangePercent,0) + COALESCE(inSummChangePercent,0) ;
 
-     outTotalSummPay := COALESCE(outAmountPriceListSumm,0) - COALESCE(outTotalChangePercent,0) ;
-
      -- сохранили
-     ioId:= lpInsertUpdate_MovementItem_ReturnIn   (ioId                 := ioId
-                                              , inMovementId         := inMovementId
-                                              , inGoodsId            := inGoodsId
-                                              , inPartionId          := COALESCE(inPartionId,0)
-                                              , inPartionMI_Id       := COALESCE(inPartionMI_Id,0)
-                                              , inSaleMI_Id          := COALESCE(inSaleMI_Id,0)
-                                              , inAmount             := inAmount
-                                              , inOperPrice          := outOperPrice
-                                              , inCountForPrice      := outCountForPrice
-                                              , inOperPriceList      := outOperPriceList
-                                              , inCurrencyValue         := outCurrencyValue 
-                                              , inParValue              := outParValue 
-                                              , inTotalChangePercent    := COALESCE(outTotalChangePercent,0)    ::TFloat     
-                                              , inTotalPay              := COALESCE(outTotalPay,0)              ::TFloat              
-                                              , inTotalPayOth           := COALESCE(outTotalPayOth,0)           ::TFloat           
-                                              , inUserId                := vbUserId
+     ioId:= lpInsertUpdate_MovementItem_ReturnIn(ioId                 := ioId
+                                               , inMovementId         := inMovementId
+                                               , inGoodsId            := inGoodsId
+                                               , inPartionId          := COALESCE(inPartionId,0)
+                                               , inPartionMI_Id       := COALESCE(inPartionMI_Id,0)
+                                               , inSaleMI_Id          := COALESCE(inSaleMI_Id,0)
+                                               , inAmount             := inAmount
+                                               , inOperPrice          := outOperPrice
+                                               , inCountForPrice      := outCountForPrice
+                                               , inOperPriceList      := outOperPriceList
+                                               , inCurrencyValue         := outCurrencyValue 
+                                               , inParValue              := outParValue 
+                                               , inTotalChangePercent    := COALESCE(outTotalChangePercent,0)    ::TFloat     
+                                               , inTotalPay              := COALESCE(outTotalPay,0)              ::TFloat              
+                                               , inTotalPayOth           := COALESCE(outTotalPayOth,0)           ::TFloat           
+                                               , inUserId                := vbUserId
                                                );
+
+     vbTotalPay_Sale := (SELECT COALESCE (MIFloat_TotalPay.ValueData, 0) 
+                         FROM MovementItemLinkObject AS MILinkObject_PartionMI
+                              LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
+                              LEFT JOIN MovementItem AS MI_Sale ON MI_Sale.Id = Object_PartionMI.ObjectCode
+                              LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
+                                     ON MIFloat_TotalPay.MovementItemId = MI_Sale.Id
+                                    AND MIFloat_TotalPay.DescId = zc_MIFloat_TotalPay()
+                         WHERE MILinkObject_PartionMI.MovementItemId = ioId
+                           AND MILinkObject_PartionMI.DescId = zc_MILinkObject_PartionMI());
+     
+     outTotalSummPay := COALESCE(outAmountPriceListSumm,0) - COALESCE(outTotalChangePercent,0);
+     outTotalSummPay := CASE WHEN outTotalSummPay > vbTotalPay_Sale THEN vbTotalPay_Sale ELSE outTotalSummPay END;
 
     IF inisPay THEN
        

@@ -44,7 +44,8 @@ BEGIN
      WHERE Movement.Id = inMovementId;
      -- сумма к оплате, сумма доп.скидки
      SELECT CAST ( SUM ( COALESCE(MovementItem.Amount,0) *  COALESCE(MIFloat_OperPriceList.ValueData,0) / COALESCE(MIFloat_CountForPrice.ValueData,1) 
-                 - COALESCE(MIFloat_TotalChangePercent.ValueData,0)) AS NUMERIC (16, 2)) 
+                 - COALESCE(MIFloat_TotalChangePercent.ValueData,0)
+                 + COALESCE(MIFloat_SummChangePercent.ValueData,0) ) AS NUMERIC (16, 2)) 
           , CAST ( SUM (COALESCE(MIFloat_SummChangePercent.ValueData,0) ) AS NUMERIC (16, 2))
     INTO vbSumm, vbSummChangePercent
      FROM MovementItem

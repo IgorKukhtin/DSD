@@ -207,6 +207,19 @@ object SaleItemEditForm: TSaleItemEditForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actRefreshTotal: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_Total
+      StoredProcList = <
+        item
+          StoredProc = spGet_Total
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object actRefreshDiscount: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -269,19 +282,6 @@ object SaleItemEditForm: TSaleItemEditForm
         end>
       Caption = #1054#1087#1083#1072#1090#1072' - '#1075#1088#1085
       Hint = #1054#1087#1083#1072#1090#1072' - '#1075#1088#1085
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object actRefreshTotal: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spGet_Total
-      StoredProcList = <
-        item
-          StoredProc = spGet_Total
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
