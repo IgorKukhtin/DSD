@@ -895,85 +895,6 @@ inherited LossForm: TLossForm
         Component = edIsChecked
         DataType = ftBoolean
         MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1030,65 +951,11 @@ inherited LossForm: TLossForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inComment'
         Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
+        Component = ceComment
         DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 162
@@ -1124,6 +991,9 @@ inherited LossForm: TLossForm
       end
       item
         Control = edArticleLoss
+      end
+      item
+        Control = ceComment
       end>
     Left = 232
     Top = 193

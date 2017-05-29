@@ -14,7 +14,7 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-     -- Определися пользователь + сессия (потом будем шифровать)
+     -- Определился пользователь + сессия (потом будем шифровать)
      SELECT Object_User.Id, Object_User.Id
           INTO ioSession, vbUserId
      FROM Object AS Object_User

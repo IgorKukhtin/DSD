@@ -39,7 +39,17 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Key(), ioId, inKey);
 
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_ProjectMobile(), ioId, inProjectMobile);
-   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_User_ProjectMobile(), ioId, inisProjectMobile);
+
+   IF inisProjectMobile = TRUE
+   THEN
+       -- всегда меняем
+       PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_User_ProjectMobile(), ioId, inisProjectMobile);
+   ELSEIF EXISTS (SELECT 1 FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = ioId AND ObjectBoolean.DescId = zc_ObjectBoolean_User_ProjectMobile())
+   THEN
+       -- тогда меняем
+       PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_User_ProjectMobile(), ioId, inisProjectMobile);
+   -- ИНАЧЕ - останется NULL
+   END IF;
 
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_User_Member(), ioId, inMemberId);
 
