@@ -77,4 +77,4 @@ ALTER FUNCTION gpSelect_Object_GoodsKind(TVarChar)
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_GoodsKind('2')
+-- SELECT * FROM gpSelect_Object_GoodsKind (inSession:= zfCalc_UserAdmin())

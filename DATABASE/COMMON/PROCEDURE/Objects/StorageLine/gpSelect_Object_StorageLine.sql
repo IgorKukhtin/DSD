@@ -35,14 +35,21 @@ $BODY$BEGIN
                                  ON ObjectLink_StorageLine_Unit.ObjectId = Object_StorageLine.Id 
                                 AND ObjectLink_StorageLine_Unit.DescId = zc_ObjectLink_StorageLine_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_StorageLine_Unit.ChildObjectId
-   WHERE Object_StorageLine.DescId = zc_Object_StorageLine();
-  
-END;$BODY$
+       WHERE Object_StorageLine.DescId = zc_Object_StorageLine()
 
+      UNION ALL
+       SELECT 0 AS Id
+            , 0 AS Code
+            , '”ƒ¿À»“‹' :: TVarChar AS Name
+            , 0         :: Integer  AS UnitId
+            , ''        :: TVarChar AS UnitName
+            , ''        :: TVarChar AS Comment
+            , FALSE                 AS isErased
+       ;
 
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_StorageLine(TVarChar) OWNER TO postgres;
-
+END;
+$BODY$
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -52,4 +59,4 @@ ALTER FUNCTION gpSelect_Object_StorageLine(TVarChar) OWNER TO postgres;
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Object_StorageLine('2')
+-- SELECT * FROM gpSelect_Object_StorageLine (inSession:= zfCalc_UserAdmin())

@@ -22,7 +22,13 @@ BEGIN
     -- проверка
    IF COALESCE (inStaffListId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка! Единица штатного расписания не установлена!';
+       RAISE EXCEPTION 'Ошибка. Единица штатного расписания не установлена.';
+   END IF;
+
+    -- проверка
+   IF COALESCE (inModelServiceId, 0) = 0 AND COALESCE (ioId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка. Модели начисления не установлена.';
    END IF;
 
    -- сохранили <Объект>
@@ -58,4 +64,3 @@ ALTER FUNCTION gpInsertUpdate_Object_StaffListCost (Integer,  TFloat, TVarChar, 
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_StaffListCost (0,  198, 'flgks', 5, 6, '2')
-    

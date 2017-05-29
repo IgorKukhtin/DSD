@@ -176,8 +176,8 @@ object StaffListDataForm: TStaffListDataForm
             Default = True
             Kind = bkEllipsis
           end>
+        Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 301
       end
       object clPrice: TcxGridDBColumn
@@ -656,11 +656,13 @@ object StaffListDataForm: TStaffListDataForm
           Name = 'Key'
           Value = Null
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -693,12 +695,14 @@ object StaffListDataForm: TStaffListDataForm
       FormName = 'TPositionForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'key'
           Value = Null
           Component = StaffListCDS
           ComponentItem = 'Positionid'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -706,6 +710,7 @@ object StaffListDataForm: TStaffListDataForm
           Component = StaffListCDS
           ComponentItem = 'PositionName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -729,12 +734,14 @@ object StaffListDataForm: TStaffListDataForm
       FormName = 'TPositionLevelForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = StaffListCDS
           ComponentItem = 'PositionLevelId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -742,6 +749,7 @@ object StaffListDataForm: TStaffListDataForm
           Component = StaffListCDS
           ComponentItem = 'PositionLevelName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -764,12 +772,14 @@ object StaffListDataForm: TStaffListDataForm
       FormName = 'TModelServiceForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'key'
           Value = Null
           Component = StaffListCostCDS
           ComponentItem = 'ModelServiceId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -777,8 +787,9 @@ object StaffListDataForm: TStaffListDataForm
           Component = StaffListCostCDS
           ComponentItem = 'ModelServiceName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
     end
     object actUpdateStaffListCost: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -800,18 +811,21 @@ object StaffListDataForm: TStaffListDataForm
       FormName = 'TStaffListForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'key'
           Value = Null
           Component = StaffListSummCDS
           ComponentItem = 'StaffListMasterId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = StaffListSummCDS
           ComponentItem = 'StaffListMasterCode'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -823,12 +837,14 @@ object StaffListDataForm: TStaffListDataForm
       FormName = 'TStaffListSummKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'key'
           Value = Null
           Component = StaffListSummCDS
           ComponentItem = 'StaffListSummKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -836,6 +852,7 @@ object StaffListDataForm: TStaffListDataForm
           Component = StaffListSummCDS
           ComponentItem = 'StaffListSummKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -871,11 +888,13 @@ object StaffListDataForm: TStaffListDataForm
       FormName = 'TStaffListEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = '0'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = StaffListDS
@@ -890,6 +909,7 @@ object StaffListDataForm: TStaffListDataForm
       FormName = 'TStaffListEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -897,6 +917,7 @@ object StaffListDataForm: TStaffListDataForm
           Component = StaffListCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = StaffListDS
@@ -945,6 +966,7 @@ object StaffListDataForm: TStaffListDataForm
         Component = StaffListCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 288
@@ -975,6 +997,7 @@ object StaffListDataForm: TStaffListDataForm
         Component = UnitGuides
         ComponentItem = 'inUnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 578
@@ -991,6 +1014,7 @@ object StaffListDataForm: TStaffListDataForm
         Component = StaffListCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioCode'
@@ -998,6 +1022,7 @@ object StaffListDataForm: TStaffListDataForm
         Component = StaffListCDS
         ComponentItem = 'Code'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inHoursPlan'
@@ -1006,6 +1031,7 @@ object StaffListDataForm: TStaffListDataForm
         ComponentItem = 'HoursPlan'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inHoursDay'
@@ -1014,6 +1040,7 @@ object StaffListDataForm: TStaffListDataForm
         ComponentItem = 'HoursDay'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalCount'
@@ -1022,6 +1049,7 @@ object StaffListDataForm: TStaffListDataForm
         ComponentItem = 'PersonalCount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisPositionLevel'
@@ -1030,6 +1058,7 @@ object StaffListDataForm: TStaffListDataForm
         ComponentItem = 'isPositionLevel'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -1038,6 +1067,7 @@ object StaffListDataForm: TStaffListDataForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -1045,6 +1075,7 @@ object StaffListDataForm: TStaffListDataForm
         Component = StaffListCDS
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPositionId'
@@ -1052,6 +1083,7 @@ object StaffListDataForm: TStaffListDataForm
         Component = StaffListCDS
         ComponentItem = 'PositionId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPositionLevelId'
@@ -1059,6 +1091,7 @@ object StaffListDataForm: TStaffListDataForm
         Component = StaffListCDS
         ComponentItem = 'PositionLevelId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 672
@@ -1102,6 +1135,7 @@ object StaffListDataForm: TStaffListDataForm
         Component = StaffListCostCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice'
@@ -1110,6 +1144,7 @@ object StaffListDataForm: TStaffListDataForm
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -1118,6 +1153,7 @@ object StaffListDataForm: TStaffListDataForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStaffListId'
@@ -1125,6 +1161,7 @@ object StaffListDataForm: TStaffListDataForm
         Component = StaffListCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inModelServiceId'
@@ -1132,6 +1169,7 @@ object StaffListDataForm: TStaffListDataForm
         Component = StaffListCostCDS
         ComponentItem = 'ModelServiceId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 376
@@ -1163,6 +1201,7 @@ object StaffListDataForm: TStaffListDataForm
         Component = StaffListSummCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inValue'
@@ -1171,6 +1210,7 @@ object StaffListDataForm: TStaffListDataForm
         ComponentItem = 'Value'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -1179,6 +1219,7 @@ object StaffListDataForm: TStaffListDataForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStaffListId'
@@ -1186,6 +1227,7 @@ object StaffListDataForm: TStaffListDataForm
         Component = StaffListCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStaffListMasterId'
@@ -1193,6 +1235,7 @@ object StaffListDataForm: TStaffListDataForm
         Component = StaffListSummCDS
         ComponentItem = 'StaffListMasterId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStaffListSummKindId'
@@ -1200,6 +1243,7 @@ object StaffListDataForm: TStaffListDataForm
         Component = StaffListSummCDS
         ComponentItem = 'StaffListSummKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 336
@@ -1222,6 +1266,7 @@ object StaffListDataForm: TStaffListDataForm
     LookupControl = ceUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1232,6 +1277,7 @@ object StaffListDataForm: TStaffListDataForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1240,6 +1286,7 @@ object StaffListDataForm: TStaffListDataForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 743
     Top = 15
@@ -1307,6 +1354,7 @@ object StaffListDataForm: TStaffListDataForm
         Component = StaffListCostCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 296
@@ -1323,6 +1371,7 @@ object StaffListDataForm: TStaffListDataForm
         Component = StaffListSummCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 304
@@ -1330,6 +1379,7 @@ object StaffListDataForm: TStaffListDataForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item

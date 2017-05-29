@@ -45,14 +45,22 @@ BEGIN
                                                                             AND ObjectLink_ModelService_ModelServiceKind.DescId = zc_ObjectLink_ModelService_ModelServiceKind()
             LEFT JOIN Object AS Object_ModelServiceKind ON Object_ModelServiceKind.Id = ObjectLink_ModelService_ModelServiceKind.ChildObjectId
 
-     WHERE Object_ModelService.DescId = zc_Object_ModelService();
+       WHERE Object_ModelService.DescId = zc_Object_ModelService()
+      UNION ALL
+       SELECT 0 AS Id
+            , 0 AS Code
+            , '”ƒ¿À»“‹' :: TVarChar AS Name
+            , ''        :: TVarChar AS Comment
+            , 0         :: Integer  AS UnitId
+            , ''        :: TVarChar AS UnitName
+            , 0         :: Integer  AS ModelServiceKindId
+            , ''        :: TVarChar AS ModelServiceKindName
+            , FALSE                 AS isErased
+       ;
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_ModelService(TVarChar) OWNER TO postgres;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -62,4 +70,4 @@ ALTER FUNCTION gpSelect_Object_ModelService(TVarChar) OWNER TO postgres;
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Object_ModelService('2')
+-- SELECT * FROM gpSelect_Object_ModelService (inSession:= zfCalc_UserAdmin())
