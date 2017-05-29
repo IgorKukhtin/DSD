@@ -334,6 +334,21 @@ object ModelServiceForm: TModelServiceForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object clmsicFromStorageLineName: TcxGridDBColumn
+        Caption = #1051#1080#1085#1080#1103' '#1087#1088'-'#1074#1072' ('#1088#1072#1089#1093#1086#1076')'
+        DataBinding.FieldName = 'FromStorageLineName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = FromStorageLineChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
       object ToCode: TcxGridDBColumn
         Caption = #1050#1086#1076' ('#1090#1086#1074'. '#1087#1088#1080#1093'.)'
         DataBinding.FieldName = 'ToCode'
@@ -381,6 +396,21 @@ object ModelServiceForm: TModelServiceForm
         Properties.Buttons = <
           item
             Action = ToGoodsKindCompleteChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object clmsicToStorageLineName: TcxGridDBColumn
+        Caption = #1051#1080#1085#1080#1103' '#1087#1088'-'#1074#1072' ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'ToStorageLineName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ToStorageLineChoiceForm
             Default = True
             Kind = bkEllipsis
           end>
@@ -1063,6 +1093,60 @@ object ModelServiceForm: TModelServiceForm
         end>
       isShowModal = True
     end
+    object FromStorageLineChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ToStorageLineForm'
+      FormName = 'TStorageLineForm'
+      FormNameParam.Value = 'TStorageLineForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = ModelServiceItemChildCDS
+          ComponentItem = 'FromStorageLineId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ModelServiceItemChildCDS
+          ComponentItem = 'FromStorageLineName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object ToStorageLineChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ToStorageLineForm'
+      FormName = 'TStorageLineForm'
+      FormNameParam.Value = 'TStorageLineForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = ModelServiceItemChildCDS
+          ComponentItem = 'ToStorageLineId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ModelServiceItemChildCDS
+          ComponentItem = 'ToStorageLineName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object ToGoodsKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1476,8 +1560,8 @@ object ModelServiceForm: TModelServiceForm
       end>
     Params = <>
     PackSize = 1
-    Left = 498
-    Top = 477
+    Left = 594
+    Top = 445
   end
   object spInsertUpdateObjectModelServiceItemChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ModelServiceItemChild'
@@ -1554,6 +1638,22 @@ object ModelServiceForm: TModelServiceForm
         Value = Null
         Component = ModelServiceItemMasterCDS
         ComponentItem = 'id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFromStorageLineId'
+        Value = Null
+        Component = ModelServiceItemChildCDS
+        ComponentItem = 'FromStorageLineId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToStorageLineId'
+        Value = Null
+        Component = ModelServiceItemChildCDS
+        ComponentItem = 'ToStorageLineId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

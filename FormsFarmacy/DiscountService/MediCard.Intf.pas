@@ -26,9 +26,19 @@ const
 type
   EMCException = class(Exception);
 
+  IMCCasualCache = interface
+    ['{E2E11DD1-E64A-40A8-A76E-830FB3CFDE9B}']
+    function GenerateCasual: string;
+    function Find(AMorionCode: Integer): string;
+    procedure Delete(AMorionCode: Integer);
+    procedure Save(AMorionCode: Integer; ACasual: string);
+    procedure Clear;
+end;
+
   IMCDesigner = interface
     ['{042F744C-4B1F-4E43-BCB1-2191ACEC3B09}']
     function GetClasses: TClassList;
+    function GetCasualCache: IMCCasualCache;
     function GetURL: string;
     procedure SetURL(const Value: string);
 
@@ -40,6 +50,7 @@ type
 
     property URL: string read GetURL write SetURL;
     property Classes: TClassList read GetClasses;
+    property CasualCache: IMCCasualCache read GetCasualCache;
   end;
 
   IMCData = interface
@@ -54,7 +65,6 @@ type
     ['{8CFA3CE2-F522-44C0-B984-8238157DABF7}']
     function GetRequest: IMCData;
     function GetResponse: IMCData;
-    function GenerateCasual: string;
     function Post: Integer;
     property Request: IMCData read GetRequest;
     property Response: IMCData read GetResponse;

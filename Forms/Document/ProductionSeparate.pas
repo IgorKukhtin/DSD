@@ -37,6 +37,8 @@ type
     bbPrint_Ceh: TdxBarButton;
     actGoodsKindChoice: TOpenChoiceForm;
     actGoodsKindChoiceChild: TOpenChoiceForm;
+    actStorageLine: TOpenChoiceForm;
+    actStorageLineChild: TOpenChoiceForm;
   private
     { Private declarations }
   public

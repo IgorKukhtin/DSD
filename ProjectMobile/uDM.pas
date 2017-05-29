@@ -2628,6 +2628,7 @@ begin
           qryMeta2.Next;
         End;
       end;
+
       if ChangeStructure then
       Begin
         TempTable := TFDTable.Create(nil);
@@ -2655,6 +2656,7 @@ begin
             delete(InsertSQL, Length(InsertSQL), 1);
             InsertSQL := 'insert into ' + T.TableName + ' (' + InsertSQL + ') select ' + InsertSQL + ' from ' + TempTableName;
             conMain.ExecSQL(InsertSQL);
+
             conMain.Commit;
           except
             on E: Exception do
@@ -2667,6 +2669,7 @@ begin
           end;
         finally
           T.EnableConstraints;
+          TempTable.Close;
           freeAndNil(TempTable);
 
           if Error then
@@ -2675,7 +2678,9 @@ begin
             conMain.ExecSQL('ALTER TABLE ' + TempTableName + ' RENAME TO ' + T.TableName);
           end
           else
+          begin
             conMain.ExecSQL('DROP TABLE IF EXISTS ' + TempTableName);
+          end;
         end;
       End;
     end;

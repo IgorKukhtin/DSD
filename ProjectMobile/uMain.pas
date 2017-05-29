@@ -973,6 +973,7 @@ type
     procedure bRestoreClick(Sender: TObject);
     procedure bCashTotalClick(Sender: TObject);
     procedure bTotalCashClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -1280,9 +1281,6 @@ begin
   FPaidKindIdList := TList<integer>.Create;
 
   FEditCashAmount := false;
-
-  SwitchToForm(tiStart, nil);
-  ChangeMainPageUpdate(tcMain);
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
@@ -1364,6 +1362,12 @@ begin
         sbBackClick(sbBack);
     end;
   end;
+end;
+
+procedure TfrmMain.FormShow(Sender: TObject);
+begin
+  SwitchToForm(tiStart, nil);
+  ChangeMainPageUpdate(tcMain);
 end;
 
 // отображение на карты всех ТТ

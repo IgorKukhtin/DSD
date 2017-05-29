@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionSeparate_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionSeparate_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionSeparate_Child (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionSeparate_Child (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionSeparate_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionSeparate_Child(
     IN inParentId            Integer   , -- Главный элемент документа
     IN inGoodsId             Integer   , -- Товары
     IN inGoodsKindId         Integer   , -- Виды товаров
+    IN inStorageLineId       Integer   , -- линия пр-ва
     IN inAmount              TFloat    , -- Количество
     IN inLiveWeight          TFloat    , -- Живой вес
     IN inHeadCount           TFloat    , -- Количество голов
@@ -29,6 +31,7 @@ BEGIN
                                                     , inParentId         := inParentId
                                                     , inGoodsId          := inGoodsId
                                                     , inGoodsKindId      := inGoodsKindId
+                                                    , inStorageLineId    := inStorageLineId
                                                     , inAmount           := inAmount
                                                     , inLiveWeight       := inLiveWeight
                                                     , inHeadCount        := inHeadCount
@@ -42,9 +45,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.05.17         *
  11.03.17         *
  11.06.15                                        *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MI_ProductionSeparate_Child (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inParentId:= NULL, inHeadCount:= 1, inComment:= '', inSession:= '2')
+-- select * from gpInsertUpdate_MI_ProductionSeparate_Child(ioId := 71593051 , inMovementId := 5264082 , inParentId := 0 , inGoodsId := 4261 , inGoodsKindId := 0 , inStorageLineId := 0 , inAmount := 157.6 , inLiveWeight := 0 , inHeadCount := 0 ,  inSession := '5');

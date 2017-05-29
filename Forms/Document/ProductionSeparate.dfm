@@ -104,7 +104,22 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             Options.Editing = False
             Width = 45
           end
-          object colAmount: TcxGridDBColumn [5]
+          object clStorageLineName: TcxGridDBColumn [5]
+            Caption = #1051#1080#1085#1080#1103' '#1087#1088'-'#1074#1072
+            DataBinding.FieldName = 'StorageLineName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actStorageLine
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object colAmount: TcxGridDBColumn [6]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -114,7 +129,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colLiveWeight: TcxGridDBColumn [6]
+          object colLiveWeight: TcxGridDBColumn [7]
             Caption = #1046#1080#1074#1086#1081' '#1074#1077#1089
             DataBinding.FieldName = 'LiveWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -124,7 +139,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colHeadCount: TcxGridDBColumn [7]
+          object colHeadCount: TcxGridDBColumn [8]
             Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -212,7 +227,22 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             Options.Editing = False
             Width = 45
           end
-          object colChildAmount: TcxGridDBColumn [5]
+          object colChildStorageLineName: TcxGridDBColumn [5]
+            Caption = #1051#1080#1085#1080#1103' '#1087#1088'-'#1074#1072
+            DataBinding.FieldName = 'StorageLineName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actStorageLineChild
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object colChildAmount: TcxGridDBColumn [6]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -222,7 +252,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colChildLiveWeight: TcxGridDBColumn [6]
+          object colChildLiveWeight: TcxGridDBColumn [7]
             Caption = #1046#1080#1074#1086#1081' '#1074#1077#1089
             DataBinding.FieldName = 'LiveWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -233,7 +263,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colChildHeadCount: TcxGridDBColumn [7]
+          object colChildHeadCount: TcxGridDBColumn [8]
             Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -243,7 +273,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colChildPartionGoods: TcxGridDBColumn [8]
+          object colChildPartionGoods: TcxGridDBColumn [9]
             Caption = #1055#1072#1088#1090#1080#1103' '#1089#1099#1088#1100#1103
             DataBinding.FieldName = 'PartionGoods'
             Visible = False
@@ -423,6 +453,60 @@ inherited ProductionSeparateForm: TProductionSeparateForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actStorageLine: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TStorageLineForm'
+      FormName = 'TStorageLineForm'
+      FormNameParam.Value = 'TStorageLineForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StorageLineId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StorageLineName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actStorageLineChild: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TStorageLineForm'
+      FormName = 'TStorageLineForm'
+      FormNameParam.Value = 'TStorageLineForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'StorageLineId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'StorageLineName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -714,6 +798,8 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
+    Left = 410
+    Top = 184
   end
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
@@ -795,6 +881,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inStorageLineId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StorageLineId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmount'
         Value = Null
         Component = MasterCDS
@@ -853,6 +947,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageLineId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StorageLineId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -917,6 +1019,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Value = Null
         Component = ChildCDS
         ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageLineId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'StorageLineId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -993,6 +1103,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Value = Null
         Component = ChildCDS
         ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageLineId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'StorageLineId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

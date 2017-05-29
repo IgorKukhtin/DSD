@@ -2,9 +2,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 673
   ClientWidth = 1307
-  ExplicitLeft = -532
+  ExplicitTop = -34
   ExplicitWidth = 1323
-  ExplicitHeight = 708
+  ExplicitHeight = 711
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -937,6 +937,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
           object cxModelServiceName: TcxGridDBColumn
             Caption = #1052#1086#1076#1077#1083#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
             DataBinding.FieldName = 'ModelServiceName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object clStorageLineName: TcxGridDBColumn
+            Caption = #1051#1080#1085#1080#1103' '#1087#1088'-'#1074#1072
+            DataBinding.FieldName = 'StorageLineName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
