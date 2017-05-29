@@ -94,6 +94,12 @@ object DiscountServiceForm: TDiscountServiceForm
         Name = 'Code'
         Value = Null
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ExternalUnit'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 120

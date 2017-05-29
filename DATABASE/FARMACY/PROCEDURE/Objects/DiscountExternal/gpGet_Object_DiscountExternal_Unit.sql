@@ -7,11 +7,12 @@ CREATE OR REPLACE FUNCTION gpGet_Object_DiscountExternal_Unit(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , URL      TVarChar
-             , Service  TVarChar
-             , Port     TVarChar
-             , UserName TVarChar
-             , Password TVarChar
+             , URL          TVarChar
+             , Service      TVarChar
+             , Port         TVarChar
+             , UserName     TVarChar
+             , Password     TVarChar
+             , ExternalUnit TVarChar
               )
 AS
 $BODY$
@@ -43,6 +44,7 @@ BEGIN
 
            , ObjectString_User.ValueData             AS UserName
            , ObjectString_Password.ValueData         AS Password
+           , ObjectString_ExternalUnit.ValueData     AS ExternalUnit
 
        FROM Object AS Object_DiscountExternal
             LEFT JOIN ObjectString AS ObjectString_URL
@@ -68,6 +70,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Password
                                    ON ObjectString_Password.ObjectId = ObjectLink_DiscountExternal.ObjectId
                                   AND ObjectString_Password.DescId = zc_ObjectString_DiscountExternalTools_Password()
+            LEFT JOIN ObjectString AS ObjectString_ExternalUnit
+                                   ON ObjectString_ExternalUnit.ObjectId = ObjectLink_DiscountExternal.ObjectId
+                                  AND ObjectString_ExternalUnit.DescId = zc_ObjectString_DiscountExternalTools_ExternalUnit()
 
        WHERE Object_DiscountExternal.Id = inId;
 
@@ -78,7 +83,8 @@ ALTER FUNCTION gpGet_Object_DiscountExternal_Unit (Integer, TVarChar) OWNER TO p
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
+ 29.05.17                                                       * ExternalUnit
  12.08.16                                        *
 */
 

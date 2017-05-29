@@ -15,9 +15,10 @@ type
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
     function GenerateCasual: string;
-    function Find(AMorionCode: Integer): string;
-    procedure Delete(AMorionCode: Integer);
-    procedure Save(AMorionCode: Integer; ACasual: string);
+    function Find(AGoodsId: Integer; APrice: Currency): string;
+    procedure Delete(AGoodsId: Integer; APrice: Currency);
+    procedure Save(AGoodsId: Integer; APrice: Currency; ACasual: string); overload;
+    procedure Save(AGoodsId: Integer; APrice: Currency); overload;
     procedure Clear;
   end;
 
@@ -54,13 +55,16 @@ implementation
 type
   TMCCasualItem = class
   private
-    FMorionCode: Integer;
+    FGoodsId: Integer;
+    FPrice: Currency;
     FCasual: string;
-    function GetMorionCode: Integer;
+    function GetGoodsId: Integer;
+    function GetPrice: Currency;
     function GetCasual: string;
   public
-    constructor Create(AMorionCode: Integer; ACasual: string);
-    property MorionCode: Integer read GetMorionCode;
+    constructor Create(AGoodsId: Integer; APrice: Currency; ACasual: string);
+    property GoodsId: Integer read GetGoodsId;
+    property Price: Currency read GetPrice;
     property Casual: string read GetCasual;
   end;
 
@@ -248,24 +252,29 @@ begin
   FCasualList.Clear;
 end;
 
-procedure TMCCasualCache.Delete(AMorionCode: Integer);
+procedure TMCCasualCache.Delete(AGoodsId: Integer; APrice: Currency);
+var
+  CasualItem: TMCCasualItem;
 var
   I, Res: Integer;
 begin
   Res := -1;
 
   for I := 0 to Pred(FCasualList.Count) do
-    if (FCasualList[I] as TMCCasualItem).MorionCode = AMorionCode then
+  begin
+    CasualItem := FCasualList[I] as TMCCasualItem;
+    if (CasualItem.GoodsId = AGoodsId) and (Abs(CasualItem.Price - APrice) < 0.00001) then
     begin
       Res := I;
       Break;
     end;
+  end;
 
   if Res <> -1 then
     FCasualList.Delete(Res);
 end;
 
-function TMCCasualCache.Find(AMorionCode: Integer): string;
+function TMCCasualCache.Find(AGoodsId: Integer; APrice: Currency): string;
 var
   I: Integer;
   CasualItem: TMCCasualItem;
@@ -275,7 +284,7 @@ begin
   for I := 0 to Pred(FCasualList.Count) do
   begin
     CasualItem := FCasualList[I] as TMCCasualItem;
-    if CasualItem.MorionCode = AMorionCode then
+    if (CasualItem.GoodsId = AGoodsId) and (Abs(CasualItem.Price - APrice) < 0.00001) then
     begin
       Result := CasualItem.Casual;
       Break;
@@ -293,21 +302,27 @@ begin
   Result := StringReplace(Result, '}', '', [rfReplaceAll, rfIgnoreCase]);
 end;
 
-procedure TMCCasualCache.Save(AMorionCode: Integer; ACasual: string);
+procedure TMCCasualCache.Save(AGoodsId: Integer; APrice: Currency);
 begin
-  if (AMorionCode = 0) or (Trim(ACasual) = '') then
-    raise EMCException.CreateFmt('Invalid data (MorionCode: %d, Casual: "%s")', [AMorionCode, ACasual]);
+  Save(AGoodsId, APrice, GenerateCasual);
+end;
 
-  Delete(AMorionCode);
-  FCasualList.Add(TMCCasualItem.Create(AMorionCode, ACasual));
+procedure TMCCasualCache.Save(AGoodsId: Integer; APrice: Currency; ACasual: string);
+begin
+  if (AGoodsId = 0) or (Abs(APrice) < 0.00001) or (Trim(ACasual) = '') then
+    raise EMCException.CreateFmt('Invalid data (GoodsId: %d, Price: %20.4f, Casual: "%s")', [AGoodsId, APrice, ACasual]);
+
+  Delete(AGoodsId, APrice);
+  FCasualList.Add(TMCCasualItem.Create(AGoodsId, APrice, ACasual));
 end;
 
 { TMCCasualItem }
 
-constructor TMCCasualItem.Create(AMorionCode: Integer; ACasual: string);
+constructor TMCCasualItem.Create(AGoodsId: Integer; APrice: Currency; ACasual: string);
 begin
   inherited Create;
-  FMorionCode := AMorionCode;
+  FGoodsId := AGoodsId;
+  FPrice := APrice;
   FCasual := ACasual;
 end;
 
@@ -316,9 +331,14 @@ begin
   Result := FCasual;
 end;
 
-function TMCCasualItem.GetMorionCode: Integer;
+function TMCCasualItem.GetGoodsId: Integer;
 begin
-  Result := FMorionCode;
+  Result := FGoodsId;
+end;
+
+function TMCCasualItem.GetPrice: Currency;
+begin
+  Result := FPrice;
 end;
 
 initialization
