@@ -518,22 +518,6 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inId'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'MovementId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inCurrencyValueUSD'
         Value = 0.000000000000000000
         Component = ceCurrencyValue_USD
@@ -545,6 +529,14 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
         Name = 'inCurrencyValueEUR'
         Value = 0.000000000000000000
         Component = ceCurrencyValue_EUR
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = 0.000000000000000000
+        Component = ceAmount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -587,13 +579,6 @@ object GoodsAccountItemEditForm: TGoodsAccountItemEditForm
         Component = ceAmountDiscount
         DataType = ftFloat
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Amount'
-        Value = 0.000000000000000000
-        Component = ceAmount
-        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item

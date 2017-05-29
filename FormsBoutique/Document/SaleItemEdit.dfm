@@ -634,22 +634,6 @@ object SaleItemEditForm: TSaleItemEditForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inId'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'MovementId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inCurrencyValueUSD'
         Value = 0.000000000000000000
         Component = ceCurrencyValue_USD
@@ -661,6 +645,14 @@ object SaleItemEditForm: TSaleItemEditForm
         Name = 'inCurrencyValueEUR'
         Value = 0.000000000000000000
         Component = ceCurrencyValue_EUR
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = ceAmount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
