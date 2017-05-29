@@ -47,7 +47,7 @@ type
     function myStrToFloat(aValue: String) : Double;
   public
     // так криво будем хранить "текущие" параметры-Main
-    gURL, gService, gPort, gUserName, gPassword, gCardNumber: string;
+    gURL, gService, gPort, gUserName, gPassword, gCardNumber, gExternalUnit: string;
     gDiscountExternalId, gCode: Integer;
     // так криво будем хранить "текущие" параметры-Item
     //gGoodsId : Integer;
@@ -352,23 +352,25 @@ begin
          gCode       := lCode;
          if lCode > 0 then
          begin
-               gURL        := ParamByName('URL').Value;
-               gService    := ParamByName('Service').Value;
-               gPort       := ParamByName('Port').Value;
-               gUserName   := ParamByName('UserName').Value;
-               gPassword   := ParamByName('Password').Value;
-               gCardNumber := lCardNumber;
+               gURL          := ParamByName('URL').Value;
+               gService      := ParamByName('Service').Value;
+               gPort         := ParamByName('Port').Value;
+               gUserName     := ParamByName('UserName').Value;
+               gPassword     := ParamByName('Password').Value;
+               gCardNumber   := lCardNumber;
+               gExternalUnit := ParamByName('ExternalUnit').AsString;
                // для проекта Медикард
                if lCode = 3 then
                  MCDesigner.URL := gURL;
          end
          else begin
-               gURL        := '';
-               gService    := '';
-               gPort       := '';
-               gUserName   := '';
-               gPassword   := '';
-               gCardNumber := '';
+               gURL          := '';
+               gService      := '';
+               gPort         := '';
+               gUserName     := '';
+               gPassword     := '';
+               gCardNumber   := '';
+               gExternalUnit := '';
                ShowMessage ('Ошибка.Для аптеки не настроена работа с Проектами дисконтных карт.')
          end;
       end
@@ -376,13 +378,14 @@ begin
      begin
           //обнулим параметры-Main
           gDiscountExternalId:= 0;
-          gCode       := 0;
-          gURL        := '';
-          gService    := '';
-          gPort       := '';
-          gUserName   := '';
-          gPassword   := '';
-          gCardNumber := '';
+          gCode         := 0;
+          gURL          := '';
+          gService      := '';
+          gPort         := '';
+          gUserName     := '';
+          gPassword     := '';
+          gCardNumber   := '';
+          gExternalUnit := '';
      end;
 end;
 
@@ -801,6 +804,9 @@ var
   llMsg: String;
   lQuantity, lPriceSale, lPrice, lChangePercent, lSummChangePercent : Currency;
 
+  MorionCode: Integer;
+  CasualId: string;
+  Session: IMCSession;
 begin
   Result:= false;
   lMsg  := '';
@@ -831,7 +837,7 @@ begin
       then lPriceSale:= CheckCDS.FieldByName('PriceSale').asFloat
       else lPriceSale:= CheckCDS.FieldByName('Price').asFloat;
       //
-      if (lDiscountExternalId > 0) and (CheckCDS.FieldByName('Amount').AsFloat > 0)
+      if (lDiscountExternalId > 0) and (gCode = 1) and (CheckCDS.FieldByName('Amount').AsFloat > 0)
       then
         //поиск Штрих-код
         with spGet_BarCode do begin
@@ -889,7 +895,7 @@ begin
 
       // иначе - обнуляем скидку
       else
-      if (DiscountServiceForm.gCode <> 2) then
+      if (gCode <> 2) then
       begin
                // на всяк случай - с условием
                if CheckCDS.FieldByName('PriceSale').asFloat > 0
@@ -1040,6 +1046,117 @@ begin
     Item := nil;
     ResList := nil;
     ResItem := nil;
+
+    if (lDiscountExternalId > 0) and (gCode = 3) then
+    begin
+      // запрос скидок у Медикард
+
+      CheckCDS.First;
+
+      while not CheckCDS.Eof do
+      begin
+        MorionCode := FindMorionCode(CheckCDS.FieldByName('GoodsId').AsInteger);
+
+        if (MorionCode <> -1) and (MorionCode <> 0) then
+        begin
+          //Предполагаемое кол-во товара
+          lQuantity := CheckCDS.FieldByName('Amount').asFloat;
+          // на всяк случай - с условием
+          if CheckCDS.FieldByName('PriceSale').AsFloat > 0 then
+            lPriceSale := CheckCDS.FieldByName('PriceSale').AsFloat
+          else
+            lPriceSale := CheckCDS.FieldByName('Price').AsFloat;
+
+          CasualId := MCDesigner.CasualCache.Find(CheckCDS.FieldByName('GoodsId').AsInteger, lPriceSale);
+
+          if (CasualId <> '') then
+          begin
+            MCDesigner.CreateObject(IMCSessionDiscount).GetInterface(IMCSession, Session);
+            // задаем параметры для запроса скидки
+            with Session.Request.Params do
+            begin
+              ParamByName('id_casual').AsString := CasualId;
+              ParamByName('inside_code').AsString := gExternalUnit;
+              ParamByName('card_code').AsString := lCardNumber;
+              ParamByName('product_code').AsInteger := MorionCode;
+              ParamByName('qty').AsFloat := lQuantity;
+              ParamByName('price').AsFloat := lPriceSale;
+            end;
+
+            try
+              // выполним запрос
+              if Session.Post = 200 then
+                with Session.Response.Params do
+                begin
+                  if Pos('202', ParamByName('error').AsString) = 1 then
+                  begin
+                    //Рекомендованная скидка в виде % от цены
+                    lChangePercent := ParamByName('discont').AsFloat;
+                    //Рекомендованная скидка в виде фиксированной суммы от общей цены за все кол-во товара (общая сумма скидки за все кол-во товара)
+                    lSummChangePercent := ParamByName('discont_absolute').AsFloat;
+
+                    //!!! расчет Цена - уже со скидкой !!!
+                    if lSummChangePercent > 0 then
+                      // типа как для кол-ва = 1, может так правильно округлит?
+                      lPrice := GetSumm(1, (GetSumm(lQuantity, lPriceSale) - lSummChangePercent) / lQuantity)
+                    else
+                    begin
+                      // тоже типа как для кол-ва = 1, может так правильно округлит?
+                      lPrice:= GetSumm(1, lPriceSale * (1 - lChangePercent / 100));
+                      // а еще досчитаем сумму скидки
+                      lSummChangePercent := GetSumm(lQuantity, lPriceSale) - GetSumm(lQuantity, lPrice)
+                    end;
+
+                    //проверка
+                    if lSummChangePercent >= GetSumm(lQuantity, lPriceSale) then
+                    begin
+                      ShowMessage ('Ошибка.Сумма скидки  <' + myFloatToStr(lSummChangePercent)
+                        + '> не может быть больше чем <' + myFloatToStr(GetSumm(lQuantity, lPriceSale)) + '>.'
+                        + sLineBreak + 'Для карты № <' + lCardNumber + '>.'
+                        + sLineBreak + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')'
+                        + CheckCDS.FieldByName('GoodsName').AsString);
+                      //ошибка
+                      lMsg := 'Error';
+                      //
+                      lPrice             := lPriceSale;
+                      lChangePercent     := 0;
+                      lSummChangePercent := 0;
+                    end;
+                  end else
+                  begin
+                    lPrice             := lPriceSale;
+                    lChangePercent     := 0;
+                    lSummChangePercent := 0;
+                    //
+                    ShowMessage ('Ошибка <' + gService + '>.Карта № <' + gCardNumber + '>.'
+                      + sLineBreak + Utf8ToAnsi(ParamByName('message').AsString));
+                  end;
+
+                  //Update
+                  CheckCDS.Edit;
+                  CheckCDS.FieldByName('Price').asCurrency             := lPrice;
+                  CheckCDS.FieldByName('PriceSale').asCurrency         := lPriceSale;
+                  //Рекомендованная скидка в виде % от цены
+                  CheckCDS.FieldByName('ChangePercent').asCurrency     := lChangePercent;
+                  //Рекомендованная скидка в виде фиксированной суммы от общей цены за все кол-во товара (общая сумма скидки за все кол-во товара)
+                  CheckCDS.FieldByName('SummChangePercent').asCurrency := lSummChangePercent;
+                  CheckCDS.FieldByName('Summ').asCurrency := GetSumm(lQuantity, lPrice);
+                  CheckCDS.Post;
+                end;
+            except
+              ShowMessage ('Ошибка на сервере <' + gURL + '>.' + sLineBreak
+                + sLineBreak + 'Для карты № <' + lCardNumber + '>.'
+                + sLineBreak + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')'
+                + CheckCDS.FieldByName('GoodsName').AsString);
+              //ошибка
+              lMsg:='Error';
+            end;
+          end;
+        end;
+
+        CheckCDS.Next;
+      end;
+    end;
 
   finally
     CheckCDS.Filtered := True;

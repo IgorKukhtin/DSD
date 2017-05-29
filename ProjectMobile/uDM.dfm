@@ -1042,6 +1042,10 @@ object DM: TDM
     object cdsOrderItemsisChangePercent: TBooleanField
       FieldName = 'isChangePercent'
     end
+    object cdsOrderItemsPriceShow: TStringField
+      FieldName = 'PriceShow'
+      Size = 200
+    end
   end
   object cdsOrderExternal: TClientDataSet
     Aggregates = <>

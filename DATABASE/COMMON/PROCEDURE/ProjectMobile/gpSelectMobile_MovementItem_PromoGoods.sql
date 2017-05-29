@@ -31,22 +31,19 @@ BEGIN
       IF vbPersonalId IS NOT NULL 
       THEN
            RETURN QUERY
-             WITH tmpPromoPartner AS (SELECT DISTINCT Movement_PromoPartner.ParentId AS ParentId
+             WITH tmpPromoPartner AS (SELECT Movement_Promo.Id AS PromoId
+                                           , ROW_NUMBER() OVER (PARTITION BY MI_PromoPartner.ObjectId ORDER BY Movement_Promo.Operdate DESC, Movement_PromoPartner.ParentId DESC) AS RowNum
                                       FROM Movement AS Movement_PromoPartner
-                                           -- JOIN MovementLinkObject AS MovementLinkObject_Partner
-                                           --                         ON MovementLinkObject_Partner.MovementId = Movement_PromoPartner.Id
-                                           --                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner() 
-                                           INNER JOIN MovementItem AS MI_PromoPartner
-                                                                   ON MI_PromoPartner.MovementId = Movement_PromoPartner.ID
-                                                                  AND MI_PromoPartner.DescId     = zc_MI_Master()
-                                                                  AND MI_PromoPartner.IsErased   = FALSE
+                                           JOIN MovementItem AS MI_PromoPartner
+                                                             ON MI_PromoPartner.MovementId = Movement_PromoPartner.Id
+                                                            AND MI_PromoPartner.DescId = zc_MI_Master()
+                                                            AND MI_PromoPartner.IsErased = FALSE
                                            JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                                           ON ObjectLink_Partner_PersonalTrade.ObjectId = MI_PromoPartner.ObjectId -- MovementLinkObject_Partner.ObjectId 
+                                                           ON ObjectLink_Partner_PersonalTrade.ObjectId = MI_PromoPartner.ObjectId
                                                           AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
                                                           AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
-                                           JOIN Movement AS Movement_Promo
-                                                         ON Movement_Promo.Id       = Movement_PromoPartner.ParentId
-                                                        -- AND Movement_Promo.DescId   = zc_Movement_Promo()
+                                           JOIN Movement AS Movement_Promo 
+                                                         ON Movement_Promo.Id = Movement_PromoPartner.ParentId
                                                         AND Movement_Promo.StatusId = zc_Enum_Status_Complete()
                                            JOIN MovementDate AS MovementDate_StartSale
                                                              ON MovementDate_StartSale.MovementId = Movement_Promo.Id
@@ -57,9 +54,12 @@ BEGIN
                                                             AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
                                                             AND MovementDate_EndSale.ValueData >= CURRENT_DATE
                                       WHERE Movement_PromoPartner.DescId = zc_Movement_PromoPartner()
-                                        -- AND Movement_PromoPartner.ParentId IS NOT NULL
                                         AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
                                      )
+                , tmpPromo AS (SELECT DISTINCT tmpPromoPartner.PromoId AS Id 
+                               FROM tmpPromoPartner 
+                               WHERE tmpPromoPartner.RowNum = 1
+                              )
              SELECT MovementItem_PromoGoods.Id
                   , MovementItem_PromoGoods.MovementId
                   , MovementItem_PromoGoods.ObjectId                          AS GoodsId
@@ -68,10 +68,11 @@ BEGIN
                   , COALESCE (MIFloat_PriceWithVAT.ValueData, 0.0)::TFloat    AS PriceWithVAT
                   , COALESCE (MovementItem_PromoGoods.Amount, 0.0)::TFloat    AS TaxPromo
                   , (NOT MovementItem_PromoGoods.isErased)                    AS isSync
-             FROM tmpPromoPartner
-                  JOIN MovementItem AS MovementItem_PromoGoods ON MovementItem_PromoGoods.MovementId = tmpPromoPartner.ParentId
-                                                              AND MovementItem_PromoGoods.DescId     = zc_MI_Master()
-                                                              AND MovementItem_PromoGoods.IsErased   = FALSE
+             FROM tmpPromo
+                  JOIN MovementItem AS MovementItem_PromoGoods 
+                                    ON MovementItem_PromoGoods.MovementId = tmpPromo.Id
+                                   AND MovementItem_PromoGoods.DescId = zc_MI_Master()
+                                   AND MovementItem_PromoGoods.IsErased = FALSE
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem_PromoGoods.Id
                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind() 
@@ -91,6 +92,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.   Ярошенко Р.Ф.
+ 29.05.17                                                                          *
  17.03.17                                                                          *
 */
 

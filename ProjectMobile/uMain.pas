@@ -92,9 +92,9 @@ type
     Label3: TLabel;
     Label4: TLabel;
     tiMain: TTabItem;
-    WebServerLayout1: TLayout;
+    WebServerLayout11: TLayout;
     WebServerLabel: TLabel;
-    WebServerLayout2: TLayout;
+    WebServerLayout12: TLayout;
     WebServerEdit: TEdit;
     SyncLayout: TLayout;
     SyncCheckBox: TCheckBox;
@@ -654,7 +654,6 @@ type
     bPathonMap: TButton;
     bPathonMapbyPhoto: TButton;
     bEnterServer: TButton;
-    Image20: TImage;
     pTemporaryServerPassword: TPanel;
     bOkPassword: TButton;
     bCancelPassword: TButton;
@@ -757,6 +756,19 @@ type
     lReturnDayCount: TLayout;
     Label97: TLabel;
     eReturnDayCount: TEdit;
+    CurWebServerLayout12: TLayout;
+    CurWebServerEdit: TEdit;
+    CurWebServerLayout11: TLayout;
+    Label98: TLabel;
+    bCopyServer: TButton;
+    Image21: TImage;
+    Image20: TImage;
+    Panel55: TPanel;
+    CurWebServerLayout: TLayout;
+    WebServerLayout: TLayout;
+    Layout43: TLayout;
+    Panel56: TPanel;
+    bPartnerJuridicalCollation: TButton;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -966,7 +978,6 @@ type
     procedure swPaidKindOClick(Sender: TObject);
     procedure swPaidKindRClick(Sender: TObject);
     procedure swPaidKindCClick(Sender: TObject);
-    procedure Label66Click(Sender: TObject);
     procedure eCashAmountClick(Sender: TObject);
     procedure ppEnterAmountClosePopup(Sender: TObject);
     procedure bBackupClick(Sender: TObject);
@@ -974,6 +985,8 @@ type
     procedure bCashTotalClick(Sender: TObject);
     procedure bTotalCashClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure bCopyServerClick(Sender: TObject);
+    procedure bPartnerJuridicalCollationClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -2643,7 +2656,7 @@ begin
   if DM.cdsOrderExternalPriceWithVAT.AsBoolean then
     lOrderPrice.Text := 'Цена (с НДС)'
   else
-    lOrderPrice.Text := 'Цена (без НДС)';
+    lOrderPrice.Text := 'Цена';
 
   lPaidKindFO.Text := DM.tblObject_ConstPaidKindName_First.AsString;
   lPaidKindSO.Text := DM.tblObject_ConstPaidKindName_Second.AsString;
@@ -3037,8 +3050,8 @@ begin
   else
   begin
     FUseTemporaryServer := false;
-    WebServerLayout1.Height := 0;
-    WebServerLayout2.Height := 0;
+    WebServerLayout.Height := 0;
+    CurWebServerLayout.Height := 0;
     gc_WebService := gc_WebServers[0];
   end;
 end;
@@ -3251,9 +3264,10 @@ begin
   vsbMain.Enabled := true;
   pTemporaryServerPassword.Visible := false;
 
-  WebServerLayout1.Height := 25;
-  WebServerLayout2.Height := 60;
+  WebServerLayout.Height := 75;
   WebServerEdit.Text := FTemporaryServer;
+  CurWebServerLayout.Height := 75;
+  CurWebServerEdit.Text := gc_WebService;
   gc_WebService := '';
   FUseTemporaryServer := true;
 end;
@@ -3278,6 +3292,29 @@ begin
 end;
 
 // переход на форму отображения все торговых точек
+procedure TfrmMain.bPartnerJuridicalCollationClick(Sender: TObject);
+var
+  OldJuridicalRJC, OldPartnerRJC, OldContractRJC, OldPaidKindRJC: integer;
+begin
+  OldJuridicalRJC := FJuridicalRJC;
+  OldPartnerRJC := FPartnerRJC;
+  OldContractRJC := FContractRJC;
+  OldPaidKindRJC := FPaidKindRJC;
+
+  FJuridicalRJC := DM.qryPartnerJuridicalId.AsInteger;
+  FPartnerRJC := DM.qryPartnerId.AsInteger;
+  FContractRJC := DM.qryPartnerCONTRACTID.AsInteger;
+  FPaidKindRJC := DM.qryPartnerPaidKindId.AsInteger;
+  try
+    bReportJuridicalCollationClick(bReportJuridicalCollation);
+  finally
+    FJuridicalRJC := OldJuridicalRJC;
+    FPartnerRJC := OldPartnerRJC;
+    FContractRJC := OldContractRJC;
+    FPaidKindRJC := OldPaidKindRJC;
+  end;
+end;
+
 procedure TfrmMain.bPartnersClick(Sender: TObject);
 begin
   ShowPartners(8, 'Все ТТ');
@@ -3523,10 +3560,11 @@ begin
     Close;
   end;
 
-  for i := 0 to FPartnerList.Count - 1 do
+  for i := 0 to FJuridicalList.Count - 1 do
     if FJuridicalList[i].Id = FJuridicalRJC then
     begin
       cbJuridicals.ItemIndex := i;
+      break;
     end;
   if cbJuridicals.ItemIndex < 0 then
     cbJuridicals.ItemIndex := 0;
@@ -3892,6 +3930,11 @@ procedure TfrmMain.bClosePhotoClick(Sender: TObject);
 begin
   CameraFree;
   ReturnPriorForm;
+end;
+
+procedure TfrmMain.bCopyServerClick(Sender: TObject);
+begin
+  WebServerEdit.Text := CurWebServerEdit.Text;
 end;
 
 procedure TfrmMain.bDocumentsClick(Sender: TObject);
@@ -4389,8 +4432,8 @@ begin
     if FTemporaryServer = '' then
       FTemporaryServer := gc_WebServers[0];
 
-    WebServerLayout1.Height := 0;
-    WebServerLayout2.Height := 0;
+    WebServerLayout.Height := 0;
+    CurWebServerLayout.Height := 0;
     SyncLayout.Visible := true;
   end
   else
@@ -4399,8 +4442,8 @@ begin
     SetLength(gc_WebServers, 0);
     gc_WebService := '';
 
-    WebServerLayout1.Height := 25;
-    WebServerLayout2.Height := 60;
+    WebServerLayout.Height := 75;
+    CurWebServerLayout.Height := 0;
     SyncLayout.Visible := false;
   end;
 
@@ -4526,11 +4569,6 @@ begin
   ppPartner.IsOpen := False;
 
   EnterNewPartner;
-end;
-
-procedure TfrmMain.Label66Click(Sender: TObject);
-begin
-
 end;
 
 // начитка справочников для ввода новой ТТ
