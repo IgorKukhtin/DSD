@@ -148,6 +148,24 @@ object Juridical_ObjectForm: TJuridical_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 40
       end
+      object isGUID: TcxGridDBColumn
+        Caption = #1057#1086#1079#1076#1072#1085' '#1085#1072' '#1084#1086#1073'.'#1091#1089#1090#1088'.'
+        DataBinding.FieldName = 'isGUID'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object GUID: TcxGridDBColumn
+        Caption = #1050#1083#1102#1095' '#1084#1086#1073'.'#1091#1089#1090#1088'.'
+        DataBinding.FieldName = 'GUID'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object ceIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -303,7 +321,7 @@ object Juridical_ObjectForm: TJuridical_ObjectForm
         item
         end
         item
-          StoredProc = GridStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -407,10 +425,10 @@ object Juridical_ObjectForm: TJuridical_ObjectForm
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = GridStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = GridStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
@@ -469,7 +487,7 @@ object Juridical_ObjectForm: TJuridical_ObjectForm
     Left = 272
     Top = 136
   end
-  object GridStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Juridical'
     DataSet = MasterCDS
     DataSets = <

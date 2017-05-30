@@ -248,7 +248,10 @@ BEGIN
                                                                                             THEN vbAmount_byPack
                                                                                        ELSE inRealWeight - inCountTare * inWeightTare
                                                                                   END
-                                                       , inAmountPartner       := CASE WHEN inIsBarCode = TRUE
+                                                       , inAmountPartner       := CASE -- !!!только Для Сканирования Метро!!!
+                                                                                       WHEN vbRetailId IN (310828) -- Метро
+                                                                                            THEN CEIL ((inRealWeight - inCountTare * inWeightTare) * 100) / 100
+                                                                                       WHEN inIsBarCode = TRUE
                                                                                             THEN (inRealWeight - inCountTare * inWeightTare)
                                                                                        WHEN inChangePercentAmount = 0
                                                                                             THEN (inRealWeight - inCountTare * inWeightTare)

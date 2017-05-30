@@ -54,7 +54,7 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     GridDS: TDataSource;
     MasterCDS: TClientDataSet;
-    GridStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clInfoMoneyGroupCode: TcxGridDBColumn;
@@ -97,6 +97,8 @@ type
     clisDiscountPrice: TcxGridDBColumn;
     isLongUKTZED: TcxGridDBColumn;
     colisPriceWithVAT: TcxGridDBColumn;
+    isGUID: TcxGridDBColumn;
+    GUID: TcxGridDBColumn;
   private
     { Private declarations }
   public

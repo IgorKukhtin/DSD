@@ -36,7 +36,7 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     GridDS: TDataSource;
     MasterCDS: TClientDataSet;
-    GridStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clInfoMoneyGroupCode: TcxGridDBColumn;
     clInfoMoneyGroupName: TcxGridDBColumn;

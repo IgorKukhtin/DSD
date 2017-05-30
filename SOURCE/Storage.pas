@@ -433,6 +433,7 @@ begin
         Begin
           try
             idHTTP.Post(FConnection + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, TIdTextEncoding.GetEncoding(1251));
+            OldConnection := FConnection;
             ok := true;
             break;
           except
@@ -485,7 +486,7 @@ begin
         if not Ok AND Not LastAttempt then
         Begin
           FActiveConnection := NextActiveConnection;
-          FConnection := FConnections.Strings[FActiveConnection];
+          FConnection := FConnections .Strings[FActiveConnection];
           try
             idHTTP.Disconnect;
           except
