@@ -406,6 +406,14 @@ object StaffListDataForm: TStaffListDataForm
         end
         item
           Visible = True
+          ItemName = 'bbProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbModelServise'
         end
         item
@@ -422,6 +430,14 @@ object StaffListDataForm: TStaffListDataForm
         end
         item
           Visible = True
+          ItemName = 'bbProtocolCost'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbStaffListSummKind'
         end
         item
@@ -431,6 +447,14 @@ object StaffListDataForm: TStaffListDataForm
         item
           Visible = True
           ItemName = 'bbUnErasedSumm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolSumm'
         end
         item
           BeginGroup = True
@@ -528,6 +552,18 @@ object StaffListDataForm: TStaffListDataForm
     end
     object bbUnErasedSumm: TdxBarButton
       Action = dsdSetUnErasedSumm
+      Category = 0
+    end
+    object bbProtocol: TdxBarButton
+      Action = ProtocolOpenForm
+      Category = 0
+    end
+    object bbProtocolCost: TdxBarButton
+      Action = ProtocolOpenFormCost
+      Category = 0
+    end
+    object bbProtocolSumm: TdxBarButton
+      Action = ProtocolOpenFormSumm
       Category = 0
     end
   end
@@ -923,6 +959,96 @@ object StaffListDataForm: TStaffListDataForm
       DataSource = StaffListDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
+    end
+    object ProtocolOpenFormSumm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1058#1080#1087' '#1089#1091#1084#1084#1099'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1058#1080#1087' '#1089#1091#1084#1084#1099'>'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = StaffListSummCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = StaffListSummCDS
+          ComponentItem = 'StaffListSummKindName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object ProtocolOpenFormCost: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1052#1086#1076#1077#1083#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1052#1086#1076#1077#1083#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = StaffListCostCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = StaffListCostCDS
+          ComponentItem = 'ModelServiceName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object ProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077'>'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = StaffListCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = StaffListCDS
+          ComponentItem = 'PositionName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

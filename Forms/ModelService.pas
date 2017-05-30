@@ -122,6 +122,12 @@ type
     bbGoodsGroupToChoice: TdxBarButton;
     ToStorageLineChoiceForm: TOpenChoiceForm;
     FromStorageLineChoiceForm: TOpenChoiceForm;
+    ProtocolOpenForm: TdsdOpenForm;
+    ProtocolOpenMaster: TdsdOpenForm;
+    ProtocolOpenChild: TdsdOpenForm;
+    bbProtocolOpen: TdxBarButton;
+    bbProtocolMaster: TdxBarButton;
+    bbProtocolChild: TdxBarButton;
   private
     { Private declarations }
   public
