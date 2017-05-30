@@ -5,7 +5,7 @@
   ClientWidth = 563
   AddOnFormData.isSingle = False
   ExplicitWidth = 569
-  ExplicitHeight = 393
+  ExplicitHeight = 390
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -509,13 +509,6 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCurrencyPartnerId'
-        Component = CurrencyPartnerGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inCurrencyPartnerValue'
         Value = Null
         Component = ceCurrencyPartnerValue
@@ -757,6 +750,21 @@
         Name = 'CurrencyName'
         Value = Null
         Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyPartnerId'
+        Value = Null
+        Component = CurrencyPartnerGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyPartnerName'
+        Value = Null
+        Component = CurrencyPartnerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','

@@ -18,18 +18,19 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Sale());
      vbUserId:= lpGetUserBySession (inSession);
 
-     IF vbUserId = 5
+     IF vbUserId = 5 OR (TRUE = (SELECT MovementBoolean.ValueData FROM MovementBoolean WHERE MovementBoolean.MovementId =  inId AND MovementBoolean.DescId = zc_MovementBoolean_Print())
+                     AND TRUE = inNewPrinted)
      THEN
-     -- определили признак
-     outPrinted := COALESCE ((SELECT MovementBoolean.ValueData FROM MovementBoolean WHERE MovementBoolean.MovementId =  inId AND MovementBoolean.DescId = zc_MovementBoolean_Print()), FALSE);
+         -- определили признак
+         outPrinted := COALESCE ((SELECT MovementBoolean.ValueData FROM MovementBoolean WHERE MovementBoolean.MovementId =  inId AND MovementBoolean.DescId = zc_MovementBoolean_Print()), FALSE);
      ELSE
-     -- определили признак
-     outPrinted := inNewPrinted;
+         -- определили признак
+         outPrinted := inNewPrinted;
 
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Print(), inId, inNewPrinted);
+         PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Print(), inId, inNewPrinted);
 
-     -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
+         -- сохранили протокол
+         PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
      END IF;
 
 END;

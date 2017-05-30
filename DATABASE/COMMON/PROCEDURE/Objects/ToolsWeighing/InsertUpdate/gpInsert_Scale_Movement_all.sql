@@ -1391,9 +1391,10 @@ then
     -- 'Повторите действие через 3 мин.'
 end if;*/
 
+-- !!! ВРЕМЕННО !!!
 if inSession = '5' AND 1=1
 then
-    RAISE EXCEPTION 'Admin - Errr _end';
+    RAISE EXCEPTION 'Admin - Test = OK';
     -- 'Повторите действие через 3 мин.'
 end if;
 
