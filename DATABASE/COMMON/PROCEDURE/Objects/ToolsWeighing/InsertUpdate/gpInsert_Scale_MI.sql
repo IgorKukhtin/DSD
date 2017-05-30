@@ -239,6 +239,38 @@ BEGIN
      WHERE Object_GoodsByGoodsKind_View.GoodsId = inGoodsId
        AND Object_GoodsByGoodsKind_View.GoodsKindId = inGoodsKindId;
 
+
+     -- проверка, т.к. несколько записей
+     IF 1 < (SELECT COUNT(*) FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure()) THEN
+        RAISE EXCEPTION 'Ошибка.Записей у <%> для Ед.измерения = <%>.', lfGet_Object_ValueData (inGoodsId)
+          , (SELECT COUNT(*) FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure());
+     END IF;
+     -- проверка, т.к. несколько записей
+     IF 1 < (SELECT COUNT(*) FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := vbOperDate_Dnepr
+                                                                   , inPriceListId:= vbPriceListId_Dnepr
+                                                                   , inGoodsId    := inGoodsId
+                                                                   , inSession    := inSession
+                                                                    ) AS tmp) THEN
+        RAISE EXCEPTION 'Ошибка.Записей у <%> <%> <%> <%> <%> для Цена = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (vbPriceListId_Dnepr), lfGet_Object_ValueData (inPriceListId), DATE (vbOperDate_Dnepr), DATE (vbOperDate)
+          , (SELECT COUNT(*) FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := vbOperDate_Dnepr
+                                                                   , inPriceListId:= vbPriceListId_Dnepr
+                                                                   , inGoodsId    := inGoodsId
+                                                                   , inSession    := inSession
+                                                                    ) AS tmp);
+     END IF;
+     -- проверка, т.к. несколько записей
+     IF 1 < (SELECT COUNT(*) FROM ObjectLink AS ObjectLink_Goods_InfoMoney
+                                  LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                             WHERE ObjectLink_Goods_InfoMoney.ObjectId = inGoodsId
+                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()) THEN
+        RAISE EXCEPTION 'Ошибка.Записей у <%> для УП = <%>.', lfGet_Object_ValueData (inGoodsId)
+          , (SELECT COUNT(*) FROM ObjectLink AS ObjectLink_Goods_InfoMoney
+                                  LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                             WHERE ObjectLink_Goods_InfoMoney.ObjectId = inGoodsId
+                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney());
+     END IF;
+
+                                                                                            
      -- сохранили
      vbId:= gpInsertUpdate_MovementItem_WeighingPartner (ioId                  := 0
                                                        , inMovementId          := inMovementId
@@ -326,6 +358,13 @@ BEGIN
 
      --
      vbTotalSumm:= (SELECT ValueData FROM MovementFloat WHERE MovementId = inMovementId AND DescId = zc_MovementFloat_TotalSumm());
+
+-- !!! ВРЕМЕННО !!!
+if inSession = '5' AND 1=1
+then
+    RAISE EXCEPTION 'Admin - Test = OK';
+    -- 'Повторите действие через 3 мин.'
+end if;
 
      -- Результат
      RETURN QUERY

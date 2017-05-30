@@ -1,7 +1,7 @@
 -- Function: lpInsertUpdate_Movement_Cash()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Cash(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -23,7 +23,6 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Cash(
     IN inUnitId              Integer   , -- Подразделения
 
     IN inCurrencyId            Integer   , -- Валюта
-    IN inCurrencyPartnerId     Integer   , -- Валюта контрагента
     IN inCurrencyValue         TFloat    , -- Курс для перевода в валюту баланса
     IN inParValue              TFloat    , -- Номинал для перевода в валюту баланса
     IN inCurrencyPartnerValue  TFloat    , -- Курс для расчета суммы операции
@@ -40,6 +39,7 @@ $BODY$
    DECLARE vbAmount TFloat;
    DECLARE vbIsInsert Boolean;
    DECLARE vbPersonalServiceListId Integer;
+   DECLARE vbCurrencyPartnerId Integer;
 BEGIN
      -- расчет - 1-ое число месяца
      inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
@@ -73,7 +73,7 @@ BEGIN
      -- проверка
      IF COALESCE (inContractId, 0) = 0 AND EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMoneyPlaceId AND Object.DescId IN (zc_Object_Partner(), zc_Object_Juridical()))
      THEN
-         RAISE EXCEPTION 'Ошибка.Значении <Догово> должно быть заполнено.';
+         RAISE EXCEPTION 'Ошибка.Значении <Договор> должно быть заполнено.';
      END IF;
 
      -- проверка
@@ -103,6 +103,9 @@ BEGIN
         vbAmount := -1 * inAmountOut;
      END IF;
 
+     -- определяем
+     vbCurrencyPartnerId:= COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inContractId AND OL.DescId = zc_ObjectLink_Contract_Currency())
+                                   , zc_Enum_Currency_Basis());
 
      -- определяем ключ доступа
 -- 280297;9;"Касса Крым";f;"грн";"филиал Крым";"ТОВ АЛАН";"";"Нал"
@@ -254,7 +257,7 @@ BEGIN
      -- сохранили связь с <Валютой>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency(), vbMovementItemId, inCurrencyId);
      -- сохранили связь с <Валютой контрагента>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_CurrencyPartner(), vbMovementItemId, inCurrencyPartnerId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_CurrencyPartner(), vbMovementItemId, vbCurrencyPartnerId);
 
      -- сохранили свойство <id документа продажи>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), vbMovementItemId, inMovementId_Partion);

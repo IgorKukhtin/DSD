@@ -163,7 +163,7 @@ BEGIN
             , Object_PriceList_def.Id        AS PriceListId_def
             , Object_PriceList_def.ValueData AS PriceListName_def
 
-            , 1::Integer  AS OperDate_diff  -- пока на один день позже для всех, потом будет для каждого филиала отдельно задаваться
+            , 0::Integer  AS OperDate_diff  -- пока на один день позже для всех, потом будет для каждого филиала отдельно задаваться
             , 14::Integer AS ReturnDayCount -- пока 14 дней
 
        FROM tmpPersonal
