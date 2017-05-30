@@ -71,16 +71,29 @@ BEGIN
               );
 
            CREATE TEMP TABLE tmpContract ON COMMIT DROP
-           AS (SELECT ObjectLink_Contract_Juridical.ObjectId AS ContractId
-               FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
+           AS (-- если vbPersonalId - Сотрудник (торговый)
+               SELECT ObjectLink_Contract_Juridical.ObjectId AS ContractId
+               FROM ObjectLink AS OL
                     JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                    ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
-                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                    ON ObjectLink_Partner_Juridical.ObjectId = OL.ObjectId
+                                   AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
                     JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                     ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                                   AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-               WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
-                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                   AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Contract_Juridical()
+               WHERE OL.ChildObjectId = vbPersonalId
+                 AND OL.DescId        = zc_ObjectLink_Partner_PersonalTrade()
+              UNION
+               -- если vbPersonalId - Сотрудник (супервайзер)
+               SELECT ObjectLink_Contract_Juridical.ObjectId AS ContractId
+               FROM ObjectLink AS OL
+                    JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                    ON ObjectLink_Partner_Juridical.ObjectId = OL.ObjectId
+                                   AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                    JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                    ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                   AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Contract_Juridical()
+               WHERE OL.ChildObjectId = vbPersonalId
+                 AND OL.DescId        = zc_ObjectLink_Partner_Personal()
               );
 
            IF inSyncDateIn > zc_DateStart()
@@ -242,6 +255,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelectMobile_Object_Contract(inSyncDateIn := zc_DateStart(), inSession := '347628') -- Киюк С.М.
--- SELECT * FROM gpSelectMobile_Object_Contract(inSyncDateIn := zc_DateStart(), inSession := '1000167') WHERE ObjectCode in (4859, 4572, 4532) -- Зенченко Ю.Д.
--- SELECT * FROM gpSelectMobile_Object_Contract(inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelectMobile_Object_Contract (inSyncDateIn := zc_DateStart(), inSession := '347628') -- Киюк С.М.
+-- SELECT * FROM gpSelectMobile_Object_Contract (inSyncDateIn := zc_DateStart(), inSession := '1000167') WHERE ObjectCode in (4859, 4572, 4532) -- Зенченко Ю.Д.
+-- SELECT * FROM gpSelectMobile_Object_Contract (inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())

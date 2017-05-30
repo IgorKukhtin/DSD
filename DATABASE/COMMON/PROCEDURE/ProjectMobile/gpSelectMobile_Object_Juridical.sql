@@ -18,7 +18,7 @@ RETURNS TABLE (Id               Integer
              , isErased         Boolean  -- Удаленный ли элемент
              , isSync           Boolean  -- Синхронизируется (да/нет)
               )
-AS 
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPersonalId Integer;
@@ -30,23 +30,33 @@ BEGIN
       vbPersonalId:= (SELECT PersonalId FROM gpGetMobile_Object_Const (inSession));
 
       -- Результат
-      IF vbPersonalId IS NOT NULL 
+      IF vbPersonalId IS NOT NULL
       THEN
            RETURN QUERY
-             WITH tmpJuridical AS (SELECT DISTINCT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
-                                   FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
+             WITH tmpJuridical AS (-- если vbPersonalId - Сотрудник (торговый)
+                                   SELECT DISTINCT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                                   FROM ObjectLink AS OL
                                         JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                        ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
-                                                       AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                   WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
-                                     AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                                        ON ObjectLink_Partner_Juridical.ObjectId = OL.ObjectId
+                                                       AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                   WHERE OL.ChildObjectId = vbPersonalId
+                                     AND OL.DescId        = zc_ObjectLink_Partner_PersonalTrade()
+                                  UNION
+                                   -- если vbPersonalId - Сотрудник (супервайзер)
+                                   SELECT DISTINCT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                                   FROM ObjectLink AS OL
+                                        JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                        ON ObjectLink_Partner_Juridical.ObjectId = OL.ObjectId
+                                                       AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                   WHERE OL.ChildObjectId = vbPersonalId
+                                     AND OL.DescId        = zc_ObjectLink_Partner_Personal()
                                   )
                 , tmpContract AS (SELECT tmpJuridical.JuridicalId
                                        , ObjectLink_Contract_Juridical.ObjectId AS ContractId
                                   FROM tmpJuridical
                                        JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                                        ON ObjectLink_Contract_Juridical.ChildObjectId = tmpJuridical.JuridicalId
-                                                      AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical() 
+                                                      AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
                                        JOIN Object AS Object_Contract
                                                    ON Object_Contract.Id = ObjectLink_Contract_Juridical.ObjectId
                                                   AND Object_Contract.isErased = false
@@ -71,7 +81,7 @@ BEGIN
                                                                                                                              )
                                       JOIN ObjectFloat AS ObjectFloat_ContractCondition_Value
                                                        ON ObjectFloat_ContractCondition_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
-                                                      AND ObjectFloat_ContractCondition_Value.DescId = zc_ObjectFloat_ContractCondition_Value() 
+                                                      AND ObjectFloat_ContractCondition_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
                                                       AND ObjectFloat_ContractCondition_Value.ValueData <> 0.0
                                       JOIN Object AS Object_ContractCondition
                                                   ON Object_ContractCondition.Id = ObjectLink_ContractCondition_Contract.ObjectId
@@ -90,7 +100,7 @@ BEGIN
                                    FROM Container AS Container_Summ
                                         JOIN ObjectLink AS ObjectLink_Account_AccountGroup
                                                         ON ObjectLink_Account_AccountGroup.ObjectId = Container_Summ.ObjectId
-                                                       AND ObjectLink_Account_AccountGroup.DescId = zc_ObjectLink_Account_AccountGroup() 
+                                                       AND ObjectLink_Account_AccountGroup.DescId = zc_ObjectLink_Account_AccountGroup()
                                                        AND ObjectLink_Account_AccountGroup.ChildObjectId = zc_Enum_AccountGroup_30000() -- Дебиторы
                                         JOIN ContainerLinkObject AS CLO_Juridical
                                                                  ON CLO_Juridical.ContainerId = Container_Summ.Id
@@ -102,7 +112,7 @@ BEGIN
                                                         AND tmpContract.ContractId = CLO_Contract.ObjectId
                                         JOIN ContainerLinkObject AS CLO_PaidKind
                                                                  ON CLO_PaidKind.ContainerId = Container_Summ.Id
-                                                                AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind() 
+                                                                AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                                                                 AND CLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() -- только БН
                                         LEFT JOIN tmpDayInfo ON tmpDayInfo.JuridicalId = CLO_Juridical.ObjectId
                                                             AND tmpDayInfo.ContractId = CLO_Contract.ObjectId
@@ -117,7 +127,7 @@ BEGIN
                                        AND (MovementItemContainer.MovementDescId = zc_Movement_Sale()
                                         OR (MovementItemContainer.MovementDescId = zc_Movement_TransferDebtOut() AND MovementItemContainer.isActive))
                                        AND MovementItemContainer.OperDate >= tmpContainer.ContractDate
-                                     GROUP BY MovementItemContainer.ContainerId  
+                                     GROUP BY MovementItemContainer.ContainerId
                                     )
                 , tmpDebt AS (SELECT tmpContainer.JuridicalId
                                    , tmpContainer.ContractId
@@ -141,7 +151,7 @@ BEGIN
                   , Object_Juridical.isErased
                   , CAST(true AS Boolean) AS isSync
              FROM Object AS Object_Juridical
-                  JOIN tmpContract ON tmpContract.JuridicalId = Object_Juridical.Id 
+                  JOIN tmpContract ON tmpContract.JuridicalId = Object_Juridical.Id
                   LEFT JOIN tmpDebt ON tmpDebt.JuridicalId = Object_Juridical.Id
                                    AND tmpDebt.ContractId = tmpContract.ContractId
                   LEFT JOIN ObjectString AS ObjectString_Juridical_GUID
@@ -154,7 +164,7 @@ BEGIN
                AND Object_Juridical.isErased = false;
       END IF;
 
-END; 
+END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
@@ -165,4 +175,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelectMobile_Object_Juridical(inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelectMobile_Object_Juridical (inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
