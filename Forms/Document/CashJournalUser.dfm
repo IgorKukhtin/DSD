@@ -456,7 +456,6 @@ inherited CashJournalUserForm: TCashJournalUserForm
     Left = 657
     Top = 7
     Caption = #1042#1072#1083#1102#1090#1072':'
-    Visible = False
   end
   object ceCurrency: TcxButtonEdit [3]
     Left = 706
@@ -470,7 +469,6 @@ inherited CashJournalUserForm: TCashJournalUserForm
     Properties.ReadOnly = True
     ShowHint = False
     TabOrder = 7
-    Visible = False
     Width = 65
   end
   inherited ActionList: TActionList
@@ -587,6 +585,21 @@ inherited CashJournalUserForm: TCashJournalUserForm
           Name = 'CashName'
           Value = Null
           Component = CashGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyId'
+          Value = Null
+          Component = CurrencyGuides
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyName'
+          Value = Null
+          Component = CurrencyGuides
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
