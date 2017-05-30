@@ -88,11 +88,15 @@ BEGIN
           , ''::TVarChar AS BranchName
           , 0 :: Integer AS PaidKindId
           , ''::TVarChar AS PaidKindName
-          , 0 :: Integer AS CurrencyId 
-          , ''::TVarChar AS CurrencyName 
+          , Object_Currency.Id        AS CurrencyId
+          , Object_Currency.ValueData AS CurrencyName
      FROM Object AS Object_Cash
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Cash.DescId
           LEFT JOIN View_InfoMoney_40801 AS View_InfoMoney ON 1 = 1
+          LEFT JOIN ObjectLink AS ObjectLink_Cash_Currency
+                               ON ObjectLink_Cash_Currency.ObjectId = Object_Cash.Id
+                              AND ObjectLink_Cash_Currency.DescId   = zc_ObjectLink_Cash_Currency()
+          LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Cash_Currency.ChildObjectId
      WHERE Object_Cash.DescId = zc_Object_Cash()
     UNION ALL
      SELECT Object_BankAccount_View.Id
@@ -123,11 +127,12 @@ BEGIN
           , ''::TVarChar AS BranchName
           , 0 :: Integer AS PaidKindId
           , ''::TVarChar AS PaidKindName
-          , 0 :: Integer AS CurrencyId 
-          , ''::TVarChar AS CurrencyName 
+          , Object_Currency.Id        AS CurrencyId
+          , Object_Currency.ValueData AS CurrencyName
      FROM Object_BankAccount_View
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_BankAccount()
           LEFT JOIN View_InfoMoney_40801 AS View_InfoMoney ON 1 = 1
+          LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = Object_BankAccount_View.CurrencyId
      WHERE Object_BankAccount_View.JuridicalId = zc_Juridical_Basis()
        AND vbIsConstraint = FALSE
     UNION ALL
@@ -159,11 +164,12 @@ BEGIN
           , ''::TVarChar AS BranchName
           , 0 :: Integer AS PaidKindId
           , ''::TVarChar AS PaidKindName
-          , 0 :: Integer AS CurrencyId 
-          , ''::TVarChar AS CurrencyName 
+          , Object_Currency.Id        AS CurrencyId
+          , Object_Currency.ValueData AS CurrencyName
      FROM Object AS Object_Member
           LEFT JOIN tmpPersonal_Branch ON tmpPersonal_Branch.MemberId = Object_Member.Id
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Member.DescId
+          LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = zc_Enum_Currency_Basis()
     WHERE Object_Member.DescId = zc_Object_Member()
       AND Object_Member.isErased = FALSE
       AND (tmpPersonal_Branch.MemberId > 0
@@ -317,14 +323,15 @@ BEGIN
           , ''::TVarChar AS BranchName
           , 0 :: Integer AS PaidKindId
           , ''::TVarChar AS PaidKindName
-          , 0 :: Integer AS CurrencyId 
-          , ''::TVarChar AS CurrencyName 
+          , Object_Currency.Id        AS CurrencyId
+          , Object_Currency.ValueData AS CurrencyName
      FROM Object AS Object_Founder
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Founder.DescId
           LEFT JOIN ObjectLink AS ObjectLink_Founder_InfoMoney
                                ON ObjectLink_Founder_InfoMoney.ObjectId = Object_Founder.Id
                               AND ObjectLink_Founder_InfoMoney.DescId = zc_ObjectLink_Founder_InfoMoney()
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Founder_InfoMoney.ChildObjectId
+          LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = zc_Enum_Currency_Basis()
     WHERE Object_Founder.DescId = zc_Object_Founder()
       AND Object_Founder.isErased = FALSE
       AND vbIsConstraint = FALSE

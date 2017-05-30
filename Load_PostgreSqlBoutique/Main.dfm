@@ -131,7 +131,7 @@
     Top = 0
     Width = 484
     Height = 507
-    ActivePage = TabSheet2
+    ActivePage = TabSheet1
     Align = alRight
     TabOrder = 2
     object TabSheet1: TTabSheet

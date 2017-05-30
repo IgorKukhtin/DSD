@@ -206,8 +206,8 @@ type
     procedure pLoadGuide_LineFabrica;
     procedure pLoadGuide_GoodsInfo;
     procedure pLoadGuide_GoodsSize;
-    procedure pLoadGuide_Cash;
     procedure pLoadGuide_Valuta;
+    procedure pLoadGuide_Cash;
     procedure pLoadGuide_Period;
     procedure pLoadGuide_GoodsGroup;
     procedure pLoadGuide_Discount;
@@ -2145,32 +2145,34 @@ procedure TMainForm.pCreateGuide_Id_Postgres;
 begin
      if cbCreateId_Postgres.Checked then
      begin
-//        try fExecSqFromQuery_noErr('alter table dba.Unit add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Valuta add Id_Postgres integer null;'); except end;
-//        try fExecSqFromQuery_noErr('alter table dba.Unit add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Period add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Measure add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.LineFabrica add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.KassaProperty add Id_Postgres integer null;'); except end;
+
         try fExecSqFromQuery_noErr('alter table dba.GoodsSize add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.GoodsInfo add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Goods add Id_Postgres integer null;'); except end;
+
         try fExecSqFromQuery_noErr('alter table dba.GoodsProperty add Id_Pg_goodsItem integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.GoodsProperty add Id_Pg_goods integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.GoodsProperty add Id_pg_label integer null;'); except end;
+
         try fExecSqFromQuery_noErr('alter table dba.Fabrika add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.DiscountTools add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Discount add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.CountryBrand add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.CompositionGroup add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Composition add Id_Postgres integer null;'); except end;
+
         try fExecSqFromQuery_noErr('alter table dba.Unit add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Brand add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Firma add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.PriceList add Id_Postgres integer null;'); except end;
+
         try fExecSqFromQuery_noErr('alter table dba.Users add MemberId_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.Users add UserId_Postgres integer null;'); except end;
-
 
      end;
 end;
@@ -2197,56 +2199,70 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pSetNullGuide_Id_Postgres;
 begin
-      //if cbMeasure.Checked then
+      // 1.1.
       fExecSqFromQuery('update dba.Measure set Id_Postgres = null where Id_Postgres is not null');
-      //if cbCompositionGroup.Checked then
+      // 1.2.
       fExecSqFromQuery('update dba.CompositionGroup set Id_Postgres = null where Id_Postgres is not null');
-      //if cbComposition.Checked then
+      // 1.3.
       fExecSqFromQuery('update dba.Composition set Id_Postgres = null where Id_Postgres is not null');
-      //if cbCountryBrand.Checked then
+      // 1.4.
       fExecSqFromQuery('update dba.CountryBrand set Id_Postgres = null where Id_Postgres is not null');
-      //if cbBrand.Checked then
+      // 1.5.
       fExecSqFromQuery('update dba.Brand set Id_Postgres = null where Id_Postgres is not null');
-      //if cbFabrika.Checked then
+      // 1.6.
       fExecSqFromQuery('update dba.Fabrika set Id_Postgres = null where Id_Postgres is not null');
-      //if cbLineFabrica.Checked then
+      // 1.7.
       fExecSqFromQuery('update dba.LineFabrica set Id_Postgres = null where Id_Postgres is not null');
-      //if cbGoodsInfo.Checked then
+      // 1.8.
       fExecSqFromQuery('update dba.GoodsInfo set Id_Postgres = null where Id_Postgres is not null');
-      //if cbGoodsSize.Checked then
+      // 1.9.
       fExecSqFromQuery('update dba.GoodsSize set Id_Postgres = null where Id_Postgres is not null');
-      //if cbValuta.Checked then
+      // 1.10.
       fExecSqFromQuery('update dba.Valuta set Id_Postgres = null where Id_Postgres is not null');
-      //if cbCash.Checked then
-      fExecSqFromQuery('update dba.KassaProperty set Id_Postgres = null where Id_Postgres is not null');
-      //if cbPeriod.Checked then
+
+      // 1.11. Подразделения
+      fExecSqFromQuery('update dba.Unit set Id_Postgres = null where Id_Postgres is not null');
+
+      // 1.12.
       fExecSqFromQuery('update dba.Period set Id_Postgres = null where Id_Postgres is not null');
-      //if cbGoodsGroup.Checked then
-//      fExecSqFromQuery('update dba.Goods set Id_Postgres = null where Goods.HasChildren <> zc_hsLeaf()');
+
+      // 1.13. Группы товаров
       fExecSqFromQuery('update dba.Goods set Id_Postgres = null where Id_Postgres is not null');
-      //if cbDiscount.Checked then
+
+      // 1.14.
       fExecSqFromQuery('update dba.Discount set Id_Postgres = null where Id_Postgres is not null');
-      //if cbDiscountTools.Checked then
+      // 1.15.
       fExecSqFromQuery('update dba.DiscountTools set Id_Postgres = null where Id_Postgres is not null');
-      //if cbPartner.Checked then
-//      fExecSqFromQuery('update dba.Unit set Id_Postgres = null  where KindUnit = zc_kuIncome()');
-      //if cbUnit.Checked then
-//      fExecSqFromQuery('update dba.Unit set Id_Postgres = null  where KindUnit = zc_kuUnit()');
-      //if cbLabel.Checked then
-//      fExecSqFromQuery('update dba.GoodsProperty set Id_pg_label = null');
-      //if cbGoods.Checked then
+
+      // 1.16. Поcтавщики = 1.11.
+      // fExecSqFromQuery('update dba.Unit set Id_Postgres = null where Id_Postgres is not null');
+
+      // 1.17.
+      fExecSqFromQuery('update dba.KassaProperty set Id_Postgres = null where Id_Postgres is not null');
+
+      // 1.18. Название для ценника
+      fExecSqFromQuery('update dba.GoodsProperty set Id_pg_label = null where Id_pg_label is not null');
+      // 1.19. Товары
       fExecSqFromQuery('update dba.GoodsProperty set Id_Pg_Goods = null where Id_Pg_Goods is not null');
-      //if cbGoodsItem.Checked then
+      // 1.20. Товары c размерами
       fExecSqFromQuery('update dba.GoodsProperty set Id_Pg_GoodsItem = null where Id_Pg_GoodsItem is not null');
-      //if cbClient.Checked then
-//      fExecSqFromQuery('update dba.Unit set Id_Postgres = null  where KindUnit = zc_kuClient()');
-      //if cbJuridical.Checked then
+
+      // 1.21. Город - ???
+      //fExecSqFromQuery('select distinct city from DiscountKlient where city <> '''');
+
+      // 1.22. Юридические лица
       fExecSqFromQuery('update dba.Firma set Id_Postgres = null where Id_Postgres is not null');
       //
+      // 1.23. Прайс листы
       fExecSqFromQuery('update dba.PriceList set Id_Postgres = null where Id_Postgres is not null');
+
+      // 1.24. Физические лица
       fExecSqFromQuery('update dba.Users set MemberId_Postgres = null where MemberId_Postgres is not null');
+      // 1.25.  Пользователи
       fExecSqFromQuery('update dba.Users set UserId_Postgres = null where UserId_Postgres is not null');
-      fExecSqFromQuery('update dba.Unit set Id_Postgres = null where Id_Postgres is not null');
+
+      // 1.26. Покупатели = 1.11.
+      // fExecSqFromQuery('update dba.Unit set Id_Postgres = null where Id_Postgres is not null');
 
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -4879,54 +4895,55 @@ begin
         Add('     , case');
         Add('       when ObjectId = 21 then 235');     // MaxMara грн   - магазин MaxMara
         Add('       when ObjectId = 25 then 235');     // MaxMara $     - магазин MaxMara
-        Add('       when ObjectId = 26 then 235');     // MaxMara бн    - магазин MaxMara
+        //Add('       when ObjectId = 26 then 235');   // MaxMara бн    - магазин MaxMara
         Add('       when ObjectId = 27 then 235');     // MaxMara EUR   - магазин MaxMara
-        Add('       when ObjectId = 28 then 0');       // Поставщики    -
+        //Add('       when ObjectId = 28 then 0');       // Поставщики    -
         Add('       when ObjectId = 29 then 204');     // Terry - L грн - магазин Terri-Luxury
         Add('       when ObjectId = 30 then 234');     // Савой грн     - магазин SAVOY
         Add('       when ObjectId = 31 then 240');     // 5 Элемент грн - магазин 5 Элемент
         Add('       when ObjectId = 32 then 240');     // 5 Элемент $   - магазин 5 Элемент
         Add('       when ObjectId = 33 then 240');     // 5 Элемент EUR - магазин 5 Элемент
-        Add('       when ObjectId = 34 then 240');     // 5 Элемент бн  - магазин 5 Элемент
+        //Add('       when ObjectId = 34 then 240');     // 5 Элемент бн  - магазин 5 Элемент
         Add('       when ObjectId = 35 then 234');     // Савой $       - магазин SAVOY
         Add('       when ObjectId = 36 then 234');     // Савой EUR     - магазин SAVOY
-        Add('       when ObjectId = 37 then 234');     // Савой бн      - магазин SAVOY
+        //Add('       when ObjectId = 37 then 234');     // Савой бн      - магазин SAVOY
         Add('       when ObjectId = 38 then 204');     // Terry - L $   - магазин Terri-Luxury
         Add('       when ObjectId = 39 then 204');     // Terry - L EUR - магазин Terri-Luxury
-        Add('       when ObjectId = 40 then 204');     // Terry - L бн  - магазин Terri-Luxury
+        //Add('       when ObjectId = 40 then 204');     // Terry - L бн  - магазин Terri-Luxury
         Add('       when ObjectId = 41 then 1121');    // Чадо грн      - магазин CHADO
         Add('       when ObjectId = 42 then 1121');    // Чадо $        - магазин CHADO
         Add('       when ObjectId = 43 then 1121');    // Чадо EUR      - магазин CHADO
-        Add('       when ObjectId = 44 then 1121');    // Чадо бн       - магазин CHADO
+        //Add('       when ObjectId = 44 then 1121');    // Чадо бн       - магазин CHADO
         Add('       when ObjectId = 45 then 969');     // Сопра грн     - магазин Sopra
         Add('       when ObjectId = 46 then 969');     // Сопра $       - магазин Sopra
         Add('       when ObjectId = 47 then 969');     // Сопра EUR     - магазин Sopra
-        Add('       when ObjectId = 48 then 969');     // Сопра бн      - магазин Sopra
+        //Add('       when ObjectId = 48 then 969');     // Сопра бн      - магазин Sopra
         Add('       when ObjectId = 49 then 5727');    // PZ грн        - магазин Savoy-P.Z.
         Add('       when ObjectId = 50 then 5727');    // PZ $          - магазин Savoy-P.Z.
-        Add('       when ObjectId = 51 then 5727');    // PZ бн         - магазин Savoy-P.Z.
+        //Add('       when ObjectId = 51 then 5727');    // PZ бн         - магазин Savoy-P.Z.
         Add('       when ObjectId = 52 then 5727');    // PZ EUR        - магазин Savoy-P.Z.
         Add('       when ObjectId = 53 then 11772');   // Терри  грн    - магазин Терри-Out
         Add('       when ObjectId = 54 then 11772');   // Терри  $      - магазин Терри-Out
         Add('       when ObjectId = 55 then 11772');   // Терри  EUR    - магазин Терри-Out
-        Add('       when ObjectId = 56 then 11772');   // Терри  бн     - магазин Терри-Out
+        //Add('       when ObjectId = 56 then 11772');   // Терри  бн     - магазин Терри-Out
         Add('       when ObjectId = 57 then 4646');    // Vintag grn    - гр.Vintag
         Add('       when ObjectId = 58 then 4646');    // Vintag dol    - гр.Vintag
         Add('       when ObjectId = 59 then 4646');    // Vintag EUR    - гр.Vintag
-        Add('       when ObjectId = 60 then 4646');    // Vintag BN     - гр.Vintag
+        //Add('       when ObjectId = 60 then 4646');    // Vintag BN     - гр.Vintag
         Add('       when ObjectId = 61 then 20484');   // ESCADA грн    - магазин ESCADA
         Add('       when ObjectId = 62 then 20484');   // ESCADA $      - магазин ESCADA
         Add('       when ObjectId = 63 then 20484');   // ESCADA EUR    - магазин ESCADA
-        Add('       when ObjectId = 64 then 20484');   // ESCADA бн     - магазин ESCADA
+        //Add('       when ObjectId = 64 then 20484');   // ESCADA бн     - магазин ESCADA
         Add('       when ObjectId = 65 then 29018');   // Savoy-O грн   - магазин Savoy-O
         Add('       when ObjectId = 66 then 29018');   // Savoy-O EUR   - магазин Savoy-O
-        Add('       when ObjectId = 67 then 29018');   // Savoy-O бн    - магазин Savoy-O
+        //Add('       when ObjectId = 67 then 29018');   // Savoy-O бн    - магазин Savoy-O
         Add('       when ObjectId = 68 then 29018');   // Savoy-O $     - магазин Savoy-O
         Add('       end   as IDUnitID');
         Add('     , podr.Id_Postgres as UnitID    ');
         Add('from dba.KassaProperty');
         Add('     left join Valuta on Valuta.Id = KassaProperty.ValutaId');
         Add('     left join Unit as Podr on podr.id = IDUnitID');
+        Add('where KassaProperty.KassaId <> 28');       // Поставщики    -
         Add('order by  ObjectId');
         Open;
         //
@@ -5587,10 +5604,18 @@ begin
 end;
 
 procedure TMainForm.pLoadGuide_Unit;
+var BankAccountId : Integer;
 begin
      if (not cbUnit.Checked)or(not cbUnit.Enabled) then exit;
      //
      myEnabledCB(cbUnit);
+     //
+     // сначала - добавим 1 Расчетный счет - ЕСЛИ его НЕТ
+     fOpenSqToQuery_two(' select case when Id_Find > 0 THEN Id_Find'
+                       +'             else (SELECT tmp.ioId from gpInsertUpdate_Object_BankAccount (0, 0, ''расчетный счет для всех'', 0, 0, zc_Currency_GRN(), zfCalc_UserAdmin()) as tmp)'
+                       +'         end as Id'
+                       +' from (SELECT MIN (Id) AS Id_Find FROM Object WHERE DescId = zc_Object_BankAccount() AND isErased = FALSE) AS tmp');
+     BankAccountId:= toSqlQuery_two.FieldByName('Id').Value;
      //
      with fromQuery,Sql do begin
         Close;
@@ -5620,7 +5645,9 @@ begin
         Add('       when ObjectId = 20484 then 0');    //магазин ESCADA      -
         Add('       when ObjectId = 29018 then 0')  ;  //магазин Savoy-O     -
         Add('       end   as IDChildId');
-        Add(', Child.Id_Postgres as ChildId');
+        Add('     , Child.Id_Postgres as ChildId');
+        Add('     , case when ObjectId = 4646 then 0 else ' + IntToStr(BankAccountId) + ' end as BankAccountId');
+
         Add('from dba.Unit');
         Add('     left join Unit as Parent on Parent.id = IDParentId ');
         Add('     left join Unit as Child on Child.Id = IDChildId');
@@ -5660,6 +5687,7 @@ begin
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId').AsInteger;
              toStoredProc.Params.ParamByName('inChildId').Value:=FieldByName('ChildId').AsInteger;
+             toStoredProc.Params.ParamByName('inBankAccountId').Value:=FieldByName('BankAccountId').AsInteger;
              if not myExecToStoredProc then ;//exit;
              if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
              //
@@ -5789,7 +5817,7 @@ begin
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.Valuta set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
 
-             if FieldByName('ObjectId').AsInteger=1 // Грн
+             if FieldByName('ObjectId').AsInteger=1 // Грн - Basis
              then fExecSqToQuery ('CREATE OR REPLACE FUNCTION zc_Currency_Basis() RETURNS Integer AS $BODY$BEGIN RETURN ('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;');
              if FieldByName('ObjectId').AsInteger=1 // Грн
              then fExecSqToQuery ('CREATE OR REPLACE FUNCTION zc_Currency_GRN() RETURNS Integer AS $BODY$BEGIN RETURN ('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;');

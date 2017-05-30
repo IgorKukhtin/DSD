@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION lpSetErased_MovementItem(
    OUT outIsErased           Boolean              , -- новое значение
     IN inUserId              Integer
 )                              
-  RETURNS Boolean
+RETURNS Boolean
 AS
 $BODY$
    DECLARE vbMovementId Integer;
@@ -28,7 +28,6 @@ BEGIN
   vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
   -- проверка - проведенные/удаленные документы Изменять нельзя
   IF vbStatusId <> zc_Enum_Status_UnComplete()
-     AND vbDescId <> zc_MI_Sign()
      -- AND inUserId <> 5 -- !!!временно для загрузки из Sybase!!!
   THEN
       /*IF AND vbStatusId = zc_Enum_Status_Erased() 
@@ -42,15 +41,11 @@ BEGIN
       RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
   END IF;
 
-  -- !!!не всегда!!!
-  IF vbDescId <> zc_MI_Sign()
-  THEN
-      -- пересчитали Итоговые суммы по накладной
-      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
+  -- пересчитали Итоговые суммы по накладной
+  PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
 
-      -- сохранили протокол
-      PERFORM lpInsert_MovementItemProtocol (inMovementItemId:= inMovementItemId, inUserId:= inUserId, inIsInsert:= FALSE, inIsErased:= TRUE);
-  END IF;
+  -- сохранили протокол
+  PERFORM lpInsert_MovementItemProtocol (inMovementItemId:= inMovementItemId, inUserId:= inUserId, inIsInsert:= FALSE, inIsErased:= TRUE);
 
 
 END;

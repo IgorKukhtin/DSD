@@ -1,7 +1,5 @@
 -- Function: lpInsertUpdate_MovementItem
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem (Integer, Integer, Integer, Integer, TFloat, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem (Integer, Integer, Integer, Integer, TFloat, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem (Integer, Integer, Integer, Integer, Integer, TFloat, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem(
@@ -14,7 +12,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem(
     IN inParentId     Integer,
     IN inUserId       Integer DEFAULT 0 -- Пользователь
 )
-  RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
   DECLARE vbStatusId  Integer;
   DECLARE vbInvNumber TVarChar;
@@ -49,7 +48,6 @@ BEGIN
      SELECT StatusId, InvNumber INTO vbStatusId, vbInvNumber FROM Movement WHERE Id = inMovementId;
      -- проверка - проведенные/удаленные документы Изменять нельзя + !!!временно захардкодил -12345!!!
      IF vbStatusId <> zc_Enum_Status_UnComplete()
-        AND inDescId <> zc_MI_Sign()
      THEN
          RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
      END IF;
@@ -89,21 +87,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION lpInsertUpdate_MovementItem (Integer, Integer, Integer, Integer, TFloat, Integer, Integer) OWNER TO postgres; 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  11.04.17         * add PartionId
- 11.07.15                                        * add inUserId
- 17.05.14                                        * add проверка - inAmount and inObjectId
- 05.04.14                                        * add vbIsErased
- 31.10.13                                        * add vbInvNumber
- 06.10.13                                        * add vbStatusId
- 09.08.13                                        * add inObjectId := NULL
- 09.08.13                                        * add inObjectId := NULL
- 23.07.13                                        * add inParentId := NULL
 */
 
 -- тест
