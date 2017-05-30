@@ -22,6 +22,11 @@ type
   end;
 
 type
+  TdbReportProcedureTest = class(TdbTest)
+  published
+    procedure CreateReportProcedure;
+  end;
+type
   TdbMovementProcedureTest = class(TdbTest)
   published
     procedure CreateCOMMON;
@@ -123,7 +128,7 @@ uses zLibUtil;
 const
 
   CommonProcedurePath = '..\DATABASE\Boutique\PROCEDURE\';
-
+  ReportsPath = '..\DATABASE\Boutique\REPORTS\';
   { TdbProcedureTest }
 
 procedure TdbProcedureTest.CreareSystem;
@@ -524,6 +529,12 @@ procedure TdbMovementItemContainerProcedureTest.CreateGoodsAccount;
 begin
   DirectoryLoad(CommonProcedurePath + 'MovementItemContainer\GoodsAccount\');
 end;
+
+procedure TdbReportProcedureTest.CreateReportProcedure;
+begin
+  DirectoryLoad(ReportsPath);
+end;
+
 initialization
 
 TestFramework.RegisterTest('Процедуры', TdbProcedureTest.Suite);
@@ -532,5 +543,6 @@ TestFramework.RegisterTest('Процедуры', TdbMovementProcedureTest.Suite);
 TestFramework.RegisterTest('Процедуры', TdbMovementItemProcedureTest.Suite);
 TestFramework.RegisterTest('Процедуры', TdbMovementItemContainerProcedureTest.Suite);
 TestFramework.RegisterTest('Процедуры', TdbObjectProcedureTest.Suite);
+TestFramework.RegisterTest('Процедуры', TdbReportProcedureTest.Suite);
 
 end.
