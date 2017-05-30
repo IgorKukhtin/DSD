@@ -1409,7 +1409,9 @@ end;
 
 procedure TLoadFormTest.LoadPartnerFormTest;
 begin
-//exit;
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerContactForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerContactForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartner_ObjectForm'));
