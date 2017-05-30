@@ -421,7 +421,8 @@ implementation
 {$R *.dfm}
 
 uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog, CashWork, MessagesUnit,
-     LocalWorkUnit, Splash, DiscountService, MainCash2, UnilWin;
+     LocalWorkUnit, Splash, DiscountService, MainCash2, UnilWin,
+     MediCard.Intf;
 
 const
   StatusUnCompleteCode = 1;
@@ -2027,8 +2028,13 @@ begin
 
         if (FormParams.ParamByName('DiscountExternalId').Value > 0) and
           (SourceClientDataSet.FindField('MorionCode') <> nil) then
+        begin
           DiscountServiceForm.SaveMorionCode(SourceClientDataSet.FieldByName('Id').AsInteger,
             SourceClientDataSet.FieldByName('MorionCode').AsInteger);
+
+          if DiscountServiceForm.gCode = 3 then
+            MCDesigner.CasualCache.Save(SourceClientDataSet.FieldByName('Id').AsInteger, lPriceSale);
+        end;
       End;
     finally
       CheckCDS.Filtered := True;

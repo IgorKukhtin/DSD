@@ -785,14 +785,6 @@ object InventoryForm: TInventoryForm
         end
         item
           Visible = True
-          ItemName = 'bbAddMask'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbInsertRecord'
         end
         item

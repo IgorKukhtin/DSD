@@ -52,13 +52,23 @@ type
     ceCurrencyValue_EUR: TcxCurrencyEdit;
     RefreshDispatcher: TRefreshDispatcher;
     dsdDataSetRefreshStart: TdsdDataSetRefresh;
-    cxLabel5: TcxLabel;
-    cxLabel6: TcxLabel;
-    cxLabel7: TcxLabel;
-    cxLabel8: TcxLabel;
-    cxLabel9: TcxLabel;
     spGet_Total: TdsdStoredProc;
     actRefreshTotal: TdsdDataSetRefresh;
+    cbisGRN: TcxCheckBox;
+    cbisUSD: TcxCheckBox;
+    cbisEUR: TcxCheckBox;
+    cbisCARD: TcxCheckBox;
+    cbisDiscount: TcxCheckBox;
+    spGet_isGRN: TdsdStoredProc;
+    actRefreshGRN: TdsdDataSetRefresh;
+    spGet_isUSD: TdsdStoredProc;
+    actRefreshUSD: TdsdDataSetRefresh;
+    spGet_isEUR: TdsdStoredProc;
+    spGet_isCard: TdsdStoredProc;
+    spGet_isDiscount: TdsdStoredProc;
+    actRefreshDiscount: TdsdDataSetRefresh;
+    actRefreshCard: TdsdDataSetRefresh;
+    actRefreshEUR: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

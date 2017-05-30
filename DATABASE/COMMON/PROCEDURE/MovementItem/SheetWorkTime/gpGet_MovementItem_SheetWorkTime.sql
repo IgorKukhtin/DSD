@@ -67,4 +67,4 @@ $BODY$
 
 
 -- тест
--- SELECT * FROM gpGet_MovementItem_SheetWorkTime (inMovementId:= 0, inSession:= '2')
+-- select * from gpGet_MovementItem_SheetWorkTime(inunitid := 8464 , inmemberid := 8468 , inpositionid := 8466 , inpositionlevelid := 0 , inPersonalGroupId := 0 , inStorageLineId := 0 , inoperdate := ('01.03.2017')::TDateTime ,  inSession := '5');

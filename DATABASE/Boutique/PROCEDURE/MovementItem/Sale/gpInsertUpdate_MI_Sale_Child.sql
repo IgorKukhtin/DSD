@@ -30,6 +30,7 @@ $BODY$
    DECLARE vbCashId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbOperDate TDateTime;
+   DECLARE vbTotalChangePercent TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
@@ -131,12 +132,38 @@ BEGIN
             -- сохранили свойство <>
             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), inParentId, inAmountDiscount);
 
+            vbTotalChangePercent := (SELECT CAST ((CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) <> 0
+                                                        THEN CAST (COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
+                                                        ELSE CAST ( COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2))
+                                                   END ) / 100 * COALESCE (MIFloat_ChangePercent.ValueData, 0) AS NUMERIC (16,2))
+                                     FROM MovementItem 
+                                          LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
+                                          LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                                        ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+                                          LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                        ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()  
+                                     WHERE MovementItem.Id = inParentId
+                                             AND MovementItem.DescId     = zc_MI_Master()
+                                             AND MovementItem.isErased   = FALSE);
+
+            -- сохранили свойство <>
+            PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalChangePercent(), inParentId, vbTotalChangePercent + inAmountDiscount);
+
+
             -- в мастер записать итого сумма оплаты грн
             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), inParentId, SUM (COALESCE (_tmpCash.Amount,0) * COALESCE (_tmpCash.CurrencyValue,1)) )
             FROM _tmpCash
                 FULL JOIN _tmpMI ON _tmpMI.CashId = _tmpCash.CashId
                                 AND _tmpMI.CurrencyId = _tmpCash.CurrencyId
              ; 
+
+            -- пересчитали Итоговые суммы по накладной
+            PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
 
      END IF;
 

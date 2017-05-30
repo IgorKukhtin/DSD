@@ -729,6 +729,7 @@ type
     qryGoodsFullForPriceListReturnTermin: TStringField;
     tblObject_ConstOperDate_diff: TIntegerField;
     tblObject_ConstReturnDayCount: TIntegerField;
+    cdsOrderItemsPriceShow: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
@@ -4211,6 +4212,12 @@ begin
     cdsOrderItemsIsPromo.AsString := '';
     cdsOrderItemsisChangePercent.AsBoolean := true;
   end;
+
+  if DM.cdsOrderExternalPriceWithVAT.AsBoolean then
+    cdsOrderItemsPriceShow.AsString := cdsOrderItemsPrice.AsString
+  else
+    cdsOrderItemsPriceShow.AsString := cdsOrderItemsPrice.AsString +
+      ' (' +  FormatFloat(',0.00', cdsOrderItemsPrice.AsFloat * (100 + DM.cdsOrderExternalVATPercent.AsCurrency) / 100) + ')';
 
   cdsOrderItemsTradeMarkName.AsString := ArrValue[12];// торговая марка
   cdsOrderItemsCount.AsString := ArrValue[13];        // количество по умолчанию

@@ -29,11 +29,12 @@ type
   IMCCasualCache = interface
     ['{E2E11DD1-E64A-40A8-A76E-830FB3CFDE9B}']
     function GenerateCasual: string;
-    function Find(AMorionCode: Integer): string;
-    procedure Delete(AMorionCode: Integer);
-    procedure Save(AMorionCode: Integer; ACasual: string);
+    function Find(AGoodsId: Integer; APrice: Currency): string;
+    procedure Delete(AGoodsId: Integer; APrice: Currency);
+    procedure Save(AGoodsId: Integer; APrice: Currency; ACasual: string); overload;
+    procedure Save(AGoodsId: Integer; APrice: Currency); overload;
     procedure Clear;
-end;
+  end;
 
   IMCDesigner = interface
     ['{042F744C-4B1F-4E43-BCB1-2191ACEC3B09}']

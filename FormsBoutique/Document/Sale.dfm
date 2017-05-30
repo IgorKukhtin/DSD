@@ -1163,14 +1163,6 @@ object SaleForm: TSaleForm
         end
         item
           Visible = True
-          ItemName = 'bbAddMask'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbInsertRecord'
         end
         item
@@ -2717,14 +2709,14 @@ object SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 492
-    Top = 260
+    Left = 484
+    Top = 340
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 548
-    Top = 297
+    Left = 564
+    Top = 321
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>

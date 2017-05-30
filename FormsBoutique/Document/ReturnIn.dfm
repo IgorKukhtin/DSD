@@ -611,7 +611,7 @@ object ReturnInForm: TReturnInForm
             Width = 91
           end
           object colTotalSummPay: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1082' '#1086#1087#1083#1072#1090#1077
+            Caption = #1057#1091#1084#1084#1072' '#1082' '#1074#1086#1079#1074#1088#1072#1090#1091' ('#1080#1085#1092'.)'
             DataBinding.FieldName = 'TotalSummPay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1140,14 +1140,6 @@ object ReturnInForm: TReturnInForm
         end
         item
           BeginGroup = True
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbAddMask'
-        end
-        item
           Visible = True
           ItemName = 'bbStatic'
         end

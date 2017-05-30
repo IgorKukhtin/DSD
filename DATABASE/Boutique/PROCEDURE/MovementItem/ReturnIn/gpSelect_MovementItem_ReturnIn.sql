@@ -25,7 +25,7 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , AmountSumm TFloat, AmountPriceListSumm TFloat
              , CurrencyValue TFloat, ParValue TFloat
              , TotalChangePercent TFloat
-             , TotalSummPay TFloat
+             , TotalSummPay TFloat, TotalSummPay_Sale TFloat
              , TotalPay_Grn TFloat, TotalPay_USD TFloat, TotalPay_Eur TFloat, TotalPay_Card TFloat
              , TotalPay TFloat, TotalPayOth TFloat
              , PartionMI_Id Integer, SaleMI_Id Integer, MovementId_Sale Integer, InvNumber_Sale_Full TVarChar
@@ -51,8 +51,19 @@ BEGIN
      -- Результат такой
      RETURN QUERY 
      WITH 
-         tmpMI_Sale AS (SELECT Movement.Id          AS MovementId_Sale
+            tmpSale AS (SELECT Movement.Id          AS MovementId_Sale
                              , Movement.InvNumber   AS InvNumber_Sale
+                        FROM Movement
+                            INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                    ON MovementLinkObject_To.MovementId = Movement.Id
+                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                   AND MovementLinkObject_To.ObjectId = vbClientId
+                        WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
+                          AND Movement.DescId = zc_Movement_Sale()
+                          --AND Movement.StatusId = zc_Enum_Status_Complete()
+                        )
+      ,  tmpMI_Sale AS (SELECT tmpSale.MovementId_Sale
+                             , tmpSale.InvNumber_Sale
                              , MI_Master.Id         AS MI_Id
                              , MI_Master.PartionId  AS PartionId
                              , MI_Master.ObjectId   AS GoodsId
@@ -62,12 +73,9 @@ BEGIN
                              , COALESCE (MIFloat_OperPriceList.ValueData, 0) AS OperPriceList
                              , COALESCE (MIFloat_CurrencyValue.ValueData, 0) AS CurrencyValue
                              , COALESCE (MIFloat_ParValue.ValueData, 0)      AS ParValue
-                        FROM Movement
-                            INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                    ON MovementLinkObject_To.MovementId = Movement.Id
-                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                   AND MovementLinkObject_To.ObjectId = vbClientId
-                             LEFT JOIN MovementItem AS MI_Master ON MI_Master.MovementId = Movement.Id
+                             , COALESCE (MIFloat_TotalPay.ValueData, 0)      AS TotalPay
+                        FROM tmpSale
+                             LEFT JOIN MovementItem AS MI_Master ON MI_Master.MovementId = tmpSale.MovementId_Sale
                                    AND MI_Master.DescId = zc_MI_Master()
                                    AND MI_Master.isErased = False
                              LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
@@ -85,9 +93,9 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_ParValue
                                     ON MIFloat_ParValue.MovementItemId = MI_Master.Id
                                    AND MIFloat_ParValue.DescId = zc_MIFloat_ParValue() 
-                        WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
-                          AND Movement.DescId = zc_Movement_Sale()
-                          --AND Movement.StatusId = zc_Enum_Status_Complete()
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
+                                    ON MIFloat_TotalPay.MovementItemId = MI_Master.Id
+                                   AND MIFloat_TotalPay.DescId = zc_MIFloat_TotalPay() 
                       ) 
  
    , tmpMI_Master AS (SELECT MovementItem.Id
@@ -158,8 +166,16 @@ BEGIN
                            , COALESCE (tmpMI_Master.ParValue, tmpMI_Sale.ParValue)           AS ParValue
                            , COALESCE (tmpMI_Master.TotalChangePercent, 0)    AS TotalChangePercent
                            , COALESCE (tmpMI_Master.TotalPay, 0)              AS TotalPay
+                           , COALESCE (tmpMI_Sale.TotalPay, 0)                AS TotalPay_Sale
                            , COALESCE (tmpMI_Master.TotalPayOth, 0)           AS TotalPayOth
                            , COALESCE (tmpMI_Master.isErased, False)          AS isErased
+
+                           , CAST ((CASE WHEN COALESCE (tmpMI_Master.CountForPrice, tmpMI_Sale.CountForPrice) <> 0
+                                         THEN CAST (COALESCE (tmpMI_Master.Amount,0) * COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList) / COALESCE (tmpMI_Master.CountForPrice, tmpMI_Sale.CountForPrice) AS NUMERIC (16, 2))
+                                         ELSE CAST (COALESCE (tmpMI_Master.Amount,0) * COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList) AS NUMERIC (16, 2))
+                                    END) - COALESCE (tmpMI_Master.TotalChangePercent, 0)
+                             AS TFloat) AS TotalSummPay
+
   --                         , AS MovementId_Sale
 --                           , AS InvNumber_Sale
                 FROM tmpMI_Sale
@@ -222,11 +238,12 @@ BEGIN
            , tmpMI.ParValue                 ::TFloat
            , tmpMI.TotalChangePercent       ::TFloat
 
-           , CAST ((CASE WHEN tmpMI.CountForPrice <> 0
-                           THEN CAST (COALESCE (tmpMI.Amount, 0) * tmpMI.OperPriceList / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                        ELSE CAST ( COALESCE (tmpMI.Amount, 0) * tmpMI.OperPriceList AS NUMERIC (16, 2))
-                   END) - tmpMI.TotalChangePercent
-                 AS TFloat) AS TotalSummPay
+           , CASE WHEN tmpMI.TotalSummPay > tmpMI.TotalSummPay_Sale
+                  THEN tmpMI.TotalSummPay_Sale
+                  ELSE tmpMI.TotalSummPay
+             END                            ::TFloat AS TotalSummPay
+
+           , tmpMI.TotalSummPay_Sale        ::TFloat 
 
            , tmpMI_Child.Amount_GRN         ::TFloat AS TotalPay_Grn 
            , tmpMI_Child.Amount_USD         ::TFloat AS TotalPay_USD
@@ -283,6 +300,12 @@ BEGIN
                            , COALESCE (MIFloat_TotalPay.ValueData, 0)              AS TotalPay
                            , COALESCE (MIFloat_TotalPayOth.ValueData, 0)           AS TotalPayOth
                           
+                           , CAST ((CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) <> 0
+                                         THEN CAST (COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
+                                         ELSE CAST (COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2))
+                                    END) - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
+                             AS TFloat) AS TotalSummPay
+
                            , MovementItem.isErased
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -377,11 +400,12 @@ BEGIN
            , tmpMI.ParValue                 ::TFloat
            , tmpMI.TotalChangePercent       ::TFloat
 
-           , CAST ((CASE WHEN tmpMI.CountForPrice <> 0
-                           THEN CAST (COALESCE (tmpMI.Amount, 0) * tmpMI.OperPriceList / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                        ELSE CAST ( COALESCE (tmpMI.Amount, 0) * tmpMI.OperPriceList AS NUMERIC (16, 2))
-                   END) - tmpMI.TotalChangePercent
-                 AS TFloat) AS TotalSummPay
+           , CASE WHEN tmpMI.TotalSummPay > COALESCE (MIFloat_TotalPay.ValueData, 0) 
+                  THEN COALESCE (MIFloat_TotalPay.ValueData, 0)
+                  ELSE tmpMI.TotalSummPay
+             END                            ::TFloat AS TotalSummPay
+
+           , COALESCE (MIFloat_TotalPay.ValueData, 0)    ::TFloat  AS TotalSummPay_Sale
 
            , tmpMI_Child.Amount_GRN         ::TFloat AS TotalPay_Grn 
            , tmpMI_Child.Amount_USD         ::TFloat AS TotalPay_USD
@@ -416,9 +440,14 @@ BEGIN
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
 
-           LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = tmpMI.PartionMI_Id
-           LEFT JOIN MovementItem AS MI_Sale ON MI_Sale.Id = Object_PartionMI.ObjectCode
-           LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MI_Sale.MovementId
+            LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = tmpMI.PartionMI_Id
+            LEFT JOIN MovementItem AS MI_Sale ON MI_Sale.Id = Object_PartionMI.ObjectCode
+
+            LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
+                                        ON MIFloat_TotalPay.MovementItemId = MI_Sale.Id
+                                       AND MIFloat_TotalPay.DescId = zc_MIFloat_TotalPay()
+
+            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MI_Sale.MovementId
        ;
 
        END IF;

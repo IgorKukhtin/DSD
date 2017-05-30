@@ -21,6 +21,11 @@ RETURNS TABLE (Id Integer
              , AmountRemains  TFloat
              , AmountChange   TFloat
              , isPayTotal     Boolean
+             , isGRN          Boolean
+             , isUSD          Boolean
+             , isEUR          Boolean
+             , isCard         Boolean
+             , isDiscount     Boolean
               )
 AS
 $BODY$
@@ -39,7 +44,8 @@ BEGIN
      WHERE Movement.Id = inMovementId;
      -- сумма к оплате, сумма доп.скидки
      SELECT CAST ( SUM ( COALESCE(MovementItem.Amount,0) *  COALESCE(MIFloat_OperPriceList.ValueData,0) / COALESCE(MIFloat_CountForPrice.ValueData,1) 
-                 - COALESCE(MIFloat_TotalChangePercent.ValueData,0)) AS NUMERIC (16, 2)) 
+                 - COALESCE(MIFloat_TotalChangePercent.ValueData,0)
+                 + COALESCE(MIFloat_SummChangePercent.ValueData,0) ) AS NUMERIC (16, 2)) 
           , CAST ( SUM (COALESCE(MIFloat_SummChangePercent.ValueData,0) ) AS NUMERIC (16, 2))
     INTO vbSumm, vbSummChangePercent
      FROM MovementItem
@@ -90,10 +96,11 @@ BEGIN
                , tmpMI.AmountCard   ::TFloat
                , vbSummChangePercent ::TFloat    AS AmountDiscount
 
-               , ( COALESCE (tmpMI.AmountGRN,0) 
+              /* , ( COALESCE (tmpMI.AmountGRN,0) 
                +  (COALESCE(tmpMI.AmountUSD,0) * COALESCE(tmp_USD.Amount,0))
                +  (COALESCE(tmpMI.AmountEUR,0) * COALESCE(tmp_EUR.Amount,0)) 
-               +  COALESCE(tmpMI.AmountCard,0) )                            ::TFloat AS Amount
+               +  COALESCE(tmpMI.AmountCard,0) )                            ::TFloat AS Amount*/
+               , vbSumm             ::TFloat AS Amount 
 
                , CASE WHEN vbSumm - ( COALESCE (tmpMI.AmountGRN,0) 
                                     + (COALESCE(tmpMI.AmountUSD,0) * COALESCE(tmp_USD.Amount,0))
@@ -121,6 +128,12 @@ BEGIN
                  END             ::TFloat AS AmountChange
 
                , TRUE AS isPayTotal
+
+               , CASE WHEN COALESCE (tmpMI.AmountGRN,0) <> 0 THEN TRUE ELSE FALSE END     AS isGRN
+               , CASE WHEN COALESCE (tmpMI.AmountUSD,0) <> 0 THEN TRUE ELSE FALSE END     AS isUSD
+               , CASE WHEN COALESCE (tmpMI.AmountEUR,0) <> 0 THEN TRUE ELSE FALSE END     AS isEUR
+               , CASE WHEN COALESCE (tmpMI.AmountCard,0) <> 0 THEN TRUE ELSE FALSE END    AS isCard
+               , CASE WHEN COALESCE (vbSummChangePercent,0) <> 0 THEN TRUE ELSE FALSE END AS isDiscount
 
            FROM tmpMI
                LEFT JOIN lfSelect_Movement_Currency_byDate (inOperDate:= vbOperDate, inCurrencyFromId:= zc_Currency_Basis(), inCurrencyToId:= zc_Currency_USD()) AS tmp_USD ON 1=1
@@ -167,11 +180,12 @@ BEGIN
                , tmpMI.AmountCard     ::TFloat
                , vbSummChangePercent ::TFloat    AS AmountDiscount
 
-               , ( COALESCE (tmpMI.AmountGRN,0) 
+               /*, ( COALESCE (tmpMI.AmountGRN,0) 
                +  (COALESCE (tmpMI.AmountUSD,0) * COALESCE (tmpMI.CurrencyValue_USD, tmp_USD.Amount))
                +  (COALESCE (tmpMI.AmountEUR,0) * COALESCE (tmpMI.CurrencyValue_EUR, tmp_EUR.Amount)) 
                +   COALESCE (tmpMI.AmountCard,0)
-               + COALESCE(vbSummChangePercent,0) )                    ::TFloat AS Amount
+               + COALESCE(vbSummChangePercent,0) )                    ::TFloat AS Amount*/
+               , vbSumm             ::TFloat AS Amount 
 
                , CASE WHEN vbSumm - (  COALESCE(tmpMI.AmountGRN,0) 
                                     + (COALESCE(tmpMI.AmountUSD,0) * COALESCE (tmpMI.CurrencyValue_USD, tmp_USD.Amount))
@@ -199,6 +213,13 @@ BEGIN
                  END                                                  ::TFloat AS AmountChange
 
                , False AS isPayTotal
+
+               , CASE WHEN COALESCE (tmpMI.AmountGRN,0) <> 0 THEN TRUE ELSE FALSE END     AS isGRN
+               , CASE WHEN COALESCE (tmpMI.AmountUSD,0) <> 0 THEN TRUE ELSE FALSE END     AS isUSD
+               , CASE WHEN COALESCE (tmpMI.AmountEUR,0) <> 0 THEN TRUE ELSE FALSE END     AS isEUR
+               , CASE WHEN COALESCE (tmpMI.AmountCard,0) <> 0 THEN TRUE ELSE FALSE END    AS isCard
+               , CASE WHEN COALESCE (vbSummChangePercent,0) <> 0 THEN TRUE ELSE FALSE END AS isDiscount
+
            FROM tmpMI
                 LEFT JOIN lfSelect_Movement_Currency_byDate (inOperDate:= vbOperDate, inCurrencyFromId:= zc_Currency_Basis(), inCurrencyToId:= zc_Currency_USD()) AS tmp_USD ON 1=1
                 LEFT JOIN lfSelect_Movement_Currency_byDate (inOperDate:= vbOperDate, inCurrencyFromId:= zc_Currency_Basis(), inCurrencyToId:= zc_Currency_EUR()) AS tmp_EUR ON 1=1
