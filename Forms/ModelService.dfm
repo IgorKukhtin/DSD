@@ -539,6 +539,14 @@ object ModelServiceForm: TModelServiceForm
         end
         item
           Visible = True
+          ItemName = 'bbProtocolOpen'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErasedMaster'
         end
         item
@@ -551,11 +559,27 @@ object ModelServiceForm: TModelServiceForm
         end
         item
           Visible = True
+          ItemName = 'bbProtocolMaster'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErasedChild'
         end
         item
           Visible = True
           ItemName = 'bbUnErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolChild'
         end
         item
           BeginGroup = True
@@ -670,11 +694,53 @@ object ModelServiceForm: TModelServiceForm
       Category = 0
       ImageIndex = 77
     end
+    object bbProtocolOpen: TdxBarButton
+      Action = ProtocolOpenForm
+      Category = 0
+    end
+    object bbProtocolMaster: TdxBarButton
+      Action = ProtocolOpenMaster
+      Category = 0
+    end
+    object bbProtocolChild: TdxBarButton
+      Action = ProtocolOpenChild
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 288
     Top = 160
+    object ProtocolOpenMaster: TdsdOpenForm
+      Category = 'Protocol'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1043#1083#1072#1074#1085#1099#1077' '#1101#1083#1077#1084#1077#1085#1090#1099'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1043#1083#1072#1074#1085#1099#1077' '#1101#1083#1077#1084#1077#1085#1090#1099'>'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ModelServiceItemMasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ModelServiceItemMasterCDS
+          ComponentItem = 'MovementDescName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1364,6 +1430,66 @@ object ModelServiceForm: TModelServiceForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object ProtocolOpenForm: TdsdOpenForm
+      Category = 'Protocol'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1052#1086#1076#1077#1083#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1052#1086#1076#1077#1083#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object ProtocolOpenChild: TdsdOpenForm
+      Category = 'Protocol'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1055#1086#1076#1095#1080#1085#1077#1085#1085#1099#1077' '#1101#1083#1077#1084#1077#1085#1090#1099'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083' <'#1055#1086#1076#1095#1080#1085#1077#1085#1085#1099#1077' '#1101#1083#1077#1084#1077#1085#1090#1099'>'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ModelServiceItemChildCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ModelServiceItemChildCDS
+          ComponentItem = 'FromName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object spSelectMaster: TdsdStoredProc

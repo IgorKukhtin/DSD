@@ -122,6 +122,12 @@ type
     cxSplitterBottom: TcxSplitter;
     cxSplitter1: TcxSplitter;
     clisPositionLevel: TcxGridDBColumn;
+    ProtocolOpenForm: TdsdOpenForm;
+    ProtocolOpenFormCost: TdsdOpenForm;
+    ProtocolOpenFormSumm: TdsdOpenForm;
+    bbProtocol: TdxBarButton;
+    bbProtocolCost: TdxBarButton;
+    bbProtocolSumm: TdxBarButton;
   private
     { Private declarations }
   public
