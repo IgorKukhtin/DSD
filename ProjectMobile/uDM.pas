@@ -10,7 +10,7 @@ uses
   FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys,
   FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs,
   FireDAC.Comp.UI, Variants, FireDAC.FMXUI.Wait, dsdDB, Datasnap.DBClient,
-  FMX.Dialogs, FMX.DialogService, System.UITypes, DateUtils
+  FMX.Dialogs, FMX.DialogService, System.UITypes, System.Sensors, DateUtils
   {$IFDEF ANDROID}
   , Androidapi.JNI.GraphicsContentViewText, Androidapi.Helpers,
   Androidapi.JNI.Net, Androidapi.JNI.JavaTypes, Androidapi.JNI.App
@@ -42,6 +42,7 @@ CONST
    + '       , Object_Juridical.ValueData    AS Name '
    + '       , Object_Contract.ContractTagName || '' '' || Object_Contract.ValueData AS ContractName '
    + '       , Object_Partner.Address '
+   + '       , Object_Partner.ShortAddress '
    + '       , Object_Partner.GPSN '
    + '       , Object_Partner.GPSE '
    + '       , Object_Partner.Schedule '
@@ -133,6 +134,7 @@ type
 
     function LoadJuridicalCollation: string;
     function UpdateProgram: string;
+    function ShowAllPartnerOnMap: string;
   protected
     procedure Execute; override;
   end;
@@ -730,6 +732,8 @@ type
     tblObject_ConstOperDate_diff: TIntegerField;
     tblObject_ConstReturnDayCount: TIntegerField;
     cdsOrderItemsPriceShow: TStringField;
+    tblObject_PartnerShortAddress: TStringField;
+    qryPartnerShortAddress: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
@@ -759,6 +763,8 @@ type
     function CompareVersion(ACurVersion, AServerVersion: string): integer;
     procedure CheckUpdate;
     procedure UpdateProgram(const AResult: TModalResult);
+
+    procedure ShowAllPartnerOnMap;
 
     function GetConfigurationInfo: boolean;
     procedure SynchronizeWithMainDatabase(LoadData: boolean = true; UploadData: boolean = true);
@@ -2301,6 +2307,51 @@ begin
   {$ENDIF}
 end;
 
+function TWaitThread.ShowAllPartnerOnMap: string;
+var
+  Coordinates: TLocationCoord2D;
+  AddressOnMap: string;
+begin
+  Result := '';
+
+  frmMain.FMarkerList.Clear;
+
+  with DM.qryPartner do
+  begin
+    DisableControls;
+    First;
+
+    while not EOF do
+    begin
+       if DM.qryPartnerShortAddress.AsString <> '' then
+         AddressOnMap := DM.qryPartnerShortAddress.AsString
+       else
+         AddressOnMap := DM.qryPartnerAddress.AsString;
+
+       if (DM.qryPartnerGPSN.AsFloat <> 0) and (DM.qryPartnerGPSE.AsFloat <> 0) then
+         frmMain.FMarkerList.Add(TLocationData.Create(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat, 0, AddressOnMap))
+       else
+       if frmMain.GetCoordinates(DM.qryPartnerAddress.AsString, Coordinates) then
+         frmMain.FMarkerList.Add(TLocationData.Create(Coordinates.Latitude, Coordinates.Longitude, 0, AddressOnMap));
+
+      Next;
+    end;
+
+    EnableControls;
+  end;
+
+  Synchronize(procedure
+              begin
+                LastDelimiter(' ', frmMain.lDayInfo.Text);
+                if pos('Все ТТ', frmMain.lDayInfo.Text) = 0 then
+                  frmMain.lCaption.Text := 'Карта (Все ТТ за ' + AnsiLowerCase(Copy(frmMain.lDayInfo.Text, LastDelimiter(' ', frmMain.lDayInfo.Text) + 1)) + ')'
+                else
+                  frmMain.lCaption.Text := 'Карта (Все ТТ)';
+
+                frmMain.ShowBigMap;
+              end);
+end;
+
 procedure TWaitThread.Execute;
 var
   Res : string;
@@ -2331,6 +2382,12 @@ begin
       SetTaskName('Получение файла обновления');
       Res := UpdateProgram;
     end
+    else
+    if TaskName = 'ShowAllPartnerOnMap' then
+    begin
+      SetTaskName('Отображение всех ТТ на карте');
+      Res := ShowAllPartnerOnMap;
+    end;
   finally
     ProgressThread.Terminate;
 
@@ -3020,6 +3077,14 @@ begin
     WaitThread.TaskName := 'UpdateProgram';
     WaitThread.Start;
   end;
+end;
+
+procedure TDM.ShowAllPartnerOnMap;
+begin
+  WaitThread := TWaitThread.Create(true);
+  WaitThread.FreeOnTerminate := true;
+  WaitThread.TaskName := 'ShowAllPartnerOnMap';
+  WaitThread.Start;
 end;
 
 { Загрузка с сервера констант и системной информации }
@@ -3896,7 +3961,7 @@ begin
     cdsOrderExternal.Insert;
 
     cdsOrderExternalId.AsInteger := -1;
-    cdsOrderExternalOperDate.AsDateTime := IncDay(Date(), tblObject_ConstOperDate_diff.AsInteger);
+    cdsOrderExternalOperDate.AsDateTime := Date();
     cdsOrderExternalComment.AsString := '';
     cdsOrderExternalName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', cdsOrderExternalOperDate.AsDateTime);
     cdsOrderExternalPrice.AsString :=  'Стоимость: 0';

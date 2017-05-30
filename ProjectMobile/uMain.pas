@@ -68,9 +68,10 @@ type
   TLocationData = record
     Latitude: TLocationDegrees;
     Longitude: TLocationDegrees;
+    Address: string;
     VisitTime: TDateTime;
 
-    constructor Create(ALatitude, ALongitude: TLocationDegrees; AVisitTime: TDateTime);
+    constructor Create(ALatitude, ALongitude: TLocationDegrees; AVisitTime: TDateTime; AAddress: string);
   end;
 
   TfrmMain = class(TForm)
@@ -654,7 +655,7 @@ type
     bPathonMap: TButton;
     bPathonMapbyPhoto: TButton;
     bEnterServer: TButton;
-    pTemporaryServerPassword: TPanel;
+    pAdminPassword: TPanel;
     bOkPassword: TButton;
     bCancelPassword: TButton;
     ePassword: TEdit;
@@ -722,7 +723,7 @@ type
     Label90: TLabel;
     dsGoodsFullForPrice: TBindSourceDB;
     LinkListControlToField5: TLinkListControlToField;
-    Panel51: TPanel;
+    pBackup: TPanel;
     GridPanelLayout15: TGridPanelLayout;
     bBackup: TButton;
     GridPanelLayout16: TGridPanelLayout;
@@ -769,6 +770,9 @@ type
     Layout43: TLayout;
     Panel56: TPanel;
     bPartnerJuridicalCollation: TButton;
+    bAdmin: TButton;
+    Image22: TImage;
+    pAdmin: TPanel;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -987,6 +991,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure bCopyServerClick(Sender: TObject);
     procedure bPartnerJuridicalCollationClick(Sender: TObject);
+    procedure bAdminClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -1001,7 +1006,6 @@ type
     FCurCoordinatesSet: boolean;
     FCurCoordinates: TLocationCoord2D;
     FMapLoaded: Boolean;
-    FMarkerList: TList<TLocationData>;
     FWebGMap: TTMSFMXWebGMaps;
 
     FCheckedGooodsItems: TList<String>;
@@ -1017,7 +1021,7 @@ type
     CameraComponent : TCameraComponent;
 
     FTemporaryServer: string;
-    FUseTemporaryServer: boolean;
+    FUseAdminRights: boolean;
     FFirstSet: boolean;
     FStartRJC: string;
     FEndRJC: string;
@@ -1069,10 +1073,8 @@ type
     procedure RestoreDB(const AResult: TModalResult);
 
     function GetAddress(const Latitude, Longitude: Double): string;
-    function GetCoordinates(const Address: string; out Coordinates: TLocationCoord2D): Boolean;
     procedure WebGMapDownloadFinish(Sender: TObject);
-    procedure ShowBigMap;
-    procedure GetPartnerMap(GPSN, GPSE: Double);
+    procedure GetPartnerMap(GPSN, GPSE: Double; Address: string);
 
     procedure ChangeStatusIcon(ACurItem: TListViewItem);
     procedure DeleteButtonHide(AItem: TListViewItem);
@@ -1130,6 +1132,10 @@ type
     property CashAmountValue: Double read FCashAmountValue write SetCashAmountValue;
   public
     { Public declarations }
+    FMarkerList: TList<TLocationData>;
+
+    function GetCoordinates(const Address: string; out Coordinates: TLocationCoord2D): Boolean;
+    procedure ShowBigMap;
   end;
 
 var
@@ -1175,11 +1181,12 @@ begin
 end;
 
 { TLocationData }
-constructor TLocationData.Create(ALatitude, ALongitude: TLocationDegrees; AVisitTime: TDateTime);
+constructor TLocationData.Create(ALatitude, ALongitude: TLocationDegrees; AVisitTime: TDateTime; AAddress: string);
 begin
   Latitude := ALatitude;
   Longitude := ALongitude;
   VisitTime := AVisitTime;
+  Address := AAddress;
 end;
 
 procedure TfrmMain.MobileIdle(Sender: TObject; var Done: Boolean);
@@ -1345,7 +1352,7 @@ begin
       if ppPartner.IsOpen then
         ppPartner.IsOpen := false
       else
-      if pTemporaryServerPassword.Visible then
+      if pAdminPassword.Visible then
         bCancelPasswordClick(bCancelPassword)
       else
       if pEnterMovmentCash.Visible then
@@ -1385,38 +1392,10 @@ end;
 
 // отображение на карты всех ТТ
 procedure TfrmMain.lbiShowAllOnMapClick(Sender: TObject);
-var
-  Coordinates: TLocationCoord2D;
 begin
-  FMarkerList.Clear;
-
-  with DM.qryPartner do
-  begin
-    DisableConstraints;
-    First;
-
-    while not EOF do
-    begin
-       if (DM.qryPartnerGPSN.AsFloat <> 0) and (DM.qryPartnerGPSE.AsFloat <> 0) then
-         FMarkerList.Add(TLocationData.Create(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat, 0))
-       else
-       if GetCoordinates(DM.qryPartnerAddress.AsString, Coordinates) then
-         FMarkerList.Add(TLocationData.Create(Coordinates.Latitude, Coordinates.Longitude, 0));
-
-      Next;
-    end;
-
-    EnableConstraints;
-  end;
-
-  LastDelimiter(' ', lDayInfo.Text);
-  if pos('Все ТТ', lDayInfo.Text) = 0 then
-    lCaption.Text := 'Карта (Все ТТ за ' + AnsiLowerCase(Copy(lDayInfo.Text, LastDelimiter(' ', lDayInfo.Text) + 1)) + ')'
-  else
-    lCaption.Text := 'Карта (Все ТТ)';
-  ShowBigMap;
-
   ppPartner.IsOpen := False;
+
+  DM.ShowAllPartnerOnMap;
 end;
 
 { изменение иконки статуса }
@@ -1613,7 +1592,7 @@ begin
   {$ENDIF}
   try
     SettingsFile.WriteString('LOGIN', 'USERNAME', LoginEdit.Text);
-    if FUseTemporaryServer then
+    if FUseAdminRights then
     begin
       SettingsFile.WriteString('LOGIN', 'TemporaryServer', WebServerEdit.Text);
       FTemporaryServer := WebServerEdit.Text;
@@ -2729,7 +2708,7 @@ begin
   begin
     FOldCashId := -1;
     eCashInvNumber.Text := '';
-    deCashDate.Date := IncDay(Date(), DM.tblObject_ConstOperDate_diff.AsInteger);
+    deCashDate.Date := Date();
     CashAmountValue := 0;
     eCashComment.Text := '';
     FCanEditDocument := true;
@@ -2826,7 +2805,8 @@ end;
 // присвоение текущих координат выбраной ТТ и сохранение в БД
 procedure TfrmMain.SetPartnerCoordinates(const AResult: TModalResult);
 var
-  Id, ContractId : integer;
+  Id, ContractId: integer;
+  AddressOnMap: string;
 begin
   if AResult = mrYes then
   begin
@@ -2841,7 +2821,12 @@ begin
       DM.qryPartner.Refresh;
       DM.qryPartner.Locate('Id;ContractId', VarArrayOf([Id, ContractId]), []);
 
-      GetPartnerMap(FCurCoordinates.Latitude, FCurCoordinates.Longitude);
+      if DM.qryPartnerShortAddress.AsString <> '' then
+         AddressOnMap := DM.qryPartnerShortAddress.AsString
+       else
+         AddressOnMap := DM.qryPartnerAddress.AsString;
+
+      GetPartnerMap(FCurCoordinates.Latitude, FCurCoordinates.Longitude, AddressOnMap);
     end
     else
       ShowMessage('Не удалось получить текущие координаты');
@@ -2943,6 +2928,21 @@ begin
   SwitchToForm(tiGoodsItems, DM.qryGoodsItems);
 end;
 
+procedure TfrmMain.bAdminClick(Sender: TObject);
+begin
+  if not FUseAdminRights then
+  begin
+    ePassword.Text := '';
+    vsbMain.Enabled := false;
+    pAdminPassword.Visible := true;
+  end
+  else
+  begin
+    FUseAdminRights := false;
+    pBackup.Visible := false;
+  end;
+end;
+
 procedure TfrmMain.bBackupClick(Sender: TObject);
 var
   Mes: string;
@@ -2974,7 +2974,7 @@ end;
 procedure TfrmMain.bCancelPasswordClick(Sender: TObject);
 begin
   vsbMain.Enabled := true;
-  pTemporaryServerPassword.Visible := false;
+  pAdminPassword.Visible := false;
 end;
 
 procedure TfrmMain.bCancelPhotoClick(Sender: TObject);
@@ -3041,15 +3041,15 @@ end;
 
 procedure TfrmMain.bEnterServerClick(Sender: TObject);
 begin
-  if not FUseTemporaryServer then
+  if not FUseAdminRights then
   begin
     ePassword.Text := '';
     vsbMain.Enabled := false;
-    pTemporaryServerPassword.Visible := true;
+    pAdminPassword.Visible := true;
   end
   else
   begin
-    FUseTemporaryServer := false;
+    FUseAdminRights := false;
     WebServerLayout.Height := 0;
     CurWebServerLayout.Height := 0;
     gc_WebService := gc_WebServers[0];
@@ -3262,14 +3262,21 @@ begin
   end;
 
   vsbMain.Enabled := true;
-  pTemporaryServerPassword.Visible := false;
+  pAdminPassword.Visible := false;
 
-  WebServerLayout.Height := 75;
-  WebServerEdit.Text := FTemporaryServer;
-  CurWebServerLayout.Height := 75;
-  CurWebServerEdit.Text := gc_WebService;
-  gc_WebService := '';
-  FUseTemporaryServer := true;
+  FUseAdminRights := true;
+  if tcMain.ActiveTab = tiInformation then
+  begin
+    pBackup.Visible := true;
+  end
+  else
+  begin
+    WebServerLayout.Height := 75;
+    WebServerEdit.Text := FTemporaryServer;
+    CurWebServerLayout.Height := 75;
+    CurWebServerEdit.Text := gc_WebService;
+    gc_WebService := '';
+  end;
 end;
 
 // переход на форму ввода нового возврата товаров
@@ -3452,7 +3459,7 @@ begin
     while not RouteQuery.EOF do
     begin
       FMarkerList.Add(TLocationData.Create(RouteQuery.FieldByName('GPSN').AsFloat,
-        RouteQuery.FieldByName('GPSE').AsFloat, RouteQuery.FieldByName('INSERTDATE').AsDateTime));
+        RouteQuery.FieldByName('GPSE').AsFloat, RouteQuery.FieldByName('INSERTDATE').AsDateTime, ''));
 
       RouteQuery.Next;
     end;
@@ -3716,8 +3723,8 @@ procedure TfrmMain.bCashTotalClick(Sender: TObject);
 begin
   lCaption.Text := bCashTotal.Text;
 
-  deStartTC.Date := IncDay(Date(), DM.tblObject_ConstOperDate_diff.AsInteger);
-  deEndTC.Date := IncDay(Date(), DM.tblObject_ConstOperDate_diff.AsInteger);
+  deStartTC.Date := Date();
+  deEndTC.Date := Date();
 
   // заполнение списка форм оплаты
   cbPaidKindTC.Items.Clear;
@@ -3963,18 +3970,24 @@ end;
 procedure TfrmMain.tcPartnerInfoChange(Sender: TObject);
 var
   Coordinates: TLocationCoord2D;
+  AddressOnMap: string;
 begin
   // карта с координатами ТТ
   if tcPartnerInfo.ActiveTab = tiPartnerMap then
   begin
+    if DM.qryPartnerShortAddress.AsString <> '' then
+      AddressOnMap := DM.qryPartnerShortAddress.AsString
+    else
+      AddressOnMap := DM.qryPartnerAddress.AsString;
+
     if (DM.qryPartnerGPSN.AsFloat <> 0) and (DM.qryPartnerGPSE.AsFloat <> 0) then
-      GetPartnerMap(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat)
+      GetPartnerMap(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat, AddressOnMap)
     else
     begin
       if GetCoordinates(DM.qryPartnerAddress.AsString, Coordinates) then
-        GetPartnerMap(Coordinates.Latitude, Coordinates.Longitude)
+        GetPartnerMap(Coordinates.Latitude, Coordinates.Longitude, AddressOnMap)
       else
-        GetPartnerMap(0, 0);
+        GetPartnerMap(0, 0, '');
     end;
   end
   else
@@ -4120,7 +4133,7 @@ begin
     begin
       for i := 0 to FMarkerList.Count - 1 do
       begin
-        with FWebGMap.Markers.Add(FMarkerList[i].Latitude, FMarkerList[i].Longitude, GetAddress(FMarkerList[i].Latitude, FMarkerList[i].Longitude), '', True, True, False, True, False, 0, TMarkerIconColor.icDefault, -1, -1, -1, -1) do
+        with FWebGMap.Markers.Add(FMarkerList[i].Latitude, FMarkerList[i].Longitude, FMarkerList[i].Address, '', True, True, False, True, False, 0, TMarkerIconColor.icDefault, -1, -1, -1, -1) do
           if tcMain.ActiveTab = tiPathOnMap then
             MapLabel.Text := IntToStr(i + 1) + ') ' + FormatDateTime('DD.MM.YYYY hh:mm:ss', FMarkerList[i].VisitTime)
           else
@@ -4148,8 +4161,8 @@ begin
   FWebGMap.Parent := tiMap;
 end;
 
-// вызов карты с координатами ТТ и дальнейшем получением скриншота этой карты
-procedure TfrmMain.GetPartnerMap(GPSN, GPSE: Double);
+// вызов карты с координатами ТТ
+procedure TfrmMain.GetPartnerMap(GPSN, GPSE: Double; Address: string);
 var
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
   MobileNetworkStatus : TMobileNetworkStatus;
@@ -4181,7 +4194,7 @@ begin
     if (GPSN <> 0) and (GPSE <> 0) then
     begin
       Coordinates := TLocationCoord2D.Create(GPSN, GPSE);
-      FMarkerList.Add(TLocationData.Create(GPSN, GPSE, 0));
+      FMarkerList.Add(TLocationData.Create(GPSN, GPSE, 0, Address));
     end
     else
     begin
@@ -4265,6 +4278,8 @@ procedure TfrmMain.ChangeMainPageUpdate(Sender: TObject);
 var
   TaskCount : integer;
 begin
+  FUseAdminRights := false;
+
   if Assigned(FWebGMap) then
   try
     FWebGMap.Visible := False;
@@ -4289,6 +4304,11 @@ begin
       imLogo.Visible := false;
       sbBack.Visible := true;
     end;
+
+    if tcMain.ActiveTab = tiInformation then
+      pAdmin.Visible := true
+    else
+      pAdmin.Visible := false;
 
     if tcMain.ActiveTab = tiPartnerInfo then
     begin
@@ -4446,8 +4466,6 @@ begin
     CurWebServerLayout.Height := 0;
     SyncLayout.Visible := false;
   end;
-
-  FUseTemporaryServer := false;
 end;
 
 // формирования перечня дней на которые запланированы визиты в ТТ (с количеством ТТ)
@@ -5073,7 +5091,7 @@ procedure TfrmMain.ShowDocuments;
 begin
   FEditDocuments := true;
 
-  deStartDoc.Date := IncDay(Date(), DM.tblObject_ConstOperDate_diff.AsInteger);
+  deStartDoc.Date := Date();
   deEndDoc.Date := IncDay(Date(), DM.tblObject_ConstOperDate_diff.AsInteger);
 
   bRefreshDocClick(bRefreshDoc);
@@ -5339,6 +5357,8 @@ procedure TfrmMain.ShowInformation;
 var
   Res : integer;
 begin
+  pBackup.Visible := false;
+
   eMobileVersion.Text := DM.GetCurrentVersion;
 
   Res := DM.CompareVersion(eMobileVersion.Text, DM.tblObject_ConstMobileVersion.AsString);
