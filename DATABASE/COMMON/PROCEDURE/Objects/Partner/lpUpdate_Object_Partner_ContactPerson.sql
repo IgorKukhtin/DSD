@@ -67,7 +67,7 @@ BEGIN
                            );
       IF COALESCE (vbContactPersonId, 0) = 0
       THEN
-          vbContactPersonId := gpInsertUpdate_Object_ContactPerson (vbContactPersonId, 0, inOrderName, inOrderPhone, inOrderMail, '', inId, 0, 0, vbContactPersonKindId, 0, 0, inSession);
+          vbContactPersonId := gpInsertUpdate_Object_ContactPerson (vbContactPersonId, 0, inOrderName, inOrderPhone, inOrderMail, '', inId, 0, 0, 0, vbContactPersonKindId, 0, 0, inSession);
       END IF;
       -- обнуление у остальных
       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContactPerson_Object(), ObjectLink_ContactPerson_Object.ObjectId, NULL)
@@ -117,7 +117,7 @@ BEGIN
 
       IF COALESCE (vbContactPersonId, 0) = 0
       THEN
-          vbContactPersonId := gpInsertUpdate_Object_ContactPerson (vbContactPersonId, 0, inDocName, inDocPhone, inDocMail, '', inId, 0, 0, vbContactPersonKindId, inSession);
+          vbContactPersonId := gpInsertUpdate_Object_ContactPerson (vbContactPersonId, 0, inDocName, inDocPhone, inDocMail, '', inId, 0, 0, 0, vbContactPersonKindId, 0, 0, inSession);
       END IF;
       -- обнуление у остальных
       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContactPerson_Object(), ObjectLink_ContactPerson_Object.ObjectId, NULL)
@@ -167,7 +167,7 @@ BEGIN
 
       IF COALESCE (vbContactPersonId, 0) = 0
       THEN
-          vbContactPersonId := gpInsertUpdate_Object_ContactPerson (vbContactPersonId, 0, inActName, inActPhone, inActMail, '', inId, 0, 0, vbContactPersonKindId, inSession);
+          vbContactPersonId := gpInsertUpdate_Object_ContactPerson (vbContactPersonId, 0, inActName, inActPhone, inActMail, '', inId, 0, 0, 0, vbContactPersonKindId, 0, 0, inSession);
       END IF;
       -- обнуление у остальных
       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContactPerson_Object(), ObjectLink_ContactPerson_Object.ObjectId, NULL)
