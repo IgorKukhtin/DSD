@@ -227,6 +227,10 @@ object DM: TDM
     object tblObject_PartnerisSync: TBooleanField
       FieldName = 'isSync'
     end
+    object tblObject_PartnerShortAddress: TStringField
+      FieldName = 'ShortAddress'
+      Size = 255
+    end
   end
   object tblObject_Juridical: TFDTable
     Connection = conMain
@@ -537,6 +541,10 @@ object DM: TDM
     end
     object qryPartnerAddress: TStringField
       FieldName = 'Address'
+      Size = 255
+    end
+    object qryPartnerShortAddress: TStringField
+      FieldName = 'ShortAddress'
       Size = 255
     end
     object qryPartnerSCHEDULE: TStringField
