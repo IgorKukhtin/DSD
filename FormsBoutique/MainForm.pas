@@ -122,6 +122,9 @@ type
     N58: TMenuItem;
     actGoodsAccount: TdsdOpenForm;
     N59: TMenuItem;
+    actReport_MovementIncome: TdsdOpenForm;
+    miReport: TMenuItem;
+    N60: TMenuItem;
   private
     { Private declarations }
   public

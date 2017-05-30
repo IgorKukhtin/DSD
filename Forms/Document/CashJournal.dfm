@@ -701,6 +701,21 @@ inherited CashJournalForm: TCashJournalForm
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyId'
+          Value = Null
+          Component = CurrencyGuides
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyName'
+          Value = Null
+          Component = CurrencyGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end

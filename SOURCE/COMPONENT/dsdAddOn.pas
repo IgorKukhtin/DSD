@@ -529,6 +529,8 @@ type
   public
     constructor Create(AOwner: TComponent); override;
 
+    procedure SetDocLoaded;
+
     property MapType: TMapAcionType read FMapType write FMapType
       default acShowOne;
     property DataSet: TDataSet read FDataSet write FDataSet;
@@ -2437,13 +2439,6 @@ begin
 end;
 
 procedure TdsdGMMap.DoAfterPageLoaded(Sender: TObject; First: Boolean);
-var
-  i: integer;
-  LatList: TArray<Real>;
-  LngList: TArray<Real>;
-  TitleList: TArray<string>;
-  FForm: TForm;
-  FGeoCode: TGMGeoCode;
 begin
   if First then
   begin
@@ -2451,6 +2446,11 @@ begin
 
     FMapLoad := True;
   end;
+end;
+
+procedure TdsdGMMap.SetDocLoaded;
+begin
+  FDocLoaded := True;
 end;
 
 {  TdsdWebBrowser  }
@@ -2585,6 +2585,7 @@ begin
     begin
       FGeoCode.Marker.Clear;
       TdsdGMMap(FGeoCode.Map).MapLoad := False;
+      TdsdGMMap(FGeoCode.Map).SetDocLoaded;
 
       FTimer.Enabled := true;
     end;

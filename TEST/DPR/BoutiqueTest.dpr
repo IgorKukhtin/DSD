@@ -215,7 +215,9 @@ uses
   CurrencyJournal in '..\..\FormsBoutique\Document\CurrencyJournal.pas' {CurrencyJournalForm: TParentForm},
   GoodsAccountItemEdit in '..\..\FormsBoutique\Document\GoodsAccountItemEdit.pas' {GoodsAccountItemEditForm: TParentForm},
   GoodsAccount in '..\..\FormsBoutique\Document\GoodsAccount.pas' {GoodsAccountForm: TParentForm},
-  GoodsAccountJournal in '..\..\FormsBoutique\Document\GoodsAccountJournal.pas' {GoodsAccountJournalForm: TParentForm};
+  GoodsAccountJournal in '..\..\FormsBoutique\Document\GoodsAccountJournal.pas' {GoodsAccountJournalForm: TParentForm},
+  Report_MovementIncomeDialog in '..\..\FormsBoutique\Report\Report_MovementIncomeDialog.pas' {Report_MovementIncomeDialogForm: TParentForm},
+  Report_MovementIncome in '..\..\FormsBoutique\Report\Report_MovementIncome.pas' {Report_MovementIncomeForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

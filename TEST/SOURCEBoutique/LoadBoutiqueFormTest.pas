@@ -46,58 +46,64 @@ type
 //    procedure LoadGoodsFormTest;
 //    procedure LoadImportSettingsFormTest;
 //    procedure LoadImportTypeFormTest;
+    procedure LoadBankFormTest;
+    procedure LoadBankAccountFormTest;
+    procedure LoadBrandFormTest;
+    procedure LoadCityFormTest;
+    procedure LoadClientFormTest;
+    procedure LoadCompositionGroupFormTest;
+    procedure LoadCompositionFormTest;
+    procedure LoadCountryBrandFormTest;
+    procedure LoadCurrencyMovementFormTest;
+    procedure LoadCashFormTest;
+    procedure LoadCurrencyFormTest;
+    procedure LoadDiscountFormTest;
+    procedure LoadDiscountToolsFormTest;
+    procedure LoadDiscountPeriodItemFormTest;
+    procedure LoadDiscountKindFormTest;
+
+//    procedure LoadJuridicalFormTest;
+//    procedure LoadLoadFormTest;
+//    procedure LoadLossDebtFormTest;
+//    procedure LoadMakerFormTest;
+//    procedure LoadMargineCategory;
+//    procedure LoadMarginReport;
+
+    procedure LoadFabrikaFormTest;
+    procedure LoadGoodsFormTest;
     procedure LoadGoodsAccountFormTest;
+    procedure LoadGoodsItemFormTest;
+    procedure LoadGoodsInfoFormTest;
+
+    procedure LoadGoodsSizeFormTest;
+    procedure LoadGoodsGroupFormTest;
     procedure LoadIncomeFormTest;
     procedure LoadInfoMoneyGroupFormTest;
     procedure LoadInfoMoneyDestinationFormTest;
 //    procedure LoadInfoMoneyFormTest;
     procedure LoadInventoryFormTest;
-//    procedure LoadJuridicalFormTest;
-//    procedure LoadLoadFormTest;
-//    procedure LoadLossDebtFormTest;
-    procedure LoadLossFormTest;
-//    procedure LoadMakerFormTest;
-//    procedure LoadMargineCategory;
-//    procedure LoadMarginReport;
-    procedure LoadMeasureFormTest;
-    procedure LoadCompositionGroupFormTest;
-    procedure LoadCompositionFormTest;
-    procedure LoadCountryBrandFormTest;
-    procedure LoadCurrencyMovementFormTest;
-    procedure LoadBrandFormTest;
-    procedure LoadFabrikaFormTest;
-    procedure LoadLineFabricaFormTest;
-    procedure LoadGoodsInfoFormTest;
-    procedure LoadGoodsSizeFormTest;
-    procedure LoadGoodsGroupFormTest;
-    procedure LoadCashFormTest;
-    procedure LoadCurrencyFormTest;
-    procedure LoadMemberFormTest;
-    procedure LoadPeriodFormTest;
-    procedure LoadDiscountFormTest;
-    procedure LoadDiscountToolsFormTest;
-    procedure LoadDiscountPeriodItemFormTest;
-    procedure LoadPartnerFormTest;
     procedure LoadJuridicalGroupFormTest;
     procedure LoadJuridicalFormTest;
-    procedure LoadUnitFormTest;
-    procedure LoadCityFormTest;
-    procedure LoadClientFormTest;
+    procedure LoadJuridicalBasisFormTest;
     procedure LoadLabelFormTest;
-    procedure LoadGoodsFormTest;
-    procedure LoadDiscountKindFormTest;
-    procedure LoadGoodsItemFormTest;
+    procedure LoadLossFormTest;
+    procedure LoadLineFabricaFormTest;
+    procedure LoadMemberFormTest;
+    procedure LoadMeasureFormTest;
+    procedure LoadPeriodFormTest;
+    procedure LoadPartnerFormTest;
     procedure LoadPartionGoodsFormTest;
     procedure LoadPositionFormTest;
     procedure LoadPersonalFormTest;
     procedure LoadPriceListFormTest;
-    procedure LoadJuridicalBasisFormTest;
-    procedure LoadBankFormTest;
-    procedure LoadBankAccountFormTest;
-
-
-
-
+    procedure LoadReportFormTest;
+    procedure LoadReturnOutFormTest;
+    procedure LoadReturnInFormTest;
+    procedure LoadSaleFormTest;
+    procedure LoadServiceFormTest;
+    procedure LoadSendFormTest;
+    procedure LoadUnitFormTest;
+    procedure FormTest;
 
 //    procedure LoadMemberFormTest;
 //    procedure LoadKindFormTest;
@@ -124,22 +130,18 @@ type
 //    procedure LoadReasonDifferencesFormTest;
 //    procedure LoadReportPromoParamsFormTest;
 //    procedure LoadReportSoldParamsFormTest;
-//    procedure LoadReportFormTest;
+//
 //    procedure LoadReportForSiteTest;
 //    procedure LoadReportUploadFormTest;
 //    procedure LoadRepriceFormTest;
 //    procedure LoadRetailFormTest;
 //    procedure LoadReturnTypeFormTest;
-    procedure LoadReturnOutFormTest;
-    procedure LoadReturnInFormTest;
-    procedure LoadSaleFormTest;
-    procedure LoadServiceFormTest;
-    procedure LoadSendFormTest;
+
 //    procedure LoadSendOnPriceFormTest;
 //    procedure LoadSPObjectFormTest;
 //    procedure LoadSheetWorkTimeFormTest;
 //    procedure LoadUnitFormTest;
-    procedure FormTest;
+
   end;
 
 implementation
@@ -796,150 +798,14 @@ end;
 //  TdsdFormStorageFactory.GetStorage.Load('TReasonDifferencesForm');
 //end;
 //
-//procedure TLoadFormTest.LoadReportFormTest;
-//begin
-// {
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BadmForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_BadmForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_byReportBadmForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TUnit_byReportBadmForm');
-//  exit;
-//
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MinPrice_onGoodsForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_MinPrice_onGoodsForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MinPrice_onGoodsDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_MinPrice_onGoodsDialogForm');
-////  exit;
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckPromoForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckPromoForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PeriodDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_PeriodDialogForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_PromoForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_PromoForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncome_PromoForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncome_PromoForm');
-//
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsDialogForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckErrorForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckErrorForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckErrorDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckErrorDialogForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Payment_PlanForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_Payment_PlanForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Payment_PlanDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_Payment_PlanDialogForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_UnLiquidForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_UnLiquidForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_UnLiquidDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_UnLiquidDialogForm');
-//  exit;
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportOrderGoodsForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReportOrderGoodsForm');
-//
-//  // отчет распределение остатков
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsDialogForm');
-//  exit;
-//  //Отчет Приход на точку
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeDialogForm');
-//
-//   //Отчет Приход на точку для фармацевта
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeFarmForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeFarmForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeFarmDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeFarmDialogForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSoldForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalCollationForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalCollationForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionMoveForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionMoveForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionMoveDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionMoveDialogForm');
-//  }
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_CrossForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_CrossForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckDialogForm');
-//   exit;
-//  // для фармацевта
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckFarmForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckFarmForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckFarmDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckFarmDialogForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionHistoryForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionHistoryForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionHistoryDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionHistoryDialogForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SoldForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_SoldForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sold_DayForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_Sold_DayForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sold_DayUserForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_Sold_DayUserForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ByPartionGoodsForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ByPartionGoodsForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_WageForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_WageDialogForm');
-//
-//  //отчет доходности
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitDialogForm');
-//
-//  //Отчет Ценовая интервенция
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceInterventionForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_PriceInterventionForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceInterventionDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_PriceInterventionDialogForm');
-//  //Отчет Ценовая интервенция2
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceIntervention2Form'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_PriceIntervention2Form');
-//
-//  // средний чек
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckMiddleForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckMiddleForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckMiddleDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheckMiddleDialogForm');
-//
-//  // отчет распределение остатков
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsDialogForm');
-//
-//end;
+procedure TLoadFormTest.LoadReportFormTest;
+begin
+  //Отчет Приход от поставщика
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeDialogForm');
+end;
 //
 //procedure TLoadFormTest.LoadReportForSiteTest;
 //begin

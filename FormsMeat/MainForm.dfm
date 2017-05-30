@@ -1728,12 +1728,12 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyId'
-          Value = '0'
+          Value = '14461'
           MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
-          Value = Null
+          Value = #1075#1088#1085
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -1816,12 +1816,12 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyId'
-          Value = '0'
+          Value = '14461'
           MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
-          Value = Null
+          Value = #1075#1088#1085
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -2083,7 +2083,7 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyId'
-          Value = '0'
+          Value = '14461'
           MultiSelectSeparator = ','
         end
         item
@@ -2116,12 +2116,12 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyId'
-          Value = '0'
+          Value = '14461'
           MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
-          Value = Null
+          Value = #1075#1088#1085
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -2150,12 +2150,12 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyId'
-          Value = '0'
+          Value = '14461'
           MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
-          Value = Null
+          Value = #1075#1088#1085
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -2218,12 +2218,12 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyId'
-          Value = '0'
+          Value = '14461'
           MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
-          Value = Null
+          Value = #1075#1088#1085
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -2251,12 +2251,12 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyId'
-          Value = '0'
+          Value = '14461'
           MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
-          Value = Null
+          Value = #1075#1088#1085
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -2317,12 +2317,12 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyId'
-          Value = '0'
+          Value = '14461'
           MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
-          Value = Null
+          Value = #1075#1088#1085
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -2558,12 +2558,12 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'CurrencyId'
-          Value = '0'
+          Value = '14461'
           MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
-          Value = Null
+          Value = #1075#1088#1085
           MultiSelectSeparator = ','
         end>
       isShowModal = False

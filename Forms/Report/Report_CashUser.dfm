@@ -2759,6 +2759,23 @@ inherited Report_CashUserForm: TReport_CashUserForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 232
