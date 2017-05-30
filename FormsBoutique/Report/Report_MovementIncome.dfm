@@ -936,7 +936,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -955,7 +955,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 576
+    Left = 456
   end
   object GuidesBrand: TdsdGuides
     KeyField = 'Id'
@@ -965,7 +965,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBrandForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -996,7 +996,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPartnerForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

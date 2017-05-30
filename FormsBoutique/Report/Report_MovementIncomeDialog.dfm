@@ -263,7 +263,7 @@ object Report_MovementIncomeDialogForm: TReport_MovementIncomeDialogForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -294,7 +294,7 @@ object Report_MovementIncomeDialogForm: TReport_MovementIncomeDialogForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBrandForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -325,7 +325,7 @@ object Report_MovementIncomeDialogForm: TReport_MovementIncomeDialogForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPartnerForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
