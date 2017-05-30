@@ -85,7 +85,7 @@ BEGIN
                            WHERE CLO_Cash.DescId = zc_ContainerLinkObject_Cash()
                              AND (Container.ObjectId = inAccountId OR inAccountId = 0)
                              AND (CLO_Cash.ObjectId = inCashId OR inCashId = 0)
-                             AND (CLO_Currency.ObjectId = inCurrencyId/* OR inCurrencyId = 0*/)
+                             AND (CLO_Currency.ObjectId = inCurrencyId OR inCurrencyId = 0)
                            )
      SELECT
         Operation.ContainerId,

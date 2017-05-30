@@ -43,7 +43,6 @@ BEGIN
                                                          , inMemberId    := inMemberId
                                                          , inUnitId      := NULL
                                                          , inCurrencyId          := zc_Enum_Currency_Basis()
-                                                         , inCurrencyPartnerId   := zc_Enum_Currency_Basis()
                                                          , inCurrencyValue       := NULL
                                                          , inParValue            := NULL
                                                          , inCurrencyPartnerValue:= NULL
