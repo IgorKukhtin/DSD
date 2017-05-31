@@ -110,6 +110,7 @@ type
     function GetConnection: string;
     procedure LoadReportList(ASession: string);
     function CheckConnectionType(pData: string): TConnectionType;
+    procedure InsertReportProtocol(pData: string);
   public
     property Connection: String read GetConnection;
     class function NewInstance: TObject; override;
@@ -131,6 +132,30 @@ begin
     Result := FConnectionList.CurrentConnection[ctMain].CString
   else
     Result := FConnectionList.FirstConnection(ctMain).CString;
+end;
+
+procedure TStorage.InsertReportProtocol(pData: string);
+const
+  {создаем XML вызова процедуры на сервере}
+  pXML =
+    '<xml Session = "%s" AutoWidth = "0">' +
+      '<gpInsert_ReportProtocol OutputType = "otResult" DataSetType = "">' +
+      '<inProtocolData DataType="ftBlob" Value="%s" />' +
+      '</gpInsert_ReportProtocol>' +
+    '</xml>';
+begin
+  //pData := ReplaceStr(pData, '"', '&quot;');
+  FSendList.Clear;
+  FSendList.Add('XML=' + '<?xml version="1.0" encoding="windows-1251"?>' +
+    Format(pXML, [gc_User.Session, '' {pData}]));
+  FReceiveStream.Clear;
+  IdHTTPWork.FExecOnServer := False;
+
+  try
+    IdHTTP.Post(FConnectionList.CurrentConnection[ctMain].CString, FSendList, FReceiveStream, TIdTextEncoding.GetEncoding(1251));
+  except
+    IdHTTP.Disconnect;
+  end;
 end;
 
 procedure TStorage.LoadReportList(ASession: string);
@@ -332,6 +357,12 @@ begin
      AMaxAtempt := 2;   // для локольного режима один проход
     if gc_isDebugMode then
        TMessagesForm.Create(nil).Execute(ConvertXMLParamToStrings(pData), ConvertXMLParamToStrings(pData), true);
+
+    CType := CheckConnectionType(pData);
+
+    if CType = ctReport then
+      InsertReportProtocol(pData);
+
     FSendList.Clear;
     FSendList.Add('XML=' + '<?xml version="1.0" encoding="windows-1251"?>' + pData);
     Logger.AddToLog(pData);
@@ -339,11 +370,12 @@ begin
     IdHTTPWork.FExecOnServer := pExecOnServer;
     AttemptCount := 0;
     ok := False;
-    CType := CheckConnectionType(pData);
+
     if FConnectionList.CurrentConnection[CType] <> nil then
       CString := FConnectionList.CurrentConnection[CType].CString
     else
       CString := FConnectionList.FirstConnection(CType).CString;
+
     try
       repeat
         for AttemptCount := 1 to AMaxAtempt do
