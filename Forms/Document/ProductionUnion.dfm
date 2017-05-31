@@ -1,10 +1,7 @@
 inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
   ClientWidth = 1020
-  ExplicitLeft = -260
-  ExplicitTop = -252
   ExplicitWidth = 1036
-  ExplicitHeight = 709
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -507,6 +504,23 @@ inherited ProductionUnionForm: TProductionUnionForm
       TabOrder = 12
       Width = 270
     end
+    object cxLabel17: TcxLabel
+      Left = 414
+      Top = 43
+      Caption = #1047#1072#1103#1074#1082#1072
+    end
+    object edInvNumberOrder: TcxButtonEdit
+      Left = 414
+      Top = 61
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 14
+      Width = 226
+    end
   end
   object edIsAuto: TcxCheckBox [2]
     Left = 216
@@ -530,8 +544,8 @@ inherited ProductionUnionForm: TProductionUnionForm
     Width = 145
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 523
-    Top = 56
+    Left = 931
+    Top = 32
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
@@ -1005,6 +1019,21 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = edInsert
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Order'
+        Value = Null
+        Component = OrderGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Order'
+        Value = Null
+        Component = OrderGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 328
     Top = 176
@@ -1275,7 +1304,7 @@ inherited ProductionUnionForm: TProductionUnionForm
   end
   inherited GuidesFrom: TdsdGuides
     PositionDataSet = 'MasterCDS'
-    Left = 416
+    Left = 496
   end
   inherited spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_ProductionUnion_Child'
@@ -1485,5 +1514,90 @@ inherited ProductionUnionForm: TProductionUnionForm
     PackSize = 1
     Left = 423
     Top = 408
+  end
+  object OrderGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberOrder
+    Key = '0'
+    FormNameParam.Value = 'TOrderIncomeJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderIncomeJournalChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = OrderGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = OrderGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 516
+    Top = 56
+  end
+  object spUpdateOrder: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_ProductionUnion_Order'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Order'
+        Value = '0'
+        Component = OrderGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 225
+    Top = 280
+  end
+  object HeaderSaver3: THeaderSaver
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
+    StoredProc = spUpdateOrder
+    ControlList = <
+      item
+        Control = edInvNumberOrder
+      end>
+    GetStoredProc = spGet
+    Left = 320
+    Top = 273
   end
 end

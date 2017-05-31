@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , DocumentKindId Integer, DocumentKindName TVarChar
              , isAuto Boolean, InsertDate TDateTime
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
+             , MovementId_Order Integer, InvNumber_Order TVarChar
                )
 AS
 $BODY$
@@ -52,6 +53,9 @@ BEGIN
              , 0                                                AS MovementId_Production
              , CAST ('' AS TVarChar) 				AS InvNumber_ProductionFull
 
+             , 0                                                AS MovementId_Order
+             , '' :: TVarChar                                   AS InvNumber_Order 
+
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
      RETURN QUERY
@@ -67,12 +71,15 @@ BEGIN
          , Object_To.ValueData                      AS ToName
          , Object_DocumentKind.Id                   AS DocumentKindId
          , Object_DocumentKind.ValueData            AS DocumentKindName
-         , COALESCE(MovementBoolean_isAuto.ValueData, False)         AS isAuto
+         , COALESCE(MovementBoolean_isAuto.ValueData, False)          AS isAuto
          , COALESCE(MovementDate_Insert.ValueData,  Null:: TDateTime) AS InsertDate
 
-         , Movement_DocumentProduction.Id               AS MovementId_Production
+         , Movement_DocumentProduction.Id           AS MovementId_Production
          , zfCalc_PartionMovementName (Movement_DocumentProduction.DescId, MovementDesc_Production.ItemName, Movement_DocumentProduction.InvNumber, Movement_DocumentProduction.OperDate) AS InvNumber_ProductionFull
 
+
+         , Movement_Order.Id                        AS MovementId_Order
+         , ('π ' || Movement_Order.InvNumber || ' ÓÚ ' || Movement_Order.OperDate  :: Date :: TVarChar) :: TVarChar AS InvNumber_Order
      FROM Movement
           LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -105,6 +112,10 @@ BEGIN
           LEFT JOIN Movement AS Movement_DocumentProduction ON Movement_DocumentProduction.Id = MovementLinkMovement_Production.MovementChildId
           LEFT JOIN MovementDesc AS MovementDesc_Production ON MovementDesc_Production.Id = Movement_DocumentProduction.DescId
 
+          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                         ON MovementLinkMovement_Order.MovementId = Movement.Id
+                                        AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+          LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
      WHERE Movement.Id = inMovementId
        AND Movement.DescId = zc_Movement_ProductionUnion();
 
@@ -119,6 +130,7 @@ ALTER FUNCTION gpGet_Movement_ProductionUnion (Integer, TDateTime, TVarChar) OWN
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 31.05.17         *
  26.06.16         *
  13.06.16         *
  23.06.14                                                        *
