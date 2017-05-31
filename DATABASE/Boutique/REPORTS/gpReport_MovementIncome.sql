@@ -83,7 +83,7 @@ BEGIN
                           , tmpMovementIncome.DescName
                           , tmpMovementIncome.FromId
                           , tmpMovementIncome.ToId
-                          , MI_Income.ObjectId                                  AS GoodsId
+                          , MI_Income.ObjectId             AS GoodsId
                           , CASE WHEN inisSize = TRUE THEN Object_PartionGoods.GoodsSizeId  ELSE 0 END  AS GoodsSizeId
                           , Object_PartionGoods.MeasureId
                           , Object_PartionGoods.GoodsGroupId
@@ -138,7 +138,7 @@ BEGIN
                             , Object_PartionGoods.LabelId
                             , Object_PartionGoods.JuridicalId
                             , COALESCE (MIFloat_CountForPrice.ValueData, 1)
-              ) 
+              )
               
 
         SELECT
@@ -190,7 +190,6 @@ BEGIN
  END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

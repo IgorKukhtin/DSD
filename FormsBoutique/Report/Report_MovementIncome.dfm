@@ -484,6 +484,37 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
     TabOrder = 9
     Width = 205
   end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = GuidesUnit
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesBrand
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesPartner
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
+  end
   inherited ActionList: TActionList
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -926,6 +957,19 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
     Top = 0
   end
   inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = GuidesBrand
+      end
+      item
+        Component = GuidesUnit
+      end
+      item
+        Component = GuidesPartner
+      end>
     Left = 688
     Top = 280
   end
