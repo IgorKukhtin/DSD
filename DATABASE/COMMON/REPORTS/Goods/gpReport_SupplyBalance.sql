@@ -19,6 +19,7 @@ RETURNS TABLE (GoodsId              Integer
              , GoodsGroupName       TVarChar
              , PartnerName          TVarChar
              , Comment              TVarChar
+             , Comment_MI           TVarChar
              , MovementId_List      TVarChar
              , CountDays            Integer
              , RemainsStart         TFloat
@@ -121,6 +122,9 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCountDays Integer;
+   DECLARE vbStartDate TDateTime;
+   DECLARE vbStartDate_Calc TDateTime;
+   DECLARE vbEndDate_Calc TDateTime;
 BEGIN
 
     -- Ограничения по товарам
@@ -135,7 +139,11 @@ BEGIN
            SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods();
     END IF;
 
-    vbCountDays := (SELECT DATE_PART('day', (inEndDate - inStartDate )) + 1);
+    vbEndDate_Calc := (SELECT CASE WHEN EXTRACT (Dow FROM inEndDate) + 1 = 7 THEN inEndDate ELSE (inEndDate - ((EXTRACT (Dow FROM inEndDate) + 1)  :: TVarChar || ' DAY') :: INTERVAL) END);
+    vbStartDate_Calc := vbEndDate_Calc - interval '27 day';
+    vbStartDate := (CASE WHEN inStartDate > vbStartDate_Calc THEN vbStartDate_Calc ELSE inStartDate END);
+    
+    vbCountDays := (SELECT DATE_PART('day', (vbEndDate_Calc - vbStartDate_Calc)) + 1);
 
      RETURN QUERY
      WITH -- подразделения для "остатки впроизводстве"
@@ -156,6 +164,7 @@ BEGIN
                                 , COALESCE (MI_Income.Amount, 0)        AS Amount_Income
                                 , ROW_NUMBER() OVER (PARTITION BY Movement.Id, MILinkObject_Goods.ObjectId) AS Ord
                                 , COALESCE (MovementString_Comment.ValueData,'') AS Comment
+                                , COALESCE (MIString_Comment.ValueData,'')       AS Comment_MI
                                 , Movement.Id AS MovementId
                            FROM Movement
                                 LEFT JOIN MovementBoolean AS MovementBoolean_Closed
@@ -186,6 +195,10 @@ BEGIN
                                                                 AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
                                 INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MILinkObject_Goods.ObjectId
 
+                                LEFT JOIN MovementItemString AS MIString_Comment
+                                                             ON MIString_Comment.MovementItemId = MovementItem.Id
+                                                            AND MIString_Comment.DescId = zc_MIString_Comment()
+
                                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Income
                                                                ON MovementLinkMovement_Income.MovementChildId = Movement.Id
                                                               AND MovementLinkMovement_Income.DescId = zc_MovementLinkMovement_Order()
@@ -207,9 +220,10 @@ BEGIN
         -- заявки по Юр Лицам - вычитаем: Заявка - Приход
    , tmpOrderIncome_gr AS (SELECT tmp.GoodsId
                                 , STRING_AGG (Object.ValueData :: TVarChar, '; ') AS PartnerName -- на самом деле это Юр лицо, но его будем использовать если вдруг другой инфі не окажется
-                                , STRING_AGG (tmp.Comment :: TVarChar, '; ') AS Comment
-                                , STRING_AGG (tmp.MovementId :: TVarChar, '; ') AS MovementId_List
-                           FROM (SELECT DISTINCT tmp.GoodsId, tmp.JuridicalId, tmp.Comment, tmp.MovementId FROM tmpOrderIncome_all AS tmp) AS tmp
+                                , STRING_AGG (tmp.Comment :: TVarChar, '; ')      AS Comment
+                                , STRING_AGG (tmp.Comment_MI :: TVarChar, '; ')   AS Comment_MI
+                                , STRING_AGG (tmp.MovementId :: TVarChar, '; ')   AS MovementId_List
+                           FROM (SELECT DISTINCT tmp.GoodsId, tmp.JuridicalId, tmp.Comment, tmp.Comment_MI, tmp.MovementId FROM tmpOrderIncome_all AS tmp) AS tmp
                                 LEFT JOIN Object ON Object.Id = tmp.JuridicalId
                            GROUP BY tmp.GoodsId
                           )
@@ -217,6 +231,7 @@ BEGIN
       , tmpOrderIncome AS (SELECT tmp.GoodsId
                                 , tmpOrderIncome_gr.PartnerName
                                 , tmpOrderIncome_gr.Comment
+                                , tmpOrderIncome_gr.Comment_MI
                                 , tmpOrderIncome_gr.MovementId_List
                                 , tmp.Amount - tmp.Amount_Income AS Amount
                            FROM (SELECT tmpOrderIncome_all.GoodsId
@@ -340,6 +355,13 @@ BEGIN
                                             ELSE 0
                                        END) AS CountSendOut
 
+                                , SUM (CASE WHEN MIContainer.OperDate BETWEEN vbStartDate_Calc AND vbEndDate_Calc
+                                             AND MIContainer.MovementDescId = zc_Movement_Send()
+                                             -- AND MIContainer.isActive = FALSE
+                                            THEN -1 * COALESCE (MIContainer.Amount, 0)
+                                            ELSE 0
+                                       END) AS CountSendOut_Calc
+
                                 , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                              AND MIContainer.MovementDescId IN (zc_Movement_Sale())
                                             THEN -1 * COALESCE (MIContainer.Amount, 0)
@@ -379,7 +401,7 @@ BEGIN
                            FROM tmpContainerAll
                                 LEFT JOIN MovementItemContainer AS MIContainer
                                                                 ON MIContainer.Containerid = tmpContainerAll.ContainerId
-                                                               AND MIContainer.OperDate >= inStartDate
+                                                               AND MIContainer.OperDate >= vbStartDate
                                 LEFT JOIN zfCalc_DayOfWeekName (MIContainer.OperDate) AS tmpWeekDay ON 1=1
                            GROUP BY CASE WHEN MIContainer.MovementDescId in (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MIContainer.ObjectExtId_Analyzer ELSE 0 END
                                   , tmpContainerAll.ContainerId, tmpContainerAll.GoodsId, tmpContainerAll.Amount
@@ -390,29 +412,25 @@ BEGIN
                           , (tmp.EndAmount)          AS RemainsEnd
                           , (tmpIncome.CountIncome)  AS CountIncome
                           , (tmp.CountSendOut)       AS CountProductionOut
+                          , (tmp.CountSendOut_Calc)  AS CountProductionOut_Calc
                           , (tmp.CountIn_oth   + COALESCE (tmpIncome.CountIn_oth, 0))  AS CountIn_oth
                           , (tmp.CountOut_oth  + COALESCE (tmpIncome.CountOut_oth, 0)) AS CountOut_oth
 
                      FROM (SELECT tmp.GoodsId
-                                , SUM (tmp.StartAmount)  AS StartAmount
-                                , SUM (tmp.EndAmount)    AS EndAmount
-
-                                , SUM (tmp.CountSendOut) AS CountSendOut
-
-                                , SUM (tmp.CountOut_oth) AS CountOut_oth
-
-                                , SUM (tmp.CountIn_oth) AS CountIn_oth
+                                , SUM (tmp.StartAmount)       AS StartAmount
+                                , SUM (tmp.EndAmount)         AS EndAmount
+                                , SUM (tmp.CountSendOut)      AS CountSendOut
+                                , SUM (tmp.CountSendOut_Calc) AS CountSendOut_Calc
+                                , SUM (tmp.CountOut_oth)      AS CountOut_oth
+                                , SUM (tmp.CountIn_oth)       AS CountIn_oth
                            FROM
                           (SELECT tmpMIContainerAll.GoodsId
                                 , tmpMIContainerAll.Amount - SUM (tmpMIContainerAll.StartAmountSum)  AS StartAmount
                                 , tmpMIContainerAll.Amount - SUM (tmpMIContainerAll.EndAmountSum)    AS EndAmount
-
-                                , SUM (tmpMIContainerAll.CountSendOut) AS CountSendOut
-
-                                , SUM (tmpMIContainerAll.CountOut_oth) AS CountOut_oth
-
-                                , SUM (tmpMIContainerAll.CountIn_oth) AS CountIn_oth
-
+                                , SUM (tmpMIContainerAll.CountSendOut)      AS CountSendOut
+                                , SUM (tmpMIContainerAll.CountSendOut_Calc) AS CountSendOut_Calc
+                                , SUM (tmpMIContainerAll.CountOut_oth)      AS CountOut_oth
+                                , SUM (tmpMIContainerAll.CountIn_oth)       AS CountIn_oth
                            FROM tmpMIContainerAll
                            GROUP BY tmpMIContainerAll.ContainerId, tmpMIContainerAll.GoodsId, tmpMIContainerAll.Amount
                           ) AS tmp
@@ -471,21 +489,21 @@ BEGIN
                           )
         -- приход / расход по дням
            , tmpOnDays AS (SELECT tmp.GoodsId
-                                , SUM (CASE WHEN tmpWeekDay.Number = 1 THEN tmp.CountIncome ELSE 0 END) CountIncome1
-                                , SUM (CASE WHEN tmpWeekDay.Number = 2 THEN tmp.CountIncome ELSE 0 END) CountIncome2
-                                , SUM (CASE WHEN tmpWeekDay.Number = 3 THEN tmp.CountIncome ELSE 0 END) CountIncome3
-                                , SUM (CASE WHEN tmpWeekDay.Number = 4 THEN tmp.CountIncome ELSE 0 END) CountIncome4
-                                , SUM (CASE WHEN tmpWeekDay.Number = 5 THEN tmp.CountIncome ELSE 0 END) CountIncome5
-                                , SUM (CASE WHEN tmpWeekDay.Number = 6 THEN tmp.CountIncome ELSE 0 END) CountIncome6
-                                , SUM (CASE WHEN tmpWeekDay.Number = 7 THEN tmp.CountIncome ELSE 0 END) CountIncome7
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 1 THEN tmp.CountIncome ELSE 0 END) CountIncome1
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 2 THEN tmp.CountIncome ELSE 0 END) CountIncome2
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 3 THEN tmp.CountIncome ELSE 0 END) CountIncome3
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 4 THEN tmp.CountIncome ELSE 0 END) CountIncome4
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 5 THEN tmp.CountIncome ELSE 0 END) CountIncome5
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 6 THEN tmp.CountIncome ELSE 0 END) CountIncome6
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 7 THEN tmp.CountIncome ELSE 0 END) CountIncome7
 
-                                , SUM (CASE WHEN tmpWeekDay.Number = 1 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut1
-                                , SUM (CASE WHEN tmpWeekDay.Number = 2 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut2
-                                , SUM (CASE WHEN tmpWeekDay.Number = 3 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut3
-                                , SUM (CASE WHEN tmpWeekDay.Number = 4 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut4
-                                , SUM (CASE WHEN tmpWeekDay.Number = 5 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut5
-                                , SUM (CASE WHEN tmpWeekDay.Number = 6 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut6
-                                , SUM (CASE WHEN tmpWeekDay.Number = 7 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut7
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 1 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut1
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 2 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut2
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 3 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut3
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 4 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut4
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 5 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut5
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 6 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut6
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 7 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut7
 
                                 , SUM (CASE WHEN tmp.NumDay = 1 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_1
                                 , SUM (CASE WHEN tmp.NumDay = 2 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_2
@@ -619,6 +637,7 @@ BEGIN
            , tmpGoodsList.PartnerName       :: TVarChar AS PartnerName
 
            , tmpOrderIncome.Comment         :: TVarChar AS Comment
+           , tmpOrderIncome.Comment_MI      :: TVarChar AS Comment_MI
            , tmpOrderIncome.MovementId_List :: TVarChar AS MovementId_List
 
            , vbCountDays                        AS CountDays
@@ -632,21 +651,27 @@ BEGIN
            , tmpContainer.CountIn_oth         :: TFloat AS CountIn_oth
            , tmpContainer.CountOut_oth        :: TFloat AS CountOut_oth
 
-           , (CASE WHEN vbCountDays <> 0 THEN tmpContainer.CountProductionOut/vbCountDays ELSE 0 END)  :: TFloat AS CountOnDay
-           , CASE WHEN tmpContainer.CountProductionOut <=0 AND  tmpContainer.RemainsEnd <> 0 THEN 365
-                  WHEN tmpContainer.RemainsEnd <> 0 AND (tmpContainer.CountProductionOut/vbCountDays) <> 0
-                  THEN tmpContainer.RemainsEnd / (tmpContainer.CountProductionOut/vbCountDays)
+           , (CASE WHEN vbCountDays <> 0 THEN tmpContainer.CountProductionOut_Calc/vbCountDays ELSE 0 END)  :: TFloat AS CountOnDay
+           , CASE WHEN tmpContainer.CountProductionOut_Calc <=0 AND  tmpContainer.RemainsEnd <> 0 THEN 365
+                  WHEN tmpContainer.RemainsEnd <> 0 AND (tmpContainer.CountProductionOut_Calc/vbCountDays) <> 0
+                  THEN tmpContainer.RemainsEnd / (tmpContainer.CountProductionOut_Calc/vbCountDays)
                   ELSE 0
              END :: TFloat AS RemainsDays
 
            , 30 :: TFloat AS ReserveDays
-           , CASE WHEN tmpContainer.CountProductionOut > 0 AND tmpContainer.RemainsEnd <> 0 AND tmpContainer.RemainsEnd <> 0  AND tmpContainer.RemainsEnd < (tmpContainer.CountProductionOut/vbCountDays) * 30 THEN (tmpContainer.CountProductionOut/vbCountDays) * 30 - tmpContainer.RemainsEnd ELSE 0 END :: TFloat AS PlanOrder
+           , CASE WHEN tmpContainer.CountProductionOut_Calc > 0 
+                   AND tmpContainer.RemainsEnd <> 0
+                   AND tmpContainer.RemainsEnd <> 0 
+                   AND tmpContainer.RemainsEnd < (tmpContainer.CountProductionOut_Calc/vbCountDays) * 30
+                  THEN (tmpContainer.CountProductionOut_Calc/vbCountDays) * 30 - tmpContainer.RemainsEnd
+                  ELSE 0
+             END :: TFloat AS PlanOrder
            , tmpOrderIncome.Amount  :: TFloat AS CountOrder
 
-           , CASE WHEN tmpContainer.CountProductionOut <= 0 AND tmpContainer.RemainsEnd <> 0
+           , CASE WHEN tmpContainer.CountProductionOut_Calc <= 0 AND tmpContainer.RemainsEnd <> 0
                   THEN 365
-                  WHEN (tmpContainer.CountProductionOut / vbCountDays) <> 0
-                  THEN (COALESCE (tmpContainer.RemainsEnd, 0) + COALESCE (tmpOrderIncome.Amount, 0)) / (tmpContainer.CountProductionOut / vbCountDays)
+                  WHEN (tmpContainer.CountProductionOut_Calc / vbCountDays) <> 0
+                  THEN (COALESCE (tmpContainer.RemainsEnd, 0) + COALESCE (tmpOrderIncome.Amount, 0)) / (tmpContainer.CountProductionOut_Calc / vbCountDays)
                   ELSE 0
              END  :: TFloat AS RemainsDaysWithOrder
 
@@ -784,6 +809,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 31.05.17         * 
  25.05.17         *
  16.05.17         *
  30.03.17         *
