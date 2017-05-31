@@ -28,7 +28,7 @@ BEGIN
   vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
   -- проверка - проведенные/удаленные документы Изменять нельзя
   IF vbStatusId <> zc_Enum_Status_UnComplete()
-     AND vbDescId <> zc_MI_Sign()
+
      -- AND inUserId <> 5 -- !!!временно для загрузки из Sybase!!!
   THEN
       /*IF AND vbStatusId = zc_Enum_Status_Erased() 
@@ -42,15 +42,7 @@ BEGIN
       RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
   END IF;
 
-  -- !!!не всегда!!!
-  IF vbDescId <> zc_MI_Sign()
-  THEN
-      -- пересчитали Итоговые суммы по накладной
-      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
 
-      -- сохранили протокол
-      PERFORM lpInsert_MovementItemProtocol (inMovementItemId:= inMovementItemId, inUserId:= inUserId, inIsInsert:= FALSE, inIsErased:= TRUE);
-  END IF;
 
 
 END;
@@ -60,7 +52,8 @@ ALTER FUNCTION lpSetErased_MovementItem (Integer, Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+ 31.05.17                                                          * del zc_MI_Sign
  09.10.14                                        * set lp
  02.04.14                                        * add zc_Enum_Role_Admin
  06.10.13                                        * add vbStatusId

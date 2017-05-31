@@ -49,7 +49,7 @@ BEGIN
      SELECT StatusId, InvNumber INTO vbStatusId, vbInvNumber FROM Movement WHERE Id = inMovementId;
      -- проверка - проведенные/удаленные документы Изменять нельзя + !!!временно захардкодил -12345!!!
      IF vbStatusId <> zc_Enum_Status_UnComplete()
-        AND inDescId <> zc_MI_Sign()
+
      THEN
          RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
      END IF;
@@ -94,7 +94,8 @@ $BODY$
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+ 31.05.17                                                          * del zc_MI_Sign
  11.04.17         * add PartionId
  11.07.15                                        * add inUserId
  17.05.14                                        * add проверка - inAmount and inObjectId
