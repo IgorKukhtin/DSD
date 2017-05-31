@@ -84,21 +84,26 @@ BEGIN
                         , SUM (MovementItem.Amount) AS Amount
                         , SUM (COALESCE (MIFloat_AmountOrder.ValueData, 0))  AS AmountOrder
                         , STRING_AGG (MIString_Comment.ValueData :: TVarChar, '; ') AS Comment
+                        , COALESCE (MIBoolean_Close.ValueData, FALSE) AS isClose
                    FROM tmp_List
                         INNER JOIN MovementItem ON MovementItem.MovementId = tmp_List.MovementId
                                                AND MovementItem.DescId     = zc_MI_Master()
                                                AND MovementItem.isErased   = False
                         INNER JOIN MovementItemLinkObject AS MILinkObject_Goods
-                                         ON MILinkObject_Goods.MovementItemId = MovementItem.Id
-                                        AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-                                        AND (MILinkObject_Goods.ObjectId = inGoodsId OR inGoodsId = 0)
+                                                          ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                                                         AND (MILinkObject_Goods.ObjectId = inGoodsId OR inGoodsId = 0)
                         LEFT JOIN MovementItemFloat AS MIFloat_AmountOrder
                                                     ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
                                                    AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
                         LEFT JOIN MovementItemString AS MIString_Comment
                                                      ON MIString_Comment.MovementItemId = MovementItem.Id
                                                     AND MIString_Comment.DescId = zc_MIString_Comment()
+                        LEFT JOIN MovementItemBoolean AS MIBoolean_Close
+                                                      ON MIBoolean_Close.MovementItemId = MovementItem.Id
+                                                     AND MIBoolean_Close.DescId = zc_MIBoolean_Close()
                    GROUP BY tmp_List.MovementId
+                          , MIBoolean_Close.ValueData
                    )
 
        SELECT
@@ -113,9 +118,14 @@ BEGIN
            , MovementDate_Insert.ValueData          AS InsertDate
            , Object_Insert.ValueData                AS InsertName
 
-           , COALESCE (tmpMI.Amount,0)                                        :: TFloat AS Amount
-           , (COALESCE (tmpMI.AmountOrder,0) + COALESCE (tmpMI.Amount,0) - COALESCE (Movement_Income.Amount,0) )    :: TFloat AS AmountOrder
-           , COALESCE (Movement_Income.Amount,0)                              :: TFloat AS AmountIncome
+           , COALESCE (tmpMI.Amount, 0)   :: TFloat AS Amount
+             
+           , CASE WHEN tmpMI.isClose = TRUE OR MovementBoolean_Closed.ValueData = TRUE
+                       THEN 0
+                  ELSE COALESCE (tmpMI.AmountOrder, 0) + COALESCE (tmpMI.Amount, 0) - COALESCE (Movement_Income.Amount, 0)
+             END :: TFloat AS AmountOrder
+
+           , COALESCE (Movement_Income.Amount, 0) :: TFloat AS AmountIncome
 
            , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData     AS VATPercent
@@ -163,7 +173,7 @@ BEGIN
                        END
                   ELSE FALSE
              END AS isNotOne
-           , COALESCE (MovementBoolean_Closed.ValueData, FALSE) :: Boolean AS isClosed
+           , CASE WHEN tmpMI.isClose = TRUE THEN TRUE ELSE COALESCE (MovementBoolean_Closed.ValueData, FALSE) END :: Boolean AS isClosed
        FROM tmp_List AS tmpMovement
             LEFT JOIN Movement ON Movement.id = tmpMovement.MovementId
             LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId

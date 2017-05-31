@@ -348,7 +348,7 @@ BEGIN
                                 , tmpContainerAll.ContainerId
                                 , tmpContainerAll.GoodsId
                                 , tmpContainerAll.Amount
-                                , SUM (COALESCE (MIContainer.Amount, 0))  AS StartAmountSum
+                                , SUM (CASE WHEN MIContainer.OperDate >= inStartDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END)  AS StartAmountSum
                                 , SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS EndAmountSum
 
                                 , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
