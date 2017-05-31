@@ -1007,6 +1007,14 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             Options.Editing = False
             Width = 140
           end
+          object colComment_MI: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1089#1090#1088'.)'
+            DataBinding.FieldName = 'Comment_MI'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 140
+          end
           object colMovementId_List: TcxGridDBColumn
             DataBinding.FieldName = 'MovementId_List'
             Visible = False

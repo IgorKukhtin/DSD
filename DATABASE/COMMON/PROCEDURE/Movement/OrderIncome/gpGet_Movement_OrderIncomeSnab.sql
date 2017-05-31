@@ -73,8 +73,10 @@ BEGIN
   
              , CAST ('' as TVarChar) 	                  AS Comment
 
-             , DATE_TRUNC ('MONTH', inOperDate)   ::TDateTime    AS OperDateStart
-             , (DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')  ::TDateTime AS OperDateEnd
+            /* , DATE_TRUNC ('MONTH', inOperDate)   ::TDateTime    AS OperDateStart
+             , (DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')  ::TDateTime AS OperDateEnd*/
+             , ((CASE WHEN EXTRACT (DOW FROM CURRENT_DATE) = 0 THEN CURRENT_DATE ELSE (CURRENT_DATE - ((EXTRACT (DOW FROM CURRENT_DATE))  :: TVarChar || ' DAY') :: INTERVAL) END) - interval '27 day')   ::TDateTime   AS OperDateStart
+             , (CASE WHEN EXTRACT (DOW FROM CURRENT_DATE) = 0 THEN CURRENT_DATE ELSE (CURRENT_DATE - ((EXTRACT (DOW FROM CURRENT_DATE))  :: TVarChar || ' DAY') :: INTERVAL) END)                         ::TDateTime   AS OperDateEnd
              , (DATE_PART ('DAY', (DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')  ::TDateTime
                                 - DATE_TRUNC ('MONTH', inOperDate)
                          ) + 1) :: Integer                AS DayCount

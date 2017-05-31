@@ -162,6 +162,12 @@ type
     spisClosed: TdsdStoredProc;
     actClosed: TdsdExecStoredProc;
     bbClosed: TdxBarButton;
+    actUpdateMovementByReport: TdsdExecStoredProc;
+    clisClose: TcxGridDBColumn;
+    spisCloseMI: TdsdStoredProc;
+    actCloseMI: TdsdExecStoredProc;
+    bbCloseMI: TdxBarButton;
+    macCloseMI: TMultiAction;
   private
   public
   end;

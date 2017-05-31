@@ -33,6 +33,7 @@ RETURNS TABLE (Id Integer, LineNum Integer
              , Color_RemainsDays integer
 
              , Comment        TVarChar 
+             , isClose        Boolean
              , isErased       Boolean
               )
 AS
@@ -152,7 +153,7 @@ BEGIN
                                   , COALESCE (MIFloat_AmountOrder.ValueData, 0)           AS AmountOrder
                                   , COALESCE (MIFloat_BalanceStart.ValueData, 0)          AS BalanceStart
                                   , COALESCE (MIFloat_BalanceEnd.ValueData, 0)            AS BalanceEnd
-
+                                  , COALESCE (MIBoolean_Close.ValueData, False)           AS isClose
                              FROM (SELECT false AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased) AS tmpIsErased
                                   JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                    AND MovementItem.DescId = zc_MI_Master()
@@ -193,6 +194,10 @@ BEGIN
                                   LEFT JOIN MovementItemFloat AS MIFloat_BalanceEnd
                                          ON MIFloat_BalanceEnd.MovementItemId = MovementItem.Id
                                         AND MIFloat_BalanceEnd.DescId = zc_MIFloat_BalanceEnd()
+
+                                  LEFT JOIN MovementItemBoolean AS MIBoolean_Close
+                                         ON MIBoolean_Close.MovementItemId = MovementItem.Id
+                                        AND MIBoolean_Close.DescId = zc_MIBoolean_Close()
                             )
 
         SELECT 0                          AS Id
@@ -228,6 +233,7 @@ BEGIN
              , zc_Color_Black() :: integer AS Color_RemainsDays
 
              , CAST (NULL AS TVarChar)    AS Comment
+             , FALSE                      AS isClose
              , FALSE                      AS isErased
         FROM tmpGoodsListIncome AS tmpGoods
              LEFT JOIN tmpMI_Goods AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
@@ -313,6 +319,7 @@ BEGIN
                END :: integer AS Color_RemainsDays
 
              , tmpMI.Comment
+             , tmpMI.isClose
              , tmpMI.isErased
         FROM tmpMI_Goods AS tmpMI
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
@@ -378,6 +385,7 @@ BEGIN
                                   , COALESCE (MIFloat_AmountOrder.ValueData, 0)           AS AmountOrder
                                   , COALESCE (MIFloat_BalanceStart.ValueData, 0)          AS BalanceStart
                                   , COALESCE (MIFloat_BalanceEnd.ValueData, 0)            AS BalanceEnd
+                                  , COALESCE (MIBoolean_Close.ValueData, False)           AS isClose
                              FROM (SELECT false AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased) AS tmpIsErased
                                   JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                    AND MovementItem.DescId = zc_MI_Master()
@@ -419,6 +427,10 @@ BEGIN
                                   LEFT JOIN MovementItemFloat AS MIFloat_BalanceEnd
                                          ON MIFloat_BalanceEnd.MovementItemId = MovementItem.Id
                                         AND MIFloat_BalanceEnd.DescId = zc_MIFloat_BalanceEnd()
+
+                                  LEFT JOIN MovementItemBoolean AS MIBoolean_Close
+                                         ON MIBoolean_Close.MovementItemId = MovementItem.Id
+                                        AND MIBoolean_Close.DescId = zc_MIBoolean_Close()
                             )
 
         SELECT tmpMI.MovementItemId       AS Id
@@ -484,6 +496,7 @@ BEGIN
                 END :: integer AS Color_RemainsDays 
 
              , tmpMI.Comment 
+             , tmpMI.isClose
              , tmpMI.isErased
         FROM tmpMI_Goods AS tmpMI
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
@@ -508,6 +521,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 31.05.17         *
  16.05.17         *
  03.05.17         * 
  14.04.17         * 

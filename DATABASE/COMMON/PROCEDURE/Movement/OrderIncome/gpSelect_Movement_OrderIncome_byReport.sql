@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Full TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
-             , Comment TVarChar
+             , Comment TVarChar, Comment_MI TVarChar
              , OperDateStart TDateTime
              , OperDateEnd TDateTime
              , DayCount TFloat
@@ -84,6 +84,7 @@ BEGIN
       ,  tmpMI AS (SELECT tmp_List.MovementId
                         , SUM (MovementItem.Amount) AS Amount
                         , SUM (COALESCE (MIFloat_AmountOrder.ValueData, 0))  AS AmountOrder
+                        , STRING_AGG (MIString_Comment.ValueData :: TVarChar, '; ') AS Comment
                    FROM tmp_List
                         INNER JOIN MovementItem ON MovementItem.MovementId = tmp_List.MovementId
                                                AND MovementItem.DescId     = zc_MI_Master()
@@ -95,6 +96,9 @@ BEGIN
                         LEFT JOIN MovementItemFloat AS MIFloat_AmountOrder
                                                     ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
                                                    AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
+                        LEFT JOIN MovementItemString AS MIString_Comment
+                                                     ON MIString_Comment.MovementItemId = MovementItem.Id
+                                                    AND MIString_Comment.DescId = zc_MIString_Comment()
                    GROUP BY tmp_List.MovementId
                    )
 
@@ -142,6 +146,7 @@ BEGIN
            , Object_PaidKind.ValueData              AS PaidKindName
 
            , MovementString_Comment.ValueData       AS Comment
+           , tmpMI.Comment              ::TVarChar  AS Comment_MI
 
            , COALESCE (MovementDate_OperDateStart.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate)) ::TDateTime  AS OperDateStart
            , COALESCE (MovementDate_OperDateEnd.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY') ::TDateTime  AS OperDateEnd
@@ -253,6 +258,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 31.05.17         *
  17.05.17         *
 */
 

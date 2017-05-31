@@ -360,6 +360,14 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         Options.Editing = False
         Width = 163
       end
+      object Comment_MI: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1089#1090#1088'.)'
+        DataBinding.FieldName = 'Comment_MI'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 163
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

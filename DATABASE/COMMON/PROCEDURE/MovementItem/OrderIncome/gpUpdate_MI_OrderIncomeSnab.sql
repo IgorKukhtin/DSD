@@ -4,16 +4,17 @@ DROP FUNCTION IF EXISTS gpUpdate_MI_OrderIncomeSnab (Integer, TDateTime, TDateTi
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_OrderIncomeSnab(
     IN inMovementId         Integer   , -- Ключ объекта <Документ>
-    IN inStartDate          TDateTime , --
-    IN inEndDate            TDateTime , --
+ INOUT ioStartDate          TDateTime , --
+ INOUT ioEndDate            TDateTime , --
     IN inUnitId             Integer,    -- подразделение склад
     IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS Void
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbJuridicalId_From Integer;
+   DECLARE vbOperDate TDateTime;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -25,11 +26,21 @@ BEGIN
                            WHERE MovementLinkObject_From.MovementId = inMovementId
                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_Juridical());
 
+    vbOperDate := (SELECT Movement.OperDate
+                   FROM Movement
+                   WHERE Movement.Id = inMovementId);
 
     -- проверка - свойство должно быть установлено
     IF COALESCE (vbJuridicalId_From, 0) = 0 THEN
        RAISE EXCEPTION 'Ошибка.Не установлено значение <Юр.лицо (поставщик)>.';
     END IF;
+
+    -- переопределяем даты для расчета данных - ПОЛНЫЕ (с пон - по вск) - ЗАВЕРШЕННЫЕ 4 недели
+    ioEndDate := (CASE WHEN vbOperDate > CURRENT_DATE 
+                       THEN CASE WHEN EXTRACT (DOW FROM CURRENT_DATE) = 0 THEN CURRENT_DATE ELSE (CURRENT_DATE - ((EXTRACT (DOW FROM CURRENT_DATE))  :: TVarChar || ' DAY') :: INTERVAL) END
+                       ELSE CASE WHEN EXTRACT (DOW FROM vbOperDate) = 0 THEN vbOperDate ELSE (vbOperDate - ((EXTRACT (DOW FROM vbOperDate))  :: TVarChar || ' DAY') :: INTERVAL) END
+                  END);
+    ioStartDate := ioEndDate - interval '27 day';
 
     -- рассчетные данные
     PERFORM lpInsertUpdate_MI_OrderIncomeSnab_Property
@@ -66,8 +77,8 @@ BEGIN
                                 , gpReport.CountIn_oth
                                 , gpReport.CountOut_oth
                                 , gpReport.CountOrder
-                           FROM gpReport_SupplyBalance (inStartDate   := inStartDate
-                                                      , inEndDate     := inEndDate
+                           FROM gpReport_SupplyBalance (inStartDate   := ioStartDate
+                                                      , inEndDate     := ioEndDate
                                                       , inUnitId      := 8455
                                                       , inGoodsGroupId:= 0
                                                       , inJuridicalId := vbJuridicalId_From
@@ -100,9 +111,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 31.05.17         *
  04.05.17         *
  18.04.17         *
 */
 
 -- тест
--- SELECT * FROM gpUpdate_MI_OrderIncomeSnab(inStartDate := ('01.12.2016')::TDateTime , inEndDate := ('21.12.2016')::TDateTime , inUnitId := 8455 , inGoodsGroupId := 1917 ,  inSession := '5');
+-- SELECT * FROM gpUpdate_MI_OrderIncomeSnab(ioStartDate := ('01.12.2016')::TDateTime , ioEndDate := ('21.12.2016')::TDateTime , inUnitId := 8455 , inGoodsGroupId := 1917 ,  inSession := '5');

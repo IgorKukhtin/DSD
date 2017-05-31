@@ -11,6 +11,7 @@ RETURNS TABLE (Id               Integer
              , ValueData        TVarChar -- Название
              , GUID             TVarChar -- Глобальный уникальный идентификатор. Для синхронизации с Главной БД
              , Address          TVarChar -- Адрес точки доставки
+             , ShortAddress     TVarChar -- Адрес точки доставки для представления на карте
              , GPSN             TFloat   -- GPS координаты точки доставки (широта)
              , GPSE             TFloat   -- GPS координаты точки доставки (долгота)
              , Schedule         TVarChar -- График посещения ТТ - по каким дням недели - в строчке 7 символов разделенных ";" t значит true и f значит false
@@ -171,6 +172,7 @@ BEGIN
                   , Object_Partner.ValueData
                   , ObjectString_Partner_GUID.ValueData     AS GUID
                   , ObjectString_Partner_Address.ValueData  AS Address
+                  , ObjectString_Partner_Address.ValueData  AS ShortAddress
                   , ObjectFloat_Partner_GPSN.ValueData      AS GPSN
                   , ObjectFloat_Partner_GPSE.ValueData      AS GPSE
                   --, REPLACE (REPLACE (LOWER (COALESCE (ObjectString_Partner_Schedule.ValueData, 't;t;t;t;t;t;t')), 'true', 't'), 'false', 'f')::TVarChar AS Schedule
@@ -247,6 +249,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Ярошенко Р.Ф.
+ 30.05.17                                                         * ShortAddress
  28.03.17         * add Delivery
  17.02.17                                                         *
 */
