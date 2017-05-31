@@ -332,14 +332,12 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 306
     ClientRectBottom = 546
     ClientRectRight = 1253
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 282
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -347,7 +345,8 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         Height = 522
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 282
+        ExplicitLeft = 16
+        ExplicitTop = 152
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1646,6 +1645,9 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
           Action = actUpdateAmountRemains
         end
         item
+          Action = actUpdateMovementByReport
+        end
+        item
           Action = actRefresh_MI
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077'?'
@@ -1653,6 +1655,19 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 50
+    end
+    object actUpdateMovementByReport: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMovementByReport
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMovementByReport
+        end>
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1086#1090#1095#1077#1090#1072
+      Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 47
     end
     object actUpdateAmountRemains: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -2812,19 +2827,19 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inStartDate'
+        Name = 'ioStartDate'
         Value = 42132d
         Component = edOperDateStart
         DataType = ftDateTime
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inEndDate'
+        Name = 'ioEndDate'
         Value = ''
         Component = edOperDateEnd
         DataType = ftDateTime
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

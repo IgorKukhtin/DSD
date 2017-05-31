@@ -139,11 +139,14 @@ BEGIN
            SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods();
     END IF;
 
-    vbEndDate_Calc := (SELECT CASE WHEN EXTRACT (Dow FROM inEndDate) + 1 = 7 THEN inEndDate ELSE (inEndDate - ((EXTRACT (Dow FROM inEndDate) + 1)  :: TVarChar || ' DAY') :: INTERVAL) END);
+    vbEndDate_Calc := (CASE WHEN inEndDate > CURRENT_DATE 
+                            THEN CASE WHEN EXTRACT (DOW FROM CURRENT_DATE) = 0 THEN CURRENT_DATE ELSE (CURRENT_DATE - ((EXTRACT (DOW FROM CURRENT_DATE))  :: TVarChar || ' DAY') :: INTERVAL) END
+                            ELSE CASE WHEN EXTRACT (DOW FROM inEndDate) = 0 THEN inEndDate ELSE (inEndDate - ((EXTRACT (DOW FROM inEndDate))  :: TVarChar || ' DAY') :: INTERVAL) END
+                       END);
     vbStartDate_Calc := vbEndDate_Calc - interval '27 day';
     vbStartDate := (CASE WHEN inStartDate > vbStartDate_Calc THEN vbStartDate_Calc ELSE inStartDate END);
     
-    vbCountDays := (SELECT DATE_PART('day', (vbEndDate_Calc - vbStartDate_Calc)) + 1);
+    vbCountDays := (SELECT DATE_PART('day', (vbEndDate_Calc - vbStartDate_Calc)) + 2);
 
      RETURN QUERY
      WITH -- подразделения для "остатки впроизводстве"

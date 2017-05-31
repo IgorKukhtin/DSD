@@ -162,6 +162,7 @@ type
     spisClosed: TdsdStoredProc;
     actClosed: TdsdExecStoredProc;
     bbClosed: TdxBarButton;
+    actUpdateMovementByReport: TdsdExecStoredProc;
   private
   public
   end;

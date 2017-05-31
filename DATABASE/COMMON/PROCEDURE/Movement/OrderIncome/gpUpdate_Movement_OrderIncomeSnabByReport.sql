@@ -22,7 +22,8 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderIncome());
 
 
-     outDayCount:= (DATE_PART ('DAY', DATE_TRUNC ('DAY', inOperDateEnd) - DATE_TRUNC ('MONTH', inOperDateStart)) + 1) :: Integer;
+     --outDayCount:= (DATE_PART ('DAY', DATE_TRUNC ('DAY', inOperDateEnd) - DATE_TRUNC ('MONTH', inOperDateStart)) + 1) :: Integer;
+     outDayCount:= (DATE_PART('day', (inOperDateEnd - inOperDateStart)) + 2) :: Integer;
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateStart(), inId, inOperDateStart);
