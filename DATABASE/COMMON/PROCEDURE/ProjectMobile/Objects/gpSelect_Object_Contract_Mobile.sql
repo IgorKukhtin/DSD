@@ -22,11 +22,11 @@ RETURNS TABLE (Id               Integer
              , EndDate          TDateTime -- Дата до которой действует договор
              , ChangePercent    TFloat    -- (-)% Скидки (+)% Наценки - для Скидки - отрицателеное значение, для Наценки - положительное
              , DelayDayCalendar TFloat    -- Отсрочка в календарных днях
-             , DelayDayBank     TFloat    -- Отсрочка в банковских днях 
+             , DelayDayBank     TFloat    -- Отсрочка в банковских днях
              , isErased         Boolean   -- Удаленный ли элемент
              , isSync           Boolean   -- Синхронизируется (да/нет)
               )
-AS 
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMemberId Integer;
@@ -36,22 +36,34 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
      vbUserId:= lpGetUserBySession (inSession);
 
-     vbMemberId:= (SELECT tmp.MemberId FROM gpGetMobile_Object_Const (inSession) AS tmp);
-     IF (COALESCE(inMemberId,0) <> 0 AND COALESCE(vbMemberId,0) <> inMemberId)
-        THEN
-            RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.'; 
+
+      -- !!!меняем значение!!! - с какими параметрами пользователь может просматривать данные с мобильного устройства
+     IF NOT EXISTS (SELECT 1 FROM ObjectBoolean WHERE ObjectBoolean.DescId = zc_ObjectBoolean_User_ProjectMobile() AND ObjectBoolean.ObjectId = vbUserId AND ObjectBoolean.ValueData = TRUE)
+        OR inSession = zfCalc_UserAdmin()
+     THEN
+         -- Если пользователь inSession - НЕ Торговый агент - видит ВСЕ
+         vbMemberId:= 0; calcSession:= '';
+     ELSE
+         --
+         vbMemberId:= (SELECT tmp.MemberId FROM gpGetMobile_Object_Const (inSession) AS tmp);
+         --
+         calcSession := (SELECT CAST (ObjectLink_User_Member.ObjectId AS TVarChar)
+                           FROM ObjectLink AS ObjectLink_User_Member
+                           WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                             AND ObjectLink_User_Member.ChildObjectId = vbMemberId);
+         --
+         IF COALESCE (vbMemberId, 0) <> inMemberId
+         THEN
+              RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.';
+         END IF;
      END IF;
 
-     calcSession := (SELECT CAST (ObjectLink_User_Member.ObjectId AS TVarChar) 
-                       FROM ObjectLink AS ObjectLink_User_Member
-                       WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-                         AND ObjectLink_User_Member.ChildObjectId = vbMemberId);
 
-      -- Результат
-       RETURN QUERY
-         SELECT tmpMobileContract.Id                                                                                                                                                                       
-              , tmpMobileContract.ObjectCode    AS Code                                                                                                                                                             
-              , tmpMobileContract.ValueData     AS Name                                                                                                                                                              
+     -- Результат
+     RETURN QUERY
+         SELECT tmpMobileContract.Id
+              , tmpMobileContract.ObjectCode    AS Code
+              , tmpMobileContract.ValueData     AS Name
               , tmpMobileContract.ContractTagName
               , tmpMobileContract.InfoMoneyName
               , tmpMobileContract.Comment
@@ -62,11 +74,11 @@ BEGIN
               , Object_Juridical.ValueData      AS JuridicalName
 
               , tmpMobileContract.StartDate
-              , tmpMobileContract.EndDate                                                                                                                                             
+              , tmpMobileContract.EndDate
               , tmpMobileContract.ChangePercent
               , tmpMobileContract.DelayDayCalendar
               , tmpMobileContract.DelayDayBank
-              , tmpMobileContract.isErased                                                                                                                                                               
+              , tmpMobileContract.isErased
               , tmpMobileContract.isSync
          FROM gpSelectMobile_Object_Contract (zc_DateStart(), calcSession) AS tmpMobileContract
               LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpMobileContract.PaidKindId
@@ -78,7 +90,7 @@ BEGIN
            AND (tmpMobileContract.isErased = inisShowAll OR inisShowAll = True)
 ;
 
-END; 
+END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
@@ -89,4 +101,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Contract_Mobile(inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Contract_Mobile (inMemberId:= 1, inisShowAll:= FALSE, inSession := zfCalc_UserAdmin())

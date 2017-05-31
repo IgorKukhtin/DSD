@@ -52,7 +52,7 @@ BEGIN
 
 
      RETURN QUERY
-     WITH 
+     WITH
       tmpPartnerLinkGoodsProperty AS (
                           SELECT ObjectLink_Partner_Juridical.ObjectId AS  PartnerId
                                , ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
@@ -65,31 +65,31 @@ BEGIN
                             AND (ObjectLink_Partner_Juridical.ObjectId = inFromId OR inFromId = 0)
                                     )
 
-  , tmpGoodsArticle AS (SELECT 
+  , tmpGoodsArticle AS (SELECT
                           ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId  as GoodsPropertyId
                         , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId          as GoodsId
                         , ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId      AS GoodsKindId
                         , ObjectString_Article.ValueData                             AS Article
                         , ObjectString_ArticleGLN.ValueData                          AS ArticleGLN
-                        
+
                    FROM ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
                      LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                            ON ObjectLink_GoodsPropertyValue_Goods.ObjectId =  ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                           AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
-                                       
+
                      LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
-                             ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId 
+                             ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                             AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
-                             
+
                      Inner JOIN ObjectString AS ObjectString_Article
-                               ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId 
+                               ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                               AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
-                              AND COALESCE (ObjectString_Article.ValueData, '') <> '' 
+                              AND COALESCE (ObjectString_Article.ValueData, '') <> ''
 
                      LEFT JOIN ObjectString AS ObjectString_ArticleGLN
-                               ON ObjectString_ArticleGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId 
+                               ON ObjectString_ArticleGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                               AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
-      
+
                    WHERE ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
                          )
 
@@ -101,9 +101,9 @@ BEGIN
            , MovementString_InvNumberPartner.ValueData                                                                                          AS invnumberorderpartner
            , MovementLinkObject_From.ObjectId                                                                                                   AS FromId
            , MovementLinkObject_Route.ObjectId                                                                                                  AS RouteId
-           , MovementLinkObject_RouteSorting.ObjectId                                                                                           AS RouteSortingId
+           , 0                                                                                                                                  AS RouteSortingId
            , MovementLinkObject_PaidKind.ObjectId                                                                                               AS PaidKindId
-           , MILinkObject_GoodsKind.ObjectId                                                                                                    AS GoodsKindId
+           , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())                                                                   AS GoodsKindId
            , MovementItem.ObjectId                                                                                                              AS GoodsId
            , CAST (SUM((CASE WHEN Movement.OperDate = MovementDate_OperDatePartner.ValueData THEN MovementItem.Amount ELSE 0 END)) AS TFloat)   AS Amount1
            , CAST (SUM((CASE WHEN Movement.OperDate <> MovementDate_OperDatePartner.ValueData THEN MovementItem.Amount ELSE 0 END)) AS TFloat)  AS Amount2
@@ -143,9 +143,6 @@ BEGIN
            LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
                                         ON MovementLinkObject_Route.MovementId = Movement.Id
                                        AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
-           LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
-                                       ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
-                                      AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
@@ -182,19 +179,17 @@ BEGIN
          AND (COALESCE (MovementLinkObject_To.ObjectId,0) = CASE WHEN inToId <> 0 THEN inToId ELSE COALESCE (MovementLinkObject_To.ObjectId,0) END)
          AND (COALESCE (MovementLinkObject_From.ObjectId,0) = CASE WHEN inFromId <> 0 THEN inFromId ELSE COALESCE (MovementLinkObject_From.ObjectId,0) END)
          AND (COALESCE (MovementLinkObject_Route.ObjectId,0) = CASE WHEN inRouteId <> 0 THEN inRouteId ELSE COALESCE (MovementLinkObject_Route.ObjectId,0) END)
-         AND (COALESCE (MovementLinkObject_RouteSorting.ObjectId,0) = CASE WHEN inRouteSortingId <> 0 THEN inRouteSortingId ELSE COALESCE (MovementLinkObject_RouteSorting.ObjectId,0) END)
 
        GROUP BY
              MovementLinkObject_From.ObjectId
            , MovementLinkObject_Route.ObjectId
-           , MovementLinkObject_RouteSorting.ObjectId
            , MovementLinkObject_PaidKind.ObjectId
            , MILinkObject_GoodsKind.ObjectId
            , MovementItem.ObjectId
            , Movement.OperDate
-           , MovementDate_OperDatePartner.ValueData 
+           , MovementDate_OperDatePartner.ValueData
            , MovementString_InvNumberPartner.ValueData
-           
+
          )
 
     ,   tmpMovementOrder AS (
@@ -248,7 +243,7 @@ tmpMovementSaleTop AS (
 
            , MovementLinkObject_From.ObjectId           AS FromId
            , MovementLinkObject_Route.ObjectId          AS RouteId
-           , MovementLinkObject_RouteSorting.ObjectId   AS RouteSortingId
+           , 0                                          AS RouteSortingId
            , MovementLinkObject_PaidKind.ObjectId       AS PaidKindId
            , CASE WHEN TRIM (COALESCE (MovementString_InvNumberOrder.ValueData, '')) <> ''
                        THEN MovementString_InvNumberOrder.ValueData
@@ -256,44 +251,39 @@ tmpMovementSaleTop AS (
              END :: TVarChar AS InvNumberOrderPartner
            , Movement.InvNumber
        FROM Movement
-       
+
            LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                     ON MovementString_InvNumberOrder.MovementId =  Movement.Id
                                    AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
-                                    
+
            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                         ON MovementLinkObject_From.MovementId = Movement.Id
                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_To() --Ì‡Ó·ÓÓÚ, ˜ÚÓ ·˚ ·˚ÎÓ Í‡Í ‚ Á‡Í‡ÁÂ
            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                         ON MovementLinkObject_To.MovementId = Movement.Id
                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_From()
-           
+
            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
-                                          ON MovementLinkMovement_Order.MovementId = Movement.Id 
+                                          ON MovementLinkMovement_Order.MovementId = Movement.Id
                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
            LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
-                   
+
            LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
                                         ON MovementLinkObject_Route.MovementId = Movement_Order.Id
                                        AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
-           LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
-                                       ON MovementLinkObject_RouteSorting.MovementId = Movement_Order.Id
-                                      AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
-                                                             
+
        WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
          AND Movement.DescId = zc_Movement_Sale()
          AND Movement.StatusId = zc_Enum_Status_Complete()
          AND (COALESCE (MovementLinkObject_To.ObjectId,0) = CASE WHEN inToId <> 0 THEN inToId ELSE COALESCE (MovementLinkObject_To.ObjectId,0) END)
          AND (COALESCE (MovementLinkObject_From.ObjectId,0) = CASE WHEN inFromId <> 0 THEN inFromId ELSE COALESCE (MovementLinkObject_From.ObjectId,0) END)
          AND (COALESCE (MovementLinkObject_Route.ObjectId,0) = CASE WHEN inRouteId <> 0 THEN inRouteId ELSE COALESCE (MovementLinkObject_Route.ObjectId,0) END)
-         AND (COALESCE (MovementLinkObject_RouteSorting.ObjectId,0) = CASE WHEN inRouteSortingId <> 0 THEN inRouteSortingId ELSE COALESCE (MovementLinkObject_RouteSorting.ObjectId,0) END)
-       GROUP BY Movement.Id 
+       GROUP BY Movement.Id
            , MovementLinkObject_From.ObjectId
            , MovementLinkObject_Route.ObjectId
-           , MovementLinkObject_RouteSorting.ObjectId
            , MovementLinkObject_PaidKind.ObjectId
            , Movement_Order.OperDate
            , Movement.OperDate
@@ -311,8 +301,8 @@ tmpMovementSaleTop AS (
            , tmpMovementSaleTop.RouteId
            , tmpMovementSaleTop.RouteSortingId
            , tmpMovementSaleTop.PaidKindId
-           
-           , MILinkObject_GoodsKind.ObjectId            AS GoodsKindId
+
+           , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId
            , MovementItem.ObjectId                      AS GoodsId
            , CAST (0 AS TFloat)                         AS Amount1
            , CAST (0 AS TFloat)                         AS Amount2
@@ -372,13 +362,13 @@ tmpMovementSaleTop AS (
            , MILinkObject_GoodsKind.ObjectId
            , MovementItem.ObjectId
            , tmpMovementSaleTop.OperDate
-           , tmpMovementSaleTop.OperDatePartner 
+           , tmpMovementSaleTop.OperDatePartner
            , tmpMovementSaleTop.InvNumber
            , tmpMovementSaleTop.InvNumberOrderPartner
            , MIFloat_Price.ValueData)
 
     ,   tmpMovementAll AS (
-       SELECT 
+       SELECT
              tmpMovementOrder.OperDate
            , tmpMovementOrder.OperDatePartner
            , Null AS InvNumber
@@ -557,15 +547,15 @@ tmpMovementSaleTop AS (
 
           LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View
                                           ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
-                                          
+
           LEFT JOIN tmpPartnerLinkGoodsProperty ON tmpPartnerLinkGoodsProperty.PartnerId = tmpMovement.FromId
 
           LEFT JOIN tmpGoodsArticle ON tmpGoodsArticle.GoodsPropertyId = tmpPartnerLinkGoodsProperty.GoodsPropertyId
                                    AND tmpGoodsArticle.GoodsId = tmpMovement.GoodsId
                                    AND tmpGoodsArticle.GoodsKindId = tmpMovement.GoodsKindId
-                                  
 
-                                   
+
+
 
             ;
 
@@ -574,11 +564,10 @@ $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpReport_OrderExternal_Sale (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
-
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
- 09.12.15         * add 
+ 09.12.15         * add
  02.09.14                                                        *
 */
 

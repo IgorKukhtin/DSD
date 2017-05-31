@@ -39,26 +39,37 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
      vbUserId:= lpGetUserBySession (inSession);
---vbMemberId:= inMemberId;
-     vbMemberId:= (SELECT tmp.MemberId FROM gpGetMobile_Object_Const (inSession) AS tmp);
-     IF (COALESCE(inMemberId,0) <> 0 AND COALESCE(vbMemberId,0) <> inMemberId)
-        THEN
-            RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.'; 
+
+
+      -- !!!меняем значение!!! - с какими параметрами пользователь может просматривать данные с мобильного устройства
+     IF NOT EXISTS (SELECT 1 FROM ObjectBoolean WHERE ObjectBoolean.DescId = zc_ObjectBoolean_User_ProjectMobile() AND ObjectBoolean.ObjectId = vbUserId AND ObjectBoolean.ValueData = TRUE)
+        OR inSession = zfCalc_UserAdmin()
+     THEN
+         -- Если пользователь inSession - НЕ Торговый агент - видит ВСЕ
+         vbMemberId:= 0; calcSession:= '';
+     ELSE
+         --
+         vbMemberId:= (SELECT tmp.MemberId FROM gpGetMobile_Object_Const (inSession) AS tmp);
+         --
+         calcSession := (SELECT CAST (ObjectLink_User_Member.ObjectId AS TVarChar)
+                         FROM ObjectLink AS ObjectLink_User_Member
+                         WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                           AND ObjectLink_User_Member.ChildObjectId = vbMemberId);
+         --
+         IF COALESCE (vbMemberId, 0) <> COALESCE (inMemberId, 0)
+         THEN
+              RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.';
+         END IF;
      END IF;
 
-     calcSession := (SELECT CAST (ObjectLink_User_Member.ObjectId AS TVarChar) 
-                     FROM ObjectLink AS ObjectLink_User_Member
-                     WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-                       AND ObjectLink_User_Member.ChildObjectId = vbMemberId);
 
      -- Результат
      RETURN QUERY
-       -- Результат
        SELECT tmpMobileConst.PaidKindId_First
             , tmpMobileConst.PaidKindName_First
             , tmpMobileConst.PaidKindId_Second
             , tmpMobileConst.PaidKindName_Second
-           
+
             , tmpMobileConst.StatusId_Complete
             , tmpMobileConst.StatusName_Complete
             , tmpMobileConst.StatusId_UnComplete
@@ -98,4 +109,4 @@ END;$BODY$
 */
 
 -- тест
---select * from gpGet_Object_Const_Mobile(inMemberId := 149833 ,  inSession := '5');
+-- SELECT * FROM gpGet_Object_Const_Mobile (inMemberId := 149833 ,  inSession := '5');

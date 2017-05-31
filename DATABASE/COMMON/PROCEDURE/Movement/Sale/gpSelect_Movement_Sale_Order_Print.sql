@@ -6,7 +6,7 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Order_Print (Integer, Integer, Bo
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_Order_Print(
     IN inMovementId                 Integer  , -- ключ Документа Заявки
     IN inMovementId_Weighing        Integer  , -- ключ Документа взвешивания
-    IN inIsDiff                     Boolean  , -- 
+    IN inIsDiff                     Boolean  , --
     IN inSession                    TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -23,29 +23,29 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
      vbUserId:= lpGetUserBySession (inSession);
 
-     
+
      SELECT Movement.Id
             INTO vbMovementId
-     FROM MovementLinkMovement 
+     FROM MovementLinkMovement
           inner join Movement on Movement.Id = MovementLinkMovement.MovementId
                              AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
                              AND Movement.StatusId <> zc_Enum_Status_Erased()
-     WHERE MovementLinkMovement.MovementChildId = inMovementId   
+     WHERE MovementLinkMovement.MovementChildId = inMovementId
        AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
 
     ;
 
     --
     OPEN Cursor1 FOR
-    
+
      SELECT
            Movement.InvNumber             AS InvNumber
          , Movement.OperDate              AS OperDate
 
          , Object_From.ValueData          AS FromName
          , Object_To.ValueData            AS ToName
-      
-     FROM Movement 
+
+     FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -55,7 +55,7 @@ BEGIN
                                        ON MovementLinkObject_To.MovementId = Movement.Id
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
           LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_To.ObjectId -- !!!наоборот т.к. это заявка!!!
-       
+
        WHERE Movement.Id = inMovementId
          AND Movement.StatusId <> zc_Enum_Status_Erased()
       ;
@@ -66,7 +66,7 @@ BEGIN
     OPEN Cursor2 FOR
 
      WITH tmpWeighing AS (SELECT MovementItem.ObjectId                                     AS GoodsId
-                               , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)             AS GoodsKindId
+                               , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId
                                , COALESCE (MIString_PartionGoods.ValueData, '')            AS PartionGoods
                                , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())  AS PartionGoodsDate
                                , SUM (MovementItem.Amount)                                 AS Amount
@@ -76,9 +76,9 @@ BEGIN
                                                        AND Movement.DescId = zc_Movement_WeighingPartner()
                                                        AND Movement.StatusId = zc_Enum_Status_unComplete()
                                                        AND (Movement.Id = inMovementId_Weighing OR COALESCE (inMovementId_Weighing, 0) = 0)
-                                WHERE MLM_Order.MovementChildId = inMovementId -- id заявки 
+                                WHERE MLM_Order.MovementChildId = inMovementId -- id заявки
                                   AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
-                                  
+
                                 ) AS tmp
                                 INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId
                                                        AND MovementItem.DescId     = zc_MI_Master()
@@ -93,12 +93,12 @@ BEGIN
                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                           GROUP BY MovementItem.ObjectId
-                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())
                                  , COALESCE (MIString_PartionGoods.ValueData, '')
                                  , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())
                          )
               , tmpMI AS (SELECT MovementItem.ObjectId                                     AS GoodsId
-                               , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)             AS GoodsKindId
+                               , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())  AS GoodsKindId
                                , COALESCE (MIString_PartionGoods.ValueData, '')            AS PartionGoods
                                , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())  AS PartionGoodsDate
                                , SUM (MovementItem.Amount)                                 AS Amount
@@ -117,23 +117,23 @@ BEGIN
                             AND MovementItem.isErased   = FALSE
                             AND MovementItem.Amount <> 0
                           GROUP BY MovementItem.ObjectId
-                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())
                                  , COALESCE (MIString_PartionGoods.ValueData, '')
                                  , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())
                           )
-                        
 
-         , tmpMIOrder AS ( SELECT MovementItem.ObjectId AS GoodsId 
-                               , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  AS GoodsKindId
+
+         , tmpMIOrder AS ( SELECT MovementItem.ObjectId AS GoodsId
+                               , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())  AS GoodsKindId
                                , COALESCE (MIString_PartionGoods.ValueData, '')            AS PartionGoods
                                , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())  AS PartionGoodsDate
-                            
-                               , SUM (MovementItem.Amount) AS Amount
-                               , SUM (COALESCE (MIFloat_AmountSecond.ValueData, 0))        AS AmountSecond  
 
-                          FROM MovementItem         
+                               , SUM (MovementItem.Amount) AS Amount
+                               , SUM (COALESCE (MIFloat_AmountSecond.ValueData, 0))        AS AmountSecond
+
+                          FROM MovementItem
                                LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
-                                                           ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id 
+                                                           ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                                           AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -144,17 +144,17 @@ BEGIN
                                                          AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                                LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                             ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
-                                                           AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()                               
+                                                           AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
 
-                          WHERE MovementItem.MovementId = inMovementId 
-                            AND MovementItem.isErased   = FALSE   
+                          WHERE MovementItem.MovementId = inMovementId
+                            AND MovementItem.isErased   = FALSE
                             AND MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) <> 0
                           GROUP BY MovementItem.ObjectId
-                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) 
+                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())
                                  , COALESCE (MIString_PartionGoods.ValueData, '')
                                  , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())
-                         ) 
-                   
+                         )
+
         , tmpResult_1 AS (SELECT COALESCE (tmpWeighing.GoodsId, tmpMI.GoodsId)                   AS GoodsId
                                , COALESCE (tmpWeighing.GoodsKindId, tmpMI.GoodsKindId)           AS GoodsKindId
                                , COALESCE (tmpWeighing.PartionGoods, tmpMI.PartionGoods)         AS PartionGoods
@@ -188,7 +188,7 @@ BEGIN
             , Object_GoodsGroup.ValueData   		  AS GoodsGroupName
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , tmpResult1.MeasureName
-            
+
             , tmpResult1.Amount
             , tmpResult1.Amount_Sh
             , tmpResult1.Amount_Weight
@@ -207,27 +207,27 @@ BEGIN
             , tmpResult1.AmountSecond_Order_Sh
             , tmpResult1.AmountSecond_Order_Weight
 
-            , CASE WHEN tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order > 0 
+            , CASE WHEN tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order > 0
                    THEN tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order
                    ELSE 0
               END AS CountDiff_B
-            , CASE WHEN tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order < 0 
+            , CASE WHEN tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order < 0
                    THEN -1 * (tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order)
                    ELSE 0
               END AS CountDiff_M
 
-            , CASE WHEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight > 0 
-                   THEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight 
+            , CASE WHEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight > 0
+                   THEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight
                    ELSE 0
               END AS WeightDiff_B
-            , CASE WHEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight < 0 
-                   THEN -1 * (tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight) 
+            , CASE WHEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight < 0
+                   THEN -1 * (tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight)
                    ELSE 0
               END AS WeightDiff_M
 
-       FROM ( SELECT tmpResult.GoodsId 			
+       FROM ( SELECT tmpResult.GoodsId
                    , tmpResult.GoodsKindId
-                   
+
                    , Object_Measure.ValueData    AS MeasureName
 
                    , tmpResult.Amount                                                                                              :: TFloat AS Amount
@@ -254,8 +254,8 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpResult.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                   LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-                  
-                  LEFT JOIN ObjectFloat AS ObjectFloat_Weight	
+
+                  LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = tmpResult.GoodsId
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
               ) AS tmpResult1
@@ -273,9 +273,9 @@ BEGIN
                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
         WHERE inIsDiff = FALSE OR (tmpResult1.Amount + tmpResult1.Amount_Weighing) < (tmpResult1.Amount_Order + tmpResult1.AmountSecond_Order)
-            
+
       ;
-      
+
     RETURN NEXT Cursor2;
 
 END;
