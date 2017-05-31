@@ -74,11 +74,17 @@ type
 
   TConnectionList = class(TObjectList)
   private
+    FCurrentConnection: array[TConnectionType] of TConnection;
     function GetConnection(Index: Integer): TConnection;
     procedure SetConnection(Index: Integer; const Value: TConnection);
+    function GetCurrentConnection(ACType: TConnectionType): TConnection;
   public
+    procedure AfterConstruction; override;
     procedure AddFromFile(AFileName: string; AConnectionType: TConnectionType);
+    function FirstConnection(ACType: TConnectionType): TConnection;
+    function NextConnection(ACType: TConnectionType): TConnection;
     property Items[Index: Integer]: TConnection read GetConnection write SetConnection; default;
+    property CurrentConnection[ACType: TConnectionType]: TConnection read GetCurrentConnection;
   end;
 
   TStorage = class(TInterfacedObject, IStorage)
@@ -86,11 +92,6 @@ type
     class var
       Instance: TStorage;
   private
-    FConnection: String;
-    FReportConnection: string;
-    FConnections: TStringList;
-    FReportConnections: TStringList;
-    FActiveConnection: Integer;
     IdHTTP: TIdHTTP;
     FSendList: TStringList;
     FReceiveStream: TStringStream;
@@ -100,6 +101,7 @@ type
     // критичесая секция нужна из-за таймера
     FCriticalSection: TCriticalSection;
     FReportList: TStringList;
+    FConnectionList: TConnectionList;
     function PrepareStr: AnsiString;
     function ExecuteProc(pData: String; pExecOnServer: boolean = false;
       AMaxAtempt: Byte = 10; ANeedShowException: Boolean = True): Variant;
@@ -107,7 +109,7 @@ type
     function ProcessMultiDataSet: Variant;
     function GetConnection: string;
     procedure LoadReportList(ASession: string);
-    function CheckReportConnection(pData: string): string;
+    function CheckConnectionType(pData: string): TConnectionType;
   public
     property Connection: String read GetConnection;
     class function NewInstance: TObject; override;
@@ -125,7 +127,10 @@ type
 
 function TStorage.GetConnection: string;
 begin
-  result := FConnection;
+  if FConnectionList.CurrentConnection[ctMain] <> nil then
+    Result := FConnectionList.CurrentConnection[ctMain].CString
+  else
+    Result := FConnectionList.FirstConnection(ctMain).CString;
 end;
 
 procedure TStorage.LoadReportList(ASession: string);
@@ -163,113 +168,26 @@ end;
 
 class function TStorage.NewInstance: TObject;
 var
-  StringList, StringListRep: TStringList;
-  ConnectionString, ReportConnectionString: string;
   lConnectionPathRep:String;
-  i: Integer;
-  StartPHP: Boolean;
 begin
   if not Assigned(Instance) then begin
     Instance := TStorage(inherited NewInstance);
-    Instance.FConnections := TStringList.Create;
-    Instance.FReportConnections := TStringList.Create;
     Instance.FReportList := TStringList.Create;
-    Instance.FActiveConnection := 0;
-    try
-      StringList := TStringList.Create;
-      StringListRep := TStringList.Create;
-      try
-        lConnectionPathRep := ReplaceStr(ConnectionPath, '\init.php', '\initRep.php');
-        //
-        StringList.LoadFromFile(ConnectionPath);
-        if (lConnectionPathRep <> ConnectionPath) and FileExists(lConnectionPathRep) then
-          StringListRep.LoadFromFile(lConnectionPathRep);
-        //
-        //составление списка возможных альтернативных серверов - ОСНОВНОЙ
-        StartPHP := False;
-        for i := 0 to StringList.Count - 1 do
-        begin
-          if not StartPHP and (Pos('<?php', StringList[i]) = 1) then
-            StartPHP := True
-          else
-          if StartPHP and (Pos('?>', StringList[i]) = 1) then
-            StartPHP := False
-          else
-          begin
-            if StartPHP and (Pos('$host', StringList[i]) > 0) then
-            begin
-              ConnectionString := AnsiDequotedStr(Trim(StringList.ValueFromIndex[i]), '"');
-              Instance.FConnections.Add(Trim(ConnectionString));
-            end else
-            if not StartPHP then
-            begin
-              Instance.FConnections.Add(Trim(StringList[i]));
-            end;
-          end;
-        end;
-        //
-        //составление списка возможных альтернативных серверов - для ОТЧЕТОВ
-        StartPHP := False;
-        ReportConnectionString := '';
-        for i := 0 to StringListRep.Count - 1 do
-        begin
-          if not StartPHP and (Pos('<?php', StringListRep[i]) = 1) then
-            StartPHP := True
-          else
-          if StartPHP and (Pos('?>', StringListRep[i]) = 1) then
-            StartPHP := False
-          else
-          begin
-            if StartPHP and (Pos('$host', StringListRep[i]) > 0) then
-            begin
-              ReportConnectionString := AnsiDequotedStr(Trim(StringListRep.ValueFromIndex[i]), '"');
-              Instance.FReportConnections.Add(Trim(ReportConnectionString));
-            end else
-            if not StartPHP then
-            begin
-              Instance.FReportConnections.Add(Trim(StringListRep[i]));
-            end;
-          end;
-        end;
-        //
-        if Instance.FConnections.Count = 0 then
-          Instance.FConnections.Add('http://localhost/dsd/index.php');
-        ConnectionString := Instance.FConnections[0];
-        if Instance.FReportConnections.Count > 0 then
-          ReportConnectionString := Instance.FReportConnections[0];
-        //
-        if ReportConnectionString = '' then
-          ReportConnectionString := ConnectionString;
-        (*
-        if StringList.Count = 1 then
-           ConnectionString := StringList[0]
-        else begin
-           // Вырезаем строку подключения
-           ConnectionString := StringList[2];
-           ConnectionString := Copy(ConnectionString, Pos('=', ConnectionString) + 3, maxint);
-           ConnectionString := Copy(ConnectionString, 1, length(ConnectionString) - 2);
-        end;*)
-      finally
-        StringList.Free;
-        StringListRep.Free;
-      end;
-    except
-      if Instance.FConnections.Count = 0 then
-        Instance.FConnections.Add('http://localhost/dsd/index.php');
-      ConnectionString := Instance.FConnections.Strings[0];
-      if ReportConnectionString = '' then
-        ReportConnectionString := ConnectionString;
-      //ConnectionString := 'http://localhost/dsd/index.php';
-    end;
-    Instance.FConnection := ConnectionString;
-    Instance.FReportConnection := ReportConnectionString;
+    Instance.FConnectionList := TConnectionList.Create;
+
+    lConnectionPathRep := ReplaceStr(ConnectionPath, '\init.php', '\initRep.php');
+
+    Instance.FConnectionList.AddFromFile(ConnectionPath, ctMain);
+    if (lConnectionPathRep <> ConnectionPath) and FileExists(lConnectionPathRep) then
+      Instance.FConnectionList.AddFromFile(lConnectionPathRep, ctReport);
+
+    if Instance.FConnectionList.Count = 0 then
+      Instance.FConnectionList.Add(TConnection.Create('http://localhost/dsd/index.php', ctMain));
+
     Instance.IdHTTP := TIdHTTP.Create(nil);
 //    Instance.IdHTTP.ConnectTimeout := 5000;
     Instance.IdHTTP.Response.CharSet := 'windows-1251';// 'Content-Type: text/xml; charset=utf-8'
-    with Instance.IdHTTP.Request do
-    begin
-      Connection:='keep-alive';
-    end;
+    Instance.IdHTTP.Request.Connection:='keep-alive';
     Instance.IdHTTP.OnWorkBegin := IdHTTPWork.IdHTTPWorkBegin;
     Instance.IdHTTP.OnWork := IdHTTPWork.IdHTTPWork;
     Instance.FSendList := TStringList.Create;
@@ -277,6 +195,7 @@ begin
     Instance.XMLDocument := TXMLDocument.Create(nil);
     Instance.FCriticalSection := TCriticalSection.Create;
   end;
+
   NewInstance := Instance;
 end;
 
@@ -368,16 +287,16 @@ begin
   end;
 end;
 
-function TStorage.CheckReportConnection(pData: string): string;
+function TStorage.CheckConnectionType(pData: string): TConnectionType;
 var
   S: string;
 begin
-  Result := FConnection;
+  Result := ctMain;
   if FReportList.Count > 0 then
     for S in FReportList do
       if Pos(S, pData) > 0 then
       begin
-        Result := FReportConnection;
+        Result := ctReport;
         Break;
       end;
 end;
@@ -395,16 +314,12 @@ var
   ResultType: String;
   AttemptCount: integer;
   ok: Boolean;
-  StartActiveConnection: Integer;
+  CType: TConnectionType;
+  CString: string;
   LastError: integer;
-  OldConnection: string;
-  function NextActiveConnection: Integer;
-  Begin
-    Result := (FActiveConnection+1) mod FConnections.Count;
-  End;
   function LastAttempt: Boolean;
   Begin
-    Result := (AttemptCount >= AMaxAtempt) AND (NextActiveConnection = StartActiveConnection);
+    Result := (AttemptCount >= AMaxAtempt) AND (FConnectionList.CurrentConnection[CType] = nil);
   End;
   function Midle: Boolean;
   Begin
@@ -424,15 +339,17 @@ begin
     IdHTTPWork.FExecOnServer := pExecOnServer;
     AttemptCount := 0;
     ok := False;
-    OldConnection := FConnection;
-    FConnection := CheckReportConnection(pData);
-    StartActiveConnection := FActiveConnection;
+    CType := CheckConnectionType(pData);
+    if FConnectionList.CurrentConnection[CType] <> nil then
+      CString := FConnectionList.CurrentConnection[CType].CString
+    else
+      CString := FConnectionList.FirstConnection(CType).CString;
     try
       repeat
         for AttemptCount := 1 to AMaxAtempt do
         Begin
           try
-            idHTTP.Post(FConnection + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, TIdTextEncoding.GetEncoding(1251));
+            idHTTP.Post(CString + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, TIdTextEncoding.GetEncoding(1251));
             ok := true;
             break;
           except
@@ -484,8 +401,8 @@ begin
         End;
         if not Ok AND Not LastAttempt then
         Begin
-          FActiveConnection := NextActiveConnection;
-          FConnection := FConnections.Strings[FActiveConnection];
+          if FConnectionList.NextConnection(CType) <> nil then
+            CString := FConnectionList.CurrentConnection[CType].CString;
           try
             idHTTP.Disconnect;
           except
@@ -494,39 +411,11 @@ begin
         else
           Break;
       until ok;
-      (*
-      for AttemptCount := 1 to 10 do
-        try
-          idHTTP.Post(FConnection + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, TIdTextEncoding.GetEncoding(1251));
-          break;
-        except
-          on E: EIdSocketError do begin
-             case E.LastError of
-               10051: raise EStorageException.Create('Отсутсвует подключение к сети. Обратитесь к системному администратору. context TStorage. ' + E.Message, );
-               10054: raise EStorageException.Create('Соединение сброшено сервером. Попробуйте действие еще раз. context TStorage. ' + E.Message);
-               10060: begin
-                         if AttemptCount > 9 then
-                            raise EStorageException.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
-                      end;
-               11001: raise EStorageException.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
-               10065: raise EStorageException.Create('Нет соединения с интернетом. Обратитесь к системному администратору. context TStorage. ' + E.Message);
-               10061: raise EStorageException.Create('Потеряно соединения с WEB сервером. Необходимо перезайти в программу после восстановления соединения.');
-               else
-                      raise E;
-             end;
-          end;
-          on E: Exception do
-                raise Exception.Create('Ошибка соединения с Web сервером.'+#10+#13+'Обратитесь к разработчику.'+#10+#13+E.Message);
-        end;
-      *)
     finally
-      FConnection := OldConnection;
       if IdHTTPWork.FExecOnServer then
          IdHTTPWork.Gauge.Finish;
       IdHTTPWork.FExecOnServer := false;
-   //   idHTTP.Disconnect;
     end;
-  //  if pExecOnServer then
 
     // Определяем тип возвращаемого результата
     if Ok then
@@ -555,7 +444,7 @@ end;
 
 class function TStorageFactory.GetStorage: IStorage;
 begin
-  result := TStorage(TStorage.NewInstance);
+  Result := TStorage.NewInstance as TStorage;
 end;
 
 { EStorageException }
@@ -619,9 +508,68 @@ begin
   end;
 end;
 
+procedure TConnectionList.AfterConstruction;
+var
+  I: TConnectionType;
+begin
+  inherited AfterConstruction;
+
+  for I := Low(FCurrentConnection) to High(FCurrentConnection) do
+    FCurrentConnection[I] := nil;
+end;
+
 function TConnectionList.GetConnection(Index: Integer): TConnection;
 begin
   Result := inherited GetItem(Index) as TConnection;
+end;
+
+function TConnectionList.GetCurrentConnection(ACType: TConnectionType): TConnection;
+begin
+  Result := FCurrentConnection[ACType];
+
+  if (Result <> nil) and (IndexOf(Result) = -1) then
+    Result := FirstConnection(ACType);
+end;
+
+function TConnectionList.FirstConnection(ACType: TConnectionType): TConnection;
+var
+  I: Integer;
+begin
+  Result := nil;
+
+  for I := 0 to Pred(Count) do
+    if Items[I].CType = ACType then
+    begin
+      Result := Items[I];
+      Break;
+    end;
+
+  FCurrentConnection[ACType] := Result;
+end;
+
+function TConnectionList.NextConnection(ACType: TConnectionType): TConnection;
+var
+  I: Integer;
+begin
+  Result := CurrentConnection[ACType];
+
+  if Result <> nil then
+  begin
+    I := IndexOf(Result);
+    Result := nil;
+
+    repeat
+      Inc(I);
+
+      if (I < Count) and (Items[I].CType = ACType) then
+      begin
+        Result := Items[I];
+        Break;
+      end;
+    until I >= Count;
+  end;
+
+  FCurrentConnection[ACType] := Result;
 end;
 
 procedure TConnectionList.SetConnection(Index: Integer; const Value: TConnection);
