@@ -235,7 +235,7 @@ BEGIN
                          END) AS TotalCountKg
 
         FROM (SELECT MovementItem.ObjectId AS GoodsId
-                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                   , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId
                    , CASE WHEN MIFloat_ChangePercent.ValueData <> 0
                                THEN CAST ( (1 + MIFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                           /*WHEN vbDiscountPercent <> 0
@@ -269,8 +269,8 @@ BEGIN
                                                ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                               AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
               WHERE MovementItem.MovementId = inMovementId
                 AND MovementItem.isErased = FALSE
               GROUP BY MovementItem.ObjectId
@@ -652,10 +652,7 @@ BEGIN
                                 AND ObjectLink_Contract_PersonalCollation.DescId = zc_ObjectLink_Contract_PersonalCollation()
             LEFT JOIN Object AS Object_PersonalCollation ON Object_PersonalCollation.Id = ObjectLink_Contract_PersonalCollation.ChildObjectId
                                 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
-                                         ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
-                                        AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
-            LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
+            LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = NULL
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = Object_To.Id
@@ -882,7 +879,7 @@ BEGIN
        )
      , tmpMI_Order AS (SELECT MovementItem.ObjectId                         AS GoodsId
                             , SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS Amount
-                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                            , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId
                             , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
                             , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
                        FROM (SELECT MovementLinkMovement_Order.MovementChildId AS MovementId
@@ -906,13 +903,13 @@ BEGIN
                                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                        GROUP BY MovementItem.ObjectId
-                              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                              , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())
                               , COALESCE (MIFloat_Price.ValueData, 0)
                               , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
                          )
  -- строки док
  , tmpMI AS (SELECT MovementItem.ObjectId AS GoodsId
-                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                  , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId
                   , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE -- !!!для НАЛ не учитываем, но НЕ всегда!!!
                               THEN CAST ( (1 + MIFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                          WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = TRUE AND vbDescId <> zc_Movement_Sale()

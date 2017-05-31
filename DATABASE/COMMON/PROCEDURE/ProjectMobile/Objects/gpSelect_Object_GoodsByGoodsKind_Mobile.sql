@@ -13,51 +13,62 @@ RETURNS TABLE (Id                 Integer
              , GoodsKindId        Integer  -- Вид товара
              , GoodsKindName      TVarChar -- Вид товара
              , GoodsGroupName     TVarChar -- Группа товара
-             , GoodsGroupNameFull TVarChar -- 
+             , GoodsGroupNameFull TVarChar --
              , Remains            TFloat   -- Остаток на  складе vbUnitId
              , Forecast           TFloat   -- Прогноз прихода на vbUnitId
              , isErased           Boolean  -- Удаленный ли элемент
              , isSync             Boolean  -- Синхронизируется (да/нет)
               )
-AS 
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMemberId Integer;
    DECLARE calcSession TVarChar;
 BEGIN
-      -- проверка прав пользователя на вызов процедуры
-      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
-      vbUserId:= lpGetUserBySession (inSession);
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
+     vbUserId:= lpGetUserBySession (inSession);
 
-     vbMemberId:= (SELECT tmp.MemberId FROM gpGetMobile_Object_Const (inSession) AS tmp);
-     IF (COALESCE(inMemberId,0) <> 0 AND COALESCE(vbMemberId,0) <> inMemberId)
-        THEN
-            RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.'; 
+
+      -- !!!меняем значение!!! - с какими параметрами пользователь может просматривать данные с мобильного устройства
+     IF NOT EXISTS (SELECT 1 FROM ObjectBoolean WHERE ObjectBoolean.DescId = zc_ObjectBoolean_User_ProjectMobile() AND ObjectBoolean.ObjectId = vbUserId AND ObjectBoolean.ValueData = TRUE)
+        OR inSession = zfCalc_UserAdmin()
+     THEN
+         -- Если пользователь inSession - НЕ Торговый агент - видит ВСЕ
+         vbMemberId:= 0; calcSession:= '';
+     ELSE
+         --
+         vbMemberId:= (SELECT tmp.MemberId FROM gpGetMobile_Object_Const (inSession) AS tmp);
+         --
+         calcSession := (SELECT CAST (ObjectLink_User_Member.ObjectId AS TVarChar)
+                         FROM ObjectLink AS ObjectLink_User_Member
+                         WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                           AND ObjectLink_User_Member.ChildObjectId = vbMemberId);
+         --
+         IF COALESCE (vbMemberId, 0) <> inMemberId
+         THEN
+              RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.';
+         END IF;
      END IF;
 
-     calcSession := (SELECT CAST (ObjectLink_User_Member.ObjectId AS TVarChar) 
-                     FROM ObjectLink AS ObjectLink_User_Member
-                     WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-                       AND ObjectLink_User_Member.ChildObjectId = vbMemberId);
 
      -- Результат
      RETURN QUERY
-       -- Результат
        SELECT tmpMobileGoodsByGoodsKind.Id
             , Object_Goods.Id             AS GoodsId
             , Object_Goods.ObjectCode     AS GoodsCode
             , Object_Goods.ValueData      AS GoodsName
-            , Object_GoodsKind.Id         AS GoodsKindId 
+            , Object_GoodsKind.Id         AS GoodsKindId
             , Object_GoodsKind.ValueData  AS GoodsKindName
-            , Object_GoodsGroup.ValueData AS GoodsGroupName 
+            , Object_GoodsGroup.ValueData AS GoodsGroupName
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , tmpMobileGoodsByGoodsKind.Remains
-            , tmpMobileGoodsByGoodsKind.Forecast 
+            , tmpMobileGoodsByGoodsKind.Forecast
             , tmpMobileGoodsByGoodsKind.isErased
             , tmpMobileGoodsByGoodsKind.isSync
        FROM gpSelectMobile_Object_GoodsByGoodsKind (zc_DateStart(), calcSession) AS tmpMobileGoodsByGoodsKind
-               LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMobileGoodsByGoodsKind.GoodsId 
-               LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMobileGoodsByGoodsKind.GoodsKindId 
+               LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMobileGoodsByGoodsKind.GoodsId
+               LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMobileGoodsByGoodsKind.GoodsKindId
 
              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                   ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
@@ -71,7 +82,7 @@ BEGIN
        WHERE tmpMobileGoodsByGoodsKind.isSync = TRUE
 ;
 
-END; 
+END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
@@ -82,4 +93,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_GoodsLinkGoodsKind_Mobile(inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_GoodsLinkGoodsKind_Mobile (inMemberId:= 1, inSession := zfCalc_UserAdmin())

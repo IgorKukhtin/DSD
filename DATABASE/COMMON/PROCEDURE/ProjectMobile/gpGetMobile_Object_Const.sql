@@ -50,13 +50,12 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
      vbUserId:= lpGetUserBySession (inSession);
 
-
-     -- Если пользователь inSession - НЕ Торговый агент - !!!ВЫХОД!!!
-     IF NOT EXISTS (SELECT 1 FROM ObjectBoolean WHERE ObjectBoolean.DescId = zc_ObjectBoolean_User_ProjectMobile() AND ObjectBoolean.ObjectId = vbUserId AND ObjectBoolean.ValueData = TRUE)
-       AND inSession <> zfCalc_UserAdmin()
+     -- Если пользователь inSession - ПУСТО - !!!ВЫХОД!!!
+     IF COALESCE (inSession, '') = '' OR COALESCE (inSession, '0') = '0'
      THEN
          RETURN;
      END IF;
+
 
      -- нашли параметры
      SELECT ObjectLink_User_Member.ChildObjectId AS MemberId

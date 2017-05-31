@@ -6,9 +6,9 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Mobile (Integer, Integer, Intege
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner_Mobile (
     IN inMemberId          Integer  , -- физ.лицо
-    IN inRetailId          Integer  , 
-    IN inJuridicalId       Integer  , 
-    IN inRouteId           Integer  , 
+    IN inRetailId          Integer  ,
+    IN inJuridicalId       Integer  ,
+    IN inRouteId           Integer  ,
     IN inisShowAll         Boolean  , --
     IN inSession           TVarChar   -- сессия пользователя
 )
@@ -27,11 +27,11 @@ RETURNS TABLE (Id              Integer
              , JuridicalId     Integer  -- Юридическое лицо
              , JuridicalName   TVarChar --
              , RouteId         Integer  -- Маршрут
-             , RouteName       TVarChar -- 
+             , RouteName       TVarChar --
              , RetailId Integer, RetailName TVarChar  -- торговая сеть
              , ContractId      Integer  -- Договор - все возможные договора...
              , ContractCode    Integer  --
-             , ContractName    TVarChar -- 
+             , ContractName    TVarChar --
              , PriceListId     Integer  -- Прайс-лист - по каким ценам будет формироваться заказ
              , PriceListName   TVarChar --
              , PriceListId_ret Integer  -- Прайс-лист Возврата - по каким ценам будет формироваться возврат
@@ -50,21 +50,46 @@ RETURNS TABLE (Id              Integer
              , UnitName TVarChar
              , PositionName TVarChar
               )
-AS 
+AS
 $BODY$
    DECLARE vbUserId Integer;
 
-   DECLARE vbUserId_Mobile   Integer;
+   DECLARE vbMemberId      Integer;
+   DECLARE vbUserId_Mobile Integer;
 BEGIN
-      -- проверка прав пользователя на вызов процедуры
-      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
-      vbUserId:= lpGetUserBySession (inSession);
-     
-      -- !!!меняем значение!!! - с какими параметрами пользователь может просматривать данные с мобильного устройства
-      SELECT lfGet.MemberId, lfGet.UserId INTO inMemberId, vbUserId_Mobile FROM lfGet_User_MobileCheck (inMemberId:= inMemberId, inUserId:= vbUserId) AS lfGet;
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
+     vbUserId:= lpGetUserBySession (inSession);
+
+/*
+     -- !!!меняем значение!!! - с какими параметрами пользователь может просматривать данные с мобильного устройства
+     IF NOT EXISTS (SELECT 1 FROM ObjectBoolean WHERE ObjectBoolean.DescId = zc_ObjectBoolean_User_ProjectMobile() AND ObjectBoolean.ObjectId = vbUserId AND ObjectBoolean.ValueData = TRUE)
+        OR inSession = zfCalc_UserAdmin()
+     THEN
+         -- Если пользователь inSession - НЕ Торговый агент - видит ВСЕ
+         inMemberId:= 0; vbUserId_Mobile:= 0;
+     ELSE
+         -- Можно Только со своими
+         SELECT inMemberId, lfGet.MemberId, lfGet.UserId INTO vbMemberId, inMemberId, vbUserId_Mobile FROM lfGet_User_MobileCheck (inMemberId:= inMemberId, inUserId:= vbUserId) AS lfGet;
+         --
+         IF COALESCE (vbMemberId, 0) <> COALESCE (inMemberId, 0)
+         THEN
+              RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.';
+         END IF;
+     END IF;
+
+*/
+         -- Можно Только со своими
+         SELECT inMemberId, lfGet.MemberId, lfGet.UserId INTO vbMemberId, inMemberId, vbUserId_Mobile FROM lfGet_User_MobileCheck (inMemberId:= inMemberId, inUserId:= vbUserId) AS lfGet;
+         --
+         IF COALESCE (vbMemberId, 0) <> COALESCE (inMemberId, 0)
+         THEN
+              RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.';
+         END IF;
 
 
-      RETURN QUERY
+     -- Результат
+     RETURN QUERY
           SELECT tmpMobilePartner.Id
                , tmpMobilePartner.ObjectCode AS Code
                , tmpMobilePartner.ValueData  AS Name
@@ -76,7 +101,7 @@ BEGIN
                , tmpMobilePartner.DebtSum
                , tmpMobilePartner.OverSum
                , tmpMobilePartner.OverDays
-               , tmpMobilePartner.PrepareDayCount 
+               , tmpMobilePartner.PrepareDayCount
                , Object_Juridical.Id            AS JuridicalId
                , Object_Juridical.ValueData     AS JuridicalName
                , Object_Route.Id                AS RouteId
@@ -110,16 +135,16 @@ BEGIN
                , CASE WHEN COALESCE(tmpMobilePartner.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Delivery, inSep:= ';', inIndex:= 7) ::Boolean END ::Boolean    AS Delivery7
 
                , Object_PersonalTrade.PersonalName
-               , Object_PersonalTrade.BranchName 
-               , Object_PersonalTrade.UnitName     
-               , Object_PersonalTrade.PositionName 
+               , Object_PersonalTrade.BranchName
+               , Object_PersonalTrade.UnitName
+               , Object_PersonalTrade.PositionName
 
           FROM gpSelectMobile_Object_Partner (zc_DateStart(), vbUserId_Mobile :: TVarChar) AS tmpMobilePartner
-               LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpMobilePartner.JuridicalId 
-               LEFT JOIN Object AS Object_Route ON Object_Route.Id = tmpMobilePartner.RouteId 
-               LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpMobilePartner.ContractId 
-               LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = tmpMobilePartner.PriceListId 
-               LEFT JOIN Object AS Object_PriceList_Ret ON Object_PriceList_Ret.Id = tmpMobilePartner.PriceListId_ret 
+               LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpMobilePartner.JuridicalId
+               LEFT JOIN Object AS Object_Route ON Object_Route.Id = tmpMobilePartner.RouteId
+               LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpMobilePartner.ContractId
+               LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = tmpMobilePartner.PriceListId
+               LEFT JOIN Object AS Object_PriceList_Ret ON Object_PriceList_Ret.Id = tmpMobilePartner.PriceListId_ret
 
                LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
                                     ON ObjectLink_Partner_PersonalTrade.ObjectId = tmpMobilePartner.Id
@@ -127,7 +152,7 @@ BEGIN
                LEFT JOIN Object_Personal_View AS Object_PersonalTrade ON Object_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
 
                LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                    ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id 
+                                    ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
                                    AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
@@ -138,7 +163,7 @@ BEGIN
            AND (tmpMobilePartner.JuridicalId = inJuridicalId OR inJuridicalId = 0)
 ;
 
-END; 
+END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
@@ -150,4 +175,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Object_Partner_Mobile(inMemberId := 274610 , inRetailId := 310847 , inJuridicalId := 140733 , inRouteId := 8548 , inisShowAll := 'False' ,  inSession := '5');
+-- SELECT * FROM gpSelect_Object_Partner_Mobile (inMemberId := 274610 , inRetailId := 310847 , inJuridicalId := 140733 , inRouteId := 8548 , inisShowAll := 'False' ,  inSession := '5');
