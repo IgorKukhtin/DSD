@@ -351,21 +351,15 @@ BEGIN
                                             THEN COALESCE (MIContainer.Amount, 0)
                                             ELSE 0
                                        END) AS CountIncome
-                                , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                , SUM (-- Перемещение
+                                       CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                              AND MIContainer.MovementDescId = zc_Movement_Send()
                                              -- AND MIContainer.isActive = FALSE
                                             THEN -1 * COALESCE (MIContainer.Amount, 0)
                                             ELSE 0
-                                       END) AS CountSendOut
-
-                                , SUM (CASE WHEN MIContainer.OperDate BETWEEN vbStartDate_Calc AND vbEndDate_Calc
-                                             AND MIContainer.MovementDescId = zc_Movement_Send()
-                                             -- AND MIContainer.isActive = FALSE
-                                            THEN -1 * COALESCE (MIContainer.Amount, 0)
-                                            ELSE 0
-                                       END) AS CountSendOut_Calc
-
-                                , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                       END
+                                       -- еще добавляем остальные
+                                     + CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                              AND MIContainer.MovementDescId IN (zc_Movement_Sale())
                                             THEN -1 * COALESCE (MIContainer.Amount, 0)
                                             ELSE 0
@@ -376,7 +370,30 @@ BEGIN
                                             THEN -1 * COALESCE (MIContainer.Amount, 0)
                                             ELSE 0
                                        END
-                                     + CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                      ) AS CountSendOut
+
+                                , SUM (-- Перемещение
+                                       CASE WHEN MIContainer.OperDate BETWEEN vbStartDate_Calc AND vbEndDate_Calc
+                                             AND MIContainer.MovementDescId = zc_Movement_Send()
+                                             -- AND MIContainer.isActive = FALSE
+                                            THEN -1 * COALESCE (MIContainer.Amount, 0)
+                                            ELSE 0
+                                       END
+                                       -- еще добавляем остальные
+                                     + CASE WHEN MIContainer.OperDate BETWEEN vbStartDate_Calc AND vbEndDate_Calc
+                                             AND MIContainer.MovementDescId IN (zc_Movement_Sale())
+                                            THEN -1 * COALESCE (MIContainer.Amount, 0)
+                                            ELSE 0
+                                       END
+                                     + CASE WHEN MIContainer.OperDate BETWEEN vbStartDate_Calc AND vbEndDate_Calc
+                                             AND MIContainer.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate(), zc_Movement_Loss())
+                                             AND MIContainer.isActive = FALSE
+                                            THEN -1 * COALESCE (MIContainer.Amount, 0)
+                                            ELSE 0
+                                       END
+                                      ) AS CountSendOut_Calc
+
+                                , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                              AND MIContainer.MovementDescId IN (zc_Movement_Inventory())
                                              AND MIContainer.Amount < 0
                                             THEN -1 * COALESCE (MIContainer.Amount, 0)
@@ -470,7 +487,7 @@ BEGIN
                                     ) AS tmpIncome ON tmpIncome.GoodsId = tmp.GoodsId
                      )
 
-        -- приход / расход по дням
+          -- приход / расход по дням
         , tmpOnDaysAll AS (SELECT CASE WHEN MIContainer.MovementDescId in (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MIContainer.ObjectExtId_Analyzer ELSE 0 END AS ObjectExtId_Analyzer
                                 , tmpContainerAll.GoodsId
                                 , MIContainer.OperDate
@@ -479,10 +496,22 @@ BEGIN
                                             ELSE 0
                                        END) CountIncome
 
-                                , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send()
+                                , SUM (-- Перемещение
+                                       CASE WHEN MIContainer.MovementDescId = zc_Movement_Send()
                                             THEN -1 * COALESCE (MIContainer.Amount, 0)
                                             ELSE 0
-                                       END) AS CountProductionOut
+                                       END
+                                       -- еще добавляем остальные
+                                     + CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Sale())
+                                            THEN -1 * COALESCE (MIContainer.Amount, 0)
+                                            ELSE 0
+                                       END
+                                     + CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate(), zc_Movement_Loss())
+                                             AND MIContainer.isActive = FALSE
+                                            THEN -1 * COALESCE (MIContainer.Amount, 0)
+                                            ELSE 0
+                                       END
+                                      ) AS CountProductionOut
                            FROM tmpContainerAll
                                 LEFT JOIN MovementItemContainer AS MIContainer
                                                                 ON MIContainer.Containerid = tmpContainerAll.ContainerId
@@ -490,7 +519,7 @@ BEGIN
                            GROUP BY CASE WHEN MIContainer.MovementDescId in (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MIContainer.ObjectExtId_Analyzer ELSE 0 END
                                   , tmpContainerAll.GoodsId, MIContainer.OperDate
                           )
-        -- приход / расход по дням
+             -- приход / расход по дням
            , tmpOnDays AS (SELECT tmp.GoodsId
                                 , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 1 THEN tmp.CountIncome ELSE 0 END) CountIncome1
                                 , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 2 THEN tmp.CountIncome ELSE 0 END) CountIncome2

@@ -332,14 +332,12 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 546
     ClientRectBottom = 494
     ClientRectRight = 1253
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 522
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -347,9 +345,6 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         Height = 470
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 16
-        ExplicitTop = 152
-        ExplicitHeight = 522
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -507,13 +502,30 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object clisClose: TcxGridDBColumn
+            Caption = #1042#1099#1087#1086#1083#1085#1077#1085' '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'isClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1087#1086#1083#1085#1077#1085' '#1079#1072#1082#1072#1079
+            Options.Editing = False
+            Width = 70
+          end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1090#1086#1074#1072#1088')'
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
           object clGoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 162
+            Width = 100
           end
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074'.'
@@ -754,22 +766,6 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             Options.Editing = False
             Width = 70
           end
-          object clisClose: TcxGridDBColumn
-            Caption = #1042#1099#1087'.'
-            DataBinding.FieldName = 'isClose'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1099#1087#1086#1083#1085#1077#1085#1086
-            Options.Editing = False
-            Width = 34
-          end
-          object Comment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-            DataBinding.FieldName = 'Comment'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 200
-          end
           object colIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
@@ -954,6 +950,10 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbCloseMI'
         end
         item
@@ -994,6 +994,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbInsertUpdateMovement: TdxBarButton
       Action = actInsertUpdateMovement
@@ -1711,8 +1712,8 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         item
           StoredProc = spisClosed
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1087#1086#1083#1085#1077#1085' '#1079#1072#1082#1072#1079' '#1044#1072'/'#1053#1077#1090'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1087#1086#1083#1085#1077#1085' '#1079#1072#1082#1072#1079' '#1044#1072'/'#1053#1077#1090'"'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1076#1083#1103' '#1042#1057#1045#1061' - '#1042#1099#1087#1086#1083#1085#1077#1085' '#1079#1072#1082#1072#1079' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1076#1083#1103' '#1042#1057#1045#1061' - '#1042#1099#1087#1086#1083#1085#1077#1085' '#1079#1072#1082#1072#1079' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
     end
     object actCloseMI: TdsdExecStoredProc
@@ -1738,8 +1739,8 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         item
           Action = actRefresh_MI
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1087#1086#1083#1085#1077#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'  '#1044#1072'/'#1053#1077#1090'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1087#1086#1083#1085#1077#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'  '#1044#1072'/'#1053#1077#1090'"'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1076#1083#1103' '#1086#1076#1085#1086#1075#1086' '#1058#1086#1074#1072#1088#1072' - '#1042#1099#1087#1086#1083#1085#1077#1085' '#1079#1072#1082#1072#1079' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1076#1083#1103' '#1086#1076#1085#1086#1075#1086' '#1058#1086#1074#1072#1088#1072' - '#1042#1099#1087#1086#1083#1085#1077#1085' '#1079#1072#1082#1072#1079' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 76
     end
   end

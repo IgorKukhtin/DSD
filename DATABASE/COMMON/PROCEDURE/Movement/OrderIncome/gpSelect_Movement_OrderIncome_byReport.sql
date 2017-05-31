@@ -30,7 +30,6 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Full TVarChar
              , isNotOne Boolean
              , isClosed Boolean
               )
-
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -44,7 +43,7 @@ BEGIN
 
      -- таблица Id документов заявок
      CREATE TEMP TABLE tmp_List (MovementId Integer) ON COMMIT DROP;
-     -- парсим 
+     -- парсим
      vbIndex := 1;
      WHILE SPLIT_PART (inMovementId_List, ';', vbIndex) <> '' LOOP
          -- добавляем то что нашли
@@ -75,7 +74,7 @@ BEGIN
                               LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                    ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
                                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
- 
+
                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement_Income.Id
                                                      AND MovementItem.DescId     = zc_MI_Master()
                                                      AND MovementItem.isErased   = False
@@ -110,7 +109,7 @@ BEGIN
            , MovementDate_OperDatePartner.ValueData AS OperDatePartner
            , Object_Status.ObjectCode               AS StatusCode
            , Object_Status.ValueData                AS StatusName
-           
+
            , MovementDate_Insert.ValueData          AS InsertDate
            , Object_Insert.ValueData                AS InsertName
 
@@ -157,8 +156,8 @@ BEGIN
            , Movement_Income.OperDate                 AS OperDate_Income
            , (CASE WHEN Movement_Income.StatusId = zc_Enum_Status_Erased() THEN 'Удален № ' WHEN Movement_Income.StatusId = zc_Enum_Status_UnComplete() THEN '***' ELSE '' END || '№ ' || Movement_Income.InvNumber || ' от ' || Movement_Income.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Income_Full
            , CASE WHEN Object_FromIncome.DescId = zc_Object_Juridical() THEN Object_FromIncome.ValueData ELSE Object_JuridicalFromIncome.ValueData END :: TVarChar AS FromName_Income
-           , CASE WHEN COALESCE (Movement_Income.Id,0) <> 0 
-                  THEN CASE WHEN Object_FromIncome.DescId = zc_Object_Juridical() 
+           , CASE WHEN COALESCE (Movement_Income.Id,0) <> 0
+                  THEN CASE WHEN Object_FromIncome.DescId = zc_Object_Juridical()
                             THEN CASE WHEN COALESCE (Object_FromIncome.Id, 0) <> COALESCE (Object_Juridical.Id, 0) THEN TRUE ELSE FALSE END
                             ELSE CASE WHEN COALESCE (Movement_Income.JuridicalId, 0) <> COALESCE (Object_Juridical.Id, 0) THEN TRUE ELSE FALSE END
                        END
@@ -173,7 +172,7 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Closed
                                       ON MovementBoolean_Closed.MovementId = Movement.Id
                                      AND MovementBoolean_Closed.DescId = zc_MovementBoolean_Closed()
-            
+
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId =  Movement.Id
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -191,9 +190,9 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MLO_Insert
                                          ON MLO_Insert.MovementId = Movement.Id
                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
-            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
-            LEFT JOIN MovementString AS MovementString_Comment 
+            LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
@@ -263,4 +262,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Movement_OrderIncome_byReport(inGoodsId := 2048 , inMovementId_List := '5604996' ,  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_OrderIncome_byReport (inGoodsId := 2048 , inMovementId_List := '5604996' ,  inSession := '5');

@@ -126,6 +126,31 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object isNotOne: TcxGridDBColumn
+        Caption = #1044#1088#1091#1075#1086#1081' '#1087#1086#1089#1090'. ('#1076#1072'/'#1085#1077#1090')'
+        DataBinding.FieldName = 'isNotOne'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1088#1091#1075#1086#1081' '#1087#1086#1089#1090#1072#1074#1097#1080#1082' ('#1076#1072'/'#1085#1077#1090')'
+        Options.Editing = False
+        Width = 57
+      end
+      object Comment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1044#1086#1082'.)'
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object Comment_MI: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1090#1086#1074#1072#1088')'
+        DataBinding.FieldName = 'Comment_MI'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object colStatus: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
@@ -172,20 +197,6 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 68
-      end
-      object colInsertDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
-        DataBinding.FieldName = 'InsertDate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 68
-      end
-      object colInsertName: TcxGridDBColumn
-        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076'.'
-        DataBinding.FieldName = 'InsertName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 98
       end
       object colAmount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
@@ -236,13 +247,21 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         HeaderAlignmentVert = vaCenter
         Width = 154
       end
-      object clUnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'UnitName'
+      object FromName_Income: TcxGridDBColumn
+        Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1087#1088#1080#1093#1086#1076')'
+        DataBinding.FieldName = 'FromName_Income'
+        DateTimeGrouping = dtgRelativeToToday
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 156
+        Width = 154
+      end
+      object colPaidKindName: TcxGridDBColumn
+        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+        DataBinding.FieldName = 'PaidKindName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 59
       end
       object ContractId: TcxGridDBColumn
         DataBinding.FieldName = 'ContractId'
@@ -261,37 +280,15 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
       object colContractName: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object FromName_Income: TcxGridDBColumn
-        Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1087#1088#1080#1093#1086#1076')'
-        DataBinding.FieldName = 'FromName_Income'
-        DateTimeGrouping = dtgRelativeToToday
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 154
-      end
-      object isNotOne: TcxGridDBColumn
-        Caption = #1044#1088#1091#1075#1086#1081' '#1087#1086#1089#1090'. ('#1076#1072'/'#1085#1077#1090')'
-        DataBinding.FieldName = 'isNotOne'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1044#1088#1091#1075#1086#1081' '#1087#1086#1089#1090#1072#1074#1097#1080#1082' ('#1076#1072'/'#1085#1077#1090')'
-        Options.Editing = False
-        Width = 57
-      end
-      object colPaidKindName: TcxGridDBColumn
-        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-        DataBinding.FieldName = 'PaidKindName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 59
-      end
       object colCurrencyDocumentName: TcxGridDBColumn
         Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1082'.)'
         DataBinding.FieldName = 'CurrencyDocumentName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -303,6 +300,7 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1091#1088#1089' '#1076#1083#1103' '#1087#1077#1088#1077#1074#1086#1076#1072' '#1074' '#1074#1072#1083#1102#1090#1091' '#1073#1072#1083#1072#1085#1089#1072
@@ -315,6 +313,7 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1053#1086#1084#1080#1085#1072#1083' '#1076#1083#1103' '#1087#1077#1088#1077#1074#1086#1076#1072' '#1074' '#1074#1072#1083#1102#1090#1091' '#1073#1072#1083#1072#1085#1089#1072
@@ -348,25 +347,32 @@ object OrderIncomeSnabJournal_byReportForm: TOrderIncomeSnabJournal_byReportForm
       object colInfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 150
       end
-      object Comment: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-        DataBinding.FieldName = 'Comment'
+      object clUnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 163
+        Width = 156
       end
-      object Comment_MI: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1089#1090#1088'.)'
-        DataBinding.FieldName = 'Comment_MI'
+      object colInsertDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
+        DataBinding.FieldName = 'InsertDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 163
+        Width = 68
+      end
+      object colInsertName: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076'.'
+        DataBinding.FieldName = 'InsertName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 98
       end
     end
     object cxGridLevel: TcxGridLevel
