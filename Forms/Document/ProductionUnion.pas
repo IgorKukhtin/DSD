@@ -67,6 +67,11 @@ type
     spSelectPrintCeh: TdsdStoredProc;
     bbPrintCeh: TdxBarButton;
     colChildIsAuto: TcxGridDBColumn;
+    cxLabel17: TcxLabel;
+    edInvNumberOrder: TcxButtonEdit;
+    OrderGuides: TdsdGuides;
+    spUpdateOrder: TdsdStoredProc;
+    HeaderSaver3: THeaderSaver;
   private
     { Private declarations }
   public

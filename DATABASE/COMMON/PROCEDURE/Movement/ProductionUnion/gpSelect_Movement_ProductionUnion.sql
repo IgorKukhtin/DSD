@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , DocumentKindId Integer, DocumentKindName TVarChar
              , isAuto Boolean, InsertDate TDateTime
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
+             , MovementId_Order Integer, InvNumber_Order_Full TVarChar
               )
 AS
 $BODY$
@@ -59,7 +60,7 @@ BEGIN
          , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) AS isAuto
          , MovementDate_Insert.ValueData            AS InsertDate
  
-         , Movement_Sale.Id                        AS MovementId_Production
+         , Movement_Sale.Id                         AS MovementId_Production
          , (CASE WHEN Movement_Sale.StatusId = zc_Enum_Status_Erased()
                        THEN '***'
                    WHEN Movement_Sale.StatusId = zc_Enum_Status_UnComplete()
@@ -68,6 +69,9 @@ BEGIN
               END
            || zfCalc_PartionMovementName (Movement_Sale.DescId, MovementDesc_Sale.ItemName, Movement_Sale.InvNumber, Movement_Sale.OperDate)
              ) :: TVarChar AS InvNumber_ProductionFull
+
+           , Movement_Order.Id                      AS MovementId_Order
+           , ('π ' || Movement_Order.InvNumber || ' ÓÚ ' || Movement_Order.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Order_Full
 
      FROM (SELECT Movement.id
              FROM tmpStatus
@@ -121,6 +125,10 @@ BEGIN
           LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementLinkMovement_Sale.MovementChildId
           LEFT JOIN MovementDesc AS MovementDesc_Sale ON MovementDesc_Sale.Id = Movement_Sale.DescId
            
+          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                         ON MovementLinkMovement_Order.MovementId = Movement.Id
+                                        AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+          LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
     ;
 
 END;
@@ -130,6 +138,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 31.05.17         * add Movement_Order
  05.10.16         * add inJuridicalBasisId
  26.07.16         *
  13.06.16         * DocumentKind

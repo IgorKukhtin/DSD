@@ -202,6 +202,10 @@ BEGIN
                                                              ON MIString_Comment.MovementItemId = MovementItem.Id
                                                             AND MIString_Comment.DescId = zc_MIString_Comment()
 
+                                LEFT JOIN MovementItemBoolean AS MIBoolean_Close
+                                                              ON MIBoolean_Close.MovementItemId = MovementItem.Id
+                                                             AND MIBoolean_Close.DescId = zc_MIBoolean_Close()
+                                                             AND MIBoolean_Close.ValueData  = TRUE
                                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Income
                                                                ON MovementLinkMovement_Income.MovementChildId = Movement.Id
                                                               AND MovementLinkMovement_Income.DescId = zc_MovementLinkMovement_Order()
@@ -218,6 +222,7 @@ BEGIN
                            WHERE Movement.DescId     = zc_Movement_OrderIncome()
                              AND Movement.StatusId   = zc_Enum_Status_Complete()
                              AND MovementBoolean_Closed.MovementId IS NULL -- т.е. заявка НЕ закрыта
+                             AND MIBoolean_Close.MovementItemId IS NULL -- т.е. строка НЕ закрыта
                              -- AND Movement_Income.Id IS NULL -- т.е. у заявки еще нет ПРОВЕДЕННОГО прихода
                            )
         -- заявки по Юр Лицам - вычитаем: Заявка - Приход
