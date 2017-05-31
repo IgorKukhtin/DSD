@@ -2,7 +2,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1089#1085#1072#1073#1078#1077#1085#1080'e>'
-  ClientHeight = 669
+  ClientHeight = 617
   ClientWidth = 1253
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -327,26 +327,29 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
     Left = 0
     Top = 123
     Width = 1253
-    Height = 546
+    Height = 494
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 546
+    ExplicitHeight = 546
+    ClientRectBottom = 494
     ClientRectRight = 1253
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 522
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 1253
-        Height = 522
+        Height = 470
         Align = alClient
         TabOrder = 0
         ExplicitLeft = 16
         ExplicitTop = 152
+        ExplicitHeight = 522
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -751,6 +754,15 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             Options.Editing = False
             Width = 70
           end
+          object clisClose: TcxGridDBColumn
+            Caption = #1042#1099#1087'.'
+            DataBinding.FieldName = 'isClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+            Options.Editing = False
+            Width = 34
+          end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
@@ -942,6 +954,10 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
         end
         item
           Visible = True
+          ItemName = 'bbCloseMI'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1071,6 +1087,10 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
     end
     object bbClosed: TdxBarButton
       Action = actClosed
+      Category = 0
+    end
+    object bbCloseMI: TdxBarButton
+      Action = macCloseMI
       Category = 0
     end
   end
@@ -1694,6 +1714,33 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1087#1086#1083#1085#1077#1085' '#1079#1072#1082#1072#1079' '#1044#1072'/'#1053#1077#1090'"'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1087#1086#1083#1085#1077#1085' '#1079#1072#1082#1072#1079' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
+    end
+    object actCloseMI: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spisCloseMI
+      StoredProcList = <
+        item
+          StoredProc = spisCloseMI
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1087#1086#1083#1085#1077#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1087#1086#1083#1085#1077#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'  '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 76
+    end
+    object macCloseMI: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCloseMI
+        end
+        item
+          Action = actRefresh_MI
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1087#1086#1083#1085#1077#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'  '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1099#1087#1086#1083#1085#1077#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'  '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 76
     end
   end
   object MasterDS: TDataSource
@@ -2938,5 +2985,31 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
     PackSize = 1
     Left = 872
     Top = 273
+  end
+  object spisCloseMI: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovementItem_Close'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisClose'
+        Value = 'False'
+        Component = MasterCDS
+        ComponentItem = 'isClose'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 856
+    Top = 345
   end
 end
