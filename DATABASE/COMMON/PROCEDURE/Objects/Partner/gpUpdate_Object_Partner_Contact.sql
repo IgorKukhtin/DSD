@@ -81,4 +81,5 @@ $BODY$
 */
 
 -- тест
--- 
+-- select * from gpUpdate_Object_Partner_Contact(inId := 10862 , inOrdeName := 'Иванов П.Р.' , inOrderPhone := '' , inOrderMail := '' ,  inSession := '5');
+-- select * from gpUpdate_Object_Partner_Contact(inId := 17170 , inOrdeName := 'Ветлицька Катя' , inOrderPhone := '098-819-12-92' , inOrderMail := '' ,  inSession := '5');
