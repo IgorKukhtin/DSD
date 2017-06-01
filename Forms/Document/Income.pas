@@ -202,6 +202,9 @@ type
     JuridicalFromGuides: TdsdGuides;
     InsertRecordGoods: TInsertRecord;
     bbInsertRecordGoods: TdxBarButton;
+    spSelectPrintSticker: TdsdStoredProc;
+    actPrintSticker: TdsdPrintAction;
+    bbPrintSticker: TdxBarButton;
   private
   public
   end;

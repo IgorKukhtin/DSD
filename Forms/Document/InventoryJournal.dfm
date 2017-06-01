@@ -4,26 +4,25 @@ inherited InventoryJournalForm: TInventoryJournalForm
   ClientWidth = 847
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -66
   ExplicitWidth = 863
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 847
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 972
+    ExplicitWidth = 847
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 847
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 972
+      ExplicitWidth = 847
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 847
         Height = 478
-        ExplicitWidth = 972
+        ExplicitWidth = 847
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -183,7 +182,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
   end
   inherited Panel: TPanel
     Width = 847
-    ExplicitWidth = 972
+    ExplicitWidth = 847
     inherited deStart: TcxDateEdit
       EditValue = 42370d
     end
@@ -344,6 +343,43 @@ inherited InventoryJournalForm: TInventoryJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actPrintSticker: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintSticker
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPrice'
+          Value = 'True'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_IncomeSticker'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_IncomeSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -460,6 +496,14 @@ inherited InventoryJournalForm: TInventoryJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintSticker'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -473,6 +517,10 @@ inherited InventoryJournalForm: TInventoryJournalForm
     end
     object bbPrint: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbPrintSticker: TdxBarButton
+      Action = actPrintSticker
       Category = 0
     end
   end
@@ -687,5 +735,25 @@ inherited InventoryJournalForm: TInventoryJournalForm
     PackSize = 1
     Left = 704
     Top = 72
+  end
+  object spSelectPrintSticker: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Income_PrintSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 511
+    Top = 152
   end
 end

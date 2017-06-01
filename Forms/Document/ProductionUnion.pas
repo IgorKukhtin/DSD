@@ -72,6 +72,8 @@ type
     OrderGuides: TdsdGuides;
     spUpdateOrder: TdsdStoredProc;
     HeaderSaver3: THeaderSaver;
+    edJuridicalFrom: TcxButtonEdit;
+    JuridicalFromGuides: TdsdGuides;
   private
     { Private declarations }
   public

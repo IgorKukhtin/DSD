@@ -521,6 +521,19 @@ inherited ProductionUnionForm: TProductionUnionForm
       TabOrder = 14
       Width = 226
     end
+    object edJuridicalFrom: TcxButtonEdit
+      Left = 320
+      Top = 38
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 15
+      Visible = False
+      Width = 64
+    end
   end
   object edIsAuto: TcxCheckBox [2]
     Left = 216
@@ -1031,6 +1044,21 @@ inherited ProductionUnionForm: TProductionUnionForm
         Name = 'InvNumber_Order'
         Value = Null
         Component = OrderGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId_From'
+        Value = Null
+        Component = JuridicalFromGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName_From'
+        Value = Null
+        Component = JuridicalFromGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1546,14 +1574,14 @@ inherited ProductionUnionForm: TProductionUnionForm
       item
         Name = 'MasterJuridicalId'
         Value = ''
-        Component = GuidesFrom
+        Component = JuridicalFromGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
         Value = ''
-        Component = GuidesFrom
+        Component = JuridicalFromGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1599,5 +1627,18 @@ inherited ProductionUnionForm: TProductionUnionForm
     GetStoredProc = spGet
     Left = 320
     Top = 273
+  end
+  object JuridicalFromGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalFrom
+    FormNameParam.Name = 'TJuridical_ObjectForm'
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <>
+    Left = 345
+    Top = 24
   end
 end
