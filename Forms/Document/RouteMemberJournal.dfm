@@ -5,7 +5,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 969
-  ExplicitHeight = 431
+  ExplicitHeight = 435
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -527,7 +527,6 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
       RefreshOnTabSetChanges = False
     end
     object actRouteOnMap: TdsdPartnerMapAction
-      Category = 'DSDLib'
       MoveParams = <>
       Caption = #1050#1072#1088#1090#1072' Google - '#1042#1077#1089#1100' '#1084#1072#1088#1096#1088#1091#1090
       Hint = #1050#1072#1088#1090#1072' Google - '#1042#1077#1089#1100' '#1084#1072#1088#1096#1088#1091#1090
@@ -539,7 +538,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
       GuiParams = <>
       isShowModal = True
       MapType = acShowAll
-      DataSet = MasterCDS
+      GridView = cxGridDBTableView
     end
   end
   inherited MasterDS: TDataSource

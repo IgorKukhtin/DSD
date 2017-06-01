@@ -839,6 +839,9 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       GuiParams = <>
       isShowModal = False
       DataSet = MasterCDS
+      GPSNField = 'GPSN'
+      GPSEField = 'GPSE'
+      AddressField = 'Address'
     end
     object actShowAllPartnerOnMap: TdsdPartnerMapAction
       Category = 'DSDLib'

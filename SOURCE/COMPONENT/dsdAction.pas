@@ -764,8 +764,13 @@ type
   TdsdPartnerMapAction = class(TdsdOpenForm, IFormAction)
   private
     FDataSet: TDataSet;
+    FGridView: TcxGridDBTableView;
     FMapType: TMapAcionType;
+    FGPSNField: string;
+    FGPSEField: string;
+    FAddressField: string;
     FGMMap: TGMMap;
+
     procedure SetDataSet(const Value: TDataSet);
   protected
     procedure Notification(AComponent: TComponent;
@@ -778,6 +783,10 @@ type
     property MapType: TMapAcionType read FMapType write FMapType
       default acShowOne;
     property DataSet: TDataSet read FDataSet write SetDataSet;
+    property GridView: TcxGridDBTableView read FGridView write FGridView;
+    property GPSNField: string read FGPSNField write FGPSNField;
+    property GPSEField: string read FGPSEField write FGPSEField;
+    property AddressField: string read FAddressField write FAddressField;
   end;
 
 procedure Register;
@@ -3107,7 +3116,7 @@ procedure TdsdPartnerMapAction.BeforeExecute(Form: TForm);
 var
   i: integer;
 begin
-  if Assigned(FDataSet) then
+  if Assigned(FDataSet) or Assigned(FGridView) then
   begin
     Form.OnClose := OnFormClose;
 
@@ -3117,6 +3126,10 @@ begin
         FGMMap := TGMMap(Form.Components[i]);
         TdsdGMMap(Form.Components[i]).MapType := FMapType;
         TdsdGMMap(Form.Components[i]).DataSet := FDataSet;
+        TdsdGMMap(Form.Components[i]).GridView := FGridView;
+        TdsdGMMap(Form.Components[i]).GPSNField := FGPSNField;
+        TdsdGMMap(Form.Components[i]).GPSEField := FGPSEField;
+        TdsdGMMap(Form.Components[i]).AddressField := FAddressField;
         FGMMap.Active := True;
         Break;
       end;
@@ -3136,7 +3149,10 @@ begin
   if csDestroying in ComponentState then
     exit;
   if (Operation = opRemove) and (AComponent = DataSet) then
-    DataSet := nil;
+    DataSet := nil
+  else
+  if (Operation = opRemove) and (AComponent = GridView) then
+    GridView := nil;
 end;
 
 procedure TdsdPartnerMapAction.SetDataSet(const Value: TDataSet);

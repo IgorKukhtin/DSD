@@ -1,5 +1,5 @@
-inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
-  Caption = #1054#1090#1095#1077#1090' '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+inherited Report_MovementSendForm: TReport_MovementSendForm
+  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102'>'
   ClientHeight = 425
   ClientWidth = 1065
   AddOnFormData.RefreshAction = actRefreshStart
@@ -10,36 +10,40 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   TextHeight = 13
   inherited Panel: TPanel [0]
     Width = 1065
-    Height = 49
+    Height = 59
     ExplicitWidth = 1065
-    ExplicitHeight = 49
+    ExplicitHeight = 59
     inherited deStart: TcxDateEdit
       Left = 29
       EditValue = 42736d
       ExplicitLeft = 29
     end
     inherited deEnd: TcxDateEdit
-      Left = 142
+      Left = 29
+      Top = 32
       EditValue = 42736d
-      ExplicitLeft = 142
+      ExplicitLeft = 29
+      ExplicitTop = 32
     end
     inherited cxLabel1: TcxLabel
       Caption = #1057':'
       ExplicitWidth = 15
     end
     inherited cxLabel2: TcxLabel
-      Left = 120
+      Left = 7
+      Top = 33
       Caption = #1087#1086':'
-      ExplicitLeft = 120
+      ExplicitLeft = 7
+      ExplicitTop = 33
       ExplicitWidth = 20
     end
     object cxLabel3: TcxLabel
-      Left = 234
+      Left = 121
       Top = 5
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+      Caption = #1054#1090' '#1082#1086#1075#1086':'
     end
-    object ceUnit: TcxButtonEdit
-      Left = 325
+    object ceUnitFrom: TcxButtonEdit
+      Left = 170
       Top = 5
       Properties.Buttons = <
         item
@@ -51,48 +55,55 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       Properties.UseNullString = True
       TabOrder = 5
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-      Width = 188
+      Width = 224
     end
     object cbPartion: TcxCheckBox
-      Left = 233
-      Top = 28
+      Left = 669
+      Top = 5
       Action = actRefreshIsPartion
       TabOrder = 6
       Width = 94
     end
     object cbSize: TcxCheckBox
-      Left = 324
-      Top = 28
+      Left = 669
+      Top = 32
       Action = actRefreshSize
       TabOrder = 7
       Width = 90
     end
     object cbPartner: TcxCheckBox
-      Left = 422
-      Top = 29
+      Left = 769
+      Top = 5
       Action = actRefreshPartner
       TabOrder = 8
       Width = 108
     end
+    object cbMovement: TcxCheckBox
+      Left = 769
+      Top = 32
+      Action = actRefreshMovement
+      TabOrder = 9
+      Width = 108
+    end
   end
   inherited PageControl: TcxPageControl [1]
-    Top = 75
+    Top = 85
     Width = 1065
-    Height = 350
+    Height = 340
     TabOrder = 3
-    ExplicitTop = 75
+    ExplicitTop = 85
     ExplicitWidth = 1065
-    ExplicitHeight = 350
-    ClientRectBottom = 350
+    ExplicitHeight = 340
+    ClientRectBottom = 340
     ClientRectRight = 1065
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1065
-      ExplicitHeight = 350
+      ExplicitHeight = 340
       inherited cxGrid: TcxGrid
         Width = 1065
-        Height = 350
+        Height = 340
         ExplicitWidth = 1065
-        ExplicitHeight = 350
+        ExplicitHeight = 340
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -200,12 +211,28 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
           Styles.Footer = nil
           Styles.Header = nil
           object colFromName: TcxGridDBColumn
-            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
+          end
+          object ToName: TcxGridDBColumn
+            Caption = #1050#1086#1084#1091
+            DataBinding.FieldName = 'ToName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 108
+          end
+          object PartnerName: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'PartnerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 108
           end
           object clGoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
@@ -338,33 +365,47 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             Width = 110
           end
           object DescName: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103' '#1042#1080#1076
+            Caption = #1042#1086#1079#1074#1088'. '#1087#1086#1089#1090'.'
             DataBinding.FieldName = 'DescName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object InvNumber: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103' '#8470
+            Caption = #8470' ('#1074#1086#1079#1074#1088'. '#1087#1086#1089#1090'.)'
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 73
           end
           object OperDate: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103' '#1044#1072#1090#1072
+            Caption = #1044#1072#1090#1072' ('#1074#1086#1079#1074#1088'. '#1087#1086#1089#1090'.)'
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object ToName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'ToName'
+          object DescName_Partion: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1042#1080#1076
+            DataBinding.FieldName = 'DescName_Partion'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 108
+            Width = 80
+          end
+          object InvNumber_Partion: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#8470
+            DataBinding.FieldName = 'InvNumber_Partion'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 73
+          end
+          object OperDate_Partion: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate_Partion'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object OurJuridicalName: TcxGridDBColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
@@ -453,13 +494,13 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
     end
   end
   object cxLabel4: TcxLabel [2]
-    Left = 522
-    Top = 6
+    Left = 401
+    Top = 33
     Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072':'
   end
   object edBrand: TcxButtonEdit [3]
-    Left = 610
-    Top = 5
+    Left = 489
+    Top = 32
     Properties.Buttons = <
       item
         Default = True
@@ -467,16 +508,16 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 159
+    Width = 170
   end
   object cxLabel5: TcxLabel [4]
-    Left = 776
-    Top = 6
+    Left = 123
+    Top = 33
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
   end
   object edPartner: TcxButtonEdit [5]
-    Left = 842
-    Top = 5
+    Left = 189
+    Top = 32
     Properties.Buttons = <
       item
         Default = True
@@ -485,6 +526,26 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
     Properties.ReadOnly = True
     TabOrder = 9
     Width = 205
+  end
+  object cxLabel6: TcxLabel [6]
+    Left = 401
+    Top = 6
+    Caption = #1050#1086#1084#1091':'
+  end
+  object ceUnitTo: TcxButtonEdit [7]
+    Left = 435
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+    Properties.ReadOnly = True
+    Properties.UseNullString = True
+    TabOrder = 11
+    Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+    Width = 224
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -499,7 +560,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
           'Date')
       end
       item
-        Component = GuidesUnit
+        Component = GuidesUnitFrom
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -512,6 +573,12 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       end
       item
         Component = GuidesPartner
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesUnitTo
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -547,8 +614,8 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_MovementIncomeDialogForm'
-      FormNameParam.Value = 'TReport_MovementIncomeDialogForm'
+      FormName = 'TReport_MovementSendDialogForm'
+      FormNameParam.Value = 'TReport_MovementSendDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -569,17 +636,34 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'UnitId'
+          Name = 'UnitId_From'
           Value = ''
-          Component = GuidesUnit
+          Component = GuidesUnitFrom
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'UnitName'
+          Name = 'UnitName_From'
           Value = ''
-          Component = GuidesUnit
+          Component = GuidesUnitFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId_To'
+          Value = ''
+          Component = GuidesUnitTo
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName_To'
+          Value = ''
+          Component = GuidesUnitTo
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -642,10 +726,31 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMovement'
+          Value = Null
+          Component = cbMovement
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actRefreshMovement: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      Hint = #1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actRefreshSize: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -696,7 +801,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
     Top = 160
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_Movement_Income'
+    StoredProcName = 'gpReport_Movement_Send'
     Params = <
       item
         Name = 'inStartDate'
@@ -715,9 +820,17 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUnitId'
+        Name = 'inUnitId_From'
         Value = Null
-        Component = GuidesUnit
+        Component = GuidesUnitFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId_To'
+        Value = Null
+        Component = GuidesUnitTo
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -761,8 +874,16 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMovement'
+        Value = 'False'
+        Component = cbMovement
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 80
+    Left = 72
     Top = 160
   end
   inherited BarManager: TdxBarManager
@@ -955,8 +1076,8 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       end>
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 104
-    Top = 0
+    Left = 56
+    Top = 24
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -967,17 +1088,20 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         Component = GuidesBrand
       end
       item
-        Component = GuidesUnit
+        Component = GuidesUnitFrom
       end
       item
         Component = GuidesPartner
+      end
+      item
+        Component = GuidesUnitTo
       end>
-    Left = 688
-    Top = 280
+    Left = 384
+    Top = 176
   end
-  object GuidesUnit: TdsdGuides
+  object GuidesUnitFrom: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceUnit
+    LookupControl = ceUnitFrom
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -987,7 +1111,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesUnit
+        Component = GuidesUnitFrom
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -995,13 +1119,13 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesUnit
+        Component = GuidesUnitFrom
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 456
+    Left = 272
   end
   object GuidesBrand: TdsdGuides
     KeyField = 'Id'
@@ -1031,8 +1155,8 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 686
-    Top = 65534
+    Left = 590
+    Top = 30
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
@@ -1062,7 +1186,35 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 878
-    Top = 6
+    Left = 326
+    Top = 22
+  end
+  object GuidesUnitTo: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceUnitTo
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnitTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnitTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 520
   end
 end
