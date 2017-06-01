@@ -255,7 +255,7 @@ inherited MainForm: TMainForm
     object actMobileGoodsListSale: TdsdOpenForm [9]
       Category = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
       MoveParams = <>
-      Caption = #1058#1086#1074#1072#1088#1099' - '#1089#1087#1080#1089#1086#1082' '#1087#1086' '#1058#1058
+      Caption = #1058#1086#1074#1072#1088#1099' - '#1089#1087#1080#1089#1086#1082' '#1076#1083#1103' '#1058#1058
       FormName = 'TMobileGoodsListSale_ObjectForm'
       FormNameParam.Value = 'TMobileGoodsListSale_ObjectForm'
       FormNameParam.DataType = ftString
