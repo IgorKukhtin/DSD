@@ -3738,14 +3738,14 @@ begin
      + '         Object_Goods.ObjectCode || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' ||  '
      + '         IFNULL(Object_Measure.ValueData, ''-'') || '';'' || IFNULL(Object_TradeMark.ValueData, ''-'') || '';0'' AS FullInfo '
      + '       , Object_Goods.ValueData || '';0'' AS SearchName '
-     + ' FROM  Object_Goods '
-     + '       LEFT JOIN Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.GoodsId   = Object_Goods.ID '
+     + ' FROM  Object_GoodsByGoodsKind '
+     + '       LEFT JOIN Object_Goods ON Object_GoodsByGoodsKind.GoodsId   = Object_Goods.ID '
      + '       LEFT JOIN Object_GoodsKind        ON Object_GoodsKind.ID               = Object_GoodsByGoodsKind.GoodsKindId '
      + '       LEFT JOIN Object_Measure          ON Object_Measure.ID                 = Object_Goods.MeasureId '
      + '       LEFT JOIN Object_TradeMark        ON Object_TradeMark.ID               = Object_Goods.TradeMarkId '
      + '       LEFT JOIN Object_PriceListItems   ON Object_PriceListItems.GoodsId     = Object_Goods.ID  '
      + '                                        AND Object_PriceListItems.PriceListId = :PRICELISTID '
-     + ' WHERE Object_Goods.isErased = 0  '
+     + ' WHERE Object_GoodsByGoodsKind.isErased = 0  '
      + ' ORDER BY GoodsName ';
 
   qryGoodsItems.ParamByName('PRICELISTID').AsInteger := cdsStoreRealsPriceListId.AsInteger;
@@ -4542,8 +4542,8 @@ begin
      + '         IFNULL(' + PromoPriceField + ', -1) || '';'' || IFNULL(Movement_Promo.isChangePercent, 1) || '';'' || '
      + '         IFNULL(Object_TradeMark.ValueData, '''') || '';0''  AS FullInfo '
      + '       , Object_Goods.ValueData || CASE WHEN ' + PromoPriceField + ' IS NULL THEN '';0'' ELSE '';1'' END  AS SearchName '
-     + ' FROM  Object_Goods '
-     + '       LEFT JOIN Object_GoodsByGoodsKind    ON Object_GoodsByGoodsKind.GoodsId        = Object_Goods.ID '
+     + ' FROM  Object_GoodsByGoodsKind '
+     + '       LEFT JOIN Object_Goods               ON Object_GoodsByGoodsKind.GoodsId        = Object_Goods.ID '
      + '       LEFT JOIN Object_GoodsKind           ON Object_GoodsKind.ID                    = Object_GoodsByGoodsKind.GoodsKindId '
      + '       LEFT JOIN Object_Measure             ON Object_Measure.ID                      = Object_Goods.MeasureId '
      + '       LEFT JOIN Object_TradeMark           ON Object_TradeMark.ID                    = Object_Goods.TradeMarkId '
@@ -4557,7 +4557,7 @@ begin
      + '                                           AND (MovementItem_PromoGoods.GoodsKindId   = Object_GoodsKind.ID '
      + '                                              OR MovementItem_PromoGoods.GoodsKindId  = 0) '
      + '       LEFT JOIN Movement_Promo             ON Movement_Promo.ID                      = MovementItem_PromoPartner.MovementId '
-     + ' WHERE Object_Goods.isErased = 0 '
+     + ' WHERE Object_GoodsByGoodsKind.isErased = 0 '
      + ' ORDER BY GoodsName ';
 
   qryGoodsItems.ParamByName('PARTNERID').AsInteger := cdsOrderExternalPartnerId.AsInteger;
@@ -5200,14 +5200,14 @@ begin
      + '         IFNULL(Object_PriceListItems.OrderPrice, 0) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || '
      + '         Object_Goods.Weight || '';'' || IFNULL(Object_TradeMark.ValueData, '''') || '';0'' AS FullInfo '
      + '       , Object_Goods.ValueData || '';0''  AS SearchName '
-     + ' FROM  Object_Goods '
-     + '       LEFT JOIN Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.GoodsId   = Object_Goods.ID '
+     + ' FROM  Object_GoodsByGoodsKind '
+     + '       LEFT JOIN Object_Goods            ON Object_GoodsByGoodsKind.GoodsId   = Object_Goods.ID '
      + '       LEFT JOIN Object_GoodsKind        ON Object_GoodsKind.ID               = Object_GoodsByGoodsKind.GoodsKindId '
      + '       LEFT JOIN Object_Measure          ON Object_Measure.ID                 = Object_Goods.MeasureId '
      + '       LEFT JOIN Object_TradeMark        ON Object_TradeMark.ID               = Object_Goods.TradeMarkId '
      + '       LEFT JOIN Object_PriceListItems   ON Object_PriceListItems.GoodsId     = Object_Goods.ID '
      + '                                        AND Object_PriceListItems.PriceListId = :PRICELISTID '
-     + ' WHERE Object_Goods.isErased = 0 '
+     + ' WHERE Object_GoodsByGoodsKind.isErased = 0 '
      + ' ORDER BY GoodsName ';
 
   qryGoodsItems.ParamByName('PRICELISTID').AsInteger := cdsReturnInPRICELISTID.AsInteger;

@@ -24,9 +24,6 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
     Height = 403
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 91
-    ExplicitWidth = 915
-    ExplicitHeight = 373
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -765,6 +762,9 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       GuiParams = <>
       isShowModal = False
       DataSet = MasterCDS
+      GPSNField = 'GPSN'
+      GPSEField = 'GPSE'
+      AddressField = 'Address'
     end
     object actShowAllPartnerOnMap: TdsdPartnerMapAction
       Category = 'DSDLib'

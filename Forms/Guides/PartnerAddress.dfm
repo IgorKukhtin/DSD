@@ -1747,6 +1747,9 @@ object PartnerAddressForm: TPartnerAddressForm
       GuiParams = <>
       isShowModal = False
       DataSet = MasterCDS
+      GPSNField = 'GPSN'
+      GPSEField = 'GPSE'
+      AddressField = 'Address'
     end
     object actCheckShowAllPartnerOnMap: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1772,6 +1775,9 @@ object PartnerAddressForm: TPartnerAddressForm
       isShowModal = False
       MapType = acShowAll
       DataSet = MasterCDS
+      GPSNField = 'GPSN'
+      GPSEField = 'GPSE'
+      AddressField = 'Address'
     end
     object mactShowAllPartnerOnMap: TMultiAction
       Category = 'DSDLib'
