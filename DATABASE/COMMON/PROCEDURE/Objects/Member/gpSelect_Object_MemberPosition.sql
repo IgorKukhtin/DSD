@@ -23,11 +23,19 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- User by RoleId
-   vbAll:= NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Role() AND Object.ObjectCode IN (3004, 4004, 5004, 6004, 7004, 8004, 8014, 9004)));
+   vbAll:= NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View
+                       WHERE UserId = vbUserId
+                         AND RoleId IN (SELECT Object.Id FROM Object
+                                        WHERE Object.DescId = zc_Object_Role()
+                                          -- Так криво - через zc_Object_Role
+                                          AND Object.ObjectCode IN (3004, 4004, 5004, 6004, 7004, 8004, 8014, 9004
+                                                                  , 1201, 2001, 2002, 2003, 2004, 2005, 2006
+                                                                   )
+                                       ));
 
    -- Результат
    RETURN QUERY 
-   with tmpPersonal AS (SELECT Object_Personal.PersonalId
+   WITH tmpPersonal AS (SELECT Object_Personal.PersonalId
                              , Object_Personal.MemberId
                              , Object_Personal.PositionId
                              , Object_Personal.PositionName

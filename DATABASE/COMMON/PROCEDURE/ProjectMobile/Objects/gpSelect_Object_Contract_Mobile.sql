@@ -28,35 +28,15 @@ RETURNS TABLE (Id               Integer
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbMemberId Integer;
-   DECLARE calcSession TVarChar;
+   DECLARE vbUserId        Integer;
+   DECLARE vbUserId_Mobile Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
      vbUserId:= lpGetUserBySession (inSession);
 
-
-      -- !!!меняем значение!!! - с какими параметрами пользователь может просматривать данные с мобильного устройства
-     IF NOT EXISTS (SELECT 1 FROM ObjectBoolean WHERE ObjectBoolean.DescId = zc_ObjectBoolean_User_ProjectMobile() AND ObjectBoolean.ObjectId = vbUserId AND ObjectBoolean.ValueData = TRUE)
-        OR inSession = zfCalc_UserAdmin()
-     THEN
-         -- Если пользователь inSession - НЕ Торговый агент - видит ВСЕ
-         vbMemberId:= 0; calcSession:= '';
-     ELSE
-         --
-         vbMemberId:= (SELECT tmp.MemberId FROM gpGetMobile_Object_Const (inSession) AS tmp);
-         --
-         calcSession := (SELECT CAST (ObjectLink_User_Member.ObjectId AS TVarChar)
-                           FROM ObjectLink AS ObjectLink_User_Member
-                           WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-                             AND ObjectLink_User_Member.ChildObjectId = vbMemberId);
-         --
-         IF COALESCE (vbMemberId, 0) <> inMemberId
-         THEN
-              RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.';
-         END IF;
-     END IF;
+     -- !!!меняем значение!!! - с какими параметрами пользователь может просматривать данные с мобильного устройства
+     vbUserId_Mobile:= (SELECT lfGet.UserId FROM lfGet_User_MobileCheck (inMemberId:= inMemberId, inUserId:= vbUserId) AS lfGet);
 
 
      -- Результат
@@ -80,14 +60,13 @@ BEGIN
               , tmpMobileContract.DelayDayBank
               , tmpMobileContract.isErased
               , tmpMobileContract.isSync
-         FROM gpSelectMobile_Object_Contract (zc_DateStart(), calcSession) AS tmpMobileContract
+         FROM gpSelectMobile_Object_Contract (zc_DateStart(), vbUserId_Mobile :: TVarChar) AS tmpMobileContract
               LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpMobileContract.PaidKindId
               LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                    ON ObjectLink_Contract_Juridical.ObjectId = tmpMobileContract.Id
                                   AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
               LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Contract_Juridical.ChildObjectId
-         WHERE tmpMobileContract.isSync = TRUE
-           AND (tmpMobileContract.isErased = inisShowAll OR inisShowAll = True)
+         WHERE (tmpMobileContract.isErased = inisShowAll OR inisShowAll = True)
 ;
 
 END;

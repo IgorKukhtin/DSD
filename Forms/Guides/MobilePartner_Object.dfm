@@ -2,7 +2,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1095#1077#1082' '#1076#1086#1089#1090#1072#1074#1082#1080'>'
-  ClientHeight = 464
+  ClientHeight = 408
   ClientWidth = 999
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,22 +21,39 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
     Left = 0
     Top = 61
     Width = 999
-    Height = 403
+    Height = 347
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 91
-    ExplicitWidth = 915
-    ExplicitHeight = 373
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
-      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clDebtSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clOverSum
+        end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = #1057#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = ceName
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clDebtSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clOverSum
         end>
       DataController.Summary.SummaryGroups = <>
       OptionsCustomize.ColumnHiding = True
@@ -50,35 +67,38 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clPersonalName: TcxGridDBColumn
-        Caption = #1060#1048#1054
+        Caption = #1060#1048#1054' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1058#1040')'
         DataBinding.FieldName = 'PersonalName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 156
+        Width = 100
       end
       object clPositionName: TcxGridDBColumn
-        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1058#1040')'
         DataBinding.FieldName = 'PositionName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 172
-      end
-      object BranchName: TcxGridDBColumn
-        Caption = #1060#1080#1083#1080#1072#1083
-        DataBinding.FieldName = 'BranchName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 87
+        Width = 100
+      end
+      object BranchName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1058#1040')'
+        DataBinding.FieldName = 'BranchName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
       end
       object UnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1058#1040')'
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 190
+        Width = 100
       end
       object ceCode: TcxGridDBColumn
         Caption = #1050#1086#1076
@@ -99,42 +119,45 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       object ceAddress: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 150
+        Width = 100
       end
       object clGPSN: TcxGridDBColumn
-        Caption = 'GPS '#1082#1086#1086#1088#1076#1080#1085#1072#1090#1099' '#1090#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080' ('#1096#1080#1088#1086#1090#1072')'
+        Caption = 'GPS '#1058#1058' ('#1096#1080#1088#1086#1090#1072')'
         DataBinding.FieldName = 'GPSN'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 115
+        Width = 70
       end
       object clGPSE: TcxGridDBColumn
-        Caption = 'GPS '#1082#1086#1086#1088#1076#1080#1085#1072#1090#1099' '#1090#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080' ('#1076#1086#1083#1075#1086#1090#1072')'
+        Caption = 'GPS '#1058#1058' ('#1076#1086#1083#1075#1086#1090#1072')'
         DataBinding.FieldName = 'GPSE'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 117
+        Width = 70
       end
       object clDebtSum: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1076#1086#1083#1075#1072' ('#1085#1072#1084')'
         DataBinding.FieldName = 'DebtSum'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
       end
       object clOverSum: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1086#1075#1086' '#1076#1086#1083#1075#1072' ('#1085#1072#1084')'
+        Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1089#1088#1086#1095'. '#1076#1086#1083#1075#1072' ('#1085#1072#1084')'
         DataBinding.FieldName = 'OverSum'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -151,7 +174,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Width = 85
       end
       object clPrepareDayCount: TcxGridDBColumn
-        Caption = #1047#1072' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1085#1080#1084#1072#1077#1090#1089#1103' '#1079#1072#1082#1072#1079
+        Caption = #1047#1072' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085'. '#1087#1088#1080#1085#1080#1084#1072#1077#1090#1089#1103' '#1079#1072#1082#1072#1079
         DataBinding.FieldName = 'PrepareDayCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
@@ -166,7 +189,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 150
+        Width = 100
       end
       object RetailName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
@@ -179,10 +202,19 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       object clRouteName: TcxGridDBColumn
         Caption = #1052#1072#1088#1096#1088#1091#1090
         DataBinding.FieldName = 'RouteName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 150
+        Width = 100
+      end
+      object InfoMoneyName_all: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+        DataBinding.FieldName = 'InfoMoneyName_all'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 111
       end
       object ContractCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1076#1086#1075'.'
@@ -195,6 +227,47 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       object clContractName: TcxGridDBColumn
         Caption = #1044#1086#1075#1086#1074#1086#1088
         DataBinding.FieldName = 'ContractName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object ContractTagName: TcxGridDBColumn
+        Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+        DataBinding.FieldName = 'ContractTagName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
+      object ContractStateKindCode: TcxGridDBColumn
+        Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
+        DataBinding.FieldName = 'ContractStateKindCode'
+        PropertiesClassName = 'TcxImageComboBoxProperties'
+        Properties.Alignment.Horz = taLeftJustify
+        Properties.Alignment.Vert = taVCenter
+        Properties.Images = dmMain.ImageList
+        Properties.Items = <
+          item
+            Description = #1055#1086#1076#1087#1080#1089#1072#1085
+            ImageIndex = 12
+            Value = 1
+          end
+          item
+            Description = #1053#1077' '#1087#1086#1076#1087#1080#1089#1072#1085
+            ImageIndex = 11
+            Value = 2
+          end
+          item
+            Description = #1047#1072#1074#1077#1088#1096#1077#1085
+            ImageIndex = 13
+            Value = 3
+          end
+          item
+            Description = #1059' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+            ImageIndex = 66
+            Value = 4
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -235,6 +308,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       object clisSync: TcxGridDBColumn
         Caption = #1057#1080#1085#1093#1088#1086#1085#1080#1079#1080#1088#1091#1077#1090#1089#1103
         DataBinding.FieldName = 'isSync'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False

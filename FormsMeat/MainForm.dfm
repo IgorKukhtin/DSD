@@ -5,7 +5,7 @@ inherited MainForm: TMainForm
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 260
+  ExplicitHeight = 257
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -171,7 +171,7 @@ inherited MainForm: TMainForm
     object actMobileGoodsByGoodsKind: TdsdOpenForm [5]
       Category = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
       MoveParams = <>
-      Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1058#1086#1074#1072#1088' '#1080' '#1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+      Caption = #1058#1086#1074#1072#1088#1099' - '#1089#1087#1080#1089#1086#1082' '#1042#1057#1045#1061
       FormName = 'TMobileGoodsByGoodsKind_ObjectForm'
       FormNameParam.Value = 'TMobileGoodsByGoodsKind_ObjectForm'
       FormNameParam.DataType = ftString
@@ -255,7 +255,7 @@ inherited MainForm: TMainForm
     object actMobileGoodsListSale: TdsdOpenForm [9]
       Category = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
       MoveParams = <>
-      Caption = #1058#1086#1074#1072#1088#1099' '#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084
+      Caption = #1058#1086#1074#1072#1088#1099' - '#1089#1087#1080#1089#1086#1082' '#1087#1086' '#1058#1058
       FormName = 'TMobileGoodsListSale_ObjectForm'
       FormNameParam.Value = 'TMobileGoodsListSale_ObjectForm'
       FormNameParam.DataType = ftString
@@ -349,7 +349,7 @@ inherited MainForm: TMainForm
     object actMobilePartner: TdsdOpenForm [17]
       Category = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090
       MoveParams = <>
-      Caption = #1058#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
+      Caption = #1058#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080' + '#1044#1086#1075#1086#1074#1086#1088#1072
       FormName = 'TMobilePartner_ObjectForm'
       FormNameParam.Value = 'TMobilePartner_ObjectForm'
       FormNameParam.DataType = ftString
@@ -6067,9 +6067,6 @@ inherited MainForm: TMainForm
       object N155: TMenuItem
         Action = actMobilePriceListItems
       end
-      object N156: TMenuItem
-        Action = actMobileConst
-      end
       object N161: TMenuItem
         Action = actPhotoMobile
       end
@@ -6078,6 +6075,9 @@ inherited MainForm: TMainForm
       end
       object N164: TMenuItem
         Action = actMobilePromo
+      end
+      object N156: TMenuItem
+        Action = actMobileConst
       end
     end
     object miReportsProduction: TMenuItem [9]

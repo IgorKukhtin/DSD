@@ -48,7 +48,6 @@ type
     bbJuridicalGuides: TdxBarControlContainerItem;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    PersonalTradeGuides: TdsdGuides;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     spGet_Const: TdsdStoredProc;
@@ -78,9 +77,14 @@ type
     cxLabel12: TcxLabel;
     edUserLogin: TcxButtonEdit;
     cxLabel13: TcxLabel;
-    edUserPassword: TcxButtonEdit;
+    edOperDate_diff: TcxButtonEdit;
     cxLabel15: TcxLabel;
     edWebService: TcxButtonEdit;
+    edPriceList_def: TcxButtonEdit;
+    cxLabel2: TcxLabel;
+    cxLabel14: TcxLabel;
+    edReturnDayCount: TcxButtonEdit;
+    PersonalTradeGuides: TdsdGuides;
   private
     { Private declarations }
   public

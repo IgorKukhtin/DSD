@@ -1,9 +1,9 @@
 object MobileConst_ObjectForm: TMobileConst_ObjectForm
   Left = 0
   Top = 0
-  Caption = #1050#1086#1085#1089#1090#1072#1085#1090#1099
-  ClientHeight = 367
-  ClientWidth = 470
+  Caption = #1052#1086#1073#1080#1083#1100#1085#1086#1077' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1077' - '#1050#1086#1085#1089#1090#1072#1085#1090#1099
+  ClientHeight = 516
+  ClientWidth = 564
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,11 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
   object Panel: TPanel
     Left = 0
     Top = 26
-    Width = 470
-    Height = 335
-    Align = alTop
+    Width = 564
+    Height = 490
+    Align = alClient
     BevelOuter = bvNone
-    TabOrder = 1
+    TabOrder = 0
     object cxLabel1: TcxLabel
       Left = 167
       Top = 148
@@ -75,7 +75,7 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 6
+    TabOrder = 5
     Width = 140
   end
   object cxLabel5: TcxLabel
@@ -92,7 +92,7 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 8
+    TabOrder = 7
     Width = 210
   end
   object cxLabel6: TcxLabel
@@ -109,7 +109,7 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 10
+    TabOrder = 9
     Width = 140
   end
   object cxLabel7: TcxLabel
@@ -126,7 +126,7 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 12
+    TabOrder = 11
     Width = 140
   end
   object cxLabel8: TcxLabel
@@ -143,7 +143,7 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 14
+    TabOrder = 13
     Width = 140
   end
   object cxLabel9: TcxLabel
@@ -160,7 +160,7 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 16
+    TabOrder = 15
     Width = 210
   end
   object cxLabel10: TcxLabel
@@ -177,7 +177,7 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 18
+    TabOrder = 17
     Width = 430
   end
   object cxLabel11: TcxLabel
@@ -194,7 +194,7 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 20
+    TabOrder = 19
     Width = 140
   end
   object cxLabel12: TcxLabel
@@ -211,25 +211,25 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 22
-    Width = 210
+    TabOrder = 21
+    Width = 420
   end
   object cxLabel13: TcxLabel
-    Left = 241
-    Top = 264
-    Caption = #1055#1072#1088#1086#1083#1100
+    Left = 21
+    Top = 398
+    Caption = #1085#1072' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1087#1086#1079#1078#1077' '#1089#1086#1079#1076#1072#1074#1072#1090#1100' '#1076#1086#1082' '#1042#1086#1079#1074#1088#1072#1090
   end
-  object edUserPassword: TcxButtonEdit
-    Left = 241
-    Top = 282
+  object edOperDate_diff: TcxButtonEdit
+    Left = 21
+    Top = 416
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 25
-    Width = 210
+    TabOrder = 23
+    Width = 430
   end
   object cxLabel15: TcxLabel
     Left = 21
@@ -245,7 +245,41 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
+    TabOrder = 26
+    Width = 430
+  end
+  object edPriceList_def: TcxButtonEdit
+    Left = 21
+    Top = 376
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
     TabOrder = 28
+    Width = 430
+  end
+  object cxLabel2: TcxLabel
+    Left = 21
+    Top = 358
+    Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' '#1076#1083#1103' "'#1073#1077#1079#1083#1080#1082#1080#1093'" '#1058#1058
+  end
+  object cxLabel14: TcxLabel
+    Left = 21
+    Top = 438
+    Caption = #1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1085#1080#1084#1072#1102#1090#1089#1103' '#1074#1086#1079#1074#1088#1072#1090#1099' '#1087#1086' '#1089#1090#1072#1088#1099#1084' '#1094#1077#1085#1072#1084
+  end
+  object edReturnDayCount: TcxButtonEdit
+    Left = 21
+    Top = 456
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 32
     Width = 430
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -309,22 +343,6 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         item
           Visible = True
           ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbChoiceGuides'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGridToExel'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
         end>
       OneOnRow = True
       Row = 0
@@ -349,6 +367,7 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
       Category = 0
       Hint = '     '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbJuridicalLabel: TdxBarControlContainerItem
       Caption = 'JuridicalLabel'
@@ -556,35 +575,6 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
     Left = 456
     Top = 168
   end
-  object PersonalTradeGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPersonalTrade
-    FormNameParam.Value = 'TMember_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMember_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = '0'
-        Component = PersonalTradeGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = PersonalTradeGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 103
-    Top = 72
-  end
   object spGet_Const: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Const_Mobile'
     DataSets = <>
@@ -669,16 +659,30 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UserPassword'
+        Name = 'WebService'
         Value = Null
-        Component = edUserPassword
+        Component = edWebService
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'WebService'
+        Name = 'PriceListName_def'
         Value = Null
-        Component = edWebService
+        Component = edPriceList_def
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate_diff'
+        Value = Null
+        Component = edOperDate_diff
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReturnDayCount'
+        Value = Null
+        Component = edReturnDayCount
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -709,5 +713,40 @@ object MobileConst_ObjectForm: TMobileConst_ObjectForm
     PackSize = 1
     Left = 328
     Top = 40
+  end
+  object PersonalTradeGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalTrade
+    Key = '0'
+    FormNameParam.Value = 'TMemberPosition_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMemberPosition_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = PersonalTradeGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PersonalTradeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = '149831'
+        MultiSelectSeparator = ','
+      end>
+    Left = 39
+    Top = 24
   end
 end

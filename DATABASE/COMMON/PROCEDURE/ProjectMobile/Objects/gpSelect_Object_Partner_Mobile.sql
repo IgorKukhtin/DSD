@@ -32,6 +32,9 @@ RETURNS TABLE (Id              Integer
              , ContractId      Integer  -- Договор - все возможные договора...
              , ContractCode    Integer  --
              , ContractName    TVarChar --
+             , ContractStateKindCode Integer
+             , ContractTagName       TVarChar
+             , InfoMoneyName_all     TVarChar
              , PriceListId     Integer  -- Прайс-лист - по каким ценам будет формироваться заказ
              , PriceListName   TVarChar --
              , PriceListId_ret Integer  -- Прайс-лист Возврата - по каким ценам будет формироваться возврат
@@ -52,56 +55,31 @@ RETURNS TABLE (Id              Integer
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-
-   DECLARE vbMemberId      Integer;
+   DECLARE vbUserId        Integer;
    DECLARE vbUserId_Mobile Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
      vbUserId:= lpGetUserBySession (inSession);
 
-/*
      -- !!!меняем значение!!! - с какими параметрами пользователь может просматривать данные с мобильного устройства
-     IF NOT EXISTS (SELECT 1 FROM ObjectBoolean WHERE ObjectBoolean.DescId = zc_ObjectBoolean_User_ProjectMobile() AND ObjectBoolean.ObjectId = vbUserId AND ObjectBoolean.ValueData = TRUE)
-        OR inSession = zfCalc_UserAdmin()
-     THEN
-         -- Если пользователь inSession - НЕ Торговый агент - видит ВСЕ
-         inMemberId:= 0; vbUserId_Mobile:= 0;
-     ELSE
-         -- Можно Только со своими
-         SELECT inMemberId, lfGet.MemberId, lfGet.UserId INTO vbMemberId, inMemberId, vbUserId_Mobile FROM lfGet_User_MobileCheck (inMemberId:= inMemberId, inUserId:= vbUserId) AS lfGet;
-         --
-         IF COALESCE (vbMemberId, 0) <> COALESCE (inMemberId, 0)
-         THEN
-              RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.';
-         END IF;
-     END IF;
-
-*/
-         -- Можно Только со своими
-         SELECT inMemberId, lfGet.MemberId, lfGet.UserId INTO vbMemberId, inMemberId, vbUserId_Mobile FROM lfGet_User_MobileCheck (inMemberId:= inMemberId, inUserId:= vbUserId) AS lfGet;
-         --
-         IF COALESCE (vbMemberId, 0) <> COALESCE (inMemberId, 0)
-         THEN
-              RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.';
-         END IF;
+     vbUserId_Mobile:= (SELECT lfGet.UserId FROM lfGet_User_MobileCheck (inMemberId:= inMemberId, inUserId:= vbUserId) AS lfGet);
 
 
      -- Результат
      RETURN QUERY
-          SELECT tmpMobilePartner.Id
-               , tmpMobilePartner.ObjectCode AS Code
-               , tmpMobilePartner.ValueData  AS Name
-               , tmpMobilePartner.Address
-               , tmpMobilePartner.GPSN
-               , tmpMobilePartner.GPSE
-               , tmpMobilePartner.Schedule
-               , tmpMobilePartner.Delivery
-               , tmpMobilePartner.DebtSum
-               , tmpMobilePartner.OverSum
-               , tmpMobilePartner.OverDays
-               , tmpMobilePartner.PrepareDayCount
+          SELECT gpSelect.Id
+               , gpSelect.ObjectCode AS Code
+               , gpSelect.ValueData  AS Name
+               , gpSelect.Address
+               , gpSelect.GPSN
+               , gpSelect.GPSE
+               , gpSelect.Schedule
+               , gpSelect.Delivery
+               , gpSelect.DebtSum
+               , gpSelect.OverSum
+               , gpSelect.OverDays
+               , gpSelect.PrepareDayCount
                , Object_Juridical.Id            AS JuridicalId
                , Object_Juridical.ValueData     AS JuridicalName
                , Object_Route.Id                AS RouteId
@@ -111,43 +89,60 @@ BEGIN
                , Object_Contract.Id             AS ContractId
                , Object_Contract.ObjectCode     AS ContractCode
                , Object_Contract.ValueData      AS ContractName
+               , Object_ContractStateKind.ObjectCode AS ContractStateKindCode
+               , Object_ContractTag.ValueData   AS ContractTagName
+               , Object_InfoMoney_View.InfoMoneyName_all
                , Object_PriceList.Id            AS PriceListId
                , Object_PriceList.ValueData     AS PriceListName
                , Object_PriceList_Ret.Id        AS PriceListId_ret
                , Object_PriceList_Ret.ValueData AS PriceListName_ret
-               , tmpMobilePartner.isErased
-               , tmpMobilePartner.isSync
+               , gpSelect.isErased
+               , gpSelect.isSync
 
-               , CASE WHEN COALESCE(tmpMobilePartner.Schedule,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Schedule, inSep:= ';', inIndex:= 1) ::Boolean END ::Boolean    AS Value1
-               , CASE WHEN COALESCE(tmpMobilePartner.Schedule,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Schedule, inSep:= ';', inIndex:= 2) ::Boolean END ::Boolean    AS Value2
-               , CASE WHEN COALESCE(tmpMobilePartner.Schedule,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Schedule, inSep:= ';', inIndex:= 3) ::Boolean END ::Boolean    AS Value3
-               , CASE WHEN COALESCE(tmpMobilePartner.Schedule,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Schedule, inSep:= ';', inIndex:= 4) ::Boolean END ::Boolean    AS Value4
-               , CASE WHEN COALESCE(tmpMobilePartner.Schedule,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Schedule, inSep:= ';', inIndex:= 5) ::Boolean END ::Boolean    AS Value5
-               , CASE WHEN COALESCE(tmpMobilePartner.Schedule,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Schedule, inSep:= ';', inIndex:= 6) ::Boolean END ::Boolean    AS Value6
-               , CASE WHEN COALESCE(tmpMobilePartner.Schedule,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Schedule, inSep:= ';', inIndex:= 7) ::Boolean END ::Boolean    AS Value7
+               , CASE WHEN COALESCE(gpSelect.Schedule,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= gpSelect.Schedule, inSep:= ';', inIndex:= 1) ::Boolean END ::Boolean    AS Value1
+               , CASE WHEN COALESCE(gpSelect.Schedule,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= gpSelect.Schedule, inSep:= ';', inIndex:= 2) ::Boolean END ::Boolean    AS Value2
+               , CASE WHEN COALESCE(gpSelect.Schedule,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= gpSelect.Schedule, inSep:= ';', inIndex:= 3) ::Boolean END ::Boolean    AS Value3
+               , CASE WHEN COALESCE(gpSelect.Schedule,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= gpSelect.Schedule, inSep:= ';', inIndex:= 4) ::Boolean END ::Boolean    AS Value4
+               , CASE WHEN COALESCE(gpSelect.Schedule,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= gpSelect.Schedule, inSep:= ';', inIndex:= 5) ::Boolean END ::Boolean    AS Value5
+               , CASE WHEN COALESCE(gpSelect.Schedule,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= gpSelect.Schedule, inSep:= ';', inIndex:= 6) ::Boolean END ::Boolean    AS Value6
+               , CASE WHEN COALESCE(gpSelect.Schedule,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= gpSelect.Schedule, inSep:= ';', inIndex:= 7) ::Boolean END ::Boolean    AS Value7
 
-               , CASE WHEN COALESCE(tmpMobilePartner.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Delivery, inSep:= ';', inIndex:= 1) ::Boolean END ::Boolean    AS Delivery1
-               , CASE WHEN COALESCE(tmpMobilePartner.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Delivery, inSep:= ';', inIndex:= 2) ::Boolean END ::Boolean    AS Delivery2
-               , CASE WHEN COALESCE(tmpMobilePartner.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Delivery, inSep:= ';', inIndex:= 3) ::Boolean END ::Boolean    AS Delivery3
-               , CASE WHEN COALESCE(tmpMobilePartner.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Delivery, inSep:= ';', inIndex:= 4) ::Boolean END ::Boolean    AS Delivery4
-               , CASE WHEN COALESCE(tmpMobilePartner.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Delivery, inSep:= ';', inIndex:= 5) ::Boolean END ::Boolean    AS Delivery5
-               , CASE WHEN COALESCE(tmpMobilePartner.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Delivery, inSep:= ';', inIndex:= 6) ::Boolean END ::Boolean    AS Delivery6
-               , CASE WHEN COALESCE(tmpMobilePartner.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= tmpMobilePartner.Delivery, inSep:= ';', inIndex:= 7) ::Boolean END ::Boolean    AS Delivery7
+               , CASE WHEN COALESCE(gpSelect.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= gpSelect.Delivery, inSep:= ';', inIndex:= 1) ::Boolean END ::Boolean    AS Delivery1
+               , CASE WHEN COALESCE(gpSelect.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= gpSelect.Delivery, inSep:= ';', inIndex:= 2) ::Boolean END ::Boolean    AS Delivery2
+               , CASE WHEN COALESCE(gpSelect.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= gpSelect.Delivery, inSep:= ';', inIndex:= 3) ::Boolean END ::Boolean    AS Delivery3
+               , CASE WHEN COALESCE(gpSelect.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= gpSelect.Delivery, inSep:= ';', inIndex:= 4) ::Boolean END ::Boolean    AS Delivery4
+               , CASE WHEN COALESCE(gpSelect.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= gpSelect.Delivery, inSep:= ';', inIndex:= 5) ::Boolean END ::Boolean    AS Delivery5
+               , CASE WHEN COALESCE(gpSelect.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= gpSelect.Delivery, inSep:= ';', inIndex:= 6) ::Boolean END ::Boolean    AS Delivery6
+               , CASE WHEN COALESCE(gpSelect.Delivery,'') = '' THEN FALSE ELSE zfCalc_Word_Split (inValue:= gpSelect.Delivery, inSep:= ';', inIndex:= 7) ::Boolean END ::Boolean    AS Delivery7
 
                , Object_PersonalTrade.PersonalName
                , Object_PersonalTrade.BranchName
                , Object_PersonalTrade.UnitName
                , Object_PersonalTrade.PositionName
 
-          FROM gpSelectMobile_Object_Partner (zc_DateStart(), vbUserId_Mobile :: TVarChar) AS tmpMobilePartner
-               LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpMobilePartner.JuridicalId
-               LEFT JOIN Object AS Object_Route ON Object_Route.Id = tmpMobilePartner.RouteId
-               LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpMobilePartner.ContractId
-               LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = tmpMobilePartner.PriceListId
-               LEFT JOIN Object AS Object_PriceList_Ret ON Object_PriceList_Ret.Id = tmpMobilePartner.PriceListId_ret
+          FROM gpSelectMobile_Object_Partner (zc_DateStart(), vbUserId_Mobile :: TVarChar) AS gpSelect
+               LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = gpSelect.JuridicalId
+               LEFT JOIN Object AS Object_Route ON Object_Route.Id = gpSelect.RouteId
+               LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = gpSelect.PriceListId
+               LEFT JOIN Object AS Object_PriceList_Ret ON Object_PriceList_Ret.Id = gpSelect.PriceListId_ret
+
+               LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = gpSelect.ContractId
+               LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
+                                    ON ObjectLink_Contract_ContractStateKind.ObjectId = Object_Contract.Id
+                                   AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind()
+               LEFT JOIN Object AS Object_ContractStateKind ON Object_ContractStateKind.Id = ObjectLink_Contract_ContractStateKind.ChildObjectId
+               LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                    ON ObjectLink_Contract_InfoMoney.ObjectId = Object_Contract.Id
+                                   AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+               LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId
+
+               LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTag
+                                    ON ObjectLink_Contract_ContractTag.ObjectId = Object_Contract.Id
+                                   AND ObjectLink_Contract_ContractTag.DescId = zc_ObjectLink_Contract_ContractTag()
+               LEFT JOIN Object AS Object_ContractTag ON Object_ContractTag.Id = ObjectLink_Contract_ContractTag.ChildObjectId
 
                LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                    ON ObjectLink_Partner_PersonalTrade.ObjectId = tmpMobilePartner.Id
+                                    ON ObjectLink_Partner_PersonalTrade.ObjectId = gpSelect.Id
                                    AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
                LEFT JOIN Object_Personal_View AS Object_PersonalTrade ON Object_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
 
@@ -156,12 +151,11 @@ BEGIN
                                    AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
-          WHERE tmpMobilePartner.isSync = TRUE
-           AND ( tmpMobilePartner.isErased = inisShowAll OR inisShowAll = True)
-           AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
-           AND (tmpMobilePartner.RouteId = inRouteId OR inRouteId = 0)
-           AND (tmpMobilePartner.JuridicalId = inJuridicalId OR inJuridicalId = 0)
-;
+          WHERE (gpSelect.isErased                 = inisShowAll        OR inisShowAll   = TRUE)
+            AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId    = 0)
+            AND (gpSelect.RouteId                  = inRouteId          OR inRouteId     = 0)
+            AND (gpSelect.JuridicalId              = inJuridicalId      OR inJuridicalId = 0)
+         ;
 
 END;
 $BODY$

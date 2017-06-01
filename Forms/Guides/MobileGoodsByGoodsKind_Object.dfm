@@ -29,12 +29,32 @@ object MobileGoodsByGoodsKind_ObjectForm: TMobileGoodsByGoodsKind_ObjectForm
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
-      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Remains
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Forecast
+        end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = #1057#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = GoodsName
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Remains
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Forecast
         end>
       DataController.Summary.SummaryGroups = <>
       OptionsCustomize.ColumnHiding = True
@@ -112,6 +132,7 @@ object MobileGoodsByGoodsKind_ObjectForm: TMobileGoodsByGoodsKind_ObjectForm
       object isSync: TcxGridDBColumn
         Caption = #1057#1080#1085#1093#1088#1086#1085#1080#1079#1080#1088#1091#1077#1090#1089#1103
         DataBinding.FieldName = 'isSync'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False

@@ -21,12 +21,17 @@ $BODY$
    DECLARE vbPersonalId Integer;
    DECLARE vbUnitId Integer;
 BEGIN
-      -- проверка прав пользователя на вызов процедуры
-      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
-      vbUserId:= lpGetUserBySession (inSession);
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
+     vbUserId:= lpGetUserBySession (inSession);
 
-      -- Определили параметры
-      SELECT PersonalId, UnitId INTO vbPersonalId, vbUnitId FROM gpGetMobile_Object_Const (inSession);
+     -- Определили параметры
+     SELECT PersonalId, UnitId INTO vbPersonalId, vbUnitId FROM gpGetMobile_Object_Const (inSession);
+
+     -- проверка - свойство должно быть установлено
+     IF COALESCE (vbUnitId, 0) =  0 THEN
+        RAISE EXCEPTION 'Ошибка.У сотрудника <%> Не установлено значение <Подразделение>.', lfGet_Object_ValueData (vbPersonalId);
+     END IF;
 
 
       -- Только если Сотрудник был определен

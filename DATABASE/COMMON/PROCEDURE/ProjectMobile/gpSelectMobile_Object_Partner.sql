@@ -14,8 +14,8 @@ RETURNS TABLE (Id               Integer
              , ShortAddress     TVarChar -- Адрес точки доставки для представления на карте
              , GPSN             TFloat   -- GPS координаты точки доставки (широта)
              , GPSE             TFloat   -- GPS координаты точки доставки (долгота)
-             , Schedule         TVarChar -- График посещения ТТ - по каким дням недели - в строчке 7 символов разделенных ";" t значит true и f значит false
-             , Delivery         TVarChar -- График завоза на ТТ - по каким дням недели - в строчке 7 символов разделенных ";" t значит true и f значит false
+             , Schedule         TVarChar -- График посещения ТТ - по каким дням недели - в строчке 7 символов разделенных ";" t значит TRUE и f значит FALSE
+             , Delivery         TVarChar -- График завоза на ТТ - по каким дням недели - в строчке 7 символов разделенных ";" t значит TRUE и f значит FALSE
              , DebtSum          TFloat   -- Сумма долга (нам) - НАЛ - т.к НАЛ долг формируется только в разрезе Контрагентов + договоров + для некоторых по № накладных
              , OverSum          TFloat   -- Сумма просроченного долга (нам) - НАЛ - Просрочка наступает спустя определенное кол-во дней
              , OverDays         Integer  -- Кол-во дней просрочки (нам)
@@ -66,17 +66,26 @@ BEGIN
                                   FROM tmpPartner
                                        JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                        ON ObjectLink_Partner_Juridical.ObjectId = tmpPartner.PartnerId
-                                                      AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                                      AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
                                        JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                                        ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                                                      AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                                                      AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Contract_Juridical()
+                                       -- убрали Удаленные
                                        JOIN Object AS Object_Contract
-                                                   ON Object_Contract.Id = ObjectLink_Contract_Juridical.ObjectId
+                                                   ON Object_Contract.Id       = ObjectLink_Contract_Juridical.ObjectId
                                                   AND Object_Contract.isErased = FALSE
+                                       -- убрали Закрытые
                                        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
-                                                            ON ObjectLink_Contract_ContractStateKind.ObjectId = Object_Contract.Id
-                                                           AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind()
+                                                            ON ObjectLink_Contract_ContractStateKind.ObjectId      = Object_Contract.Id
+                                                           AND ObjectLink_Contract_ContractStateKind.DescId        = zc_ObjectLink_Contract_ContractStateKind()
                                                            AND ObjectLink_Contract_ContractStateKind.ChildObjectId = zc_Enum_ContractStateKind_Close()
+                                       -- Ограничим - ТОЛЬКО если ГП
+                                       INNER JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                                             ON ObjectLink_Contract_InfoMoney.ObjectId = ObjectLink_Contract_Juridical.ObjectId
+                                                            AND ObjectLink_Contract_InfoMoney.DescId   = zc_ObjectLink_Contract_InfoMoney()
+                                                            AND ObjectLink_Contract_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
+                                                                                                              , zc_Enum_InfoMoney_30102() -- Доходы + Тушенка   + Тушенка
+                                                                                                               )
                                   WHERE ObjectLink_Contract_ContractStateKind.ChildObjectId IS NULL
                                  )
                 , tmpDayInfo AS (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId              AS ContractId
@@ -86,9 +95,11 @@ BEGIN
                                                                    , MIN (ObjectFloat_ContractCondition_Value.ValueData)::Integer
                                                                    , CURRENT_DATE)::Date AS ContractDate
                                  FROM ObjectLink AS ObjectLink_ContractCondition_Contract
+                                      JOIN tmpContract ON tmpContract.ContractId = ObjectLink_ContractCondition_Contract.ChildObjectId
+                                      -- выбираем только ДВА условия
                                       JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                                                       ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
-                                                     AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                                                     AND ObjectLink_ContractCondition_ContractConditionKind.DescId   = zc_ObjectLink_ContractCondition_ContractConditionKind()
                                                      AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId IN (zc_Enum_ContractConditionKind_DelayDayCalendar()
                                                                                                                             , zc_Enum_ContractConditionKind_DelayDayBank()
                                                                                                                              )
@@ -96,10 +107,11 @@ BEGIN
                                                        ON ObjectFloat_ContractCondition_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
                                                       AND ObjectFloat_ContractCondition_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
                                                       AND ObjectFloat_ContractCondition_Value.ValueData <> 0.0
+                                      -- убрали Удаленные
                                       JOIN Object AS Object_ContractCondition
-                                                  ON Object_ContractCondition.Id = ObjectLink_ContractCondition_Contract.ObjectId
-                                                 AND Object_ContractCondition.isErased = false
-                                      JOIN tmpContract ON tmpContract.ContractId = ObjectLink_ContractCondition_Contract.ChildObjectId
+                                                  ON Object_ContractCondition.Id       = ObjectLink_ContractCondition_Contract.ObjectId
+                                                 AND Object_ContractCondition.isErased = FALSE
+
                                  WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
                                  GROUP BY ObjectLink_ContractCondition_Contract.ChildObjectId
                                         , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId
@@ -109,7 +121,7 @@ BEGIN
                                         , CLO_Partner.ObjectId   AS PartnerId
                                         , CLO_Contract.ObjectId  AS ContractId
                                         , Container_Summ.Amount
-                                        , COALESCE (tmpDayInfo.ContractDate, CURRENT_DATE)::Date AS ContractDate
+                                        , COALESCE (tmpDayInfo.ContractDate, CURRENT_DATE) :: TDateTime AS ContractDate
                                    FROM Container AS Container_Summ
                                         JOIN ObjectLink AS ObjectLink_Account_AccountGroup
                                                         ON ObjectLink_Account_AccountGroup.ObjectId = Container_Summ.ObjectId
@@ -175,10 +187,10 @@ BEGIN
                   , ObjectString_Partner_Address.ValueData  AS ShortAddress
                   , ObjectFloat_Partner_GPSN.ValueData      AS GPSN
                   , ObjectFloat_Partner_GPSE.ValueData      AS GPSE
-                  --, REPLACE (REPLACE (LOWER (COALESCE (ObjectString_Partner_Schedule.ValueData, 't;t;t;t;t;t;t')), 'true', 't'), 'false', 'f')::TVarChar AS Schedule
-                  --, REPLACE (REPLACE (LOWER (COALESCE (ObjectString_Partner_Delivery.ValueData, 'f;f;f;f;f;f;f')), 'true', 't'), 'false', 'f')::TVarChar AS Delivery
-                  , zfReCalc_ScheduleOrDelivery (ObjectString_Partner_Schedule.ValueData, ObjectString_Partner_Delivery.ValueData, false) AS Schedule
-                  , zfReCalc_ScheduleOrDelivery (ObjectString_Partner_Schedule.ValueData, ObjectString_Partner_Delivery.ValueData, true)  AS Delivery
+                  --, REPLACE (REPLACE (LOWER (COALESCE (ObjectString_Partner_Schedule.ValueData, 't;t;t;t;t;t;t')), 'TRUE', 't'), 'FALSE', 'f')::TVarChar AS Schedule
+                  --, REPLACE (REPLACE (LOWER (COALESCE (ObjectString_Partner_Delivery.ValueData, 'f;f;f;f;f;f;f')), 'TRUE', 't'), 'FALSE', 'f')::TVarChar AS Delivery
+                  , zfReCalc_ScheduleOrDelivery (ObjectString_Partner_Schedule.ValueData, ObjectString_Partner_Delivery.ValueData, FALSE) AS Schedule
+                  , zfReCalc_ScheduleOrDelivery (ObjectString_Partner_Schedule.ValueData, ObjectString_Partner_Delivery.ValueData, TRUE)  AS Delivery
                   , COALESCE (tmpDebt.DebtSum, 0.0)::TFloat AS DebtSum
                   , COALESCE (tmpDebt.OverSum, 0.0)::TFloat AS OverSum
                   , CASE WHEN COALESCE (tmpDebt.OverSum, 0.0) > 0.0 THEN COALESCE (tmpDebt.OverDays, 0)::Integer ELSE 0::Integer END AS OverDays
@@ -186,14 +198,14 @@ BEGIN
                   , COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0.0)::TFloat AS DocumentDayCount
                   , CASE WHEN tmpStoreRealDoc.OperDate IS NULL THEN 0.0::TFloat ELSE DATE_PART ('day', CURRENT_DATE::TDateTime - tmpStoreRealDoc.OperDate)::TFloat END AS CalcDayCount
                   , 7.0::TFloat AS OrderDayCount
-                  , COALESCE (ObjectBoolean_Retail_OperDateOrder.ValueData, false)::Boolean AS isOperDateOrder
+                  , COALESCE (ObjectBoolean_Retail_OperDateOrder.ValueData, FALSE)::Boolean AS isOperDateOrder
                   , tmpContract.JuridicalId
                   , ObjectLink_Partner_Route.ChildObjectId AS RouteId
                   , tmpContract.ContractId
                   , COALESCE (ObjectLink_Partner_PriceList.ChildObjectId, zc_PriceList_Basis()) AS PriceListId
                   , COALESCE (ObjectLink_Partner_PriceListPrior.ChildObjectId, zc_PriceList_Basis() /*zc_PriceList_BasisPrior()*/) AS PriceListId_ret
                   , Object_Partner.isErased
-                  , CAST(true AS Boolean) AS isSync
+                  , TRUE :: Boolean AS isSync
              FROM Object AS Object_Partner
                   JOIN tmpContract ON tmpContract.PartnerId = Object_Partner.Id
                   LEFT JOIN tmpDebt ON tmpDebt.PartnerId = Object_Partner.Id
@@ -238,8 +250,9 @@ BEGIN
                   LEFT JOIN ObjectString AS ObjectString_Partner_GUID
                                          ON ObjectString_Partner_GUID.ObjectId = Object_Partner.Id
                                         AND ObjectString_Partner_GUID.DescId = zc_ObjectString_Partner_GUID()
-             WHERE Object_Partner.DescId = zc_Object_Partner()
-               AND Object_Partner.isErased = false;
+             WHERE Object_Partner.DescId   = zc_Object_Partner()
+               AND Object_Partner.isErased = FALSE
+            ;
       END IF;
 
 END;

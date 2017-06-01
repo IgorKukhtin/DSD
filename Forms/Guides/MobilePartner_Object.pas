@@ -23,7 +23,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter, dxBarExtItems,
   dsdAddOn, cxCheckBox, dxSkinscxPCPainter, cxButtonEdit, cxContainer,
-  cxTextEdit, dsdGuides, cxLabel, cxCurrencyEdit, Vcl.ExtCtrls;
+  cxTextEdit, dsdGuides, cxLabel, cxCurrencyEdit, Vcl.ExtCtrls, cxImageComboBox;
 
 type
   TMobilePartner_ObjectForm = class(TParentForm)

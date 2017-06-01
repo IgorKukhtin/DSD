@@ -385,7 +385,7 @@ begin
            then ActiveControl:=EditPrice
            else if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
       else if (ActiveControl=EditGoodsCode)
-           then if (Length(trim(EditGoodsCode.Text))>1)and(CDS.RecordCount>=1)
+           then if (Length(trim(EditGoodsCode.Text))>0)and(CDS.RecordCount>=1)
                 then if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301)
                      then ActiveControl:=EditWeightValue
                      else if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount

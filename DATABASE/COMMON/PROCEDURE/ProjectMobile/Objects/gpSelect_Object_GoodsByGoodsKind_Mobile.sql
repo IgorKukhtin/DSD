@@ -21,40 +21,20 @@ RETURNS TABLE (Id                 Integer
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbMemberId Integer;
-   DECLARE calcSession TVarChar;
+   DECLARE vbUserId        Integer;
+   DECLARE vbUserId_Mobile Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
      vbUserId:= lpGetUserBySession (inSession);
 
-
-      -- !!!меняем значение!!! - с какими параметрами пользователь может просматривать данные с мобильного устройства
-     IF NOT EXISTS (SELECT 1 FROM ObjectBoolean WHERE ObjectBoolean.DescId = zc_ObjectBoolean_User_ProjectMobile() AND ObjectBoolean.ObjectId = vbUserId AND ObjectBoolean.ValueData = TRUE)
-        OR inSession = zfCalc_UserAdmin()
-     THEN
-         -- Если пользователь inSession - НЕ Торговый агент - видит ВСЕ
-         vbMemberId:= 0; calcSession:= '';
-     ELSE
-         --
-         vbMemberId:= (SELECT tmp.MemberId FROM gpGetMobile_Object_Const (inSession) AS tmp);
-         --
-         calcSession := (SELECT CAST (ObjectLink_User_Member.ObjectId AS TVarChar)
-                         FROM ObjectLink AS ObjectLink_User_Member
-                         WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-                           AND ObjectLink_User_Member.ChildObjectId = vbMemberId);
-         --
-         IF COALESCE (vbMemberId, 0) <> inMemberId
-         THEN
-              RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.';
-         END IF;
-     END IF;
+     -- !!!меняем значение!!! - с какими параметрами пользователь может просматривать данные с мобильного устройства
+     vbUserId_Mobile:= (SELECT lfGet.UserId FROM lfGet_User_MobileCheck (inMemberId:= inMemberId, inUserId:= vbUserId) AS lfGet);
 
 
      -- Результат
      RETURN QUERY
-       SELECT tmpMobileGoodsByGoodsKind.Id
+       SELECT gpSelect.Id
             , Object_Goods.Id             AS GoodsId
             , Object_Goods.ObjectCode     AS GoodsCode
             , Object_Goods.ValueData      AS GoodsName
@@ -62,25 +42,23 @@ BEGIN
             , Object_GoodsKind.ValueData  AS GoodsKindName
             , Object_GoodsGroup.ValueData AS GoodsGroupName
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-            , tmpMobileGoodsByGoodsKind.Remains
-            , tmpMobileGoodsByGoodsKind.Forecast
-            , tmpMobileGoodsByGoodsKind.isErased
-            , tmpMobileGoodsByGoodsKind.isSync
-       FROM gpSelectMobile_Object_GoodsByGoodsKind (zc_DateStart(), calcSession) AS tmpMobileGoodsByGoodsKind
-               LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMobileGoodsByGoodsKind.GoodsId
-               LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMobileGoodsByGoodsKind.GoodsKindId
+            , gpSelect.Remains
+            , gpSelect.Forecast
+            , gpSelect.isErased
+            , gpSelect.isSync
+       FROM gpSelectMobile_Object_GoodsByGoodsKind (zc_DateStart(), vbUserId_Mobile :: TVarChar) AS gpSelect
+            LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id = gpSelect.GoodsId
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = gpSelect.GoodsKindId
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
-                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
-             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
-                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
-                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-
-       WHERE tmpMobileGoodsByGoodsKind.isSync = TRUE
-;
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+       ;
 
 END;
 $BODY$

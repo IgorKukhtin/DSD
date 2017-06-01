@@ -51,17 +51,17 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Если пользователь inSession - ПУСТО - !!!ВЫХОД!!!
-     IF COALESCE (inSession, '') = '' OR COALESCE (inSession, '0') = '0'
+     /*IF COALESCE (inSession, '') = '' OR COALESCE (inSession, '0') = '0'
      THEN
          RETURN;
-     END IF;
+     END IF;*/
 
 
      -- нашли параметры
      SELECT ObjectLink_User_Member.ChildObjectId AS MemberId
           , lfSelect.PersonalId                  AS PersonalId
           , lfSelect.UnitId                      AS UnitId
-          , ObjectLink_Unit_Branch.ChildObjectId AS BranchId
+          , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId
             INTO vbMemberId, vbPersonalId, vbUnitId, vbBranchId
      FROM ObjectLink AS ObjectLink_User_Member
           LEFT JOIN lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
@@ -93,24 +93,26 @@ BEGIN
                                  , Object_Member.ValueData   AS MemberName
                                  , vbPersonalId              AS PersonalId
                                  , CASE (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbBranchId)
-                                        WHEN 11 THEN 301309  -- филиал Запорожье - Склад ГП ф.Запорожье
-                                        WHEN 4  THEN 346093  -- филиал Одесса    - Склад ГП ф.Одесса
-                                        WHEN 3  THEN 8417    -- филиал Николаев (Херсон) - Склад ГП ф.Николаев (Херсон)
+                                        WHEN 1  THEN 8459    -- филиал zc_Branch_Basis - Склад Реализации
                                         WHEN 2  THEN 8411    -- филиал Киев      - Склад ГП ф Киев
+                                        WHEN 3  THEN 8417    -- филиал Николаев (Херсон) - Склад ГП ф.Николаев (Херсон)
+                                        WHEN 4  THEN 346093  -- филиал Одесса    - Склад ГП ф.Одесса
                                         WHEN 5  THEN 8415    -- филиал Черкассы (Кировоград) - Склад ГП ф.Черкассы (Кировоград)
                                         WHEN 7  THEN 8413    -- филиал Кр.Рог    - Склад ГП ф.Кривой Рог
                                         WHEN 9  THEN 8425    -- филиал Харьков   - Склад ГП ф.Харьков
+                                        WHEN 11 THEN 301309  -- филиал Запорожье - Склад ГП ф.Запорожье
                                         -- WHEN ??? THEN 8459   -- филиал ???    - Склад Реализации
                                         ELSE vbUnitId
                                    END AS UnitId
                                  , CASE (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbBranchId)
-                                        WHEN 11 THEN 309599  -- филиал Запорожье - Склад возвратов ф.Запорожье
-                                        WHEN 4  THEN 346094  -- филиал Одесса    - Склад возвратов ф.Одесса
-                                        WHEN 3  THEN 428364  -- филиал Николаев (Херсон) - Склад возвратов ф.Николаев (Херсон)
+                                        WHEN 1  THEN 8461    -- филиал zc_Branch_Basis - Склад Возвратов
                                         WHEN 2  THEN 428365  -- филиал Киев      - Склад возвратов ф.Киев
+                                        WHEN 3  THEN 428364  -- филиал Николаев (Херсон) - Склад возвратов ф.Николаев (Херсон)
+                                        WHEN 4  THEN 346094  -- филиал Одесса    - Склад возвратов ф.Одесса
                                         WHEN 5  THEN 428363  -- филиал Черкассы (Кировоград) - Склад возвратов ф.Черкассы (Кировоград)
                                         WHEN 7  THEN 428366  -- филиал Кр.Рог    - Склад возвратов ф.Кривой Рог
                                         WHEN 9  THEN 409007  -- филиал Харьков   - Склад возвратов ф.Харьков
+                                        WHEN 11 THEN 309599  -- филиал Запорожье - Склад возвратов ф.Запорожье
                                         -- WHEN ??? THEN 8461   -- филиал ???    - Склад Возвратов
                                         ELSE vbUnitId
                                    END AS UnitId_ret
@@ -178,7 +180,7 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Cash_Branch 
                                  ON ObjectLink_Cash_Branch.ChildObjectId = vbBranchId
                                 AND ObjectLink_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch() 
-            LEFT JOIN Object AS Object_Cash     ON Object_Cash.Id     = ObjectLink_Cash_Branch.ObjectId
+            LEFT JOIN Object AS Object_Cash     ON Object_Cash.Id     = CASE WHEN vbBranchId = zc_Branch_Basis() THEN 14462 /*Касса Днепр*/ ELSE ObjectLink_Cash_Branch.ObjectId END
 
             LEFT JOIN Object AS Object_User ON Object_User.Id = vbUserId
             LEFT JOIN ObjectString AS ObjectString_User_
