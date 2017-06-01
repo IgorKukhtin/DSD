@@ -29,7 +29,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- !!!меняем значение!!! - с какими параметрами пользователь может просматривать данные с мобильного устройства
-     vbUserId_Mobile:= (SELECT lfGet.UserId FROM lfGet_User_MobileCheck (inMemberId:= inMemberId, inUserId:= vbUserId) AS lfGet);
+     vbUserId_Mobile:= (SELECT CASE WHEN lfGet.UserId > 0 THEN lfGet.UserId ELSE vbUserId END FROM lfGet_User_MobileCheck (inMemberId:= inMemberId, inUserId:= vbUserId) AS lfGet);
 
 
      -- Результат

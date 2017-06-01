@@ -1,4 +1,4 @@
--- Function: lfGet_User_MobileCheck (Integer, Integer)
+ -- Function: lfGet_User_MobileCheck (Integer, Integer)
 
 DROP FUNCTION IF EXISTS lfGet_User_MobileCheck (Integer, Integer);
 
@@ -28,11 +28,17 @@ BEGIN
              RAISE EXCEPTION 'Ошибка.Для ФИО <%> не определно значение <Пользователь>.', lfGet_Object_ValueData (inMemberId);
          END IF;
 
-     ELSE
+     ELSEIF vbIsProjectMobile = TRUE
+     THEN
          -- в этом случае - видит только себя
          vbUserId_Member:= inUserId;
          -- !!!меняем значение!!! - Определяется для UserId - его <Физическое лицо>
          inMemberId:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_User_Member() AND OL.ObjectId = inUserId);
+     ELSE
+         -- в этом случае - видит ВСЕ
+         vbUserId_Member:= 0;
+         -- !!!меняем значение!!!
+         inMemberId:= 0;
      END IF;
 
 
