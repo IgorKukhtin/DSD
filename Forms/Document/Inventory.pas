@@ -62,10 +62,13 @@ type
     actGoodsKindCompleteChoiceMaster: TOpenChoiceForm;
     ContainerId: TcxGridDBColumn;
     actSendOpenForm: TOpenChoiceForm;
-    bb: TdxBarButton;
+    bbInsert_bySend: TdxBarButton;
     spInsert_MI_Inventory_bySend: TdsdStoredProc;
     actInsert_bySend: TdsdExecStoredProc;
     macInsert_bySend: TMultiAction;
+    spSelectPrintSticker: TdsdStoredProc;
+    actPrintSticker: TdsdPrintAction;
+    bbPrintSticker: TdxBarButton;
   private
     { Private declarations }
   public

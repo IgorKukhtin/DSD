@@ -18,6 +18,9 @@ RETURNS TABLE (
                InvNumber      TVarChar,
                OperDate       TDateTime,
                DescName       TVarChar,
+               InvNumber_Partion  TVarChar,
+               OperDate_Partion   TDateTime,
+               DescName_Partion   TVarChar,
                FromName       TVarChar,
                ToName         TVarChar,
                
@@ -51,29 +54,28 @@ BEGIN
     RETURN QUERY
     WITH
        tmpMovementReturnOut AS (SELECT Movement_ReturnOut.Id AS MovementId
-                                     , CASE WHEN inIsPartion = TRUE THEN MovementDesc_ReturnOut.ItemName ELSE CAST (NULL AS TVarChar)  END    AS DescName
-                                     , CASE WHEN inIsPartion = TRUE THEN Movement_ReturnOut.InvNumber    ELSE CAST (NULL AS TVarChar)  END    AS InvNumber
-                                     , CASE WHEN inIsPartion = TRUE THEN Movement_ReturnOut.OperDate     ELSE CAST (NULL AS TDateTime) END    AS OperDate
-                                     , CASE WHEN inisPartnerId = TRUE THEN MovementLinkObject_From.ObjectId ELSE 0 END                     AS FromId
-                                     , MovementLinkObject_To.ObjectId                                                                      AS ToId
+                                     , CASE WHEN inisMovement = TRUE THEN MovementDesc_ReturnOut.ItemName ELSE CAST (NULL AS TVarChar)  END    AS DescName
+                                     , CASE WHEN inisMovement = TRUE THEN Movement_ReturnOut.InvNumber    ELSE CAST (NULL AS TVarChar)  END    AS InvNumber
+                                     , CASE WHEN inisMovement = TRUE THEN Movement_ReturnOut.OperDate     ELSE CAST (NULL AS TDateTime) END    AS OperDate
+                                     , MovementLinkObject_From.ObjectId                                                                        AS FromId
+                                     , CASE WHEN inisPartnerId = TRUE THEN MovementLinkObject_To.ObjectId  ELSE 0 END                          AS ToId
                                 FROM Movement AS Movement_ReturnOut
-                                     -- куда был приход
-                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                                   ON MovementLinkObject_To.MovementId = Movement_ReturnOut.Id
-                                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                                  AND MovementLinkObject_To.ObjectId = inUnitId
-                                     -- от кого приход    Поставщик                   
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                                    ON MovementLinkObject_From.MovementId = Movement_ReturnOut.Id
                                                                   AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                                  AND (MovementLinkObject_From.ObjectId = inPartnerId OR inPartnerId = 0)
+                                                                  AND (MovementLinkObject_From.ObjectId = inUnitId)
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                   ON MovementLinkObject_To.MovementId = Movement_ReturnOut.Id
+                                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                                  AND (MovementLinkObject_To.ObjectId = inPartnerId OR inPartnerId = 0)
                                      -- бренд
                                      INNER JOIN ObjectLink AS ObjectLink_Partner_Brand
-                                                           ON ObjectLink_Partner_Brand.ObjectId = MovementLinkObject_From.ObjectId
+                                                           ON ObjectLink_Partner_Brand.ObjectId = MovementLinkObject_To.ObjectId
                                                           AND ObjectLink_Partner_Brand.DescId = zc_ObjectLink_Partner_Brand()
                                                           AND (ObjectLink_Partner_Brand.ChildObjectId = inBrandId OR inBrandId = 0)
 
-                                     LEFT JOIN MovementDesc AS MovementDesc_ReturnOut ON MovementDesc_ReturnOut.Id = Movement_ReturnOut.DescId                                                          
+                                     LEFT JOIN MovementDesc AS MovementDesc_ReturnOut ON MovementDesc_ReturnOut.Id = Movement_ReturnOut.DescId 
+                                                         
                                 WHERE Movement_ReturnOut.DescId = zc_Movement_ReturnOut()
                                   AND Movement_ReturnOut.OperDate BETWEEN inStartDate AND inEndDate
                                  -- AND Movement_ReturnOut.StatusId = zc_Enum_Status_Complete() 
@@ -82,6 +84,10 @@ BEGIN
      , tmpData  AS  (SELECT tmpMovementReturnOut.InvNumber
                           , tmpMovementReturnOut.OperDate
                           , tmpMovementReturnOut.DescName
+                          , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE CAST (NULL AS TVarChar)  END    AS DescName_Partion
+                          , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE CAST (NULL AS TVarChar)  END    AS InvNumber_Partion
+                          , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE CAST (NULL AS TDateTime) END    AS OperDate_Partion
+
                           , tmpMovementReturnOut.FromId
                           , tmpMovementReturnOut.ToId
                           , MI_ReturnOut.ObjectId             AS GoodsId
@@ -112,7 +118,9 @@ BEGIN
                                                   ON MI_ReturnOut.MovementId = tmpMovementReturnOut.MovementId
                                                  AND MI_ReturnOut.isErased   = False
                           INNER JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MI_ReturnOut.PartionId
-                                                        AND (Object_PartionGoods.BrandId = inBrandId OR inBrandId = 0)
+                                                  --      AND (Object_PartionGoods.BrandId = inBrandId OR inBrandId = 0)
+                          LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = Object_PartionGoods.MovementId
+                          LEFT JOIN MovementDesc AS MovementDesc_Partion ON MovementDesc_Partion.Id = Movement_Partion.DescId 
 
                           LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                       ON MIFloat_CountForPrice.MovementItemId = MI_ReturnOut.Id
