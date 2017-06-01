@@ -2147,4 +2147,20 @@ object DM: TDM
       Calculated = True
     end
   end
+  object qJuridicalCollationItems: TFDQuery
+    Connection = conMain
+    Left = 248
+    Top = 568
+    object qJuridicalCollationItemsValue: TStringField
+      FieldName = 'Value'
+      Size = 300
+    end
+    object qJuridicalCollationItemsId: TIntegerField
+      FieldName = 'Id'
+    end
+    object qJuridicalCollationItemsDopValue: TWideStringField
+      FieldName = 'DopValue'
+      Size = 500
+    end
+  end
 end

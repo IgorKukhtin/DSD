@@ -44,11 +44,14 @@ type
     Data: TObject;
   end;
 
+  TListType = (ltJuridicals, ltPartners);
+
   TJuridicalItem = record
     Id: Integer;
+    Name: string;
     ContractIds: string;
 
-    constructor Create(AId: Integer; AContractIds: string);
+    constructor Create(AId: Integer; AName: string; AContractIds: string);
   end;
 
   TContractItem = record
@@ -60,9 +63,10 @@ type
 
   TPartnerItem = record
     Id: Integer;
+    Name: string;
     ContractIds: string;
 
-    constructor Create(AId: integer; AContractIds: string);
+    constructor Create(AId: integer; AName: string; AContractIds: string);
   end;
 
   TLocationData = record
@@ -443,7 +447,6 @@ type
     Layout12: TLayout;
     Layout13: TLayout;
     Label45: TLabel;
-    cbJuridicals: TComboBox;
     Layout14: TLayout;
     Label46: TLabel;
     cbContracts: TComboBox;
@@ -510,7 +513,6 @@ type
     Layout17: TLayout;
     Layout18: TLayout;
     Layout19: TLayout;
-    cbPartners: TComboBox;
     Layout20: TLayout;
     Label50: TLabel;
     GridPanelLayout1: TGridPanelLayout;
@@ -773,6 +775,15 @@ type
     bAdmin: TButton;
     Image22: TImage;
     pAdmin: TPanel;
+    bSelectJuridicals: TButton;
+    Image23: TImage;
+    tiJuridicalCollationItems: TTabItem;
+    lwJuridicalCollationItems: TListView;
+    BindSourceDB1: TBindSourceDB;
+    eJuridicals: TEdit;
+    ePartners: TEdit;
+    bSelectPartners: TButton;
+    Image24: TImage;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -893,7 +904,6 @@ type
       const AItem: TListViewItem);
     procedure bReportClick(Sender: TObject);
     procedure bReportJuridicalCollationClick(Sender: TObject);
-    procedure cbJuridicalsChange(Sender: TObject);
     procedure bPrintJuridicalCollationClick(Sender: TObject);
     procedure bReloginClick(Sender: TObject);
     procedure tTasksTimer(Sender: TObject);
@@ -911,7 +921,6 @@ type
       ItemIndex: Integer; const LocalClickPos: TPointF;
       const ItemObject: TListItemDrawable);
     procedure bUpdateProgramClick(Sender: TObject);
-    procedure cbPartnersChange(Sender: TObject);
     procedure cSelectJuridicalChange(Sender: TObject);
     procedure ibiNewPartnerClick(Sender: TObject);
     procedure bNewPartnerGPSClick(Sender: TObject);
@@ -992,10 +1001,17 @@ type
     procedure bCopyServerClick(Sender: TObject);
     procedure bPartnerJuridicalCollationClick(Sender: TObject);
     procedure bAdminClick(Sender: TObject);
+    procedure bSelectJuridicalsClick(Sender: TObject);
+    procedure lwJuridicalCollationItemsItemClick(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure bSelectPartnersClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
+    FListType: TListType;
+    FJuridicalIndex: integer;
     FJuridicalList: TList<TJuridicalItem>;
+    FPartnerIndex: integer;
     FPartnerList: TList<TPartnerItem>;
     FAllContractList: TList<TContractItem>;
     FContractIdList: TList<integer>;
@@ -1116,6 +1132,8 @@ type
     procedure SwitchToForm(const TabItem: TTabItem; const Data: TObject);
     procedure ReturnPriorForm(const OmitOnChange: Boolean = False);
 
+    procedure BuildJuridicalCollationList(AListType: TListType);
+    procedure ChangeJuridicalCollationIndex(AListType: TListType; AIndex: integer);
 
     procedure PrepareCamera;
     procedure CameraFree;
@@ -1126,7 +1144,8 @@ type
 
     procedure GetCurrentCoordinates;
 
-    procedure AddComboItem(AComboBox: TComboBox; AText: string);
+    procedure AddComboItem(AComboBox: TComboBox; AText: string); overload;
+    procedure AddComboItem(AComboBox: TComboEdit; AText: string); overload;
     procedure MobileIdle(Sender: TObject; var Done: Boolean);
 
     property CashAmountValue: Double read FCashAmountValue write SetCashAmountValue;
@@ -1160,9 +1179,10 @@ begin
 end;
 
 { TJuridicalItem }
-constructor TJuridicalItem.Create(AId: Integer; AContractIds: string);
+constructor TJuridicalItem.Create(AId: Integer; AName: string; AContractIds: string);
 begin
   Id := AId;
+  Name := AName;
   ContractIds := AContractIds;
 end;
 
@@ -1174,9 +1194,10 @@ begin
 end;
 
 { TPartnerItem }
-constructor TPartnerItem.Create(AId: integer; AContractIds: string);
+constructor TPartnerItem.Create(AId: integer; AName: string; AContractIds: string);
 begin
   Id := AId;
+  Name := AName;
   ContractIds := AContractIds;
 end;
 
@@ -1809,6 +1830,135 @@ begin
   (AItem.Objects.FindDrawable('PromoPrice') as TListItemDrawable).Visible := lPromoPrice.Visible;
   // отобразить "галочку" для выбранных товаров
   (AItem.Objects.FindDrawable('IsSelected') as TListItemDrawable).Visible := FCheckedGooodsItems.Contains((AItem.Objects.FindDrawable('FullInfo') as TListItemDrawable).Data.AsString);
+end;
+
+procedure TfrmMain.ChangeJuridicalCollationIndex(AListType: TListType; AIndex: integer);
+var
+  i, OldIndex, DefIndex, OldContractId: integer;
+begin
+  case AListType of
+    ltJuridicals:
+    begin
+      OldIndex := FJuridicalIndex;
+
+      FJuridicalIndex := AIndex;
+
+      if OldIndex <> FJuridicalIndex then
+      begin
+        eJuridicals.Text := FJuridicalList[FJuridicalIndex].Name;
+
+        with DM.qrySelect do
+        begin
+          FPartnerList.Clear;
+
+          FPartnerList.Add(TPartnerItem.Create(0, 'все', ''));
+
+          Open(
+             ' SELECT '
+           + '         Object_Partner.Id '
+           + '       , Object_Partner.Address '
+           + '       , group_concat(distinct Object_Contract.Id) AS ContractIds '
+           + ' FROM  Object_Partner  '
+           + '       LEFT JOIN Object_Contract  ON Object_Contract.Id = Object_Partner.ContractId  '
+           + ' WHERE Object_Partner.JuridicalId = ' + IntToStr(FJuridicalList[FJuridicalIndex].Id)
+           + '   AND Object_Partner.isErased    = 0 '
+           + ' GROUP BY Address '
+              );
+
+          First;
+          while not Eof do
+          begin
+            FPartnerList.Add(TPartnerItem.Create(FieldByName('Id').AsInteger, FieldByName('ADDRESS').AsString, FieldByName('ContractIds').AsString));
+
+            Next;
+          end;
+          Close;
+
+          // все договора юридического лица
+          FAllContractList.Clear;
+
+          Open(
+             ' SELECT '
+           + '         distinct Id '
+           + '       , ContractTagName || '' '' || ValueData AS ContractName '
+           + ' FROM  Object_Contract '
+           + ' WHERE Id in (' + FJuridicalList[FJuridicalIndex].ContractIds + ') '
+              );
+
+          First;
+          while not Eof do
+          begin
+            FAllContractList.Add(TContractItem.Create(FieldByName('Id').AsInteger, FieldByName('ContractName').AsString));
+
+            Next;
+          end;
+
+          Close;
+        end;
+
+        FPartnerIndex := -1;
+        DefIndex := 0;
+        if FFirstSet then
+          for i := 0 to FPartnerList.Count - 1 do
+            if FPartnerList[i].Id = FPartnerRJC then
+            begin
+              DefIndex := i;
+              break;
+            end;
+        ChangeJuridicalCollationIndex(ltPartners, DefIndex);
+      end;
+    end;
+    ltPartners:
+    begin
+      OldIndex := FPartnerIndex;
+
+      FPartnerIndex := AIndex;
+
+      if OldIndex <> FPartnerIndex then
+      begin
+        ePartners.Text := FPartnerList[FPartnerIndex].Name;
+
+        DefIndex := 0;
+        OldContractId := -1;
+        if cbContracts.ItemIndex > 0 then
+          OldContractId := FContractIdList[cbContracts.ItemIndex];
+
+        cbContracts.Items.Clear;
+        FContractIdList.Clear;
+
+        AddComboItem(cbContracts, 'все');
+        FContractIdList.Add(0);
+
+        for i := 0 to FAllContractList.Count - 1 do
+        begin
+          if (FPartnerIndex <= 0) or
+             (pos(IntToStr(FAllContractList[i].Id) + ',', FPartnerList[FPartnerIndex].ContractIds) > 0) or
+             (pos(',' + IntToStr(FAllContractList[i].Id), FPartnerList[FPartnerIndex].ContractIds) > 0) or
+             (IntToStr(FAllContractList[i].Id) = FPartnerList[FPartnerIndex].ContractIds) then
+          begin
+            AddComboItem(cbContracts, FAllContractList[i].Name);
+            FContractIdList.Add(FAllContractList[i].Id);
+            if FAllContractList[i].Id = OldContractId then
+              DefIndex := FContractIdList.Count - 1;
+          end;
+        end;
+
+        if FFirstSet then
+          cbContracts.ItemIndex := FContractIdList.IndexOf(FContractRJC);
+
+        if cbContracts.ItemIndex < 0 then
+          cbContracts.ItemIndex := DefIndex;
+      end;
+    end;
+  end;
+end;
+
+procedure TfrmMain.lwJuridicalCollationItemsItemClick(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  ChangeJuridicalCollationIndex(FListType, StrToIntDef(TListItemText(AItem.Objects.FindDrawable('Index')).Text, 0));
+
+  ReturnPriorForm;
 end;
 
 procedure TfrmMain.lwPartnerFilter(Sender: TObject; const AFilter,
@@ -3361,12 +3511,12 @@ begin
   lTotalKredit.Text := '0';
 
   DM.GenerateJuridicalCollation(deStartRJC.Date, deEndRJC.Date,
-           FJuridicalList[cbJuridicals.ItemIndex].Id,
-           FPartnerList[cbPartners.ItemIndex].Id,
+           FJuridicalList[FJuridicalIndex].Id,
+           FPartnerList[FPartnerIndex].Id,
            FContractIdList[cbContracts.ItemIndex],
            FPaidKindIdList[cbPaidKind.ItemIndex]);
 
-  lCaption.Text := 'Акт сверки для "' + cbJuridicals.Items[cbJuridicals.ItemIndex] + '" за период с ' +
+  lCaption.Text := 'Акт сверки для "' + FJuridicalList[FJuridicalIndex].Name + '" за период с ' +
     FormatDateTime('DD.MM.YYYY', deStartRJC.Date) +  ' по ' + FormatDateTime('DD.MM.YYYY', deEndRJC.Date) +
     '. Форма оплаты: ' + cbPaidKind.Items[cbPaidKind.ItemIndex];
   SwitchToForm(tiPrintJuridicalCollation, nil);
@@ -3379,8 +3529,8 @@ begin
   try
     SettingsFile.WriteString('REPORT', 'StartRJC', FormatDateTime('DD.MM.YYYY', deStartRJC.Date));
     SettingsFile.WriteString('REPORT', 'EndRJC', FormatDateTime('DD.MM.YYYY', deEndRJC.Date));
-    SettingsFile.WriteInteger('REPORT', 'JuridicalRJC', FJuridicalList[cbJuridicals.ItemIndex].Id);
-    SettingsFile.WriteInteger('REPORT', 'PartnerRJC', FPartnerList[cbPartners.ItemIndex].Id);
+    SettingsFile.WriteInteger('REPORT', 'JuridicalRJC', FJuridicalList[FJuridicalIndex].Id);
+    SettingsFile.WriteInteger('REPORT', 'PartnerRJC', FPartnerList[FPartnerIndex].Id);
     SettingsFile.WriteInteger('REPORT', 'ContractRJC', FContractIdList[cbContracts.ItemIndex]);
     SettingsFile.WriteInteger('REPORT', 'PaidKindRJC', FPaidKindIdList[cbPaidKind.ItemIndex]);
   finally
@@ -3528,22 +3678,17 @@ end;
 // переход на форму ввода пераметров акта сверки
 procedure TfrmMain.bReportJuridicalCollationClick(Sender: TObject);
 var
-  i: integer;
+  i, NewJuridicalIndex: integer;
 begin
   SwitchToForm(tiReportJuridicalCollation, nil);
 
   FFirstSet := true; // для востановления сохраненных значений ТТ и договоров при первом открытии
 
   // заполнение списка юридических лиц
-  cbJuridicals.Items.Clear;
   FJuridicalList.Clear;
 
   with DM.qrySelect do
   begin
-//or
-//    Open('SELECT Id, ValueData, group_concat(distinct CONTRACTID) ContractIds from OBJECT_JURIDICAL ' +
-//      'where ISERASED = 0 GROUP BY ID order by ValueData');
-//or
     Open(
        ' SELECT '
      + '         Id '
@@ -3558,8 +3703,8 @@ begin
 
     while not Eof do
     begin
-      AddComboItem(cbJuridicals, FieldByName('ValueData').AsString);
-      FJuridicalList.Add(TJuridicalItem.Create(FieldByName('Id').AsInteger, FieldByName('ContractIds').AsString));
+      FJuridicalList.Add(TJuridicalItem.Create(FieldByName('Id').AsInteger,
+        FieldByName('ValueData').AsString, FieldByName('ContractIds').AsString));
 
       Next;
     end;
@@ -3567,14 +3712,15 @@ begin
     Close;
   end;
 
+  FJuridicalIndex := -1;
+  NewJuridicalIndex := 0;
   for i := 0 to FJuridicalList.Count - 1 do
     if FJuridicalList[i].Id = FJuridicalRJC then
     begin
-      cbJuridicals.ItemIndex := i;
+      NewJuridicalIndex := i;
       break;
     end;
-  if cbJuridicals.ItemIndex < 0 then
-    cbJuridicals.ItemIndex := 0;
+  ChangeJuridicalCollationIndex(ltJuridicals, NewJuridicalIndex);
 
   if FStartRJC = '' then
     deStartRJC.Date := Date()
@@ -3740,6 +3886,67 @@ begin
   cbPaidKindTC.ItemIndex := 2;
 
   SwitchToForm(tiReportTotalCash, nil);
+end;
+
+{ заполнение списка юридических лиц }
+procedure TfrmMain.BuildJuridicalCollationList(AListType: TListType);
+var
+  i: integer;
+  NewItem: TListViewItem;
+begin
+  lwJuridicalCollationItems.BeginUpdate;
+  try
+    lwJuridicalCollationItems.Items.Clear;
+
+    case AListType of
+      ltJuridicals:
+      begin
+        for i := 0 to FJuridicalList.Count - 1 do
+        begin
+          NewItem := lwJuridicalCollationItems.Items.Add;
+          NewItem.Text := FJuridicalList[i].Name;
+          TListItemText(NewItem.Objects.FindDrawable('Value')).Text := FJuridicalList[i].Name;
+          TListItemText(NewItem.Objects.FindDrawable('Index')).Text := IntToStr(i);
+        end;
+      end;
+      ltPartners:
+      begin
+        for i := 0 to FPartnerList.Count - 1 do
+        begin
+          NewItem := lwJuridicalCollationItems.Items.Add;
+          NewItem.Text := FPartnerList[i].Name;
+          TListItemText(NewItem.Objects.FindDrawable('Value')).Text := FPartnerList[i].Name;
+          TListItemText(NewItem.Objects.FindDrawable('Index')).Text := IntToStr(i);
+        end;
+      end;
+    end;
+  finally
+    lwJuridicalCollationItems.EndUpdate;
+  end;
+end;
+
+procedure TfrmMain.bSelectJuridicalsClick(Sender: TObject);
+begin
+  ClearListSearch(lwJuridicalCollationItems);
+
+  FListType := ltJuridicals;
+  BuildJuridicalCollationList(FListType);
+
+  lwJuridicalCollationItems.ScrollViewPos := 0;
+  lCaption.Text := 'Выбор юридического лица для акта сверки';
+  SwitchToForm(tiJuridicalCollationItems, nil);
+end;
+
+procedure TfrmMain.bSelectPartnersClick(Sender: TObject);
+begin
+  ClearListSearch(lwJuridicalCollationItems);
+
+  FListType := ltPartners;
+  BuildJuridicalCollationList(FListType);
+
+  lwJuridicalCollationItems.ScrollViewPos := 0;
+  lCaption.Text := 'Выбор торговой точки для акта сверки';
+  SwitchToForm(tiJuridicalCollationItems, nil);
 end;
 
 // ввод коментария к фотографии перед сохранением
@@ -4626,7 +4833,8 @@ begin
     while not Eof do
     begin
       AddComboItem(cbNewPartnerJuridical, FieldByName('ValueData').AsString);
-      FJuridicalList.Add(TJuridicalItem.Create(FieldByName('Id').AsInteger, FieldByName('ContractIds').AsString));
+      FJuridicalList.Add(TJuridicalItem.Create(FieldByName('Id').AsInteger,
+        FieldByName('ValueData').AsString, FieldByName('ContractIds').AsString));
 
       Next;
     end;
@@ -5705,126 +5913,6 @@ begin
   end;
 end;
 
-// изменение юридического лица с начиткой ТТ и договор для нового выбраного юр.лица
-procedure TfrmMain.cbJuridicalsChange(Sender: TObject);
-var
-  i: integer;
-begin
-  if cbJuridicals.Items.Count > 0 then
-  begin
-
-    with DM.qrySelect do
-    begin
-      cbPartners.Items.Clear;
-      FPartnerList.Clear;
-
-      AddComboItem(cbPartners, 'все');
-      FPartnerList.Add(TPartnerItem.Create(0, ''));
-//or
-//      Open('SELECT P.ID, P.ADDRESS, group_concat(distinct C.ID) ContractIds from OBJECT_PARTNER P ' +
-//           'LEFT JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID ' +
-//           'WHERE P.JURIDICALID = ' + IntToStr(FJuridicalList[cbJuridicals.ItemIndex].Id) +
-//           ' AND P.ISERASED = 0 GROUP BY ADDRESS');
-//or
-      Open(
-            ' SELECT '
-          + '         Object_Partner.Id '
-          + '       , Object_Partner.Address '
-          + '       , group_concat(distinct Object_Contract.Id) AS ContractIds '
-          + ' FROM  Object_Partner  '
-          + '       LEFT JOIN Object_Contract  ON Object_Contract.Id = Object_Partner.ContractId  '
-          + ' WHERE Object_Partner.JuridicalId = ' + IntToStr(FJuridicalList[cbJuridicals.ItemIndex].Id)
-          + '   AND Object_Partner.isErased    = 0 '
-          + ' GROUP BY Address '
-           );
-
-      First;
-      while not Eof do
-      begin
-        AddComboItem(cbPartners, FieldByName('ADDRESS').AsString);
-        FPartnerList.Add(TPartnerItem.Create(FieldByName('Id').AsInteger, FieldByName('ContractIds').AsString));
-
-        Next;
-      end;
-
-      // все договора юридического лица
-      FAllContractList.Clear;
-
-//or
-//      Open('SELECT distinct ID, CONTRACTTAGNAME || '' '' || VALUEDATA ContractName from OBJECT_CONTRACT ' +
-//        'where ID in (' + FJuridicalList[cbJuridicals.ItemIndex].ContractIds + ')');
-//or
-
-      Open(
-         ' SELECT '
-       + '         distinct Id '
-       + '       , ContractTagName || '' '' || ValueData AS ContractName '
-       + ' FROM  Object_Contract '
-       + ' WHERE Id in (' + FJuridicalList[cbJuridicals.ItemIndex].ContractIds + ') '
-          );
-
-      First;
-      while not Eof do
-      begin
-        FAllContractList.Add(TContractItem.Create(FieldByName('Id').AsInteger, FieldByName('ContractName').AsString));
-
-        Next;
-      end;
-
-      Close;
-    end;
-
-    if FFirstSet then
-      for i := 0 to FPartnerList.Count - 1 do
-        if FPartnerList[i].Id = FPartnerRJC then
-        begin
-          cbPartners.ItemIndex := i;
-        end;
-    if cbPartners.ItemIndex < 0 then
-      cbPartners.ItemIndex := 0;
-  end;
-end;
-
-// изменение ТТ с фильтрацией договоров юр.лица только выбраной ТТ
-procedure TfrmMain.cbPartnersChange(Sender: TObject);
-var
-  i: integer;
-  OldContractId, DefIndex: integer;
-begin
-  if cbPartners.Items.Count > 0 then
-  begin
-    DefIndex := 0;
-    OldContractId := -1;
-    if cbContracts.ItemIndex > 0 then
-      OldContractId := FContractIdList[cbContracts.ItemIndex];
-
-    cbContracts.Items.Clear;
-    FContractIdList.Clear;
-
-    AddComboItem(cbContracts, 'все');
-    FContractIdList.Add(0);
-
-    for i := 0 to FAllContractList.Count - 1 do
-    begin
-      if (cbPartners.ItemIndex <= 0) or
-         (pos(IntToStr(FAllContractList[i].Id) + ',', FPartnerList[cbPartners.ItemIndex].ContractIds) > 0) or
-         (pos(',' + IntToStr(FAllContractList[i].Id), FPartnerList[cbPartners.ItemIndex].ContractIds) > 0) then
-      begin
-        AddComboItem(cbContracts, FAllContractList[i].Name);
-        FContractIdList.Add(FAllContractList[i].Id);
-        if FAllContractList[i].Id = OldContractId then
-          DefIndex := FContractIdList.Count - 1;
-      end;
-    end;
-
-    if FFirstSet then
-      cbContracts.ItemIndex := FContractIdList.IndexOf(FContractRJC);
-
-    if cbContracts.ItemIndex < 0 then
-      cbContracts.ItemIndex := DefIndex;
-  end;
-end;
-
 // отображать маршрут контрагента за все время или за конкретную дату
 procedure TfrmMain.cbShowAllPathChange(Sender: TObject);
 begin
@@ -5936,6 +6024,19 @@ end;
 
 // добавление елемента в combobox
 procedure TfrmMain.AddComboItem(AComboBox: TComboBox; AText: string);
+var
+  lbi: TListBoxItem;
+begin
+  lbi := TListBoxItem.Create(AComboBox);
+  lbi.Parent := AComboBox;
+  lbi.Text := AText;
+  lbi.Font.Size := DefaultSize;
+  lbi.StyledSettings := lbi.StyledSettings - [TStyledSetting.Size];
+
+  AComboBox.AddObject(lbi);
+end;
+
+procedure TfrmMain.AddComboItem(AComboBox: TComboEdit; AText: string);
 var
   lbi: TListBoxItem;
 begin

@@ -734,6 +734,10 @@ type
     cdsOrderItemsPriceShow: TStringField;
     tblObject_PartnerShortAddress: TStringField;
     qryPartnerShortAddress: TStringField;
+    qJuridicalCollationItems: TFDQuery;
+    qJuridicalCollationItemsValue: TStringField;
+    qJuridicalCollationItemsId: TIntegerField;
+    qJuridicalCollationItemsDopValue: TWideStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
