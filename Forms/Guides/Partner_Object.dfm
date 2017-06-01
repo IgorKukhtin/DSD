@@ -568,6 +568,9 @@ object Partner_ObjectForm: TPartner_ObjectForm
       GuiParams = <>
       isShowModal = False
       DataSet = MasterCDS
+      GPSNField = 'GPSN'
+      GPSEField = 'GPSE'
+      AddressField = 'Address'
     end
   end
   object spSelect: TdsdStoredProc
