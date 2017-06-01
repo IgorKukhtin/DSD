@@ -26,6 +26,11 @@ CREATE TABLE ObjectHistory(
 
 
 CREATE UNIQUE INDEX idx_ObjectHistory_ObjectId_DescId_StartDate_EndDate ON ObjectHistory(ObjectId, DescId, StartDate, EndDate);
+CREATE UNIQUE INDEX idx_ObjectHistory_ObjectId_DescId_StartDate ON ObjectHistory(ObjectId, DescId, StartDate);
+CREATE UNIQUE INDEX idx_ObjectHistory_EndDate_DescId_ObjectId ON ObjectHistory(EndDate, DescId, ObjectId);
+
+CREATE INDEX idx_ObjectHistory_ObjectId ON ObjectHistory(ObjectId);
+CREATE INDEX idx_ObjectHistory_DescId ON ObjectHistory(DescId);
 
 /*-------------------------------------------------------------------------------*/
 
