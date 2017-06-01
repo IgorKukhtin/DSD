@@ -12,7 +12,9 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_ProductionUnion(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , FromId Integer, FromName TVarChar
+             , JuridicalId_From Integer, JuridicalName_From TVarChar
+             , ToId Integer, ToName TVarChar
              , DocumentKindId Integer, DocumentKindName TVarChar
              , isAuto Boolean, InsertDate TDateTime
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
@@ -43,6 +45,8 @@ BEGIN
              , Object_Status.Name                               AS StatusName
              , 0                     			        AS FromId
              , CAST ('' AS TVarChar) 			        AS FromName
+             , 0                                                AS JuridicalId_From
+             , CAST ('' as TVarChar)                            AS JuridicalName_From
              , 0                     			        AS ToId
              , CAST ('' AS TVarChar) 				AS ToName
              , 0                                                AS DocumentKindId
@@ -67,6 +71,8 @@ BEGIN
          , Object_Status.ValueData                  AS StatusName
          , Object_From.Id                           AS FromId
          , Object_From.ValueData                    AS FromName
+         , Object_JuridicalFrom.id                  AS JuridicalId_From
+         , Object_JuridicalFrom.ValueData           AS JuridicalName_From
          , Object_To.Id                             AS ToId
          , Object_To.ValueData                      AS ToName
          , Object_DocumentKind.Id                   AS DocumentKindId
@@ -116,6 +122,15 @@ BEGIN
                                          ON MovementLinkMovement_Order.MovementId = Movement.Id
                                         AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
           LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract
+                               ON ObjectLink_Unit_Contract.ObjectId = Object_From.Id
+                              AND ObjectLink_Unit_Contract.DescId = zc_ObjectLink_Unit_Contract()
+          LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                               ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Unit_Contract.ChildObjectId
+                              AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+          LEFT JOIN Object AS Object_JuridicalFrom ON Object_JuridicalFrom.Id = ObjectLink_Contract_Juridical.ChildObjectId
+
      WHERE Movement.Id = inMovementId
        AND Movement.DescId = zc_Movement_ProductionUnion();
 
