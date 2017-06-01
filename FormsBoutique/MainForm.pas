@@ -125,6 +125,12 @@ type
     actReport_MovementIncome: TdsdOpenForm;
     miReport: TMenuItem;
     N60: TMenuItem;
+    actReport_MovementReturnOut: TdsdOpenForm;
+    N61: TMenuItem;
+    actReport_MovementSend: TdsdOpenForm;
+    N62: TMenuItem;
+    actReport_MovementLoss: TdsdOpenForm;
+    N63: TMenuItem;
   private
     { Private declarations }
   public

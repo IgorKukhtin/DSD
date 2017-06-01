@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION  gpReport_Movement_Income(
     IN inPartnerId        Integer  ,  -- Поставщик
     IN inisPartion        Boolean,    -- 
     IN inisSize           Boolean,    --
-    IN inisPartnerId      Boolean,    --
+    IN inisPartner        Boolean,    --
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
@@ -53,7 +53,7 @@ BEGIN
                                      , CASE WHEN inIsPartion = TRUE THEN MovementDesc_Income.ItemName ELSE CAST (NULL AS TVarChar)  END    AS DescName
                                      , CASE WHEN inIsPartion = TRUE THEN Movement_Income.InvNumber    ELSE CAST (NULL AS TVarChar)  END    AS InvNumber
                                      , CASE WHEN inIsPartion = TRUE THEN Movement_Income.OperDate     ELSE CAST (NULL AS TDateTime) END    AS OperDate
-                                     , CASE WHEN inisPartnerId = TRUE THEN MovementLinkObject_From.ObjectId ELSE 0 END                     AS FromId
+                                     , CASE WHEN inisPartner = TRUE THEN MovementLinkObject_From.ObjectId ELSE 0 END                     AS FromId
                                      , MovementLinkObject_To.ObjectId                                                                      AS ToId
                                 FROM Movement AS Movement_Income
                                      -- куда был приход
@@ -198,8 +198,8 @@ $BODY$
 */
 
 -- тест
---SELECT * from gpReport_Movement_Income(    inStartDate := '01.12.2016' :: TDateTime, inEndDate:= '01.12.2018' :: TDateTime, inUnitId :=311,inBrandId  := 0 ,inPartnerId  := 0 , inisPartion  := TRUE,inisSize:=  TRUE, inisPartnerId := TRUE, inSession := '2':: TVarChar )
---SELECT * from gpReport_Movement_Income(    inStartDate := '01.12.2016' :: TDateTime, inEndDate:= '01.12.2018' :: TDateTime, inUnitId :=230,inBrandId  := 0 ,inPartnerId  := 0 , inisPartion  :=False,inisSize:=  False, inisPartnerId := False, inSession := '2':: TVarChar )
+--SELECT * from gpReport_Movement_Income(    inStartDate := '01.12.2016' :: TDateTime, inEndDate:= '01.12.2018' :: TDateTime, inUnitId :=311,inBrandId  := 0 ,inPartnerId  := 0 , inisPartion  := TRUE,inisSize:=  TRUE, inisPartner := TRUE, inSession := '2':: TVarChar )
+--SELECT * from gpReport_Movement_Income(    inStartDate := '01.12.2016' :: TDateTime, inEndDate:= '01.12.2018' :: TDateTime, inUnitId :=230,inBrandId  := 0 ,inPartnerId  := 0 , inisPartion  :=False,inisSize:=  False, inisPartner := False, inSession := '2':: TVarChar )
 
 --select * from gpGet_Movement_Income(inMovementId := 22 , inOperDate := ('04.02.2018')::TDateTime ,  inSession := '2');
 --select * from gpGet_Movement_Income(inMovementId := 22 , inOperDate := ('04.02.2018')::TDateTime ,  inSession := '2');

@@ -800,6 +800,21 @@ end;
 //
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  //Отчет пл списанию
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementLossForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementLossForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementLossDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementLossDialogForm');
+  //Отчет Перемещение
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementSendForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementSendForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementSendDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementSendDialogForm');
+  //Отчет Возврат поставщику
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementReturnOutForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementReturnOutForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementReturnOutDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MovementReturnOutDialogForm');
   //Отчет Приход от поставщика
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeForm');

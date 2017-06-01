@@ -217,7 +217,13 @@ uses
   GoodsAccount in '..\..\FormsBoutique\Document\GoodsAccount.pas' {GoodsAccountForm: TParentForm},
   GoodsAccountJournal in '..\..\FormsBoutique\Document\GoodsAccountJournal.pas' {GoodsAccountJournalForm: TParentForm},
   Report_MovementIncomeDialog in '..\..\FormsBoutique\Report\Report_MovementIncomeDialog.pas' {Report_MovementIncomeDialogForm: TParentForm},
-  Report_MovementIncome in '..\..\FormsBoutique\Report\Report_MovementIncome.pas' {Report_MovementIncomeForm: TParentForm};
+  Report_MovementIncome in '..\..\FormsBoutique\Report\Report_MovementIncome.pas' {Report_MovementIncomeForm: TParentForm},
+  Report_MovementReturnOutDialog in '..\..\FormsBoutique\Report\Report_MovementReturnOutDialog.pas' {Report_MovementReturnOutDialogForm: TParentForm},
+  Report_MovementReturnOut in '..\..\FormsBoutique\Report\Report_MovementReturnOut.pas' {Report_MovementReturnOutForm: TParentForm},
+  Report_MovementSend in '..\..\FormsBoutique\Report\Report_MovementSend.pas' {Report_MovementSendForm: TParentForm},
+  Report_MovementSendDialog in '..\..\FormsBoutique\Report\Report_MovementSendDialog.pas' {Report_MovementSendDialogForm: TParentForm},
+  Report_MovementLoss in '..\..\FormsBoutique\Report\Report_MovementLoss.pas' {Report_MovementLossForm: TParentForm},
+  Report_MovementLossDialog in '..\..\FormsBoutique\Report\Report_MovementLossDialog.pas' {Report_MovementLossDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
