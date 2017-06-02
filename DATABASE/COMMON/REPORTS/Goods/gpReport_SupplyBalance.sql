@@ -122,6 +122,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCountDays Integer;
+   DECLARE vbReserveDays Integer;
    DECLARE vbStartDate TDateTime;
    DECLARE vbStartDate_Calc TDateTime;
    DECLARE vbEndDate_Calc TDateTime;
@@ -139,14 +140,30 @@ BEGIN
            SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods();
     END IF;
 
-    vbEndDate_Calc := (CASE WHEN inEndDate > CURRENT_DATE 
-                            THEN CASE WHEN EXTRACT (DOW FROM CURRENT_DATE) = 0 THEN CURRENT_DATE ELSE (CURRENT_DATE - ((EXTRACT (DOW FROM CURRENT_DATE))  :: TVarChar || ' DAY') :: INTERVAL) END
-                            ELSE CASE WHEN EXTRACT (DOW FROM inEndDate) = 0 THEN inEndDate ELSE (inEndDate - ((EXTRACT (DOW FROM inEndDate))  :: TVarChar || ' DAY') :: INTERVAL) END
-                       END);
-    vbStartDate_Calc := vbEndDate_Calc - interval '27 day';
-    vbStartDate := (CASE WHEN inStartDate > vbStartDate_Calc THEN vbStartDate_Calc ELSE inStartDate END);
+
+    -- на сколько дней считаем План. Заказ на месяц
+    vbReserveDays:= 30;
+    -- период ПРОГНОЗА = 4 недели
+    vbCountDays := 4 * 7;
+    -- определяются даты для расчета ПРОГНОЗ - ПОЛНЫЕ (с пон - по вск) - ЗАВЕРШЕННЫЕ 4 недели
+    vbEndDate_Calc := CASE WHEN inEndDate > CURRENT_DATE 
+                           THEN -- если Дата отчета БОЛЬШЕ сегодняшней
+                                CASE WHEN EXTRACT (DOW FROM CURRENT_DATE) = 0
+                                          THEN CURRENT_DATE -- Если СЕГОДНЯ = вскр.
+                                     -- иначе находим ближайшее ПРОШЕДШЕЕ вскр. от СЕГОДНЯ
+                                     ELSE (CURRENT_DATE - ((EXTRACT (DOW FROM CURRENT_DATE)) :: TVarChar || ' DAY') :: INTERVAL)
+                                END
+                           ELSE CASE WHEN EXTRACT (DOW FROM inEndDate) = 0
+                                          THEN inEndDate -- Если ДАТА отчета = вскр.
+                                     -- иначе находим ближайшее ПРОШЕДШЕЕ вскр. от ДАТЫ отчета
+                                     ELSE (inEndDate - ((EXTRACT (DOW FROM inEndDate)) :: TVarChar || ' DAY') :: INTERVAL)
+                                END
+                      END;
+    -- начальная будет пнд. - 4 недели НАЗАД
+    vbStartDate_Calc := vbEndDate_Calc - ((vbCountDays - 1) :: TVarChar || ' DAY') :: INTERVAL;
+    -- начальная - для ВСЕХ данных
+    vbStartDate := (CASE WHEN vbStartDate_Calc < inStartDate THEN vbStartDate_Calc ELSE inStartDate END);
     
-    vbCountDays := (SELECT DATE_PART('day', (vbEndDate_Calc - vbStartDate_Calc)) + 2);
 
      RETURN QUERY
      WITH -- подразделения для "остатки впроизводстве"
@@ -348,7 +365,9 @@ BEGIN
                                 , tmpContainerAll.ContainerId
                                 , tmpContainerAll.GoodsId
                                 , tmpContainerAll.Amount
+                                  -- для остатка на начало inStartDate
                                 , SUM (CASE WHEN MIContainer.OperDate >= inStartDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END)  AS StartAmountSum
+                                  -- для остатка на конец inEndDate
                                 , SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS EndAmountSum
 
                                 , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
@@ -526,21 +545,21 @@ BEGIN
                           )
              -- приход / расход по дням
            , tmpOnDays AS (SELECT tmp.GoodsId
-                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 1 THEN tmp.CountIncome ELSE 0 END) CountIncome1
-                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 2 THEN tmp.CountIncome ELSE 0 END) CountIncome2
-                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 3 THEN tmp.CountIncome ELSE 0 END) CountIncome3
-                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 4 THEN tmp.CountIncome ELSE 0 END) CountIncome4
-                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 5 THEN tmp.CountIncome ELSE 0 END) CountIncome5
-                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 6 THEN tmp.CountIncome ELSE 0 END) CountIncome6
-                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 7 THEN tmp.CountIncome ELSE 0 END) CountIncome7
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - INTERVAL '6 DAY' AND inEndDate AND tmpWeekDay.Number = 1 THEN tmp.CountIncome ELSE 0 END) CountIncome1
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - INTERVAL '6 DAY' AND inEndDate AND tmpWeekDay.Number = 2 THEN tmp.CountIncome ELSE 0 END) CountIncome2
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - INTERVAL '6 DAY' AND inEndDate AND tmpWeekDay.Number = 3 THEN tmp.CountIncome ELSE 0 END) CountIncome3
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - INTERVAL '6 DAY' AND inEndDate AND tmpWeekDay.Number = 4 THEN tmp.CountIncome ELSE 0 END) CountIncome4
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - INTERVAL '6 DAY' AND inEndDate AND tmpWeekDay.Number = 5 THEN tmp.CountIncome ELSE 0 END) CountIncome5
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - INTERVAL '6 DAY' AND inEndDate AND tmpWeekDay.Number = 6 THEN tmp.CountIncome ELSE 0 END) CountIncome6
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - INTERVAL '6 DAY' AND inEndDate AND tmpWeekDay.Number = 7 THEN tmp.CountIncome ELSE 0 END) CountIncome7
 
-                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 1 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut1
-                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 2 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut2
-                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 3 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut3
-                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 4 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut4
-                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 5 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut5
-                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 6 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut6
-                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - interval '6 day' AND inEndDate AND tmpWeekDay.Number = 7 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut7
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - INTERVAL '6 DAY' AND inEndDate AND tmpWeekDay.Number = 1 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut1
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - INTERVAL '6 DAY' AND inEndDate AND tmpWeekDay.Number = 2 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut2
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - INTERVAL '6 DAY' AND inEndDate AND tmpWeekDay.Number = 3 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut3
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - INTERVAL '6 DAY' AND inEndDate AND tmpWeekDay.Number = 4 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut4
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - INTERVAL '6 DAY' AND inEndDate AND tmpWeekDay.Number = 5 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut5
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - INTERVAL '6 DAY' AND inEndDate AND tmpWeekDay.Number = 6 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut6
+                                , SUM (CASE WHEN tmp.OperDate BETWEEN inEndDate - INTERVAL '6 DAY' AND inEndDate AND tmpWeekDay.Number = 7 THEN tmp.CountProductionOut ELSE 0 END) CountProductionOut7
 
                                 , SUM (CASE WHEN tmp.NumDay = 1 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_1
                                 , SUM (CASE WHEN tmp.NumDay = 2 THEN tmp.CountIncome ELSE 0 END) AS CountIncome_2
@@ -677,6 +696,7 @@ BEGIN
            , tmpOrderIncome.Comment_MI      :: TVarChar AS Comment_MI
            , tmpOrderIncome.MovementId_List :: TVarChar AS MovementId_List
 
+             -- период ПРОГНОЗА = 4 недели
            , vbCountDays                        AS CountDays
 
            , tmpContainer.RemainsStart        :: TFloat AS RemainsStart
@@ -688,30 +708,38 @@ BEGIN
            , tmpContainer.CountIn_oth         :: TFloat AS CountIn_oth
            , tmpContainer.CountOut_oth        :: TFloat AS CountOut_oth
 
-           , (CASE WHEN vbCountDays <> 0 THEN tmpContainer.CountProductionOut_Calc/vbCountDays ELSE 0 END)  :: TFloat AS CountOnDay
+             -- Средний расход в день
+           , (CASE WHEN vbCountDays <> 0 THEN tmpContainer.CountProductionOut_Calc / vbCountDays ELSE 0 END) :: TFloat AS CountOnDay
+
+             -- Кол. дней остатка
            , CASE WHEN tmpContainer.CountProductionOut_Calc <=0 AND  tmpContainer.RemainsEnd <> 0 THEN 365
                   WHEN tmpContainer.RemainsEnd <> 0 AND (tmpContainer.CountProductionOut_Calc/vbCountDays) <> 0
                   THEN tmpContainer.RemainsEnd / (tmpContainer.CountProductionOut_Calc/vbCountDays)
                   ELSE 0
              END :: TFloat AS RemainsDays
 
-           , 30 :: TFloat AS ReserveDays
+             -- на сколько дней считаем План. Заказ на месяц
+           , vbReserveDays :: TFloat AS ReserveDays
+
+             -- План. Заказ на месяц
            , CASE WHEN tmpContainer.CountProductionOut_Calc > 0 
                    AND tmpContainer.RemainsEnd <> 0
                    AND tmpContainer.RemainsEnd <> 0 
-                   AND tmpContainer.RemainsEnd < (tmpContainer.CountProductionOut_Calc/vbCountDays) * 30
-                  THEN (tmpContainer.CountProductionOut_Calc/vbCountDays) * 30 - tmpContainer.RemainsEnd
+                   AND tmpContainer.RemainsEnd < (tmpContainer.CountProductionOut_Calc/vbCountDays) * vbReserveDays
+                  THEN (tmpContainer.CountProductionOut_Calc/vbCountDays) * vbReserveDays - tmpContainer.RemainsEnd
                   ELSE 0
              END :: TFloat AS PlanOrder
+
+             -- Заказ в пути
            , tmpOrderIncome.Amount  :: TFloat AS CountOrder
 
+             -- Кол. дней ост. с учет. заказа
            , CASE WHEN tmpContainer.CountProductionOut_Calc <= 0 AND tmpContainer.RemainsEnd <> 0
                   THEN 365
                   WHEN (tmpContainer.CountProductionOut_Calc / vbCountDays) <> 0
                   THEN (COALESCE (tmpContainer.RemainsEnd, 0) + COALESCE (tmpOrderIncome.Amount, 0)) / (tmpContainer.CountProductionOut_Calc / vbCountDays)
                   ELSE 0
              END  :: TFloat AS RemainsDaysWithOrder
-
 
            , tmpOnDays.CountIncome1         :: TFloat
            , tmpOnDays.CountIncome2         :: TFloat

@@ -29,42 +29,42 @@ RETURNS TABLE (Id Integer, LineNum Integer
              , RemainsDays    TFloat
              , PlanOrder      TFloat
              , RemainsDaysWithOrder TFloat
-             , CountDays      integer
-             , Color_RemainsDays integer
+             , CountDays      Integer
+             , ReserveDays    Integer
+             , Color_RemainsDays Integer
 
-             , Comment        TVarChar 
+             , Comment        TVarChar
              , isClose        Boolean
              , isErased       Boolean
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE Cursor1 refcursor;
-   DECLARE vbJuridicalId_From Integer;
-   DECLARE vbCountDays Integer;
-   DECLARE vbDayCount  TFloat;
-   DECLARE vbEndDate TDateTime;
-   DECLARE vbStartDate TDateTime;
+   DECLARE vbUserId           Integer;
+   DECLARE Cursor1            refcursor;
 
-   DECLARE vbGoodsPropertyId Integer;
+   DECLARE vbJuridicalId_From Integer;
+   DECLARE vbCountDays        Integer; -- период ПРОГНОЗА = 4 недели
+   DECLARE vbReserveDays      Integer; -- на сколько дней считаем План. Заказ на месяц
+   DECLARE vbEndDate          TDateTime;
+   DECLARE vbStartDate        TDateTime;
+
+   DECLARE vbGoodsPropertyId       Integer;
    DECLARE vbGoodsPropertyId_basis Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_OrderIncome());
      vbUserId:= lpGetUserBySession (inSession);
 
-     --определяем пост. из документа
-     vbJuridicalId_From := (SELECT MovementLinkObject_From.ObjectId AS JuridicalId_From
-                            FROM MovementLinkObject AS MovementLinkObject_From
-                            WHERE MovementLinkObject_From.MovementId = inMovementId
-                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_Juridical());
+     -- определяем поставщика из документа
+     vbJuridicalId_From := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Juridical());
 
-     SELECT  COALESCE (MovementDate_OperDateStart.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate)) ::TDateTime  AS OperDateStart
-           , COALESCE (MovementDate_OperDateEnd.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY') ::TDateTime  AS OperDateEnd
-           , COALESCE (MovementFloat_DayCount.ValueData, 30)  ::TFloat  AS DayCount
+     -- определяем из документа
+     SELECT  COALESCE (MovementDate_OperDateStart.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate))  AS StartDate
+           , COALESCE (MovementDate_OperDateEnd.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY') AS vbEndDate
+           , COALESCE (MovementFloat_DayCount.ValueData, 30) :: Integer AS ReserveDays
            , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId), MovementLinkObject_To.ObjectId) AS GoodsPropertyId
            , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)       AS GoodsPropertyId_basis
-    INTO vbStartDate, vbEndDate, vbDayCount, vbGoodsPropertyId, vbGoodsPropertyId_basis
+             INTO vbStartDate, vbEndDate, vbReserveDays, vbGoodsPropertyId, vbGoodsPropertyId_basis
      FROM Movement
             LEFT JOIN MovementDate AS MovementDate_OperDateStart
                                    ON MovementDate_OperDateStart.MovementId = Movement.Id
@@ -85,10 +85,14 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-     WHERE Movement.id = inMovementId
+     WHERE Movement.Id     = inMovementId
        AND Movement.DescId = zc_Movement_OrderIncome();
 
-     vbCountDays := (SELECT DATE_PART('day', (vbEndDate - vbStartDate )) + 1);
+
+     -- период ПРОГНОЗА = 4 недели
+     vbCountDays := (SELECT DATE_PART('DAY', (vbEndDate - vbStartDate )) + 1);
+
+
 
      IF inShowAll THEN
 
@@ -117,7 +121,7 @@ BEGIN
                                ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
                               AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
                        INNER JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                                           
+
                        LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                               ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                              AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
@@ -164,10 +168,10 @@ BEGIN
                                   LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
-                                
+
                                   LEFT JOIN MovementItemFloat AS MIFloat_Price
                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                        AND MIFloat_Price.DescId = zc_MIFloat_Price() 
+                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
                                   LEFT JOIN MovementItemFloat AS MIFloat_AmountRemains
                                          ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
@@ -207,7 +211,7 @@ BEGIN
              , Object_Goods.ObjectCode    AS GoodsCode
              , Object_Goods.ValueData     AS GoodsName
           , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name
-                   WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name 
+                   WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name
                    ELSE ''
               END) :: TVarChar AS GoodsName_Partner
              , Object_Measure.Id          AS MeasureId
@@ -229,8 +233,13 @@ BEGIN
              , CAST (NULL AS TFloat)      AS RemainsDays
              , CAST (NULL AS TFloat)      AS PlanOrder
              , CAST (NULL AS TFloat)      AS RemainsDaysWithOrder
+
+               -- период ПРОГНОЗА = 4 недели
              , vbCountDays
-             , zc_Color_Black() :: integer AS Color_RemainsDays
+               -- на сколько дней считаем План. Заказ на месяц
+             , vbReserveDays
+
+             , zc_Color_Black() :: Integer AS Color_RemainsDays
 
              , CAST (NULL AS TVarChar)    AS Comment
              , FALSE                      AS isClose
@@ -241,7 +250,7 @@ BEGIN
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsId
 
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                  ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId 
+                                  ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
              LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
@@ -264,7 +273,7 @@ BEGIN
              , Object_Goods.ObjectCode    AS GoodsCode
              , Object_Goods.ValueData     AS GoodsName
           , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name
-                   WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name 
+                   WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name
                    ELSE ''
               END) :: TVarChar AS GoodsName_Partner
 
@@ -281,21 +290,28 @@ BEGIN
              , tmpMI.AmountForecast ::TFloat
              , tmpMI.AmountIn       ::TFloat
              , tmpMI.AmountOut      ::TFloat
+
+               -- Заказ в пути
              , (COALESCE (tmpMI.AmountOrder,0) + COALESCE (tmpMI.Amount,0))  ::TFloat AS AmountOrder
 
+               -- Заказ в пути
              , (CASE WHEN vbCountDays <> 0 THEN tmpMI.AmountForecast/vbCountDays ELSE 0 END)  :: TFloat AS CountOnDay
+
+               -- Средний расход в день
              , CASE WHEN tmpMI.AmountForecast <=0 AND tmpMI.AmountRemainsEnd <> 0 THEN 365
                     WHEN tmpMI.AmountRemainsEnd <> 0 AND (tmpMI.AmountForecast/vbCountDays) <> 0
                     THEN tmpMI.AmountRemainsEnd / (tmpMI.AmountForecast/vbCountDays)
                     ELSE 0
                END :: TFloat AS RemainsDays
 
+               -- План. Заказ на месяц
              , CASE WHEN tmpMI.AmountForecast > 0 AND tmpMI.AmountRemainsEnd <> 0
-                     AND tmpMI.AmountRemainsEnd <> 0 AND tmpMI.AmountRemainsEnd < (tmpMI.AmountForecast/vbCountDays) * vbDayCount
-                    THEN (tmpMI.AmountForecast/vbCountDays) * vbDayCount - tmpMI.AmountRemainsEnd
-                    ELSE 0 
+                     AND tmpMI.AmountRemainsEnd <> 0 AND tmpMI.AmountRemainsEnd < (tmpMI.AmountForecast/vbCountDays) * vbReserveDays
+                    THEN (tmpMI.AmountForecast/vbCountDays) * vbReserveDays - tmpMI.AmountRemainsEnd
+                    ELSE 0
                END :: TFloat AS PlanOrder
-  
+
+               -- Кол-во дней остатка с учетом заказа
              , CASE WHEN tmpMI.AmountForecast <= 0 AND tmpMI.AmountRemainsEnd <> 0
                     THEN 365
                     WHEN (tmpMI.AmountForecast/vbCountDays) <> 0
@@ -303,24 +319,31 @@ BEGIN
                     ELSE 0
                END  :: TFloat AS RemainsDaysWithOrder
 
+               -- период ПРОГНОЗА = 4 недели
              , vbCountDays
-             , CASE WHEN COALESCE(tmpMI.AmountOrder,0) > 0 THEN 25088  -- зеленый
+               -- на сколько дней считаем План. Заказ на месяц
+             , vbReserveDays
+  
+  
+             , CASE WHEN COALESCE (tmpMI.AmountOrder,0) > 0 OR tmpMI.Amount > 0 THEN 25088  -- зеленый
                     ELSE
                     CASE WHEN tmpMI.AmountForecast <= 0 AND tmpMI.AmountRemainsEnd <> 0
-                         THEN zc_Color_Black()
+                              THEN zc_Color_Black()
                          WHEN COALESCE (tmpMI.AmountForecast, 0) <= 0 AND COALESCE (tmpMI.AmountRemainsEnd, 0) = 0
-                         THEN zc_Color_Black()
-                         WHEN (CASE WHEN tmpMI.AmountRemainsEnd <> 0 AND (tmpMI.AmountForecast/vbCountDays) <> 0
-                               THEN COALESCE(tmpMI.AmountRemainsEnd,0) / (tmpMI.AmountForecast/vbCountDays)
-                               ELSE 0 END) > 29.9
-                         THEN zc_Color_Black()
+                              THEN zc_Color_Black()
+                         WHEN 29.9 < (CASE WHEN tmpMI.AmountRemainsEnd <> 0 AND (tmpMI.AmountForecast/vbCountDays) <> 0
+                                                THEN COALESCE(tmpMI.AmountRemainsEnd,0) / (tmpMI.AmountForecast/vbCountDays)
+                                           ELSE 0
+                                      END)
+                              THEN zc_Color_Black()
                          ELSE zc_Color_Red()
-                    END 
-               END :: integer AS Color_RemainsDays
+                    END
+               END :: Integer AS Color_RemainsDays
 
              , tmpMI.Comment
              , tmpMI.isClose
              , tmpMI.isErased
+             
         FROM tmpMI_Goods AS tmpMI
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
              LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = tmpMI.MeasureId
@@ -362,7 +385,7 @@ BEGIN
                                ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
                               AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
                        INNER JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                                           
+
                        LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                               ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                              AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
@@ -393,14 +416,14 @@ BEGIN
                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
                                              ON MILinkObject_Goods.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-                                 
+
                                   LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
 
                                   LEFT JOIN MovementItemFloat AS MIFloat_Price
                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                        AND MIFloat_Price.DescId = zc_MIFloat_Price() 
+                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
                                   LEFT JOIN MovementItemFloat AS MIFloat_AmountRemains
                                          ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
@@ -432,7 +455,7 @@ BEGIN
                                          ON MIBoolean_Close.MovementItemId = MovementItem.Id
                                         AND MIBoolean_Close.DescId = zc_MIBoolean_Close()
                             )
-
+        -- Результат
         SELECT tmpMI.MovementItemId       AS Id
              , (ROW_NUMBER() OVER (ORDER BY tmpMI.MovementItemId))::Integer AS LineNum
              , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
@@ -440,7 +463,7 @@ BEGIN
              , Object_Goods.ObjectCode    AS GoodsCode
              , Object_Goods.ValueData     AS GoodsName
           , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name
-                   WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name 
+                   WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name
                    ELSE ''
               END) :: TVarChar AS GoodsName_Partner
 
@@ -467,11 +490,11 @@ BEGIN
                END :: TFloat AS RemainsDays
 
              , CASE WHEN tmpMI.AmountForecast > 0 AND tmpMI.AmountRemainsEnd <> 0
-                     AND tmpMI.AmountRemainsEnd <> 0 AND tmpMI.AmountRemainsEnd < (tmpMI.AmountForecast/vbCountDays) * vbDayCount
-                    THEN (tmpMI.AmountForecast/vbCountDays) * vbDayCount - tmpMI.AmountRemainsEnd
-                    ELSE 0 
+                     AND tmpMI.AmountRemainsEnd <> 0 AND tmpMI.AmountRemainsEnd < (tmpMI.AmountForecast/vbCountDays) * vbReserveDays
+                    THEN (tmpMI.AmountForecast/vbCountDays) * vbReserveDays - tmpMI.AmountRemainsEnd
+                    ELSE 0
                END :: TFloat AS PlanOrder
-  
+
              , CASE WHEN tmpMI.AmountForecast <= 0 AND tmpMI.AmountRemainsEnd <> 0
                     THEN 365
                     WHEN (tmpMI.AmountForecast/vbCountDays) <> 0
@@ -479,7 +502,10 @@ BEGIN
                     ELSE 0
                END  :: TFloat AS RemainsDaysWithOrder
 
+               -- период ПРОГНОЗА = 4 недели
              , vbCountDays
+               -- на сколько дней считаем План. Заказ на месяц
+             , vbReserveDays
 
              , CASE WHEN COALESCE(tmpMI.AmountOrder,0) > 0 THEN 25088  -- зеленый
                     ELSE
@@ -489,13 +515,13 @@ BEGIN
                          THEN zc_Color_Black()
                          WHEN (CASE WHEN tmpMI.AmountRemainsEnd <> 0 AND (tmpMI.AmountForecast/vbCountDays) <> 0
                                THEN COALESCE(tmpMI.AmountRemainsEnd,0) / (tmpMI.AmountForecast/vbCountDays)
-                               ELSE 0 END) > (vbDayCount - 0.1)
+                               ELSE 0 END) > (vbReserveDays - 0.1)
                          THEN zc_Color_Black()
                          ELSE zc_Color_Red()
-                    END 
-                END :: integer AS Color_RemainsDays 
+                    END
+                END :: Integer AS Color_RemainsDays
 
-             , tmpMI.Comment 
+             , tmpMI.Comment
              , tmpMI.isClose
              , tmpMI.isErased
         FROM tmpMI_Goods AS tmpMI
@@ -510,10 +536,10 @@ BEGIN
             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = tmpMI.GoodsId
                                                   AND tmpObject_GoodsPropertyValue.Name <> ''
             LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpMI.GoodsId
-;
+        ;
 
      END IF;
- 
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -523,10 +549,10 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  31.05.17         *
  16.05.17         *
- 03.05.17         * 
- 14.04.17         * 
+ 03.05.17         *
+ 14.04.17         *
 */
 
 -- тест
 -- SELECT * FROM gpSelect_MI_OrderIncomeSnab (0, FALSE, FALSE, zfCalc_UserAdmin());
---select * from gpSelect_MI_OrderIncomeSnab(inMovementId := 5812842 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '5');
+-- SELECT * FROM gpSelect_MI_OrderIncomeSnab (inMovementId:= 5812842, inShowAll:= 'False', inIsErased:= 'False', inSession:= '5');

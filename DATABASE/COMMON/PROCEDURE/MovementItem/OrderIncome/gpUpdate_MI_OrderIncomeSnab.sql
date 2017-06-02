@@ -20,29 +20,37 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderIncome());
 
-    -- определяем пост. из документа
-    vbJuridicalId_From := (SELECT MovementLinkObject_From.ObjectId AS JuridicalId_From
-                           FROM MovementLinkObject AS MovementLinkObject_From
-                           WHERE MovementLinkObject_From.MovementId = inMovementId
-                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_Juridical());
-
-    vbOperDate := (SELECT Movement.OperDate
-                   FROM Movement
-                   WHERE Movement.Id = inMovementId);
+    -- определяем поставщика из документа
+    vbJuridicalId_From := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Juridical());
 
     -- проверка - свойство должно быть установлено
     IF COALESCE (vbJuridicalId_From, 0) = 0 THEN
        RAISE EXCEPTION 'Ошибка.Не установлено значение <Юр.лицо (поставщик)>.';
     END IF;
 
-    -- переопределяем даты для расчета данных - ПОЛНЫЕ (с пон - по вск) - ЗАВЕРШЕННЫЕ 4 недели
-    ioEndDate := (CASE WHEN vbOperDate > CURRENT_DATE 
-                       THEN CASE WHEN EXTRACT (DOW FROM CURRENT_DATE) = 0 THEN CURRENT_DATE ELSE (CURRENT_DATE - ((EXTRACT (DOW FROM CURRENT_DATE))  :: TVarChar || ' DAY') :: INTERVAL) END
-                       ELSE CASE WHEN EXTRACT (DOW FROM vbOperDate) = 0 THEN vbOperDate ELSE (vbOperDate - ((EXTRACT (DOW FROM vbOperDate))  :: TVarChar || ' DAY') :: INTERVAL) END
-                  END);
-    ioStartDate := ioEndDate - interval '27 day';
+    -- определяем из документа
+    vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
-    -- рассчетные данные
+
+    -- переопределяем даты для расчета данных - ПОЛНЫЕ (с пон - по вск) - ЗАВЕРШЕННЫЕ 4 недели
+    ioEndDate := CASE WHEN vbOperDate > CURRENT_DATE 
+                      THEN -- если Дата документа БОЛЬШЕ сегодняшней
+                           CASE WHEN EXTRACT (DOW FROM CURRENT_DATE) = 0
+                                             THEN CURRENT_DATE -- Если СЕГОДНЯ = вскр.
+                                     -- иначе находим ближайшее ПРОШЕДШЕЕ вскр. от СЕГОДНЯ
+                                     ELSE (CURRENT_DATE - ((EXTRACT (DOW FROM CURRENT_DATE)) :: TVarChar || ' DAY') :: INTERVAL)
+                           END
+                      ELSE CASE WHEN EXTRACT (DOW FROM vbOperDate) = 0
+                                     THEN vbOperDate -- Если ДАТА = вскр.
+                                -- иначе находим ближайшее ПРОШЕДШЕЕ вскр. от ДАТЫ
+                                ELSE (vbOperDate - ((EXTRACT (DOW FROM vbOperDate)) :: TVarChar || ' DAY') :: INTERVAL)
+                           END
+                 END;
+    -- начальная будет пнд. - 4 недели НАЗАД
+    ioStartDate := ioEndDate - INTERVAL '27 DAY';
+
+
+    -- рассчетные данные !!!до ДАТЫ документа!!!
     PERFORM lpInsertUpdate_MI_OrderIncomeSnab_Property
                                                    (inId              := tmpData.MovementItemId
                                                   , inMovementId      := inMovementId
@@ -78,7 +86,7 @@ BEGIN
                                 , gpReport.CountOut_oth
                                 , gpReport.CountOrder
                            FROM gpReport_SupplyBalance (inStartDate   := ioStartDate
-                                                      , inEndDate     := ioEndDate
+                                                      , inEndDate     := vbOperDate -- !!!последняя дата - ДАТА документа!!!
                                                       , inUnitId      := 8455
                                                       , inGoodsGroupId:= 0
                                                       , inJuridicalId := vbJuridicalId_From

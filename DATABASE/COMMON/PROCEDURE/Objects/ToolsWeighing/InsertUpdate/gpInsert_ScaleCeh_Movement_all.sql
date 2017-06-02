@@ -403,7 +403,8 @@ BEGIN
                                                          (ioId                  := MovementItem.Id
                                                         , inMovementId          := vbMovementId_begin
                                                         , inGoodsId             := tmpIncome.GoodsId
-                                                        , inGoodsKindId         := NULL
+                                                        , inGoodsKindId         := MILinkObject_StorageLine.ObjectId
+                                                        , inStorageLineId       := tmpIncome.StorageLineId
                                                         , inAmount              := tmpIncome.Amount
                                                         , inLiveWeight          := tmpIncome.LiveWeight
                                                         , inHeadCount           := tmpIncome.HeadCount
@@ -413,6 +414,9 @@ BEGIN
               LEFT JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
                                     AND MovementItem.DescId = zc_MI_Master()
                                     AND MovementItem.isErased = FALSE
+              LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
+                                               ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
+                                              AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
               LEFT JOIN (SELECT MAX (MovementItem.ObjectId)                      AS GoodsId
                               , SUM (MovementItem.Amount)                        AS Amount
                               , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0))  AS HeadCount
@@ -540,6 +544,7 @@ BEGIN
                                                         , inMovementId          := vbMovementId_begin
                                                         , inGoodsId             := tmp.GoodsId
                                                         , inGoodsKindId         := tmp.GoodsKindId
+                                                        , inStorageLineId       := tmp.StorageLineId
                                                         , inAmount              := tmp.Amount
                                                         , inLiveWeight          := tmp.LiveWeight
                                                         , inHeadCount           := tmp.HeadCount
@@ -552,7 +557,8 @@ BEGIN
                                                         , inMovementId          := vbMovementId_begin
                                                         , inParentId            := NULL
                                                         , inGoodsId             := tmp.GoodsId
-                                                        , inGoodsKindId         := tmp.GoodsKindId                                                         
+                                                        , inGoodsKindId         := tmp.GoodsKindId
+                                                        , inStorageLineId       := tmp.StorageLineId
                                                         , inAmount              := tmp.Amount
                                                         , inLiveWeight          := tmp.LiveWeight
                                                         , inHeadCount           := tmp.HeadCount
@@ -584,6 +590,7 @@ BEGIN
                      , tmp.MovementItemId_Partion
                      , tmp.GoodsId
                      , tmp.GoodsKindId
+                     , tmp.StorageLineId
                      , tmp.PartionGoodsDate
                      , tmp.PartionGoods
                      , SUM (tmp.Amount)       AS Amount
@@ -605,6 +612,9 @@ BEGIN
                                        THEN 0
                                   ELSE COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                              END AS GoodsKindId
+
+                           , COALESCE (MILinkObject_StorageLine.ObjectId, 0) AS StorageLineId
+
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE
                                        THEN NULL
                                   WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
@@ -680,10 +690,13 @@ BEGIN
                                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
                                                        AND vbMovementDescId <> zc_Movement_ProductionSeparate() -- !!!надо убрать партии, т.к. в UNION их нет!!!
                                                        AND vbMovementDescId <> zc_Movement_ProductionUnion() -- !!!надо убрать партии, т.к. в UNION их нет!!!
-                                   
+
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
+                                                            ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
 
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                                 ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
@@ -702,6 +715,7 @@ BEGIN
                       SELECT MovementItem.Id                                     AS MovementItemId
                            , MovementItem.ObjectId                               AS GoodsId
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
+                           , COALESCE (MILinkObject_StorageLine.ObjectId, 0)     AS StorageLineId
                            , MIDate_PartionGoods.ValueData                       AS PartionGoodsDate
                            , COALESCE (MIString_PartionGoods.ValueData, '')      AS PartionGoods
 
@@ -751,10 +765,14 @@ BEGIN
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
+                                                            ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
                      ) AS tmp
                 GROUP BY tmp.MovementItemId_Partion
                        , tmp.GoodsId
                        , tmp.GoodsKindId
+                       , tmp.StorageLineId
                        , tmp.PartionGoodsDate
                        , tmp.PartionGoods
                        , tmp.myId -- если нет суммирования - каждое взвешивание в отдельной строчке

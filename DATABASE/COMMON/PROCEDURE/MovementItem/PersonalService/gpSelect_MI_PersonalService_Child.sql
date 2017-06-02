@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, ParentId Integer, MemberId Integer, MemberName TVarCh
              , ModelServiceId Integer, ModelServiceName TVarChar
              , StaffListSummKindId Integer, StaffListSummKindName TVarChar
              , StorageLineId Integer, StorageLineName TVarChar
-             
+
              , Amount TFloat, MemberCount TFloat, DayCount TFloat, WorkTimeHoursOne TFloat, WorkTimeHours TFloat, Price TFloat
              , HoursPlan TFloat, HoursDay TFloat, PersonalCount TFloat, GrossOne TFloat
              , isErased Boolean
@@ -34,13 +34,13 @@ BEGIN
                            , MovementItem.ParentId                    AS ParentId
                            , MovementItem.ObjectId                    AS MemberId
                            , MovementItem.Amount
-                           
+
                            , MILinkObject_PositionLevel.ObjectId      AS PositionLevelId
                            , MILinkObject_StaffList.ObjectId          AS StaffListId
                            , MILinkObject_ModelService.ObjectId       AS ModelServiceId
                            , MILinkObject_StaffListSummKind.ObjectId  AS StaffListSummKindId
                            , MILinkObject_StorageLine.ObjectId        AS StorageLineId
-                           
+
                            , MovementItem.isErased
                       FROM tmpIsErased
                            INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -62,7 +62,7 @@ BEGIN
                                                             ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
                        )
-                       
+
        -- –ÂÁÛÎ¸Ú‡Ú
        SELECT tmpMI.MovementItemId                     AS Id
             , tmpMI.ParentId                           AS ParentId
@@ -86,7 +86,7 @@ BEGIN
 
             , Object_StaffListSummKind.Id              AS StaffListSummKindId
             , Object_StaffListSummKind.ValueData       AS StaffListSummKindName
-            
+
             , Object_StorageLine.Id                    AS StorageLineId
             , Object_StorageLine.ValueData             AS StorageLineName
 
@@ -95,16 +95,16 @@ BEGIN
             , MIFloat_MemberCount.ValueData            AS MemberCount
             , MIFloat_DayCount.ValueData               AS DayCount
             , MIFloat_WorkTimeHoursOne.ValueData       AS WorkTimeHoursOne
-            , MIFloat_WorkTimeHours.ValueData          AS WorkTimeHours        
+            , MIFloat_WorkTimeHours.ValueData          AS WorkTimeHours
             , MIFloat_Price.ValueData                  AS Price
             , MIFloat_HoursPlan.ValueData              AS HoursPlan
             , MIFloat_HoursDay.ValueData               AS HoursDay
             , MIFloat_PersonalCount.ValueData          AS PersonalCount
             , MIFloat_GrossOne.ValueData               AS GrossOne
-            
+
             , tmpMI.isErased
-         
-       FROM tmpMI 
+
+       FROM tmpMI
             LEFT JOIN MovementItemFloat AS MIFloat_MemberCount
                                         ON MIFloat_MemberCount.MovementItemId = tmpMI .MovementItemId
                                        AND MIFloat_MemberCount.DescId = zc_MIFloat_MemberCount()
@@ -118,7 +118,7 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_WorkTimeHours
                                         ON MIFloat_WorkTimeHours.MovementItemId = tmpMI .MovementItemId
                                        AND MIFloat_WorkTimeHours.DescId = zc_MIFloat_WorkTimeHours()
-                                                                              
+
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = tmpMI .MovementItemId
                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
@@ -135,10 +135,10 @@ BEGIN
                                        AND MIFloat_PersonalCount.DescId = zc_MIFloat_PersonalCount()
             LEFT JOIN MovementItemFloat AS MIFloat_GrossOne
                                         ON MIFloat_GrossOne.MovementItemId = tmpMI .MovementItemId
-                                       AND MIFloat_GrossOne.DescId = zc_MIFloat_GrossOne()                                     
-            
+                                       AND MIFloat_GrossOne.DescId = zc_MIFloat_GrossOne()
+
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpMI .MemberId
-            
+
             LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = tmpMI.PositionLevelId
             LEFT JOIN Object AS Object_StaffList ON Object_StaffList.Id = tmpMI.StaffListId
             LEFT JOIN Object AS Object_ModelService ON Object_ModelService.Id = tmpMI.ModelServiceId
@@ -167,7 +167,6 @@ END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
-
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
@@ -178,7 +177,3 @@ $BODY$
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_MI_PersonalService_Child (inMovementId:= 25173, inIsErased:= FALSE, inSession:= '9818')
 -- SELECT * FROM gpSelect_MI_PersonalService_Child (inMovementId:= 25173, inIsErased:= TRUE, inSession:= '2')
-
-
-
-

@@ -23,7 +23,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , Comment TVarChar
              , OperDateStart TDateTime
              , OperDateEnd TDateTime
-             , DayCount Integer
+             , DayCount    TFloat  -- период ПРОГНОЗА = 4 недели
+             , ReserveDays TFloat  -- на сколько дней считаем План. Заказ на месяц
              , InvNumber_Income_Full TVarChar
              , FromName_Income TVarChar
              , isClosed Boolean
@@ -48,10 +49,10 @@ BEGIN
 
              , Object_Status.Code                         AS StatusCode
              , Object_Status.Name                         AS StatusName
-             
+
              , CURRENT_TIMESTAMP ::TDateTime              AS InsertDate
              , COALESCE(Object_Insert.ValueData,'')  ::TVarChar AS InsertName
-                          
+
              , CAST (TRUE as Boolean)                     AS PriceWithVAT
              , CAST (20 as TFloat)                        AS VATPercent
              , CAST (0 as TFloat)                         AS ChangePercent
@@ -69,17 +70,21 @@ BEGIN
              , 0                                          AS ContractId
              , CAST ('' as TVarChar)                      AS ContractName
              , 0                                          AS PaidKindId
-             , CAST ('' as TVarChar)                      AS PaidKindName  
-  
+             , CAST ('' as TVarChar)                      AS PaidKindName
+
              , CAST ('' as TVarChar) 	                  AS Comment
 
             /* , DATE_TRUNC ('MONTH', inOperDate)   ::TDateTime    AS OperDateStart
              , (DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')  ::TDateTime AS OperDateEnd*/
              , ((CASE WHEN EXTRACT (DOW FROM CURRENT_DATE) = 0 THEN CURRENT_DATE ELSE (CURRENT_DATE - ((EXTRACT (DOW FROM CURRENT_DATE))  :: TVarChar || ' DAY') :: INTERVAL) END) - interval '27 day')   ::TDateTime   AS OperDateStart
              , (CASE WHEN EXTRACT (DOW FROM CURRENT_DATE) = 0 THEN CURRENT_DATE ELSE (CURRENT_DATE - ((EXTRACT (DOW FROM CURRENT_DATE))  :: TVarChar || ' DAY') :: INTERVAL) END)                         ::TDateTime   AS OperDateEnd
-             , (DATE_PART ('DAY', (DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')  ::TDateTime
-                                - DATE_TRUNC ('MONTH', inOperDate)
-                         ) + 1) :: Integer                AS DayCount
+
+               -- период ПРОГНОЗА = 4 недели
+             , CAST (DATE_PART ('DAY', (DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
+                                      - DATE_TRUNC ('MONTH', inOperDate)
+                                       )) + 1 AS TFloat) AS DayCount
+               -- на сколько дней считаем План. Заказ на месяц
+             , CAST (30 as TFloat)                        AS ReserveDays
 
              , CAST ('' as TVarChar) 	                  AS InvNumber_Income_Full
              , CAST ('' as TVarChar) 	                  AS FromName_Income
@@ -95,8 +100,8 @@ BEGIN
      ELSE
 
      RETURN QUERY
-     WITH 
-     tmpIncome AS 
+     WITH
+     tmpIncome AS
               (SELECT STRING_AGG ( tmp.InvNumber_Income_Full, '; ')    :: TVarChar  AS InvNumber_Income_Full
                     , STRING_AGG (DISTINCT tmp.FromName_Income, '; ')  :: TVarChar  AS FromName_Income
                FROM (
@@ -124,10 +129,10 @@ BEGIN
            , MovementDate_OperDatePartner.ValueData AS OperDatePartner
            , Object_Status.ObjectCode               AS StatusCode
            , Object_Status.ValueData                AS StatusName
-           
+
            , MovementDate_Insert.ValueData          AS InsertDate
            , Object_Insert.ValueData                AS InsertName
-           
+
            , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData     AS VATPercent
            , MovementFloat_ChangePercent.ValueData  AS ChangePercent
@@ -153,7 +158,13 @@ BEGIN
 
            , COALESCE (MovementDate_OperDateStart.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate)) ::TDateTime  AS OperDateStart
            , COALESCE (MovementDate_OperDateEnd.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY') ::TDateTime  AS OperDateEnd
-           , COALESCE (MovementFloat_DayCount.ValueData, 0)  ::Integer  AS DayCount
+
+             -- период ПРОГНОЗА = 4 недели
+           , CAST (DATE_PART ('DAY', (COALESCE (MovementDate_OperDateEnd.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
+                                    - COALESCE (MovementDate_OperDateStart.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate))
+                                     )) + 1 AS TFloat) AS DayCount
+             -- на сколько дней считаем План. Заказ на месяц
+           , COALESCE (MovementFloat_DayCount.ValueData, 30) :: TFloat  AS ReserveDays
 
            , tmpIncome.InvNumber_Income_Full
            , tmpIncome.FromName_Income
@@ -183,9 +194,9 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MLO_Insert
                                          ON MLO_Insert.MovementId = Movement.Id
                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
-            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
-            LEFT JOIN MovementString AS MovementString_Comment 
+            LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
@@ -250,8 +261,8 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  05.05.17         *
- 14.04.17         * 
- 12.07.16         *  
+ 14.04.17         *
+ 12.07.16         *
 */
 
 -- тест
