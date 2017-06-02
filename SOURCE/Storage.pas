@@ -143,11 +143,40 @@ const
       '<inProtocolData DataType="ftBlob" Value="%s" />' +
       '</gpInsert_ReportProtocol>' +
     '</xml>';
+var
+  XML: IXMLDocument;
+  Data, NodeFun, NodeParam: IXMLNode;
+  I, J: Integer;
+  S, T, Q: string;
 begin
-  //pData := ReplaceStr(pData, '"', '&quot;');
+  TXMLDocument.Create(nil).GetInterface(IXMLDocument, XML);
+
+  XML.LoadFromXML(pData);
+  Data := XML.DocumentElement;
+  S := '';
+
+  if Data <> nil then
+  begin
+    for I := 0 to Pred(Data.ChildNodes.Count) do
+    begin
+      NodeFun := Data.ChildNodes.Get(I);
+      S := S + NodeFun.NodeName + ' (';
+      for J := 0 to Pred(NodeFun.ChildNodes.Count) do
+      begin
+        NodeParam := NodeFun.ChildNodes.Get(J);
+        T := NodeParam.Attributes['DataType'];
+        Q := '';
+        if (T = 'ftString') or (T = 'ftBlob') or (T = 'ftDateTime') or (T = 'ftDate') then
+          Q := '''';
+        S := S + NodeParam.NodeName + ':= ' + Q + NodeParam.Attributes['Value'] + Q + ', ';
+      end;
+      S := S + 'inSession:= ''' + Data.Attributes['Session'] + ''')';
+    end;
+  end;
+
   FSendList.Clear;
   FSendList.Add('XML=' + '<?xml version="1.0" encoding="windows-1251"?>' +
-    Format(pXML, [gc_User.Session, '' {pData}]));
+    Format(pXML, [gc_User.Session, S {pData}]));
   FReceiveStream.Clear;
   IdHTTPWork.FExecOnServer := False;
 

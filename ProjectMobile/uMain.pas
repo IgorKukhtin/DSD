@@ -336,7 +336,6 @@ type
     pProgress: TPanel;
     Layout6: TLayout;
     pieProgress: TPie;
-    pieAllProgress: TPie;
     Pie3: TPie;
     lProgress: TLabel;
     lProgressName: TLabel;
@@ -508,7 +507,6 @@ type
     Label48: TLabel;
     eServerVersion: TEdit;
     bUpdateProgram: TButton;
-    Circle1: TCircle;
     Layout16: TLayout;
     Layout17: TLayout;
     Layout18: TLayout;
@@ -784,6 +782,9 @@ type
     ePartners: TEdit;
     bSelectPartners: TButton;
     Image24: TImage;
+    Pie1: TPie;
+    Circle1: TCircle;
+    pieAllProgress: TPie;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
