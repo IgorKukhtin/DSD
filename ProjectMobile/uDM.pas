@@ -880,7 +880,7 @@ const
   Colors : array[0..5] of TAlphaColor = ($FF1AF71A, $FF1305DA, $FFF818D2, $FF02F2FA, $FFFB1028, $FFFE7FE8);
 var
   d: single;
-  OldColor: TAlphaColor;
+  NewColor, OldColor: TAlphaColor;
   ColorIndex: integer;
 begin
   inc(FProgress);
@@ -892,8 +892,9 @@ begin
     repeat
       ColorIndex := Random(5);
 
-      frmMain.pieProgress.Fill.Color := Colors[ColorIndex];
-    until OldColor <> frmMain.pieProgress.Fill.Color;
+      NewColor := Colors[ColorIndex];
+    until OldColor <> NewColor;
+    frmMain.pieProgress.Fill.Color := NewColor;
   end;
 
   d := (-FProgress * 360 / 100);
