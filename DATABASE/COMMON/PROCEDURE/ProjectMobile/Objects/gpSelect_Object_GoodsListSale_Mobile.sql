@@ -12,6 +12,8 @@ RETURNS TABLE (Id             Integer
              , GoodsName      TVarChar -- Товар
              , GoodsKindId    Integer  -- Вид товара
              , GoodsKindName  TVarChar -- Вид товара
+             , GoodsGroupNameFull TVarChar --
+             , InfoMoneyName_all  TVarChar --
              , PartnerId      Integer  -- Контрагент
              , PartnerCode    Integer  -- Контрагент
              , PartnerName    TVarChar --
@@ -40,6 +42,8 @@ BEGIN
             , Object_Goods.ValueData      AS GoodsName
             , Object_GoodsKind.Id         AS GoodsKindId
             , Object_GoodsKind.ValueData  AS GoodsKindName
+            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+            , Object_InfoMoney_View.InfoMoneyName_all
             , Object_Partner.Id           AS PartnerId
             , Object_Partner.ObjectCode   AS PartnerCode
             , Object_Partner.ValueData    AS PartnerName
@@ -50,6 +54,15 @@ BEGIN
             LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = gpSelect.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = gpSelect.GoodsKindId
             LEFT JOIN Object AS Object_Partner   ON Object_Partner.Id   = gpSelect.PartnerId
+
+            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
        ;
 
 END;

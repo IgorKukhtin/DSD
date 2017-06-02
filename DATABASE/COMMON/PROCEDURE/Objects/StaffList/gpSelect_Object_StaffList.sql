@@ -2,9 +2,11 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_StaffList (TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_StaffList (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_StaffList (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_StaffList(
     IN inUnitId      Integer,       -- Подразделение
+    IN inIsShowAll   Boolean,       --
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer
@@ -96,16 +98,18 @@ BEGIN
                                   ON ObjectBoolean_PositionLevel.ObjectId = Object_StaffList.Id 
                                  AND ObjectBoolean_PositionLevel.DescId = zc_ObjectBoolean_StaffList_PositionLevel()
 
-     WHERE Object_StaffList.DescId = zc_Object_StaffList();
+     WHERE Object_StaffList.DescId = zc_Object_StaffList()
+      AND (Object_StaffList.isErased = False OR inIsShowAll = True);
   
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Object_StaffList (Integer,TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_StaffList (Integer,TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.06.17         * add inIsShowAll
  24.03.16         * add isPositionLevel
  30.11.13                                        * add zc_ObjectFloat_StaffList_HoursDay
  22.11.13                                        * Cyr1251

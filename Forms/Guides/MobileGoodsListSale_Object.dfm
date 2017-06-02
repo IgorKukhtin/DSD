@@ -25,6 +25,8 @@ object MobileGoodsListSale_ObjectForm: TMobileGoodsListSale_ObjectForm
     Height = 438
     Align = alClient
     TabOrder = 0
+    ExplicitLeft = -7
+    ExplicitTop = 18
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -58,6 +60,14 @@ object MobileGoodsListSale_ObjectForm: TMobileGoodsListSale_ObjectForm
       OptionsView.HeaderHeight = 50
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object clGoodsGroupNameFull: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+        DataBinding.FieldName = 'GoodsGroupNameFull'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 209
+      end
       object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsCode'
@@ -81,6 +91,23 @@ object MobileGoodsListSale_ObjectForm: TMobileGoodsListSale_ObjectForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 150
+      end
+      object InfoMoneyName_all: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+        DataBinding.FieldName = 'InfoMoneyName_all'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 111
+      end
+      object PartnerCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088'.'
+        DataBinding.FieldName = 'PartnerCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090
+        Options.Editing = False
+        Width = 48
       end
       object PartnerName: TcxGridDBColumn
         Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090

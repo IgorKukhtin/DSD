@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_ModelServiceItemMaster()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ModelServiceItemMaster(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ModelServiceItemMaster(Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ModelServiceItemMaster(
+    IN inIsShowAll   Boolean,       --
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
@@ -86,18 +88,20 @@ BEGIN
                                  ON ObjectString_Comment.ObjectId = Object_ModelServiceItemMaster.Id 
                                 AND ObjectString_Comment.DescId = zc_ObjectString_ModelServiceItemMaster_Comment()
 
-     WHERE Object_ModelServiceItemMaster.DescId = zc_Object_ModelServiceItemMaster();
+     WHERE Object_ModelServiceItemMaster.DescId = zc_Object_ModelServiceItemMaster()
+      AND (Object_ModelServiceItemMaster.isErased = False OR inIsShowAll = True);
   
 END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Object_ModelServiceItemMaster (TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_ModelServiceItemMaster (TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.06.17         * add inIsShowAll
  17.06.16         * DocumentKind
  21.11.13                                        * MovementDescName
  19.10.13         * 

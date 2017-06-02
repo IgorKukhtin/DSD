@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_StaffListCost()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_StaffListCost(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_StaffListCost(Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_StaffListCost(
+    IN inIsShowAll   Boolean,       --
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
@@ -51,18 +53,20 @@ BEGIN
                                  ON ObjectString_Comment.ObjectId = Object_StaffListCost.Id 
                                 AND ObjectString_Comment.DescId = zc_ObjectString_StaffListCost_Comment()
 
-     WHERE Object_StaffListCost.DescId = zc_Object_StaffListCost();
+     WHERE Object_StaffListCost.DescId = zc_Object_StaffListCost()
+      AND (Object_StaffListCost.isErased = False OR inIsShowAll = True);
   
 END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Object_StaffListCost (TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_StaffListCost (TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.06.17         * add inIsShowAll
  22.11.13                                        * Cyr1251
  19.10.13         * 
 */

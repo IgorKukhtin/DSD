@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_ModelService(TVarChar)
 
 DROP FUNCTION IF EXISTS  gpSelect_Object_ModelService(TVarChar);
+DROP FUNCTION IF EXISTS  gpSelect_Object_ModelService(Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ModelService(
+    IN inIsShowAll   Boolean,       --
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
@@ -46,6 +48,7 @@ BEGIN
             LEFT JOIN Object AS Object_ModelServiceKind ON Object_ModelServiceKind.Id = ObjectLink_ModelService_ModelServiceKind.ChildObjectId
 
        WHERE Object_ModelService.DescId = zc_Object_ModelService()
+         AND (Object_ModelService.isErased = False OR inIsShowAll = True)
       UNION ALL
        SELECT 0 AS Id
             , 0 AS Code
@@ -65,6 +68,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.06.17         *
  19.10.13         * 
 
 */

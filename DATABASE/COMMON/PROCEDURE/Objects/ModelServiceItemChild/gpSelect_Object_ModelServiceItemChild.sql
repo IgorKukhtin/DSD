@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_ModelServiceItemChild()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ModelServiceItemChild(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ModelServiceItemChild(Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ModelServiceItemChild(
+    IN inIsShowAll   Boolean,  
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
@@ -112,7 +114,8 @@ BEGIN
                                  ON ObjectString_Comment.ObjectId = Object_ModelServiceItemChild.Id 
                                 AND ObjectString_Comment.DescId = zc_ObjectString_ModelServiceItemChild_Comment()
 
-     WHERE Object_ModelServiceItemChild.DescId = zc_Object_ModelServiceItemChild();
+     WHERE Object_ModelServiceItemChild.DescId = zc_Object_ModelServiceItemChild()
+      AND (Object_ModelServiceItemChild.isErased = False OR inIsShowAll = True);
   
 END;
 $BODY$
@@ -121,6 +124,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.06.17         * add inIsShowAll
  26.05.17         * add StorageLine
  27.12.16         *
  20.10.13         * 
