@@ -129,6 +129,14 @@ object MobileGoodsByGoodsKind_ObjectForm: TMobileGoodsByGoodsKind_ObjectForm
         Options.Editing = False
         Width = 87
       end
+      object InfoMoneyName_all: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+        DataBinding.FieldName = 'InfoMoneyName_all'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 111
+      end
       object isSync: TcxGridDBColumn
         Caption = #1057#1080#1085#1093#1088#1086#1085#1080#1079#1080#1088#1091#1077#1090#1089#1103
         DataBinding.FieldName = 'isSync'

@@ -1846,14 +1846,39 @@ object IncomeFuelForm: TIncomeFuelForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'PersonalDriverId'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalDriverName'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inOperDate'
         Value = 0d
         Component = edOperDatePartner
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 336
-    Top = 32
+    Left = 320
+    Top = 16
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1927,8 +1952,8 @@ object IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 416
-    Top = 24
+    Left = 472
+    Top = 8
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -2003,7 +2028,7 @@ object IncomeFuelForm: TIncomeFuelForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 134
+    Left = 158
     Top = 272
   end
   object MasterViewAddOn: TdsdDBViewAddOn
@@ -2168,11 +2193,19 @@ object IncomeFuelForm: TIncomeFuelForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inToId'
+        Name = 'ioToId'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outToName'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item

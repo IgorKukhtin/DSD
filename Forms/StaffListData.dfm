@@ -471,6 +471,14 @@ object StaffListDataForm: TStaffListDataForm
         end
         item
           Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoiceGuides'
         end
         item
@@ -564,6 +572,10 @@ object StaffListDataForm: TStaffListDataForm
     end
     object bbProtocolSumm: TdxBarButton
       Action = ProtocolOpenFormSumm
+      Category = 0
+    end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
       Category = 0
     end
   end
@@ -1050,6 +1062,31 @@ object StaffListDataForm: TStaffListDataForm
         end>
       isShowModal = False
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectStaffList
+      StoredProcList = <
+        item
+          StoredProc = spSelectStaffList
+        end
+        item
+          StoredProc = spSelectStaffListCost
+        end
+        item
+          StoredProc = spSelectStaffListSumm
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 168
@@ -1122,6 +1159,14 @@ object StaffListDataForm: TStaffListDataForm
         Value = ''
         Component = UnitGuides
         ComponentItem = 'inUnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1245,7 +1290,15 @@ object StaffListDataForm: TStaffListDataForm
       item
         DataSet = StaffListCostCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inisShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 514
     Top = 397
@@ -1382,7 +1435,15 @@ object StaffListDataForm: TStaffListDataForm
       item
         DataSet = StaffListSummCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inisShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 506
     Top = 541

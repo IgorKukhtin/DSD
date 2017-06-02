@@ -373,6 +373,7 @@ begin
 
       SetLength(InBytes, Length(FReceiveStream.Bytes) - ResultTypeLenght - IsArchiveLenght);
       Move(FReceiveStream.Bytes[ResultTypeLenght + IsArchiveLenght], InBytes[0], Length(InBytes));
+
       if ResultType = gcMultiDataSet then begin
          Result := ProcessMultiDataSet;
          exit;

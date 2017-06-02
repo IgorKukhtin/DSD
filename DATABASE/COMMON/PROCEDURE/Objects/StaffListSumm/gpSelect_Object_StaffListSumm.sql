@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_StaffListSumm (TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_StaffListSumm (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_StaffListSumm (Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_StaffListSumm(
+    IN inIsShowAll   Boolean,       --
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
@@ -38,7 +40,7 @@ BEGIN
 
          , Object_StaffListSumm.isErased AS isErased
          
-     FROM OBJECT AS Object_StaffListSumm
+     FROM Object AS Object_StaffListSumm
      
           LEFT JOIN ObjectLink AS ObjectLink_StaffListSumm_StaffList
                                ON ObjectLink_StaffListSumm_StaffList.ObjectId = Object_StaffListSumm.Id
@@ -66,20 +68,22 @@ BEGIN
                                  ON ObjectString_Comment.ObjectId = Object_StaffListSumm.Id 
                                 AND ObjectString_Comment.DescId = zc_ObjectString_StaffListSumm_Comment()
 
-     WHERE Object_StaffListSumm.DescId = zc_Object_StaffListSumm();
+     WHERE Object_StaffListSumm.DescId = zc_Object_StaffListSumm()
+      AND (Object_StaffListSumm.isErased = False OR inIsShowAll = True);
   
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Object_StaffListSumm (TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_StaffListSumm (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.06.17         * add inIsShowAll
  30.11.13                                        * add SummKindComment
  22.11.13                                        * Cyr1251
  30.10.13         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_StaffListSumm ('2')
+-- SELECT * FROM gpSelect_Object_StaffListSumm (False,'2')

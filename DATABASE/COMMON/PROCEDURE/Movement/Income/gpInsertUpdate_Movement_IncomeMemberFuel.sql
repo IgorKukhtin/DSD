@@ -28,19 +28,22 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_IncomeMemberFuel(
     IN inLimitDistanceChange TFloat    , -- лимит (по служебке) литры
 
     IN inFromId              Integer   , -- От кого (в документе)
-    IN inToId                Integer   , -- Кому (в документе)
+ INOUT ioToId                Integer   , -- Кому (в документе)
+   OUT outToName             TVarChar  , -- Кому (в документе)
     IN inPaidKindId          Integer   , -- Виды форм оплаты 
     IN inContractId          Integer   , -- Договора
     IN inRouteId             Integer   , -- Маршрут
     IN inPersonalDriverId    Integer   , -- Сотрудник (водитель)
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbToId Integer;
+   DECLARE vbDescId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_IncomeFuel());
@@ -53,6 +56,18 @@ BEGIN
      -- проверка - связанные документы Изменять нельзя
      PERFORM lfCheck_Movement_Parent (inMovementId:= ioId, inComment:= 'изменение');
 
+     -- проверяем водителя для топливной карты.
+     vbDescId := (SELECT Object.DescId FROM Object WHERE Object.Id = inFromId);
+     IF vbDescId = zc_Object_CardFuel()
+        THEN
+             vbToId := (SELECT OL_PersonalDriver.ChildObjectId
+                        FROM ObjectLink AS OL_PersonalDriver 
+                        WHERE OL_PersonalDriver.ObjectId = inFromId
+                        AND OL_PersonalDriver.DescId = zc_ObjectLink_CardFuel_PersonalDriver());
+     END IF;
+     IF COALESCE (vbToId,0) <> 0 THEN ioToId:= vbToId; END IF;
+     outToName := COALESCE((SELECT Object.ValueData FROM Object WHERE Object.Id = ioToId),'') ::TVarChar ;
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_IncomeFuel (ioId               := ioId
                                                , inParentId         := NULL
@@ -64,7 +79,7 @@ BEGIN
                                                , inVATPercent       := inVATPercent
                                                , inChangePrice      := inChangePrice
                                                , inFromId           := inFromId
-                                               , inToId             := inToId
+                                               , inToId             := ioToId
                                                , inPaidKindId       := inPaidKindId
                                                , inContractId       := inContractId
                                                , inRouteId          := inRouteId
@@ -104,6 +119,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.06.17         *
  07.12.13                                        * add lpGetAccess
  31.10.13                                        * add inOperDatePartner
  19.10.13                                        * add inChangePrice
@@ -116,4 +132,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_IncomeFuel (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePrice:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_Movement_IncomeFuel (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePrice:= 0, inFromId:= 1, ioToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')

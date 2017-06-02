@@ -58,6 +58,8 @@ type
     clChangePercent: TcxGridDBColumn;
     clChangePrice: TcxGridDBColumn;
     FormParams: TdsdFormParams;
+    colPersonalDriverName: TcxGridDBColumn;
+    colPersonalDriverName_inf: TcxGridDBColumn;
 
   private
     { Private declarations }

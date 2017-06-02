@@ -14,6 +14,7 @@ RETURNS TABLE (Id                 Integer
              , GoodsKindName      TVarChar -- Вид товара
              , GoodsGroupName     TVarChar -- Группа товара
              , GoodsGroupNameFull TVarChar --
+             , InfoMoneyName_all  TVarChar
              , Remains            TFloat   -- Остаток на  складе vbUnitId
              , Forecast           TFloat   -- Прогноз прихода на vbUnitId
              , isErased           Boolean  -- Удаленный ли элемент
@@ -42,6 +43,7 @@ BEGIN
             , Object_GoodsKind.ValueData  AS GoodsKindName
             , Object_GoodsGroup.ValueData AS GoodsGroupName
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+            , Object_InfoMoney_View.InfoMoneyName_all
             , gpSelect.Remains
             , gpSelect.Forecast
             , gpSelect.isErased
@@ -58,6 +60,11 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
        ;
 
 END;
@@ -67,6 +74,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Ярошенко Р.Ф.
+ 02.06.17         * add InfoMoney
  10.03.17         *
 */
 

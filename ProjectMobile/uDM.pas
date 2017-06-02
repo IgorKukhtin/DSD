@@ -876,16 +876,30 @@ end;
 
 { обновление бегущего круга }
 procedure TProgressThread.Update;
+const
+  Colors : array[0..5] of TAlphaColor = ($FF1AF71A, $FF1305DA, $FFF818D2, $FF02F2FA, $FFFB1028, $FFFE7FE8);
 var
   d: single;
+  NewColor, OldColor: TAlphaColor;
+  ColorIndex: integer;
 begin
   inc(FProgress);
   if FProgress>= 100 then
+  begin
     FProgress := 0;
 
-  d := (FProgress * 360 / 100);
+    OldColor := frmMain.pieProgress.Fill.Color;
+    repeat
+      ColorIndex := Random(5);
 
-  frmMain.pieProgress.StartAngle := d - 20;
+      NewColor := Colors[ColorIndex];
+    until OldColor <> NewColor;
+    frmMain.pieProgress.Fill.Color := NewColor;
+  end;
+
+  d := (-FProgress * 360 / 100);
+
+  frmMain.pieProgress.StartAngle := d + 20;
   frmMain.pieProgress.EndAngle := d;
 end;
 
@@ -5703,6 +5717,7 @@ end;
 initialization
 
 Structure := TStructure.Create;
+Randomize;
 
 finalization
 

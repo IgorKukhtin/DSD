@@ -128,6 +128,8 @@ type
     bbProtocolOpen: TdxBarButton;
     bbProtocolMaster: TdxBarButton;
     bbProtocolChild: TdxBarButton;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public

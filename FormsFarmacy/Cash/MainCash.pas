@@ -559,6 +559,7 @@ begin
   chbNotMCS.Checked := False;
   UpdateRemainsFromCheck;
   CheckCDS.EmptyDataSet;
+  MCDesigner.CasualCache.Clear;
   StartRefreshDiffThread;
 end;
 
@@ -2301,6 +2302,12 @@ begin
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
+  edPrice.Value := 0.0;
+  edPrice.Visible := False;
+  edAmount.Value := 0.0;
+  edAmount.Visible := False;
+  lblPrice.Visible := False;
+  lblAmount.Visible := False;
   pnlDiscount.Visible := False;
   pnlSP.Visible := False;
   lblCashMember.Caption := '';
@@ -2312,6 +2319,7 @@ begin
   finally
     CheckCDS.EnableControls;
   end;
+  MCDesigner.CasualCache.Clear;
 
   MainCashForm.SoldRegim := true;
   MainCashForm.actSpec.Checked := false;

@@ -10,6 +10,10 @@ uses
 
 const
   cURL = 'http://medicard.in.ua/api/api.php';
+  CardCount = 10;
+  CardList: array[1..CardCount] of String[16] = ('MD00030026441', 'MD00030026593', 'MD00071023724',
+    'MD00071053713', 'MD00072032404', 'MD00072032847', 'MD00072059497', 'MD00072059505',
+    'MD00072059744', 'MD00072060385');
 
 type
   TfrmMain = class(TForm)
@@ -226,6 +230,7 @@ end;
 procedure TfrmMain.Button3Click(Sender: TObject);
 var
   sData, sResp: TStringStream;
+  I: Integer;
   Session: IMCSession;
   CasualId, XML: string;
 begin
@@ -233,59 +238,68 @@ begin
   sResp := TStringStream.Create;
   try
     MCDesigner.URL := cURL;
-    MCDesigner.CreateObject(IMCSessionDiscount).GetInterface(IMCSession, Session);
 
-    CasualId := MCDesigner.CasualCache.GenerateCasual;
-
-    with Session.Request.Params do
+    for I := 1 to CardCount do
     begin
-      ParamByName('id_casual').AsString := CasualId;
-      ParamByName('inside_code').AsInteger := 679;
-      ParamByName('card_code').AsString := 'MD00030026441';
-      ParamByName('product_code').AsString := '134965';
-      ParamByName('qty').AsFloat := 3;
-    end;
+      MCDesigner.CreateObject(IMCSessionDiscount).GetInterface(IMCSession, Session);
 
-    Session.Request.SaveToXML(XML);
-    sData.WriteString(XML);
-    sData.SaveToFile(ExtractFilePath(Application.ExeName) + 'request.xml');
-
-    if Session.Post = 200 then
-    begin
-      Session.Response.SaveToXML(XML);
-      sResp.WriteString(XML);
-      sResp.SaveToFile(ExtractFilePath(Application.ExeName) + 'response.xml');
-
-      MCDesigner.CreateObject(IMCSessionSale).GetInterface(IMCSession, Session);
+      CasualId := MCDesigner.CasualCache.GenerateCasual;
 
       with Session.Request.Params do
       begin
         ParamByName('id_casual').AsString := CasualId;
-        ParamByName('inside_code').AsInteger := 679;;
-        ParamByName('supplier').AsInteger := 45643;
-        ParamByName('id_alter').AsString := '5678';
-        ParamByName('sale_status').AsInteger := MC_SALE_COMPLETE;
-        ParamByName('card_code').AsString := 'MD00030026441';
+        ParamByName('inside_code').AsInteger := 679;
+        ParamByName('card_code').AsString := CardList[I];
         ParamByName('product_code').AsString := '134965';
-        ParamByName('price').AsFloat := 34.67;
-        ParamByName('qty').AsFloat := 3;
-        ParamByName('rezerv').AsFloat := 51;
-        ParamByName('discont_percent').AsFloat := 15;
-        ParamByName('discont_value').AsFloat := 0;
-        ParamByName('sale_date').AsString := '2017-05-11 17:26:45';
+        ParamByName('qty').AsFloat := 2;
       end;
 
       Session.Request.SaveToXML(XML);
       sData.Clear;
       sData.WriteString(XML);
-      sData.SaveToFile(ExtractFilePath(Application.ExeName) + 'request_sale.xml');
+      sData.SaveToFile(ExtractFilePath(Application.ExeName) + 'request_' + CardList[I] + '.xml');
 
       if Session.Post = 200 then
       begin
         Session.Response.SaveToXML(XML);
         sResp.Clear;
         sResp.WriteString(XML);
-        sResp.SaveToFile(ExtractFilePath(Application.ExeName) + 'response_sale.xml');
+        sResp.SaveToFile(ExtractFilePath(Application.ExeName) + 'response_' + CardList[I] + '.xml');
+
+        if Pos('202', Session.Response.Params.ParamByName('error').AsString) = 1 then
+        begin
+          MCDesigner.CreateObject(IMCSessionSale).GetInterface(IMCSession, Session);
+
+          with Session.Request.Params do
+          begin
+            ParamByName('id_casual').AsString := CasualId;
+            ParamByName('inside_code').AsInteger := 679;;
+            ParamByName('supplier').AsInteger := 45643;
+            ParamByName('id_alter').AsString := '5678';
+            ParamByName('sale_status').AsInteger := MC_SALE_COMPLETE;
+            ParamByName('card_code').AsString := CardList[I];
+            ParamByName('product_code').AsString := '134965';
+            ParamByName('price').AsFloat := 34.67;
+            ParamByName('qty').AsFloat := 3;
+            ParamByName('rezerv').AsFloat := 51;
+            ParamByName('discont_percent').AsFloat := 15;
+            ParamByName('discont_value').AsFloat := 0;
+            ParamByName('sale_date').AsString := '2017-05-11 17:26:45';
+          end;
+
+          Session.Request.SaveToXML(XML);
+          sData.Clear;
+          sData.WriteString(XML);
+          sData.SaveToFile(ExtractFilePath(Application.ExeName) + 'request_sale_' + CardList[I] + '.xml');
+
+          if Session.Post = 200 then
+          begin
+            Session.Response.SaveToXML(XML);
+            sResp.Clear;
+            sResp.WriteString(XML);
+            sResp.SaveToFile(ExtractFilePath(Application.ExeName) + 'response_sale_' + CardList[I] + '.xml');
+          end;
+        end;
       end;
     end;
   finally
