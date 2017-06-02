@@ -785,6 +785,10 @@ type
     Pie1: TPie;
     Circle1: TCircle;
     pieAllProgress: TPie;
+    pOptimizeDB: TPanel;
+    GridPanelLayout18: TGridPanelLayout;
+    bOptimizeDB: TButton;
+    Panel57: TPanel;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -1006,6 +1010,7 @@ type
     procedure lwJuridicalCollationItemsItemClick(const Sender: TObject;
       const AItem: TListViewItem);
     procedure bSelectPartnersClick(Sender: TObject);
+    procedure bOptimizeDBClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -3090,6 +3095,7 @@ begin
   begin
     FUseAdminRights := false;
     pBackup.Visible := false;
+    pOptimizeDB.Visible := false;
   end;
 end;
 
@@ -3418,6 +3424,7 @@ begin
   if tcMain.ActiveTab = tiInformation then
   begin
     pBackup.Visible := true;
+    pOptimizeDB.Visible := true;
   end
   else
   begin
@@ -3426,6 +3433,28 @@ begin
     CurWebServerLayout.Height := 75;
     CurWebServerEdit.Text := gc_WebService;
     gc_WebService := '';
+  end;
+end;
+
+procedure TfrmMain.bOptimizeDBClick(Sender: TObject);
+begin
+  try
+    DM.conMain.ExecSQL('DELETE FROM Object_GoodsByGoodsKind WHERE isErased = 1');
+    DM.conMain.ExecSQL('DELETE FROM Object_GoodsListSale WHERE isErased = 1');
+
+    DM.conMain.ExecSQL('DELETE FROM OBJECT_PARTNER'
+     + ' WHERE  OBJECT_PARTNER.ISERASED = 1'
+     + '    AND NOT EXISTS (SELECT 1 FROM  MOVEMENT_ORDEREXTERNAL WHERE MOVEMENT_ORDEREXTERNAL.PARTNERID = OBJECT_PARTNER.ID AND MOVEMENT_ORDEREXTERNAL.CONTRACTID = OBJECT_PARTNER.CONTRACTID)'
+     + '    AND NOT EXISTS (SELECT 1 FROM  MOVEMENT_RETURNIN WHERE MOVEMENT_RETURNIN.PARTNERID = OBJECT_PARTNER.ID AND MOVEMENT_RETURNIN.CONTRACTID = OBJECT_PARTNER.CONTRACTID)'
+     + '    AND NOT EXISTS (SELECT 1 FROM  MOVEMENT_CASH WHERE MOVEMENT_CASH.PARTNERID = OBJECT_PARTNER.ID AND MOVEMENT_CASH.CONTRACTID = OBJECT_PARTNER.CONTRACTID)'
+     + '    AND NOT EXISTS (SELECT 1 FROM  MOVEMENT_STOREREAL WHERE MOVEMENT_STOREREAL.PARTNERID = OBJECT_PARTNER.ID)'
+     + '    AND NOT EXISTS (SELECT 1 FROM  MOVEMENT_VISIT WHERE MOVEMENT_VISIT.PARTNERID = OBJECT_PARTNER.ID)'
+     + '    AND NOT EXISTS (SELECT 1 FROM  MOVEMENTITEM_TASK WHERE MOVEMENTITEM_TASK.PARTNERID = OBJECT_PARTNER.ID)');
+
+    ShowMessage('Оптимизация базы данных успешно завершена');
+  except
+    on E: Exception do
+      Showmessage(E.Message);
   end;
 end;
 
@@ -5568,6 +5597,7 @@ var
   Res : integer;
 begin
   pBackup.Visible := false;
+  pOptimizeDB.Visible := false;
 
   eMobileVersion.Text := DM.GetCurrentVersion;
 
