@@ -1146,7 +1146,6 @@ type
     procedure GetCurrentCoordinates;
 
     procedure AddComboItem(AComboBox: TComboBox; AText: string); overload;
-    procedure AddComboItem(AComboBox: TComboEdit; AText: string); overload;
     procedure MobileIdle(Sender: TObject; var Done: Boolean);
 
     property CashAmountValue: Double read FCashAmountValue write SetCashAmountValue;
@@ -6027,19 +6026,6 @@ end;
 
 // добавление елемента в combobox
 procedure TfrmMain.AddComboItem(AComboBox: TComboBox; AText: string);
-var
-  lbi: TListBoxItem;
-begin
-  lbi := TListBoxItem.Create(AComboBox);
-  lbi.Parent := AComboBox;
-  lbi.Text := AText;
-  lbi.Font.Size := DefaultSize;
-  lbi.StyledSettings := lbi.StyledSettings - [TStyledSetting.Size];
-
-  AComboBox.AddObject(lbi);
-end;
-
-procedure TfrmMain.AddComboItem(AComboBox: TComboEdit; AText: string);
 var
   lbi: TListBoxItem;
 begin
