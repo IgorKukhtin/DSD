@@ -12,8 +12,8 @@ object SourceFuel_ObjectForm: TSourceFuel_ObjectForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
@@ -136,6 +136,21 @@ object SourceFuel_ObjectForm: TSourceFuel_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
+      end
+      object colPersonalDriverName: TcxGridDBColumn
+        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1074#1086#1076#1080#1090#1077#1083#1100')'
+        DataBinding.FieldName = 'PersonalDriverName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object colPersonalDriverName_inf: TcxGridDBColumn
+        DataBinding.FieldName = 'PersonalDriverName_inf'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 80
       end
       object clItemName: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -301,6 +316,7 @@ object SourceFuel_ObjectForm: TSourceFuel_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -308,6 +324,7 @@ object SourceFuel_ObjectForm: TSourceFuel_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
@@ -315,18 +332,21 @@ object SourceFuel_ObjectForm: TSourceFuel_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'Code'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsCode'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
@@ -334,6 +354,7 @@ object SourceFuel_ObjectForm: TSourceFuel_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FuelName'
@@ -341,42 +362,65 @@ object SourceFuel_ObjectForm: TSourceFuel_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'FuelName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InvNumber'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'InvNumber'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ChangePercent'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'ChangePercent'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ChangePrice'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'ChangePrice'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'PaidKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalDriverId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalDriverId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalDriverName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalDriverName_inf'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -408,6 +452,15 @@ object SourceFuel_ObjectForm: TSourceFuel_ObjectForm
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inToId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 40
@@ -448,6 +501,12 @@ object SourceFuel_ObjectForm: TSourceFuel_ObjectForm
         Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 168
     Top = 272

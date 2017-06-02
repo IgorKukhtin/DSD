@@ -131,4 +131,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ModelServiceItemChild ('2')
+-- SELECT * FROM gpSelect_Object_ModelServiceItemChild (False,'2')

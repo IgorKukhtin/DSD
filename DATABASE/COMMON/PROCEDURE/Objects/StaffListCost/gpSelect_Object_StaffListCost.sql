@@ -72,4 +72,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_StaffListCost ('2')
+-- SELECT * FROM gpSelect_Object_StaffListCost (False,'2')

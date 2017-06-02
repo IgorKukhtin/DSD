@@ -119,4 +119,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_StaffList (0,'2')
+-- SELECT * FROM gpSelect_Object_StaffList (0, False, '2')

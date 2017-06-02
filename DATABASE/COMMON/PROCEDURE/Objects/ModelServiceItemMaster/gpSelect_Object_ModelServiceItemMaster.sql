@@ -108,4 +108,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ModelServiceItemMaster ('2')
+-- SELECT * FROM gpSelect_Object_ModelServiceItemMaster (False,'2')

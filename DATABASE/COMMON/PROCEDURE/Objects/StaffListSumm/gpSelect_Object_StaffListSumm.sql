@@ -86,4 +86,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_StaffListSumm ('2')
+-- SELECT * FROM gpSelect_Object_StaffListSumm (False,'2')

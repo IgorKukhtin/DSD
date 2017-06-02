@@ -74,4 +74,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ModelService (inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ModelService (inIsShowAll:=False, inSession:= zfCalc_UserAdmin())
