@@ -731,10 +731,6 @@
 				<Form>Report_MovementIncomeDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Report\Report_MovementIncome.pas">
-				<Form>Report_MovementIncomeForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Report\Report_MovementReturnOutDialog.pas">
 				<Form>Report_MovementReturnOutDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -757,6 +753,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Report\Report_MovementLossDialog.pas">
 				<Form>Report_MovementLossDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_MovementIncome.pas">
+				<Form>Report_MovementIncomeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
