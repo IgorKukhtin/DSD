@@ -24,7 +24,7 @@ type
     dxBarButton1: TdxBarButton;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    colFromName: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     actRefreshSize: TdsdDataSetRefresh;
