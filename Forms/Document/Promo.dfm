@@ -4,7 +4,7 @@ inherited PromoForm: TPromoForm
   ClientHeight = 599
   ClientWidth = 1204
   ExplicitWidth = 1220
-  ExplicitHeight = 634
+  ExplicitHeight = 637
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1182,6 +1182,102 @@ inherited PromoForm: TPromoForm
       ReportName = #1040#1082#1094#1080#1103
       ReportNameParam.Value = #1040#1082#1094#1080#1103
     end
+    inherited MovementItemProtocolOpenForm: TdsdOpenForm
+      TabSheet = tsMain
+    end
+    object actPartnerProtocolOpenForm: TdsdOpenForm [16]
+      Category = 'DSDLib'
+      TabSheet = tsPartner
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1055#1072#1088#1090#1085#1077#1088#1099'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1055#1072#1088#1090#1085#1077#1088#1099'>'
+      ImageIndex = 34
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = PartnerCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = PartnerCDS
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actConditionPromoProtocolOpenForm: TdsdOpenForm [17]
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1044#1086#1087'. '#1089#1082#1080#1076#1082#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1044#1086#1087'. '#1089#1082#1080#1076#1082#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ConditionPromoCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = ConditionPromoCDS
+          ComponentItem = 'ConditionPromoName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actAdvertisingProtocolOpenForm: TdsdOpenForm [18]
+      Category = 'DSDLib'
+      TabSheet = tsAdvertising
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = AdvertisingCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = AdvertisingCDS
+          ComponentItem = 'AdvertisingName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object GoodsKindChoiceForm: TOpenChoiceForm
       Category = 'Goods'
       MoveParams = <>
@@ -1801,6 +1897,14 @@ inherited PromoForm: TPromoForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementItemProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton12'
         end
         item
@@ -1818,6 +1922,14 @@ inherited PromoForm: TPromoForm
         item
           Visible = True
           ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPartnerProtocol'
         end
         item
           Visible = True
@@ -1841,6 +1953,14 @@ inherited PromoForm: TPromoForm
         end
         item
           Visible = True
+          ItemName = 'bbPartnerListProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton8'
         end
         item
@@ -1857,15 +1977,20 @@ inherited PromoForm: TPromoForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'bbAdvertisingProtocol'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemProtocol'
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -1936,6 +2061,18 @@ inherited PromoForm: TPromoForm
     end
     object dxBarButton12: TdxBarButton
       Action = mactAddAllPartner
+      Category = 0
+    end
+    object bbPartnerProtocol: TdxBarButton
+      Action = actPartnerProtocolOpenForm
+      Category = 0
+    end
+    object bbPartnerListProtocol: TdxBarButton
+      Action = actConditionPromoProtocolOpenForm
+      Category = 0
+    end
+    object bbAdvertisingProtocol: TdxBarButton
+      Action = actAdvertisingProtocolOpenForm
       Category = 0
     end
   end
@@ -2670,8 +2807,8 @@ inherited PromoForm: TPromoForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 132
-    Top = 96
+    Left = 148
+    Top = 64
   end
   object PersonalGuides: TdsdGuides
     KeyField = 'Id'
@@ -3169,8 +3306,8 @@ inherited PromoForm: TPromoForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 424
-    Top = 504
+    Left = 392
+    Top = 488
   end
   object AdvertisingDS: TDataSource
     DataSet = AdvertisingCDS
@@ -3371,8 +3508,8 @@ inherited PromoForm: TPromoForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 264
-    Top = 536
+    Left = 48
+    Top = 512
   end
   object dsdDBViewAddOnPartnerList: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

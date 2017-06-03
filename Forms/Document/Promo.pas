@@ -216,6 +216,12 @@ type
     dxBarButton12: TdxBarButton;
     deEndReturn: TcxDateEdit;
     cxLabel3: TcxLabel;
+    actPartnerProtocolOpenForm: TdsdOpenForm;
+    actConditionPromoProtocolOpenForm: TdsdOpenForm;
+    bbPartnerProtocol: TdxBarButton;
+    bbPartnerListProtocol: TdxBarButton;
+    bbAdvertisingProtocol: TdxBarButton;
+    actAdvertisingProtocolOpenForm: TdsdOpenForm;
   private
     { Private declarations }
   public
