@@ -39,6 +39,8 @@ type
     //
     //ScaleCeh
     function gpGet_ScaleCeh_Movement_checkPartion(MovementId,GoodsId:Integer;PartionGoods:String;OperCount:Double): Boolean;
+    //ScaleCeh
+    function gpGet_ScaleCeh_Movement_checkStorageLine(MovementId : Integer): String;
 
   end;
 
@@ -147,6 +149,21 @@ begin
          Result := '';
          ShowMessage('Ошибка получения - gpGet_Scale_Movement_checkId');
        end;}
+    end;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleCehForm.gpGet_ScaleCeh_Movement_checkStorageLine(MovementId : Integer): String;
+begin
+    with spSelect do begin
+       StoredProcName:='gpGet_ScaleCeh_Movement_checkStorageLine';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inMovementId', ftInteger, ptInput, MovementId);
+       //try
+       Execute;
+       if DataSet.FieldByName('isStorageLine_empty').asBoolean = TRUE
+       then Result:= ''
+       else Result:= DataSet.FieldByName('MessageStr').asString
     end;
 end;
 {------------------------------------------------------------------------}
@@ -327,6 +344,7 @@ begin
        Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
        Params.AddParam('inGoodsId', ftInteger, ptInput, execParamsMI.ParamByName('GoodsId').AsInteger);
        Params.AddParam('inGoodsKindId', ftInteger, ptInput, execParamsMI.ParamByName('GoodsKindId').AsInteger);
+       Params.AddParam('inStorageLineId', ftInteger, ptInput, execParamsMI.ParamByName('StorageLineId').AsInteger);
        Params.AddParam('inIsStartWeighing', ftBoolean, ptInput, execParamsMI.ParamByName('isStartWeighing').AsBoolean);
        Params.AddParam('inIsPartionGoodsDate', ftBoolean, ptInput, execParamsMovement.ParamByName('isPartionGoodsDate').AsBoolean);
        Params.AddParam('inOperCount', ftFloat, ptInput, execParamsMI.ParamByName('OperCount').AsFloat);

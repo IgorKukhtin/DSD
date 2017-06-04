@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_ScaleCeh_MI(
     IN inSession         TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementItemId Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, MeasureId Integer, MeasureName TVarChar
-             , GoodsKindName TVarChar
+             , GoodsKindName TVarChar, StorageLineName TVarChar
              , isStartWeighing Boolean
              , Amount TFloat, AmountWeight TFloat
              , RealWeight TFloat, RealWeightWeight TFloat
@@ -28,7 +28,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Scale_MI());
 
-     RETURN QUERY 
+     RETURN QUERY
        SELECT
              tmpMI.MovementItemId
            , Object_Goods.Id                  AS GoodsId
@@ -37,6 +37,7 @@ BEGIN
            , Object_Measure.Id                AS MeasureId
            , Object_Measure.ValueData         AS MeasureName
            , Object_GoodsKind.ValueData       AS GoodsKindName
+           , Object_StorageLine.ValueData     AS StorageLineName
 
            , tmpMI.isStartWeighing :: Boolean AS isStartWeighing
 
@@ -66,7 +67,7 @@ BEGIN
            , CASE WHEN tmpMI.PartionGoods <> ''
                        THEN tmpMI.PartionGoods
                   WHEN MI_Partion.Id > 0
-                       THEN 
+                       THEN
                        ('кол.=<' || zfConvert_FloatToString (COALESCE (MI_Partion.Amount, 0)) || '>'
                      || ' кут.=<' || zfConvert_FloatToString (COALESCE (MIFloat_CuterCount.ValueData, 0)) || '>'
                      || ' вид=<' || COALESCE (Object_GoodsKindComplete.ValueData, '') || '>'
@@ -77,7 +78,7 @@ BEGIN
              END :: TVarChar AS PartionGoods
            , tmpMI.PartionGoodsDate :: TDateTime  AS PartionGoodsDate
 
-           
+
            , tmpMI.InsertDate :: TDateTime AS InsertDate
            , tmpMI.UpdateDate :: TDateTime AS UpdateDate
 
@@ -88,6 +89,8 @@ BEGIN
                   , MovementItem.Amount
 
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                  , COALESCE (MILinkObject_StorageLine.ObjectId, 0) AS StorageLineId
+
                   , COALESCE (MIBoolean_StartWeighing.ValueData, FALSE) AS isStartWeighing
 
                   , COALESCE (MIFloat_RealWeight.ValueData, 0)    AS RealWeight
@@ -106,7 +109,7 @@ BEGIN
                   , COALESCE (MIFloat_CountPack.ValueData, 0)           AS CountPack
                   , COALESCE (MIFloat_HeadCount.ValueData, 0)           AS HeadCount
                   , COALESCE (MIFloat_LiveWeight.ValueData, 0)          AS LiveWeight
-          
+
                   , MIString_PartionGoods.ValueData AS PartionGoods
 
                   , MIDate_PartionGoods.ValueData     AS PartionGoodsDate
@@ -135,7 +138,7 @@ BEGIN
                   LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                               AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
-                                                                 
+
                   LEFT JOIN MovementItemFloat AS MIFloat_RealWeight
                                               ON MIFloat_RealWeight.MovementItemId = MovementItem.Id
                                              AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
@@ -179,12 +182,16 @@ BEGIN
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                  LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
+                                                   ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
+                                                  AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
 
              WHERE MovementItem.MovementId = inMovementId
                AND MovementItem.DescId     = zc_MI_Master()
             ) AS tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
+            LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = tmpMI.StorageLineId
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId

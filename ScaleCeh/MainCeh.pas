@@ -218,6 +218,12 @@ type
     FormParams: TdsdFormParams;
     TimerProtocol_isProcess: TTimer;
     spProtocol_isProcess: TdsdStoredProc;
+    bbChangeStorageLine: TSpeedButton;
+    actStorageLine: TOpenChoiceForm;
+    StorageLineName: TcxGridDBColumn;
+    PanelStorageLine: TPanel;
+    LabelStorageLine: TLabel;
+    EditStorageLine: TcxButtonEdit;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -280,6 +286,9 @@ type
     procedure EditGoodsKindCodeEnter(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TimerProtocol_isProcessTimer(Sender: TObject);
+    procedure bbChangeStorageLineClick(Sender: TObject);
+    procedure EditStorageLinePropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
   private
     oldGoodsId, oldGoodsCode : Integer;
     fEnterKey13:Boolean;
@@ -325,11 +334,28 @@ begin
      oldGoodsId:= 0;
      oldGoodsCode:= 0;
      EditPartionGoods.Text:= '';
+     //
+     ParamsMI.ParamByName('StorageLineId').AsInteger := 0;
+     ParamsMI.ParamByName('StorageLineName').AsString:= '';
+     EditStorageLine.Text:= '';
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainCehForm.Initialize_afterSave_MI;
+var
+     oldStorageLineId: Integer;
+     oldStorageLineName: String;
 begin
+     // Сначала сохраним
+     oldStorageLineId  := ParamsMI.ParamByName('StorageLineId').AsInteger;
+     oldStorageLineName:= ParamsMI.ParamByName('StorageLineName').AsString;
+     //
      EmptyValuesParams(ParamsMI);
+     //
+     // теперь восстановим
+     ParamsMI.ParamByName('StorageLineId').AsInteger:=  oldStorageLineId;
+     ParamsMI.ParamByName('StorageLineName').AsString:= oldStorageLineName;
+     EditStorageLine.Text:= oldStorageLineName;
+     //
      //
      gbStartWeighing.ItemIndex:=0;
      //
@@ -477,10 +503,23 @@ end;
 //------------------------------------------------------------------------------------------------
 function TMainCehForm.Save_Movement_all:Boolean;
 var execParams:TParams;
+    MessageErr :String;
 begin
      Result:=false;
      //
      OperDateEdit.Text:=DateToStr(DMMainScaleCehForm.gpGet_Scale_OperDate(ParamsMovement));
+     //
+     // проверка
+     if (ParamsMovement.ParamByName('isStorageLine').AsBoolean = TRUE)
+     then begin
+              MessageErr:= DMMainScaleCehForm.gpGet_ScaleCeh_Movement_checkStorageLine(ParamsMovement.ParamByName('MovementId').AsInteger);
+              if MessageErr <> ''
+              then if (MessageDlg (MessageErr+#10+#13+'Хотите исправить?', mtConfirmation, mbYesNoCancel, 0) = 6)
+                   then begin
+                             ActiveControl:=EditStorageLine;
+                             exit;
+                   end;
+     end;
      //Проверка
      if ParamsMovement.ParamByName('MovementId').AsInteger=0
      then begin
@@ -736,6 +775,7 @@ begin
      //***myActiveControl;
      if ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_CuterWeight
      then cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible := TRUE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('StorageLineName').Index].Visible := ParamsMovement.ParamByName('isStorageLine').AsBoolean = TRUE;
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainCehForm.bbChangeCountClick(Sender: TObject);
@@ -931,6 +971,53 @@ begin
      execParams.Free;
      //
      RefreshDataSet;
+end;
+{------------------------------------------------------------------------}
+procedure TMainCehForm.bbChangeStorageLineClick(Sender: TObject);
+var execParams:TParams;
+begin
+     if CDS.FieldByName('MovementItemId').AsInteger = 0
+     then begin
+               ShowMessage ('Ошибка.Элемент взвешивания не выбран');
+               exit;
+     end;
+     //
+     if actStorageLine.Execute then
+     begin
+          execParams:=nil;
+          try
+               ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
+               ParamAddValue(execParams,'inDescCode',ftString,'zc_MILinkObject_StorageLine');
+               ParamAddValue(execParams,'inObjectId',ftInteger,actStorageLine.GuiParams.ParamByName('Key').Value);
+               if DMMainScaleCehForm.gpUpdate_Scale_MILinkObject(execParams) then
+               begin
+                    RefreshDataSet;
+                    CDS.Locate('MovementItemId',IntToStr(execParams.ParamByName('inMovementItemId').AsInteger),[]);
+               end;
+          finally
+               execParams.Free;
+          end;
+     end;
+end;
+{------------------------------------------------------------------------}
+procedure TMainCehForm.EditStorageLinePropertiesButtonClick(Sender: TObject;AButtonIndex: Integer);
+begin
+     if ParamsMovement.ParamByName('isStorageLine').AsBoolean = FALSE
+     then begin
+               ShowMessage ('Ошибка.Для данного документ нет выбора <Линии Производства>.');
+               exit;
+     end;
+     //
+     if actStorageLine.Execute then
+     begin
+          ParamsMI.ParamByName('StorageLineId').AsInteger:=  actStorageLine.GuiParams.ParamByName('Key').Value;
+          //
+          if actStorageLine.GuiParams.ParamByName('Key').Value > 0
+          then ParamsMI.ParamByName('StorageLineName').AsString:= actStorageLine.GuiParams.ParamByName('TextValue').Value
+          else ParamsMI.ParamByName('StorageLineName').AsString:= '';
+          //
+          EditStorageLine.Text:= ParamsMI.ParamByName('StorageLineName').AsString;
+     end;
 end;
 {------------------------------------------------------------------------}
 procedure TMainCehForm.bbChoice_UnComleteClick(Sender: TObject);
@@ -1480,6 +1567,7 @@ begin
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName').Index].Visible       :=SettingMain.isGoodsComplete = TRUE;
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoodsDate').Index].Visible    :=SettingMain.isGoodsComplete = TRUE;
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible        :=SettingMain.isGoodsComplete = FALSE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('StorageLineName').Index].Visible     :=SettingMain.isGoodsComplete = FALSE;
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count').Index].Visible               :=SettingMain.isGoodsComplete = TRUE;
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountPack').Index].Visible           :=SettingMain.isGoodsComplete = TRUE;
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('HeadCount').Index].Visible           :=SettingMain.isGoodsComplete = FALSE;
@@ -1537,6 +1625,7 @@ end;
 procedure TMainCehForm.WriteParamsMovement;
 begin
   PanelPartionDate.Visible:=ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean=true;
+  PanelStorageLine.Visible:=ParamsMovement.ParamByName('isStorageLine').asBoolean=true;
   PanelMovementInfo.Visible:=ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_CuterWeight;
   //
   PanelMovementDesc.Font.Color:=clBlue;

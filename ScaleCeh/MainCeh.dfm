@@ -37,7 +37,7 @@ object MainCehForm: TMainCehForm
       BevelOuter = bvNone
       TabOrder = 0
       object bbDeleteItem: TSpeedButton
-        Left = 225
+        Left = 233
         Top = 2
         Width = 31
         Height = 29
@@ -198,7 +198,7 @@ object MainCehForm: TMainCehForm
         OnClick = bbView_allClick
       end
       object bbChangeCount: TSpeedButton
-        Left = 102
+        Left = 117
         Top = 2
         Width = 31
         Height = 29
@@ -236,7 +236,7 @@ object MainCehForm: TMainCehForm
         OnClick = bbChangeLiveWeightClick
       end
       object bbChangeCountPack: TSpeedButton
-        Left = 133
+        Left = 148
         Top = 2
         Width = 31
         Height = 29
@@ -293,7 +293,7 @@ object MainCehForm: TMainCehForm
         OnClick = bbChangePartionGoodsClick
       end
       object bbChangePartionGoodsDate: TSpeedButton
-        Left = 164
+        Left = 179
         Top = 2
         Width = 31
         Height = 29
@@ -310,6 +310,51 @@ object MainCehForm: TMainCehForm
         ParentShowHint = False
         ShowHint = True
         OnClick = bbChangePartionGoodsDateClick
+      end
+      object bbChangeStorageLine: TSpeedButton
+        Left = 96
+        Top = 2
+        Width = 31
+        Height = 29
+        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1080#1085#1080#1080' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072'>'
+        Glyph.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000000000000000000000000000000000000FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF0004D00F00FFFFFF00FF00FF00FF00FF00FF00
+          FF00FF00FF0004D00F00FFFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+          FF0004D00F0004D00F0004D00F00FFFFFF00FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF00FF00FF0004D00F00FFFFFF00FF00FF00FF00FF00FF00FF00FF00
+          FF0004D00F0004D00F0004D00F00FFFFFF00FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF0004D00F00FFFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF0004D00F0004D00F0004D00F00FFFFFF00FF00FF00FF00FF00FF00
+          FF0004D00F0004D00F00FFFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF00FF00FF0004D00F0004D00F0004D00F00FFFFFF00FF00FF0004D0
+          0F0004D00F00FFFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF0004D00F0004D00F0004D00F0004D00F0004D0
+          0F00FFFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF0004D00F0004D00F0004D00F00FFFF
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF0004D00F0004D00F0004D00F0004D00F0004D0
+          0F00FFFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF00FF00FF0004D00F0004D00F0004D00F00FFFFFF00FF00FF0004D0
+          0F00FFFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+          FF0004D00F0004D00F0004D00F0004D00F00FFFFFF00FF00FF00FF00FF00FF00
+          FF0004D00F0004D00F00FFFFFF00FF00FF00FF00FF00FF00FF00FF00FF0004D0
+          0F0004D00F0004D00F0004D00F00FFFFFF00FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF0004D00F0004D00F00FFFFFF00FF00FF00FF00FF00FF00FF0004D0
+          0F0004D00F00FFFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF00FF00FF0004D00F0004D00F00FFFFFF00FF00FF00FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+          FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbChangeStorageLineClick
       end
     end
     object infoPanelTotalSumm: TPanel
@@ -659,6 +704,13 @@ object MainCehForm: TMainCehForm
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 55
+        end
+        object StorageLineName: TcxGridDBColumn
+          Caption = #1051#1080#1085#1080#1103' '#1087#1088'-'#1074#1072
+          DataBinding.FieldName = 'StorageLineName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 80
         end
         object isStartWeighing: TcxGridDBColumn
           Caption = #1056#1077#1078#1080#1084' '#1085#1086#1074'.'
@@ -1049,6 +1101,53 @@ object MainCehForm: TMainCehForm
         OnExit = EditEnterCountExit
         OnKeyDown = EditEnterCountKeyDown
         Width = 110
+      end
+    end
+    object PanelStorageLine: TPanel
+      Left = 0
+      Top = 80
+      Width = 130
+      Height = 40
+      Align = alTop
+      BevelInner = bvRaised
+      BevelOuter = bvNone
+      TabOrder = 5
+      ExplicitTop = 40
+      object LabelStorageLine: TLabel
+        Left = 1
+        Top = 1
+        Width = 128
+        Height = 14
+        Align = alTop
+        Caption = '   '#1051#1080#1085#1080#1103' '#1087#1088'-'#1074#1072
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clRed
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 78
+      end
+      object EditStorageLine: TcxButtonEdit
+        Left = 4
+        Top = 15
+        ParentFont = False
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        Properties.OnButtonClick = EditStorageLinePropertiesButtonClick
+        Style.Font.Charset = RUSSIAN_CHARSET
+        Style.Font.Color = clBlack
+        Style.Font.Height = -11
+        Style.Font.Name = 'Arial'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
+        TabOrder = 0
+        Text = 'EditStorageLine'
+        Width = 120
       end
     end
   end
@@ -2317,6 +2416,31 @@ object MainCehForm: TMainCehForm
       Category = 'ScaleLib'
       Hint = #1042#1099#1093#1086#1076
       OnExecute = actExitExecute
+    end
+    object actStorageLine: TOpenChoiceForm
+      Category = 'ScaleLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TStorageLineForm'
+      FormName = 'TStorageLineForm'
+      FormNameParam.Value = 'TStorageLineForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          ComponentItem = 'StorageLineId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          ComponentItem = 'StorageLineName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   object spProtocol_isExit: TdsdStoredProc

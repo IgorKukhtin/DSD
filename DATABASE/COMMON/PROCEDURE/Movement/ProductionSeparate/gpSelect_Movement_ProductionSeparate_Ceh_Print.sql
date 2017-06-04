@@ -14,6 +14,7 @@ $BODY$
 
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
+    DECLARE Cursor3 refcursor;
 
     DECLARE vbGoodsPropertyId Integer;
     DECLARE vbGoodsPropertyId_basis Integer;
@@ -54,7 +55,7 @@ BEGIN
                             AND Movement.StatusId = zc_Enum_Status_Complete()
                           LIMIT 1
                          );
-
+                         
 
     -- очень важная проверка
     IF COALESCE (vbStatusId, 0) = zc_Enum_Status_Erased()
@@ -73,35 +74,39 @@ BEGIN
 
 
 
-     --
+    --
     OPEN Cursor1 FOR
-    
+
     WITH tmpMIMaster AS (SELECT MAX (MovementItem.ObjectId)                     AS GoodsId
                               , SUM (MovementItem.Amount)                       AS Count
-                              , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0)) AS HeadCount          
-                         FROM MovementItem 
+                              , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0)) AS HeadCount
+                              , MAX (COALESCE (MILinkObject_StorageLine.ObjectId, 0)) AS StorageLineId
+                         FROM MovementItem
                               LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                                           ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                                          AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
+                                                               ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
                          WHERE MovementItem.MovementId = inMovementId
                            AND MovementItem.DescId     = zc_MI_Master()
                            AND MovementItem.isErased   = FALSE
                         )
        , tmpMIChild AS (SELECT SUM (MovementItem.Amount)  AS Count_Child
-                        FROM MovementItem 
+                        FROM MovementItem
                         WHERE MovementItem.MovementId = inMovementId
                           AND MovementItem.DescId     = zc_MI_Child()
                           AND MovementItem.isErased   = FALSE
                        )
        , tmpMovementWeighing AS (SELECT Movement.Id AS MovementId
-                                      , MFloat_WeighingNumber.ValueData AS WeighingNumber 
+                                      , MFloat_WeighingNumber.ValueData AS WeighingNumber
                                  FROM Movement
                                       LEFT JOIN MovementFloat AS MFloat_WeighingNumber
                                                               ON MFloat_WeighingNumber.MovementId = Movement.Id
                                                              AND MFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
                                  WHERE Movement.ParentId = inMovementId
                                    AND Movement.StatusId = zc_Enum_Status_Complete()
-                                ) 
+                                )
       , tmpMIWeighing AS (SELECT CASE WHEN inMovementId_Weighing > 0 THEN tmpMovementWeighing.WeighingNumber ELSE 0 END AS WeighingNumber
                                , SUM (MovementItem.Amount) AS Count
                           FROM tmpMovementWeighing
@@ -112,10 +117,10 @@ BEGIN
                               LEFT JOIN MovementItem ON MovementItem.MovementId = tmpMovementWeighing.MovementId
                                                      AND MovementItem.isErased  = FALSE
                                                      AND MovementBoolean_isIncome.ValueData = FALSE
-                          WHERE tmpMovementWeighing.MovementId = inMovementId_Weighing 
-                             OR COALESCE (inMovementId_Weighing, 0) = 0 
+                          WHERE tmpMovementWeighing.MovementId = inMovementId_Weighing
+                             OR COALESCE (inMovementId_Weighing, 0) = 0
                           GROUP BY CASE WHEN inMovementId_Weighing > 0 THEN tmpMovementWeighing.WeighingNumber ELSE 0 END
-                          ) 
+                         )
         -- Результат - Мастер (1 строка)
         SELECT
            Movement.InvNumber                 AS InvNumber
@@ -128,18 +133,21 @@ BEGIN
 
          , Object_Goods.ObjectCode                AS GoodsCode
          , Object_Goods.ValueData                 AS GoodsName
-         , tmpMIMaster.Count 
-         , tmpMIMaster.HeadCount 
+         , tmpMIMaster.Count
+         , tmpMIMaster.HeadCount
          , CASE WHEN tmpMIMaster.Count <> 0 THEN tmpMIChild.Count_Child / tmpMIMaster.Count ELSE 0 END :: TFloat AS PersentVyhod
          , tmpCount.Count :: TFloat       AS TotalNumber
          , tmpMIWeighing.WeighingNumber   AS WeighingNumber
          , tmpMIWeighing.Count ::  TFloat AS CountWeighing
 
-         , vbStoreKeeperName AS StoreKeeper -- кладовщик
-     FROM Movement 
+           -- Есть ли в Мастере - Производственные линии
+         , (EXISTS (SELECT 1 FROM tmpMIMaster WHERE tmpMIMaster.StorageLineId <> 0 AND tmpMIMaster.Count <> 0)) :: Boolean AS isStorageLine
+
+         , vbStoreKeeperName AS StoreKeeper   -- кладовщик
+     FROM Movement
           LEFT JOIN (SELECT COUNT(*) AS Count from tmpMovementWeighing) AS tmpCount ON 1 = 1
           LEFT JOIN  tmpMIWeighing ON 1 = 1
-         
+
           LEFT JOIN MovementString AS MovementString_PartionGoods
                                    ON MovementString_PartionGoods.MovementId =  Movement.Id
                                   AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
@@ -166,8 +174,9 @@ BEGIN
 
     OPEN Cursor2 FOR
      WITH tmpWeighing AS (-- Данные по элементам взвешивания
-                          SELECT MovementItem.ObjectId AS GoodsId 
-                               , SUM (MovementItem.Amount) AS Count
+                          SELECT MovementItem.ObjectId             AS GoodsId
+                               , COALESCE (MILinkObject_StorageLine.ObjectId, 0) AS StorageLineId
+                               , SUM (MovementItem.Amount)         AS Count
                                , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0)) AS HeadCount
                           FROM (SELECT Movement.Id AS MovementId
                                 FROM Movement
@@ -183,14 +192,20 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                                           ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                                          AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
-                          WHERE tmp.MovementId = inMovementId_Weighing  
-                             OR COALESCE (inMovementId_Weighing, 0) = 0 
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
+                                                               ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
+                          WHERE tmp.MovementId = inMovementId_Weighing
+                             OR COALESCE (inMovementId_Weighing, 0) = 0
                           GROUP BY MovementItem.ObjectId
-                          ) 
+                                 , MILinkObject_StorageLine.ObjectId
+                         )
        -- Результат - Все элементы
        SELECT Object_Goods.ObjectCode  			  AS GoodsCode
             , Object_Goods.ValueData   			  AS GoodsName
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+            , Object_StorageLine.ObjectCode               AS StorageLineCode
+            , Object_StorageLine.ValueData                AS StorageLineName
             , Object_Measure.ValueData                    AS MeasureName
             , tmpMI.Amount                      :: TFloat AS Amount
             , tmpMI.LiveWeight                  :: TFloat AS LiveWeight
@@ -203,10 +218,14 @@ BEGIN
             , tmpWeighing.HeadCount             :: TFloat AS HeadCount_item
 
        FROM (SELECT MovementItem.ObjectId                            AS GoodsId
+                  , COALESCE (MILinkObject_StorageLine.ObjectId, 0)  AS StorageLineId
                   , SUM (MovementItem.Amount)                        AS Amount
                   , SUM (COALESCE (MIFloat_LiveWeight.ValueData, 0)) AS LiveWeight
                   , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0))  AS HeadCount
              FROM MovementItem
+                  LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
+                                                   ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
+                                                  AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
                   LEFT JOIN MovementItemFloat AS MIFloat_LiveWeight
                                               ON MIFloat_LiveWeight.MovementItemId = MovementItem.Id
                                              AND MIFloat_LiveWeight.DescId = zc_MIFloat_LiveWeight()
@@ -218,10 +237,13 @@ BEGIN
                AND MovementItem.isErased   = FALSE
                AND MovementItem.Amount <> 0
              GROUP BY MovementItem.ObjectId
+                    , MILinkObject_StorageLine.ObjectId
             ) AS tmpMI
-            FULL JOIN tmpWeighing ON tmpWeighing.GoodsId = tmpMI.GoodsId
+            FULL JOIN tmpWeighing ON tmpWeighing.GoodsId       = tmpMI.GoodsId
+                                 AND tmpWeighing.StorageLineId = tmpMI.StorageLineId
 
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (tmpMI.GoodsId, tmpWeighing.GoodsId)
+            LEFT JOIN Object AS Object_Goods       ON Object_Goods.Id       = COALESCE (tmpMI.GoodsId, tmpWeighing.GoodsId)
+            LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = COALESCE (tmpMI.StorageLineId, tmpWeighing.StorageLineId)
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -231,14 +253,41 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-     
-            LEFT JOIN ObjectFloat AS ObjectFloat_Weight	
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
       ;
-      
 
     RETURN NEXT Cursor2;
+
+    --
+    OPEN Cursor3 FOR
+       SELECT Object_Goods.Id   			  AS GoodsId
+            , Object_Goods.ObjectCode  			  AS GoodsCode
+            , Object_Goods.ValueData   			  AS GoodsName
+            , Object_StorageLine.ObjectCode               AS StorageLineCode
+            , Object_StorageLine.ValueData                AS StorageLineName
+            , SUM (MovementItem.Amount)                   AS Amount
+       FROM MovementItem
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
+                                             ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
+            LEFT JOIN Object AS Object_Goods       ON Object_Goods.Id       = MovementItem.ObjectId
+            LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = MILinkObject_StorageLine.ObjectId
+       WHERE MovementItem.MovementId = inMovementId
+         AND MovementItem.DescId     = zc_MI_Master()
+         AND MovementItem.isErased   = FALSE
+         AND MovementItem.Amount <> 0
+       GROUP BY Object_Goods.Id
+              , Object_Goods.ObjectCode
+              , Object_Goods.ValueData
+              , Object_StorageLine.ObjectCode
+              , Object_StorageLine.ValueData
+               ;
+    --
+    RETURN NEXT Cursor3;
+
 
 END;
 $BODY$

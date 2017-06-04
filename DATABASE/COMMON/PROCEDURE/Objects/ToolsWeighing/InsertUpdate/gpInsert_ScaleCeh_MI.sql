@@ -1,13 +1,15 @@
 -- Function: gpInsert_ScaleCeh_MI()
 
 -- DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_ScaleCeh_MI(
     IN inId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inGoodsKindId         Integer   , -- Виды товаров
+    IN inStorageLineId       Integer   , -- Линия пр-ва
     IN inIsStartWeighing     Boolean   , -- Режим начала взвешивания
     IN inIsPartionGoodsDate  Boolean   , -- 
     IN inOperCount           TFloat    , -- Количество
@@ -96,6 +98,7 @@ BEGIN
                                                                                                THEN 0
                                                                                           ELSE inGoodsKindId
                                                                                      END
+                                                          , inStorageLineId       := inStorageLineId
                                                           , inSession             := inSession
                                                            );
 

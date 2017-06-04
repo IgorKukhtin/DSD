@@ -215,6 +215,20 @@ inherited Report_WageForm: TReport_WageForm
             HeaderAlignmentVert = vaCenter
             Width = 105
           end
+          object StorageLineName_From: TcxGridDBColumn
+            Caption = #1051#1080#1085#1080#1103' '#1087#1088'-'#1074#1072': '#1088#1072#1089#1093#1086#1076
+            DataBinding.FieldName = 'StorageLineName_From'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object StorageLineName_To: TcxGridDBColumn
+            Caption = #1051#1080#1085#1080#1103' '#1087#1088'-'#1074#1072': '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'StorageLineName_To'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object GoodsKind_FromName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074': '#1088#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'GoodsKind_FromName'

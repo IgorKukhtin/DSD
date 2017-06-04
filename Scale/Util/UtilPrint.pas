@@ -95,6 +95,7 @@ type
     spGetMovement: TdsdStoredProc;
     spSelectPrint_ReestrKind: TdsdStoredProc;
     actPrint_ReestrKind: TdsdPrintAction;
+    PrintItemsTwoCDS: TClientDataSet;
   private
   end;
 

@@ -35,12 +35,13 @@ begin
              CDS.Filtered:=true;
              if CDS.RecordCount<>1
              then ShowMessage('Ошибка.Код операции не определен.')
-             else begin ParamsMovement.ParamByName('MovementDescName_master').asString:= CDS.FieldByName('MovementDescName_master').asString;
+             else begin ParamsMovement.ParamByName('MovementDescName_master').asString  := CDS.FieldByName('MovementDescName_master').asString;
                         ParamsMovement.ParamByName('GoodsKindWeighingGroupId').asInteger:=CDS.FieldByName('GoodsKindWeighingGroupId').asInteger;
-                        ParamsMovement.ParamByName('DocumentKindId').AsInteger:= CDS.FieldByName('DocumentKindId').AsInteger;
-                        ParamsMovement.ParamByName('DocumentKindName').asString := CDS.FieldByName('DocumentKindName').asString;
-                        ParamsMovement.ParamByName('isSendOnPriceIn').asBoolean:= CDS.FieldByName('isSendOnPriceIn').asBoolean;
+                        ParamsMovement.ParamByName('DocumentKindId').AsInteger    := CDS.FieldByName('DocumentKindId').AsInteger;
+                        ParamsMovement.ParamByName('DocumentKindName').asString   := CDS.FieldByName('DocumentKindName').asString;
+                        ParamsMovement.ParamByName('isSendOnPriceIn').asBoolean   := CDS.FieldByName('isSendOnPriceIn').asBoolean;
                         ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean:= CDS.FieldByName('isPartionGoodsDate').asBoolean;
+                        ParamsMovement.ParamByName('isStorageLine').asBoolean     := CDS.FieldByName('isStorageLine').asBoolean;
                   end;
         end
         else ParamsMovement.ParamByName('MovementDescName_master').AsString:='Для <Нового взвешивания> нажмите на клавиатуре клавишу <F2>.';

@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Report_Wage (TDateTime, TDateTime, Integer, Int
 CREATE OR REPLACE FUNCTION gpSelect_Report_Wage(
     IN inStartDate      TDateTime, --дата начала периода
     IN inEndDate        TDateTime, --дата окончания периода
-    IN inUnitId         Integer,   --подразделение 
+    IN inUnitId         Integer,   --подразделение
     IN inModelServiceId Integer,   --модель начисления
     IN inMemberId       Integer,   --сотрудник
     IN inPositionId     Integer,   --должность
@@ -46,6 +46,8 @@ RETURNS TABLE(
     ,MovementDescName               TVarChar
     ,ModelServiceItemChild_FromName TVarChar
     ,ModelServiceItemChild_ToName   TVarChar
+    ,StorageLineName_From           TVarChar
+    ,StorageLineName_To             TVarChar
     ,GoodsKind_FromName             TVarChar
     ,GoodsKindComplete_FromName     TVarChar
     ,GoodsKind_ToName               TVarChar
@@ -114,6 +116,10 @@ BEGIN
         , ModelServiceItemChild_ToId         Integer
         , ModelServiceItemChild_ToDescId     Integer
         , ModelServiceItemChild_ToName       TVarChar
+        , StorageLineId_From                 Integer
+        , StorageLineName_From               TVarChar
+        , StorageLineId_To                   Integer
+        , StorageLineName_To                 TVarChar
         , GoodsKind_FromId                   Integer
         , GoodsKind_FromName                 TVarChar
         , GoodsKindComplete_FromId           Integer
@@ -143,12 +149,13 @@ BEGIN
         , ServiceModelName  TVarChar
         , Ord Integer
          ) ON COMMIT DROP;
-    
+
 
     -- Report_1 - По штатному расписанию - из Модели + из Табеля - По проводкам кол-во
     Insert Into Res (StaffListId, DocumentKindId, UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,Count_Member,HoursPlan,HoursDay, PersonalGroupId, PersonalGroupName, MemberId, MemberName, SheetWorkTime_Date, SUM_MemberHours, SheetWorkTime_Amount
                    , ServiceModelCode,ServiceModelName,Price,FromId,FromName,ToId,ToName,MovementDescId,MovementDescName,SelectKindId,SelectKindName,Ratio
                    , ModelServiceItemChild_FromId,ModelServiceItemChild_FromDescId,ModelServiceItemChild_FromName,ModelServiceItemChild_ToId,ModelServiceItemChild_ToDescId,ModelServiceItemChild_ToName
+                   , StorageLineId_From, StorageLineName_From, StorageLineId_To, StorageLineName_To
                    , GoodsKind_FromId, GoodsKind_FromName, GoodsKindComplete_FromId, GoodsKindComplete_FromName, GoodsKind_ToId, GoodsKind_ToName, GoodsKindComplete_ToId, GoodsKindComplete_ToName
                    , OperDate, Count_Day, Count_MemberInDay,Gross,GrossOnOneMember,Amount,AmountOnOneMember
                    , ModelServiceId, StaffListSummKindId
@@ -158,6 +165,7 @@ BEGIN
          , Report_1.FromId,Report_1.FromName,Report_1.ToId,Report_1.ToName,Report_1.MovementDescId,Report_1.MovementDescName,Report_1.SelectKindId,Report_1.SelectKindName,Report_1.Ratio
          , Report_1.ModelServiceItemChild_FromId,Report_1.ModelServiceItemChild_FromDescId,Report_1.ModelServiceItemChild_FromName,Report_1.ModelServiceItemChild_ToId
          , Report_1.ModelServiceItemChild_ToDescId,Report_1.ModelServiceItemChild_ToName
+         , Report_1.StorageLineId_From, Report_1.StorageLineName_From, Report_1.StorageLineId_To, Report_1.StorageLineName_To
          , Report_1.GoodsKind_FromId, Report_1.GoodsKind_FromName, Report_1.GoodsKindComplete_FromId, Report_1.GoodsKindComplete_FromName
          , Report_1.GoodsKind_ToId, Report_1.GoodsKind_ToName, Report_1.GoodsKindComplete_ToId, Report_1.GoodsKindComplete_ToName
          , Report_1.OperDate, Report_1.Count_Day, Report_1.Count_MemberInDay, Report_1.Gross,Report_1.GrossOnOneMember
@@ -165,7 +173,7 @@ BEGIN
          , Report_1.ServiceModelId AS ModelServiceId, 0 AS StaffListSummKindId
     FROM gpSelect_Report_Wage_Model (inStartDate      := inStartDate,
                                      inEndDate        := inEndDate, --дата окончания периода
-                                     inUnitId         := inUnitId,   --подразделение 
+                                     inUnitId         := inUnitId,   --подразделение
                                      inModelServiceId := inModelServiceId,   --модель начисления
                                      inMemberId       := inMemberId,   --сотрудник
                                      inPositionId     := inPositionId,   --должность
@@ -204,12 +212,12 @@ BEGIN
        ,0 AS ModelServiceId, Report_2.StaffListSummKindId
     FROM gpSelect_Report_Wage_Sum (inStartDate      := inStartDate,
                                    inEndDate        := inEndDate, --дата окончания периода
-                                   inUnitId         := inUnitId,   --подразделение 
+                                   inUnitId         := inUnitId,   --подразделение
                                    inMemberId       := inMemberId,   --сотрудник
                                    inPositionId     := inPositionId,   --должность
                                    inSession        := inSession
                                   ) AS Report_2;
-    
+
     --
     INSERT INTO tmpListServiceModel (ServiceModelCode, ServiceModelName, Ord)
     SELECT tmp.ServiceModelCode
@@ -221,7 +229,7 @@ BEGIN
           FROM Res
           WHERE Res.ServiceModelCode IS NOT NULL
          ) AS tmp;
-        
+
     -- Результат
     RETURN QUERY
         WITH tmpPersonal AS (SELECT *
@@ -288,6 +296,13 @@ BEGIN
                 ELSE NULL::TVarChar END                         AS ModelServiceItemChild_ToName
 
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
+                     THEN Res.StorageLineName_From
+                ELSE NULL::TVarChar END                         AS StorageLineName_From
+               ,CASE WHEN inDetailModelServiceItemChild = TRUE
+                     THEN Res.StorageLineName_To
+                ELSE NULL::TVarChar END                         AS StorageLineName_To
+
+               ,CASE WHEN inDetailModelServiceItemChild = TRUE
                      THEN Res.GoodsKind_FromName
                 ELSE NULL::TVarChar END                         AS GoodsKind_FromName
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
@@ -300,20 +315,20 @@ BEGIN
                      THEN Res.GoodsKindComplete_ToName
                 ELSE NULL::TVarChar END                         AS GoodsKindComplete_ToName
 
-               ,CASE WHEN inDetailDay = TRUE 
-                     THEN Res.OperDate 
+               ,CASE WHEN inDetailDay = TRUE
+                     THEN Res.OperDate
                 ELSE NULL::TDateTime END                  AS OperDate
 
                , MAX (Res.Count_Day) :: Integer           AS Count_Day         -- Отраб. дн. 1 чел (инф.)
 
-               ,CASE WHEN inDetailDay = TRUE 
+               ,CASE WHEN inDetailDay = TRUE
                      THEN Res.Count_MemberInDay
                 ELSE NULL::Integer END                    AS Count_MemberInDay -- Кол-во человек (за 1 д.)
-               ,CASE WHEN inDetailDay = TRUE 
+               ,CASE WHEN inDetailDay = TRUE
                      THEN Res.Gross
                 ELSE NULL::TFloat END                     AS Gross
                ,SUM(Res.GrossOnOneMember)::TFloat         AS GrossOnOneMember
-               ,CASE WHEN inDetailDay = TRUE 
+               ,CASE WHEN inDetailDay = TRUE
                      THEN Res.Amount
                 ELSE NULL::TFloat END                     AS Amount
                ,SUM(Res.AmountOnOneMember)::TFloat        AS AmountOnOneMember
@@ -377,6 +392,13 @@ BEGIN
                 ELSE NULL::TVarChar END
 
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
+                     THEN Res.StorageLineName_From
+                ELSE NULL::TVarChar END
+               ,CASE WHEN inDetailModelServiceItemChild = TRUE
+                     THEN Res.StorageLineName_To
+                ELSE NULL::TVarChar END
+
+               ,CASE WHEN inDetailModelServiceItemChild = TRUE
                      THEN Res.GoodsKind_FromName
                 ELSE NULL::TVarChar END
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
@@ -389,16 +411,16 @@ BEGIN
                      THEN Res.GoodsKindComplete_ToName
                 ELSE NULL::TVarChar END
 
-               ,CASE WHEN inDetailDay = TRUE 
-                     THEN Res.OperDate 
+               ,CASE WHEN inDetailDay = TRUE
+                     THEN Res.OperDate
                 ELSE NULL::TDateTime END
-               ,CASE WHEN inDetailDay = TRUE 
+               ,CASE WHEN inDetailDay = TRUE
                      THEN Res.Count_MemberInDay
                 ELSE NULL::Integer END
-               ,CASE WHEN inDetailDay = TRUE 
+               ,CASE WHEN inDetailDay = TRUE
                      THEN Res.Gross
                 ELSE NULL::TFloat END
-               ,CASE WHEN inDetailDay = TRUE 
+               ,CASE WHEN inDetailDay = TRUE
                      THEN Res.Amount
                 ELSE NULL::TFloat END
 
@@ -421,7 +443,7 @@ BEGIN
           , Object_DocumentKind.Id        AS DocumentKindId
           , Object_DocumentKind.ValueData AS DocumentKindName
 
-          , (CASE 
+          , (CASE
                   WHEN inDetailModelService = FALSE            THEN ''
                   WHEN tmpRes.ModelServiceId <> 0 THEN '1 кг.'
                   WHEN tmpRes.HoursDay       <> 0 THEN zfConvert_FloatToString (tmpRes.HoursDay) || ' час.'
@@ -433,7 +455,7 @@ BEGIN
           , tmpRes.HoursPlan                AS HoursPlan_StaffList
           , tmpRes.HoursDay                 AS HoursDay_StaffList
           , ObjectFloat_PersonalCount.ValueData :: Integer AS Count_Member_StaffList
- 
+
            ,tmpRes.Count_Member
 
            ,tmpRes.UnitId
@@ -457,6 +479,9 @@ BEGIN
            ,tmpRes.MovementDescName
            ,tmpRes.ModelServiceItemChild_FromName
            ,tmpRes.ModelServiceItemChild_ToName
+
+           ,tmpRes.StorageLineName_From
+           ,tmpRes.StorageLineName_To
 
            ,tmpRes.GoodsKind_FromName
            ,tmpRes.GoodsKindComplete_FromName
@@ -521,7 +546,7 @@ BEGIN
             LEFT JOIN tmpListServiceModel AS tmpListServiceModel_3 ON tmpListServiceModel_3.Ord = 3
             LEFT JOIN tmpListServiceModel AS tmpListServiceModel_4 ON tmpListServiceModel_4.Ord = 4
        ;
-       
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

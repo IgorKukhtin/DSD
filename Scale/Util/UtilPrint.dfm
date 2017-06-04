@@ -1546,6 +1546,11 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
+        end
+        item
+          DataSet = PrintItemsTwoCDS
+          UserName = 'frxDBDMasterTwo'
+          IndexFieldNames = 'StorageLineCode;StorageLineName'
         end>
       Params = <
         item
@@ -2049,6 +2054,9 @@ object UtilPrintForm: TUtilPrintForm
       end
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsTwoCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -2288,5 +2296,11 @@ object UtilPrintForm: TUtilPrintForm
     PackSize = 1
     Left = 63
     Top = 368
+  end
+  object PrintItemsTwoCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 212
+    Top = 70
   end
 end

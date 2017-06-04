@@ -209,6 +209,7 @@ begin
 
      ParamAdd(Params,'isSendOnPriceIn',ftBoolean);
      ParamAdd(Params,'isPartionGoodsDate',ftBoolean);
+     ParamAdd(Params,'isStorageLine',ftBoolean);
 
      ParamAdd(Params,'OrderExternalId',ftInteger);
      ParamAdd(Params,'OrderExternal_DescId',ftInteger);
@@ -254,6 +255,9 @@ begin
      ParamAdd(Params,'GoodsKindId',ftInteger);       // Виды товаров
      ParamAdd(Params,'GoodsKindCode',ftInteger);     // Виды товаров
      ParamAdd(Params,'GoodsKindName',ftString);      // Виды товаров
+     ParamAdd(Params,'StorageLineId',ftInteger);     // Линия пр-ва
+     ParamAdd(Params,'StorageLineCode',ftInteger);   // Линия пр-ва
+     ParamAdd(Params,'StorageLineName',ftString);    // Линия пр-ва
      ParamAdd(Params,'RealWeight_Get',ftFloat);      //
      ParamAdd(Params,'RealWeight',ftFloat);          // Реальный вес (без учета: минус тара и % скидки для кол-ва)
      ParamAdd(Params,'CountTare',ftFloat);           // Количество тары
@@ -279,6 +283,9 @@ begin
      ParamAdd(Params,'GoodsKindId',ftInteger);       // Виды товаров
      ParamAdd(Params,'GoodsKindCode',ftInteger);     // Виды товаров
      ParamAdd(Params,'GoodsKindName',ftString);      // Виды товаров
+     ParamAdd(Params,'StorageLineId',ftInteger);     // Линия пр-ва
+     ParamAdd(Params,'StorageLineCode',ftInteger);   // Линия пр-ва
+     ParamAdd(Params,'StorageLineName',ftString);    // Линия пр-ва
 
      ParamAdd(Params,'GoodsKindId_list',ftString);   // Виды товаров
      ParamAdd(Params,'GoodsKindName_List',ftString); // Виды товаров

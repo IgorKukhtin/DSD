@@ -39,6 +39,7 @@ type
     actGoodsKindChoiceChild: TOpenChoiceForm;
     actStorageLine: TOpenChoiceForm;
     actStorageLineChild: TOpenChoiceForm;
+    PrintItemsTwoCDS: TClientDataSet;
   private
     { Private declarations }
   public

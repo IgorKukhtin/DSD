@@ -4,7 +4,6 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
   ClientWidth = 1073
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -283
   ExplicitWidth = 1089
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -192,10 +191,10 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
     Width = 1073
     ExplicitWidth = 1073
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42736d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42736d
     end
   end
   object edJuridicalBasis: TcxButtonEdit [2]
@@ -333,6 +332,11 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
+        end
+        item
+          DataSet = PrintItemsTwoCDS
+          UserName = 'frxDBDMasterTwo'
+          IndexFieldNames = 'StorageLineCode;StorageLineName'
         end>
       Params = <
         item
@@ -534,6 +538,9 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
           ItemName = 'dxBarStatic'
         end>
     end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
+    end
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
@@ -702,6 +709,9 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
       end
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsTwoCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -775,5 +785,11 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
     PackSize = 1
     Left = 824
     Top = 48
+  end
+  object PrintItemsTwoCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 692
+    Top = 70
   end
 end

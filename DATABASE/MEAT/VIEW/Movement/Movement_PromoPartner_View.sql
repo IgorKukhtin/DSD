@@ -17,6 +17,9 @@ CREATE OR REPLACE VIEW Movement_PromoPartner_View AS
                   THEN TRUE
              ELSE FALSE
         END                                    AS isErased                --Удален
+      , Movement_Promo.StatusId                AS StatusId           --ид статуса
+      , Object_Status.ObjectCode               AS StatusCode         --код статуса
+      , Object_Status.ValueData                AS StatusName         --Статус
       , Object_Contract.ContractId                                        -- ИД контракта
       , Object_Contract.ContractCode                                      -- код контракта
       , Object_Contract.InvNumber              AS ContractName            --наименование контракта
@@ -24,7 +27,8 @@ CREATE OR REPLACE VIEW Movement_PromoPartner_View AS
       , MovementString_Comment.ValueData       AS Comment                 --Примечание
       , Object_Area.ValueData                  AS AreaName
     FROM Movement AS Movement_Promo 
-
+        LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Promo.StatusId
+    
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                      ON MovementLinkObject_Partner.MovementId = Movement_Promo.Id
                                     AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()

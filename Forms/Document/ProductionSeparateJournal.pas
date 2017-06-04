@@ -47,6 +47,7 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    PrintItemsTwoCDS: TClientDataSet;
   private
     { Private declarations }
   public

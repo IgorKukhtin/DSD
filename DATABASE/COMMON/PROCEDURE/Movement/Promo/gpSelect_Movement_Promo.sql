@@ -58,8 +58,8 @@ BEGIN
             Movement_Promo.Id                 --Идентификатор
           , Movement_Promo.InvNumber          --Номер документа
           , Movement_Promo.OperDate           --Дата документа
-          , Movement_Promo.StatusCode         --код статуса
-          , Movement_Promo.StatusName         --Статус
+          , CASE WHEN Movement_PromoPartner.StatusId = zc_Enum_Status_Erased() THEN Movement_PromoPartner.StatusCode ELSE Movement_Promo.StatusCode END :: Integer  AS StatusCode
+          , CASE WHEN Movement_PromoPartner.StatusId = zc_Enum_Status_Erased() THEN Movement_PromoPartner.StatusName ELSE Movement_Promo.StatusName END :: TVarChar AS StatusName
           , Movement_Promo.PromoKindId        --Вид акции
           , Movement_Promo.PromoKindName      --Вид акции
           , Movement_Promo.PriceListId        --Прай слист
@@ -130,4 +130,4 @@ $BODY$
  13.10.15                                                                        *
 */
 
--- SELECT * FROM gpSelect_Movement_Promo (inStartDate:= '01.11.2016', inEndDate:= '30.11.2016', inIsErased:= FALSE, inPeriodForOperDate:=TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Promo (inStartDate:= '01.11.2016', inEndDate:= '30.11.2016', inIsErased:= FALSE, inPeriodForOperDate:=TRUE, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())

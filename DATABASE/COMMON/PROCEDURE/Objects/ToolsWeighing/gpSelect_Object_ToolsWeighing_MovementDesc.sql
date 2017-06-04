@@ -24,6 +24,7 @@ RETURNS TABLE (Number             Integer
              , OrderById          Integer
              , isSendOnPriceIn    Boolean
              , isPartionGoodsDate Boolean
+             , isStorageLine      Boolean
              , isTransport_link   Boolean
                )
 AS
@@ -64,11 +65,12 @@ BEGIN
                                        , OrderById                Integer
                                        , isSendOnPriceIn          Boolean
                                        , isPartionGoodsDate       Boolean
+                                       , isStorageLine            Boolean
                                        , isTransport_link         Boolean
                                        , ItemName                 TVarChar
                                         ) ON COMMIT DROP;
     -- формирование
-    INSERT INTO _tmpToolsWeighing (Number, MovementDescId, FromId, ToId, PaidKindId, InfoMoneyId, GoodsId_ReWork, DocumentKindId, GoodsKindWeighingGroupId, ColorGridValue, OrderById, isSendOnPriceIn, isPartionGoodsDate, isTransport_link, ItemName)
+    INSERT INTO _tmpToolsWeighing (Number, MovementDescId, FromId, ToId, PaidKindId, InfoMoneyId, GoodsId_ReWork, DocumentKindId, GoodsKindWeighingGroupId, ColorGridValue, OrderById, isSendOnPriceIn, isPartionGoodsDate, isStorageLine, isTransport_link, ItemName)
        SELECT tmp.Number
             , CASE WHEN TRIM (tmp.MovementDescId)           <> '' THEN TRIM (tmp.MovementDescId)           ELSE '0' END :: Integer AS MovementDescId
             , CASE WHEN TRIM (tmp.FromId)                   <> '' THEN TRIM (tmp.FromId)                   ELSE '0' END :: Integer AS FromId
@@ -115,6 +117,7 @@ BEGIN
               END AS isSendOnPriceIn
 
             , CASE WHEN tmp.isPartionGoodsDate = 'TRUE' THEN TRUE ELSE FALSE END AS isPartionGoodsDate
+            , CASE WHEN tmp.isStorageLine      = 'TRUE' THEN TRUE ELSE FALSE END AS isStorageLine
             , CASE WHEN tmp.isTransport_link   = 'TRUE' THEN TRUE ELSE FALSE END AS isTransport_link
 
             , CASE WHEN tmp.MovementDescId IN (zc_Movement_ProductionUnion() :: TVarChar) AND inBranchCode = 201 -- если Обвалка
@@ -138,6 +141,7 @@ BEGIN
                   , CASE WHEN inIsCeh = TRUE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'DocumentKindId',     '0',                                   inSession) ELSE '0' END AS DocumentKindId
                   , CASE WHEN inIsCeh = TRUE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'isProductionIn',     'TRUE',                                inSession) ELSE ''  END AS isProductionIn
                   , CASE WHEN inIsCeh = TRUE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'isPartionGoodsDate', 'FALSE',                               inSession) ELSE ''  END AS isPartionGoodsDate
+                  , CASE WHEN inIsCeh = TRUE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'isStorageLine',      'FALSE',                               inSession) ELSE ''  END AS isStorageLine
                   , CASE WHEN inIsCeh = TRUE THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isTransport_link',   'FALSE',                               inSession)          END AS isTransport_link
              FROM (SELECT GENERATE_SERIES (1, vbCount) AS Number) AS tmp
             ) AS tmp
@@ -284,6 +288,7 @@ BEGIN
            , (_tmpToolsWeighing.OrderById + _tmpToolsWeighing.Number) :: Integer AS OrderById
            , _tmpToolsWeighing.isSendOnPriceIn
            , _tmpToolsWeighing.isPartionGoodsDate
+           , _tmpToolsWeighing.isStorageLine
            , _tmpToolsWeighing.isTransport_link
 
        FROM _tmpToolsWeighing
@@ -342,6 +347,7 @@ BEGIN
             , tmp.OrderById                       AS OrderById
             , tmp.isSendOnPriceIn
             , FALSE AS isPartionGoodsDate
+            , FALSE AS isStorageLine
             , FALSE AS isTransport_link
        FROM (SELECT DISTINCT
                     _tmpToolsWeighing.MovementDescId

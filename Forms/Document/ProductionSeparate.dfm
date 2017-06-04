@@ -3,7 +3,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   ClientHeight = 678
   ClientWidth = 903
   ExplicitWidth = 919
-  ExplicitHeight = 716
+  ExplicitHeight = 713
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -369,6 +369,11 @@ inherited ProductionSeparateForm: TProductionSeparateForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
+        end
+        item
+          DataSet = PrintItemsTwoCDS
+          UserName = 'frxDBDMasterTwo'
+          IndexFieldNames = 'StorageLineCode;StorageLineName'
         end>
       Params = <
         item
@@ -629,6 +634,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     object bbPrint_Ceh: TdxBarButton
       Action = actPrint_Ceh
@@ -1175,6 +1183,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       end
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsTwoCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -1195,5 +1206,11 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     PackSize = 1
     Left = 679
     Top = 96
+  end
+  object PrintItemsTwoCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 612
+    Top = 174
   end
 end

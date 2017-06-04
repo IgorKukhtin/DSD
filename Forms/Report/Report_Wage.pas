@@ -74,6 +74,8 @@ type
     GoodsKindComplete_FromName: TcxGridDBColumn;
     GoodsKind_ToName: TcxGridDBColumn;
     GoodsKindComplete_ToName: TcxGridDBColumn;
+    StorageLineName_From: TcxGridDBColumn;
+    StorageLineName_To: TcxGridDBColumn;
   private
     { Private declarations }
   public
