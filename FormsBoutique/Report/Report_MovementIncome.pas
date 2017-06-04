@@ -24,7 +24,7 @@ type
     dxBarButton1: TdxBarButton;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    colFromName: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     actRefreshSize: TdsdDataSetRefresh;
@@ -39,6 +39,7 @@ type
     actRefreshPartner: TdsdDataSetRefresh;
     GuidesBrand: TdsdGuides;
     GuidesPartner: TdsdGuides;
+    PeriodYear: TcxGridDBColumn;
   private
     { Private declarations }
   public

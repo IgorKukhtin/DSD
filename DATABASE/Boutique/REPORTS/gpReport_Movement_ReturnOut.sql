@@ -23,9 +23,14 @@ RETURNS TABLE (
                DescName_Partion   TVarChar,
                FromName       TVarChar,
                ToName         TVarChar,
+
+               BrandName      TVarChar,
+               FabrikaName    TVarChar,
+               PeriodName     TVarChar,
+               PeriodYear     Integer,
                
                GoodsId Integer, GoodsCode Integer, GoodsName TVarChar,
-               GoodsGroupNameFull TVarChar, MeasureName TVarChar,
+               GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar, MeasureName TVarChar,
                JuridicalName TVarChar,
                CompositionGroupName TVarChar,
                CompositionName TVarChar,
@@ -33,13 +38,15 @@ RETURNS TABLE (
                LineFabricaName TVarChar,
                LabelName TVarChar,
                GoodsSizeName TVarChar,
+               CurrencyName  TVarChar,
 
                OperPrice           TFloat,
                OperPriceList       TFloat,
-               Amount          TFloat,
-  
-               AmountSumm           TFloat,
-               AmountPriceListSumm  TFloat
+               PriceSale           TFloat,
+               Amount              TFloat,
+               AmountSumm          TFloat,
+               AmountPriceListSumm TFloat,
+               SaleSumm            TFloat
   )
 AS
 $BODY$
@@ -58,7 +65,11 @@ BEGIN
                                      , CASE WHEN inisMovement = TRUE THEN Movement_ReturnOut.InvNumber    ELSE CAST (NULL AS TVarChar)  END    AS InvNumber
                                      , CASE WHEN inisMovement = TRUE THEN Movement_ReturnOut.OperDate     ELSE CAST (NULL AS TDateTime) END    AS OperDate
                                      , MovementLinkObject_From.ObjectId                                                                        AS FromId
-                                     , CASE WHEN inisPartner = TRUE THEN MovementLinkObject_To.ObjectId  ELSE 0 END                          AS ToId
+                                     , CASE WHEN inisPartner = TRUE THEN MovementLinkObject_To.ObjectId  ELSE 0 END                            AS ToId
+                                     , ObjectLink_Partner_Brand.ChildObjectId                                                                  AS BrandId
+                                     , ObjectLink_Partner_Fabrika.ChildObjectId                                                                AS FabrikaId
+                                     , ObjectLink_Partner_Period.ChildObjectId                                                                 AS PeriodId
+
                                 FROM Movement AS Movement_ReturnOut
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                                    ON MovementLinkObject_From.MovementId = Movement_ReturnOut.Id
@@ -73,6 +84,12 @@ BEGIN
                                                            ON ObjectLink_Partner_Brand.ObjectId = MovementLinkObject_To.ObjectId
                                                           AND ObjectLink_Partner_Brand.DescId = zc_ObjectLink_Partner_Brand()
                                                           AND (ObjectLink_Partner_Brand.ChildObjectId = inBrandId OR inBrandId = 0)
+                                     LEFT JOIN ObjectLink AS ObjectLink_Partner_Fabrika
+                                                          ON ObjectLink_Partner_Fabrika.ObjectId = MovementLinkObject_To.ObjectId
+                                                         AND ObjectLink_Partner_Fabrika.DescId = zc_ObjectLink_Partner_Fabrika()
+                                     LEFT JOIN ObjectLink AS ObjectLink_Partner_Period
+                                                          ON ObjectLink_Partner_Period.ObjectId = MovementLinkObject_To.ObjectId
+                                                         AND ObjectLink_Partner_Period.DescId = zc_ObjectLink_Partner_Period()
 
                                      LEFT JOIN MovementDesc AS MovementDesc_ReturnOut ON MovementDesc_ReturnOut.Id = Movement_ReturnOut.DescId 
                                                          
@@ -90,6 +107,11 @@ BEGIN
 
                           , tmpMovementReturnOut.FromId
                           , tmpMovementReturnOut.ToId
+                          , tmpMovementReturnOut.BrandId
+                          , tmpMovementReturnOut.FabrikaId
+                          , tmpMovementReturnOut.PeriodId
+                          , Object_PartionGoods.PeriodYear
+
                           , MI_ReturnOut.ObjectId             AS GoodsId
                           , CASE WHEN inisSize = TRUE THEN Object_PartionGoods.GoodsSizeId  ELSE 0 END  AS GoodsSizeId
                           , Object_PartionGoods.MeasureId
@@ -100,6 +122,7 @@ BEGIN
                           , Object_PartionGoods.LineFabricaId 
                           , Object_PartionGoods.LabelId
                           , Object_PartionGoods.JuridicalId
+                          , Object_PartionGoods.CurrencyId
 
                           , COALESCE (MIFloat_CountForPrice.ValueData, 1)      AS CountForPrice
                           , SUM (COALESCE (MI_ReturnOut.Amount, 0))            AS Amount
@@ -112,6 +135,8 @@ BEGIN
                                           THEN CAST (COALESCE (MI_ReturnOut.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
                                       ELSE CAST ( COALESCE (MI_ReturnOut.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2))
                                  END) AS AmountPriceListSumm
+
+                          , SUM (COALESCE (Object_PartionGoods.PriceSale,0) * COALESCE (MI_ReturnOut.Amount, 0) ) AS SaleSumm
 
                      FROM tmpMovementReturnOut
                           INNER JOIN MovementItem AS MI_ReturnOut 
@@ -150,6 +175,11 @@ BEGIN
                             , Object_PartionGoods.LabelId
                             , Object_PartionGoods.JuridicalId
                             , COALESCE (MIFloat_CountForPrice.ValueData, 1)
+                            , tmpMovementReturnOut.BrandId
+                            , tmpMovementReturnOut.FabrikaId
+                            , tmpMovementReturnOut.PeriodId
+                            , Object_PartionGoods.CurrencyId
+                            , Object_PartionGoods.PeriodYear
               )
               
 
@@ -163,10 +193,16 @@ BEGIN
            , Object_From.ValueData          AS FromName
            , Object_To.ValueData            AS ToName
 
+           , Object_Brand.ValueData         AS BrandName
+           , Object_Fabrika.ValueData       AS FabrikaName
+           , Object_Period.ValueData        AS PeriodName
+           , tmpData.PeriodYear
+
            , Object_Goods.Id                AS GoodsId
            , Object_Goods.ObjectCode        AS GoodsCode
            , Object_Goods.ValueData         AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , Object_GoodsGroup.ValueData    AS GoodsGroupName
            , Object_Measure.ValueData       AS MeasureName
            , Object_Juridical.ValueData     AS JuridicalName
            , Object_CompositionGroup.ValueData   AS CompositionGroupName
@@ -175,12 +211,15 @@ BEGIN
            , Object_LineFabrica.ValueData   AS LineFabricaName
            , Object_Label.ValueData         AS LabelName
            , Object_GoodsSize.ValueData     AS GoodsSizeName
+           , Object_Currency.ValueData      AS CurrencyName
            
            , CASE WHEN tmpData.Amount <> 0 THEN tmpData.AmountSumm  / tmpData.Amount ELSE 0 END          ::TFloat AS OperPrice
            , CASE WHEN tmpData.Amount <> 0 THEN tmpData.AmountPriceListSumm  / tmpData.Amount ELSE 0 END ::TFloat AS OperPriceList
+           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SaleSumm  / tmpData.Amount ELSE 0 END            ::TFloat AS PriceSale
            , tmpData.Amount                  ::TFloat
            , tmpData.AmountSumm              ::TFloat
-           , tmpData.AmountPriceListSumm     ::TFloat 
+           , tmpData.AmountPriceListSumm     ::TFloat
+           , tmpData.SaleSumm                ::TFloat
            
         FROM tmpData
             LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId
@@ -196,6 +235,11 @@ BEGIN
             LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = tmpData.LabelId
             LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = tmpData.GoodsSizeId
             LEFT JOIN Object AS Object_Juridical        ON Object_Juridical.Id        = tmpData.JuridicalId
+            LEFT JOIN Object AS Object_Currency         ON Object_Currency.Id         = tmpData.CurrencyId
+
+            LEFT JOIN Object AS Object_Brand   ON Object_Brand.Id   = tmpData.BrandId
+            LEFT JOIN Object AS Object_Fabrika ON Object_Fabrika.Id = tmpData.FabrikaId
+            LEFT JOIN Object AS Object_Period  ON Object_Period.Id  = tmpData.PeriodId
            
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpData.GoodsId

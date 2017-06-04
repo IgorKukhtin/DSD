@@ -2089,8 +2089,8 @@ object IncomeForm: TIncomeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 552
-    Top = 8
+    Left = 584
+    Top = 24
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
