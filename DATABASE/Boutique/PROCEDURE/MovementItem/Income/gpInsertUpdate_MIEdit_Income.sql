@@ -31,7 +31,7 @@ $BODY$
    DECLARE vbGoodsId       Integer;
    DECLARE vbGoodsInfoId   Integer;
    DECLARE vbGoodsItemId   Integer;
-   DECLARE vblabelid       Integer;
+   DECLARE vbLabelId       Integer;
 
    DECLARE vbOperDate  TDateTime;
    DECLARE vbPartnerId Integer;
@@ -277,7 +277,7 @@ BEGIN
                                                , inAmount         := inAmount
                                                , inOperPrice      := inOperPrice
                                                , inCountForPrice  := inCountForPrice
-                                               , inPriceSale      := inOperPriceList
+                                               , inPriceSale      := inOperPriceList -- !!!если не было переоценки!!!
                                                , inBrandId        := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbPartnerId AND OL.DescId = zc_ObjectLink_Partner_Brand())
                                                , inPeriodId       := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbPartnerId AND OL.DescId = zc_ObjectLink_Partner_Period())
                                                , inPeriodYear     := (SELECT ObF.ValueData FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbPartnerId AND ObF.DescId = zc_ObjectFloat_Partner_PeriodYear()) :: Integer
@@ -293,6 +293,11 @@ BEGIN
                                                , inJuridicalId    := inJuridicalId
                                                , inUserId         := vbUserId
                                                 );
+
+     -- !!!Кроме Sybase!!! - !!!не забыли - проверили что НЕТ движения и Переоценки, тогда Цену в истории можно менять!!!
+     -- PERFORM lpCheck ...
+     -- !!!Кроме Sybase!!! - !!!не забыли - cохранили Цену в истории!!!
+     -- PERFORM lpUpdate_ObjectHistory ...
 
      -- дописали - партию = Id
      UPDATE MovementItem SET PartionId = ioId WHERE MovementItem.Id = ioId AND MovementItem.PartionId IS NULL;
@@ -312,4 +317,4 @@ $BODY$
 */
 
 -- тест
---
+-- SELECT * FROMgpInsertUpdate_MIEdit_Income()

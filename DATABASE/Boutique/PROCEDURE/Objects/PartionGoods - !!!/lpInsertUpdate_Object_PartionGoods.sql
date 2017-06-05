@@ -19,11 +19,11 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Object_PartionGoods (Integer, Integer, In
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_PartionGoods(
     IN inMovementItemId         Integer,       -- Ключ партии
     IN inMovementId             Integer,       -- Ключ Документа
-    IN inPartnerId              Integer,       -- Поcтавщики
+    IN inPartnerId              Integer,       -- Поcтавщик
     IN inUnitId                 Integer,       -- Подразделение(прихода)
     IN inOperDate               TDateTime,     -- Дата прихода
-    IN inGoodsId                Integer,       -- Товары
-    IN inGoodsItemId            Integer,       -- Товары с размерами
+    IN inGoodsId                Integer,       -- Товар
+    IN inGoodsItemId            Integer,       -- Товар с размером
     IN inCurrencyId             Integer,       -- Валюта для цены прихода
     IN inAmount                 TFloat,        -- Кол-во приход
     IN inOperPrice              TFloat,        -- Цена прихода
@@ -33,15 +33,15 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_PartionGoods(
     IN inPeriodId               Integer,       -- Сезон
     IN inPeriodYear             Integer,       -- Год
     IN inFabrikaId              Integer,       -- Фабрика производитель
-    IN inGoodsGroupId           Integer,       -- Группы товаров
-    IN inMeasureId              Integer,       -- Единицы измерения
-    IN inCompositionId          Integer,       -- Состав товара
-    IN inGoodsInfoId            Integer,       -- Описание товара
-    IN inLineFabricaId          Integer,       -- Линия коллекции
-    IN inLabelId                Integer,       -- Название для ценника
-    IN inCompositionGroupId     Integer,       -- Группа для состава товара
-    IN inGoodsSizeId            Integer,       -- Размер товара
-    IN inJuridicalId            Integer,       -- Юр.лицо(наше)
+    IN inGoodsGroupId           Integer,       -- Группа товара
+    IN inMeasureId              Integer,       -- Единица измерения
+    IN inCompositionId          Integer,       -- Состав
+    IN inGoodsInfoId            Integer,       -- Описание
+    IN inLineFabricaId          Integer,       -- Линия
+    IN inLabelId                Integer,       -- Название в ценнике
+    IN inCompositionGroupId     Integer,       -- Группа состава
+    IN inGoodsSizeId            Integer,       -- Размер
+    IN inJuridicalId            Integer,       -- Юр.лицо
     IN inUserId                 Integer        --
 )
 RETURNS VOID
@@ -94,6 +94,10 @@ BEGIN
                                          , zfConvert_IntToNull (inFabrikaId), inGoodsGroupId, inMeasureId
                                          , zfConvert_IntToNull (inCompositionId), zfConvert_IntToNull (inGoodsInfoId), zfConvert_IntToNull (inLineFabricaId)
                                          , inLabelId, zfConvert_IntToNull (inCompositionGroupId), inGoodsSizeId, zfConvert_IntToNull (inJuridicalId));
+       ELSE
+           -- !!!не забыли - проверили что НЕТ движения, тогда инфу в партии можно менять!!!
+           -- PERFORM lpCheck ...
+
        END IF; -- if NOT FOUND       
 
        -- !!!меняем у остальных партий - все св-ва!!!
@@ -107,8 +111,8 @@ BEGIN
                                     , CompositionGroupId     = zfConvert_IntToNull (inCompositionGroupId)
                                       -- только для документа inMovementId
                                     , JuridicalId            = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN zfConvert_IntToNull (inJuridicalId) ELSE Object_PartionGoods.JuridicalId   END
-                                    , OperPrice              = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inOperPrice                         ELSE Object_PartionGoods.OperPrice     END
-                                    , CountForPrice          = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inCountForPrice                     ELSE Object_PartionGoods.CountForPrice END
+                                    -- , OperPrice              = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inOperPrice                         ELSE Object_PartionGoods.OperPrice     END
+                                    -- , CountForPrice          = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inCountForPrice                     ELSE Object_PartionGoods.CountForPrice END
                                     , PriceSale              = CASE WHEN Object_PartionGoods.MovementId = inMovementId THEN inPriceSale                         ELSE Object_PartionGoods.PriceSale     END
        WHERE Object_PartionGoods.MovementItemId <> inMovementItemId
          AND Object_PartionGoods.GoodsId        = inGoodsId;

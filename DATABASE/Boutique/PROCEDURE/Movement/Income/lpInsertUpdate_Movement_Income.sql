@@ -37,6 +37,29 @@ BEGIN
                                    , inParentId  := NULL
                                     );
 
+     -- только для Update
+     IF vbIsInsert = FALSE
+     THEN
+         -- !!!Кроме Sybase!!! - !!!не забыли - проверили что НЕТ движения, тогда инфу в партии можно менять!!!
+         -- PERFORM lpCheck ...
+
+         -- !!!не забыли - изменили свойства в партии!!!
+         PERFORM lpUpdate_Object_PartionGoods_Movement (inMovementId := ioId
+                                                      , inPartnerId  := inFromId
+                                                      , inUnitId     := inToId
+                                                      , inOperDate   := inOperDate
+                                                      , inCurrencyId := inCurrencyDocumentId
+                                                      , inUserId     := inUserId
+                                                       );
+
+         -- !!!Кроме Sybase!!! - !!!не забыли - проверили что НЕТ движения, тогда дату цены в истории можно менять!!!
+         -- PERFORM lpCheck ...
+         -- !!!Кроме Sybase!!! - !!!не забыли - изменили дату цены в истории!!!
+         -- PERFORM lpUpdate_ObjectHistory ...
+
+     END IF;
+
+
      -- сохранили свойство <Курс для перевода в валюту баланса>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, inCurrencyValue);
      -- сохранили свойство <Курс для перевода в валюту баланса>
