@@ -19,16 +19,29 @@ RETURNS TABLE (Id Integer, PartionId Integer, GoodsId Integer, GoodsCode Integer
              , GoodsSizeName TVarChar
              , Amount TFloat
              , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
-             , AmountSumm TFloat, AmountPriceListSumm TFloat
+             , TotalSumm TFloat, TotalSummBalance TFloat, TotalSummPriceList TFloat
              , isErased Boolean
               )
 AS
 $BODY$
-  DECLARE vbUserId Integer;
+  DECLARE vbUserId        Integer;
+  DECLARE vbCurrencyValue TFloat;
+  DECLARE vbParValue      TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- Определили курс в документе
+     SELECT MF_CurrencyValue.ValueData
+          , MF_ParValue.ValueData
+            INTO vbCurrencyValue, vbParValue
+     FROM MovementFloat AS MF_CurrencyValue
+          LEFT JOIN MovementFloat AS MF_ParValue
+                                  ON MF_ParValue.MovementId = MF_CurrencyValue.MovementId
+                                 AND MF_ParValue.DescId     = zc_MovementFloat_ParValue()
+     WHERE MF_CurrencyValue.MovementId = inMovementId
+       AND MF_CurrencyValue.DescId     = zc_MovementFloat_CurrencyValue()
+     ;
 
      -- Результат
      RETURN QUERY
@@ -39,6 +52,12 @@ BEGIN
                            , COALESCE (MIFloat_OperPrice.ValueData, 0)       AS OperPrice
                            , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
                            , COALESCE (MIFloat_OperPriceList.ValueData, 0)   AS OperPriceList
+                           , CAST (CASE WHEN MIFloat_CountForPrice.ValueData <> 0
+                                             THEN MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0) / MIFloat_CountForPrice.ValueData
+                                         ELSE MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0)
+                                   END AS NUMERIC (16, 2)) AS TotalSumm
+                           , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2)) AS TotalSummPriceList
+
                            , MovementItem.isErased
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -72,25 +91,16 @@ BEGIN
            , Object_GoodsSize.ValueData     AS GoodsSizeName
 
            , tmpMI.Amount
-
-           , tmpMI.OperPrice      ::TFloat
-           , tmpMI.CountForPrice  ::TFloat
-           , tmpMI.OperPriceList  ::TFloat
-
-           , CAST (CASE WHEN tmpMI.CountForPrice <> 0
-                           THEN CAST (COALESCE (tmpMI.Amount, 0) * tmpMI.OperPrice / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                        ELSE CAST ( COALESCE (tmpMI.Amount, 0) * tmpMI.OperPrice AS NUMERIC (16, 2))
-                   END AS TFloat) AS AmountSumm
-
-           , CAST (CASE WHEN tmpMI.CountForPrice <> 0
-                           THEN CAST (COALESCE (tmpMI.Amount, 0) * tmpMI.OperPriceList / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                        ELSE CAST ( COALESCE (tmpMI.Amount, 0) * tmpMI.OperPriceList AS NUMERIC (16, 2))
-                   END AS TFloat) AS AmountPriceListSumm
+           , tmpMI.OperPrice           :: TFloat AS OperPrice
+           , tmpMI.CountForPrice       :: TFloat AS CountForPrice
+           , tmpMI.OperPriceList       :: TFloat AS OperPriceList
+           , tmpMI.TotalSumm           :: TFloat AS TotalSumm
+           , (CAST (tmpMI.TotalSumm * vbCurrencyValue / CASE WHEN vbParValue <> 0 THEN vbParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance
+           , tmpMI.TotalSummPriceList  :: TFloat AS TotalSummPriceList
 
            , tmpMI.isErased
 
        FROM tmpMI
-
             LEFT JOIN Object_PartionGoods               ON Object_PartionGoods.MovementItemId = tmpMI.PartionId
 
             LEFT JOIN Object AS Object_Goods            ON Object_Goods.Id       = tmpMI.GoodsId
@@ -107,7 +117,6 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   =  zc_ObjectString_Goods_GroupNameFull()
-
            ;
 
 END;

@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Movement_Income()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
@@ -9,18 +10,14 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
     IN inFromId               Integer   , -- От кого (в документе)
     IN inToId                 Integer   , -- Кому (в документе)
     IN inCurrencyDocumentId   Integer   , -- Валюта (документа)
-    IN inCurrencyPartnerId    Integer   , -- Валюта (контрагента)
     IN inCurrencyValue        TFloat    , -- курс валюты
     IN inParValue             TFloat    , -- Номинал для перевода в валюту баланса
-    IN inCurrencyPartnerValue TFloat    , -- Курс для расчета суммы операции
-    IN inParPartnerValue      TFloat    , -- Номинал для расчета суммы операции
     IN inComment              TVarChar  , -- Примечание
     IN inUserId               Integer     -- пользователь
 )
 RETURNS Integer
 AS
 $BODY$
-   DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка
@@ -33,19 +30,17 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Income(), inInvNumber, inOperDate, NULL);
-
-
+     ioId:= lpInsertUpdate_Movement (ioId        := ioId
+                                   , inDescId    := zc_Movement_Income()
+                                   , inInvNumber := inInvNumber
+                                   , inOperDate  := inOperDate
+                                   , inParentId  := NULL
+                                    );
 
      -- сохранили свойство <Курс для перевода в валюту баланса>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, inCurrencyValue);
      -- сохранили свойство <Курс для перевода в валюту баланса>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParValue(), ioId, inParValue);
-
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyPartnerValue(), ioId, inCurrencyPartnerValue);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParPartnerValue(), ioId, inParPartnerValue);
 
      -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
@@ -57,8 +52,6 @@ BEGIN
 
      -- сохранили связь с <Валюта (документа)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyDocument(), ioId, inCurrencyDocumentId);
-     -- сохранили связь с <Валюта (контрагента) >
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyPartner(), ioId, inCurrencyPartnerId);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
@@ -77,4 +70,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_Movement_Income (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')
+-- SELECT * FROM lpInsertUpdate_Movement_Income (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inChangePercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')

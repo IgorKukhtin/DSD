@@ -55,7 +55,6 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    GoodsGroupName: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     isErased: TcxGridDBColumn;
     cxDBTreeList: TcxDBTreeList;

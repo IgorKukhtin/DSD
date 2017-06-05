@@ -194,8 +194,6 @@ type
     procedure pSetNullGuide_Id_Postgres;
     procedure pSetNullDocument_Id_Postgres;
 
-
-
     // Guides :
     procedure pLoadGuide_Measure;
     procedure pLoadGuide_CompositionGroup;
@@ -2912,26 +2910,17 @@ begin
         Add('     , Bill_To.UnitName as UnitNameTo ');
         Add('     , Bill_CurrencyDocument.Id_Postgres as CurrencyDocumentId ');
         Add('     , Bill_CurrencyDocument.ValutaName as  CurrencyDocumentName ');
-        Add('     , Bill_CurrencyPartner.Id_Postgres as CurrencyPartnerId ');
-        Add('     , Bill_CurrencyPartner.ValutaName as CurrencyPartnerName ');
         Add('     , 0 as CurrencyValue ');
         Add('     , 1 as ParValue ');
         Add('     , 0 as CurrencyPartnerValue ');
         Add('     , 1 as ParPartnerValue ');
-        //Add('     , ValutaDoc.NewKursIn as CurrencyValue ');
-        //Add('     , ValutaDoc.NominalFromValuta as ParValue ');
-        //Add('     , ValutaPar.NewKursOut as CurrencyPartnerValue ');
-        //Add('     , ValutaPar.NominalFromValuta as ParPartnerValue ');
         Add('     , '''' as Comments ');
         Add('     , Bill.Id_Postgres ');
         Add(' from DBA.Bill ');
         Add('     left outer join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
         Add('     left outer join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
         Add('     left outer join DBA.Valuta as Bill_CurrencyDocument on Bill_CurrencyDocument.Id = Bill.ValutaIDIn   ');
-        Add('     left outer join DBA.Valuta as Bill_CurrencyPartner on Bill_CurrencyPartner.Id = Bill.ValutaID  ');
-        //Add('     left outer join (select * from  DBA.ValutaKursItems order by id desc ) as valutaDoc  on Bill.BillDate  between valutaDoc.startDate and valutaDoc.EndDate and valutaDoc.FromValutaID = Bill.ValutaIDIn  and valutaDoc.ToValutaID = Bill.ValutaIDpl ');
-        //Add('     left outer join (select * from  DBA.ValutaKursItems order by id desc ) as valutaPar  on Bill.BillDate  between valutaPar.startDate and valutaPar.EndDate and valutaPar.FromValutaID = Bill.ValutaIDIn  and valutaPar.ToValutaID = Bill.ValutaID ');
-        Add(' where  Bill.BillKind = 2 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add(' where  Bill.BillKind = zc_bkIncomeFromClientToUnit() and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add(' order by ObjectId ');
         Open;
 
@@ -2957,9 +2946,6 @@ begin
         toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inCurrencyDocumentId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inCurrencyPartnerId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inCurrencyPartnerValue',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inParPartnerValue',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         //
         HideCurGrid(True);
@@ -2976,9 +2962,6 @@ begin
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
              toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId').AsInteger;
              toStoredProc.Params.ParamByName('inCurrencyDocumentId').Value:=FieldByName('CurrencyDocumentId').AsInteger;
-             toStoredProc.Params.ParamByName('inCurrencyPartnerId').Value:=FieldByName('CurrencyPartnerId').AsInteger;
-             toStoredProc.Params.ParamByName('inCurrencyPartnerValue').Value:=FieldByName('CurrencyPartnerValue').AsFloat;
-             toStoredProc.Params.ParamByName('inParPartnerValue').Value:=FieldByName('ParPartnerValue').AsFloat;
              toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('Comments').AsString;
 
              if not myExecToStoredProc then ;//exit;
@@ -3916,7 +3899,7 @@ begin
         Add(', DiscountKlient.KindDiscount as KindDiscount');
         Add(', users.userId_postgres as LastUserID');
         Add('from Unit inner join DiscountKlient on DiscountKlient.ClientId = Unit.id');
-        Add('left join Users on users.id = DiscountKlient.LastUserID');
+        Add('     left outer join Users on users.id = DiscountKlient.LastUserID');
         Add('where KindUnit = zc_kuClient()');
         Add('order by  ObjectId');
         Open;
@@ -4941,8 +4924,8 @@ begin
         Add('       end   as IDUnitID');
         Add('     , podr.Id_Postgres as UnitID    ');
         Add('from dba.KassaProperty');
-        Add('     left join Valuta on Valuta.Id = KassaProperty.ValutaId');
-        Add('     left join Unit as Podr on podr.id = IDUnitID');
+        Add('     left outer join Valuta on Valuta.Id = KassaProperty.ValutaId');
+        Add('     left outer join Unit as Podr on podr.id = IDUnitID');
         Add('where KassaProperty.KassaId <> 28');       // Поставщики    -
         Add('order by  ObjectId');
         Open;
@@ -5649,8 +5632,8 @@ begin
         Add('     , case when ObjectId = 4646 then 0 else ' + IntToStr(BankAccountId) + ' end as BankAccountId');
 
         Add('from dba.Unit');
-        Add('     left join Unit as Parent on Parent.id = IDParentId ');
-        Add('     left join Unit as Child on Child.Id = IDChildId');
+        Add('     left outer join Unit as Parent on Parent.id = IDParentId ');
+        Add('     left outer join Unit as Child on Child.Id = IDChildId');
         Add('where Unit.KindUnit =  zc_kuUnit() or Unit.id = 4646');
         Add('order by ObjectId');
         Open;

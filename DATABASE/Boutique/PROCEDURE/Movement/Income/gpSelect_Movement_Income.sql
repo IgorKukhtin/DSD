@@ -10,11 +10,10 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Income(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , TotalCount TFloat, TotalSumm TFloat, TotalSummPriceList TFloat
+             , TotalCount TFloat, TotalSumm TFloat, TotalSummBalance TFloat, TotalSummPriceList TFloat
              , CurrencyValue TFloat, ParValue TFloat
-             , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
              , FromName TVarChar, ToName TVarChar
-             , CurrencyDocumentName TVarChar, CurrencyPartnerName TVarChar
+             , CurrencyDocumentName TVarChar
              , Comment TVarChar
              )
 AS
@@ -41,19 +40,18 @@ BEGIN
 
            , MovementFloat_TotalCount.ValueData          AS TotalCount
            , MovementFloat_TotalSumm.ValueData           AS TotalSumm
+           , (CAST (MovementFloat_TotalSumm.ValueData * MovementFloat_CurrencyValue.ValueData
+                  / CASE WHEN MovementFloat_ParValue.ValueData <> 0 THEN MovementFloat_ParValue.ValueData ELSE 1 END
+                    AS NUMERIC (16, 2))
+             ) :: TFloat AS TotalSumm
            , MovementFloat_TotalSummPriceList.ValueData  AS TotalSummPriceList
 
            , CAST (COALESCE (MovementFloat_CurrencyValue.ValueData, 0) AS TFloat)  AS CurrencyValue
            , MovementFloat_ParValue.ValueData   AS ParValue
 
-           , CAST (COALESCE (MovementFloat_CurrencyPartnerValue.ValueData, 0) AS TFloat)  AS CurrencyPartnerValue
-           , MovementFloat_ParPartnerValue.ValueData   AS ParPartnerValue
-
-
            , Object_From.ValueData                       AS FromName
            , Object_To.ValueData                         AS ToName
            , Object_CurrencyDocument.ValueData           AS CurrencyDocumentName
-           , Object_CurrencyPartner.ValueData            AS CurrencyPartnerName
            , MovementString_Comment.ValueData            AS Comment
          
        FROM (SELECT Movement.id
@@ -86,13 +84,6 @@ BEGIN
                                     ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
                                    AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
 
-            LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
-                                    ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
-                                   AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
-            LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
-                                    ON MovementFloat_CurrencyPartnerValue.MovementId =  Movement.Id
-                                   AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
-
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -106,12 +97,7 @@ BEGIN
                                          ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
                                         AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
             LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
-                                         ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
-                                        AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
-            LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
-     ;
+           ;
   
 END;
 $BODY$
@@ -124,4 +110,4 @@ $BODY$
 */
 
 -- тест
- --SELECT * FROM gpSelect_Movement_Income (inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Income (inStartDate:= '01.03.2017', inEndDate:= '01.03.2017', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

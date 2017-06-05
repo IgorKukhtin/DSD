@@ -1,9 +1,8 @@
 -- Function: gpInsertUpdate_Movement_Income()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income 
-                       (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income
-                       (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
@@ -12,50 +11,48 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
     IN inFromId               Integer   , -- От кого (в документе)
     IN inToId                 Integer   , -- Кому (в документе)
     IN inCurrencyDocumentId   Integer   , -- Валюта (документа)
-    IN inCurrencyPartnerId    Integer   , -- Валюта (контрагента)
    OUT outCurrencyValue       TFloat    , -- курс валюты
    OUT outParValue            TFloat    , -- Номинал для перевода в валюту баланса
-    IN inCurrencyPartnerValue TFloat    , -- Курс для расчета суммы операции
-    IN inParPartnerValue      TFloat    , -- Номинал для расчета суммы операции
     IN inComment              TVarChar  , -- Примечание
     IN inSession              TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbIsInsert Boolean;
-   DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Income());
 
+     -- определяется уникальный № док.
      IF COALESCE (ioId, 0) = 0 THEN
-         ioInvNumber:= CAST (NEXTVAL ('movement_income_seq') AS TVarChar);  
+         ioInvNumber:= CAST (NEXTVAL ('movement_income_seq') AS TVarChar);
      END IF;
 
-     -- данные из шапки
-     SELECT Movement.OperDate
-    INTO vbOperDate
-     FROM Movement 
-     WHERE Movement.Id = ioId;
+     IF inCurrencyDocumentId <> zc_Currency_Basis()
+     THEN
+         -- Определили курс на Дату документа
+         SELECT COALESCE (tmp.Amount, 1), COALESCE (tmp.ParValue,0)
+                INTO outCurrencyValue, outParValue
+         FROM lfSelect_Movement_Currency_byDate (inOperDate      := (SELECT Movement.OperDate FROM Movement  WHERE Movement.Id = ioId)
+                                               , inCurrencyFromId:= zc_Currency_Basis()
+                                               , inCurrencyToId  := inCurrencyDocumentId
+                                                ) AS tmp;
 
-    IF inCurrencyDocumentId <> zc_Currency_Basis() THEN
-        SELECT COALESCE (tmp.Amount,1), COALESCE (tmp.ParValue,0)
-       INTO outCurrencyValue, outParValue
-        FROM lfSelect_Movement_Currency_byDate (inOperDate:= vbOperDate, inCurrencyFromId:= zc_Currency_Basis(), inCurrencyToId:= inCurrencyDocumentId ) AS tmp;
-    END IF;
+         -- только для Sybase - !!!потом УБРАТЬ!!!
+         IF COALESCE (outCurrencyValue, 0) = 0
+         THEN
+             --
+             outParValue:= 1;
+             --
+             IF     inCurrencyDocumentId = zc_Currency_EUR() THEN outCurrencyValue:= 30;
+             ELSEIF inCurrencyDocumentId = zc_Currency_USD() THEN outCurrencyValue:= 27;
+             END IF;
+         END IF;
+         
+     END IF;
 
-  /*  IF inCurrencyPartnerId <> zc_Currency_Basis() THEN
-        SELECT COALESCE (tmp.Amount,1), COALESCE (tmp.ParValue,0)
-       INTO outCurrencyValue, outParValue
-        FROM lfSelect_Movement_Currency_byDate (inOperDate:= vbOperDate, inCurrencyFromId:= zc_Currency_Basis(), inCurrencyToId:= inCurrencyPartnerId ) AS tmp;
-    END IF;
-*/
-    outCurrencyValue := COALESCE(outCurrencyValue,1);
-    outParValue      := COALESCE(outParValue,0);
 
-     
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_Income (ioId                := ioId
                                            , inInvNumber         := ioInvNumber
@@ -63,14 +60,11 @@ BEGIN
                                            , inFromId            := inFromId
                                            , inToId              := inToId
                                            , inCurrencyDocumentId:= inCurrencyDocumentId
-                                           , inCurrencyPartnerId := inCurrencyPartnerId
                                            , inCurrencyValue     := outCurrencyValue
                                            , inParValue          := outParValue
-                                           , inCurrencyPartnerValue := inCurrencyPartnerValue
-                                           , inParPartnerValue   := inParPartnerValue
                                            , inComment           := inComment
                                            , inUserId            := vbUserId
-                                           );
+                                            );
 
 END;
 $BODY$
@@ -84,4 +78,4 @@ $BODY$
  */
 
 -- тест
--- select * from gpInsertUpdate_Movement_Income(ioId := 22 , ioInvNumber := '3' , inOperDate := ('04.02.2018')::TDateTime , inFromId := 229 , inToId := 311 , inCurrencyDocumentId := 0 , inCurrencyPartnerId := 0 , inCurrencyPartnerValue := 1 , inParPartnerValue := 0 , inComment := 'vbn' ,  inSession := '2');
+-- SELECT * FROM gpInsertUpdate_Movement_Income (ioId:= 22, ioInvNumber:= '3', inOperDate:= '04.02.2018', inFromId:= 229, inToId:= 311, inCurrencyDocumentId:= zc_Currency_USD(), inComment:= 'vbn', inSession:= zfCalc_UserAdmin()));

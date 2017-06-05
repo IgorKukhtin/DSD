@@ -81,7 +81,6 @@ type
     spMovementReCompleteAll: TdsdStoredProc;
     colCurrencyValue: TcxGridDBColumn;
     colCurrencyDocumentName: TcxGridDBColumn;
-    colCurrencyPartnerName: TcxGridDBColumn;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
     MovementProtocolOpenForm: TdsdOpenForm;
@@ -107,6 +106,7 @@ type
     actPrintSticker: TdsdPrintAction;
     spSelectPrintSticker: TdsdStoredProc;
     dxBarButton2: TdxBarButton;
+    TotalSummBalance: TcxGridDBColumn;
   private
   public
   end;
