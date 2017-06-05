@@ -66,7 +66,7 @@ BEGIN
      IF inLineFabricaName <> ''
      THEN
          -- Поиск
-         vbLineFabricaId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_LineFabrica() AND UPPER (Object.ValueData) LIKE UPPER (inLineFabricaName));
+         vbLineFabricaId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_LineFabrica() AND LOWER (Object.ValueData) = LOWER (inLineFabricaName));
          --
          IF COALESCE (vbLineFabricaId, 0) = 0
          THEN
@@ -84,7 +84,7 @@ BEGIN
      IF inCompositionName <> ''
      THEN
          -- Поиск !!!без Группы!!!
-         vbCompositionId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Composition() AND TRIM (UPPER (Object.ValueData), '\%')  LIKE TRIM (UPPER (inCompositionName), '\%') limit 1);   -- limit 1 так как ошибка  для inCompositionName = '100%шерсть'  возвращает 2 строки       
+         vbCompositionId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Composition() AND LOWER (Object.ValueData) = LOWER (inCompositionName));   -- limit 1 так как ошибка  для inCompositionName = '100%шерсть'  возвращает 2 строки
          --
          IF COALESCE (vbCompositionId,0) = 0
          THEN
@@ -103,7 +103,7 @@ BEGIN
      IF COALESCE (TRIM (inGoodsInfoName), '') <> ''
      THEN
          -- Поиск !!!без Группы!!!
-         vbGoodsInfoId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsInfo() AND TRIM (UPPER (Object.ValueData), '\%') LIKE TRIM (UPPER (inGoodsInfoName), '\%'));   --  '\%'  так как ошибка для  inGoodsInfoName = '\текст  '   так как обратный слеше не экранирован в параметре постгреса 
+         vbGoodsInfoId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsInfo() AND LOWER (Object.ValueData) = LOWER (inGoodsInfoName));   --  '\%'  так как ошибка для  inGoodsInfoName = '\текст  '   так как обратный слеше не экранирован в параметре постгреса 
          --
          IF COALESCE (vbGoodsInfoId, 0) = 0
          THEN
@@ -121,7 +121,7 @@ BEGIN
      IF inLabelName <> ''
      THEN
          -- Поиск
-         vbLabelId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Label() AND UPPER (Object.ValueData) LIKE UPPER (inLabelName));
+         vbLabelId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Label() AND LOWER (Object.ValueData) = LOWER (inLabelName));
          --
          IF COALESCE (vbLabelId, 0) = 0
          THEN
@@ -142,7 +142,7 @@ BEGIN
      -- END IF;
      --
      -- Поиск - ВСЕГДА
-     vbGoodsSizeId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsSize() AND UPPER (Object.ValueData) LIKE UPPER (inGoodsSizeName));
+     vbGoodsSizeId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsSize() AND LOWER (Object.ValueData) = LOWER (inGoodsSizeName));
      --
      IF COALESCE (vbGoodsSizeId, 0) = 0
      THEN
@@ -154,13 +154,13 @@ BEGIN
                                                                                  ) AS tmp);
      END IF;
 
-     -- Товары
-     inGoodsName:= COALESCE (TRIM (inGoodsName), '');
      -- проверка - свойство должно быть установлено
      IF COALESCE (inGoodsGroupId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Группа товаров>.';
      END IF;
+
      -- проверка - свойство должно быть установлено
+     inGoodsName:= COALESCE (TRIM (inGoodsName), '');
      IF inGoodsName = '' THEN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Товар>.';
      END IF;
@@ -174,7 +174,7 @@ BEGIN
                                              ON ObjectLink_Goods_GoodsGroup.ObjectId      = Object.Id
                                             AND ObjectLink_Goods_GoodsGroup.DescId        = zc_ObjectLink_Goods_GoodsGroup()
                                             AND ObjectLink_Goods_GoodsGroup.ChildObjectId = inGoodsGroupId*/
-                  WHERE Object.Descid    = zc_Object_Goods()
+                  WHERE Object.DescId    = zc_Object_Goods()
                     AND Object.ValueData = inGoodsName
                  );
 
@@ -268,7 +268,6 @@ BEGIN
      -- cохраняем Object_PartionGoods + Update св-ва у остальных партий этого vbGoodsId
      PERFORM lpInsertUpdate_Object_PartionGoods (inMovementItemId := ioId
                                                , inMovementId     := inMovementId
-                                               , inSybaseId       := NULL -- !!!если что - оставим без изменения!!!
                                                , inPartnerId      := vbPartnerId
                                                , inUnitId         := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
                                                , inOperDate       := vbOperDate

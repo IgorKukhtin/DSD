@@ -6,9 +6,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem(
  INOUT ioId           Integer, 
     IN inDescId       Integer, 
     IN inObjectId     Integer, 
-    IN inPartionId    Integer, -- партия
+    IN inPartionId    Integer, -- Партия в Object_PartionGoods.MovementItemId
     IN inMovementId   Integer,
-    IN inAmount       TFloat,
+    IN inAmount       TFloat ,
     IN inParentId     Integer,
     IN inUserId       Integer DEFAULT 0 -- Пользователь
 )

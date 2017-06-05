@@ -1,11 +1,11 @@
--- Function: gpInsertUpdate_Object_PartionGoods (Integer, Integer, Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar)
+-- Function: gpInsertUpdate_Object_PartionGoods (Integer, Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PartionGoods (Integer, Integer, Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PartionGoods (Integer, Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PartionGoods(
  INOUT ioMovementItemId         Integer,       -- Ключ партии            
     IN inMovementId             Integer,       -- Ключ Документа             
-    IN inSybaseId               Integer,       -- Ключ партии в Sybase
     IN inPartnerId              Integer,       -- Поcтавщики
     IN inUnitId                 Integer,       -- Подразделение(прихода)
     IN inOperDate               TDateTime,     -- Дата прихода
@@ -47,7 +47,6 @@ BEGIN
      -- cохраняем Object_PartionGoods + Update св-ва у остальных партий этого vbGoodsId
      PERFORM lpInsertUpdate_Object_PartionGoods (inMovementItemId := ioMovementItemId
                                                , inMovementId     := inMovementId
-                                               , inSybaseId       := NULL -- !!!если что - оставим без изменения!!!
                                                , inPartnerId      := vbPartnerId
                                                , inUnitId         := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
                                                , inOperDate       := vbOperDate

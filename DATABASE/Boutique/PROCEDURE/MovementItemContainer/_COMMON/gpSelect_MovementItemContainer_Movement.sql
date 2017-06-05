@@ -1,9 +1,6 @@
 -- Запрос возвращает все проводки по документу
 -- Function: gpSelect_MovementItemContainer_Movement()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItemContainer_Movement (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_MovementItemContainer_Movement (Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_MovementItemContainer_Movement (Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItemContainer_Movement (Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItemContainer_Movement(
@@ -46,7 +43,7 @@ BEGIN
      inIsParentDetail:= inIsParentDetail OR inIsInfoMoneyDetail;
 
      -- !!!проводки только у Админа!!!
-     IF 1 = 1 AND EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), 10898, 76933, 14604 )) -- Отчеты (управленческие) + Клиент банк-ввод документов + Касса Днепр
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin()))
      THEN
 
      RETURN QUERY 

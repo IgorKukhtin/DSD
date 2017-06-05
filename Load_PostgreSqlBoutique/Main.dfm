@@ -111,7 +111,7 @@
     end
     object cbOnlyOpenMI: TCheckBox
       Left = 1014
-      Top = 29
+      Top = 25
       Width = 137
       Height = 17
       Caption = #1090#1086#1083#1100#1082#1086' '#1089#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -124,6 +124,7 @@
       Height = 17
       Caption = #1057#1082#1088#1099#1074#1072#1090#1100' '#1082#1091#1088#1089#1086#1088' '#1075#1088#1080#1076#1072
       TabOrder = 7
+      OnClick = сbNotVisibleCursorClick
     end
   end
   object PageControl1: TPageControl
@@ -832,15 +833,32 @@
           ParentFont = False
           TabOrder = 14
         end
+        object cbTest: TCheckBox
+          Left = 19
+          Top = 433
+          Width = 150
+          Height = 17
+          Caption = #1058#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1058#1077#1089#1090' Id :'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 15
+        end
+        object TestEdit: TEdit
+          Left = 19
+          Top = 456
+          Width = 104
+          Height = 21
+          TabOrder = 16
+        end
       end
     end
     object TabSheet2: TTabSheet
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1092#1072#1081#1083#1086#1074
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 0

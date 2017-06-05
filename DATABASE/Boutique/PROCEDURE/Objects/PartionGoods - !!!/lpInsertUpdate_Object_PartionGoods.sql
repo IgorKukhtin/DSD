@@ -5,8 +5,12 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Object_PartionGoods (Integer, Integer, In
                                                           , Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                           , Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                            );
-
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_PartionGoods (Integer, Integer, Integer, Integer, Integer
+                                                          , TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat
+                                                          , Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                          , Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                           );
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_PartionGoods (Integer, Integer, Integer, Integer
                                                           , TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat
                                                           , Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                           , Integer, Integer, Integer, Integer, Integer, Integer, Integer
@@ -15,7 +19,6 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Object_PartionGoods (Integer, Integer, In
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_PartionGoods(
     IN inMovementItemId         Integer,       -- Ключ партии
     IN inMovementId             Integer,       -- Ключ Документа
-    IN inSybaseId               Integer,       -- Ключ партии в Sybase
     IN inPartnerId              Integer,       -- Поcтавщики
     IN inUnitId                 Integer,       -- Подразделение(прихода)
     IN inOperDate               TDateTime,     -- Дата прихода
@@ -51,7 +54,7 @@ BEGIN
        -- изменили элемент - по значению <Ключ партии>
        UPDATE Object_PartionGoods
               SET MovementId           = inMovementId
-                , SybaseId             = CASE WHEN inSybaseId > 0 THEN inSybaseId ELSE SybaseId END -- !!!если что - оставим без изменения!!!
+                -- , SybaseId             = CASE WHEN inSybaseId > 0 THEN inSybaseId ELSE SybaseId END -- !!!если что - оставим без изменения!!!
                 , PartnerId            = inPartnerId
                 , UnitId               = inUnitId
                 , OperDate             = inOperDate
@@ -81,12 +84,12 @@ BEGIN
        -- если такой элемент не был найден
        IF NOT FOUND THEN             
           -- добавили новый элемент
-          INSERT INTO Object_PartionGoods (MovementItemId, MovementId, SybaseId, PartnerId, UnitId, OperDate, GoodsId, GoodsItemId
+          INSERT INTO Object_PartionGoods (MovementItemId, MovementId, /*SybaseId,*/ PartnerId, UnitId, OperDate, GoodsId, GoodsItemId
                                          , CurrencyId, Amount, OperPrice, CountForPrice, PriceSale, BrandId, PeriodId, PeriodYear
                                          , FabrikaId, GoodsGroupId, MeasureId
                                          , CompositionId, GoodsInfoId, LineFabricaId
                                          , LabelId, CompositionGroupId, GoodsSizeId, JuridicalId)
-                                   VALUES (inMovementItemId, inMovementId, inSybaseId, inPartnerId, inUnitId, inOperDate, inGoodsId, inGoodsItemId
+                                   VALUES (inMovementItemId, inMovementId, /*inSybaseId, */ inPartnerId, inUnitId, inOperDate, inGoodsId, inGoodsItemId
                                          , inCurrencyId, inAmount, inOperPrice, inCountForPrice, inPriceSale, inBrandId, inPeriodId, inPeriodYear
                                          , zfConvert_IntToNull (inFabrikaId), inGoodsGroupId, inMeasureId
                                          , zfConvert_IntToNull (inCompositionId), zfConvert_IntToNull (inGoodsInfoId), zfConvert_IntToNull (inLineFabricaId)

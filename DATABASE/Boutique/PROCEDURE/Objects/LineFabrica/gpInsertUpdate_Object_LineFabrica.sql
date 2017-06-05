@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_LineFabrica(
     IN inName         TVarChar,      -- Название объекта <Линия коллекции>
     IN inSession      TVarChar       -- сессия пользователя
 )
-RETURNS record
+RETURNS RECORD
 AS
 $BODY$
   DECLARE vbUserId integer;
@@ -19,17 +19,17 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
-   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) <> 0 THEN  ioCode := NEXTVAL ('Object_LineFabrica_seq'); 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode, 0) <> 0 THEN  ioCode := NEXTVAL ('Object_LineFabrica_seq'); 
    END IF; 
 
    -- Нужен для загрузки из Sybase т.к. там код = 0 
-   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode,0) = 0  THEN  ioCode := NEXTVAL ('Object_LineFabrica_seq'); 
+   IF COALESCE (ioId, 0) = 0 AND COALESCE(ioCode, 0) = 0  THEN  ioCode := NEXTVAL ('Object_LineFabrica_seq'); 
    ELSEIF ioCode = 0
          THEN ioCode := COALESCE((SELECT ObjectCode FROM Object WHERE Id = ioId),0);
    END IF; 
 
    -- проверка уникальности для свойства <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_LineFabrica(), inName); 
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_LineFabrica(), inName); 
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_LineFabrica(), ioCode, inName);

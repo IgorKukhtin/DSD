@@ -133,6 +133,8 @@ type
     cbReturnIn_Child: TCheckBox;
     cbGroup11: TCheckBox;
     cbGroup22: TCheckBox;
+    cbTest: TCheckBox;
+    TestEdit: TEdit;
 
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
@@ -156,6 +158,7 @@ type
     procedure btnResultCSVClick(Sender: TObject);
     procedure btnResultGroupCSVClick(Sender: TObject);
     procedure ButtonPanelDblClick(Sender: TObject);
+    procedure сbNotVisibleCursorClick(Sender: TObject);
   private
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
@@ -249,7 +252,7 @@ type
 
     procedure myEnabledCB (cb:TCheckBox);
     procedure myDisabledCB (cb:TCheckBox);
-    procedure HideCurGrid(AVisible: BOOL);
+    procedure CursorGridChange;
   public
   end;
 
@@ -259,8 +262,6 @@ var
 implementation
 uses Authentication, CommonData, Storage, SysUtils, Dialogs, Graphics, UtilConst;
 {$R *.dfm}
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.StopButtonClick(Sender: TObject);
 begin
@@ -866,6 +867,20 @@ begin
         if (Components[i] is TCheckBox) then
           if (Components[i].Tag=10)and(TCheckBox(Components[i]).Enabled)
           then TCheckBox(Components[i]).Checked:=cbAllGuide.Checked;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.сbNotVisibleCursorClick(Sender: TObject);
+begin
+    CursorGridChange;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.CursorGridChange;
+begin
+     if Assigned (DBGrid.DataSource.DataSet)
+     then
+       if сbNotVisibleCursor.Checked
+       then DBGrid.DataSource.DataSet.DisableControls
+       else DBGrid.DataSource.DataSet.EnableControls;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.btnLoadDatClick(Sender: TObject);
@@ -1552,19 +1567,7 @@ begin
 
      //
 end;
-
-
-
-procedure TMainForm.HideCurGrid(AVisible: BOOL);
-begin
- if MainForm.сbNotVisibleCursor.Checked then
- if AVisible then
-  DBGrid.DataSource.DataSet.DisableControls
-  else
-  DBGrid.DataSource.DataSet.EnableControls;
-
-end;
-
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.btnInsertGoods2Click(Sender: TObject);
 var  inGoodsName,  inParentID, inHasChildren , upWhere : string;
      fErr : Boolean;
@@ -1982,6 +1985,7 @@ begin
 //     DataSource.DataSet:=fromFlQuery;
 
      if not fStop then DataSource.DataSet:=fromQuery;
+     CursorGridChange;
      //!!!end FLOAT!!!
      //
 
@@ -2076,7 +2080,7 @@ begin
      tmpDate1:=NOw;
 
      DataSource.DataSet:=fromQuery;
-
+     CursorGridChange;
 
      if not fStop then myRecordCount1:=pLoadDocument_Income;
      if not fStop then pLoadDocumentItem_Income(myRecordCount1);
@@ -2136,7 +2140,6 @@ var tmpDate1,tmpDate2,tmpDate3:TDateTime;
     saveStartDate,saveEndDate:TDateTime;
     calcStartDate,calcEndDate:TDateTime;
 begin
-
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCreateGuide_Id_Postgres;
@@ -2281,66 +2284,79 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocumentItem_Income(SaveCount: Integer);
+var GroupId_BII_Dolg : Integer;
 begin
      if (not cbIncome.Checked)or(not cbIncome.Enabled) then exit;
      //
      myEnabledCB(cbIncome);
      //
-     //создаем вьюху, т.к. подзапрос не пашет
-     try fExecSqFromQuery_noErr('create view dba._ViewLoadPG4 as select goods_group.goodsName AS LabelName'
-           +'                           , GoodsProperty.goodsId '
-           +'              from GoodsProperty '
-           +'              join goods on goods.Id = GoodsProperty.goodsId '
-           +'              join goods as goods_group on goods_group.Id = goods.ParentId '
-           +'              group by  GoodsProperty.goodsId, goods_group.goodsName');
+     // найдем для элемента zc_BII_Dolg - "любую" группу
+     fOpenSqToQuery_two(' select min (Id) AS Id_find'
+                       +' from Object'
+                       +' where DescId = zc_Object_GoodsGroup()');
+     GroupId_BII_Dolg:=toSqlQuery_two.FieldByName('Id_find').Value;
+     //
+     //создаем Таблицу, т.к. подзапрос не пашет
+     try fExecSqFromQuery_noErr('create table dba._TableLoadPG4 (goodsid integer primary key'
+          +'                                                   , LabelName TVarCharLong)');
      except end;
+     fExecSqFromQuery('delete from dba._TableLoadPG4');
+     fExecSqFromQuery('insert into dba._TableLoadPG4 (goodsid, LabelName)'
+                     +'  select DISTINCT GoodsProperty.goodsId'
+                     +'       , goods_group.goodsName AS LabelName '
+                     +'  from GoodsProperty '
+                     +'       join goods on goods.Id = GoodsProperty.goodsId '
+                     +'       join goods as goods_group on goods_group.Id = goods.ParentId');
      //
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add(' select BillItemsIncome.Id as ObjectId  ');
-        Add('     , Bill.Id_Postgres as MovementId  ');
-        Add('     , GoodsProperty.Id_Pg_GoodsItem as GoodsItemId  ');
-        Add('     , BillItemsIncome.Id as SybaseId  ');
-        Add('     , case when Goods.ParentId = 500000');
-        Add('              or GoodsGroup1.ParentId = 500000');
-        Add('              or GoodsGroup2.ParentId = 500000');
-        Add('            then GoodsGroup1.Id_Postgres');
+        Add(' select BillItemsIncome.Id as ObjectId');
+        Add('     , BillItemsIncome.Id as SybaseId'); // !!!надо сохранить этот ключ
+        Add('     , Bill.Id_Postgres as MovementId_pg');
+
+        // !!!последнюю группу не загружаем, но кроме АРХИВА
+        Add('     , case when BillItemsIncome.Id = zc_BII_Dolg()');
+        Add('                 then ' + IntToStr(GroupId_BII_Dolg));
+        Add('            when coalesce (Goods.ParentId, 0) = 500000');
+        Add('              or coalesce (GoodsGroup1.ParentId, 0) = 500000');
+        Add('              or coalesce (GoodsGroup2.ParentId, 0) = 500000');
+        Add('                 then GoodsGroup1.Id_Postgres');
         Add('            else GoodsGroup2.Id_Postgres');
-        Add('       end as GoodsGroupId'); // !!!последнюю группу не загружаем, но кроме АРХИВА
-        Add('     , Firma.Id_Postgres as JuridicalId ');
-        Add('     , Goods.GoodsName as GoodsName ');
-        Add('     , GoodsInfo.GoodsInfoName as GoodsInfoName ');
-        Add('     , GoodsSize.GoodsSizeName as GoodsSizeName ');
-        Add('     , CompositionGroup.CompositionGroupName as CompositionGroupName ');
-        Add('     , Composition.CompositionName as CompositionName ');
-        Add('     , LineFabrica.LineFabricaName as LineFabricaName ');
-        Add('     , Label.LabelName as LabelName ');
-        Add('     , Measure.Id_Postgres as MeasureId ');
+        Add('       end as GoodsGroupId_pg');
+
+        Add('     , TRIM(Goods.GoodsName)             as GoodsName ');
+        Add('     , TRIM(GoodsInfo.GoodsInfoName)     as GoodsInfoName ');
+        Add('     , TRIM(GoodsSize.GoodsSizeName)     as GoodsSizeName ');
+        Add('     , TRIM(Composition.CompositionName) as CompositionName ');
+        Add('     , TRIM(LineFabrica.LineFabricaName) as LineFabricaName ');
+        Add('     , TRIM(Label.LabelName)             as LabelName ');
         Add('     , BillItemsIncome.OperCount as Amount  ');
         Add('     , BillItemsIncome.OperPrice as OperPrice  ');
         Add('     , 1 as CountForPrice  ');
-        Add('     , BillItemsIncome.PriceListPrice as OperPriceList  ');
-        Add('     , BillItemsIncome.Id_Postgres as Id_Postgres  ');
-        Add(' from dba.BillItemsIncome   ');
-        Add('     join dba.Bill on BillItemsIncome.BillID = Bill.Id ');
+        Add('     , BillItemsIncome.PriceListPrice as OperPriceList');
+        Add('     , Firma.Id_Postgres as JuridicalId_pg');
+        Add('     , Measure.Id_Postgres as MeasureId_pg');
+        Add('     , BillItemsIncome.Id_Postgres as Id_Postgres');
+        Add(' from dba.Bill');
+        Add('     join dba.BillItemsIncome on BillItemsIncome.BillID = Bill.Id');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItemsIncome.GoodsPropertyId  ');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId  ');
         Add('     left outer join dba.Measure on Measure.Id = GoodsProperty.MeasureId  ');
         Add('     left outer join DBA.GoodsInfo  on GoodsInfo.Id = GoodsProperty.GoodsInfoId ');
         Add('     left outer join DBA.GoodsSize on  GoodsSize.Id = GoodsProperty.GoodsSizeId ');
         Add('     left outer join DBA.Composition on Composition.Id = GoodsProperty.CompositionId ');
-        Add('     left outer join DBA.CompositionGroup on CompositionGroup.Id = Composition.CompositionGroupId  ');
         Add('     left outer join DBA.LineFabrica on LineFabrica.Id = GoodsProperty.LineFabricaId ');
-        Add('     left outer join _ViewLoadPG4 as Label on label.goodsId = GoodsProperty.goodsId ');
+        Add('     left outer join _TableLoadPG4 as Label on label.goodsId = GoodsProperty.goodsId ');
         Add('      left outer join  dba.Firma as Firma on  Firma.id = BillItemsIncome.FirmaId ');
         //    !!!последнюю группу не загружаем, но кроме АРХИВА
         Add('      left outer join  dba.Goods as GoodsGroup1 on  GoodsGroup1.id = Goods.ParentId ');
         Add('      left outer join  dba.Goods as GoodsGroup2 on  GoodsGroup2.id = GoodsGroup1.ParentId ');
 
-        Add(' where  Bill.BillKind = 2 and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add('  and GoodsGroupId  is not null '); // для Долги нет GoodsGroupId
-        Add(' order by Bill.Id ');
+        Add(' where Bill.BillKind = zc_bkIncomeFromClientToUnit() and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        //??? Add('  and GoodsGroupId is not null '); // для Долги нет GoodsGroupId
+        if cbTest.Checked then Add(' and BillItemsIncome.Id = ' + TestEdit.Text);
+        Add(' order by Bill.BillDate, Bill.Id, Goods.Id, GoodsSize.GoodsSizeName, BillItemsIncome.Id');
         Open;
 
         cbIncome.Caption:='1.1. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Приход от поставщика';
@@ -2370,18 +2386,16 @@ begin
         toStoredProc.Params.AddParam ('inCountForPrice',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inOperPriceList',ftFloat,ptInput, 0);
         //
-        HideCurGrid(True);
         while not EOF do
         begin
              //!!!
-             if fStop then begin HideCurGrid(False);  exit; end;
-
-              //
+             if fStop then begin exit; end;
+             //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
-             toStoredProc.Params.ParamByName('inGoodsGroupId').Value:=FieldByName('GoodsGroupId').AsInteger;
-             toStoredProc.Params.ParamByName('inMeasureId').Value:=FieldByName('MeasureId').AsInteger;
-             toStoredProc.Params.ParamByName('inJuridicalId').Value:=FieldByName('JuridicalId').AsInteger;
+             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId_pg').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsGroupId').Value:=FieldByName('GoodsGroupId_pg').AsInteger;
+             toStoredProc.Params.ParamByName('inMeasureId').Value:=FieldByName('MeasureId_pg').AsInteger;
+             toStoredProc.Params.ParamByName('inJuridicalId').Value:=FieldByName('JuridicalId_pg').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsName').Value:=FieldByName('GoodsName').AsString;
              toStoredProc.Params.ParamByName('inGoodsInfoName').Value:=FieldByName('GoodsInfoName').AsString;
              toStoredProc.Params.ParamByName('inGoodsSizeName').Value:=FieldByName('GoodsSizeName').AsString;
@@ -2397,7 +2411,11 @@ begin
 
              if not myExecToStoredProc then ;//exit;
              //
-             if FieldByName('Id_Postgres').AsInteger=0 then
+             // !!! сохранили еще в Postgresql - ЭТОТ КЛЮЧ !!!
+             fExecSqToQuery_two ('update Object_PartionGoods set SybaseId = ' + IntToStr(FieldByName('SybaseId').AsInteger)+ ' where MovementItemId = ' + IntToStr(toStoredProc.Params.ParamByName('ioId').Value) + ' and SybaseId is null');
+             //
+             //
+             if (FieldByName('Id_Postgres').AsInteger = 0) and (toStoredProc.Params.ParamByName('ioId').Value <> 0) then
                fExecSqFromQuery('update dba.BillItemsIncome set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
               fOpenSqToQuery_two(' select GoodsID '
@@ -2410,7 +2428,6 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
      end;
      //
      myDisabledCB(cbIncome);
@@ -2461,17 +2478,12 @@ begin
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountSecond',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
-
-
-
         //
-        HideCurGrid(True);
         while not EOF do
         begin
              //!!!
-             if fStop then begin HideCurGrid(False);  exit; end;
-
-              //
+             if fStop then begin exit; end;
+             //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
@@ -2490,7 +2502,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbInventory);
@@ -2543,11 +2555,11 @@ begin
         toStoredProc.Params.AddParam ('inPartionId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-             if fStop then begin HideCurGrid(False);  exit; end;
+             if fStop then begin exit; end;
 
               //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -2567,7 +2579,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbLoss);
@@ -2621,11 +2633,11 @@ begin
 
 
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-             if fStop then begin HideCurGrid(False);  exit; end;
+             if fStop then begin exit; end;
 
               //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -2646,7 +2658,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbReturnIn);
@@ -2701,11 +2713,11 @@ begin
         toStoredProc.Params.AddParam ('inPartionId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-             if fStop then begin HideCurGrid(False);  exit; end;
+             if fStop then begin exit; end;
 
               //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -2725,7 +2737,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbReturnOut);
@@ -2779,11 +2791,11 @@ begin
 
 
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-             if fStop then begin HideCurGrid(False);  exit; end;
+             if fStop then begin exit; end;
 
               //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -2805,7 +2817,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbSale);
@@ -2858,11 +2870,11 @@ begin
         toStoredProc.Params.AddParam ('inPartionId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-             if fStop then begin HideCurGrid(False);  exit; end;
+             if fStop then begin exit; end;
 
               //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -2882,7 +2894,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbSend);
@@ -2948,11 +2960,11 @@ begin
         toStoredProc.Params.AddParam ('inCurrencyDocumentId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-            if fStop then begin HideCurGrid(False);  exit; end;
+            if fStop then begin exit; end;
              //
 
              //
@@ -2966,7 +2978,7 @@ begin
 
              if not myExecToStoredProc then ;//exit;
              //
-             if FieldByName('Id_Postgres').AsInteger=0 then
+             if (FieldByName('Id_Postgres').AsInteger = 0) and (toStoredProc.Params.ParamByName('ioId').Value <> 0) then
                fExecSqFromQuery('update dba.Bill set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
 
@@ -2975,7 +2987,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbIncome);
@@ -3035,11 +3047,11 @@ begin
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-            if fStop then begin HideCurGrid(False);  exit; end;
+            if fStop then begin exit; end;
              //
 
              //
@@ -3060,7 +3072,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbInventory);
@@ -3132,11 +3144,11 @@ begin
         toStoredProc.Params.AddParam ('outParValue',ftFloat,ptOutput, 0);
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-            if fStop then begin HideCurGrid(False);  exit; end;
+            if fStop then begin exit; end;
              //
 
              //
@@ -3159,7 +3171,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbLoss);
@@ -3217,11 +3229,11 @@ begin
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-            if fStop then begin HideCurGrid(False);  exit; end;
+            if fStop then begin exit; end;
              //
 
              //
@@ -3242,7 +3254,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbReturnIn);
@@ -3326,11 +3338,11 @@ begin
 
 //
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-            if fStop then begin HideCurGrid(False);  exit; end;
+            if fStop then begin exit; end;
              //
 
              //
@@ -3362,7 +3374,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbReturnIn_Child);
@@ -3438,11 +3450,11 @@ begin
         toStoredProc.Params.AddParam ('inParPartnerValue',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-            if fStop then begin HideCurGrid(False);  exit; end;
+            if fStop then begin exit; end;
              //
 
              //
@@ -3468,7 +3480,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbReturnOut);
@@ -3526,11 +3538,11 @@ begin
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-            if fStop then begin HideCurGrid(False);  exit; end;
+            if fStop then begin exit; end;
              //
 
              //
@@ -3551,7 +3563,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbSale);
@@ -3632,11 +3644,11 @@ begin
         toStoredProc.Params.AddParam ('inAmountCard',ftFloat,ptInput, false);
         toStoredProc.Params.AddParam ('inAmountDiscount',ftFloat,ptInput, false);
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-            if fStop then begin HideCurGrid(False);  exit; end;
+            if fStop then begin exit; end;
              //
 
              //
@@ -3665,7 +3677,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbSale_Child);
@@ -3722,11 +3734,11 @@ begin
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-            if fStop then begin HideCurGrid(False);  exit; end;
+            if fStop then begin exit; end;
              //
 
              //
@@ -3748,7 +3760,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbSend);
@@ -3790,11 +3802,11 @@ begin
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inCountryBrandId',ftInteger,ptInput, 0);
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-             if fStop then begin  HideCurGrid(False); exit; end;
+             if fStop then begin   exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -3811,7 +3823,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbBrand);
@@ -4043,11 +4055,11 @@ begin
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inCompositionGroupId',ftInteger,ptInput, 0);
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-             if fStop then begin  HideCurGrid(False); exit; end;
+             if fStop then begin   exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -4065,7 +4077,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbComposition);
@@ -4103,11 +4115,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-             if fStop then begin  HideCurGrid(False); exit; end;
+             if fStop then begin   exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -4123,7 +4135,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbCompositionGroup);
@@ -4161,11 +4173,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-             if fStop then begin  HideCurGrid(False); exit; end;
+             if fStop then begin   exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -4181,7 +4193,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbCountryBrand);
@@ -4221,11 +4233,11 @@ begin
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inDiscountKindId',ftInteger,ptInput, 0);
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-             if fStop then begin  HideCurGrid(False); exit; end;
+             if fStop then begin   exit; end;
              //
 
              fOpenSqToQuery (' SELECT ID  FROM Object WHERE Object.DescId = zc_Object_DiscountKind()  '
@@ -4249,7 +4261,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbDiscount);
@@ -4297,12 +4309,12 @@ begin
         toStoredProc.Params.AddParam ('inDiscountTax',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inDiscountId',ftInteger,ptInput, 0);
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
 
              //!!!
-             if fStop then begin  HideCurGrid(False); exit; end;
+             if fStop then begin   exit; end;
              //
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -4323,7 +4335,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbDiscountTools);
@@ -4361,11 +4373,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-             if fStop then begin  HideCurGrid(False); exit; end;
+             if fStop then begin   exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -4381,7 +4393,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbFabrika);
@@ -4464,12 +4476,12 @@ begin
         toStoredProc.Params.AddParam ('inLabelId',ftInteger,ptInput, 0);
 
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
 
              //!!!
-             if fStop then begin HideCurGrid(False); exit;end;
+             if fStop then begin  exit;end;
              //
                           fOpenSqToQuery (' SELECT ID  FROM Object WHERE Object.DescId = zc_Object_Label()  '
                            +' and ValueData = '''+FieldByName('LabelName').AsString+'''');
@@ -4495,7 +4507,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbGoods);
@@ -4559,11 +4571,11 @@ begin
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-             if fStop then begin  HideCurGrid(False); exit; end;
+             if fStop then begin   exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -4580,7 +4592,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbGoodsGroup);
@@ -4624,11 +4636,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-             if fStop then begin  HideCurGrid(False); exit; end;
+             if fStop then begin   exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -4644,7 +4656,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbGoodsInfo);
@@ -4692,12 +4704,12 @@ begin
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsSizeId',ftInteger,ptInput, 0);
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
 
              //!!!
-             if fStop then begin HideCurGrid(False); exit;end;
+             if fStop then begin  exit;end;
              //
 
              //
@@ -4718,7 +4730,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbGoodsItem);
@@ -4763,11 +4775,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-             if fStop then begin  HideCurGrid(False); exit; end;
+             if fStop then begin   exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -4783,7 +4795,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbGoodsSize);
@@ -4828,12 +4840,12 @@ begin
         toStoredProc.Params.AddParam ('inINN',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inJuridicalGroupId',ftInteger,ptInput, 0);
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
 
              //!!!
-             if fStop then begin HideCurGrid(False); exit;end;
+             if fStop then begin  exit;end;
 
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
@@ -4852,7 +4864,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbJuridical);
@@ -4945,11 +4957,11 @@ begin
         toStoredProc.Params.AddParam ('inCurrencyId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inUnitId',ftInteger,ptInput, 0);
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-             if fStop then begin  HideCurGrid(False); exit; end;
+             if fStop then begin   exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -4968,7 +4980,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbCash);
@@ -5009,11 +5021,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-             if fStop then begin  HideCurGrid(False); exit; end;
+             if fStop then begin   exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=0;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
@@ -5025,7 +5037,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbLabel);
@@ -5069,11 +5081,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-             if fStop then begin  HideCurGrid(False); exit; end;
+             if fStop then begin   exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -5089,7 +5101,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbLineFabrica);
@@ -5132,11 +5144,11 @@ begin
         toStoredProc.Params.AddParam ('inInternalCode',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inInternalName',ftString,ptInput, '');
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-             if fStop then begin  HideCurGrid(False); exit; end;
+             if fStop then begin   exit; end;
              //
 
              fOpenSqToQuery (' select OS_Measure_InternalCode.ValueData  AS InternalCode'
@@ -5174,7 +5186,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbMeasure);
@@ -5214,11 +5226,11 @@ begin
         toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inEMail',ftString,ptInput, '');
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-             if fStop then begin  HideCurGrid(False); exit; end;
+             if fStop then begin   exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -5234,7 +5246,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbMember);
@@ -5285,12 +5297,12 @@ begin
         toStoredProc.Params.AddParam ('inPeriodId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPeriodYear',ftFloat,ptInput, 0);
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
 
              //!!!
-             if fStop then begin  HideCurGrid(False); exit; end;
+             if fStop then begin   exit; end;
              //
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -5309,7 +5321,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbPartner);
@@ -5347,11 +5359,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-             if fStop then begin  HideCurGrid(False); exit; end;
+             if fStop then begin   exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -5367,7 +5379,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbPeriod);
@@ -5409,12 +5421,12 @@ begin
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inCurrencyId',ftInteger,ptInput, 0);
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
 
              //!!!
-             if fStop then begin HideCurGrid(False); exit;end;
+             if fStop then begin  exit;end;
 
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
@@ -5437,7 +5449,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbPriceList);
@@ -5482,12 +5494,12 @@ begin
         toStoredProc.Params.AddParam ('inValue',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inIsLast',ftBoolean,ptInput, True);
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
 
              //!!!
-             if fStop then begin HideCurGrid(False); exit;end;
+             if fStop then begin  exit;end;
 
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inUnitId').Value:=FieldByName('UnitId').AsString;
@@ -5508,7 +5520,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbDiscountPeriodItem);
@@ -5554,12 +5566,12 @@ begin
         toStoredProc.Params.AddParam ('inValue',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inIsLast',ftBoolean,ptInput, True);
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
 
              //!!!
-             if fStop then begin HideCurGrid(False); exit;end;
+             if fStop then begin  exit;end;
 
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inPriceListId').Value:=FieldByName('PriceListId').AsInteger;
@@ -5580,7 +5592,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbPriceListItem);
@@ -5658,12 +5670,12 @@ begin
         toStoredProc.Params.AddParam ('inChildId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inBankAccountId',ftInteger,ptInput, 0);
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
 
              //!!!
-             if fStop then begin  HideCurGrid(False); exit; end;
+             if fStop then begin   exit; end;
              //
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -5682,7 +5694,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbUnit);
@@ -5725,11 +5737,11 @@ begin
         toStoredProc.Params.AddParam ('inMemberId',ftInteger,ptInput, 0);
 
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-             if fStop then begin  HideCurGrid(False); exit; end;
+             if fStop then begin   exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -5747,7 +5759,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbUser);
@@ -5785,11 +5797,11 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
-        HideCurGrid(True);
+
         while not EOF do
         begin
              //!!!
-             if fStop then begin  HideCurGrid(False); exit; end;
+             if fStop then begin   exit; end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -5814,7 +5826,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        HideCurGrid(False);
+
      end;
      //
      myDisabledCB(cbValuta);

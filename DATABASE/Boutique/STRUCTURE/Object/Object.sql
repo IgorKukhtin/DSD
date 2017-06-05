@@ -19,6 +19,8 @@ CREATE TABLE Object(
 CREATE INDEX idx_Object_DescId            ON Object (DescId);
 CREATE INDEX idx_Object_DescId_ValueData  ON Object (DescId, ValueData);
 CREATE INDEX idx_Object_DescId_ObjectCode ON Object (DescId, ObjectCode);
+CREATE INDEX idx_Object_ValueData_DescId  ON Object (LOWER (ValueData), DescId);
+
 
 -- !!! CLUSTER !!!
 CLUSTER Object_pkey ON Object; 

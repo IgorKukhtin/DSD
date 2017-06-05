@@ -46,6 +46,7 @@ CREATE TABLE Object_PartionGoods(
 /*                                  Индексы                                      */
 CREATE INDEX idx_Object_PartionGoods_MovementItemId ON Object_PartionGoods(MovementItemId);
 CREATE INDEX idx_Object_PartionGoods_MovementId	 ON Object_PartionGoods(MovementId);
+CREATE INDEX idx_Object_PartionGoods_GoodsId_PartnerId ON Object_PartionGoods(GoodsId, PartnerId);
 
 /*-------------------------------------------------------------------------------*/
 /*

@@ -30,7 +30,7 @@ BEGIN
           RETURN; -- !!!выход!!!
      END IF;
      -- по этим док-там !!!нет закрытия периода!!!
-     IF inMovementDescId IN (zc_Movement_TransportGoods(), zc_Movement_QualityDoc(), zc_Movement_Invoice(), zc_Movement_IncomeAsset())
+     IF inMovementDescId IN (zc_Movement_TransportGoods(), zc_Movement_QualityDoc(), zc_Movement_Invoice(), zc_Movement_IncomeAsset(), zc_Movement_RouteMember())
      THEN
           RETURN; -- !!!выход!!!
      END IF;

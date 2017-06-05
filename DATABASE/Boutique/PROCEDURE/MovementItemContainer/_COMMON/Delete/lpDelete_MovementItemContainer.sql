@@ -3,19 +3,19 @@
 -- DROP FUNCTION lpDelete_MovementItemContainer (Integer);
 
 CREATE OR REPLACE FUNCTION lpDelete_MovementItemContainer (IN inMovementId Integer)
-  RETURNS VOID AS
+RETURNS VOID
+AS
 $BODY$
    DECLARE vbLock Integer;
    DECLARE vbSec Integer;
 BEGIN
-/*
     -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
     IF zc_IsLockTable() = TRUE
     THEN
         -- LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
         LOCK TABLE LockProtocol IN SHARE UPDATE EXCLUSIVE MODE;
     ELSE
-    IF zc_IsLockTableCycle() = TRUE
+     IF zc_IsLockTableCycle() = TRUE
     THEN
         -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
         vbLock := 1;
@@ -68,7 +68,7 @@ BEGIN
           GROUP BY MIContainer.ContainerId
          ) AS _tmpMIContainer
     WHERE Container.Id = _tmpMIContainer.ContainerId;
-*/
+
     -- Удалить все проводки
     DELETE FROM MovementItemContainer WHERE MovementId = inMovementId;
 

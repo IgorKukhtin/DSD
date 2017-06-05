@@ -4,17 +4,16 @@ DROP FUNCTION IF EXISTS gpSetErased_Movement (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSetErased_Movement(
     IN inMovementId Integer               , -- ключ объекта <Документ>
---    IN inIsChild    Boolean  DEFAULT TRUE , -- есть ли у этого документа Подчиненные документы !!!ни в коем случае не ставить FALSE!!!
-    IN inSession    TVarChar DEFAULT ''     -- текущий пользователь
+    IN inSession    TVarChar                -- текущий пользователь
 )                              
-  RETURNS void
+RETURNS VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight(inSession, zc_Enum_Process_SetErased_Movement());
-     vbUserId:= lpGetUserBySession (inSession);
+     vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_Movement());
+     -- vbUserId:= lpGetUserBySession (inSession);
 /*
      -- !!!Для Админа отключаем эти проверки, иначе из Sybase не загрузить!!!
      IF NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
