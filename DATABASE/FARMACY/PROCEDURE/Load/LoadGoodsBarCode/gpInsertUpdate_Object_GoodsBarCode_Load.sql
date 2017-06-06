@@ -16,6 +16,7 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbId Integer;
+  DECLARE vbItemId Integer;
   DECLARE vbErrorText TVarChar;
   DECLARE vbObjectId Integer;
   DECLARE vbGoodsId Integer;
@@ -86,7 +87,7 @@ BEGIN
                                AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                                AND ObjectLink_Goods_Object.ChildObjectId = vbJuridicalId 
            WHERE ObjectString_Goods_Code.DescId = zc_ObjectString_Goods_Code()
-             AND ObjectString_Goods_Code.ValueData = inGoodsCode
+             AND ObjectString_Goods_Code.ValueData = inGoodsCode;
 
            IF COALESCE (vbGoodsJuridicalId, 0) = 0
            THEN
@@ -108,20 +109,112 @@ BEGIN
            WHERE Object_Goods.DescId = zc_Object_Goods()
              AND Object_Goods.ValueData = inBarCode;
 
-           IF COALESCE (vbGoodsBarCodeId, 0)
+           IF COALESCE (vbGoodsBarCodeId, 0) = 0
            THEN
+                vbGoodsBarCodeId:= lpInsertUpdate_Object(0, zc_Object_Goods(), 0, inBarCode);
+                PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Object(), vbGoodsBarCodeId, zc_Enum_GlobalConst_BarCode());
            END IF;  
+
+           IF COALESCE (vbGoodsMainId, 0) <> 0
+           THEN
+                IF NOT EXISTS (SELECT 1
+                               FROM ObjectLink AS ObjectLink_LinkGoods_Goods
+                                    JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                                    ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
+                                                   AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                                                   AND ObjectLink_LinkGoods_GoodsMain.ChildObjectId = vbGoodsMainId
+                               WHERE ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                 AND ObjectLink_LinkGoods_Goods.ChildObjectId = vbGoodsBarCodeId)
+                THEN
+                     PERFORM gpInsertUpdate_Object_LinkGoods (0, vbGoodsMainId, vbGoodsBarCodeId, inSession);
+                END IF;  
+           END IF;
       END IF;
 
       SELECT Id INTO vbId FROM LoadGoodsBarCode WHERE Code = COALESCE (inCode, 0); 
 
       IF COALESCE (vbId, 0) = 0
       THEN
-           INSERT INTO LoadGoodsBarCode (GoodsId, GoodsMainId, GoodsBarCodeId, GoodsJuridicalId, JuridicalId,
-             Code, Name, ProducerName, GoodsCode, BarCode, JuridicalName, ErrorText)
-           VALUES (COALESCE (vbGoodsId, 0), COALESCE (vbGoodsMainId, 0)) 
+           INSERT INTO LoadGoodsBarCode (GoodsId
+                                       , GoodsMainId
+                                       , GoodsBarCodeId
+                                       , GoodsJuridicalId
+                                       , JuridicalId
+                                       , Code
+                                       , Name
+                                       , ProducerName
+                                       , GoodsCode
+                                       , BarCode
+                                       , JuridicalName
+                                       , ErrorText
+                                        )
+           VALUES (COALESCE (vbGoodsId, 0)::Integer
+                 , COALESCE (vbGoodsMainId, 0)::Integer
+                 , COALESCE (vbGoodsBarCodeId, 0)::Integer
+                 , COALESCE (vbGoodsJuridicalId, 0)::Integer
+                 , COALESCE (vbJuridicalId, 0)::Integer
+                 , inCode
+                 , inName
+                 , inProducerName
+                 , inGoodsCode
+                 , inBarCode
+                 , inJuridicalName
+                 , vbErrorText
+                  )
            RETURNING Id INTO vbId;
       ELSE
+           UPDATE LoadGoodsBarCode
+           SET GoodsId          = COALESCE (vbGoodsId, 0)::Integer
+             , GoodsMainId      = COALESCE (vbGoodsMainId, 0)::Integer     
+             , GoodsBarCodeId   = COALESCE (vbGoodsBarCodeId, 0)::Integer  
+             , GoodsJuridicalId = COALESCE (vbGoodsJuridicalId, 0)::Integer
+             , JuridicalId      = COALESCE (vbJuridicalId, 0)::Integer     
+             , Code             = inCode                                   
+             , Name             = inName                                   
+             , ProducerName     = inProducerName                           
+             , GoodsCode        = inGoodsCode                              
+             , BarCode          = inBarCode                                
+             , JuridicalName    = inJuridicalName                          
+             , ErrorText        = vbErrorText                              
+           WHERE Id = vbId; 
+      END IF;
+
+      IF COALESCE (vbJuridicalId, 0) <> 0
+      THEN
+           SELECT Id INTO vbItemId FROM LoadGoodsBarCodeItem WHERE LoadGoodsBarCodeId = vbId AND JuridicalId = vbJuridicalId;
+
+           IF COALESCE (vbItemId, 0) = 0
+           THEN
+                INSERT INTO LoadGoodsBarCodeItem (LoadGoodsBarCodeId
+                                                , GoodsJuridicalId
+                                                , JuridicalId
+                                                , UserId
+                                                , OperDate
+                                                , GoodsCode
+                                                , BarCode
+                                                , JuridicalName
+                                                 )
+                VALUES (vbId
+                      , COALESCE (vbGoodsJuridicalId, 0)::Integer
+                      , vbJuridicalId
+                      , vbUserId
+                      , CURRENT_TIMESTAMP
+                      , inGoodsCode
+                      , inBarCode
+                      , inJuridicalName 
+                       );
+           ELSE
+                UPDATE LoadGoodsBarCodeItem
+                SET LoadGoodsBarCodeId = vbId
+                  , GoodsJuridicalId   = COALESCE (vbGoodsJuridicalId, 0)::Integer 
+                  , JuridicalId        = vbJuridicalId                            
+                  , UserId             = vbUserId                                 
+                  , OperDate           = CURRENT_TIMESTAMP                        
+                  , GoodsCode          = inGoodsCode                              
+                  , BarCode            = inBarCode                                
+                  , JuridicalName      = inJuridicalName                          
+                WHERE Id = vbItemId; 
+           END IF;
       END IF;
 END;
 $BODY$
@@ -131,4 +224,14 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Ярошенко Р.Ф.
  05.06.2017                                                      *
+*/
+
+/* SELECT * FROM gpInsertUpdate_Object_GoodsBarCode_Load (inCode:= 5622,   -- Наш Код товара
+                                                          inName:= 'L-лізина есцинат р-н для ін"єкцій, 1 мг/мл 5 мл амп № 10',  -- Название товара
+                                                          inProducerName:= 'Галичфарм',  -- Производитель
+                                                          inGoodsCode:= '274',  -- Код товара поставщика
+                                                          inBarCode:= '4823000800724',  -- Штрих-код
+                                                          inJuridicalName:= 'Фармлига',  -- Поставщик
+                                                          inSession:= zfCalc_UserAdmin()   -- сессия пользователя
+                                                         );
 */
