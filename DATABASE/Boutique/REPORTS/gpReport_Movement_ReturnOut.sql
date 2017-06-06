@@ -131,12 +131,8 @@ BEGIN
                                       ELSE CAST ( COALESCE (MI_ReturnOut.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0) AS NUMERIC (16, 2))
                                  END) AS AmountSumm
 
-                          , SUM (CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) <> 0
-                                          THEN CAST (COALESCE (MI_ReturnOut.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
-                                      ELSE CAST ( COALESCE (MI_ReturnOut.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2))
-                                 END) AS AmountPriceListSumm
-
-                          , SUM (COALESCE (Object_PartionGoods.PriceSale,0) * COALESCE (MI_ReturnOut.Amount, 0) ) AS SaleSumm
+                          , SUM (COALESCE (MI_ReturnOut.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0))  AS AmountPriceListSumm
+                          , SUM (COALESCE (MI_ReturnOut.Amount, 0) * COALESCE (Object_PartionGoods.PriceSale,0))     AS SaleSumm
 
                      FROM tmpMovementReturnOut
                           INNER JOIN MovementItem AS MI_ReturnOut 

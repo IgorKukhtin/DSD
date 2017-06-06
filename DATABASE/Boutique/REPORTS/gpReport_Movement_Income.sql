@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION  gpReport_Movement_Income(
     IN inisPartner        Boolean,    --
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (
+RETURNS TABLE (MovementId     Integer,
                InvNumber      TVarChar,
                OperDate       TDateTime,
                DescName       TVarChar,
@@ -35,11 +35,13 @@ RETURNS TABLE (
                CurrencyName  TVarChar,
 
                OperPrice           TFloat,
+               OperPriceBalance    TFloat,
                OperPriceList       TFloat,
                PriceSale           TFloat,
                Amount              TFloat,
   
                AmountSumm           TFloat,
+               TotalSummBalance     TFloat,
                AmountPriceListSumm  TFloat,
                SaleSumm             TFloat
   )
@@ -64,6 +66,9 @@ BEGIN
                                      , ObjectLink_Partner_Brand.ChildObjectId                                                              AS BrandId
                                      , ObjectLink_Partner_Fabrika.ChildObjectId                                                            AS FabrikaId
                                      , ObjectLink_Partner_Period.ChildObjectId                                                             AS PeriodId
+
+                                     , COALESCE (MovementFloat_CurrencyValue.ValueData, 0)                                                 AS CurrencyValue
+                                     , COALESCE (MovementFloat_ParValue.ValueData, 0)                                                      AS ParValue
                                 FROM Movement AS Movement_Income
                                      -- куда был приход
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
@@ -88,14 +93,22 @@ BEGIN
                                      LEFT JOIN ObjectLink AS ObjectLink_Partner_Period
                                                           ON ObjectLink_Partner_Period.ObjectId = MovementLinkObject_From.ObjectId
                                                          AND ObjectLink_Partner_Period.DescId = zc_ObjectLink_Partner_Period()
-                                     
+
+                                     LEFT JOIN MovementFloat AS MovementFloat_ParValue
+                                                             ON MovementFloat_ParValue.MovementId = Movement_Income.Id
+                                                            AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
+                                     LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
+                                                             ON MovementFloat_CurrencyValue.MovementId = Movement_Income.Id
+                                                            AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
+
                                      LEFT JOIN MovementDesc AS MovementDesc_Income ON MovementDesc_Income.Id = Movement_Income.DescId                                                          
                                 WHERE Movement_Income.DescId = zc_Movement_Income()
                                   AND Movement_Income.OperDate BETWEEN inStartDate AND inEndDate
                                  -- AND Movement_Income.StatusId = zc_Enum_Status_Complete() 
                               )
 
-     , tmpData  AS  (SELECT tmpMovementIncome.InvNumber
+     , tmpData  AS  (SELECT CASE WHEN inIsPartion = TRUE THEN tmpMovementIncome.MovementId ELSE -1 END  AS MovementId
+                          , tmpMovementIncome.InvNumber
                           , tmpMovementIncome.OperDate
                           , tmpMovementIncome.DescName
                           , tmpMovementIncome.FromId
@@ -116,6 +129,9 @@ BEGIN
                           , Object_PartionGoods.CurrencyId
                           , Object_PartionGoods.PeriodYear
 
+                          , tmpMovementIncome.CurrencyValue
+                          , tmpMovementIncome.ParValue
+
                           , COALESCE (MIFloat_CountForPrice.ValueData, 1)       AS CountForPrice
                           , SUM (COALESCE (MI_Income.Amount, 0))                AS Amount
                           , SUM (CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) <> 0
@@ -123,12 +139,8 @@ BEGIN
                                       ELSE CAST ( COALESCE (MI_Income.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0) AS NUMERIC (16, 2))
                                  END) AS AmountSumm
 
-                          , SUM (CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) <> 0
-                                          THEN CAST (COALESCE (MI_Income.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
-                                      ELSE CAST ( COALESCE (MI_Income.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2))
-                                 END) AS AmountPriceListSumm
-
-                          , SUM (COALESCE (Object_PartionGoods.PriceSale,0) * COALESCE (MI_Income.Amount, 0) ) AS SaleSumm
+                          , SUM (COALESCE (MI_Income.Amount, 0) * COALESCE (MIFloat_OperPriceList.ValueData, 0) ) AS AmountPriceListSumm
+                          , SUM (COALESCE (MI_Income.Amount, 0) * COALESCE (Object_PartionGoods.PriceSale,0) )    AS SaleSumm
 
                      FROM tmpMovementIncome
                           INNER JOIN MovementItem AS MI_Income 
@@ -146,11 +158,14 @@ BEGIN
                           LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                       ON MIFloat_OperPriceList.MovementItemId = MI_Income.Id
                                                      AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
-                     GROUP BY tmpMovementIncome.InvNumber
+                     GROUP BY CASE WHEN inIsPartion = TRUE THEN tmpMovementIncome.MovementId ELSE -1 END
+                            , tmpMovementIncome.InvNumber
                             , tmpMovementIncome.OperDate
                             , tmpMovementIncome.DescName
                             , tmpMovementIncome.FromId
                             , tmpMovementIncome.ToId
+                            , tmpMovementIncome.CurrencyValue
+                            , tmpMovementIncome.ParValue
                             , MI_Income.ObjectId
                             , CASE WHEN inisSize = TRUE THEN Object_PartionGoods.GoodsSizeId  ELSE 0 END 
                             , Object_PartionGoods.MeasureId
@@ -171,7 +186,8 @@ BEGIN
               
 
         SELECT
-             tmpData.InvNumber
+             tmpData.MovementId
+           , tmpData.InvNumber
            , tmpData.OperDate
            , tmpData.DescName
            , Object_From.ValueData          AS FromName
@@ -198,10 +214,15 @@ BEGIN
            , Object_Currency.ValueData      AS CurrencyName
            
            , CASE WHEN tmpData.Amount <> 0 THEN tmpData.AmountSumm  / tmpData.Amount ELSE 0 END          ::TFloat AS OperPrice
+     
+           , (CAST ( (CASE WHEN tmpData.Amount <> 0 THEN tmpData.AmountSumm / tmpData.Amount ELSE 0 END)
+                      * tmpData.CurrencyValue / CASE WHEN tmpData.ParValue <> 0 THEN tmpData.ParValue ELSE 1 END  AS NUMERIC (16, 2))) :: TFloat  AS OperPriceBalance
+     
            , CASE WHEN tmpData.Amount <> 0 THEN tmpData.AmountPriceListSumm  / tmpData.Amount ELSE 0 END ::TFloat AS OperPriceList
            , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SaleSumm  / tmpData.Amount ELSE 0 END            ::TFloat AS PriceSale
            , tmpData.Amount                  ::TFloat
            , tmpData.AmountSumm              ::TFloat
+           , (CAST (tmpData.AmountSumm * tmpData.CurrencyValue / CASE WHEN tmpData.ParValue <> 0 THEN tmpData.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance
            , tmpData.AmountPriceListSumm     ::TFloat 
            , tmpData.SaleSumm                ::TFloat 
            
