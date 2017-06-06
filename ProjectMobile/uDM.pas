@@ -757,6 +757,8 @@ type
     procedure InitStructure;
   public
     { Public declarations }
+    IsUploadRouteMember: boolean;
+
     function Connect: Boolean;
     function ConnectWithOutDB: Boolean;
     function CheckStructure: Boolean;
@@ -1785,6 +1787,10 @@ var
   UploadStoredProc : TdsdStoredProc;
 begin
   UploadStoredProc := TdsdStoredProc.Create(nil);
+  Synchronize(procedure
+              begin
+                DM.IsUploadRouteMember := true;
+              end);
   try
     UploadStoredProc.OutputType := otResult;
 
@@ -1827,6 +1833,10 @@ begin
       end;
     end;
   finally
+    Synchronize(procedure
+                begin
+                  DM.IsUploadRouteMember := false;
+                end);
     FreeAndNil(UploadStoredProc);
   end;
 end;
@@ -2188,7 +2198,7 @@ begin
         while not Eof do
         begin
           StartRemains := StartRemains + FieldByName('StartRemains').AsFloat;
-          EndRemains := StartRemains + FieldByName('EndRemains').AsFloat;
+          EndRemains := EndRemains + FieldByName('EndRemains').AsFloat;
 
           if FieldByName('InvNumber').AsString <> '' then
           begin
@@ -2837,6 +2847,8 @@ begin
   cdsReturnInItems.CreateDataSet;
   cdsJuridicalCollation.CreateDataSet;
   cdsTasks.CreateDataSet;
+
+  IsUploadRouteMember := false;
 end;
 
 { вычисление цены для товаров }
