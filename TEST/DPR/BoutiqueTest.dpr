@@ -228,7 +228,9 @@ uses
   Report_BalanceDialog in '..\..\FormsBoutique\Report\Report_BalanceDialog.pas' {Report_BalanceDialogForm: TParentForm},
   InfoMoney in '..\..\FormsBoutique\Guides\InfoMoney.pas' {InfoMoneyForm: TParentForm},
   InfoMoney_Object in '..\..\FormsBoutique\Guides\InfoMoney_Object.pas' {InfoMoney_ObjectForm: TParentForm},
-  InfoMoneyEdit in '..\..\FormsBoutique\Guides\InfoMoneyEdit.pas' {InfoMoneyEditForm: TParentForm};
+  InfoMoneyEdit in '..\..\FormsBoutique\Guides\InfoMoneyEdit.pas' {InfoMoneyEditForm: TParentForm},
+  MovementItemProtocol in '..\..\FormsBoutique\Document\MovementItemProtocol.pas' {MovementItemProtocolForm: TParentForm},
+  MovementProtocol in '..\..\FormsBoutique\Document\MovementProtocol.pas' {MovementProtocolForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

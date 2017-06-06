@@ -32,4 +32,4 @@ $BODY$
 */
 
 -- тест
--- 
+-- select * from gpGet_MI_Income_OperPriceList(inOperPrice := 156 , inCountForPrice := 1 , ioOperPriceList := 256 ,  inSession := '2');
