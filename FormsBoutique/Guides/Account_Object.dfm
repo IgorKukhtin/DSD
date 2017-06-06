@@ -275,10 +275,10 @@ object Account_ObjectForm: TAccount_ObjectForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -301,50 +301,64 @@ object Account_ObjectForm: TAccount_ObjectForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValueAll'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountName_All'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountGroupId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountGroupName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountDirectionId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountDirectionId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountDirectionName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountDirectionName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Account'
     DataSet = MasterCDS
     DataSets = <
@@ -352,14 +366,15 @@ object Account_ObjectForm: TAccount_ObjectForm
         DataSet = MasterCDS
       end>
     Params = <>
+    PackSize = 1
     Left = 56
     Top = 216
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 160
     Top = 160
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
@@ -392,10 +407,13 @@ object Account_ObjectForm: TAccount_ObjectForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 280
     Top = 216
   end

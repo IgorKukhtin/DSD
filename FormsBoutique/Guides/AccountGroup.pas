@@ -49,12 +49,12 @@ type
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
-    dsdStoredProc: TdsdStoredProc;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    spSelect: TdsdStoredProc;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spErasedUnErased: TdsdStoredProc;
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
+    DBViewAddOn: TdsdDBViewAddOn;
   private
     { Private declarations }
   public

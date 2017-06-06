@@ -223,7 +223,12 @@ uses
   Report_MovementSendDialog in '..\..\FormsBoutique\Report\Report_MovementSendDialog.pas' {Report_MovementSendDialogForm: TParentForm},
   Report_MovementLoss in '..\..\FormsBoutique\Report\Report_MovementLoss.pas' {Report_MovementLossForm: TParentForm},
   Report_MovementLossDialog in '..\..\FormsBoutique\Report\Report_MovementLossDialog.pas' {Report_MovementLossDialogForm: TParentForm},
-  Report_MovementIncome in '..\..\FormsBoutique\Report\Report_MovementIncome.pas' {Report_MovementIncomeForm: TParentForm};
+  Report_MovementIncome in '..\..\FormsBoutique\Report\Report_MovementIncome.pas' {Report_MovementIncomeForm: TParentForm},
+  Report_Balance in '..\..\FormsBoutique\Report\Report_Balance.pas' {Report_BalanceForm: TParentForm},
+  Report_BalanceDialog in '..\..\FormsBoutique\Report\Report_BalanceDialog.pas' {Report_BalanceDialogForm: TParentForm},
+  InfoMoney in '..\..\FormsBoutique\Guides\InfoMoney.pas' {InfoMoneyForm: TParentForm},
+  InfoMoney_Object in '..\..\FormsBoutique\Guides\InfoMoney_Object.pas' {InfoMoney_ObjectForm: TParentForm},
+  InfoMoneyEdit in '..\..\FormsBoutique\Guides\InfoMoneyEdit.pas' {InfoMoneyEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

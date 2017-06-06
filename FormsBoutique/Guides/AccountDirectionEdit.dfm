@@ -13,7 +13,7 @@
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = dsdDataSetRefresh
-  AddOnFormData.Params = dsdFormParams
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -103,7 +103,7 @@
       item
         Name = 'ioId'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -127,7 +127,7 @@
     Left = 304
     Top = 56
   end
-  object dsdFormParams: TdsdFormParams
+  object FormParams: TdsdFormParams
     Params = <
       item
         Name = 'Id'
@@ -146,7 +146,7 @@
       item
         Name = 'Id'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -168,7 +168,7 @@
     Left = 304
     Top = 16
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 304
     Top = 88
   end

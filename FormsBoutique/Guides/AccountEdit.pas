@@ -35,12 +35,12 @@ type
     dsdDataSetRefresh: TdsdDataSetRefresh;
     dsdFormClose1: TdsdFormClose;
     spInsertUpdate: TdsdStoredProc;
-    dsdFormParams: TdsdFormParams;
+    FormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     AccountGroupGuides: TdsdGuides;
     AccountDirectionGuides: TdsdGuides;
     cxPropertiesStore: TcxPropertiesStore;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel4: TcxLabel;
     InfoMoneyDestinationGuides: TdsdGuides;
     cxLabel5: TcxLabel;

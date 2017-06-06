@@ -1,4 +1,4 @@
-unit Account_ObjectDesc;
+unit InfoMoney;
 
 interface
 
@@ -20,44 +20,45 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, dxSkinsdxBarPainter, dsdAddOn,
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox;
+  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
+  DataModul;
 
 type
-  TAccount_ObjectDescForm = class(TParentForm)
+  TInfoMoneyForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    Code: TcxGridDBColumn;
-    Name: TcxGridDBColumn;
+    clCode: TcxGridDBColumn;
+    clName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
-    MasterDS: TDataSource;
+    DataSource: TDataSource;
     MasterCDS: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
     bbRefresh: TdxBarButton;
+    bbInsert: TdxBarButton;
+    bbEdit: TdxBarButton;
+    bbSetErased: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
     bbGridToExcel: TdxBarButton;
-    dxBarStatic: TdxBarStatic;
+    dxBarStatic1: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
+    actInsert: TdsdInsertUpdateAction;
+    actUpdate: TdsdInsertUpdateAction;
+    dsdSetErased: TdsdUpdateErased;
+    dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
-    dsdChoiceGuides: TdsdChoiceGuides;
     spSelect: TdsdStoredProc;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
-    AccountGroupName: TcxGridDBColumn;
-    AccountDirectionName: TcxGridDBColumn;
-    InfoMoneyDestinationName: TcxGridDBColumn;
-    InfoMoneyName: TcxGridDBColumn;
-    isErased: TcxGridDBColumn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spErasedUnErased: TdsdStoredProc;
-    InfoMoneyGroupName: TcxGridDBColumn;
-    AccountGroupCode: TcxGridDBColumn;
-    AccountDirectionCode: TcxGridDBColumn;
-    AccountName_All: TcxGridDBColumn;
-    onComplete: TcxGridDBColumn;
-    InfoMoneyCode: TcxGridDBColumn;
-    FormParams: TdsdFormParams;
+    DBViewAddOn: TdsdDBViewAddOn;
+    clInfoMoneyGroup: TcxGridDBColumn;
+    clInfoMoneyDestination: TcxGridDBColumn;
+    dsdChoiceGuides: TdsdChoiceGuides;
+    clErased: TcxGridDBColumn;
+    isProfitLoss: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -68,6 +69,6 @@ type
 implementation
 
 {$R *.dfm}
-initialization
-  RegisterClass(TAccount_ObjectDescForm);
+ initialization
+  RegisterClass(TInfoMoneyForm);
 end.

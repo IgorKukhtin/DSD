@@ -42,9 +42,9 @@ type
     actRefresh: TdsdDataSetRefresh;
     dsdGridToExcel: TdsdGridToExcel;
     dsdChoiceGuides: TdsdChoiceGuides;
-    dsdStoredProc: TdsdStoredProc;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
+    spSelect: TdsdStoredProc;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    DBViewAddOn: TdsdDBViewAddOn;
     AccountGroupName: TcxGridDBColumn;
     AccountDirectionName: TcxGridDBColumn;
     InfoMoneyDestinationName: TcxGridDBColumn;

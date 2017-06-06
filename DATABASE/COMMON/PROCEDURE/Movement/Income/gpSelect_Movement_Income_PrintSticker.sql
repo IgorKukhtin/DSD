@@ -64,7 +64,7 @@ BEGIN
            , CASE WHEN vbDescId = zc_Movement_Income() THEN vbOperDate ELSE Null END  AS OperDate
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
-       ORDER BY Object_Goods.ObjectCode
+       ORDER BY Object_Goods.ValueData
        ;
 
     RETURN NEXT Cursor1;

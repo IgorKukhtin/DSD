@@ -13,7 +13,7 @@
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = dsdDataSetRefresh
-  AddOnFormData.Params = dsdFormParams
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object edMeasureName: TcxTextEdit
@@ -64,6 +64,7 @@
     Top = 120
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -75,9 +76,13 @@
       RefreshOnTabSetChanges = False
     end
     object dsdFormClose1: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -94,15 +99,17 @@
       item
         Name = 'ioId'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -110,16 +117,19 @@
         Component = edMeasureName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 112
     Top = 88
   end
-  object dsdFormParams: TdsdFormParams
+  object FormParams: TdsdFormParams
     Params = <
       item
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 152
     Top = 40
@@ -132,21 +142,25 @@
       item
         Name = 'Id'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edMeasureName
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 200
     Top = 120
   end
@@ -165,7 +179,7 @@
     Left = 120
     Top = 40
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 232
     Top = 56
   end

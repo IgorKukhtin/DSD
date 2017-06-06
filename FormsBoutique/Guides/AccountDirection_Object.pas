@@ -39,9 +39,9 @@ type
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
     dsdGridToExcel: TdsdGridToExcel;
-    dsdStoredProc: TdsdStoredProc;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
+    spSelect: TdsdStoredProc;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    DBViewAddOn: TdsdDBViewAddOn;
     dxBarStatic: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
     dsdChoiceGuides: TdsdChoiceGuides;

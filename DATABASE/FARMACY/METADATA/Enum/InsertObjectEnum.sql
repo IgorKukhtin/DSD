@@ -2302,12 +2302,12 @@ BEGIN
                                                       inSession           := vbUserId::TVarChar);
 
     vbImportTypeItemId := 0;
-    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inCommonCode';
+    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inBarCode';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId, 0), 
                                                                 inParamNumber   := 5, 
-                                                                inName          := 'inCommonCode', 
-                                                                inParamType     := 'ftInteger', 
-                                                                inUserParamName := 'Код Мориона',
+                                                                inName          := 'inBarCode', 
+                                                                inParamType     := 'ftString', 
+                                                                inUserParamName := 'Штрих-код',
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := vbUserId::TVarChar);
     vbImportSettingsItem := 0;
@@ -2320,27 +2320,9 @@ BEGIN
                                                       inSession           := vbUserId::TVarChar);
 
     vbImportTypeItemId := 0;
-    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inBarCode';
-    vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId, 0), 
-                                                                inParamNumber   := 6, 
-                                                                inName          := 'inBarCode', 
-                                                                inParamType     := 'ftString', 
-                                                                inUserParamName := 'Штрих-код',
-                                                                inImportTypeId  := vbImportTypeId, 
-                                                                inSession       := vbUserId::TVarChar);
-    vbImportSettingsItem := 0;
-    Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
-    PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'G',
-                                                      inImportSettingsId  := vbImportSettingId,
-                                                      inImportTypeItemsId := vbImportTypeItemId,
-                                                      inDefaultValue      := NULL::TVarChar,
-                                                      inSession           := vbUserId::TVarChar);
-
-    vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inJuridicalName';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId, 0), 
-                                                                inParamNumber   := 7, 
+                                                                inParamNumber   := 6, 
                                                                 inName          := 'inJuridicalName', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Поставщик',
@@ -2349,7 +2331,7 @@ BEGIN
     vbImportSettingsItem := 0;
     Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
     PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'H',
+                                                      inName              := 'G',
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarChar,

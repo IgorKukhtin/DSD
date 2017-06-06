@@ -1977,7 +1977,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUnitGroupEditForm');
 end; }
 
-   procedure TLoadFormTest.LoadInfoMoneyFormTest;
+procedure TLoadFormTest.LoadInfoMoneyFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyGroupEditForm');
