@@ -3,59 +3,87 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , -- Товары
-    IN inPartionId           Integer   , -- Партия
-    IN inAmount              TFloat    , -- Количество
-    IN inOperPrice           TFloat    , -- Цена
- INOUT ioCountForPrice       TFloat    , -- Цена за количество
-   OUT outAmountSumm         TFloat    , -- Сумма расчетная
-   OUT outOperPriceList      TFloat    , -- Цена по прайсу
-   OUT outAmountPriceListSumm TFloat    , -- Сумма по прайсу
-    IN inSession             TVarChar    -- сессия пользователя
+    IN inId                   Integer   , -- Ключ объекта <Элемент документа>
+    IN inAmount               TFloat    , -- Количество
+   OUT outTotalSumm           TFloat    , -- Сумма расчетная
+   OUT outTotalSummPriceList  TFloat    , -- Сумма по прайсу
+   OUT outTotalSummBalance    TFloat    , -- Сумма вх. в грн
+    IN inSession              TVarChar    -- сессия пользователя
 )                              
 RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbPartionId Integer;
-   DECLARE vbOperDate TDateTime;
+   DECLARE vbCountForPrice TFloat;
+   DECLARE vbOperPrice TFloat;
+   DECLARE vbOperPriceList TFloat;
+   DECLARE vbCurrencyValue TFloat;
+   DECLARE vbParValue      TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Income());
 
-     -- Заменили свойство <Цена за количество>
-     IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
-
-     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
-     -- цена продажи из прайса 
-     outOperPriceList := COALESCE ((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem(vbOperDate, zc_PriceList_Basis(), inGoodsId) AS tmp), 0);
-
      -- сохранили
-     ioId:= lpInsertUpdate_MovementItem_Income (ioId                 := ioId
-                                              , inMovementId         := inMovementId
-                                              , inGoodsId            := inGoodsId
-                                              , inPartionId          := COALESCE(inPartionId,0)
-                                              , inAmount             := inAmount
-                                              , inOperPrice          := inOperPrice
-                                              , inCountForPrice      := ioCountForPrice
-                                              , inOperPriceList      := outOperPriceList
-                                              , inUserId             := vbUserId
-                                               );
+     PERFORM lpInsertUpdate_MovementItem (ioId         := MovementItem.Id
+                                        , inDescId     := zc_MI_Master()
+                                        , inObjectId   := MovementItem.ObjectId
+                                        , inPartionId  := MovementItem.PartionId
+                                        , inMovementId := MovementItem.MovementId
+                                        , inAmount     := inAmount
+                                        , inParentId   := NULL
+                                        , inUserId     := vbUserId
+                                         )
+     FROM MovementItem
+     WHERE MovementItem.Id = inId  ;
+
+     -- данные для расчета сумм
+     SELECT MF_CurrencyValue.ValueData
+          , MF_ParValue.ValueData
+          , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
+          , COALESCE (MIFloat_OperPrice.ValueData, 0)       AS OperPrice
+          , COALESCE (MIFloat_OperPriceList.ValueData, 0)   AS OperPriceList
+    INTO vbCurrencyValue, vbParValue
+       , vbCountForPrice, vbOperPrice, vbOperPriceList
+     FROM MovementItem
+          -- из док.
+          LEFT JOIN MovementFloat AS MF_CurrencyValue
+                                  ON MF_CurrencyValue.MovementId = MovementItem.MovementId
+                                 AND MF_CurrencyValue.DescId     = zc_MovementFloat_CurrencyValue()
+          LEFT JOIN MovementFloat AS MF_ParValue
+                                  ON MF_ParValue.MovementId = MovementItem.MovementId
+                                 AND MF_ParValue.DescId     = zc_MovementFloat_ParValue()
+          -- из строки
+          LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                      ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                     AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+          LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
+                                      ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
+                                     AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
+          LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                      ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
+                                     AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
+
+     WHERE MovementItem.Id = inId;
 
      -- расчитали сумму по элементу, для грида
-     outAmountSumm := CASE WHEN ioCountForPrice > 0
-                                THEN CAST (inAmount * inOperPrice / ioCountForPrice AS NUMERIC (16, 2))
-                           ELSE CAST (inAmount * inOperPrice AS NUMERIC (16, 2))
+     outTotalSumm := CASE WHEN vbCountForPrice > 0
+                                THEN CAST (inAmount * vbOperPrice / vbCountForPrice AS NUMERIC (16, 2))
+                           ELSE CAST (inAmount * vbOperPrice AS NUMERIC (16, 2))
                       END;
      -- расчитали сумму по прайсу по элементу, для грида
-     outAmountPriceListSumm := CASE WHEN ioCountForPrice > 0
-                                         THEN CAST (inAmount * outOperPriceList / ioCountForPrice AS NUMERIC (16, 2))
-                                    ELSE CAST (inAmount * outOperPriceList AS NUMERIC (16, 2))
-                               END;
+     outTotalSummPriceList := CAST (inAmount * vbOperPriceList AS NUMERIC (16, 2));
+
+     --  расчитали сумму по элементу в грн, для грида
+     outTotalSummBalance := (CAST (outTotalSumm * vbCurrencyValue / CASE WHEN vbParValue <> 0 THEN vbParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat;
+
+     -- Обновляем для Партии - Object_PartionGoods.Amount
+     UPDATE Object_PartionGoods 
+     SET Amount = inAmount
+     WHERE Object_PartionGoods.MovementItemId = inId;
+
 
 END;
 $BODY$
@@ -64,6 +92,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.06.17         *
  09.05.17         * outOperPriceList
  10.04.17         *
 */

@@ -186,7 +186,7 @@ object IncomeForm: TIncomeForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -239,7 +239,7 @@ object IncomeForm: TIncomeForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -264,7 +264,7 @@ object IncomeForm: TIncomeForm
             end
             item
               Kind = skSum
-              Column = colPrice
+              Column = Price
             end
             item
               Format = ',0.####'
@@ -290,7 +290,7 @@ object IncomeForm: TIncomeForm
             item
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colName
+              Column = Name
             end
             item
               Format = ',0.####'
@@ -310,7 +310,7 @@ object IncomeForm: TIncomeForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object colCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -318,7 +318,7 @@ object IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 50
           end
-          object clGoodsGroupNameFull: TcxGridDBColumn
+          object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
@@ -326,7 +326,7 @@ object IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 150
           end
-          object colName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -342,7 +342,7 @@ object IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 100
           end
-          object colCompositionGroupName: TcxGridDBColumn
+          object CompositionGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1089#1086#1089#1090#1072#1074#1072
             DataBinding.FieldName = 'CompositionGroupName'
             Visible = False
@@ -351,7 +351,7 @@ object IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 72
           end
-          object colLabelName: TcxGridDBColumn
+          object LabelName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074' '#1094#1077#1085#1085#1080#1082#1077
             DataBinding.FieldName = 'LabelName'
             HeaderAlignmentHorz = taCenter
@@ -359,7 +359,7 @@ object IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 100
           end
-          object colCompositionName: TcxGridDBColumn
+          object CompositionName: TcxGridDBColumn
             Caption = #1057#1086#1089#1090#1072#1074
             DataBinding.FieldName = 'CompositionName'
             HeaderAlignmentHorz = taCenter
@@ -367,7 +367,7 @@ object IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 72
           end
-          object colGoodsInfoName: TcxGridDBColumn
+          object GoodsInfoName: TcxGridDBColumn
             Caption = #1054#1087#1080#1089#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsInfoName'
             HeaderAlignmentHorz = taCenter
@@ -375,7 +375,7 @@ object IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 76
           end
-          object colLineFabricaName: TcxGridDBColumn
+          object LineFabricaName: TcxGridDBColumn
             Caption = #1051#1080#1085#1080#1103
             DataBinding.FieldName = 'LineFabricaName'
             HeaderAlignmentHorz = taCenter
@@ -383,7 +383,7 @@ object IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 70
           end
-          object colGoodsSizeName: TcxGridDBColumn
+          object GoodsSizeName: TcxGridDBColumn
             Caption = #1056#1072#1079#1084#1077#1088
             DataBinding.FieldName = 'GoodsSizeName'
             HeaderAlignmentHorz = taCenter
@@ -391,7 +391,7 @@ object IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 55
           end
-          object colMeasureName: TcxGridDBColumn
+          object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -399,7 +399,7 @@ object IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 47
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -407,10 +407,9 @@ object IncomeForm: TIncomeForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 50
           end
-          object colPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1074#1093'.'
             DataBinding.FieldName = 'OperPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -421,7 +420,7 @@ object IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 75
           end
-          object colCountForPrice: TcxGridDBColumn
+          object CountForPrice: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -456,7 +455,7 @@ object IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 80
           end
-          object colOperPriceList: TcxGridDBColumn
+          object OperPriceList: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' ('#1087#1088#1072#1081#1089')'
             DataBinding.FieldName = 'OperPriceList'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -479,14 +478,15 @@ object IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 80
           end
-          object colJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
-          object colIsErased: TcxGridDBColumn
+          object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
             Visible = False
@@ -1489,26 +1489,10 @@ object IncomeForm: TIncomeForm
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1522,44 +1506,26 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperPrice'
+        Name = 'outTotalSumm'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'OperPrice'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioCountForPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CountForPrice'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAmountSumm'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountSumm'
+        ComponentItem = 'TotalSumm'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outOperPriceList'
+        Name = 'outTotalSummPriceList'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'OperPriceList'
+        ComponentItem = 'TotalSummPriceList'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outAmountPriceListSumm'
+        Name = 'outTotalSummBalance'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'AmountPriceListSumm'
+        ComponentItem = 'TotalSummBalance'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -1673,7 +1639,7 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 266
+    Left = 314
     Top = 240
   end
   object HeaderSaver: THeaderSaver
