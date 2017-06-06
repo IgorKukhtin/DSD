@@ -585,6 +585,9 @@ begin
         ResList := nil;
         ResItem := nil;
       end else
+      else if gCode = 2
+           then Result:= true //!!!все ОК и Чек можно сохранить!!!
+           else
       if gCode = 3 then
       begin
         CheckCDS.First;
