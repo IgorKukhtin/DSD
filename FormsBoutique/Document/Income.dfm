@@ -165,14 +165,12 @@ object IncomeForm: TIncomeForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 343
     ClientRectBottom = 283
     ClientRectRight = 925
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 319
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -180,7 +178,6 @@ object IncomeForm: TIncomeForm
         Height = 259
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 319
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -631,6 +628,14 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bbAddMask'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -756,8 +761,9 @@ object IncomeForm: TIncomeForm
       Visible = ivAlways
     end
     object bbAddMask: TdxBarButton
-      Action = actAddMask
+      Action = macInsertMaskAction
       Category = 0
+      ImageIndex = 54
     end
     object bbInsertRecord: TdxBarButton
       Action = macInsertAction
@@ -1299,6 +1305,13 @@ object IncomeForm: TIncomeForm
           Component = FormParams
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMask'
+          Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       IdFieldName = 'Id'
@@ -1318,11 +1331,48 @@ object IncomeForm: TIncomeForm
       ImageIndex = 1
       ShortCut = 115
     end
+    object actInsertMaskAction: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' <'#1058#1086#1074#1072#1088'>'
+      ImageIndex = 0
+      FormName = 'TIncomeItemEditForm'
+      FormNameParam.Value = 'TIncomeItemEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMask'
+          Value = 'True'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      IdFieldName = 'Id'
+    end
     object actInsertAction1: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1087#1083#1072#1090#1091'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ImageIndex = 0
       FormName = 'TIncomeItemEditForm'
       FormNameParam.Value = 'TIncomeItemEditForm'
@@ -1342,9 +1392,31 @@ object IncomeForm: TIncomeForm
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMask'
+          Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       IdFieldName = 'Id'
+    end
+    object macInsertMaskAction: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertMaskAction
+        end
+        item
+          Action = actRefreshMI
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' <'#1058#1086#1074#1072#1088'>'
+      ImageIndex = 0
+      ShortCut = 45
     end
     object macInsertAction: TMultiAction
       Category = 'DSDLib'
@@ -1492,7 +1564,7 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 150
+    Left = 190
     Top = 287
   end
   object MasterViewAddOn: TdsdDBViewAddOn
@@ -1601,8 +1673,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 234
-    Top = 272
+    Left = 266
+    Top = 240
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -2124,7 +2196,7 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 126
+    Left = 238
     Top = 335
   end
   object spSelectPrintSticker: TdsdStoredProc

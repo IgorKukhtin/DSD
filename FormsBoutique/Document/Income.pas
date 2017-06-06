@@ -139,6 +139,8 @@ type
     dxBarButton2: TdxBarButton;
     spSelectPrintSticker: TdsdStoredProc;
     TotalSummBalance: TcxGridDBColumn;
+    actInsertMaskAction: TdsdInsertUpdateAction;
+    macInsertMaskAction: TMultiAction;
   private
   public
   end;

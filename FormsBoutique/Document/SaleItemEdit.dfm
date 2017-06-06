@@ -625,7 +625,7 @@ object SaleItemEditForm: TSaleItemEditForm
       item
         Component = ceAmountGRN
       end>
-    Left = 392
+    Left = 384
     Top = 120
   end
   object spGet_Total: TdsdStoredProc

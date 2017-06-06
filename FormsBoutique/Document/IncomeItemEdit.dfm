@@ -266,6 +266,17 @@ object IncomeItemEditForm: TIncomeItemEditForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
     end
+    object actRefreshOperPriceList: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_OperPriceList
+      StoredProcList = <
+        item
+          StoredProc = spGet_OperPriceList
+        end>
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MIEdit_Income'
@@ -409,9 +420,16 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Value = Null
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMask'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
-    Left = 80
-    Top = 344
+    Left = 96
+    Top = 328
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_MovementItem_Income'
@@ -423,6 +441,15 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMask'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isMask'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -587,6 +614,13 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Value = Null
         Component = ceOperPriceList
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -1190,5 +1224,52 @@ object IncomeItemEditForm: TIncomeItemEditForm
       end>
     Left = 111
     Top = 278
+  end
+  object spGet_OperPriceList: TdsdStoredProc
+    StoredProcName = 'gpGet_MI_Income_OperPriceList'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperPrice'
+        Value = 0.000000000000000000
+        Component = ceOperPrice
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountForPrice'
+        Value = 0.000000000000000000
+        Component = ceCountForPrice
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioOperPriceList'
+        Value = 0.000000000000000000
+        Component = ceOperPriceList
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 384
+    Top = 168
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefreshOperPriceList
+    ComponentList = <
+      item
+        Component = ceOperPrice
+      end
+      item
+        Component = ceCountForPrice
+      end>
+    Left = 384
+    Top = 120
   end
 end
