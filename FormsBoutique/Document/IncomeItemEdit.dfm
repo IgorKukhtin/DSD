@@ -47,7 +47,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
   end
   object cxLabel4: TcxLabel
     Left = 444
-    Top = 53
+    Top = 96
     Caption = #1045#1076'.'#1080#1079#1084'.'
   end
   object cxLabel5: TcxLabel
@@ -67,12 +67,12 @@ object IncomeItemEditForm: TIncomeItemEditForm
   end
   object cxLabel9: TcxLabel
     Left = 289
-    Top = 54
+    Top = 97
     Caption = #1056#1072#1079#1084#1077#1088' '#1090#1086#1074#1072#1088#1072
   end
   object ceGoodsSize: TcxButtonEdit
     Left = 289
-    Top = 70
+    Top = 113
     Properties.Buttons = <
       item
         Default = True
@@ -139,7 +139,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
   end
   object edMeasure: TcxButtonEdit
     Left = 444
-    Top = 70
+    Top = 113
     Properties.Buttons = <
       item
         Default = True
@@ -151,12 +151,12 @@ object IncomeItemEditForm: TIncomeItemEditForm
   end
   object cxLabel18: TcxLabel
     Left = 388
-    Top = 53
+    Top = 96
     Caption = #1050#1086#1083'-'#1074#1086
   end
   object ceAmount: TcxCurrencyEdit
     Left = 388
-    Top = 70
+    Top = 113
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 17
@@ -234,6 +234,21 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Properties.ReadOnly = True
     TabOrder = 27
     Width = 273
+  end
+  object cxLabel13: TcxLabel
+    Left = 289
+    Top = 53
+    Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+  end
+  object edGoodsCode: TcxCurrencyEdit
+    Left = 289
+    Top = 70
+    EditValue = 0.000000000000000000
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
+    TabOrder = 29
+    Width = 210
   end
   object ActionList: TActionList
     Left = 24
@@ -321,6 +336,13 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioGoodsCode'
+        Value = Null
+        Component = edGoodsCode
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -458,6 +480,12 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Value = Null
         Component = GoodsGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsCode'
+        Value = Null
+        Component = edGoodsCode
         MultiSelectSeparator = ','
       end
       item
@@ -673,7 +701,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end>
     Left = 313
-    Top = 85
+    Top = 149
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
@@ -1123,8 +1151,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 473
-    Top = 94
+    Left = 489
+    Top = 110
   end
   object LabelGuides: TdsdGuides
     KeyField = 'Id'
@@ -1269,7 +1297,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
       item
         Component = ceCountForPrice
       end>
-    Left = 384
-    Top = 120
+    Left = 448
+    Top = 160
   end
 end

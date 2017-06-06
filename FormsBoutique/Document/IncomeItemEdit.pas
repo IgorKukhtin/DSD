@@ -72,6 +72,8 @@ type
     spGet_OperPriceList: TdsdStoredProc;
     RefreshDispatcher: TRefreshDispatcher;
     actRefreshOperPriceList: TdsdDataSetRefresh;
+    cxLabel13: TcxLabel;
+    edGoodsCode: TcxCurrencyEdit;
   private
     { Private declarations }
   public
