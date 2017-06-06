@@ -16,7 +16,6 @@ type
     actUser: TdsdOpenForm;
     actRole: TdsdOpenForm;
     miUser: TMenuItem;
-    N6: TMenuItem;
     miRole: TMenuItem;
     miImportExportLink: TMenuItem;
     N20: TMenuItem;
@@ -91,16 +90,16 @@ type
     N43: TMenuItem;
     actIncome: TdsdOpenForm;
     N44: TMenuItem;
-    N45: TMenuItem;
+    miIncome: TMenuItem;
     actReturnOut: TdsdOpenForm;
-    N46: TMenuItem;
+    miReturnOut: TMenuItem;
     actSend: TdsdOpenForm;
     actLoss: TdsdOpenForm;
-    N47: TMenuItem;
-    N48: TMenuItem;
+    miSend: TMenuItem;
+    miLoss: TMenuItem;
     actCurrencyMovement: TdsdOpenForm;
-    N49: TMenuItem;
-    N50: TMenuItem;
+    miCurrencyMovement: TMenuItem;
+    miLine21: TMenuItem;
     actPriceList: TdsdOpenForm;
     N51: TMenuItem;
     actPriceListItem: TdsdOpenForm;
@@ -109,19 +108,19 @@ type
     actDiscountPeriodItem: TdsdOpenForm;
     N53: TMenuItem;
     actInventory: TdsdOpenForm;
-    N54: TMenuItem;
+    miInventory: TMenuItem;
     actCash: TdsdOpenForm;
     N13: TMenuItem;
     actBank: TdsdOpenForm;
     N55: TMenuItem;
     actSale: TdsdOpenForm;
-    N56: TMenuItem;
+    miSale: TMenuItem;
     actBankAccount: TdsdOpenForm;
     N57: TMenuItem;
     actReturnIn: TdsdOpenForm;
-    N58: TMenuItem;
+    miReturnIn: TMenuItem;
     actGoodsAccount: TdsdOpenForm;
-    N59: TMenuItem;
+    miGoodsAccount: TMenuItem;
     actReport_MovementIncome: TdsdOpenForm;
     miReport: TMenuItem;
     N60: TMenuItem;
@@ -131,6 +130,23 @@ type
     N62: TMenuItem;
     actReport_MovementLoss: TdsdOpenForm;
     N63: TMenuItem;
+    actReport_Balance: TdsdOpenForm;
+    actReport_ProfitLoss: TdsdOpenForm;
+    actReport_Cash: TdsdOpenForm;
+    N49: TMenuItem;
+    miLine11: TMenuItem;
+    miLine31: TMenuItem;
+    N45: TMenuItem;
+    miReport_Balance: TMenuItem;
+    N46: TMenuItem;
+    miReport_Cash: TMenuItem;
+    miReport_ProfitLoss: TMenuItem;
+    miGoodsAll: TMenuItem;
+    miLine711: TMenuItem;
+    miLine71: TMenuItem;
+    miLine72: TMenuItem;
+    miLine73: TMenuItem;
+    miLine74: TMenuItem;
   private
     { Private declarations }
   public

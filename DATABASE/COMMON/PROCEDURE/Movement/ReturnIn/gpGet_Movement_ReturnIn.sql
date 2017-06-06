@@ -145,6 +145,18 @@ BEGIN
                       ORDER BY MovementItem.Id DESC
                       LIMIT 1
                      )
+   , tmpPriceList AS (SELECT Object_PriceList.Id AS PriceListId, Object_PriceList.ValueData AS PriceListName
+                      FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                                                                , inPartnerId      := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
+                                                                , inMovementDescId := zc_Movement_ReturnIn()
+                                                                , inOperDate_order := NULL
+                                                                , inOperDatePartner:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
+                                                                , inDayPrior_PriceReturn:= 0
+                                                                , inIsPrior        := FALSE -- !!!отказались от старых цен!!!
+                                                    ) AS tmp
+                           LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = tmp.PriceListId
+                      LIMIT 1
+                     )
        SELECT
              Movement.Id
            , Movement.InvNumber
@@ -184,8 +196,8 @@ BEGIN
            , Object_JuridicalFrom.id             AS JuridicalId_From
            , Object_JuridicalFrom.ValueData      AS JuridicalName_From
 
-           , (SELECT tmp.PriceListId   FROM lfGet_Object_Partner_PriceList (inContractId:= MovementLinkObject_Contract.ObjectId, inPartnerId:= MovementLinkObject_From.ObjectId, inOperDate:= MovementDate_OperDatePartner.ValueData) AS tmp) AS PriceListId
-           , (SELECT tmp.PriceListName FROM lfGet_Object_Partner_PriceList (inContractId:= MovementLinkObject_Contract.ObjectId, inPartnerId:= MovementLinkObject_From.ObjectId, inOperDate:= MovementDate_OperDatePartner.ValueData) AS tmp) AS PriceListName
+           , (SELECT tmpPriceList.PriceListId   FROM tmpPriceList) AS PriceListId
+           , (SELECT tmpPriceList.PriceListName FROM tmpPriceList) AS PriceListName
 
            , Object_TaxKind.Id                	    AS DocumentTaxKindId
            , Object_TaxKind.ValueData         	    AS DocumentTaxKindName
@@ -204,7 +216,7 @@ BEGIN
            , MovementString_Comment.ValueData       AS Comment
 
            , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo
-           , COALESCE (MovementBoolean_List.ValueData, False) :: Boolean AS isList
+           , COALESCE (MovementBoolean_List.ValueData, FALSE) :: Boolean AS isList
 
        FROM Movement
             LEFT JOIN tmpMI ON 1 = 1
@@ -349,8 +361,8 @@ BEGIN
                                 AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
             LEFT JOIN Object AS Object_MemberInsert ON Object_MemberInsert.Id = ObjectLink_User_Member.ChildObjectId
 
-         WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_ReturnIn();
+         WHERE Movement.Id     =  inMovementId
+           AND Movement.DescId = zc_Movement_ReturnIn();
 
      END IF;
 
