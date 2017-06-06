@@ -4,8 +4,9 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   ClientWidth = 1065
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -275
   ExplicitWidth = 1081
-  ExplicitHeight = 463
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -218,6 +219,14 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             Options.Editing = False
             Width = 95
           end
+          object PeriodYear: TcxGridDBColumn
+            Caption = #1043#1086#1076
+            DataBinding.FieldName = 'PeriodYear'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object CurrencyName: TcxGridDBColumn
             Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'CurrencyName'
@@ -282,14 +291,6 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 87
-          end
-          object PeriodYear: TcxGridDBColumn
-            Caption = #1043#1086#1076
-            DataBinding.FieldName = 'PeriodYear'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086

@@ -33,9 +33,9 @@ type
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
     dsdFormClose: TdsdFormClose;
     spInsertUpdate: TdsdStoredProc;
-    dsdFormParams: TdsdFormParams;
+    FormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
   private
     { Private declarations }

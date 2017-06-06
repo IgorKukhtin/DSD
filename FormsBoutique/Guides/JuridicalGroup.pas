@@ -51,8 +51,8 @@ type
     Code: TcxDBTreeListColumn;
     isErased: TcxDBTreeListColumn;
     spErased: TdsdStoredProc;
-    dsdDBTreeAddOn: TdsdDBTreeAddOn;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    DBTreeAddOn: TdsdDBTreeAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;

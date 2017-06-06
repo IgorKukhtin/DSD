@@ -443,7 +443,7 @@ object JuridicalGroupForm: TJuridicalGroupForm
     Left = 376
     Top = 200
   end
-  object dsdDBTreeAddOn: TdsdDBTreeAddOn
+  object DBTreeAddOn: TdsdDBTreeAddOn
     ErasedFieldName = 'isErased'
     OnDblClickActionList = <
       item
@@ -466,7 +466,7 @@ object JuridicalGroupForm: TJuridicalGroupForm
     Left = 56
     Top = 208
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 408
     Top = 112
   end

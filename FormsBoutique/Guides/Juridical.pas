@@ -53,9 +53,9 @@ type
     clCode: TcxGridDBColumn;
     clName: TcxGridDBColumn;
     clErased: TcxGridDBColumn;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
+    DBViewAddOn: TdsdDBViewAddOn;
     clINN: TcxGridDBColumn;
     clFullName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;

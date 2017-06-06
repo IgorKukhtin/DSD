@@ -1,9 +1,9 @@
-object AccountGroup_ObjectDescForm: TAccountGroup_ObjectDescForm
+object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1091#1087#1087#1099' '#1089#1095#1077#1090#1086#1074'>'
-  ClientHeight = 408
-  ClientWidth = 368
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103'>'
+  ClientHeight = 376
+  ClientWidth = 597
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,75 +15,94 @@ object AccountGroup_ObjectDescForm: TAccountGroup_ObjectDescForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 368
-    Height = 382
+    Width = 597
+    Height = 350
     Align = alClient
     TabOrder = 0
+    LookAndFeel.NativeStyle = False
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = MasterDS
+      DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
-      DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
       OptionsBehavior.IncSearchItem = clName
+      OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsSelection.InvertSelect = False
+      OptionsView.CellAutoHeight = True
       OptionsView.ColumnAutoWidth = True
-      OptionsView.GroupByBox = False
-      OptionsView.HeaderHeight = 40
+      OptionsView.HeaderHeight = 50
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 75
+        Width = 86
+      end
+      object clInfoMoneyGroup: TcxGridDBColumn
+        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyGroupName'
+        HeaderAlignmentVert = vaCenter
+        Width = 123
+      end
+      object clInfoMoneyDestination: TcxGridDBColumn
+        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'InfoMoneyDestinationName'
+        HeaderAlignmentVert = vaCenter
+        Width = 200
       end
       object clName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 458
+        Width = 177
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
         Visible = False
-        Width = 70
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
       end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
     end
   end
-  object MasterDS: TDataSource
+  object DataSource: TDataSource
     DataSet = MasterCDS
-    Left = 32
-    Top = 112
+    Left = 64
+    Top = 56
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 136
-    Top = 88
+    Left = 72
+    Top = 120
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = clName
+        Properties.Strings = (
+          'Width')
+      end
       item
         Component = Owner
         Properties.Strings = (
@@ -94,8 +113,8 @@ object AccountGroup_ObjectDescForm: TAccountGroup_ObjectDescForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 288
-    Top = 72
+    Left = 320
+    Top = 96
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -114,8 +133,8 @@ object AccountGroup_ObjectDescForm: TAccountGroup_ObjectDescForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 168
-    Top = 192
+    Left = 152
+    Top = 88
     DockControlHeights = (
       0
       0
@@ -135,7 +154,7 @@ object AccountGroup_ObjectDescForm: TAccountGroup_ObjectDescForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
@@ -143,15 +162,15 @@ object AccountGroup_ObjectDescForm: TAccountGroup_ObjectDescForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
-          ItemName = 'bbChoiceGuide'
+          ItemName = 'bbChoiceGuides'
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
@@ -159,7 +178,7 @@ object AccountGroup_ObjectDescForm: TAccountGroup_ObjectDescForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'dxBarStatic1'
         end>
       OneOnRow = True
       Row = 0
@@ -171,17 +190,17 @@ object AccountGroup_ObjectDescForm: TAccountGroup_ObjectDescForm
       Action = actRefresh
       Category = 0
     end
-    object dxBarStatic: TdxBarStatic
-      Caption = '      '
-      Category = 0
-      Hint = '      '
-      Visible = ivAlways
-    end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
       Category = 0
     end
-    object bbChoiceGuide: TdxBarButton
+    object dxBarStatic1: TdxBarStatic
+      Caption = '    '
+      Category = 0
+      Hint = '    '
+      Visible = ivAlways
+    end
+    object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
       Category = 0
     end
@@ -189,7 +208,7 @@ object AccountGroup_ObjectDescForm: TAccountGroup_ObjectDescForm
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 264
-    Top = 120
+    Top = 104
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -214,34 +233,35 @@ object AccountGroup_ObjectDescForm: TAccountGroup_ObjectDescForm
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Name'
-        end
-        item
-          Name = 'AccountDirectionId'
-          Value = 0
-        end
-        item
-          Name = 'AccountDirectionName'
-          Value = ''
+          ComponentItem = 'NameAll'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
-          Name = 'AccountId'
-          Value = 0
+          Name = 'InfoMoneyCode'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end
         item
-          Name = 'AccountName'
-          Value = ''
+          Name = 'InfoMoneyGroupName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyGroupName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
+      DataSource = DataSource
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -254,30 +274,22 @@ object AccountGroup_ObjectDescForm: TAccountGroup_ObjectDescForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_AccountGroup_Desc'
+    StoredProcName = 'gpSelect_Object_InfoMoney'
     DataSet = MasterCDS
     DataSets = <
       item
         DataSet = MasterCDS
       end>
-    Params = <
-      item
-        Name = 'inDescCode'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'inDescCode'
-        DataType = ftString
-        ParamType = ptInput
-      end>
+    Params = <>
     PackSize = 1
+    Left = 256
+    Top = 184
+  end
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 112
-    Top = 152
+    Top = 168
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 288
-    Top = 160
-  end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
@@ -300,17 +312,7 @@ object AccountGroup_ObjectDescForm: TAccountGroup_ObjectDescForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 168
-    Top = 240
-  end
-  object FormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'inDescCode'
-        Value = Null
-        DataType = ftString
-      end>
-    Left = 56
-    Top = 72
+    Left = 304
+    Top = 152
   end
 end

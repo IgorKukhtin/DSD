@@ -192,10 +192,10 @@ object AccountGroup_ObjectForm: TAccountGroup_ObjectForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -209,32 +209,40 @@ object AccountGroup_ObjectForm: TAccountGroup_ObjectForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountDirectionId'
           Value = 0
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountDirectionName'
           Value = ''
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = 0
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
           Value = ''
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -250,7 +258,7 @@ object AccountGroup_ObjectForm: TAccountGroup_ObjectForm
       ShortCut = 16472
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_AccountGroup'
     DataSet = MasterCDS
     DataSets = <
@@ -258,14 +266,15 @@ object AccountGroup_ObjectForm: TAccountGroup_ObjectForm
         DataSet = MasterCDS
       end>
     Params = <>
+    PackSize = 1
     Left = 112
     Top = 152
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
     Top = 160
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <

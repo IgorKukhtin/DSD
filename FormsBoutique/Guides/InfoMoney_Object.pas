@@ -1,4 +1,4 @@
-unit AccountGroup_ObjectDesc;
+unit InfoMoney_Object;
 
 interface
 
@@ -20,33 +20,35 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, dxSkinsdxBarPainter, dsdAddOn,
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox;
+  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
+  DataModul;
 
 type
-  TAccountGroup_ObjectDescForm = class(TParentForm)
+  TInfoMoney_ObjectForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
     clName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
-    MasterDS: TDataSource;
+    DataSource: TDataSource;
     MasterCDS: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
     bbRefresh: TdxBarButton;
-    dxBarStatic: TdxBarStatic;
     bbGridToExcel: TdxBarButton;
-    bbChoiceGuide: TdxBarButton;
+    dxBarStatic1: TdxBarStatic;
+    bbChoiceGuides: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
     dsdGridToExcel: TdsdGridToExcel;
     spSelect: TdsdStoredProc;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    DBViewAddOn: TdsdDBViewAddOn;
+    clInfoMoneyGroup: TcxGridDBColumn;
+    clInfoMoneyDestination: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
-    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public
@@ -54,10 +56,9 @@ type
   end;
 
 
-
 implementation
 
 {$R *.dfm}
  initialization
-  RegisterClass(TAccountGroup_ObjectDescForm);
+  RegisterClass(TInfoMoney_ObjectForm);
 end.

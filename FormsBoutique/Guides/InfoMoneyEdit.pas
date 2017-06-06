@@ -1,4 +1,4 @@
-unit AccountGroupEdit;
+unit InfoMoneyEdit;
 
 interface
 
@@ -16,27 +16,36 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, cxPropertiesStore, dsdAddOn,
-  dsdDB, dsdAction, Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons,
-  cxLabel, cxTextEdit;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdAddOn, cxPropertiesStore,
+  dsdDB, dsdAction, Vcl.ActnList, cxCurrencyEdit, cxLabel, Vcl.StdCtrls,
+  cxButtons, cxTextEdit, dsdGuides, Data.DB, Datasnap.DBClient, cxMaskEdit,
+  cxDropDownEdit, cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, cxButtonEdit,
+  cxCheckBox;
 
 type
-  TAccountGroupEditForm = class(TParentForm)
+  TInfoMoneyEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
+    cxLabel3: TcxLabel;
+    cxLabel2: TcxLabel;
     ActionList: TActionList;
     dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
-    dsdFormClose: TdsdFormClose;
     spInsertUpdate: TdsdStoredProc;
     FormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
-    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    GuidesInfoMoneyGroup: TdsdGuides;
+    GuidesInfoMoneyDestination: TdsdGuides;
     cxPropertiesStore: TcxPropertiesStore;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    ceInfoMoneyGroup: TcxButtonEdit;
+    ceInfoMoneyDestination: TcxButtonEdit;
+    dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
+    dsdFormClose: TdsdFormClose;
+    ceisProfitLoss: TcxCheckBox;
   private
     { Private declarations }
   public
@@ -44,10 +53,9 @@ type
   end;
 
 
-
 implementation
 
 {$R *.dfm}
- initialization
-  RegisterClass(TAccountGroupEditForm);
+  initialization
+  RegisterClass(TInfoMoneyEditForm);
 end.
