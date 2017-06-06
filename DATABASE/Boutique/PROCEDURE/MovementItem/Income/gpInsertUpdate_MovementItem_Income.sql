@@ -17,6 +17,7 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbMovementId Integer;
    DECLARE vbCountForPrice TFloat;
    DECLARE vbOperPrice TFloat;
    DECLARE vbOperPriceList TFloat;
@@ -40,12 +41,14 @@ BEGIN
      WHERE MovementItem.Id = inId  ;
 
      -- данные для расчета сумм
-     SELECT MF_CurrencyValue.ValueData
+     SELECT MovementItem.MovementId
+          , MF_CurrencyValue.ValueData
           , MF_ParValue.ValueData
           , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
           , COALESCE (MIFloat_OperPrice.ValueData, 0)       AS OperPrice
           , COALESCE (MIFloat_OperPriceList.ValueData, 0)   AS OperPriceList
-    INTO vbCurrencyValue, vbParValue
+    INTO vbMovementId
+       , vbCurrencyValue, vbParValue
        , vbCountForPrice, vbOperPrice, vbOperPriceList
      FROM MovementItem
           -- из док.
@@ -85,6 +88,13 @@ BEGIN
      WHERE Object_PartionGoods.MovementItemId = inId;
 
 
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, False);
+
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -98,4 +108,4 @@ $BODY$
 */
 
 -- тест
--- 
+-- select * from gpInsertUpdate_MovementItem_Income(inId := 154 , inAmount := 11 ,  inSession := '2');

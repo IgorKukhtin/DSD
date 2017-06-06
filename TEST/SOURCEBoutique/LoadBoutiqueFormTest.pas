@@ -1382,10 +1382,10 @@ begin
 //  TdsdFormStorageFactory.GetStorage.Load('TProcessForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProtocolForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementProtocolForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TMovementProtocolForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemProtocolForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementProtocolForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementProtocolForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemProtocolForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
 //
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportExportLinkForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TImportExportLinkForm');
