@@ -4270,21 +4270,24 @@ var
 begin
   tSavePath.Enabled := false;
   try
-    GetCurrentCoordinates;
-    if FCurCoordinatesSet then
+    if not DM.IsUploadRouteMember then
     begin
-      DM.tblMovement_RouteMember.Open;
+      GetCurrentCoordinates;
+      if FCurCoordinatesSet then
+      begin
+        DM.tblMovement_RouteMember.Open;
 
-      DM.tblMovement_RouteMember.Append;
-      CreateGUID(GlobalId);
-      DM.tblMovement_RouteMemberGUID.AsString := GUIDToString(GlobalId);
-      DM.tblMovement_RouteMemberGPSN.AsFloat := FCurCoordinates.Latitude;
-      DM.tblMovement_RouteMemberGPSE.AsFloat := FCurCoordinates.Longitude;
-      DM.tblMovement_RouteMemberInsertDate.AsDateTime := Now();
-      DM.tblMovement_RouteMemberisSync.AsBoolean := false;
-      DM.tblMovement_RouteMember.Post;
+        DM.tblMovement_RouteMember.Append;
+        CreateGUID(GlobalId);
+        DM.tblMovement_RouteMemberGUID.AsString := GUIDToString(GlobalId);
+        DM.tblMovement_RouteMemberGPSN.AsFloat := FCurCoordinates.Latitude;
+        DM.tblMovement_RouteMemberGPSE.AsFloat := FCurCoordinates.Longitude;
+        DM.tblMovement_RouteMemberInsertDate.AsDateTime := Now();
+        DM.tblMovement_RouteMemberisSync.AsBoolean := false;
+        DM.tblMovement_RouteMember.Post;
 
-      DM.tblMovement_RouteMember.Close;
+        DM.tblMovement_RouteMember.Close;
+      end;
     end;
   finally
     tSavePath.Enabled := true;
