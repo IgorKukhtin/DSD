@@ -1,13 +1,15 @@
 -- Function: gpGet_Movement_Income()
 
 DROP FUNCTION IF EXISTS gpGet_MovementItem_Income (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MovementItem_Income (Integer, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpGet_MovementItem_Income(
     IN inId             Integer  , -- ключ
+    IN inisMask         Boolean  , -- по маске
     IN inSession        TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsName TVarChar
+RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , MeasureId Integer, MeasureName TVarChar
              , JuridicalId Integer,  JuridicalName TVarChar
@@ -34,6 +36,7 @@ BEGIN
              SELECT
                   0 :: Integer           AS Id
                ,  0 :: Integer           AS GoodsId
+               , lfGet_ObjectCode(0, zc_Object_Goods())  AS GoodsCode
                , '' :: TVarChar          AS GoodsName
                ,  0 :: Integer           AS GoodsGroupId
                , '' :: TVarChar          AS GoodsGroupName
@@ -83,8 +86,9 @@ BEGIN
                           )
            -- Результат
            SELECT
-                 tmpMI.Id
+                 CASE WHEN inisMask = False THEN tmpMI.Id ELSE 0 END Id
                , Object_Goods.Id                AS GoodsId
+               , Object_Goods.ObjectCode        AS GoodsCode
                , Object_Goods.ValueData         AS GoodsName
                , Object_GoodsGroup.Id           AS GoodsGroupId
                , Object_GoodsGroup.ValueData    AS GoodsGroupName

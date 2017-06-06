@@ -75,6 +75,6 @@ type
 implementation
 
 {$R *.dfm}
- initialization
+initialization
   RegisterClass(TGoodsSPForm);
 end.

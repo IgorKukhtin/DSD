@@ -69,6 +69,11 @@ type
     cxLabel12: TcxLabel;
     ceJuridicalBasis: TcxButtonEdit;
     JuridicalBasisGuides: TdsdGuides;
+    spGet_OperPriceList: TdsdStoredProc;
+    RefreshDispatcher: TRefreshDispatcher;
+    actRefreshOperPriceList: TdsdDataSetRefresh;
+    cxLabel13: TcxLabel;
+    edGoodsCode: TcxCurrencyEdit;
   private
     { Private declarations }
   public

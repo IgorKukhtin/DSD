@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MIEdit_Income()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income (Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar ,TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar ,TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MIEdit_Income(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MIEdit_Income(
     IN inGoodsGroupId          Integer   , --
     IN inMeasureId             Integer   , --
     IN inJuridicalId           Integer   , -- Юр.лицо(наше)
+ INOUT ioGoodsCode             Integer   , -- код товара
     IN inGoodsName             TVarChar  , -- Товары
     IN inGoodsInfoName         TVarChar  , --
     IN inGoodsSizeName         TVarChar  , --
@@ -20,7 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MIEdit_Income(
     IN inOperPriceList         TFloat    , -- Цена по прайсу
     IN inSession               TVarChar    -- сессия пользователя
 )
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -182,17 +184,19 @@ BEGIN
      IF COALESCE (vbGoodsId, 0) = 0
      THEN
          -- Создание
-         vbGoodsId := (SELECT tmp.ioId FROM gpInsertUpdate_Object_Goods (ioId            := vbGoodsId
-                                                                       , ioCode          := 0
-                                                                       , inName          := inGoodsName
-                                                                       , inGoodsGroupId  := inGoodsGroupId
-                                                                       , inMeasureId     := inMeasureId
-                                                                       , inCompositionId := vbCompositionId
-                                                                       , inGoodsInfoId   := vbGoodsInfoId
-                                                                       , inLineFabricaId := vbLineFabricaId
-                                                                       , inLabelId       := vbLabelId
-                                                                       , inSession       := inSession
-                                                                         ) AS tmp);
+         SELECT tmp.ioId, tmp.ioCode 
+       INTO vbGoodsId, ioGoodsCode
+         FROM gpInsertUpdate_Object_Goods (ioId            := vbGoodsId
+                                         , ioCode          := ioGoodsCode
+                                         , inName          := inGoodsName
+                                         , inGoodsGroupId  := inGoodsGroupId
+                                         , inMeasureId     := inMeasureId
+                                         , inCompositionId := vbCompositionId
+                                         , inGoodsInfoId   := vbGoodsInfoId
+                                         , inLineFabricaId := vbLineFabricaId
+                                         , inLabelId       := vbLabelId
+                                         , inSession       := inSession
+                                         ) AS tmp;
 
      ELSE
          -- если изменился - Группы товаров
