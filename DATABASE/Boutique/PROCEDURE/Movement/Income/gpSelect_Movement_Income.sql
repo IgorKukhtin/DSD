@@ -43,7 +43,7 @@ BEGIN
            , (CAST (MovementFloat_TotalSumm.ValueData * MovementFloat_CurrencyValue.ValueData
                   / CASE WHEN MovementFloat_ParValue.ValueData <> 0 THEN MovementFloat_ParValue.ValueData ELSE 1 END
                     AS NUMERIC (16, 2))
-             ) :: TFloat AS TotalSumm
+             ) :: TFloat AS TotalSummBalance
            , MovementFloat_TotalSummPriceList.ValueData  AS TotalSummPriceList
 
            , CAST (COALESCE (MovementFloat_CurrencyValue.ValueData, 0) AS TFloat)  AS CurrencyValue

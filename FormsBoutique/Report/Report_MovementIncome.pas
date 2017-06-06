@@ -40,6 +40,8 @@ type
     GuidesBrand: TdsdGuides;
     GuidesPartner: TdsdGuides;
     PeriodYear: TcxGridDBColumn;
+    actOpenForm: TdsdInsertUpdateAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

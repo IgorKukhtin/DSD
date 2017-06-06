@@ -114,6 +114,11 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
               Format = ',0.####'
               Kind = skSum
               Column = SaleSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummBalance
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -140,6 +145,11 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
               Format = ',0.####'
               Kind = skSum
               Column = SaleSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummBalance
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -305,7 +315,16 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'OperPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 69
+          end
+          object OperPriceBalance: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1074#1093'. ('#1043#1056#1053')'
+            DataBinding.FieldName = 'OperPriceBalance'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 69
@@ -314,45 +333,58 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             Caption = #1062#1077#1085#1072' ('#1087#1088#1072#1081#1089')'
             DataBinding.FieldName = 'OperPriceList'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 58
           end
           object PriceSale: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080', '#1075#1088#1085
+            Caption = #1062#1077#1085#1072' '#1090#1077#1082'. ('#1087#1088#1072#1081#1089') '
             DataBinding.FieldName = 'PriceSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1090#1077#1082#1091#1097#1072#1103' ('#1087#1088#1072#1081#1089') '
             Width = 79
           end
           object AmountSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 102
+          end
+          object TotalSummBalance: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074#1093'. ('#1043#1056#1053')'
+            DataBinding.FieldName = 'TotalSummBalance'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object AmountPriceListSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1087#1088#1072#1081#1089')'
             DataBinding.FieldName = 'AmountPriceListSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 110
           end
           object SaleSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080', '#1075#1088#1085
+            Caption = #1057#1091#1084#1084#1072' '#1090#1077#1082'. ('#1087#1088#1072#1081#1089')'
             DataBinding.FieldName = 'SaleSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1090#1077#1082#1091#1097#1072#1103' ('#1087#1088#1072#1081#1089')'
             Width = 102
           end
           object DescName: TcxGridDBColumn
@@ -622,6 +654,35 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actOpenForm: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ShortCut = 115
+      FormName = 'TIncomeForm'
+      FormNameParam.Value = 'TIncomeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 0
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42736d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -725,6 +786,14 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -750,6 +819,11 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
       Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actOpenForm
+      Category = 0
+      ImageIndex = 28
     end
   end
   inherited PeriodChoice: TPeriodChoice
