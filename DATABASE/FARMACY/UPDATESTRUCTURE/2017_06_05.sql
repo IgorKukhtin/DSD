@@ -8,7 +8,6 @@ BEGIN
              Id               serial NOT NULL,
              GoodsId          Integer,
              GoodsMainId      Integer,
-             GoodsMorionId    Integer,
              GoodsBarCodeId   Integer,
              GoodsJuridicalId Integer,
              JuridicalId      Integer,
@@ -16,7 +15,6 @@ BEGIN
              Name             TVarChar,  -- Название товара
              ProducerName     TVarChar,  -- Производитель
              GoodsCode        TVarChar,  -- Код товара поставщика
-             CommonCode       Integer,   -- Код Мориона
              BarCode          TVarChar,  -- Штрих-код
              JuridicalName    TVarChar,  -- Поставщик
              ErrorText        TVarChar,
@@ -24,7 +22,6 @@ BEGIN
            );
 
            CREATE UNIQUE INDEX idx_LoadGoodsBarCode_Code ON LoadGoodsBarCode (Code);
-           CREATE UNIQUE INDEX idx_LoadGoodsBarCode_BarCode ON LoadGoodsBarCode (BarCode);
       END IF;
 
       IF NOT (EXISTS (SELECT table_name FROM INFORMATION_SCHEMA.tables WHERE table_name = lower ('LoadGoodsBarCodeItem'))) 

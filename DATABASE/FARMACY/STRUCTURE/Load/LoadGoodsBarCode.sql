@@ -15,7 +15,6 @@ CREATE TABLE LoadGoodsBarCode
   Id               serial NOT NULL,
   GoodsId          Integer,
   GoodsMainId      Integer,
-  GoodsMorionId    Integer,
   GoodsBarCodeId   Integer,
   GoodsJuridicalId Integer,
   JuridicalId      Integer,
@@ -23,7 +22,6 @@ CREATE TABLE LoadGoodsBarCode
   Name             TVarChar,  -- Название товара
   ProducerName     TVarChar,  -- Производитель
   GoodsCode        TVarChar,  -- Код товара поставщика
-  CommonCode       Integer,   -- Код Мориона
   BarCode          TVarChar,  -- Штрих-код
   JuridicalName    TVarChar,  -- Поставщик
   ErrorText        TVarChar,
@@ -31,7 +29,6 @@ CREATE TABLE LoadGoodsBarCode
 );
 
 CREATE UNIQUE INDEX idx_LoadGoodsBarCode_Code ON LoadGoodsBarCode (Code);
-CREATE UNIQUE INDEX idx_LoadGoodsBarCode_BarCode ON LoadGoodsBarCode (BarCode);
 
 /*-------------------------------------------------------------------------------*/
 
