@@ -69,6 +69,7 @@ type
     clChildName: TcxGridDBColumn;
     clBankAccountName: TcxGridDBColumn;
     clBankName: TcxGridDBColumn;
+    clAccountDirectionName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,17 +1,24 @@
-п»ї-- Function: gpGet_Object_Unit(Integer, TVarChar)
+-- Function: gpGet_Object_Unit(Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_Object_Unit (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Unit(
-    IN inId          Integer,       -- РџРѕРґСЂР°Р·РґРµР»РµРЅРёСЏ
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
-)
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Address TVarChar, Phone TVarChar, DiscountTax TFloat, JuridicalId Integer, JuridicalName TVarChar,  ParentId Integer, ParentName TVarChar,  ChildId Integer, ChildName  TVarChar, BankAccountId Integer, BankAccountName  TVarChar) 
+    IN inId          Integer,       -- Подразделения
+    IN inSession     TVarChar       -- сессия пользователя
+) 
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , Address TVarChar, Phone TVarChar, DiscountTax TFloat
+             , JuridicalId Integer, JuridicalName TVarChar
+             , ParentId Integer, ParentName TVarChar
+             , ChildId Integer, ChildName  TVarChar
+             , BankAccountId Integer, BankAccountName  TVarChar
+             , AccountDirectionId Integer, AccountDirectionName TVarChar
+) 
 AS
 $BODY$
 BEGIN
 
-  -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+  -- проверка прав пользователя на вызов процедуры
   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Unit());
 
   IF COALESCE (inId, 0) = 0
@@ -32,7 +39,8 @@ BEGIN
            , '' :: TVarChar                         AS ChildName        
            ,  0 :: Integer                          AS BankAccountId          
            , '' :: TVarChar                         AS BankAccountName        
-
+           ,  0 :: Integer                          AS AccountDirectionId
+           , '' :: TVarChar                         AS AccountDirectionName 
        ;
    ELSE
        RETURN QUERY
@@ -51,7 +59,9 @@ BEGIN
            , Object_Child.ValueData          AS ChildName
            , Object_BankAccount.Id           AS BankAccountId
            , Object_BankAccount.ValueData    AS BankAccountName
-       
+
+           , Object_AccountDirection.Id         AS AccountDirectionId
+           , Object_AccountDirection.ValueData  AS AccountDirectionName       
        FROM Object AS Object_Unit
             LEFT JOIN ObjectString AS OS_Unit_Address
                                    ON OS_Unit_Address.ObjectId = Object_Unit.Id
@@ -79,6 +89,10 @@ BEGIN
                                 AND ObjectLink_Unit_BankAccount.DescId = zc_ObjectLink_Unit_BankAccount()
             LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = ObjectLink_Unit_BankAccount.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_AccountDirection
+                                 ON ObjectLink_Unit_AccountDirection.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
+            LEFT JOIN Object AS Object_AccountDirection ON Object_AccountDirection.Id = ObjectLink_Unit_AccountDirection.ChildObjectId
 
       WHERE Object_Unit.Id = inId;
 
@@ -91,8 +105,9 @@ $BODY$
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РџРѕР»СЏС‚С‹РєРёРЅ Рђ.Рђ.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+07.06.17          * add AccountDirection
 10.05.17                                                          *
 08.05.17                                                          *
 06.03.17                                                          *
@@ -100,5 +115,5 @@ $BODY$
  
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpGet_Object_Unit(1,'2')

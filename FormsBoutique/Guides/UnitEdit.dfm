@@ -2,7 +2,7 @@ object UnitEditForm: TUnitEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
-  ClientHeight = 440
+  ClientHeight = 476
   ClientWidth = 302
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object UnitEditForm: TUnitEditForm
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 400
+    Top = 443
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object UnitEditForm: TUnitEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 400
+    Top = 443
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -165,6 +165,23 @@ object UnitEditForm: TUnitEditForm
     TabOrder = 7
     Width = 275
   end
+  object cxLabel10: TcxLabel
+    Left = 10
+    Top = 387
+    Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+  end
+  object ceAccountDirection: TcxButtonEdit
+    Left = 8
+    Top = 403
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 21
+    Width = 275
+  end
   object ActionList: TActionList
     Left = 176
     Top = 8
@@ -277,6 +294,14 @@ object UnitEditForm: TUnitEditForm
         Name = 'inBankAccountId'
         Value = Null
         Component = BankAccountGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAccountDirectionId'
+        Value = Null
+        Component = AccountDirectionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -401,6 +426,21 @@ object UnitEditForm: TUnitEditForm
         Name = 'BankAccountName'
         Value = Null
         Component = BankAccountGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AccountDirectionId'
+        Value = Null
+        Component = AccountDirectionGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AccountDirectionName'
+        Value = Null
+        Component = AccountDirectionGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -543,5 +583,34 @@ object UnitEditForm: TUnitEditForm
       end>
     Left = 184
     Top = 325
+  end
+  object AccountDirectionGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceAccountDirection
+    FormNameParam.Value = 'TAccountDirection_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TAccountDirection_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = AccountDirectionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = AccountDirectionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 152
+    Top = 397
   end
 end
