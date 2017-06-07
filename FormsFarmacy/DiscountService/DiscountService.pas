@@ -585,9 +585,9 @@ begin
         ResList := nil;
         ResItem := nil;
       end else
-      else if gCode = 2
-           then Result:= true //!!!все ОК и Чек можно сохранить!!!
-           else
+      if gCode = 2 then
+        Result:= True //!!!все ОК и Чек можно сохранить!!!
+      else
       if gCode = 3 then
       begin
         CheckCDS.First;
@@ -632,7 +632,8 @@ begin
                 if Session.Post = 200 then
                   with Session.Response.Params do
                   begin
-                    if Pos('200', ParamByName('error').AsString) <> 1 then
+                    Result := Pos('200', ParamByName('error').AsString) = 1;
+                    if not Result then
                       ShowMessage ('Ошибка <' + gService + '>.Карта № <' + lCardNumber + '>.'
                         + sLineBreak + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')'
                         + CheckCDS.FieldByName('GoodsName').AsString
