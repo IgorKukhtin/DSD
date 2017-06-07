@@ -46,7 +46,7 @@ type
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     Code: TcxGridDBColumn;
-    Name: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     Price: TcxGridDBColumn;
     AmountSumm: TcxGridDBColumn;

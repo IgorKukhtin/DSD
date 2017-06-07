@@ -316,7 +316,7 @@ object ReturnOutForm: TReturnOutForm
             item
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = Name
+              Column = GoodsName
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -332,7 +332,7 @@ object ReturnOutForm: TReturnOutForm
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object GoodsGroupNameFull: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+            Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -347,8 +347,8 @@ object ReturnOutForm: TReturnOutForm
             Options.Editing = False
             Width = 50
           end
-          object Name: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088
+          object GoodsName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -381,7 +381,7 @@ object ReturnOutForm: TReturnOutForm
             Width = 72
           end
           object CompositionName: TcxGridDBColumn
-            Caption = #1057#1086#1089#1090#1072#1074' '#1090#1086#1074#1072#1088#1072
+            Caption = #1057#1086#1089#1090#1072#1074
             DataBinding.FieldName = 'CompositionName'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -390,7 +390,7 @@ object ReturnOutForm: TReturnOutForm
             Width = 72
           end
           object GoodsInfoName: TcxGridDBColumn
-            Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+            Caption = #1054#1087#1080#1089#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsInfoName'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -399,7 +399,7 @@ object ReturnOutForm: TReturnOutForm
             Width = 76
           end
           object LineFabricaName: TcxGridDBColumn
-            Caption = #1051#1080#1085#1080#1103' '#1082#1086#1083#1083#1077#1082#1094#1080#1080
+            Caption = #1051#1080#1085#1080#1103
             DataBinding.FieldName = 'LineFabricaName'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -408,7 +408,7 @@ object ReturnOutForm: TReturnOutForm
             Width = 70
           end
           object LabelName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074' '#1094#1077#1085#1085#1080#1082#1077
             DataBinding.FieldName = 'LabelName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
