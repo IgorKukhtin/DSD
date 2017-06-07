@@ -69,6 +69,8 @@ type
     spSelectPrintSticker: TdsdStoredProc;
     actPrintSticker: TdsdPrintAction;
     bbPrintSticker: TdxBarButton;
+    actPrintStickerTermo: TdsdPrintAction;
+    bbPrintStickerTermo: TdxBarButton;
   private
     { Private declarations }
   public

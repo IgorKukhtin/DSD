@@ -343,6 +343,49 @@ inherited InventoryJournalForm: TInventoryJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actPrintStickerTermo: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintSticker
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ImageIndex = 20
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPrice'
+          Value = 'True'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPrintTermo'
+          Value = 'True'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_IncomeSticker'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_IncomeSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
     object actPrintSticker: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -370,6 +413,12 @@ inherited InventoryJournalForm: TInventoryJournalForm
         item
           Name = 'isPrice'
           Value = 'True'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPrintTermo'
+          Value = 'False'
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -504,6 +553,14 @@ inherited InventoryJournalForm: TInventoryJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintStickerTermo'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -521,6 +578,10 @@ inherited InventoryJournalForm: TInventoryJournalForm
     end
     object bbPrintSticker: TdxBarButton
       Action = actPrintSticker
+      Category = 0
+    end
+    object bbPrintStickerTermo: TdxBarButton
+      Action = actPrintStickerTermo
       Category = 0
     end
   end
@@ -748,6 +809,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
       item
         Name = 'inMovementId'
         Value = Null
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','

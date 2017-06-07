@@ -205,6 +205,9 @@ type
     spSelectPrintSticker: TdsdStoredProc;
     actPrintSticker: TdsdPrintAction;
     bbPrintSticker: TdxBarButton;
+    actPrintStickerTermo: TdsdPrintAction;
+    bbPrintStickerTermo: TdxBarButton;
+    bb: TdxBarButton;
   private
   public
   end;
