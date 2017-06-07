@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_Object_GoodsGroup (Integer,Integer,TVarChar,Integer,TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer,Integer,TVarChar,Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer,Integer,TVarChar,Integer,Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsGroup(
  INOUT ioId                       Integer   ,    -- Ключ объекта <Группа товара> 
  INOUT ioCode                     Integer   ,    -- Код объекта <Группа товара>
     IN inName                     TVarChar  ,    -- Название объекта <Группа товара>
     IN inParentId                 Integer   ,    -- ключ объекта <Группа товара> 
+    IN inInfoMoneyId              Integer   ,    -- ключ объекта <Статьи назначения 	> 
     IN inSession                  TVarChar       -- сессия пользователя  
 )
 RETURNS record
@@ -56,6 +58,9 @@ BEGIN
    ioId := lpInsertUpdate_Object (ioId, zc_Object_GoodsGroup(), ioCode, inName);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsGroup_Parent(), ioId, inParentId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsGroup_InfoMoney(), ioId, inInfoMoneyId);
+
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -69,6 +74,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+07.06.17          * InfoMoney
 13.05.17                                                           *
 06.03.17                                                           *
 20.02.17                                                           *

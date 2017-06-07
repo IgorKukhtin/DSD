@@ -61,12 +61,21 @@ object GoodsGroupForm: TGoodsGroupForm
       Summary.FooterSummaryItems = <>
       Summary.GroupFooterSummaryItems = <>
     end
+    object InfoMoneyName: TcxDBTreeListColumn
+      Caption.Text = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+      DataBinding.FieldName = 'InfoMoneyName'
+      Position.ColIndex = 2
+      Position.RowIndex = 0
+      Position.BandIndex = 0
+      Summary.FooterSummaryItems = <>
+      Summary.GroupFooterSummaryItems = <>
+    end
     object isErased: TcxDBTreeListColumn
       PropertiesClassName = 'TcxCheckBoxProperties'
       Caption.Text = #1059#1076#1072#1083#1077#1085
       DataBinding.FieldName = 'isErased'
       Width = 60
-      Position.ColIndex = 2
+      Position.ColIndex = 3
       Position.RowIndex = 0
       Position.BandIndex = 0
       Summary.FooterSummaryItems = <>

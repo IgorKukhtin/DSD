@@ -57,6 +57,7 @@ type
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    InfoMoney: TcxDBTreeListColumn;
   private
     { Private declarations }
   public

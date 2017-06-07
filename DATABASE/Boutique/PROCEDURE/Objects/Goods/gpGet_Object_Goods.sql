@@ -1,17 +1,25 @@
-п»ї-- Function: gpGet_Object_Goods(Integer, TVarChar)
+-- Function: gpGet_Object_Goods(Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_Object_Goods (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Goods(
-    IN inId          Integer,       -- РўРѕРІР°СЂС‹
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inId          Integer,       -- Товары
+    IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, GoodsGroupId Integer, GoodsGroupName TVarChar, MeasureId Integer, MeasureName TVarChar, CompositionId Integer, CompositionName TVarChar, GoodsInfoId Integer, GoodsInfoName TVarChar, LineFabricaId Integer, LineFabricaName TVarChar, LabalId Integer, LabelName TVarChar) 
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , GoodsGroupId Integer, GoodsGroupName TVarChar
+             , MeasureId Integer, MeasureName TVarChar
+             , CompositionId Integer, CompositionName TVarChar
+             , GoodsInfoId Integer, GoodsInfoName TVarChar
+             , LineFabricaId Integer, LineFabricaName TVarChar
+             , LabalId Integer, LabelName TVarChar
+             , InfoMoneyId Integer, InfoMoneyName TVarChar
+) 
 AS
 $BODY$
 BEGIN
 
-  -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+  -- проверка прав пользователя на вызов процедуры
   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Goods());
 
   IF COALESCE (inId, 0) = 0
@@ -32,7 +40,9 @@ BEGIN
            ,  0 :: Integer                             AS LineFabricaId       
            , '' :: TVarChar                            AS LineFabricaName     
            ,  0 :: Integer                             AS LabalId             
-           , '' :: TVarChar                            AS LabelName           
+           , '' :: TVarChar                            AS LabelName 
+           , CAST (0 as Integer)                       AS InfoMoneyId
+           , CAST ('' as TVarChar)                     AS InfoMoneyName          
         ;
    ELSE
        RETURN QUERY
@@ -52,6 +62,8 @@ BEGIN
            , Object_LineFabrica.ValueData  AS LineFabricaName
            , Object_Label.Id               AS LabalId
            , Object_Label.ValueData        AS LabelName
+           , Object_InfoMoney.Id           AS InfoMoneyId
+           , Object_InfoMoney.ValueData    AS InfoMoneyName
            
        FROM Object AS Object_Goods
             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
@@ -84,6 +96,11 @@ BEGIN
                                 AND ObjectLink_Goods_Label.DescId = zc_ObjectLink_Goods_Label()
             LEFT JOIN Object AS Object_Label ON Object_Label.Id = ObjectLink_Goods_Label.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Goods_InfoMoney.ChildObjectId
+
       WHERE Object_Goods.Id = inId;
    END IF;
 
@@ -94,10 +111,11 @@ $BODY$
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РџРѕР»СЏС‚С‹РєРёРЅ Рђ.Рђ.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+07.06.17          * add InfoMoney
 03.03.17                                                          *
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_Goods (1,'2')
