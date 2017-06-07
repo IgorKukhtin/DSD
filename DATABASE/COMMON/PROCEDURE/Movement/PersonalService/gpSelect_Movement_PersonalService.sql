@@ -246,5 +246,15 @@ $BODY$
  11.09.14         *
 */
 
+/*
+             SELECT Movement.*
+             FROM Movement 
+                  LEFT JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
+             WHERE Movement.DescId = zc_Movement_PersonalService()
+               and Movement.StatusId = zc_Enum_Status_Complete()
+               and Movement.OperDate BETWEEN '01.01.2017' AND '31.05.2017'
+               and MovementItemContainer.MovementId is null
+             order by operDate desc
+*/
 -- тест
 -- SELECT * FROM gpSelect_Movement_PersonalService (inStartDate:= '30.01.2015', inEndDate:= '01.02.2015', inJuridicalBasisId:= 0, inIsServiceDate:= FALSE, inIsErased:= FALSE, inSession:= '2')

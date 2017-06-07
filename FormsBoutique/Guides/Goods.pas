@@ -68,6 +68,7 @@ type
     LabelName: TcxGridDBColumn;
     GroupNameFull: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
+    InfoMoneyName: TcxGridDBColumn;
   private
     { Private declarations }
   public

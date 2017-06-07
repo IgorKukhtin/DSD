@@ -18,6 +18,7 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId        Integer;
+   DECLARE vbInfoMoneyId   Integer;
    DECLARE vbGroupNameFull TVarChar;
    DECLARE vbIsInsert      Boolean;
 BEGIN
@@ -40,7 +41,6 @@ BEGIN
 
    -- проверка уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), ioCode);
-
 
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -65,6 +65,9 @@ BEGIN
 
    -- расчет - Полное название группы
    vbGroupNameFull:= lfGet_Object_TreeNameFull (inGoodsGroupId, zc_ObjectLink_GoodsGroup_Parent());
+   -- из ближайшей группы где установлено <Статьи назначения>
+   vbInfoMoneyId:= lfGet_Object_GoodsGroup_InfoMoneyId (inGoodsGroupId);
+
    -- сохранили Полное название группы
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_GroupNameFull(), ioId, vbGroupNameFull);
   
@@ -80,6 +83,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_LineFabrica(), ioId, inLineFabricaId);
    -- сохранили связь с <Название для ценника>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Label(), ioId, inLabelId);
+   -- сохранили связь с ***<УП статья назначения>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ioId, vbInfoMoneyId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -93,6 +98,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятикин А.А.
+07.06.17          * add vbInfoMoneyId
 13.05.17                                                           *
 03.03.17                                                           *
 02.03.17                                                           *

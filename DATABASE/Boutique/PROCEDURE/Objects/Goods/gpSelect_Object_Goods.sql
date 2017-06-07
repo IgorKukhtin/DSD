@@ -25,6 +25,8 @@ RETURNS TABLE (
            , LabelId              Integer
            , LabelName            TVarChar
            , GroupNameFull        TVarChar
+           , InfoMoneyId          Integer
+           , InfoMoneyName        TVarChar
            , isErased             boolean
  ) 
 AS
@@ -58,7 +60,9 @@ BEGIN
            , Object_LineFabrica.ValueData   AS LineFabricaName
            , Object_Label.Id                AS LabelId
            , Object_Label.ValueData         AS LabelName
-           , Object_GroupNameFull.ValueData As GroupNameFull
+           , Object_GroupNameFull.ValueData AS GroupNameFull
+           , Object_InfoMoney.Id            AS InfoMoneyId
+           , Object_InfoMoney.ValueData     AS InfoMoneyName
            , Object_Goods.isErased          AS isErased
            
        FROM Object AS Object_Goods
@@ -97,9 +101,14 @@ BEGIN
                                 AND ObjectLink_Goods_Label.DescId = zc_ObjectLink_Goods_Label()
             LEFT JOIN Object AS Object_Label ON Object_Label.Id = ObjectLink_Goods_Label.ChildObjectId
 
-           LEFT JOIN ObjectString AS Object_GroupNameFull
-                                  ON Object_GroupNameFull.ObjectId = Object_Goods.Id
-                                 AND Object_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Goods_InfoMoney.ChildObjectId
+
+            LEFT JOIN ObjectString AS Object_GroupNameFull
+                                   ON Object_GroupNameFull.ObjectId = Object_Goods.Id
+                                  AND Object_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
      WHERE Object_Goods.DescId = zc_Object_Goods()
               AND (Object_Goods.isErased = FALSE OR inIsShowAll = TRUE)
@@ -114,6 +123,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
+07.06.17          * add InfoMoney
 19.04.17          * add Object_CompositionGroup
 09.03.17                                                           *
 03.03.17                                                           *

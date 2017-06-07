@@ -104,6 +104,14 @@ object GoodsTreeForm: TGoodsTreeForm
         HeaderAlignmentVert = vaCenter
         Width = 102
       end
+      object InfoMoneyName: TcxGridDBColumn
+        Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
+      end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'

@@ -56,6 +56,8 @@ type
     GoodsInfoGuides: TdsdGuides;
     LineFabricaGuides: TdsdGuides;
     LabelGuides: TdsdGuides;
+    cxLabel9: TcxLabel;
+    ceInfoMoney: TcxButtonEdit;
   private
     { Private declarations }
   public

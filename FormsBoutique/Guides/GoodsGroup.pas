@@ -58,6 +58,7 @@ type
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     spUnErased: TdsdStoredProc;
+    InfoMoneyName: TcxDBTreeListColumn;
   private
     { Private declarations }
   public
