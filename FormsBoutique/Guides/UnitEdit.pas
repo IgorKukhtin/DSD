@@ -56,6 +56,9 @@ type
     cxLabel9: TcxLabel;
     ceBankAccount: TcxButtonEdit;
     BankAccountGuides: TdsdGuides;
+    cxLabel10: TcxLabel;
+    ceAccountDirection: TcxButtonEdit;
+    AccountDirectionGuides: TdsdGuides;
   private
     { Private declarations }
   public

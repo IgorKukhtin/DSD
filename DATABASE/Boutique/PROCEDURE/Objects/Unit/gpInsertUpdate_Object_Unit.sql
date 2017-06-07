@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, TVarChar,  Integer,
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar,  Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
@@ -17,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inParentId                 Integer   ,    -- ключ объекта <Група> 
     IN inChildId                  Integer   ,    -- ключ объекта <Склад>
     IN inBankAccountId            Integer   ,    -- ключ объекта <Расчетный счет>
+    IN inAccountDirectionId       Integer   ,    -- ключ объекта <Аналитики управленческих счетов - направление>
     IN inSession                  TVarChar       -- сессия пользователя
 )
 RETURNS record
@@ -60,6 +62,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Child(), ioId, inChildId);
    -- сохранили связь с <Расчетный счет>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_BankAccount(), ioId, inBankAccountId);
+   -- сохранили связь с <Аналитики управленческих счетов - направление>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_AccountDirection(), ioId, inAccountDirectionId);
 
 
    -- сохранили протокол
@@ -74,6 +78,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятикин А.А.
+07.06.17          * add AccountDirection
 23.05.17                                                           *
 13.05.17                                                           *
 10.05.17                                                           *
