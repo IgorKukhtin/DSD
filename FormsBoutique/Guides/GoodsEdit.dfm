@@ -2,7 +2,7 @@ object GoodsEditForm: TGoodsEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088#1099'>'
-  ClientHeight = 392
+  ClientHeight = 424
   ClientWidth = 302
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object GoodsEditForm: TGoodsEditForm
   end
   object cxButton1: TcxButton
     Left = 36
-    Top = 349
+    Top = 388
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object GoodsEditForm: TGoodsEditForm
   end
   object cxButton2: TcxButton
     Left = 180
-    Top = 349
+    Top = 388
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -161,6 +161,24 @@ object GoodsEditForm: TGoodsEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 6
+    Width = 273
+  end
+  object cxLabel9: TcxLabel
+    Left = 10
+    Top = 336
+    Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+  end
+  object ceInfoMoney: TcxButtonEdit
+    Left = 8
+    Top = 352
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 19
     Width = 273
   end
   object ActionList: TActionList
@@ -400,6 +418,13 @@ object GoodsEditForm: TGoodsEditForm
         Value = Null
         Component = LabelGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = Null
+        Component = ceInfoMoney
         DataType = ftString
         MultiSelectSeparator = ','
       end>

@@ -752,6 +752,36 @@ inherited InventoryForm: TInventoryForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
       ImageIndex = 27
     end
+    object actPrintStickerTermo: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintSticker
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ImageIndex = 20
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = 'True'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_IncomeSticker'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_IncomeSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
     object actPrintSticker: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -768,7 +798,13 @@ inherited InventoryForm: TInventoryForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDItems'
         end>
-      Params = <>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = 'False'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
       ReportName = 'PrintMovement_IncomeSticker'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
       ReportNameParam.Value = 'PrintMovement_IncomeSticker'
@@ -924,6 +960,14 @@ inherited InventoryForm: TInventoryForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintStickerTermo'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdate_Summ'
         end
         item
@@ -958,6 +1002,10 @@ inherited InventoryForm: TInventoryForm
     end
     object bbPrintSticker: TdxBarButton
       Action = actPrintSticker
+      Category = 0
+    end
+    object bbPrintStickerTermo: TdxBarButton
+      Action = actPrintStickerTermo
       Category = 0
     end
   end

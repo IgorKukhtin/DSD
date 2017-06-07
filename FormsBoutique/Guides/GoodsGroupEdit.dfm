@@ -2,7 +2,7 @@ object GoodsGroupEditForm: TGoodsGroupEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074'>'
-  ClientHeight = 217
+  ClientHeight = 243
   ClientWidth = 302
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object GoodsGroupEditForm: TGoodsGroupEditForm
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 168
+    Top = 209
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object GoodsGroupEditForm: TGoodsGroupEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 168
+    Top = 209
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -67,7 +67,7 @@ object GoodsGroupEditForm: TGoodsGroupEditForm
     Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
   end
   object ceGoodsGroup: TcxButtonEdit
-    Left = 8
+    Left = 10
     Top = 120
     Properties.Buttons = <
       item
@@ -76,6 +76,23 @@ object GoodsGroupEditForm: TGoodsGroupEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 1
+    Width = 273
+  end
+  object cxLabel4: TcxLabel
+    Left = 10
+    Top = 151
+    Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+  end
+  object ceInfoMoney: TcxButtonEdit
+    Left = 10
+    Top = 168
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
     Width = 273
   end
   object ActionList: TActionList
@@ -145,6 +162,14 @@ object GoodsGroupEditForm: TGoodsGroupEditForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96
@@ -201,6 +226,21 @@ object GoodsGroupEditForm: TGoodsGroupEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = Null
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = Null
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -222,8 +262,8 @@ object GoodsGroupEditForm: TGoodsGroupEditForm
     Top = 56
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 96
-    Top = 104
+    Left = 136
+    Top = 112
   end
   object GoodsGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -253,5 +293,34 @@ object GoodsGroupEditForm: TGoodsGroupEditForm
       end>
     Left = 240
     Top = 101
+  end
+  object InfoMoneyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 152
+    Top = 181
   end
 end
