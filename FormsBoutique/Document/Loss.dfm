@@ -48,7 +48,7 @@ object LossForm: TLossForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -65,7 +65,7 @@ object LossForm: TLossForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSumm
+              Column = AmountSumm
             end
             item
               Format = ',0.####'
@@ -90,13 +90,13 @@ object LossForm: TLossForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountPriceListSumm
+              Column = AmountPriceListSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -113,7 +113,7 @@ object LossForm: TLossForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSumm
+              Column = AmountSumm
             end
             item
               Format = ',0.####'
@@ -121,15 +121,7 @@ object LossForm: TLossForm
             end
             item
               Kind = skSum
-              Column = colPrice
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Column = Price
             end
             item
               Format = ',0.####'
@@ -142,12 +134,20 @@ object LossForm: TLossForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountPriceListSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPriceListSumm
             end
             item
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colName
+              Column = Name
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -162,7 +162,7 @@ object LossForm: TLossForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object clGoodsGroupNameFull: TcxGridDBColumn
+          object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
@@ -170,7 +170,7 @@ object LossForm: TLossForm
             Options.Editing = False
             Width = 120
           end
-          object colCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -178,7 +178,7 @@ object LossForm: TLossForm
             Options.Editing = False
             Width = 50
           end
-          object colName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -193,7 +193,7 @@ object LossForm: TLossForm
             HeaderAlignmentVert = vaCenter
             Width = 200
           end
-          object colMeasureName: TcxGridDBColumn
+          object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -201,7 +201,7 @@ object LossForm: TLossForm
             Options.Editing = False
             Width = 47
           end
-          object colCompositionGroupName: TcxGridDBColumn
+          object CompositionGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1076#1083#1103' '#1089#1086#1089#1090#1072#1074#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'CompositionGroupName'
             Visible = False
@@ -210,7 +210,7 @@ object LossForm: TLossForm
             Options.Editing = False
             Width = 72
           end
-          object colCompositionName: TcxGridDBColumn
+          object CompositionName: TcxGridDBColumn
             Caption = #1057#1086#1089#1090#1072#1074' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'CompositionName'
             Visible = False
@@ -219,7 +219,7 @@ object LossForm: TLossForm
             Options.Editing = False
             Width = 72
           end
-          object colGoodsInfoName: TcxGridDBColumn
+          object GoodsInfoName: TcxGridDBColumn
             Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsInfoName'
             Visible = False
@@ -228,7 +228,7 @@ object LossForm: TLossForm
             Options.Editing = False
             Width = 76
           end
-          object colLineFabricaName: TcxGridDBColumn
+          object LineFabricaName: TcxGridDBColumn
             Caption = #1051#1080#1085#1080#1103' '#1082#1086#1083#1083#1077#1082#1094#1080#1080
             DataBinding.FieldName = 'LineFabricaName'
             Visible = False
@@ -237,7 +237,7 @@ object LossForm: TLossForm
             Options.Editing = False
             Width = 70
           end
-          object colLabelName: TcxGridDBColumn
+          object LabelName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072
             DataBinding.FieldName = 'LabelName'
             HeaderAlignmentHorz = taCenter
@@ -245,7 +245,7 @@ object LossForm: TLossForm
             Options.Editing = False
             Width = 104
           end
-          object colGoodsSizeName: TcxGridDBColumn
+          object GoodsSizeName: TcxGridDBColumn
             Caption = #1056#1072#1079#1084#1077#1088
             DataBinding.FieldName = 'GoodsSizeName'
             HeaderAlignmentHorz = taCenter
@@ -253,7 +253,7 @@ object LossForm: TLossForm
             Options.Editing = False
             Width = 62
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -263,7 +263,7 @@ object LossForm: TLossForm
             HeaderAlignmentVert = vaCenter
             Width = 46
           end
-          object colPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'OperPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -274,7 +274,7 @@ object LossForm: TLossForm
             Options.Editing = False
             Width = 75
           end
-          object colCountForPrice: TcxGridDBColumn
+          object CountForPrice: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -286,7 +286,7 @@ object LossForm: TLossForm
             Options.Editing = False
             Width = 55
           end
-          object colAmountSumm: TcxGridDBColumn
+          object AmountSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -298,7 +298,7 @@ object LossForm: TLossForm
             Options.Editing = False
             Width = 91
           end
-          object colOperPriceList: TcxGridDBColumn
+          object OperPriceList: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' ('#1087#1088#1072#1081#1089')'
             DataBinding.FieldName = 'OperPriceList'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -309,7 +309,7 @@ object LossForm: TLossForm
             Options.Editing = False
             Width = 80
           end
-          object colAmountPriceListSumm: TcxGridDBColumn
+          object AmountPriceListSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1087#1088#1072#1081#1089')'
             DataBinding.FieldName = 'AmountPriceListSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -321,7 +321,7 @@ object LossForm: TLossForm
             Options.Editing = False
             Width = 91
           end
-          object colIsErased: TcxGridDBColumn
+          object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
             Visible = False
@@ -330,7 +330,7 @@ object LossForm: TLossForm
             Options.Editing = False
             Width = 70
           end
-          object colPartionId: TcxGridDBColumn
+          object PartionId: TcxGridDBColumn
             DataBinding.FieldName = 'PartionId'
             Visible = False
             Options.Editing = False

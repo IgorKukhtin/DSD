@@ -45,11 +45,11 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
-    colStatus: TcxGridDBColumn;
-    colInvNumber: TcxGridDBColumn;
-    colOperDate: TcxGridDBColumn;
-    colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
+    Status: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
@@ -64,8 +64,8 @@ type
     bbDelete: TdxBarButton;
     actSetErased: TdsdChangeMovementStatus;
     spMovementSetErased: TdsdStoredProc;
-    colTotalCount: TcxGridDBColumn;
-    colTotalSummPriceList: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
+    TotalSummPriceList: TcxGridDBColumn;
     bbStatic: TdxBarStatic;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;

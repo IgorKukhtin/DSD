@@ -54,17 +54,17 @@ type
     cxTabSheetMain: TcxTabSheet;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colAmountSumm: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    AmountSumm: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;
     spInsertUpdateMIMaster: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    colCountForPrice: TcxGridDBColumn;
+    CountForPrice: TcxGridDBColumn;
     bbShowAll: TdxBarButton;
     bbStatic: TdxBarStatic;
     actShowAll: TBooleanStoredProcAction;
@@ -88,14 +88,14 @@ type
     cxLabel11: TcxLabel;
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
-    colIsErased: TcxGridDBColumn;
+    IsErased: TcxGridDBColumn;
     StatusGuides: TdsdGuides;
     spChangeStatus: TdsdStoredProc;
     UnCompleteMovement: TChangeGuidesStatus;
     CompleteMovement: TChangeGuidesStatus;
     DeleteMovement: TChangeGuidesStatus;
     ceStatus: TcxButtonEdit;
-    colMeasureName: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
     GuidesFrom: TdsdGuides;
     spGetTotalSumm: TdsdStoredProc;
     cxLabel12: TcxLabel;
@@ -104,7 +104,7 @@ type
     bbMIContainer: TdxBarButton;
     MovementItemProtocolOpenForm: TdsdOpenForm;
     bbMovementItemProtocol: TdxBarButton;
-    clGoodsGroupNameFull: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
@@ -127,7 +127,7 @@ type
     edTotalDebt: TcxCurrencyEdit;
     bbUpdateRecord1: TdxBarButton;
     actRefreshMI: TdsdDataSetRefresh;
-    colPartionId: TcxGridDBColumn;
+    PartionId: TcxGridDBColumn;
     edHappyDate: TcxDateEdit;
     cxLabel8: TcxLabel;
     cxLabel9: TcxLabel;
@@ -162,8 +162,8 @@ type
     cxLabel15: TcxLabel;
     edStartDate: TcxDateEdit;
     edEndDate: TcxDateEdit;
-    colPartionMI_Id: TcxGridDBColumn;
-    colSaleMI_Id: TcxGridDBColumn;
+    PartionMI_Id: TcxGridDBColumn;
+    SaleMI_Id: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
   private
   public

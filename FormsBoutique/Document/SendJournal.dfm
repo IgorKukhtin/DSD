@@ -75,20 +75,12 @@ object SendJournalForm: TSendJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSumm
+          Column = TotalSumm
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummPriceList
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
+          Column = TotalSummPriceList
         end
         item
           Format = ',0.####'
@@ -101,7 +93,15 @@ object SendJournalForm: TSendJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalCount
         end
         item
           Format = ',0.####'
@@ -119,17 +119,17 @@ object SendJournalForm: TSendJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalCount
+          Column = TotalCount
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSumm
+          Column = TotalSumm
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummPriceList
+          Column = TotalSummPriceList
         end
         item
           Format = ',0.####'
@@ -162,7 +162,7 @@ object SendJournalForm: TSendJournalForm
         item
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = colFromName
+          Column = FromName
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -177,7 +177,7 @@ object SendJournalForm: TSendJournalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object colStatus: TcxGridDBColumn
+      object Status: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
         PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -202,35 +202,35 @@ object SendJournalForm: TSendJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object colInvNumber: TcxGridDBColumn
+      object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'.'
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 91
       end
-      object colOperDate: TcxGridDBColumn
+      object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 82
       end
-      object colFromName: TcxGridDBColumn
+      object FromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086
         DataBinding.FieldName = 'FromName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 163
       end
-      object colToName: TcxGridDBColumn
+      object ToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091
         DataBinding.FieldName = 'ToName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 181
       end
-      object colTotalCount: TcxGridDBColumn
+      object TotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -240,7 +240,7 @@ object SendJournalForm: TSendJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object colTotalSumm: TcxGridDBColumn
+      object TotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' ('#1074' '#1074#1072#1083#1102#1090#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072')'
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -252,7 +252,7 @@ object SendJournalForm: TSendJournalForm
         VisibleForCustomization = False
         Width = 92
       end
-      object colTotalSummPriceList: TcxGridDBColumn
+      object TotalSummPriceList: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
         DataBinding.FieldName = 'TotalSummPriceList'
         PropertiesClassName = 'TcxCurrencyEditProperties'

@@ -75,33 +75,12 @@ object InventoryJournalForm: TInventoryJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummRemainsPriceList
+          Column = TotalSummRemainsPriceList
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummPriceList
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colTotalCount
+          Column = TotalSummPriceList
         end
         item
           Format = ',0.####'
@@ -118,23 +97,44 @@ object InventoryJournalForm: TInventoryJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalCountRemains
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalCountRemains
         end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalCount
+          Column = TotalCount
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummRemainsPriceList
+          Column = TotalSummRemainsPriceList
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummPriceList
+          Column = TotalSummPriceList
         end
         item
           Format = ',0.####'
@@ -167,12 +167,12 @@ object InventoryJournalForm: TInventoryJournalForm
         item
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = colFromName
+          Column = FromName
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalCountRemains
+          Column = TotalCountRemains
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -187,7 +187,7 @@ object InventoryJournalForm: TInventoryJournalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object colStatus: TcxGridDBColumn
+      object Status: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
         PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -212,28 +212,28 @@ object InventoryJournalForm: TInventoryJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object colInvNumber: TcxGridDBColumn
+      object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'.'
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 91
       end
-      object colOperDate: TcxGridDBColumn
+      object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 82
       end
-      object colFromName: TcxGridDBColumn
+      object FromName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1084#1072#1075#1072#1079#1080#1085')'
         DataBinding.FieldName = 'FromName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 163
       end
-      object colToName: TcxGridDBColumn
+      object ToName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1089#1082#1083#1072#1076')'
         DataBinding.FieldName = 'ToName'
         HeaderAlignmentHorz = taCenter
@@ -241,7 +241,7 @@ object InventoryJournalForm: TInventoryJournalForm
         Options.Editing = False
         Width = 159
       end
-      object colTotalCount: TcxGridDBColumn
+      object TotalCount: TcxGridDBColumn
         Caption = #1054#1089#1090#1072#1090#1086#1082' '#1092#1072#1082#1090'.'
         DataBinding.FieldName = 'TotalCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -251,7 +251,7 @@ object InventoryJournalForm: TInventoryJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object colTotalCountRemains: TcxGridDBColumn
+      object TotalCountRemains: TcxGridDBColumn
         Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
         DataBinding.FieldName = 'TotalCountRemains'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -261,7 +261,7 @@ object InventoryJournalForm: TInventoryJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object colTotalSummPriceList: TcxGridDBColumn
+      object TotalSummPriceList: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1086#1089#1090'. '#1092#1072#1082#1090')'
         DataBinding.FieldName = 'TotalSummPriceList'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -272,7 +272,7 @@ object InventoryJournalForm: TInventoryJournalForm
         Options.Editing = False
         Width = 78
       end
-      object colTotalSummRemainsPriceList: TcxGridDBColumn
+      object TotalSummRemainsPriceList: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1088#1072#1089#1095'. '#1086#1089#1090'.)'
         DataBinding.FieldName = 'TotalSummRemainsPriceList'
         PropertiesClassName = 'TcxCurrencyEditProperties'
