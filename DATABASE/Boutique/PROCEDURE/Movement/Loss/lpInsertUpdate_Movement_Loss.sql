@@ -31,11 +31,11 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <ƒокумент>
-     ioId := lpInsertUpdate_Movement (ioId := ioId                                        
-                                    , inDescId := zc_Movement_Loss()
+     ioId := lpInsertUpdate_Movement (ioId        := ioId                                        
+                                    , inDescId    := zc_Movement_Loss()
                                     , inInvNumber := inInvNumber
-                                    , inOperDate := inOperDate
-                                    , inParentId := NULL
+                                    , inOperDate  := inOperDate
+                                    , inParentId  := NULL
                                      );
 
      -- сохранили свойство < урс дл€ перевода в валюту баланса>

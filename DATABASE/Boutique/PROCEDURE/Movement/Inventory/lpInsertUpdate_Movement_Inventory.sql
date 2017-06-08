@@ -28,11 +28,11 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId := ioId
-                                    , inDescId := zc_Movement_Inventory()
+     ioId := lpInsertUpdate_Movement (ioId        := ioId
+                                    , inDescId    := zc_Movement_Inventory()
                                     , inInvNumber := inInvNumber
-                                    , inOperDate := inOperDate
-                                    , inParentId := NULL
+                                    , inOperDate  := inOperDate
+                                    , inParentId  := NULL
                                      );
 
      -- Комментарий
