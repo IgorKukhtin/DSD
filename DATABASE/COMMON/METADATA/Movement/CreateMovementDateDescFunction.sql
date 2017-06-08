@@ -119,9 +119,14 @@ CREATE OR REPLACE FUNCTION zc_MovementDate_InsertMobile() RETURNS Integer AS $BO
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_InsertMobile', 'Дата/время создания на мобильном устройстве' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_InsertMobile');
     
+CREATE OR REPLACE FUNCTION zc_MovementDate_Check() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Check'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_Check', 'Дата проверки Уполномоченным лицом' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Check');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.    Воробкало А.А.   Ярошенко Р.Ф.
+ 08.06.17         * zc_MovementDate_Check
  24.03.17                                                                                          * zc_MovementDate_InsertMobile
  22.12.16         * zc_MovementDate_OperDateSP
  31.10.15                                                                         *zc_MovementDate_StartPromo, zc_MovementDate_EndPromo, zc_MovementDate_StartSale, zc_MovementDate_EndSale

@@ -509,7 +509,10 @@ uses
   DiscountExternalTools in '..\..\FormsFarmacy\Guides\DiscountExternalTools.pas' {DiscountExternalToolsForm: TParentForm},
   DiscountExternalToolsEdit in '..\..\FormsFarmacy\Guides\DiscountExternalToolsEdit.pas' {DiscountExternalToolsEditForm: TParentForm},
   SPKind in '..\..\FormsFarmacy\Kind\SPKind.pas' {SPKindForm: TParentForm},
-  GoodsBarCode in '..\..\FormsFarmacy\Guides\GoodsBarCode.pas' {GoodsBarCodeForm: TParentForm};
+  GoodsBarCode in '..\..\FormsFarmacy\Guides\GoodsBarCode.pas' {GoodsBarCodeForm: TParentForm},
+  MemberIncomeCheck in '..\..\FormsFarmacy\Guides\MemberIncomeCheck.pas' {MemberIncomeCheckForm: TParentForm},
+  MemberIncomeCheckEdit in '..\..\FormsFarmacy\Guides\MemberIncomeCheckEdit.pas' {MemberIncomeCheckEditForm: TParentForm},
+  IncomeCheckDialog in '..\..\FormsFarmacy\Document\IncomeCheckDialog.pas' {IncomeCheckDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

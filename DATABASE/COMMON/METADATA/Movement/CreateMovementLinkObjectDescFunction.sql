@@ -330,6 +330,9 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_SPKind() RETURNS Integer AS $BO
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_SPKind', 'Вид Соц. проекта' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_SPKind');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_MemberIncomeCheck() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_MemberIncomeCheck'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_MemberIncomeCheck', 'ФИО Уполномоченных лиц' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_MemberIncomeCheck');
 
 /*-------------------------------------------------------------------------------
 
@@ -337,6 +340,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 08.06.17         * zc_MovementLinkObject_MemberIncomeCheck
  09.02.17         * zc_MovementLinkObject_GroupMemberSP
  22.12.16         * zc_MovementLinkObject_PartnerMedical
  25.08.16         * zc_MovementLinkObject_ConfirmedKindClient

@@ -70,6 +70,8 @@ type
     actPrintSticker: TdsdPrintAction;
     actPrintSticker_notPrice: TdsdPrintAction;
     bbPrintSticker_notPrice: TdxBarButton;
+    colMemberIncomeCheckName: TcxGridDBColumn;
+    colCheckDate: TcxGridDBColumn;
   private
     { Private declarations }
   public
