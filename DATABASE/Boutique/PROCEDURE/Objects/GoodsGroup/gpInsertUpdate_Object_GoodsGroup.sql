@@ -82,4 +82,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_GoodsGroup()
+-- select * from gpInsertUpdate_Object_GoodsGroup(ioId := 0 , ioCode := 0 , inName := 'Группа товара 2' ::TVarChar, inParentId := 0 , inInfoMoneyId := 0 ,  inSession := '2'::TVarChar);
