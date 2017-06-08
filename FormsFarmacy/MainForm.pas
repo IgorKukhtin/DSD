@@ -359,6 +359,8 @@ type
     miDiscountExternalJuridical: TMenuItem;
     actSPKind: TdsdOpenForm;
     N139: TMenuItem;
+    actMemberIncomeCheck: TdsdOpenForm;
+    N140: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

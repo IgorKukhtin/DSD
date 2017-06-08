@@ -393,6 +393,21 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Options.Editing = False
             Width = 78
           end
+          object colMemberIncomeCheckName: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1091#1087#1086#1083#1085#1086#1084#1086#1095'. '#1083#1080#1094#1072
+            DataBinding.FieldName = 'MemberIncomeCheckName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 95
+          end
+          object colCheckDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088'.  '#1091#1087'. '#1083#1080#1094#1086#1084
+            DataBinding.FieldName = 'CheckDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1087#1088#1086#1074#1077#1088#1082#1080' '#1091#1087'. '#1083#1080#1094#1086#1084
+            Width = 78
+          end
         end
       end
     end
