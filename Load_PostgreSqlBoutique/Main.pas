@@ -2101,8 +2101,6 @@ begin
      if not fStop then myRecordCount1:=pLoadDocument_Sale_Child;
      if not fStop then myRecordCount1:=pLoadDocument_ReturnIn_Child;
 
-
-
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
@@ -2206,18 +2204,18 @@ begin
      if cbCreateDocId_Postgres.Checked then
      begin
       // 1.1. Приход
-        try fExecSqFromQuery_noErr('alter table dba.Bill add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.Bill add IncomeId_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.BillItemsIncome add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.BillItemsIncome add GoodsId_Postgres integer null;'); except end;
       // 1.2. Возврат поставщику
-//        try fExecSqFromQuery_noErr('alter table dba.Bill add Id_Postgres integer null;'); except end;
-        try fExecSqFromQuery_noErr('alter table dba.BillItems add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.Bill add ReturnOutId_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.BillItems add ReturnOutId_Postgres integer null;'); except end;
       // 1.3. Перемещение
-//        try fExecSqFromQuery_noErr('alter table dba.Bill add Id_Postgres integer null;'); except end;
-//        try fExecSqFromQuery_noErr('alter table dba.BillItems add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.Bill add SendId_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.BillItems add SendId_Postgres integer null;'); except end;
       // 1.4. Списание
-//        try fExecSqFromQuery_noErr('alter table dba.Bill add Id_Postgres integer null;'); except end;
-//        try fExecSqFromQuery_noErr('alter table dba.BillItems add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.Bill add LossId_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.BillItems add LossId_Postgres integer null;'); except end;
       // 1.5. Инвентаризация
         try fExecSqFromQuery_noErr('alter table dba.DiscountMovementInventory add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.DiscountMovementItemInventory_byBarCode add Id_Postgres integer null;'); except end;
@@ -2226,15 +2224,17 @@ begin
       // 1.7. История скидок
         try fExecSqFromQuery_noErr('alter table dba.DiscountTaxItems add Id_Postgres integer null;'); except end;
       // 1.8. Продажа покупателю
-        try fExecSqFromQuery_noErr('alter table dba.DiscountMovement add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.DiscountMovement add SaleId_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.DiscountMovementItem_byBarCode add Id_Postgres integer null;'); except end;
       // 1.9. Возврат от покупателя
-//        try fExecSqFromQuery_noErr('alter table dba.DiscountMovement add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.DiscountMovement add ReturnInId_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.DiscountMovementItemReturn_byBarCode add Id_Postgres integer null;'); except end;
       // 1.10. Оплаты покупателя
-// не используется      try fExecSqFromQuery_noErr('alter table dba.DiscountKlientAccountMoney add Id_Postgres integer null;'); except end;
+      // не используется но в запросе участвует,  нет IO параметра в gpInsertUpdate_MI_Sale_Child
+        try fExecSqFromQuery_noErr('alter table dba.DiscountKlientAccountMoney add SaleId_Postgres integer null;'); except end;
       // 1.11. Возврат оплаты покупателю
-// не используется      try fExecSqFromQuery_noErr('alter table dba.DiscountKlientAccountMoney add Id_Postgres integer null;'); except end;
+      // не используется но в запросе участвует, нет IO параметра в gpInsertUpdate_MI_ReturnIn_Child
+        try fExecSqFromQuery_noErr('alter table dba.DiscountKlientAccountMoney add ReturnInId_Postgres integer null;'); except end;
 
      end;
 end;
@@ -2310,18 +2310,39 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pSetNullDocument_Id_Postgres;
 begin
-     fExecSqFromQuery('update dba.Bill set Id_Postgres = null where Id_Postgres is not null'); //
-     fExecSqFromQuery('update dba.BillItems set Id_Postgres = null where Id_Postgres is not null');
-     fExecSqFromQuery('update dba.BillItemsIncome set Id_Postgres = null where Id_Postgres is not null');
-     fExecSqFromQuery('update dba.BillItemsIncome set GoodsId_Postgres = null where GoodsId_Postgres is not null');
-     fExecSqFromQuery('update dba.PriceListItems set Id_Postgres = null where Id_Postgres is not null');
-     fExecSqFromQuery('update dba.DiscountTaxItems set Id_Postgres = null where Id_Postgres is not null');
-     fExecSqFromQuery('update dba.DiscountMovementInventory set Id_Postgres = null where Id_Postgres is not null');
-     fExecSqFromQuery('update dba.DiscountMovementItemInventory_byBarCode set Id_Postgres = null where Id_Postgres is not null');
-     fExecSqFromQuery('update dba.DiscountMovement set Id_Postgres = null where Id_Postgres is not null');
-     fExecSqFromQuery('update dba.DiscountMovementItem_byBarCode set Id_Postgres = null where Id_Postgres is not null');
-     fExecSqFromQuery('update dba.DiscountMovementItemReturn_byBarCode set Id_Postgres = null where Id_Postgres is not null');
-     fExecSqFromQuery('update dba.DiscountKlientAccountMoney set Id_Postgres = null where Id_Postgres is not null');
+      // 1.1. Приход
+        try fExecSqFromQuery('update dba.Bill set IncomeId_Postgres = null where IncomeId_Postgres is not null'); except end;
+        try fExecSqFromQuery('update dba.BillItemsIncome set Id_Postgres = null where Id_Postgres is not null'); except end;
+        try fExecSqFromQuery('update dba.BillItemsIncome set GoodsId_Postgres = null where GoodsId_Postgres is not null'); except end;
+      // 1.2. Возврат поставщику
+        try fExecSqFromQuery('update dba.Bill set ReturnOutId_Postgres = null where ReturnOutId_Postgres is not null'); except end;
+        try fExecSqFromQuery('update dba.BillItems set ReturnOutId_Postgres = null where ReturnOutId_Postgres is not null'); except end;
+      // 1.3. Перемещение
+        try fExecSqFromQuery('update dba.Bill set SendId_Postgres = null where SendId_Postgres is not null'); except end;
+        try fExecSqFromQuery('update dba.BillItems set SendId_Postgres = null where SendId_Postgres is not null'); except end;
+      // 1.3. Списание
+        try fExecSqFromQuery('update dba.Bill set LossId_Postgres = null where LossId_Postgres is not null'); except end;
+        try fExecSqFromQuery('update dba.BillItems set LossId_Postgres = null where LossId_Postgres is not null'); except end;
+      // 1.4. Инвентаризация
+        try fExecSqFromQuery('update dba.DiscountMovementInventory set Id_Postgres = null where Id_Postgres is not null'); except end;
+        try fExecSqFromQuery('update dba.DiscountMovementItemInventory_byBarCode set Id_Postgres = null where Id_Postgres is not null'); except end;
+      // 1.5. История цены
+        try fExecSqFromQuery('update dba.PriceListItems set Id_Postgres = null where Id_Postgres is not null'); except end;
+      // 1.6. История скидки
+        try fExecSqFromQuery('update dba.DiscountTaxItems set Id_Postgres = null where Id_Postgres is not null'); except end;
+      // 1.8. Продажа покупателю
+        try fExecSqFromQuery('update dba.DiscountMovement set SaleId_Postgres = null where SaleId_Postgres is not null'); except end;
+        try fExecSqFromQuery('update dba.DiscountMovementItem_byBarCode set Id_Postgres = null where Id_Postgres is not null'); except end;
+      // 1.9. Возврат от покупателя
+        try fExecSqFromQuery('update dba.DiscountMovement set ReturnInId_Postgres = null where ReturnInId_Postgres is not null'); except end;
+        try fExecSqFromQuery('update dba.DiscountMovementItemReturn_byBarCode set Id_Postgres = null where Id_Postgres is not null'); except end;
+      // 1.10. Оплаты покупателя
+      // не используется но в запросе участвует, нет IO параметра в gpInsertUpdate_MI_Sale_Child
+        try fExecSqFromQuery('update dba.DiscountKlientAccountMoney set SaleId_Postgres = null where SaleId_Postgres is not null'); except end;
+      // 1.11. Возврат оплаты покупателю
+      // не используется но в запросе участвует, нет IO параметра в gpInsertUpdate_MI_ReturnIn_Child
+        try fExecSqFromQuery('update dba.DiscountKlientAccountMoney set ReturnInId_Postgres = null where ReturnInId_Postgres is not null'); except end;
+
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocumentItem_Income(SaveCount: Integer);
@@ -2354,7 +2375,7 @@ begin
         Clear;
         Add(' select BillItemsIncome.Id as ObjectId');
         Add('     , BillItemsIncome.Id as SybaseId'); // !!!надо сохранить этот ключ
-        Add('     , Bill.Id_Postgres as MovementId_pg');
+        Add('     , Bill.IncomeId_Postgres as MovementId_pg');
 
         // !!!последнюю группу не загружаем, но кроме АРХИВА
         Add('     , case when BillItemsIncome.Id = zc_BII_Dolg()');
@@ -2416,6 +2437,7 @@ begin
         toStoredProc.Params.AddParam ('inGoodsGroupId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inMeasureId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('ioGoodsCode',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inGoodsName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inGoodsInfoName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inGoodsSizeName',ftString,ptInput, '');
@@ -2560,7 +2582,7 @@ begin
         Close;
         Clear;
         Add(' select BillItems.Id as ObjectId  ');
-        Add('     , Bill.Id_Postgres as MovementId  ');
+        Add('     , Bill.LossId_Postgres as MovementId  ');
         Add('     , BillItemsIncome.GoodsId_Postgres as GoodsId  ');
         Add('     , BillItems.Id as SybaseId  ');
         Add('     , Goods.GoodsName as GoodsName ');
@@ -2569,7 +2591,7 @@ begin
         Add('     , BillItems.OperPrice as OperPrice  ');
         Add('     , 1 as CountForPrice  ');
         Add('     , BillItems.PriceListPrice as OperPriceList  ');
-        Add('     , BillItems.Id_Postgres as Id_Postgres  ');
+        Add('     , BillItems.LossId_Postgres as LossId_Postgres  ');
         Add(' from dba.BillItems   ');
         Add('     join dba.Bill on BillItems.BillID = Bill.Id ');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId  ');
@@ -2603,7 +2625,7 @@ begin
              if fStop then begin exit; end;
 
               //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('LossId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
              toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
@@ -2611,8 +2633,8 @@ begin
 
              if not myExecToStoredProc then ;//exit;
              //
-             if FieldByName('Id_Postgres').AsInteger=0 then
-               fExecSqFromQuery('update dba.BillItems set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             if FieldByName('LossId_Postgres').AsInteger=0 then
+               fExecSqFromQuery('update dba.BillItems set LossId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
 
              Next;
@@ -2637,7 +2659,7 @@ begin
         Clear;
         Add('SELECT');
         Add('      DiscountMovementItemReturn_byBarCode.Id as ObjectId');
-        Add('    , DiscountMovement.Id_Postgres as MovementId');
+        Add('    , DiscountMovement.ReturnInId_Postgres as MovementId');
         Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
         Add('    , DiscountMovementItem_byBarCode.Id_Postgres as SaleMI_Id');
@@ -2716,7 +2738,7 @@ begin
         Close;
         Clear;
         Add(' select BillItems.Id as ObjectId  ');
-        Add('     , Bill.Id_Postgres as MovementId  ');
+        Add('     , Bill.ReturnOutId_Postgres as MovementId  ');
         Add('     , BillItemsIncome.GoodsId_Postgres as GoodsId  ');
         Add('     , BillItems.Id as SybaseId  ');
         Add('     , Goods.GoodsName as GoodsName ');
@@ -2725,7 +2747,7 @@ begin
         Add('     , BillItems.OperPrice as OperPrice  ');
         Add('     , 1 as CountForPrice  ');
         Add('     , BillItems.PriceListPrice as OperPriceList  ');
-        Add('     , BillItems.Id_Postgres as Id_Postgres  ');
+        Add('     , BillItems.ReturnOutId_Postgres as ReturnOutId_Postgres  ');
         Add(' from dba.BillItems   ');
         Add('     join dba.Bill on BillItems.BillID = Bill.Id ');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId  ');
@@ -2761,7 +2783,7 @@ begin
              if fStop then begin exit; end;
 
               //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('ReturnOutId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
              toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
@@ -2769,8 +2791,8 @@ begin
 
              if not myExecToStoredProc then ;//exit;
              //
-             if FieldByName('Id_Postgres').AsInteger=0 then
-               fExecSqFromQuery('update dba.BillItems set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             if FieldByName('ReturnOutId_Postgres').AsInteger=0 then
+               fExecSqFromQuery('update dba.BillItems set ReturnOutId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
 
              Next;
@@ -2795,7 +2817,7 @@ begin
         Clear;
         Add('SELECT');
         Add('      DiscountMovementItem_byBarCode.Id as ObjectId');
-        Add('    , DiscountMovement.Id_Postgres as MovementId');
+        Add('    , DiscountMovement.SaleId_Postgres as MovementId');
         Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
         Add('    , DiscountMovementItem_byBarCode.OperCount as Amount');
@@ -2875,7 +2897,7 @@ begin
         Close;
         Clear;
         Add(' select BillItems.Id as ObjectId  ');
-        Add('     , Bill.Id_Postgres as MovementId  ');
+        Add('     , Bill.SendId_Postgres as MovementId  ');
         Add('     , BillItemsIncome.GoodsId_Postgres as GoodsId  ');
         Add('     , BillItems.Id as SybaseId  ');
         Add('     , Goods.GoodsName as GoodsName ');
@@ -2883,7 +2905,7 @@ begin
         Add('     , abs(BillItems.OperCount) as Amount  ');
         Add('     , BillItems.OperPrice as OperPrice  ');
         Add('     , BillItems.PriceListPrice as OperPriceList  ');
-        Add('     , BillItems.Id_Postgres as Id_Postgres  ');
+        Add('     , BillItems.SendId_Postgres as SendId_Postgres  ');
         Add(' from dba.BillItems   ');
         Add('     join dba.Bill on BillItems.BillID = Bill.Id ');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId  ');
@@ -2918,7 +2940,7 @@ begin
              if fStop then begin exit; end;
 
               //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('SendId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId').AsInteger;
              toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
@@ -2926,8 +2948,8 @@ begin
 
              if not myExecToStoredProc then ;//exit;
              //
-             if FieldByName('Id_Postgres').AsInteger=0 then
-               fExecSqFromQuery('update dba.BillItems set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             if FieldByName('SendId_Postgres').AsInteger=0 then
+               fExecSqFromQuery('update dba.BillItems set SendId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
 
              Next;
@@ -2968,7 +2990,7 @@ begin
         Add('     , 0 as CurrencyPartnerValue ');
         Add('     , 1 as ParPartnerValue ');
         Add('     , '''' as Comments ');
-        Add('     , Bill.Id_Postgres ');
+        Add('     , Bill.IncomeId_Postgres ');
         Add(' from DBA.Bill ');
         Add('     left outer join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
         Add('     left outer join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
@@ -3009,7 +3031,7 @@ begin
              //
 
              //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('IncomeId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
@@ -3019,8 +3041,8 @@ begin
 
              if not myExecToStoredProc then ;//exit;
              //
-             if (FieldByName('Id_Postgres').AsInteger = 0) and (toStoredProc.Params.ParamByName('ioId').Value <> 0) then
-               fExecSqFromQuery('update dba.Bill set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             if (FieldByName('IncomeId_Postgres').AsInteger = 0) and (toStoredProc.Params.ParamByName('ioId').Value <> 0) then
+               fExecSqFromQuery('update dba.Bill set IncomeId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
 
              Next;
@@ -3147,7 +3169,7 @@ begin
         //Add('     , ValutaPar.NewKursOut as CurrencyPartnerValue ');
         //Add('     , ValutaPar.NominalFromValuta as ParPartnerValue ');
         Add('     , '''' as Comments ');
-        Add('     , Bill.Id_Postgres ');
+        Add('     , Bill.LossId_Postgres ');
         Add(' from DBA.Bill ');
         Add('     left outer join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
         Add('     left outer join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
@@ -3193,7 +3215,7 @@ begin
              //
 
              //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('LossId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
@@ -3203,8 +3225,8 @@ begin
 
              if not myExecToStoredProc then ;//exit;
              //
-             if FieldByName('Id_Postgres').AsInteger=0 then
-               fExecSqFromQuery('update dba.Bill set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             if FieldByName('LossId_Postgres').AsInteger=0 then
+               fExecSqFromQuery('update dba.Bill set LossId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
 
              Next;
@@ -3238,7 +3260,7 @@ begin
         Add('    , DiscountMovement_From.UnitName as UnitNameFrom');
         Add('    , DiscountMovement_To.Id_Postgres as ToId');
         Add('    , DiscountMovement_To.UnitName as UnitNameTo');
-        Add('    , DiscountMovement.Id_Postgres');
+        Add('    , DiscountMovement.ReturnInId_Postgres');
         Add('from DBA.DiscountMovement');
         Add('    left join DBA.Unit as DiscountMovement_To on DiscountMovement_To.Id = DiscountMovement.UnitID');
         Add('    left join DBA.DiscountKlient as DiscountKlient on DiscountKlient.Id = DiscountMovement.DiscountKlientID');
@@ -3278,7 +3300,7 @@ begin
              //
 
              //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('ReturnInId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('ioInvNumber').Value:=FieldByName('InvNumber').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
@@ -3286,8 +3308,8 @@ begin
 
              if not myExecToStoredProc then ;//exit;
              //
-             if FieldByName('Id_Postgres').AsInteger=0 then
-               fExecSqFromQuery('update dba.DiscountMovement set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             if FieldByName('ReturnInId_Postgres').AsInteger=0 then
+               fExecSqFromQuery('update dba.DiscountMovement set ReturnInId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
 
              Next;
@@ -3315,11 +3337,11 @@ begin
         Clear;
         Add('SELECT');
         Add('      DiscountKlientAccountMoney.Id as ObjectId');
-        Add('    , DiscountMovement.Id_Postgres as MovementId');
+        Add('    , DiscountMovement.ReturnInId_Postgres as MovementId');
         Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
         Add('    , DiscountMovementItemReturn_byBarCode.Id_Postgres as ParentId');
-        Add('    , DiscountKlientAccountMoney.Id_Postgres');
+        Add('    , DiscountKlientAccountMoney.ReturnInId_Postgres');
         Add('    , KassaProperty.valutaID ');
         Add('    , if  Kassa.ID in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )   then 1 else 0 endif as isBNKassa');
         Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=1 then 1 else 0 endif as isPayGRN');
@@ -3359,24 +3381,20 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpInsertUpdate_MI_ReturnIn_Child';  //  _Sybase определяем валюту через кассу
+        toStoredProc.StoredProcName:='gpInsertUpdate_MI_ReturnIn_Child';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
 //
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inisPayTotal',ftBoolean,ptInput, false);
-        toStoredProc.Params.AddParam ('inisPayGRN',ftBoolean,ptInput, false);
-        toStoredProc.Params.AddParam ('inisPayUSD',ftBoolean,ptInput, false);
-        toStoredProc.Params.AddParam ('inisPayEUR',ftBoolean,ptInput, false);
-        toStoredProc.Params.AddParam ('inisPayCard',ftBoolean,ptInput, false);
-        toStoredProc.Params.AddParam ('inisDiscount',ftBoolean,ptInput, false);
-        toStoredProc.Params.AddParam ('inAmountGRN',ftFloat,ptInput, false);
-        toStoredProc.Params.AddParam ('inAmountUSD',ftFloat,ptInput, false);
-        toStoredProc.Params.AddParam ('inAmountEUR',ftFloat,ptInput, false);
-        toStoredProc.Params.AddParam ('inAmountCard',ftFloat,ptInput, false);
-        toStoredProc.Params.AddParam ('inAmountDiscount',ftFloat,ptInput, false);
-
+        toStoredProc.Params.AddParam ('inAmountGRN',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountUSD',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountEUR',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountCard',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCurrencyValueUSD',ftFloat,ptInput, 5);  // тестовые данные
+        toStoredProc.Params.AddParam ('inParValueUSD',ftFloat,ptInput, 1);  // тестовые данные
+        toStoredProc.Params.AddParam ('inCurrencyValueEUR',ftFloat,ptInput, 8);  // тестовые данные
+        toStoredProc.Params.AddParam ('inParValueEUR',ftFloat,ptInput, 1);  // тестовые данные
 //
         //
 
@@ -3387,27 +3405,17 @@ begin
              //
 
              //
-//             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;  //  ioId  не используестя gpInsertUpdate_MI_ReturnIn_Child - не поддерживается многократная загрузка
+//             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('ReturnInId_Postgres').AsInteger;  //  ioId  не используестя gpInsertUpdate_MI_ReturnIn_Child - не поддерживается многократная загрузка
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
              toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId').AsInteger;
-//             toStoredProc.Params.ParamByName('inisPayTotal').Value:=FieldByName('isPayTotal').AsString;
-             toStoredProc.Params.ParamByName('inisPayGRN').Value:= FieldByName('isPayGRN').AsString;
-             toStoredProc.Params.ParamByName('inisPayUSD').Value:=FieldByName('isPayUSD').AsString;
-             toStoredProc.Params.ParamByName('inisPayEUR').Value:=FieldByName('isPayEUR').AsString;
-             toStoredProc.Params.ParamByName('inisPayCard').Value:=FieldByName('isPayCard').AsString;
-             toStoredProc.Params.ParamByName('inisDiscount').Value:=FieldByName('isDiscount').AsString;
              toStoredProc.Params.ParamByName('inAmountGRN').Value:=FieldByName('AmountGRN').AsFloat;
              toStoredProc.Params.ParamByName('inAmountUSD').Value:=FieldByName('AmountUSD').AsFloat;
              toStoredProc.Params.ParamByName('inAmountEUR').Value:=FieldByName('AmountEUR').AsFloat;
              toStoredProc.Params.ParamByName('inAmountCard').Value:=FieldByName('AmountCard').AsFloat;
-             toStoredProc.Params.ParamByName('inAmountDiscount').Value:=FieldByName('AmountDiscount').AsFloat;
-
-
-
 
              if not myExecToStoredProc then ;//exit;
-//             if FieldByName('Id_Postgres').AsInteger=0 then
-//               fExecSqFromQuery('update dba.DiscountKlientAccountMoney set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+//             if FieldByName('ReturnInId_Postgres').AsInteger=0 then
+//               fExecSqFromQuery('update dba.DiscountKlientAccountMoney set ReturnInId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
 
              Next;
@@ -3452,7 +3460,7 @@ begin
         Add('     , 0 as CurrencyPartnerValue ');
         Add('     , 1 as ParPartnerValue ');
         Add('     , '''' as Comments ');
-        Add('     , Bill.Id_Postgres ');
+        Add('     , Bill.ReturnOutId_Postgres ');
         Add(' from DBA.Bill ');
         Add('     left outer join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
         Add('     left outer join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
@@ -3499,7 +3507,7 @@ begin
              //
 
              //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('ReturnOutId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
@@ -3512,8 +3520,8 @@ begin
 
              if not myExecToStoredProc then ;//exit;
              //
-             if FieldByName('Id_Postgres').AsInteger=0 then
-               fExecSqFromQuery('update dba.Bill set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             if FieldByName('ReturnOutId_Postgres').AsInteger=0 then
+               fExecSqFromQuery('update dba.Bill set ReturnOutId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
 
              Next;
@@ -3547,7 +3555,7 @@ begin
         Add('    , DiscountMovement_From.UnitName as UnitNameFrom');
         Add('    , DiscountMovement_To.Id_Postgres as ToId');
         Add('    , DiscountMovement_To.UnitName as UnitNameTo');
-        Add('    , DiscountMovement.Id_Postgres');
+        Add('    , DiscountMovement.SaleId_Postgres');
         Add('from DBA.DiscountMovement');
         Add('    left join DBA.Unit as DiscountMovement_From on DiscountMovement_From.Id = DiscountMovement.UnitID');
         Add('    left join DBA.DiscountKlient as DiscountKlient on DiscountKlient.Id = DiscountMovement.DiscountKlientID');
@@ -3587,7 +3595,7 @@ begin
              //
 
              //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('SaleId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('ioInvNumber').Value:=FieldByName('InvNumber').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
@@ -3595,8 +3603,8 @@ begin
 
              if not myExecToStoredProc then ;//exit;
              //
-             if FieldByName('Id_Postgres').AsInteger=0 then
-               fExecSqFromQuery('update dba.DiscountMovement set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             if FieldByName('SaleId_Postgres').AsInteger=0 then
+               fExecSqFromQuery('update dba.DiscountMovement set SaleId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
 
              Next;
@@ -3624,12 +3632,12 @@ begin
         Clear;
         Add('SELECT');
         Add('      DiscountKlientAccountMoney.Id as ObjectId');
-        Add('    , DiscountMovement.Id_Postgres as MovementId');
+        Add('    , DiscountMovement.SaleId_Postgres as MovementId');
         Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
         Add('    , DiscountMovementItem_byBarCode.Id_Postgres as ParentId');
         Add('    , Kassa.Id_Postgres as KassaId');
-        Add('    , DiscountKlientAccountMoney.Id_Postgres');
+        Add('    , DiscountKlientAccountMoney.SaleId_Postgres');
         Add('    , KassaProperty.valutaID ');
         Add('    , if  Kassa.ID in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )   then 1 else 0 endif as isBNKassa');
         Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=1 then 1 else 0 endif as isPayGRN');
@@ -3667,23 +3675,21 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpInsertUpdate_MI_Sale_Child';  //  _Sybase определяем валюту через кассу
+        toStoredProc.StoredProcName:='gpInsertUpdate_MI_Sale_Child';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         //
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inisPayTotal',ftBoolean,ptInput, false);
-        toStoredProc.Params.AddParam ('inisPayGRN',ftBoolean,ptInput, false);
-        toStoredProc.Params.AddParam ('inisPayUSD',ftBoolean,ptInput, false);
-        toStoredProc.Params.AddParam ('inisPayEUR',ftBoolean,ptInput, false);
-        toStoredProc.Params.AddParam ('inisPayCard',ftBoolean,ptInput, false);
-        toStoredProc.Params.AddParam ('inisDiscount',ftBoolean,ptInput, false);
-        toStoredProc.Params.AddParam ('inAmountGRN',ftFloat,ptInput, false);
-        toStoredProc.Params.AddParam ('inAmountUSD',ftFloat,ptInput, false);
-        toStoredProc.Params.AddParam ('inAmountEUR',ftFloat,ptInput, false);
-        toStoredProc.Params.AddParam ('inAmountCard',ftFloat,ptInput, false);
-        toStoredProc.Params.AddParam ('inAmountDiscount',ftFloat,ptInput, false);
+        toStoredProc.Params.AddParam ('inAmountGRN',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountUSD',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountEUR',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountCard',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountDiscount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCurrencyValueUSD',ftFloat,ptInput, 5); // тестовые данные
+        toStoredProc.Params.AddParam ('inParValueUSD',ftFloat,ptInput, 1);      // тестовые данные
+        toStoredProc.Params.AddParam ('inCurrencyValueEUR',ftFloat,ptInput, 8); // тестовые данные
+        toStoredProc.Params.AddParam ('inParValueEUR',ftFloat,ptInput, 1);      // тестовые данные
         //
 
         while not EOF do
@@ -3693,15 +3699,9 @@ begin
              //
 
              //
-//             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;  //  ioId  не используестя gpInsertUpdate_MI_Sale_Child - не поддерживается многократная загрузка
+//             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('SaleId_Postgres').AsInteger;  //  ioId  не используестя gpInsertUpdate_MI_Sale_Child - не поддерживается многократная загрузка
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
              toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId').AsInteger;
-//             toStoredProc.Params.ParamByName('inisPayTotal').Value:=FieldByName('isPayTotal').AsString;
-             toStoredProc.Params.ParamByName('inisPayGRN').Value:= FieldByName('isPayGRN').AsString;
-             toStoredProc.Params.ParamByName('inisPayUSD').Value:=FieldByName('isPayUSD').AsString;
-             toStoredProc.Params.ParamByName('inisPayEUR').Value:=FieldByName('isPayEUR').AsString;
-             toStoredProc.Params.ParamByName('inisPayCard').Value:=FieldByName('isPayCard').AsString;
-             toStoredProc.Params.ParamByName('inisDiscount').Value:=FieldByName('isDiscount').AsString;
              toStoredProc.Params.ParamByName('inAmountGRN').Value:=FieldByName('AmountGRN').AsFloat;
              toStoredProc.Params.ParamByName('inAmountUSD').Value:=FieldByName('AmountUSD').AsFloat;
              toStoredProc.Params.ParamByName('inAmountEUR').Value:=FieldByName('AmountEUR').AsFloat;
@@ -3709,8 +3709,8 @@ begin
              toStoredProc.Params.ParamByName('inAmountDiscount').Value:=FieldByName('AmountDiscount').AsFloat;
 
              if not myExecToStoredProc then ;//exit;
-//             if FieldByName('Id_Postgres').AsInteger=0 then
-//               fExecSqFromQuery('update dba.DiscountKlientAccountMoney set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+//             if FieldByName('SaleId_Postgres').AsInteger=0 then
+//               fExecSqFromQuery('update dba.DiscountKlientAccountMoney set SaleId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
 
              Next;
@@ -3743,7 +3743,7 @@ begin
         Add('     , Bill_To.Id_Postgres as ToId ');
         Add('     , Bill_To.UnitName as UnitNameTo ');
         Add('     , '''' as Comments ');
-        Add('     , Bill.Id_Postgres ');
+        Add('     , Bill.SendId_Postgres ');
         Add(' from DBA.Bill ');
         Add('     left outer join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
         Add('     left outer join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
@@ -3783,7 +3783,7 @@ begin
              //
 
              //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('SendId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId').AsInteger;
@@ -3792,8 +3792,8 @@ begin
 
              if not myExecToStoredProc then ;//exit;
              //
-             if FieldByName('Id_Postgres').AsInteger=0 then
-               fExecSqFromQuery('update dba.Bill set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             if FieldByName('SendId_Postgres').AsInteger=0 then
+               fExecSqFromQuery('update dba.Bill set SendId_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
 
              Next;
@@ -4611,6 +4611,7 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inInfoMoneyId',ftInteger,ptInput, 0);
         //
 
         while not EOF do
@@ -5710,6 +5711,7 @@ begin
         toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inChildId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inBankAccountId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAccountDirectionId',ftInteger,ptInput, 0);
         //
 
         while not EOF do
