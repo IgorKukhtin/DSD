@@ -1,25 +1,25 @@
 inherited IncomeJournalForm: TIncomeJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 481
-  ClientWidth = 831
+  ClientWidth = 896
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 847
+  ExplicitWidth = 912
   ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 831
+    Width = 896
     Height = 424
     TabOrder = 3
     ExplicitWidth = 831
     ExplicitHeight = 424
     ClientRectBottom = 424
-    ClientRectRight = 831
+    ClientRectRight = 896
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 831
       ExplicitHeight = 424
       inherited cxGrid: TcxGrid
-        Width = 831
+        Width = 896
         Height = 424
         ExplicitWidth = 831
         ExplicitHeight = 424
@@ -413,13 +413,58 @@ inherited IncomeJournalForm: TIncomeJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 831
+    Width = 896
     ExplicitWidth = 831
     inherited deStart: TcxDateEdit
+      Left = 100
       EditValue = 42370d
+      ExplicitLeft = 100
+      ExplicitWidth = 82
+      Width = 82
     end
     inherited deEnd: TcxDateEdit
+      Left = 301
       EditValue = 42370d
+      ExplicitLeft = 301
+      ExplicitWidth = 79
+      Width = 79
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 190
+      ExplicitLeft = 190
+    end
+    object cxLabel6: TcxLabel
+      Left = 719
+      Top = 6
+      Caption = #1044#1072#1090#1072' '#1087#1088#1086#1074#1077#1088#1082#1080':'
+    end
+    object deCheckDate: TcxDateEdit
+      Left = 804
+      Top = 5
+      EditValue = 42887d
+      Properties.DateButtons = [btnClear, btnNow, btnToday]
+      Properties.PostPopupValueOnTab = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 5
+      Width = 80
+    end
+    object cxLabel16: TcxLabel
+      Left = 455
+      Top = 6
+      Caption = #1060#1048#1054' '#1091#1087#1086#1083#1085#1086#1084#1086#1095'.:'
+    end
+    object edMemberIncomeCheck: TcxButtonEdit
+      Left = 547
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 166
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -832,6 +877,34 @@ inherited IncomeJournalForm: TIncomeJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actUpdateMovementCheck: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMovementCheck
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMovementCheck
+        end>
+      Caption = 'actUpdateMovementCheck'
+    end
+    object mactUpdateMovementCheck: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMovementCheck
+        end
+        item
+          Action = actRefresh
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1091#1087#1086#1083#1085#1086#1084'. '#1083#1080#1094#1086' '#1080' '#1076#1072#1090#1091' '#1087#1088#1086#1074#1077#1088#1082#1080'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1087#1086' '#1091#1087#1086#1083#1085#1086#1084#1086#1095'. '#1083#1080#1094#1091' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1099
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1091#1087#1086#1083#1085#1086#1084'. '#1083#1080#1094#1086' '#1080' '#1076#1072#1090#1091' '#1087#1088#1086#1074#1077#1088#1082#1080
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1091#1087#1086#1083#1085#1086#1084'. '#1083#1080#1094#1086' '#1080' '#1076#1072#1090#1091' '#1087#1088#1086#1074#1077#1088#1082#1080
+      ImageIndex = 55
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -982,6 +1055,14 @@ inherited IncomeJournalForm: TIncomeJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateMovementCheck'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbNewSend'
         end
         item
@@ -1054,6 +1135,10 @@ inherited IncomeJournalForm: TIncomeJournalForm
     object bbPrintSticker_notPrice: TdxBarButton
       Action = actPrintSticker_notPrice
       Caption = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080' '#1073#1077#1079' '#1094#1077#1085#1099
+      Category = 0
+    end
+    object bbUpdateMovementCheck: TdxBarButton
+      Action = mactUpdateMovementCheck
       Category = 0
     end
   end
@@ -1375,5 +1460,80 @@ inherited IncomeJournalForm: TIncomeJournalForm
     PackSize = 1
     Left = 551
     Top = 160
+  end
+  object MemberIncomeCheckGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMemberIncomeCheck
+    FormNameParam.Value = 'TMemberIncomeCheckForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMemberIncomeCheckForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = MemberIncomeCheckGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = MemberIncomeCheckGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPartnerMedicalId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPartnerMedicalName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 576
+    Top = 65529
+  end
+  object spUpdateMovementCheck: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Income_CheckParam'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberIncomeCheckId'
+        Value = 'zc_Movement_SendOnPrice'
+        Component = MemberIncomeCheckGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCheckDate'
+        Value = 'NULL'
+        Component = deCheckDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 273
+    Top = 298
   end
 end

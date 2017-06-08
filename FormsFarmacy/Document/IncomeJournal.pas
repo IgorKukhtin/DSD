@@ -14,7 +14,7 @@ uses
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, ExternalSave,
   dxBarBuiltInMenu, cxNavigator, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.DBActns;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.DBActns, cxButtonEdit, dsdGuides;
 
 type
   TIncomeJournalForm = class(TAncestorJournalForm)
@@ -72,6 +72,15 @@ type
     bbPrintSticker_notPrice: TdxBarButton;
     colMemberIncomeCheckName: TcxGridDBColumn;
     colCheckDate: TcxGridDBColumn;
+    cxLabel6: TcxLabel;
+    deCheckDate: TcxDateEdit;
+    cxLabel16: TcxLabel;
+    edMemberIncomeCheck: TcxButtonEdit;
+    MemberIncomeCheckGuides: TdsdGuides;
+    spUpdateMovementCheck: TdsdStoredProc;
+    actUpdateMovementCheck: TdsdExecStoredProc;
+    mactUpdateMovementCheck: TMultiAction;
+    bbUpdateMovementCheck: TdxBarButton;
   private
     { Private declarations }
   public

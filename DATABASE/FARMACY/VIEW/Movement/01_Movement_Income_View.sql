@@ -34,9 +34,9 @@ CREATE OR REPLACE VIEW Movement_Income_View AS
        , COALESCE(MovementBoolean_Document.ValueData, false)    AS isDocument
        , MovementBoolean_Registered.ValueData                   AS isRegistered -- !!!иногда будем возвращать NULL!!!
        , Container.Id                               AS PaymentContainerId
-       , Object_MemberIncomeCheck.Id                AS MemberIncomeCheckId
-       , Object_MemberIncomeCheck.ValueData         AS MemberIncomeCheckName
-       , MovementDate_Check.ValueData               AS CheckDate
+       , COALESCE(Object_MemberIncomeCheck.Id,0)                     AS MemberIncomeCheckId
+       , COALESCE(Object_MemberIncomeCheck.ValueData,'') ::TVarChar  AS MemberIncomeCheckName
+       , COALESCE(MovementDate_Check.ValueData,Null)     ::TDateTime AS CheckDate
     FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
