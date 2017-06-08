@@ -75,98 +75,98 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummPriceList
+          Column = TotalSummPriceList
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalCount
+          Column = TotalCount
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummChange
+          Column = TotalSummChange
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummPay
+          Column = TotalSummPay
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummPayOth
+          Column = TotalSummPayOth
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalCountReturn
+          Column = TotalCountReturn
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummReturn
+          Column = TotalSummReturn
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummPayReturn
+          Column = TotalSummPayReturn
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummBalance
+          Column = TotalSummBalance
         end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalCount
+          Column = TotalCount
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummPriceList
+          Column = TotalSummPriceList
         end
         item
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = colFromName
+          Column = FromName
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummChange
+          Column = TotalSummChange
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummPay
+          Column = TotalSummPay
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummPayOth
+          Column = TotalSummPayOth
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalCountReturn
+          Column = TotalCountReturn
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummReturn
+          Column = TotalSummReturn
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummPayReturn
+          Column = TotalSummPayReturn
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummBalance
+          Column = TotalSummBalance
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -181,7 +181,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object colStatus: TcxGridDBColumn
+      object Status: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
         PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -206,28 +206,28 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object colInvNumber: TcxGridDBColumn
+      object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'.'
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 91
       end
-      object colOperDate: TcxGridDBColumn
+      object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 82
       end
-      object colFromName: TcxGridDBColumn
+      object FromName: TcxGridDBColumn
         Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
         DataBinding.FieldName = 'FromName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 163
       end
-      object colTotalCount: TcxGridDBColumn
+      object TotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -237,7 +237,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object colTotalSummBalance: TcxGridDBColumn
+      object TotalSummBalance: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' ('#1074' '#1043#1056#1053')'
         DataBinding.FieldName = 'TotalSummBalance'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -247,7 +247,7 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 92
       end
-      object colTotalSummPriceList: TcxGridDBColumn
+      object TotalSummPriceList: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
         DataBinding.FieldName = 'TotalSummPriceList'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -257,42 +257,42 @@ object GoodsAccountJournalForm: TGoodsAccountJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 78
       end
-      object colTotalSummChange: TcxGridDBColumn
+      object TotalSummChange: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1074' '#1043#1056#1053
         DataBinding.FieldName = 'TotalSummChange'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 97
       end
-      object colTotalSummPay: TcxGridDBColumn
+      object TotalSummPay: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1074' '#1043#1056#1053')'
         DataBinding.FieldName = 'TotalSummPay'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object colTotalSummPayOth: TcxGridDBColumn
+      object TotalSummPayOth: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1074' '#1043#1056#1053')'
         DataBinding.FieldName = 'TotalSummPayOth'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 62
       end
-      object colTotalCountReturn: TcxGridDBColumn
+      object TotalCountReturn: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090#1072
         DataBinding.FieldName = 'TotalCountReturn'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 69
       end
-      object colTotalSummReturn: TcxGridDBColumn
+      object TotalSummReturn: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1074' '#1043#1056#1053')'
         DataBinding.FieldName = 'TotalSummReturn'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 85
       end
-      object colTotalSummPayReturn: TcxGridDBColumn
+      object TotalSummPayReturn: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' ('#1074' '#1043#1056#1053')'
         DataBinding.FieldName = 'TotalSummPayReturn'
         HeaderAlignmentHorz = taCenter

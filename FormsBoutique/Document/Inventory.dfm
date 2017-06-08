@@ -48,7 +48,7 @@ object InventoryForm: TInventoryForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -65,7 +65,7 @@ object InventoryForm: TInventoryForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSumm
+              Column = AmountSumm
             end
             item
               Format = ',0.####'
@@ -90,58 +90,58 @@ object InventoryForm: TInventoryForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountPriceListSumm
+              Column = AmountPriceListSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountRemains
+              Column = AmountRemains
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSummRemains
+              Column = AmountSummRemains
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountPriceListSummRemains
+              Column = AmountPriceListSummRemains
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSecondRemains
+              Column = AmountSecondRemains
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSecond
+              Column = AmountSecond
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSecondRemainsPLSumm
+              Column = AmountSecondRemainsPLSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSecondPriceListSumm
+              Column = AmountSecondPriceListSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSecondRemainsSumm
+              Column = AmountSecondRemainsSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSecondSumm
+              Column = AmountSecondSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -158,7 +158,7 @@ object InventoryForm: TInventoryForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSumm
+              Column = AmountSumm
             end
             item
               Format = ',0.####'
@@ -166,15 +166,7 @@ object InventoryForm: TInventoryForm
             end
             item
               Kind = skSum
-              Column = colPrice
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Column = Price
             end
             item
               Format = ',0.####'
@@ -187,57 +179,65 @@ object InventoryForm: TInventoryForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountPriceListSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPriceListSumm
             end
             item
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colName
+              Column = GoodsName
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountRemains
+              Column = AmountRemains
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSummRemains
+              Column = AmountSummRemains
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountPriceListSummRemains
+              Column = AmountPriceListSummRemains
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSecondRemains
+              Column = AmountSecondRemains
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSecond
+              Column = AmountSecond
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSecondRemainsPLSumm
+              Column = AmountSecondRemainsPLSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSecondPriceListSumm
+              Column = AmountSecondPriceListSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSecondRemainsSumm
+              Column = AmountSecondRemainsSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSecondSumm
+              Column = AmountSecondSumm
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -252,15 +252,15 @@ object InventoryForm: TInventoryForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object clGoodsGroupNameFull: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+          object GoodsGroupNameFull: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 120
           end
-          object colCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -268,8 +268,8 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 50
           end
-          object colName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088
+          object GoodsName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -283,7 +283,7 @@ object InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 200
           end
-          object colMeasureName: TcxGridDBColumn
+          object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -291,7 +291,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 47
           end
-          object colCompositionGroupName: TcxGridDBColumn
+          object CompositionGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1076#1083#1103' '#1089#1086#1089#1090#1072#1074#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'CompositionGroupName'
             Visible = False
@@ -300,8 +300,8 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 72
           end
-          object colCompositionName: TcxGridDBColumn
-            Caption = #1057#1086#1089#1090#1072#1074' '#1090#1086#1074#1072#1088#1072
+          object CompositionName: TcxGridDBColumn
+            Caption = #1057#1086#1089#1090#1072#1074
             DataBinding.FieldName = 'CompositionName'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -309,8 +309,8 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 72
           end
-          object colGoodsInfoName: TcxGridDBColumn
-            Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+          object GoodsInfoName: TcxGridDBColumn
+            Caption = #1054#1087#1080#1089#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsInfoName'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -318,8 +318,8 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 76
           end
-          object colLineFabricaName: TcxGridDBColumn
-            Caption = #1051#1080#1085#1080#1103' '#1082#1086#1083#1083#1077#1082#1094#1080#1080
+          object LineFabricaName: TcxGridDBColumn
+            Caption = #1051#1080#1085#1080#1103
             DataBinding.FieldName = 'LineFabricaName'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -327,8 +327,8 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 70
           end
-          object colLabelName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072
+          object LabelName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074' '#1094#1077#1085#1085#1080#1082#1077
             DataBinding.FieldName = 'LabelName'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -336,7 +336,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 104
           end
-          object colGoodsSizeName: TcxGridDBColumn
+          object GoodsSizeName: TcxGridDBColumn
             Caption = #1056#1072#1079#1084#1077#1088
             DataBinding.FieldName = 'GoodsSizeName'
             Visible = False
@@ -345,7 +345,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 62
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082' '#1092#1072#1082#1090' ('#1084#1072#1075'.)'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -355,7 +355,7 @@ object InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 71
           end
-          object colAmountSecond: TcxGridDBColumn
+          object AmountSecond: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082' '#1092#1072#1082#1090' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'AmountSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -365,7 +365,7 @@ object InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 71
           end
-          object colAmountRemains: TcxGridDBColumn
+          object AmountRemains: TcxGridDBColumn
             Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' ('#1084#1072#1075'.)'
             DataBinding.FieldName = 'AmountRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -376,7 +376,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 80
           end
-          object colAmountSecondRemains: TcxGridDBColumn
+          object AmountSecondRemains: TcxGridDBColumn
             Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'AmountSecondRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -387,7 +387,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 80
           end
-          object colAmountClient: TcxGridDBColumn
+          object AmountClient: TcxGridDBColumn
             Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' ('#1087#1086#1082#1091#1087'.)'
             DataBinding.FieldName = 'AmountClient'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -398,7 +398,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 80
           end
-          object colPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'OperPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -409,7 +409,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 75
           end
-          object colCountForPrice: TcxGridDBColumn
+          object CountForPrice: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -421,7 +421,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 55
           end
-          object colOperPriceList: TcxGridDBColumn
+          object OperPriceList: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' ('#1087#1088#1072#1081#1089')'
             DataBinding.FieldName = 'OperPriceList'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -432,7 +432,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 80
           end
-          object colAmountSumm: TcxGridDBColumn
+          object AmountSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1086#1089#1090'. '#1092#1072#1082#1090' '#1084#1072#1075'.)'
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -444,7 +444,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 91
           end
-          object colAmountSummRemains: TcxGridDBColumn
+          object AmountSummRemains: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1088#1072#1089#1095'. '#1086#1089#1090'. '#1084#1072#1075'.)'
             DataBinding.FieldName = 'AmountSummRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -456,7 +456,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 91
           end
-          object colAmountClientSumm: TcxGridDBColumn
+          object AmountClientSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1088#1072#1089#1095'. '#1086#1089#1090'. '#1087#1086#1082#1091#1087'.)'
             DataBinding.FieldName = 'AmountClientSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -468,7 +468,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 91
           end
-          object colAmountClientPriceListSumm: TcxGridDBColumn
+          object AmountClientPriceListSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' ('#1088#1072#1089#1095'. '#1086#1089#1090'. '#1087#1086#1082#1091#1087'.)'
             DataBinding.FieldName = 'AmountClientPriceListSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -480,7 +480,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 91
           end
-          object colAmountPriceListSumm: TcxGridDBColumn
+          object AmountPriceListSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' ('#1086#1089#1090'. '#1092#1072#1082#1090' '#1084#1072#1075'.)'
             DataBinding.FieldName = 'AmountPriceListSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -492,7 +492,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 91
           end
-          object colAmountPriceListSummRemains: TcxGridDBColumn
+          object AmountPriceListSummRemains: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' ('#1088#1072#1089#1095'. '#1086#1089#1090'. '#1084#1072#1075'.)'
             DataBinding.FieldName = 'AmountPriceListSummRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -504,7 +504,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 91
           end
-          object colAmountSecondSumm: TcxGridDBColumn
+          object AmountSecondSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1086#1089#1090'. '#1092#1072#1082#1090' '#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'AmountSecondSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -516,7 +516,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 91
           end
-          object colAmountSecondRemainsSumm: TcxGridDBColumn
+          object AmountSecondRemainsSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1088#1072#1089#1095'. '#1086#1089#1090'. '#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'AmountSecondRemainsSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -528,7 +528,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 91
           end
-          object colAmountSecondPriceListSumm: TcxGridDBColumn
+          object AmountSecondPriceListSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' ('#1086#1089#1090'. '#1092#1072#1082#1090' '#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'AmountSecondPriceListSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -540,7 +540,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 91
           end
-          object colAmountSecondRemainsPLSumm: TcxGridDBColumn
+          object AmountSecondRemainsPLSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' ('#1088#1072#1089#1095'. '#1086#1089#1090'. '#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'AmountSecondRemainsPLSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -552,7 +552,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 91
           end
-          object colIsErased: TcxGridDBColumn
+          object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
             Visible = False
@@ -561,13 +561,13 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 70
           end
-          object colPartionId: TcxGridDBColumn
+          object PartionId: TcxGridDBColumn
             DataBinding.FieldName = 'PartionId'
             Visible = False
             Options.Editing = False
             Width = 50
           end
-          object clComment: TcxGridDBColumn
+          object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter

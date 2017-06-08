@@ -1229,9 +1229,9 @@ begin
     if Assigned(CurDictTable) then
     begin
       CurDictTable.Close;
-      FreeAndNil(CurDictTable);
+      //FreeAndNil(CurDictTable);
     end;
-    FreeAndNil(GetStoredProc);
+    //FreeAndNil(GetStoredProc);
   end;
 end;
 

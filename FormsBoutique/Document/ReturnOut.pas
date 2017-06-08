@@ -54,17 +54,17 @@ type
     cxTabSheetMain: TcxTabSheet;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colAmountSumm: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    AmountSumm: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;
     spInsertUpdateMIMaster: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    colCountForPrice: TcxGridDBColumn;
+    CountForPrice: TcxGridDBColumn;
     bbShowAll: TdxBarButton;
     bbStatic: TdxBarStatic;
     actShowAll: TBooleanStoredProcAction;
@@ -88,14 +88,14 @@ type
     cxLabel11: TcxLabel;
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
-    colIsErased: TcxGridDBColumn;
+    IsErased: TcxGridDBColumn;
     StatusGuides: TdsdGuides;
     spChangeStatus: TdsdStoredProc;
     UnCompleteMovement: TChangeGuidesStatus;
     CompleteMovement: TChangeGuidesStatus;
     DeleteMovement: TChangeGuidesStatus;
     ceStatus: TcxButtonEdit;
-    colMeasureName: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
     GuidesTo: TdsdGuides;
     spGetTotalSumm: TdsdStoredProc;
     cxLabel12: TcxLabel;
@@ -110,7 +110,7 @@ type
     bbMIContainer: TdxBarButton;
     MovementItemProtocolOpenForm: TdsdOpenForm;
     bbMovementItemProtocol: TdxBarButton;
-    clGoodsGroupNameFull: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
@@ -138,7 +138,7 @@ type
     macInsertAction: TMultiAction;
     actRefreshMI: TdsdDataSetRefresh;
     macUpdateAction: TMultiAction;
-    colPartionId: TcxGridDBColumn;
+    PartionId: TcxGridDBColumn;
   private
   public
   end;
