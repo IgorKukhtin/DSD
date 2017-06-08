@@ -11,17 +11,17 @@ inherited IncomeJournalForm: TIncomeJournalForm
     Width = 896
     Height = 424
     TabOrder = 3
-    ExplicitWidth = 831
+    ExplicitWidth = 896
     ExplicitHeight = 424
     ClientRectBottom = 424
     ClientRectRight = 896
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 831
+      ExplicitWidth = 896
       ExplicitHeight = 424
       inherited cxGrid: TcxGrid
         Width = 896
         Height = 424
-        ExplicitWidth = 831
+        ExplicitWidth = 896
         ExplicitHeight = 424
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -414,7 +414,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
   end
   inherited Panel: TPanel
     Width = 896
-    ExplicitWidth = 831
+    ExplicitWidth = 896
     inherited deStart: TcxDateEdit
       Left = 100
       EditValue = 42370d
@@ -745,6 +745,69 @@ inherited IncomeJournalForm: TIncomeJournalForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
+    object actPrintReestr: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' '#1083#1077#1082#1072#1088#1089#1090#1074#1077#1085#1085#1099#1093' '#1087#1088#1077#1087#1072#1088#1072#1090#1086#1074
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' '#1083#1077#1082#1072#1088#1089#1090#1074#1077#1085#1085#1099#1093' '#1087#1088#1077#1087#1072#1088#1072#1090#1086#1074
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberIncomeCheckName'
+          Value = Null
+          Component = MemberIncomeCheckGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CheckDate'
+          Value = 'NULL'
+          Component = deCheckDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1056#1077#1077#1089#1090#1088' '#1083#1077#1082#1072#1088#1089#1090#1074#1077#1085#1085#1099#1093' '#1087#1088#1077#1087#1072#1088#1072#1090#1086#1074
+      ReportNameParam.Name = #1056#1077#1077#1089#1090#1088' '#1083#1077#1082#1072#1088#1089#1090#1074#1077#1085#1085#1099#1093' '#1087#1088#1077#1087#1072#1088#1072#1090#1086#1074
+      ReportNameParam.Value = #1056#1077#1077#1089#1090#1088' '#1083#1077#1082#1072#1088#1089#1090#1074#1077#1085#1085#1099#1093' '#1087#1088#1077#1087#1072#1088#1072#1090#1086#1074
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
     object ADOQueryAction1: TADOQueryAction
       Category = 'dsdImportExport'
       MoveParams = <>
@@ -1035,6 +1098,14 @@ inherited IncomeJournalForm: TIncomeJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintReestr'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintSticker'
         end
         item
@@ -1140,6 +1211,11 @@ inherited IncomeJournalForm: TIncomeJournalForm
     object bbUpdateMovementCheck: TdxBarButton
       Action = mactUpdateMovementCheck
       Category = 0
+    end
+    object bbPrintReestr: TdxBarButton
+      Action = actPrintReestr
+      Category = 0
+      ImageIndex = 17
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

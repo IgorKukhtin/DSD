@@ -36,8 +36,9 @@ OPEN Cursor1 FOR
            , Movement_Income_View.SaleSumm
            , Movement_Income_View.InvNumberBranch
            , Movement_Income_View.BranchDate
-
+           , ObjectHistory_JuridicalDetails.License
        FROM Movement_Income_View 
+            LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := Movement_Income_View.FromId, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_JuridicalDetails ON 1=1
        WHERE Movement_Income_View.Id =  inMovementId;
 
     RETURN NEXT Cursor1;
@@ -61,9 +62,12 @@ OPEN Cursor1 FOR
            , MovementItem.MakerName
            , MovementItem.FEA
            , MovementItem.Measure
-
+           , ObjectString_Goods_Maker.ValueData AS MakerGoodsName
        FROM MovementItem_Income_View AS MovementItem 
-           WHERE MovementItem.MovementId = inMovementId
+         LEFT JOIN ObjectString AS ObjectString_Goods_Maker
+                                ON ObjectString_Goods_Maker.ObjectId = MovementItem.GoodsId
+                               AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()   
+       WHERE MovementItem.MovementId = inMovementId
              AND MovementItem.isErased   = false;
 
     RETURN NEXT Cursor2;
