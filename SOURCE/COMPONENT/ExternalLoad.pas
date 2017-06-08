@@ -635,7 +635,7 @@ begin
                         if VarIsNULL(Field.Value) then
                            StoredProc.Params.Items[i].Value := ''
                         else
-                           StoredProc.Params.Items[i].Value := trim(Field.Value);
+                           StoredProc.Params.Items[i].Value := trim(ReplaceStr(Field.Value,chr(39), '`'));
                     end;
                  end;
           end;

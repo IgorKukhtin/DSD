@@ -18,76 +18,30 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContactPerson(
     IN inRetailId                 Integer   ,    --
     IN inSession                  TVarChar       -- сессия пользователя
 )
- RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer; 
-   DECLARE vbObjectId Integer;   
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ContactPerson());
 
-   -- пытаемся найти код
-   IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
-
-   -- Если код не установлен, определяем его как последний+1
-   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_ContactPerson()); 
-   
-   -- проверка прав уникальности для свойства <Наименование > + <Object> + <ContactPersonKind>
---   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_ContactPerson(), inName);
---   IF COALESCE((SELECT ), 0) = ioId THEN
---      RAISE EXCEPTION '';
---   END IF;
-   -- проверка прав уникальности для свойства <Код > + <Object> 
---   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_ContactPerson(), vbCode_calc);
-
-   IF COALESCE (inObjectId_Partner, 0) <> 0 AND (COALESCE (inObjectId_Juridical, 0) = 0 AND COALESCE (inObjectId_Contract, 0) = 0 AND COALESCE (inObjectId_Unit, 0) = 0) 
-   THEN
-	vbObjectId = COALESCE (inObjectId_Partner, 0);
-   END IF;
-
-   IF COALESCE (inObjectId_Juridical, 0) <> 0 AND (COALESCE (inObjectId_Partner, 0) = 0 AND COALESCE (inObjectId_Contract, 0) = 0 AND COALESCE (inObjectId_Unit, 0) = 0) 
-   THEN
-	vbObjectId = COALESCE (inObjectId_Juridical, 0);
-   END IF;
-
-   IF COALESCE (inObjectId_Contract, 0) <> 0 AND (COALESCE (inObjectId_Partner, 0) = 0 AND COALESCE (inObjectId_Juridical, 0) = 0 AND COALESCE (inObjectId_Unit, 0) = 0) 
-   THEN
-	vbObjectId = COALESCE (inObjectId_Contract, 0);
-   END IF;
-
-   IF COALESCE (inObjectId_Unit, 0) <> 0 AND (COALESCE (inObjectId_Partner, 0) = 0 AND COALESCE (inObjectId_Juridical, 0) = 0 AND COALESCE (inObjectId_Contract, 0) = 0) 
-   THEN
-	vbObjectId = COALESCE (inObjectId_Unit, 0);
-   END IF;
-
-
-   IF COALESCE (vbObjectId, 0) = 0 THEN RAISE EXCEPTION 'Ошибка.Должен быть выбран один <Объект контакта>: <Юридическое лицо> или <Договор> или <Контрагент>.'; END IF;
-   
-   -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_ContactPerson(), vbCode_calc, inName);
    -- сохранили св-во <>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ContactPerson_Phone(), ioId, inPhone);
-   -- сохранили св-во <>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ContactPerson_Mail(), ioId, inMail);
-   -- сохранили св-во <>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ContactPerson_Comment(), ioId, inComment);
-
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ContactPerson_Object(), ioId, vbObjectId);
-
-  -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ContactPerson_ContactPersonKind(), ioId, inContactPersonKindId);
-  -- сохранили связь с <>
-  PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ContactPerson_Email(), ioId, inEmailId);
-   
-  -- сохранили связь с <>
-  PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ContactPerson_Retail(), ioId, inRetailId);
-
-
-
-   -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+   ioId:= lpInsertUpdate_Object_ContactPerson (ioId                 := ioId
+                                             , inCode               := inCode
+                                             , inName               := inName
+                                             , inPhone              := inPhone
+                                             , inMail               := inMail
+                                             , inComment            := inComment
+                                             , inObjectId_Partner   := inObjectId_Partner
+                                             , inObjectId_Juridical := inObjectId_Juridical
+                                             , inObjectId_Contract  := inObjectId_Contract
+                                             , inObjectId_Unit      := inObjectId_Unit
+                                             , inContactPersonKindId:= inContactPersonKindId
+                                             , inEmailId            := inEmailId
+                                             , inRetailId           := inRetailId
+                                             , inUserId             := vbUserId
+                                              );
    
 END;
 $BODY$
@@ -105,4 +59,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpInsertUpdate_Object_ContactPerson(ioId := 0 , inCode := 1 , inName := 'Белов' , inPhone := '4444' , Mail := 'выа@kjjkj' , Comment := '' , inPartnerId := 258441 , inJuridicalId := 0 , inContractId := 0 , inContactPersonKindId := 153272 ,  inSession := '5');
+-- SELECT * FROM gpInsertUpdate_Object_ContactPerson(ioId := 0 , inCode := 1 , inName := 'Белов' , inPhone := '4444' , Mail := 'выа@kjjkj' , Comment := '' , inPartnerId := 258441 , inJuridicalId := 0 , inContractId := 0 , inContactPersonKindId := 153272 ,  inSession := '5');
