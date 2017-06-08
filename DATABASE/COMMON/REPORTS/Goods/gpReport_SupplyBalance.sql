@@ -229,7 +229,7 @@ BEGIN
                                 LEFT JOIN Movement AS Movement_Income
                                                    ON Movement_Income.Id       = MovementLinkMovement_Income.MovementId
                                                   AND Movement_Income.StatusId = zc_Enum_Status_Complete()
-                                                  AND Movement_Income.DescId   = zc_Movement_Income()
+                                                  AND Movement_Income.DescId   IN (zc_Movement_Income(), zc_Movement_ProductionUnion())
                                 LEFT JOIN MovementItem AS MI_Income
                                                        ON MI_Income.MovementId  = Movement_Income.Id
                                                       AND MI_Income.ObjectId    = MILinkObject_Goods.ObjectId
@@ -278,15 +278,15 @@ BEGIN
                                 , MIContainer.ObjectExtId_Analyzer AS PartnerId
                            FROM MovementItemContainer AS MIContainer
                                 INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
-                                INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                      ON ObjectLink_Partner_Juridical.ObjectId = MIContainer.ObjectExtId_Analyzer
-                                                     AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
-                                                     -- !!!ограничили!!!
-                                                     AND (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
+                                LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                     ON ObjectLink_Partner_Juridical.ObjectId = MIContainer.ObjectExtId_Analyzer
+                                                    AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
                            WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                              AND MIContainer.WhereObjectId_Analyzer = inUnitId
-                             AND MIContainer.MovementDescId         = zc_Movement_Income()
+                             AND MIContainer.MovementDescId         IN (zc_Movement_Income(), zc_Movement_ProductionUnion())
                              AND MIContainer.DescId                 = zc_MIContainer_Count()
+                             -- !!!ограничили!!!
+                             AND (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
                           )
   -- список товаров по поставщикам из !!!последней!!! "привязки"
 , tmpGoodsListIncome AS (SELECT DISTINCT
@@ -303,11 +303,11 @@ BEGIN
                               LEFT JOIN ObjectLink AS ObjectLink_GoodsListIncome_Partner
                                                    ON ObjectLink_GoodsListIncome_Partner.ObjectId = ObjectLink_GoodsListIncome_Goods.ObjectId
                                                   AND ObjectLink_GoodsListIncome_Partner.DescId = zc_ObjectLink_GoodsListIncome_Partner()
-                              INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                    ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_GoodsListIncome_Partner.ChildObjectId
-                                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                                   -- !!!ограничили!!!
-                                                   AND (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
+                              LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                   ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_GoodsListIncome_Partner.ChildObjectId
+                                                  AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                         -- !!!ограничили!!!
+                         WHERE (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
                         )
       -- !!!финальный!!! список товаров + он ПО поставщикам - и GoodsId в нем надеюсь уникальный
     , tmpGoodsList AS (SELECT tmp.GoodsId
@@ -361,7 +361,10 @@ BEGIN
                       )
 
      -- остатки
-   , tmpMIContainerAll AS (SELECT CASE WHEN MIContainer.MovementDescId in (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MIContainer.ObjectExtId_Analyzer ELSE 0 END AS ObjectExtId_Analyzer
+   , tmpMIContainerAll AS (SELECT CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MIContainer.ObjectExtId_Analyzer
+                                       WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion()) AND MIContainer.isActive = TRUE THEN MIContainer.ObjectExtId_Analyzer
+                                       ELSE 0
+                                  END AS ObjectExtId_Analyzer
                                 , tmpContainerAll.ContainerId
                                 , tmpContainerAll.GoodsId
                                 , tmpContainerAll.Amount
@@ -372,7 +375,11 @@ BEGIN
 
                                 , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                              AND MIContainer.MovementDescId in (zc_Movement_Income(), zc_Movement_ReturnOut())
-                                            THEN COALESCE (MIContainer.Amount, 0)
+                                                 THEN COALESCE (MIContainer.Amount, 0)
+                                            WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                             AND MIContainer.MovementDescId in (zc_Movement_ProductionUnion())
+                                             AND MIContainer.isActive = TRUE
+                                                 THEN COALESCE (MIContainer.Amount, 0)
                                             ELSE 0
                                        END) AS CountIncome
                                 , SUM (-- Перемещение
@@ -430,7 +437,7 @@ BEGIN
                                             ELSE 0
                                        END
                                      + CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                             AND MIContainer.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate(), zc_Movement_Loss())
+                                             AND MIContainer.MovementDescId IN (zc_Movement_ProductionSeparate(), zc_Movement_Loss())
                                              AND MIContainer.isActive = TRUE
                                             THEN 1 * COALESCE (MIContainer.Amount, 0)
                                             ELSE 0
@@ -447,7 +454,10 @@ BEGIN
                                                                 ON MIContainer.Containerid = tmpContainerAll.ContainerId
                                                                AND MIContainer.OperDate >= vbStartDate
                                 LEFT JOIN zfCalc_DayOfWeekName (MIContainer.OperDate) AS tmpWeekDay ON 1=1
-                           GROUP BY CASE WHEN MIContainer.MovementDescId in (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MIContainer.ObjectExtId_Analyzer ELSE 0 END
+                           GROUP BY CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MIContainer.ObjectExtId_Analyzer
+                                         WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion()) AND MIContainer.isActive = TRUE THEN MIContainer.ObjectExtId_Analyzer
+                                         ELSE 0
+                                    END
                                   , tmpContainerAll.ContainerId, tmpContainerAll.GoodsId, tmpContainerAll.Amount
                           )
     -- движение + остатки
@@ -492,13 +502,13 @@ BEGIN
                                                 END) AS CountIncome
 
                                           , SUM (CASE -- иначе это "другой" приход
-                                                      WHEN ObjectLink_Partner_Juridical.ChildObjectId <> inJuridicalId AND inJuridicalId > 0
+                                                      WHEN COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, 0) <> inJuridicalId AND inJuridicalId > 0
                                                            AND tmpMIContainerAll.CountIncome > 0
                                                            THEN tmpMIContainerAll.CountIncome
                                                       ELSE 0
                                                 END) AS CountIn_oth
                                           , SUM (CASE -- иначе это "другой" расход
-                                                      WHEN ObjectLink_Partner_Juridical.ChildObjectId <> inJuridicalId AND inJuridicalId > 0
+                                                      WHEN COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, 0) <> inJuridicalId AND inJuridicalId > 0
                                                            AND tmpMIContainerAll.CountIncome < 0
                                                            THEN -1 * tmpMIContainerAll.CountIncome
                                                       ELSE 0
@@ -512,11 +522,16 @@ BEGIN
                      )
 
           -- приход / расход по дням
-        , tmpOnDaysAll AS (SELECT CASE WHEN MIContainer.MovementDescId in (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MIContainer.ObjectExtId_Analyzer ELSE 0 END AS ObjectExtId_Analyzer
+        , tmpOnDaysAll AS (SELECT CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MIContainer.ObjectExtId_Analyzer
+                                       WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion()) AND MIContainer.isActive = TRUE THEN MIContainer.ObjectExtId_Analyzer
+                                       ELSE 0
+                                  END AS ObjectExtId_Analyzer
                                 , tmpContainerAll.GoodsId
                                 , MIContainer.OperDate
                                 , SUM (CASE WHEN MIContainer.MovementDescId in (zc_Movement_Income(), zc_Movement_ReturnOut())
-                                            THEN COALESCE (MIContainer.Amount, 0)
+                                                 THEN COALESCE (MIContainer.Amount, 0)
+                                            WHEN MIContainer.MovementDescId in (zc_Movement_ProductionUnion()) AND MIContainer.isActive = TRUE
+                                                 THEN COALESCE (MIContainer.Amount, 0)
                                             ELSE 0
                                        END) CountIncome
 
@@ -540,7 +555,10 @@ BEGIN
                                 LEFT JOIN MovementItemContainer AS MIContainer
                                                                 ON MIContainer.Containerid = tmpContainerAll.ContainerId
                                                                AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                           GROUP BY CASE WHEN MIContainer.MovementDescId in (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MIContainer.ObjectExtId_Analyzer ELSE 0 END
+                           GROUP BY CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MIContainer.ObjectExtId_Analyzer
+                                         WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion()) AND MIContainer.isActive = TRUE THEN MIContainer.ObjectExtId_Analyzer
+                                         ELSE 0
+                                    END
                                   , tmpContainerAll.GoodsId, MIContainer.OperDate
                           )
              -- приход / расход по дням

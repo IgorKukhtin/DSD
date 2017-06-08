@@ -53,11 +53,11 @@ BEGIN
 
 
      -- сохранили <ƒокумент>
-     ioId := lpInsertUpdate_Movement (ioId := ioId
-                                    , inDescId := zc_Movement_Currency()
+     ioId := lpInsertUpdate_Movement (ioId        := ioId
+                                    , inDescId    := zc_Movement_Currency()
                                     , inInvNumber := ioInvNumber
-                                    , inOperDate := inOperDate
-                                    , inParentId := NULL
+                                    , inOperDate  := inOperDate
+                                    , inParentId  := NULL
                                      );
 
      -- определ€ем <Ёлемент документа>

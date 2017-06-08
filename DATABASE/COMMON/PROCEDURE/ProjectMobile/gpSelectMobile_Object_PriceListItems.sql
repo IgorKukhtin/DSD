@@ -277,7 +277,7 @@ if inSession = '5' then inSession = '1000137'; end if;
                        , ObjectHistory_PriceListItem_Return.StartDate            AS ReturnStartDate
                        , ObjectHistory_PriceListItem_Return.EndDate              AS ReturnEndDate
                        , ObjectHistoryFloat_PriceListItem_Value_Return.ValueData AS ReturnPrice
-                       , CAST(true AS Boolean) AS isSync
+                       , TRUE :: Boolean                                         AS isSync
                   FROM Object AS Object_PriceListItem
                        JOIN ObjectLink AS ObjectLink_PriceListItem_Goods 
                                        ON ObjectLink_PriceListItem_Goods.ObjectId = Object_PriceListItem.Id
@@ -314,9 +314,9 @@ if inSession = '5' then inSession = '1000137'; end if;
                   WHERE Object_PriceListItem.DescId = zc_Object_PriceListItem()
                     AND ((ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Order.ValueData, 0.0)) 
                         + ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Sale.ValueData, 0.0))) <> 0.0)
-                  -- ORDER BY Id DESC
-                  -- ORDER BY Id DESC
-                  LIMIT 2000
+                  -- ORDER BY Id
+                  ORDER BY Id DESC
+                  LIMIT 1700
                   ;
 
            ELSE
@@ -335,7 +335,7 @@ if inSession = '5' then inSession = '1000137'; end if;
                        , ObjectHistory_PriceListItem_Return.StartDate            AS ReturnStartDate
                        , ObjectHistory_PriceListItem_Return.EndDate              AS ReturnEndDate
                        , ObjectHistoryFloat_PriceListItem_Value_Return.ValueData AS ReturnPrice
-                       , CAST(true AS Boolean) AS isSync
+                       , TRUE :: Boolean                                         AS isSync
                   FROM Object AS Object_PriceListItem
                        JOIN ObjectLink AS ObjectLink_PriceListItem_Goods 
                                        ON ObjectLink_PriceListItem_Goods.ObjectId = Object_PriceListItem.Id

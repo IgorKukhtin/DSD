@@ -107,10 +107,11 @@ BEGIN
              , SUM (MIContainer.Amount )         AS Amount
              , MAX (MIContainer.OperDate )       AS OperDate
         FROM MovementItemContainer AS MIContainer
-            INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
+             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
         WHERE MIContainer.OperDate BETWEEN vbStartDate AND vbEndDate
-          AND MIContainer.MovementDescId = zc_Movement_Income()
+          AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ProductionUnion())
           AND MIContainer.DescId         = zc_MIContainer_Count()
+          AND MIContainer.isActive       = TRUE
         GROUP BY MIContainer.ContainerId_analyzer
                , MIContainer.ObjectId_analyzer
                , MIContainer.ObjectExtId_analyzer
@@ -133,6 +134,14 @@ BEGIN
                              , ROW_NUMBER() OVER (PARTITION BY tmp.PartnerId, tmp.GoodsId ORDER BY tmp.Amount DESC) AS Ord
                              , ROW_NUMBER() OVER (PARTITION BY tmp.GoodsId ORDER BY tmp.OperDate DESC, tmp.Amount DESC) AS Ord_date
                         FROM
+                       (SELECT tmp.GoodsId
+                             , tmp.GoodsKindId
+                             , tmp.PartnerId
+                             , tmp.Juridical
+                             , tmp.ContractId
+                             , SUM (tmp.Amount) AS Amount
+                             , MAX (tmp.OperDate) AS OperDate
+                        FROM
                        (SELECT _tmpMIContainer.GoodsId
                              , _tmpMIContainer.GoodsKindId
                              , _tmpMIContainer.PartnerId
@@ -153,6 +162,32 @@ BEGIN
                                 , ContainerLO_Juridical.ObjectId
                                 , ContainerLO_Contract.ObjectId
                         HAVING SUM (_tmpMIContainer.Amount) <> 0
+                       UNION ALL
+                        SELECT _tmpMIContainer.GoodsId
+                             , _tmpMIContainer.GoodsKindId
+                             , _tmpMIContainer.PartnerId
+                             , _tmpMIContainer.PartnerId AS Juridical
+                             , 0 AS ContractId
+                             , SUM (_tmpMIContainer.Amount) AS Amount
+                             , MAX (_tmpMIContainer.OperDate) AS OperDate
+                        FROM _tmpMIContainer
+                            JOIN Object AS Object_Unit
+                                        ON Object_Unit.Id     = _tmpMIContainer.PartnerId
+                                       AND Object_Unit.DescId = zc_Object_Unit()
+                            INNER JOIN ObjectLink AS ObjectLink_Unit_AccountDirection
+                                                  ON ObjectLink_Unit_AccountDirection.ObjectId      = Object_Unit.Id
+                                                 AND ObjectLink_Unit_AccountDirection.DescId        = zc_ObjectLink_Unit_AccountDirection()
+                                                 AND ObjectLink_Unit_AccountDirection.ChildObjectId = zc_Enum_AccountDirection_20300() -- Запасы + на хранении
+                        GROUP BY  _tmpMIContainer.GoodsId
+                                , _tmpMIContainer.GoodsKindId
+                                , _tmpMIContainer.PartnerId
+                        HAVING SUM (_tmpMIContainer.Amount) <> 0
+                       ) AS tmp
+                       GROUP BY tmp.GoodsId
+                              , tmp.GoodsKindId
+                              , tmp.PartnerId
+                              , tmp.Juridical
+                              , tmp.ContractId
                        ) AS tmp
                         ORDER BY tmp.Juridical
                                , tmp.ContractId
