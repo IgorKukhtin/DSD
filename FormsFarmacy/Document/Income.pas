@@ -139,6 +139,8 @@ type
     ExecuteDialogCheck: TExecuteDialog;
     macUpdateCheck: TMultiAction;
     bbUpdateCheck: TdxBarButton;
+    actPrintReestr: TdsdPrintAction;
+    bbPrintReestr: TdxBarButton;
   private
     { Private declarations }
   public
