@@ -314,9 +314,9 @@ if inSession = '5' then inSession = '1000137'; end if;
                   WHERE Object_PriceListItem.DescId = zc_Object_PriceListItem()
                     AND ((ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Order.ValueData, 0.0)) 
                         + ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Sale.ValueData, 0.0))) <> 0.0)
-                  -- ORDER BY Id DESC
                   ORDER BY Id DESC
-                  LIMIT 2000
+                  -- ORDER BY Id DESC
+                  LIMIT 1500
                   ;
 
            ELSE
@@ -386,6 +386,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelectMobile_Object_PriceListItems(inSyncDateIn := zc_DateStart(), inSession := '1000168') WHERE GoodsId = 477449
--- SELECT * FROM gpSelectMobile_Object_PriceListItems(inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
--- SELECT * FROM gpSelectMobile_Object_PriceListItems(inSyncDateIn := zc_DateStart(), inSession := '1000137')
+-- SELECT * FROM gpSelectMobile_Object_PriceListItems (inSyncDateIn := zc_DateStart(), inSession := '1000168') WHERE GoodsId = 477449
+-- SELECT * FROM gpSelectMobile_Object_PriceListItems (inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelectMobile_Object_PriceListItems (inSyncDateIn := zc_DateStart(), inSession := '1000137')

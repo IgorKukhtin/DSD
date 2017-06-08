@@ -212,7 +212,7 @@ BEGIN
                   , tmpGoodsListSale.PartnerId
                   , (COALESCE (tmpStoreRealItem.AmountStoreReal, 0.0) + COALESCE (tmpSaleItem.AmountSale, 0.0) - COALESCE (tmpReturnInItem.AmountReturnIn, 0.0))::TFloat AS AmountCalc
                   , tmpGoodsListSale.isErased
-                  , CAST(true AS Boolean) AS isSync
+                  , CAST (TRUE AS Boolean) AS isSync
              FROM tmpGoodsListSale
                   LEFT JOIN tmpStoreRealItem ON tmpStoreRealItem.GoodsId = tmpGoodsListSale.GoodsId
                                             AND tmpStoreRealItem.GoodsKindId = tmpGoodsListSale.GoodsKindId
@@ -236,4 +236,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelectMobile_Object_GoodsListSale(inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelectMobile_Object_GoodsListSale (inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelectMobile_Object_GoodsListSale (inSyncDateIn := zc_DateStart(), inSession := '1000137')
