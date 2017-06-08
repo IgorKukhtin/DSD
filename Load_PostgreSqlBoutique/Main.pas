@@ -2090,10 +2090,10 @@ begin
      if not fStop then pLoadDocumentItem_Send(myRecordCount1);
      if not fStop then myRecordCount1:=pLoadDocument_Loss;
      if not fStop then pLoadDocumentItem_Loss(myRecordCount1);
-     if not fStop then pLoadDocuments_PriceListItem;
-     if not fStop then pLoadDocuments_DiscountPeriodItem;
      if not fStop then myRecordCount1:=pLoadDocument_Inventory;
      if not fStop then pLoadDocumentItem_Inventory(myRecordCount1);
+     if not fStop then pLoadDocuments_PriceListItem;
+     if not fStop then pLoadDocuments_DiscountPeriodItem;
      if not fStop then myRecordCount1:=pLoadDocument_Sale;
      if not fStop then pLoadDocumentItem_Sale(myRecordCount1);
      if not fStop then myRecordCount1:=pLoadDocument_ReturnIn;
@@ -2146,35 +2146,58 @@ procedure TMainForm.pCreateGuide_Id_Postgres;
 begin
      if cbCreateId_Postgres.Checked then
      begin
-        try fExecSqFromQuery_noErr('alter table dba.Valuta add Id_Postgres integer null;'); except end;
-        try fExecSqFromQuery_noErr('alter table dba.Period add Id_Postgres integer null;'); except end;
+        // 1.1. Ед.изм.
         try fExecSqFromQuery_noErr('alter table dba.Measure add Id_Postgres integer null;'); except end;
-        try fExecSqFromQuery_noErr('alter table dba.LineFabrica add Id_Postgres integer null;'); except end;
-        try fExecSqFromQuery_noErr('alter table dba.KassaProperty add Id_Postgres integer null;'); except end;
-
-        try fExecSqFromQuery_noErr('alter table dba.GoodsSize add Id_Postgres integer null;'); except end;
-        try fExecSqFromQuery_noErr('alter table dba.GoodsInfo add Id_Postgres integer null;'); except end;
-        try fExecSqFromQuery_noErr('alter table dba.Goods add Id_Postgres integer null;'); except end;
-
-        try fExecSqFromQuery_noErr('alter table dba.GoodsProperty add Id_Pg_goodsItem integer null;'); except end;
-        try fExecSqFromQuery_noErr('alter table dba.GoodsProperty add Id_Pg_goods integer null;'); except end;
-        try fExecSqFromQuery_noErr('alter table dba.GoodsProperty add Id_pg_label integer null;'); except end;
-
-        try fExecSqFromQuery_noErr('alter table dba.Fabrika add Id_Postgres integer null;'); except end;
-        try fExecSqFromQuery_noErr('alter table dba.DiscountTools add Id_Postgres integer null;'); except end;
-        try fExecSqFromQuery_noErr('alter table dba.Discount add Id_Postgres integer null;'); except end;
-        try fExecSqFromQuery_noErr('alter table dba.CountryBrand add Id_Postgres integer null;'); except end;
+        // 1.2. Группа для состава товара
         try fExecSqFromQuery_noErr('alter table dba.CompositionGroup add Id_Postgres integer null;'); except end;
+        // 1.3. Состав товара
         try fExecSqFromQuery_noErr('alter table dba.Composition add Id_Postgres integer null;'); except end;
-
-        try fExecSqFromQuery_noErr('alter table dba.Unit add Id_Postgres integer null;'); except end;
+        // 1.4. Страна производитель
+        try fExecSqFromQuery_noErr('alter table dba.CountryBrand add Id_Postgres integer null;'); except end;
+        // 1.5. Торговая марка
         try fExecSqFromQuery_noErr('alter table dba.Brand add Id_Postgres integer null;'); except end;
+        // 1.6. Фабрика производитель
+        try fExecSqFromQuery_noErr('alter table dba.Fabrika add Id_Postgres integer null;'); except end;
+        // 1.7. Линия коллекции
+        try fExecSqFromQuery_noErr('alter table dba.LineFabrica add Id_Postgres integer null;'); except end;
+        // 1.8. Описание товара
+        try fExecSqFromQuery_noErr('alter table dba.GoodsInfo add Id_Postgres integer null;'); except end;
+        // 1.9. Размер товара
+        try fExecSqFromQuery_noErr('alter table dba.GoodsSize add Id_Postgres integer null;'); except end;
+        // 1.10. Валюта
+        try fExecSqFromQuery_noErr('alter table dba.Valuta add Id_Postgres integer null;'); except end;
+        // 1.11. Подразделения
+        try fExecSqFromQuery_noErr('alter table dba.Unit add Id_Postgres integer null;'); except end;
+        // 1.12. Период
+        try fExecSqFromQuery_noErr('alter table dba.Period add Id_Postgres integer null;'); except end;
+        // 1.13. Группы товаров
+        try fExecSqFromQuery_noErr('alter table dba.Goods add Id_Postgres integer null;'); except end;
+        // 1.14. Названия накопительных скидок
+        try fExecSqFromQuery_noErr('alter table dba.Discount add Id_Postgres integer null;'); except end;
+        // 1.15. Настройка процентов по накопительным скидкам
+        try fExecSqFromQuery_noErr('alter table dba.DiscountTools add Id_Postgres integer null;'); except end;
+        // 1.16. Поcтавщики
+//        try fExecSqFromQuery_noErr('alter table dba.Unit add Id_Postgres integer null;'); except end;
+        // 1.17. Касса
+        try fExecSqFromQuery_noErr('alter table dba.KassaProperty add Id_Postgres integer null;'); except end;
+        // 1.18. Название для ценника
+//        try fExecSqFromQuery_noErr('alter table dba.GoodsProperty add Id_pg_label integer null;'); except end;
+        // 1.19. Товары
+        try fExecSqFromQuery_noErr('alter table dba.GoodsProperty add Id_Pg_goods integer null;'); except end;
+        // 1.20. Товары c размерами
+        try fExecSqFromQuery_noErr('alter table dba.GoodsProperty add Id_Pg_goodsItem integer null;'); except end;
+        // 1.21. Город
+//       no
+        // 1.22. Юридические лица
         try fExecSqFromQuery_noErr('alter table dba.Firma add Id_Postgres integer null;'); except end;
+        // 1.23. Прайс листы
         try fExecSqFromQuery_noErr('alter table dba.PriceList add Id_Postgres integer null;'); except end;
-
+        // 1.24. Физические лица
         try fExecSqFromQuery_noErr('alter table dba.Users add MemberId_Postgres integer null;'); except end;
+        // 1.25. Пользователи
         try fExecSqFromQuery_noErr('alter table dba.Users add UserId_Postgres integer null;'); except end;
-
+        // 1.26. Покупатели
+//        try fExecSqFromQuery_noErr('alter table dba.Unit add Id_Postgres integer null;'); except end;
      end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2182,19 +2205,37 @@ procedure TMainForm.pCreateDocument_Id_Postgres;
 begin
      if cbCreateDocId_Postgres.Checked then
      begin
+      // 1.1. Приход
         try fExecSqFromQuery_noErr('alter table dba.Bill add Id_Postgres integer null;'); except end;
-        try fExecSqFromQuery_noErr('alter table dba.BillItems add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.BillItemsIncome add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.BillItemsIncome add GoodsId_Postgres integer null;'); except end;
+      // 1.2. Возврат поставщику
+//        try fExecSqFromQuery_noErr('alter table dba.Bill add Id_Postgres integer null;'); except end;
+        try fExecSqFromQuery_noErr('alter table dba.BillItems add Id_Postgres integer null;'); except end;
+      // 1.3. Перемещение
+//        try fExecSqFromQuery_noErr('alter table dba.Bill add Id_Postgres integer null;'); except end;
+//        try fExecSqFromQuery_noErr('alter table dba.BillItems add Id_Postgres integer null;'); except end;
+      // 1.4. Списание
+//        try fExecSqFromQuery_noErr('alter table dba.Bill add Id_Postgres integer null;'); except end;
+//        try fExecSqFromQuery_noErr('alter table dba.BillItems add Id_Postgres integer null;'); except end;
+      // 1.5. Инвентаризация
         try fExecSqFromQuery_noErr('alter table dba.DiscountMovementInventory add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.DiscountMovementItemInventory_byBarCode add Id_Postgres integer null;'); except end;
+      // 1.6. История цены
+        try fExecSqFromQuery_noErr('alter table dba.PriceListItems add Id_Postgres integer null;'); except end;
+      // 1.7. История скидок
+        try fExecSqFromQuery_noErr('alter table dba.DiscountTaxItems add Id_Postgres integer null;'); except end;
+      // 1.8. Продажа покупателю
         try fExecSqFromQuery_noErr('alter table dba.DiscountMovement add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.DiscountMovementItem_byBarCode add Id_Postgres integer null;'); except end;
+      // 1.9. Возврат от покупателя
+//        try fExecSqFromQuery_noErr('alter table dba.DiscountMovement add Id_Postgres integer null;'); except end;
         try fExecSqFromQuery_noErr('alter table dba.DiscountMovementItemReturn_byBarCode add Id_Postgres integer null;'); except end;
-        try fExecSqFromQuery_noErr('alter table dba.DiscountKlientAccountMoney add Id_Postgres integer null;'); except end;
-        //История
-        try fExecSqFromQuery_noErr('alter table dba.PriceListItems add Id_Postgres integer null;'); except end;
-        try fExecSqFromQuery_noErr('alter table dba.DiscountTaxItems add Id_Postgres integer null;'); except end;
+      // 1.10. Оплаты покупателя
+// не используется      try fExecSqFromQuery_noErr('alter table dba.DiscountKlientAccountMoney add Id_Postgres integer null;'); except end;
+      // 1.11. Возврат оплаты покупателю
+// не используется      try fExecSqFromQuery_noErr('alter table dba.DiscountKlientAccountMoney add Id_Postgres integer null;'); except end;
+
      end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2610,7 +2651,7 @@ begin
         Add('ORDER BY ObjectId ');
         Open;
 
-        cbReturnIn.Caption:='1.7. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Возврат от покупателя';
+        cbReturnIn.Caption:='1.9. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Возврат от покупателя';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -2768,7 +2809,7 @@ begin
         Add('ORDER BY ObjectId ');
         Open;
 
-        cbSale.Caption:='1.6. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Продажа покупателю';
+        cbSale.Caption:='1.8. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Продажа покупателю';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -3207,7 +3248,7 @@ begin
         Open;
 
         Result:=RecordCount;
-        cbReturnIn.Caption:='1.7. ('+IntToStr(RecordCount)+') Возврат от покупателя';
+        cbReturnIn.Caption:='1.9. ('+IntToStr(RecordCount)+') Возврат от покупателя';
         //
         //
         //
@@ -3306,7 +3347,7 @@ begin
         Open;
 
         Result:=RecordCount;
-        cbReturnIn_Child.Caption:='1.9. ('+IntToStr(RecordCount)+') Возврит оплаты покупателю';
+        cbReturnIn_Child.Caption:='1.11. ('+IntToStr(RecordCount)+') Возврат оплаты покупателю';
         //
         //
         //
@@ -3516,7 +3557,7 @@ begin
         Open;
 
         Result:=RecordCount;
-        cbSale.Caption:='1.6. ('+IntToStr(RecordCount)+') Продажа покупателю';
+        cbSale.Caption:='1.8. ('+IntToStr(RecordCount)+') Продажа покупателю';
         //
         //
         //
@@ -3614,7 +3655,7 @@ begin
         Open;
 
         Result:=RecordCount;
-        cbSale_Child.Caption:='1.8. ('+IntToStr(RecordCount)+') Оплаты покупателя';
+        cbSale_Child.Caption:='1.10. ('+IntToStr(RecordCount)+') Оплаты покупателя';
         //
         //
         //
