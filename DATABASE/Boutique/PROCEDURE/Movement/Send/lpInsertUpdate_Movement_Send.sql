@@ -28,7 +28,12 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Send(), inInvNumber, inOperDate, NULL);
+     ioId := lpInsertUpdate_Movement (ioId := ioId
+                                    , inDescId := zc_Movement_Send()
+                                    , inInvNumber := inInvNumber
+                                    , inOperDate := inOperDate
+                                    , inParentId := NULL
+                                     );
 
      -- сохранили связь с <От кого (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
@@ -50,7 +55,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+ 08.06.17                                                       *  lpInsertUpdate_Movement c параметрами
  25.04.17         *
 */
 

@@ -60,7 +60,7 @@ BEGIN
 
 
      -- сохранили <Документ>
-     IF COALESCE (inMovementId, 0) <> COALESCE ((SELECT lpInsertUpdate_Movement (inMovementId, zc_Movement_SendOnPrice(), Movement.InvNumber, Movement.OperDate, Movement.ParentId, Movement.AccessKeyId) FROM Movement WHERE Movement.Id = inMovementId), -1)
+     IF COALESCE (inMovementId, 0) <> COALESCE ((SELECT lpInsertUpdate_Movement (ioId := inMovementId, inDescId := zc_Movement_SendOnPrice(), inInvNumber := Movement.InvNumber, inOperDate := Movement.OperDate, inParentId := Movement.ParentId) FROM Movement WHERE Movement.Id = inMovementId), -1)
      THEN
          RAISE EXCEPTION 'Ошибка. Найден документ <Налоговая>.';
      END IF;
@@ -88,7 +88,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. Полятыкин А.А.
+ 08.06.17                                                       *  lpInsertUpdate_Movement c параметрами
  04.08.15                                        *
 */
 

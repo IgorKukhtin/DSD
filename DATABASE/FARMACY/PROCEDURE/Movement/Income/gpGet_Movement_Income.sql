@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InvNumberBranch TVarChar, BranchDate TDateTime
              , Checked Boolean, isDocument Boolean, isRegistered Boolean
              , JuridicalId Integer, JuridicalName TVarChar
+             , MemberIncomeCheckId Integer, MemberIncomeCheckName TVarChar, CheckDate TDateTime
              , IsPay Boolean, DateLastPay TDateTime
              , Movement_OrderId Integer, Movement_OrderInvNumber TVarChar, Movement_OrderInvNumber_full TVarChar
              , isDeferred Boolean
@@ -56,6 +57,11 @@ BEGIN
              , false                                            AS isRegistered  
              , 0                                                AS JuridicalId
              , CAST('' as TVarChar)                             AS JuridicalName
+
+             , 0                                                AS MemberIncomeCheckId 
+             , CAST('' as TVarChar)                             AS MemberIncomeCheckName
+             , NULL ::TDateTime                                 AS CheckDate
+
              , False                                            AS isPay
              , NULL::TDateTime                                  AS DateLastPay
     
@@ -97,6 +103,9 @@ BEGIN
                            , COALESCE(Movement_Income_View.isRegistered, false) AS isRegistered
                            , Movement_Income_View.JuridicalId
                            , Movement_Income_View.JuridicalName
+                           , Movement_Income_View.MemberIncomeCheckId 
+                           , Movement_Income_View.MemberIncomeCheckName
+                           , Movement_Income_View.CheckDate
                            , CASE WHEN Movement_Income_View.PaySumm <= 0.01 then TRUE ELSE FALSE END AS isPay
                            , Movement_Income_View.PaymentContainerId
                            , MLM_Order.MovementChildId          AS Movement_OrderId
@@ -130,6 +139,9 @@ BEGIN
           , Movement_Income.isRegistered
           , Movement_Income.JuridicalId
           , Movement_Income.JuridicalName
+          , Movement_Income.MemberIncomeCheckId 
+          , Movement_Income.MemberIncomeCheckName
+          , Movement_Income.CheckDate
           , Movement_Income.isPay
           , MAX(MovementItemContainer.OperDate)::TDateTime AS LastDatePay
 
@@ -169,6 +181,9 @@ BEGIN
           , Movement_Income.isRegistered
           , Movement_Income.JuridicalId
           , Movement_Income.JuridicalName
+          , Movement_Income.MemberIncomeCheckId 
+          , Movement_Income.MemberIncomeCheckName
+          , Movement_Income.CheckDate
           , Movement_Income.isPay
           , Movement_Order.InvNumber
           , Movement_Order.Id  

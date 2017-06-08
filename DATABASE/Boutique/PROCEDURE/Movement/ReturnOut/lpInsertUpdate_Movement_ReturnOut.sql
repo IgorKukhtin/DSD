@@ -33,7 +33,12 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ReturnOut(), inInvNumber, inOperDate, NULL);
+     ioId := lpInsertUpdate_Movement (ioId        := ioId
+                                    , inDescId    := zc_Movement_ReturnOut()
+                                    , inInvNumber := inInvNumber
+                                    , inOperDate  := inOperDate
+                                    , inParentId  := NULL
+                                     );
 
 
 
@@ -72,7 +77,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+ 08.06.17                                                       *  lpInsertUpdate_Movement c параметрами
  24.04.17         *
 */
 

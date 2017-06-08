@@ -130,6 +130,15 @@ type
     bbUpdateisDeferredNo: TdxBarButton;
     InsertName: TcxGridDBColumn;
     InsertDate: TcxGridDBColumn;
+    cxLabel14: TcxLabel;
+    edMemberIncomeCheck: TcxTextEdit;
+    edCheckDate: TcxDateEdit;
+    cxLabel16: TcxLabel;
+    spUpdate_Check: TdsdStoredProc;
+    actUpdateCheck: TdsdDataSetRefresh;
+    ExecuteDialogCheck: TExecuteDialog;
+    macUpdateCheck: TMultiAction;
+    bbUpdateCheck: TdxBarButton;
   private
     { Private declarations }
   public

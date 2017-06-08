@@ -34,6 +34,9 @@ CREATE OR REPLACE VIEW Movement_Income_View AS
        , COALESCE(MovementBoolean_Document.ValueData, false)    AS isDocument
        , MovementBoolean_Registered.ValueData                   AS isRegistered -- !!!иногда будем возвращать NULL!!!
        , Container.Id                               AS PaymentContainerId
+       , COALESCE(Object_MemberIncomeCheck.Id,0)                     AS MemberIncomeCheckId
+       , COALESCE(Object_MemberIncomeCheck.ValueData,'') ::TVarChar  AS MemberIncomeCheckName
+       , COALESCE(MovementDate_Check.ValueData,Null)     ::TDateTime AS CheckDate
     FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -86,6 +89,11 @@ CREATE OR REPLACE VIEW Movement_Income_View AS
 
         LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberIncomeCheck
+                                     ON MovementLinkObject_MemberIncomeCheck.MovementId = Movement.Id
+                                    AND MovementLinkObject_MemberIncomeCheck.DescId = zc_MovementLinkObject_MemberIncomeCheck()
+        LEFT JOIN Object AS Object_MemberIncomeCheck ON Object_MemberIncomeCheck.Id = MovementLinkObject_MemberIncomeCheck.ObjectId 
+
         LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                   ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                  AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
@@ -109,6 +117,10 @@ CREATE OR REPLACE VIEW Movement_Income_View AS
         LEFT JOIN MovementDate    AS MovementDate_Branch
                                   ON MovementDate_Branch.MovementId = Movement.Id
                                  AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
+
+        LEFT JOIN MovementDate    AS MovementDate_Check
+                                  ON MovementDate_Check.MovementId = Movement.Id
+                                 AND MovementDate_Check.DescId = zc_MovementDate_Check()
 
         LEFT JOIN MovementString  AS MovementString_InvNumberBranch
                                   ON MovementString_InvNumberBranch.MovementId = Movement.Id

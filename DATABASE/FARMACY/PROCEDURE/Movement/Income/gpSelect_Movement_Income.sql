@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , PaymentDays TFloat
+             , MemberIncomeCheckId Integer, MemberIncomeCheckName TVarChar, CheckDate TDateTime
              )
 
 AS
@@ -188,6 +189,10 @@ BEGIN
              , MovementDate_Update.ValueData        AS UpdateDate
 
              , (Movement_Income.PaymentDate::Date - Movement_Income.OperDate::Date) ::TFloat AS PaymentDays 
+
+             , Object_MemberIncomeCheck.Id          AS MemberIncomeCheckId
+             , Object_MemberIncomeCheck.ValueData   AS MemberIncomeCheckName
+             , MovementDate_Check.ValueData         AS CheckDate
         FROM Movement_Income
 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Income.StatusId
@@ -245,6 +250,10 @@ BEGIN
                                   ON MovementDate_Branch.MovementId = Movement_Income.Id
                                  AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
 
+        LEFT JOIN MovementDate    AS MovementDate_Check
+                                  ON MovementDate_Check.MovementId = Movement_Income.Id
+                                 AND MovementDate_Check.DescId = zc_MovementDate_Check()
+
         LEFT JOIN MovementString  AS MovementString_InvNumberBranch
                                   ON MovementString_InvNumberBranch.MovementId = Movement_Income.Id
                                  AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
@@ -286,6 +295,11 @@ BEGIN
                                   ON MovementBoolean_Deferred.MovementId = Movement_Order.Id
                                  AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
 
+        LEFT JOIN MovementLinkObject AS MLO_MemberIncomeCheck
+                                     ON MLO_MemberIncomeCheck.MovementId = Movement_Income.Id
+                                    AND MLO_MemberIncomeCheck.DescId = zc_MovementLinkObject_MemberIncomeCheck()
+        LEFT JOIN Object AS Object_MemberIncomeCheck ON Object_MemberIncomeCheck.Id = MLO_MemberIncomeCheck.ObjectId 
+
         GROUP BY Movement_Income.Id
                , Movement_Income.InvNumber
                , Movement_Income.OperDate
@@ -321,6 +335,9 @@ BEGIN
                , MovementDate_Insert.ValueData  
                , Object_Update.ValueData        
                , MovementDate_Update.ValueData  
+               , Object_MemberIncomeCheck.Id  
+               , Object_MemberIncomeCheck.ValueData
+               , MovementDate_Check.ValueData
 ;
 END;
 $BODY$

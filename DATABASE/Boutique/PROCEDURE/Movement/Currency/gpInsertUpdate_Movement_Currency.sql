@@ -53,7 +53,12 @@ BEGIN
 
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Currency(), ioInvNumber, inOperDate, NULL, NULL);
+     ioId := lpInsertUpdate_Movement (ioId := ioId
+                                    , inDescId := zc_Movement_Currency()
+                                    , inInvNumber := ioInvNumber
+                                    , inOperDate := inOperDate
+                                    , inParentId := NULL
+                                     );
 
      -- определяем <Элемент документа>
      SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
@@ -94,7 +99,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+ 08.06.17                                                       *  lpInsertUpdate_Movement c параметрами
  08.05.17         *
  27.04.17         * бутики
  10.11.14                                        * add inParValue

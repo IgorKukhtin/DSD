@@ -31,7 +31,12 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Loss(), inInvNumber, inOperDate, NULL);
+     ioId := lpInsertUpdate_Movement (ioId := ioId                                        
+                                    , inDescId := zc_Movement_Loss()
+                                    , inInvNumber := inInvNumber
+                                    , inOperDate := inOperDate
+                                    , inParentId := NULL
+                                     );
 
      -- сохранили свойство <Курс для перевода в валюту баланса>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, inCurrencyValue);
@@ -62,7 +67,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+ 08.06.17                                                       *  lpInsertUpdate_Movement c параметрами
  25.04.17         *
 */
 

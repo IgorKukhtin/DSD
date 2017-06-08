@@ -61,6 +61,7 @@ type
     procedure LoadMarginReport;
     procedure LoadMeasureFormTest;
     procedure LoadMemberFormTest;
+    procedure LoadMemberIncomeCheckFormTest;
     procedure LoadKindFormTest;
     procedure LoadOrderSheduleFormTest;
     procedure LoadOrderInternalFormTest;
@@ -374,6 +375,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
+end;
+
+ procedure TLoadFormTest.LoadMemberIncomeCheckFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberIncomeCheckForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberIncomeCheckForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberIncomeCheckEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberIncomeCheckEditForm');
 end;
 
 procedure TLoadFormTest.LoadMakerFormTest;
@@ -995,6 +1004,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TIncome_AmountTroubleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePartnerDataDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePartnerDataDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeCheckDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeCheckDialogForm');
 end;
 
 procedure TLoadFormTest.LoadAdditionalGoodsFormTest;
