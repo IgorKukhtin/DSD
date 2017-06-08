@@ -51,7 +51,7 @@ BEGIN
                            );
       IF COALESCE (vbContactPersonId, 0) = 0
       THEN
-          vbContactPersonId := gpInsertUpdate_Object_ContactPerson (vbContactPersonId, 0, inOrderName, inOrderPhone, inOrderMail, '', inId, 0, 0, 0, vbContactPersonKindId, 0, 0, inSession);
+          vbContactPersonId := lpInsertUpdate_Object_ContactPerson (vbContactPersonId, 0, inOrderName, inOrderPhone, inOrderMail, '', inId, 0, 0, 0, vbContactPersonKindId, 0, 0, vbUserId);
       END IF;
       -- обнуление у остальных
       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContactPerson_Object(), ObjectLink_ContactPerson_Object.ObjectId, NULL)
@@ -81,5 +81,5 @@ $BODY$
 */
 
 -- тест
--- select * from gpUpdate_Object_Partner_Contact(inId := 10862 , inOrdeName := 'Иванов П.Р.' , inOrderPhone := '' , inOrderMail := '' ,  inSession := '5');
--- select * from gpUpdate_Object_Partner_Contact(inId := 17170 , inOrdeName := 'Ветлицька Катя' , inOrderPhone := '098-819-12-92' , inOrderMail := '' ,  inSession := '5');
+-- SELECT * FROM gpUpdate_Object_Partner_Contact(inId := 10862 , inOrdeName := 'Иванов П.Р.' , inOrderPhone := '' , inOrderMail := '' ,  inSession := '5');
+-- SELECT * FROM gpUpdate_Object_Partner_Contact(inId := 17170 , inOrdeName := 'Ветлицька Катя' , inOrderPhone := '098-819-12-92' , inOrderMail := '' ,  inSession := '5');

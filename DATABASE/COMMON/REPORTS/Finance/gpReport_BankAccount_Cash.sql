@@ -1,6 +1,5 @@
 -- Function: gpReport_BankAccount_Cash
 
-
 DROP FUNCTION IF EXISTS gpReport_BankAccount_Cash (TDateTime, TDateTime, Integer, Integer, Integer,Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_BankAccount_Cash(
@@ -135,7 +134,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpReport_BankAccount_Cash (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -144,5 +142,4 @@ $BODY$
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpReport_BankAccount_Cash (inStartDate:= '01.01.2015', inEndDate:= '31.01.2015', inAccountId:= 0, inBankAccountId:=0, inCurrencyId:= 0, inIsDetail:= TRUE, inSession:= zfCalc_UserAdmin());
---select * from gpReport_BankAccount_Cash(inStartDate := ('21.05.2015')::TDateTime , inEndDate := ('21.05.2015')::TDateTime , inAccountId := 0 , inBankAccountId := 0 , inCurrencyId := 0 , inCashId := 0 , inIsDetail := 'True' ,  inSession := '5');
+-- SELECT * FROM gpReport_BankAccount_Cash (inStartDate:= '01.01.2015', inEndDate:= '31.01.2015', inAccountId:= 0, inBankAccountId:=0, inCurrencyId:= 0, inCashId:= 0, inIsDetail:= TRUE, inSession:= zfCalc_UserAdmin());

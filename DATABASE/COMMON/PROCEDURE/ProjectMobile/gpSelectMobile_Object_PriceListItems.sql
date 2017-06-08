@@ -26,8 +26,15 @@ $BODY$
    DECLARE vbPersonalId Integer;
    DECLARE vbReturnDayCount Integer;
    DECLARE vbReturnDate TDateTime;
+   DECLARE vbSession_save    TVarChar;
 BEGIN
+
+-- !!!ВРЕМЕННО!!!
+vbSession_save:=inSession;
+if inSession = '5' then inSession = '1000137'; end if;
+
 -- if inSession = '1000137' then return; end if;
+
       -- !!! ВРЕМЕННО будем выгружать все
       inSyncDateIn:= zc_DateStart();
 
@@ -253,7 +260,7 @@ BEGIN
                   WHERE Object_PriceListItem.DescId = zc_Object_PriceListItem();
 
            -- !!!ВРЕМЕННО!!!
-           ELSEIF 1=0 AND inSession = '1000137'
+           ELSEIF 1=1   AND inSession = '1000137' and vbSession_save <> '5'
            THEN
                 -- Результат
                 RETURN QUERY
@@ -307,6 +314,8 @@ BEGIN
                   WHERE Object_PriceListItem.DescId = zc_Object_PriceListItem()
                     AND ((ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Order.ValueData, 0.0)) 
                         + ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Sale.ValueData, 0.0))) <> 0.0)
+                  -- ORDER BY Id DESC
+                  ORDER BY Id DESC
                   LIMIT 2000
                   ;
 
@@ -379,3 +388,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelectMobile_Object_PriceListItems(inSyncDateIn := zc_DateStart(), inSession := '1000168') WHERE GoodsId = 477449
 -- SELECT * FROM gpSelectMobile_Object_PriceListItems(inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelectMobile_Object_PriceListItems(inSyncDateIn := zc_DateStart(), inSession := '1000137')

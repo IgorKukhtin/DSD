@@ -400,6 +400,7 @@ initialization
   RegisterClass (TFileDialogAction);
   RegisterClass (TGuidesFiller);
   RegisterClass (THeaderSaver);
+  RegisterClass (THeaderChanger);
   RegisterClass (TInsertRecord);
   RegisterClass (TInsertUpdateChoiceAction);
   RegisterClass (TMultiAction);

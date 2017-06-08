@@ -368,6 +368,44 @@ type
     property GetStoredProc: TdsdStoredProc read FGetStoredProc write SetGetStoredProc;
   end;
 
+  TChangerListItem = class(TCollectionItem)
+  private
+    FControl: TControl;
+    procedure SetControl(const Value: TControl);
+  protected
+    function GetDisplayName: string; override;
+  public
+    procedure Assign(Source: TPersistent); override;
+  published
+    property Control: TControl read FControl write SetControl;
+  end;
+
+  TChangerList = class(TOwnedCollection)
+  private
+    function GetChangerListItem(Index: Integer): TChangerListItem;
+    procedure SetChangerListItem(Index: Integer; const Value: TChangerListItem);
+  public
+    function Add: TChangerListItem;
+    property Items[Index: Integer]: TChangerListItem read GetChangerListItem write SetChangerListItem; default;
+  end;
+
+  THeaderChanger = class(TComponent)
+  private
+    FParam: TdsdParam;
+    FChangerList: TChangerList;
+    FAction: TCustomAction;
+    procedure OnChange(Sender: TObject);
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property IdParam: TdsdParam read FParam write FParam;
+    property ChangerList: TChangerList read FChangerList write FChangerList;
+    property Action: TCustomAction read FAction write FAction;
+  end;
+
   TRefreshAddOn = class(TComponent)
   private
     FFormName: string;
@@ -576,17 +614,21 @@ type
 
 procedure Register;
 begin
-   RegisterComponents('DSDComponent', [TCrossDBViewAddOn]);
-   RegisterComponents('DSDComponent', [THeaderSaver]);
-   RegisterComponents('DSDComponent', [TdsdDBTreeAddOn]);
-   RegisterComponents('DSDComponent', [TdsdDBViewAddOn]);
-   RegisterComponents('DSDComponent', [TdsdUserSettingsStorageAddOn]);
-   RegisterComponents('DSDComponent', [TRefreshAddOn]);
-   RegisterComponents('DSDComponent', [TRefreshDispatcher]);
-   RegisterComponents('DSDComponent', [TPivotAddOn]);
-   RegisterComponents('DSDComponent', [TdsdGMMap]);
-   RegisterComponents('DSDComponent', [TdsdWebBrowser]);
-   RegisterActions('DSDLib', [TExecuteDialog], TExecuteDialog);
+  RegisterComponents('DSDComponent', [
+    TCrossDBViewAddOn,
+    THeaderSaver,
+    THeaderChanger,
+    TdsdDBTreeAddOn,
+    TdsdDBViewAddOn,
+    TdsdUserSettingsStorageAddOn,
+    TRefreshAddOn,
+    TRefreshDispatcher,
+    TPivotAddOn,
+    TdsdGMMap,
+    TdsdWebBrowser
+  ]);
+
+  RegisterActions('DSDLib', [TExecuteDialog], TExecuteDialog);
 end;
 
 { TdsdDBTreeAddOn }
@@ -2701,6 +2743,114 @@ begin
       FTimer.Enabled := true;
     end;
   end;
+end;
+
+{ TChangerListItem }
+
+procedure TChangerListItem.Assign(Source: TPersistent);
+begin
+  if Source is TChangerListItem then
+    Self.Control := (Source as TChangerListItem).Control
+  else
+    inherited Assign(Source);
+end;
+
+function TChangerListItem.GetDisplayName: string;
+begin
+  if Control <> nil then
+    Result := Control.Name
+  else
+    Result := inherited GetDisplayName;
+end;
+
+procedure TChangerListItem.SetControl(const Value: TControl);
+begin
+  if Value <> FControl then
+  begin
+    FControl := Value;
+    if Assigned(FControl) and Assigned(Collection) then
+    begin
+      FControl.FreeNotification(TComponent(Collection.Owner));
+      if (Collection.Owner is THeaderChanger) then
+      begin
+        if FControl is TcxTextEdit then
+          (FControl as TcxTextEdit).Properties.OnChange := THeaderChanger(Collection.Owner).OnChange;
+        if FControl is TcxDateEdit then
+          (FControl as TcxDateEdit).Properties.OnChange := THeaderChanger(Collection.Owner).OnChange;
+        if FControl is TcxButtonEdit then
+          (FControl as TcxButtonEdit).Properties.OnChange := THeaderChanger(Collection.Owner).OnChange;
+        if FControl is TcxCheckBox then
+          (FControl as TcxCheckBox).Properties.OnChange := THeaderChanger(Collection.Owner).OnChange;
+        if FControl is TcxCurrencyEdit then
+          (FControl as TcxCurrencyEdit).Properties.OnChange := THeaderChanger(Collection.Owner).OnChange;
+      end;
+    end;
+  end;
+end;
+
+{ TChangerList }
+
+function TChangerList.Add: TChangerListItem;
+begin
+  Result := inherited Add as TChangerListItem;
+end;
+
+function TChangerList.GetChangerListItem(Index: Integer): TChangerListItem;
+begin
+  Result := inherited GetItem(Index) as TChangerListItem
+end;
+
+procedure TChangerList.SetChangerListItem(Index: Integer; const Value: TChangerListItem);
+begin
+  inherited SetItem(Index, Value);
+end;
+
+{ THeaderChanger }
+
+constructor THeaderChanger.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  FParam := TdsdParam.Create(nil);
+  FChangerList := TChangerList.Create(Self, TChangerListItem);
+end;
+
+destructor THeaderChanger.Destroy;
+begin
+  FParam.Free;
+  FChangerList.Free;
+  inherited;
+end;
+
+procedure THeaderChanger.Notification(AComponent: TComponent; Operation: TOperation);
+var
+  I: Integer;
+begin
+  inherited Notification(AComponent, Operation);
+
+  if csDesigning in ComponentState then
+    if Operation = opRemove then
+    begin
+      if AComponent is TControl then
+      begin
+        for I := 0 to Pred(ChangerList.Count) do
+          if ChangerList[I].Control = AComponent then
+            ChangerList[I].Control := nil;
+      end;
+
+      if AComponent = Action then
+        Action := nil;
+    end;
+end;
+
+procedure THeaderChanger.OnChange(Sender: TObject);
+begin
+  if Assigned(Action) then
+    if (Sender is TcxTextEdit) or
+      (Sender is TcxButtonEdit) or
+      (Sender is TcxCurrencyEdit) or
+      (Sender is TcxDateEdit) or
+      (Sender is TcxCheckBox) then
+      Action.Execute;
 end;
 
 end.

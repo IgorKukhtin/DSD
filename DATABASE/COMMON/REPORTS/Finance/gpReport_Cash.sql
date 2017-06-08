@@ -85,7 +85,7 @@ BEGIN
                            WHERE CLO_Cash.DescId = zc_ContainerLinkObject_Cash()
                              AND (Container.ObjectId = inAccountId OR inAccountId = 0)
                              AND (CLO_Cash.ObjectId = inCashId OR inCashId = 0)
-                             AND (CLO_Currency.ObjectId = inCurrencyId OR inCurrencyId = 0)
+                             -- AND (CLO_Currency.ObjectId = inCurrencyId OR inCurrencyId = 0)
                            )
      SELECT
         Operation.ContainerId,
@@ -344,4 +344,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpReport_Cash (inStartDate:= '03.12.2016' ::TDateTime, inEndDate:= '31.12.2016'::TDateTime, inAccountId:= 0, inCashId:=280296 , inCurrencyId:=0,  inSession:= '2'::TVarChar);
+-- SELECT * FROM gpReport_Cash (inStartDate:= '03.12.2016' ::TDateTime, inEndDate:= '31.12.2016'::TDateTime, inAccountId:= 0, inCashId:=280296 , inCurrencyId:=0,  inSession:= '2'::TVarChar);

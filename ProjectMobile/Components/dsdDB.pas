@@ -209,6 +209,7 @@ end;
 procedure TdsdStoredProc.DataSetRefresh;
 var B: TBookMark;
     FStringStream: TStringStream;
+    str : string;
 begin
   if (DataSets.Count > 0) and
       Assigned(DataSets[0]) and
@@ -221,8 +222,15 @@ begin
         B := DataSets[0].DataSet.GetBookmark;
      try
         if DataSets[0].DataSet is TClientDataSet then begin
+           try
            FStringStream := TStringStream.Create(TStorageFactory.GetStorage.ExecuteProc(GetXML), TEncoding.UTF8);
            TClientDataSet(DataSets[0].DataSet).LoadFromStream(FStringStream);
+           except
+             on E : Exception do
+             begin
+               raise Exception.Create(E.Message);
+             end;
+           end;
         end;
      finally
        FreeAndNil(FStringStream);
