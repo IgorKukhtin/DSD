@@ -590,7 +590,7 @@
           Top = 426
           Width = 178
           Height = 24
-          Caption = '1.25.  '#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
+          Caption = '1.25. '#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -729,10 +729,10 @@
         object cbDiscountPeriodItem: TCheckBox
           Tag = 20
           Left = 6
-          Top = 267
+          Top = 150
           Width = 178
           Height = 17
-          Caption = '2.2. '#1048#1089#1090#1086#1088#1080#1103' '#1089#1082#1080#1076#1086#1082
+          Caption = '1.7. '#1048#1089#1090#1086#1088#1080#1103' '#1089#1082#1080#1076#1086#1082
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -745,10 +745,10 @@
         object cbPriceListItem: TCheckBox
           Tag = 20
           Left = 6
-          Top = 251
+          Top = 134
           Width = 178
           Height = 17
-          Caption = '2.1. '#1048#1089#1090#1086#1088#1080#1103' '#1094#1077#1085#1099
+          Caption = '1.6. '#1048#1089#1090#1086#1088#1080#1103' '#1094#1077#1085#1099
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -776,10 +776,10 @@
         object cbSale: TCheckBox
           Tag = 20
           Left = 6
-          Top = 137
+          Top = 166
           Width = 235
           Height = 17
-          Caption = '1.6. '#1055#1088#1086#1076#1072#1078#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+          Caption = '1.8. '#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -791,10 +791,10 @@
         object cbReturnIn: TCheckBox
           Tag = 20
           Left = 6
-          Top = 155
+          Top = 184
           Width = 235
           Height = 17
-          Caption = '1.7. '#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+          Caption = '1.9. '#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -806,10 +806,10 @@
         object cbSale_Child: TCheckBox
           Tag = 20
           Left = 6
-          Top = 174
+          Top = 203
           Width = 235
           Height = 17
-          Caption = '1.8. '#1054#1087#1083#1072#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+          Caption = '1.10. '#1054#1087#1083#1072#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -821,10 +821,10 @@
         object cbReturnIn_Child: TCheckBox
           Tag = 20
           Left = 6
-          Top = 193
+          Top = 222
           Width = 235
           Height = 17
-          Caption = '1.9. '#1042#1086#1079#1074#1088#1072#1090' '#1086#1087#1083#1072#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+          Caption = '1.11. '#1042#1086#1079#1074#1088#1072#1090' '#1086#1087#1083#1072#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -11
@@ -859,6 +859,10 @@
     object TabSheet2: TTabSheet
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1092#1072#1081#1083#1086#1074
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 0
