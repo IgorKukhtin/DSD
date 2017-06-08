@@ -24,6 +24,7 @@ $BODY$
   DECLARE vbJuridicalId Integer;
   DECLARE vbGoodsJuridicalId Integer;
   DECLARE vbGoodsBarCodeId Integer;
+  DECLARE vbLinkGoodsId Integer;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -117,17 +118,36 @@ BEGIN
 
            IF COALESCE (vbGoodsMainId, 0) <> 0
            THEN
-                IF NOT EXISTS (SELECT 1
-                               FROM ObjectLink AS ObjectLink_LinkGoods_Goods
-                                    JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
-                                                    ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
-                                                   AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-                                                   AND ObjectLink_LinkGoods_GoodsMain.ChildObjectId = vbGoodsMainId
-                               WHERE ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
-                                 AND ObjectLink_LinkGoods_Goods.ChildObjectId = vbGoodsBarCodeId)
+                SELECT ObjectLink_LinkGoods_Goods.ObjectId
+                INTO vbLinkGoodsId 
+                FROM ObjectLink AS ObjectLink_LinkGoods_Goods
+                     JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                     ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
+                                    AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    AND ObjectLink_LinkGoods_GoodsMain.ChildObjectId = vbGoodsMainId
+                WHERE ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+                  AND ObjectLink_LinkGoods_Goods.ChildObjectId = vbGoodsBarCodeId;
+
+                IF COALESCE (vbLinkGoodsId, 0) = 0
                 THEN
-                     PERFORM gpInsertUpdate_Object_LinkGoods (0, vbGoodsMainId, vbGoodsBarCodeId, inSession);
+                     vbLinkGoodsId:= gpInsertUpdate_Object_LinkGoods (0, vbGoodsMainId, vbGoodsBarCodeId, inSession);
                 END IF;  
+
+                IF COALESCE (vbLinkGoodsId, 0) <> 0  
+                THEN -- чистим ненужные связи "товар штрих-код -> главный товар"
+                     PERFORM lpDelete_Object(ObjectLink_LinkGoods_Goods.ObjectId, zfCalc_UserAdmin())     
+                     FROM ObjectLink AS ObjectLink_Goods_Object
+                          JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                          ON ObjectLink_LinkGoods_Goods.ChildObjectId = ObjectLink_Goods_Object.ObjectId
+                                         AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                         AND ObjectLink_LinkGoods_Goods.ObjectId <> vbLinkGoodsId
+                          JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                          ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
+                                         AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                                         AND ObjectLink_LinkGoods_GoodsMain.ChildObjectId = vbGoodsMainId
+                     WHERE ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                       AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_BarCode();
+                END IF;
            END IF;
       END IF;
 
@@ -226,12 +246,23 @@ $BODY$
  05.06.2017                                                      *
 */
 
-/* SELECT * FROM gpInsertUpdate_Object_GoodsBarCode_Load (inCode:= 5622,   -- Наш Код товара
-                                                          inName:= 'L-лізина есцинат р-н для ін"єкцій, 1 мг/мл 5 мл амп № 10',  -- Название товара
-                                                          inProducerName:= 'Галичфарм',  -- Производитель
-                                                          inGoodsCode:= '274',  -- Код товара поставщика
-                                                          inBarCode:= '4823000800724',  -- Штрих-код
-                                                          inJuridicalName:= 'Фармлига',  -- Поставщик
-                                                          inSession:= zfCalc_UserAdmin()   -- сессия пользователя
-                                                         );
+/* 
+SELECT * FROM gpInsertUpdate_Object_GoodsBarCode_Load (inCode:= 5622,   -- Наш Код товара
+                                                       inName:= 'L-лізина есцинат р-н для ін"єкцій, 1 мг/мл 5 мл амп № 10',  -- Название товара
+                                                       inProducerName:= 'Галичфарм',  -- Производитель
+                                                       inGoodsCode:= '274',  -- Код товара поставщика
+                                                       inBarCode:= '4823000800724',  -- Штрих-код
+                                                       inJuridicalName:= 'Фармлига',  -- Поставщик
+                                                       inSession:= zfCalc_UserAdmin()   -- сессия пользователя
+                                                      );
+*/
+/*
+SELECT * FROM gpInsertUpdate_Object_GoodsBarCode_Load (inCode:= 9851,   -- Наш Код товара
+                                                       inName:= 'Халат мед.стер.р.L(50-52)117см(спанбонд)на завяз.д/пос.1220507"Славна"',  -- Название товара
+                                                       inProducerName:= 'Технокомплекс',  -- Производитель
+                                                       inGoodsCode:= '393.0189',  -- Код товара поставщика
+                                                       inBarCode:= '4820101882314',  -- Штрих-код
+                                                       inJuridicalName:= 'БаДМ',  -- Поставщик
+                                                       inSession:= zfCalc_UserAdmin()   -- сессия пользователя
+                                                      );
 */

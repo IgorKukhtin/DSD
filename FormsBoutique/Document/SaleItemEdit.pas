@@ -69,6 +69,7 @@ type
     actRefreshDiscount: TdsdDataSetRefresh;
     actRefreshCard: TdsdDataSetRefresh;
     actRefreshEUR: TdsdDataSetRefresh;
+    HeaderChanger: THeaderChanger;
   private
     { Private declarations }
   public

@@ -68,6 +68,7 @@ type
     actRefreshEUR: TdsdDataSetRefresh;
     actRefreshUSD: TdsdDataSetRefresh;
     actRefreshGRN: TdsdDataSetRefresh;
+    HeaderChanger: THeaderChanger;
   private
     { Private declarations }
   public

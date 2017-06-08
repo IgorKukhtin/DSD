@@ -560,7 +560,6 @@ object ReturnInItemEditForm: TReturnInItemEditForm
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
     IdParam.MultiSelectSeparator = ','
-    RefreshAction = actRefreshTotal
     ComponentList = <
       item
         Component = ceCurrencyValue_EUR
@@ -1061,5 +1060,28 @@ object ReturnInItemEditForm: TReturnInItemEditForm
     PackSize = 1
     Left = 88
     Top = 116
+  end
+  object HeaderChanger: THeaderChanger
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    ChangerList = <
+      item
+        Control = ceAmountGRN
+      end
+      item
+        Control = ceAmountUSD
+      end
+      item
+        Control = ceAmountEUR
+      end
+      item
+        Control = ceAmountCARD
+      end
+      item
+        Control = ceAmountDiscount
+      end>
+    Action = actRefreshTotal
+    Left = 256
+    Top = 200
   end
 end
