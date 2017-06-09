@@ -1600,15 +1600,16 @@ begin
   // сохранение координат при логине и запуск таймера
   tSavePathTimer(tSavePath);
 
-  if not DM.GetConfigurationInfo then
-    exit;
-
-  if (not gc_User.Local) and NeedSync then
+  if not gc_User.Local then
   begin
-    DM.SynchronizeWithMainDatabase;
-  end
-  else
+    if not DM.GetConfigurationInfo then
+      exit;
+
+    if NeedSync then
+      DM.SynchronizeWithMainDatabase
+    else
     DM.CheckUpdate; // проверка небходимости обновления
+  end;
 
   // сохранение логина в ini файле
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}

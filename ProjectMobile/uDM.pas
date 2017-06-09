@@ -1025,6 +1025,7 @@ var
   CurDictTable : TFDTable;
   FindRec : boolean;
   Mapping : array of array[1..2] of integer;
+  FieldsStr, ValuesStr, WhereStr: string;
 begin
   GetStoredProc := TdsdStoredProc.Create(nil);
   CurDictTable := TFDTable.Create(nil);
@@ -1179,9 +1180,15 @@ begin
         while not Eof do
         begin
           if (AName = 'Partner') or (AName = 'Juridical') then
-            FindRec := CurDictTable.Locate('Id;ContractId', VarArrayOf([FieldByName('Id').AsInteger, FieldByName('ContractId').AsInteger]))
+          begin
+            FindRec := CurDictTable.Locate('Id;ContractId', VarArrayOf([FieldByName('Id').AsInteger, FieldByName('ContractId').AsInteger]));
+            WhereStr := 'Id = ' + FieldByName('Id').AsString + ' and ContractId = ' + FieldByName('ContractId').AsString;
+          end
           else
+          begin
             FindRec := CurDictTable.Locate('Id', FieldByName('Id').AsInteger);
+            WhereStr := 'Id = ' + FieldByName('Id').AsString;
+          end;
 
           if FindRec then
           begin
@@ -1189,9 +1196,7 @@ begin
             begin
               Next;
               continue;
-            end
-            else
-              CurDictTable.Edit;
+            end;
           end
           else
           begin
@@ -1200,21 +1205,97 @@ begin
               Next;
               continue;
             end;
-
-            CurDictTable.Append;
           end;
 
           if FieldByName('isSync').AsBoolean then
           begin
+            FieldsStr := '';
+            ValuesStr := '';
+
             for x := 0 to Length(Mapping) - 1 do
-              CurDictTable.Fields[ Mapping[x][1] ].Value := GetStoredProc.DataSet.Fields[ Mapping[x][2] ].Value;
+            begin
+              FieldsStr := FieldsStr + CurDictTable.Fields[ Mapping[x][1] ].FieldName + ',';
+              case CurDictTable.Fields[ Mapping[x][1] ].DataType of
+                ftInteger :
+                begin
+                  if FindRec then
+                    ValuesStr := ValuesStr + CurDictTable.Fields[ Mapping[x][1] ].FieldName + ' = ' +
+                                 IntToStr(StrToIntDef(GetStoredProc.DataSet.Fields[ Mapping[x][2] ].AsString, 0)) + ','
+                  else
+                    ValuesStr := ValuesStr + IntToStr(StrToIntDef(GetStoredProc.DataSet.Fields[ Mapping[x][2] ].AsString, 0)) + ',';
+                end;
+                ftFloat :
+                begin
+                  if FindRec then
+                    ValuesStr := ValuesStr + CurDictTable.Fields[ Mapping[x][1] ].FieldName + ' = ' +
+                                 FloatToStr(StrToFloatDef(GetStoredProc.DataSet.Fields[ Mapping[x][2] ].AsString, 0)) + ','
+                  else
+                    ValuesStr := ValuesStr + FloatToStr(StrToFloatDef(GetStoredProc.DataSet.Fields[ Mapping[x][2] ].AsString, 0)) + ',';
+                end;
+                ftBoolean :
+                begin
+                  if FindRec then
+                  begin
+                    if GetStoredProc.DataSet.Fields[ Mapping[x][2] ].AsBoolean then
+                      ValuesStr := ValuesStr + CurDictTable.Fields[ Mapping[x][1] ].FieldName + ' = 1,'
+                    else
+                      ValuesStr := ValuesStr + CurDictTable.Fields[ Mapping[x][1] ].FieldName + ' = 0,';
+                  end
+                  else
+                  begin
+                    if GetStoredProc.DataSet.Fields[ Mapping[x][2] ].AsBoolean then
+                      ValuesStr := ValuesStr + ' 1,'
+                    else
+                      ValuesStr := ValuesStr + ' 0,';
+                  end;
+                end;
+                ftDateTime :
+                begin
+                  if FindRec then
+                    ValuesStr := ValuesStr + CurDictTable.Fields[ Mapping[x][1] ].FieldName + ' = ' +
+                                 QuotedStr(FormatDateTime('yyyy-mm-dd hh:nn:ss', GetStoredProc.DataSet.Fields[ Mapping[x][2] ].AsDateTime)) + ','
+                  else
+                    ValuesStr := ValuesStr + QuotedStr(FormatDateTime('yyyy-mm-dd hh:nn:ss', GetStoredProc.DataSet.Fields[ Mapping[x][2] ].AsDateTime)) + ',';
+                end;
+                ftDate :
+                begin
+                  if FindRec then
+                    ValuesStr := ValuesStr + CurDictTable.Fields[ Mapping[x][1] ].FieldName + ' = ' +
+                                 QuotedStr(FormatDateTime('yyyy-mm-dd', GetStoredProc.DataSet.Fields[ Mapping[x][2] ].AsDateTime)) + ','
+                  else
+                    ValuesStr := ValuesStr + QuotedStr(FormatDateTime('yyyy-mm-dd', GetStoredProc.DataSet.Fields[ Mapping[x][2] ].AsDateTime)) + ',';
+                end;
+                else
+                begin
+                  if FindRec then
+                    ValuesStr := ValuesStr + CurDictTable.Fields[ Mapping[x][1] ].FieldName + ' = ' +
+                                 QuotedStr(GetStoredProc.DataSet.Fields[ Mapping[x][2] ].AsString) + ','
+                  else
+                    ValuesStr := ValuesStr + QuotedStr(GetStoredProc.DataSet.Fields[ Mapping[x][2] ].AsString) + ',';
+                end;
+              end;
+            end;
+
+            System.delete(FieldsStr, Length(FieldsStr), 1);
+            System.delete(ValuesStr, Length(ValuesStr), 1);
+
+            Synchronize(procedure
+                        begin
+                          if FindRec then
+                            DM.conMain.ExecSQL('update ' + CurDictTable.TableName + ' set ' + ValuesStr + ' where ' + WhereStr)
+                          else
+                            DM.conMain.ExecSQL('insert into ' + CurDictTable.TableName + ' (' + FieldsStr + ') values (' + ValuesStr + ')');
+                        end);
           end
           else
             if (AName <> 'PromoMain') and (AName <> 'PromoPartner') and (AName <> 'PromoGoods')  and
                (AName <> 'MovementTask') and (AName <> 'MovementItemTask')  then
-              CurDictTable.FieldByName('isErased').AsBoolean := true;
-
-          CurDictTable.Post;
+            begin
+              Synchronize(procedure
+                          begin
+                            DM.conMain.ExecSQL('update ' + CurDictTable.TableName + ' set isErased = 1 where ' + WhereStr)
+                          end);
+            end;
 
           Next;
         end;
@@ -1229,9 +1310,9 @@ begin
     if Assigned(CurDictTable) then
     begin
       CurDictTable.Close;
-      //FreeAndNil(CurDictTable);
+      FreeAndNil(CurDictTable);
     end;
-    //FreeAndNil(GetStoredProc);
+    FreeAndNil(GetStoredProc);
   end;
 end;
 
