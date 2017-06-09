@@ -340,6 +340,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TFabrikaEditForm');
 end;
 
+
+
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
@@ -1338,8 +1340,8 @@ procedure TLoadFormTest.LoadServiceFormTest;
 begin
 
 //
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFormsForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TFormsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFormsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFormsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TObjectDescForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectForm'));
@@ -1396,8 +1398,8 @@ begin
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerForm');
 //
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescDataForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TMovementDescDataForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescDataForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementDescDataForm');
 //
 //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_PeriodDialogForm'));

@@ -779,6 +779,14 @@
 				<Form>InfoMoneyEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\FormsUnit.pas">
+				<Form>FormsUnit</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\MovementDescForms.pas">
+				<Form>MovementDescForms</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Document\MovementItemProtocol.pas">
 				<Form>MovementItemProtocolForm</Form>
 				<DesignClass>TParentForm</DesignClass>

@@ -229,6 +229,8 @@ uses
   InfoMoney in '..\..\FormsBoutique\Guides\InfoMoney.pas' {InfoMoneyForm: TParentForm},
   InfoMoney_Object in '..\..\FormsBoutique\Guides\InfoMoney_Object.pas' {InfoMoney_ObjectForm: TParentForm},
   InfoMoneyEdit in '..\..\FormsBoutique\Guides\InfoMoneyEdit.pas' {InfoMoneyEditForm: TParentForm},
+  FormsUnit in'..\..\FormsBoutique\Guides\FormsUnit.pas' {FormsUnit: TParentForm},
+  MovementDescForms in'..\..\FormsBoutique\Guides\MovementDescForms.pas' {MovementDescForms: TParentForm},
   MovementItemProtocol in '..\..\FormsBoutique\Document\MovementItemProtocol.pas' {MovementItemProtocolForm: TParentForm},
   MovementProtocol in '..\..\FormsBoutique\Document\MovementProtocol.pas' {MovementProtocolForm: TParentForm};
 
