@@ -239,6 +239,7 @@ uses
   ProfitLossGroup in'..\..\FormsBoutique\Guides\ProfitLossGroup.pas' {ProfitLossGroup: TParentForm},
   ProfitLossGroup_Object in'..\..\FormsBoutique\Guides\ProfitLossGroup_Object.pas' {ProfitLossGroup_Object: TParentForm},
   ProfitLossGroupEdit in'..\..\FormsBoutique\Guides\ProfitLossGroupEdit.pas' {ProfitLossGroupEdit: TParentForm},
+  UserProtocol in'..\..\FormsBoutique\Guides\UserProtocol.pas' {UserProtocol: TParentForm},
   MovementItemProtocol in '..\..\FormsBoutique\Document\MovementItemProtocol.pas' {MovementItemProtocolForm: TParentForm},
   MovementProtocol in '..\..\FormsBoutique\Document\MovementProtocol.pas' {MovementProtocolForm: TParentForm};
 

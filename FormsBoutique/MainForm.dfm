@@ -911,6 +911,12 @@ inherited MainForm: TMainForm
       inherited N2: TMenuItem [5]
       end
       inherited N116: TMenuItem [6]
+        inherited miProtocol: TMenuItem
+          Visible = False
+        end
+        inherited miMovementProtocol: TMenuItem
+          Visible = False
+        end
       end
     end
   end

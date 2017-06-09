@@ -505,14 +505,6 @@ object UserForm: TUserForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'BranchName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'BranchName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'UnitName'
           Value = Null
           Component = MasterCDS

@@ -819,6 +819,10 @@
 				<Form>ProfitLossGroupEdit</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\UserProtocol.pas">
+				<Form>UserProtocol</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Document\MovementItemProtocol.pas">
 				<Form>MovementItemProtocolForm</Form>
 				<DesignClass>TParentForm</DesignClass>
