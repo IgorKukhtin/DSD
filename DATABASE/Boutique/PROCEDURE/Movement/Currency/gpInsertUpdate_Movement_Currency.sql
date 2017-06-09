@@ -53,11 +53,12 @@ BEGIN
 
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId := ioId
-                                    , inDescId := zc_Movement_Currency()
+     ioId := lpInsertUpdate_Movement (ioId        := ioId
+                                    , inDescId    := zc_Movement_Currency()
                                     , inInvNumber := ioInvNumber
-                                    , inOperDate := inOperDate
-                                    , inParentId := NULL
+                                    , inOperDate  := inOperDate
+                                    , inParentId  := NULL
+                                    , inUserId    := vbUserId
                                      );
 
      -- определяем <Элемент документа>
@@ -100,6 +101,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+ 09.06.17                                                       *  add inUserId in lpInsertUpdate_Movement
  08.06.17                                                       *  lpInsertUpdate_Movement c параметрами
  08.05.17         *
  27.04.17         * бутики

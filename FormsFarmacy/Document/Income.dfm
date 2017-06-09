@@ -11,17 +11,17 @@
     Width = 1054
     Height = 378
     ExplicitTop = 138
-    ExplicitWidth = 971
+    ExplicitWidth = 1054
     ExplicitHeight = 378
     ClientRectBottom = 378
     ClientRectRight = 1054
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 971
+      ExplicitWidth = 1054
       ExplicitHeight = 354
       inherited cxGrid: TcxGrid
         Width = 1054
         Height = 354
-        ExplicitWidth = 971
+        ExplicitWidth = 1054
         ExplicitHeight = 354
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -557,7 +557,7 @@
     Width = 1054
     Height = 112
     TabOrder = 3
-    ExplicitWidth = 971
+    ExplicitWidth = 1054
     ExplicitHeight = 112
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1150,7 +1150,42 @@
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object mactEditPartnerData: TMultiAction [24]
+    object actPrintReestr: TdsdPrintAction [24]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' '#1083#1077#1082#1072#1088#1089#1090#1074#1077#1085#1085#1099#1093' '#1087#1088#1077#1087#1072#1088#1072#1090#1086#1074
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' '#1083#1077#1082#1072#1088#1089#1090#1074#1077#1085#1085#1099#1093' '#1087#1088#1077#1087#1072#1088#1072#1090#1086#1074
+      ImageIndex = 17
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1056#1077#1077#1089#1090#1088' '#1083#1077#1082#1072#1088#1089#1090#1074#1077#1085#1085#1099#1093' '#1087#1088#1077#1087#1072#1088#1072#1090#1086#1074
+      ReportNameParam.Value = #1056#1077#1077#1089#1090#1088' '#1083#1077#1082#1072#1088#1089#1090#1074#1077#1085#1085#1099#1093' '#1087#1088#1077#1087#1072#1088#1072#1090#1086#1074
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object mactEditPartnerData: TMultiAction [25]
       Category = 'PartnerData'
       MoveParams = <>
       ActionList = <
@@ -1167,7 +1202,7 @@
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1080' '#1076#1072#1090#1091' '#1086#1087#1083#1072#1090#1099
       ImageIndex = 35
     end
-    inherited actPrint: TdsdPrintAction [25]
+    inherited actPrint: TdsdPrintAction [26]
       StoredProc = spSelectPrint
       StoredProcList = <
         item
@@ -1578,6 +1613,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbPrintReestr'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbCalculateSalePrice'
         end
         item
@@ -1693,6 +1736,10 @@
     end
     object bbUpdateCheck: TdxBarButton
       Action = macUpdateCheck
+      Category = 0
+    end
+    object bbPrintReestr: TdxBarButton
+      Action = actPrintReestr
       Category = 0
     end
   end
@@ -2653,7 +2700,7 @@
     Top = 334
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    StoredProcName = 'gpSelect_Movement_Income_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -3189,6 +3236,13 @@
         Value = 42261d
         Component = edCheckDate
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSaveNull'
+        Value = 'True'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

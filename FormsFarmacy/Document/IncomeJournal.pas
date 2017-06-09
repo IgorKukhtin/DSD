@@ -83,6 +83,9 @@ type
     bbUpdateMovementCheck: TdxBarButton;
     actPrintReestr: TdsdPrintAction;
     bbPrintReestr: TdxBarButton;
+    spUpdateMovementCheck_Print: TdsdStoredProc;
+    macPrintReestr: TMultiAction;
+    actUpdateMovementCheckPrint: TdsdExecStoredProc;
   private
     { Private declarations }
   public

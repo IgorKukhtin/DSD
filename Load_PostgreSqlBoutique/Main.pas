@@ -3354,7 +3354,10 @@ begin
         Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=5 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountUSD');
         Add('    , if  isBNKassa = 1 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountCard');
         Add('    , if  isDiscount= 1 then  DiscountKlientAccountMoney.SummDiscountManual else 0 endif as  AmountDiscount');
-        Add('');
+        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.KursClient else 0 endif as CurrencyValueUSD');
+        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.NominalKursClient else 0 endif as ParValueUSD');
+        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.KursClient else 0 endif as CurrencyValueEUR');
+        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.NominalKursClient else 0 endif as ParValueEUR');
         Add('FROM dba.DiscountMovementItemReturn_byBarCode');
         Add('    join DiscountMovement     on DiscountMovement.id = DiscountMovementItemReturn_byBarCode.DiscountMovementId');
         Add('    left join BillItemsIncome on BillItemsIncome.id  = DiscountMovementItemReturn_byBarCode.BillItemsIncomeId');
@@ -3391,10 +3394,10 @@ begin
         toStoredProc.Params.AddParam ('inAmountUSD',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountEUR',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountCard',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inCurrencyValueUSD',ftFloat,ptInput, 5);  // тестовые данные
-        toStoredProc.Params.AddParam ('inParValueUSD',ftFloat,ptInput, 1);  // тестовые данные
-        toStoredProc.Params.AddParam ('inCurrencyValueEUR',ftFloat,ptInput, 8);  // тестовые данные
-        toStoredProc.Params.AddParam ('inParValueEUR',ftFloat,ptInput, 1);  // тестовые данные
+        toStoredProc.Params.AddParam ('inCurrencyValueUSD',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inParValueUSD',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCurrencyValueEUR',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inParValueEUR',ftFloat,ptInput, 0);
 //
         //
 
@@ -3412,6 +3415,10 @@ begin
              toStoredProc.Params.ParamByName('inAmountUSD').Value:=FieldByName('AmountUSD').AsFloat;
              toStoredProc.Params.ParamByName('inAmountEUR').Value:=FieldByName('AmountEUR').AsFloat;
              toStoredProc.Params.ParamByName('inAmountCard').Value:=FieldByName('AmountCard').AsFloat;
+             toStoredProc.Params.ParamByName('inCurrencyValueUSD').Value:=FieldByName('CurrencyValueUSD').AsFloat;
+             toStoredProc.Params.ParamByName('inParValueUSD').Value:=FieldByName('ParValueUSD').AsFloat;
+             toStoredProc.Params.ParamByName('inCurrencyValueEUR').Value:=FieldByName('CurrencyValueEUR').AsFloat;
+             toStoredProc.Params.ParamByName('inParValueEUR').Value:=FieldByName('ParValueEUR').AsFloat;
 
              if not myExecToStoredProc then ;//exit;
 //             if FieldByName('ReturnInId_Postgres').AsInteger=0 then
@@ -3650,6 +3657,10 @@ begin
         Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=5 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountUSD');
         Add('    , if  isBNKassa = 1 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountCard');
         Add('    , if  isDiscount= 1 then  DiscountKlientAccountMoney.SummDiscountManual else 0 endif as  AmountDiscount');
+        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.KursClient else 0 endif as CurrencyValueUSD');
+        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.NominalKursClient else 0 endif as ParValueUSD');
+        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.KursClient else 0 endif as CurrencyValueEUR');
+        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.NominalKursClient else 0 endif as ParValueEUR');
         Add('FROM dba.DiscountMovementItem_byBarCode');
         Add('    join DiscountMovement     on DiscountMovement.id = DiscountMovementItem_byBarCode.DiscountMovementId');
         Add('    left join BillItemsIncome on BillItemsIncome.id  = DiscountMovementItem_byBarCode.BillItemsIncomeId');
@@ -3686,10 +3697,10 @@ begin
         toStoredProc.Params.AddParam ('inAmountEUR',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountCard',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountDiscount',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inCurrencyValueUSD',ftFloat,ptInput, 5); // тестовые данные
-        toStoredProc.Params.AddParam ('inParValueUSD',ftFloat,ptInput, 1);      // тестовые данные
-        toStoredProc.Params.AddParam ('inCurrencyValueEUR',ftFloat,ptInput, 8); // тестовые данные
-        toStoredProc.Params.AddParam ('inParValueEUR',ftFloat,ptInput, 1);      // тестовые данные
+        toStoredProc.Params.AddParam ('inCurrencyValueUSD',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inParValueUSD',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCurrencyValueEUR',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inParValueEUR',ftFloat,ptInput, 0);
         //
 
         while not EOF do
@@ -3707,6 +3718,10 @@ begin
              toStoredProc.Params.ParamByName('inAmountEUR').Value:=FieldByName('AmountEUR').AsFloat;
              toStoredProc.Params.ParamByName('inAmountCard').Value:=FieldByName('AmountCard').AsFloat;
              toStoredProc.Params.ParamByName('inAmountDiscount').Value:=FieldByName('AmountDiscount').AsFloat;
+             toStoredProc.Params.ParamByName('inCurrencyValueUSD').Value:=FieldByName('CurrencyValueUSD').AsFloat;
+             toStoredProc.Params.ParamByName('inParValueUSD').Value:=FieldByName('ParValueUSD').AsFloat;
+             toStoredProc.Params.ParamByName('inCurrencyValueEUR').Value:=FieldByName('CurrencyValueEUR').AsFloat;
+             toStoredProc.Params.ParamByName('inParValueEUR').Value:=FieldByName('ParValueEUR').AsFloat;
 
              if not myExecToStoredProc then ;//exit;
 //             if FieldByName('SaleId_Postgres').AsInteger=0 then

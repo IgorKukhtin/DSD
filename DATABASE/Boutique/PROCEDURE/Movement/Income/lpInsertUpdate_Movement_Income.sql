@@ -35,6 +35,7 @@ BEGIN
                                    , inInvNumber := inInvNumber
                                    , inOperDate  := inOperDate
                                    , inParentId  := NULL
+                                   , inUserId    := vbUserId
                                     );
 
      -- только для Update
@@ -88,7 +89,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+ 09.06.17                                                       *  add inUserId in lpInsertUpdate_Movement
  10.04.17         *
 */
 

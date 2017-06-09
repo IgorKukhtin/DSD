@@ -767,7 +767,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' '#1083#1077#1082#1072#1088#1089#1090#1074#1077#1085#1085#1099#1093' '#1087#1088#1077#1087#1072#1088#1072#1090#1086#1074
       Hint = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' '#1083#1077#1082#1072#1088#1089#1090#1074#1077#1085#1085#1099#1093' '#1087#1088#1077#1087#1072#1088#1072#1090#1086#1074
-      ImageIndex = 3
+      ImageIndex = 17
       ShortCut = 16464
       DataSets = <
         item
@@ -807,6 +807,37 @@ inherited IncomeJournalForm: TIncomeJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+    end
+    object actUpdateMovementCheckPrint: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMovementCheck_Print
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMovementCheck_Print
+        end>
+      Caption = 'actUpdateMovementCheck'
+    end
+    object macPrintReestr: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMovementCheckPrint
+        end
+        item
+          Action = actRefresh
+        end
+        item
+          Action = actPrintReestr
+        end>
+      QuestionBeforeExecute = 
+        #1041#1091#1076#1077#1090' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1086' '#1074#1099#1073#1088#1072#1085#1085#1086#1077' '#1091#1087#1086#1083#1085#1086#1084'. '#1083#1080#1094#1086' '#1080' '#1076#1072#1090#1072' '#1087#1088#1086#1074#1077#1088#1082#1080'. '#1055#1088#1086#1076#1086 +
+        #1083#1078#1080#1090#1100'?'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' '#1083#1077#1082#1072#1088#1089#1090#1074#1077#1085#1085#1099#1093' '#1087#1088#1077#1087#1072#1088#1072#1090#1086#1074
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' '#1083#1077#1082#1072#1088#1089#1090#1074#1077#1085#1085#1099#1093' '#1087#1088#1077#1087#1072#1088#1072#1090#1086#1074
+      ImageIndex = 17
     end
     object ADOQueryAction1: TADOQueryAction
       Category = 'dsdImportExport'
@@ -1098,7 +1129,11 @@ inherited IncomeJournalForm: TIncomeJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintReestr'
+          ItemName = 'bbPrintSticker'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintSticker_notPrice'
         end
         item
           Visible = True
@@ -1106,11 +1141,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintSticker'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintSticker_notPrice'
+          ItemName = 'bbPrintReestr'
         end
         item
           Visible = True
@@ -1213,9 +1244,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
       Category = 0
     end
     object bbPrintReestr: TdxBarButton
-      Action = actPrintReestr
+      Action = macPrintReestr
       Category = 0
-      ImageIndex = 17
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1607,9 +1637,56 @@ inherited IncomeJournalForm: TIncomeJournalForm
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSaveNull'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 273
     Top = 298
+  end
+  object spUpdateMovementCheck_Print: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Income_CheckParam'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberIncomeCheckId'
+        Value = '0'
+        Component = MemberIncomeCheckGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCheckDate'
+        Value = 42144d
+        Component = deCheckDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSaveNull'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 306
+    Top = 360
   end
 end
