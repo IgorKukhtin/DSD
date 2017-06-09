@@ -50,9 +50,9 @@ type
     spErased: TdsdStoredProc;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
-    clErased: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    Erased: TcxGridDBColumn;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     DBViewAddOn: TdsdDBViewAddOn;
@@ -60,11 +60,11 @@ type
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    clJuridicalName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
-    clMFO: TcxGridDBColumn;
-    clSWIFT: TcxGridDBColumn;
-    clIBAN: TcxGridDBColumn;
+    MFO: TcxGridDBColumn;
+    SWIFT: TcxGridDBColumn;
+    IBAN: TcxGridDBColumn;
   private
     { Private declarations }
   public

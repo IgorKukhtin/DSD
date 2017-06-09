@@ -44,8 +44,8 @@ type
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     cxGridDBTableView: TcxGridDBTableView;
-    clName: TcxGridDBColumn;
-    clStartDate: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    StartDate: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Panel: TPanel;
     cxLabel1: TcxLabel;
@@ -55,9 +55,9 @@ type
     cxLabel2: TcxLabel;
     cxLabel3: TcxLabel;
     edOperDate: TcxDateEdit;
-    clEndDate: TcxGridDBColumn;
-    clPrice: TcxGridDBColumn;
-    clGoodsCode: TcxGridDBColumn;
+    EndDate: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
     actDiscountPeriodGoods: TdsdOpenForm;
     bbPriceListGoodsItem: TdxBarButton;
     spInsertUpdate: TdsdStoredProc;

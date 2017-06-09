@@ -50,7 +50,7 @@ type
     spErased: TdsdStoredProc;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
-    clErased: TcxGridDBColumn;
+    Erased: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
@@ -58,10 +58,10 @@ type
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    dDiscountName: TcxGridDBColumn;
-    dStartSumm: TcxGridDBColumn;
-    dEndSumm: TcxGridDBColumn;
-    dDiscountTax: TcxGridDBColumn;
+    DiscountName: TcxGridDBColumn;
+    StartSumm: TcxGridDBColumn;
+    EndSumm: TcxGridDBColumn;
+    DiscountTax: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
   private
     { Private declarations }

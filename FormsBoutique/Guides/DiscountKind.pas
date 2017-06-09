@@ -25,7 +25,7 @@ uses
 
 type
   TDiscountKindForm = class(TAncestorEnumForm)
-    clName: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
   private
     { Private declarations }
   public

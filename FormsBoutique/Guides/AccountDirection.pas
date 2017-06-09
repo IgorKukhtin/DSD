@@ -26,8 +26,8 @@ type
   TAccountDirectionForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     MasterCDS: TClientDataSet;
@@ -53,7 +53,7 @@ type
     dxBarStatic: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clErased: TcxGridDBColumn;
+    Erased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
   private
     { Private declarations }

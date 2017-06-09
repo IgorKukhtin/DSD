@@ -17,13 +17,13 @@ inherited FormsForm: TFormsForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1092#1086#1088#1084
             DataBinding.FieldName = 'Name'
             Options.Editing = False
             Width = 267
           end
-          object colHelpFile: TcxGridDBColumn
+          object HelpFile: TcxGridDBColumn
             Caption = #1055#1091#1090#1100' '#1082' '#1089#1087#1088#1072#1074#1082#1077
             DataBinding.FieldName = 'HelpFile'
             PropertiesClassName = 'TcxButtonEditProperties'

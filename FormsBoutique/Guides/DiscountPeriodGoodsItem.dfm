@@ -45,19 +45,19 @@ object DiscountPeriodGoodsItemForm: TDiscountPeriodGoodsItemForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clStartDate: TcxGridDBColumn
+      object StartDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1089
         DataBinding.FieldName = 'StartDate'
         HeaderAlignmentVert = vaCenter
         Width = 78
       end
-      object clEndDate: TcxGridDBColumn
+      object EndDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1086
         DataBinding.FieldName = 'EndDate'
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object clPrice: TcxGridDBColumn
+      object Price: TcxGridDBColumn
         Caption = '% '#1089#1082#1080#1076#1082#1080
         DataBinding.FieldName = 'ValuePrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
