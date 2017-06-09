@@ -41,7 +41,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clGoodsCode: TcxGridDBColumn
+      object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentHorz = taCenter
@@ -49,7 +49,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Options.Editing = False
         Width = 35
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
@@ -57,7 +57,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Options.Editing = False
         Width = 150
       end
-      object clStartDate: TcxGridDBColumn
+      object StartDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1089
         DataBinding.FieldName = 'StartDate'
         HeaderAlignmentHorz = taCenter
@@ -65,7 +65,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Options.Editing = False
         Width = 55
       end
-      object clEndDate: TcxGridDBColumn
+      object EndDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1086
         DataBinding.FieldName = 'EndDate'
         HeaderAlignmentHorz = taCenter
@@ -73,7 +73,7 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
         Options.Editing = False
         Width = 55
       end
-      object clPrice: TcxGridDBColumn
+      object Price: TcxGridDBColumn
         Caption = '% '#1089#1082#1080#1076#1082#1080
         DataBinding.FieldName = 'ValuePrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -796,17 +796,17 @@ object DiscountPeriodItemForm: TDiscountPeriodItemForm
     ColorRuleList = <>
     ColumnAddOnList = <
       item
-        Column = clGoodsCode
+        Column = GoodsCode
         FindByFullValue = True
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end>
     ColumnEnterList = <
       item
-        Column = clGoodsCode
+        Column = GoodsCode
       end
       item
-        Column = clPrice
+        Column = Price
       end>
     SummaryItemList = <>
     Left = 192

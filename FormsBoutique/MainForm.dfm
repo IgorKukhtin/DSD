@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 723
   KeyPreview = True
   ExplicitWidth = 739
-  ExplicitHeight = 223
+  ExplicitHeight = 227
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -202,11 +202,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    inherited actImportExportLink: TdsdOpenForm
+      Enabled = False
+    end
     inherited actAccount: TdsdOpenForm [32]
     end
     inherited actProfitLossGroup: TdsdOpenForm [33]
     end
     inherited actProfitLossDirection: TdsdOpenForm [34]
+    end
+    inherited actMovementDesc: TdsdOpenForm
+      Enabled = False
     end
     object actMeasure: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
@@ -854,6 +860,9 @@ inherited MainForm: TMainForm
         object N74: TMenuItem [0]
           Action = actForms
         end
+        inherited miMovementDesc: TMenuItem
+          Visible = False
+        end
       end
       object miUser: TMenuItem [1]
         Action = actUser
@@ -861,12 +870,9 @@ inherited MainForm: TMainForm
       object miRole: TMenuItem [2]
         Action = actRole
       end
-      object miImportExportLink: TMenuItem [3]
-        Action = actImportExportLink
+      inherited N3: TMenuItem [3]
       end
-      inherited N3: TMenuItem [4]
-      end
-      object N20: TMenuItem [5]
+      object N20: TMenuItem [4]
         Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
         object N21: TMenuItem
           Action = actAccountGroup
@@ -902,9 +908,15 @@ inherited MainForm: TMainForm
           Action = actProfitLoss
         end
       end
-      inherited N2: TMenuItem [6]
+      inherited N2: TMenuItem [5]
       end
-      inherited N116: TMenuItem [7]
+      inherited N116: TMenuItem [6]
+        inherited miProtocol: TMenuItem
+          Visible = False
+        end
+        inherited miMovementProtocol: TMenuItem
+          Visible = False
+        end
       end
     end
   end

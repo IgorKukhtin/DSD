@@ -573,6 +573,31 @@ var i: integer;
     Ft: double;
     Field: TField;
     vbFieldName: string;
+
+  function AdaptStr(S: string): string;
+  var
+    C: Char;
+    Code: SmallInt;
+  begin
+    Result := '';
+
+    for C in S do
+    begin
+      Code := Ord(C);
+
+      if Code = 39 then
+        Result := Result + '`'
+      else if Code = 188 then
+        Result := Result + '1/4'
+      else if Code = 189 then
+        Result := Result + '1/2'
+      else if Code = 190 then
+        Result := Result + '3/4'
+      else
+        Result := Result + C;
+    end;
+  end;
+
 begin
   with AImportSettings do begin
     for i := 0 to Count - 1 do begin
@@ -635,7 +660,7 @@ begin
                         if VarIsNULL(Field.Value) then
                            StoredProc.Params.Items[i].Value := ''
                         else
-                           StoredProc.Params.Items[i].Value := trim(ReplaceStr(Field.Value,chr(39), '`'));
+                           StoredProc.Params.Items[i].Value := Trim(AdaptStr(Field.Value));
                     end;
                  end;
           end;

@@ -77,6 +77,10 @@ type
     GoodsGuides: TdsdGuides;
     RefreshDispatcher: TRefreshDispatcher;
     Color_ExpirationDate: TcxGridDBColumn;
+    cbisMCSAuto: TcxCheckBox;
+    ceDays: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
+    cxLabel4: TcxLabel;
   private
     { Private declarations }
   public

@@ -31,6 +31,9 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , Remains TFloat, SummaRemains TFloat
              , RemainsNotMCS TFloat, SummaNotMCS TFloat
              , PriceRetSP TFloat, PriceOptSP TFloat, PriceSP TFloat, PaymentSP TFloat
+             , MCSValueOld TFloat
+             , StartDateMCSAuto TDateTime, EndDateMCSAuto TDateTime
+             , isMCSAuto Boolean, isMCSNotRecalcOld Boolean
              , isSP Boolean
              , isErased boolean
              , isClose boolean, isFirst boolean , isSecond boolean
@@ -97,6 +100,13 @@ BEGIN
                ,NULL::TFloat                     AS PriceOptSP
                ,NULL::TFloat                     AS PriceSP
                ,NULL::TFloat                     AS PaymentSP
+
+               ,NULL::TFloat                     AS MCSValueOld
+               ,NULL::TDateTime                  AS StartDateMCSAuto
+               ,NULL::TDateTime                  AS EndDateMCSAuto
+               ,NULL::Boolean                    AS isMCSAuto
+               ,NULL::Boolean                    AS isMCSNotRecalcOld
+
                ,NULL::Boolean                    AS isSP
                ,NULL::Boolean                    AS isErased
                ,NULL::Boolean                    AS isClose 
@@ -260,6 +270,12 @@ BEGIN
                  ELSE COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
                  
                END   ::TFloat  AS PaymentSP
+
+               , Object_Price_View.MCSValueOld
+               , Object_Price_View.StartDateMCSAuto
+               , Object_Price_View.EndDateMCSAuto
+               , Object_Price_View.isMCSAuto
+               , Object_Price_View.isMCSNotRecalcOld
 
                , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
                , Object_Goods_View.isErased                      AS isErased 
@@ -489,6 +505,12 @@ BEGIN
                  
                END   ::TFloat  AS PaymentSP
 
+               , Object_Price_View.MCSValueOld
+               , Object_Price_View.StartDateMCSAuto
+               , Object_Price_View.EndDateMCSAuto
+               , Object_Price_View.isMCSAuto
+               , Object_Price_View.isMCSNotRecalcOld
+
                , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
                , Object_Goods_View.isErased                AS isErased 
 
@@ -497,8 +519,8 @@ BEGIN
                , Object_Goods_View.isSecond
                , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
 
-               , Object_Price_View.isTop                AS isTop
-               , Object_Price_View.TopDateChange        AS TopDateChange
+               , Object_Price_View.isTop                   AS isTop
+               , Object_Price_View.TopDateChange           AS TopDateChange
 
                , Object_Price_View.PercentMarkup           AS PercentMarkup
                , Object_Price_View.PercentMarkupDateChange AS PercentMarkupDateChange
@@ -575,6 +597,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А. 
+ 09.06.17         *
  06.04.17         *
  12.01.17         *
  06.09.16         *

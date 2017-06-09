@@ -38,6 +38,11 @@ AS
       , COALESCE(Price_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup
       , Price_PercentMarkupDateChange.ValueData             AS PercentMarkupDateChange
 
+      , COALESCE(Price_MCSValueOld.ValueData,0)    ::TFloat AS MCSValueOld
+      , MCS_StartDateMCSAuto.ValueData                      AS StartDateMCSAuto
+      , MCS_EndDateMCSAuto.ValueData                        AS EndDateMCSAuto
+      , COALESCE(Price_MCSAuto.ValueData,False)          :: Boolean   AS isMCSAuto
+      , COALESCE(Price_MCSNotRecalcOld.ValueData,False)  :: Boolean   AS isMCSNotRecalcOld
     FROM Object AS Object_Price
         LEFT JOIN ObjectFloat       AS Price_Value
                                     ON Price_Value.ObjectId = Object_Price.Id
@@ -48,9 +53,21 @@ AS
         LEFT JOIN ObjectFloat       AS MCS_Value
                                     ON MCS_Value.ObjectId = Object_Price.Id
                                    AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+        LEFT JOIN ObjectFloat       AS Price_MCSValueOld
+                                    ON Price_MCSValueOld.ObjectId = Object_Price.Id
+                                   AND Price_MCSValueOld.DescId = zc_ObjectFloat_Price_MCSValueOld()
+
         LEFT JOIN ObjectDate        AS MCS_DateChange
                                     ON MCS_DateChange.ObjectId = Object_Price.Id
                                    AND MCS_DateChange.DescId = zc_ObjectDate_Price_MCSDateChange()
+
+        LEFT JOIN ObjectDate        AS MCS_StartDateMCSAuto
+                                    ON MCS_StartDateMCSAuto.ObjectId = Object_Price.Id
+                                   AND MCS_StartDateMCSAuto.DescId = zc_ObjectDate_Price_StartDateMCSAuto()
+        LEFT JOIN ObjectDate        AS MCS_EndDateMCSAuto
+                                    ON MCS_EndDateMCSAuto.ObjectId = Object_Price.Id
+                                   AND MCS_EndDateMCSAuto.DescId = zc_ObjectDate_Price_EndDateMCSAuto()
+
         LEFT JOIN ObjectLink        AS Price_Goods
                                     ON Price_Goods.ObjectId = Object_Price.Id
                                    AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
@@ -93,6 +110,13 @@ AS
         LEFT JOIN ObjectDate        AS Price_PercentMarkupDateChange
                                     ON Price_PercentMarkupDateChange.ObjectId = Object_Price.Id
                                    AND Price_PercentMarkupDateChange.DescId = zc_ObjectDate_Price_PercentMarkupDateChange()    
+
+        LEFT JOIN ObjectBoolean     AS Price_MCSAuto
+                                    ON Price_MCSAuto.ObjectId = Object_Price.Id
+                                   AND Price_MCSAuto.DescId = zc_ObjectBoolean_Price_MCSAuto()
+        LEFT JOIN ObjectBoolean     AS Price_MCSNotRecalcOld
+                                    ON Price_MCSNotRecalcOld.ObjectId = Object_Price.Id
+                                   AND Price_MCSNotRecalcOld.DescId = zc_ObjectBoolean_Price_MCSNotRecalcOld()
     WHERE 
         Object_Price.DescId = zc_Object_Price();
 
@@ -103,6 +127,7 @@ ALTER TABLE Object_Price_View  OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».  ¬ÓÓ·Í‡ÎÓ ¿.¿.
+ 09.06.17         *
  29.06.16         *
  29.08.15                                                       * + isClose, NotRecalc
  23.07.14                         *

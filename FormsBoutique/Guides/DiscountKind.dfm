@@ -22,7 +22,7 @@ inherited DiscountKindForm: TDiscountKindForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentHorz = taCenter

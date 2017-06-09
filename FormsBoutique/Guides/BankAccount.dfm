@@ -45,7 +45,7 @@ object BankAccountForm: TBankAccountForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
@@ -53,7 +53,7 @@ object BankAccountForm: TBankAccountForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 55
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088' '#1089#1095#1077#1090#1072
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -61,7 +61,7 @@ object BankAccountForm: TBankAccountForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 243
       end
-      object clJuridicalName: TcxGridDBColumn
+      object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentHorz = taCenter
@@ -69,7 +69,7 @@ object BankAccountForm: TBankAccountForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 100
       end
-      object clBankName: TcxGridDBColumn
+      object BankName: TcxGridDBColumn
         Caption = #1041#1072#1085#1082
         DataBinding.FieldName = 'BankName'
         HeaderAlignmentHorz = taCenter
@@ -77,7 +77,7 @@ object BankAccountForm: TBankAccountForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 100
       end
-      object clCurrencyName: TcxGridDBColumn
+      object CurrencyName: TcxGridDBColumn
         Caption = #1042#1072#1083#1102#1090#1072
         DataBinding.FieldName = 'CurrencyName'
         HeaderAlignmentHorz = taCenter
@@ -85,7 +85,7 @@ object BankAccountForm: TBankAccountForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 70
       end
-      object clErased: TcxGridDBColumn
+      object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

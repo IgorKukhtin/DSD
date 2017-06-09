@@ -1378,8 +1378,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TActionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TActionForm');
 //
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserProtocolForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TUserProtocolForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserProtocolForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUserProtocolForm');
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProcessForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TProcessForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProtocolForm'));
@@ -1398,8 +1398,8 @@ begin
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerForm');
 //
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescDataForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TMovementDescDataForm');
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescDataForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TMovementDescDataForm');
 //
 //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_PeriodDialogForm'));

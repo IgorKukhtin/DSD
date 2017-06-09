@@ -178,6 +178,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Price_FixDateChange() RETURNS Integer A
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Price(), 'zc_ObjectDate_Price_FixDateChange', 'Дата изменения признака "Фиксированная цена"' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Price_FixDateChange');
   
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Price_StartDateMCSAuto() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Price_StartDateMCSAuto'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Price(), 'zc_ObjectDate_Price_StartDateMCSAuto', 'Дата с которой действует выставленное фармацевтом НТЗ' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Price_StartDateMCSAuto');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Price_EndDateMCSAuto() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Price_EndDateMCSAuto'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Price(), 'zc_ObjectDate_Price_EndDateMCSAuto', 'Дата окончания действия выставленного фармацевтом НТЗ' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Price_EndDateMCSAuto');
+
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectDate_ReportSoldParams_PlanDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ReportSoldParams_PlanDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_ReportSoldParams(), 'zc_ObjectDate_ReportSoldParams_PlanDate', 'Месяц плана продаж' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ReportSoldParams_PlanDate');
@@ -229,6 +239,8 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 09.06.17         * zc_ObjectDate_Price_StartDateMCSAuto
+                    zc_ObjectDate_Price_EndDateMCSAuto
  14.04.17         * zc_ObjectDate_GoodsListIncome_Last
  04.04.17         * zc_ObjectDate_Goods_ReestrSP
  13.06.16         * add zc_ObjectDate_Unit_FarmacyCash

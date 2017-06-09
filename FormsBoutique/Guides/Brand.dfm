@@ -45,14 +45,14 @@ object BrandForm: TBrandForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -60,7 +60,7 @@ object BrandForm: TBrandForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 325
       end
-      object clCountryBrandName: TcxGridDBColumn
+      object CountryBrandName: TcxGridDBColumn
         Caption = #1057#1090#1088#1072#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
         DataBinding.FieldName = 'CountryBrandName'
         HeaderAlignmentHorz = taCenter
@@ -68,7 +68,7 @@ object BrandForm: TBrandForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 122
       end
-      object clErased: TcxGridDBColumn
+      object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

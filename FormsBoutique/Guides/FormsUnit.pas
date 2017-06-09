@@ -25,8 +25,8 @@ uses
 
 type
   TFormsForm = class(TAncestorEnumForm)
-    colName: TcxGridDBColumn;
-    colHelpFile: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    HelpFile: TcxGridDBColumn;
     spUpdate_Object_Form_HelpFile: TdsdStoredProc;
     actUpdate_Object_Form_HelpFile: TdsdUpdateDataSet;
     ShellExecuteAction1: TShellExecuteAction;

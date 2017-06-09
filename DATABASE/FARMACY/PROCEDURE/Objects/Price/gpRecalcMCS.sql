@@ -168,12 +168,14 @@ BEGIN
                                         inMCSPeriod    := inPeriod::TFloat,     --
                                         inMCSDay       := inDay::TFloat,        --
                                         inPercentMarkup:= Object_Price.PercentMarkup, -- % наценки
+                                        inDays         := 0    ::TFloat,        -- дней для периода
                                         inGoodsId      := tmp_ResultSet.GoodsId,-- Товар
                                         inUnitId       := inUnitId,             -- подразделение
                                         inMCSIsClose   := NULL::Boolean,        -- НТЗ закрыт
                                         inMCSNotRecalc := NULL::Boolean,        -- НТЗ не пересчитывается
                                         inFix          := Object_Price.Fix,     -- фиксированная цена
                                         inisTop        := Object_Price.isTop,   -- ТОП позиция
+                                        inisMCSAuto    := False,                -- НТЗ за период
                                         inSession      := inSession)
     FROM 
         tmp_ResultSet

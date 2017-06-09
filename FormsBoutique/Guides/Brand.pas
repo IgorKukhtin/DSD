@@ -50,9 +50,9 @@ type
     spErased: TdsdStoredProc;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
-    clErased: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    Erased: TcxGridDBColumn;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     DBViewAddOn: TdsdDBViewAddOn;
@@ -60,7 +60,7 @@ type
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    clCountryBrandName: TcxGridDBColumn;
+    CountryBrandName: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
   private
     { Private declarations }

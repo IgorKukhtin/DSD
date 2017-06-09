@@ -10,8 +10,6 @@ CREATE OR REPLACE FUNCTION gpSelect_UserProtocol(
 )
 RETURNS TABLE (OperDate TDateTime, ProtocolData TBlob, UserName TVarChar
              , MemberName TVarChar
-             , BranchCode Integer
-             , BranchName TVarChar
              , UnitCode Integer
              , UnitName TVarChar
              , PositionName TVarChar)
@@ -36,8 +34,6 @@ BEGIN
        , Object_User.ValueData     AS UserName
 
        , Object_Member.ValueData   AS MemberName
-       , Object_Branch.ObjectCode  AS BranchCode
-       , Object_Branch.ValueData   AS BranchName
        , Object_Unit.ObjectCode    AS UnitCode
        , Object_Unit.ValueData     AS UnitName
        , Object_Position.ValueData AS PositionName
@@ -52,10 +48,6 @@ BEGIN
         LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
         LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
-        LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
-                             ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
-                            AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-        LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
 
  WHERE UserProtocol.OperDate BETWEEN inStartDate AND inEndDate
    AND (UserProtocol.UserId = inUserId OR 0 = inUserId);

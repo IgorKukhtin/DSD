@@ -44,14 +44,14 @@ object BankForm: TBankForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 90
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -59,7 +59,7 @@ object BankForm: TBankForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 339
       end
-      object clMFO: TcxGridDBColumn
+      object MFO: TcxGridDBColumn
         Caption = #1052#1060#1054
         DataBinding.FieldName = 'MFO'
         HeaderAlignmentHorz = taCenter
@@ -67,7 +67,7 @@ object BankForm: TBankForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 100
       end
-      object clSWIFT: TcxGridDBColumn
+      object SWIFT: TcxGridDBColumn
         Caption = 'SWIFT '#1082#1086#1076
         DataBinding.FieldName = 'SWIFT'
         HeaderAlignmentHorz = taCenter
@@ -75,7 +75,7 @@ object BankForm: TBankForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 100
       end
-      object clIBAN: TcxGridDBColumn
+      object IBAN: TcxGridDBColumn
         Caption = 'IBAN '#1082#1086#1076' '#1089#1095#1077#1090#1072
         DataBinding.FieldName = 'IBAN'
         HeaderAlignmentHorz = taCenter
@@ -83,7 +83,7 @@ object BankForm: TBankForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 120
       end
-      object clJuridicalName: TcxGridDBColumn
+      object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentHorz = taCenter
@@ -91,7 +91,7 @@ object BankForm: TBankForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 165
       end
-      object clErased: TcxGridDBColumn
+      object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

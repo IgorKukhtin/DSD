@@ -45,14 +45,14 @@ object CompositionForm: TCompositionForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 90
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -60,7 +60,7 @@ object CompositionForm: TCompositionForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 339
       end
-      object dCompositionGroup: TcxGridDBColumn
+      object CompositionGroup: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1076#1083#1103' '#1089#1086#1089#1090#1072#1074#1072' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'CompositionGroupName'
         HeaderAlignmentHorz = taCenter
@@ -68,7 +68,7 @@ object CompositionForm: TCompositionForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 165
       end
-      object clErased: TcxGridDBColumn
+      object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
