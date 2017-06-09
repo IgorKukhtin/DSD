@@ -42,4 +42,4 @@ ALTER FUNCTION gpSelect_Object_ProfitLossDirection (TVarChar) OWNER TO postgres;
 
 */
 -- тест
--- SELECT * FROM gpSelect_Object_ProfitLossDirection('2')
+-- SELECT * FROM gpSelect_Object_ProfitLossDirection(True,'2')

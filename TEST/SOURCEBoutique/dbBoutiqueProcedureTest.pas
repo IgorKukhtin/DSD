@@ -113,6 +113,7 @@ type
     procedure CreatePartionMI;
     procedure CreatePosition;
     procedure CreatePriceList;
+    procedure CreateProfitLoss;
     procedure CreatePersonal;
     procedure CreateStatus;
     procedure CreateUnit;
@@ -419,6 +420,13 @@ procedure TdbObjectProcedureTest.CreatePriceList;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\PriceList\');
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\PriceListItem\');
+end;
+
+procedure TdbObjectProcedureTest.CreateProfitLoss;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\ProfitLoss\');
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\ProfitLossDirection\');
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\ProfitLossGroup\');
 end;
 
 procedure TdbObjectProcedureTest.CreateStatus;
