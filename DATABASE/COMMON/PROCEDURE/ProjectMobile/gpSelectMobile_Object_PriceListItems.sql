@@ -260,7 +260,7 @@ if inSession = '5' then inSession = '1000137'; end if;
                   WHERE Object_PriceListItem.DescId = zc_Object_PriceListItem();
 
            -- !!!ВРЕМЕННО!!!
-           ELSEIF 1=1   AND inSession = '1000137' and vbSession_save <> '5'
+           ELSEIF 1=0   AND inSession = '1000137' and vbSession_save <> '5'
            THEN
                 -- Результат
                 RETURN QUERY

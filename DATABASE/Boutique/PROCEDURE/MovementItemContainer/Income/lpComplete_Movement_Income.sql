@@ -3,10 +3,17 @@ DROP FUNCTION IF EXISTS lpComplete_Movement_Income (Integer, Integer);
 CREATE OR REPLACE FUNCTION lpComplete_Movement_Income(
     IN inMovementId        Integer  , -- ключ Документа
     IN inUserId            Integer    -- Пользователь
-)                              
+)
 RETURNS VOID
 AS
 $BODY$
+  DECLARE vbOperDate       TDateTime;
+  DECLARE vbPartnerId_From Integer;
+  DECLARE vbUnitId         Integer;
+
+  DECLARE vbCurrencyDocumentId Integer;
+  DECLARE vbCurrencyValue      TFloat;
+  DECLARE vbParValue           TFloat;
 BEGIN
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
@@ -16,23 +23,16 @@ BEGIN
      DELETE FROM _tmpItem;
 
 
-
-     -- Эти параметры нужны для расчета конечных сумм по Контрагенту и Сотруднику (заготовитель) и для формирования Аналитик в проводках
-     SELECT _tmp.PriceWithVAT, _tmp.VATPercent, _tmp.DiscountPercent, _tmp.ExtraChargesPercent, _tmp.ChangePrice
-          , _tmp.MovementDescId, _tmp.OperDate, _tmp.OperDatePartner, _tmp.JuridicalId_From, _tmp.isCorporate_From, _tmp.InfoMoneyId_CorporateFrom, _tmp.PartnerId_From, _tmp.MemberId_From, _tmp.CardFuelId_From, _tmp.TicketFuelId_From
-          , _tmp.InfoMoneyId_From
-          , _tmp.JuridicalId_To, _tmp.PartnerId_To, _tmp.MemberId_To, _tmp.FounderId_To, _tmp.InfoMoneyId_To, _tmp.PaidKindId_To, _tmp.ContractId_To, _tmp.ChangePercent_To, _tmp.isAccount_30000
-          , _tmp.UnitId, _tmp.CarId, _tmp.MemberDriverId, _tmp.BranchId_To, _tmp.BranchId_Car, _tmp.AccountDirectionId_To, _tmp.isPartionDate_Unit
-          , _tmp.MemberId_Packer, _tmp.PaidKindId, _tmp.ContractId, _tmp.JuridicalId_Basis_To, _tmp.BusinessId_To, _tmp.BusinessId_Route
-            INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbChangePrice
-               , vbMovementDescId, vbOperDate, vbOperDatePartner, vbJuridicalId_From, vbIsCorporate_From, vbInfoMoneyId_CorporateFrom, vbPartnerId_From, vbMemberId_From, vbCardFuelId_From, vbTicketFuelId_From
-               , vbInfoMoneyId_From
-               , vbJuridicalId_To, vbPartnerId_To, vbMemberId_To, vbFounderId_To, vbInfoMoneyId_To, vbPaidKindId_To, vbContractId_To, vbChangePercent_To, vbIsAccount_30000
-               , vbUnitId, vbCarId, vbMemberId_Driver, vbBranchId_To, vbBranchId_Car, vbAccountDirectionId_To, vbIsPartionDate_Unit
-               , vbMemberId_Packer, vbPaidKindId, vbContractId, vbJuridicalId_Basis_To, vbBusinessId_To, vbBusinessId_Route
-
-     FROM (SELECT Movement.DescId AS MovementDescId
-                , Movement.OperDate
+     -- Параметры из документа
+     SELECT _tmp.OperDate, _tmp.PartnerId_From, _tmp.UnitId
+          , _tmp.CurrencyDocumentId, _tmp.CurrencyValue, _tmp.ParValue
+            INTO vbOperDate
+               , vbPartnerId_From
+               , vbUnitId
+               , vbCurrencyDocumentId
+               , vbCurrencyValue
+               , vbParValue
+     FROM (SELECT Movement.OperDate
                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Partner()    THEN Object_From.Id ELSE 0 END, 0) AS PartnerId_From
                 , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN Object_To.Id ELSE 0 END, 0) AS UnitId
 
@@ -62,8 +62,8 @@ BEGIN
                                         ON MovementFloat_ParValue.MovementId = Movement.Id
                                        AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
 
-           WHERE Movement.Id = inMovementId
-             AND Movement.DescId IN (zc_Movement_Income(), zc_Movement_IncomeAsset())
+           WHERE Movement.Id       = inMovementId
+             AND Movement.DescId   = zc_Movement_Income()
              AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
           ) AS _tmp;
 
@@ -82,7 +82,7 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
  08.06.17                                        *
- 25.04.17         * 
+ 25.04.17         *
 */
 
 -- тест

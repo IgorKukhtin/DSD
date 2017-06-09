@@ -143,8 +143,8 @@ BEGIN
                   , Object_Juridical.ObjectCode
                   , Object_Juridical.ValueData
                   , ObjectString_Juridical_GUID.ValueData   AS GUID
-                  , COALESCE (tmpDebt.DebtSum, 0.0)::TFloat AS DebtSum
-                  , COALESCE (tmpDebt.OverSum, 0.0)::TFloat AS OverSum
+                  , 0 /*COALESCE (tmpDebt.DebtSum, 0.0)*/ :: TFloat AS DebtSum -- !!!временно убрали долги БН!!!
+                  , 0 /*COALESCE (tmpDebt.OverSum, 0.0)*/ :: TFloat AS OverSum -- !!!временно убрали долги БН!!!
                   , CASE WHEN COALESCE (tmpDebt.OverSum, 0.0) > 0.0 THEN COALESCE (tmpDebt.OverDays, 0)::Integer ELSE 0::Integer END AS OverDays
                   , tmpContract.ContractId
                   , ObjectLink_Juridical_JuridicalGroup.ChildObjectId AS JuridicalGroupId

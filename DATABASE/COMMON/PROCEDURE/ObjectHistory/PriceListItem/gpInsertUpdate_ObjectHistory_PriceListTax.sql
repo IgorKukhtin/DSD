@@ -46,14 +46,22 @@ BEGIN
 
 
    -- Изменение ВСЕХ цен
-   PERFORM  lpInsertUpdate_ObjectHistory_PriceListItem (ioId         := inId
+   PERFORM  lpInsertUpdate_ObjectHistory_PriceListItem (ioId         := 0
                                                      , inPriceListId := inPriceListToId
                                                      , inGoodsId     := ObjectLink_PriceListItem_Goods.ChildObjectId
                                                      , inOperDate    := inOperDate
                                                      , inValue       := CAST (ObjectHistoryFloat_PriceListItem_Value.ValueData
                                                                            + (ObjectHistoryFloat_PriceListItem_Value.ValueData * inTax / 100) AS Numeric (16,2)) ::TFloat
                                                      , inUserId      := vbUserId)
-
+   /*PERFORM  gpInsertUpdate_ObjectHistory_PriceListItemLast
+                                                      (ioId          := inId
+                                                     , inPriceListId := inPriceListToId
+                                                     , inGoodsId     := ObjectLink_PriceListItem_Goods.ChildObjectId
+                                                     , inOperDate    := inOperDate
+                                                     , inValue       := CAST (ObjectHistoryFloat_PriceListItem_Value.ValueData
+                                                                           + (ObjectHistoryFloat_PriceListItem_Value.ValueData * inTax / 100) AS Numeric (16,2)) ::TFloat
+                                                     , inIsLast      := TRUE
+                                                     , inSession     := inSession)*/
               FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
                   LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                                  ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
@@ -70,11 +78,19 @@ BEGIN
               WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
                 AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListFromId
                 AND (ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0 OR ObjectHistory_PriceListItem.StartDate <> zc_DateStart())
-;                
+             ;
+
+-- !!! ВРЕМЕННО !!!
+if inSession = '5' AND 1=1
+then
+    RAISE EXCEPTION 'Admin - Test = OK';
+    -- 'Повторите действие через 3 мин.'
+end if;
+
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-  
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

@@ -93,7 +93,9 @@ BEGIN
         FROM
             Movement_Promo_View AS Movement_Promo
             INNER JOIN tmpStatus ON Movement_Promo.StatusId = tmpStatus.StatusId
-            LEFT JOIN Movement_PromoPartner_View AS Movement_PromoPartner ON Movement_PromoPartner.ParentId = Movement_Promo.Id
+            LEFT JOIN Movement_PromoPartner_View AS Movement_PromoPartner
+                                                 ON Movement_PromoPartner.ParentId = Movement_Promo.Id
+                                                AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
             LEFT JOIN MovementItem AS MI_Child
                                    ON MI_Child.MovementId = Movement_Promo.Id
                                   AND MI_Child.ObjectId = zc_Enum_ConditionPromo_ContractChangePercentOff() -- без учета % скидки по договору

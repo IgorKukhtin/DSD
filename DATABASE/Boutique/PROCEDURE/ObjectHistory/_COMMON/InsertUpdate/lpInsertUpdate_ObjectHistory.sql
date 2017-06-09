@@ -19,7 +19,8 @@ DECLARE
   findId     Integer;
   tmpId      Integer;
 BEGIN
-
+   -- !!!обнулили!!!
+   ioId:= COALESCE (ioId, 0);
    -- !!!Округляем дату!!!
    inOperDate:= DATE_TRUNC ('SECOND', inOperDate);
 
@@ -28,17 +29,20 @@ BEGIN
        RAISE EXCEPTION 'Error. inObjectId = %', inObjectId;
    END IF;
 
+  -- если его нет - попробуем найти
   IF ioId = 0 THEN
-     -- Ищем ioId, если он равен 0
-     SELECT ObjectHistory.Id INTO ioId
-     FROM ObjectHistory
-     WHERE ObjectHistory.DescId = inDescId 
-       AND ObjectHistory.ObjectId = inObjectId
-       AND ObjectHistory.StartDate = inOperDate;
+
+     -- Ищем ioId - за тот же день, т.е. StartDate = inOperDate
+     ioId:= (SELECT ObjectHistory.Id FROM ObjectHistory WHERE ObjectHistory.DescId = inDescId AND ObjectHistory.ObjectId = inObjectId AND ObjectHistory.StartDate = inOperDate);
+
+     -- !!!обнулили!!!
+     ioId:= COALESCE (ioId, 0);
+
      -- Если нашли запись такую, то ее и будем менять
      IF COALESCE (ioId, 0) <> 0 THEN
         RETURN;
      END IF;
+
   ELSE
      -- Ищем любой Id, если он начинается с той же даты
      findId:= (SELECT ObjectHistory.Id

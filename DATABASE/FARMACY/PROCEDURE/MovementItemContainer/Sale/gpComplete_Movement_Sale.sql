@@ -19,6 +19,7 @@ $BODY$
   DECLARE vbInvNumberSP TVarChar;
   DECLARE vbOperDateSP TDateTime;
   DECLARE vbPartnerMedicalId Integer;
+  DECLARE vbMedicSPId Integer;
 BEGIN
     vbUserId:= inSession;
     vbGoodsName := '';
@@ -27,13 +28,15 @@ BEGIN
     SELECT Movement_Sale.OperDate,
            Movement_Sale.UnitId,
            Movement_Sale.InvNumberSP,
-           Movement_Sale.OperDateSP 
-           Movement_Sale.PartnerMedicalId
-    INTO vbOperDate,
-         vbUnitId,
-         vbInvNumberSP,
-         vbOperDateSP,
-         vbPartnerMedicalId
+           Movement_Sale.OperDateSP ,
+           Movement_Sale.PartnerMedicalId,
+           Movement_Sale.MedicSPId
+           INTO vbOperDate,
+                vbUnitId,
+                vbInvNumberSP,
+                vbOperDateSP,
+                vbPartnerMedicalId,
+                vbMedicSPId
     FROM Movement_Sale_View AS Movement_Sale
     WHERE Movement_Sale.Id = inMovementId;
 
@@ -48,6 +51,11 @@ BEGIN
        THEN 
            IF EXISTS(SELECT Movement.Id
                      FROM Movement 
+                      INNER JOIN MovementLinkObject AS MovementLinkObject_MedicSP
+                              ON MovementLinkObject_MedicSP.MovementId = Movement.Id
+                             AND MovementLinkObject_MedicSP.DescId = zc_MovementLinkObject_MedicSP()
+                             AND MovementLinkObject_MedicSP.ObjectId = vbMedicSPId
+
                       INNER JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
                               ON MovementLinkObject_PartnerMedical.MovementId = Movement.Id
                              AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()

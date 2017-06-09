@@ -246,6 +246,42 @@ BEGIN
                               , COALESCE (MIContainer.AccountId, 0)
                               , CASE WHEN inDescId = zc_Movement_Loss() THEN COALESCE (MIContainer.AnalyzerId, 0) ELSE 0 END
                               , MIContainer.ContainerId_Analyzer
+                      UNION ALL
+                       SELECT CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END AS ContainerId
+                            , CASE WHEN MIContainer.isActive = FALSE THEN MIContainer.WhereObjectId_analyzer ELSE MIContainer.ObjectExtId_Analyzer END AS UnitId
+                            , CASE WHEN MIContainer.isActive = TRUE  THEN MIContainer.WhereObjectId_analyzer ELSE MIContainer.ObjectExtId_Analyzer END AS UnitId_by
+                            , MIContainer.ObjectId_analyzer AS GoodsId
+                            , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ObjectIntId_Analyzer END AS GoodsKindId
+                            , COALESCE (MIContainer.AccountId, 0)  AS AccountId
+                            , 0 AS ArticleLossId
+                            , COALESCE (MIContainer.ContainerId_Analyzer, 0) AS ContainerId_Analyzer -- !!!для ОПиУ!!!
+
+                            , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Count() THEN -1 * MIContainer.Amount ELSE 0 END) AS AmountOut
+                            , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Summ()  THEN -1 * MIContainer.Amount ELSE 0 END) AS SummOut
+
+                            , SUM (CASE WHEN MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END) AS AmountIn
+                            , SUM (CASE WHEN MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Summ()  THEN MIContainer.Amount ELSE 0 END) AS SummIn
+
+                            , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND (inDescId = zc_Movement_Loss() OR MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()) THEN CASE WHEN inDescId IN(zc_Movement_Loss(), zc_Movement_Send()) THEN -1 ELSE 1 END * MIContainer.Amount ELSE 0 END) AS Summ_ProfitLoss
+
+                       FROM MovementItemContainer AS MIContainer
+                            INNER JOIN _tmpUnit ON _tmpUnit.UnitId    = MIContainer.WhereObjectId_analyzer
+                                               AND _tmpUnit.isActive  = MIContainer.isActive
+                       WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate  
+                         AND MIContainer.MovementDescId = zc_Movement_Send()
+                         AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()
+                         AND MIContainer.isActive = FALSE
+                         AND MIContainer.ParentId IS NULL
+                         AND inDescId = zc_Movement_Loss()
+                         AND COALESCE (MIContainer.AccountId, 0) NOT IN (12102, zc_Enum_Account_100301()) -- Прибыль текущего периода
+                       GROUP BY CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END
+                              , CASE WHEN MIContainer.isActive = FALSE THEN MIContainer.WhereObjectId_analyzer ELSE MIContainer.ObjectExtId_Analyzer END
+                              , CASE WHEN MIContainer.isActive = TRUE  THEN MIContainer.WhereObjectId_analyzer ELSE MIContainer.ObjectExtId_Analyzer END
+                              , MIContainer.ObjectId_analyzer
+                              , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ObjectIntId_Analyzer END
+                              , COALESCE (MIContainer.AccountId, 0)
+                              , CASE WHEN inDescId = zc_Movement_Loss() THEN COALESCE (MIContainer.AnalyzerId, 0) ELSE 0 END
+                              , MIContainer.ContainerId_Analyzer
                       ) AS tmpMI
                       INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI.GoodsId
 
