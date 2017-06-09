@@ -121,9 +121,9 @@ type
 //    procedure LoadPositionEducationFormTest;
 //    procedure LoadPriceListFormTest;
 //    procedure LoadPriceFormTest;
-//    procedure LoadProfitLossFormTest;
-//    procedure LoadProfitLossGroupFormTest;
-//    procedure LoadProfitLossDirectionFormTest;
+    procedure LoadProfitLossFormTest;
+    procedure LoadProfitLossGroupFormTest;
+    procedure LoadProfitLossDirectionFormTest;
 //    procedure LoadPromoFormTest;
 //    procedure LoadPromoUnitFormTest;
 //    procedure LoadReasonDifferencesFormTest;
@@ -999,37 +999,37 @@ end;
 //  TdsdFormStorageFactory.GetStorage.Load('TEmailEditForm');
 //end;
 //
-//procedure TLoadFormTest.LoadProfitLossGroupFormTest;
-//begin
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossGroupForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TProfitLossGroupForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossGroup_ObjectForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TProfitLossGroup_ObjectForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossGroupEditForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TProfitLossGroupEditForm');
-//end;
+procedure TLoadFormTest.LoadProfitLossGroupFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLossGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossGroup_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLossGroup_ObjectForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLossGroupEditForm');
+end;
 //
-//procedure TLoadFormTest.LoadProfitLossDirectionFormTest;
-//begin
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossDirectionForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TProfitLossDirectionForm');
+procedure TLoadFormTest.LoadProfitLossDirectionFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossDirectionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLossDirectionForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossDirection_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLossDirection_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossDirectionEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLossDirectionEditForm');
+end;
 //
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossDirection_ObjectForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TProfitLossDirection_ObjectForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossDirectionEditForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TProfitLossDirectionEditForm');
-//end;
-//
-//procedure TLoadFormTest.LoadProfitLossFormTest;
-//begin
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TProfitLossForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLoss_ObjectForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TProfitLoss_ObjectForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossEditForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TProfitLossEditForm');
-//end;
+procedure TLoadFormTest.LoadProfitLossFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLossForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLoss_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLoss_ObjectForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLossEditForm');
+end;
 //
 //procedure TLoadFormTest.LoadPromoFormTest;
 //begin
