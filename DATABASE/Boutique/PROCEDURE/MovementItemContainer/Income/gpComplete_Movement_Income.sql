@@ -11,15 +11,16 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-    -- проверка прав пользователя на вызов процедуры
-    vbUserId:= lpGetUserBySession (inSession);
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
  
-    -- собственно проводки
-    PERFORM lpComplete_Movement_Income(inMovementId, -- ключ Документа
-                                       vbUserId);    -- Пользователь  
+     -- создаются временные таблицы - для формирование данных по проводкам
+     PERFORM lpComplete_Movement_Income_CreateTemp();
 
-    UPDATE Movement SET StatusId = zc_Enum_Status_Complete() 
-    WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+     -- проводки
+     PERFORM lpComplete_Movement_Income (inMovementId -- Документ
+                                       , vbUserId     -- Пользователь  
+                                        );
 
 END;
 $BODY$
@@ -30,3 +31,6 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
  25.04.17         *
  */
+ 
+-- тест
+-- SELECT * FROM gpComplete_Movement_Income (inMovementId:= 149639, inSession:= zfCalc_UserAdmin())

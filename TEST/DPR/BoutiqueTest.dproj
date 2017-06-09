@@ -779,6 +779,46 @@
 				<Form>InfoMoneyEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\FormsUnit.pas">
+				<Form>FormsUnit</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\ProfitLoss.pas">
+				<Form>ProfitLoss</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\ProfitLoss_Object.pas">
+				<Form>ProfitLoss_Object</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\ProfitLossEdit.pas">
+				<Form>ProfitLossEdit</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\ProfitLossDirection.pas">
+				<Form>ProfitLossDirection</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\ProfitLossDirection_Object.pas">
+				<Form>ProfitLossDirection_Object</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\ProfitLossDirectionEdit.pas">
+				<Form>ProfitLossDirectionEdit</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\ProfitLossGroup.pas">
+				<Form>ProfitLossGroup</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\ProfitLossGroup_Object.pas">
+				<Form>ProfitLossGroup_Object</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\ProfitLossGroupEdit.pas">
+				<Form>ProfitLossGroupEdit</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Document\MovementItemProtocol.pas">
 				<Form>MovementItemProtocolForm</Form>
 				<DesignClass>TParentForm</DesignClass>

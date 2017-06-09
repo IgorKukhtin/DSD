@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement (
     IN inInvNumber TVarChar  , --
     IN inOperDate  TDateTime , --
     IN inParentId  Integer   , --
-    IN inUserId    Integer   , -- 
+    IN inUserId    Integer     -- 
   )
 RETURNS Integer
 AS
@@ -64,7 +64,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_Movement (Integer, Integer, TVarChar, TDateTime, Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

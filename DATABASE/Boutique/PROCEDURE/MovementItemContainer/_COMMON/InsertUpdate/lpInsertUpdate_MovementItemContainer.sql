@@ -1,32 +1,33 @@
 -- Function: lpInsertUpdate_MovementItemContainer
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemContainer (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime, Boolean);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemContainer (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime, Boolean);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemContainer (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime, Boolean);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemContainer (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime, Boolean);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemContainer (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime, Boolean);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemContainer (BigInt, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime, Boolean);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemContainer (BigInt, Integer, Integer, Integer, Integer, BigInt, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime, Boolean);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemContainer (BigInt, Integer, Integer, Integer, Integer, Integer, BigInt, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime, Boolean);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemContainer(
- INOUT ioId                      BigInt                ,
-    IN inDescId                  Integer               ,
-    IN inMovementDescId          Integer               ,
-    IN inMovementId              Integer               ,
-    IN inMovementItemId          Integer               ,
-    IN inParentId                BigInt                ,
-    IN inContainerId             Integer               ,
-    IN inAccountId               Integer               ,
-    IN inAnalyzerId              Integer               ,
-    IN inObjectId_Analyzer       Integer               ,
-    IN inWhereObjectId_Analyzer  Integer               ,
-    IN inContainerId_Analyzer    Integer               ,
-    IN inObjectIntId_Analyzer    Integer               ,
-    IN inObjectExtId_Analyzer    Integer               ,
-    IN inContainerIntId_Analyzer Integer               ,
-    IN inAmount                  TFloat                ,
-    IN inOperDate                TDateTime             ,
-    IN inIsActive                Boolean
+ INOUT ioId                      BigInt    ,
+    IN inDescId                  Integer   , -- Вид документа
+    IN inMovementDescId          Integer   , --
+    IN inMovementId              Integer   , --
+    IN inMovementItemId          Integer   , --
+    IN inContainerId             Integer   , --
+    IN inParentId                BigInt    , --
+
+    IN inAccountId               Integer   , -- Счет
+    IN inAnalyzerId              Integer   , -- Типы аналитик (проводки)
+    IN inObjectId_Analyzer       Integer   , -- MovementItem.ObjectId
+    IN inPartionId               Integer   , -- MovementItem.PartionId
+    IN inWhereObjectId_Analyzer  Integer   , -- Место учета
+
+    IN inAccountId_Analyzer      Integer   , -- Счет - корреспондент
+    
+    IN inContainerId_Analyzer    Integer   , -- Контейнер ОПиУ - статья ОПиУ
+    IN inContainerIntId_Analyzer Integer   , -- Контейнер - Корреспондент
+ 
+    IN inObjectIntId_Analyzer    Integer   , -- Аналитический справочник (Размер, УП статья или что-то особенное - т.е. все то что не вписалось в аналитики выше)
+    IN inObjectExtId_Analyzer    Integer   , --
+
+    IN inAmount                  TFloat    , --
+    IN inOperDate                TDateTime , --
+    IN inIsActive                Boolean     --
 )
 AS
 $BODY$
@@ -80,44 +81,55 @@ BEGIN
     END IF;
 
 
-     -- меняем параметр
-     IF inParentId = 0 THEN inParentId:= NULL; END IF;
-
      -- изменить значение остатка
      UPDATE Container SET Amount = Amount + COALESCE (inAmount, 0) WHERE Id = inContainerId;
+
      -- сохранили проводку
-     INSERT INTO MovementItemContainer (DescId, MovementDescId, MovementId, MovementItemId, ParentId, ContainerId
-                                      , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer, ContainerIntId_Analyzer
+     INSERT INTO MovementItemContainer (DescId, MovementDescId, MovementId
+                                      , MovementItemId, ContainerId, ParentId
+
+                                      , AccountId, AnalyzerId, ObjectId_Analyzer, PartionId, WhereObjectId_Analyzer
+
+                                      , AccountId_Analyzer
+
+                                      , ContainerId_Analyzer, ContainerIntId_Analyzer
+
+                                      , ObjectIntId_Analyzer, ObjectExtId_Analyzer
+
                                       , Amount, OperDate, IsActive)
-                                VALUES (inDescId, inMovementDescId, inMovementId, inMovementItemId, inParentId, inContainerId
-                                      , CASE WHEN inAccountId = 0 THEN NULL ELSE inAccountId END
-                                      , CASE WHEN inAnalyzerId = 0 THEN NULL ELSE inAnalyzerId END
-                                      , CASE WHEN inObjectId_Analyzer = 0 THEN NULL ELSE inObjectId_Analyzer END
-                                      , CASE WHEN inWhereObjectId_Analyzer = 0 THEN NULL ELSE inWhereObjectId_Analyzer END
-                                      , CASE WHEN inContainerId_Analyzer = 0 THEN NULL ELSE inContainerId_Analyzer END
-                                      , CASE WHEN inObjectIntId_Analyzer = 0 THEN NULL ELSE inObjectIntId_Analyzer END
-                                      , CASE WHEN inObjectExtId_Analyzer = 0 THEN NULL ELSE inObjectExtId_Analyzer END
+
+                                VALUES (inDescId, inMovementDescId, inMovementId
+                                      , inMovementItemId, inContainerId
+                                      , CASE WHEN inParentId                = 0 THEN NULL ELSE inParentId END
+
+                                      , CASE WHEN inAccountId               = 0 THEN NULL ELSE inAccountId END
+                                      , CASE WHEN inAnalyzerId              = 0 THEN NULL ELSE inAnalyzerId END
+                                      , CASE WHEN inObjectId_Analyzer       = 0 THEN NULL ELSE inObjectId_Analyzer END
+                                      , CASE WHEN inPartionId               = 0 THEN NULL ELSE inPartionId END
+                                      , CASE WHEN inWhereObjectId_Analyzer  = 0 THEN NULL ELSE inWhereObjectId_Analyzer END
+
+                                     , CASE WHEN inAccountId_Analyzer       = 0 THEN NULL ELSE inAccountId_Analyzer END
+
+                                      , CASE WHEN inContainerId_Analyzer    = 0 THEN NULL ELSE inContainerId_Analyzer END
+                                      , CASE WHEN inObjectIntId_Analyzer    = 0 THEN NULL ELSE inObjectIntId_Analyzer END
+
+                                      , CASE WHEN inObjectExtId_Analyzer    = 0 THEN NULL ELSE inObjectExtId_Analyzer END
                                       , CASE WHEN inContainerIntId_Analyzer = 0 THEN NULL ELSE inContainerIntId_Analyzer END
-                                      , COALESCE (inAmount, 0), inOperDate, inIsActive
-                                       ) RETURNING Id INTO ioId;
+
+                                      , COALESCE (inAmount, 0)
+                                      , inOperDate
+                                      , inIsActive
+                                       )
+                                RETURNING Id INTO ioId;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION lpInsertUpdate_MovementItemContainer (BigInt, Integer, Integer, Integer, Integer, BigInt, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime, Boolean) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 29.07.15                                        * add inObjectIntId_Analyzer, inObjectExtId_Analyzer
- 20.12.14                                        * add inAccountId, inObjectId_Analyzer, inWhereObjectId_Analyzer, inContainerId_Analyzer
- 06.12.14                                        * add inAnalyzerId
- 17.08.14                                        * add inMovementDescId
- 13.08.14                                        * del так так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
- 15.04.14                                        * add так так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
- 07.08.13                                        * add inParentId and inIsActive
- 25.07.13                                        * add inMovementItemId
- 11.07.13                                        * !!! finich !!!
+ 08.06.17                                        *
 */
 
 -- тест
