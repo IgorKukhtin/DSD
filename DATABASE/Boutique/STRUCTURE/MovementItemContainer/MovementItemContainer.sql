@@ -24,8 +24,8 @@ CREATE TABLE MovementItemContainer(
    ContainerId_analyzer    Integer     NULL, -- Контейнер ОПиУ - статья ОПиУ
    ContainerIntId_analyzer Integer     NULL, -- Контейнер - Корреспондент
 
-   ObjectIntId_analyzer    Integer     NULL, -- Аналитический справочник (Размер, УП статья или что-то особенное - т.е. все то что не вписалось в аналитику выше)
-   ObjectExtId_analyzer    Integer     NULL, -- Аналитический справочник (Подразделение - корреспондент, Подразделение ЗП, ФИО, Контрагент и т.д. - т.е. все то что не вписалось в анадитики выше)
+   ObjectIntId_analyzer    Integer     NULL, -- Аналитический справочник (Размер, УП статья или что-то особенное - т.е. все то что не вписалось в аналитики выше)
+   ObjectExtId_analyzer    Integer     NULL, -- Аналитический справочник (Подразделение - корреспондент, Подразделение ЗП, ФИО, Контрагент и т.д. - т.е. все то что не вписалось в аналитики выше)
    
    CONSTRAINT fk_MovementItemContainer_DescId            FOREIGN KEY (DescId)             REFERENCES MovementItemContainerDesc(Id),
    CONSTRAINT fk_MovementItemContainer_MovementDescId    FOREIGN KEY (MovementDescId)     REFERENCES MovementDesc(Id),

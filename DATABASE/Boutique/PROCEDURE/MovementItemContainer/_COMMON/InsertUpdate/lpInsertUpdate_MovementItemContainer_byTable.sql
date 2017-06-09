@@ -63,43 +63,66 @@ BEGIN
      WHERE Container.Id = _tmpMIContainer.ContainerId;
 
      -- сохранили проводки
-     INSERT INTO MovementItemContainer (DescId, MovementDescId, MovementId, MovementItemId, ParentId, ContainerId
-                                      , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, AccountId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer, ContainerIntId_Analyzer
-                                      , Amount, OperDate, IsActive)
+     INSERT INTO MovementItemContainer (DescId
+                                      , MovementDescId          -- Вид документа
+                                      , MovementId
+                                      , MovementItemId
+                                      , ContainerId
+                                      , ParentId
+
+                                      , AccountId               -- Счет
+                                      , AnalyzerId              -- Типы аналитик (проводки)
+                                      , ObjectId_Analyzer       -- MovementItem.ObjectId
+                                      , PartionId               -- MovementItem.PartionId
+                                      , WhereObjectId_Analyzer  -- Место учета
+                                      
+                                      , AccountId_Analyzer      -- Счет - корреспондент
+                                      
+                                      , ContainerId_Analyzer    -- Контейнер ОПиУ - статья ОПиУ
+                                      , ContainerIntId_Analyzer -- Контейнер - Корреспондент
+
+                                      , ObjectIntId_Analyzer    -- Аналитический справочник (Размер, УП статья или что-то особенное - т.е. все то что не вписалось в аналитики выше)
+                                      , ObjectExtId_Analyzer    -- Аналитический справочник (Подразделение - корреспондент, Подразделение ЗП, ФИО, Контрагент и т.д. - т.е. все то что не вписалось в аналитики выше)
+
+                                      , Amount
+                                      , OperDate
+                                      , IsActive
+                                       )
         SELECT DescId, MovementDescId, MovementId
-             , CASE WHEN MovementItemId = 0          THEN NULL ELSE MovementItemId END
-             , CASE WHEN ParentId = 0                THEN NULL ELSE ParentId END
+             , CASE WHEN MovementItemId          = 0 THEN NULL ELSE MovementItemId END
              , ContainerId
-             , CASE WHEN AccountId = 0               THEN NULL ELSE AccountId END
-             , CASE WHEN AnalyzerId = 0              THEN NULL ELSE AnalyzerId END
-             , CASE WHEN ObjectId_Analyzer = 0       THEN NULL ELSE ObjectId_Analyzer END
-             , CASE WHEN WhereObjectId_Analyzer = 0  THEN NULL ELSE WhereObjectId_Analyzer END
-             , CASE WHEN ContainerId_Analyzer = 0    THEN NULL ELSE ContainerId_Analyzer END
-             , CASE WHEN AccountId_Analyzer = 0      THEN NULL ELSE AccountId_Analyzer END
-             , CASE WHEN ObjectIntId_Analyzer = 0    THEN NULL ELSE ObjectIntId_Analyzer END
-             , CASE WHEN ObjectExtId_Analyzer = 0    THEN NULL ELSE ObjectExtId_Analyzer END
+             , CASE WHEN ParentId                = 0 THEN NULL ELSE ParentId END
+
+             , CASE WHEN AccountId               = 0 THEN NULL ELSE AccountId END
+             , CASE WHEN AnalyzerId              = 0 THEN NULL ELSE AnalyzerId END
+             , CASE WHEN ObjectId_Analyzer       = 0 THEN NULL ELSE ObjectId_Analyzer END
+             , CASE WHEN PartionId               = 0 THEN NULL ELSE PartionId END
+             , CASE WHEN WhereObjectId_Analyzer  = 0 THEN NULL ELSE WhereObjectId_Analyzer END
+
+             , CASE WHEN AccountId_Analyzer      = 0 THEN NULL ELSE AccountId_Analyzer END
+
+             , CASE WHEN ContainerId_Analyzer    = 0 THEN NULL ELSE ContainerId_Analyzer END
              , CASE WHEN ContainerIntId_Analyzer = 0 THEN NULL ELSE ContainerIntId_Analyzer END
+
+             , CASE WHEN ObjectIntId_Analyzer    = 0 THEN NULL ELSE ObjectIntId_Analyzer END
+             , CASE WHEN ObjectExtId_Analyzer    = 0 THEN NULL ELSE ObjectExtId_Analyzer END
+
              , COALESCE (Amount, 0)
              , OperDate
              , IsActive
+     
         FROM _tmpMIContainer_insert;
      
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_MovementItemContainer_byTable () OWNER TO postgres;
+ALTER FUNCTION lpInsertUpdate_MovementItemContainer_byTable() OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 29.07.15                                        * add ObjectIntId_Analyzer, ObjectExtId_Analyzer
- 20.12.14                                        * add AccountId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
- 06.12.14                                        * add AnalyzerId
- 17.08.14                                        * add MovementDescId
- 13.08.14                                        * del так так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
- 14.04.14                                        * add так так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
- 02.09.13                                        *
+ 08.06.17                                        *
 */
 
 -- тест
