@@ -18,7 +18,10 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                Color_ExpirationDate Integer,
                ConditionsKeepName TVarChar,
                AmountIncome TFloat, PriceSaleIncome TFloat,
-               MorionCode Integer, BarCode TVarChar
+               MorionCode Integer, BarCode TVarChar,
+               MCSValueOld TFloat,
+               StartDateMCSAuto TDateTime, EndDateMCSAuto TDateTime,
+               isMCSAuto Boolean, isMCSNotRecalcOld Boolean
                )
 AS
 $BODY$
@@ -118,7 +121,8 @@ BEGIN
 
 
     --залили снапшот
-    INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,Price,Remains,MCSValue,Reserved,MinExpirationDate)
+    INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,Price,Remains,MCSValue,Reserved,MinExpirationDate
+                                  , MCSValueOld, StartDateMCSAuto, EndDateMCSAuto, isMCSAuto, isMCSNotRecalcOld)
     SELECT
         inCashSessionId                             AS CashSession
        ,GoodsRemains.ObjectId                       AS GoodsId
@@ -128,6 +132,12 @@ BEGIN
        ,Object_Price_View.MCSValue                  AS MCSValue
        ,Reserve.Amount::TFloat                      AS Reserved
        ,GoodsRemains.MinExpirationDate              AS MinExpirationDate
+
+       , Object_Price_View.MCSValueOld
+       , Object_Price_View.StartDateMCSAuto
+       , Object_Price_View.EndDateMCSAuto
+       , Object_Price_View.isMCSAuto
+       , Object_Price_View.isMCSNotRecalcOld
 
     FROM
         GoodsRemains
@@ -402,7 +412,13 @@ BEGIN
             COALESCE(tmpIncome.AmountIncome,0)            :: TFloat   AS AmountIncome,
             CASE WHEN COALESCE(tmpIncome.AmountIncome,0) <> 0 THEN COALESCE(tmpIncome.SummSale,0) / COALESCE(tmpIncome.AmountIncome,0) ELSE 0 END  :: TFloat AS PriceSaleIncome,
             COALESCE (tmpGoodsMorion.MorionCode, 0)::Integer AS MorionCode,
-            COALESCE (tmpGoodsBarCode.BarCode, '')::TVarChar AS BarCode
+            COALESCE (tmpGoodsBarCode.BarCode, '')::TVarChar AS BarCode,
+
+            CashSessionSnapShot.MCSValueOld,
+            CashSessionSnapShot.StartDateMCSAuto,
+            CashSessionSnapShot.EndDateMCSAuto,
+            CashSessionSnapShot.isMCSAuto,
+            CashSessionSnapShot.isMCSNotRecalcOld
          FROM
             CashSessionSnapShot
             JOIN OBJECT AS Goods ON Goods.Id = CashSessionSnapShot.ObjectId
@@ -475,6 +491,7 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.
+ 09.06.17         * 
  24.05.17                                                                                      * MorionCode
  23.05.17                                                                                      * BarCode
  25.01.16         *

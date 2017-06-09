@@ -12,7 +12,7 @@ inherited MainCashForm: TMainCashForm
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
   ExplicitWidth = 759
-  ExplicitHeight = 454
+  ExplicitHeight = 453
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
@@ -665,6 +665,52 @@ inherited MainCashForm: TMainCashForm
           HeaderHint = #1064'/'#1050' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1103
           Options.Editing = False
           Width = 110
+        end
+        object MainMCSValueOld: TcxGridDBColumn
+          Caption = #1053#1058#1047' - '#1074#1077#1088#1085#1077#1090#1089#1103' '#1087#1086' '#1086#1082#1086#1085#1095#1072#1085#1080#1080' '#1087#1077#1088#1080#1086#1076#1072
+          DataBinding.FieldName = 'MCSValueOld'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1053#1058#1047' - '#1074#1077#1088#1085#1077#1090#1089#1103' '#1087#1086' '#1086#1082#1086#1085#1095#1072#1085#1080#1080' '#1087#1077#1088#1080#1086#1076#1072
+          Options.Editing = False
+          Width = 88
+        end
+        object MainStartDateMCSAuto: TcxGridDBColumn
+          Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1076#1077#1081#1089#1090#1074#1080#1103' '#1053#1058#1047
+          DataBinding.FieldName = 'StartDateMCSAuto'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
+        end
+        object MainEndDateMCSAuto: TcxGridDBColumn
+          Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095'. '#1076#1077#1081#1089#1090#1074#1080#1103' '#1053#1058#1047
+          DataBinding.FieldName = 'EndDateMCSAuto'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
+        end
+        object MainisMCSAuto: TcxGridDBColumn
+          Caption = #1056#1077#1078#1080#1084' - '#1053#1058#1047' '#1085#1072' '#1087#1077#1088#1080#1086#1076
+          DataBinding.FieldName = 'isMCSAuto'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1056#1077#1078#1080#1084' - '#1053#1058#1047' '#1074#1099#1089#1090#1072#1074#1080#1083' '#1092#1072#1088#1084#1072#1094#1077#1074#1090' '#1085#1072' '#1087#1077#1088#1080#1086#1076
+          Options.Editing = False
+          Width = 60
+        end
+        object MainisMCSNotRecalcOld: TcxGridDBColumn
+          Caption = ' '#9#1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072' - '#1074#1077#1088#1085#1077#1090#1089#1103' '#1087#1086' '#1086#1082#1086#1085#1095#1072#1085#1080#1080' '#1087#1077#1088#1080#1086#1076#1072
+          DataBinding.FieldName = 'isMCSNotRecalcOld'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = ' '#9#1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072' - '#1074#1077#1088#1085#1077#1090#1089#1103' '#1087#1086' '#1086#1082#1086#1085#1095#1072#1085#1080#1080' '#1087#1077#1088#1080#1086#1076#1072
+          Options.Editing = False
+          Width = 100
         end
       end
       object MainGridLevel: TcxGridLevel
@@ -1817,8 +1863,8 @@ inherited MainCashForm: TMainCashForm
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
-    Left = 632
-    Top = 88
+    Left = 640
+    Top = 120
   end
   object spSelectRemains: TdsdStoredProc
     StoredProcName = 'gpSelect_CashRemains_ver2'
@@ -2389,8 +2435,8 @@ inherited MainCashForm: TMainCashForm
     Enabled = False
     Interval = 25000
     OnTimer = TimerMoneyInCashTimer
-    Left = 376
-    Top = 64
+    Left = 360
+    Top = 104
   end
   object spUpdate_UnitForFarmacyCash: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_UnitForFarmacyCash'
@@ -2405,8 +2451,8 @@ inherited MainCashForm: TMainCashForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 448
-    Top = 80
+    Left = 424
+    Top = 120
   end
   object TimerBlinkBtn: TTimer
     Enabled = False

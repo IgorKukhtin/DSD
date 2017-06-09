@@ -33,12 +33,18 @@ ALTER TABLE CashSession
 /*-------------------------------------------------------------------------------*/
 CREATE TABLE CashSessionSnapShot
 (
-  CashSessionId   TVarChar    NOT NULL,
-  ObjectId        INTEGER     NOT NULL, -- Товар
-  Price           TFloat      NOT NULL, -- цена
-  Remains         TFloat      NOT NULL, -- Остаток
-  MCSValue        TFloat      NULL,     -- неснижаемый товарный остаток
-  Reserved        TFloat      NULL,     -- в резерве
+  CashSessionId     TVarChar    NOT NULL,
+  ObjectId          INTEGER     NOT NULL, -- Товар
+  Price             TFloat      NOT NULL, -- цена
+  Remains           TFloat      NOT NULL, -- Остаток
+  MCSValue          TFloat      NULL,     -- неснижаемый товарный остаток
+  Reserved          TFloat      NULL,     -- в резерве
+  MinExpirationDate TDateTime   NULL,     -- Срок годн. ост.
+  MCSValueOld       TFloat      NULL,     -- НТЗ - значение которое вернется по окончании периода
+  StartDateMCSAuto  TDateTime   NULL,     -- дата нач. периода
+  EndDateMCSAuto    TDateTime   NULL,     -- дата оконч. периода
+  isMCSAuto         Boolean     NULL,     -- Режим - НТЗ выставил фармацевт на период
+  isMCSNotRecalcOld Boolean     NULL,     -- Спецконтроль кода - значение которое вернется по окончании периода
   CONSTRAINT PK_CashSessionSnapShot PRIMARY KEY(CashSessionId,ObjectId)
 );
 
@@ -60,6 +66,7 @@ CREATE INDEX idx_CashSessionSnapShot_ObjectId ON CashSessionSnapShot(ObjectId);
  ИСТОРИЯ РАЗРАБОТКИ:
  ДАТА         АВТОР
  ----------------
-                 Климентьев К.И.   Кухтин И.В.   Воробкало А.А.
+                 Климентьев К.И.   Кухтин И.В.   Воробкало А.А.   Фелонюк И.В.
+09.06.2017                                                           *
 10.09.2015                                           *
 */

@@ -26,6 +26,7 @@ type
     bbInsertRecord: TdxBarButton;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
+    clisNotMobile: TcxGridDBColumn;
   private
     { Private declarations }
   public
