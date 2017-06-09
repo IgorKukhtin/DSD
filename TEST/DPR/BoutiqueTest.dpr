@@ -230,7 +230,6 @@ uses
   InfoMoney_Object in '..\..\FormsBoutique\Guides\InfoMoney_Object.pas' {InfoMoney_ObjectForm: TParentForm},
   InfoMoneyEdit in '..\..\FormsBoutique\Guides\InfoMoneyEdit.pas' {InfoMoneyEditForm: TParentForm},
   FormsUnit in'..\..\FormsBoutique\Guides\FormsUnit.pas' {FormsUnit: TParentForm},
-  MovementDescForms in'..\..\FormsBoutique\Guides\MovementDescForms.pas' {MovementDescForms: TParentForm},
   ProfitLoss in'..\..\FormsBoutique\Guides\ProfitLoss.pas' {ProfitLoss: TParentForm},
   ProfitLoss_Object in'..\..\FormsBoutique\Guides\ProfitLoss_Object.pas' {ProfitLoss_Object: TParentForm},
   ProfitLossEdit in'..\..\FormsBoutique\Guides\ProfitLossEdit.pas' {ProfitLossEdit: TParentForm},

@@ -783,10 +783,6 @@
 				<Form>FormsUnit</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Guides\MovementDescForms.pas">
-				<Form>MovementDescForms</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\ProfitLoss.pas">
 				<Form>ProfitLoss</Form>
 				<DesignClass>TParentForm</DesignClass>

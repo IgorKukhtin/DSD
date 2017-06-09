@@ -17,7 +17,6 @@ type
     actRole: TdsdOpenForm;
     miUser: TMenuItem;
     miRole: TMenuItem;
-    miImportExportLink: TMenuItem;
     N20: TMenuItem;
     N21: TMenuItem;
     N22: TMenuItem;
