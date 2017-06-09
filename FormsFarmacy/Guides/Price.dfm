@@ -1,22 +1,23 @@
 inherited PriceForm: TPriceForm
   Caption = #1055#1088#1072#1081#1089' - '#1083#1080#1089#1090' '#1090#1077#1082#1091#1097#1080#1081
-  ClientHeight = 386
-  ClientWidth = 846
+  ClientHeight = 413
+  ClientWidth = 1059
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 862
-  ExplicitHeight = 424
+  ExplicitWidth = 1075
+  ExplicitHeight = 451
   PixelsPerInch = 96
   TextHeight = 13
   object Panel: TPanel [0]
     Left = 0
     Top = 0
-    Width = 846
+    Width = 1059
     Height = 32
     Align = alTop
     TabOrder = 6
+    ExplicitWidth = 846
     object deOperDate: TcxDateEdit
-      Left = 800
-      Top = 5
+      Left = 998
+      Top = 19
       EditValue = 42460d
       Properties.DateOnError = deToday
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
@@ -34,32 +35,57 @@ inherited PriceForm: TPriceForm
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object cxLabel1: TcxLabel
-      Left = 760
-      Top = 6
+      Left = 958
+      Top = 20
       Caption = #1094#1077#1085#1072' '#1085#1072':'
       Visible = False
     end
     object cxLabel2: TcxLabel
-      Left = 389
+      Left = 382
       Top = 6
       Caption = #1058#1086#1074#1072#1088':'
+    end
+    object cbisMCSAuto: TcxCheckBox
+      Left = 839
+      Top = 5
+      Properties.ReadOnly = False
+      TabOrder = 4
+      Width = 22
+    end
+    object ceDays: TcxCurrencyEdit
+      Left = 982
+      Top = 5
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      TabOrder = 5
+      Width = 64
+    end
+    object cxLabel8: TcxLabel
+      Left = 868
+      Top = 6
+      Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1077#1088#1080#1086#1076#1072
+    end
+    object cxLabel4: TcxLabel
+      Left = 751
+      Top = 6
+      Caption = #1053#1058#1047' '#1076#1083#1103' '#1087#1077#1088#1080#1086#1076#1072
     end
   end
   inherited PageControl: TcxPageControl
     Top = 58
-    Width = 846
-    Height = 328
+    Width = 1059
+    Height = 355
     ExplicitTop = 58
     ExplicitWidth = 846
     ExplicitHeight = 328
-    ClientRectBottom = 328
-    ClientRectRight = 846
+    ClientRectBottom = 355
+    ClientRectRight = 1059
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 846
       ExplicitHeight = 328
       inherited cxGrid: TcxGrid
-        Width = 846
-        Height = 328
+        Width = 1059
+        Height = 355
         ExplicitWidth = 846
         ExplicitHeight = 328
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -501,6 +527,52 @@ inherited PriceForm: TPriceForm
             Options.Editing = False
             Width = 75
           end
+          object clMCSValueOld: TcxGridDBColumn
+            Caption = #1053#1058#1047' - '#1074#1077#1088#1085#1077#1090#1089#1103' '#1087#1086' '#1086#1082#1086#1085#1095#1072#1085#1080#1080' '#1087#1077#1088#1080#1086#1076#1072
+            DataBinding.FieldName = 'MCSValueOld'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1058#1047' - '#1074#1077#1088#1085#1077#1090#1089#1103' '#1087#1086' '#1086#1082#1086#1085#1095#1072#1085#1080#1080' '#1087#1077#1088#1080#1086#1076#1072
+            Options.Editing = False
+            Width = 88
+          end
+          object colStartDateMCSAuto: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1076#1077#1081#1089#1090#1074#1080#1103' '#1053#1058#1047
+            DataBinding.FieldName = 'StartDateMCSAuto'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colEndDateMCSAuto: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095'. '#1076#1077#1081#1089#1090#1074#1080#1103' '#1053#1058#1047
+            DataBinding.FieldName = 'EndDateMCSAuto'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object clisMCSAuto: TcxGridDBColumn
+            Caption = #1056#1077#1078#1080#1084' - '#1053#1058#1047' '#1085#1072' '#1087#1077#1088#1080#1086#1076
+            DataBinding.FieldName = 'isMCSAuto'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1077#1078#1080#1084' - '#1053#1058#1047' '#1074#1099#1089#1090#1072#1074#1080#1083' '#1092#1072#1088#1084#1072#1094#1077#1074#1090' '#1085#1072' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 60
+          end
+          object clisMCSNotRecalcOld: TcxGridDBColumn
+            Caption = ' '#9#1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072' - '#1074#1077#1088#1085#1077#1090#1089#1103' '#1087#1086' '#1086#1082#1086#1085#1095#1072#1085#1080#1080' '#1087#1077#1088#1080#1086#1076#1072
+            DataBinding.FieldName = 'isMCSNotRecalcOld'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = ' '#9#1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072' - '#1074#1077#1088#1085#1077#1090#1089#1103' '#1087#1086' '#1086#1082#1086#1085#1095#1072#1085#1080#1080' '#1087#1077#1088#1080#1086#1076#1072
+            Options.Editing = False
+            Width = 100
+          end
           object Color_ExpirationDate: TcxGridDBColumn
             DataBinding.FieldName = 'Color_ExpirationDate'
             Visible = False
@@ -513,7 +585,7 @@ inherited PriceForm: TPriceForm
     end
   end
   object ceUnit: TcxButtonEdit [2]
-    Left = 90
+    Left = 88
     Top = 5
     Properties.Buttons = <
       item
@@ -525,10 +597,10 @@ inherited PriceForm: TPriceForm
     Properties.UseNullString = True
     TabOrder = 5
     Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-    Width = 290
+    Width = 287
   end
   object ceGoods: TcxButtonEdit [3]
-    Left = 427
+    Left = 419
     Top = 5
     Properties.Buttons = <
       item
@@ -540,7 +612,7 @@ inherited PriceForm: TPriceForm
     Properties.UseNullString = True
     TabOrder = 7
     Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1090#1086#1074#1072#1088'>'
-    Width = 294
+    Width = 285
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1383,6 +1455,14 @@ inherited PriceForm: TPriceForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inDays'
+        Value = Null
+        Component = ceDays
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = MasterCDS
@@ -1432,6 +1512,22 @@ inherited PriceForm: TPriceForm
         ComponentItem = 'isTop'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMCSAuto'
+        Value = Null
+        Component = cbisMCSAuto
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisMCSAuto'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isMCSAuto'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
@@ -1496,6 +1592,38 @@ inherited PriceForm: TPriceForm
         Component = MasterCDS
         ComponentItem = 'PercentMarkupDateChange'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMCSValueOld'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MCSValueOld'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outStartDateMCSAuto'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'StartDateMCSAuto'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEndDateMCSAuto'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'EndDateMCSAuto'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisMCSNotRecalcOld'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isMCSNotRecalcOld'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
