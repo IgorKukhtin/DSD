@@ -2,13 +2,15 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement (Integer, Integer, TVarChar, TDateTime, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement (Integer, Integer, TVarChar, TDateTime, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement (Integer, Integer, TVarChar, TDateTime, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement (
  INOUT ioId        Integer   , --
     IN inDescId    Integer   , --
     IN inInvNumber TVarChar  , --
     IN inOperDate  TDateTime , --
-    IN inParentId  Integer     --
+    IN inParentId  Integer   , --
+    IN inUserId    Integer   , -- 
   )
 RETURNS Integer
 AS
@@ -66,7 +68,8 @@ ALTER FUNCTION lpInsertUpdate_Movement (Integer, Integer, TVarChar, TDateTime, I
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+ 09.06.17                                                       *  add inUserId
  05.06.17                                        * all
 */
 

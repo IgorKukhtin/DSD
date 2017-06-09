@@ -32,6 +32,7 @@ BEGIN
                                     , inInvNumber := inInvNumber
                                     , inOperDate  := inOperDate
                                     , inParentId  := NULL
+                                    , inUserId    := vbUserId
                                      );
 
      -- Комментарий
@@ -55,6 +56,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+ 09.06.17                                                       *  add inUserId in lpInsertUpdate_Movement
  08.06.17                                                       *  lpInsertUpdate_Movement c параметрами
  09.05.17         *
 */
