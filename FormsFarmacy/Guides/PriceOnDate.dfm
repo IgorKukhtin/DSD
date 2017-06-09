@@ -3,6 +3,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
   ClientHeight = 420
   ClientWidth = 1354
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -217
   ExplicitWidth = 1370
   ExplicitHeight = 458
   PixelsPerInch = 96
@@ -1182,6 +1183,13 @@ inherited PriceOnDateForm: TPriceOnDateForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inDays'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = MasterCDS
@@ -1229,6 +1237,13 @@ inherited PriceOnDateForm: TPriceOnDateForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isTop'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMCSAuto'
+        Value = 'False'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

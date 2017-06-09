@@ -7,6 +7,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TFloat, TFloat, TF
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Price(
  INOUT ioId                       Integer   ,    -- ключ объекта < Цена >
@@ -16,12 +17,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Price(
     IN inMCSPeriod                TFloat    ,    -- Количество дней для анализа НТЗ
     IN inMCSDay                   TFloat    ,    -- Страховой запас дней НТЗ
     IN inPercentMarkup            TFloat    ,    -- % наценки
+    IN inDays                     TFloat    ,    -- кол-во дней периода НТЗ
     IN inGoodsId                  Integer   ,    -- Товар
     IN inUnitId                   Integer   ,    -- подразделение
     IN inMCSIsClose               Boolean   ,    -- НТЗ закрыт
     IN inMCSNotRecalc             Boolean   ,    -- НТЗ не пересчитывается
     IN inFix                      Boolean   ,    -- Фиксированная цена
     IN inisTop                    Boolean   ,    -- ТОП позиция
+    IN inisMCSAuto                Boolean   ,    -- Режим - НТЗ выставил фармацевт на период
+   OUT outisMCSAuto               Boolean   ,    -- Режим - НТЗ выставил фармацевт на период
+
    OUT outDateChange              TDateTime ,    -- Дата изменения цены
    OUT outMCSDateChange           TDateTime ,    -- Дата изменения неснижаемого товарного запаса
    OUT outMCSIsCloseDateChange    TDateTime ,    -- Дата изменения признака "Убить код"
@@ -30,6 +35,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Price(
    OUT outStartDate               TDateTime ,    -- Дата
    OUT outTopDateChange           TDateTime ,    -- Дата изменения признака "ТОП позиция"
    OUT outPercentMarkupDateChange TDateTime ,    -- Дата изменения признака % наценки
+
+   OUT outMCSValueOld             TFloat    ,    -- НТЗ - значение которое вернется по окончании периода
+   OUT outStartDateMCSAuto        TDateTime ,    -- Дата нач. периода
+   OUT outEndDateMCSAuto          TDateTime ,    -- Дата оконч. периода
+   OUT outisMCSNotRecalcOld       Boolean   ,    -- Спецконтроль кода - значение которое вернется по окончании периода
+
     IN inSession                  TVarChar       -- сессия пользователя
 )
 AS
@@ -43,6 +54,7 @@ $BODY$
         vbFix Boolean;
         vbTop Boolean;
         vbPercentMarkup TFloat;
+        vbDate TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
@@ -62,6 +74,11 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Неснижаемый товарный запас <%> Не может быть меньше 0.', inMCSValue;
     END IF;
 
+    IF COALESCE (inisMCSAuto,False) = True AND COALESCE (inDays,0) = 0
+    THEN
+        RAISE EXCEPTION 'Ошибка.Кол-во дней для периода должно быть больше 0.';
+    END IF;    
+
     -- Если такая запись есть - достаем её ключу подр.-товар
     SELECT Id, 
            Price, 
@@ -72,7 +89,12 @@ BEGIN
            MCSNotRecalc,
            Fix,
            isTop,
-           PercentMarkup
+           PercentMarkup,
+           MCSValueOld,
+           StartDateMCSAuto,
+           EndDateMCSAuto,
+           isMCSNotRecalcOld,
+           isMCSAuto
       INTO ioId, 
            vbPrice, 
            vbMCSValue, 
@@ -82,7 +104,12 @@ BEGIN
            vbMCSNotRecalc,
            vbFix,
            vbTop,
-           vbPercentMarkup
+           vbPercentMarkup,
+           outMCSValueOld,
+           outStartDateMCSAuto,
+           outEndDateMCSAuto,
+           outisMCSNotRecalcOld,
+           outisMCSAuto
     FROM Object_Price_View
     WHERE GoodsId = inGoodsId
       AND UnitId = inUnitID;
@@ -106,6 +133,23 @@ BEGIN
        ;
     END IF;
 
+    -- поиск значения НТЗ до тек.даты
+    IF COALESCE (inisMCSAuto,False) = True
+    THEN
+        vbDate := CURRENT_DATE - INTERVAL '1 DAY';
+        SELECT ObjectHistoryFloat_MCSValue.ValueData
+      INTO outMCSValueOld
+        FROM ObjectHistory
+                LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSValue
+                                             ON ObjectHistoryFloat_MCSValue.ObjectHistoryId = ObjectHistory.Id
+                                            AND ObjectHistoryFloat_MCSValue.DescId = zc_ObjectHistoryFloat_Price_MCSValue()                
+        WHERE ObjectHistory.ObjectId = @ioId
+          AND ObjectHistory.DescId   = zc_ObjectHistory_Price()
+          AND vbDate >= ObjectHistory.StartDate AND CURRENT_DATE < ObjectHistory.EndDate
+       ;
+    END IF;
+
+   
     -- проверили корректность записи по дате
     IF ioStartDate > zc_DateStart()
     THEN
@@ -154,13 +198,43 @@ BEGIN
         outDateChange := CURRENT_DATE;
         PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_DateChange(), ioId, outDateChange);
     END IF;
+
     -- сохранили св-во < Неснижаемый товарный запас >
-    IF (inMCSValue is not null) AND (inMCSValue <> COALESCE(vbMCSValue,0))
+    IF COALESCE (inisMCSAuto,False) = False                 
     THEN
-        PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Price_MCSValue(), ioId, inMCSValue);
-        -- сохранили св-во < Дата изменения Неснижаемого товарного запаса>
-        outMCSDateChange := CURRENT_DATE;
-        PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSDateChange(), ioId, outMCSDateChange);
+        IF (inMCSValue is not null) AND (inMCSValue <> COALESCE(vbMCSValue,0))
+        THEN
+            PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Price_MCSValue(), ioId, inMCSValue);
+            -- сохранили св-во < Дата изменения Неснижаемого товарного запаса>
+            outMCSDateChange := CURRENT_DATE;
+            PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSDateChange(), ioId, outMCSDateChange);
+        END IF;
+    ELSE
+        IF (inMCSValue is not null) --AND (inMCSValue <> COALESCE(vbMCSValue,0))
+        THEN
+            -- сохранили свойство <НТЗ для периода>
+            PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSAuto(), ioId, inisMCSAuto);
+            outisMCSAuto := inisMCSAuto;
+
+            -- сохраняем старое значение НТЗ
+            PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Price_MCSValueOld(), ioId, outMCSValueOld);
+
+            ---
+            PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Price_MCSValue(), ioId, inMCSValue);
+            -- сохранили св-во < Дата изменения Неснижаемого товарного запаса>
+            outMCSDateChange := CURRENT_DATE;
+            PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSDateChange(), ioId, outMCSDateChange);
+
+            --
+            outStartDateMCSAuto := CURRENT_DATE;
+            PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_StartDateMCSAuto(), ioId, outStartDateMCSAuto);
+            --
+            outEndDateMCSAuto := outStartDateMCSAuto + (inDays || ' DAY') :: INTERVAL; 
+            PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_EndDateMCSAuto(), ioId, outEndDateMCSAuto);
+            --
+            outisMCSNotRecalcOld := vbMCSNotRecalc;
+            PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSNotRecalcOld(), ioId, outisMCSNotRecalcOld);
+        END IF;
     END IF;
 
     -- сохранили св-во < % наценки >
@@ -208,6 +282,7 @@ BEGIN
         PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSNotRecalcDateChange(), ioId, outMCSNotRecalcDateChange);
     END IF;
     
+
     -- сохранили протокол
     PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 END;
@@ -219,6 +294,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 09.06.17         *
  04.07.16         *
  22.12.15                                                         *
  29.08.15                                                         *
