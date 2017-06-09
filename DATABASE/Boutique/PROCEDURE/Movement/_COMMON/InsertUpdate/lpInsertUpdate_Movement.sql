@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement (
     IN inInvNumber TVarChar  , --
     IN inOperDate  TDateTime , --
     IN inParentId  Integer   , --
-    IN inUserId    Integer   , -- 
+    IN inUserId    Integer     -- 
   )
 RETURNS Integer
 AS
