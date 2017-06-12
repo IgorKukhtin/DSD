@@ -10,17 +10,17 @@ inherited UserProtocolForm: TUserProtocolForm
   inherited PageControl: TcxPageControl
     Width = 937
     Height = 262
-    ExplicitWidth = 782
+    ExplicitWidth = 937
     ExplicitHeight = 262
     ClientRectBottom = 262
     ClientRectRight = 937
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 782
+      ExplicitWidth = 937
       ExplicitHeight = 262
       inherited cxGrid: TcxGrid
         Width = 937
         Height = 262
-        ExplicitWidth = 782
+        ExplicitWidth = 937
         ExplicitHeight = 262
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.CellAutoHeight = True
@@ -29,21 +29,21 @@ inherited UserProtocolForm: TUserProtocolForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colDate: TcxGridDBColumn
+          object Date: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 54
           end
-          object colUserName: TcxGridDBColumn
+          object UserName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
             DataBinding.FieldName = 'UserName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 99
           end
-          object colProtocolData: TcxGridDBColumn
+          object ProtocolData: TcxGridDBColumn
             Caption = #1044#1072#1085#1085#1099#1077
             DataBinding.FieldName = 'ProtocolData'
             PropertiesClassName = 'TcxMemoProperties'
@@ -52,7 +52,7 @@ inherited UserProtocolForm: TUserProtocolForm
             Options.Editing = False
             Width = 505
           end
-          object clMemberName: TcxGridDBColumn
+          object MemberName: TcxGridDBColumn
             Caption = #1060#1048#1054
             DataBinding.FieldName = 'MemberName'
             HeaderAlignmentHorz = taCenter
@@ -91,7 +91,7 @@ inherited UserProtocolForm: TUserProtocolForm
   end
   inherited Panel: TPanel
     Width = 937
-    ExplicitWidth = 782
+    ExplicitWidth = 937
     inherited deStart: TcxDateEdit
       EditValue = 42736d
     end

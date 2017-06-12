@@ -25,7 +25,7 @@ uses
 
 type
   TObjectDescForm = class(TAncestorEnumForm)
-    colName: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
   private
     { Private declarations }
   public

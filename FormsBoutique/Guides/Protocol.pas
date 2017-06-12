@@ -13,13 +13,23 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxButtonEdit, dsdGuides, cxMemo, dxSkinsCore, dxSkinsDefaultPainters,
   dxSkinscxPCPainter, cxPCdxBarPopupMenu, dxSkinsdxBarPainter, cxPC, Vcl.Menus,
-  dsdXMLTransform, cxSplitter;
+  dsdXMLTransform, cxSplitter, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TProtocolForm = class(TAncestorReportForm)
-    colDate: TcxGridDBColumn;
-    colUserName: TcxGridDBColumn;
-    colObjectName: TcxGridDBColumn;
+    Date: TcxGridDBColumn;
+    UserName: TcxGridDBColumn;
+    ObjectName: TcxGridDBColumn;
     edUser: TcxButtonEdit;
     edObjectDesc: TcxButtonEdit;
     edObject: TcxButtonEdit;
@@ -29,8 +39,8 @@ type
     ObjectDescGuides: TdsdGuides;
     ObjectGuides: TdsdGuides;
     cxLabel5: TcxLabel;
-    colObjectTypeName: TcxGridDBColumn;
-    colInsert: TcxGridDBColumn;
+    ObjectTypeName: TcxGridDBColumn;
+    Insert: TcxGridDBColumn;
     dsdXMLTransform: TdsdXMLTransform;
     ProtocolDataCDS: TClientDataSet;
     ProtocolDataDS: TDataSource;

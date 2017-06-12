@@ -51,7 +51,7 @@ object GoodsItemForm: TGoodsItemForm
         HeaderAlignmentVert = vaCenter
         Width = 90
       end
-      object clGoodsName: TcxGridDBColumn
+      object GoodsName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter

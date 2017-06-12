@@ -27,9 +27,9 @@ type
   TRoleForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
-    clErased: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    Erased: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -64,8 +64,8 @@ type
     Panel1: TPanel;
     UserGrid: TcxGrid;
     UserView: TcxGridDBTableView;
-    colCodeUser: TcxGridDBColumn;
-    colNameUser: TcxGridDBColumn;
+    CodeUser: TcxGridDBColumn;
+    NameUser: TcxGridDBColumn;
     UserLevel: TcxGridLevel;
     ActionDS: TDataSource;
     ActionCDS: TClientDataSet;
@@ -94,7 +94,7 @@ type
     ProcessChoiceForm: TOpenChoiceForm;
     ProcessUpdateDataSet: TdsdUpdateDataSet;
     spInsertUpdateRoleProcess: TdsdStoredProc;
-    clProcess_EnumName: TcxGridDBColumn;
+    Process_EnumName: TcxGridDBColumn;
     ProcessAccessViewAddOn: TdsdDBViewAddOn;
     ProcessAccessCDS: TClientDataSet;
     ProcessAccessDS: TDataSource;
@@ -109,7 +109,7 @@ type
     ProcessAccessUpdateDataSet: TdsdUpdateDataSet;
     actInsertMask: TdsdInsertUpdateAction;
     bbInsertMask: TdxBarButton;
-    colisErased: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     actProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpen: TdxBarButton;
     actProtocolActionForm: TdsdOpenForm;

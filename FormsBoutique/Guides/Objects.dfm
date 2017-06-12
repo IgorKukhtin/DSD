@@ -16,19 +16,19 @@ inherited ObjectForm: TObjectForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             Options.Editing = False
             Width = 78
           end
-          object colName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             Options.Editing = False
             Width = 344
           end
-          object colDesc: TcxGridDBColumn
+          object Desc: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
             DataBinding.FieldName = 'DescName'
             Options.Editing = False

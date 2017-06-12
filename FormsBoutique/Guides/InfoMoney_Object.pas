@@ -27,8 +27,8 @@ type
   TInfoMoney_ObjectForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     MasterCDS: TClientDataSet;
@@ -45,10 +45,10 @@ type
     spSelect: TdsdStoredProc;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     DBViewAddOn: TdsdDBViewAddOn;
-    clInfoMoneyGroup: TcxGridDBColumn;
-    clInfoMoneyDestination: TcxGridDBColumn;
+    InfoMoneyGroup: TcxGridDBColumn;
+    InfoMoneyDestination: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clErased: TcxGridDBColumn;
+    Erased: TcxGridDBColumn;
   private
     { Private declarations }
   public

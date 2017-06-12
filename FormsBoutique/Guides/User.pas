@@ -27,9 +27,9 @@ type
   TUserForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
-    clErased: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    Erased: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     MasterCDS: TClientDataSet;
@@ -56,7 +56,7 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     spErased: TdsdStoredProc;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    clMemberName: TcxGridDBColumn;
+    MemberName: TcxGridDBColumn;
     RoleAddOn: TdsdDBViewAddOn;
     spUserRole: TdsdStoredProc;
     spInsertUpdateUserRole: TdsdStoredProc;

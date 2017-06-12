@@ -42,7 +42,7 @@ object UserForm: TUserForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
@@ -50,7 +50,7 @@ object UserForm: TUserForm
         Options.Editing = False
         Width = 55
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1051#1086#1075#1080#1085
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -58,7 +58,7 @@ object UserForm: TUserForm
         Options.Editing = False
         Width = 87
       end
-      object clMemberName: TcxGridDBColumn
+      object MemberName: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'MemberName'
         HeaderAlignmentHorz = taCenter
@@ -97,7 +97,7 @@ object UserForm: TUserForm
         Options.Editing = False
         Width = 47
       end
-      object clErased: TcxGridDBColumn
+      object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
