@@ -33,7 +33,7 @@ BEGIN
                                     , inInvNumber := inInvNumber
                                     , inOperDate  := inOperDate
                                     , inParentId  := NULL
-                                    , inUserId    := vbUserId
+                                    , inUserId    := inUserId
                                      );
 
      -- сохранили связь с <От кого (в документе)>
