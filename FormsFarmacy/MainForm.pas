@@ -361,6 +361,8 @@ type
     N139: TMenuItem;
     actMemberIncomeCheck: TdsdOpenForm;
     N140: TMenuItem;
+    dsdGoodsBarCodeLoad: TdsdOpenForm;
+    N141: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
