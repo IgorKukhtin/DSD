@@ -38,7 +38,7 @@ BEGIN
                                     , inInvNumber := inInvNumber
                                     , inOperDate  := inOperDate
                                     , inParentId  := NULL
-                                    , inUserId    := vbUserId
+                                    , inUserId    := inUserId
                                      );
 
 

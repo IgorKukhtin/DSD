@@ -3669,7 +3669,7 @@ begin
         Add('    join Kassa on Kassa.Id = DiscountKlientAccountMoney.KassaID');
         Add('    join KassaProperty  on KassaProperty.KassaID = Kassa.ID');
         Add('WHERE DiscountMovement.descId = 1  AND DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-        Add(' and BillItemsIncome.Id_Postgres is not null '); // Тестовая строка - удалить в загрузке
+//        Add(' and BillItemsIncome.Id_Postgres is not null '); // Тестовая строка - удалить в загрузке
         Add('ORDER BY ObjectId ');
         Open;
 

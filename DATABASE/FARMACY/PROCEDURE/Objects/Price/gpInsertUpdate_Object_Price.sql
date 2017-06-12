@@ -21,7 +21,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Price(
     IN inGoodsId                  Integer   ,    -- Товар
     IN inUnitId                   Integer   ,    -- подразделение
     IN inMCSIsClose               Boolean   ,    -- НТЗ закрыт
-    IN inMCSNotRecalc             Boolean   ,    -- НТЗ не пересчитывается
+ INOUT ioMCSNotRecalc             Boolean   ,    -- НТЗ не пересчитывается
     IN inFix                      Boolean   ,    -- Фиксированная цена
     IN inisTop                    Boolean   ,    -- ТОП позиция
     IN inisMCSAuto                Boolean   ,    -- Режим - НТЗ выставил фармацевт на период
@@ -315,7 +315,7 @@ BEGIN
             PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSDateChange(), ioId, outMCSDateChange);
         END IF;
     ELSE
-        IF (inMCSValue is not null) --AND (inMCSValue <> COALESCE(vbMCSValue,0))
+        IF (inMCSValue is not null) AND (inMCSValue <> COALESCE(vbMCSValue,0))
         THEN
             -- сохранили свойство <НТЗ для периода>
             PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSAuto(), ioId, inisMCSAuto);
@@ -339,6 +339,9 @@ BEGIN
             --
             outisMCSNotRecalcOld := vbMCSNotRecalc;
             PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSNotRecalcOld(), ioId, outisMCSNotRecalcOld);
+            --
+            ioMCSNotRecalc := True;
+--            PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSNotRecalc(), ioId, True);
         END IF;
     END IF;
 
@@ -380,9 +383,9 @@ BEGIN
         PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSIsCloseDateChange(), ioId, outMCSIsCloseDateChange);
     END IF;
     
-    IF (inMCSNotRecalc is not null) AND (COALESCE(vbMCSNotRecalc,False) <> inMCSNotRecalc)
+    IF (ioMCSNotRecalc is not null) AND (COALESCE(vbMCSNotRecalc,False) <> ioMCSNotRecalc)
     THEN
-        PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSNotRecalc(), ioId, inMCSNotRecalc);
+        PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSNotRecalc(), ioId, ioMCSNotRecalc);
         outMCSNotRecalcDateChange := CURRENT_DATE;
         PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSNotRecalcDateChange(), ioId, outMCSNotRecalcDateChange);
     END IF;

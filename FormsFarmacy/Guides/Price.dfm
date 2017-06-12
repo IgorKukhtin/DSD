@@ -14,7 +14,6 @@ inherited PriceForm: TPriceForm
     Height = 32
     Align = alTop
     TabOrder = 6
-    ExplicitWidth = 846
     object deOperDate: TcxDateEdit
       Left = 998
       Top = 19
@@ -76,18 +75,18 @@ inherited PriceForm: TPriceForm
     Width = 1059
     Height = 355
     ExplicitTop = 58
-    ExplicitWidth = 846
-    ExplicitHeight = 328
+    ExplicitWidth = 1059
+    ExplicitHeight = 355
     ClientRectBottom = 355
     ClientRectRight = 1059
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 846
-      ExplicitHeight = 328
+      ExplicitWidth = 1059
+      ExplicitHeight = 355
       inherited cxGrid: TcxGrid
         Width = 1059
         Height = 355
-        ExplicitWidth = 846
-        ExplicitHeight = 328
+        ExplicitWidth = 1059
+        ExplicitHeight = 355
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1488,12 +1487,12 @@ inherited PriceForm: TPriceForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMCSNotRecalc'
+        Name = 'ioMCSNotRecalc'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MCSNotRecalc'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

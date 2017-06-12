@@ -172,7 +172,7 @@ BEGIN
                                         inGoodsId      := tmp_ResultSet.GoodsId,-- Товар
                                         inUnitId       := inUnitId,             -- подразделение
                                         inMCSIsClose   := NULL::Boolean,        -- НТЗ закрыт
-                                        inMCSNotRecalc := NULL::Boolean,        -- НТЗ не пересчитывается
+                                        ioMCSNotRecalc := NULL::Boolean,        -- НТЗ не пересчитывается
                                         inFix          := Object_Price.Fix,     -- фиксированная цена
                                         inisTop        := Object_Price.isTop,   -- ТОП позиция
                                         inisMCSAuto    := False,                -- НТЗ за период

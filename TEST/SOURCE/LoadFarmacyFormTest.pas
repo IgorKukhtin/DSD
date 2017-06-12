@@ -481,7 +481,9 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TColorForm'));
   TdsdFormStorageFactory.GetStorage.Load('TColorForm');
-
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsBarCodeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsBarCodeForm');
 end;
 
 procedure TLoadFormTest.LoadLossDebtFormTest;

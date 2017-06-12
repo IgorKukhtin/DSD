@@ -36,7 +36,7 @@ BEGIN
                                     , inInvNumber := inInvNumber
                                     , inOperDate  := inOperDate
                                     , inParentId  := NULL
-                                    , inUserId    := vbUserId
+                                    , inUserId    := inUserId
                                      );
 
      -- сохранили свойство <Курс для перевода в валюту баланса>

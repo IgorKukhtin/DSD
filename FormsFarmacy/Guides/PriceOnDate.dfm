@@ -3,7 +3,6 @@ inherited PriceOnDateForm: TPriceOnDateForm
   ClientHeight = 420
   ClientWidth = 1354
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -217
   ExplicitWidth = 1370
   ExplicitHeight = 458
   PixelsPerInch = 96
@@ -1215,12 +1214,12 @@ inherited PriceOnDateForm: TPriceOnDateForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMCSNotRecalc'
+        Name = 'ioMCSNotRecalc'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MCSNotRecalc'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
