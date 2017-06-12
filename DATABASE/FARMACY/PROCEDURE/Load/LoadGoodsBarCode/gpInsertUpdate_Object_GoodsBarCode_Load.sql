@@ -225,9 +225,7 @@ BEGIN
                        );
            ELSE
                 UPDATE LoadGoodsBarCodeItem
-                SET LoadGoodsBarCodeId = vbId
-                  , GoodsJuridicalId   = COALESCE (vbGoodsJuridicalId, 0)::Integer 
-                  , JuridicalId        = vbJuridicalId                            
+                SET GoodsJuridicalId   = COALESCE (vbGoodsJuridicalId, 0)::Integer 
                   , UserId             = vbUserId                                 
                   , OperDate           = CURRENT_TIMESTAMP                        
                   , GoodsCode          = inGoodsCode                              
