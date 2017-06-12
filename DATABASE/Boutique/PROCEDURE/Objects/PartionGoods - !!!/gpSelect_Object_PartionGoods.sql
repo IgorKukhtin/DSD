@@ -79,7 +79,7 @@ BEGIN
        FROM Object_PartionGoods
 
            LEFT JOIN  Object AS Object_Partner on Object_Partner.Id = Object_PartionGoods.PartnerId
-           LEFT JOIN  Object AS Object_Unit on Object_Unit.Id = Object_PartionGoods.PartnerId
+           LEFT JOIN  Object AS Object_Unit on Object_Unit.Id = Object_PartionGoods.UnitId
            LEFT JOIN  Object AS Object_Goods on Object_Goods.Id = Object_PartionGoods.GoodsId
            LEFT JOIN  ObjectString AS Object_GroupNameFull
                                    ON Object_GroupNameFull.ObjectId = Object_Goods.Id

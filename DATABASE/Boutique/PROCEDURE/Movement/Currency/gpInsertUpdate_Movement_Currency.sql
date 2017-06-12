@@ -35,9 +35,9 @@ BEGIN
      END IF;
 
      -- проверка
-     IF inCurrencyFromId <> zc_Enum_Currency_Basis()
+     IF inCurrencyFromId <> zc_Currency_Basis()
      THEN
-        RAISE EXCEPTION 'Ошибка.<Валюта (значение)> должно соответствовать <%>.', lfGet_Object_ValueData (zc_Enum_Currency_Basis());
+        RAISE EXCEPTION 'Ошибка.<Валюта (значение)> должно соответствовать <%>.', lfGet_Object_ValueData (zc_Currency_Basis());
      END IF;
 
      IF COALESCE (ioId, 0) = 0 THEN

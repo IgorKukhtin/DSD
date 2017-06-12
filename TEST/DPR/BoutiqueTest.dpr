@@ -243,7 +243,8 @@ uses
   MovementItemProtocol in '..\..\FormsBoutique\Document\MovementItemProtocol.pas' {MovementItemProtocolForm: TParentForm},
   MovementProtocol in '..\..\FormsBoutique\Document\MovementProtocol.pas' {MovementProtocolForm: TParentForm},
   Report_ProfitLoss in '..\..\FormsBoutique\Report\Report_ProfitLoss.pas' {Report_ProfitLossForm: TParentForm},
-  Report_ProfitLossDialog in '..\..\FormsBoutique\Report\Report_ProfitLossDialog.pas' {Report_ProfitLossDialogForm: TParentForm};
+  Report_ProfitLossDialog in '..\..\FormsBoutique\Report\Report_ProfitLossDialog.pas' {Report_ProfitLossDialogForm: TParentForm},
+  MovementItemContainer in '..\..\FormsBoutique\Document\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
