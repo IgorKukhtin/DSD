@@ -160,8 +160,8 @@ BEGIN
                   LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                                        ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                                       AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
-             WHERE Object_Juridical.DescId = zc_Object_Juridical()
-               AND Object_Juridical.isErased = false;
+             WHERE Object_Juridical.DescId   = zc_Object_Juridical()
+               AND Object_Juridical.isErased = FALSE;
       END IF;
 
 END;
