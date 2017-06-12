@@ -57,11 +57,8 @@ type
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
     pvObjectDirection: TcxDBPivotGridField;
-    pvObjectDestination: TcxDBPivotGridField;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
-    pvJuridicalBasisName: TcxDBPivotGridField;
-    pvBusinessName: TcxDBPivotGridField;
     PivotAddOn: TPivotAddOn;
     spGetBalanceParam: TdsdStoredProc;
     FormParams: TdsdFormParams;
@@ -69,7 +66,6 @@ type
     MultiAction1: TMultiAction;
     dsdExecStoredProc1: TdsdExecStoredProc;
     bbStaticText: TdxBarButton;
-    pvPaidKindName: TcxDBPivotGridField;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     pvAmountActiveStart: TcxDBPivotGridField;
@@ -77,7 +73,6 @@ type
     pvAmountActiveEnd: TcxDBPivotGridField;
     pvAmountPassiveEnd: TcxDBPivotGridField;
     pvByObjectItemName: TcxDBPivotGridField;
-    pvGoodsItemName: TcxDBPivotGridField;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     actPrint2: TdsdPrintAction;

@@ -96,6 +96,7 @@ type
     procedure LoadPriceListFormTest;
     procedure LoadReportFormTest;
     procedure LoadReportBalanceFormTest;
+    procedure LoadReportProfitLossFormTest;
     procedure LoadReturnOutFormTest;
     procedure LoadReturnInFormTest;
     procedure LoadSaleFormTest;
@@ -829,6 +830,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceDialogForm');
+end;
+procedure TLoadFormTest.LoadReportProfitLossFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossDialogForm');
 end;
 //
 //procedure TLoadFormTest.LoadReportForSiteTest;

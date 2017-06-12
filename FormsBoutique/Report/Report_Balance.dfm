@@ -28,7 +28,7 @@ object Report_BalanceForm: TReport_BalanceForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 42370d
+      EditValue = 42736d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -37,7 +37,7 @@ object Report_BalanceForm: TReport_BalanceForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 42370d
+      EditValue = 42736d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -62,7 +62,7 @@ object Report_BalanceForm: TReport_BalanceForm
     Align = alClient
     DataSource = DataSource
     Groups = <>
-    TabOrder = 4
+    TabOrder = 3
     object pvRootName: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 0
@@ -122,46 +122,6 @@ object Report_BalanceForm: TReport_BalanceForm
       DataBinding.FieldName = 'ByObjectItemName'
       Visible = True
       UniqueName = #1069#1083#1077#1084#1077#1085#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
-    end
-    object pvObjectDestination: TcxDBPivotGridField
-      AreaIndex = 3
-      IsCaptionAssigned = True
-      Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
-      DataBinding.FieldName = 'GoodsName'
-      Visible = True
-      UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
-    end
-    object pvGoodsItemName: TcxDBPivotGridField
-      AreaIndex = 4
-      IsCaptionAssigned = True
-      Caption = #1069#1083#1077#1084#1077#1085#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-      DataBinding.FieldName = 'GoodsItemName'
-      Visible = True
-      UniqueName = #1069#1083#1077#1084#1077#1085#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-    end
-    object pvPaidKindName: TcxDBPivotGridField
-      AreaIndex = 5
-      IsCaptionAssigned = True
-      Caption = #1053#1072#1083'/'#1041#1085
-      DataBinding.FieldName = 'PaidKindName'
-      Visible = True
-      UniqueName = #1053#1072#1083'/'#1041#1085
-    end
-    object pvJuridicalBasisName: TcxDBPivotGridField
-      AreaIndex = 6
-      IsCaptionAssigned = True
-      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1075#1083#1072#1074#1085#1086#1077')'
-      DataBinding.FieldName = 'JuridicalBasisName'
-      Visible = True
-      UniqueName = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1075#1083#1072#1074#1085#1086#1077')'
-    end
-    object pvBusinessName: TcxDBPivotGridField
-      AreaIndex = 7
-      IsCaptionAssigned = True
-      Caption = #1041#1080#1079#1085#1077#1089
-      DataBinding.FieldName = 'BusinessName'
-      Visible = True
-      UniqueName = #1041#1080#1079#1085#1077#1089
     end
     object pvAmountDebetStart: TcxDBPivotGridField
       Area = faData

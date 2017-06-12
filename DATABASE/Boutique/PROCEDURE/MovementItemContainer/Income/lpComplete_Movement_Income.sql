@@ -7,6 +7,11 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_Income(
 RETURNS VOID
 AS
 $BODY$
+  DECLARE vbOperSumm_Partner_byItem TFloat;
+  DECLARE vbOperSumm_Partner TFloat;
+  DECLARE vbOperSumm_Currency_byItem TFloat;
+  DECLARE vbOperSumm_Currency TFloat;
+
   DECLARE vbOperDate       TDateTime;
   DECLARE vbPartnerId_From Integer;
   DECLARE vbUnitId         Integer;
@@ -67,6 +72,83 @@ BEGIN
              AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
           ) AS _tmp;
 
+
+     -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     INSERT INTO _tmpItem (MovementItemId
+                         , ContainerId_Summ, ContainerId_Goods
+                         , GoodsId, PartionId
+                         , OperCount, OperSumm_Partner, OperSumm_Partner_Currency
+                         , AccountId, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
+                         , BusinessId
+                          )
+        -- результат
+        SELECT
+              _tmp.MovementItemId
+            , 0 AS ContainerId_Summ          -- сформируем позже
+            , 0 AS ContainerId_Goods         -- сформируем позже
+            , _tmp.GoodsId
+            , _tmp.PartionId
+
+            , _tmp.OperCount
+
+              -- конечная сумма по Контрагенту
+            , _tmp.tmpOperSumm_Partner AS OperSumm_Partner
+              -- конечная сумма в валюте по Контрагенту
+            , _tmp.tmpOperSumm_Partner AS OperSumm_Partner
+
+             
+            , 0 AS AccountId              -- Счет(справочника), сформируем позже
+
+              -- УП для Income = УП долг Контрагента
+            , _tmp.InfoMoneyGroupId
+            , _tmp.InfoMoneyDestinationId
+            , _tmp.InfoMoneyId
+
+              -- значение Бизнес !!!пока не используется ВООБЩЕ!!!
+            , 0 AS BusinessId 
+
+        FROM (SELECT
+                     MovementItem.Id        AS MovementItemId
+                   , MovementItem.ObjectId  AS GoodsId
+                   , MovementItem.PartionId AS PartionId
+
+                   , MovementItem.Amount                           AS OperCount
+                   , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
+                               -- так переводится в валюту zc_Enum_Currency_Basis
+                               THEN CAST (COALESCE (MIFloat_Price.ValueData, 0) * CASE WHEN vbParValue > 0 THEN vbCurrencyValue / vbParValue ELSE vbCurrencyValue END AS NUMERIC (16, 2))
+                          ELSE tmpMI.Price
+                     END AS Price
+                   , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
+
+                     -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков
+                   , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN CAST (MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
+                                                                   ELSE CAST (MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                     END AS tmpOperSumm_Partner
+
+                    -- Управленческая группа
+                  , View_InfoMoney.InfoMoneyGroupId
+                    -- Управленческие назначения
+                  , View_InfoMoney.InfoMoneyDestinationId
+                    -- Статьи назначения
+                  , View_InfoMoney.InfoMoneyId
+
+              FROM Movement
+                   JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                    AND MovementItem.DescId     = zc_MI_Master()
+                                    AND MovementItem.isErased   = FALSE
+                   LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                   LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                               ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                              AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                   LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MovementItem.ObjectId
+
+              WHERE Movement.Id     = inMovementId
+                AND Movement.DescId = zc_Movement_Income()
+                AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+             ) AS _tmp
+            ;
 
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
