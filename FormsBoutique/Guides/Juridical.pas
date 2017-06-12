@@ -50,22 +50,22 @@ type
     spErased: TdsdStoredProc;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
-    clErased: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    Erased: TcxGridDBColumn;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     DBViewAddOn: TdsdDBViewAddOn;
-    clINN: TcxGridDBColumn;
-    clFullName: TcxGridDBColumn;
+    INN: TcxGridDBColumn;
+    FullName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    clAddress: TcxGridDBColumn;
-    clisCorporate: TcxGridDBColumn;
-    clOKPO: TcxGridDBColumn;
-    clJuridicalGroupName: TcxGridDBColumn;
+    Address: TcxGridDBColumn;
+    isCorporate: TcxGridDBColumn;
+    OKPO: TcxGridDBColumn;
+    JuridicalGroupName: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
   private
     { Private declarations }

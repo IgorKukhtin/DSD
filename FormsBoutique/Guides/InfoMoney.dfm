@@ -34,7 +34,7 @@ object InfoMoneyForm: TInfoMoneyForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -45,25 +45,25 @@ object InfoMoneyForm: TInfoMoneyForm
       OptionsView.HeaderHeight = 50
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object clInfoMoneyGroup: TcxGridDBColumn
+      object InfoMoneyGroup: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyGroupName'
         HeaderAlignmentVert = vaCenter
         Width = 123
       end
-      object clInfoMoneyDestination: TcxGridDBColumn
+      object InfoMoneyDestination: TcxGridDBColumn
         Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'InfoMoneyDestinationName'
         HeaderAlignmentVert = vaCenter
         Width = 200
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
@@ -76,7 +76,7 @@ object InfoMoneyForm: TInfoMoneyForm
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
-      object clErased: TcxGridDBColumn
+      object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -105,7 +105,7 @@ object InfoMoneyForm: TInfoMoneyForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = clName
+        Component = Name
         Properties.Strings = (
           'Width')
       end

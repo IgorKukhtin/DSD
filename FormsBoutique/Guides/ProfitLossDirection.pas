@@ -26,8 +26,8 @@ type
   TProfitLossDirectionForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -52,11 +52,11 @@ type
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clErased: TcxGridDBColumn;
+    Erased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clProfitLossGroupCode: TcxGridDBColumn;
-    clProfitLossGroupName: TcxGridDBColumn;
+    ProfitLossGroupCode: TcxGridDBColumn;
+    ProfitLossGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

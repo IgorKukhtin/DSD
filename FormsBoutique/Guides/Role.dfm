@@ -46,20 +46,20 @@ object RoleForm: TRoleForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1056#1086#1083#1100
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Width = 224
       end
-      object clErased: TcxGridDBColumn
+      object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -115,7 +115,7 @@ object RoleForm: TRoleForm
         OptionsView.HeaderAutoHeight = True
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-        object colCodeUser: TcxGridDBColumn
+        object CodeUser: TcxGridDBColumn
           Caption = #1050#1086#1076
           DataBinding.FieldName = 'Code'
           Visible = False
@@ -123,7 +123,7 @@ object RoleForm: TRoleForm
           HeaderAlignmentVert = vaCenter
           Width = 95
         end
-        object colNameUser: TcxGridDBColumn
+        object NameUser: TcxGridDBColumn
           Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
           DataBinding.FieldName = 'Name'
           PropertiesClassName = 'TcxButtonEditProperties'
@@ -152,7 +152,7 @@ object RoleForm: TRoleForm
           Options.Editing = False
           Width = 64
         end
-        object colisErased: TcxGridDBColumn
+        object isErased: TcxGridDBColumn
           Caption = #1059#1076#1072#1083#1077#1085
           DataBinding.FieldName = 'isErased'
           Visible = False
@@ -248,7 +248,7 @@ object RoleForm: TRoleForm
           HeaderAlignmentVert = vaCenter
           Width = 100
         end
-        object clProcess_EnumName: TcxGridDBColumn
+        object Process_EnumName: TcxGridDBColumn
           Caption = 'EnumName'
           DataBinding.FieldName = 'Process_EnumName'
           Width = 100

@@ -33,35 +33,35 @@ inherited ProtocolForm: TProtocolForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colInsert: TcxGridDBColumn
+          object Insert: TcxGridDBColumn
             Caption = '+'
             DataBinding.FieldName = 'IsInsert'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 30
           end
-          object colDate: TcxGridDBColumn
+          object Date: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 54
           end
-          object colUserName: TcxGridDBColumn
+          object UserName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
             DataBinding.FieldName = 'UserName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 99
           end
-          object colObjectName: TcxGridDBColumn
+          object ObjectName: TcxGridDBColumn
             Caption = #1054#1073#1098#1077#1082#1090
             DataBinding.FieldName = 'ObjectName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 110
           end
-          object colObjectTypeName: TcxGridDBColumn
+          object ObjectTypeName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1086#1073#1098#1077#1082#1090#1072
             DataBinding.FieldName = 'ObjectTypeName'
             HeaderAlignmentVert = vaCenter

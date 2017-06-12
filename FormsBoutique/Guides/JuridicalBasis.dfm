@@ -44,14 +44,14 @@ object JuridicalBasisForm: TJuridicalBasisForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -59,7 +59,7 @@ object JuridicalBasisForm: TJuridicalBasisForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 226
       end
-      object clisCorporate: TcxGridDBColumn
+      object isCorporate: TcxGridDBColumn
         Caption = #1055#1088#1080#1079#1085#1072#1082' '#1075#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'isCorporate'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -68,7 +68,7 @@ object JuridicalBasisForm: TJuridicalBasisForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 130
       end
-      object clFullName: TcxGridDBColumn
+      object FullName: TcxGridDBColumn
         Caption = #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'FullName'
         HeaderAlignmentHorz = taCenter
@@ -76,7 +76,7 @@ object JuridicalBasisForm: TJuridicalBasisForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 196
       end
-      object clAddress: TcxGridDBColumn
+      object Address: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1081' '#1072#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'
         HeaderAlignmentHorz = taCenter
@@ -84,7 +84,7 @@ object JuridicalBasisForm: TJuridicalBasisForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 168
       end
-      object clOKPO: TcxGridDBColumn
+      object OKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
         DataBinding.FieldName = 'OKPO'
         HeaderAlignmentHorz = taCenter
@@ -92,7 +92,7 @@ object JuridicalBasisForm: TJuridicalBasisForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 106
       end
-      object clINN: TcxGridDBColumn
+      object INN: TcxGridDBColumn
         Caption = #1048#1053#1053
         DataBinding.FieldName = 'INN'
         HeaderAlignmentHorz = taCenter
@@ -100,7 +100,7 @@ object JuridicalBasisForm: TJuridicalBasisForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 100
       end
-      object clJuridicalGroupName: TcxGridDBColumn
+      object JuridicalGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
         DataBinding.FieldName = 'JuridicalGroupName'
         HeaderAlignmentHorz = taCenter
@@ -108,7 +108,7 @@ object JuridicalBasisForm: TJuridicalBasisForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 121
       end
-      object clErased: TcxGridDBColumn
+      object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

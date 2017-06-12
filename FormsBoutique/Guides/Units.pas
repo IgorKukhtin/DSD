@@ -50,9 +50,9 @@ type
     spErased: TdsdStoredProc;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
-    clErased: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    Erased: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
@@ -60,16 +60,16 @@ type
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    clJuridicalName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
-    clAddress: TcxGridDBColumn;
-    clPhone: TcxGridDBColumn;
-    clDiscountTax: TcxGridDBColumn;
-    clParentName: TcxGridDBColumn;
-    clChildName: TcxGridDBColumn;
-    clBankAccountName: TcxGridDBColumn;
-    clBankName: TcxGridDBColumn;
-    clAccountDirectionName: TcxGridDBColumn;
+    Address: TcxGridDBColumn;
+    Phone: TcxGridDBColumn;
+    DiscountTax: TcxGridDBColumn;
+    ParentName: TcxGridDBColumn;
+    ChildName: TcxGridDBColumn;
+    BankAccountName: TcxGridDBColumn;
+    BankName: TcxGridDBColumn;
+    AccountDirectionName: TcxGridDBColumn;
   private
     { Private declarations }
   public

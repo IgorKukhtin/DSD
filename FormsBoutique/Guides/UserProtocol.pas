@@ -27,9 +27,9 @@ uses
 
 type
   TUserProtocolForm = class(TAncestorReportForm)
-    colDate: TcxGridDBColumn;
-    colUserName: TcxGridDBColumn;
-    colProtocolData: TcxGridDBColumn;
+    Date: TcxGridDBColumn;
+    UserName: TcxGridDBColumn;
+    ProtocolData: TcxGridDBColumn;
     edUser: TcxButtonEdit;
     cxLabel3: TcxLabel;
     UserGuides: TdsdGuides;
