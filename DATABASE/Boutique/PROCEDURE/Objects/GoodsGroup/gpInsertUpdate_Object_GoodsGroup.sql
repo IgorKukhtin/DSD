@@ -62,10 +62,11 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsGroup_InfoMoney(), ioId, inInfoMoneyId);
 
 
-  IF inInfoMoneyId <> 0
-   THEN
+
    -- изменили свойство <УП статью> у всех товаров этой группы
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ObjectLink.ObjectId, inInfoMoneyId)
+   PERFORM CASE WHEN inInfoMoneyId <> 0 THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ObjectLink.ObjectId, inInfoMoneyId)
+                ELSE lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ObjectLink.ObjectId, lfGet_Object_GoodsGroup_InfoMoneyId (ObjectLink.ChildObjectId)) 
+           END
    FROM ObjectLink
    WHERE DescId = zc_ObjectLink_Goods_GoodsGroup()
      AND ChildObjectId IN -- !!! опускаемся на все уровни вниз !!!!
@@ -132,7 +133,7 @@ BEGIN
                         AND ObjectLink.ChildObjectId = ioId
                      )
   ;
-   END IF; -- inInfoMoneyId <> 0
+
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
