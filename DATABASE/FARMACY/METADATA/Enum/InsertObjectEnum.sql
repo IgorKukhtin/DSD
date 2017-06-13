@@ -2216,7 +2216,7 @@ BEGIN
                                                               inImportTypeId := vbImportTypeId,
                                                               inEmailId      := (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_Email()),
                                                               inContactPersonId:= (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_ContactPerson()),
-                                                              inStartRow     := 3,
+                                                              inStartRow     := 2,
                                                               inHDR          := False,
                                                               inDirectory    := NULL::TVarChar,
                                                               inQuery        := NULL::TVarChar,

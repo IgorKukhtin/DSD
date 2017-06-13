@@ -1403,8 +1403,8 @@ begin
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportExportLinkTypeForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TImportExportLinkTypeForm');
 //
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerForm');
 //
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescDataForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TMovementDescDataForm');
