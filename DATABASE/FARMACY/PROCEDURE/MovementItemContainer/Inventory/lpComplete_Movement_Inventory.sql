@@ -189,10 +189,16 @@ BEGIN
                                          ON MovementItem_Inventory.ObjectId   = Saldo.ObjectId
                                         AND MovementItem_Inventory.MovementId = inMovementId
                                         AND MovementItem_Inventory.DescId     = zc_MI_Master()
-            LEFT OUTER JOIN (SELECT Object_Price_View.GoodsId
-                                  , Object_Price_View.Price
-                             FROM Object_Price_View
-                             WHERE Object_Price_View.UnitId = vbUnitId                    
+            LEFT OUTER JOIN (SELECT Price_Goods.ChildObjectId               AS GoodsId
+                                  , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+                             FROM ObjectLink AS ObjectLink_Price_Unit
+                                LEFT JOIN ObjectLink AS Price_Goods
+                                       ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                      AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                LEFT JOIN ObjectFloat AS Price_Value
+                                       ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                             WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                               AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId                
                             ) AS Object_Price ON Object_Price.GoodsId = Saldo.ObjectId
         WHERE Saldo.Amount > 0
           AND MovementItem_Inventory.Id IS NULL
@@ -415,6 +421,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.
+ 12.06.17         * ушли от Object_Price_View
  14.03.16                                        * !!!5.3. формируется свойство <MovementItemId - для созданных партий этой инвентаризацией - ближайший документ прихода, из которого для ВСЕХ отчетов будем считать с/с> !!!
  03.08.15                                                                  *Добавить в переучет строки, которые есть на остатке, но нет в переучете
  11.02.14                        * 

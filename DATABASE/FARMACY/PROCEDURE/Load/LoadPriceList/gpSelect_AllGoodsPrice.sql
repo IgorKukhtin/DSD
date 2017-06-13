@@ -146,6 +146,28 @@ BEGIN
                                                  AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
                      WHERE Object_Goods_View.ObjectId = vbObjectId
                )
+
+  , tmpPrice_View AS (SELECT ObjectLink_Price_Unit.ObjectId          AS Id
+                           , ObjectLink_Price_Unit.ChildObjectId     AS UnitId
+                           , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+                           , Price_Goods.ChildObjectId               AS GoodsId
+                           , COALESCE(Price_Fix.ValueData,False)     AS Fix 
+                           , COALESCE(Price_Top.ValueData,False)     AS isTop   
+                      FROM ObjectLink AS ObjectLink_Price_Unit
+                           LEFT JOIN ObjectLink AS Price_Goods
+                                  ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                 AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                           LEFT JOIN ObjectFloat AS Price_Value
+                                  ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                           LEFT JOIN ObjectBoolean AS Price_Fix
+                                  ON Price_Fix.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                 AND Price_Fix.DescId = zc_ObjectBoolean_Price_Fix()
+                           LEFT JOIN ObjectBoolean AS Price_Top
+                                  ON Price_Top.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                 AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
+                      WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                      )
+
   , ResultSet AS
     (
         SELECT
@@ -202,15 +224,14 @@ BEGIN
                                     ) AS SelectMinPrice_AllGoods
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = SelectMinPrice_AllGoods.ContractId
 
-
             LEFT OUTER JOIN RemainsTo ON RemainsTo.GoodsId = SelectMinPrice_AllGoods.GoodsId
 
-            LEFT OUTER JOIN Object_Price_View AS Object_Price_to
-                                              ON Object_Price_to.GoodsId = SelectMinPrice_AllGoods.GoodsId_retail
-                                             AND Object_Price_to.UnitId = CASE WHEN inUnitId_to = 0 THEN NULL ELSE inUnitId_to END
-            LEFT OUTER JOIN Object_Price_View AS Object_Price
-                                              ON Object_Price.GoodsId = SelectMinPrice_AllGoods.GoodsId_retail
-                                             AND Object_Price.UnitId = inUnitId
+            LEFT OUTER JOIN tmpPrice_View AS Object_Price_to
+                                          ON Object_Price_to.GoodsId = SelectMinPrice_AllGoods.GoodsId_retail
+                                         AND Object_Price_to.UnitId = CASE WHEN inUnitId_to = 0 THEN NULL ELSE inUnitId_to END
+            LEFT OUTER JOIN tmpPrice_View AS Object_Price
+                                          ON Object_Price.GoodsId = SelectMinPrice_AllGoods.GoodsId_retail
+                                         AND Object_Price.UnitId = inUnitId
             LEFT OUTER JOIN tmpGoodsView AS Object_Goods
                                          -- !!!берем из сети!!!
                                          ON Object_Goods.Id = SelectMinPrice_AllGoods.GoodsId_retail -- SelectMinPrice_AllGoods.GoodsId

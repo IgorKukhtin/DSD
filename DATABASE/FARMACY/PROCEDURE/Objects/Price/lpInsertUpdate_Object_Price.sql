@@ -19,22 +19,32 @@ $BODY$
     DECLARE vbMCSValue TFloat;
 BEGIN
     -- Если такая запись есть - достаем её ключу подр.-товар
-    SELECT
-        Id, 
-        price, 
-        DateChange,
-        MCSValue
+   SELECT ObjectLink_Price_Unit.ObjectId          AS Id
+        , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+        , Price_DateChange.valuedata              AS DateChange
+        , MCS_Value.ValueData                     AS MCSValue 
     INTO 
         vbId, 
         vbPrice_Value, 
         vbDateChange,
         vbMCSValue
-    FROM 
-        Object_Price_View
-    WHERE
-        GoodsId = inGoodsId
-        AND
-        UnitId = inUnitID;
+   FROM ObjectLink AS ObjectLink_Price_Unit
+        INNER JOIN ObjectLink AS Price_Goods
+                ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+               AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+               AND Price_Goods.ChildObjectId = inGoodsId
+        LEFT JOIN ObjectFloat AS Price_Value
+               ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+              AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+        LEFT JOIN ObjectDate AS Price_DateChange
+               ON Price_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
+              AND Price_DateChange.DescId = zc_ObjectDate_Price_DateChange()
+        LEFT JOIN ObjectFloat AS MCS_Value
+               ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+              AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+   WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+     AND ObjectLink_Price_Unit.ChildObjectId = inUnitId;
+
     IF COALESCE(vbId,0)=0
     THEN
         -- сохранили/получили <Объект> по ИД
@@ -93,6 +103,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.
+ 12.06.17         * убрали Object_Price_View
  22.12.15                                                                      *
  11.02.14                        *
  05.02.14                        *

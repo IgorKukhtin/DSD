@@ -89,10 +89,16 @@ BEGIN
                                 GROUP By ObjectId
                                 HAVING SUM(T0.Amount) <> 0
                             ),
-                 CurrPRICE AS(
-                                SELECT Object_Price_View.GoodsId, Object_Price_View.Price
-                                FROM Object_Price_View
-                                WHERE Object_Price_View.UnitId = vbUnitId
+                 CurrPRICE AS(  SELECT Price_Goods.ChildObjectId               AS GoodsId
+                                     , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+                                FROM ObjectLink AS ObjectLink_Price_Unit
+                                   LEFT JOIN ObjectLink AS Price_Goods
+                                          ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                         AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                   LEFT JOIN ObjectFloat AS Price_Value
+                                          ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                                  AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId  
                             ),
                  MIContainer AS ( 
                                     SELECT
@@ -208,9 +214,16 @@ BEGIN
                                 HAVING SUM(T0.Amount) <> 0
                             ),
                  CurrPRICE AS(
-                                SELECT Object_Price_View.GoodsId, Object_Price_View.Price
-                                FROM Object_Price_View
-                                WHERE Object_Price_View.UnitId = vbUnitId
+                                SELECT Price_Goods.ChildObjectId               AS GoodsId
+                                     , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+                                FROM ObjectLink AS ObjectLink_Price_Unit
+                                   LEFT JOIN ObjectLink AS Price_Goods
+                                          ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                         AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                   LEFT JOIN ObjectFloat AS Price_Value
+                                          ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                                  AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                             ),
                  MIContainer AS ( 
                                     SELECT
@@ -291,6 +304,7 @@ ALTER FUNCTION gpSelect_MovementItem_Loss (Integer, Boolean, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.06.17         * убрали Object_Price_View
  27.10.16         * 
  31.03.15         * add GoodsGroupNameFull, MeasureName
  17.10.14         * add св-ва PartionGoods
