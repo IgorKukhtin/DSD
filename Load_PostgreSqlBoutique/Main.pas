@@ -3342,9 +3342,9 @@ begin
              + '    , DiscountMovement.ReturnInId_Postgres as MovementId'
              + '    , DiscountMovementItemReturn_byBarCode.Id_Postgres as ParentId'
 //  не используется            + ' --   , DiscountKlientAccountMoney.ReturnInId_Postgres'
-             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=1 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountGRN'
-             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountEUR'
-             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountUSD'
+             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=1 then  Abs(DiscountKlientAccountMoney.Summa) else 0 endif as AmountGRN'
+             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then  Abs(DiscountKlientAccountMoney.Summa) else 0 endif as AmountEUR'
+             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then  Abs(DiscountKlientAccountMoney.Summa) else 0 endif as AmountUSD'
              + '    , if  Kassa.ID in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  ) then  DiscountKlientAccountMoney.Summa else 0 endif as AmountCard'
              + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.KursClient else 0 endif as CurrencyValueUSD'
              + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.NominalKursClient else 0 endif as ParValueUSD'
@@ -3416,7 +3416,7 @@ begin
              //
 
              //
-//             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('ReturnInId_Postgres').AsInteger;  //  ioId  не используестя gpInsertUpdate_MI_Sale_Child - не поддерживается многократная загрузка
+//             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('ReturnInId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
              toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId').AsInteger;
              toStoredProc.Params.ParamByName('inAmountGRN').Value:=FieldByName('AmountGRN').AsFloat;
@@ -3730,7 +3730,7 @@ begin
              //
 
              //
-//             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('SaleId_Postgres').AsInteger;  //  ioId  не используестя gpInsertUpdate_MI_Sale_Child - не поддерживается многократная загрузка
+//             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('SaleId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
              toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId').AsInteger;
              toStoredProc.Params.ParamByName('inAmountGRN').Value:=FieldByName('AmountGRN').AsFloat;
