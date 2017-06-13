@@ -11,20 +11,20 @@ inherited MobilePromoForm: TMobilePromoForm
     Top = 107
     Width = 747
     Height = 453
-    ExplicitTop = 139
-    ExplicitWidth = 974
-    ExplicitHeight = 421
+    ExplicitTop = 107
+    ExplicitWidth = 747
+    ExplicitHeight = 453
     ClientRectBottom = 453
     ClientRectRight = 747
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
-      ExplicitWidth = 974
-      ExplicitHeight = 397
+      ExplicitWidth = 747
+      ExplicitHeight = 429
       inherited cxGrid: TcxGrid
         Width = 747
         Height = 248
-        ExplicitWidth = 974
-        ExplicitHeight = 216
+        ExplicitWidth = 747
+        ExplicitHeight = 248
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -180,8 +180,6 @@ inherited MobilePromoForm: TMobilePromoForm
         Height = 173
         Align = alBottom
         TabOrder = 1
-        ExplicitTop = 224
-        ExplicitWidth = 974
         object cxPageControl1: TcxPageControl
           Left = 1
           Top = 1
@@ -191,13 +189,11 @@ inherited MobilePromoForm: TMobilePromoForm
           TabOrder = 0
           Properties.ActivePage = tsPartner
           Properties.CustomButtons.Buttons = <>
-          ExplicitWidth = 972
           ClientRectBottom = 171
           ClientRectRight = 745
           ClientRectTop = 24
           object tsPartner: TcxTabSheet
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
-            ExplicitWidth = 972
             object cxGridPartner: TcxGrid
               Left = 0
               Top = 0
@@ -206,7 +202,6 @@ inherited MobilePromoForm: TMobilePromoForm
               Align = alClient
               PopupMenu = pmPartner
               TabOrder = 0
-              ExplicitWidth = 972
               object cxGridDBTableViewPartner: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
                 DataController.DataSource = PartnerDS
@@ -361,8 +356,6 @@ inherited MobilePromoForm: TMobilePromoForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel1
-        ExplicitTop = 216
-        ExplicitWidth = 974
       end
     end
   end
@@ -370,7 +363,7 @@ inherited MobilePromoForm: TMobilePromoForm
     Width = 747
     Height = 81
     TabOrder = 3
-    ExplicitWidth = 974
+    ExplicitWidth = 747
     ExplicitHeight = 81
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1189,11 +1182,11 @@ inherited MobilePromoForm: TMobilePromoForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsErased'
+        Name = 'inMemberId'
         Value = False
-        Component = actShowErased
-        DataType = ftBoolean
-        ParamType = ptUnknown
+        Component = PersonalTradeGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -1202,7 +1195,8 @@ inherited MobilePromoForm: TMobilePromoForm
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
-    Top = 272
+    Left = 272
+    Top = 208
   end
   inherited BarManager: TdxBarManager
     Top = 271
@@ -1373,6 +1367,11 @@ inherited MobilePromoForm: TMobilePromoForm
       item
         Name = 'RetailId'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Top = 312
@@ -1954,8 +1953,8 @@ inherited MobilePromoForm: TMobilePromoForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 260
-    Top = 48
+    Left = 292
+    Top = 40
   end
   object PersonalGuides: TdsdGuides
     KeyField = 'Id'
@@ -2004,7 +2003,14 @@ inherited MobilePromoForm: TMobilePromoForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsErased'
+        Name = 'inMemberId'
+        Value = Null
+        Component = PersonalTradeGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Value = False
         Component = actShowErased
         DataType = ftBoolean
@@ -2012,8 +2018,8 @@ inherited MobilePromoForm: TMobilePromoForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 568
-    Top = 288
+    Left = 664
+    Top = 208
   end
   object PartnerCDS: TClientDataSet
     Aggregates = <>
@@ -2287,6 +2293,14 @@ inherited MobilePromoForm: TMobilePromoForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberId'
+        Value = Null
+        Component = PersonalTradeGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
