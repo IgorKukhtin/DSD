@@ -3634,43 +3634,54 @@ begin
      //
      myEnabledCB(cbSale_Child);
      //
+      //создаем Таблицу, т.к. подзапрос не пашет
+      try fExecSqFromQuery_noErr(' create table dba._TableLoadSale ( ObjectId integer, MovementId integer, ParentId integer,' + ' AmountGRN decimal, AmountEUR decimal, AmountUSD decimal, AmountCard decimal, AmountDiscount decimal,  CurrencyValueUSD decimal, ParValueUSD decimal, CurrencyValueEUR decimal,  ParValueEUR decimal )');
+      except end;
+      fExecSqFromQuery(' delete from dba._TableLoadSale');
+      fExecSqFromQuery(' insert into dba._TableLoadSale (ObjectId, MovementId, ParentId, AmountGRN, AmountEUR, AmountUSD, AmountCard, AmountDiscount, CurrencyValueUSD, ParValueUSD, CurrencyValueEUR,  ParValueEUR )'
+             + ' SELECT'
+             + '      DiscountKlientAccountMoney.Id as ObjectId'
+             + '    , DiscountMovement.SaleId_Postgres as MovementId'
+             + '    , DiscountMovementItem_byBarCode.Id_Postgres as ParentId'
+//  не используется            + ' --   , DiscountKlientAccountMoney.SaleId_Postgres'
+             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=1 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountGRN'
+             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountEUR'
+             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountUSD'
+             + '    , if  Kassa.ID in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  ) then  DiscountKlientAccountMoney.Summa else 0 endif as AmountCard'
+             + '    , if  Kassa.ID in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  ) then  DiscountKlientAccountMoney.SummDiscountManual else 0 endif as  AmountDiscount'
+             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.KursClient else 0 endif as CurrencyValueUSD'
+             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.NominalKursClient else 0 endif as ParValueUSD'
+             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.KursClient else 0 endif as CurrencyValueEUR'
+             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.NominalKursClient else 0 endif as ParValueEUR'
+             + ' FROM dba.DiscountMovementItem_byBarCode'
+             + '    join DiscountMovement     on DiscountMovement.id = DiscountMovementItem_byBarCode.DiscountMovementId'
+             + '    left join BillItemsIncome on BillItemsIncome.id  = DiscountMovementItem_byBarCode.BillItemsIncomeId'
+             + '    join DiscountKlientAccountMoney  on DiscountKlientAccountMoney.DiscountMovementItemId = DiscountMovementItem_byBarCode.Id '
+             + '                                and isCurrent = zc_rvYes() and discountMovementItemReturnId  is null'
+             + '    join Kassa on Kassa.Id = DiscountKlientAccountMoney.KassaID'
+             + '    join KassaProperty  on KassaProperty.KassaID = Kassa.ID'
+             + ' WHERE DiscountMovement.descId = 1  AND DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+             + ' ORDER BY ObjectId '
+);
+     //
      with fromQuery,Sql do begin
         Close;
         Clear;
         Add('SELECT');
-        Add('      DiscountKlientAccountMoney.Id as ObjectId');
-        Add('    , DiscountMovement.SaleId_Postgres as MovementId');
-        Add('    , BillItemsIncome.GoodsId_Postgres as GoodsId');
-        Add('    , BillItemsIncome.Id_Postgres as PartionId');
-        Add('    , DiscountMovementItem_byBarCode.Id_Postgres as ParentId');
-        Add('    , Kassa.Id_Postgres as KassaId');
-        Add('    , DiscountKlientAccountMoney.SaleId_Postgres');
-        Add('    , KassaProperty.valutaID ');
-        Add('    , if  Kassa.ID in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )   then 1 else 0 endif as isBNKassa');
-        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=1 then 1 else 0 endif as isPayGRN');
-        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=2 then 1 else 0 endif as isPayEUR');
-        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=5 then 1 else 0 endif as isPayUSD');
-        Add('    , if  isBNKassa = 1  then 1 else 0 endif as isPayCard');
-        Add('    , if  DiscountKlientAccountMoney.SummDiscountManual >0 then 1 else 0 endif as isDiscount');
-        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=1 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountGRN');
-        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=2 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountEUR');
-        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=5 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountUSD');
-        Add('    , if  isBNKassa = 1 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountCard');
-        Add('    , if  isDiscount= 1 then  DiscountKlientAccountMoney.SummDiscountManual else 0 endif as  AmountDiscount');
-        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.KursClient else 0 endif as CurrencyValueUSD');
-        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.NominalKursClient else 0 endif as ParValueUSD');
-        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.KursClient else 0 endif as CurrencyValueEUR');
-        Add('    , if  isBNKassa = 0  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.NominalKursClient else 0 endif as ParValueEUR');
-        Add('FROM dba.DiscountMovementItem_byBarCode');
-        Add('    join DiscountMovement     on DiscountMovement.id = DiscountMovementItem_byBarCode.DiscountMovementId');
-        Add('    left join BillItemsIncome on BillItemsIncome.id  = DiscountMovementItem_byBarCode.BillItemsIncomeId');
-        Add('    join DiscountKlientAccountMoney  on DiscountKlientAccountMoney.DiscountMovementItemId = DiscountMovementItem_byBarCode.Id ');
-        Add('                                and isCurrent = zc_rvYes() and discountMovementItemReturnId  is null');
-        Add('    join Kassa on Kassa.Id = DiscountKlientAccountMoney.KassaID');
-        Add('    join KassaProperty  on KassaProperty.KassaID = Kassa.ID');
-        Add('WHERE DiscountMovement.descId = 1  AND DiscountMovement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
-//        Add(' and BillItemsIncome.Id_Postgres is not null '); // Тестовая строка - удалить в загрузке
-        Add('ORDER BY ObjectId ');
+        Add('  min(ObjectId) as ObjectId');
+        Add(', a.MovementId');
+        Add(', a.ParentId');
+        Add(', sum(AmountGRN) as AmountGRN');
+        Add(', sum(AmountEUR) as AmountEUR');
+        Add(', sum(AmountUSD) as AmountUSD');
+        Add(', sum(AmountCard) as AmountCard');
+        Add(', sum(AmountDiscount) as AmountDiscount');
+        Add(', min(CurrencyValueUSD) as CurrencyValueUSD');
+        Add(', min(ParValueUSD) as ParValueUSD');
+        Add(', min(CurrencyValueEUR) as CurrencyValueEUR');
+        Add(', min(ParValueEUR) as ParValueEUR');
+        Add(' FROM  dba._TableLoadSale AS a');
+        Add(' GROUP BY MovementId, ParentId');
         Open;
 
         Result:=RecordCount;
@@ -3735,6 +3746,7 @@ begin
         end;
 
      end;
+     try fExecSqFromQuery_noErr(' drop table dba._TableLoadSale '); except end;
      //
      myDisabledCB(cbSale_Child);
 end;
