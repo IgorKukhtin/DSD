@@ -35,7 +35,7 @@ BEGIN
      inIsParentDetail:= inIsParentDetail OR inIsInfoMoneyDetail;
 
      -- !!!проводки только у Админа!!!
-     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin()))
+     IF 1=1 OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin()))
      THEN
 
      RETURN QUERY 
@@ -46,6 +46,7 @@ BEGIN
                                                 , CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN 0 ELSE MIContainer.Id END AS Id
                                                 , COALESCE (MIContainer.MovementItemId, 0) AS MovementItemId -- !!!может быть NULL!!!
                                                 , MIContainer.ContainerId
+                                                , MIContainer.AccountId
                                                 , 0 AS ObjectId_Analyzer
                                                 -- , MIContainer.ObjectId_Analyzer
                                                 , MIContainer.OperDate
@@ -61,6 +62,7 @@ BEGIN
                                                 , CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN 0 ELSE MIContainer.Id END
                                                 , COALESCE (MIContainer.MovementItemId, 0)
                                                 , MIContainer.ContainerId
+                                                , MIContainer.AccountId
                                                 -- , MIContainer.ObjectId_Analyzer
                                                 , MIContainer.OperDate
                                                 , MIContainer.isActive
@@ -71,27 +73,25 @@ BEGIN
                                           )
                    -- проводки: только суммовые + определяется Счет
                  , tmpMIContainer_Summ AS (SELECT tmpMIContainer_all.MIContainerDescId
-                                                , tmpMIContainer_all.Id
                                                 , tmpMIContainer_all.MovementItemId -- !!!может быть NULL!!!
-                                                , Container.ParentId AS ContainerId
+                                                , tmpMIContainer_all.ContainerId
                                                 , tmpMIContainer_all.ObjectId_Analyzer
                                                 , tmpMIContainer_all.OperDate
                                                 , tmpMIContainer_all.isActive
-                                                , 0 AS Amount
+                                                , tmpMIContainer_all.Amount
                                                 , tmpMIContainer_all.MovementId
                                                 , tmpMIContainer_all.MovementDescId
                                                 , tmpMIContainer_all.InvNumber
                                                 , tmpMIContainer_all.isDestination
-                                                , Container.ObjectId AS AccountId
-                                                , 0 AS ContainerId_Currency, 0 AS Amount_Currency
+                                                , tmpMIContainer_all.AccountId
+                                                , 0 AS Amount_Currency
                                            FROM tmpMIContainer_all
-                                                LEFT JOIN Container ON Container.Id = tmpMIContainer_all.ContainerId
                                            WHERE tmpMIContainer_all.MIContainerDescId = zc_MIContainer_Summ()
                                           UNION ALL
                                            SELECT tmpMIContainer_all.MIContainerDescId
-                                                , tmpMIContainer_all.Id
                                                 , tmpMIContainer_all.MovementItemId -- !!!может быть NULL!!!
-                                                , Container.ParentId AS ContainerId
+                                                , tmpMIContainer_all.ContainerId
+                                                -- , Container.ParentId AS ContainerId
                                                 , tmpMIContainer_all.ObjectId_Analyzer
                                                 , tmpMIContainer_all.OperDate
                                                 , tmpMIContainer_all.isActive
@@ -100,11 +100,10 @@ BEGIN
                                                 , tmpMIContainer_all.MovementDescId
                                                 , tmpMIContainer_all.InvNumber
                                                 , tmpMIContainer_all.isDestination
-                                                , Container.ObjectId AS AccountId
-                                                , COALESCE (tmpMIContainer_all.ContainerId, 0) AS ContainerId_Currency
+                                                , tmpMIContainer_all.AccountId
                                                 , COALESCE (tmpMIContainer_all.Amount, 0)      AS Amount_Currency
                                            FROM tmpMIContainer_all
-                                                LEFT JOIN Container ON Container.Id = tmpMIContainer_all.ContainerId
+                                                -- LEFT JOIN Container ON Container.Id = tmpMIContainer_all.ContainerId
                                            WHERE tmpMIContainer_all.MIContainerDescId = zc_MIContainer_SummCurrency()
                                           )
        -- Результат

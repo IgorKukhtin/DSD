@@ -112,14 +112,14 @@ BEGIN
                    , CAST (MovementItem.Amount
                          * CASE WHEN vbCurrencyDocumentId <> zc_Currency_Basis()
                                      -- так переводится в валюту zc_Currency_Basis - с округлением до 2-х знаков
-                                     THEN CAST (COALESCE (MIFloat_Price.ValueData, 0) * vbCurrencyValue / CASE WHEN vbParValue > 0 THEN vbParValue ELSE 1 END AS NUMERIC (16, 2))
-                                ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                     THEN CAST (COALESCE (MIFloat_OperPrice.ValueData, 0) * vbCurrencyValue / CASE WHEN vbParValue > 0 THEN vbParValue ELSE 1 END AS NUMERIC (16, 2))
+                                ELSE COALESCE (MIFloat_OperPrice.ValueData, 0)
                            END
                          / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
                      AS NUMERIC (16, 2)) AS OperSumm
 
                      -- сумма по Контрагенту в Валюте - с округлением до 2-х знаков
-                   , CAST (MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, 0) / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS NUMERIC (16, 2)) AS OperSumm_Currency
+                   , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0) / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS NUMERIC (16, 2)) AS OperSumm_Currency
 
                      -- Управленческая группа
                    , View_InfoMoney.InfoMoneyGroupId
@@ -132,9 +132,9 @@ BEGIN
                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                     AND MovementItem.DescId     = zc_MI_Master()
                                     AND MovementItem.isErased   = FALSE
-                   LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                              AND MIFloat_Price.DescId         = zc_MIFloat_Price()
+                   LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
+                                               ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
+                                              AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
                    LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                               AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
@@ -249,7 +249,7 @@ BEGIN
                                        , Amount, OperDate, IsActive
                                         )
        -- это 2 проводки
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId
+       SELECT 0, _tmpItem_group.DescId, vbMovementDescId, inMovementId
             , 0                               AS MovementItemId
             , _tmpItem_group.ContainerId      AS ContainerId
             , 0                               AS ParentId
@@ -259,7 +259,7 @@ BEGIN
             , 0                               AS PartionId               -- Партия
             , 0                               AS WhereObjectId_Analyzer  -- Место учета
             , 0                               AS AccountId_Analyzer      -- Счет - корреспондент
-            , _tmpItem_group.ContainerId      AS ContainerId_Analyzer    -- Контейнер ОПиУ - статья ОПиУ
+            , 0                               AS ContainerId_Analyzer    -- Контейнер ОПиУ - статья ОПиУ
             , 0                               AS ContainerIntId_Analyzer -- Контейнер - Корреспондент
             , 0                               AS ObjectIntId_Analyzer    -- Аналитический справочник
             , 0                               AS ObjectExtId_Analyzer    -- Аналитический справочник
@@ -268,10 +268,10 @@ BEGIN
             , FALSE                           AS isActive
 
        FROM (-- !!!одна!!! проводка в валюте Баланса
-             SELECT tmp.ContainerId, tmp.AccountId, SUM (tmp.OperSumm) AS OperSumm FROM _tmpItem_SummPartner AS tmp GROUP BY tmp.ContainerId, tmp.AccountId
+             SELECT zc_MIContainer_Summ() AS DescId, tmp.ContainerId, tmp.AccountId, SUM (tmp.OperSumm) AS OperSumm FROM _tmpItem_SummPartner AS tmp GROUP BY tmp.ContainerId, tmp.AccountId
             UNION ALL
              -- !!!одна!!! проводка для "забалансового" Валютного счета - если НАДО
-             SELECT tmp.ContainerId_Currency AS ContainerId, tmp.AccountId, SUM (tmp.OperSumm_Currency) AS OperSumm FROM _tmpItem_SummPartner AS tmp WHERE vbCurrencyDocumentId <> zc_Currency_Basis() GROUP BY tmp.ContainerId_Currency, tmp.AccountId
+             SELECT zc_MIContainer_SummCurrency() AS DescId, tmp.ContainerId_Currency AS ContainerId, tmp.AccountId, SUM (tmp.OperSumm_Currency) AS OperSumm FROM _tmpItem_SummPartner AS tmp WHERE vbCurrencyDocumentId <> zc_Currency_Basis() GROUP BY tmp.ContainerId_Currency, tmp.AccountId
             ) AS _tmpItem_group
        -- !!!не будем ограничивать, т.к. эти проводки ?МОГУТ? понадобится в отчетах!!!
        -- WHERE _tmpItem_group.OperSumm <> 0
