@@ -83,13 +83,31 @@ BEGIN
                                                                                                               ,inUserId     := vbUserId)
                                                 ,inValueData       := tmp.ValueData
                                                 )
-        FROM (WITH Object_Price AS (SELECT Object_Price.*
-                                    FROM Object_Price_View AS Object_Price
-                                    WHERE Object_Price.MCSValue > 0
-                                              AND Object_Price.MCSIsClose = False 
-                                              AND Object_Price.UnitId = inUnitId
-                                              AND Object_Price.isErased = FALSE
+        FROM (WITH Object_Price AS (SELECT ObjectLink_Price_Unit.ChildObjectId     AS UnitId
+                                         , Price_Goods.ChildObjectId               AS GoodsId
+                                         , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+                                         , MCS_Value.ValueData                     AS MCSValue 
+                                    FROM ObjectLink        AS ObjectLink_Price_Unit
+                                         LEFT JOIN ObjectBoolean      AS MCS_isClose
+                                                 ON MCS_isClose.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND MCS_isClose.DescId = zc_ObjectBoolean_Price_MCSIsClose()
+                                         LEFT JOIN ObjectLink AS Price_Goods
+                                                ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                               AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                         INNER JOIN Object AS Object_Goods ON Object_Goods.Id = Price_Goods.ChildObjectId
+                                                                          AND Object_Goods.isErased = False
+                                         LEFT JOIN ObjectFloat AS Price_Value
+                                                ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                               AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                                         LEFT JOIN ObjectFloat AS MCS_Value
+                                                 ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+                                    WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                                      AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
+                                      AND COALESCE(MCS_isClose.ValueData,False) = False
+                                      AND COALESCE(MCS_Value.ValueData,0) > 0
                                    )
+
             , MovementItemSaved AS (SELECT T1.Id,
                                            T1.Amount, 
                                            T1.ObjectId  
@@ -262,6 +280,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 12.06.17         *
  27.12.16         * add tmpMI_OrderExternal.Amount
  15.03.16         * add Object_Goods_View.IsClose = FALSE  
  02.02.16                                        * add MovementItem_Income.isErased = FALSE

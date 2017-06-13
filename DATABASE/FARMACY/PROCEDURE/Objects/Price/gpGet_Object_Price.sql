@@ -49,37 +49,78 @@ BEGIN
           , CAST (NULL AS Boolean)   AS isErased;
     ELSE
         RETURN QUERY
-        SELECT
-            Object_Price_View.Id
-           ,Object_Price_View.Price
-           ,Object_Price_View.MCSValue
+        SELECT Object_Price.Id                         AS Id
+             , ROUND(Price_Value.ValueData,2)::TFloat  AS Price
+             , MCS_Value.ValueData                     AS MCSValue
 
-           ,Object_Price_View.GoodsId
-           ,Object_Price_View.GoodsCode
-           ,Object_Price_View.GoodsName
+             , Price_Goods.ChildObjectId               AS GoodsId
+             , Object_Goods.ObjectCode                 AS GoodsCode
+             , Object_Goods.ValueData                  AS GoodsName
 
-           ,Object_Price_View.UnitId
-           ,Object_Price_View.UnitCode
-           ,Object_Price_View.UnitName
+             , ObjectLink_Price_Unit.ChildObjectId     AS UnitId
+             , Object_Unit.ObjectCode                  AS UnitCode
+             , Object_Unit.ValueData                   AS UnitName
 
-           ,object_price_view.DateChange
-           ,object_price_view.MCSDateChange
+             , price_datechange.valuedata              AS DateChange
+             , MCS_datechange.valuedata                AS MCSDateChange
+      
+             , COALESCE(MCS_isClose.ValueData,False)   AS MCSIsClose
+             , MCSIsClose_DateChange.valuedata         AS MCSIsCloseDateChange
 
-           ,object_price_view.MCSIsClose
-           ,object_price_view.MCSIsCloseDateChange
-           
-           ,object_price_view.MCSNotRecalc
-           ,object_price_view.MCSNotRecalcDateChange
-           
-           ,object_price_view.Fix
-           ,object_price_view.FixDateChange
-           
-           ,Object_Price_View.isErased
+             , COALESCE(MCS_NotRecalc.ValueData,False) AS MCSNotRecalc
+             , MCSNotRecalc_DateChange.valuedata       AS MCSNotRecalcDateChange
+      
+             , COALESCE(Price_Fix.ValueData,False)     AS Fix
+             , Fix_DateChange.valuedata                AS FixDateChange
 
-        FROM 
-            Object_Price_View
-        WHERE 
-            Object_Price_View.Id = inId;
+             , Object_Goods.isErased                   AS isErased
+           FROM Object AS Object_Price
+               LEFT JOIN ObjectFloat AS Price_Value
+                                     ON Price_Value.ObjectId = Object_Price.Id
+                                    AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+               LEFT JOIN ObjectDate AS Price_DateChange
+                                    ON Price_DateChange.ObjectId = Object_Price.Id
+                                   AND Price_DateChange.DescId = zc_ObjectDate_Price_DateChange()
+               LEFT JOIN ObjectFloat AS MCS_Value
+                                     ON MCS_Value.ObjectId = Object_Price.Id
+                                    AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+               LEFT JOIN ObjectFloat AS Price_MCSValueOld
+                                     ON Price_MCSValueOld.ObjectId = Object_Price.Id
+                                    AND Price_MCSValueOld.DescId = zc_ObjectFloat_Price_MCSValueOld()
+
+               LEFT JOIN ObjectDate AS MCS_DateChange
+                                    ON MCS_DateChange.ObjectId = Object_Price.Id
+                                   AND MCS_DateChange.DescId = zc_ObjectDate_Price_MCSDateChange()
+
+               LEFT JOIN ObjectLink AS Price_Goods
+                                    ON Price_Goods.ObjectId = Object_Price.Id
+                                   AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+               LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Price_Goods.ChildObjectId
+
+               LEFT JOIN ObjectLink AS ObjectLink_Price_Unit
+                                    ON ObjectLink_Price_Unit.ObjectId = Object_Price.Id
+                                   AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+               LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Price_Unit.ChildObjectId
+               LEFT JOIN ObjectBoolean AS MCS_isClose
+                                    ON MCS_isClose.ObjectId = Object_Price.Id
+                                   AND MCS_isClose.DescId = zc_ObjectBoolean_Price_MCSIsClose()
+               LEFT JOIN ObjectDate AS MCSIsClose_DateChange
+                                    ON MCSIsClose_DateChange.ObjectId = Object_Price.Id
+                                   AND MCSIsClose_DateChange.DescId = zc_ObjectDate_Price_MCSIsCloseDateChange()
+               LEFT JOIN ObjectBoolean AS MCS_NotRecalc
+                                    ON MCS_NotRecalc.ObjectId = Object_Price.Id
+                                   AND MCS_NotRecalc.DescId = zc_ObjectBoolean_Price_MCSNotRecalc()
+               LEFT JOIN ObjectDate AS MCSNotRecalc_DateChange
+                                    ON MCSNotRecalc_DateChange.ObjectId = Object_Price.Id
+                                   AND MCSNotRecalc_DateChange.DescId = zc_ObjectDate_Price_MCSNotRecalcDateChange()
+               LEFT JOIN ObjectBoolean AS Price_Fix
+                                    ON Price_Fix.ObjectId = Object_Price.Id
+                                   AND Price_Fix.DescId = zc_ObjectBoolean_Price_Fix()
+               LEFT JOIN ObjectDate AS Fix_DateChange
+                                    ON Fix_DateChange.ObjectId = Object_Price.Id
+                                   AND Fix_DateChange.DescId = zc_ObjectDate_Price_FixDateChange()
+           WHERE Object_Price.DescId = zc_Object_Price() 
+             AND Object_Price.Id = inId;
 
     END IF;
 END;
@@ -89,10 +130,11 @@ ALTER FUNCTION gpGet_Object_Price (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».  ¬ÓÓ·Í‡ÎÓ ¿.¿.
+12.06.17          * Û·‡ÎË Object_Price_View
 22.12.2015                                                       *
 29.08.2015                                                       * + MCSIsClose, MCSNotRecalc
  31.07.15                                                        *
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpGet_Object_Price (0, '')
+-- SELECT * FROM gpGet_Object_Price (497019, '2')

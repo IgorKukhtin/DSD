@@ -202,3 +202,4 @@ ALTER FUNCTION gpRecalcMCS(Integer, Integer, Integer, TVarChar) OWNER TO postgre
  04.07.16         * add PercentMarkup
  29.08.15                                                         *
  */
+----select * from gpRecalcMCS(inUnitId := 3457773 , inPeriod := 40 , inDay := 6 ,  inSession := '424351')

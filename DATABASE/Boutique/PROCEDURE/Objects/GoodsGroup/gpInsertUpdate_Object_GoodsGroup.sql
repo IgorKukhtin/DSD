@@ -62,6 +62,78 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsGroup_InfoMoney(), ioId, inInfoMoneyId);
 
 
+  IF inInfoMoneyId <> 0
+   THEN
+   -- изменили свойство <УП статью> у всех товаров этой группы
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ObjectLink.ObjectId, inInfoMoneyId)
+   FROM ObjectLink
+   WHERE DescId = zc_ObjectLink_Goods_GoodsGroup()
+     AND ChildObjectId IN -- !!! опускаемся на все уровни вниз !!!!
+                     (SELECT ioId
+                     UNION ALL
+                      SELECT ObjectLink.ObjectId
+                      FROM ObjectLink
+                      WHERE ObjectLink.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                        AND ObjectLink.ChildObjectId = ioId
+                     UNION ALL
+                      SELECT ObjectLink_Child1.ObjectId
+                      FROM ObjectLink
+                           JOIN ObjectLink AS ObjectLink_Child1 ON ObjectLink_Child1.ChildObjectId = ObjectLink.ObjectId
+                                                               AND ObjectLink_Child1.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                      WHERE ObjectLink.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                        AND ObjectLink.ChildObjectId = ioId
+                     UNION ALL
+                      SELECT ObjectLink_Child2.ObjectId
+                      FROM ObjectLink
+                           JOIN ObjectLink AS ObjectLink_Child1 ON ObjectLink_Child1.ChildObjectId = ObjectLink.ObjectId
+                                                               AND ObjectLink_Child1.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                           JOIN ObjectLink AS ObjectLink_Child2 ON ObjectLink_Child2.ChildObjectId = ObjectLink_Child1.ObjectId
+                                                               AND ObjectLink_Child2.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                      WHERE ObjectLink.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                        AND ObjectLink.ChildObjectId = ioId
+                     UNION ALL
+                      SELECT ObjectLink_Child3.ObjectId
+                      FROM ObjectLink
+                           JOIN ObjectLink AS ObjectLink_Child1 ON ObjectLink_Child1.ChildObjectId = ObjectLink.ObjectId
+                                                               AND ObjectLink_Child1.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                           JOIN ObjectLink AS ObjectLink_Child2 ON ObjectLink_Child2.ChildObjectId = ObjectLink_Child1.ObjectId
+                                                               AND ObjectLink_Child2.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                           JOIN ObjectLink AS ObjectLink_Child3 ON ObjectLink_Child3.ChildObjectId = ObjectLink_Child2.ObjectId
+                                                               AND ObjectLink_Child3.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                      WHERE ObjectLink.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                        AND ObjectLink.ChildObjectId = ioId
+                     UNION ALL
+                      SELECT ObjectLink_Child4.ObjectId
+                      FROM ObjectLink
+                           JOIN ObjectLink AS ObjectLink_Child1 ON ObjectLink_Child1.ChildObjectId = ObjectLink.ObjectId
+                                                               AND ObjectLink_Child1.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                           JOIN ObjectLink AS ObjectLink_Child2 ON ObjectLink_Child2.ChildObjectId = ObjectLink_Child1.ObjectId
+                                                               AND ObjectLink_Child2.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                           JOIN ObjectLink AS ObjectLink_Child3 ON ObjectLink_Child3.ChildObjectId = ObjectLink_Child2.ObjectId
+                                                               AND ObjectLink_Child3.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                           JOIN ObjectLink AS ObjectLink_Child4 ON ObjectLink_Child4.ChildObjectId = ObjectLink_Child3.ObjectId
+                                                               AND ObjectLink_Child4.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                      WHERE ObjectLink.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                        AND ObjectLink.ChildObjectId = ioId
+                     UNION ALL
+                      SELECT ObjectLink_Child5.ObjectId
+                      FROM ObjectLink
+                           JOIN ObjectLink AS ObjectLink_Child1 ON ObjectLink_Child1.ChildObjectId = ObjectLink.ObjectId
+                                                               AND ObjectLink_Child1.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                           JOIN ObjectLink AS ObjectLink_Child2 ON ObjectLink_Child2.ChildObjectId = ObjectLink_Child1.ObjectId
+                                                               AND ObjectLink_Child2.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                           JOIN ObjectLink AS ObjectLink_Child3 ON ObjectLink_Child3.ChildObjectId = ObjectLink_Child2.ObjectId
+                                                               AND ObjectLink_Child3.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                           JOIN ObjectLink AS ObjectLink_Child4 ON ObjectLink_Child4.ChildObjectId = ObjectLink_Child3.ObjectId
+                                                               AND ObjectLink_Child4.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                           JOIN ObjectLink AS ObjectLink_Child5 ON ObjectLink_Child5.ChildObjectId = ObjectLink_Child4.ObjectId
+                                                               AND ObjectLink_Child5.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                      WHERE ObjectLink.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                        AND ObjectLink.ChildObjectId = ioId
+                     )
+  ;
+   END IF; -- inInfoMoneyId <> 0
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    

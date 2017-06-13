@@ -66,9 +66,18 @@ BEGIN
                            WHERE MovementItem.MovementId =  inMovementId
                              AND MovementItem.isErased = FALSE
                           ) AS tmpMI ON tmpMI.GoodsId = tmpContainer.GoodsId
-                LEFT OUTER JOIN Object_Price_View AS Object_Price 
-                                                  ON COALESCE(tmpMI.GoodsId,tmpContainer.GoodsId) = Object_Price.GoodsId 
-                                                 AND Object_Price.UnitId = vbUnitId
+                LEFT OUTER JOIN (SELECT Price_Goods.ChildObjectId               AS GoodsId
+                                      , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+                                 FROM ObjectLink AS ObjectLink_Price_Unit
+                                   LEFT JOIN ObjectLink AS Price_Goods
+                                          ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                         AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                   LEFT JOIN ObjectFloat AS Price_Value
+                                          ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                 WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                                   AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId  
+                                 ) AS Object_Price ON Object_Price.GoodsId  = COALESCE(tmpMI.GoodsId,tmpContainer.GoodsId)
+                                                 
                                                               
            ) AS tmp;
    
@@ -95,6 +104,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.06.17         * убрали Object_Price_View
  05.01.17         *
  26.04.15                                        * all
  24.04.15         *
