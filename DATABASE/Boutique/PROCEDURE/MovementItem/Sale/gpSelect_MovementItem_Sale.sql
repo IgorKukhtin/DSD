@@ -177,10 +177,7 @@ BEGIN
                         ELSE CAST ( COALESCE (tmpMI.Amount, 0) * tmpMI.OperPrice AS NUMERIC (16, 2))
                    END AS TFloat) AS AmountSumm
 
-           , CAST (CASE WHEN tmpMI.CountForPrice <> 0
-                           THEN CAST (COALESCE (tmpMI.Amount, 0) * tmpMI.OperPriceList / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                        ELSE CAST ( COALESCE (tmpMI.Amount, 0) * tmpMI.OperPriceList AS NUMERIC (16, 2))
-                   END AS TFloat) AS AmountPriceListSumm
+           , CAST ( (COALESCE (tmpMI.Amount, 0) * tmpMI.OperPriceList) AS TFloat) AS AmountPriceListSumm
 
            , tmpMI.CurrencyValue            ::TFloat
            , tmpMI.ParValue                 ::TFloat
@@ -189,11 +186,7 @@ BEGIN
            , tmpMI.TotalChangePercent       ::TFloat
            , tmpMI.TotalChangePercentPay    ::TFloat
 
-           , CAST ((CASE WHEN tmpMI.CountForPrice <> 0
-                           THEN CAST (COALESCE (tmpMI.Amount, 0) * tmpMI.OperPriceList / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                        ELSE CAST ( COALESCE (tmpMI.Amount, 0) * tmpMI.OperPriceList AS NUMERIC (16, 2))
-                   END) - tmpMI.TotalChangePercent
-                 AS TFloat) AS TotalSummPay
+           , CAST (  ( COALESCE (tmpMI.Amount, 0) * tmpMI.OperPriceList - tmpMI.TotalChangePercent)   AS TFloat) AS TotalSummPay
 
            , tmpMI_Child.Amount_GRN         ::TFloat AS TotalPay_Grn 
            , tmpMI_Child.Amount_USD         ::TFloat AS TotalPay_USD

@@ -36,10 +36,16 @@ BEGIN
         -- Результат такой
         RETURN QUERY
             WITH 
-            tmpPrice AS (SELECT Object_Price_View.GoodsId
-                              , Object_Price_View.Price
-                         FROM Object_Price_View
-                         WHERE Object_Price_View.UnitId = vbUnitId
+            tmpPrice AS (SELECT Price_Goods.ChildObjectId               AS GoodsId
+                              , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+                         FROM ObjectLink AS ObjectLink_Price_Unit
+                              LEFT JOIN ObjectLink AS Price_Goods
+                                     ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                    AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                              LEFT JOIN ObjectFloat AS Price_Value
+                                     ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                         WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                           AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId     
                          )
 
         , MI_PromoUnit AS (SELECT MI_PromoUnit.Id
@@ -122,6 +128,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 12.06.17         *
  04.02.17         *
 */
 

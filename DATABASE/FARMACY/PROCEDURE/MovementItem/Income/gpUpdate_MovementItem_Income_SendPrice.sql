@@ -84,7 +84,34 @@ BEGIN
                                FROM DD),
          MovementItem_Income AS (SELECT SUM(PriceWithVAT * Amount) / SUM(Amount) AS PriceWithVAT, MovementItem_Income_View.GoodsId
                                   FROM MovementItem_Income_View WHERE MovementId = inMovementId
-                               GROUP BY MovementItem_Income_View.GoodsId)
+                               GROUP BY MovementItem_Income_View.GoodsId),
+
+         tmpPrice_View AS (SELECT ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+                                , Price_Goods.ChildObjectId               AS GoodsId
+                                , COALESCE(Price_Fix.ValueData,False)     AS Fix 
+                                , COALESCE(Price_Top.ValueData,False)     AS isTop   
+                                , COALESCE(Price_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup 
+                           FROM ObjectLink        AS ObjectLink_Price_Unit
+                                LEFT JOIN ObjectLink       AS Price_Goods
+                                       ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                      AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                LEFT JOIN ObjectFloat       AS Price_Value
+                                       ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                LEFT JOIN ObjectBoolean     AS Price_Fix
+                                        ON Price_Fix.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                       AND Price_Fix.DescId = zc_ObjectBoolean_Price_Fix()
+                                LEFT JOIN ObjectBoolean     AS Price_Top
+                                        ON Price_Top.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                       AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
+                                LEFT JOIN ObjectFloat       AS Price_PercentMarkup
+                                        ON Price_PercentMarkup.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                       AND Price_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
+                           WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                             AND ObjectLink_Price_Unit.ChildObjectId = vbToId -- 183292 --inUnitId
+                             AND (COALESCE(Price_Fix.ValueData,False) = True
+                                  OR COALESCE(Price_Top.ValueData,False) = True
+                                  OR COALESCE(Price_PercentMarkup.ValueData, 0) <> 0)
+                           )
        
      SELECT COUNT(lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSale(), MovementItem_Income_View.Id, 
                          zfCalc_SalePrice(MovementItem_Income.PriceWithVAT                            -- ÷ÂÌ‡ — Õƒ—
@@ -95,10 +122,10 @@ BEGIN
                                         , CASE WHEN View_Price.Fix = TRUE AND View_Price.Price <> 0 /*AND COALESCE (Object_Goods_View.Price, 0) = 0*/ THEN View_Price.Price ELSE Object_Goods_View.Price END))) -- ÷ÂÌ‡ Û ÚÓ‚‡‡ (ÙËÍÒËÓ‚‡ÌÌ‡ˇ)
          FROM MarginCondition, MovementItem_Income_View, MovementItem_Income
               LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = MovementItem_Income.GoodsId
-              LEFT JOIN Object_Price_View AS View_Price
-                                          ON View_Price.GoodsId = MovementItem_Income.GoodsId
-                                         AND View_Price.UnitId  = vbToId
-                                         AND (View_Price.isTop  = TRUE OR View_Price.Fix = TRUE OR View_Price.PercentMarkup <> 0)
+              LEFT JOIN tmpPrice_View AS View_Price
+                                      ON View_Price.GoodsId = MovementItem_Income.GoodsId
+                         --            AND View_Price.UnitId  = vbToId
+                         --            AND (View_Price.isTop  = TRUE OR View_Price.Fix = TRUE OR View_Price.PercentMarkup <> 0)
 
          WHERE MarginCondition.MinPrice < MovementItem_Income.PriceWithVAT AND MovementItem_Income.PriceWithVAT <= MarginCondition.MaxPrice 
            AND MovementItem_Income.GoodsId = MovementItem_Income_View.GoodsId
@@ -131,6 +158,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 12.06.17         *
  09.12.16         * add ObjectFloat_Contract_Percent
  13.05.15                        *   
  26.01.15                        *   

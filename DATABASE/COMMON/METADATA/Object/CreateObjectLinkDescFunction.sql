@@ -1432,6 +1432,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_StorageLine_Unit() RETURNS Integer AS $
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_StorageLine_Unit', 'Подразделение', zc_Object_StorageLine(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_StorageLine_Unit');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_DocumentKind_Goods() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_DocumentKind_Goods'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_DocumentKind_Goods', 'Товары', zc_Object_DocumentKind(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_DocumentKind_Goods');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_DocumentKind_GoodsKind() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_DocumentKind_GoodsKind'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_DocumentKind_GoodsKind', 'Виды Товаров', zc_Object_DocumentKind(), zc_Object_GoodsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_DocumentKind_GoodsKind');
+
+
 --!!! АПТЕКА
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_NDSKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_NDSKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -1734,6 +1743,8 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 12.06.17         * zc_ObjectLink_DocumentKind_GoodsKind
+                    zc_ObjectLink_DocumentKind_Goods
  05.03.17         * zc_ObjectLink_Contract_GroupMemberSP
  03.03.17         * zc_ObjectLink_Member_Bank
                     zc_ObjectLink_Member_BankSecond

@@ -5,6 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Inte
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
  INOUT ioId                   Integer   , -- Ключ объекта <Элемент документа>
@@ -18,7 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
    OUT outOperPrice           TFloat    , -- Цена
    OUT outCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm          TFloat    , -- Сумма расчетная
-   OUT outOperPriceList       TFloat    , -- Цена по прайсу
+ INOUT ioOperPriceList        TFloat    , -- Цена по прайсу
    OUT outAmountPriceListSumm TFloat    , -- Сумма по прайсу
 
    OUT outCurrencyValue         TFloat    , -- 
@@ -77,7 +78,7 @@ BEGIN
      WHERE Movement.Id = inMovementId;
 
      -- цена продажи из прайса 
-     outOperPriceList := COALESCE ((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem(vbOperDate, zc_PriceList_Basis(), inGoodsId) AS tmp), 0);
+     --ioOperPriceList := COALESCE ((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem(vbOperDate, zc_PriceList_Basis(), inGoodsId) AS tmp), 0);
 
      -- данные из партии : OperPrice и CountForPrice
      SELECT COALESCE (Object_PartionGoods.CountForPrice,1)
@@ -106,10 +107,7 @@ BEGIN
                            ELSE CAST (inAmount * outOperPrice AS NUMERIC (16, 2))
                       END;
      -- расчитали сумму по прайсу по элементу, для грида
-     outAmountPriceListSumm := CASE WHEN outCountForPrice > 0
-                                         THEN CAST (inAmount * outOperPriceList / outCountForPrice AS NUMERIC (16, 2))
-                                    ELSE CAST (inAmount * outOperPriceList AS NUMERIC (16, 2))
-                               END;
+     outAmountPriceListSumm := CAST (inAmount * ioOperPriceList AS NUMERIC (16, 2));
 
      outTotalChangePercent := outAmountPriceListSumm / 100 * COALESCE(outChangePercent,0) + COALESCE(inSummChangePercent,0) ;
 
@@ -126,7 +124,7 @@ BEGIN
                                               , inSummChangePercent  := COALESCE(inSummChangePercent,0)    ::TFloat
                                               , inOperPrice          := outOperPrice
                                               , inCountForPrice      := outCountForPrice
-                                              , inOperPriceList      := outOperPriceList
+                                              , inOperPriceList      := ioOperPriceList
                                               , inCurrencyValue         := outCurrencyValue 
                                               , inParValue              := outParValue 
                                               , inTotalChangePercent    := COALESCE(outTotalChangePercent,0)    ::TFloat     
@@ -152,9 +150,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.16.17         *
  09.05.17         *
  10.04.17         *
 */
 
 -- тест
--- select * from gpInsertUpdate_MovementItem_Sale(ioId := 0 , inMovementId := 8 , inGoodsId := 446 , inPartionId := 50 , inAmount := 4 , outOperPrice := 100 , ioCountForPrice := 1 ,  inSession := '2');
+-- select * from gpInsertUpdate_MovementItem_Sale(ioId := 0 , inMovementId := 8 , inGoodsId := 446 , inPartionId := 50 , inisPay := False ,  inAmount := 4 ,inSummChangePercent:=0, ioOperPriceList := 1030 , inBarCode := '1' ::TVarChar,  inSession := '2');

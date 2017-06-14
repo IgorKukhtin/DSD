@@ -1,9 +1,11 @@
 -- Function: gpSelect_MovementItem_PromoGoods_Mobile()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_PromoGoods_Mobile (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_PromoGoods_Mobile (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PromoGoods_Mobile(
     IN inMovementId Integer  , --
+    IN inMemberId   Integer  , -- 
     IN inSession    TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id              Integer -- Уникальный идентификатор, формируется в Главной БД, и используется при синхронизации
@@ -34,15 +36,15 @@ BEGIN
       vbUserId:= lpGetUserBySession (inSession);
 
       vbMemberId:= (SELECT tmp.MemberId FROM gpGetMobile_Object_Const (inSession) AS tmp);
-      /*IF (COALESCE(inMemberId,0) <> 0 AND COALESCE(vbMemberId,0) <> inMemberId)
+      IF (COALESCE(inMemberId,0) <> 0 AND COALESCE(vbMemberId,0) <> inMemberId)
         THEN
             RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.'; 
       END IF;
-*/
+
       calcSession := (SELECT CAST (ObjectLink_User_Member.ObjectId AS TVarChar) 
                       FROM ObjectLink AS ObjectLink_User_Member
                       WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-                        AND ObjectLink_User_Member.ChildObjectId = vbMemberId);
+                        AND ObjectLink_User_Member.ChildObjectId = inMemberId);
 
       RETURN QUERY
        SELECT tmpMI.Id
@@ -86,6 +88,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.   Ярошенко Р.Ф.
+ 13.06.17         * add inMemberId
  29.03.17         *
 */
 

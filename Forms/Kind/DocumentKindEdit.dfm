@@ -2,7 +2,7 @@ object DocumentKindEditForm: TDocumentKindEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1042#1080#1076#1099' '#1086#1087#1077#1088#1072#1094#1080#1081'>'
-  ClientHeight = 139
+  ClientHeight = 248
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -24,12 +24,12 @@ object DocumentKindEditForm: TDocumentKindEditForm
   end
   object cxLabel1: TcxLabel
     Left = 10
-    Top = 49
+    Top = 54
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 100
+    Top = 200
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object DocumentKindEditForm: TDocumentKindEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 100
+    Top = 200
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -48,7 +48,7 @@ object DocumentKindEditForm: TDocumentKindEditForm
   end
   object cxLabel2: TcxLabel
     Left = 10
-    Top = 8
+    Top = 11
     Caption = #1050#1086#1076
   end
   object edCode: TcxCurrencyEdit
@@ -59,9 +59,33 @@ object DocumentKindEditForm: TDocumentKindEditForm
     TabOrder = 5
     Width = 273
   end
+  object cxLabel3: TcxLabel
+    Left = 10
+    Top = 99
+    Caption = #1058#1086#1074#1072#1088
+  end
+  object edGoodsName: TcxTextEdit
+    Left = 10
+    Top = 117
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 273
+  end
+  object cxLabel4: TcxLabel
+    Left = 10
+    Top = 143
+    Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+  end
+  object edGoodsKindName: TcxTextEdit
+    Left = 10
+    Top = 161
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 273
+  end
   object ActionList: TActionList
     Left = 152
-    Top = 56
+    Top = 224
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -120,8 +144,8 @@ object DocumentKindEditForm: TDocumentKindEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 104
-    Top = 56
+    Left = 88
+    Top = 184
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -159,6 +183,20 @@ object DocumentKindEditForm: TDocumentKindEditForm
         Component = edName
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsName'
+        Value = Null
+        Component = edGoodsName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsKindName'
+        Value = Null
+        Component = edGoodsKindName
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -176,11 +214,11 @@ object DocumentKindEditForm: TDocumentKindEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 160
-    Top = 104
+    Left = 248
+    Top = 200
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 8
-    Top = 48
+    Left = 80
+    Top = 128
   end
 end

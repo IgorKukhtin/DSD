@@ -187,10 +187,18 @@ BEGIN
                   )
 
     -- Список цены + ТОП
-  , GoodsPrice AS (SELECT Object_Price_View.GoodsId, Object_Price_View.isTOP
-                   FROM Object_Price_View
-                   WHERE Object_Price_View.UnitId = vbUnitId
-                     AND Object_Price_View.isTop  = TRUE
+  , GoodsPrice AS (SELECT Price_Goods.ChildObjectId           AS GoodsId
+                        , COALESCE(Price_Top.ValueData,False) AS isTop   
+                       FROM ObjectLink AS ObjectLink_Price_Unit
+                            INNER JOIN ObjectBoolean     AS Price_Top
+                                    ON Price_Top.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                   AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
+                                   AND Price_Top.ValueData = True
+                            LEFT JOIN ObjectLink       AS Price_Goods
+                                   ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                  AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                       WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                         AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                   )
 
   , tmpMI_Child AS (SELECT MI_Child.ParentId AS MIMasterId
@@ -282,8 +290,8 @@ BEGIN
 
        -- Результат 1
        SELECT
-             tmpMI.MovementItemId                                    AS Id
-           , tmpMI.GoodsId                                           AS GoodsId
+             tmpMI.MovementItemId                                   AS Id
+           , tmpMI.GoodsId                                          AS GoodsId
            , tmpMI.GoodsCode
            , tmpMI.GoodsName
            , tmpMI.Multiplicity
@@ -293,7 +301,7 @@ BEGIN
            , tmpMI.NDS
 
            , tmpMI.isTOP
-           , tmpMI.isUnitTOP                                         AS isTOP_Price
+           , tmpMI.isUnitTOP                                        AS isTOP_Price
            , tmpMI.isClose
            , tmpMI.isFirst
            , tmpMI.isSecond
@@ -722,10 +730,18 @@ BEGIN
                                                          AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
                   )
     -- Список цены + ТОП
-  , GoodsPrice AS (SELECT Object_Price_View.GoodsId, Object_Price_View.isTOP
-                   FROM Object_Price_View
-                   WHERE Object_Price_View.UnitId = vbUnitId
-                     AND Object_Price_View.isTop  = TRUE
+  , GoodsPrice AS (SELECT Price_Goods.ChildObjectId           AS GoodsId
+                        , COALESCE(Price_Top.ValueData,False) AS isTop   
+                       FROM ObjectLink AS ObjectLink_Price_Unit
+                            INNER JOIN ObjectBoolean     AS Price_Top
+                                    ON Price_Top.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                   AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
+                                   AND Price_Top.ValueData = True
+                            LEFT JOIN ObjectLink       AS Price_Goods
+                                   ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                  AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                       WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                         AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                   )
 
       , tmpRemains AS (SELECT Container.ObjectId
@@ -909,11 +925,34 @@ BEGIN
                        LEFT JOIN tmpMIF_AmountManual AS MIFloat_AmountManual ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                        )  
 
- , tmpPriceView AS (SELECT Object_Price_View.*
-                    FROM Object_Price_View
-                         LEFT JOIN tmpMI_Master ON tmpMI_Master.ObjectId = Object_Price_View.GoodsId
-                    WHERE Object_Price_View.UnitId = vbUnitId
-                      AND (inShowAll = TRUE OR tmpMI_Master.Id is not null)
+    , tmpPriceView AS (SELECT ObjectLink_Price_Unit.ObjectId          AS Id
+                            , MCS_Value.ValueData                     AS MCSValue  
+                            , Price_Goods.ChildObjectId               AS GoodsId
+                            , COALESCE(MCS_isClose.ValueData,False)   AS MCSIsClose  
+                            , COALESCE(MCS_NotRecalc.ValueData,False) AS MCSNotRecalc  
+                            , COALESCE(Price_Top.ValueData,False)     AS isTop                   
+                       FROM ObjectLink AS ObjectLink_Price_Unit
+                            LEFT JOIN ObjectLink AS Price_Goods
+                                   ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                  AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                             
+                            LEFT JOIN tmpMI_Master ON tmpMI_Master.ObjectId = Price_Goods.ChildObjectId  -- goodsId
+
+                            LEFT JOIN ObjectFloat AS MCS_Value
+                                    ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                   AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+                            LEFT JOIN ObjectBoolean AS MCS_isClose
+                                    ON MCS_isClose.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                   AND MCS_isClose.DescId = zc_ObjectBoolean_Price_MCSIsClose()
+                            LEFT JOIN ObjectBoolean AS MCS_NotRecalc
+                                    ON MCS_NotRecalc.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                   AND MCS_NotRecalc.DescId = zc_ObjectBoolean_Price_MCSNotRecalc()
+                            LEFT JOIN ObjectBoolean AS Price_Top
+                                    ON Price_Top.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                   AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
+                       WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                         AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
+                         AND (inShowAll = TRUE OR tmpMI_Master.Id is not null)
                     )
 
      , tmpData AS (SELECT tmpMI.Id                                                AS Id 
@@ -921,18 +960,18 @@ BEGIN
                         , COALESCE (tmpMI.GoodsCode, tmpGoods.GoodsCode)          AS GoodsCode
                         , COALESCE (tmpMI.GoodsName, tmpGoods.GoodsName)          AS GoodsName
                         , COALESCE (tmpMI.Goods_isTOP, tmpGoods.Goods_isTOP)      AS isTOP
-                        , COALESCE(tmpMI.GoodsGroupId, tmpGoods.GoodsGroupId)     AS GoodsGroupId
-                        , COALESCE(tmpMI.NDSKindId, tmpGoods.NDSKindId)           AS NDSKindId
-                        , COALESCE(tmpMI.NDSKindName, tmpGoods.NDSKindName)       AS NDSKindName
-                        , COALESCE(tmpMI.NDS, tmpGoods.NDS)                       AS NDS
-                        , COALESCE(tmpMI.isClose, tmpGoods.isClose)               AS isClose
-                        , COALESCE(tmpMI.isFirst, tmpGoods.isFirst)               AS isFirst
-                        , COALESCE(tmpMI.isSecond, tmpGoods.isSecond)             AS isSecond
-                        , COALESCE(tmpMI.Multiplicity, tmpGoods.Multiplicity)    AS Multiplicity
+                        , COALESCE (tmpMI.GoodsGroupId, tmpGoods.GoodsGroupId)    AS GoodsGroupId
+                        , COALESCE (tmpMI.NDSKindId, tmpGoods.NDSKindId)          AS NDSKindId
+                        , COALESCE (tmpMI.NDSKindName, tmpGoods.NDSKindName)      AS NDSKindName
+                        , COALESCE (tmpMI.NDS, tmpGoods.NDS)                      AS NDS
+                        , COALESCE (tmpMI.isClose, tmpGoods.isClose)              AS isClose
+                        , COALESCE (tmpMI.isFirst, tmpGoods.isFirst)              AS isFirst
+                        , COALESCE (tmpMI.isSecond, tmpGoods.isSecond)            AS isSecond
+                        , COALESCE (tmpMI.Multiplicity, tmpGoods.Multiplicity)    AS Multiplicity
                         , tmpMI.CalcAmount
-                        , NULLIF(tmpMI.Amount,0)                                 AS Amount
-                        , tmpMI.Price * tmpMI.CalcAmount                         AS Summ
-                        , COALESCE (tmpMI.isErased, FALSE)                       AS isErased
+                        , NULLIF(tmpMI.Amount,0)                                  AS Amount
+                        , tmpMI.Price * tmpMI.CalcAmount                          AS Summ
+                        , COALESCE (tmpMI.isErased, FALSE)                        AS isErased
                         , tmpMI.Price
                         , tmpMI.MinimumLot
                         , tmpMI.PartionGoodsDate
@@ -944,11 +983,11 @@ BEGIN
                         , tmpMI.JuridicalName -- ***
                         , tmpMI.ContractId
                         , tmpMI.ContractName
-                        , tmpMI.MakerName 
+                        , tmpMI.MakerName
                         , tmpMI.SuperFinalPrice 
-                        , COALESCE(tmpMI.isCalculated, FALSE)                    AS isCalculated
-                        , tmpMI.AmountSecond                                     AS AmountSecond
-                        , NULLIF(tmpMI.AmountAll,0)                              AS AmountAll
+                        , COALESCE(tmpMI.isCalculated, FALSE)                     AS isCalculated
+                        , tmpMI.AmountSecond                                      AS AmountSecond
+                        , NULLIF(tmpMI.AmountAll,0)                               AS AmountAll
                         , NULLIF(COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll),0)      AS CalcAmountAll
                         , tmpMI.Price * COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll)  AS SummAll
                    FROM tmpGoods
@@ -1040,7 +1079,7 @@ BEGIN
        FROM tmpData AS tmpMI
 
             LEFT JOIN tmpPriceView AS Object_Price_View ON tmpMI.GoodsId = Object_Price_View.GoodsId
-                             --     AND Object_Price_View.UnitId = vbUnitId
+
             LEFT JOIN tmpRemains AS Remains ON Remains.ObjectId = tmpMI.GoodsId
 
             LEFT JOIN tmpIncome AS Income ON Income.Income_GoodsId = tmpMI.GoodsId
