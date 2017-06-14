@@ -27,26 +27,17 @@ RETURNS TABLE (Id              Integer -- Уникальный идентификатор, формируется 
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbPersonalId Integer;
-   DECLARE vbMemberId Integer;
-   DECLARE calcSession TVarChar;
+   DECLARE vbUserId_Mobile Integer;
 BEGIN
-      -- проверка прав пользователя на вызов процедуры
-      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
-      vbUserId:= lpGetUserBySession (inSession);
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
+     vbUserId:= lpGetUserBySession (inSession);
 
-      vbMemberId:= (SELECT tmp.MemberId FROM gpGetMobile_Object_Const (inSession) AS tmp);
-      IF (COALESCE(inMemberId,0) <> 0 AND COALESCE(vbMemberId,0) <> inMemberId)
-        THEN
-            RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.'; 
-      END IF;
+     -- !!!меняем значение!!! - с какими параметрами пользователь может просматривать данные с мобильного устройства
+     vbUserId_Mobile:= (SELECT CASE WHEN lfGet.UserId > 0 THEN lfGet.UserId ELSE vbUserId END FROM lfGet_User_MobileCheck (inMemberId:= inMemberId, inUserId:= vbUserId) AS lfGet);
 
-      calcSession := (SELECT CAST (ObjectLink_User_Member.ObjectId AS TVarChar) 
-                      FROM ObjectLink AS ObjectLink_User_Member
-                      WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-                        AND ObjectLink_User_Member.ChildObjectId = inMemberId);
-
-      RETURN QUERY
+     -- Результат
+     RETURN QUERY
        SELECT tmpMI.Id
             , tmpMI.MovementId
             , tmpMI.GoodsId
@@ -63,7 +54,7 @@ BEGIN
             , tmpMI.PriceWithVAT
             , tmpMI.TaxPromo
             , tmpMI.isSync
-       FROM gpSelectMobile_MovementItem_PromoGoods (zc_DateStart(), calcSession) AS tmpMI
+       FROM gpSelectMobile_MovementItem_PromoGoods (zc_DateStart(), vbUserId_Mobile :: TVarChar) AS tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
 
@@ -92,4 +83,4 @@ $BODY$
  29.03.17         *
 */
 
--- SELECT * FROM gpSelect_MovementItem_PromoGoods_Mobile (inSyncDateIn:= zc_DateStart(), inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MovementItem_PromoGoods_Mobile (inMovementId:= 0, inMemberId:= 0, inSession:= zfCalc_UserAdmin())
