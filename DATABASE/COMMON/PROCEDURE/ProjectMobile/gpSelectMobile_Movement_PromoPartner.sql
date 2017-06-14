@@ -28,7 +28,7 @@ BEGIN
       IF vbPersonalId IS NOT NULL 
       THEN
            RETURN QUERY
-             WITH tmpPromoPartner AS (SELECT Movement_PromoPartner.Id       AS PromoPartnerId
+             WITH tmpPromoPartner AS (SELECT MI_PromoPartner.Id             AS PromoPartnerId
                                            , Movement_PromoPartner.ParentId AS MovementId
                                            , COALESCE (MILinkObject_Contract.ObjectId, 0)::Integer AS ContractId
                                            , MI_PromoPartner.ObjectId       AS PartnerId
