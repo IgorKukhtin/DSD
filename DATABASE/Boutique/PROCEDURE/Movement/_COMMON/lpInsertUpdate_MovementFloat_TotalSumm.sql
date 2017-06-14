@@ -30,8 +30,8 @@ $BODY$
   DECLARE vbTotalCountReturn TFloat;
   DECLARE vbTotalSummReturn TFloat;
   DECLARE vbTotalSummPayReturn TFloat;
+  DECLARE vbTotalSummBalance TFloat;
 /*  DECLARE vbTotalCountSecond TFloat;
-  DECLARE vbTotalCountSecond TFloat;
 */
 BEGIN
      IF COALESCE (inMovementId, 0) = 0
@@ -127,6 +127,7 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
                                         ON MIFloat_TotalPayReturn.MovementItemId = MovementItem.Id
                                        AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()    
+
 
       WHERE MovementItem.MovementId = inMovementId 
         AND MovementItem.DescId     = zc_MI_Master()

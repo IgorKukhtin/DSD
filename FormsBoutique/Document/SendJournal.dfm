@@ -75,7 +75,6 @@ object SendJournalForm: TSendJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalSumm
         end
         item
           Format = ',0.####'
@@ -124,7 +123,6 @@ object SendJournalForm: TSendJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalSumm
         end
         item
           Format = ',0.####'
@@ -240,18 +238,6 @@ object SendJournalForm: TSendJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object TotalSumm: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' ('#1074' '#1074#1072#1083#1102#1090#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072')'
-        DataBinding.FieldName = 'TotalSumm'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        VisibleForCustomization = False
-        Width = 92
-      end
       object TotalSummPriceList: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
         DataBinding.FieldName = 'TotalSummPriceList'
@@ -261,6 +247,16 @@ object SendJournalForm: TSendJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 120
+      end
+      object TotalSummBalance: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1074#1093'. ('#1043#1056#1053')'
+        DataBinding.FieldName = 'TotalSummBalance'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
