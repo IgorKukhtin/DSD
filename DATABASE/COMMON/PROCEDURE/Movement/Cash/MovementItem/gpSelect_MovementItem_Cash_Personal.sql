@@ -96,7 +96,7 @@ BEGIN
                                           , CLO_Position.ObjectId
                                           , CLO_Personal.ObjectId
                                   )
-              , tmpParent AS (SELECT SUM (COALESCE (MIFloat_SummService.ValueData, 0))      AS SummService
+          , tmpParent_all AS (SELECT SUM (COALESCE (MIFloat_SummService.ValueData, 0))      AS SummService
                                    , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0) - COALESCE (tmpSummNalog.SummNalog, 0) + COALESCE (MIFloat_SummNalog.ValueData, 0)
                                         - COALESCE (MIFloat_SummCard.ValueData, 0)
                                         - COALESCE (MIFloat_SummCardSecond.ValueData, 0)
@@ -219,6 +219,82 @@ BEGIN
                                      , MILinkObject_Position.ObjectId
                                      , MILinkObject_InfoMoney.ObjectId
                                      , MLO_PersonalServiceList.ObjectId
+                             )
+              , tmpParent AS (SELECT tmpParent_all.SummService
+                                   , tmpParent_all.SummToPay_cash
+                                   , tmpParent_all.SummToPay
+                                   , tmpParent_all.SummCard
+                                   , tmpParent_all.SummCardSecond
+                                   , tmpParent_all.SummNalog
+                                   , tmpParent_all.SummMinus
+                                   , tmpParent_all.SummAdd
+                                   , tmpParent_all.SummHoliday
+                                   , tmpParent_all.SummSocialIn
+                                   , tmpParent_all.SummSocialAdd
+                                   , tmpParent_all.SummChild
+                                   , tmpParent_all.SummMinusExt
+                                   , tmpParent_all.SummTransport
+                                   , tmpParent_all.SummTransportAdd
+                                   , tmpParent_all.SummTransportAddLong
+                                   , tmpParent_all.SummTransportTaxi
+                                   , tmpParent_all.SummPhone
+                                   , tmpParent_all.PersonalId
+                                   , tmpParent_all.UnitId
+                                   , tmpParent_all.PositionId
+                                   , tmpParent_all.InfoMoneyId
+                                   , tmpParent_all.PersonalServiceListId
+                              FROM tmpParent_all
+                             UNION
+                              SELECT DISTINCT
+                                     0 AS SummService
+                                   , 0 AS SummToPay_cash
+                                   , 0 AS SummToPay
+                                   , 0 AS SummCard
+                                   , 0 AS SummCardSecond
+                                   , 0 AS SummNalog
+                                   , 0 AS SummMinus
+                                   , 0 AS SummAdd
+                                   , 0 AS SummHoliday
+                                   , 0 AS SummSocialIn
+                                   , 0 AS SummSocialAdd
+                                   , 0 AS SummChild
+                                   , 0 AS SummMinusExt
+                                   , 0 AS SummTransport
+                                   , 0 AS SummTransportAdd
+                                   , 0 AS SummTransportAddLong
+                                   , 0 AS SummTransportTaxi
+                                   , 0 AS SummPhone
+                                   , CLO_Personal.ObjectId  AS PersonalId
+                                   , CLO_Unit.ObjectId      AS UnitId
+                                   , CLO_Position.ObjectId  AS PositionId
+                                   , CLO_InfoMoney.ObjectId AS InfoMoneyId
+                                   , tmp.PersonalServiceListId
+                              FROM (SELECT DISTINCT tmpParent_all.PersonalServiceListId FROM tmpParent_all) AS tmp
+                                   INNER JOIN ContainerLinkObject AS CLO_PersonalServiceList
+                                                                  ON CLO_PersonalServiceList.ObjectId    = tmp.PersonalServiceListId
+                                                                 AND CLO_PersonalServiceList.DescId      = zc_ContainerLinkObject_PersonalServiceList()
+                                   INNER JOIN ContainerLinkObject AS CLO_ServiceDate
+                                                                  ON CLO_ServiceDate.ObjectId    = vbServiceDateId
+                                                                 AND CLO_ServiceDate.DescId      = zc_ContainerLinkObject_ServiceDate()
+                                                                 AND CLO_ServiceDate.ContainerId = CLO_PersonalServiceList.ContainerId
+                                   INNER JOIN ContainerLinkObject AS CLO_Personal
+                                                                  ON CLO_Personal.ContainerId = CLO_ServiceDate.ContainerId
+                                                                 AND CLO_Personal.DescId      = zc_ContainerLinkObject_Personal()
+                                   INNER JOIN ContainerLinkObject AS CLO_InfoMoney
+                                                                  ON CLO_InfoMoney.ContainerId = CLO_ServiceDate.ContainerId
+                                                                 AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
+                                   INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                                  ON CLO_Unit.ContainerId = CLO_ServiceDate.ContainerId
+                                                                 AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                   INNER JOIN ContainerLinkObject AS CLO_Position
+                                                                  ON CLO_Position.ContainerId = CLO_ServiceDate.ContainerId
+                                                                 AND CLO_Position.DescId      = zc_ContainerLinkObject_Position()
+                                   LEFT JOIN tmpParent_all ON tmpParent_all.PersonalId            = CLO_Personal.ObjectId
+                                                          AND tmpParent_all.UnitId                = CLO_Unit.ObjectId
+                                                          AND tmpParent_all.PositionId            = CLO_Position.ObjectId
+                                                          AND tmpParent_all.InfoMoneyId           = CLO_InfoMoney.ObjectId
+                                                          AND tmpParent_all.PersonalServiceListId = tmp.PersonalServiceListId
+                              WHERE tmpParent_all.PersonalId IS NULL
                              )
            , tmpContainer AS (SELECT CLO_ServiceDate.ContainerId
                                    , tmpParent.PersonalId
@@ -345,6 +421,7 @@ BEGIN
             , COALESCE (ObjectBoolean_Member_Official.ValueData, FALSE) :: Boolean AS isOfficial
 
             , Object_Unit.Id                          AS UnitId
+            -- , (select sum(tmpMIContainer.Amount_avance)  from  tmpMIContainer) :: Integer
             , Object_Unit.ObjectCode                  AS UnitCode
             , Object_Unit.ValueData                   AS UnitName
             , Object_Position.Id                      AS PositionId

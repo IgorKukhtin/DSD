@@ -4,7 +4,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
   ClientWidth = 1180
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1196
-  ExplicitHeight = 376
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -262,6 +262,27 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
+          object DescName_Movement: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'DescName_Movement'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object InvNumber_Movement: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'InvNumber_Movement'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 73
+          end
+          object OperDate_Movement: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'OperDate_Movement'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
         end
       end
     end
@@ -273,14 +294,12 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 123
-      EditValue = 42370d
       Properties.SaveTime = False
       ExplicitLeft = 123
     end
     inherited deEnd: TcxDateEdit
       Left = 123
       Top = 31
-      EditValue = 42370d
       Properties.SaveTime = False
       ExplicitLeft = 123
       ExplicitTop = 31
@@ -313,6 +332,13 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       TabOrder = 5
       Visible = False
       Width = 208
+    end
+    object cbMovement: TcxCheckBox
+      Left = 612
+      Top = 5
+      Action = actRefreshMovement
+      TabOrder = 6
+      Width = 102
     end
   end
   object cxLabel3: TcxLabel [2]
@@ -409,6 +435,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       FormName = 'TReport_CheckBonusDialogForm'
       FormNameParam.Value = 'TReport_CheckBonusDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -416,6 +443,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -423,6 +451,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BonusKindId'
@@ -430,6 +459,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           Component = DocumentTaxKindGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BonusKindName'
@@ -438,6 +468,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
@@ -445,6 +476,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           Component = PaidKindGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -453,6 +485,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
@@ -460,6 +493,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           Component = JuridicalGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -468,9 +502,31 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMovement'
+          Value = Null
+          Component = cbMovement
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       OpenBeforeShow = True
+    end
+    object actRefreshMovement: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      Hint = #1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
   end
   inherited MasterDS: TDataSource
@@ -490,6 +546,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -497,6 +554,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
@@ -504,6 +562,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -511,6 +570,15 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMovement'
+        Value = Null
+        Component = cbMovement
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 208
@@ -601,6 +669,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     LookupControl = edBonusKind
     FormNameParam.Value = 'TDocumentBonusKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TDocumentBonusKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -611,6 +680,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -619,6 +689,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 1064
   end
@@ -636,6 +707,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -643,6 +715,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
@@ -650,6 +723,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -657,6 +731,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 368
@@ -667,6 +742,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -677,6 +753,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -685,6 +762,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 348
     Top = 24
@@ -694,6 +772,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -704,6 +783,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -712,6 +792,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 453
     Top = 65534

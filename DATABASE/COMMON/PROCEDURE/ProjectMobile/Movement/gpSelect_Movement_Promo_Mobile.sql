@@ -27,25 +27,17 @@ RETURNS TABLE (Id              Integer   -- Уникальный идентификатор, формируетс
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbMemberId Integer;
-   DECLARE calcSession TVarChar;
+   DECLARE vbUserId_Mobile Integer;
 BEGIN
-      -- проверка прав пользователя на вызов процедуры
-      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
-      vbUserId:= lpGetUserBySession (inSession);
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
+     vbUserId:= lpGetUserBySession (inSession);
 
-      vbMemberId:= (SELECT tmp.MemberId FROM gpGetMobile_Object_Const (inSession) AS tmp);
-      /*IF (COALESCE(inMemberId,0) <> 0 AND COALESCE(vbMemberId,0) <> inMemberId)
-        THEN
-            RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.'; 
-      END IF;
-*/
-      calcSession := (SELECT CAST (ObjectLink_User_Member.ObjectId AS TVarChar) 
-                      FROM ObjectLink AS ObjectLink_User_Member
-                      WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-                        AND ObjectLink_User_Member.ChildObjectId = vbMemberId);
+     -- !!!меняем значение!!! - с какими параметрами пользователь может просматривать данные с мобильного устройства
+     vbUserId_Mobile:= (SELECT CASE WHEN lfGet.UserId > 0 THEN lfGet.UserId ELSE vbUserId END FROM lfGet_User_MobileCheck (inMemberId:= inMemberId, inUserId:= vbUserId) AS lfGet);
 
-      RETURN QUERY
+     -- Результат
+     RETURN QUERY
              SELECT DISTINCT
                     tmpPromo.Id
                   , tmpPromo.InvNumber
@@ -62,9 +54,9 @@ BEGIN
                   , Object_ContractTag.ValueData  AS ContractTagName
                   , Object_Partner.ObjectCode     AS PartnerCode
                   , Object_Partner.ValueData      AS PartnerName
-             FROM gpSelectMobile_Movement_Promo (zc_DateStart(), calcSession) AS tmpPromo
+             FROM gpSelectMobile_Movement_Promo (zc_DateStart(), vbUserId_Mobile :: TVarChar) AS tmpPromo
                  LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpPromo.StatusId
-                 LEFT JOIN gpSelectMobile_Movement_PromoPartner (zc_DateStart(), calcSession) AS tmpPromoPartner ON tmpPromoPartner.MovementId = tmpPromo.Id
+                 LEFT JOIN gpSelectMobile_Movement_PromoPartner (zc_DateStart(), vbUserId_Mobile :: TVarChar) AS tmpPromoPartner ON tmpPromoPartner.MovementId = tmpPromo.Id
 
                   LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpPromoPartner.ContractId
                   LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpPromoPartner.PartnerId
@@ -86,4 +78,4 @@ $BODY$
  29.03.17         *
 */
 
--- SELECT * FROM gpSelect_Movement_Promo_Mobile (inSyncDateIn:= zc_DateStart(), inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Promo_Mobile (inJuridicalBasisId:= 0, inMemberId:= 0, inSession:= zfCalc_UserAdmin())

@@ -21,7 +21,7 @@ CREATE TABLE MovementItemContainer(
    WhereObjectId_analyzer  Integer     NULL, -- Место учета
    AccountId_analyzer      Integer     NULL, -- Счет - корреспондент
 
-   ContainerId_analyzer    Integer     NULL, -- Контейнер ОПиУ - статья ОПиУ
+   ContainerId_analyzer    Integer     NULL, -- Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
    ContainerIntId_analyzer Integer     NULL, -- Контейнер - Корреспондент
 
    ObjectIntId_analyzer    Integer     NULL, -- Аналитический справочник (Размер, УП статья или что-то особенное - т.е. все то что не вписалось в аналитики выше)

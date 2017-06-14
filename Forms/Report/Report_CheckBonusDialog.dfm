@@ -115,6 +115,14 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
     TabOrder = 11
     Width = 319
   end
+  object cbMovement: TcxCheckBox
+    Left = 227
+    Top = 79
+    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+    Caption = #1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
+    TabOrder = 12
+    Width = 104
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -152,6 +160,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
@@ -159,6 +168,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BonusKindId'
@@ -166,6 +176,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         Component = BonusKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BonusKindName'
@@ -174,6 +185,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindId'
@@ -181,6 +193,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
@@ -189,6 +202,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
@@ -196,6 +210,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -204,6 +219,15 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMovement'
+        Value = Null
+        Component = cbMovement
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 160
@@ -213,6 +237,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
     LookupControl = edBonusKind
     FormNameParam.Value = 'TDocumentBonusKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TDocumentBonusKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -223,6 +248,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -231,6 +257,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 296
   end
@@ -239,6 +266,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -249,6 +277,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -257,6 +286,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 77
     Top = 62
@@ -266,6 +296,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -276,6 +307,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -284,6 +316,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 77
     Top = 126

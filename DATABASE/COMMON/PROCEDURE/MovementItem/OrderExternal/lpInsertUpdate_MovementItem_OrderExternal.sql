@@ -97,7 +97,12 @@ BEGIN
             ioPrice:= outPricePromo;
         ELSE IF ioId <> 0 AND ioPrice <> outPricePromo AND vbTaxPromo <> 0
              THEN
-                 RAISE EXCEPTION 'Ошибка.Для товара = <%> <%> необходимо ввести акционную цену = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId), TFloat (outPricePromo);
+                 IF EXISTS (SELECT 1 FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_GUID())
+                 THEN
+                     ioPrice:= outPricePromo;
+                 ELSE
+                     RAISE EXCEPTION 'Ошибка.Для товара = <%> <%> необходимо ввести акционную цену = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId), TFloat (outPricePromo);
+                 END IF;
              END IF;
         END IF;
      -- ELSE !!!обратно из прайса пока не реализовал!!!!

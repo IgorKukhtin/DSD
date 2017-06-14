@@ -150,8 +150,7 @@ BEGIN
             ;
 
 
-     -- заполняем таблицу - элементы по контрагенту, со всеми свойствами для формирования Аналитик в проводках, здесь по !!!InfoMoneyId_Detail!!!
-     -- !!!только если не талон!!!
+     -- заполняем таблицу - элементы по контрагенту, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem_SummPartner (MovementItemId, ContainerId, ContainerId_Currency, AccountId, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId, GoodsId, PartionId, OperSumm, OperSumm_Currency)
         SELECT _tmpItem.MovementItemId
              , 0 AS ContainerId, 0 AS ContainerId_Currency, 0 AS AccountId
@@ -259,7 +258,7 @@ BEGIN
             , 0                               AS PartionId               -- Партия
             , 0                               AS WhereObjectId_Analyzer  -- Место учета
             , 0                               AS AccountId_Analyzer      -- Счет - корреспондент
-            , 0                               AS ContainerId_Analyzer    -- Контейнер ОПиУ - статья ОПиУ
+            , 0                               AS ContainerId_Analyzer    -- Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
             , 0                               AS ContainerIntId_Analyzer -- Контейнер - Корреспондент
             , 0                               AS ObjectIntId_Analyzer    -- Аналитический справочник
             , 0                               AS ObjectExtId_Analyzer    -- Аналитический справочник

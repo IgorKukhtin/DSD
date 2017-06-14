@@ -172,19 +172,20 @@ BEGIN
        (SELECT _tmpMinPrice_RemainsList.GoodsId, COALESCE (ObjectBoolean_Top.ValueData, FALSE) AS isTOP, COALESCE (ObjectFloat_PercentMarkup.ValueData, 0) AS PercentMarkup
         FROM _tmpMinPrice_RemainsList
              INNER JOIN ObjectLink AS ObjectLink_Price_Goods
-                                   ON ObjectLink_Price_Goods.ChildObjectId = _tmpMinPrice_RemainsList.GoodsId
+                                   -- ON ObjectLink_Price_Goods.ChildObjectId = _tmpMinPrice_RemainsList.GoodsId
+                                   ON ObjectLink_Price_Goods.ChildObjectId = _tmpMinPrice_RemainsList.ObjectId_retail
                                   AND ObjectLink_Price_Goods.DescId = zc_ObjectLink_Price_Goods()
              INNER JOIN ObjectLink AS ObjectLink_Price_Unit
                                    ON ObjectLink_Price_Unit.ChildObjectId = inUnitId
                                   AND ObjectLink_Price_Unit.ObjectId = ObjectLink_Price_Goods.ObjectId
                                   AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Top
-                                     -- ON ObjectBoolean_Top.ObjectId = ObjectLink_Price_Goods.ObjectId
-                                     ON ObjectBoolean_Top.ObjectId = _tmpMinPrice_RemainsList.ObjectId_retail
+                                     ON ObjectBoolean_Top.ObjectId = ObjectLink_Price_Goods.ObjectId
+                                     -- ON ObjectBoolean_Top.ObjectId = _tmpMinPrice_RemainsList.ObjectId_retail
                                     AND ObjectBoolean_Top.DescId = zc_ObjectBoolean_Price_Top()
              LEFT JOIN ObjectFloat AS ObjectFloat_PercentMarkup
-                                   -- ON ObjectFloat_PercentMarkup.ObjectId = ObjectLink_Price_Goods.ObjectId
-                                   ON ObjectFloat_PercentMarkup.ObjectId = _tmpMinPrice_RemainsList.ObjectId_retail
+                                   ON ObjectFloat_PercentMarkup.ObjectId = ObjectLink_Price_Goods.ObjectId
+                                   -- ON ObjectFloat_PercentMarkup.ObjectId = _tmpMinPrice_RemainsList.ObjectId_retail
                                   AND ObjectFloat_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
         WHERE ObjectBoolean_Top.ValueData = TRUE OR ObjectFloat_PercentMarkup.ValueData <> 0
        )
