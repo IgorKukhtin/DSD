@@ -49,6 +49,10 @@ BEGIN
                                                                 ON ObjectBoolean_GoodsByGoodsKind_Order.ObjectId  = Object_GoodsByGoodsKind.Id
                                                                AND ObjectBoolean_GoodsByGoodsKind_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order() 
                                                                AND ObjectBoolean_GoodsByGoodsKind_Order.ValueData = TRUE -- условие что разрешен
+                                             LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsByGoodsKind_NotMobile
+                                                                     ON ObjectBoolean_GoodsByGoodsKind_NotMobile.ObjectId  = Object_GoodsByGoodsKind.Id
+                                                                    AND ObjectBoolean_GoodsByGoodsKind_NotMobile.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_NotMobile() 
+                                                                    AND ObjectBoolean_GoodsByGoodsKind_NotMobile.ValueData = TRUE -- условие что НЕ разрешен
                                              JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                                              ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId = Object_GoodsByGoodsKind.Id
                                                             AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
@@ -74,6 +78,7 @@ BEGIN
                                                                                                                                 , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                                                                                                                  )
                                         WHERE Object_GoodsByGoodsKind.DescId = zc_Object_GoodsByGoodsKind()
+                                          AND ObjectBoolean_GoodsByGoodsKind_NotMobile.ObjectId IS NULL
                                        )
                   -- сгруппировали Товар
                 , tmpGoodsOrder AS (SELECT DISTINCT tmpGoodsOrder_all.GoodsId FROM tmpGoodsOrder_all)

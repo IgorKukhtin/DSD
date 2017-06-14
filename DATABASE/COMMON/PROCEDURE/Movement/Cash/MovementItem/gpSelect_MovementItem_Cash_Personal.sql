@@ -295,6 +295,7 @@ BEGIN
                                                           AND tmpParent_all.InfoMoneyId           = CLO_InfoMoney.ObjectId
                                                           AND tmpParent_all.PersonalServiceListId = tmp.PersonalServiceListId
                               WHERE tmpParent_all.PersonalId IS NULL
+                                AND COALESCE (inMovementItemId, 0) = 0
                              )
            , tmpContainer AS (SELECT CLO_ServiceDate.ContainerId
                                    , tmpParent.PersonalId

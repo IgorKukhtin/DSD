@@ -36,6 +36,8 @@ BEGIN
                                  WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
                                    AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
                                 )
+                  -- список - только разрешенные товары
+                , tmpGoodsByGoodsKind AS (SELECT gpSelect.GoodsId, gpSelect.GoodsKindId FROM gpSelectMobile_Object_GoodsByGoodsKind (inSyncDateIn, inSession) AS gpSelect)
                   -- список последних актуальных документов "Фактический остаток по ТТ"
                 , tmpStoreRealDoc AS (SELECT SR.PartnerId, SR.StoreRealId, SR.OperDate
                                       FROM (SELECT MovementLinkObject_Partner.ObjectId AS PartnerId
@@ -214,15 +216,19 @@ BEGIN
                   , tmpGoodsListSale.isErased
                   , CAST (TRUE AS Boolean) AS isSync
              FROM tmpGoodsListSale
-                  LEFT JOIN tmpStoreRealItem ON tmpStoreRealItem.GoodsId = tmpGoodsListSale.GoodsId
+                  INNER JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId     = tmpGoodsListSale.GoodsId
+                                                AND tmpGoodsByGoodsKind.GoodsKindId = tmpGoodsListSale.GoodsKindId
+
+                  LEFT JOIN tmpStoreRealItem ON tmpStoreRealItem.GoodsId     = tmpGoodsListSale.GoodsId
                                             AND tmpStoreRealItem.GoodsKindId = tmpGoodsListSale.GoodsKindId
-                                            AND tmpStoreRealItem.PartnerId = tmpGoodsListSale.PartnerId                     
-                  LEFT JOIN tmpSaleItem ON tmpSaleItem.GoodsId = tmpGoodsListSale.GoodsId
+                                            AND tmpStoreRealItem.PartnerId   = tmpGoodsListSale.PartnerId                     
+                  LEFT JOIN tmpSaleItem ON tmpSaleItem.GoodsId     = tmpGoodsListSale.GoodsId
                                        AND tmpSaleItem.GoodsKindId = tmpGoodsListSale.GoodsKindId
-                                       AND tmpSaleItem.PartnerId = tmpGoodsListSale.PartnerId                     
-                  LEFT JOIN tmpReturnInItem ON tmpReturnInItem.GoodsId = tmpGoodsListSale.GoodsId
+                                       AND tmpSaleItem.PartnerId   = tmpGoodsListSale.PartnerId                     
+                  LEFT JOIN tmpReturnInItem ON tmpReturnInItem.GoodsId     = tmpGoodsListSale.GoodsId
                                            AND tmpReturnInItem.GoodsKindId = tmpGoodsListSale.GoodsKindId
-                                           AND tmpReturnInItem.PartnerId = tmpGoodsListSale.PartnerId;
+                                           AND tmpReturnInItem.PartnerId   = tmpGoodsListSale.PartnerId
+                 ;
       END IF;
 
 END; 

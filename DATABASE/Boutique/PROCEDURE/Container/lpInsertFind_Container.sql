@@ -76,7 +76,8 @@ BEGIN
 
 
      -- !!!определяется КЛЮЧ!!!
-     vbKeyValue = (SELECT  STRING_AGG (tmp.Value, CASE WHEN tmp.myOrder1 = 0 THEN ';' ELSE ',' END)
+     vbKeyValue = CASE WHEN inPartionId > 0 THEN inPartionId :: TVarChar || '-' ELSE '' END
+               || (SELECT  STRING_AGG (tmp.Value, CASE WHEN tmp.myOrder1 = 0 THEN ';' ELSE ',' END)
                    FROM (SELECT tmp.Value :: TVarChar AS Value
                               , tmp.myOrder1
                          FROM     (SELECT COALESCE (inContainerDescId, 0)         AS Value, 0 AS myOrder1, -1 AS myOrder2
@@ -119,16 +120,17 @@ BEGIN
 
 
      BEGIN
-     -- !!!находим СРАЗУ по ключу!!!
-     -- vbContainerId := (SELECT Id FROM Container WHERE KeyValue = vbKeyValue);
+          -- !!!находим СРАЗУ по ДВУМ ключам!!!
+          vbContainerId := (SELECT Id FROM Container WHERE MasterKeyValue = vbMasterKeyValue AND ChildKeyValue = vbChildKeyValue);
 
-     -- !!!находим СРАЗУ по ДВУМ ключам!!!
-     vbContainerId := (SELECT Id FROM Container WHERE MasterKeyValue = vbMasterKeyValue AND ChildKeyValue = vbChildKeyValue);
-     EXCEPTION
-              WHEN invalid_row_count_in_limit_clause
-              THEN RAISE EXCEPTION 'Счет не уникален : vbContainerId = <%>, inContainerDescId = <%>, inParentId = <%>, inObjectId = <%>, inJuridicalId_basis = <%>, inBusinessId = <%>, inDescId_1 = <%>, inObjectId_1 = <%>, inDescId_2 = <%>, inObjectId_2 = <%>, inDescId_3 = <%>, inObjectId_3 = <%>, inDescId_4 = <%>, inObjectId_4 = <%>, inDescId_5 = <%>, inObjectId_5 = <%>, inDescId_6 = <%>, inObjectId_6 = <%>, inDescId_7 = <%>, inObjectId_7 = <%>, inDescId_8 = <%>, inObjectId_8 = <%>, inDescId_9 = <%>, inObjectId_9 = <%>, inDescId_10 = <%>, inObjectId_10 = <%>'
-                                 , vbContainerId, inContainerDescId, inParentId, inObjectId, inJuridicalId_basis, inBusinessId
-                                 , inDescId_1, inObjectId_1, inDescId_2, inObjectId_2, inDescId_3, inObjectId_3, inDescId_4, inObjectId_4, inDescId_5, inObjectId_5, inDescId_6, inObjectId_6, inDescId_7, inObjectId_7, inDescId_8, inObjectId_8, inDescId_9, inObjectId_9, inDescId_10, inObjectId_10;
+          -- !!!находим СРАЗУ по ключу!!!
+          -- vbContainerId := (SELECT Id FROM Container WHERE KeyValue = vbKeyValue);
+    
+          EXCEPTION
+                   WHEN invalid_row_count_in_limit_clause
+                   THEN RAISE EXCEPTION 'Счет не уникален : vbContainerId = <%>, inPartionId = <%>, inContainerDescId = <%>, inParentId = <%>, inObjectId = <%>, inJuridicalId_basis = <%>, inBusinessId = <%>, inDescId_1 = <%>, inObjectId_1 = <%>, inDescId_2 = <%>, inObjectId_2 = <%>, inDescId_3 = <%>, inObjectId_3 = <%>, inDescId_4 = <%>, inObjectId_4 = <%>, inDescId_5 = <%>, inObjectId_5 = <%>, inDescId_6 = <%>, inObjectId_6 = <%>, inDescId_7 = <%>, inObjectId_7 = <%>, inDescId_8 = <%>, inObjectId_8 = <%>, inDescId_9 = <%>, inObjectId_9 = <%>, inDescId_10 = <%>, inObjectId_10 = <%>'
+                                      , vbContainerId, inPartionId, inContainerDescId, inParentId, inObjectId, inJuridicalId_basis, inBusinessId
+                                      , inDescId_1, inObjectId_1, inDescId_2, inObjectId_2, inDescId_3, inObjectId_3, inDescId_4, inObjectId_4, inDescId_5, inObjectId_5, inDescId_6, inObjectId_6, inDescId_7, inObjectId_7, inDescId_8, inObjectId_8, inDescId_9, inObjectId_9, inDescId_10, inObjectId_10;
      END;
 
 
