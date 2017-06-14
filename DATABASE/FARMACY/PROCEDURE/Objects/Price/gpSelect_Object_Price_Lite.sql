@@ -22,6 +22,9 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , isClose boolean, isFirst boolean , isSecond boolean
              , isTop boolean, TOPDateChange TDateTime
              , PercentMarkup TFloat, PercentMarkupDateChange TDateTime
+             , MCSValueOld TFloat
+             , StartDateMCSAuto TDateTime, EndDateMCSAuto TDateTime
+             , isMCSAuto Boolean, isMCSNotRecalcOld Boolean
              ) AS
 $BODY$
 DECLARE
@@ -73,6 +76,13 @@ BEGIN
                ,NULL::TDateTime                  AS TOPDateChange
                ,NULL::TFloat                     AS PercentMarkup 
                ,NULL::TDateTime                  AS PercentMarkupDateChange
+
+               ,NULL::TFloat                     AS MCSValueOld
+               ,NULL::TDateTime                  AS StartDateMCSAuto
+               ,NULL::TDateTime                  AS EndDateMCSAuto
+               ,NULL::Boolean                    AS isMCSAuto
+               ,NULL::Boolean                    AS isMCSNotRecalcOld
+
            WHERE 1=0;
     ELSEIF inisShowAll = True
     THEN
@@ -150,6 +160,12 @@ BEGIN
 
                           , COALESCE (Price_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup
                           , Price_PercentMarkupDateChange.ValueData              AS PercentMarkupDateChange
+
+                          , COALESCE(Price_MCSValueOld.ValueData,0)    ::TFloat AS MCSValueOld         
+                          , MCS_StartDateMCSAuto.ValueData                      AS StartDateMCSAuto
+                          , MCS_EndDateMCSAuto.ValueData                        AS EndDateMCSAuto
+                          , COALESCE(Price_MCSAuto.ValueData,False)          :: Boolean   AS isMCSAuto
+                          , COALESCE(Price_MCSNotRecalcOld.ValueData,False)  :: Boolean   AS isMCSNotRecalcOld
                      FROM Object AS Object_Price
                         INNER JOIN ObjectLink AS ObjectLink_Price_Unit
                                 ON ObjectLink_Price_Unit.ObjectId = Object_Price.Id
@@ -201,7 +217,23 @@ BEGIN
                               AND Price_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
                         LEFT JOIN ObjectDate        AS Price_PercentMarkupDateChange
                                ON Price_PercentMarkupDateChange.ObjectId = Object_Price.Id
-                              AND Price_PercentMarkupDateChange.DescId = zc_ObjectDate_Price_PercentMarkupDateChange()   
+                              AND Price_PercentMarkupDateChange.DescId = zc_ObjectDate_Price_PercentMarkupDateChange() 
+
+                        LEFT JOIN ObjectDate        AS MCS_StartDateMCSAuto
+                               ON MCS_StartDateMCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
+                              AND MCS_StartDateMCSAuto.DescId = zc_ObjectDate_Price_StartDateMCSAuto()
+                        LEFT JOIN ObjectDate        AS MCS_EndDateMCSAuto
+                               ON MCS_EndDateMCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
+                              AND MCS_EndDateMCSAuto.DescId = zc_ObjectDate_Price_EndDateMCSAuto()
+                        LEFT JOIN ObjectFloat       AS Price_MCSValueOld
+                               ON Price_MCSValueOld.ObjectId = ObjectLink_Price_Unit.ObjectId
+                              AND Price_MCSValueOld.DescId = zc_ObjectFloat_Price_MCSValueOld()
+                        LEFT JOIN ObjectBoolean     AS Price_MCSAuto
+                               ON Price_MCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
+                              AND Price_MCSAuto.DescId = zc_ObjectBoolean_Price_MCSAuto()
+                        LEFT JOIN ObjectBoolean     AS Price_MCSNotRecalcOld
+                               ON Price_MCSNotRecalcOld.ObjectId = ObjectLink_Price_Unit.ObjectId
+                              AND Price_MCSNotRecalcOld.DescId = zc_ObjectBoolean_Price_MCSNotRecalcOld()
                      WHERE Object_Price.DescId = zc_Object_Price()
                     )
 
@@ -232,7 +264,12 @@ BEGIN
                  , tmpPrice.TopDateChange           AS TopDateChange
                  , tmpPrice.PercentMarkup           AS PercentMarkup
                  , tmpPrice.PercentMarkupDateChange AS PercentMarkupDateChange
-                              
+                       
+                 , tmpPrice.MCSValueOld
+                 , tmpPrice.StartDateMCSAuto
+                 , tmpPrice.EndDateMCSAuto
+                 , tmpPrice.isMCSAuto
+                 , tmpPrice.isMCSNotRecalcOld       
               FROM tmpGoods
                 LEFT OUTER JOIN tmpPrice ON  tmpPrice.goodsid = tmpGoods.GoodsId
             ORDER BY GoodsGroupName, GoodsName;
@@ -310,6 +347,12 @@ BEGIN
 
                           , COALESCE (Price_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup
                           , Price_PercentMarkupDateChange.ValueData              AS PercentMarkupDateChange
+
+                          , COALESCE(Price_MCSValueOld.ValueData,0)    ::TFloat AS MCSValueOld         
+                          , MCS_StartDateMCSAuto.ValueData                      AS StartDateMCSAuto
+                          , MCS_EndDateMCSAuto.ValueData                        AS EndDateMCSAuto
+                          , COALESCE(Price_MCSAuto.ValueData,False)          :: Boolean   AS isMCSAuto
+                          , COALESCE(Price_MCSNotRecalcOld.ValueData,False)  :: Boolean   AS isMCSNotRecalcOld
                      FROM Object AS Object_Price
                         INNER JOIN ObjectLink AS ObjectLink_Price_Unit
                                     ON ObjectLink_Price_Unit.ObjectId = Object_Price.Id
@@ -362,6 +405,21 @@ BEGIN
                         LEFT JOIN ObjectDate        AS Price_PercentMarkupDateChange
                                     ON Price_PercentMarkupDateChange.ObjectId = Object_Price.Id
                                    AND Price_PercentMarkupDateChange.DescId = zc_ObjectDate_Price_PercentMarkupDateChange()   
+                        LEFT JOIN ObjectDate        AS MCS_StartDateMCSAuto
+                               ON MCS_StartDateMCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
+                              AND MCS_StartDateMCSAuto.DescId = zc_ObjectDate_Price_StartDateMCSAuto()
+                        LEFT JOIN ObjectDate        AS MCS_EndDateMCSAuto
+                               ON MCS_EndDateMCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
+                              AND MCS_EndDateMCSAuto.DescId = zc_ObjectDate_Price_EndDateMCSAuto()
+                        LEFT JOIN ObjectFloat       AS Price_MCSValueOld
+                               ON Price_MCSValueOld.ObjectId = ObjectLink_Price_Unit.ObjectId
+                              AND Price_MCSValueOld.DescId = zc_ObjectFloat_Price_MCSValueOld()
+                        LEFT JOIN ObjectBoolean     AS Price_MCSAuto
+                               ON Price_MCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
+                              AND Price_MCSAuto.DescId = zc_ObjectBoolean_Price_MCSAuto()
+                        LEFT JOIN ObjectBoolean     AS Price_MCSNotRecalcOld
+                               ON Price_MCSNotRecalcOld.ObjectId = ObjectLink_Price_Unit.ObjectId
+                              AND Price_MCSNotRecalcOld.DescId = zc_ObjectBoolean_Price_MCSNotRecalcOld()
                      WHERE Object_Price.DescId = zc_Object_Price()
                     )
       
@@ -393,6 +451,11 @@ BEGIN
                  , tmpPrice.PercentMarkup           AS PercentMarkup
                  , tmpPrice.PercentMarkupDateChange AS PercentMarkupDateChange
 
+                 , tmpPrice.MCSValueOld
+                 , tmpPrice.StartDateMCSAuto
+                 , tmpPrice.EndDateMCSAuto
+                 , tmpPrice.isMCSAuto
+                 , tmpPrice.isMCSNotRecalcOld
             FROM tmpPrice
                 JOIN tmpGoods ON tmpGoods.goodsid = tmpPrice.goodsid
             ORDER BY GoodsGroupName, GoodsName;
@@ -406,7 +469,8 @@ $BODY$
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А. 
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 14.06.17 
  05.10.16         * parce
  12.09.16         *
 */

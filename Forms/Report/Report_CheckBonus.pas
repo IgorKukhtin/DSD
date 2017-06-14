@@ -13,7 +13,8 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxImageComboBox;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxImageComboBox,
+  cxCheckBox;
 
 type
   TReport_CheckBonusForm = class(TAncestorReportForm)
@@ -48,6 +49,8 @@ type
     cxLabel5: TcxLabel;
     edJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
+    actRefreshMovement: TdsdDataSetRefresh;
+    cbMovement: TcxCheckBox;
   private
     { Private declarations }
   public
