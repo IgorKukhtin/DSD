@@ -776,7 +776,6 @@ inherited Report_MovementReturnOutForm: TReport_MovementReturnOutForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    AfterExecute = spSelectAfterExecute
     Left = 72
     Top = 160
   end

@@ -41,7 +41,6 @@ type
     GuidesPartner: TdsdGuides;
     actRefreshMovement: TdsdDataSetRefresh;
     cbMovement: TcxCheckBox;
-    procedure spSelectAfterExecute(Sender: TObject);
   private
     { Private declarations }
   public
@@ -54,12 +53,6 @@ var
 implementation
 
 {$R *.dfm}
-
-procedure TReport_MovementReturnOutForm.spSelectAfterExecute(Sender: TObject);
-begin
-  inherited;
-
-end;
 
 initialization
 
