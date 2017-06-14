@@ -19,7 +19,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemContainer(
 
     IN inAccountId_Analyzer      Integer   , -- Счет - корреспондент
     
-    IN inContainerId_Analyzer    Integer   , -- Контейнер ОПиУ - статья ОПиУ
+    IN inContainerId_Analyzer    Integer   , -- Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
     IN inContainerIntId_Analyzer Integer   , -- Контейнер - Корреспондент
  
     IN inObjectIntId_Analyzer    Integer   , -- Аналитический справочник (Размер, УП статья или что-то особенное - т.е. все то что не вписалось в аналитики выше)

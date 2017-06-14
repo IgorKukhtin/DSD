@@ -345,6 +345,7 @@ BEGIN
             , COALESCE (ObjectBoolean_Member_Official.ValueData, FALSE) :: Boolean AS isOfficial
 
             , Object_Unit.Id                          AS UnitId
+            -- , (select sum(tmpMIContainer.Amount_avance)  from  tmpMIContainer) :: Integer
             , Object_Unit.ObjectCode                  AS UnitCode
             , Object_Unit.ValueData                   AS UnitName
             , Object_Position.Id                      AS PositionId
