@@ -266,6 +266,13 @@ inherited MobilePromoJournalForm: TMobilePromoJournalForm
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMemberId'
+          Value = Null
+          Component = PersonalTradeGuides
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end>
     end
     object actPrint: TdsdPrintAction [22]
@@ -518,8 +525,8 @@ inherited MobilePromoJournalForm: TMobilePromoJournalForm
   end
   inherited spMovementUnComplete: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement_Promo'
-    Left = 64
-    Top = 160
+    Left = 112
+    Top = 200
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_Promo'

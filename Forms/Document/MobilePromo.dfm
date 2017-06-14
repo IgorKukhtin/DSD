@@ -1184,8 +1184,8 @@ inherited MobilePromoForm: TMobilePromoForm
       item
         Name = 'inMemberId'
         Value = False
-        Component = PersonalTradeGuides
-        ComponentItem = 'Key'
+        Component = FormParams
+        ComponentItem = 'inMemberId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1370,8 +1370,9 @@ inherited MobilePromoForm: TMobilePromoForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMemberId'
         Value = Null
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Top = 312
@@ -1953,8 +1954,8 @@ inherited MobilePromoForm: TMobilePromoForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 292
-    Top = 40
+    Left = 260
+    Top = 48
   end
   object PersonalGuides: TdsdGuides
     KeyField = 'Id'
@@ -2005,8 +2006,8 @@ inherited MobilePromoForm: TMobilePromoForm
       item
         Name = 'inMemberId'
         Value = Null
-        Component = PersonalTradeGuides
-        ComponentItem = 'Key'
+        Component = FormParams
+        ComponentItem = 'inMemberId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2299,8 +2300,8 @@ inherited MobilePromoForm: TMobilePromoForm
       item
         Name = 'inMemberId'
         Value = Null
-        Component = PersonalTradeGuides
-        ComponentItem = 'Key'
+        Component = FormParams
+        ComponentItem = 'inMemberId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
