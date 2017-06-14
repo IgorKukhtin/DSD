@@ -84,6 +84,7 @@ type
     SummNalog: TcxGridDBColumn;
     SummCardSecond: TcxGridDBColumn;
     SummMinusExt: TcxGridDBColumn;
+    PositionLevelName: TcxGridDBColumn;
   private
     { Private declarations }
   public
