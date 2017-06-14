@@ -82,9 +82,19 @@ BEGIN
           , SUM (COALESCE (MIFloat_TotalReturn.ValueData,0))           ::TFloat AS TotalSummReturn
           , SUM (COALESCE (MIFloat_TotalPayReturn.ValueData,0))        ::TFloat AS TotalSummPayReturn
 
+          --, COALESCE (MIFloat_CurrencyValue.ValueData, 0)              ::TFloat AS CurrencyValue
+          --, COALESCE (MIFloat_ParValue.ValueData, 0)                   ::TFloat AS ParValue
+          , SUM (CAST ((CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 1) <> 0
+                             THEN CAST ( COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0) / COALESCE (MIFloat_CountForPrice.ValueData, 1) AS NUMERIC (16, 2))
+                             ELSE CAST ( COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_OperPrice.ValueData, 0) AS NUMERIC (16, 2))
+                        END) 
+                        * COALESCE (MIFloat_CurrencyValue.ValueData, 0) / CASE WHEN COALESCE (MIFloat_ParValue.ValueData, 0) <> 0
+                                                                               THEN COALESCE (MIFloat_ParValue.ValueData, 0) ELSE 1
+                                                                          END AS NUMERIC (16, 2))   ) :: TFloat AS TotalSummBalance
     INTO vbTotalCount, vbTotalCountRemains, vbTotalSumm, vbTotalSummPriceList, vbTotalSummRemainsPriceList
        , vbTotalCountSecond, vbTotalCountSecondRemains, vbTotalSummSecondPriceList, vbTotalSummSecondRemainsPriceList
        , vbTotalSummChange, vbTotalSummPay, vbTotalSummChangePay, vbTotalSummPayOth, vbTotalCountReturn, vbTotalSummReturn, vbTotalSummPayReturn
+       , vbTotalSummBalance
        FROM MovementItem
             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
@@ -128,11 +138,21 @@ BEGIN
                                         ON MIFloat_TotalPayReturn.MovementItemId = MovementItem.Id
                                        AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()    
 
-
+            LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
+                                        ON MIFloat_CurrencyValue.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()    
+            LEFT JOIN MovementItemFloat AS MIFloat_ParValue
+                                        ON MIFloat_ParValue.MovementItemId = MovementItem.Id
+                                       AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue() 
       WHERE MovementItem.MovementId = inMovementId 
         AND MovementItem.DescId     = zc_MI_Master()
         AND MovementItem.isErased = false;
 
+      IF vbMovementDescId IN (zc_Movement_Send(), zc_Movement_Sale(), zc_Movement_ReturnIn())
+         THEN
+             -- Сохранили свойство <Итого сумма вх. в ГРН>
+             PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummBalance(), inMovementId, vbTotalSummBalance);
+      END IF;
 
       IF vbMovementDescId IN (zc_Movement_Inventory())
          THEN
@@ -185,6 +205,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.06.17         *
  28.04.15                         * 
 */
 -- select lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= id) from gpSelect_Movement_WeighingPartner (inStartDate := ('01.06.2014')::TDateTime , inEndDate := ('30.06.2014')::TDateTime ,  inSession := '5') as a

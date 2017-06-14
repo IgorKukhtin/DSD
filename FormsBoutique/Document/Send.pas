@@ -122,6 +122,7 @@ type
     actGoodsChoiceForm: TOpenChoiceForm;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
+    TotalSummBalance: TcxGridDBColumn;
   private
   public
   end;

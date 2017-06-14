@@ -91,6 +91,11 @@ object SendForm: TSendForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummPriceList
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummBalance
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -148,6 +153,11 @@ object SendForm: TSendForm
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummBalance
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -325,6 +335,18 @@ object SendForm: TSendForm
           object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object TotalSummBalance: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074#1093'. ('#1043#1056#1053')'
+            DataBinding.FieldName = 'TotalSummBalance'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -1316,6 +1338,22 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outOperPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPrice'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCountForPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountForPrice'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outOperPriceList'
         Value = Null
         Component = MasterCDS
@@ -1324,10 +1362,34 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outAmountPriceListSumm'
+        Name = 'outTotalSumm'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'AmountPriceListSumm'
+        ComponentItem = 'TotalSumm'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalSummPriceList'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalSummPriceList'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCurrencyValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CurrencyValue'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outParValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ParValue'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -1807,6 +1869,14 @@ object SendForm: TSendForm
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPrice'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
