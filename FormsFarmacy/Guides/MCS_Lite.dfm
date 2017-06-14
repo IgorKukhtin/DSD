@@ -1,30 +1,30 @@
 inherited MCS_LiteForm: TMCS_LiteForm
   Caption = #1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
   ClientHeight = 419
-  ClientWidth = 758
+  ClientWidth = 1061
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 774
+  ExplicitWidth = 1077
   ExplicitHeight = 457
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel
-    Width = 758
+    Width = 1061
     ExplicitWidth = 758
   end
   inherited PageControl: TcxPageControl
-    Width = 758
+    Width = 1061
     Height = 361
     TabOrder = 2
     ExplicitWidth = 758
     ExplicitHeight = 361
     ClientRectBottom = 361
-    ClientRectRight = 758
+    ClientRectRight = 1061
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 758
       ExplicitHeight = 361
       inherited cxGrid: TcxGrid
-        Width = 758
+        Width = 1061
         Height = 361
         ExplicitWidth = 758
         ExplicitHeight = 361
@@ -101,6 +101,30 @@ inherited MCS_LiteForm: TMCS_LiteForm
           inherited clisPromo: TcxGridDBColumn [33]
             Visible = False
             VisibleForCustomization = False
+          end
+          inherited clisSecond: TcxGridDBColumn [34]
+          end
+          inherited PriceRetSP: TcxGridDBColumn [35]
+          end
+          inherited PriceOptSP: TcxGridDBColumn [36]
+          end
+          inherited colPriceSP: TcxGridDBColumn [37]
+          end
+          inherited PaymentSP: TcxGridDBColumn [38]
+          end
+          inherited clisSp: TcxGridDBColumn [39]
+          end
+          inherited clConditionsKeepName: TcxGridDBColumn [40]
+          end
+          inherited clMCSValueOld: TcxGridDBColumn [41]
+          end
+          inherited colStartDateMCSAuto: TcxGridDBColumn [42]
+          end
+          inherited colEndDateMCSAuto: TcxGridDBColumn [43]
+          end
+          inherited clisMCSAuto: TcxGridDBColumn [44]
+          end
+          inherited clisMCSNotRecalcOld: TcxGridDBColumn [45]
           end
         end
       end
@@ -257,6 +281,14 @@ inherited MCS_LiteForm: TMCS_LiteForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inDays'
+        Value = Null
+        Component = ceDays
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = MasterCDS
@@ -306,6 +338,22 @@ inherited MCS_LiteForm: TMCS_LiteForm
         ComponentItem = 'isTop'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMCSAuto'
+        Value = Null
+        Component = cbisMCSAuto
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisMCSAuto'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isMCSAuto'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
@@ -372,6 +420,38 @@ inherited MCS_LiteForm: TMCS_LiteForm
         ComponentItem = 'PercentMarkupDateChange'
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMCSValueOld'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MCSValueOld'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outStartDateMCSAuto'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'StartDateMCSAuto'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEndDateMCSAuto'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'EndDateMCSAuto'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisMCSNotRecalcOld'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isMCSNotRecalcOld'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 264
   end
@@ -393,6 +473,7 @@ inherited MCS_LiteForm: TMCS_LiteForm
     Params = <
       item
         Name = 'UnitId'
+        Value = Null
         Component = UnitGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
