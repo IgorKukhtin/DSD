@@ -148,6 +148,11 @@ BEGIN
      THEN
          PERFORM lpUpdate_Object_Enum_byCode (inCode:= 1, inDescId:= zc_Object_DocumentKind(), inEnumName:= 'zc_Enum_DocumentKind_CuterWeight');
      END IF;
+     -- !!! Типы документов - !!! Элементы справочника добавляет Пользователь!!!
+     IF EXISTS (SELECT Id FROM Object WHERE DescId = zc_Object_DocumentKind() AND ObjectCode = 3)
+     THEN
+         PERFORM lpUpdate_Object_Enum_byCode (inCode:= 3, inDescId:= zc_Object_DocumentKind(), inEnumName:= 'zc_Enum_DocumentKind_PackDiff');
+     END IF;
 
 
      -- !!! Типы аналитик для проводок
