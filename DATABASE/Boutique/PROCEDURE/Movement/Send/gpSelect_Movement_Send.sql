@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Send(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , TotalCount TFloat, TotalSummPriceList TFloat
+             , TotalCount TFloat, TotalSummBalance TFloat, TotalSummPriceList TFloat
              , FromName TVarChar, ToName TVarChar
              , Comment TVarChar
              )
@@ -37,6 +37,7 @@ BEGIN
            , Object_Status.ValueData                     AS StatusName
 
            , MovementFloat_TotalCount.ValueData          AS TotalCount
+           , MovementFloat_TotalSummBalance.ValueData    AS TotalSummBalance
            , MovementFloat_TotalSummPriceList.ValueData  AS TotalSummPriceList
         
            , Object_From.ValueData                       AS FromName
@@ -66,6 +67,10 @@ BEGIN
                                     ON MovementFloat_TotalSummPriceList.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummPriceList.DescId = zc_MovementFloat_TotalSummPriceList()
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummBalance 	
+                                    ON MovementFloat_TotalSummBalance.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummBalance.DescId = zc_MovementFloat_TotalSummBalance()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -84,6 +89,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .». 
+ 14.06.17         * add TotalSummBalance
  25.04.17         *
 */
 

@@ -65,7 +65,7 @@ object SendForm: TSendForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountSumm
+              Column = TotalSumm
             end
             item
               Format = ',0.####'
@@ -90,7 +90,12 @@ object SendForm: TSendForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountPriceListSumm
+              Column = TotalSummPriceList
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummBalance
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -113,7 +118,7 @@ object SendForm: TSendForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountSumm
+              Column = TotalSumm
             end
             item
               Format = ',0.####'
@@ -121,15 +126,7 @@ object SendForm: TSendForm
             end
             item
               Kind = skSum
-              Column = Price
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Column = OperPrice
             end
             item
               Format = ',0.####'
@@ -142,12 +139,25 @@ object SendForm: TSendForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountPriceListSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPriceList
             end
             item
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummBalance
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -263,18 +273,27 @@ object SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Width = 46
           end
-          object Price: TcxGridDBColumn
+          object OperPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'OperPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 75
+          end
+          object OperPriceList: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' ('#1087#1088#1072#1081#1089')'
+            DataBinding.FieldName = 'OperPriceList'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object CountForPrice: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
@@ -289,30 +308,65 @@ object SendForm: TSendForm
             VisibleForCustomization = False
             Width = 55
           end
-          object AmountSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'AmountSumm'
+          object CurrencyValue: TcxGridDBColumn
+            Caption = #1050#1091#1088#1089' '#1074#1072#1083#1102#1090#1099
+            DataBinding.FieldName = 'CurrencyValue'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Properties.ReadOnly = False
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 91
           end
-          object OperPriceList: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' ('#1087#1088#1072#1081#1089')'
-            DataBinding.FieldName = 'OperPriceList'
+          object ParValue: TcxGridDBColumn
+            Caption = #1053#1086#1084#1080#1085#1072#1083
+            DataBinding.FieldName = 'ParValue'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 91
+          end
+          object TotalSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object TotalSummBalance: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074#1093'. ('#1043#1056#1053')'
+            DataBinding.FieldName = 'TotalSummBalance'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object TotalSummPriceList: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' ('#1087#1088#1072#1081#1089')'
+            DataBinding.FieldName = 'TotalSummPriceList'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
           end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
@@ -328,18 +382,6 @@ object SendForm: TSendForm
             Visible = False
             Options.Editing = False
             Width = 50
-          end
-          object AmountPriceListSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' ('#1087#1088#1072#1081#1089')'
-            DataBinding.FieldName = 'AmountPriceListSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 91
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -1296,6 +1338,22 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outOperPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPrice'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCountForPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountForPrice'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outOperPriceList'
         Value = Null
         Component = MasterCDS
@@ -1304,10 +1362,34 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outAmountPriceListSumm'
+        Name = 'outTotalSumm'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'AmountPriceListSumm'
+        ComponentItem = 'TotalSumm'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalSummPriceList'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalSummPriceList'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCurrencyValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CurrencyValue'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outParValue'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ParValue'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -1787,6 +1869,14 @@ object SendForm: TSendForm
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPrice'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
