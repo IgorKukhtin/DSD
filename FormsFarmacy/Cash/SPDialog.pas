@@ -26,14 +26,15 @@ type
     edMedicSP: TcxButtonEdit;
     MedicSPGuides: TdsdGuides;
     Label3: TLabel;
-    ceSPKind: TcxButtonEdit;
+    edSPKind: TcxButtonEdit;
     SPKindGuides: TdsdGuides;
+    spGet_SPKind_def: TdsdStoredProc;
     procedure bbOkClick(Sender: TObject);
     procedure DiscountExternalGuidesAfterChoice(Sender: TObject);
   private
     { Private declarations }
   public
-     function DiscountDialogExecute(var APartnerMedicalId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP: String; var aOperDateSP : TDateTime): boolean;
+     function DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String; var AOperDateSP : TDateTime; var ASPTax : Currency): boolean;
   end;
 
 
@@ -82,6 +83,14 @@ begin
           exit;
     end;
     //
+    try Key:= SPKindGuides.Params.ParamByName('Key').Value; except Key:= 0;end;
+    if Key = 0 then
+    begin
+          ActiveControl:=edSPKind;
+          ShowMessage ('Внимание.Значение <Вид соц.проекта:> не установлено.');
+          ModalResult:=mrNone; // не надо закрывать
+    end;
+    //
     try Key:= PartnerMedicalGuides.Params.ParamByName('Key').Value; except Key:= 0;end;
     if Key = 0 then
     begin
@@ -94,12 +103,13 @@ begin
 
 end;
 
-function TSPDialogForm.DiscountDialogExecute(var APartnerMedicalId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP: String; var aOperDateSP : TDateTime): boolean;
+function TSPDialogForm.DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String; var AOperDateSP : TDateTime; var ASPTax : Currency): boolean;
 Begin
       edAmbulance.Text:= AAmbulance;
       edMedicSP.Text:= AMedicSP;
       edInvNumberSP.Text:= AInvNumberSP;
       edOperDateSP.Text:= DateToStr(aOperDateSP);
+      edSPKind.Text:= AInvNumberSP;
       //
       PartnerMedicalGuides.Params.ParamByName('Key').Value      := APartnerMedicalId;
       PartnerMedicalGuides.Params.ParamByName('TextValue').Value:= '';
@@ -108,6 +118,18 @@ Begin
           cePartnerMedical.Text:= APartnerMedicalName;
           PartnerMedicalGuides.Params.ParamByName('TextValue').Value:= APartnerMedicalName;
       end;
+      //
+      SPKindGuides.Params.ParamByName('Key').Value      := ASPKindId;
+      SPKindGuides.Params.ParamByName('TextValue').Value:= '';
+      FormParams.ParamByName('SPTax').Value:=ASPTax;
+
+      if ASPKindId > 0 then
+      begin
+          edSPKind.Text:= ASPKindName;
+          SPKindGuides.Params.ParamByName('TextValue').Value:= ASPKindName;
+      end
+      else spGet_SPKind_def.Execute;
+
       //
       Result := ShowModal = mrOK;
       //
@@ -123,13 +145,24 @@ Begin
         AMedicSP:= trim (edMedicSP.Text);
         AInvNumberSP:= trim (edInvNumberSP.Text);
         AOperDateSP:= StrToDate (edOperDateSP.Text);
+
+        ASPTax:=FormParams.ParamByName('SPTax').Value;
+        try ASPKindId := SPKindGuides.Params.ParamByName('Key').Value;
+        except
+            ASPKindId := 0;
+            SPKindGuides.Params.ParamByName('Key').Value:= 0;
+        end;
+        ASPKindName   := SPKindGuides.Params.ParamByName('TextValue').Value;
       end
       else begin
-            APartnerMedicalId   := 0;
-            APartnerMedicalName := '';
-            AAmbulance          := '';
-            AMedicSP            := '';
-            AInvNumberSP        := '';
+              APartnerMedicalId   := 0;
+              APartnerMedicalName := '';
+              AAmbulance          := '';
+              AMedicSP            := '';
+              AInvNumberSP        := '';
+              ASPTax              := 0;
+              ASPKindId           := 0;
+              ASPKindName         := '';
            end;
 end;
 

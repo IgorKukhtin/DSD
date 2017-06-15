@@ -98,7 +98,7 @@ begin
     //Если все хорошо создаем главную форму Application.CreateForm();
 
    //  Выбор формы для запуска
-    case 1 of   // 1 для MainCash;  2 для MainCash2
+     case 1 of   // 1 для MainCash;  2 для MainCash2
      1: begin
           AllowLocalConnect := False;
           MForm := True;
@@ -112,7 +112,7 @@ begin
     if FindCmdLineSwitch('autologin', True)
     then begin
       edUserName.Text := 'Админ';
-      edPassword.Text := 'Админ1111';
+      edPassword.Text := 'Админ1234';
       btnOkClick(btnOk);
 //    TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1111', gc_User); // не работает вмести с AllowLocalConnect := True;
       //TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1234', gc_User);

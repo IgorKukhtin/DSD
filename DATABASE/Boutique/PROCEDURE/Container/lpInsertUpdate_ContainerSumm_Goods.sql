@@ -1,6 +1,8 @@
 -- Function: lpInsertUpdate_ContainerSumm_Goods (TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer)
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_ContainerSumm_Goods (TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_ContainerSumm_Goods (TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_ContainerSumm_Goods (TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_ContainerSumm_Goods (
     IN inOperDate                TDateTime, 
@@ -11,11 +13,10 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_ContainerSumm_Goods (
     IN inAccountId               Integer  , 
     IN inInfoMoneyDestinationId  Integer  , 
     IN inInfoMoneyId             Integer  , 
-    IN inInfoMoneyId_Detail      Integer  , 
     IN inContainerId_Goods       Integer  , 
     IN inGoodsId                 Integer  , 
-    IN inPartionId               Integer  , -- Партия в Object_PartionGoods.MovementItemId
-    IN inAssetId                 Integer
+    IN inGoodsSizeId             Integer  ,
+    IN inPartionId               Integer    -- Партия в Object_PartionGoods.MovementItemId
 )
 RETURNS Integer
 AS
@@ -33,12 +34,12 @@ BEGIN
                                                  , inBusinessId        := inBusinessId
                                                  , inDescId_1          := zc_ContainerLinkObject_Goods()
                                                  , inObjectId_1        := inGoodsId
-                                                 , inDescId_2          := CASE WHEN inMemberId <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
-                                                 , inObjectId_2        := CASE WHEN inMemberId <> 0 THEN inMemberId                      ELSE inUnitId                      END
-                                                 , inDescId_3          := zc_ContainerLinkObject_InfoMoney()
-                                                 , inObjectId_3        := inInfoMoneyId
-                                                 , inDescId_4          := zc_ContainerLinkObject_InfoMoneyDetail()
-                                                 , inObjectId_4        := inInfoMoneyId_Detail
+                                                 , inDescId_2          := zc_ContainerLinkObject_GoodsSize()
+                                                 , inObjectId_2        := inGoodsSizeId
+                                                 , inDescId_3          := CASE WHEN inMemberId <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
+                                                 , inObjectId_3        := CASE WHEN inMemberId <> 0 THEN inMemberId                      ELSE inUnitId                      END
+                                                 , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
+                                                 , inObjectId_4        := inInfoMoneyId
                                                   );
 
 
@@ -48,7 +49,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_ContainerSumm_Goods (TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

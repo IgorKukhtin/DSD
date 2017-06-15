@@ -23,7 +23,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemContainer(
     IN inContainerIntId_Analyzer Integer   , -- Контейнер - Корреспондент
  
     IN inObjectIntId_Analyzer    Integer   , -- Аналитический справочник (Размер, УП статья или что-то особенное - т.е. все то что не вписалось в аналитики выше)
-    IN inObjectExtId_Analyzer    Integer   , --
+    IN inObjectExtId_Analyzer    Integer   , -- Аналитический справочник (Подразделение - корреспондент, Подразделение ЗП, ФИО, Контрагент и т.д. - т.е. все то что не вписалось в аналитики выше)
 
     IN inAmount                  TFloat    , --
     IN inOperDate                TDateTime , --

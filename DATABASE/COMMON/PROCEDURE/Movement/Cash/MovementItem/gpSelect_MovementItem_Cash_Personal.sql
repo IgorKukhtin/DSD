@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Cash_Personal(
 RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalName TVarChar, INN TVarChar, isMain Boolean, isOfficial Boolean
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , PositionId Integer, PositionName TVarChar
+             , PositionLevelId Integer, PositionLevelName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , Amount TFloat
              , SummService TFloat, SummToPay_cash TFloat, SummToPay TFloat, SummCard TFloat, SummCardSecond TFloat, SummNalog TFloat, SummMinus TFloat, SummAdd TFloat, SummHoliday TFloat
@@ -427,6 +428,8 @@ BEGIN
             , Object_Unit.ValueData                   AS UnitName
             , Object_Position.Id                      AS PositionId
             , Object_Position.ValueData               AS PositionName
+            , Object_PositionLevel.Id                 AS PositionLevelId
+            , Object_PositionLevel.ValueData          AS PositionLevelName
             , View_InfoMoney.InfoMoneyId
             , View_InfoMoney.InfoMoneyCode
             , View_InfoMoney.InfoMoneyName
@@ -481,6 +484,10 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Member_Official
                                     ON ObjectBoolean_Member_Official.ObjectId = ObjectLink_Personal_Member.ChildObjectId
                                    AND ObjectBoolean_Member_Official.DescId = zc_ObjectBoolean_Member_Official()
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
+                                 ON ObjectLink_Personal_PositionLevel.ObjectId = tmpData.PersonalId
+                                AND ObjectLink_Personal_PositionLevel.DescId = zc_ObjectLink_Personal_PositionLevel()
+            LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
       ;
 
 END;

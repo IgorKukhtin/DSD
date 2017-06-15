@@ -1560,9 +1560,10 @@ end;
 //***20.04.17
 procedure TMainCashForm2.actSetSPExecute(Sender: TObject);
 var
-  PartnerMedicalId:Integer;
-  PartnerMedicalName,MedicSP,Ambulance,InvNumberSP: String;
+  PartnerMedicalId, SPKindId : Integer;
+  PartnerMedicalName, MedicSP, Ambulance, InvNumberSP, SPKindName: String;
   OperDateSP : TDateTime;
+  SPTax : Currency;
 begin
   if (not CheckCDS.IsEmpty) and (Self.FormParams.ParamByName('InvNumberSP').Value = '') then
   Begin
@@ -1577,10 +1578,15 @@ begin
      Ambulance    := Self.FormParams.ParamByName('Ambulance').Value;
      MedicSP      := Self.FormParams.ParamByName('MedicSP').Value;
      InvNumberSP  := Self.FormParams.ParamByName('InvNumberSP').Value;
+     SPTax        := Self.FormParams.ParamByName('SPTax').Value;
+     SPKindId     := Self.FormParams.ParamByName('SPKindId').Value;
+     SPKindName   := Self.FormParams.ParamByName('SPKindName').Value;
+
+     //
      if Self.FormParams.ParamByName('PartnerMedicalId').Value > 0
      then OperDateSP   := Self.FormParams.ParamByName('OperDateSP').Value
      else OperDateSP   := NOW;
-     if not DiscountDialogExecute(PartnerMedicalId, PartnerMedicalName, Ambulance, MedicSP, InvNumberSP, OperDateSP)
+     if not DiscountDialogExecute(PartnerMedicalId, SPKindId, PartnerMedicalName, Ambulance, MedicSP, InvNumberSP, SPKindName, OperDateSP, SPTax)
      then exit;
   finally
      Free;
@@ -1592,10 +1598,15 @@ begin
   FormParams.ParamByName('MedicSP').Value := MedicSP;
   FormParams.ParamByName('InvNumberSP').Value := InvNumberSP;
   FormParams.ParamByName('OperDateSP').Value := OperDateSP;
+  FormParams.ParamByName('SPTax').Value     := SPTax;
+  FormParams.ParamByName('SPKindId').Value  := SPKindId;
+  FormParams.ParamByName('SPKindName').Value:= SPKindName;
   //
   pnlSP.Visible := InvNumberSP <> '';
   lblPartnerMedicalName.Caption:= '  ' + PartnerMedicalName + '  /  № амб. ' + Ambulance;
   lblMedicSP.Caption  := '  ' + MedicSP + '  /  № '+InvNumberSP+'  от ' + DateToStr(OperDateSP);
+  if SPTax <> 0 then lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FloatToStr(SPTax) + '% : ' + FormParams.ParamByName('SPKindName').Value
+  else lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FormParams.ParamByName('SPKindName').Value;
 end;
 
 procedure TMainCashForm2.actSetVIPExecute(Sender: TObject);

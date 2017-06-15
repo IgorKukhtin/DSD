@@ -7,7 +7,7 @@ inherited SPDialogForm: TSPDialogForm
   ClientWidth = 571
   Position = poDesktopCenter
   ExplicitWidth = 577
-  ExplicitHeight = 194
+  ExplicitHeight = 191
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel [0]
@@ -114,7 +114,7 @@ inherited SPDialogForm: TSPDialogForm
     Text = '<'#1044#1083#1103' '#1074#1099#1073#1086#1088#1072' '#1060#1048#1054' '#1074#1088#1072#1095#1072' [Ctrl+Enter]>'
     Width = 265
   end
-  object ceSPKind: TcxButtonEdit [13]
+  object edSPKind: TcxButtonEdit [13]
     Left = 433
     Top = 27
     Properties.Buttons = <
@@ -141,53 +141,9 @@ inherited SPDialogForm: TSPDialogForm
   inherited FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'PartnerMedicalId'
+        Name = 'SPTax'
         Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PartnerMedicalName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Ambulance'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MedicSP'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumberSP'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperDateSP'
-        Value = 'NULL'
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'SPKindId'
-        Value = Null
-        Component = SPKindGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'SPKindName'
-        Value = Null
-        Component = SPKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 104
@@ -268,7 +224,7 @@ inherited SPDialogForm: TSPDialogForm
   end
   object SPKindGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceSPKind
+    LookupControl = edSPKind
     FormNameParam.Value = 'TSPKindForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -291,8 +247,48 @@ inherited SPDialogForm: TSPDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Tax'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SPTax'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
-    Left = 480
-    Top = 16
+    Left = 520
+    Top = 80
+  end
+  object spGet_SPKind_def: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_SPKind_def'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        Component = SPKindGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Name'
+        Value = Null
+        Component = SPKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Tax'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SPTax'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 472
+    Top = 104
   end
 end
