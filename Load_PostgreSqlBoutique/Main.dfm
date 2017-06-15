@@ -857,9 +857,9 @@
         object cbGoodsAccount: TCheckBox
           Tag = 20
           Left = 6
-          Top = 240
-          Width = 235
-          Height = 17
+          Top = 237
+          Width = 195
+          Height = 36
           Caption = '1.12. '#1056#1072#1089#1095#1077#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -868,16 +868,13 @@
           Font.Style = []
           ParentFont = False
           TabOrder = 17
+          WordWrap = True
         end
       end
     end
     object TabSheet2: TTabSheet
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1092#1072#1081#1083#1086#1074
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 0

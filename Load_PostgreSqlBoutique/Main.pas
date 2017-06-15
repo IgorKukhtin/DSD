@@ -3202,7 +3202,7 @@ begin
         Open;
 
         Result:=RecordCount;
-        cbGoodsAccount.Caption:='1.12. ('+IntToStr(RecordCount)+') Расчеты покупателей';
+        cbGoodsAccount.Caption:= cbGoodsAccount.Caption + ' ('+IntToStr(RecordCount)+')Child';
         //
         //
         //
