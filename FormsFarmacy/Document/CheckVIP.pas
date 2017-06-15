@@ -63,6 +63,8 @@ type
     actShowMessage: TShowMessageAction;
     InvNumberSP: TcxGridDBColumn;
     MedicSP: TcxGridDBColumn;
+    SPKindName: TcxGridDBColumn;
+    SPTax: TcxGridDBColumn;
   private
     { Private declarations }
   public

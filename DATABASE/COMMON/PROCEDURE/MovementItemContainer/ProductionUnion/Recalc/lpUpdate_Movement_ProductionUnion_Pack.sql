@@ -66,6 +66,31 @@ BEGIN
                                    , MIContainer.OperDate
                                    , MIContainer.isActive
                            UNION ALL
+                            -- получаем движение: приход/расход - !!!УПАКОВКА АССОРТИ!!!
+                            SELECT MIContainer.ContainerId
+                                 , MIContainer.OperDate
+                                   -- расход будет zc_MI_Master() приход будет zc_MI_Child
+                                 , CASE WHEN MIContainer.isActive = FALSE THEN zc_MI_Master() ELSE zc_MI_Child() END   AS DescId_mi
+                                 , SUM (MIContainer.Amount * CASE WHEN MIContainer.isActive = TRUE THEN 1 ELSE -1 END) AS OperCount
+                            FROM MovementItemContainer AS MIContainer 
+                                 INNER JOIN MovementLinkObject AS MLO_DocumentKind
+                                                               ON MLO_DocumentKind.MovementId = MIContainer.MovementId
+                                                              AND MLO_DocumentKind.DescId     = zc_MovementLinkObject_DocumentKind()
+                                                              AND MLO_DocumentKind.ObjectId   > 0
+                                 LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                                           ON MovementBoolean_isAuto.MovementId = MIContainer.MovementId
+                                                          AND MovementBoolean_isAuto.DescId     = zc_MovementBoolean_isAuto()
+                                                          AND MovementBoolean_isAuto.ValueData  = TRUE
+                            WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                              AND MIContainer.DescId                 = zc_MIContainer_Count()
+                              AND MIContainer.WhereObjectId_Analyzer = inUnitId
+                              AND MIContainer.ObjectExtId_Analyzer   = inUnitId
+                              AND MIContainer.MovementDescId         = zc_Movement_ProductionUnion()
+                              AND MovementBoolean_isAuto.MovementId  IS NULL
+                            GROUP BY MIContainer.ContainerId
+                                   , MIContainer.OperDate
+                                   , MIContainer.isActive
+                           UNION ALL
                             -- плюс Производство как перемещение - в zc_MI_Child
                             SELECT MIContainer.ContainerId
                                  , MIContainer.OperDate
@@ -883,7 +908,7 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '24.03.2017', inEndDate:= '24.03.2017', inUnitId:= 8451,   inUserId:= zc_Enum_Process_Auto_Pack()) -- Цех Упаковки
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '09.06.2017', inEndDate:= '09.06.2017', inUnitId:= 8451,   inUserId:= zc_Enum_Process_Auto_Pack()) -- Цех Упаковки
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '09.04.2017', inEndDate:= '09.04.2017', inUnitId:= 951601, inUserId:= zc_Enum_Process_Auto_Pack()) -- ЦЕХ упаковки мясо
 
 -- where ContainerId = 568111

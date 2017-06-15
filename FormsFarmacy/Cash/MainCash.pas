@@ -50,6 +50,8 @@ type
     MEDICSP     : String[254];   //ФИО врача (Соц. проект)
     INVNUMSP    : String[50];    //номер рецепта (Соц. проект)
     OPERDATESP  : TDateTime;     //дата рецепта (Соц. проект)
+    //***15.06.17
+    SPKINDID    : Integer;       //Id Вид СП
   end;
   TBodyRecord = record
     ID: Integer;            //ид записи
@@ -632,8 +634,10 @@ begin
     pnlDiscount.Visible            := FormParams.ParamByName('DiscountExternalId').Value > 0;
 
     lblPartnerMedicalName.Caption:= '  ' + FormParams.ParamByName('PartnerMedicalName').Value + '  /  № амб. ' + FormParams.ParamByName('Ambulance').Value;
-    lblMedicSP.Caption  := '  ' + FormParams.ParamByName('MedicSP').Value + '  /  № '+FormParams.ParamByName('InvNumberSP').Value+'  от ' + DateToStr(FormParams.ParamByName('OperDateSP').Value);
-    pnlSP.Visible                  := FormParams.ParamByName('InvNumberSP').Value <> '';
+    lblMedicSP.Caption:= '  ' + FormParams.ParamByName('MedicSP').Value + '  /  № '+FormParams.ParamByName('InvNumberSP').Value+'  от ' + DateToStr(FormParams.ParamByName('OperDateSP').Value);
+    if FormParams.ParamByName('SPTax').Value <> 0 then lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FloatToStr(FormParams.ParamByName('SPTax').Value) + '% : ' + FormParams.ParamByName('SPKindName').Value
+    else lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FormParams.ParamByName('SPKindName').Value;
+    pnlSP.Visible:= FormParams.ParamByName('InvNumberSP').Value <> '';
 
     lblCashMember.Caption := FormParams.ParamByName('ManagerName').AsString;
     if (FormParams.ParamByName('ConfirmedKindName').AsString <> '')
@@ -1256,8 +1260,8 @@ begin
   pnlSP.Visible := InvNumberSP <> '';
   lblPartnerMedicalName.Caption:= '  ' + PartnerMedicalName + '  /  № амб. ' + Ambulance;
   lblMedicSP.Caption  := '  ' + MedicSP + '  /  № '+InvNumberSP+'  от ' + DateToStr(OperDateSP);
-  if SPTax <> 0 then lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FloatToStr(SPTax) + '% : ' + FormParams.ParamByName('SPKindName').Value
-  else lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FormParams.ParamByName('SPKindName').Value;
+  if SPTax <> 0 then lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FloatToStr(SPTax) + '% : ' + SPKindName
+  else lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + SPKindName;
 
 end;
 
@@ -1512,6 +1516,7 @@ function TMainCashForm.InitLocalStorage: Boolean;
 var fields11, fields12, fields13, fields14, fields15, fields16, fields17, fields18: TVKDBFFieldDefs;
     fields21, fields22, fields23, fields24, fields25: TVKDBFFieldDefs;
     fields31, fields32, fields33, fields34, fields35, fields36: TVKDBFFieldDefs;
+    fields41: TVKDBFFieldDefs;
   procedure InitTable(DS: TVKSmartDBF; AFileName: String);
   Begin
     DS.DBFFileName := AnsiString(AFileName);
@@ -1557,6 +1562,8 @@ begin
     AddStrField(FLocalDataBaseHead,'MEDICSP',254);   //ФИО врача (Соц. проект)
     AddStrField(FLocalDataBaseHead,'INVNUMSP',50);   //номер рецепта (Соц. проект)
     AddDateField(FLocalDataBaseHead,'OPERDATESP');   //дата рецепта (Соц. проект)
+    //***15.06.17
+    AddIntField(FLocalDataBaseHead,'SPKINDID');     //Id Вид СП
 
     try
       FLocalDataBaseHead.CreateTable;
@@ -1745,6 +1752,19 @@ begin
                FLocalDataBaseHead.AddFields(fields36,1000);
            end;
 
+           //***15.06.17
+           if FLocalDataBaseHead.FindField('SPKINDID') = nil then
+           begin
+               fields41:=TVKDBFFieldDefs.Create(self);
+               with fields41.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'SPKINDID';
+                    field_type := 'N';
+                    len := 10;
+               end;
+               FLocalDataBaseHead.AddFields(fields41,1000);
+           end;
+
            FLocalDataBaseHead.Close;
 
   end;// !!!добавляем НОВЫЕ поля
@@ -1889,7 +1909,9 @@ begin
      (FLocalDataBaseHead.FindField('AMBULANCE') = nil) or
      (FLocalDataBaseHead.FindField('MEDICSP') = nil) or
      (FLocalDataBaseHead.FindField('INVNUMSP') = nil) or
-     (FLocalDataBaseHead.FindField('OPERDATESP') = nil)
+     (FLocalDataBaseHead.FindField('OPERDATESP') = nil) or
+      //***15.06.17
+     (FLocalDataBaseHead.FindField('SPKINDID') = nil)
 
   then begin
     ShowMessage('Неверная структура файла локального хранилища ('+FLocalDataBaseHead.DBFFileName+')');
@@ -1958,6 +1980,7 @@ begin
   if SoldRegim = TRUE
   then
       if  (Self.FormParams.ParamByName('InvNumberSP').Value <> '')
+       and(Self.FormParams.ParamByName('SPTax').Value = 0)
        and(SourceClientDataSet.FieldByName('isSP').asBoolean = FALSE)
       then begin
         ShowMessage('Ошибка.Выбранный код товара не участвует в Соц.проекте!');
@@ -1968,6 +1991,14 @@ begin
   if SoldRegim = TRUE
   then //это ПРОДАЖА
        begin lGoodsId_bySoldRegim   := SourceClientDataSet.FieldByName('Id').asInteger;
+             if (Self.FormParams.ParamByName('SPTax').Value <> 0)
+                 and(Self.FormParams.ParamByName('InvNumberSP').Value <> '')
+             then begin
+                       // цена БЕЗ скидки
+                       lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
+                       // цена СО скидкой - с процентом SPTax
+                       lPrice_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency * (1 - Self.FormParams.ParamByName('SPTax').Value/100);
+             end else
              if (SourceClientDataSet.FieldByName('isSP').asBoolean = TRUE)
                  and(Self.FormParams.ParamByName('InvNumberSP').Value <> '')
              then begin
@@ -2025,8 +2056,17 @@ begin
   else} begin
          lPrice             := lPrice_bySoldRegim; //lPriceSale_bySoldRegim;
          lPriceSale         := lPriceSale_bySoldRegim;
-         lChangePercent     := 0;
-         lSummChangePercent := (lPriceSale_bySoldRegim - lPrice_bySoldRegim) * 0;
+         if (Self.FormParams.ParamByName('SPTax').Value <> 0)
+         and(Self.FormParams.ParamByName('InvNumberSP').Value <> '')
+         //and(1=0) // временно - не будем сохранять
+         then begin
+                 lChangePercent     := Self.FormParams.ParamByName('SPTax').Value;
+                 lSummChangePercent := (lPriceSale_bySoldRegim - lPrice_bySoldRegim) * 0;
+              end
+         else begin
+                lChangePercent     := 0;
+                lSummChangePercent := (lPriceSale_bySoldRegim - lPrice_bySoldRegim) * 0;
+              end;
          // обнулим "нужные" параметры-Item
          //DiscountServiceForm.pSetParamItemNull;
   end; // else если установлен Проект (дисконтные карты) ***20.07.16
@@ -2332,6 +2372,10 @@ begin
   FormParams.ParamByName('MedicSP').Value            := '';
   FormParams.ParamByName('InvNumberSP').Value        := '';
   FormParams.ParamByName('OperDateSP').Value         := NOW;
+  //***15.06.17
+  FormParams.ParamByName('SPTax').Value      := 0;
+  FormParams.ParamByName('SPKindId').Value   := 0;
+  FormParams.ParamByName('SPKindName').Value := '';
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -2753,6 +2797,16 @@ begin
             checkCDS.FieldByName('SummChangePercent').asCurrency :=DiscountServiceForm.gSummChangePercent;
         end
         else}
+        if (Self.FormParams.ParamByName('SPTax').Value <> 0)
+          and(Self.FormParams.ParamByName('InvNumberSP').Value <> '')
+        then begin
+            // на всяк случай - УСТАНОВИМ скидку еще разок
+            checkCDS.FieldByName('PriceSale').asCurrency:= RemainsCDS.FieldByName('Price').asCurrency;
+            checkCDS.FieldByName('Price').asCurrency    := RemainsCDS.FieldByName('Price').asCurrency * (1 - Self.FormParams.ParamByName('SPTax').Value/100);
+            // и УСТАНОВИМ скидку - с процентом SPTax
+            checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('SPTax').Value;
+            checkCDS.FieldByName('SummChangePercent').asCurrency := CheckCDS.FieldByName('Amount').asCurrency * RemainsCDS.FieldByName('Price').asCurrency * (Self.FormParams.ParamByName('SPTax').Value/100);
+        end else
         if (RemainsCDS.FieldByName('isSP').asBoolean = TRUE)
           and(Self.FormParams.ParamByName('InvNumberSP').Value <> '')
         then begin
@@ -2871,6 +2925,10 @@ begin
     MyVipCDS.FieldByName('MedicSP').AsString            := AMedicSP;
     MyVipCDS.FieldByName('InvNumberSP').AsString        := AInvNumberSP;
     MyVipCDS.FieldByName('OperDateSP').AsDateTime       := AOperDateSP;
+    //***15.06.17
+    MyVipCDS.FieldByName('SPTax').AsFloat       := ASPTax;
+    MyVipCDS.FieldByName('SPKindId').AsInteger  := ASPKindId;
+    MyVipCDS.FieldByName('SPKindName').AsString := ASPKindName;
 
     MyVipCDS.Post;
 
@@ -2962,7 +3020,9 @@ begin
                                          AAmbulance,               //№ амбулатории (Соц. проект)
                                          AMedicSP,                 //ФИО врача (Соц. проект)
                                          AInvNumberSP,             //номер рецепта (Соц. проект)
-                                         AOperDateSP                //дата рецепта (Соц. проект)
+                                         AOperDateSP,              //дата рецепта (Соц. проект)
+                                         //***15.06.17
+                                         ASPKindId                 //Id Вид СП
                                         ]);
       End
       else
@@ -2996,6 +3056,8 @@ begin
         FLocalDataBaseHead.FieldByName('MEDICSP').Value    := AMedicSP;            //ФИО врача (Соц. проект)
         FLocalDataBaseHead.FieldByName('INVNUMSP').Value   := AInvNumberSP;        //номер рецепта (Соц. проект)
         FLocalDataBaseHead.FieldByName('OPERDATESP').Value := AOperDateSP;         //дата рецепта (Соц. проект)
+        //***15.06.17
+        FLocalDataBaseHead.FieldByName('SPKINDID').Value   := ASPKindId;  //Id Вид СП
 
         FLocalDataBaseHead.Post;
       End;
@@ -3444,6 +3506,8 @@ begin
               MEDICSP    := trim(FieldByName('MEDICSP').AsString);
               INVNUMSP   := trim(FieldByName('INVNUMSP').AsString);
               OPERDATESP := FieldByName('OPERDATESP').asCurrency;
+              //***15.06.17
+              SPKINDID := FieldByName('SPKINDID').AsInteger;
 
               FNeedSaveVIP := (MANAGER <> 0);
             end;
@@ -3542,6 +3606,8 @@ begin
                 dsdSave.Params.AddParam('inMedicSP', ftString, ptInput, Head.MEDICSP);
                 dsdSave.Params.AddParam('inInvNumberSP', ftString, ptInput, Head.INVNUMSP);
                 dsdSave.Params.AddParam('inOperDateSP', ftDateTime, ptInput, Head.OPERDATESP);
+                //***15.06.17
+                dsdSave.Params.AddParam('inSPKindId',ftInteger,ptInput,Head.SPKINDID);
                 //***24.01.17
                 dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 

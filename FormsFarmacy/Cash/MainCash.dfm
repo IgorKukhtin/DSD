@@ -1577,6 +1577,28 @@ inherited MainCashForm: TMainCashForm
           ComponentItem = 'OperDateSP'
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SPTax'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SPTax'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SPKindId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SPKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SPKindName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SPKindName'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end

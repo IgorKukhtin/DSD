@@ -142,6 +142,22 @@ inherited CheckVIPForm: TCheckVIPForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object SPKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1057#1055
+            DataBinding.FieldName = 'SPKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SPTax: TcxGridDBColumn
+            Caption = '% '#1089#1082#1080#1076#1082#1080' '#1076#1083#1103' '#1057#1055
+            DataBinding.FieldName = 'SPTax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object Color_CalcDoc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_CalcDoc'
             Visible = False
@@ -443,6 +459,29 @@ inherited CheckVIPForm: TCheckVIPForm
           Component = MasterCDS
           ComponentItem = 'OperDateSP'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SPKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'SPKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SPKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'SPKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SPTax'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'SPTax'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1088#1072#1073#1086#1090#1091

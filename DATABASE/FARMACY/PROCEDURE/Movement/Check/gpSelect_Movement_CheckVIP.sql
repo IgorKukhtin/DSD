@@ -32,6 +32,9 @@ RETURNS TABLE (
   MedicSP TVarChar,
   InvNumberSP TVarChar,
   OperDateSP TDateTime,
+  SPKindId Integer,
+  SPKindName TVarChar,
+  SPTax TFloat,
   Color_CalcDoc Integer
  )
 AS
@@ -129,6 +132,10 @@ BEGIN
             , MovementString_InvNumberSP.ValueData       AS InvNumberSP
             , COALESCE (MovementDate_OperDateSP.ValueData, zc_DateStart()) :: TDateTime AS OperDateSP
 
+            , Object_SPKind.Id            AS SPKindId
+            , Object_SPKind.ValueData     AS SPKindName
+            , ObjectFloat_SPTax.ValueData AS SPTax
+
             , CASE WHEN Object_ConfirmedKind.Id = zc_Enum_ConfirmedKind_UnComplete() AND tmpErr.MovementId > 0 THEN 16440317 -- бледно крассный / розовый
                    WHEN Object_ConfirmedKind.Id = zc_Enum_ConfirmedKind_UnComplete() AND tmpErr.MovementId IS NULL THEN zc_Color_Yelow() -- желтый
                    ELSE zc_Color_White()
@@ -215,6 +222,14 @@ BEGIN
              LEFT JOIN MovementDate AS MovementDate_OperDateSP
                                     ON MovementDate_OperDateSP.MovementId = Movement.Id
                                    AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SPKind
+                                         ON MovementLinkObject_SPKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
+            LEFT JOIN Object AS Object_SPKind ON Object_SPKind.Id = MovementLinkObject_SPKind.ObjectId
+            LEFT JOIN ObjectFloat AS ObjectFloat_SPTax
+                                  ON ObjectFloat_SPTax.ObjectId = Object_SPKind.Id
+                                 AND ObjectFloat_SPTax.DescId   = zc_ObjectFloat_SPKind_Tax()
 
        ;
 
