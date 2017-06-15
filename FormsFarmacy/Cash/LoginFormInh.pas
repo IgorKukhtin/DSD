@@ -17,6 +17,7 @@ type
     spChekFarmacyName: TdsdStoredProc;
     procedure btnOkClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -60,6 +61,12 @@ begin
       end;
   end;
 
+end;
+
+procedure TLoginForm1.FormCreate(Sender: TObject);
+begin
+  inherited;
+  edFarmacyName.Text := iniLocalUnitNameGet;
 end;
 
 procedure TLoginForm1.FormShow(Sender: TObject);

@@ -252,8 +252,15 @@ type
     MainColIntenalSPName: TcxGridDBColumn;
     actOpenGoodsSP_UserForm: TdsdOpenForm;
     miOpenGoodsSP_UserForm: TMenuItem;
-	lblPrice: TLabel;
+    lblPrice: TLabel;
     edPrice: TcxCurrencyEdit;
+    spGet_JuridicalList: TdsdStoredProc;
+    actGetJuridicalList: TAction;
+    N16: TMenuItem;
+    lblAmount: TLabel;
+    edAmount: TcxCurrencyEdit;
+    BarCode: TcxGridDBColumn;
+    MorionCode: TcxGridDBColumn;
     actSetMemdataFromDBF: TAction;
     actSetUpdateFromMemdata: TAction;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
@@ -311,6 +318,8 @@ type
     procedure actServiseRunExecute(Sender: TObject);
     procedure actSetMemdataFromDBFExecute(Sender: TObject);
     procedure actSetUpdateFromMemdataExecute(Sender: TObject); //***10.08.16
+	procedure actGetJuridicalListExecute(Sender: TObject);
+    procedure actGetJuridicalListUpdate(Sender: TObject); //***10.08.16
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -361,6 +370,7 @@ type
       ADiscountExternalId: Integer; ADiscountExternalName, ADiscountCardNumber: String;
       APartnerMedicalId: Integer; APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP : String;
       AOperDateSP : TDateTime;
+      ASPKindId: Integer; ASPKindName : String; ASPTax : Currency;
       NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 
     //проверили что есть остаток
@@ -397,7 +407,8 @@ implementation
 {$R *.dfm}
 
 uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog, CashWork, MessagesUnit,
-     LocalWorkUnit, Splash, DiscountService, MainCash, UnilWin;
+     LocalWorkUnit, Splash, DiscountService, MainCash, UnilWin,
+	 MediCard.Intf;
 
 const
   StatusUnCompleteCode = 1;
@@ -580,12 +591,19 @@ begin
   FormParams.ParamByName('MedicSP').Value            := '';
   FormParams.ParamByName('InvNumberSP').Value        := '';
   FormParams.ParamByName('OperDateSP').Value         := NOW;
+  //***15.06.17
+  FormParams.ParamByName('SPTax').Value      := 0;
+  FormParams.ParamByName('SPKindId').Value   := 0;
+  FormParams.ParamByName('SPKindName').Value := '';
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
   edPrice.Value := 0.0;
   edPrice.Visible := False;
+  edAmount.Value := 0.0;
+  edAmount.Visible := False;
   lblPrice.Visible := False;
+  lblAmount.Visible := False;
   pnlDiscount.Visible := False;
   pnlSP.Visible := False;
   lblCashMember.Caption := '';
@@ -593,7 +611,7 @@ begin
   chbNotMCS.Checked := False;
   UpdateRemainsFromCheck;
   CheckCDS.EmptyDataSet;
-
+  MCDesigner.CasualCache.Clear;
 end;
 
 procedure TMainCashForm2.actClearMoneyExecute(Sender: TObject);
@@ -647,9 +665,12 @@ begin
     end;
     //
     if FormParams.ParamByName('InvNumberSP').Value = ''
-    then
+    then begin
         // Update ƒисконт в CDS - по всем "обновим" ƒисконт
         DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
+        //
+        CalcTotalSumm;
+    end;
 
     //***20.07.16
     lblDiscountExternalName.Caption:= '  ' + FormParams.ParamByName('DiscountExternalName').Value + '  ';
@@ -681,6 +702,21 @@ begin
   End;
 end;
 
+procedure TMainCashForm2.actGetJuridicalListExecute(Sender: TObject);
+begin
+  if edAmount.Visible and (edAmount.Value > 0.0) then
+  begin
+    spGet_JuridicalList.ParamByName('inGoodsId').Value := RemainsCDS.FieldByName('Id').AsInteger;
+    spGet_JuridicalList.ParamByName('inAmount').Value := edAmount.Value;
+    ShowMessage(spGet_JuridicalList.Execute());
+  end;
+end;
+
+procedure TMainCashForm2.actGetJuridicalListUpdate(Sender: TObject);
+begin
+  actGetJuridicalList.Enabled := edAmount.Visible and (edAmount.Value > 0);
+end;
+
 procedure TMainCashForm2.actGetMoneyInCashExecute(Sender: TObject);
 begin
   if gc_User.local then exit;
@@ -703,7 +739,7 @@ begin
   lblMoneyInCash.Caption := '0.00';
   TimerMoneyInCash.Enabled:=False;
  finally
-  TimerMoneyInCash.Enabled:=True;
+   TimerMoneyInCash.Enabled:=True;
  end;
 end;
 
@@ -861,6 +897,10 @@ begin
                    FormParams.ParamByName('MedicSP').Value,
                    FormParams.ParamByName('InvNumberSP').Value,
                    FormParams.ParamByName('OperDateSP').Value,
+                   //***15.06.17
+                   FormParams.ParamByName('SPKindId').Value,
+                   FormParams.ParamByName('SPKindName').Value,
+                   FormParams.ParamByName('SPTax').Value,
 
                    True,         // NeedComplete
                    CheckNumber,  // FiscalCheckNumber
@@ -1439,6 +1479,10 @@ begin
               ,FormParams.ParamByName('MedicSP').Value
               ,FormParams.ParamByName('InvNumberSP').Value
               ,FormParams.ParamByName('OperDateSP').Value
+               //***15.06.17
+              ,FormParams.ParamByName('SPKindId').Value
+              ,FormParams.ParamByName('SPKindName').Value
+              ,FormParams.ParamByName('SPTax').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -1507,6 +1551,10 @@ begin
               ,FormParams.ParamByName('MedicSP').Value
               ,FormParams.ParamByName('InvNumberSP').Value
               ,FormParams.ParamByName('OperDateSP').Value
+               //***15.06.17
+              ,FormParams.ParamByName('SPKindId').Value
+              ,FormParams.ParamByName('SPKindName').Value
+              ,FormParams.ParamByName('SPTax').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -1550,11 +1598,15 @@ begin
   // update DataSet - еще раз по всем "обновим" ƒисконт
   DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
   //
+  CalcTotalSumm;
+  //
   pnlDiscount.Visible    := DiscountExternalId > 0;
   lblDiscountExternalName.Caption:= '  ' + DiscountExternalName + '  ';
   lblDiscountCardNumber.Caption  := '  ' + DiscountCardNumber + '  ';
   lblPrice.Visible := (DiscountServiceForm.gCode = 2);
   edPrice.Visible := lblPrice.Visible;
+  lblAmount.Visible := lblPrice.Visible;
+  edAmount.Visible := lblAmount.Visible;
 end;
 
 //***20.04.17
@@ -1643,6 +1695,10 @@ begin
               ,FormParams.ParamByName('MedicSP').Value
               ,FormParams.ParamByName('InvNumberSP').Value
               ,FormParams.ParamByName('OperDateSP').Value
+               //***15.06.17
+              ,FormParams.ParamByName('SPKindId').Value
+              ,FormParams.ParamByName('SPKindName').Value
+              ,FormParams.ParamByName('SPTax').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -1706,19 +1762,28 @@ begin
    //
    if Key = #13 then
    begin
+       //
+       RemainsCDS.AfterScroll := nil;
+       RemainsCDS.DisableConstraints;
        try
+           // —начала ищем по внутреннему Ў/ 
            StrToInt(Copy(ceScaner.Text,4, 9));
-           //
-           RemainsCDS.AfterScroll := nil;
-           RemainsCDS.DisableConstraints;
            //нашли
            isFind:= RemainsCDS.Locate('GoodsId_main', StrToInt(Copy(ceScaner.Text,4, 9)), []);
            //еще проверили что равно...
            isFind:= (isFind) and (RemainsCDS.FieldByName('GoodsId_main').AsInteger = StrToInt(Copy(ceScaner.Text,4, 9)));
            //
-           if isFind
-           then lbScaner.Caption:='найдено ' + ceScaner.Text
-           else lbScaner.Caption:='не найдено ' + ceScaner.Text;
+           if not isFind then
+           begin
+             isFind:= RemainsCDS.Locate('BarCode', Trim(ceScaner.Text), []);
+             //еще проверили что равно...
+             isFind:= (isFind) and (Trim(RemainsCDS.FieldByName('BarCode').AsString) = Trim(ceScaner.Text));
+           end;
+           //
+           if isFind then
+             lbScaner.Caption:='найдено ' + ceScaner.Text
+           else
+             lbScaner.Caption:='не найдено ' + ceScaner.Text;
            //
            ceScaner.Text:='';
        except
@@ -1787,10 +1852,7 @@ begin
   LastErr := GetLastError;
   MutexAlternative := CreateMutex(nil, false, 'farmacycashMutexAlternative');
   LastErr := GetLastError;
-
-
   DiscountServiceForm:= TDiscountServiceForm.Create(Self);
-
 
   //сгенерили гуид дл€ определени€ сессии
   ChangeStatus('”становка первоначальных параметров');
@@ -2433,6 +2495,16 @@ begin
         //***10.08.16
         checkCDS.FieldByName('List_UID').AsString := GenerateGUID;
         checkCDS.Post;
+
+        if (FormParams.ParamByName('DiscountExternalId').Value > 0) and
+          (SourceClientDataSet.FindField('MorionCode') <> nil) then
+        begin
+          DiscountServiceForm.SaveMorionCode(SourceClientDataSet.FieldByName('Id').AsInteger,
+            SourceClientDataSet.FieldByName('MorionCode').AsInteger);
+
+          if DiscountServiceForm.gCode = 3 then
+            MCDesigner.CasualCache.Save(SourceClientDataSet.FieldByName('Id').AsInteger, lPriceSale);
+        end;
       End;
     finally
       CheckCDS.Filtered := True;
@@ -2699,6 +2771,12 @@ begin
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
+  edPrice.Value := 0.0;
+  edPrice.Visible := False;
+  edAmount.Value := 0.0;
+  edAmount.Visible := False;
+  lblPrice.Visible := False;
+  lblAmount.Visible := False;
   pnlDiscount.Visible := False;
   pnlSP.Visible := False;
   lblCashMember.Caption := '';
@@ -2710,6 +2788,7 @@ begin
   finally
     CheckCDS.EnableControls;
   end;
+  MCDesigner.CasualCache.Clear;
 
   MainCashForm.SoldRegim := true;
   MainCashForm.actSpec.Checked := false;
@@ -3161,6 +3240,7 @@ function TMainCashForm2.SaveLocal(ADS :TClientDataSet; AManagerId: Integer; AMan
       ADiscountExternalId: Integer; ADiscountExternalName, ADiscountCardNumber: String;
       APartnerMedicalId: Integer; APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP : String;
       AOperDateSP : TDateTime;
+      ASPKindId: Integer; ASPKindName : String; ASPTax : Currency;
       NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: integer;
@@ -3587,7 +3667,6 @@ begin
  TimerBlinkBtn.Enabled:=False;
  try
 
-
   SetBlinkVIP (false);
   SetBlinkCheck (false);
 
@@ -3715,15 +3794,15 @@ initialization
   RegisterClass(TMainCashForm2);
   FLocalDataBaseHead := TVKSmartDBF.Create(nil);
   FLocalDataBaseBody := TVKSmartDBF.Create(nil);
-  FLocalDataBaseDiff := TVKSmartDBF.Create(nil);  // только 1 форма
+  FLocalDataBaseDiff := TVKSmartDBF.Create(nil);  // только 2 форма
   InitializeCriticalSection(csCriticalSection);
   InitializeCriticalSection(csCriticalSection_Save);
   InitializeCriticalSection(csCriticalSection_All);
-  FM_SERVISE := RegisterWindowMessage('FarmacyCashMessage');  // только 1 форма
+  FM_SERVISE := RegisterWindowMessage('FarmacyCashMessage');  // только 2 форма
 finalization
   FLocalDataBaseHead.Free;
   FLocalDataBaseBody.Free;
-  FLocalDataBaseDiff.Free;  // только 1 форма
+  FLocalDataBaseDiff.Free;  // только 2 форма
   DeleteCriticalSection(csCriticalSection);
   DeleteCriticalSection(csCriticalSection_Save);
   DeleteCriticalSection(csCriticalSection_All);

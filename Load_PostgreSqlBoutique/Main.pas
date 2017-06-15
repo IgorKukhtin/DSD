@@ -2913,6 +2913,7 @@ begin
         Add('    , BillItemsIncome.Id_Postgres as PartionId');
         Add('    , DiscountMovementItem_byBarCode.OperCount as Amount');
         Add('    , DiscountMovementItem_byBarCode.SummDiscountManual as SummChangePercent');
+        Add('    , DiscountMovementItem_byBarCode.OperPrice as OperPriceList');
         Add('    , DiscountMovementItem_byBarCode.BarCode_byClient as BarCode');
         Add('    , DiscountMovementItem_byBarCode.Id_Postgres');
         Add('FROM dba.DiscountMovementItem_byBarCode');
@@ -2940,6 +2941,7 @@ begin
         toStoredProc.Params.AddParam ('inisPay',ftBoolean,ptInput, False);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inSummChangePercent',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('ioOperPriceList',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inBarCode',ftString,ptInput, '');
 
 
@@ -2958,6 +2960,7 @@ begin
              toStoredProc.Params.ParamByName('inPartionId').Value:=FieldByName('PartionId').AsInteger;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
              toStoredProc.Params.ParamByName('inSummChangePercent').Value:=FieldByName('SummChangePercent').AsFloat;
+             toStoredProc.Params.ParamByName('ioOperPriceList').Value:=FieldByName('OperPriceList').AsFloat;
              toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode').AsString;
 
              if not myExecToStoredProc then ;//exit;
@@ -3199,7 +3202,7 @@ begin
         Open;
 
         Result:=RecordCount;
-        cbGoodsAccount.Caption:='1.12. ('+IntToStr(RecordCount)+') Расчеты покупателей';
+        cbGoodsAccount.Caption:= cbGoodsAccount.Caption + ' ('+IntToStr(RecordCount)+')Child';
         //
         //
         //
