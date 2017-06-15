@@ -7,22 +7,24 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_SPKind(
     IN inTax           TFloat    ,    -- % скидки по кассе
     IN inSession       TVarChar       -- сессия пользователя
 )
- RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_SPKind());
-   vbUserId := inSession;
+   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Object_SPKind());
 
    -- сохранили св-во <>
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_SPKind_Tax(), ioId, inTax);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_SPKind_Tax(), ioId, inTax);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
-END;$BODY$ LANGUAGE plpgsql;
+END;
+$BODY$
+  LANGUAGE plpgsql;
 
 /*-------------------------------------------------------------------------------*/
 /*

@@ -20,7 +20,7 @@ BEGIN
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
                                , ContainerId_Summ Integer, ContainerId_Goods Integer
-                               , GoodsId Integer, PartionId Integer
+                               , GoodsId Integer, PartionId Integer, GoodsSizeId Integer
                                , OperCount TFloat, OperSumm TFloat, OperSumm_Currency TFloat
                                , AccountId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                 ) ON COMMIT DROP;
