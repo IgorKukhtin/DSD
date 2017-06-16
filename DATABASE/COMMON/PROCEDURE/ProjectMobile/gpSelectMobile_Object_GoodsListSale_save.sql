@@ -69,7 +69,7 @@ BEGIN
                                                 , ObjectLink_GoodsListSale_Partner.ChildObjectId AS PartnerId
                                                 , Object_GoodsListSale.isErased
                                                   --  № п/п
-                                                , 0 AS Ord
+                                                , ROW_NUMBER() OVER (PARTITION BY ObjectLink_GoodsListSale_Goods.ChildObjectId, ObjectLink_GoodsListSale_Partner.ChildObjectId) AS Ord
                                            FROM tmpPartner
                                                 JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
                                                                 ON ObjectLink_GoodsListSale_Partner.ChildObjectId = tmpPartner.PartnerId
@@ -211,13 +211,13 @@ BEGIN
                                              , MI_ReturnIn.ObjectId
                                              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  
                                  )
-             SELECT tmpGoodsListSale.Id
+             SELECT (tmpGoodsListSale.Id + CASE WHEN Ord = 1 THEN 0 ELSE Ord * 100000000 END) :: Integer AS Id
                   , tmpGoodsListSale.GoodsId
                   , tmpGoodsListSale.GoodsKindId 
                   , tmpGoodsListSale.PartnerId
                   , (COALESCE (tmpStoreRealItem.AmountStoreReal, 0.0) + COALESCE (tmpSaleItem.AmountSale, 0.0) - COALESCE (tmpReturnInItem.AmountReturnIn, 0.0))::TFloat AS AmountCalc
                   , tmpGoodsListSale.isErased
-                  , CAST (TRUE AS Boolean) AS isSync
+                  , CAST(true AS Boolean) AS isSync
              FROM tmpGoodsListSale
                   INNER JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId     = tmpGoodsListSale.GoodsId
                                                 AND tmpGoodsByGoodsKind.GoodsKindId = tmpGoodsListSale.GoodsKindId
@@ -245,5 +245,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelectMobile_Object_GoodsListSale (inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
--- SELECT * FROM gpSelectMobile_Object_GoodsListSale (inSyncDateIn := zc_DateStart(), inSession := '1000137')
+-- SELECT * FROM gpSelectMobile_Object_GoodsListSale(inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())

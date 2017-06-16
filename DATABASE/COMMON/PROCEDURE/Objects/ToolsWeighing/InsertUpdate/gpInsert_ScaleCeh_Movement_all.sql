@@ -691,7 +691,9 @@ BEGIN
                                   ELSE COALESCE (MIString_PartionGoods.ValueData, '')
                              END AS PartionGoods
 
-                           , CASE WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
+                           , CASE WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion() AND vbDocumentKindId = zc_Enum_DocumentKind_PackDiff()
+                                       THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                  WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
                                        THEN 0
                                   ELSE MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                              END AS Amount -- !!! вес только для пересортицы в переработку!!
