@@ -68,8 +68,8 @@ BEGIN
                                                 , GoodsKindArr :: Integer                        AS GoodsKindId
                                                 , ObjectLink_GoodsListSale_Partner.ChildObjectId AS PartnerId
                                                 , Object_GoodsListSale.isErased
-                                                  --  π Ô/Ô
-                                                , 0 AS Ord
+                                                  --  π Ô/Ô - !!!¬–≈Ã≈ÕÕŒ!!!
+                                                , ROW_NUMBER() OVER (PARTITION BY ObjectLink_GoodsListSale_Goods.ChildObjectId, ObjectLink_GoodsListSale_Partner.ChildObjectId) AS Ord
                                            FROM tmpPartner
                                                 JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
                                                                 ON ObjectLink_GoodsListSale_Partner.ChildObjectId = tmpPartner.PartnerId
@@ -211,7 +211,7 @@ BEGIN
                                              , MI_ReturnIn.ObjectId
                                              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  
                                  )
-             SELECT tmpGoodsListSale.Id
+             SELECT (tmpGoodsListSale.Id + CASE WHEN Ord = 1 THEN 0 ELSE Ord * 100000000 END) :: Integer AS Id
                   , tmpGoodsListSale.GoodsId
                   , tmpGoodsListSale.GoodsKindId 
                   , tmpGoodsListSale.PartnerId
