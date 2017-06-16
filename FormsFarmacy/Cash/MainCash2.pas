@@ -50,6 +50,8 @@ type
     MEDICSP     : String[254];   //ФИО врача (Соц. проект)
     INVNUMSP    : String[50];    //номер рецепта (Соц. проект)
     OPERDATESP  : TDateTime;     //дата рецепта (Соц. проект)
+    //***15.06.17
+    SPKINDID    : Integer;       //Id Вид СП
   end;
   TBodyRecord = record
     ID: Integer;            //ид записи
@@ -224,19 +226,19 @@ type
     ceScaner: TcxCurrencyEdit;
     lbScaner: TLabel;
     GoodsId_main: TcxGridDBColumn;    
-    MemData: TdxMemData;
-    MemDataID: TIntegerField;
-    MemDataGOODSCODE: TIntegerField;
-    MemDataGOODSNAME: TStringField;
-    MemDataPRICE: TFloatField;
-    MemDataREMAINS: TFloatField;
-    MemDataMCSVALUE: TFloatField;
-    MemDataRESERVED: TFloatField;
-    MemDataNEWROW: TBooleanField;
-    actAddDiffMemdata: TAction;
-    actSetRimainsFromMemdata: TAction;
-    actSaveCashSesionIdToFile: TAction;
-    actServiseRun: TAction;
+    MemData: TdxMemData; // только 2 форма
+    MemDataID: TIntegerField; // только 2 форма
+    MemDataGOODSCODE: TIntegerField; // только 2 форма
+    MemDataGOODSNAME: TStringField; // только 2 форма
+    MemDataPRICE: TFloatField; // только 2 форма
+    MemDataREMAINS: TFloatField; // только 2 форма
+    MemDataMCSVALUE: TFloatField; // только 2 форма
+    MemDataRESERVED: TFloatField; // только 2 форма
+    MemDataNEWROW: TBooleanField; // только 2 форма
+    actAddDiffMemdata: TAction; // только 2 форма
+    actSetRimainsFromMemdata: TAction; // только 2 форма
+    actSaveCashSesionIdToFile: TAction; // только 2 форма
+    actServiseRun: TAction; // только 2 форма
     MainColIsSP: TcxGridDBColumn;
     MainColPriceSP: TcxGridDBColumn;
     actSetSP: TAction;
@@ -261,8 +263,8 @@ type
     edAmount: TcxCurrencyEdit;
     BarCode: TcxGridDBColumn;
     MorionCode: TcxGridDBColumn;
-    actSetMemdataFromDBF: TAction;
-    actSetUpdateFromMemdata: TAction;
+    actSetMemdataFromDBF: TAction; // только 2 форма
+    actSetUpdateFromMemdata: TAction; // только 2 форма
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -312,12 +314,12 @@ type
     procedure ParentFormDestroy(Sender: TObject);
     procedure ceScanerKeyPress(Sender: TObject; var Key: Char); //***10.08.16 
 	procedure actSetSPExecute(Sender: TObject); //***10.08.16  
-    procedure actAddDiffMemdataExecute(Sender: TObject);
-    procedure actSetRimainsFromMemdataExecute(Sender: TObject);
-    procedure actSaveCashSesionIdToFileExecute(Sender: TObject);
-    procedure actServiseRunExecute(Sender: TObject);
-    procedure actSetMemdataFromDBFExecute(Sender: TObject);
-    procedure actSetUpdateFromMemdataExecute(Sender: TObject); //***10.08.16
+    procedure actAddDiffMemdataExecute(Sender: TObject); // только 2 форма
+    procedure actSetRimainsFromMemdataExecute(Sender: TObject); // только 2 форма
+    procedure actSaveCashSesionIdToFileExecute(Sender: TObject); // только 2 форма
+    procedure actServiseRunExecute(Sender: TObject); // только 2 форма
+    procedure actSetMemdataFromDBFExecute(Sender: TObject); // только 2 форма
+    procedure actSetUpdateFromMemdataExecute(Sender: TObject); //***10.08.16 // только 2 форма
 	procedure actGetJuridicalListExecute(Sender: TObject);
     procedure actGetJuridicalListUpdate(Sender: TObject); //***10.08.16
   private
@@ -396,9 +398,9 @@ var
   csCriticalSection_Save,
   csCriticalSection_All: TRTLCriticalSection;
 
-  MutexDBF, MutexDBFDiff, MutexVip, MutexRemains, MutexAlternative, MutexAllowedConduct : THandle;
+  MutexDBF, MutexDBFDiff, MutexVip, MutexRemains, MutexAlternative, MutexAllowedConduct : THandle;  // MutexAllowedConduct только 2 форма
   LastErr: Integer;
-  FM_SERVISE: Integer;  // для передачи сообщений между приложение и сервисом
+  FM_SERVISE: Integer;  // для передачи сообщений между приложение и сервисом // только 2 форма
   function GetSumm(Amount,Price:currency): currency;
   function GenerateGUID: String;
 
@@ -678,8 +680,10 @@ begin
     pnlDiscount.Visible            := FormParams.ParamByName('DiscountExternalId').Value > 0;
 
     lblPartnerMedicalName.Caption:= '  ' + FormParams.ParamByName('PartnerMedicalName').Value + '  /  № амб. ' + FormParams.ParamByName('Ambulance').Value;
-    lblMedicSP.Caption  := '  ' + FormParams.ParamByName('MedicSP').Value + '  /  № '+FormParams.ParamByName('InvNumberSP').Value+'  от ' + DateToStr(FormParams.ParamByName('OperDateSP').Value);
-    pnlSP.Visible                  := FormParams.ParamByName('InvNumberSP').Value <> '';
+    lblMedicSP.Caption:= '  ' + FormParams.ParamByName('MedicSP').Value + '  /  № '+FormParams.ParamByName('InvNumberSP').Value+'  от ' + DateToStr(FormParams.ParamByName('OperDateSP').Value);
+    if FormParams.ParamByName('SPTax').Value <> 0 then lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FloatToStr(FormParams.ParamByName('SPTax').Value) + '% : ' + FormParams.ParamByName('SPKindName').Value
+    else lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FormParams.ParamByName('SPKindName').Value;
+    pnlSP.Visible:= FormParams.ParamByName('InvNumberSP').Value <> '';
 
     lblCashMember.Caption := FormParams.ParamByName('ManagerName').AsString;
     if (FormParams.ParamByName('ConfirmedKindName').AsString <> '')
@@ -925,7 +929,7 @@ var
 begin
   startSplash('Начало обновления данных с сервера');
   try
-    if  gc_User.Local AND RemainsCDS.IsEmpty then
+    if gc_User.Local AND RemainsCDS.IsEmpty then
     begin
 //      ShowMessage('Загрузка из Remains');
       MainGridDBTableView.BeginUpdate;
@@ -957,6 +961,7 @@ begin
     else
     if   not gc_User.Local then
     Begin
+	//а1 начало - только 2 форма
         MutexAllowedConduct := CreateMutex(nil, false, 'farmacycashMutexAlternative');
         LastErr := GetLastError;
 //        ShowMessage(inttostr(LastErr));
@@ -973,7 +978,7 @@ begin
             WaitForSingleObject(MutexAllowedConduct, INFINITE);  // ожидаем разлочки в сервисе
 
           end;
-      //
+    //а1 конец - только 2 форма
 
       MainGridDBTableView.BeginUpdate;
       RemainsCDS.DisableControls;
@@ -1021,12 +1026,12 @@ begin
 
       // начало   проходим по дбф и изменяем остатки в гриде
 
-      actSetMemdataFromDBF.Execute;
+      actSetMemdataFromDBF.Execute; // только 2 форма
 
-      actSetUpdateFromMemdata.Execute;
+      actSetUpdateFromMemdata.Execute; // только 2 форма
 
 
-      ReleaseMutex(MutexAllowedConduct);
+      ReleaseMutex(MutexAllowedConduct); // только 2 форма
       // конец    проходим по дбф и изменяем остатки в гриде
 
 
@@ -1038,8 +1043,9 @@ end;
 
 procedure TMainCashForm2.actRefreshRemainsExecute(Sender: TObject);
 begin
- // было  StartRefreshDiffThread;
+ // StartRefreshDiffThread; // оставлено для коректной синхронизации двух форм  
 end;
+{ synh1 } // для коректной синхронизации двух форм 
 
 procedure TMainCashForm2.actSaveCashSesionIdToFileExecute(Sender: TObject);  // только 2 форма
 var
@@ -1657,8 +1663,9 @@ begin
   pnlSP.Visible := InvNumberSP <> '';
   lblPartnerMedicalName.Caption:= '  ' + PartnerMedicalName + '  /  № амб. ' + Ambulance;
   lblMedicSP.Caption  := '  ' + MedicSP + '  /  № '+InvNumberSP+'  от ' + DateToStr(OperDateSP);
-  if SPTax <> 0 then lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FloatToStr(SPTax) + '% : ' + FormParams.ParamByName('SPKindName').Value
-  else lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FormParams.ParamByName('SPKindName').Value;
+  if SPTax <> 0 then lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FloatToStr(SPTax) + '% : ' + SPKindName
+  else lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + SPKindName;
+
 end;
 
 procedure TMainCashForm2.actSetVIPExecute(Sender: TObject);
@@ -1820,7 +1827,6 @@ begin
 end;
 
 procedure TMainCashForm2.CheckCDSBeforePost(DataSet: TDataSet);
-
 begin
   inherited;
   if DataSet.FieldByName('List_UID').AsString = '' then
@@ -1858,7 +1864,6 @@ begin
   ChangeStatus('Установка первоначальных параметров');
   FormParams.ParamByName('CashSessionId').Value := GenerateGUID;
   actSaveCashSesionIdToFile.Execute;  // только 2 форма
-
   FormParams.ParamByName('ClosedCheckId').Value := 0;
   FormParams.ParamByName('CheckId').Value := 0;
   ShapeState.Brush.Color := clGreen;
@@ -1890,13 +1895,13 @@ begin
                   'Дальнейшая работа программы возможна только в нефискальном режиме!');
     End;
   end;
-  //  // только 2 форма
+  //а2 начало -  только 2 форма
   ChangeStatus('Удаление файла остатков');
   WaitForSingleObject(MutexDBFDiff, INFINITE);
   if  FileExists(iniLocalDataBaseDiff) then
     DeleteFile(iniLocalDataBaseDiff);
   ReleaseMutex(MutexDBFDiff);
-  //  //
+  //а2 конец -  только 2 форма
   ChangeStatus('Инициализация локального хранилища');
   if not InitLocalStorage then
   Begin
@@ -1913,8 +1918,7 @@ begin
   OnCLoseQuery := ParentFormCloseQuery;
   OnShow := ParentFormShow;
 
-// TimerSaveAll.Enabled := true;
-// временно отключим
+
 
   SetBlinkVIP (true);
   SetBlinkCheck (true);
@@ -1926,6 +1930,7 @@ function TMainCashForm2.InitLocalStorage: Boolean;
 var fields11, fields12, fields13, fields14, fields15, fields16, fields17, fields18: TVKDBFFieldDefs;
     fields21, fields22, fields23, fields24, fields25: TVKDBFFieldDefs;
     fields31, fields32, fields33, fields34, fields35, fields36: TVKDBFFieldDefs;
+    fields41: TVKDBFFieldDefs;
   procedure InitTable(DS: TVKSmartDBF; AFileName: String);
   Begin
     DS.DBFFileName := AnsiString(AFileName);
@@ -1935,9 +1940,10 @@ var fields11, fields12, fields13, fields14, fields15, fields16, fields17, fields
 begin
   result := False;
   WaitForSingleObject(MutexDBF, INFINITE);
-  WaitForSingleObject(MutexDBFDiff, INFINITE);
+  WaitForSingleObject(MutexDBFDiff, INFINITE); // только 2 форма
   InitTable(FLocalDataBaseHead, iniLocalDataBaseHead);
   InitTable(FLocalDataBaseBody, iniLocalDataBaseBody);
+  //а3 начало - только 2 форма 
   InitTable(FLocalDataBaseDiff, iniLocalDataBaseDiff);
    if (not FileExists(iniLocalDataBaseDiff)) then
   begin
@@ -1960,7 +1966,7 @@ begin
       End;
     end;
   end;
-
+  //а3 конец -  только 2 форма
   if (not FileExists(iniLocalDataBaseHead)) then
   begin
     AddIntField(FLocalDataBaseHead,'ID');//id чека
@@ -1993,6 +1999,8 @@ begin
     AddStrField(FLocalDataBaseHead,'MEDICSP',254);   //ФИО врача (Соц. проект)
     AddStrField(FLocalDataBaseHead,'INVNUMSP',50);   //номер рецепта (Соц. проект)
     AddDateField(FLocalDataBaseHead,'OPERDATESP');   //дата рецепта (Соц. проект)
+    //***15.06.17
+    AddIntField(FLocalDataBaseHead,'SPKINDID');     //Id Вид СП
 
     try
       FLocalDataBaseHead.CreateTable;
@@ -2181,7 +2189,21 @@ begin
                FLocalDataBaseHead.AddFields(fields36,1000);
            end;
 
+           //***15.06.17
+           if FLocalDataBaseHead.FindField('SPKINDID') = nil then
+           begin
+               fields41:=TVKDBFFieldDefs.Create(self);
+               with fields41.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'SPKINDID';
+                    field_type := 'N';
+                    len := 10;
+               end;
+               FLocalDataBaseHead.AddFields(fields41,1000);
+           end;
+
            FLocalDataBaseHead.Close;
+
   end;// !!!добавляем НОВЫЕ поля
 
 
@@ -2325,7 +2347,9 @@ begin
      (FLocalDataBaseHead.FindField('AMBULANCE') = nil) or
      (FLocalDataBaseHead.FindField('MEDICSP') = nil) or
      (FLocalDataBaseHead.FindField('INVNUMSP') = nil) or
-     (FLocalDataBaseHead.FindField('OPERDATESP') = nil)
+     (FLocalDataBaseHead.FindField('OPERDATESP') = nil) or
+      //***15.06.17
+     (FLocalDataBaseHead.FindField('SPKINDID') = nil)
 
   then begin
     ShowMessage('Неверная структура файла локального хранилища ('+FLocalDataBaseHead.DBFFileName+')');
@@ -2354,16 +2378,16 @@ begin
   End;
 
 
-  Result := FLocalDataBaseHead.Active AND FLocalDataBaseBody.Active and FLocalDataBaseDiff.Active;
+  Result := FLocalDataBaseHead.Active AND FLocalDataBaseBody.Active and FLocalDataBaseDiff.Active; // and FLocalDataBaseDiff.Active - только 2 форма
 
   if Result then
   begin
    FLocalDataBaseHead.Active:=False;
    FLocalDataBaseBody.Active:=False;
-   FLocalDataBaseDiff.Active:=False;
+   FLocalDataBaseDiff.Active:=False; // только 2 форма
   end;
   ReleaseMutex(MutexDBF);
-  ReleaseMutex(MutexDBFDiff);
+  ReleaseMutex(MutexDBFDiff); // только 2 форма
 end;
 
 procedure TMainCashForm2.InsertUpdateBillCheckItems;
@@ -2394,6 +2418,7 @@ begin
   if SoldRegim = TRUE
   then
       if  (Self.FormParams.ParamByName('InvNumberSP').Value <> '')
+       and(Self.FormParams.ParamByName('SPTax').Value = 0)
        and(SourceClientDataSet.FieldByName('isSP').asBoolean = FALSE)
       then begin
         ShowMessage('Ошибка.Выбранный код товара не участвует в Соц.проекте!');
@@ -2404,6 +2429,14 @@ begin
   if SoldRegim = TRUE
   then //это ПРОДАЖА
        begin lGoodsId_bySoldRegim   := SourceClientDataSet.FieldByName('Id').asInteger;
+             if (Self.FormParams.ParamByName('SPTax').Value <> 0)
+                 and(Self.FormParams.ParamByName('InvNumberSP').Value <> '')
+             then begin
+                       // цена БЕЗ скидки
+                       lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
+                       // цена СО скидкой - с процентом SPTax
+                       lPrice_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency * (1 - Self.FormParams.ParamByName('SPTax').Value/100);
+             end else
              if (SourceClientDataSet.FieldByName('isSP').asBoolean = TRUE)
                  and(Self.FormParams.ParamByName('InvNumberSP').Value <> '')
              then begin
@@ -2461,8 +2494,17 @@ begin
   else} begin
          lPrice             := lPrice_bySoldRegim; //lPriceSale_bySoldRegim;
          lPriceSale         := lPriceSale_bySoldRegim;
-         lChangePercent     := 0;
-         lSummChangePercent := (lPriceSale_bySoldRegim - lPrice_bySoldRegim) * 0;
+         if (Self.FormParams.ParamByName('SPTax').Value <> 0)
+         and(Self.FormParams.ParamByName('InvNumberSP').Value <> '')
+         //and(1=0) // временно - не будем сохранять
+         then begin
+                 lChangePercent     := Self.FormParams.ParamByName('SPTax').Value;
+                 lSummChangePercent := (lPriceSale_bySoldRegim - lPrice_bySoldRegim) * 0;
+              end
+         else begin
+                lChangePercent     := 0;
+                lSummChangePercent := (lPriceSale_bySoldRegim - lPrice_bySoldRegim) * 0;
+              end;
          // обнулим "нужные" параметры-Item
          //DiscountServiceForm.pSetParamItemNull;
   end; // else если установлен Проект (дисконтные карты) ***20.07.16
@@ -2768,6 +2810,10 @@ begin
   FormParams.ParamByName('MedicSP').Value            := '';
   FormParams.ParamByName('InvNumberSP').Value        := '';
   FormParams.ParamByName('OperDateSP').Value         := NOW;
+  //***15.06.17
+  FormParams.ParamByName('SPTax').Value      := 0;
+  FormParams.ParamByName('SPKindId').Value   := 0;
+  FormParams.ParamByName('SPKindName').Value := '';
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -2800,10 +2846,10 @@ begin
 //     ShowMessage('При работе');
    End
   else
-   Begin
+  Begin
 //    ShowMessage('При старте');
     actRefreshAllExecute(nil);
-   End;
+  End;
   CalcTotalSumm;
   ceAmount.Value := 0;
   isScaner:=false;
@@ -2828,7 +2874,6 @@ begin
       Begin
         actRefreshAllExecute(nil);
         spDelete_CashSession.Execute;
-        
       End
       else
       begin
@@ -2858,10 +2903,11 @@ end;
 procedure TMainCashForm2.ParentFormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  if (Key=VK_Tab) and (CheckGrid.IsFocused) 
-   then if isScaner = true
+  if (Key=VK_Tab) and (CheckGrid.IsFocused)
+  then if isScaner = true
        then ActiveControl := ceScaner
        else ActiveControl := lcName;
+
   if (Key = VK_ADD) or ((Key = VK_Return) AND (ssShift in Shift)) then
   Begin
     Key := 0;
@@ -3186,6 +3232,16 @@ begin
             checkCDS.FieldByName('SummChangePercent').asCurrency :=DiscountServiceForm.gSummChangePercent;
         end
         else}
+        if (Self.FormParams.ParamByName('SPTax').Value <> 0)
+          and(Self.FormParams.ParamByName('InvNumberSP').Value <> '')
+        then begin
+            // на всяк случай - УСТАНОВИМ скидку еще разок
+            checkCDS.FieldByName('PriceSale').asCurrency:= RemainsCDS.FieldByName('Price').asCurrency;
+            checkCDS.FieldByName('Price').asCurrency    := RemainsCDS.FieldByName('Price').asCurrency * (1 - Self.FormParams.ParamByName('SPTax').Value/100);
+            // и УСТАНОВИМ скидку - с процентом SPTax
+            checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('SPTax').Value;
+            checkCDS.FieldByName('SummChangePercent').asCurrency := CheckCDS.FieldByName('Amount').asCurrency * RemainsCDS.FieldByName('Price').asCurrency * (Self.FormParams.ParamByName('SPTax').Value/100);
+        end else
         if (RemainsCDS.FieldByName('isSP').asBoolean = TRUE)
           and(Self.FormParams.ParamByName('InvNumberSP').Value <> '')
         then begin
@@ -3304,6 +3360,10 @@ begin
     MyVipCDS.FieldByName('MedicSP').AsString            := AMedicSP;
     MyVipCDS.FieldByName('InvNumberSP').AsString        := AInvNumberSP;
     MyVipCDS.FieldByName('OperDateSP').AsDateTime       := AOperDateSP;
+    //***15.06.17
+    MyVipCDS.FieldByName('SPTax').AsFloat       := ASPTax;
+    MyVipCDS.FieldByName('SPKindId').AsInteger  := ASPKindId;
+    MyVipCDS.FieldByName('SPKindName').AsString := ASPKindName;
 
     MyVipCDS.Post;
 
@@ -3395,7 +3455,9 @@ begin
                                          AAmbulance,               //№ амбулатории (Соц. проект)
                                          AMedicSP,                 //ФИО врача (Соц. проект)
                                          AInvNumberSP,             //номер рецепта (Соц. проект)
-                                         AOperDateSP                //дата рецепта (Соц. проект)
+                                         AOperDateSP,              //дата рецепта (Соц. проект)
+                                         //***15.06.17
+                                         ASPKindId                 //Id Вид СП
                                         ]);
       End
       else
@@ -3429,6 +3491,8 @@ begin
         FLocalDataBaseHead.FieldByName('MEDICSP').Value    := AMedicSP;            //ФИО врача (Соц. проект)
         FLocalDataBaseHead.FieldByName('INVNUMSP').Value   := AInvNumberSP;        //номер рецепта (Соц. проект)
         FLocalDataBaseHead.FieldByName('OPERDATESP').Value := AOperDateSP;         //дата рецепта (Соц. проект)
+        //***15.06.17
+        FLocalDataBaseHead.FieldByName('SPKINDID').Value   := ASPKindId;  //Id Вид СП
 
         FLocalDataBaseHead.Post;
       End;
@@ -3524,6 +3588,7 @@ begin
     ReleaseMutex(MutexDBF);
     PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 3);  // только 2 форма
   end;
+
   // что б отловить ошибки - запишим в лог чек - во время СОХРАНЕНИЯ чека, т.е. ПОСЛЕ пробития через ЭККА
   Add_Log_XML('<Save now="'+FormatDateTime('YYYY.MM.DD hh:mm:ss',now)+'">'
      +#10+#13+'<AUID>"'  + AUID  + '"</AUID>'
@@ -3571,7 +3636,7 @@ begin  //+
       sp.Execute(False,False);
       WaitForSingleObject(MutexVip, INFINITE);  // только для формы2;  защищаем так как есть в приложениее и сервисе
       SaveLocalData(ds,Member_lcl);
-      ReleaseMutex(MutexVip);
+      ReleaseMutex(MutexVip); // только 2 форма
 
       sp.StoredProcName := 'gpSelect_Movement_CheckVIP';
       sp.Params.Clear;
@@ -3757,7 +3822,7 @@ procedure TMainCashForm2.TimerSaveAllTimer(Sender: TObject);
 var fEmpt  : Boolean;
     RCount : Integer;
 begin
-  if gc_User.Local then Exit;
+  if gc_User.Local then Exit; // только 2 форма
    TimerSaveAll.Enabled:=False;
    fEmpt:= true;
    RCount:= 0;
@@ -3786,7 +3851,7 @@ begin
   end;
 end;
 
-{ TSaveRealThread }
+{ TSaveRealThread }  // для коректной синхронизации
 
 
 

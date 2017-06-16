@@ -73,7 +73,7 @@ type
   end;
   TBodyArr = Array of TBodyRecord;
 
-  TSaveRealThread = class(TThread)
+  TSaveRealThread = class(TThread) // только 1 форма
     DiffCDS : TClientDataSet;
     FCheckUID: String;
     FShapeColor: TColor;
@@ -88,12 +88,12 @@ type
   protected
     procedure Execute; override;
   end;
-  TSaveRealAllThread = class(TThread)
+  TSaveRealAllThread = class(TThread) // только 1 форма
   protected
     procedure Execute; override;
   end;
 
-   TRefreshDiffThread = class(TThread)
+   TRefreshDiffThread = class(TThread) // только 1 форма
     FUserSession: string; // Подмененная сесия
     FShapeColor: TColor;
     procedure SetShapeState(AColor: TColor);
@@ -384,16 +384,16 @@ type
       ASPKindId: Integer; ASPKindName : String; ASPTax : Currency;
       NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
     //сохраняет чек в реальную базу
-    procedure SaveReal(AUID: String; ANeedComplete: boolean = False);
+    procedure SaveReal(AUID: String; ANeedComplete: boolean = False); // только 1 форма
 
     //Перечитывает остаток
-    procedure StartRefreshDiffThread;
+    procedure StartRefreshDiffThread; // только 1 форма
 
     //проверили что есть остаток
     function fCheck_RemainsError : Boolean;
 
     //Находит в локальной базе и досылает всечеки
-    procedure SaveRealAll;
+    procedure SaveRealAll; // только 1 форма
     property SoldRegim: boolean read FSoldRegim write SetSoldRegim;
     procedure Thread_Exception(var Msg: TMessage); message UM_THREAD_EXCEPTION;
     procedure ConnectionModeChange(var Msg: TMessage); message UM_LOCAL_CONNECTION;
@@ -403,9 +403,9 @@ type
 
 var
   MainCashForm: TMainCashForm;
-  CountRRT: Integer = 0;
-  CountSaveThread: Integer = 0;
-  ActualRemainSession: Integer = 0;
+  CountRRT: Integer = 0; // только 1 форма
+  CountSaveThread: Integer = 0; // только 1 форма
+  ActualRemainSession: Integer = 0; // только 1 форма
   FLocalDataBaseHead : TVKSmartDBF;
   FLocalDataBaseBody : TVKSmartDBF;
   LocalDataBaseisBusy: Integer = 0;
@@ -567,7 +567,7 @@ begin
   UpdateRemainsFromCheck;
   CheckCDS.EmptyDataSet;
   MCDesigner.CasualCache.Clear;
-  StartRefreshDiffThread;
+  StartRefreshDiffThread; // только 1 форма
 end;
 
 procedure TMainCashForm.actClearMoneyExecute(Sender: TObject);
@@ -861,7 +861,7 @@ begin
                    UID           // out AUID
                   )
       then Begin
-        SaveReal(UID, True);
+        SaveReal(UID, True); // только 1 форма
         NewCheck(false);
       End;
            end; // else if fErr = true
@@ -875,7 +875,7 @@ end;
 procedure TMainCashForm.actRefreshAllExecute(Sender: TObject);
 var
   AfterScr: TDataSetNotifyEvent;
-  lMsg :String;
+  lMsg: String;
 begin
   startSplash('Начало обновления данных с сервера');
   try
@@ -965,7 +965,7 @@ procedure TMainCashForm.actRefreshRemainsExecute(Sender: TObject);
 begin
   StartRefreshDiffThread;
 end;
-
+{ synh1 } //для коректной синхронизации двух форм 
 procedure TMainCashForm.actSelectLocalVIPCheckExecute(Sender: TObject);
 var
   vip,vipList: TClientDataSet;
@@ -1092,7 +1092,7 @@ begin
               ,UID           // out AUID
               )
   then begin
-    SaveReal(UID);
+    SaveReal(UID); // только 1 форма
     //
     NewCheck(False);
     //
@@ -1164,7 +1164,7 @@ begin
               ,UID           // out AUID
               )
   then begin
-    SaveReal(UID);
+    SaveReal(UID); // только 1 форма
     //
     NewCheck(False);
     //
@@ -1309,7 +1309,7 @@ begin
               )
   then begin
     NewCheck(False);
-    SaveReal(UID);
+    SaveReal(UID); // только 1 форма
   End;
 end;
 
@@ -1505,7 +1505,7 @@ begin
   NewCheck;
   OnCLoseQuery := ParentFormCloseQuery;
   OnShow := ParentFormShow;
-  TimerSaveAll.Enabled := true;
+  TimerSaveAll.Enabled := true; // только 1 форма
 
   SetBlinkVIP (true);
   SetBlinkCheck (true);
@@ -1944,10 +1944,10 @@ begin
   begin
     FLocalDataBaseHead.Active:=False;
     FLocalDataBaseBody.Active:=False;
-    ReleaseMutex(MutexDBF);
-    SaveRealAll;
+    ReleaseMutex(MutexDBF); // только 1 форма
+    SaveRealAll;  // только 1 форма
   end
-  else
+  else // только 1 форма
       ReleaseMutex(MutexDBF);
 
  end;
@@ -2405,8 +2405,8 @@ begin
 
   if Self.Visible then
   Begin
-    if ANeedRemainsRefresh then
-      StartRefreshDiffThread;
+    if ANeedRemainsRefresh then // только 1 форма
+      StartRefreshDiffThread;  // только 1 форма
   End
   else
   Begin
@@ -2429,8 +2429,8 @@ begin
   End
   else
     CanClose := MessageDlg('Вы действительно хотите выйти?',mtConfirmation,[mbYes,mbCancel], 0) = mrYes;
-  while CountRRT>0 do //Ждем пока закроются все потоки
-    Application.ProcessMessages;
+  while CountRRT>0 do //Ждем пока закроются все потоки  // только 1 форма
+    Application.ProcessMessages;  // только 1 форма
   if CanClose then
   Begin
     try
@@ -3223,7 +3223,7 @@ begin
   end;
 end;
 
-procedure TMainCashForm.SaveReal(AUID: String; ANeedComplete: boolean = False);
+procedure TMainCashForm.SaveReal(AUID: String; ANeedComplete: boolean = False); // только 1 форма
 Begin
   With TSaveRealThread.Create(true) do
   Begin
@@ -3233,7 +3233,7 @@ Begin
   End;
 End;
 
-procedure TMainCashForm.SaveRealAll;
+procedure TMainCashForm.SaveRealAll; // только 1 форма
 begin
   With TSaveRealAllThread.Create(true) do
   Begin
@@ -3242,7 +3242,7 @@ begin
   End;
 end;
 
-procedure TMainCashForm.StartRefreshDiffThread;
+procedure TMainCashForm.StartRefreshDiffThread; // только 1 форма
 Begin
   With TRefreshDiffThread.Create(true) do
   Begin
@@ -3370,7 +3370,7 @@ begin
                 // Сохранили список ВСЕХ документов - с типом "Не подтвержден"
                 MovementId_BlinkVIP:= lMovementId_BlinkVIP;
                 // "не самое долгое" обновление грида
-                StartRefreshDiffThread;
+                StartRefreshDiffThread; // только 1 форма
       end;
 
   except
@@ -3432,8 +3432,8 @@ begin
      except end;
      //
      //еще сохраним чеки, если они есть
-     if not fEmpt then
-       SaveRealAll;
+     if not fEmpt then  // только 1 форма
+       SaveRealAll;  // только 1 форма
 
  finally
     TimerSaveAll.Enabled:=True;
@@ -3442,7 +3442,7 @@ begin
 end;
 
 { TSaveRealThread }
-
+// TSaveRealThread синхронизируется с формой 2 в приложеннии сервиса
 procedure TSaveRealThread.Execute;
 var
   Head: THeadRecord;
@@ -3850,30 +3850,30 @@ end;
 
 
 
-procedure TSaveRealThread.SendError(const AErrorMessage: String);
+procedure TSaveRealThread.SendError(const AErrorMessage: String); // только 1 форма
 begin
   FLastError := AErrorMessage;
   Synchronize(SendErrorMineForm);
 end;
 
-procedure  TSaveRealThread.SendErrorMineForm;
+procedure  TSaveRealThread.SendErrorMineForm; // только 1 форма
 begin
   MainCashForm.ThreadErrorMessage := FLastError;
   PostMessage(MainCashForm.Handle,UM_THREAD_EXCEPTION,0,0);
 end;
 
-procedure TSaveRealThread.SetShapeState(AColor: TColor);
+procedure TSaveRealThread.SetShapeState(AColor: TColor); // только 1 форма
 begin
   FShapeColor := AColor;
   Synchronize(SyncShapeState);
 end;
 
-procedure TSaveRealThread.SyncShapeState;
+procedure TSaveRealThread.SyncShapeState; // только 1 форма
 begin
   MainCashForm.ShapeState.Pen.Color := FShapeColor;
 end;
 
-procedure TSaveRealThread.UpdateRemains;
+procedure TSaveRealThread.UpdateRemains; // только 1 форма
 
 begin
   MainCashForm.UpdateRemainsFromDiff(DiffCDS);

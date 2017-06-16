@@ -12,7 +12,7 @@ inherited MainCashForm2: TMainCashForm2
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
   ExplicitWidth = 759
-  ExplicitHeight = 450
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
@@ -1576,6 +1576,28 @@ inherited MainCashForm2: TMainCashForm2
           Component = FormParams
           ComponentItem = 'OperDateSP'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SPTax'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SPTax'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SPKindId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SPKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SPKindName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SPKindName'
           MultiSelectSeparator = ','
         end>
       isShowModal = True

@@ -17,22 +17,6 @@ object MainCashForm2: TMainCashForm2
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
-    Left = 0
-    Top = 0
-    Width = 621
-    Height = 13
-    Align = alTop
-    Caption = 'Info'
-    ExplicitWidth = 20
-  end
-  object ShapeState: TShape
-    Left = 32
-    Top = 19
-    Width = 65
-    Height = 65
-    Pen.Width = 10
-  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -453,110 +437,6 @@ object MainCashForm2: TMainCashForm2
     Images = dmMain.ImageList
     Left = 15
     Top = 175
-    object actChoiceGoodsInRemainsGrid: TAction
-      Caption = 'actChoiceGoodsInRemainsGrid'
-    end
-    object actOpenCheckVIP_Error: TOpenChoiceForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = #1063#1077#1082#1080' '#1089' '#1090#1086#1074#1072#1088#1072#1084#1080' "'#1085#1077#1090' '#1074' '#1085#1072#1083#1080#1095#1080#1080'"'
-      FormName = 'TCheckVIP_ErrorForm'
-      FormNameParam.Value = 'TCheckVIP_ErrorForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'CheckId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'BayerName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'CashMemberId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'ManagerId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'CashMember'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'ManagerName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'DiscountExternalId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'DiscountExternalId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'DiscountExternalName'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'DiscountExternalName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'DiscountCardNumber'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'DiscountCardNumber'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ConfirmedKindName'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'ConfirmedKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'BayerPhone'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'BayerPhone'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InvNumberOrder'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'InvNumberOrder'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ConfirmedKindClientName'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'ConfirmedKindClientName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
     object actRefreshAll: TAction
       Category = 'DSDLib'
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
@@ -564,24 +444,6 @@ object MainCashForm2: TMainCashForm2
       ImageIndex = 4
       ShortCut = 116
       OnExecute = actRefreshAllExecute
-    end
-    object actSold: TAction
-      Caption = #1055#1088#1086#1076#1072#1078#1072
-      ShortCut = 113
-    end
-    object actCheck: TdsdOpenForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      MoveParams = <>
-      Caption = #1063#1077#1082#1080
-      FormName = 'TCheckJournalForm'
-      FormNameParam.Value = 'TCheckJournalForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actInsertUpdateCheckItems: TAction
-      Caption = 'actInsertUpdateCheckItems'
     end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -601,193 +463,6 @@ object MainCashForm2: TMainCashForm2
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actPutCheckToCash: TAction
-      Caption = #1055#1086#1089#1083#1072#1090#1100' '#1095#1077#1082
-      Hint = #1055#1086#1089#1083#1072#1090#1100' '#1095#1077#1082
-    end
-    object actSetVIP: TAction
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' VIP '#1095#1077#1082
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' VIP '#1095#1077#1082
-      ShortCut = 117
-    end
-    object actDeferrent: TAction
-      Caption = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1095#1077#1082' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1084
-      Hint = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1095#1077#1082' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1084
-      ShortCut = 119
-      Visible = False
-    end
-    object actChoiceGoodsFromRemains: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = #1058#1057
-      FormName = 'TChoiceGoodsFromRemainsForm'
-      FormNameParam.Value = 'TChoiceGoodsFromRemainsForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = True
-    end
-    object actOpenCheckVIP: TOpenChoiceForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'actOpenCheckVIP'
-      FormName = 'TCheckVIPForm'
-      FormNameParam.Value = 'TCheckVIPForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'CheckId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'BayerName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'CashMemberId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'ManagerId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'CashMember'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'ManagerName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'DiscountExternalId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'DiscountExternalId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'DiscountExternalName'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'DiscountExternalName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'DiscountCardNumber'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'DiscountCardNumber'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ConfirmedKindName'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'ConfirmedKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'BayerPhone'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'BayerPhone'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InvNumberOrder'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'InvNumberOrder'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ConfirmedKindClientName'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'ConfirmedKindClientName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actLoadVIP: TMultiAction
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actOpenCheckVIP
-        end
-        item
-          Action = actSelectCheck
-        end
-        item
-          Action = actSelectLocalVIPCheck
-        end
-        item
-          Action = actRefreshLite
-        end
-        item
-          Action = actUpdateRemains
-        end
-        item
-          Action = actCalcTotalSumm
-        end
-        item
-          Action = actSetFocus
-        end>
-      Caption = 'VIP'
-    end
-    object actUpdateRemains: TAction
-      Category = 'DSDLib'
-      Caption = 'actUpdateRemains'
-    end
-    object actCalcTotalSumm: TAction
-      Category = 'DSDLib'
-      Caption = 'actCalcTotalSumm'
-    end
-    object actCashWork: TAction
-      Caption = #1056#1072#1073#1086#1090#1072' '#1089' '#1082#1072#1089#1089#1086#1081
-      ShortCut = 16451
-    end
-    object actClearAll: TAction
-      Caption = #1057#1073#1088#1086#1089#1080#1090#1100' '#1074#1089#1077
-      Hint = #1057#1073#1088#1086#1089#1080#1090#1100' '#1074#1089#1077
-      ShortCut = 32776
-    end
-    object actClearMoney: TAction
-      Caption = #1057#1073#1088#1086#1089#1080#1090#1100' '#1076#1077#1085#1100#1075#1080
-      Hint = #1057#1073#1088#1086#1089#1080#1090#1100' '#1076#1077#1085#1100#1075#1080
-      ShortCut = 16500
-    end
-    object actGetMoneyInCash: TAction
-      Caption = #1044#1077#1085#1100#1075#1080' '#1074' '#1082#1072#1089#1089#1077
-      Hint = #1044#1077#1085#1100#1075#1080' '#1074' '#1082#1072#1089#1089#1077
-      ShortCut = 32884
-    end
-    object actSpec: TAction
-      AutoCheck = True
-      Caption = #1058#1080#1093#1086' / '#1043#1088#1086#1084#1082#1086
-      ShortCut = 16501
-    end
     object actRefreshLite: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -805,43 +480,6 @@ object MainCashForm2: TMainCashForm2
       Category = 'DSDLib'
       MoveParams = <>
     end
-    object actOpenMCSForm: TdsdOpenForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      MoveParams = <>
-      Caption = #1053#1058#1047
-      Hint = #1056#1077#1077#1089#1090#1088' '#1085#1077#1089#1085#1080#1078#1072#1077#1086#1075#1086' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
-      FormName = 'TMCSForm'
-      FormNameParam.Value = 'TMCSForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actOpenMCS_LiteForm: TdsdOpenForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      MoveParams = <>
-      Caption = #1053#1058#1047
-      Hint = #1056#1077#1077#1089#1090#1088' '#1085#1077#1089#1085#1080#1078#1072#1077#1086#1075#1086' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
-      FormName = 'TMCS_LiteForm'
-      FormNameParam.Value = 'TMCS_LiteForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actSetFocus: TAction
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      Caption = 'actSetFocus'
-    end
-    object actRefreshRemains: TAction
-      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1089#1090#1072#1090#1086#1082
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1089#1090#1072#1090#1086#1082
-      ShortCut = 115
-    end
-    object actExecuteLoadVIP: TAction
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      Caption = 'VIP'
-    end
     object actSelectCheck: TdsdExecStoredProc
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -851,25 +489,6 @@ object MainCashForm2: TMainCashForm2
           StoredProc = spSelectCheck
         end>
       Caption = 'actSelectCheck'
-    end
-    object actSelectLocalVIPCheck: TAction
-      Caption = 'actSelectLocalVIPCheck'
-    end
-    object actCheckConnection: TAction
-      Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1089#1074#1103#1079#1100' '#1089' '#1089#1077#1088#1074#1077#1088#1086#1084
-    end
-    object actSetDiscountExternal: TAction
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1086#1077#1082#1090' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099')'
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1086#1077#1082#1090' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099')'
-      ShortCut = 118
-    end
-    object actSetConfirmedKind_UnComplete: TAction
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' - <'#1053#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
-    end
-    object actSetConfirmedKind_Complete: TAction
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' - <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
     end
     object actSetCashSessionId: TAction
       Caption = 'actSetCashSessionId'
@@ -963,7 +582,7 @@ object MainCashForm2: TMainCashForm2
     Left = 432
     Top = 16
     Bitmap = {
-      494C010102003400500080008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102003400540080008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000000200008000000001002000000000000000
       04000000000000000000000000000000000000FF000000FF000000FF000000FF
       000000FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF
