@@ -431,9 +431,9 @@ BEGIN
              , tmpGoodsSP.InsertDateSP    :: TDateTime
 
              , tmpData.Amount            :: TFloat 
-             , tmpData.PriceSale         :: TFloat 
-             , (tmpData.SummChangePercent / tmpData.Amount) :: TFloat AS PriceCheckSP
-             , tmpData.SummChangePercent :: TFloat  AS SummaSP
+             , CAST (tmpData.PriceSale AS NUMERIC(16,2))                            :: TFloat 
+             , CAST ((tmpData.SummChangePercent / tmpData.Amount) AS NUMERIC(16,2)) :: TFloat  AS PriceCheckSP
+             , CAST (tmpData.SummChangePercent AS NUMERIC(16,2))                    :: TFloat  AS SummaSP
              , CAST (ROW_NUMBER() OVER (PARTITION BY Object_PartnerMedical.Id ORDER BY tmpGoodsSP.IntenalSPName, tmpData.OperDate ) AS Integer) AS NumLine    --PARTITION BY Object_Juridical.ValueData
              , CAST (tmpCountR.CountInvNumberSP AS Integer) AS CountInvNumberSP
 
