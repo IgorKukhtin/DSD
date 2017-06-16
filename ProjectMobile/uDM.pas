@@ -1320,6 +1320,7 @@ end;
 procedure TSyncThread.UploadStoreReal;
 var
   UploadStoredProc : TdsdStoredProc;
+  ItemsCount: Integer;
 begin
   UploadStoredProc := TdsdStoredProc.Create(nil);
   try
@@ -1336,8 +1337,8 @@ begin
         First;
         while not Eof do
         begin
-          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Movement_StoreReal';
           UploadStoredProc.Params.Clear;
+          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Movement_StoreReal';
           UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
           UploadStoredProc.Params.AddParam('inInvNumber', ftString, ptInput, FieldByName('INVNUMBER').AsString);
           UploadStoredProc.Params.AddParam('inOperDate', ftDateTime, ptInput, FieldByName('OPERDATE').AsDateTime);
@@ -1353,26 +1354,36 @@ begin
             DM.tblMovementItem_StoreReal.Filter := 'MovementId = ' + FieldByName('ID').AsString;
             DM.tblMovementItem_StoreReal.Filtered := true;
             DM.tblMovementItem_StoreReal.Open;
-
             DM.tblMovementItem_StoreReal.First;
+            ItemsCount := 0;
+
             while not DM.tblMovementItem_StoreReal.Eof do
             begin
-              UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_MovementItem_StoreReal';
               UploadStoredProc.Params.Clear;
+              UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_MovementItem_StoreReal';
               UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, DM.tblMovementItem_StoreReal.FieldByName('GUID').AsString);
               UploadStoredProc.Params.AddParam('inMovementGUID', ftString, ptInput, FieldByName('GUID').AsString);
               UploadStoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, DM.tblMovementItem_StoreReal.FieldByName('GOODSID').AsInteger);
               UploadStoredProc.Params.AddParam('inAmount', ftFloat, ptInput, DM.tblMovementItem_StoreReal.FieldByName('AMOUNT').AsFloat);
               UploadStoredProc.Params.AddParam('inGoodsKindId', ftInteger, ptInput, DM.tblMovementItem_StoreReal.FieldByName('GOODSKINDID').AsInteger);
-
               UploadStoredProc.Execute(false, false, false);
-
+              Inc(ItemsCount);
               DM.tblMovementItem_StoreReal.Next;
             end;
 
-            Edit;
-            FieldByName('IsSync').AsBoolean := true;
-            Post;
+            UploadStoredProc.Params.Clear;
+            UploadStoredProc.StoredProcName := 'gpGetMobile_Movement_CountItems';
+            UploadStoredProc.Params.AddParam('inMovementGUID', ftString, ptInput, FieldByName('GUID').AsString);
+            UploadStoredProc.Params.AddParam('outItemsCount', ftInteger, ptOutput, 0);
+            UploadStoredProc.Execute(false, false, false);
+
+            if ItemsCount = UploadStoredProc.ParamByName('outItemsCount').Value then
+            begin
+              Edit;
+              FieldByName('IsSync').AsBoolean := true;
+              Post;
+            end else
+              raise Exception.Create('По факт. остатку №' + FieldByName('INVNUMBER').AsString + ' отправились не все позиции. Требуется повторная синхронизация');
           except
             on E : Exception do
             begin
@@ -1399,7 +1410,8 @@ end;
 { Сохранение на сервер введенных заявок }
 procedure TSyncThread.UploadOrderExternal;
 var
-  UploadStoredProc : TdsdStoredProc;
+  UploadStoredProc: TdsdStoredProc;
+  ItemsCount: Integer;
 begin
   UploadStoredProc := TdsdStoredProc.Create(nil);
   try
@@ -1416,8 +1428,8 @@ begin
         First;
         while not Eof do
         begin
-          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Movement_OrderExternal';
           UploadStoredProc.Params.Clear;
+          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Movement_OrderExternal';
           UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
           UploadStoredProc.Params.AddParam('inInvNumber', ftString, ptInput, FieldByName('INVNUMBER').AsString);
           UploadStoredProc.Params.AddParam('inOperDate', ftDateTime, ptInput, FieldByName('OPERDATE').AsDateTime);
@@ -1440,12 +1452,13 @@ begin
             DM.tblMovementItem_OrderExternal.Filter := 'MovementId = ' + FieldByName('ID').AsString;
             DM.tblMovementItem_OrderExternal.Filtered := true;
             DM.tblMovementItem_OrderExternal.Open;
-
             DM.tblMovementItem_OrderExternal.First;
+            ItemsCount := 0;
+
             while not DM.tblMovementItem_OrderExternal.Eof do
             begin
-              UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_MovementItem_OrderExternal';
               UploadStoredProc.Params.Clear;
+              UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_MovementItem_OrderExternal';
               UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, DM.tblMovementItem_OrderExternal.FieldByName('GUID').AsString);
               UploadStoredProc.Params.AddParam('inMovementGUID', ftString, ptInput, FieldByName('GUID').AsString);
               UploadStoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, DM.tblMovementItem_OrderExternal.FieldByName('GOODSID').AsInteger);
@@ -1453,15 +1466,24 @@ begin
               UploadStoredProc.Params.AddParam('inChangePercent', ftFloat, ptInput, DM.tblMovementItem_OrderExternal.FieldByName('CHANGEPERCENT').AsFloat);
               UploadStoredProc.Params.AddParam('inAmount', ftFloat, ptInput, DM.tblMovementItem_OrderExternal.FieldByName('AMOUNT').AsFloat);
               UploadStoredProc.Params.AddParam('inPrice', ftFloat, ptInput, DM.tblMovementItem_OrderExternal.FieldByName('PRICE').AsFloat);
-
               UploadStoredProc.Execute(false, false, false);
-
+              Inc(ItemsCount);
               DM.tblMovementItem_OrderExternal.Next;
             end;
 
-            Edit;
-            FieldByName('IsSync').AsBoolean := true;
-            Post;
+            UploadStoredProc.Params.Clear;
+            UploadStoredProc.StoredProcName := 'gpGetMobile_Movement_CountItems';
+            UploadStoredProc.Params.AddParam('inMovementGUID', ftString, ptInput, FieldByName('GUID').AsString);
+            UploadStoredProc.Params.AddParam('outItemsCount', ftInteger, ptOutput, 0);
+            UploadStoredProc.Execute(false, false, false);
+
+            if ItemsCount = UploadStoredProc.ParamByName('outItemsCount').Value then
+            begin
+              Edit;
+              FieldByName('IsSync').AsBoolean := true;
+              Post;
+            end else
+              raise Exception.Create('По заявке №' + FieldByName('INVNUMBER').AsString + ' отправились не все позиции. Требуется повторная синхронизация');
           except
             on E : Exception do
             begin
@@ -1488,6 +1510,7 @@ end;
 procedure TSyncThread.UploadReturnIn;
 var
   UploadStoredProc : TdsdStoredProc;
+  ItemsCount: Integer;
 begin
   UploadStoredProc := TdsdStoredProc.Create(nil);
   try
@@ -1504,8 +1527,8 @@ begin
         First;
         while not Eof do
         begin
-          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Movement_ReturnIn';
           UploadStoredProc.Params.Clear;
+          UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_Movement_ReturnIn';
           UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, FieldByName('GUID').AsString);
           UploadStoredProc.Params.AddParam('inInvNumber', ftString, ptInput, FieldByName('INVNUMBER').AsString);
           UploadStoredProc.Params.AddParam('inOperDate', ftDateTime, ptInput, FieldByName('OPERDATE').AsDateTime);
@@ -1528,12 +1551,13 @@ begin
             DM.tblMovementItem_ReturnIn.Filter := 'MovementId = ' + FieldByName('ID').AsString;
             DM.tblMovementItem_ReturnIn.Filtered := true;
             DM.tblMovementItem_ReturnIn.Open;
-
             DM.tblMovementItem_ReturnIn.First;
+            ItemsCount := 0;
+
             while not DM.tblMovementItem_ReturnIn.Eof do
             begin
-              UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_MovementItem_ReturnIn';
               UploadStoredProc.Params.Clear;
+              UploadStoredProc.StoredProcName := 'gpInsertUpdateMobile_MovementItem_ReturnIn';
               UploadStoredProc.Params.AddParam('inGUID', ftString, ptInput, DM.tblMovementItem_ReturnIn.FieldByName('GUID').AsString);
               UploadStoredProc.Params.AddParam('inMovementGUID', ftString, ptInput, FieldByName('GUID').AsString);
               UploadStoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, DM.tblMovementItem_ReturnIn.FieldByName('GOODSID').AsInteger);
@@ -1541,15 +1565,24 @@ begin
               UploadStoredProc.Params.AddParam('inAmount', ftFloat, ptInput, DM.tblMovementItem_ReturnIn.FieldByName('AMOUNT').AsFloat);
               UploadStoredProc.Params.AddParam('inPrice', ftFloat, ptInput, DM.tblMovementItem_ReturnIn.FieldByName('PRICE').AsFloat);
               UploadStoredProc.Params.AddParam('inChangePercent', ftFloat, ptInput, DM.tblMovementItem_ReturnIn.FieldByName('CHANGEPERCENT').AsFloat);
-
               UploadStoredProc.Execute(false, false, false);
-
+              Inc(ItemsCount);
               DM.tblMovementItem_ReturnIn.Next;
             end;
 
-            Edit;
-            FieldByName('IsSync').AsBoolean := true;
-            Post;
+            UploadStoredProc.Params.Clear;
+            UploadStoredProc.StoredProcName := 'gpGetMobile_Movement_CountItems';
+            UploadStoredProc.Params.AddParam('inMovementGUID', ftString, ptInput, FieldByName('GUID').AsString);
+            UploadStoredProc.Params.AddParam('outItemsCount', ftInteger, ptOutput, 0);
+            UploadStoredProc.Execute(false, false, false);
+
+            if ItemsCount = UploadStoredProc.ParamByName('outItemsCount').Value then
+            begin
+              Edit;
+              FieldByName('IsSync').AsBoolean := true;
+              Post;
+            end else
+              raise Exception.Create('По возврату №' + FieldByName('INVNUMBER').AsString + ' отправились не все позиции. Требуется повторная синхронизация');
           except
             on E : Exception do
             begin

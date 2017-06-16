@@ -230,6 +230,10 @@ BEGIN
                               , SUM (MI_Check.Amount) AS Amount
                               , SUM (COALESCE (MIFloat_SummChangePercent.ValueData, 0))   AS SummChangePercent
                               , COALESCE (MIFloat_PriceSale.ValueData, 0)                 AS PriceSale
+                              , MAX (CASE WHEN date_trunc ('day', Movement_Check.OperDate) = '01.06.2017' ::TDateTime
+                                               THEN CAST (COALESCE (MIFloat_PriceSale.ValueData, 0) - COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC(16,2))
+                                          ELSE 0
+                                     END)                                                 AS Price_calc
                               , MovementString_InvNumberSP.ValueData                      AS InvNumberSP
                               , MovementString_MedicSP.ValueData                          AS MedicSPName
 
@@ -273,6 +277,9 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
                                                           ON MIFloat_PriceSale.MovementItemId = MI_Check.Id
                                                          AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+                              LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                          ON MIFloat_Price.MovementItemId = MI_Check.Id
+                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
                          WHERE Movement_Check.DescId = zc_Movement_Check()
                            AND Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY'
@@ -431,9 +438,15 @@ BEGIN
              , tmpGoodsSP.InsertDateSP    :: TDateTime
 
              , tmpData.Amount            :: TFloat 
-             , tmpData.PriceSale         :: TFloat 
-             , (tmpData.SummChangePercent / tmpData.Amount) :: TFloat AS PriceCheckSP
-             , tmpData.SummChangePercent :: TFloat  AS SummaSP
+             , CAST (tmpData.PriceSale AS NUMERIC(16,2))                        :: TFloat 
+             , CASE WHEN date_trunc('day', tmpData.OperDate) = ('01.06.2017' ::TDateTime)
+                    THEN tmpData.Price_calc
+                    ELSE CAST ((tmpData.SummChangePercent / tmpData.Amount) AS NUMERIC(16,2))
+               END                                                              :: TFloat  AS PriceCheckSP
+             , CASE WHEN date_trunc('day', tmpData.OperDate) = ('01.06.2017' ::TDateTime)
+                    THEN CAST (tmpData.Price_calc * tmpData.Amount AS NUMERIC(16,2))
+                    ELSE CAST (tmpData.SummChangePercent AS NUMERIC(16,2)) 
+               END                                                              :: TFloat  AS SummaSP
              , CAST (ROW_NUMBER() OVER (PARTITION BY Object_PartnerMedical.Id ORDER BY tmpGoodsSP.IntenalSPName, tmpData.OperDate ) AS Integer) AS NumLine    --PARTITION BY Object_Juridical.ValueData
              , CAST (tmpCountR.CountInvNumberSP AS Integer) AS CountInvNumberSP
 

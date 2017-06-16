@@ -65,38 +65,41 @@ BEGIN
                   -- развернутые виды товара  
                 , tmpGoodsListSaleKind AS (SELECT Object_GoodsListSale.Id 
                                                 , ObjectLink_GoodsListSale_Goods.ChildObjectId   AS GoodsId
-                                                , GoodsKindArr::Integer                          AS GoodsKindId
+                                                , GoodsKindArr :: Integer                        AS GoodsKindId
                                                 , ObjectLink_GoodsListSale_Partner.ChildObjectId AS PartnerId
                                                 , Object_GoodsListSale.isErased
+                                                  --  № п/п - !!!ВРЕМЕННО!!!
+                                                , ROW_NUMBER() OVER (PARTITION BY ObjectLink_GoodsListSale_Goods.ChildObjectId, ObjectLink_GoodsListSale_Partner.ChildObjectId) AS Ord
                                            FROM tmpPartner
                                                 JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
                                                                 ON ObjectLink_GoodsListSale_Partner.ChildObjectId = tmpPartner.PartnerId
                                                                AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
                                                 JOIN Object AS Object_GoodsListSale 
-                                                            ON Object_GoodsListSale.Id = ObjectLink_GoodsListSale_Partner.ObjectId
-                                                           AND Object_GoodsListSale.isErased = false
+                                                            ON Object_GoodsListSale.Id       = ObjectLink_GoodsListSale_Partner.ObjectId
+                                                           AND Object_GoodsListSale.isErased = FALSE
                                                 JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods
                                                                 ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
                                                                AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
                                                                AND ObjectLink_GoodsListSale_Goods.ChildObjectId > 0
                                                 JOIN Object AS Object_Goods 
-                                                            ON Object_Goods.Id = ObjectLink_GoodsListSale_Goods.ChildObjectId
-                                                           AND Object_Goods.isErased = false
+                                                            ON Object_Goods.Id       = ObjectLink_GoodsListSale_Goods.ChildObjectId
+                                                           AND Object_Goods.isErased = FALSE
                                                 JOIN ObjectString AS ObjectString_GoodsListSale_GoodsKind
                                                                   ON ObjectString_GoodsListSale_GoodsKind.ObjectId = Object_GoodsListSale.Id
                                                                  AND ObjectString_GoodsListSale_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind() 
                                                 JOIN regexp_split_to_table(ObjectString_GoodsListSale_GoodsKind.ValueData, E'\,+') AS GoodsKindArr ON 1 = 1
                                           )
                   -- предопределенный список товар+вид товара+контрагент доступный торговому агенту
-                , tmpGoodsListSale AS (SELECT MAX (tmpGoodsListSaleKind.Id) AS Id
+                , tmpGoodsListSale AS (SELECT MAX (tmpGoodsListSaleKind.Id)  AS Id
+                                            , MIN (tmpGoodsListSaleKind.Ord) AS Ord
                                             , tmpGoodsListSaleKind.GoodsId
                                             , tmpGoodsListSaleKind.GoodsKindId 
                                             , tmpGoodsListSaleKind.PartnerId
                                             , tmpGoodsListSaleKind.isErased
                                        FROM tmpGoodsListSaleKind
                                             JOIN Object AS Object_GoodsKind 
-                                                        ON Object_GoodsKind.Id = tmpGoodsListSaleKind.GoodsKindId
-                                                       AND Object_GoodsKind.isErased = false
+                                                        ON Object_GoodsKind.Id       = tmpGoodsListSaleKind.GoodsKindId
+                                                       AND Object_GoodsKind.isErased = FALSE
                                             -- Ограничим - ТОЛЬКО если ГП
                                             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                                  ON ObjectLink_Goods_InfoMoney.ObjectId = tmpGoodsListSaleKind.GoodsId
@@ -208,7 +211,7 @@ BEGIN
                                              , MI_ReturnIn.ObjectId
                                              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  
                                  )
-             SELECT tmpGoodsListSale.Id
+             SELECT (tmpGoodsListSale.Id + CASE WHEN Ord = 1 THEN 0 ELSE Ord * 100000000 END) :: Integer AS Id
                   , tmpGoodsListSale.GoodsId
                   , tmpGoodsListSale.GoodsKindId 
                   , tmpGoodsListSale.PartnerId
