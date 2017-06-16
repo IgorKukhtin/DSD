@@ -431,9 +431,15 @@ BEGIN
              , tmpGoodsSP.InsertDateSP    :: TDateTime
 
              , tmpData.Amount            :: TFloat 
-             , tmpData.PriceSale         :: TFloat 
-             , (tmpData.SummChangePercent / tmpData.Amount) :: TFloat AS PriceCheckSP
-             , tmpData.SummChangePercent :: TFloat  AS SummaSP
+             , CAST (tmpData.PriceSale AS NUMERIC(16,2))                        :: TFloat 
+             , CASE WHEN date_trunc('day', tmpData.OperDate) = ('01.06.2017' ::TDateTime)
+                    THEN tmpGoodsSP.PriceSP
+                    ELSE CAST ((tmpData.SummChangePercent / tmpData.Amount) AS NUMERIC(16,2))
+               END                                                              :: TFloat  AS PriceCheckSP
+             , CASE WHEN date_trunc('day', tmpData.OperDate) = ('01.06.2017' ::TDateTime)
+                    THEN CAST (tmpGoodsSP.PriceSP * tmpData.Amount AS NUMERIC(16,2))
+                    ELSE CAST (tmpData.SummChangePercent AS NUMERIC(16,2)) 
+               END                                                              :: TFloat  AS SummaSP
              , CAST (ROW_NUMBER() OVER (PARTITION BY Object_PartnerMedical.Id ORDER BY tmpGoodsSP.IntenalSPName, tmpData.OperDate ) AS Integer) AS NumLine    --PARTITION BY Object_Juridical.ValueData
              , CAST (tmpCountR.CountInvNumberSP AS Integer) AS CountInvNumberSP
 
