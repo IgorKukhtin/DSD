@@ -279,6 +279,23 @@ object PartnerAddressForm: TPartnerAddressForm
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
+      object PositionName_PersonalMerch: TcxGridDBColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1084#1077#1088#1095#1072#1085#1076#1072#1081#1079#1077#1088')'
+        DataBinding.FieldName = 'PositionName_PersonalMerch'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object UnitName_PersonalMerch: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1084#1077#1088#1095#1072#1085#1076#1072#1081#1079#1077#1088')'
+        DataBinding.FieldName = 'UnitName_PersonalMerch'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object colMemberTakeName: TcxGridDBColumn
         Caption = #1060#1048#1054' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
         DataBinding.FieldName = 'MemberTakeName'
