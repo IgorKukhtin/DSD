@@ -389,6 +389,38 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object PersonalMerchCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1084#1077#1088#1095#1072#1085#1076#1072#1081#1079#1077#1088')'
+            DataBinding.FieldName = 'PersonalMerchCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object PersonalMerchName: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1084#1077#1088#1095#1072#1085#1076#1072#1081#1079#1077#1088')'
+            DataBinding.FieldName = 'PersonalMerchName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object PositionName_PersonalMerch: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1084#1077#1088#1095#1072#1085#1076#1072#1081#1079#1077#1088')'
+            DataBinding.FieldName = 'PositionName_PersonalMerch'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object BranchName_PersonalMerch: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083' ('#1084#1077#1088#1095#1072#1085#1076#1072#1081#1079#1077#1088')'
+            DataBinding.FieldName = 'BranchName_PersonalMerch'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
@@ -549,12 +581,14 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -562,12 +596,14 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
           Component = MasterCDS
           ComponentItem = 'InvNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -575,12 +611,14 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -588,12 +626,14 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -601,12 +641,14 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -614,6 +656,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName_all'
@@ -621,12 +664,14 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName_all'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractTagId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractTagId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractTagName'
@@ -634,6 +679,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
           Component = MasterCDS
           ComponentItem = 'ContractTagName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RouteName'
@@ -641,12 +687,14 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
           Component = MasterCDS
           ComponentItem = 'RouteName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RouteSortingId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteSortingId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RouteSortingName'
@@ -654,12 +702,14 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
           Component = MasterCDS
           ComponentItem = 'RouteSortingName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PersonalTakeId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MemberTakeId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PersonalTakeName'
@@ -667,6 +717,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
           Component = MasterCDS
           ComponentItem = 'MemberTakeName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ChangePercent'
@@ -674,15 +725,18 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
           Component = MasterCDS
           ComponentItem = 'ChangePercent'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PriceListId'
           Value = 0
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PriceListName'
           Value = ''
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
     end
     object actShowAll: TBooleanStoredProcAction
@@ -724,12 +778,14 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
       FormName = 'TRoute_ObjectForm'
       FormNameParam.Value = 'TRoute_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -737,6 +793,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
           Component = MasterCDS
           ComponentItem = 'RouteName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -748,12 +805,14 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
       FormName = 'TRouteSorting_ObjectForm'
       FormNameParam.Value = 'TRouteSorting_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteSortingId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -761,6 +820,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
           Component = MasterCDS
           ComponentItem = 'RouteSortingName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -772,12 +832,14 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
       FormName = 'TMember_ObjectForm'
       FormNameParam.Value = 'TMember_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MemberTakeId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -785,6 +847,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
           Component = MasterCDS
           ComponentItem = 'MemberTakeName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -805,6 +868,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
         Component = deOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRetailId'
@@ -812,6 +876,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
         Component = GuidesRetail
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -819,6 +884,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
         Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -826,6 +892,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 128
     Top = 130
@@ -973,6 +1040,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
         Component = MasterCDS
         ComponentItem = 'PartnerId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRouteId'
@@ -980,6 +1048,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
         Component = MasterCDS
         ComponentItem = 'RouteId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRouteSortingId'
@@ -987,6 +1056,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
         Component = MasterCDS
         ComponentItem = 'RouteSortingId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberId'
@@ -994,6 +1064,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
         Component = MasterCDS
         ComponentItem = 'MemberTakeId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrepareDayCount'
@@ -1002,6 +1073,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
         ComponentItem = 'PrepareDayCount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocumentDayCount'
@@ -1010,6 +1082,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
         ComponentItem = 'DocumentDayCount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -1020,6 +1093,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1029,6 +1103,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
         Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1037,6 +1112,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 872
     Top = 24
@@ -1046,6 +1122,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
     LookupControl = edRetail
     FormNameParam.Value = 'TRetailForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TRetailForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1055,6 +1132,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
         Component = GuidesRetail
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1063,6 +1141,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 576
     Top = 24

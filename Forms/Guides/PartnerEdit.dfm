@@ -84,12 +84,12 @@
   end
   object cxLabel6: TcxLabel [12]
     Left = 15
-    Top = 249
+    Top = 247
     Caption = #1052#1072#1088#1096#1088#1091#1090
   end
   object ceRoute: TcxButtonEdit [13]
     Left = 158
-    Top = 248
+    Top = 246
     Properties.Buttons = <
       item
         Default = True
@@ -101,12 +101,12 @@
   end
   object cxLabel7: TcxLabel [14]
     Left = 15
-    Top = 279
+    Top = 276
     Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
   end
   object ceRouteSorting: TcxButtonEdit [15]
     Left = 158
-    Top = 278
+    Top = 275
     Properties.Buttons = <
       item
         Default = True
@@ -118,12 +118,12 @@
   end
   object cxLabel8: TcxLabel [16]
     Left = 15
-    Top = 369
+    Top = 388
     Caption = #1060#1080#1079'. '#1083#1080#1094#1086' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
   end
   object ceMemberTake: TcxButtonEdit [17]
     Left = 158
-    Top = 368
+    Top = 387
     Properties.Buttons = <
       item
         Default = True
@@ -281,12 +281,12 @@
   end
   object cxLabel18: TcxLabel [38]
     Left = 15
-    Top = 309
+    Top = 305
     Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')'
   end
   object cePersonal: TcxButtonEdit [39]
     Left = 158
-    Top = 308
+    Top = 304
     Properties.Buttons = <
       item
         Default = True
@@ -298,12 +298,12 @@
   end
   object cxLabel19: TcxLabel [40]
     Left = 15
-    Top = 339
+    Top = 336
     Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1090#1086#1088#1075#1086#1074#1099#1081')'
   end
   object cePersonalTrade: TcxButtonEdit [41]
     Left = 158
-    Top = 338
+    Top = 333
     Properties.Buttons = <
       item
         Default = True
@@ -315,12 +315,12 @@
   end
   object cxLabel20: TcxLabel [42]
     Left = 15
-    Top = 399
+    Top = 416
     Caption = #1056#1077#1075#1080#1086#1085
   end
   object ceArea: TcxButtonEdit [43]
     Left = 158
-    Top = 398
+    Top = 415
     Properties.Buttons = <
       item
         Default = True
@@ -332,12 +332,12 @@
   end
   object cxLabel21: TcxLabel [44]
     Left = 15
-    Top = 433
+    Top = 444
     Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1088#1075#1086#1074#1086#1081' '#1090#1086#1095#1082#1080
   end
   object cePartnerTag: TcxButtonEdit [45]
     Left = 158
-    Top = 432
+    Top = 443
     Properties.Buttons = <
       item
         Default = True
@@ -588,24 +588,24 @@
   end
   object cxLabel34: TcxLabel [79]
     Left = 15
-    Top = 466
+    Top = 473
     Caption = 'GPS ('#1096#1080#1088#1086#1090#1072')'
   end
   object edGPSN: TcxTextEdit [80]
     Left = 89
-    Top = 465
+    Top = 472
     Properties.ReadOnly = True
     TabOrder = 80
     Width = 92
   end
   object cxLabel35: TcxLabel [81]
     Left = 187
-    Top = 466
+    Top = 473
     Caption = 'GPS ('#1076#1086#1083#1075#1086#1090#1072')'
   end
   object edGPSE: TcxTextEdit [82]
     Left = 261
-    Top = 465
+    Top = 472
     Properties.ReadOnly = True
     TabOrder = 82
     Width = 92
@@ -672,13 +672,29 @@
     TabOrder = 90
     Width = 37
   end
+  object cxLabel37: TcxLabel [91]
+    Left = 15
+    Top = 362
+    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1084#1077#1088#1095#1072#1085#1076#1072#1081#1079#1077#1088')'
+  end
+  object cePersonalMerch: TcxButtonEdit [92]
+    Left = 158
+    Top = 361
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 92
+    Width = 195
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 419
     Top = 339
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 8
-    Top = 320
+    Top = 200
   end
   inherited ActionList: TActionList
     Left = 295
@@ -916,6 +932,14 @@
         Name = 'inPersonalTradeId'
         Value = ''
         Component = PersonalTradeGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalMerchId'
+        Value = Null
+        Component = PersonalMerchGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1339,6 +1363,21 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'PersonalMerchId'
+        Value = Null
+        Component = PersonalMerchGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalMerchName'
+        Value = Null
+        Component = PersonalMerchGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'AreaId'
         Value = ''
         Component = AreaGuides
@@ -1668,8 +1707,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 296
-    Top = 365
+    Left = 336
+    Top = 362
   end
   object dsdRouteSortingGuides: TdsdGuides
     KeyField = 'Id'
@@ -1847,7 +1886,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 320
+    Left = 288
     Top = 285
   end
   object PersonalTradeGuides: TdsdGuides
@@ -1908,7 +1947,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 248
-    Top = 383
+    Top = 404
   end
   object PartnerTagGuides: TdsdGuides
     KeyField = 'Id'
@@ -1937,8 +1976,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 168
-    Top = 407
+    Left = 160
+    Top = 468
   end
   object RegionGuides: TdsdGuides
     KeyField = 'Id'
@@ -2143,5 +2182,35 @@
       end>
     Left = 600
     Top = 274
+  end
+  object PersonalMerchGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePersonalMerch
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PersonalMerchGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PersonalMerchGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 208
+    Top = 365
   end
 end

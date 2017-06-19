@@ -32,6 +32,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                MemberTakeId Integer, MemberTakeCode Integer, MemberTakeName TVarChar,
                PersonalId Integer, PersonalCode Integer, PersonalName TVarChar,
                PersonalTradeId Integer, PersonalTradeCode Integer, PersonalTradeName TVarChar,
+               PersonalMerchId Integer, PersonalMerchCode Integer, PersonalMerchName TVarChar,
                AreaId Integer, AreaName TVarChar,
                PartnerTagId Integer, PartnerTagName TVarChar,
                GoodsPropertyId Integer, GoodsPropertyName TVarChar,
@@ -160,6 +161,10 @@ BEGIN
          , Object_PersonalTrade.PersonalId   AS PersonalTradeId
          , Object_PersonalTrade.PersonalCode AS PersonalTradeCode
          , Object_PersonalTrade.PersonalName AS PersonalTradeName
+
+         , Object_PersonalMerch.Id           AS PersonalMerchId
+         , Object_PersonalMerch.ObjectCode   AS PersonalMerchCode
+         , Object_PersonalMerch.ValueData    AS PersonalMerchName
 
          , Object_Area.Id                  AS AreaId
          , Object_Area.ValueData           AS AreaName
@@ -356,6 +361,11 @@ BEGIN
                              AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
          LEFT JOIN Object_Personal_View AS Object_PersonalTrade ON Object_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
 
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalMerch
+                              ON ObjectLink_Partner_PersonalMerch.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_PersonalMerch.DescId = zc_ObjectLink_Partner_PersonalMerch()
+         LEFT JOIN Object AS Object_PersonalMerch ON Object_PersonalMerch.Id = ObjectLink_Partner_PersonalMerch.ChildObjectId
+
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
                               ON ObjectLink_Partner_Area.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
@@ -420,6 +430,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 19.06.17         * add PersonalMerch
  05.05.17         * add ‚ı.Ô‡‡Ï-˚
  25.12.15         * add GoodsProperty
  06.10.15         * add inShowAll

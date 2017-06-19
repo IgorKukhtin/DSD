@@ -9,6 +9,11 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                      , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
+                                                     , TFloat, TFloat, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
    OUT outPartnerName        TVarChar  ,    -- 
@@ -38,6 +43,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inMemberTakeId        Integer   ,    -- Физ лицо(сотрудник экспедитор) 
     IN inPersonalId          Integer   ,    -- Физ лицо (ответственное лицо)
     IN inPersonalTradeId     Integer   ,    -- Физ лицо(торговый)
+    IN inPersonalMerchId     Integer   ,    -- Физ лицо (мерчандайзер)
     IN inAreaId              Integer   ,    -- Регион
     IN inPartnerTagId        Integer   ,    -- Признак торговой точки 
 
@@ -112,6 +118,7 @@ BEGIN
                                         , inMemberTakeId    := inMemberTakeId
                                         , inPersonalId      := inPersonalId
                                         , inPersonalTradeId := inPersonalTradeId
+                                        , inPersonalMerchId := inPersonalMerchId
                                         , inAreaId          := inAreaId
                                         , inPartnerTagId    := inPartnerTagId
                                         , inGoodsPropertyId := inGoodsPropertyId           
@@ -153,6 +160,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.06.17         * add inPersonalMerchId
  07.03.17         * add Schedule
  25.12.15         * add inGoodsPropertyId
  06.02.15         * add inEdiOrdspr, inEdiInvoice, inEdiDesadv
