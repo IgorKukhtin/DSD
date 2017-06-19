@@ -3,9 +3,9 @@
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Package(
-    IN inStartDate    TDateTime ,  
+    IN inStartDate    TDateTime ,
     IN inEndDate      TDateTime ,
-    IN inUnitId       Integer   , 
+    IN inUnitId       Integer   ,
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar
@@ -17,7 +17,7 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar
 
              , Amount_Send_out TFloat, Weight_Send_out TFloat
              , Amount_Send_in TFloat, Weight_Send_in TFloat
-         
+
              , Amount_Production TFloat, Weight_Production TFloat
              , CountPackage TFloat, WeightPackage TFloat, WeightPackage_one TFloat
              , CountPackage_calc TFloat, WeightPackage_calc TFloat
@@ -30,16 +30,16 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-         -- 
+         --
     WITH tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
                       FROM Object_InfoMoney_View
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                 ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
                                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                       WHERE Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
-                          OR Object_InfoMoney_View.InfoMoneyGroupId       = zc_Enum_InfoMoneyGroup_30000() -- Доходы 
+                          OR Object_InfoMoney_View.InfoMoneyGroupId       = zc_Enum_InfoMoneyGroup_30000() -- Доходы
                           OR (inUnitId = 951601 -- ЦЕХ упаковки мясо
-                          AND Object_InfoMoney_View.InfoMoneyDestinationId       = zc_Enum_InfoMoneyDestination_10100() -- 
+                          AND Object_InfoMoney_View.InfoMoneyDestinationId       = zc_Enum_InfoMoneyDestination_10100() --
                              )
                      )
    , tmpMI_Union AS  (SELECT tmpMI.GoodsId
@@ -48,37 +48,51 @@ BEGIN
                            , tmpMI.Amount_Send_out
                            , tmpMI.Amount_Production
                            , tmpMI.CountPack
-                      FROM
-                     (SELECT MIContainer.ObjectId_Analyzer           AS GoodsId
-                           , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
-                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send()            AND MIContainer.IsActive = TRUE  THEN      MIContainer.Amount ELSE 0 END
-                                + CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion() AND MIContainer.IsActive = TRUE AND MIContainer.ObjectExtId_Analyzer <> inUnitId AND inUnitId = 951601 -- ЦЕХ упаковки мясо
-                                            THEN MIContainer.Amount
-                                       ELSE 0
-                                  END) AS Amount_Send_in
-                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send()            AND MIContainer.IsActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_Send_out
-                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion() AND MIContainer.IsActive = FALSE AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReWork() THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_Production
-                           , SUM (COALESCE (MIFloat_CountPack.ValueData ,0)) AS CountPack
-                      FROM MovementItemContainer AS MIContainer
-                           LEFT JOIN MovementItemFloat AS MIFloat_CountPack
-                                                       ON MIFloat_CountPack.MovementItemId = MIContainer.MovementItemId
-                                                      AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
-                                                      AND MIContainer.MovementDescId = zc_Movement_Send()
-                                                      AND MIContainer.IsActive = FALSE
-                      WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                        AND MIContainer.DescId = zc_MIContainer_Count()
-                        AND MIContainer.WhereObjectId_Analyzer = inUnitId
-                        AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion())
-                        -- AND MIContainer.Amount <> 0
-                      GROUP BY MIContainer.ObjectId_Analyzer
-                             , MIContainer.ObjectIntId_Analyzer
-                     ) AS tmpMI
-                     INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmpMI.GoodsId
+
+                      FROM (SELECT MIContainer.ObjectId_Analyzer           AS GoodsId
+                                 , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
+                                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send()            AND MIContainer.IsActive = TRUE  THEN      MIContainer.Amount ELSE 0 END
+                                      + CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion() AND MIContainer.IsActive = TRUE AND MLO_DocumentKind.ObjectId > 0 AND MIContainer.ObjectExtId_Analyzer = inUnitId
+                                                  THEN MIContainer.Amount
+                                             ELSE 0
+                                        END
+                                      + CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion() AND MIContainer.IsActive = TRUE AND MIContainer.ObjectExtId_Analyzer <> inUnitId AND inUnitId = 951601 -- ЦЕХ упаковки мясо
+                                                  THEN MIContainer.Amount
+                                             ELSE 0
+                                        END) AS Amount_Send_in
+                                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send()            AND MIContainer.IsActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_Send_out
+                                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                              AND MIContainer.IsActive = FALSE
+                                              AND (MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReWork()
+                                                OR MLO_DocumentKind.ObjectId > 0)
+                                                  THEN -1 * MIContainer.Amount
+                                             ELSE 0
+                                        END) AS Amount_Production
+                                 , SUM (COALESCE (MIFloat_CountPack.ValueData ,0)) AS CountPack
+                            FROM MovementItemContainer AS MIContainer
+                                 LEFT JOIN MovementLinkObject AS MLO_DocumentKind
+                                                              ON MLO_DocumentKind.MovementId = MIContainer.MovementId
+                                                             AND MLO_DocumentKind.DescId     = zc_MovementLinkObject_DocumentKind()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_CountPack
+                                                             ON MIFloat_CountPack.MovementItemId = MIContainer.MovementItemId
+                                                            AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
+                                                            AND MIContainer.MovementDescId = zc_Movement_Send()
+                                                            AND MIContainer.IsActive = FALSE
+                            WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                              AND MIContainer.DescId = zc_MIContainer_Count()
+                              AND MIContainer.WhereObjectId_Analyzer = inUnitId
+                              AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion())
+                              -- AND MIContainer.Amount <> 0
+                            GROUP BY MIContainer.ObjectId_Analyzer
+                                   , MIContainer.ObjectIntId_Analyzer
+                           ) AS tmpMI
+                           INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmpMI.GoodsId
                      )
            , tmpReceipt AS (SELECT tmpMI_Union.GoodsId
                                  , tmpMI_Union.GoodsKindId
                                  , MAX (Object_Receipt.Id) AS ReceiptId
                                  , MAX (COALESCE (ObjectLink_Receipt_Goods_Parent_0.ChildObjectId, 0)) AS GoodsId_basis
+                                 , MAX (COALESCE (ObjectLink_Receipt_Parent_0.ChildObjectId, 0))       AS ReceiptId_basis
                             FROM tmpMI_Union
                                  INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
                                                        ON ObjectLink_Receipt_Goods.ChildObjectId = tmpMI_Union.GoodsId
@@ -102,6 +116,36 @@ BEGIN
                             GROUP BY tmpMI_Union.GoodsId
                                    , tmpMI_Union.GoodsKindId
                           )
+           , tmpReceipt_find AS (-- взяли данные - у товара нет прямой ссылки - из чего он делается
+                                 SELECT tmpReceipt.GoodsId
+                                      , tmpReceipt.GoodsKindId
+                                      , tmpReceipt.ReceiptId
+                                      , MAX (COALESCE (ObjectLink_ReceiptChild_Goods.ChildObjectId, 0)) AS GoodsId_basis
+                                 FROM tmpReceipt
+                                      INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
+                                                           ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = tmpReceipt.ReceiptId
+                                                          AND ObjectLink_ReceiptChild_Receipt.DescId        = zc_ObjectLink_ReceiptChild_Receipt()
+                                      INNER JOIN Object AS Object_ReceiptChild ON Object_ReceiptChild.Id       = ObjectLink_ReceiptChild_Receipt.ObjectId
+                                                                              AND Object_ReceiptChild.isErased = FALSE
+                                      LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
+                                                           ON ObjectLink_ReceiptChild_Goods.ObjectId = Object_ReceiptChild.Id
+                                                          AND ObjectLink_ReceiptChild_Goods.DescId   = zc_ObjectLink_ReceiptChild_Goods()
+                                      INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                                             ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
+                                                            AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
+                                                            AND ObjectFloat_Value.ValueData <> 0
+                                      LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                           ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
+                                                          AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                      INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                                      AND (Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000()             -- Доходы
+                                                                        OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
+                                                                          )
+                                 WHERE tmpReceipt.ReceiptId_basis = 0
+                                 GROUP BY tmpReceipt.GoodsId
+                                        , tmpReceipt.GoodsKindId
+                                        , tmpReceipt.ReceiptId
+                                )
     -- Результат
     SELECT ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
          , Object_GoodsGroup.ValueData                AS GoodsGroupName
@@ -121,7 +165,7 @@ BEGIN
 
          , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI_Union.Amount_Send_in  ELSE 0 END                                  :: TFloat AS Amount_Send_in
          , (tmpMI_Union.Amount_Send_in * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  :: TFloat  AS Weight_Send_in
-         
+
          , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI_Union.Amount_Production  ELSE 0 END                                 :: TFloat AS Amount_Production
          , (tmpMI_Union.Amount_Production * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS Weight_Production
 
@@ -148,14 +192,17 @@ BEGIN
           LEFT JOIN tmpReceipt ON tmpReceipt.GoodsId     = tmpMI_Union.GoodsId
                               AND tmpReceipt.GoodsKindId = tmpMI_Union.GoodsKindId
                               AND tmpReceipt.GoodsId_basis <> 0
+          LEFT JOIN tmpReceipt_find ON tmpReceipt_find.GoodsId     = tmpMI_Union.GoodsId
+                                   AND tmpReceipt_find.GoodsKindId = tmpMI_Union.GoodsKindId
+                                   AND tmpReceipt_find.GoodsId_basis <> 0
 
-          LEFT JOIN Object AS Object_Goods_basis ON Object_Goods_basis.Id = COALESCE (tmpReceipt.GoodsId_basis, tmpMI_Union.GoodsId)
+          LEFT JOIN Object AS Object_Goods_basis ON Object_Goods_basis.Id = COALESCE (tmpReceipt.GoodsId_basis, COALESCE (tmpReceipt_find.GoodsId_basis, tmpMI_Union.GoodsId))
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpMI_Union.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI_Union.GoodsKindId
-          
+
           LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = tmpMI_Union.GoodsId
                                                 AND Object_GoodsByGoodsKind_View.GoodsKindId = tmpMI_Union.GoodsKindId
-         -- а теперь привязываю  zc_ObjectFloat_GoodsByGoodsKind_WeightPackage 
+         -- а теперь привязываю  zc_ObjectFloat_GoodsByGoodsKind_WeightPackage
           LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
                                 ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id
                                AND ObjectFloat_WeightPackage.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
@@ -167,8 +214,8 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                 ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                               AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-                             
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                                           AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
@@ -181,12 +228,12 @@ BEGIN
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods_basis.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
-          LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = tmpReceipt.ReceiptId
+          LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = COALESCE (tmpReceipt.ReceiptId, tmpReceipt_find.ReceiptId)
           LEFT JOIN ObjectString AS ObjectString_Receipt_Code
                                  ON ObjectString_Receipt_Code.ObjectId = Object_Receipt.Id
                                 AND ObjectString_Receipt_Code.DescId = zc_ObjectString_Receipt_Code()
     ;
-         
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -200,4 +247,4 @@ ALTER FUNCTION gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, TVarChar
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_Package(inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inUnitId:= 8451, inSession:= zfCalc_UserAdmin()) ORDER BY 2;
+-- SELECT * FROM gpReport_GoodsMI_Package(inStartDate:= '01.07.2017', inEndDate:= '01.07.2017', inUnitId:= 8451, inSession:= zfCalc_UserAdmin()) ORDER BY 2;
