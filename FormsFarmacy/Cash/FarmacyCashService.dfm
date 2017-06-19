@@ -380,7 +380,7 @@ object MainCashForm2: TMainCashForm2
     IndexFieldNames = 'Id'
     Params = <>
     StoreDefs = True
-    Left = 352
+    Left = 360
     Top = 216
   end
   object spCheck_RemainsError: TdsdStoredProc
@@ -494,6 +494,10 @@ object MainCashForm2: TMainCashForm2
       Caption = 'actSetCashSessionId'
       OnExecute = actSetCashSessionIdExecute
     end
+    object actCashRemains: TAction
+      Caption = #1055#1086#1083#1091#1095#1080#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1089#1090#1072#1090#1082#1080
+      OnExecute = actCashRemainsExecute
+    end
   end
   object MemData: TdxMemData
     Indexes = <>
@@ -534,8 +538,11 @@ object MainCashForm2: TMainCashForm2
       OnClick = N5Click
     end
     object N1: TMenuItem
-      Caption = #1055#1086#1083#1091#1095#1080#1090#1100' '#1086#1089#1090#1072#1090#1082#1080
+      Caption = #1055#1086#1083#1091#1095#1080#1090#1100' '#1074#1089#1077' '#1086#1089#1090#1072#1090#1082#1080
       OnClick = N1Click
+    end
+    object N8: TMenuItem
+      Action = actCashRemains
     end
     object N2: TMenuItem
       Caption = #1058#1072#1081#1084#1077#1088' '#1086#1073#1085#1086#1074#1083#1077#1085#1080#1103' '#1086#1089#1090#1072#1090#1082#1086#1074
@@ -582,7 +589,7 @@ object MainCashForm2: TMainCashForm2
     Left = 432
     Top = 16
     Bitmap = {
-      494C010102003400540080008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102003400580080008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000000200008000000001002000000000000000
       04000000000000000000000000000000000000FF000000FF000000FF000000FF
       000000FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF

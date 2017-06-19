@@ -119,6 +119,8 @@ type
     N5: TMenuItem;
     N6: TMenuItem;
     N7: TMenuItem;
+    actCashRemains: TAction;
+    N8: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -133,6 +135,7 @@ type
     procedure N5Click(Sender: TObject);
     procedure N6Click(Sender: TObject);
     procedure N7Click(Sender: TObject);
+    procedure actCashRemainsExecute(Sender: TObject);
 
   private
     { Private declarations }
@@ -145,10 +148,6 @@ type
    ThreadErrorMessage:String;
 
    FiscalNumber: String;
-
-
-      //Обновить остаток согласно пришедшей разнице
-    procedure UpdateRemainsFromDiff(ADiffCDS : TClientDataSet);
 
     procedure SaveLocalVIP;
     procedure RemainsCDSAfterScroll(DataSet: TDataSet);
@@ -207,6 +206,14 @@ begin
             if AllowedConduct then
              AllowedConduct := False;
            end;
+
+      30: begin // получен запрос на обновление всех данных
+             actRefreshAllExecute(nil);
+          end;
+
+      40: begin // получен запрос на обновление только остатков
+             actCashRemainsExecute(nil);
+          end;
 
     end;
 
@@ -270,11 +277,58 @@ begin
 end;
 
 
+procedure TMainCashForm2.actCashRemainsExecute(Sender: TObject);
+begin
+  WaitForSingleObject(MutexRemains, INFINITE);
+  MainCashForm2.tiServise.IconIndex:=1;
+  try
+    try
+      MainCashForm2.spSelect_CashRemains_Diff.Execute(False, False, False);
+      DiffCDS.First;
+      if DiffCDS.FieldCount>0 then
+      begin
+         WaitForSingleObject(MutexDBFDiff, INFINITE);
+         FLocalDataBaseDiff.Open;
+         while not DiffCDS.Eof  do
+         begin
+            FLocalDataBaseDiff.Append;
+            FLocalDataBaseDiff.Fields[0].AsString:=DiffCDS.Fields[0].AsString;
+            FLocalDataBaseDiff.Fields[1].AsString:=DiffCDS.Fields[1].AsString;
+            FLocalDataBaseDiff.Fields[2].AsString:=DiffCDS.Fields[2].AsString;
+            FLocalDataBaseDiff.Fields[3].AsString:=DiffCDS.Fields[3].AsString;
+            FLocalDataBaseDiff.Fields[4].AsString:=DiffCDS.Fields[4].AsString;
+            FLocalDataBaseDiff.Fields[5].AsString:=DiffCDS.Fields[5].AsString;
+            FLocalDataBaseDiff.Fields[6].AsString:=DiffCDS.Fields[6].AsString;
+            FLocalDataBaseDiff.Fields[7].AsString:=DiffCDS.Fields[7].AsString;
+            FLocalDataBaseDiff.Post;
+            DiffCDS.Next;
+         end;
+         FLocalDataBaseDiff.Close;
+         ReleaseMutex(MutexDBFDiff);
+         // Отправка сообщения приложению про надобность обновить остатки из файла
+         PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
+        end;
+    except
+      if gc_User.Local then
+       begin
+         tiServise.BalloonHint:='Локальный режим';
+         tiServise.ShowBalloonHint;
+         Exit;
+       end;
+    end;
+  finally
+    ReleaseMutex(MutexRemains);
+    MainCashForm2.tiServise.IconIndex:=0;
+  end;
+
+end;
+
 procedure TMainCashForm2.actRefreshAllExecute(Sender: TObject);
 begin   //yes
   // обновления данных с сервера
   WaitForSingleObject(MutexRemains, INFINITE);
   WaitForSingleObject(MutexAlternative, INFINITE);
+  MainCashForm2.tiServise.IconIndex:=1;
   try
     if RemainsCDS.IsEmpty then
     begin
@@ -323,6 +377,7 @@ begin   //yes
     ReleaseMutex(MutexRemains);
     ReleaseMutex(MutexAlternative);
     ChangeStatus('Сохранили');
+    MainCashForm2.tiServise.IconIndex:=0;
   end;
 end;
 
@@ -414,6 +469,8 @@ end;
 
 procedure TMainCashForm2.N5Click(Sender: TObject);
 begin
+try
+ MainCashForm2.tiServise.IconIndex:=1;
   try
     spGet_User_IsAdmin.Execute;
     gc_User.Local := False;
@@ -426,6 +483,9 @@ begin
       tiServise.ShowBalloonHint;
     End;
   end;
+finally
+ MainCashForm2.tiServise.IconIndex:=0;
+end;
 end;
 
 procedure TMainCashForm2.N6Click(Sender: TObject);
@@ -913,105 +973,6 @@ begin
 end;
 
 
-procedure TMainCashForm2.UpdateRemainsFromDiff(ADiffCDS : TClientDataSet);
-var
-  GoodsId: Integer;
-  Amount_find: Currency;
-  oldFilter:String;
-  oldFiltered:Boolean;
-begin
-
-  //Если нет расхождений - ничего не делаем
-  if ADiffCDS = nil then
-    ADiffCDS := DiffCDS;
-  if ADIffCDS.IsEmpty then
-    exit;
-  //отключаем реакции
-  if not RemainsCDS.Active then
-    exit;
-
-  AlternativeCDS.DisableControls;
-  RemainsCDS.AfterScroll := Nil;
-  RemainsCDS.DisableControls;
-  if RemainsCDS.RecordCount>0 then
-  GoodsId := RemainsCDS.FieldByName('Id').asInteger;
-  RemainsCDS.Filtered := False;
-  AlternativeCDS.Filtered := False;
-  ADIffCDS.DisableControls;
-  CheckCDS.DisableControls;
-  oldFilter:= CheckCDS.Filter;
-  oldFiltered:= CheckCDS.Filtered;
-
-  try
-    ADIffCDS.First;
-    while not ADIffCDS.eof do
-    begin
-     // Кусок кода только для формы  2 
-
-      if ADIffCDS.FieldByName('NewRow').AsBoolean then
-      Begin
-        RemainsCDS.Append;
-        RemainsCDS.FieldByName('Id').AsInteger := ADIffCDS.FieldByName('Id').AsInteger;
-        RemainsCDS.FieldByName('GoodsCode').AsInteger := ADIffCDS.FieldByName('GoodsCode').AsInteger;
-        RemainsCDS.FieldByName('GoodsName').AsString := ADIffCDS.FieldByName('GoodsName').AsString;
-        RemainsCDS.FieldByName('Price').asCurrency := ADIffCDS.FieldByName('Price').asCurrency;
-        RemainsCDS.FieldByName('Remains').asCurrency := ADIffCDS.FieldByName('Remains').asCurrency;
-        RemainsCDS.FieldByName('MCSValue').asCurrency := ADIffCDS.FieldByName('MCSValue').asCurrency;
-        RemainsCDS.FieldByName('Reserved').asCurrency := ADIffCDS.FieldByName('Reserved').asCurrency;
-        RemainsCDS.Post;
-      End
-      else
-      Begin
-        if RemainsCDS.Locate('Id',ADIffCDS.FieldByName('Id').AsInteger,[]) then
-        Begin
-          RemainsCDS.Edit;
-          RemainsCDS.FieldByName('Price').asCurrency := ADIffCDS.FieldByName('Price').asCurrency;
-          RemainsCDS.FieldByName('Remains').asCurrency := ADIffCDS.FieldByName('Remains').asCurrency;
-          RemainsCDS.FieldByName('MCSValue').asCurrency := ADIffCDS.FieldByName('MCSValue').asCurrency;
-          RemainsCDS.FieldByName('Reserved').asCurrency := ADIffCDS.FieldByName('Reserved').asCurrency;
-          {12.10.2016 - сделал по другому, т.к. в CheckCDS теперь могут повторяться GoodsId
-          if CheckCDS.Locate('GoodsId',ADIffCDS.FieldByName('Id').AsInteger,[]) then
-            RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency
-              - CheckCDS.FieldByName('Amount').asCurrency;}
-          RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency;
-
-          RemainsCDS.Post;
-        End;
-      End;
-      ADIffCDS.Next;
-    end;
-
-    AlternativeCDS.First;
-    while Not AlternativeCDS.eof do
-    Begin
-      if ADIffCDS.locate('Id',AlternativeCDS.fieldByName('Id').AsInteger,[]) then
-      Begin
-        if AlternativeCDS.FieldByName('Remains').asCurrency <> ADIffCDS.FieldByName('Remains').asCurrency then
-        Begin
-          AlternativeCDS.Edit;
-          AlternativeCDS.FieldByName('Remains').asCurrency := ADIffCDS.FieldByName('Remains').asCurrency;
-          {12.10.2016 - сделал по другому, т.к. в CheckCDS теперь могут повторяться GoodsId
-          if CheckCDS.Locate('GoodsId',ADIffCDS.FieldByName('Id').AsInteger,[]) then
-            AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency
-              - CheckCDS.FieldByName('Amount').asCurrency;}
-          AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency;
-
-          AlternativeCDS.Post;
-        End;
-      End;
-      AlternativeCDS.Next;
-    End;
-  finally
-    RemainsCDS.Filtered := True;
-    RemainsCDS.Locate('Id',GoodsId,[]);
-    RemainsCDS.EnableControls;
-    RemainsCDS.AfterScroll := RemainsCDSAfterScroll;
-    AlternativeCDS.Filtered := true;
-    RemainsCDSAfterScroll(RemainsCDS);
-    AlternativeCDS.EnableControls;
-  end;
-
-end;
 
 procedure TMainCashForm2.SaveLocalVIP;
 var
@@ -1480,7 +1441,7 @@ begin
                FLocalDataBaseDiff.Close;
                ReleaseMutex(MutexDBFDiff);
                // Отправка сообщения приложению про надобность обновить остатки из файла
-               PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);  
+               PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
               end;
 
             finally
@@ -1527,6 +1488,30 @@ begin
             try
               try
                 MainCashForm2.spSelect_CashRemains_Diff.Execute(False, False, False);
+                DiffCDS.First;
+                if DiffCDS.FieldCount>0 then
+                begin
+                   WaitForSingleObject(MutexDBFDiff, INFINITE);
+                   FLocalDataBaseDiff.Open;
+                   while not DiffCDS.Eof  do
+                   begin
+                      FLocalDataBaseDiff.Append;
+                      FLocalDataBaseDiff.Fields[0].AsString:=DiffCDS.Fields[0].AsString;
+                      FLocalDataBaseDiff.Fields[1].AsString:=DiffCDS.Fields[1].AsString;
+                      FLocalDataBaseDiff.Fields[2].AsString:=DiffCDS.Fields[2].AsString;
+                      FLocalDataBaseDiff.Fields[3].AsString:=DiffCDS.Fields[3].AsString;
+                      FLocalDataBaseDiff.Fields[4].AsString:=DiffCDS.Fields[4].AsString;
+                      FLocalDataBaseDiff.Fields[5].AsString:=DiffCDS.Fields[5].AsString;
+                      FLocalDataBaseDiff.Fields[6].AsString:=DiffCDS.Fields[6].AsString;
+                      FLocalDataBaseDiff.Fields[7].AsString:=DiffCDS.Fields[7].AsString;
+                      FLocalDataBaseDiff.Post;
+                      DiffCDS.Next;
+                   end;
+                   FLocalDataBaseDiff.Close;
+                   ReleaseMutex(MutexDBFDiff);
+                   // Отправка сообщения приложению про надобность обновить остатки из файла
+                   PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
+                  end;
               except
                 if gc_User.Local then
                  begin
@@ -1534,13 +1519,11 @@ begin
                    tiServise.ShowBalloonHint;
                    Exit;
                  end;
-              
+
               end;
             finally
               ReleaseMutex(MutexRemains);
             end;
-            //заменили c   Synchronize(UpdateRemains);
-              MainCashForm2.UpdateRemainsFromDiff(DiffCDS);
                WaitForSingleObject(MutexRemains, INFINITE);
               SaveLocalData(MainCashForm2.RemainsCDS,Remains_lcl);
                ReleaseMutex(MutexRemains);
