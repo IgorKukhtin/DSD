@@ -321,7 +321,9 @@ type
     procedure actSetMemdataFromDBFExecute(Sender: TObject); // только 2 форма
     procedure actSetUpdateFromMemdataExecute(Sender: TObject); //***10.08.16 // только 2 форма
 	procedure actGetJuridicalListExecute(Sender: TObject);
-    procedure actGetJuridicalListUpdate(Sender: TObject); //***10.08.16
+    procedure actGetJuridicalListUpdate(Sender: TObject);
+    procedure N1Click(Sender: TObject);
+    procedure N10Click(Sender: TObject); //***10.08.16
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -2787,6 +2789,21 @@ begin
 end;
 
 // процедура обновл€ет параметры дл€ введени€ нового чека
+procedure TMainCashForm2.N10Click(Sender: TObject);
+begin
+  inherited;
+  // отправка сообщени€ об обновлении только остатков
+  PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 40);
+
+end;
+
+procedure TMainCashForm2.N1Click(Sender: TObject);
+begin
+  inherited;
+  // отправка сообщени€ об обновлении всех данных
+  PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 30);
+end;
+
 procedure TMainCashForm2.NewCheck(ANeedRemainsRefresh: Boolean = True);
 begin
   FormParams.ParamByName('CheckId').Value := 0;
