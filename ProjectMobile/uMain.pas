@@ -3382,8 +3382,16 @@ begin
 end;
 
 procedure TfrmMain.bNewOrderExternalClick(Sender: TObject);
+const
+  CriticalOverDays = 21;
 begin
-  CreateEditOrderExtrernal(true);
+  if (DM.qryPartnerOverDays.AsInteger >= CriticalOverDays) and (DM.qryPartnerDebtSum.AsFloat > 1) then
+    TDialogService.MessageDialog(Format('” контрагента "' + DM.qryPartnerName.AsString
+      + '" просроченный долг >= %d день. '
+      + sLineBreak + '‘ормирование за€вки невозможно.', [CriticalOverDays]),
+      TMsgDlgType.mtWarning, [TMsgDlgBtn.mbOK], TMsgDlgBtn.mbOK, 0, nil)
+  else
+    CreateEditOrderExtrernal(true);
 end;
 
 // переход на форму ввода новых "остатков"
