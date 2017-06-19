@@ -280,6 +280,12 @@ type
     edAmount: TcxCurrencyEdit;
     BarCode: TcxGridDBColumn;
     MorionCode: TcxGridDBColumn;
+    actUpdateRemainsCDS: TdsdUpdateDataSet;
+    spUpdate_Object_Price: TdsdStoredProc;
+    Panel2: TPanel;
+    Label6: TLabel;
+    Label8: TLabel;
+    edDays: TcxCurrencyEdit;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
