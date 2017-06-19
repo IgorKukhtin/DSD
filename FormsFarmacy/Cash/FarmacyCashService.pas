@@ -340,6 +340,10 @@ procedure TMainCashForm2.FormCreate(Sender: TObject);
 var
   F: String;
 begin
+  if ParamStr(1) = 'Админ' then  // показываем меню только для Админа
+    tiServise.PopupMenu:=pmServise
+  else tiServise.PopupMenu:=nil;
+
   Application.OnMessage := AppMsgHandler;
   // создаем мутексы если не созданы
   MutexDBF := CreateMutex(nil, false, 'farmacycashMutexDBF');
@@ -380,6 +384,10 @@ begin
  //}
 
   ChangeStatus('Готово');
+
+  SaveRealAll; // Проводим чеки которые остались не проведенными раньше. Учитывается CountСhecksAtOnce = 7
+               // проведутся первые 7 чеков и будут ждать или таймер или пока не пройдет первая покупка
+
 end;
 
 // процедура обновляет параметры для введения нового чека
