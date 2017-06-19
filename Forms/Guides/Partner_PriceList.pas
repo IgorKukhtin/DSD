@@ -120,6 +120,7 @@ type
     clRouteName_30201: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    PersonalMerchChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

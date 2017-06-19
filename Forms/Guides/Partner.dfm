@@ -134,6 +134,21 @@ object PartnerForm: TPartnerForm
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
+      object clPersonalMerchName: TcxGridDBColumn
+        Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1084#1077#1088#1095#1072#1085#1076#1072#1081#1079#1077#1088')'
+        DataBinding.FieldName = 'PersonalMerchName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = PersonalMerchChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 120
+      end
       object clGoodsPropertyName: TcxGridDBColumn
         Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsPropertyName'
@@ -1372,6 +1387,33 @@ object PartnerForm: TPartnerForm
         end>
       isShowModal = True
     end
+    object PersonalMerchChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Personal_ObjectForm'
+      FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = 'TPersonal_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalMerchId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalMerchName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object PersonalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1785,6 +1827,14 @@ object PartnerForm: TPartnerForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPersonalMerchId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PersonalMerchId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inUnitId'
         Value = Null
         Component = MasterCDS
@@ -1949,8 +1999,8 @@ object PartnerForm: TPartnerForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 744
-    Top = 208
+    Left = 720
+    Top = 200
   end
   object spUpdateEdiDesadv: TdsdStoredProc
     StoredProcName = 'gpUpdateObject_Partner_Edi'

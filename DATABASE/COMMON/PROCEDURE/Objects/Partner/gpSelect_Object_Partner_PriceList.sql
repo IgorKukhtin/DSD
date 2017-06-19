@@ -34,6 +34,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , DescName_30201_sale TVarChar, DescName_30201_return TVarChar
 
              , PersonalTradeCode Integer, PersonalTradeName TVarChar, PositionName_PersonalTrade TVarChar, BranchName_PersonalTrade TVarChar
+             , PersonalMerchCode Integer, PersonalMerchName TVarChar, PositionName_PersonalMerch TVarChar, BranchName_PersonalMerch TVarChar 
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractStateKindCode Integer
              , ContractComment TVarChar
@@ -510,6 +511,11 @@ BEGIN
        , View_PersonalTrade.PositionName  AS PositionName_PersonalTrade
        , Object_Branch.ValueData          AS BranchName_PersonalTrade
 
+       , View_PersonalMerch.PersonalCode  AS PersonalMerchCode
+       , View_PersonalMerch.PersonalName  AS PersonalMerchName
+       , View_PersonalMerch.PositionName  AS PositionName_PersonalMerch
+       , View_PersonalMerch.BranchName    AS BranchName_PersonalMerch
+
        , Object_PaidKind.Id            AS PaidKindId
        , Object_PaidKind.ValueData     AS PaidKindName
 
@@ -544,6 +550,11 @@ BEGIN
          LEFT JOIN tmpPersonal AS View_PersonalTrade ON View_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId
 
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalMerch
+                              ON ObjectLink_Partner_PersonalMerch.ObjectId = tmpPartner.Id
+                             AND ObjectLink_Partner_PersonalMerch.DescId = zc_ObjectLink_Partner_PersonalMerch()
+         LEFT JOIN tmpPersonal AS View_PersonalMerch ON View_PersonalMerch.PersonalId = ObjectLink_Partner_PersonalMerch.ChildObjectId
+
          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = tmpPartner.RetailId
          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpPartner.JuridicalId
          LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
@@ -566,9 +577,11 @@ ALTER FUNCTION gpSelect_Object_Partner_PriceList (TDateTime, Integer, Integer, B
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 19.06.17         * add PersonalMerch
  22.06.15                                        *
 */
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_Object_Partner_PriceList (inOperDate:= '01.06.2015', inRetailId:= 0,  inJuridicalId:= 78893, inShowAll:= False, inSession := zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_Object_Partner_PriceList (inOperDate:= '01.01.2015', inRetailId:= 0,  inJuridicalId:= 0, inShowAll:= FALSE, inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Partner_PriceList (inOperDate:= '01.01.2017', inRetailId:= 0,  inJuridicalId:= 0, inShowAll:= FALSE, inSession := zfCalc_UserAdmin())
+-- select * from gpSelect_Object_Partner_PriceList(inOperDate := ('19.06.2017')::TDateTime , inRetailId := 340848 , inJuridicalId := 0 , inShowAll := 'False' ,  inSession := '5');
