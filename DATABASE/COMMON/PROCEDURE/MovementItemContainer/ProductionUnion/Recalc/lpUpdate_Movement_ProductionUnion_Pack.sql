@@ -406,7 +406,7 @@ BEGIN
            , tmpResult_child AS (-- взяли данные, которые будут в zc_MI_Child
                                  SELECT _tmpResult.* FROM _tmpResult WHERE _tmpResult.DescId_mi = zc_MI_Child()  AND _tmpResult.isDelete = FALSE AND _tmpResult.OperCount > 0)
 
-           , tmpReceipt_find AS (-- взяли данные - товар делается сам из себя
+           , tmpReceipt_find AS (-- взяли данные - у товара нет прямой ссылки - из чего он делается
                        SELECT tmpResult_master.OperDate, tmpResult_master.GoodsId, ObjectLink_ReceiptChild_Goods.ChildObjectId AS GoodsId_child
                            ,  ROW_NUMBER() OVER (PARTITION BY tmpResult_master.OperDate, tmpResult_master.GoodsId ORDER BY COALESCE (ObjectFloat_Value.ValueData, 0) DESC) AS Ord --  № п/п
                        FROM tmpResult_master
