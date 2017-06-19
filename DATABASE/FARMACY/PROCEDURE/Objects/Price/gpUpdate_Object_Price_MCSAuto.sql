@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_Price_MCSAuto(
    OUT outMCSDateChange           TDateTime ,    -- Дата изменения неснижаемого товарного запаса
    OUT outStartDateMCSAuto        TDateTime ,    -- Дата нач. действия НТЗ (Авто)
    OUT outEndDateMCSAuto          TDateTime ,    -- Дата оконч. действия НТЗ (Авто)
+   OUT outMCSNotRecalcDateChange  TDateTime ,    -- Дата изменения признака "Спецконтроль кода"
    OUT outIsMCSNotRecalc          Boolean   ,    -- Спецконтроль кода - измененное значение
    OUT outIsMCSNotRecalcOld       Boolean   ,    -- Спецконтроль кода - значение которое вернется по окончании периода
    OUT outIsMCSAuto               Boolean   ,    -- Режим - НТЗ на период
@@ -27,6 +28,7 @@ $BODY$
         vbPrice TFloat;
         vbMCSValue TFloat;
         vbMCSNotRecalc Boolean;
+        vbDate TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
@@ -72,7 +74,7 @@ BEGIN
            EndDateMCSAuto,
            isMCSNotRecalcOld,
            isMCSAuto
-      INTO ioId, 
+      INTO vbPriceId, 
            vbPrice,
            vbMCSValue, 
            outMCSDateChange,
@@ -147,7 +149,7 @@ BEGIN
                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSValue
                                              ON ObjectHistoryFloat_MCSValue.ObjectHistoryId = ObjectHistory.Id
                                             AND ObjectHistoryFloat_MCSValue.DescId = zc_ObjectHistoryFloat_Price_MCSValue()                
-        WHERE ObjectHistory.ObjectId = ioId
+        WHERE ObjectHistory.ObjectId = vbPriceId
           AND ObjectHistory.DescId   = zc_ObjectHistory_Price()
           AND vbDate >= ObjectHistory.StartDate AND CURRENT_DATE < ObjectHistory.EndDate;
 
@@ -155,35 +157,35 @@ BEGIN
         THEN
             -- сохранили свойство <НТЗ для периода>
             outisMCSAuto := TRUE;
-            PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSAuto(), ioId, outisMCSAuto);
+            PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSAuto(), vbPriceId, outisMCSAuto);
     
 
             -- сохраняем старое значение НТЗ
-            PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Price_MCSValueOld(), ioId, outMCSValueOld);
+            PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Price_MCSValueOld(), vbPriceId, outMCSValueOld);
 
             ---
-            PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Price_MCSValue(), ioId, inMCSValue);
+            PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Price_MCSValue(), vbPriceId, inMCSValue);
             -- сохранили св-во < Дата изменения Неснижаемого товарного запаса>
             outMCSDateChange := CURRENT_DATE;
-            PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSDateChange(), ioId, outMCSDateChange);
+            PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSDateChange(), vbPriceId, outMCSDateChange);
 
             --
             outStartDateMCSAuto := CURRENT_DATE;
-            PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_StartDateMCSAuto(), ioId, outStartDateMCSAuto);
+            PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_StartDateMCSAuto(), vbPriceId, outStartDateMCSAuto);
             --
             outEndDateMCSAuto := outStartDateMCSAuto + (inDays || ' DAY') :: INTERVAL; 
-            PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_EndDateMCSAuto(), ioId, outEndDateMCSAuto);
+            PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_EndDateMCSAuto(), vbPriceId, outEndDateMCSAuto);
             --
             outisMCSNotRecalcOld := vbMCSNotRecalc;
-            PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSNotRecalcOld(), ioId, outisMCSNotRecalcOld);
+            PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSNotRecalcOld(), vbPriceId, outisMCSNotRecalcOld);
 
             -- 
-            outMCSNotRecalc := True;
-          IF (COALESCE(vbMCSNotRecalc,False) <> outMCSNotRecalc)
+            outisMCSNotRecalc := True;
+          IF (COALESCE(vbMCSNotRecalc,False) <> outisMCSNotRecalc)
           THEN
-              PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSNotRecalc(), ioId, outMCSNotRecalc);
+              PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSNotRecalc(), vbPriceId, outisMCSNotRecalc);
               outMCSNotRecalcDateChange := CURRENT_DATE;
-              PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSNotRecalcDateChange(), ioId, outMCSNotRecalcDateChange);
+              PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSNotRecalcDateChange(), vbPriceId, outMCSNotRecalcDateChange);
           END IF;
 
         END IF;
@@ -194,7 +196,7 @@ BEGIN
             -- сохранили историю
             PERFORM gpInsertUpdate_ObjectHistory_Price(
                 ioId       := 0 :: Integer,    -- ключ объекта <Элемент истории прайса>
-                inPriceId  := ioId,    -- Прайс
+                inPriceId  := vbPriceId   ,    -- Прайс
                 inOperDate := CURRENT_TIMESTAMP                 :: TDateTime, -- Дата действия прайса
                 inPrice    := COALESCE (vbPrice,0)              :: TFloat,    -- Цена
                 inMCSValue := COALESCE (inMCSValue, vbMCSValue) :: TFloat,    -- НТЗ
@@ -202,9 +204,8 @@ BEGIN
                 inMCSDay   := 0                                 :: TFloat,    -- Страховой запас дней НТЗ
                 inSession  := inSession);
            -- определили
-           ioStartDate:= (SELECT MAX (StartDate) FROM ObjectHistory WHERE ObjectHistory.ObjectId = ioId AND DescId = zc_ObjectHistory_Price());
-           outStartDate:= ioStartDate;
-
+           --outStartDate:= (SELECT MAX (StartDate) FROM ObjectHistory WHERE ObjectHistory.ObjectId = vbPriceId AND DescId = zc_ObjectHistory_Price());
+ 
         END IF;
 
     -- сохранили протокол
@@ -223,3 +224,6 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpUpdate_Object_Price_MCSAuto()
+--select * from gpUpdate_Object_Price_MCSAuto(inMCSValue := 4 ::TFloat , inGoodsId := 652, inDays := 3 ::TFloat,  inSession := '3'::TVarChar);
+
+
