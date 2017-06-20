@@ -96,6 +96,7 @@ BEGIN
                                                         , inSummService        := COALESCE (gpSelect.SummService, 0)
                                                         , inSummCardRecalc     := COALESCE (inSummCardRecalc1, 0) + COALESCE (inSummCardRecalc2, 0)
                                                         , inSummCardSecondRecalc:= 0
+                                                        , inSummCardSecondCash := 0
                                                         , inSummNalogRecalc    := COALESCE (inSummNalogRecalc, 0)
                                                         , inSummMinus          := COALESCE (gpSelect.SummMinus, 0)
                                                         , inSummAdd            := COALESCE (gpSelect.SummAdd, 0)
@@ -132,6 +133,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.06.17         * add inSummCardSecondCash 
  28.01.17                                        *
  18.01.17         *
 */

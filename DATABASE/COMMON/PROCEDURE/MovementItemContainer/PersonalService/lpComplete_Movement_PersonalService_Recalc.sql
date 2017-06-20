@@ -226,6 +226,7 @@ BEGIN
                                                                   , inSummService        := 0 :: TFloat
                                                                   , inSummCardRecalc     := 0 :: TFloat
                                                                   , inSummCardSecondRecalc:= 0 :: TFloat
+                                                                  , inSummCardSecondCash := 0 :: TFloat
                                                                   , inSummNalogRecalc    := 0 :: TFloat
                                                                   , inSummMinus          := 0 :: TFloat
                                                                   , inSummAdd            := 0 :: TFloat

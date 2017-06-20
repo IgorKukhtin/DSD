@@ -7,6 +7,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, In
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -25,6 +27,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
     IN inSummService         TFloat    , -- Сумма начислено
     IN inSummCardRecalc      TFloat    , -- Карта БН (ввод) - 1ф.
     IN inSummCardSecondRecalc  TFloat  , -- Карта БН (ввод) - 2ф.
+    IN inSummCardSecondCash  TFloat    , -- Карта БН (касса) - 2ф.
     IN inSummNalogRecalc     TFloat    , -- Налоги - удержания (ввод)
     IN inSummMinus           TFloat    , -- Сумма удержания
     IN inSummAdd             TFloat    , -- Сумма премия
@@ -60,6 +63,7 @@ BEGIN
                                                      , inSummService        := inSummService
                                                      , inSummCardRecalc     := inSummCardRecalc
                                                      , inSummCardSecondRecalc:= inSummCardSecondRecalc
+                                                     , inSummCardSecondCash := inSummCardSecondCash
                                                      , inSummNalogRecalc    := inSummNalogRecalc
                                                      , inSummMinus          := inSummMinus
                                                      , inSummAdd            := inSummAdd
@@ -88,6 +92,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.06.17         *  add inSummCardSecondCash
  24.02.17         *
  20.04.16         * inSummHoliday
  08.05.15         * add PersonalServiceList

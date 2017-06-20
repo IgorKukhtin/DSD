@@ -187,6 +187,7 @@ BEGIN
                                                                     , inSummService        := 0 -- !!!потом зальем сумму!!!
                                                                     , inSummCardRecalc     := 0
                                                                     , inSummCardSecondRecalc:= 0
+                                                                    , inSummCardSecondCash := 0
                                                                     , inSummNalogRecalc    := 0
                                                                     , inSummMinus          := 0
                                                                     , inSummAdd            := 0
@@ -294,6 +295,7 @@ BEGIN
                                                           , inSummService        := vbSummService ::TFloat
                                                           , inSummCardRecalc     := COALESCE (MIFloat_SummCardRecalc.ValueData, 0)
                                                           , inSummCardSecondRecalc:= COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0)
+                                                          , inSummCardSecondCash := COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)
                                                           , inSummNalogRecalc    := COALESCE (MIFloat_SummNalogRecalc.ValueData, 0)
                                                           , inSummMinus          := COALESCE (MIFloat_SummMinus.ValueData, 0)
                                                           , inSummAdd            := COALESCE (MIFloat_SummAdd.ValueData, 0)
@@ -317,6 +319,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondRecalc
                                         ON MIFloat_SummCardSecondRecalc.MovementItemId = MovementItem.Id
                                        AND MIFloat_SummCardSecondRecalc.DescId = zc_MIFloat_SummCardSecondRecalc()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondCash
+                                        ON MIFloat_SummCardSecondCash.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummCardSecondCash.DescId = zc_MIFloat_SummCardSecondCash()
             LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRecalc
                                         ON MIFloat_SummNalogRecalc.MovementItemId = MovementItem.Id
                                        AND MIFloat_SummNalogRecalc.DescId = zc_MIFloat_SummNalogRecalc()
@@ -360,6 +365,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.06.17         * add inSummCardSecondCash 
  21.06.16         *
 */
 

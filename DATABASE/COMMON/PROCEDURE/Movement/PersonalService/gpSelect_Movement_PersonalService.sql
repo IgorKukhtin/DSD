@@ -14,7 +14,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , ServiceDate TDateTime
              , TotalSumm TFloat, TotalSummToPay TFloat, TotalSummCash TFloat, TotalSummService TFloat
-             , TotalSummCard TFloat, TotalSummCardSecond TFloat,TotalSummNalog TFloat, TotalSummMinus TFloat, TotalSummAdd TFloat, TotalSummHoliday TFloat
+             , TotalSummCard TFloat, TotalSummCardSecond TFloat, TotalSummCardSecondCash TFloat
+             , TotalSummNalog TFloat, TotalSummMinus TFloat, TotalSummAdd TFloat, TotalSummHoliday TFloat
              , TotalSummCardRecalc TFloat, TotalSummCardSecondRecalc TFloat, TotalSummNalogRecalc TFloat, TotalSummSocialIn TFloat, TotalSummSocialAdd TFloat
              , TotalSummChild TFloat, TotalSummChildRecalc TFloat, TotalSummMinusExt TFloat, TotalSummMinusExtRecalc TFloat
              , TotalSummTransport TFloat, TotalSummTransportAdd TFloat, TotalSummTransportAddLong TFloat, TotalSummTransportTaxi TFloat, TotalSummPhone TFloat
@@ -81,6 +82,7 @@ BEGIN
            , MovementFloat_TotalSummService.ValueData    AS TotalSummService
            , MovementFloat_TotalSummCard.ValueData       AS TotalSummCard
            , MovementFloat_TotalSummCardSecond.ValueData AS TotalSummCardSecond
+           , MovementFloat_TotalSummCardSecondCash.ValueData AS TotalSummCardSecondCash
            , MovementFloat_TotalSummNalog.ValueData      AS TotalSummNalog
            , MovementFloat_TotalSummMinus.ValueData      AS TotalSummMinus
            , MovementFloat_TotalSummAdd.ValueData        AS TotalSummAdd
@@ -149,6 +151,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardSecond
                                     ON MovementFloat_TotalSummCardSecond.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummCardSecond.DescId = zc_MovementFloat_TotalSummCardSecond()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardSecondCash
+                                    ON MovementFloat_TotalSummCardSecondCash.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummCardSecondCash.DescId = zc_MovementFloat_TotalSummCardSecondCash()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummNalog
                                     ON MovementFloat_TotalSummNalog.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummNalog.DescId = zc_MovementFloat_TotalSummNalog()
@@ -236,6 +241,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 20.06.17         * add TotalSummCardSecondCash
  24.02.17         *
  20.02.17         * add CardSecond
  07.10.16         * add inJuridicalBasisId
