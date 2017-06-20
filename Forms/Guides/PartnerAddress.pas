@@ -160,6 +160,7 @@ type
     mactShowAllPartnerOnMap: TMultiAction;
     bbShowCurPartnerOnMap: TdxBarButton;
     bbShowAllPartnerOnMap: TdxBarButton;
+    PersonalMerchChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

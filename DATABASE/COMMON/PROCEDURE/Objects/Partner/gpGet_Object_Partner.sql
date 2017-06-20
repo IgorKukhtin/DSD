@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar,
                
                PersonalId Integer, PersonalName TVarChar,
                PersonalTradeId Integer, PersonalTradeName TVarChar,
+               PersonalMerchId Integer, PersonalMerchName TVarChar,
                AreaId Integer, AreaName TVarChar,
                PartnerTagId Integer, PartnerTagName TVarChar,
 
@@ -101,6 +102,9 @@ BEGIN
          
            , CAST (0 as Integer)    AS PersonalTradeId
            , CAST ('' as TVarChar)  AS PersonalTradeName
+
+           , CAST (0 as Integer)    AS PersonalMerchId
+           , CAST ('' as TVarChar)  AS PersonalMerchName
          
            , CAST (0 as Integer)    AS AreaId
            , CAST ('' as TVarChar)  AS AreaName
@@ -195,6 +199,9 @@ BEGIN
          
            , Object_PersonalTrade.PersonalId    AS PersonalTradeId
            , Object_PersonalTrade.PersonalName  AS PersonalTradeName
+
+           , Object_PersonalMerch.Id            AS PersonalMerchId
+           , Object_PersonalMerch.ValueData     AS PersonalMerchName
          
            , Object_Area.Id                  AS AreaId
            , Object_Area.ValueData           AS AreaName
@@ -354,6 +361,11 @@ BEGIN
                                AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
            LEFT JOIN Object_Personal_View AS Object_PersonalTrade ON Object_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalMerch
+                                ON ObjectLink_Partner_PersonalMerch.ObjectId = Object_Partner.Id 
+                               AND ObjectLink_Partner_PersonalMerch.DescId = zc_ObjectLink_Partner_PersonalMerch()
+           LEFT JOIN Object AS Object_PersonalMerch ON Object_PersonalMerch.Id = ObjectLink_Partner_PersonalMerch.ChildObjectId
+
            LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
                                 ON ObjectLink_Partner_Area.ObjectId = Object_Partner.Id 
                                AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
@@ -407,6 +419,7 @@ ALTER FUNCTION gpGet_Object_Partner (Integer, Integer, Integer, TVarChar) OWNER 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 19.06.17         * add PersonalMerch
  25.12.15         * add GoodsProperty
  10.02.15         * add remine  05.02.15
  20.11.14         * add remine 

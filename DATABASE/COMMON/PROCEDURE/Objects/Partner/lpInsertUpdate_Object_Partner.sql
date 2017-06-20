@@ -7,7 +7,11 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
                                                        TFloat, TFloat, Boolean, Boolean, Boolean,
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                       TDateTime, TDateTime, Integer);       
+                                                       TDateTime, TDateTime, Integer);  
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
+                                                       TFloat, TFloat, Boolean, Boolean, Boolean,
+                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                       TDateTime, TDateTime, Integer);            
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -33,6 +37,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
     IN inMemberTakeId        Integer   ,    -- Физ лицо (сотрудник экспедитор)
     IN inPersonalId          Integer   ,    -- Сотрудник (супервайзер)
     IN inPersonalTradeId     Integer   ,    -- Сотрудник (торговый)
+    IN inPersonalMerchId     Integer   ,    -- Сотрудник (мерчандайзер)
     IN inAreaId              Integer   ,    -- Регион
     IN inPartnerTagId        Integer   ,    -- Признак торговой точки
 
@@ -100,6 +105,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Personal(), ioId, inPersonalId);
    -- сохранили связь с <Сотрудник (торговый)>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTrade(), ioId, inPersonalTradeId);
+   -- сохранили связь с <Сотрудник (мерчандайзер)>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalMerch(), ioId, inPersonalMerchId);
    -- сохранили связь с <Регион>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Area(), ioId, inAreaId);
    -- сохранили связь с <Признак торговой точки>
@@ -134,6 +141,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.06.17         * add inPersonalMerchId
  07.03.17         * add Schedule
  25.12.15         * add inGoodsPropertyId
  06.02.15         * add inEdiOrdspr, inEdiInvoice, inEdiDesadv

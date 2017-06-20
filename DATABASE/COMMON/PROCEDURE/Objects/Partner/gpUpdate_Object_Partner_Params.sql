@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Params (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Params (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Params (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_Params(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -11,9 +12,10 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_Params(
     IN inMemberId            Integer   ,    -- 
     IN inPersonalId          Integer   ,    -- Сотрудник (супервайзер)
     IN inPersonalTradeId     Integer   ,    -- Сотрудник (торговый)
+    IN inPersonalMerchId     Integer   ,    -- Сотрудник (мерчандайзер)
     IN inUnitId              Integer   ,    -- 
-    IN inPrepareDayCount     TFloat   ,    -- 
-    IN inDocumentDayCount    TFloat   ,    -- 
+    IN inPrepareDayCount     TFloat    ,    -- 
+    IN inDocumentDayCount    TFloat    ,    -- 
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS Integer
@@ -39,6 +41,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Personal(), ioId, inPersonalId);
    -- сохранили связь с <Сотрудник (торговый)>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTrade(), ioId, inPersonalTradeId);
+   -- сохранили связь с <Сотрудник (мерчандайзер)>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalMerch(), ioId, inPersonalMerchId);
 
 
    IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (106597 )) -- Торговый отдел
@@ -73,6 +77,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.06.17         * add inPersonalMerchId
  26.06.15                                        * add inRouteId_30201
  22.06.15                                        * all
  16.03.15                                        * all

@@ -35,6 +35,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                MemberTakeId Integer, MemberTakeName TVarChar,
                PersonalId Integer, PersonalName TVarChar, UnitName_Personal TVarChar, PositionName_Personal TVarChar, BranchName_Personal TVarChar,
                PersonalTradeId Integer, PersonalTradeName TVarChar, UnitName_PersonalTrade TVarChar, PositionName_PersonalTrade TVarChar,
+               PersonalMerchId Integer, PersonalMerchName TVarChar, UnitName_PersonalMerch TVarChar, PositionName_PersonalMerch TVarChar,
                AreaId Integer, AreaName TVarChar,
                PartnerTagId Integer, PartnerTagName TVarChar,
                InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar,
@@ -101,6 +102,32 @@ BEGIN
                               WHERE Object_ContactPerson.DescId = zc_Object_ContactPerson()
                             )
 
+   , tmpPersonal AS (SELECT Object_Personal.Id             AS PersonalId
+                          , Object_Personal.ValueData      AS PersonalName
+                          , Object_Position.ValueData      AS PositionName
+                          , Object_Unit.Id                 AS UnitId
+                          , Object_Unit.ValueData          AS UnitName
+                          , ObjectLink_Unit_Branch.ChildObjectId AS BranchId
+                     FROM Object AS Object_Personal
+                          LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                 ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
+                                AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                          LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
+ 
+                          LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                 ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
+                                AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
+
+                          LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                 ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
+
+                    WHERE Object_Personal.DescId = zc_Object_Personal()
+                     )
+
+
      SELECT
            Object_Partner.Id               AS Id
          , Object_Partner.ObjectCode       AS Code
@@ -165,6 +192,11 @@ BEGIN
            , View_PersonalTrade.PersonalName  AS PersonalTradeName
            , View_PersonalTrade.UnitName      AS UnitName_PersonalTrade
            , View_PersonalTrade.PositionName  AS PositionName_PersonalTrade
+
+           , View_PersonalMerch.PersonalId    AS PersonalMerchId
+           , View_PersonalMerch.PersonalName  AS PersonalMerchName
+           , View_PersonalMerch.UnitName      AS UnitName_PersonalMerch
+           , View_PersonalMerch.PositionName  AS PositionName_PersonalMerch
 
            , Object_Area.Id                   AS AreaId
            , Object_Area.ValueData            AS AreaName
@@ -275,7 +307,6 @@ BEGIN
                               ON ObjectString_NameInteger.ObjectId = Object_Partner.Id
                              AND ObjectString_NameInteger.DescId = zc_ObjectString_Partner_NameInteger()
 
-
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                              ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
@@ -292,8 +323,8 @@ BEGIN
          LEFT JOIN Object AS Object_CityKind ON Object_CityKind.Id = ObjectLink_City_CityKind.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_City_Region
-                             ON ObjectLink_City_Region.ObjectId = Object_Street_View.CityId
-                            AND ObjectLink_City_Region.DescId = zc_ObjectLink_City_Region()
+                              ON ObjectLink_City_Region.ObjectId = Object_Street_View.CityId
+                             AND ObjectLink_City_Region.DescId = zc_ObjectLink_City_Region()
          LEFT JOIN Object AS Object_Region ON Object_Region.Id = ObjectLink_City_Region.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_City_Province
@@ -309,7 +340,7 @@ BEGIN
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
                               ON ObjectLink_Partner_Personal.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
-         LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
+         LEFT JOIN tmpPersonal AS View_Personal ON View_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
          LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                               ON ObjectLink_Unit_Branch.ObjectId = View_Personal.UnitId
                              AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
@@ -318,7 +349,12 @@ BEGIN
          LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
                               ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-         LEFT JOIN Object_Personal_View AS View_PersonalTrade ON View_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
+         LEFT JOIN tmpPersonal AS View_PersonalTrade ON View_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalMerch
+                              ON ObjectLink_Partner_PersonalMerch.ObjectId = Object_Partner.Id
+                             AND ObjectLink_Partner_PersonalMerch.DescId = zc_ObjectLink_Partner_PersonalMerch()
+         LEFT JOIN tmpPersonal AS View_PersonalMerch ON View_PersonalMerch.PersonalId = ObjectLink_Partner_PersonalMerch.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
                               ON ObjectLink_Partner_Area.ObjectId = Object_Partner.Id
@@ -361,6 +397,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 19.06.17         * add PersonalMerch
  06.05.17         * 
  06.10.15         * add inShowAll
  09.12.14                                        * add inInfoMoneyId

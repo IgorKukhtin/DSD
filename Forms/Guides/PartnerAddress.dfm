@@ -25,8 +25,6 @@ object PartnerAddressForm: TPartnerAddressForm
     Height = 403
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = -8
-    ExplicitTop = 101
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -260,6 +258,38 @@ object PartnerAddressForm: TPartnerAddressForm
       object PositionName_PersonalTrade: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1058#1055')'
         DataBinding.FieldName = 'PositionName_PersonalTrade'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object clPersonalMerchName: TcxGridDBColumn
+        Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1084#1077#1088#1095#1072#1085#1076#1072#1081#1079#1077#1088')'
+        DataBinding.FieldName = 'PersonalMerchName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = PersonalMerchChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 120
+      end
+      object PositionName_PersonalMerch: TcxGridDBColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1084#1077#1088#1095#1072#1085#1076#1072#1081#1079#1077#1088')'
+        DataBinding.FieldName = 'PositionName_PersonalMerch'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object UnitName_PersonalMerch: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1084#1077#1088#1095#1072#1085#1076#1072#1081#1079#1077#1088')'
+        DataBinding.FieldName = 'UnitName_PersonalMerch'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -1798,6 +1828,33 @@ object PartnerAddressForm: TPartnerAddressForm
       Hint = #1050#1072#1088#1090#1072' Google - '#1042#1057#1045' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
       ImageIndex = 40
     end
+    object PersonalMerchChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Personal_ObjectForm'
+      FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = 'TPersonal_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalMerchId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalMerchName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Partner_Address'
@@ -2169,6 +2226,14 @@ object PartnerAddressForm: TPartnerAddressForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PersonalTradeId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalMerchId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PersonalMerchId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

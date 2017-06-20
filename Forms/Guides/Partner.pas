@@ -142,6 +142,7 @@ type
     cxLabel4: TcxLabel;
     edRoute: TcxButtonEdit;
     GuidesRoute: TdsdGuides;
+    PersonalMerchChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
