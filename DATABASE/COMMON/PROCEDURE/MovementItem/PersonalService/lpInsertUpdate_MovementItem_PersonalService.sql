@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_PersonalService()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
@@ -18,6 +19,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
     IN inSummService            TFloat    , -- Сумма начислено
     IN inSummCardRecalc         TFloat    , -- Карта БН (ввод) - 1ф.
     IN inSummCardSecondRecalc   TFloat    , -- Карта БН (ввод) - 2ф.
+    IN inSummCardSecondCash     TFloat    , -- Карта БН (касса) - 2ф.
     IN inSummNalogRecalc        TFloat    , -- Налоги - удержания с ЗП (ввод)
     IN inSummMinus              TFloat    , -- Сумма удержания
     IN inSummAdd                TFloat    , -- Сумма премия
@@ -181,6 +183,8 @@ BEGIN
                    - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummCard()), 0)
                      -- "минус" <Карта БН - 2ф.>
                    - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummCardSecond()), 0)
+                     -- "минус" <Карта БН (касса) - 2ф.>
+                   - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummCardSecondCash()), 0)
                     ;
 
      -- определяется признак Создание/Корректировка
@@ -197,6 +201,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardRecalc(), ioId, inSummCardRecalc);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecondRecalc(), ioId, inSummCardSecondRecalc);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecondCash(), ioId, inSummCardSecondCash);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummNalogRecalc(), ioId, inSummNalogRecalc);
      -- сохранили свойство <>
@@ -254,6 +260,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.06.17         * add inSummCardSecondCash
  24.02.17         * add SummMinusExtRecalc, CHANGE inSummChild on inSummChildRecalc
  20.02.17         * inSummCardSecondRecalc
  20.04.16         * inSummHoliday

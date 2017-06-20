@@ -5,7 +5,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1237
-  ExplicitHeight = 439
+  ExplicitHeight = 442
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -149,6 +149,11 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalSummMinusExtRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummCardSecondCash
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -270,6 +275,11 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalSummMinusExtRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummCardSecondCash
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -402,6 +412,16 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 95
+          end
+          object colTotalSummCardSecondCash: TcxGridDBColumn
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072') - 2'#1092'.'
+            DataBinding.FieldName = 'TotalSummCardSecondCash'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 82
           end
           object TotalSummNalog: TcxGridDBColumn
             Caption = #1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089' '#1047#1055

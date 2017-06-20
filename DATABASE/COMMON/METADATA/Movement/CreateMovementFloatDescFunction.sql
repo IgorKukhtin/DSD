@@ -132,6 +132,10 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummCardSecond() RETURNS Intege
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalSummCardSecond', 'Карта БН - 2ф.' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummCardSecond');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummCardSecondCash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummCardSecondCash'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalSummCardSecondCash', 'Карта БН (касса) - 2ф.' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummCardSecondCash');
+
 CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummCardSecondRecalc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummCardSecondRecalc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalSummCardSecondRecalc', 'Карта БН (ввод) - 2ф.' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummCardSecondRecalc');
@@ -344,6 +348,7 @@ INSERT INTO MovementFloatDesc(Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 20.06.17         * zc_MovementFloat_TotalSummCardSecondCash
  20.02.17         *
  20.06.16         *
  15.01.16         * add zc_MovementFloat_StartOdometre, zc_MovementFloat_EndOdometre, zc_MovementFloat_AmountFuel
