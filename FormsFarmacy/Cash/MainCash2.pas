@@ -265,6 +265,12 @@ type
     MorionCode: TcxGridDBColumn;
     actSetMemdataFromDBF: TAction; // только 2 форма
     actSetUpdateFromMemdata: TAction; // только 2 форма
+    actUpdateRemainsCDS: TdsdUpdateDataSet;
+    spUpdate_Object_Price: TdsdStoredProc;
+    PanelMCSAuto: TPanel;
+    Label6: TLabel;
+    edDays: TcxCurrencyEdit;
+    miMCSAuto: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -312,8 +318,8 @@ type
     procedure actSetConfirmedKind_UnCompleteExecute(Sender: TObject);
     procedure btnCheckClick(Sender: TObject);
     procedure ParentFormDestroy(Sender: TObject);
-    procedure ceScanerKeyPress(Sender: TObject; var Key: Char); //***10.08.16 
-	procedure actSetSPExecute(Sender: TObject); //***10.08.16  
+    procedure ceScanerKeyPress(Sender: TObject; var Key: Char); 
+	procedure actSetSPExecute(Sender: TObject);
     procedure actAddDiffMemdataExecute(Sender: TObject); // только 2 форма
     procedure actSetRimainsFromMemdataExecute(Sender: TObject); // только 2 форма
     procedure actSaveCashSesionIdToFileExecute(Sender: TObject); // только 2 форма
@@ -322,6 +328,7 @@ type
     procedure actSetUpdateFromMemdataExecute(Sender: TObject); //***10.08.16 // только 2 форма
 	procedure actGetJuridicalListExecute(Sender: TObject);
     procedure actGetJuridicalListUpdate(Sender: TObject);
+    procedure miMCSAutoClick(Sender: TObject); //***10.08.16
     procedure N1Click(Sender: TObject);
     procedure N10Click(Sender: TObject); //***10.08.16
   private
@@ -1840,6 +1847,14 @@ begin
   SetWorkMode(gc_User.Local);
 end;
 
+procedure TMainCashForm2.miMCSAutoClick(Sender: TObject);
+begin
+  if RemainsCDS.State in dsEditModes then RemainsCDS.Post;
+  //
+  edDays.Value:=7;
+  PanelMCSAuto.Visible:= not PanelMCSAuto.Visible;
+  MainGridDBTableView.Columns[MainGridDBTableView.GetColumnByFieldName('MCSValue').Index].Options.Editing:= PanelMCSAuto.Visible;
+end;
 procedure TMainCashForm2.FormCreate(Sender: TObject);
 var
   F: String;
@@ -1848,6 +1863,10 @@ begin
 
   Application.OnMessage := AppMsgHandler;   // только 2 форма
   isScaner:= false;
+  //
+  edDays.Value:=7;
+  PanelMCSAuto.Visible:=false;
+  MainGridDBTableView.Columns[MainGridDBTableView.GetColumnByFieldName('MCSValue').Index].Options.Editing:= False;
   //для
   // создаем мутексы если не созданы
   MutexDBF := CreateMutex(nil, false, 'farmacycashMutexDBF');
@@ -3868,10 +3887,12 @@ begin
   end;
 end;
 
-{ TSaveRealThread }  // для коректной синхронизации
 
 
 
+{ TSaveRealThread }
+{ TRefreshDiffThread }
+{ TSaveRealAllThread }
 initialization
   RegisterClass(TMainCashForm2);
   FLocalDataBaseHead := TVKSmartDBF.Create(nil);
