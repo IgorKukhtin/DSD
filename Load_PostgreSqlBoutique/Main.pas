@@ -3939,24 +3939,25 @@ begin
      //
      myEnabledCB(cbSale_Child);
      //
+      try fExecSqFromQuery_noErr(' drop table dba._TableLoadSale '); except end;  // «акомитить после первого использовани€. // нужно если была создана стара€ таблица перед этим
       //создаем “аблицу, т.к. подзапрос не пашет
-      try fExecSqFromQuery_noErr(' create table dba._TableLoadSale ( ObjectId integer, MovementId integer, ParentId integer,' + ' AmountGRN decimal, AmountEUR decimal, AmountUSD decimal, AmountCard decimal, AmountDiscount decimal,  CurrencyValueUSD decimal, ParValueUSD decimal, CurrencyValueEUR decimal,  ParValueEUR decimal )');
+      try fExecSqFromQuery_noErr(' create table dba._TableLoadSale ( ObjectId integer, MovementId integer, ParentId integer, KassaID integer, ' + ' AmountGRN decimal, AmountEUR decimal, AmountUSD decimal, AmountCard decimal, AmountDiscount decimal,  CurrencyValueUSD decimal, ParValueUSD decimal, CurrencyValueEUR decimal,  ParValueEUR decimal )');
       except end;
-      fExecSqFromQuery(' delete from dba._TableLoadSale');
-      fExecSqFromQuery(' insert into dba._TableLoadSale (ObjectId, MovementId, ParentId, AmountGRN, AmountEUR, AmountUSD, AmountCard, AmountDiscount, CurrencyValueUSD, ParValueUSD, CurrencyValueEUR,  ParValueEUR )'
+      fExecSqFromQuery(' insert into dba._TableLoadSale (ObjectId, MovementId, ParentId, KassaID, AmountGRN, AmountEUR, AmountUSD, AmountCard, AmountDiscount, CurrencyValueUSD, ParValueUSD, CurrencyValueEUR,  ParValueEUR )'
              + ' SELECT'
              + '      DiscountKlientAccountMoney.Id as ObjectId'
              + '    , DiscountMovement.SaleId_Postgres as MovementId'
              + '    , DiscountMovementItem_byBarCode.Id_Postgres as ParentId'
+             + '    , Kassa.ID as KassaID'
              + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=1 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountGRN'
              + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountEUR'
              + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountUSD'
              + '    , if  Kassa.ID in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  ) then  DiscountKlientAccountMoney.Summa else 0 endif as AmountCard'
              + '    , if  Kassa.ID in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  ) then  DiscountKlientAccountMoney.SummDiscountManual else 0 endif as  AmountDiscount'
              + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.KursClient else 0 endif as CurrencyValueUSD'
-             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.NominalKursClient else 1 endif as ParValueUSD'
+             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.NominalKursClient else 0 endif as ParValueUSD'
              + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.KursClient else 0 endif as CurrencyValueEUR'
-             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.NominalKursClient else 1 endif as ParValueEUR'
+             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.NominalKursClient else 0 endif as ParValueEUR'
              + ' FROM dba.DiscountMovementItem_byBarCode'
              + '    join DiscountMovement     on DiscountMovement.id = DiscountMovementItem_byBarCode.DiscountMovementId'
              + '    left join BillItemsIncome on BillItemsIncome.id  = DiscountMovementItem_byBarCode.BillItemsIncomeId'
@@ -3975,6 +3976,7 @@ begin
         Add('  min(ObjectId) as ObjectId');
         Add(', a.MovementId');
         Add(', a.ParentId');
+        Add(', a.KassaId');
         Add(', sum(AmountGRN) as AmountGRN');
         Add(', sum(AmountEUR) as AmountEUR');
         Add(', sum(AmountUSD) as AmountUSD');
@@ -3985,7 +3987,7 @@ begin
         Add(', min(CurrencyValueEUR) as CurrencyValueEUR');
         Add(', min(ParValueEUR) as ParValueEUR');
         Add(' FROM  dba._TableLoadSale AS a');
-        Add(' GROUP BY MovementId, ParentId');
+        Add(' GROUP BY MovementId, ParentId, KassaID');
         Open;
 
         Result:=RecordCount;
