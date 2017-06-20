@@ -55,6 +55,7 @@ $BODY$
         vbTop Boolean;
         vbPercentMarkup TFloat;
         vbDate TDateTime;
+    DECLARE vbIsMCSAuto_old  Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
@@ -94,7 +95,7 @@ BEGIN
            StartDateMCSAuto,
            EndDateMCSAuto,
            isMCSNotRecalcOld,
-           isMCSAuto
+           isMCSAuto, isMCSAuto
       INTO ioId, 
            vbPrice, 
            vbMCSValue, 
@@ -109,7 +110,7 @@ BEGIN
            outStartDateMCSAuto,
            outEndDateMCSAuto,
            outisMCSNotRecalcOld,
-           outisMCSAuto
+           outisMCSAuto, vbIsMCSAuto_old
     FROM (WITH tmp1 AS (SELECT Object_Price.Id                         AS Id
                              , ROUND(Price_Value.ValueData,2)::TFloat AS Price
                              , MCS_Value.ValueData                     AS MCSValue
@@ -268,7 +269,7 @@ BEGIN
     END IF;
 
     -- сохранили св-во < Неснижаемый товарный запас >
-    IF COALESCE (inisMCSAuto,False) = False                 
+    IF COALESCE (inisMCSAuto, FALSE) = FALSE
     THEN
         IF (inMCSValue is not null) AND (inMCSValue <> COALESCE(vbMCSValue,0))
         THEN
@@ -278,14 +279,22 @@ BEGIN
             PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSDateChange(), ioId, outMCSDateChange);
         END IF;
     ELSE
-        IF (inMCSValue is not null) AND (inMCSValue <> COALESCE(vbMCSValue,0))
+        --  !!!всегда!!!
+        IF 1=1
         THEN
             -- сохранили свойство <НТЗ для периода>
-            PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSAuto(), ioId, inisMCSAuto);
+            PERFORM lpInsertUpdate_objectBoolean (zc_ObjectBoolean_Price_MCSAuto(), ioId, inisMCSAuto);
             outisMCSAuto := inisMCSAuto;
 
-            -- сохраняем старое значение НТЗ
-            PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Price_MCSValueOld(), ioId, outMCSValueOld);
+            -- !!!только в этом случае!!!
+            IF COALESCE (vbIsMCSAuto_old, FALSE) = FALSE
+            THEN
+                -- сохраняем старое значение НТЗ
+                PERFORM lpInsertUpdate_objectFloat (zc_ObjectFloat_Price_MCSValueOld(), ioId, outMCSValueOld);
+                -- меняем старое на текеущее и сохраняем
+                outisMCSNotRecalcOld := vbMCSNotRecalc;
+                PERFORM lpInsertUpdate_objectBoolean (zc_ObjectBoolean_Price_MCSNotRecalcOld(), ioId, outisMCSNotRecalcOld);
+            END IF;
 
             ---
             PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Price_MCSValue(), ioId, inMCSValue);
@@ -297,11 +306,9 @@ BEGIN
             outStartDateMCSAuto := CURRENT_DATE;
             PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_StartDateMCSAuto(), ioId, outStartDateMCSAuto);
             --
-            outEndDateMCSAuto := outStartDateMCSAuto + (inDays || ' DAY') :: INTERVAL; 
+            outEndDateMCSAuto := outStartDateMCSAuto + ((inDays - 1) :: TVarChar || ' DAY') :: INTERVAL; 
             PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_EndDateMCSAuto(), ioId, outEndDateMCSAuto);
-            --
-            outisMCSNotRecalcOld := vbMCSNotRecalc;
-            PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSNotRecalcOld(), ioId, outisMCSNotRecalcOld);
+
             --
             ioMCSNotRecalc := True;
 --            PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSNotRecalc(), ioId, True);
@@ -356,6 +363,7 @@ BEGIN
 
     -- сохранили протокол
     PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+    
 END;
 $BODY$
 LANGUAGE plpgsql VOLATILE;

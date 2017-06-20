@@ -12,7 +12,7 @@ inherited MainCashForm: TMainCashForm
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
   ExplicitWidth = 759
-  ExplicitHeight = 454
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
@@ -210,22 +210,19 @@ inherited MainCashForm: TMainCashForm
   end
   object MainPanel: TPanel [2]
     Left = 0
-    Top = 96
+    Top = 77
     Width = 743
-    Height = 120
+    Height = 139
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 77
-    ExplicitHeight = 139
     object MainGrid: TcxGrid
       Left = 0
       Top = 0
       Width = 743
-      Height = 87
+      Height = 106
       Align = alClient
       TabOrder = 0
-      ExplicitHeight = 106
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = MainGridDBTableViewFocusedRecordChanged
@@ -362,6 +359,7 @@ inherited MainCashForm: TMainCashForm
           OnGetDisplayText = MainColReservedGetDisplayText
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          Options.Editing = False
           Width = 40
         end
         object MainColor_calc: TcxGridDBColumn
@@ -683,19 +681,28 @@ inherited MainCashForm: TMainCashForm
           Width = 110
         end
         object MainMCSValueOld: TcxGridDBColumn
-          Caption = #1053#1058#1047' - '#1074#1077#1088#1085#1077#1090#1089#1103' '#1087#1086' '#1086#1082#1086#1085#1095#1072#1085#1080#1080' '#1087#1077#1088#1080#1086#1076#1072
+          Caption = #1053#1058#1047' - '#1072#1074#1090#1086#1084'. '#1074#1077#1088#1085#1077#1090#1089#1103
           DataBinding.FieldName = 'MCSValueOld'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1053#1058#1047' - '#1074#1077#1088#1085#1077#1090#1089#1103' '#1087#1086' '#1086#1082#1086#1085#1095#1072#1085#1080#1080' '#1087#1077#1088#1080#1086#1076#1072
+          HeaderHint = #1053#1058#1047' - '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1074#1077#1088#1085#1077#1090#1089#1103' '#1087#1086' '#1086#1082#1086#1085#1095#1072#1085#1080#1080' '#1087#1077#1088#1080#1086#1076#1072
           Options.Editing = False
           Width = 88
         end
+        object MainisMCSNotRecalcOld: TcxGridDBColumn
+          Caption = #1057#1087#1077#1094#1082'. - '#1072#1074#1090#1086#1084'. '#1074#1077#1088#1085#1077#1090#1089#1103
+          DataBinding.FieldName = 'isMCSNotRecalcOld'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072' - '#1074#1077#1088#1085#1077#1090#1089#1103' '#1087#1086' '#1086#1082#1086#1085#1095#1072#1085#1080#1080' '#1087#1077#1088#1080#1086#1076#1072
+          Options.Editing = False
+          Width = 100
+        end
         object MainStartDateMCSAuto: TcxGridDBColumn
-          Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1076#1077#1081#1089#1090#1074#1080#1103' '#1053#1058#1047
+          Caption = #1044#1072#1090#1072' '#1053#1058#1047' '#1089
           DataBinding.FieldName = 'StartDateMCSAuto'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
@@ -703,7 +710,7 @@ inherited MainCashForm: TMainCashForm
           Width = 70
         end
         object MainEndDateMCSAuto: TcxGridDBColumn
-          Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095'. '#1076#1077#1081#1089#1090#1074#1080#1103' '#1053#1058#1047
+          Caption = #1044#1072#1090#1072' '#1053#1058#1047' '#1087#1086
           DataBinding.FieldName = 'EndDateMCSAuto'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
@@ -715,16 +722,7 @@ inherited MainCashForm: TMainCashForm
           DataBinding.FieldName = 'isMCSAuto'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1056#1077#1078#1080#1084' - '#1053#1058#1047' '#1074#1099#1089#1090#1072#1074#1080#1083' '#1092#1072#1088#1084#1072#1094#1077#1074#1090' '#1085#1072' '#1087#1077#1088#1080#1086#1076
-          Options.Editing = False
-          Width = 60
-        end
-        object MainisMCSNotRecalcOld: TcxGridDBColumn
-          Caption = ' '#9#1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072' - '#1074#1077#1088#1085#1077#1090#1089#1103' '#1087#1086' '#1086#1082#1086#1085#1095#1072#1085#1080#1080' '#1087#1077#1088#1080#1086#1076#1072
-          DataBinding.FieldName = 'isMCSNotRecalcOld'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = ' '#9#1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072' - '#1074#1077#1088#1085#1077#1090#1089#1103' '#1087#1086' '#1086#1082#1086#1085#1095#1072#1085#1080#1080' '#1087#1077#1088#1080#1086#1076#1072
+          HeaderHint = #1056#1077#1078#1080#1084' - '#1053#1058#1047' '#1091#1089#1090#1072#1085#1086#1074#1080#1083' '#1092#1072#1088#1084#1072#1094#1077#1074#1090' '#1085#1072' '#1087#1077#1088#1080#1086#1076
           Options.Editing = False
           Width = 100
         end
@@ -735,12 +733,11 @@ inherited MainCashForm: TMainCashForm
     end
     object SearchPanel: TPanel
       Left = 0
-      Top = 87
+      Top = 106
       Width = 743
       Height = 33
       Align = alBottom
       TabOrder = 1
-      ExplicitTop = 106
       object ShapeState: TShape
         Left = 751
         Top = 13
@@ -955,7 +952,7 @@ inherited MainCashForm: TMainCashForm
   end
   object pnlVIP: TPanel [3]
     Left = 0
-    Top = 40
+    Top = 21
     Width = 743
     Height = 17
     Align = alTop
@@ -963,7 +960,6 @@ inherited MainCashForm: TMainCashForm
     ParentBackground = False
     TabOrder = 3
     Visible = False
-    ExplicitTop = 21
     object Label1: TLabel
       Left = 1
       Top = 1
@@ -1029,7 +1025,7 @@ inherited MainCashForm: TMainCashForm
   end
   object pnlDiscount: TPanel [4]
     Left = 0
-    Top = 57
+    Top = 38
     Width = 743
     Height = 21
     Align = alTop
@@ -1037,7 +1033,6 @@ inherited MainCashForm: TMainCashForm
     ParentBackground = False
     TabOrder = 4
     Visible = False
-    ExplicitTop = 38
     object Label3: TLabel
       Left = 1
       Top = 1
@@ -1170,10 +1165,45 @@ inherited MainCashForm: TMainCashForm
       OnKeyPress = ceScanerKeyPress
       Width = 172
     end
+    object PanelMCSAuto: TPanel
+      Left = 350
+      Top = 1
+      Width = 392
+      Height = 19
+      Align = alRight
+      BevelOuter = bvNone
+      Color = 15656679
+      ParentBackground = False
+      TabOrder = 1
+      object Label6: TLabel
+        Left = 0
+        Top = 0
+        Width = 137
+        Height = 19
+        Align = alLeft
+        Caption = #1040#1074#1090#1086' '#1053#1058#1047' '#1085#1072' '#1082#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' : '
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clGray
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        ExplicitHeight = 13
+      end
+      object edDays: TcxCurrencyEdit
+        Left = 138
+        Top = -2
+        EditValue = 0.000000000000000000
+        Properties.DecimalPlaces = 2
+        Properties.DisplayFormat = ',0;-,0'
+        TabOrder = 0
+        Width = 38
+      end
+    end
   end
   object pnlSP: TPanel [6]
     Left = 0
-    Top = 78
+    Top = 59
     Width = 743
     Height = 18
     Align = alTop
@@ -1181,7 +1211,6 @@ inherited MainCashForm: TMainCashForm
     ParentBackground = False
     TabOrder = 6
     Visible = False
-    ExplicitTop = 59
     object Label4: TLabel
       Left = 1
       Top = 1
@@ -1243,53 +1272,6 @@ inherited MainCashForm: TMainCashForm
       Font.Style = [fsBold]
       ParentFont = False
       ExplicitLeft = 503
-    end
-  end
-  object Panel2: TPanel [7]
-    Left = 0
-    Top = 21
-    Width = 743
-    Height = 19
-    Align = alTop
-    Color = 15656679
-    ParentBackground = False
-    TabOrder = 7
-    object Label6: TLabel
-      Left = 1
-      Top = 1
-      Width = 169
-      Height = 17
-      Align = alLeft
-      Caption = '     '#1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clGray
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-      ExplicitHeight = 13
-    end
-    object Label8: TLabel
-      Left = 185
-      Top = 1
-      Width = 63
-      Height = 13
-      Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clGray
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-    end
-    object edDays: TcxCurrencyEdit
-      Left = 254
-      Top = -1
-      EditValue = 7.000000000000000000
-      Properties.DecimalPlaces = 2
-      Properties.DisplayFormat = ',0;-,0'
-      TabOrder = 0
-      Width = 38
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -2037,6 +2019,11 @@ inherited MainCashForm: TMainCashForm
     object N3: TMenuItem
       Action = actCashWork
     end
+    object miMCSAuto: TMenuItem
+      AutoCheck = True
+      Caption = #1042#1082#1083'. / '#1042#1099#1082#1083'. '#1088#1077#1078#1080#1084' <'#1040#1074#1090#1086' '#1053#1058#1047'>'
+      OnClick = miMCSAutoClick
+    end
     object VIP1: TMenuItem
       Action = actSetVIP
     end
@@ -2710,7 +2697,7 @@ inherited MainCashForm: TMainCashForm
         Name = 'inGoodsId'
         Value = Null
         Component = RemainsCDS
-        ComponentItem = 'GoodsId_main'
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2744,14 +2731,6 @@ inherited MainCashForm: TMainCashForm
         Component = RemainsCDS
         ComponentItem = 'EndDateMCSAuto'
         DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsMCSNotRecalc'
-        Value = Null
-        Component = RemainsCDS
-        ComponentItem = 'IsMCSNotRecalc'
-        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item

@@ -282,10 +282,10 @@ type
     MorionCode: TcxGridDBColumn;
     actUpdateRemainsCDS: TdsdUpdateDataSet;
     spUpdate_Object_Price: TdsdStoredProc;
-    Panel2: TPanel;
+    PanelMCSAuto: TPanel;
     Label6: TLabel;
-    Label8: TLabel;
     edDays: TcxCurrencyEdit;
+    miMCSAuto: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -336,7 +336,8 @@ type
     procedure ceScanerKeyPress(Sender: TObject; var Key: Char);
     procedure actSetSPExecute(Sender: TObject);
     procedure actGetJuridicalListExecute(Sender: TObject);
-    procedure actGetJuridicalListUpdate(Sender: TObject); //***10.08.16
+    procedure actGetJuridicalListUpdate(Sender: TObject);
+    procedure miMCSAutoClick(Sender: TObject); //***10.08.16
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -1440,6 +1441,15 @@ begin
   SetWorkMode(gc_User.Local);
 end;
 
+procedure TMainCashForm.miMCSAutoClick(Sender: TObject);
+begin
+  if RemainsCDS.State in dsEditModes then RemainsCDS.Post;
+  //
+  edDays.Value:=7;
+  PanelMCSAuto.Visible:= not PanelMCSAuto.Visible;
+  MainGridDBTableView.Columns[MainGridDBTableView.GetColumnByFieldName('MCSValue').Index].Options.Editing:= PanelMCSAuto.Visible;
+end;
+
 procedure TMainCashForm.FormCreate(Sender: TObject);
 var
   F: String;
@@ -1447,6 +1457,10 @@ begin
   inherited;
 
   isScaner:= false;
+  //
+  edDays.Value:=7;
+  PanelMCSAuto.Visible:=false;
+  MainGridDBTableView.Columns[MainGridDBTableView.GetColumnByFieldName('MCSValue').Index].Options.Editing:= False;
   //для
   // создаем мутексы если не созданы
   MutexDBF := CreateMutex(nil, false, 'farmacycashMutexDBF');

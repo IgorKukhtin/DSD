@@ -1,6 +1,6 @@
 -- Function: gpUpdate_Object_Price_MCSAuto (Integer, TFloat, Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_Price_MCSAuto (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Price_MCSAuto (TFloat, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Price_MCSAuto(
     IN inMCSValue                 TFloat    ,    -- Неснижаемый товарный запас
@@ -24,11 +24,12 @@ $BODY$
 
     DECLARE vbUnitId  Integer;
     DECLARE vbPriceId Integer;
-    DECLARE
-        vbPrice TFloat;
-        vbMCSValue TFloat;
-        vbMCSNotRecalc Boolean;
-        vbDate TDateTime;
+    DECLARE vbPrice   TFloat;
+
+    DECLARE vbMCSValue       TFloat;
+    DECLARE vbMCSNotRecalc   Boolean;
+    DECLARE vbDate           TDateTime;
+    DECLARE vbIsMCSAuto_old  Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
@@ -44,7 +45,6 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка.Кол-во дней для периода должно быть больше 0.';
     END IF;   
-
 
     -- нашли UnitId
     vbUnitId:= COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '0') :: Integer;
@@ -73,7 +73,7 @@ BEGIN
            StartDateMCSAuto,
            EndDateMCSAuto,
            isMCSNotRecalcOld,
-           isMCSAuto
+           isMCSAuto, isMCSAuto
       INTO vbPriceId, 
            vbPrice,
            vbMCSValue, 
@@ -84,7 +84,7 @@ BEGIN
            outStartDateMCSAuto,
            outEndDateMCSAuto,
            outisMCSNotRecalcOld,
-           outisMCSAuto
+           outisMCSAuto, vbIsMCSAuto_old
     FROM (WITH tmp1 AS (SELECT Object_Price.Id                         AS Id
                              , ROUND(Price_Value.ValueData,2)::TFloat  AS Price
                              , MCS_Value.ValueData                     AS MCSValue
@@ -141,10 +141,12 @@ BEGIN
                                 AND Object_Price.DescId = zc_Object_Price() )
           SELECT  * FROM tmp1) AS tmp;
 
-        -- поиск значения НТЗ до тек.даты
-        vbDate := CURRENT_DATE - INTERVAL '1 DAY';
-        SELECT ObjectHistoryFloat_MCSValue.ValueData
-      INTO outMCSValueOld
+
+
+      -- поиск значения НТЗ до тек.даты
+      vbDate := CURRENT_DATE - INTERVAL '1 DAY';
+      SELECT ObjectHistoryFloat_MCSValue.ValueData
+             INTO outMCSValueOld
         FROM ObjectHistory
                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSValue
                                              ON ObjectHistoryFloat_MCSValue.ObjectHistoryId = ObjectHistory.Id
@@ -153,42 +155,45 @@ BEGIN
           AND ObjectHistory.DescId   = zc_ObjectHistory_Price()
           AND vbDate >= ObjectHistory.StartDate AND CURRENT_DATE < ObjectHistory.EndDate;
 
-        IF (inMCSValue is not null) AND (inMCSValue <> COALESCE(vbMCSValue,0))
-        THEN
-            -- сохранили свойство <НТЗ для периода>
-            outisMCSAuto := TRUE;
-            PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSAuto(), vbPriceId, outisMCSAuto);
+
+        -- сохранили свойство <НТЗ для периода>
+        outisMCSAuto := TRUE;
+        PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSAuto(), vbPriceId, outisMCSAuto);
     
 
-            -- сохраняем старое значение НТЗ
-            PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Price_MCSValueOld(), vbPriceId, outMCSValueOld);
-
-            ---
-            PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Price_MCSValue(), vbPriceId, inMCSValue);
-            -- сохранили св-во < Дата изменения Неснижаемого товарного запаса>
-            outMCSDateChange := CURRENT_DATE;
-            PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSDateChange(), vbPriceId, outMCSDateChange);
-
-            --
-            outStartDateMCSAuto := CURRENT_DATE;
-            PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_StartDateMCSAuto(), vbPriceId, outStartDateMCSAuto);
-            --
-            outEndDateMCSAuto := outStartDateMCSAuto + (inDays || ' DAY') :: INTERVAL; 
-            PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_EndDateMCSAuto(), vbPriceId, outEndDateMCSAuto);
-            --
-            outisMCSNotRecalcOld := vbMCSNotRecalc;
-            PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSNotRecalcOld(), vbPriceId, outisMCSNotRecalcOld);
-
-            -- 
-            outisMCSNotRecalc := True;
-          IF (COALESCE(vbMCSNotRecalc,False) <> outisMCSNotRecalc)
-          THEN
-              PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSNotRecalc(), vbPriceId, outisMCSNotRecalc);
-              outMCSNotRecalcDateChange := CURRENT_DATE;
-              PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSNotRecalcDateChange(), vbPriceId, outMCSNotRecalcDateChange);
-          END IF;
-
+        -- !!!только в этом случае!!!
+        IF COALESCE (vbIsMCSAuto_old, FALSE) = FALSE
+        THEN
+             -- сохраняем текущее значение НТЗ
+             PERFORM lpInsertUpdate_objectFloat (zc_ObjectFloat_Price_MCSValueOld(), vbPriceId, outMCSValueOld);
+             -- меняем старое на текеущее и сохраняем
+             outisMCSNotRecalcOld := vbMCSNotRecalc;
+             PERFORM lpInsertUpdate_objectBoolean (zc_ObjectBoolean_Price_MCSNotRecalcOld(), vbPriceId, outisMCSNotRecalcOld);
         END IF;
+             
+
+        ---
+        PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Price_MCSValue(), vbPriceId, inMCSValue);
+        -- сохранили св-во < Дата изменения Неснижаемого товарного запаса>
+        outMCSDateChange := CURRENT_DATE;
+        PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSDateChange(), vbPriceId, outMCSDateChange);
+
+        --
+        outStartDateMCSAuto := CURRENT_DATE;
+        PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_StartDateMCSAuto(), vbPriceId, outStartDateMCSAuto);
+        --
+        outEndDateMCSAuto := outStartDateMCSAuto + ((inDays - 1) :: TVarChar || ' DAY') :: INTERVAL; 
+        PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_EndDateMCSAuto(), vbPriceId, outEndDateMCSAuto);
+
+        -- 
+        outisMCSNotRecalc := TRUE;
+        IF (COALESCE(vbMCSNotRecalc,False) <> outisMCSNotRecalc)
+        THEN
+          PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSNotRecalc(), vbPriceId, outisMCSNotRecalc);
+          outMCSNotRecalcDateChange := CURRENT_DATE;
+          PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSNotRecalcDateChange(), vbPriceId, outMCSNotRecalcDateChange);
+        END IF;
+
 
         -- сохранили историю
         IF (inMCSValue is not null) AND (inMCSValue <> COALESCE(vbMCSValue,0))
