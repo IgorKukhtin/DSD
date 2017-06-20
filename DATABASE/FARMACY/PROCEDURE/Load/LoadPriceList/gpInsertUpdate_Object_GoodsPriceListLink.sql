@@ -20,6 +20,7 @@ $BODY$
 
    DECLARE vbMarionCode Integer;
    DECLARE vbBarCode TVarChar;
+   DECLARE vbBarCodeOld TVarChar;
    DECLARE vbGoodsName TVarChar;
    DECLARE vbGoodsCode TVarChar;
    DECLARE vbGoodsId Integer;
@@ -96,9 +97,16 @@ BEGIN
               , inSession                 -- сессия пользователя
             );
        END IF;     
-     END IF;          
+    END IF;          
 
     IF vbBarCode <> '' THEN
+       SELECT BarCode INTO vbBarCodeOld FROM gpGet_Object_Goods_BarCode (0, vbMainGoodsId, inSession);
+
+       IF (COALESCE (vbBarCodeOld, '') <> '') AND (vbBarCodeOld <> vbBarCode)
+       THEN
+            RAISE EXCEPTION 'Попытка заменить существующий штрих-код "%" на новый "%"', vbBarCodeOld, vbBarCode;
+       END IF;
+       
        -- Устанавливаем связь со штрих-кодом
   
        SELECT Id INTO vbBarCodeGoodsId
@@ -120,8 +128,7 @@ BEGIN
               , inSession                 -- сессия пользователя
             );
        END IF;     
-             
-     END IF;          
+    END IF;          
  
    -- Переносим данные в прайс-лист
    

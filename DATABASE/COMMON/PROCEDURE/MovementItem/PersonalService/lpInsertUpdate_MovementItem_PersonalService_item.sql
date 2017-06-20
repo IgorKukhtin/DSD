@@ -1,6 +1,8 @@
 -- Function: lpInsertUpdate_MovementItem_PersonalService_item()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService_item(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -10,6 +12,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService_item(
     IN inSummService         TFloat    , -- Сумма начислено
     IN inSummCardRecalc      TFloat    , -- Карта БН (ввод) - 1ф.
     IN inSummCardSecondRecalc TFloat    , -- Карта БН (ввод) - 2ф.
+    IN inSummCardSecondCash  TFloat    , -- Карта БН (касса) - 2ф.
     IN inSummNalogRecalc     TFloat    , -- Налоги - удержания с ЗП (ввод)
     IN inSummMinus           TFloat    , -- Сумма удержания
     IN inSummAdd             TFloat    , -- Сумма премия
@@ -41,6 +44,7 @@ BEGIN
                                                      , inSummService        := inSummService
                                                      , inSummCardRecalc     := inSummCardRecalc
                                                      , inSummCardSecondRecalc:= inSummCardSecondRecalc
+                                                     , inSummCardSecondCash := inSummCardSecondCash
                                                      , inSummNalogRecalc    := inSummNalogRecalc
                                                      , inSummMinus          := inSummMinus
                                                      , inSummAdd            := inSummAdd
@@ -64,6 +68,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.06.17         * add inSummCardSecondCash
  20.04.16         * add inSummHoliday
  22.05.15                                        *
 */
