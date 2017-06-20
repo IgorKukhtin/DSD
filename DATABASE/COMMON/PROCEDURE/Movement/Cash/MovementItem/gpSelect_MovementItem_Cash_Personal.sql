@@ -16,7 +16,8 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , PositionLevelId Integer, PositionLevelName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , Amount TFloat
-             , SummService TFloat, SummToPay_cash TFloat, SummToPay TFloat, SummCard TFloat, SummCardSecond TFloat, SummNalog TFloat, SummMinus TFloat, SummAdd TFloat, SummHoliday TFloat
+             , SummService TFloat, SummToPay_cash TFloat, SummToPay TFloat, SummCard TFloat, SummCardSecond TFloat, SummCardSecondCash TFloat
+             , SummNalog TFloat, SummMinus TFloat, SummAdd TFloat, SummHoliday TFloat
              , SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat, SummMinusExt TFloat
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
              , Amount_current TFloat, Amount_avance TFloat, Amount_service TFloat
@@ -106,6 +107,7 @@ BEGIN
                                          ) AS SummToPay
                                    , SUM (COALESCE (MIFloat_SummCard.ValueData, 0))         AS SummCard
                                    , SUM (COALESCE (MIFloat_SummCardSecond.ValueData, 0))   AS SummCardSecond
+                                   , SUM (COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)) AS SummCardSecondCash
 --                                 , SUM (COALESCE (MIFloat_SummNalog.ValueData, 0))        AS SummNalog
                                    , SUM (COALESCE (tmpSummNalog.SummNalog, 0))             AS SummNalog
                                    , SUM (COALESCE (MIFloat_SummMinus.ValueData, 0))        AS SummMinus
@@ -154,6 +156,9 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecond
                                                                ON MIFloat_SummCardSecond.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummCardSecond.DescId = zc_MIFloat_SummCardSecond()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondCash
+                                                               ON MIFloat_SummCardSecondCash.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummCardSecondCash.DescId = zc_MIFloat_SummCardSecondCash()
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummNalog
                                                                ON MIFloat_SummNalog.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummNalog.DescId = zc_MIFloat_SummNalog()
@@ -226,6 +231,7 @@ BEGIN
                                    , tmpParent_all.SummToPay
                                    , tmpParent_all.SummCard
                                    , tmpParent_all.SummCardSecond
+                                   , tmpParent_all.SummCardSecondCash
                                    , tmpParent_all.SummNalog
                                    , tmpParent_all.SummMinus
                                    , tmpParent_all.SummAdd
@@ -252,6 +258,7 @@ BEGIN
                                    , 0 AS SummToPay
                                    , 0 AS SummCard
                                    , 0 AS SummCardSecond
+                                   , 0 AS SummCardSecondCash
                                    , 0 AS SummNalog
                                    , 0 AS SummMinus
                                    , 0 AS SummAdd
@@ -357,6 +364,7 @@ BEGIN
                                    , tmpParent.SummToPay
                                    , tmpParent.SummCard
                                    , tmpParent.SummCardSecond
+                                   , tmpParent.SummCardSecondCash
                                    , tmpParent.SummNalog
                                    , tmpParent.SummMinus
                                    , tmpParent.SummAdd
@@ -386,6 +394,7 @@ BEGIN
                                    , tmpService.SummToPay
                                    , tmpService.SummCard
                                    , tmpService.SummCardSecond
+                                   , tmpService.SummCardSecondCash
                                    , tmpService.SummNalog
                                    , tmpService.SummMinus
                                    , tmpService.SummAdd
@@ -441,6 +450,7 @@ BEGIN
             , tmpData.SummToPay        :: TFloat AS SummToPay
             , tmpData.SummCard         :: TFloat AS SummCard
             , tmpData.SummCardSecond   :: TFloat AS SummCardSecond
+            , tmpData.SummCardSecondCAsh  :: TFloat AS SummCardSecondCash
             , tmpData.SummNalog        :: TFloat AS SummNalog
             , tmpData.SummMinus        :: TFloat AS SummMinus
             , tmpData.SummAdd          :: TFloat AS SummAdd
@@ -497,6 +507,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 20.06.17         * add SummCardSecondCash
  04.04.15                                        * all
  16.09.14         *
 */

@@ -119,6 +119,10 @@ type
     PersonalName_to: TcxGridDBColumn;
     PersonalCode_to: TcxGridDBColumn;
     clStorageLineName: TcxGridDBColumn;
+    spUpdate_CardSecondCash: TdsdStoredProc;
+    actUpdateCardSecondCash: TdsdExecStoredProc;
+    bbUpdateCardSecondCash: TdxBarButton;
+    macUpdateCardSecondCash: TMultiAction;
   private
     { Private declarations }
   public

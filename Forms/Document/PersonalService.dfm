@@ -2,6 +2,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 673
   ClientWidth = 1307
+  ExplicitTop = -19
   ExplicitWidth = 1323
   ExplicitHeight = 711
   PixelsPerInch = 96
@@ -1393,6 +1394,31 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103#1084' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
       ImageIndex = 59
     end
+    object actUpdateCardSecondCash: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_CardSecondCash
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_CardSecondCash
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072') - 2'#1092'.'
+    end
+    object macUpdateCardSecondCash: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateCardSecondCash
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072') - 2'#1092'.'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072') - 2'#1092'.'
+      ImageIndex = 27
+    end
     object actUpdateMask: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1619,6 +1645,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateCardSecondCash'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1661,6 +1695,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     object bbLoadExcel: TdxBarButton
       Action = actLoadExcel
+      Category = 0
+    end
+    object bbUpdateCardSecondCash: TdxBarButton
+      Action = macUpdateCardSecondCash
       Category = 0
     end
   end
@@ -2528,5 +2566,22 @@ inherited PersonalServiceForm: TPersonalServiceForm
     PackSize = 1
     Left = 600
     Top = 240
+  end
+  object spUpdate_CardSecondCash: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_PersonalService_CardSecondCash'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 600
+    Top = 296
   end
 end

@@ -1,26 +1,27 @@
 inherited Cash_PersonalForm: TCash_PersonalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1089#1089#1072', '#1074#1099#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080'>'
-  ClientHeight = 402
+  ClientHeight = 507
   ClientWidth = 982
+  ExplicitLeft = -28
   ExplicitWidth = 998
-  ExplicitHeight = 440
+  ExplicitHeight = 545
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 115
     Width = 982
-    Height = 287
+    Height = 392
     ExplicitTop = 115
     ExplicitWidth = 982
     ExplicitHeight = 287
-    ClientRectBottom = 287
+    ClientRectBottom = 392
     ClientRectRight = 982
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 982
       ExplicitHeight = 263
       inherited cxGrid: TcxGrid
         Width = 982
-        Height = 263
+        Height = 368
         ExplicitWidth = 982
         ExplicitHeight = 263
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -134,6 +135,11 @@ inherited Cash_PersonalForm: TCash_PersonalForm
               Format = ',0.00'
               Kind = skSum
               Column = SummMinusExt
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummCardSecondCash
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -245,6 +251,11 @@ inherited Cash_PersonalForm: TCash_PersonalForm
               Format = ',0.00'
               Kind = skSum
               Column = SummMinusExt
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummCardSecondCash
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -374,9 +385,9 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object SummCardSecond: TcxGridDBColumn [12]
-            Caption = ' '#1050#1072#1088#1090#1072' '#1041#1053' - 2'#1092'. '
-            DataBinding.FieldName = 'SummCardSecond'
+          object SummCardSecondCash: TcxGridDBColumn [12]
+            Caption = ' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072')- 2'#1092'. '
+            DataBinding.FieldName = 'SummCardSecondCash'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
@@ -600,6 +611,16 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 80
           end
+          object SummCardSecond: TcxGridDBColumn [35]
+            Caption = ' '#1050#1072#1088#1090#1072' '#1041#1053' - 2'#1092'. '
+            DataBinding.FieldName = 'SummCardSecond'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
@@ -752,7 +773,46 @@ inherited Cash_PersonalForm: TCash_PersonalForm
   inherited ActionList: TActionList
     Left = 55
     Top = 303
-    object mactList: TMultiAction [0]
+    object mactListCardSecondCash: TMultiAction [0]
+      Category = 'actAllGrid'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      ActionList = <
+        item
+          Action = actGetMICardSecondCash
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
+    end
+    object actGetMICardSecondCash: TdsdExecStoredProc [1]
+      Category = 'actAllGrid'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetMICardSecondCash
+      StoredProcList = <
+        item
+          StoredProc = spGetMICardSecondCash
+        end>
+      Caption = 'actGetMIAmount'
+    end
+    object mactInsertUpdateMICardSecondCash_AllGrid: TMultiAction [2]
+      Category = 'actAllGrid'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      ActionList = <
+        item
+          Action = mactListCardSecondCash
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072')- 2'#1092'.  '#1082' '#1074#1099#1087#1083#1072 +
+        #1090#1077'> ?'
+      InfoAfterExecute = '<'#1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072')- 2'#1092'. '#1082' '#1074#1099#1087#1083#1072#1090#1077'> '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1091#1089#1087#1077#1096#1085#1086'.'
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072')- 2'#1092'.  '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072')- 2'#1092'.  '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
+      ImageIndex = 74
+    end
+    object mactList: TMultiAction [3]
       Category = 'actAllGrid'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -991,7 +1051,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 136
+    Left = 96
     Top = 256
   end
   inherited BarManager: TdxBarManager
@@ -1059,6 +1119,14 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1094,6 +1162,10 @@ inherited Cash_PersonalForm: TCash_PersonalForm
     end
     object bbInsertUpdateMIAmount_All: TdxBarButton
       Action = mactInsertUpdateMIAmount_AllGrid
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = mactInsertUpdateMICardSecondCash_AllGrid
       Category = 0
     end
   end
@@ -1375,7 +1447,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Guides = GuidesCash
       end>
     Left = 160
-    Top = 192
+    Top = 232
   end
   inherited HeaderSaver: THeaderSaver
     ControlList = <
@@ -1414,13 +1486,13 @@ inherited Cash_PersonalForm: TCash_PersonalForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Cash_Personal_SetErased'
-    Left = 430
-    Top = 472
+    Left = 646
+    Top = 320
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Cash_Personal_SetUnErased'
-    Left = 438
-    Top = 416
+    Left = 430
+    Top = 336
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Cash_Personal'
@@ -1804,7 +1876,42 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 282
-    Top = 424
+    Left = 362
+    Top = 368
+  end
+  object spGetMICardSecondCash: TdsdStoredProc
+    StoredProcName = 'gpGet_MovementItem_Cash_Personal_CardSecondCash'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummCardSecondCash'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummCardSecondCash'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 426
+    Top = 384
   end
 end

@@ -52,7 +52,9 @@ AS
                            ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id 
                           AND ObjectBoolean_isPriceWithVAT.DescId = zc_ObjectBoolean_Juridical_isPriceWithVAT() 
                           AND ObjectBoolean_isPriceWithVAT.ValueData = TRUE
+        LEFT JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
+        AND OH_JuridicalDetails.OKPO NOT IN ('2902403938') 
       UNION
 -- —чет
       SELECT
@@ -626,3 +628,4 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
 -- тест
 -- SELECT * FROM PrintForms_View LEFT JOIN Object ON Object.Id = JuridicalId WHERE JuridicalId IN (SELECT JuridicalId FROM PrintForms_View GROUP BY JuridicalId, ReportType, PaidKindId, StartDate HAVING COUNT(*) > 1) ORDER BY ReportType, JuridicalId, PaidKindId, StartDate
 -- SELECT * FROM PrintForms_View LEFT JOIN Object ON Object.Id = JuridicalId WHERE PrintFormName = 'PrintMovement_Sale35275230'
+
