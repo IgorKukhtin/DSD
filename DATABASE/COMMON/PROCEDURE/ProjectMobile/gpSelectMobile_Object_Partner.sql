@@ -59,6 +59,12 @@ BEGIN
                                  FROM ObjectLink AS OL
                                  WHERE OL.ChildObjectId = vbPersonalId
                                    AND OL.DescId        = zc_ObjectLink_Partner_Personal()
+                                UNION
+                                 -- если vbPersonalId - Сотрудник (мерчандайзер)
+                                 SELECT OL.ObjectId AS PartnerId
+                                 FROM ObjectLink AS OL
+                                 WHERE OL.ChildObjectId = vbPersonalId
+                                   AND OL.DescId        = zc_ObjectLink_Partner_PersonalMerch()
                                 )
                 , tmpContract AS (SELECT tmpPartner.PartnerId
                                        , ObjectLink_Contract_Juridical.ObjectId      AS ContractId
