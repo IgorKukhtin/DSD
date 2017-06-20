@@ -50,6 +50,15 @@ BEGIN
                                                        AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
                                    WHERE OL.ChildObjectId = vbPersonalId
                                      AND OL.DescId        = zc_ObjectLink_Partner_Personal()
+                                  UNION
+                                   -- если vbPersonalId - Сотрудник (мерчандайзер)
+                                   SELECT DISTINCT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                                   FROM ObjectLink AS OL
+                                        JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                        ON ObjectLink_Partner_Juridical.ObjectId = OL.ObjectId
+                                                       AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                   WHERE OL.ChildObjectId = vbPersonalId
+                                     AND OL.DescId        = zc_ObjectLink_Partner_PersonalMerch()
                                   )
                 , tmpContract AS (SELECT tmpJuridical.JuridicalId
                                        , ObjectLink_Contract_Juridical.ObjectId AS ContractId

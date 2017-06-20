@@ -94,6 +94,18 @@ BEGIN
                                    AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Contract_Juridical()
                WHERE OL.ChildObjectId = vbPersonalId
                  AND OL.DescId        = zc_ObjectLink_Partner_Personal()
+              UNION
+               -- если vbPersonalId - Сотрудник (мерчандайзер)
+               SELECT ObjectLink_Contract_Juridical.ObjectId AS ContractId
+               FROM ObjectLink AS OL
+                    JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                    ON ObjectLink_Partner_Juridical.ObjectId = OL.ObjectId
+                                   AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                    JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                    ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                   AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Partner_PersonalMerch()
+               WHERE OL.ChildObjectId = vbPersonalId
+                 AND OL.DescId        = zc_ObjectLink_Partner_PersonalMerch()
               );
 
            IF inSyncDateIn > zc_DateStart()

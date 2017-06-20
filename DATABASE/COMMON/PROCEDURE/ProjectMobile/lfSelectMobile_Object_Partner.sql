@@ -24,16 +24,22 @@ BEGIN
       THEN
            RETURN QUERY
              WITH tmpPartner AS (-- если vbPersonalId - Сотрудник (торговый)
-                                 SELECT ObjectLink_Partner_PersonalTrade.ObjectId AS PartnerId
-                                 FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                 WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
-                                   AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                 SELECT OL.ObjectId AS PartnerId
+                                 FROM ObjectLink AS OL
+                                 WHERE OL.ChildObjectId = vbPersonalId
+                                   AND OL.DescId = zc_ObjectLink_Partner_PersonalTrade()
                                  UNION
                                  -- если vbPersonalId - Сотрудник (супервайзер)
-                                 SELECT ObjectLink_Partner_Personal.ObjectId AS PartnerId
-                                 FROM ObjectLink AS ObjectLink_Partner_Personal
-                                 WHERE ObjectLink_Partner_Personal.ChildObjectId = vbPersonalId
-                                   AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
+                                 SELECT OL.ObjectId AS PartnerId
+                                 FROM ObjectLink AS OL
+                                 WHERE OL.ChildObjectId = vbPersonalId
+                                   AND OL.DescId = zc_ObjectLink_Partner_Personal()
+                                UNION
+                                 -- если vbPersonalId - Сотрудник (мерчандайзер)
+                                 SELECT OL.ObjectId AS PartnerId
+                                 FROM ObjectLink AS OL
+                                 WHERE OL.ChildObjectId = vbPersonalId
+                                   AND OL.DescId        = zc_ObjectLink_Partner_PersonalMerch()
                                 )
                 , tmpIsErased AS (SELECT FALSE AS isErased UNION SELECT inIsErased AS isErased)
              SELECT Object_Partner.Id
