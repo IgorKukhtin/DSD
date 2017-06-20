@@ -3152,15 +3152,17 @@ begin
      //
      myEnabledCB(cbGoodsAccount);
      //
+     try fExecSqFromQuery_noErr(' drop table dba._TableLoadGoodsAccount '); except end;  // «акомитить после первого использовани€. // нужно если была создана стара€ таблица перед этим
       //создаем “аблицу, т.к. подзапрос не пашет
-      try fExecSqFromQuery_noErr(' create table dba._TableLoadGoodsAccount ( ObjectId integer, MovementId integer, ParentId integer,' + ' AmountGRN decimal, AmountEUR decimal, AmountUSD decimal, AmountCard decimal, AmountDiscount decimal,  CurrencyValueUSD decimal, ParValueUSD decimal, CurrencyValueEUR decimal,  ParValueEUR decimal )');
+      try fExecSqFromQuery_noErr(' create table dba._TableLoadGoodsAccount ( ObjectId integer, MovementId integer, ParentId integer, KassaID integer, ' + ' AmountGRN decimal, AmountEUR decimal, AmountUSD decimal, AmountCard decimal, AmountDiscount decimal,  CurrencyValueUSD decimal, ParValueUSD decimal, CurrencyValueEUR decimal,  ParValueEUR decimal )');
       except end;
       fExecSqFromQuery(' delete from dba._TableLoadGoodsAccount');
-      fExecSqFromQuery(' insert into dba._TableLoadGoodsAccount (ObjectId, MovementId, ParentId, AmountGRN, AmountEUR, AmountUSD, AmountCard, AmountDiscount, CurrencyValueUSD, ParValueUSD, CurrencyValueEUR,  ParValueEUR )'
+      fExecSqFromQuery(' insert into dba._TableLoadGoodsAccount (ObjectId, MovementId, ParentId, KassaID, AmountGRN, AmountEUR, AmountUSD, AmountCard, AmountDiscount, CurrencyValueUSD, ParValueUSD, CurrencyValueEUR,  ParValueEUR )'
              + ' SELECT'
              + '      DiscountKlientAccountMoney.Id as ObjectId'
              + '    , DiscountMovement.GoodsAccountId_Postgres as MovementId'
              + '    , DiscountMovementItem_byBarCode.Id_Postgres as ParentId'
+             + '    , Kassa.ID as KassaID'
              + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=1 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountGRN'
              + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountEUR'
              + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then  DiscountKlientAccountMoney.Summa else 0 endif as AmountUSD'
@@ -3188,6 +3190,7 @@ begin
         Add('  min(ObjectId) as ObjectId');
         Add(', a.MovementId');
         Add(', a.ParentId');
+        Add(', a.KassaID');
         Add(', sum(AmountGRN) as AmountGRN');
         Add(', sum(AmountEUR) as AmountEUR');
         Add(', sum(AmountUSD) as AmountUSD');
@@ -3198,7 +3201,7 @@ begin
         Add(', min(CurrencyValueEUR) as CurrencyValueEUR');
         Add(', min(ParValueEUR) as ParValueEUR');
         Add(' FROM  dba._TableLoadGoodsAccount AS a');
-        Add(' GROUP BY MovementId, ParentId');
+        Add(' GROUP BY MovementId, ParentId, KassaID');
         Open;
 
         Result:=RecordCount;
@@ -3632,15 +3635,17 @@ begin
      //
      myEnabledCB(cbReturnIn_Child);
      //
+      try fExecSqFromQuery_noErr(' drop table dba._TableLoadReturnIn '); except end;   // «акомитить после первого использовани€. // нужно если была создана стара€ таблица перед этим
       //создаем “аблицу, т.к. подзапрос не пашет
-      try fExecSqFromQuery_noErr(' create table dba._TableLoadReturnIn ( ObjectId integer, MovementId integer, ParentId integer,' + ' AmountGRN decimal, AmountEUR decimal, AmountUSD decimal, AmountCard decimal,  CurrencyValueUSD decimal, ParValueUSD decimal, CurrencyValueEUR decimal,  ParValueEUR decimal )');
+      try fExecSqFromQuery_noErr(' create table dba._TableLoadReturnIn ( ObjectId integer, MovementId integer, ParentId integer, KassaID integer, ' + ' AmountGRN decimal, AmountEUR decimal, AmountUSD decimal, AmountCard decimal,  CurrencyValueUSD decimal, ParValueUSD decimal, CurrencyValueEUR decimal,  ParValueEUR decimal )');
       except end;
       fExecSqFromQuery(' delete from dba._TableLoadReturnIn');
-      fExecSqFromQuery(' insert into dba._TableLoadReturnIn (ObjectId, MovementId, ParentId, AmountGRN, AmountEUR, AmountUSD, AmountCard, CurrencyValueUSD, ParValueUSD, CurrencyValueEUR,  ParValueEUR )'
+      fExecSqFromQuery(' insert into dba._TableLoadReturnIn (ObjectId, MovementId, ParentId, KassaID, AmountGRN, AmountEUR, AmountUSD, AmountCard, CurrencyValueUSD, ParValueUSD, CurrencyValueEUR,  ParValueEUR )'
              + ' SELECT'
              + '      DiscountKlientAccountMoney.Id as ObjectId'
              + '    , DiscountMovement.ReturnInId_Postgres as MovementId'
              + '    , DiscountMovementItemReturn_byBarCode.Id_Postgres as ParentId'
+             + '    , Kassa.ID as  KassaID'
              + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=1 then  Abs(DiscountKlientAccountMoney.Summa) else 0 endif as AmountGRN'
              + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then  Abs(DiscountKlientAccountMoney.Summa) else 0 endif as AmountEUR'
              + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then  Abs(DiscountKlientAccountMoney.Summa) else 0 endif as AmountUSD'
@@ -3667,6 +3672,7 @@ begin
         Add('  min(ObjectId) as ObjectId');
         Add(', a.MovementId');
         Add(', a.ParentId');
+        Add(', a.KassaID');
         Add(', sum(AmountGRN) as AmountGRN');
         Add(', sum(AmountEUR) as AmountEUR');
         Add(', sum(AmountUSD) as AmountUSD');
@@ -3676,7 +3682,7 @@ begin
         Add(', min(CurrencyValueEUR) as CurrencyValueEUR');
         Add(', min(ParValueEUR) as ParValueEUR');
         Add(' FROM  dba._TableLoadReturnIn AS a');
-        Add(' GROUP BY MovementId, ParentId');
+        Add(' GROUP BY MovementId, ParentId, KassaID');
         Open;
 
         Result:=RecordCount;
