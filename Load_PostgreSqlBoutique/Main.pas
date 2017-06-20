@@ -3295,7 +3295,7 @@ begin
         Add('     left outer join DBA.Unit as Bill_From on Bill_From.Id = Bill.FromID ');
         Add('     left outer join DBA.Unit as Bill_To on Bill_To.Id = Bill.ToID ');
         Add('     left outer join DBA.Valuta as Bill_CurrencyDocument on Bill_CurrencyDocument.Id = Bill.ValutaIDIn   ');
-        Add(' where  Bill.BillKind = zc_bkIncomeFromClientToUnit() and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add(' where Bill.BillKind = zc_bkIncomeFromClientToUnit() and  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
         Add(' order by ObjectId ');
         Open;
 
@@ -3954,9 +3954,9 @@ begin
              + '    , if  Kassa.ID in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  ) then  DiscountKlientAccountMoney.Summa else 0 endif as AmountCard'
              + '    , if  Kassa.ID in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  ) then  DiscountKlientAccountMoney.SummDiscountManual else 0 endif as  AmountDiscount'
              + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.KursClient else 0 endif as CurrencyValueUSD'
-             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.NominalKursClient else 0 endif as ParValueUSD'
+             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=5 then DiscountKlientAccountMoney.NominalKursClient else 1 endif as ParValueUSD'
              + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.KursClient else 0 endif as CurrencyValueEUR'
-             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.NominalKursClient else 0 endif as ParValueEUR'
+             + '    , if  Kassa.ID not in (26, 34, 37, 40, 44, 48, 51, 56, 60, 64, 67  )  and KassaProperty.valutaID=2 then DiscountKlientAccountMoney.NominalKursClient else 1 endif as ParValueEUR'
              + ' FROM dba.DiscountMovementItem_byBarCode'
              + '    join DiscountMovement     on DiscountMovement.id = DiscountMovementItem_byBarCode.DiscountMovementId'
              + '    left join BillItemsIncome on BillItemsIncome.id  = DiscountMovementItem_byBarCode.BillItemsIncomeId'
