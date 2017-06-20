@@ -2899,6 +2899,7 @@ end;
 
 procedure TMainForm.pLoadDocumentItem_Sale(SaveCount: Integer);
 begin
+exit;
      if (not cbSale.Checked)or(not cbSale.Enabled) then exit;
      //
      myEnabledCB(cbSale);

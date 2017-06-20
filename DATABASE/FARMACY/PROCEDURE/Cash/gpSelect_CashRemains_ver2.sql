@@ -40,7 +40,7 @@ BEGIN
        vbUnitKey := '0';
     END IF;
     vbUnitId := vbUnitKey::Integer;
-    
+
     -- для Теста
     -- IF inSession = '3' then vbUnitId:= 1781716; END IF;
 
@@ -121,8 +121,7 @@ BEGIN
 
 
     --залили снапшот
-    INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,Price,Remains,MCSValue,Reserved,MinExpirationDate
-                                  , MCSValueOld, StartDateMCSAuto, EndDateMCSAuto, isMCSAuto, isMCSNotRecalcOld)
+    INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,Price,Remains,MCSValue,Reserved,MinExpirationDate)
     SELECT
         inCashSessionId                             AS CashSession
        ,GoodsRemains.ObjectId                       AS GoodsId
@@ -133,16 +132,10 @@ BEGIN
        ,Reserve.Amount::TFloat                      AS Reserved
        ,GoodsRemains.MinExpirationDate              AS MinExpirationDate
 
-       , Object_Price_View.MCSValueOld
-       , Object_Price_View.StartDateMCSAuto
-       , Object_Price_View.EndDateMCSAuto
-       , Object_Price_View.isMCSAuto
-       , Object_Price_View.isMCSNotRecalcOld
-
     FROM
         GoodsRemains
-        LEFT OUTER JOIN Object_Price_View ON GoodsRemains.ObjectId = Object_Price_View.GoodsId
-                                         AND Object_Price_View.UnitId = vbUnitId
+        LEFT OUTER JOIN Object_Price_View ON Object_Price_View.GoodsId = GoodsRemains.ObjectId
+                                         AND Object_Price_View.UnitId  = vbUnitId
         LEFT OUTER JOIN RESERVE ON GoodsRemains.ObjectId = RESERVE.GoodsId;
 
     RETURN QUERY
@@ -204,7 +197,7 @@ BEGIN
                                 AND ObjectLink_Main_Morion.ChildObjectId > 0
                               GROUP BY ObjectLink_Main_Morion.ChildObjectId
                              )
-           -- Штрих-коды производителя  
+           -- Штрих-коды производителя
          , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId          AS GoodsMainId
                                     , MAX (Object_Goods_BarCode.ValueData)::TVarChar AS BarCode
                                FROM ObjectLink AS ObjectLink_Main_BarCode
@@ -219,7 +212,20 @@ BEGIN
                                WHERE ObjectLink_Main_BarCode.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
                                  AND ObjectLink_Main_BarCode.ChildObjectId > 0
                                GROUP BY ObjectLink_Main_BarCode.ChildObjectId
-                              )                  
+                              )
+                -- MCS - Auto
+              , tmpMCSAuto AS (SELECT CashSessionSnapShot.ObjectId
+                                    , Object_Price_View.MCSValueOld
+                                    , Object_Price_View.StartDateMCSAuto
+                                    , Object_Price_View.EndDateMCSAuto
+                                    , Object_Price_View.isMCSAuto
+                                    , Object_Price_View.isMCSNotRecalcOld
+                               FROM CashSessionSnapShot
+                                    INNER JOIN Object_Price_View ON Object_Price_View.GoodsId = CashSessionSnapShot.ObjectId
+                                                                AND Object_Price_View.UnitId  = vbUnitId
+                               WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
+                              )
+
         -- Результат
         SELECT
             Goods.Id,
@@ -244,17 +250,17 @@ BEGIN
 
                  WHEN CashSessionSnapShot.Price < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
                    AND 0 > COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - CashSessionSnapShot.Price 
+                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - CashSessionSnapShot.Price
                            ) -- разница с ценой возмещения и "округлили в большую"
                       THEN 0
 
                  WHEN CashSessionSnapShot.Price < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
                       THEN COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - CashSessionSnapShot.Price 
+                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - CashSessionSnapShot.Price
                            ) -- разница с ценой возмещения и "округлили в большую"
 
                  ELSE COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
-                 
+
             END :: TFloat AS PriceSP,
 
 
@@ -263,7 +269,7 @@ BEGIN
             --
             CASE WHEN CashSessionSnapShot.Price < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
                       THEN CashSessionSnapShot.Price -- по нашей цене, т.к. она меньше чем цена возмещения
-                      
+
                  /*WHEN CashSessionSnapShot.Price < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
                       THEN CashSessionSnapShot.Price -- по нашей цене, т.к. она меньше чем цена возмещения + цена доплаты "округлили в меньшую"
 
@@ -283,29 +289,29 @@ BEGIN
 
                  WHEN CashSessionSnapShot.Price < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
                    AND 0 > COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - CashSessionSnapShot.Price 
+                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - CashSessionSnapShot.Price
                            ) -- разница с ценой возмещения и "округлили в большую"
                       THEN 0
 
                  WHEN CashSessionSnapShot.Price < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
                       THEN COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - CashSessionSnapShot.Price 
+                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - CashSessionSnapShot.Price
                            ) -- разница с ценой возмещения и "округлили в большую"
 
                  ELSE COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
-                 
+
             END
           + COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
 
             END :: TFloat AS PriceSaleSP,
-            
+
             -- временно для проверки1
            (CASE WHEN COALESCE (ObjectBoolean_Goods_SP.ValueData, FALSE) = FALSE THEN 0 ELSE
             COALESCE (CashSessionSnapShot.Price, 0)
           - CASE WHEN CashSessionSnapShot.Price < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
                       THEN CashSessionSnapShot.Price -- по нашей цене, т.к. она меньше чем цена возмещения
 
-                 ELSE 
+                 ELSE
             CASE WHEN COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0) = 0
                       THEN 0 -- по 0, т.к. цена доплаты = 0
 
@@ -317,31 +323,31 @@ BEGIN
 
                  WHEN CashSessionSnapShot.Price < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
                    AND 0 > COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - CashSessionSnapShot.Price 
+                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - CashSessionSnapShot.Price
                            ) -- разница с ценой возмещения и "округлили в большую"
                       THEN 0
 
                  WHEN CashSessionSnapShot.Price < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
                       THEN COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - CashSessionSnapShot.Price 
+                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - CashSessionSnapShot.Price
                            ) -- разница с ценой возмещения и "округлили в большую"
 
                  ELSE COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
-                 
+
             END
           + COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
 
 
             END
             END
-            -- COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - CashSessionSnapShot.Price 
+            -- COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - CashSessionSnapShot.Price
             ) :: TFloat AS DiffSP1,
-                 
+
             -- временно для проверки2
            (CASE WHEN CashSessionSnapShot.Price < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
                       THEN CashSessionSnapShot.Price -- по нашей цене, т.к. она меньше чем цена возмещения
-                      
-                 ELSE 
+
+                 ELSE
 
             CASE WHEN COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0) = 0
                       THEN 0 -- по 0, т.к. цена доплаты = 0
@@ -354,17 +360,17 @@ BEGIN
 
                  WHEN CashSessionSnapShot.Price < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
                    AND 0 > COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - CashSessionSnapShot.Price 
+                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - CashSessionSnapShot.Price
                            ) -- разница с ценой возмещения и "округлили в большую"
                       THEN 0
 
                  WHEN CashSessionSnapShot.Price < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
                       THEN COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - CashSessionSnapShot.Price 
+                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - CashSessionSnapShot.Price
                            ) -- разница с ценой возмещения и "округлили в большую"
 
                  ELSE COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
-                 
+
             END
           + COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
 
@@ -381,19 +387,19 @@ BEGIN
 
                  WHEN CashSessionSnapShot.Price < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
                    AND 0 > COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - CashSessionSnapShot.Price 
+                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - CashSessionSnapShot.Price
                            ) -- разница с ценой возмещения и "округлили в большую"
                       THEN 0
 
                  WHEN CashSessionSnapShot.Price < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
                       THEN COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - CashSessionSnapShot.Price 
+                         - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - CashSessionSnapShot.Price
                            ) -- разница с ценой возмещения и "округлили в большую"
 
                  ELSE COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
-                 
+
             END
-           ) :: TFloat AS DiffSP2,            
+           ) :: TFloat AS DiffSP2,
 
             NULLIF (CashSessionSnapShot.Reserved, 0) :: TFloat AS Reserved,
             CashSessionSnapShot.MCSValue,
@@ -412,16 +418,17 @@ BEGIN
             COALESCE(tmpIncome.AmountIncome,0)            :: TFloat   AS AmountIncome,
             CASE WHEN COALESCE(tmpIncome.AmountIncome,0) <> 0 THEN COALESCE(tmpIncome.SummSale,0) / COALESCE(tmpIncome.AmountIncome,0) ELSE 0 END  :: TFloat AS PriceSaleIncome,
             COALESCE (tmpGoodsMorion.MorionCode, 0)::Integer AS MorionCode,
-            COALESCE (tmpGoodsBarCode.BarCode, '')::TVarChar AS BarCode,
+            COALESCE (tmpGoodsBarCode.BarCode, '')::TVarChar AS BarCode
 
-            CashSessionSnapShot.MCSValueOld,
-            CashSessionSnapShot.StartDateMCSAuto,
-            CashSessionSnapShot.EndDateMCSAuto,
-            CashSessionSnapShot.isMCSAuto,
-            CashSessionSnapShot.isMCSNotRecalcOld
+          , tmpMCSAuto.MCSValueOld
+          , tmpMCSAuto.StartDateMCSAuto
+          , tmpMCSAuto.EndDateMCSAuto
+          , tmpMCSAuto.isMCSAuto
+          , tmpMCSAuto.isMCSNotRecalcOld
          FROM
             CashSessionSnapShot
-            JOIN OBJECT AS Goods ON Goods.Id = CashSessionSnapShot.ObjectId
+            INNER JOIN Object AS Goods ON Goods.Id = CashSessionSnapShot.ObjectId
+            LEFT JOIN tmpMCSAuto ON tmpMCSAuto.ObjectId = CashSessionSnapShot.ObjectId
             LEFT OUTER JOIN ObjectLink AS Link_Goods_AlternativeGroup
                                        ON Link_Goods_AlternativeGroup.ObjectId = Goods.Id
                                       AND Link_Goods_AlternativeGroup.DescId = zc_ObjectLink_Goods_AlternativeGroup()
@@ -491,7 +498,7 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.
- 09.06.17         * 
+ 09.06.17         *
  24.05.17                                                                                      * MorionCode
  23.05.17                                                                                      * BarCode
  25.01.16         *
