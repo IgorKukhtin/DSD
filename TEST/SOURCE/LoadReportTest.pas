@@ -89,9 +89,9 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-  LoadReportFromFile('PrintMovement_IncomeSticker', ReportPath + '\Товарный Учет\PrintMovement_IncomeSticker.fr3');
+  {LoadReportFromFile('PrintMovement_IncomeSticker', ReportPath + '\Товарный Учет\PrintMovement_IncomeSticker.fr3');
   exit;
-  {
+
   LoadReportFromFile('Отчет движение по товару (партии ТМЦ+МНМА)', ReportPath + '\Отчеты (товарные)\Отчет движение по товару (партии ТМЦ+МНМА).fr3');
   exit;
   {
@@ -130,10 +130,10 @@ begin
   LoadReportFromFile('Обороты по кассе (с комментариями)', ReportPath + '\Отчеты (финансы)\Обороты по кассе (с комментариями).fr3');
   LoadReportFromFile('Обороты по учредителям', ReportPath + '\Отчеты (финансы)\Обороты по учредителям.fr3');
   LoadReportFromFile('Обороты по учредителям - детальный', ReportPath + '\Отчеты (финансы)\Обороты по учредителям - детальный.fr3');
-  }
+
   LoadReportFromFile('Отчет по счетам', ReportPath + '\Отчеты (финансы)\Отчет по счетам.fr3');
   exit;
-  {
+
   LoadReportFromFile('PrintObject_ReportCollation', ReportPath + '\Отчеты (финансы)\PrintObject_ReportCollation.fr3');
 
 
@@ -196,12 +196,12 @@ begin
 
   LoadReportFromFile('Производство План и Факт расход сырья', ReportPath + '\Отчеты (производство)\Производство План и Факт расход сырья.fr3');
   LoadReportFromFile('Производство План и Факт запас цен', ReportPath + '\Отчеты (производство)\Производство План и Факт запас цен.fr3');
-   }
+
   LoadReportFromFile('Отчет по остаткам для снабжения', ReportPath + '\Отчеты (производство)\Отчет по остаткам для снабжения.fr3');
   LoadReportFromFile('Отчет по остаткам для снабжения(поставщик)', ReportPath + '\Отчеты (производство)\Отчет по остаткам для снабжения(поставщик).fr3');
   LoadReportFromFile('Отчет по движению по дням недели', ReportPath + '\Отчеты (производство)\Отчет по движению по дням недели.fr3');
 
-  {
+
   LoadReportFromFile('Дефростер по партиям', ReportPath + '\Отчеты (производство)\Дефростер по партиям.fr3');
   LoadReportFromFile('Дефростер(итог)', ReportPath + '\Отчеты (производство)\Дефростер(итог).fr3');
   LoadReportFromFile('Отчет по упаковке', ReportPath + '\Отчеты (производство)\Отчет по упаковке.fr3');
@@ -279,7 +279,7 @@ begin
   LoadReportFromFile('PrintMovement_SalePack22', ReportPath + '\Товарный Учет\PrintMovement_SalePack22.fr3');
 
   LoadReportFromFile('PrintMovement_ReturnIn_By_TaxCorrective', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn_By_TaxCorrective.fr3');
-  }
+
   LoadReportFromFile('PrintMovement_OrderIncomeSnab', ReportPath + '\Товарный Учет\PrintMovement_OrderIncomeSnab.fr3');
   exit;
   LoadReportFromFile('PrintMovement_OrderExternal', ReportPath + '\Товарный Учет\PrintMovement_OrderExternal.fr3');
@@ -302,11 +302,11 @@ begin
   LoadReportFromFile('Касса филиалы', ReportPath + '\Отчеты(филиалы)\Касса Филиалы.fr3');
 
   LoadReportFromFile('PrintObjectHistory_PriceListItem', ReportPath + '\Справочники\PrintObjectHistory_PriceListItem.fr3');
-
-  TStrArrAdd(['35275230','30982361','30487219','37910513','32294926','01074874','32516492','35442481','36387249','32049199', '31929492', '22447463', '36003603', '39118745']);
+  }
+  TStrArrAdd(['35275230','30982361','30487219','37910513','32294926','01074874','32516492','35442481','36387249','32049199', '31929492', '22447463', '36003603', '39118745', '2902403938']);
   for i := Low(OKPO) to High(OKPO) do
     LoadReportFromFile('PrintMovement_Sale' + OKPO[i], ReportPath + '\Товарный Учет\PrintMovement_Sale' + OKPO[i] + '.fr3');
-
+  exit;
   LoadReportFromFile('PrintMovement_Transport', ReportPath + '\Товарный Учет\PrintMovement_Transport.fr3');
 
   TStrArrAdd(['32516492','39135315','32049199','36003603','36387249', '36387233', '38916558' ]);

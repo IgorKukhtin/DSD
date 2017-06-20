@@ -284,6 +284,20 @@ AS
                                        )  -- добвавили из др.группу ритейл
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
+-- Сидоров 2902403938
+      SELECT
+             zc_Movement_Sale()
+           , CAST ('Sale' AS TVarChar)
+           , CAST ('01.06.2017' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_Sale2902403938' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('2902403938')
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      UNION
 
 --налоговая
       SELECT
@@ -586,6 +600,7 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.06.17         * add PrintMovement_Sale2902403938
  15.03.17         * add Tax0317, TaxCorrective0317
  01.02.16         * add PrintMovement_Transport
  21.12.15         * add PrintMovement_Sale36003603 Новус
