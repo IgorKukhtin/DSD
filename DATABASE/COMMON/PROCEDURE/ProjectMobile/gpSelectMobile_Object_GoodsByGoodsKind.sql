@@ -78,6 +78,7 @@ BEGIN
                                                                                                                                 , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                                                                                                                  )
                                         WHERE Object_GoodsByGoodsKind.DescId = zc_Object_GoodsByGoodsKind()
+                                          AND Object_GoodsByGoodsKind.isErased = FALSE
                                           AND ObjectBoolean_GoodsByGoodsKind_NotMobile.ObjectId IS NULL
                                        )
                   -- сгруппировали Товар
