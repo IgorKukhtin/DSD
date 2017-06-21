@@ -56,12 +56,12 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colTotalSummVAT
+              Column = colTotalSummWithOutVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colTotalSummWithOutVAT
+              Column = colTotalSummVAT
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -159,7 +159,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 108
           end
-          object colTotalSummVAT: TcxGridDBColumn
+          object colTotalSummWithOutVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummWithOutVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -169,9 +169,9 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 71
           end
-          object colTotalSummWithOutVAT: TcxGridDBColumn
+          object colTotalSummVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
-            DataBinding.FieldName = 'TotalSummWithOutVAT'
+            DataBinding.FieldName = 'TotalSummVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
