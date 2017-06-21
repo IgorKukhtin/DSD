@@ -96,6 +96,8 @@ type
     mactShowAllPartnerOnMap: TMultiAction;
     bbShowCurPartnerOnMap: TdxBarButton;
     bbShowAllPartnerOnMap: TdxBarButton;
+    PartnerTagName: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -10,7 +10,7 @@ CREATE TABLE Container(
    Amount                TFloat   NOT NULL DEFAULT 0,
    ParentId              Integer      NULL,  
    KeyValue              TVarChar NOT NULL,
-   WhereObjectId         Integer  NOT NULL,
+   WhereObjectId         Integer      NULL,
    
    CONSTRAINT fk_Container_DescId    FOREIGN KEY (DescId)    REFERENCES ContainerDesc(Id),
    CONSTRAINT fk_Container_ObjectId  FOREIGN KEY (ObjectId)  REFERENCES Object(Id),

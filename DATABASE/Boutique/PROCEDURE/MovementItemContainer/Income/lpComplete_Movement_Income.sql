@@ -378,7 +378,7 @@ BEGIN
             , 0                               AS ParentId
             , _tmpItem_group.AccountId        AS AccountId               -- Счет
             , 0                               AS AnalyzerId              -- Типы аналитик (проводки)
-            , 0                               AS ObjectId_Analyzer       -- Товар
+            , vbPartnerId_From                AS ObjectId_Analyzer       -- Поставщик
             , 0                               AS PartionId               -- Партия
             , 0                               AS WhereObjectId_Analyzer  -- Место учета
             , 0                               AS AccountId_Analyzer      -- Счет - корреспондент

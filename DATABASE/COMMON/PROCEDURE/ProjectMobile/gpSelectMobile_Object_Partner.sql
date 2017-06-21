@@ -126,6 +126,7 @@ BEGIN
                 , tmpContainer AS (SELECT Container_Summ.Id      AS ContainerId
                                         , CLO_Partner.ObjectId   AS PartnerId
                                         , CLO_Contract.ObjectId  AS ContractId
+                                        , CLO_PaidKind.ObjectId  AS PaidKindId
                                         , Container_Summ.Amount
                                         , COALESCE (tmpDayInfo.ContractDate, CURRENT_DATE) :: TDateTime AS ContractDate
                                    FROM Container AS Container_Summ
@@ -162,6 +163,7 @@ BEGIN
                                     )
                 , tmpDebt AS (SELECT tmpContainer.PartnerId
                                    , tmpContainer.ContractId
+                                   , tmpContainer.PaidKindId
                                    , SUM (tmpContainer.Amount)::TFloat                                               AS DebtSum
                                    , SUM (tmpContainer.Amount - COALESCE (tmpMIContainer.Summ, 0.0)::TFloat)::TFloat AS OverSum
                                    , MAX (zfCalc_OverDayCount (tmpContainer.ContainerId, tmpContainer.Amount - COALESCE (tmpMIContainer.Summ, 0.0)::TFloat, tmpContainer.ContractDate)) AS OverDays
@@ -169,6 +171,7 @@ BEGIN
                                    LEFT JOIN tmpMIContainer ON tmpContainer.ContainerId = tmpMIContainer.ContainerId
                               GROUP BY tmpContainer.PartnerId
                                      , tmpContainer.ContractId
+                                     , tmpContainer.PaidKindId
                              )
                 , tmpStoreRealDoc AS (SELECT SR.PartnerId, SR.StoreRealId, SR.OperDate
                                       FROM (SELECT MovementLinkObject_Partner.ObjectId AS PartnerId
