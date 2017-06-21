@@ -38,8 +38,8 @@ $BODY$
    DECLARE vbWhereObjectId Integer;
 
    DECLARE vbKeyValue TVarChar;
-   DECLARE vbMasterKeyValue BigInt;
-   DECLARE vbChildKeyValue BigInt;
+   -- DECLARE vbMasterKeyValue BigInt;
+   -- DECLARE vbChildKeyValue BigInt;
 
    DECLARE vbLock Integer;
    DECLARE vbSec Integer;
@@ -114,18 +114,18 @@ BEGIN
                         ) AS tmp
                   );
      -- !!!определяется еще первый КЛЮЧ!!!
-     vbMasterKeyValue:= zfCalc_FromHex (SUBSTRING (md5 (vbKeyValue) FROM 1 FOR 8));
+     -- vbMasterKeyValue:= zfCalc_FromHex (SUBSTRING (md5 (vbKeyValue) FROM 1 FOR 8));
      -- !!!определяется еще второй КЛЮЧ!!!
-     vbChildKeyValue:= zfCalc_FromHex (SUBSTRING (md5 (vbKeyValue) FROM 9 FOR 8));
+     -- vbChildKeyValue:= zfCalc_FromHex (SUBSTRING (md5 (vbKeyValue) FROM 9 FOR 8));
 
 
      BEGIN
-          -- !!!находим СРАЗУ по ДВУМ ключам!!!
-          vbContainerId := (SELECT Id FROM Container WHERE MasterKeyValue = vbMasterKeyValue AND ChildKeyValue = vbChildKeyValue);
-
           -- !!!находим СРАЗУ по ключу!!!
-          -- vbContainerId := (SELECT Id FROM Container WHERE KeyValue = vbKeyValue);
-    
+          vbContainerId := (SELECT Container.Id FROM Container WHERE Container.KeyValue = vbKeyValue);
+          
+          -- !!!находим СРАЗУ по ДВУМ ключам!!!
+          -- vbContainerId := (SELECT Container.Id FROM Container.Container WHERE Container.MasterKeyValue = vbMasterKeyValue AND Container.ChildKeyValue = vbChildKeyValue);
+   
           EXCEPTION
                    WHEN invalid_row_count_in_limit_clause
                    THEN RAISE EXCEPTION 'Счет не уникален : vbContainerId = <%>, inPartionId = <%>, inContainerDescId = <%>, inParentId = <%>, inObjectId = <%>, inJuridicalId_basis = <%>, inBusinessId = <%>, inDescId_1 = <%>, inObjectId_1 = <%>, inDescId_2 = <%>, inObjectId_2 = <%>, inDescId_3 = <%>, inObjectId_3 = <%>, inDescId_4 = <%>, inObjectId_4 = <%>, inDescId_5 = <%>, inObjectId_5 = <%>, inDescId_6 = <%>, inObjectId_6 = <%>, inDescId_7 = <%>, inObjectId_7 = <%>, inDescId_8 = <%>, inObjectId_8 = <%>, inDescId_9 = <%>, inObjectId_9 = <%>, inDescId_10 = <%>, inObjectId_10 = <%>'
@@ -158,8 +158,8 @@ BEGIN
          END IF;
 
          -- добавили Остаток
-         INSERT INTO Container (DescId, ObjectId, PartionId, ParentId, Amount, KeyValue, MasterKeyValue, ChildKeyValue, WhereObjectId)
-                        VALUES (inContainerDescId, inObjectId, inPartionId, CASE WHEN inParentId = 0 THEN NULL ELSE inParentId END, 0, vbKeyValue, vbMasterKeyValue, vbChildKeyValue, vbWhereObjectId)
+         INSERT INTO Container (DescId, ObjectId, PartionId, ParentId, Amount, KeyValue, WhereObjectId)
+                        VALUES (inContainerDescId, inObjectId, inPartionId, CASE WHEN inParentId = 0 THEN NULL ELSE inParentId END, 0, vbKeyValue, vbWhereObjectId)
             RETURNING Id INTO vbContainerId;
 
          -- добавили Аналитики
