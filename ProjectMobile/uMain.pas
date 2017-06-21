@@ -3382,10 +3382,14 @@ begin
 end;
 
 procedure TfrmMain.bNewOrderExternalClick(Sender: TObject);
-const
-  CriticalOverDays = 21;
+var
+  CriticalOverDays: Integer;
+  CriticalDebtSum: Double;
 begin
-  if (DM.qryPartnerOverDays.AsInteger >= CriticalOverDays) and (DM.qryPartnerDebtSum.AsFloat > 1) then
+  CriticalOverDays := DM.tblObject_ConstCriticalOverDays.AsInteger;
+  CriticalDebtSum := DM.tblObject_ConstCriticalDebtSum.AsFloat;
+
+  if (DM.qryPartnerOverDays.AsInteger >= CriticalOverDays) and (DM.qryPartnerDebtSum.AsFloat > CriticalDebtSum) then
     TDialogService.MessageDialog(Format('У контрагента "' + DM.qryPartnerName.AsString
       + '" просроченный долг >= %d день. '
       + sLineBreak + 'Формирование заявки невозможно.', [CriticalOverDays]),

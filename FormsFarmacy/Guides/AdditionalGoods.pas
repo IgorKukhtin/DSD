@@ -11,20 +11,31 @@ uses
   dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB, Datasnap.DBClient,
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel, cxGridCustomView,
   cxGrid, cxPC, cxPCdxBarPopupMenu, cxContainer, cxLabel, cxTextEdit, cxMaskEdit,
-  dsdGuides, Vcl.DBActns;
+  dsdGuides, Vcl.DBActns, dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TAdditionalGoodsForm = class(TAncestorGuidesForm)
-    clObjectCode: TcxGridDBColumn;
-    clValueData: TcxGridDBColumn;
+    ObjectCode: TcxGridDBColumn;
+    ValueData: TcxGridDBColumn;
     grSecondGoods: TcxGrid;
     tvSecondGoods: TcxGridDBTableView;
-    colGoodsSecondName: TcxGridDBColumn;
+    GoodsSecondName: TcxGridDBColumn;
     glSecondGoods: TcxGridLevel;
     cxSplitter1: TcxSplitter;
     grClientGoods: TcxGrid;
     tvClientGoods: TcxGridDBTableView;
-    colGoodsClientName: TcxGridDBColumn;
+    GoodsClientName: TcxGridDBColumn;
     glClientGoods: TcxGridLevel;
     cxSplitter2: TcxSplitter;
     ClientDS: TDataSource;
@@ -57,26 +68,26 @@ type
     MenuItem8: TMenuItem;
     GridAll: TcxGrid;
     GridAllDBTableView: TcxGridDBTableView;
-    colId: TcxGridDBColumn;
+    Id: TcxGridDBColumn;
     GridAllLevel1: TcxGridLevel;
     cxSplitter3: TcxSplitter;
     dsdDBViewAddOn1: TdsdDBViewAddOn;
     cdsAll: TClientDataSet;
     spAll: TdsdStoredProc;
     dsAll: TDataSource;
-    colGoodsMainId: TcxGridDBColumn;
-    colGoodsMainCode: TcxGridDBColumn;
-    colGoodsMainName: TcxGridDBColumn;
-    colGoodsId: TcxGridDBColumn;
-    colGoodsCode: TcxGridDBColumn;
-    colGoodsName: TcxGridDBColumn;
-    colGoodsGroupName: TcxGridDBColumn;
-    colNDSKindName: TcxGridDBColumn;
+    GoodsMainId: TcxGridDBColumn;
+    GoodsMainCode: TcxGridDBColumn;
+    GoodsMainName: TcxGridDBColumn;
+    GoodsId: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
+    NDSKindName: TcxGridDBColumn;
     cxSplitter4: TcxSplitter;
     cxSplitter5: TcxSplitter;
-    colGoodsSecondCode: TcxGridDBColumn;
-    colGoodsCodeInt: TcxGridDBColumn;
-    colMakerName: TcxGridDBColumn;
+    GoodsSecondCode: TcxGridDBColumn;
+    GoodsCodeInt: TcxGridDBColumn;
+    MakerName: TcxGridDBColumn;
   private
     { Private declarations }
   public

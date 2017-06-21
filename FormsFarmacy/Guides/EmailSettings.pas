@@ -12,12 +12,22 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, dsdGuides, cxContainer, cxTextEdit, cxMaskEdit, cxButtonEdit,
   cxLabel, cxCurrencyEdit, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.ExtCtrls;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.ExtCtrls, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TEmailSettingsForm = class(TAncestorEnumForm)
-    colCode: TcxGridDBColumn;
-    colValue: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Value: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     actInsertUpdate: TdsdUpdateDataSet;
     EmailGuides: TdsdGuides;
@@ -27,10 +37,10 @@ type
     Panel: TPanel;
     cxLabel4: TcxLabel;
     ceEmail: TcxButtonEdit;
-    colEmailKindName: TcxGridDBColumn;
-    colEmailToolsName: TcxGridDBColumn;
-    colEmailName: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
+    EmailKindName: TcxGridDBColumn;
+    EmailToolsName: TcxGridDBColumn;
+    EmailName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     cxLabel1: TcxLabel;

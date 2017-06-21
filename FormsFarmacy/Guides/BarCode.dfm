@@ -27,7 +27,6 @@ object BarCodeForm: TBarCodeForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 534
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -38,7 +37,7 @@ object BarCodeForm: TBarCodeForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clBarCodeName
+      OptionsBehavior.IncSearchItem = BarCodeName
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -51,7 +50,7 @@ object BarCodeForm: TBarCodeForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
@@ -59,7 +58,7 @@ object BarCodeForm: TBarCodeForm
         Options.Editing = False
         Width = 25
       end
-      object clBarCodeName: TcxGridDBColumn
+      object BarCodeName: TcxGridDBColumn
         Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076
         DataBinding.FieldName = 'BarCodeName'
         HeaderAlignmentHorz = taCenter
@@ -74,7 +73,7 @@ object BarCodeForm: TBarCodeForm
         HeaderAlignmentVert = vaCenter
         Width = 35
       end
-      object clGoodsName: TcxGridDBColumn
+      object GoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
@@ -82,7 +81,7 @@ object BarCodeForm: TBarCodeForm
         Options.Editing = False
         Width = 104
       end
-      object clObjectName: TcxGridDBColumn
+      object ObjectName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1055#1088#1086#1077#1082#1090#1072
         DataBinding.FieldName = 'ObjectName'
         HeaderAlignmentHorz = taCenter
@@ -91,7 +90,7 @@ object BarCodeForm: TBarCodeForm
         Options.Editing = False
         Width = 100
       end
-      object clErased: TcxGridDBColumn
+      object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

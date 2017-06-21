@@ -738,6 +738,8 @@ type
     qJuridicalCollationItemsValue: TStringField;
     qJuridicalCollationItemsId: TIntegerField;
     qJuridicalCollationItemsDopValue: TWideStringField;
+    tblObject_ConstCriticalOverDays: TIntegerField;
+    tblObject_ConstCriticalDebtSum: TFloatField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);

@@ -197,7 +197,7 @@ object CalendarForm: TCalendarForm
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clValue: TcxGridDBColumn
+      object Value: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'Value'
         HeaderAlignmentHorz = taCenter
@@ -206,7 +206,7 @@ object CalendarForm: TCalendarForm
         Options.Editing = False
         Width = 156
       end
-      object clWorking: TcxGridDBColumn
+      object Working: TcxGridDBColumn
         Caption = #1056#1072#1073#1086#1095#1080#1081' '#1076#1077#1085#1100
         DataBinding.FieldName = 'Working'
         HeaderAlignmentHorz = taCenter
@@ -214,7 +214,7 @@ object CalendarForm: TCalendarForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 100
       end
-      object clDayOfWeekName: TcxGridDBColumn
+      object DayOfWeekName: TcxGridDBColumn
         Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
         DataBinding.FieldName = 'DayOfWeekName'
         HeaderAlignmentHorz = taCenter
@@ -222,7 +222,7 @@ object CalendarForm: TCalendarForm
         Options.Editing = False
         Width = 115
       end
-      object clColor_calc: TcxGridDBColumn
+      object Color_calc: TcxGridDBColumn
         DataBinding.FieldName = 'Color_calc'
         Visible = False
         VisibleForCustomization = False
@@ -543,6 +543,7 @@ object CalendarForm: TCalendarForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -550,6 +551,7 @@ object CalendarForm: TCalendarForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152
@@ -564,13 +566,13 @@ object CalendarForm: TCalendarForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <
       item
-        ColorColumn = clDayOfWeekName
-        ValueColumn = clColor_calc
+        ColorColumn = DayOfWeekName
+        ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clValue
-        ValueColumn = clColor_calc
+        ColorColumn = Value
+        ValueColumn = Color_calc
         ColorValueList = <>
       end>
     ColumnAddOnList = <>
@@ -591,6 +593,7 @@ object CalendarForm: TCalendarForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -619,6 +622,7 @@ object CalendarForm: TCalendarForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inWorking'
@@ -627,6 +631,7 @@ object CalendarForm: TCalendarForm
         ComponentItem = 'Working'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 248
@@ -646,6 +651,7 @@ object CalendarForm: TCalendarForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate           '
@@ -653,6 +659,7 @@ object CalendarForm: TCalendarForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 160

@@ -3,7 +3,7 @@ inherited EmailSettingsForm: TEmailSettingsForm
   ClientHeight = 316
   ClientWidth = 771
   ExplicitWidth = 787
-  ExplicitHeight = 354
+  ExplicitHeight = 355
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -11,18 +11,17 @@ inherited EmailSettingsForm: TEmailSettingsForm
     Width = 771
     Height = 258
     ExplicitTop = 58
-    ExplicitWidth = 753
+    ExplicitWidth = 771
     ExplicitHeight = 258
     ClientRectBottom = 258
     ClientRectRight = 771
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 753
+      ExplicitWidth = 771
       ExplicitHeight = 258
       inherited cxGrid: TcxGrid
         Width = 771
         Height = 258
-        ExplicitLeft = 3
-        ExplicitWidth = 816
+        ExplicitWidth = 771
         ExplicitHeight = 258
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -33,7 +32,7 @@ inherited EmailSettingsForm: TEmailSettingsForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             Visible = False
@@ -42,7 +41,7 @@ inherited EmailSettingsForm: TEmailSettingsForm
             Options.Editing = False
             Width = 67
           end
-          object colEmailKindName: TcxGridDBColumn
+          object EmailKindName: TcxGridDBColumn
             Caption = #1058#1080#1087
             DataBinding.FieldName = 'EmailKindName'
             HeaderAlignmentHorz = taCenter
@@ -51,7 +50,7 @@ inherited EmailSettingsForm: TEmailSettingsForm
             Options.Editing = False
             Width = 140
           end
-          object colEmailName: TcxGridDBColumn
+          object EmailName: TcxGridDBColumn
             Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1103#1097#1080#1082
             DataBinding.FieldName = 'EmailName'
             HeaderAlignmentHorz = taCenter
@@ -59,7 +58,7 @@ inherited EmailSettingsForm: TEmailSettingsForm
             Options.Editing = False
             Width = 135
           end
-          object colEmailToolsName: TcxGridDBColumn
+          object EmailToolsName: TcxGridDBColumn
             Caption = #1055#1072#1088#1072#1084#1077#1090#1088' '#1076#1083#1103' '#1087#1086#1095#1090#1099
             DataBinding.FieldName = 'EmailToolsName'
             HeaderAlignmentHorz = taCenter
@@ -68,14 +67,14 @@ inherited EmailSettingsForm: TEmailSettingsForm
             Options.Editing = False
             Width = 140
           end
-          object colValue: TcxGridDBColumn
+          object Value: TcxGridDBColumn
             Caption = #1047#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'Value'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 140
           end
-          object colJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
@@ -94,7 +93,6 @@ inherited EmailSettingsForm: TEmailSettingsForm
     Height = 32
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 753
     object cxLabel4: TcxLabel
       Left = 8
       Top = 7

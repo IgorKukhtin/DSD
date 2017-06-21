@@ -3,6 +3,7 @@ inherited JuridicalForm: TJuridicalForm
   ClientWidth = 761
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 777
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -25,18 +26,18 @@ inherited JuridicalForm: TJuridicalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             Width = 58
           end
-          object clName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
             Width = 221
           end
-          object colOKPO: TcxGridDBColumn
+          object OKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
             HeaderAlignmentHorz = taCenter
@@ -44,25 +45,25 @@ inherited JuridicalForm: TJuridicalForm
             Options.Editing = False
             Width = 60
           end
-          object clisCorporate: TcxGridDBColumn
+          object isCorporate: TcxGridDBColumn
             Caption = #1053#1072#1096#1077' '#1102#1088'.'#1083#1080#1094#1086
             DataBinding.FieldName = 'isCorporate'
             HeaderAlignmentVert = vaCenter
             Width = 98
           end
-          object clRetailName: TcxGridDBColumn
+          object RetailName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
             DataBinding.FieldName = 'RetailName'
             HeaderAlignmentVert = vaCenter
             Width = 133
           end
-          object colPayOrder: TcxGridDBColumn
+          object PayOrder: TcxGridDBColumn
             Caption = #1054#1095#1077#1088#1077#1076#1100' '#1087#1083#1072#1090#1077#1078#1072
             DataBinding.FieldName = 'PayOrder'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
-          object colPercent: TcxGridDBColumn
+          object Percent: TcxGridDBColumn
             Caption = '% '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'Percent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -72,7 +73,7 @@ inherited JuridicalForm: TJuridicalForm
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
-          object colOrderSumm: TcxGridDBColumn
+          object OrderSumm: TcxGridDBColumn
             Caption = #1052#1080#1085'. '#1089#1091#1084#1084#1072' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
             DataBinding.FieldName = 'OrderSumm'
             HeaderAlignmentHorz = taCenter
@@ -80,7 +81,7 @@ inherited JuridicalForm: TJuridicalForm
             Options.Editing = False
             Width = 99
           end
-          object colOrderTime: TcxGridDBColumn
+          object OrderTime: TcxGridDBColumn
             Caption = #1052#1072#1082#1089'. '#1074#1088#1077#1084#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' ('#1080#1085#1092'.)'
             DataBinding.FieldName = 'OrderTime'
             HeaderAlignmentHorz = taCenter
@@ -89,7 +90,7 @@ inherited JuridicalForm: TJuridicalForm
             Options.Editing = False
             Width = 107
           end
-          object clisErased: TcxGridDBColumn
+          object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             HeaderAlignmentHorz = taCenter

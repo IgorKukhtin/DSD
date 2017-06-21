@@ -3,20 +3,21 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
   ClientHeight = 567
   ClientWidth = 798
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  ExplicitTop = -46
   ExplicitWidth = 814
-  ExplicitHeight = 605
+  ExplicitHeight = 606
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 798
     Height = 541
-    ExplicitWidth = 919
-    ExplicitHeight = 610
+    ExplicitWidth = 798
+    ExplicitHeight = 541
     ClientRectBottom = 541
     ClientRectRight = 798
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 919
-      ExplicitHeight = 610
+      ExplicitWidth = 798
+      ExplicitHeight = 541
       inherited cxGrid: TcxGrid
         Width = 441
         Height = 301
@@ -33,24 +34,24 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clObjectCode: TcxGridDBColumn
+          object ObjectCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'CodeInt'
             Options.Editing = False
             Width = 39
           end
-          object clValueData: TcxGridDBColumn
+          object ValueData: TcxGridDBColumn
             Caption = #1054#1089#1085#1086#1074#1085#1086#1081' '#1090#1086#1074#1072#1088
             DataBinding.FieldName = 'Name'
             Options.Editing = False
             Width = 209
           end
-          object colGoodsGroupName: TcxGridDBColumn
+          object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupName'
             Width = 138
           end
-          object colNDSKindName: TcxGridDBColumn
+          object NDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
             Options.Editing = False
@@ -66,9 +67,6 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
         Align = alClient
         PopupMenu = PopupMenu1
         TabOrder = 2
-        ExplicitLeft = 376
-        ExplicitWidth = 407
-        ExplicitHeight = 431
         object tvSecondGoods: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ClientDS
@@ -93,13 +91,13 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object colGoodsSecondCode: TcxGridDBColumn
+          object GoodsSecondCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             Options.Editing = False
             Width = 48
           end
-          object colGoodsSecondName: TcxGridDBColumn
+          object GoodsSecondName: TcxGridDBColumn
             Caption = #1044#1086#1087#1086#1083#1085#1103#1102#1097#1080#1081' '#1090#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -117,13 +115,11 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
         end
       end
       object cxSplitter1: TcxSplitter
-        Left = 449
+        Left = 441
         Top = 0
         Width = 3
         Height = 301
         Control = cxGrid
-        ExplicitLeft = 385
-        ExplicitHeight = 370
       end
       object grClientGoods: TcxGrid
         Left = 664
@@ -155,18 +151,18 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object colGoodsCodeInt: TcxGridDBColumn
+          object GoodsCodeInt: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCodeInt'
             Width = 35
           end
-          object colGoodsClientName: TcxGridDBColumn
+          object GoodsClientName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088' '#1091' '#1082#1083#1080#1077#1085#1090#1072
             DataBinding.FieldName = 'GoodsName'
             Options.Editing = False
             Width = 153
           end
-          object colMakerName: TcxGridDBColumn
+          object MakerName: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'MakerName'
             Width = 104
@@ -183,8 +179,6 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
         Height = 301
         AlignSplitter = salRight
         Control = grClientGoods
-        ExplicitLeft = 676
-        ExplicitHeight = 370
       end
       object GridAll: TcxGrid
         Left = 0
@@ -193,8 +187,6 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
         Height = 232
         Align = alBottom
         TabOrder = 5
-        ExplicitTop = 378
-        ExplicitWidth = 919
         object GridAllDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = dsAll
@@ -220,7 +212,7 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object colId: TcxGridDBColumn
+          object Id: TcxGridDBColumn
             Caption = #1048#1044
             DataBinding.FieldName = 'Id'
             Visible = False
@@ -228,38 +220,38 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
             VisibleForCustomization = False
             Width = 38
           end
-          object colGoodsMainId: TcxGridDBColumn
+          object GoodsMainId: TcxGridDBColumn
             Caption = #1048#1044' '#1075#1083'. '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsMainId'
             Visible = False
             VisibleForCustomization = False
             Width = 72
           end
-          object colGoodsMainCode: TcxGridDBColumn
+          object GoodsMainCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1075#1083'. '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsMainCode'
             Options.CellMerging = True
             Width = 56
           end
-          object colGoodsMainName: TcxGridDBColumn
+          object GoodsMainName: TcxGridDBColumn
             Caption = #1043#1083#1072#1074#1085#1099#1081' '#1090#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsMainName'
             Options.CellMerging = True
             Width = 322
           end
-          object colGoodsId: TcxGridDBColumn
+          object GoodsId: TcxGridDBColumn
             Caption = #1048#1044' '#1076#1086#1087'. '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsId'
             Visible = False
             VisibleForCustomization = False
             Width = 51
           end
-          object colGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1087'. '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsSecondCode'
             Width = 64
           end
-          object colGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1044#1086#1087#1086#1083#1085#1103#1102#1097#1080#1081' '#1090#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsSecondName'
             Width = 342
@@ -277,18 +269,14 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = GridAll
-        ExplicitTop = 370
-        ExplicitWidth = 919
       end
       object cxSplitter4: TcxSplitter
-        Left = 441
+        Left = 444
         Top = 0
         Width = 8
         Height = 301
         HotZoneClassName = 'TcxMediaPlayer8Style'
         Control = cxGrid
-        ExplicitLeft = 451
-        ExplicitTop = 2
       end
       object cxSplitter5: TcxSplitter
         Left = 656
@@ -299,8 +287,6 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
         AlignSplitter = salRight
         Control = grClientGoods
         Visible = False
-        ExplicitLeft = 679
-        ExplicitHeight = 370
       end
     end
   end
@@ -369,12 +355,14 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
       FormName = 'TGoodsLiteForm'
       FormNameParam.Value = 'TGoodsLiteForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientCDS
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -382,12 +370,14 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
           Component = ClientCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = ClientCDS
           ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -633,6 +623,7 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
     KeyField = 'Id'
     FormNameParam.Value = 'TRetailForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TRetailForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -641,6 +632,7 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
         Value = ''
         Component = RetailGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -648,6 +640,7 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
         Component = RetailGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 464
     Top = 48
@@ -691,6 +684,7 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
         Component = ClientCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsMainId'
@@ -698,6 +692,7 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsSecondId'
@@ -705,6 +700,7 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
         Component = ClientCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 408
@@ -721,6 +717,7 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
         Component = ClientCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 408

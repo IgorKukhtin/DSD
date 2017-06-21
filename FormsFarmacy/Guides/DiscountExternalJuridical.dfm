@@ -50,7 +50,7 @@ object DiscountExternalJuridicalForm: TDiscountExternalJuridicalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
@@ -90,7 +90,7 @@ object DiscountExternalJuridicalForm: TDiscountExternalJuridicalForm
         Options.Editing = False
         Width = 200
       end
-      object cExternalJuridical: TcxGridDBColumn
+      object ExternalJuridical: TcxGridDBColumn
         Caption = #1070#1088'. '#1083#1080#1094#1086' '#1087#1088#1086#1077#1082#1090#1072' ('#1048#1044')'
         DataBinding.FieldName = 'ExternalJuridical'
         HeaderAlignmentHorz = taCenter
@@ -107,7 +107,7 @@ object DiscountExternalJuridicalForm: TDiscountExternalJuridicalForm
         VisibleForCustomization = False
         Width = 55
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
