@@ -161,6 +161,7 @@ BEGIN
                                        AND MovementItemContainer.OperDate >= tmpContainer.ContractDate
                                      GROUP BY MovementItemContainer.ContainerId
                                     )
+<<<<<<< HEAD
                 , tmpDebt AS (SELECT tmpContainer.PartnerId
                                    , tmpContainer.ContractId
                                    , tmpContainer.PaidKindId
@@ -172,6 +173,27 @@ BEGIN
                               GROUP BY tmpContainer.PartnerId
                                      , tmpContainer.ContractId
                                      , tmpContainer.PaidKindId
+=======
+                , tmpDebtAll AS (SELECT tmpContainer.ContainerId
+                                      , tmpContainer.PartnerId
+                                      , tmpContainer.ContractId
+                                      , tmpContainer.Amount                                                 AS DebtSum
+                                      , (tmpContainer.Amount - COALESCE (tmpMIContainer.Summ, 0.0)::TFloat) AS OverSum
+                                      , (zfCalc_OverDayCount (tmpContainer.ContainerId, tmpContainer.Amount - COALESCE (tmpMIContainer.Summ, 0.0)::TFloat, tmpContainer.ContractDate)) AS OverDays
+                                      , SUM (tmpContainer.Amount) OVER (PARTITION BY tmpContainer.PartnerId, ABS (tmpContainer.Amount)) AS ResortSum
+                                 FROM tmpContainer
+                                      LEFT JOIN tmpMIContainer ON tmpContainer.ContainerId = tmpMIContainer.ContainerId
+                                )
+                , tmpDebt AS (SELECT tmpDebtAll.PartnerId
+                                   , tmpDebtAll.ContractId
+                                   , SUM (tmpDebtAll.DebtSum)::TFloat AS DebtSum
+                                   , SUM (tmpDebtAll.OverSum)::TFloat AS OverSum
+                                   , MAX (tmpDebtAll.OverDays)        AS OverDays
+                              FROM tmpDebtAll
+                              WHERE tmpDebtAll.ResortSum <> 0.0
+                              GROUP BY tmpDebtAll.PartnerId
+                                     , tmpDebtAll.ContractId
+>>>>>>> origin/master
                              )
                 , tmpStoreRealDoc AS (SELECT SR.PartnerId, SR.StoreRealId, SR.OperDate
                                       FROM (SELECT MovementLinkObject_Partner.ObjectId AS PartnerId
