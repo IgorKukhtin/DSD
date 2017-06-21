@@ -1,8 +1,8 @@
 inherited AlternativeGroupForm: TAlternativeGroupForm
   Caption = #1043#1088#1091#1087#1087#1099' '#1072#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074
   ClientWidth = 651
-  ExplicitWidth = 659
-  ExplicitHeight = 335
+  ExplicitWidth = 667
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -21,7 +21,7 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
             item
               Format = #1043#1088#1091#1087#1087': ,0'
               Kind = skCount
-              Column = colName
+              Column = Name
             end>
           OptionsData.Appending = True
           Styles.Content = nil
@@ -29,17 +29,17 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colId: TcxGridDBColumn
+          object Id: TcxGridDBColumn
             Caption = #8470
             DataBinding.FieldName = 'Id'
             Visible = False
           end
-          object colName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             Width = 202
           end
-          object colisErased: TcxGridDBColumn
+          object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             Visible = False
@@ -63,7 +63,7 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
             item
               Format = #1058#1086#1074#1072#1088#1086#1074' '#1074' '#1075#1088#1091#1087#1087#1077': ,0'
               Kind = skCount
-              Column = GridGodsColGoodsName
+              Column = GoodsName
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -82,25 +82,25 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object GridGodsColAlternativeGroupId: TcxGridDBColumn
+          object AlternativeGroupId: TcxGridDBColumn
             Caption = #8470' '#1075#1088#1091#1087#1087#1099
             DataBinding.FieldName = 'AlternativeGroupId'
             Visible = False
             Options.Editing = False
           end
-          object GridGodsColGoodsId: TcxGridDBColumn
+          object GoodsId: TcxGridDBColumn
             Caption = #1048#1044' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsId'
             Visible = False
             Options.Editing = False
           end
-          object GridGodsColGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsCode'
             Options.Editing = False
             Width = 59
           end
-          object GridGodsColGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -115,7 +115,7 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
             Options.ShowEditButtons = isebAlways
             Width = 318
           end
-          object GridGodsColisErased: TcxGridDBColumn
+          object clisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             Visible = False
@@ -207,12 +207,14 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
       FormName = 'TGoodsLiteForm'
       FormNameParam.Value = 'TGoodsLiteForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = GoodsCDS
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -220,12 +222,14 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
           Component = GoodsCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = GoodsCDS
           ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -310,6 +314,7 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
         Component = actShowDel
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 64
   end
@@ -435,6 +440,7 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
         Component = actShowDelGoods
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 376
@@ -469,6 +475,7 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -477,6 +484,7 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96
@@ -493,6 +501,7 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -500,6 +509,7 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
         Component = GoodsCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOldGoodsId'
@@ -507,12 +517,14 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
         Component = GoodsCDS
         ComponentItem = 'OldGoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outAlternativeGroupId'
         Value = Null
         Component = GoodsCDS
         ComponentItem = 'AlternativeGroupId'
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 480
@@ -529,6 +541,7 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -536,6 +549,7 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
         Component = GoodsCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 480
@@ -552,6 +566,7 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 144

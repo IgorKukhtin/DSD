@@ -10,13 +10,23 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TDiscountExternalTools_ObjectForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     MasterDS: TDataSource;
     MasterCDS: TClientDataSet;
@@ -34,17 +44,17 @@ type
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clErased: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clUserName: TcxGridDBColumn;
-    clPassword: TcxGridDBColumn;
+    UserName: TcxGridDBColumn;
+    Password: TcxGridDBColumn;
     Id: TcxGridDBColumn;
     UnitCode: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
     DiscountExternalCode: TcxGridDBColumn;
     DiscountExternalName: TcxGridDBColumn;
-    cExternalUnit: TcxGridDBColumn;
+    ExternalUnit: TcxGridDBColumn;
   private
     { Private declarations }
   public

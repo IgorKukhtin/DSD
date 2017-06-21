@@ -12,21 +12,32 @@ uses
   Vcl.Controls, cxGrid, AncestorGuides, cxPCdxBarPopupMenu, Vcl.Menus, cxPC,
   dxSkinsCore, dxSkinsDefaultPainters, cxContainer, cxTextEdit, cxMaskEdit,
   cxButtonEdit, cxLabel, dsdGuides, cxSplitter, Vcl.DBActns, dxBarBuiltInMenu,
-  cxNavigator, ExternalLoad, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  cxNavigator, ExternalLoad, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TGoodsPartnerCodeForm = class(TAncestorGuidesForm)
-    clCodeInt: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
+    GoodsCodeInt: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
     edPartnerCode: TcxButtonEdit;
     cxLabel1: TcxLabel;
     PartnerCodeGuides: TdsdGuides;
-    clCode: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
     mactDelete: TMultiAction;
-    colGoodsMainName: TcxGridDBColumn;
-    colGoodsMainCode: TcxGridDBColumn;
-    clMakerName: TcxGridDBColumn;
+    GoodsMainName: TcxGridDBColumn;
+    GoodsMainCode: TcxGridDBColumn;
+    MakerName: TcxGridDBColumn;
     spDeleteLink: TdsdStoredProc;
     actDeleteLink: TdsdExecStoredProc;
     DataSetPost: TDataSetPost;
@@ -39,7 +50,7 @@ type
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     dsdUpdateDataSet: TdsdUpdateDataSet;
-    clMinimumLot: TcxGridDBColumn;
+    MinimumLot: TcxGridDBColumn;
     spUpdate_Goods_MinimumLot: TdsdStoredProc;
     spDelete_ObjectFloat_Goods_MinimumLot: TdsdStoredProc;
     actStartLoad: TMultiAction;
@@ -49,7 +60,7 @@ type
     actGetImportSetting_Goods_MinimumLot: TdsdExecStoredProc;
     dxBarButton1: TdxBarButton;
     FormParams: TdsdFormParams;
-    colIsUpload: TcxGridDBColumn;
+    IsUpload: TcxGridDBColumn;
     spUpdate_Goods_IsUpload: TdsdStoredProc;
     spGetImportSetting_Goods_IsUpload: TdsdStoredProc;
     spDelete_ObjectBoolean_Goods_IsUpload: TdsdStoredProc;
@@ -59,10 +70,10 @@ type
     actDoLoadIsUpload: TExecuteImportSettingsAction;
     dxBarButton2: TdxBarButton;
     spUpdate_Goods_Promo: TdsdStoredProc;
-    colUpdateName: TcxGridDBColumn;
-    colUpdateDate: TcxGridDBColumn;
+    UpdateName: TcxGridDBColumn;
+    UpdateDate: TcxGridDBColumn;
     spUpdate_Goods_IsSpecCondition: TdsdStoredProc;
-    ñolisSpecCondition: TcxGridDBColumn;
+    isSpecCondition: TcxGridDBColumn;
     actDoLoadIsSpecCondition: TExecuteImportSettingsAction;
     actDelete_ObjectFloat_Goods_IsSpecCondition: TdsdExecStoredProc;
     actGetImportSetting_Goods_IsSpecCondition: TdsdExecStoredProc;
@@ -77,8 +88,8 @@ type
     bbSetErasedGoogs: TdxBarButton;
     bbSetUnErasedGoods: TdxBarButton;
     bbShowErased: TdxBarButton;
-    colisErased: TcxGridDBColumn;
-    colCommonCode: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
+    CommonCode: TcxGridDBColumn;
     ConditionsKeepChoiceForm: TOpenChoiceForm;
     actDoLoadConditionsKeep: TExecuteImportSettingsAction;
     actGetImportSetting_Goods_ConditionsKeep: TdsdExecStoredProc;
@@ -89,7 +100,7 @@ type
     bbisUpdate: TdxBarControlContainerItem;
     cbUpdate: TcxCheckBox;
     spUpdate_Goods_isUploadBadm: TdsdStoredProc;
-    colisUploadTeva: TcxGridDBColumn;
+    isUploadTeva: TcxGridDBColumn;
     spUpdate_Goods_isUploadTeva: TdsdStoredProc;
   private
     { Private declarations }

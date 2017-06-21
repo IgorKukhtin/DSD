@@ -70,7 +70,7 @@ object PartnerForm: TPartnerForm
         Width = 92
       end
       object FabrikaName: TcxGridDBColumn
-        Caption = #1060#1072#1073#1088#1080#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+        Caption = #1060#1072#1073#1088#1080#1082#1072
         DataBinding.FieldName = 'FabrikaName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -78,7 +78,7 @@ object PartnerForm: TPartnerForm
         Width = 106
       end
       object PeriodName: TcxGridDBColumn
-        Caption = #1055#1077#1088#1080#1086#1076
+        Caption = #1057#1077#1079#1086#1085
         DataBinding.FieldName = 'PeriodName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -86,7 +86,7 @@ object PartnerForm: TPartnerForm
         Width = 76
       end
       object PeriodYear: TcxGridDBColumn
-        Caption = #1043#1086#1076' '#1087#1077#1088#1080#1086#1076#1072
+        Caption = #1043#1086#1076
         DataBinding.FieldName = 'PeriodYear'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

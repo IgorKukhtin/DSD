@@ -11,16 +11,26 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   Vcl.Controls, cxGrid, AncestorGuides, cxPCdxBarPopupMenu, Vcl.Menus, cxPC,
   Vcl.DBActns, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TGoodsForm = class(TAncestorGuidesForm)
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
-    clNDSKindName: TcxGridDBColumn;
-    clMeasureName: TcxGridDBColumn;
-    clisErased: TcxGridDBColumn;
-    clGoodsGroupName: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    NDSKindName: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
     spRefreshOneRecord: TdsdDataSetRefresh;
     spGet: TdsdStoredProc;
     mactAfterInsert: TMultiAction;
@@ -30,16 +40,16 @@ type
     spGetOnInsert: TdsdStoredProc;
     spRefreshOnInsert: TdsdExecStoredProc;
     InsertRecord1: TInsertRecord;
-    clMinimumLot: TcxGridDBColumn;
+    MinimumLot: TcxGridDBColumn;
     UpdateDataSet: TdsdUpdateDataSet;
     spUpdate_Goods_MinimumLot: TdsdStoredProc;
-    clIsClose: TcxGridDBColumn;
-    cbIsTop: TcxGridDBColumn;
-    cbPercentMarkup: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    clisFirst: TcxGridDBColumn;
+    IsClose: TcxGridDBColumn;
+    IsTop: TcxGridDBColumn;
+    PercentMarkup: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    isFirst: TcxGridDBColumn;
     spUpdate_Goods_isFirst: TdsdStoredProc;
-    clColor_calc: TcxGridDBColumn;
+    Color_calc: TcxGridDBColumn;
     RetailCode: TcxGridDBColumn;
     RetailName: TcxGridDBColumn;
     spUpdate_Goods_isSecond: TdsdStoredProc;
@@ -48,12 +58,12 @@ type
     actSimplePublishedList: TMultiAction;
     actPublishedList: TMultiAction;
     bbPublished: TdxBarButton;
-    clisMarketToday: TcxGridDBColumn;
-    clisSp: TcxGridDBColumn;
-    clLastPriceDate: TcxGridDBColumn;
-    clCountPrice: TcxGridDBColumn;
-    cMorionCode: TcxGridDBColumn;
-    cBarCode: TcxGridDBColumn;
+    isMarketToday: TcxGridDBColumn;
+    isSp: TcxGridDBColumn;
+    LastPriceDate: TcxGridDBColumn;
+    CountPrice: TcxGridDBColumn;
+    MorionCode: TcxGridDBColumn;
+    BarCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

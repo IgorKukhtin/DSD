@@ -44,8 +44,8 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Panel1: TPanel;
-    clValue: TcxGridDBColumn;
-    clWorking: TcxGridDBColumn;
+    Value: TcxGridDBColumn;
+    Working: TcxGridDBColumn;
     PeriodChoice: TPeriodChoice;
     bbDialogForm: TdxBarButton;
     RefreshDispatcher: TRefreshDispatcher;
@@ -58,7 +58,7 @@ type
     bbOk: TcxButton;
     dsdUpdateDataSet1: TdsdUpdateDataSet;
     dsdStoredProcInsCalendar: TdsdStoredProc;
-    clDayOfWeekName: TcxGridDBColumn;
+    DayOfWeekName: TcxGridDBColumn;
   private
   public
   end;
