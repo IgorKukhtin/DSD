@@ -122,20 +122,36 @@ BEGIN
 
     --залили снапшот
     INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,Price,Remains,MCSValue,Reserved,MinExpirationDate)
+    WITH 
+    tmpObject_Price AS (SELECT ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+                             , MCS_Value.ValueData                     AS MCSValue
+                             , Price_Goods.ChildObjectId               AS GoodsId
+                        FROM ObjectLink AS ObjectLink_Price_Unit
+                           LEFT JOIN ObjectLink AS Price_Goods
+                                                ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                               AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                           LEFT JOIN ObjectFloat AS Price_Value
+                                                 ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                           LEFT JOIN ObjectFloat AS MCS_Value
+                                                 ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+                        WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                          AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId                          
+                        )
     SELECT
         inCashSessionId                             AS CashSession
        ,GoodsRemains.ObjectId                       AS GoodsId
-       ,COALESCE(Object_Price_View.Price,0)         AS Price
+       ,COALESCE(tmpObject_Price.Price,0)           AS Price
        ,(GoodsRemains.Remains
             - COALESCE(Reserve.Amount,0))::TFloat   AS Remains
-       ,Object_Price_View.MCSValue                  AS MCSValue
+       ,tmpObject_Price.MCSValue                    AS MCSValue
        ,Reserve.Amount::TFloat                      AS Reserved
        ,GoodsRemains.MinExpirationDate              AS MinExpirationDate
 
     FROM
         GoodsRemains
-        LEFT OUTER JOIN Object_Price_View ON Object_Price_View.GoodsId = GoodsRemains.ObjectId
-                                         AND Object_Price_View.UnitId  = vbUnitId
+        LEFT OUTER JOIN tmpObject_Price ON tmpObject_Price.GoodsId = GoodsRemains.ObjectId
         LEFT OUTER JOIN RESERVE ON GoodsRemains.ObjectId = RESERVE.GoodsId;
 
     RETURN QUERY
@@ -213,16 +229,45 @@ BEGIN
                                  AND ObjectLink_Main_BarCode.ChildObjectId > 0
                                GROUP BY ObjectLink_Main_BarCode.ChildObjectId
                               )
+              -- данные из прайса
+              , tmpObject_Price AS (SELECT ObjectLink_Price_Unit.ObjectId                                AS Id
+                                         , Price_Goods.ChildObjectId                                     AS GoodsId
+                                         , COALESCE(Price_MCSValueOld.ValueData,0)          ::TFloat     AS MCSValueOld         
+                                         , MCS_StartDateMCSAuto.ValueData                                AS StartDateMCSAuto
+                                         , MCS_EndDateMCSAuto.ValueData                                  AS EndDateMCSAuto
+                                         , COALESCE(Price_MCSAuto.ValueData,False)          :: Boolean   AS isMCSAuto
+                                         , COALESCE(Price_MCSNotRecalcOld.ValueData,False)  :: Boolean   AS isMCSNotRecalcOld
+                                    FROM ObjectLink AS ObjectLink_Price_Unit
+                                         INNER JOIN ObjectLink AS Price_Goods
+                                                               ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                              AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                         LEFT JOIN ObjectFloat AS Price_MCSValueOld
+                                                               ON Price_MCSValueOld.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                              AND Price_MCSValueOld.DescId = zc_ObjectFloat_Price_MCSValueOld()
+                                         LEFT JOIN ObjectDate AS MCS_StartDateMCSAuto
+                                                              ON MCS_StartDateMCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                             AND MCS_StartDateMCSAuto.DescId = zc_ObjectDate_Price_StartDateMCSAuto()
+                                         LEFT JOIN ObjectDate AS MCS_EndDateMCSAuto
+                                                              ON MCS_EndDateMCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                             AND MCS_EndDateMCSAuto.DescId = zc_ObjectDate_Price_EndDateMCSAuto()
+                                         LEFT JOIN ObjectBoolean AS Price_MCSAuto
+                                                                 ON Price_MCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                                AND Price_MCSAuto.DescId = zc_ObjectBoolean_Price_MCSAuto()
+                                         LEFT JOIN ObjectBoolean AS Price_MCSNotRecalcOld
+                                                                 ON Price_MCSNotRecalcOld.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                                AND Price_MCSNotRecalcOld.DescId = zc_ObjectBoolean_Price_MCSNotRecalcOld()
+                                    WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                                      AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
+                                    )
                 -- MCS - Auto
               , tmpMCSAuto AS (SELECT CashSessionSnapShot.ObjectId
-                                    , Object_Price_View.MCSValueOld
-                                    , Object_Price_View.StartDateMCSAuto
-                                    , Object_Price_View.EndDateMCSAuto
-                                    , Object_Price_View.isMCSAuto
-                                    , Object_Price_View.isMCSNotRecalcOld
+                                    , tmpObject_Price.MCSValueOld
+                                    , tmpObject_Price.StartDateMCSAuto
+                                    , tmpObject_Price.EndDateMCSAuto
+                                    , tmpObject_Price.isMCSAuto
+                                    , tmpObject_Price.isMCSNotRecalcOld
                                FROM CashSessionSnapShot
-                                    INNER JOIN Object_Price_View ON Object_Price_View.GoodsId = CashSessionSnapShot.ObjectId
-                                                                AND Object_Price_View.UnitId  = vbUnitId
+                                    INNER JOIN tmpObject_Price ON tmpObject_Price.GoodsId = CashSessionSnapShot.ObjectId
                                WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
                               )
 
@@ -498,6 +543,7 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.
+ 21.06.17         *
  09.06.17         *
  24.05.17                                                                                      * MorionCode
  23.05.17                                                                                      * BarCode
