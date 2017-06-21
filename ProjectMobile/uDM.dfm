@@ -147,6 +147,12 @@ object DM: TDM
     object tblObject_ConstReturnDayCount: TIntegerField
       FieldName = 'ReturnDayCount'
     end
+    object tblObject_ConstCriticalOverDays: TIntegerField
+      FieldName = 'CriticalOverDays'
+    end
+    object tblObject_ConstCriticalDebtSum: TFloatField
+      FieldName = 'CriticalDebtSum'
+    end
   end
   object tblObject_Partner: TFDTable
     Connection = conMain
