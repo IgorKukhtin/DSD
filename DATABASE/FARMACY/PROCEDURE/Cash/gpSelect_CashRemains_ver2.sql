@@ -151,8 +151,14 @@ BEGIN
 
     FROM
         GoodsRemains
+<<<<<<< HEAD
+        LEFT OUTER JOIN Object_Price_View ON Object_Price_View.GoodsId = GoodsRemains.ObjectId
+                                         AND Object_Price_View.UnitId  = vbUnitId
+        LEFT OUTER JOIN RESERVE ON RESERVE.GoodsId = GoodsRemains.ObjectId;
+=======
         LEFT OUTER JOIN tmpObject_Price ON tmpObject_Price.GoodsId = GoodsRemains.ObjectId
         LEFT OUTER JOIN RESERVE ON GoodsRemains.ObjectId = RESERVE.GoodsId;
+>>>>>>> origin/master
 
     RETURN QUERY
       -- Маркетинговый контракт

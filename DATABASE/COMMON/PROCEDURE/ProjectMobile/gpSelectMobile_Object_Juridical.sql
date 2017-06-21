@@ -144,7 +144,7 @@ BEGIN
                                       , tmpContainer.Amount                                                 AS DebtSum
                                       , (tmpContainer.Amount - COALESCE (tmpMIContainer.Summ, 0.0)::TFloat) AS OverSum
                                       , (zfCalc_OverDayCount (tmpContainer.ContainerId, tmpContainer.Amount - COALESCE (tmpMIContainer.Summ, 0.0)::TFloat, tmpContainer.ContractDate)) AS OverDays
-                                      , SUM (tmpContainer.Amount) OVER (PARTITION BY ABS (tmpContainer.Amount)) AS ResortSum
+                                      , SUM (tmpContainer.Amount) OVER (PARTITION BY tmpContainer.JuridicalId, ABS (tmpContainer.Amount)) AS ResortSum
                                  FROM tmpContainer
                                       LEFT JOIN tmpMIContainer ON tmpContainer.ContainerId = tmpMIContainer.ContainerId
                                 )
