@@ -34,7 +34,7 @@ object BankEditForm: TBankEditForm
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
-    TabOrder = 4
+    TabOrder = 5
   end
   object cxButton2: TcxButton
     Left = 185
@@ -44,7 +44,7 @@ object BankEditForm: TBankEditForm
     Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    TabOrder = 5
+    TabOrder = 6
   end
   object cxLabel2: TcxLabel
     Left = 10
@@ -58,7 +58,7 @@ object BankEditForm: TBankEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
-    TabOrder = 6
+    TabOrder = 7
     Width = 273
   end
   object cxLabel3: TcxLabel
@@ -75,7 +75,7 @@ object BankEditForm: TBankEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 3
+    TabOrder = 4
     Width = 275
   end
   object edMFO: TcxTextEdit
@@ -108,7 +108,7 @@ object BankEditForm: TBankEditForm
   object edIBAN: TcxTextEdit
     Left = 10
     Top = 192
-    TabOrder = 13
+    TabOrder = 3
     Width = 273
   end
   object ActionList: TActionList

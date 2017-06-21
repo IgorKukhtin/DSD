@@ -38,7 +38,7 @@ object PartnerEditForm: TPartnerEditForm
   object cxLabel3: TcxLabel
     Left = 10
     Top = 177
-    Caption = #1043#1086#1076' '#1087#1077#1088#1080#1086#1076#1072
+    Caption = #1043#1086#1076
   end
   object ceBrandName: TcxButtonEdit
     Left = 8
@@ -60,12 +60,12 @@ object PartnerEditForm: TPartnerEditForm
   object cxLabel5: TcxLabel
     Left = 9
     Top = 99
-    Caption = #1060#1072#1073#1088#1080#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+    Caption = #1060#1072#1073#1088#1080#1082#1072
   end
   object cxLabel6: TcxLabel
     Left = 9
     Top = 137
-    Caption = #1055#1077#1088#1080#1086#1076
+    Caption = #1057#1077#1079#1086#1085
   end
   object edPeriodYear: TcxCurrencyEdit
     Left = 8

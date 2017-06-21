@@ -61,6 +61,8 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     InfoMoneyGroupName: TcxGridDBColumn;
     OnComplete: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public

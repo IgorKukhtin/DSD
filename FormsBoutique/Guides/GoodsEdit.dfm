@@ -34,7 +34,7 @@ object GoodsEditForm: TGoodsEditForm
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
-    TabOrder = 7
+    TabOrder = 8
   end
   object cxButton2: TcxButton
     Left = 180
@@ -44,7 +44,7 @@ object GoodsEditForm: TGoodsEditForm
     Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    TabOrder = 8
+    TabOrder = 9
   end
   object cxLabel2: TcxLabel
     Left = 10
@@ -58,7 +58,7 @@ object GoodsEditForm: TGoodsEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
-    TabOrder = 9
+    TabOrder = 10
     Width = 273
   end
   object cxLabel3: TcxLabel
@@ -178,7 +178,7 @@ object GoodsEditForm: TGoodsEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 19
+    TabOrder = 7
     Width = 273
   end
   object ActionList: TActionList
