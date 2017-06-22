@@ -3900,7 +3900,7 @@ function TDM.SaveOrderExternal(OperDate: TDate; PaidKindId: integer; Comment: st
 var
   GlobalId: TGUID;
   MovementId: integer;
-  NewInvNumber: string;
+  NewInvNumber, CurInvNumber: string;
   b: TBookmark;
   isHasItems: boolean;
 begin
@@ -4003,6 +4003,8 @@ begin
       end;
     end;
 
+    CurInvNumber := tblMovement_OrderExternalInvNumber.AsString;
+
     tblMovementItem_OrderExternal.Open;
 
     with cdsOrderItems do
@@ -4064,7 +4066,7 @@ begin
       cdsOrderExternalOperDate.AsDateTime := OperDate;
       cdsOrderExternalPaidKindId.AsInteger := PaidKindId;
       cdsOrderExternalComment.AsString := Comment;
-      cdsOrderExternalName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', OperDate);
+      cdsOrderExternalName.AsString := 'Заявка №' + CurInvNumber + ' на ' + FormatDateTime('DD.MM.YYYY', OperDate);
       cdsOrderExternalPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', ToralPrice);
       cdsOrderExternalWeight.AsString := 'Вес: ' + FormatFloat(',0.00', TotalWeight);
       if Complete then
@@ -4158,6 +4160,7 @@ begin
     qryOrderExternal.SQL.Text :=
        ' SELECT '
      + '         ID '
+     + '       , InvNumber '
      + '       , OperDate '
      + '       , PaidKindId '
      + '       , Comment '
@@ -4179,7 +4182,7 @@ begin
       cdsOrderExternalid.AsInteger := qryOrderExternal.FieldByName('ID').AsInteger;
       cdsOrderExternalOperDate.AsDateTime := qryOrderExternal.FieldByName('OPERDATE').AsDateTime;
       cdsOrderExternalComment.AsString := qryOrderExternal.FieldByName('COMMENT').AsString;
-      cdsOrderExternalName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', qryOrderExternal.FieldByName('OPERDATE').AsDateTime);
+      cdsOrderExternalName.AsString := 'Заявка №' + qryOrderExternal.FieldByName('INVNUMBER').AsString + ' на ' + FormatDateTime('DD.MM.YYYY', qryOrderExternal.FieldByName('OPERDATE').AsDateTime);
       cdsOrderExternalPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', qryOrderExternal.FieldByName('TOTALSUMM').AsFloat);
       cdsOrderExternalWeight.AsString := 'Вес: ' + FormatFloat(',0.00', qryOrderExternal.FieldByName('TOTALCOUNTKG').AsFloat);
 
@@ -4255,6 +4258,7 @@ begin
     qryOrderExternal.SQL.Text :=
        ' SELECT '
      + '         Movement_OrderExternal.Id '
+     + '       , Movement_OrderExternal.InvNumber '
      + '       , Movement_OrderExternal.OperDate '
      + '       , Movement_OrderExternal.PaidKindId '
      + '       , Movement_OrderExternal.Comment '
@@ -4297,7 +4301,7 @@ begin
       cdsOrderExternalid.AsInteger := qryOrderExternal.FieldByName('ID').AsInteger;
       cdsOrderExternalOperDate.AsDateTime := qryOrderExternal.FieldByName('OPERDATE').AsDateTime;
       cdsOrderExternalComment.AsString := qryOrderExternal.FieldByName('COMMENT').AsString;
-      cdsOrderExternalName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', qryOrderExternal.FieldByName('OPERDATE').AsDateTime);
+      cdsOrderExternalName.AsString := 'Заявка №' + qryOrderExternal.FieldByName('INVNUMBER').AsString + ' на ' + FormatDateTime('DD.MM.YYYY', qryOrderExternal.FieldByName('OPERDATE').AsDateTime);
       cdsOrderExternalPrice.AsString :=  'Стоимость: ' + FormatFloat(',0.00', qryOrderExternal.FieldByName('TOTALSUMM').AsFloat);
       cdsOrderExternalWeight.AsString := 'Вес: ' + FormatFloat(',0.00', qryOrderExternal.FieldByName('TOTALCOUNTKG').AsFloat);
 
