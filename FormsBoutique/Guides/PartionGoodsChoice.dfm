@@ -96,6 +96,17 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         HeaderAlignmentVert = vaCenter
         Width = 114
       end
+      object Remains: TcxGridDBColumn
+        Caption = #1054#1089#1090#1072#1090#1086#1082
+        DataBinding.FieldName = 'Remains'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object Amount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076
         DataBinding.FieldName = 'Amount'
@@ -110,8 +121,15 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         HeaderAlignmentVert = vaCenter
         Width = 65
       end
-      object PriceSale: TcxGridDBColumn
+      object PriceSale_Partion: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
+        DataBinding.FieldName = 'PriceSale_Partion'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 65
+      end
+      object PriceSale: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1087#1088#1072#1081#1089')'
         DataBinding.FieldName = 'PriceSale'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -627,6 +645,22 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceSale'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceSale_Partion'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PriceSale_Partion'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Remains'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Remains'
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>

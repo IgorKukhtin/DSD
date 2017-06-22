@@ -388,6 +388,10 @@ object OrderSheduleForm: TOrderSheduleForm
         end
         item
           Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
@@ -462,8 +466,8 @@ object OrderSheduleForm: TOrderSheduleForm
       Action = dsdChoiceGuides
       Category = 0
     end
-    object bbShowAll: TdxBarButton
-      Action = actShowAll
+    object bbShowErased: TdxBarButton
+      Action = actShowErased
       Category = 0
     end
     object bbProtocolOpenForm: TdxBarButton
@@ -472,6 +476,10 @@ object OrderSheduleForm: TOrderSheduleForm
     end
     object bbInsertMask: TdxBarButton
       Action = actInsertMask
+      Category = 0
+    end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
       Category = 0
     end
   end
@@ -668,7 +676,7 @@ object OrderSheduleForm: TOrderSheduleForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object actShowAll: TBooleanStoredProcAction
+    object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -678,12 +686,31 @@ object OrderSheduleForm: TOrderSheduleForm
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
+      ImageIndex = 64
       Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1089#1074#1103#1079#1080
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1089#1074#1103#1079#1080
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1089#1074#1103#1079#1080
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1089#1074#1103#1079#1080
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
@@ -753,6 +780,14 @@ object OrderSheduleForm: TOrderSheduleForm
         Value = Null
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShowErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

@@ -264,6 +264,10 @@ object GoodsAccountForm: TGoodsAccountForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalPay_Return
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -349,6 +353,10 @@ object GoodsAccountForm: TGoodsAccountForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalPay_Return
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList

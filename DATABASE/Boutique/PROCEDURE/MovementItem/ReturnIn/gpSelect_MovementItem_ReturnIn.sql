@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , LabelName TVarChar
              , GoodsSizeName TVarChar
              --, BarCode TVarChar
-             , Amount TFloat, Amount_Sale TFloat
+             , Amount TFloat, Amount_Sale TFloat, Remains TFloat
              , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
              , AmountSumm TFloat, AmountPriceListSumm TFloat
              , CurrencyValue TFloat, ParValue TFloat
@@ -35,17 +35,27 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbUnitId Integer;
-  DECLARE vbPriceListId Integer;
   DECLARE vbClientId Integer;
+  DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_ReturnIn());
      vbUserId:= lpGetUserBySession (inSession);
 
-     vbClientId := (SELECT MLO_From.ObjectId
-                    FROM MovementLinkObject AS MLO_From
-                    WHERE MLO_From.MovementId = inMovementId
-                      AND MLO_From.DescId = zc_MovementLinkObject_From());
+     -- данные из шапки
+     SELECT Movement.OperDate
+          , MovementLinkObject_To.ObjectId
+          , MovementLinkObject_From.ObjectId
+    INTO vbOperDate, vbUnitId, vbClientId
+     FROM Movement 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                         ON MovementLinkObject_From.MovementId = Movement.Id
+                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+     WHERE Movement.Id = inMovementId;
+
 
      IF inShowAll THEN
      -- Результат такой
@@ -62,6 +72,7 @@ BEGIN
                           AND Movement.DescId = zc_Movement_Sale()
                           --AND Movement.StatusId = zc_Enum_Status_Complete()
                         )
+
       ,  tmpMI_Sale AS (SELECT tmpSale.MovementId_Sale
                              , tmpSale.InvNumber_Sale
                              , MI_Master.Id         AS MI_Id
@@ -166,7 +177,7 @@ BEGIN
                            , COALESCE (tmpMI_Master.ParValue, tmpMI_Sale.ParValue)           AS ParValue
                            , COALESCE (tmpMI_Master.TotalChangePercent, 0)    AS TotalChangePercent
                            , COALESCE (tmpMI_Master.TotalPay, 0)              AS TotalPay
-                           , COALESCE (tmpMI_Sale.TotalPay, 0)                AS TotalPay_Sale
+                           , COALESCE (tmpMI_Sale.TotalPay, 0)                AS TotalSummPay_Sale
                            , COALESCE (tmpMI_Master.TotalPayOth, 0)           AS TotalPayOth
                            , COALESCE (tmpMI_Master.isErased, False)          AS isErased
 
@@ -176,8 +187,6 @@ BEGIN
                                     END) - COALESCE (tmpMI_Master.TotalChangePercent, 0)
                              AS TFloat) AS TotalSummPay
 
-  --                         , AS MovementId_Sale
---                           , AS InvNumber_Sale
                 FROM tmpMI_Sale
                      FULL JOIN tmpMI_Master ON tmpMI_Master.GoodsId = tmpMI_Sale.GoodsId
                                            AND tmpMI_Master.SaleMI_ID = tmpMI_Sale.MI_Id  -- уточнить правильную связь
@@ -198,6 +207,22 @@ BEGIN
                                                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
                       GROUP BY MovementItem.ParentId
                       )
+   , tmpContainer AS (SELECT Container.PartionId
+                           , Container.ObjectId                                        AS GoodsId
+                           , Container.Amount - SUM (COALESCE (MIContainer.Amount, 0)) AS Remains
+                      FROM tmpMI AS tmpMI_Master
+                           INNER JOIN Container ON Container.ObjectId = tmpMI_Master.GoodsId
+                                               AND Container.PartionId = tmpMI_Master.PartionId
+                                               AND Container.DescId = zc_Container_count()
+                                               AND Container.WhereObjectId = vbUnitId
+                           LEFT JOIN MovementItemContainer AS MIContainer 
+                                                           ON MIContainer.ContainerId = Container.Id
+                                                          AND MIContainer.OperDate >= vbOperDate
+                      GROUP BY Container.PartionId 
+                             , Container.Amount 
+                             , Container.ObjectId
+                      HAVING (Container.Amount - SUM (COALESCE (MIContainer.Amount, 0))) <> 0
+                    )
 
 
        -- результат
@@ -220,6 +245,8 @@ BEGIN
 
            , tmpMI.Amount         ::TFloat
            , tmpMI.Amount_Sale    ::TFloat
+           , tmpContainer.Remains ::TFloat
+
            , tmpMI.OperPrice      ::TFloat
            , tmpMI.CountForPrice  ::TFloat
            , tmpMI.OperPriceList  ::TFloat
@@ -280,6 +307,9 @@ BEGIN
            LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = tmpMI.PartionMI_Id
            LEFT JOIN MovementItem AS MI_Sale ON MI_Sale.Id = Object_PartionMI.ObjectCode
            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MI_Sale.MovementId
+
+           LEFT JOIN tmpContainer ON tmpContainer.GoodsId = tmpMI.GoodsId
+                                 AND tmpContainer.PartionId = tmpMI.PartionId  
        ;
      ELSE
      -- Результат такой
@@ -360,6 +390,22 @@ BEGIN
                                                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
                       GROUP BY MovementItem.ParentId
                       )
+   , tmpContainer AS (SELECT Container.PartionId
+                           , Container.ObjectId                                        AS GoodsId
+                           , Container.Amount - SUM (COALESCE (MIContainer.Amount, 0)) AS Remains
+                      FROM tmpMI_Master
+                           INNER JOIN Container ON Container.ObjectId = tmpMI_Master.GoodsId
+                                               AND Container.PartionId = tmpMI_Master.PartionId
+                                               AND Container.DescId = zc_Container_count()
+                                               AND Container.WhereObjectId = vbUnitId
+                           LEFT JOIN MovementItemContainer AS MIContainer 
+                                                           ON MIContainer.ContainerId = Container.Id
+                                                          AND MIContainer.OperDate >= vbOperDate
+                      GROUP BY Container.PartionId 
+                             , Container.Amount 
+                             , Container.ObjectId
+                      HAVING (Container.Amount - SUM (COALESCE (MIContainer.Amount, 0))) <> 0
+                    )
 
 
        -- результат
@@ -382,6 +428,8 @@ BEGIN
 
            , tmpMI.Amount         ::TFloat
            , MI_Sale.Amount       ::TFloat
+           , tmpContainer.Remains ::TFloat
+
            , tmpMI.OperPrice      ::TFloat
            , tmpMI.CountForPrice  ::TFloat
            , tmpMI.OperPriceList  ::TFloat
@@ -448,6 +496,9 @@ BEGIN
                                        AND MIFloat_TotalPay.DescId = zc_MIFloat_TotalPay()
 
             LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MI_Sale.MovementId
+
+            LEFT JOIN tmpContainer ON tmpContainer.GoodsId = tmpMI.GoodsId
+                                  AND tmpContainer.PartionId = tmpMI.PartionId  
        ;
 
        END IF;
@@ -459,6 +510,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 21.06.17         *
  15.05.17         *
 */
 

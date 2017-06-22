@@ -260,6 +260,11 @@ object ReturnOutForm: TReturnOutForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountPriceListSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -317,6 +322,11 @@ object ReturnOutForm: TReturnOutForm
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -422,6 +432,16 @@ object ReturnOutForm: TReturnOutForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 62
+          end
+          object Remains: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'Remains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
