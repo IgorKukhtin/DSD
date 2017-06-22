@@ -40,6 +40,8 @@ $BODY$
    DECLARE vbPartionId Integer;
    DECLARE vbIsInsert Boolean;
    DECLARE vbOperDate TDateTime;
+   DECLARE vbFromId Integer;
+   DECLARE vbToId Integer;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
@@ -47,9 +49,25 @@ BEGIN
      -- определ€етс€ признак —оздание/ орректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
-     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);    
+     --vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);   
+     -- определ€ютс€ параметры из шапки документа
+     SELECT Movement.OperDate
+          , MovementLinkObject_From.ObjectId
+          , MovementLinkObject_To.ObjectId
+   INTO vbOperDate, vbFromId, vbToId 
+     FROM Movement
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = Movement.Id
+                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+     WHERE Movement.Id = inMovementId;
+
+ 
      -- получили цену из прайса на дату док. 
      outOperPriceList := COALESCE ((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem(vbOperDate, zc_PriceList_Basis(), inGoodsId) AS tmp), 0);
+     
      -- данные из партии : OperPrice и CountForPrice
      SELECT COALESCE (Object_PartionGoods.CountForPrice,1)
           , COALESCE (Object_PartionGoods.OperPrice,0)
@@ -58,9 +76,28 @@ BEGIN
      WHERE Object_PartionGoods.MovementItemId = inPartionId;
 
       
-     outAmountRemains := 1;        -- вставить расчет
-     outAmountSecondRemains := 1;  -- вставить расчет
-     outAmountClient := 1;         -- вставить расчет
+     outAmountRemains := 0;        -- вставить расчет
+     outAmountSecondRemains := 0;  -- вставить расчет
+     outAmountClient := 0;         -- вставить расчет
+
+
+     -- рассчет остатка
+     SELECT SUM (COALESCE (tmp.Remains,0))       AS Remains
+          , SUM (COALESCE (tmp.SecondRemains,0)) AS SecondRemains 
+    INTO outAmountRemains, outAmountSecondRemains
+     FROM 
+         (SELECT CASE WHEN Container.WhereObjectId  = vbFromId THEN Container.Amount - SUM (COALESCE (MIContainer.Amount, 0)) ELSE 0 END AS Remains 
+               , CASE WHEN Container.WhereObjectId  = vbToId THEN Container.Amount - SUM (COALESCE (MIContainer.Amount, 0)) ELSE 0 END   AS SecondRemains 
+          FROM Container 
+               LEFT JOIN MovementItemContainer AS MIContainer 
+                                               ON MIContainer.ContainerId = Container.Id
+                                              AND MIContainer.OperDate > vbOperDate
+          WHERE Container.DescId = zc_Container_count()
+            AND Container.PartionId = inPartionId
+            AND Container.ObjectId = inGoodsId
+            AND Container.WhereObjectId IN (vbFromId, vbToId)
+         GROUP BY Container.WhereObjectId
+                , Container.Amount) AS tmp;
 
      -- «аменили свойство <÷ена за количество>
      --IF COALESCE (outCountForPrice, 0) = 0 THEN outCountForPrice := 1; END IF;

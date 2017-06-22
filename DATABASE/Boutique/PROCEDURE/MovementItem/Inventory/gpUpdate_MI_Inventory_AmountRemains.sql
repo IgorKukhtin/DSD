@@ -22,7 +22,7 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
 
 
-     -- определяются параметры документа
+     -- определяются параметры из шапки документа
      SELECT Movement.StatusId
           , Movement.InvNumber
           , Movement.OperDate
@@ -45,9 +45,9 @@ BEGIN
      END IF;
 
      -- вставить рассчет остатка на конец дня
-     CREATE TEMP TABLE _tmpContainer (Id Integer, UnitId Integer, PartionId Integer, GoodsId Integer, Remains TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpContainer (PartionId Integer, GoodsId Integer, Remains TFloat, SecondRemains TFloat) ON COMMIT DROP;
      --
-     INSERT INTO _tmpContainer (Id, UnitId, PartionId, GoodsId, Remains)
+     INSERT INTO _tmpContainer (PartionId, GoodsId, Remains, SecondRemains)
               SELECT tmp.PartionId 
                    , tmp.GoodsId
                    , SUM (tmp.Remains)       AS Remains
@@ -64,7 +64,7 @@ BEGIN
                                              AND Container.WhereObjectId IN (vbFromId, vbToId)
                          LEFT JOIN MovementItemContainer AS MIContainer 
                                                          ON MIContainer.ContainerId = Container.Id
-                                                        AND MIContainer.OperDate >= vbOperDate
+                                                        AND MIContainer.OperDate > vbOperDate
                     WHERE MovementItem.MovementId = inMovementId 
                     GROUP BY Container.PartionId
                            , Container.WhereObjectId
