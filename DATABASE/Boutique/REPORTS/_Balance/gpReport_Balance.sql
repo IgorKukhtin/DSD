@@ -53,19 +53,19 @@ BEGIN
            , CAST (CASE WHEN tmpReportOperation.AmountRemainsEnd > 0 THEN tmpReportOperation.AmountRemainsEnd ELSE 0 END AS TFloat) AS AmountDebetEnd
            , CAST (CASE WHEN tmpReportOperation.AmountRemainsEnd < 0 THEN -1 * tmpReportOperation.AmountRemainsEnd ELSE 0 END AS TFloat) AS AmountKreditEnd
 
-           , CAST (CASE WHEN COALESCE (Object_Account_View.AccountKindId, 0) IN (0, zc_Enum_AccountKind_Active(), zc_Enum_AccountKind_All())
+           , CAST (CASE WHEN Object_Account_View.AccountCode < 60000
                              THEN tmpReportOperation.AmountRemainsStart
                         ELSE 0
                    END AS TFloat) AS AmountActiveStart
-           , CAST (CASE WHEN Object_Account_View.AccountKindId = zc_Enum_AccountKind_Passive()
+           , CAST (CASE WHEN Object_Account_View.AccountCode >= 60000
                              THEN -1 * tmpReportOperation.AmountRemainsStart
                         ELSE 0
                    END AS TFloat) AS AmountPassiveStart
-           , CAST (CASE WHEN COALESCE (Object_Account_View.AccountKindId, 0) IN (0, zc_Enum_AccountKind_Active(), zc_Enum_AccountKind_All())
+           , CAST (CASE WHEN Object_Account_View.AccountCode < 60000
                              THEN tmpReportOperation.AmountRemainsEnd
                         ELSE 0
                    END AS TFloat) AS AmountActiveEnd
-           , CAST (CASE WHEN Object_Account_View.AccountKindId = zc_Enum_AccountKind_Passive()
+           , CAST (CASE WHEN Object_Account_View.AccountCode >= 60000
                              THEN -1 * tmpReportOperation.AmountRemainsEnd
                         ELSE 0
                    END AS TFloat) AS AmountPassiveEnd
@@ -139,7 +139,9 @@ BEGIN
            LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpReportOperation.InfoMoneyId
            LEFT JOIN Object AS Object_by ON Object_by.Id = NULL
            LEFT JOIN ObjectDesc AS ObjectDesc_by    ON ObjectDesc_by.Id    = Object_by.DescId
-          ;
+
+       WHERE Object_Account_View.isErased = FALSE
+      ;
 
 END;
 $BODY$

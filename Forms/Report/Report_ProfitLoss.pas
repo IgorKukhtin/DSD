@@ -74,6 +74,9 @@ type
     bbPrint: TdxBarButton;
     cbTotal: TcxCheckBox;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
+    PL_GroupName_original: TcxDBPivotGridField;
+    PL_DirectionName_original: TcxDBPivotGridField;
+    PL_Name_original: TcxDBPivotGridField;
   private
   public
   end;
