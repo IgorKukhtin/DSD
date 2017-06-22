@@ -16,7 +16,7 @@ type
   TWorkTimeKind_ObjectForm = class(TAncestorEnumForm)
     spInsertUpdateObject: TdsdStoredProc;
     FormParams: TdsdFormParams;
-    clValue: TcxGridDBColumn;
+    Value: TcxGridDBColumn;
   private
     { Private declarations }
   public
