@@ -4,10 +4,10 @@ inherited GoodsAllForm: TGoodsAllForm
   ClientWidth = 1079
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitLeft = -306
-  ExplicitTop = -70
+  ExplicitLeft = -294
+  ExplicitTop = -14
   ExplicitWidth = 1095
-  ExplicitHeight = 527
+  ExplicitHeight = 531
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -38,7 +38,7 @@ inherited GoodsAllForm: TGoodsAllForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object MainId_1: TcxGridDBColumn
+          object GoodsMainId_1: TcxGridDBColumn
             Caption = 'MainId'
             DataBinding.FieldName = 'GoodsMainId'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -344,7 +344,7 @@ inherited GoodsAllForm: TGoodsAllForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object MainId_2: TcxGridDBColumn
+          object GoodsMainId_2: TcxGridDBColumn
             Caption = 'MainId'
             DataBinding.FieldName = 'GoodsMainId'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -670,7 +670,7 @@ inherited GoodsAllForm: TGoodsAllForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object MainId_3: TcxGridDBColumn
+          object GoodsMainId_3: TcxGridDBColumn
             Caption = 'MainId'
             DataBinding.FieldName = 'GoodsMainId'
             PropertiesClassName = 'TcxCurrencyEditProperties'

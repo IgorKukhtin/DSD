@@ -70,7 +70,6 @@ object UnitTreeForm: TUnitTreeForm
     Height = 377
     Align = alClient
     TabOrder = 6
-    ExplicitWidth = 522
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
@@ -90,7 +89,7 @@ object UnitTreeForm: TUnitTreeForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object ceTreeState: TcxGridDBColumn
+      object isLeaf: TcxGridDBColumn
         Caption = '_'
         DataBinding.FieldName = 'isLeaf'
         PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -109,7 +108,7 @@ object UnitTreeForm: TUnitTreeForm
         SortOrder = soAscending
         Width = 20
       end
-      object ceCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
@@ -117,7 +116,7 @@ object UnitTreeForm: TUnitTreeForm
         Options.Editing = False
         Width = 45
       end
-      object ceName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
@@ -126,14 +125,14 @@ object UnitTreeForm: TUnitTreeForm
         SortOrder = soAscending
         Width = 163
       end
-      object ceBranchName: TcxGridDBColumn
+      object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088'. '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 92
       end
-      object colTaxService: TcxGridDBColumn
+      object TaxService: TcxGridDBColumn
         Caption = '% '#1086#1090' '#1074#1099#1088#1091#1095#1082#1080
         DataBinding.FieldName = 'TaxService'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -141,7 +140,7 @@ object UnitTreeForm: TUnitTreeForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
       end
-      object colTaxServiceNigth: TcxGridDBColumn
+      object TaxServiceNigth: TcxGridDBColumn
         Caption = '% '#1086#1090' '#1074#1099#1088#1091#1095#1082#1080' '#1085#1086#1095#1100
         DataBinding.FieldName = 'TaxServiceNigth'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -149,7 +148,7 @@ object UnitTreeForm: TUnitTreeForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
       end
-      object ceisErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -159,7 +158,7 @@ object UnitTreeForm: TUnitTreeForm
         Options.Editing = False
         Width = 94
       end
-      object colisRepriceAuto: TcxGridDBColumn
+      object isRepriceAuto: TcxGridDBColumn
         Caption = #1040#1074#1090#1086' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072
         DataBinding.FieldName = 'isRepriceAuto'
         HeaderAlignmentHorz = taCenter
@@ -168,7 +167,7 @@ object UnitTreeForm: TUnitTreeForm
         Options.Editing = False
         Width = 80
       end
-      object colisUploadBadm: TcxGridDBColumn
+      object isUploadBadm: TcxGridDBColumn
         Caption = #1042#1099#1075#1088#1091#1078#1072#1090#1100' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090'. '#1041#1040#1044#1052
         DataBinding.FieldName = 'isUploadBadm'
         Visible = False
@@ -178,7 +177,7 @@ object UnitTreeForm: TUnitTreeForm
         Options.Editing = False
         Width = 89
       end
-      object colAddress: TcxGridDBColumn
+      object Address: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'
         HeaderAlignmentVert = vaCenter

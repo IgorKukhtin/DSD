@@ -10,14 +10,25 @@ uses
   cxData, cxDataStorage, cxEdit, Data.DB, cxDBData, dxSkinsdxBarPainter,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, dsdDB, Vcl.Menus,
   dsdAddOn, dxBarExtItems, dxBar, cxClasses, Datasnap.DBClient, dsdAction,
-  Vcl.ActnList, cxPropertiesStore, cxGridLevel, cxGridCustomView, cxGrid, cxPC;
+  Vcl.ActnList, cxPropertiesStore, cxGridLevel, cxGridCustomView, cxGrid, cxPC,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TMarginCategoryItemHistoryForm = class(TAncestorEnumForm)
     FormParams: TdsdFormParams;
-    colStartDate: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colMCSValue: TcxGridDBColumn;
+    StartDate: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    Value: TcxGridDBColumn;
   private
     { Private declarations }
   public

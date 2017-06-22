@@ -11,17 +11,27 @@ uses
   dsdAction, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB,
   Datasnap.DBClient, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
-  cxGridCustomView, cxGrid, cxPC;
+  cxGridCustomView, cxGrid, cxPC, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TReasonDifferencesForm = class(TAncestorGuidesForm)
     actShowDel: TBooleanStoredProcAction;
     dxBarButton1: TdxBarButton;
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     actUpdateDataSet: TdsdUpdateDataSet;
     spInsertUpdate_Object_ReasonDifferences: TdsdStoredProc;
-    colisErased: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -3,8 +3,9 @@ inherited PriceOnDateForm: TPriceOnDateForm
   ClientHeight = 420
   ClientWidth = 1354
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -610
   ExplicitWidth = 1370
-  ExplicitHeight = 458
+  ExplicitHeight = 459
   PixelsPerInch = 96
   TextHeight = 13
   object Panel: TPanel [0]
@@ -59,17 +60,17 @@ inherited PriceOnDateForm: TPriceOnDateForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clRemainsNotMCS
+              Column = RemainsNotMCS
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSummaNotMCS
+              Column = SummaNotMCS
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colRemains
+              Column = Remains
             end
             item
               Format = ',0.####'
@@ -79,7 +80,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colRemainsEnd
+              Column = RemainsEnd
             end
             item
               Format = ',0.####'
@@ -93,28 +94,28 @@ inherited PriceOnDateForm: TPriceOnDateForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clRemainsNotMCSEnd
+              Column = RemainsNotMCSEnd
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSummaNotMCSEnd
+              Column = SummaNotMCSEnd
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = clGoodsName
+              Column = GoodsName
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clRemainsNotMCS
+              Column = RemainsNotMCS
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSummaNotMCS
+              Column = SummaNotMCS
             end
             item
               Format = ',0.####'
@@ -124,12 +125,12 @@ inherited PriceOnDateForm: TPriceOnDateForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colRemains
+              Column = Remains
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colRemainsEnd
+              Column = RemainsEnd
             end
             item
               Format = ',0.####'
@@ -139,12 +140,12 @@ inherited PriceOnDateForm: TPriceOnDateForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clRemainsNotMCSEnd
+              Column = RemainsNotMCSEnd
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSummaNotMCSEnd
+              Column = SummaNotMCSEnd
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -155,7 +156,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clGoodsGroupName: TcxGridDBColumn
+          object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
             HeaderAlignmentHorz = taCenter
@@ -163,7 +164,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 101
           end
-          object clGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -171,7 +172,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 62
           end
-          object clGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -179,7 +180,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 234
           end
-          object clNDSKindName: TcxGridDBColumn
+          object NDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
             HeaderAlignmentHorz = taCenter
@@ -194,7 +195,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 58
           end
-          object clDateChange: TcxGridDBColumn
+          object DateChange: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083'. '#1080#1079#1084'. '#1094#1077#1085#1099
             DataBinding.FieldName = 'DateChange'
             HeaderAlignmentHorz = taCenter
@@ -202,7 +203,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 71
           end
-          object clPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' ('#1085#1072' '#1085#1072#1095'. '#1076#1085#1103')'
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -213,7 +214,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             HeaderAlignmentVert = vaCenter
             Width = 56
           end
-          object clMCSDateChange: TcxGridDBColumn
+          object MCSDateChange: TcxGridDBColumn
             AlternateCaption = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1085#1077#1089#1085#1080#1078#1072#1077#1084#1086#1075#1086' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
             Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083'. '#1080#1079#1084'. '#1053#1058#1047' ('#1085#1072#1095'.)'
             DataBinding.FieldName = 'MCSDateChange'
@@ -223,7 +224,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 81
           end
-          object clMCSPeriod: TcxGridDBColumn
+          object MCSPeriod: TcxGridDBColumn
             Caption = #1087#1077#1088#1080#1086#1076' '#1072#1085#1072#1083#1080#1079#1072'*** ('#1085#1072' '#1085#1072#1095'. '#1076#1085#1103')'
             DataBinding.FieldName = 'MCSPeriod'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -236,7 +237,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 70
           end
-          object clMCSDay: TcxGridDBColumn
+          object MCSDay: TcxGridDBColumn
             Caption = #1079#1072#1087#1072#1089' '#1076#1085#1077#1081'***  ('#1085#1072' '#1085#1072#1095'. '#1076#1085#1103')'
             DataBinding.FieldName = 'MCSDay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -249,7 +250,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 53
           end
-          object colRemains: TcxGridDBColumn
+          object Remains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082' ('#1085#1072' '#1085#1072#1095'. '#1076#1085#1103')'
             DataBinding.FieldName = 'Remains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -270,7 +271,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 80
           end
-          object clRemainsNotMCS: TcxGridDBColumn
+          object RemainsNotMCS: TcxGridDBColumn
             Caption = #1042#1080#1088#1090'. '#1074#1086#1079#1074#1088#1072#1090' ('#1085#1072' '#1085#1072#1095'. '#1076#1085#1103')'
             DataBinding.FieldName = 'RemainsNotMCS'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -283,7 +284,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 70
           end
-          object clSummaNotMCS: TcxGridDBColumn
+          object SummaNotMCS: TcxGridDBColumn
             Caption = #1042#1080#1088#1090'. '#1089#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' ('#1085#1072' '#1085#1072#1095'. '#1076#1085#1103')'
             DataBinding.FieldName = 'SummaNotMCS'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -296,7 +297,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 80
           end
-          object clMCSValue: TcxGridDBColumn
+          object MCSValue: TcxGridDBColumn
             AlternateCaption = #1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
             Caption = #1053#1058#1047' ('#1085#1072#1095'.)'
             DataBinding.FieldName = 'MCSValue'
@@ -316,7 +317,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 58
           end
-          object clPriceEnd: TcxGridDBColumn
+          object PriceEnd: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' ('#1085#1072' '#1082#1086#1085#1077#1094' '#1076#1085#1103')'
             DataBinding.FieldName = 'PriceEnd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -328,7 +329,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 56
           end
-          object clMCSPeriodEnd: TcxGridDBColumn
+          object MCSPeriodEnd: TcxGridDBColumn
             Caption = #1087#1077#1088#1080#1086#1076' '#1072#1085#1072#1083#1080#1079#1072'***  ('#1085#1072' '#1082#1086#1085'. '#1076#1085#1103')'
             DataBinding.FieldName = 'MCSPeriodEnd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -342,7 +343,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 70
           end
-          object clMCSDayEnd: TcxGridDBColumn
+          object MCSDayEnd: TcxGridDBColumn
             Caption = #1079#1072#1087#1072#1089' '#1076#1085#1077#1081'*** ('#1085#1072' '#1082#1086#1085'. '#1076#1085#1103')'
             DataBinding.FieldName = 'MCSDayEnd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -356,7 +357,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 53
           end
-          object colRemainsEnd: TcxGridDBColumn
+          object RemainsEnd: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082' ('#1085#1072' '#1082#1086#1085#1077#1094' '#1076#1085#1103')'
             DataBinding.FieldName = 'RemainsEnd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -378,7 +379,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 80
           end
-          object clMCSValueEnd: TcxGridDBColumn
+          object MCSValueEnd: TcxGridDBColumn
             AlternateCaption = #1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
             Caption = #1053#1058#1047' ('#1082#1086#1085'.)'
             DataBinding.FieldName = 'MCSValueEnd'
@@ -392,7 +393,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 53
           end
-          object clRemainsNotMCSEnd: TcxGridDBColumn
+          object RemainsNotMCSEnd: TcxGridDBColumn
             Caption = #1042#1080#1088#1090'. '#1074#1086#1079#1074#1088#1072#1090' ('#1085#1072' '#1082#1086#1085#1077#1094' '#1076#1085#1103')'
             DataBinding.FieldName = 'RemainsNotMCSEnd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -405,7 +406,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 70
           end
-          object clSummaNotMCSEnd: TcxGridDBColumn
+          object SummaNotMCSEnd: TcxGridDBColumn
             Caption = #1042#1080#1088#1090'. '#1089#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' ('#1085#1072' '#1082#1086#1085#1077#1094' '#1076#1085#1103')'
             DataBinding.FieldName = 'SummaNotMCSEnd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -418,14 +419,14 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 80
           end
-          object clMCSIsClose: TcxGridDBColumn
+          object MCSIsClose: TcxGridDBColumn
             Caption = #1059#1073#1080#1090#1100' '#1082#1086#1076
             DataBinding.FieldName = 'MCSIsClose'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 44
           end
-          object colMCSIsCloseDateChange: TcxGridDBColumn
+          object MCSIsCloseDateChange: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' "'#1091#1073#1080#1090#1100' '#1082#1086#1076'"'
             DataBinding.FieldName = 'MCSIsCloseDateChange'
             HeaderAlignmentHorz = taCenter
@@ -433,7 +434,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 52
           end
-          object clMCSNotRecalc: TcxGridDBColumn
+          object MCSNotRecalc: TcxGridDBColumn
             Caption = #1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072
             DataBinding.FieldName = 'MCSNotRecalc'
             HeaderAlignmentHorz = taCenter
@@ -441,7 +442,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             HeaderHint = #1053#1077' '#1087#1077#1088#1077#1089#1095#1080#1090#1099#1074#1072#1090#1100' '#1053#1058#1047
             Width = 59
           end
-          object colMCSNotRecalcDateChange: TcxGridDBColumn
+          object MCSNotRecalcDateChange: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' "'#1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072'"'
             DataBinding.FieldName = 'MCSNotRecalcDateChange'
             HeaderAlignmentHorz = taCenter
@@ -449,7 +450,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 85
           end
-          object colFix: TcxGridDBColumn
+          object Fix: TcxGridDBColumn
             AlternateCaption = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1094#1077#1085#1072
             Caption = #1060#1080#1082#1089'. '#1094#1077#1085#1072
             DataBinding.FieldName = 'Fix'
@@ -458,7 +459,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             HeaderHint = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1094#1077#1085#1072
             Width = 48
           end
-          object colFixDateChange: TcxGridDBColumn
+          object FixDateChange: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' "'#1060#1080#1082#1089'. '#1094#1077#1085#1072'"'
             DataBinding.FieldName = 'FixDateChange'
             HeaderAlignmentHorz = taCenter
@@ -466,7 +467,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 70
           end
-          object clGoods_isTop: TcxGridDBColumn
+          object Goods_isTop: TcxGridDBColumn
             Caption = #1058#1054#1055' ('#1087#1086' '#1089#1077#1090#1080')'
             DataBinding.FieldName = 'Goods_isTop'
             GroupSummaryAlignment = taCenter
@@ -475,7 +476,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 60
           end
-          object clisTop: TcxGridDBColumn
+          object isTop: TcxGridDBColumn
             Caption = #1058#1054#1055' ('#1072#1087#1090#1077#1082#1072')'
             DataBinding.FieldName = 'isTop'
             HeaderAlignmentHorz = taCenter
@@ -483,7 +484,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             HeaderGlyphAlignmentHorz = taCenter
             Width = 60
           end
-          object colTOPDateChange: TcxGridDBColumn
+          object TOPDateChange: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1058#1054#1055' ('#1072#1087#1090#1077#1082#1072')'
             DataBinding.FieldName = 'TOPDateChange'
             HeaderAlignmentHorz = taCenter
@@ -491,7 +492,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 74
           end
-          object clGoods_PercentMarkup: TcxGridDBColumn
+          object Goods_PercentMarkup: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1087#1086' '#1089#1077#1090#1080')'
             DataBinding.FieldName = 'Goods_PercentMarkup'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -503,7 +504,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 70
           end
-          object clPercentMarkup: TcxGridDBColumn
+          object PercentMarkup: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1072#1087#1090#1077#1082#1072')'
             DataBinding.FieldName = 'PercentMarkup'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -514,7 +515,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080
             Width = 70
           end
-          object colPercentMarkupDateChange: TcxGridDBColumn
+          object PercentMarkupDateChange: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' % '#1085#1072#1094#1077#1085#1082#1080' ('#1072#1087#1090#1077#1082#1072')'
             DataBinding.FieldName = 'PercentMarkupDateChange'
             HeaderAlignmentHorz = taCenter
@@ -523,7 +524,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 74
           end
-          object colMinExpirationDate: TcxGridDBColumn
+          object MinExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072
             DataBinding.FieldName = 'MinExpirationDate'
             HeaderAlignmentHorz = taCenter
@@ -531,7 +532,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 112
           end
-          object clConditionsKeepName: TcxGridDBColumn
+          object ConditionsKeepName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
             DataBinding.FieldName = 'ConditionsKeepName'
             GroupSummaryAlignment = taCenter
@@ -540,7 +541,7 @@ inherited PriceOnDateForm: TPriceOnDateForm
             Options.Editing = False
             Width = 75
           end
-          object clisErased: TcxGridDBColumn
+          object isErased: TcxGridDBColumn
             AlternateCaption = #1058#1086#1074#1072#1088' '#1091#1076#1072#1083#1077#1085
             Caption = #1061
             DataBinding.FieldName = 'isErased'

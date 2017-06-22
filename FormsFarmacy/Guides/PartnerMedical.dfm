@@ -37,7 +37,7 @@ object PartnerMedicalForm: TPartnerMedicalForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -50,26 +50,26 @@ object PartnerMedicalForm: TPartnerMedicalForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Width = 103
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Width = 279
       end
-      object clJuridicalName: TcxGridDBColumn
+      object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 147
       end
-      object clMedicFIO: TcxGridDBColumn
+      object MedicFIO: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1075#1083#1072#1074'.'#1074#1088#1072#1095#1072
         DataBinding.FieldName = 'MedicFIO'
         HeaderAlignmentHorz = taCenter
@@ -77,7 +77,7 @@ object PartnerMedicalForm: TPartnerMedicalForm
         Options.Editing = False
         Width = 90
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

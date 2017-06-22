@@ -3,24 +3,24 @@ inherited MarginReportForm: TMarginReportForm
   ClientHeight = 309
   ClientWidth = 453
   ExplicitWidth = 469
-  ExplicitHeight = 347
+  ExplicitHeight = 348
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 453
     Height = 283
-    ExplicitWidth = 512
-    ExplicitHeight = 281
+    ExplicitWidth = 453
+    ExplicitHeight = 283
     ClientRectBottom = 283
     ClientRectRight = 453
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 512
-      ExplicitHeight = 281
+      ExplicitWidth = 453
+      ExplicitHeight = 283
       inherited cxGrid: TcxGrid
         Width = 453
         Height = 283
-        ExplicitWidth = 512
-        ExplicitHeight = 281
+        ExplicitWidth = 453
+        ExplicitHeight = 283
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
           OptionsData.Inserting = True
@@ -29,13 +29,13 @@ inherited MarginReportForm: TMarginReportForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             HeaderAlignmentVert = vaCenter
             Width = 88
           end
-          object colName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
@@ -120,6 +120,7 @@ inherited MarginReportForm: TMarginReportForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
@@ -127,6 +128,7 @@ inherited MarginReportForm: TMarginReportForm
         Component = MasterCDS
         ComponentItem = 'Code'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -135,18 +137,21 @@ inherited MarginReportForm: TMarginReportForm
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Id'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Code'
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 296

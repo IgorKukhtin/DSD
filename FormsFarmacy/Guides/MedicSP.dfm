@@ -27,9 +27,7 @@ object MedicSPForm: TMedicSPForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 26
-    ExplicitWidth = 633
-    ExplicitHeight = 292
+    ExplicitTop = 53
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -40,7 +38,7 @@ object MedicSPForm: TMedicSPForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -52,13 +50,13 @@ object MedicSPForm: TMedicSPForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Width = 36
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -73,7 +71,7 @@ object MedicSPForm: TMedicSPForm
         Options.Editing = False
         Width = 416
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -94,8 +92,6 @@ object MedicSPForm: TMedicSPForm
     Height = 35
     Align = alTop
     TabOrder = 5
-    ExplicitLeft = -16
-    ExplicitTop = -22
     object cxLabel6: TcxLabel
       Left = 6
       Top = 9

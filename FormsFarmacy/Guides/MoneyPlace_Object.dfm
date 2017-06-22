@@ -2,7 +2,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082
   ClientHeight = 411
   ClientWidth = 304
-  ExplicitHeight = 449
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -30,7 +30,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             Visible = False
@@ -39,7 +39,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
             Options.Editing = False
             Width = 33
           end
-          object clName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentHorz = taCenter
@@ -47,7 +47,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
             Options.Editing = False
             Width = 268
           end
-          object clIsErased: TcxGridDBColumn
+          object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             Visible = False
@@ -68,6 +68,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -75,30 +76,39 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Value = 0
+          MultiSelectSeparator = ','
         end
         item
           Value = ''
+          MultiSelectSeparator = ','
         end>
     end
   end

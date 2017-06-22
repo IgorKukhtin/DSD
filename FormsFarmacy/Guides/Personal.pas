@@ -12,13 +12,24 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   cxGrid, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
   dxSkinsdxBarPainter, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxLabel,
-  cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, ChoicePeriod, cxButtonEdit;
+  cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, ChoicePeriod, cxButtonEdit,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TPersonalForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clMemberCode: TcxGridDBColumn;
+    MemberCode: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -42,17 +53,17 @@ type
     dsdGridToExcel: TdsdGridToExcel;
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    clDateIn: TcxGridDBColumn;
-    clDateOut: TcxGridDBColumn;
-    clMemberName: TcxGridDBColumn;
-    clPositionName: TcxGridDBColumn;
-    clUnitName: TcxGridDBColumn;
+    DateIn: TcxGridDBColumn;
+    DateOut: TcxGridDBColumn;
+    MemberName: TcxGridDBColumn;
+    PositionName: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clErased: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clPersonalGroupName: TcxGridDBColumn;
-    clIsOfficial: TcxGridDBColumn;
+    PersonalGroupName: TcxGridDBColumn;
+    isOfficial: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
@@ -63,10 +74,10 @@ type
     deStart: TcxDateEdit;
     cxlEnd: TcxLabel;
     deEnd: TcxDateEdit;
-    clIsDateOut: TcxGridDBColumn;
+    isDateOut: TcxGridDBColumn;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
-    clIsMain: TcxGridDBColumn;
+    isMain: TcxGridDBColumn;
     actUpdateIsMain: TdsdExecStoredProc;
     bbUpdateIsMain: TdxBarButton;
     actPositionChoice: TOpenChoiceForm;

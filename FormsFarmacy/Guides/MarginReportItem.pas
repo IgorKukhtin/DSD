@@ -12,21 +12,31 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
   dxSkinsdxBarPainter, cxContainer, cxLabel, dsdGuides, cxTextEdit, cxMaskEdit,
-  cxButtonEdit, cxCurrencyEdit;
+  cxButtonEdit, cxCurrencyEdit, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TMarginReportItemForm = class(TAncestorEnumForm)
     spInsertUpdate: TdsdStoredProc;
     actInsertUpdate: TdsdUpdateDataSet;
-    colPercent1: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
+    Percent1: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
     UnitChoiceForm: TOpenChoiceForm;
     ceMarginReport: TcxButtonEdit;
     MarginReportGuides: TdsdGuides;
     textMarginReport: TdxBarControlContainerItem;
     cxLabel1: TcxLabel;
     bbMarginReport: TdxBarControlContainerItem;
-    colMarginReportName: TcxGridDBColumn;
+    MarginReportName: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
     FormParams: TdsdFormParams;
   private

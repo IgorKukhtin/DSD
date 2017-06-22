@@ -3,23 +3,23 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 420
   ClientWidth = 771
   ExplicitWidth = 787
-  ExplicitHeight = 458
+  ExplicitHeight = 459
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 771
     Height = 394
-    ExplicitWidth = 699
+    ExplicitWidth = 771
     ExplicitHeight = 394
     ClientRectBottom = 394
     ClientRectRight = 771
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 699
+      ExplicitWidth = 771
       ExplicitHeight = 394
       inherited cxGrid: TcxGrid
         Width = 771
         Height = 394
-        ExplicitWidth = 699
+        ExplicitWidth = 771
         ExplicitHeight = 394
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -33,35 +33,35 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object ceParentName: TcxGridDBColumn
+          object ParentName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'ParentName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object ceCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 35
           end
-          object ceName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 133
           end
-          object ceJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 87
           end
-          object colTaxService: TcxGridDBColumn
+          object TaxService: TcxGridDBColumn
             Caption = '% '#1086#1090' '#1074#1099#1088#1091#1095#1082#1080
             DataBinding.FieldName = 'TaxService'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -70,7 +70,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentVert = vaCenter
             Width = 57
           end
-          object colTaxServiceNigth: TcxGridDBColumn
+          object TaxServiceNigth: TcxGridDBColumn
             Caption = '% '#1086#1090' '#1074#1099#1088#1091#1095#1082#1080' '#1085#1086#1095#1100
             DataBinding.FieldName = 'TaxServiceNigth'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -79,7 +79,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentVert = vaCenter
             Width = 56
           end
-          object colisRepriceAuto: TcxGridDBColumn
+          object isRepriceAuto: TcxGridDBColumn
             Caption = #1040#1074#1090#1086' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072
             DataBinding.FieldName = 'isRepriceAuto'
             HeaderAlignmentHorz = taCenter
@@ -88,7 +88,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 70
           end
-          object colisOver: TcxGridDBColumn
+          object isOver: TcxGridDBColumn
             Caption = #1040#1074#1090#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
             DataBinding.FieldName = 'isOver'
             HeaderAlignmentHorz = taCenter
@@ -97,7 +97,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 88
           end
-          object ceIsErased: TcxGridDBColumn
+          object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             PropertiesClassName = 'TcxCheckBoxProperties'
@@ -106,14 +106,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentVert = vaCenter
             Width = 40
           end
-          object UnitId: TcxGridDBColumn
+          object Id: TcxGridDBColumn
             Caption = 'UnitId'
             DataBinding.FieldName = 'Id'
             Visible = False
             VisibleForCustomization = False
             Width = 30
           end
-          object colisUploadBadm: TcxGridDBColumn
+          object isUploadBadm: TcxGridDBColumn
             Caption = #1042#1099#1075#1088#1091#1078#1072#1090#1100' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090'. '#1041#1040#1044#1052
             DataBinding.FieldName = 'isUploadBadm'
             HeaderAlignmentHorz = taCenter
@@ -130,7 +130,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 55
           end
-          object colisMarginCategory: TcxGridDBColumn
+          object isMarginCategory: TcxGridDBColumn
             Caption = #1060#1086#1088#1084'. '#1074' '#1087#1088#1086#1089#1084'. '#1082#1072#1090#1077#1075#1086#1088#1080#1081' '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'isMarginCategory'
             HeaderAlignmentHorz = taCenter

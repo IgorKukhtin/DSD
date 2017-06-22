@@ -2,8 +2,9 @@
   Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080' '#1102#1088' '#1083#1080#1094
   ClientHeight = 311
   ClientWidth = 985
+  ExplicitLeft = -241
   ExplicitWidth = 1001
-  ExplicitHeight = 349
+  ExplicitHeight = 350
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -26,21 +27,21 @@
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colJuridicalName
+              Column = JuridicalName
             end>
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'Name'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colMainJuridical: TcxGridDBColumn
+          object MainJuridicalName: TcxGridDBColumn
             Caption = #1053#1072#1096#1077' '#1102#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'MainJuridicalName'
             HeaderAlignmentHorz = taCenter
@@ -48,7 +49,7 @@
             Options.Editing = False
             Width = 122
           end
-          object colJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
@@ -56,7 +57,7 @@
             Options.Editing = False
             Width = 162
           end
-          object colContract: TcxGridDBColumn
+          object ContractName: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
@@ -64,7 +65,7 @@
             Options.Editing = False
             Width = 158
           end
-          object colisPriceClose: TcxGridDBColumn
+          object isPriceClose: TcxGridDBColumn
             Caption = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090
             DataBinding.FieldName = 'isPriceClose'
             PropertiesClassName = 'TcxCheckBoxProperties'
@@ -72,14 +73,14 @@
             HeaderAlignmentVert = vaCenter
             Width = 108
           end
-          object colBonus: TcxGridDBColumn
+          object Bonus: TcxGridDBColumn
             Caption = #1041#1086#1085#1091#1089
             DataBinding.FieldName = 'Bonus'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 73
           end
-          object colPriceLimit: TcxGridDBColumn
+          object PriceLimit: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1076#1086
             DataBinding.FieldName = 'PriceLimit'
             HeaderAlignmentHorz = taCenter
@@ -87,21 +88,21 @@
             HeaderHint = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' "'#1062#1077#1085#1072' '#1076#1086'"'
             Width = 70
           end
-          object colStartDate: TcxGridDBColumn
+          object StartDate: TcxGridDBColumn
             Caption = #1044#1077#1081#1089#1090#1074'. '#1089
             DataBinding.FieldName = 'StartDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 65
           end
-          object colEndDate: TcxGridDBColumn
+          object EndDate: TcxGridDBColumn
             Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086
             DataBinding.FieldName = 'EndDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 74
           end
-          object colСonditionalPercent: TcxGridDBColumn
+          object СonditionalPercent: TcxGridDBColumn
             Caption = #1044#1086#1087'. % '#1087#1086' '#1087#1088#1072#1081#1089#1091
             DataBinding.FieldName = 'ConditionalPercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -112,14 +113,14 @@
             HeaderHint = #1044#1086#1087'. '#1091#1089#1083#1086#1074#1080#1103' '#1087#1086' '#1087#1088#1072#1081#1089#1091', %'
             Width = 65
           end
-          object colisSite: TcxGridDBColumn
+          object isSite: TcxGridDBColumn
             Caption = #1044#1083#1103' '#1089#1072#1081#1090#1072
             DataBinding.FieldName = 'isSite'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colisBonusVirtual: TcxGridDBColumn
+          object isBonusVirtual: TcxGridDBColumn
             Caption = #1042#1080#1088#1090'. '#1073#1086#1085#1091#1089
             DataBinding.FieldName = 'isBonusVirtual'
             HeaderAlignmentHorz = taCenter
@@ -127,7 +128,7 @@
             HeaderHint = #1042#1080#1088#1090#1091#1072#1083#1100#1085#1099#1081' '#1073#1086#1085#1091#1089
             Width = 51
           end
-          object clInsertName: TcxGridDBColumn
+          object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
@@ -135,7 +136,7 @@
             Options.Editing = False
             Width = 101
           end
-          object clInsertDate: TcxGridDBColumn
+          object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
@@ -143,7 +144,7 @@
             Options.Editing = False
             Width = 78
           end
-          object clUpdateName: TcxGridDBColumn
+          object UpdateName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateName'
             HeaderAlignmentHorz = taCenter
@@ -151,7 +152,7 @@
             Options.Editing = False
             Width = 101
           end
-          object clUpdateDate: TcxGridDBColumn
+          object UpdateDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateDate'
             HeaderAlignmentHorz = taCenter
@@ -159,7 +160,7 @@
             Options.Editing = False
             Width = 78
           end
-          object clErased: TcxGridDBColumn
+          object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             PropertiesClassName = 'TcxCheckBoxProperties'

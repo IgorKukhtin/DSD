@@ -37,7 +37,7 @@ object OverSettingsForm: TOverSettingsForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clUnitName
+      OptionsBehavior.IncSearchItem = UnitName
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -50,21 +50,21 @@ object OverSettingsForm: TOverSettingsForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clLinenum: TcxGridDBColumn
+      object Linenum: TcxGridDBColumn
         Caption = #8470' '#1087'.'#1087'.'
         DataBinding.FieldName = 'Linenum'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 37
       end
-      object clUnitName: TcxGridDBColumn
+      object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 149
       end
-      object clMinPrice: TcxGridDBColumn
+      object MinPrice: TcxGridDBColumn
         Caption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1072#1103' '#1094#1077#1085#1072
         DataBinding.FieldName = 'MinPrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -76,7 +76,7 @@ object OverSettingsForm: TOverSettingsForm
         Options.Editing = False
         Width = 104
       end
-      object colMinPriceEnd: TcxGridDBColumn
+      object MinPriceEnd: TcxGridDBColumn
         Caption = #1044#1086' '#1094#1077#1085#1099
         DataBinding.FieldName = 'MinPriceEnd'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -86,7 +86,7 @@ object OverSettingsForm: TOverSettingsForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clMinimumLot: TcxGridDBColumn
+      object MinimumLot: TcxGridDBColumn
         Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' ('#1052#1080#1085'.'#1086#1082#1088#1091#1075#1083#1077#1085#1080#1077')'
         DataBinding.FieldName = 'MinimumLot'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -98,7 +98,7 @@ object OverSettingsForm: TOverSettingsForm
         Options.Editing = False
         Width = 149
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

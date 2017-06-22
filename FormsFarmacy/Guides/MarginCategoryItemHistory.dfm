@@ -5,7 +5,7 @@ inherited MarginCategoryItemHistoryForm: TMarginCategoryItemHistoryForm
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
   ExplicitWidth = 520
-  ExplicitHeight = 392
+  ExplicitHeight = 393
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -32,21 +32,21 @@ inherited MarginCategoryItemHistoryForm: TMarginCategoryItemHistoryForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colStartDate: TcxGridDBColumn
+          object StartDate: TcxGridDBColumn
             Caption = #1057' '#1076#1072#1090#1099
             DataBinding.FieldName = 'StartDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 104
           end
-          object colPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1072#1103' '#1094#1077#1085#1072
             DataBinding.FieldName = 'Price'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 126
           end
-          object colMCSValue: TcxGridDBColumn
+          object Value: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'Value'
             HeaderAlignmentHorz = taCenter

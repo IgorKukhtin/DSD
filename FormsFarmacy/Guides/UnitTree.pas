@@ -12,7 +12,17 @@ uses
   cxCheckBox, dsdAddOn, dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar,
   cxPropertiesStore, Datasnap.DBClient, cxGrid, cxSplitter, cxInplaceContainer,
   cxDBTL, cxTLData, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter, cxCurrencyEdit;
+  dxSkinsdxBarPainter, cxCurrencyEdit, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TUnitTreeForm = class(TParentForm)
@@ -42,24 +52,24 @@ type
     GridDS: TDataSource;
     ClientDataSet: TClientDataSet;
     spGrid: TdsdStoredProc;
-    ceCode: TcxGridDBColumn;
-    ceName: TcxGridDBColumn;
-    ceBranchName: TcxGridDBColumn;
-    ceisErased: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     dsdDBTreeAddOn: TdsdDBTreeAddOn;
     bbChoice: TdxBarButton;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dxBarStatic: TdxBarStatic;
-    ceTreeState: TcxGridDBColumn;
+    isLeaf: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     bbUnitChoiceForm: TdxBarButton;
     dsdOpenUnitForm: TdsdOpenForm;
-    colTaxService: TcxGridDBColumn;
-    colisRepriceAuto: TcxGridDBColumn;
+    TaxService: TcxGridDBColumn;
+    isRepriceAuto: TcxGridDBColumn;
     actProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    colAddress: TcxGridDBColumn;
+    Address: TcxGridDBColumn;
   private
     { Private declarations }
   public
