@@ -179,9 +179,22 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     TabOrder = 23
     Width = 163
   end
+  object cxLabel12: TcxLabel
+    Left = 291
+    Top = 253
+    Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074#1083#1086#1078#1077#1085#1080#1077
+  end
+  object ceAmountDoc: TcxCurrencyEdit
+    Left = 291
+    Top = 272
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 25
+    Width = 261
+  end
   object ActionList: TActionList
-    Left = 432
-    Top = 246
+    Left = 408
+    Top = 318
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -224,6 +237,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -231,6 +245,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -238,6 +253,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Component = ceAmount
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBoxCount'
@@ -245,6 +261,15 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Component = ceBoxCount
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountDoc'
+        Value = Null
+        Component = ceAmountDoc
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBarCode'
@@ -252,6 +277,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Component = ceBarCode
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inArticle'
@@ -259,6 +285,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Component = ceArticle
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBarCodeGLN'
@@ -266,6 +293,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Component = ceBarCodeGLN
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inArticleGLN'
@@ -273,6 +301,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Component = ceArticleGLN
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGroupName'
@@ -280,6 +309,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Component = ceGroupName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsPropertyId'
@@ -287,6 +317,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Component = dsdGoodsPropertyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -294,6 +325,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -301,6 +333,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Component = GoodsKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 88
@@ -312,6 +345,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 512
     Top = 246
@@ -329,60 +363,77 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Amount'
         Value = 0.000000000000000000
         Component = ceAmount
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BoxCount'
         Value = Null
         Component = ceBoxCount
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountDoc'
+        Value = Null
+        Component = ceAmountDoc
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BarCode'
         Value = ''
         Component = ceBarCode
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Article'
         Value = ''
         Component = ceArticle
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BarCodeGLN'
         Value = ''
         Component = ceBarCodeGLN
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ArticleGLN'
         Value = ''
         Component = ceArticleGLN
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GroupName'
         Value = Null
         Component = ceGroupName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsPropertyId'
         Value = ''
         Component = dsdGoodsPropertyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsPropertyName'
@@ -390,12 +441,14 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Component = dsdGoodsPropertyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsId'
         Value = ''
         Component = GoodsGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsName'
@@ -403,12 +456,14 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Component = GoodsGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsKindId'
         Value = ''
         Component = GoodsKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsKindName'
@@ -416,6 +471,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Component = GoodsKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 251
@@ -426,6 +482,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     LookupControl = ceGoodsProperty
     FormNameParam.Value = 'TGoodsPropertyForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsPropertyForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -435,6 +492,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Component = dsdGoodsPropertyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -443,6 +501,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 108
     Top = 110
@@ -452,6 +511,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     LookupControl = ceGoodsKind
     FormNameParam.Value = 'TGoodsKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -461,6 +521,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Component = GoodsKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -469,6 +530,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 372
     Top = 102
@@ -478,6 +540,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     LookupControl = ceGoods
     FormNameParam.Value = 'TGoods_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoods_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -487,6 +550,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -495,6 +559,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 180
     Top = 62

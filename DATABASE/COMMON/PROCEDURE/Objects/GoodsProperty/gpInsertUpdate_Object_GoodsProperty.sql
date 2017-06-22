@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsProperty (Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsProperty (Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsProperty (Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsProperty (Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsProperty(
@@ -15,6 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsProperty(
     IN inEndPosFrac          TFloat    ,    -- Дробная часть веса в штрих коде(последняя позиция)
     IN inStartPosIdent       TFloat    ,    -- Идентификатор товара(начальная позиция)
     IN inEndPosIdent         TFloat    ,    -- Идентификатор товара(последняя позиция)
+    In inTaxDoc              TFloat    ,    -- % отклонения для вложения
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -50,6 +52,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsProperty_StartPosIdent(), ioId, inStartPosIdent);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsProperty_EndPosIdent(), ioId, inEndPosIdent);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsProperty_TaxDoc(), ioId, inTaxDoc);
 
    -- обновили
    PERFORM lpUpdate_Object_GoodsPropertyValue_BarCodeShort (ioId, 0, vbUserId);
@@ -67,6 +71,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.06.17         * add TaxDoc
  24,09,15         *
  26.05.15         * add Float
  12.02.15                                        *
