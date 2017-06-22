@@ -59,8 +59,8 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     UnitName: TcxGridDBColumn;
     ContractName: TcxGridDBColumn;
-    actShowAll: TBooleanStoredProcAction;
-    bbShowAll: TdxBarButton;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     Value1: TcxGridDBColumn;
@@ -78,6 +78,8 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     spInsertUpdate: TdsdStoredProc;
     actInsertUpdate: TdsdUpdateDataSet;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public
