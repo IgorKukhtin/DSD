@@ -286,7 +286,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         item
           Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = clGoodsName
+          Column = GoodsName
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -304,7 +304,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clGoodsGroupNameFull: TcxGridDBColumn
+      object GoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077')'
         DataBinding.FieldName = 'GoodsGroupNameFull'
         Visible = False
@@ -312,7 +312,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object clGoodsGroupName: TcxGridDBColumn
+      object GoodsGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'GoodsGroupName'
         Visible = False
@@ -320,28 +320,28 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object clGoodsCode: TcxGridDBColumn
+      object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 35
       end
-      object clCommonCode: TcxGridDBColumn
+      object CommonCode: TcxGridDBColumn
         Caption = #1082#1086#1076' '#1052#1086#1088#1080#1086#1085
         DataBinding.FieldName = 'CommonCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object clGoodsName: TcxGridDBColumn
+      object GoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object cPrice_1_1: TcxGridDBColumn
+      object Price_1_1: TcxGridDBColumn
         Caption = '1 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -351,7 +351,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_1: TcxGridDBColumn
+      object Price_2_1: TcxGridDBColumn
         Caption = '1 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -361,7 +361,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_1: TcxGridDBColumn
+      object Price_3_1: TcxGridDBColumn
         Caption = '1 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -371,7 +371,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_2: TcxGridDBColumn
+      object Price_1_2: TcxGridDBColumn
         Caption = '2 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -381,7 +381,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_2: TcxGridDBColumn
+      object Price_2_2: TcxGridDBColumn
         Caption = '2 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -391,7 +391,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_2: TcxGridDBColumn
+      object Price_3_2: TcxGridDBColumn
         Caption = '2 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -401,7 +401,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_3: TcxGridDBColumn
+      object Price_1_3: TcxGridDBColumn
         Caption = '3 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -411,7 +411,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_3: TcxGridDBColumn
+      object Price_2_3: TcxGridDBColumn
         Caption = '3 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -421,7 +421,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_3: TcxGridDBColumn
+      object Price_3_3: TcxGridDBColumn
         Caption = '3 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -431,7 +431,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_4: TcxGridDBColumn
+      object Price_1_4: TcxGridDBColumn
         Caption = '4 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_4'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -441,7 +441,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_4: TcxGridDBColumn
+      object Price_2_4: TcxGridDBColumn
         Caption = '4 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_4'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -451,7 +451,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_4: TcxGridDBColumn
+      object Price_3_4: TcxGridDBColumn
         Caption = '4 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_4'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -461,7 +461,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_5: TcxGridDBColumn
+      object Price_1_5: TcxGridDBColumn
         Caption = '5 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_5'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -471,7 +471,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_5: TcxGridDBColumn
+      object Price_2_5: TcxGridDBColumn
         Caption = '5 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_5'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -481,7 +481,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_5: TcxGridDBColumn
+      object Price_3_5: TcxGridDBColumn
         Caption = '5 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_5'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -491,7 +491,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_6: TcxGridDBColumn
+      object Price_1_6: TcxGridDBColumn
         Caption = '6 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_6'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -501,7 +501,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_6: TcxGridDBColumn
+      object Price_2_6: TcxGridDBColumn
         Caption = '6 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_6'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -511,7 +511,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_6: TcxGridDBColumn
+      object Price_3_6: TcxGridDBColumn
         Caption = '6 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_6'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -521,7 +521,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_7: TcxGridDBColumn
+      object Price_1_7: TcxGridDBColumn
         Caption = '7 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_7'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -531,7 +531,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_7: TcxGridDBColumn
+      object Price_2_7: TcxGridDBColumn
         Caption = '7 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_7'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -541,7 +541,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_7: TcxGridDBColumn
+      object Price_3_7: TcxGridDBColumn
         Caption = '7 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_7'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -551,7 +551,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_8: TcxGridDBColumn
+      object Price_1_8: TcxGridDBColumn
         Caption = '8 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_8'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -561,7 +561,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_8: TcxGridDBColumn
+      object Price_2_8: TcxGridDBColumn
         Caption = '8 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_8'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -571,7 +571,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_8: TcxGridDBColumn
+      object Price_3_8: TcxGridDBColumn
         Caption = '8 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_8'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -581,7 +581,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_9: TcxGridDBColumn
+      object Price_1_9: TcxGridDBColumn
         Caption = '9 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_9'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -591,7 +591,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_9: TcxGridDBColumn
+      object Price_2_9: TcxGridDBColumn
         Caption = '9 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_9'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -601,7 +601,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_9: TcxGridDBColumn
+      object Price_3_9: TcxGridDBColumn
         Caption = '9 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_9'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -611,7 +611,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_10: TcxGridDBColumn
+      object Price_1_10: TcxGridDBColumn
         Caption = '10 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_10'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -621,7 +621,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_10: TcxGridDBColumn
+      object Price_2_10: TcxGridDBColumn
         Caption = '10 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_10'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -631,7 +631,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_10: TcxGridDBColumn
+      object Price_3_10: TcxGridDBColumn
         Caption = '10 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_10'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -641,7 +641,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_11: TcxGridDBColumn
+      object Price_1_11: TcxGridDBColumn
         Caption = '11 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_11'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -651,7 +651,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_11: TcxGridDBColumn
+      object Price_2_11: TcxGridDBColumn
         Caption = '11 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_11'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -661,7 +661,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_11: TcxGridDBColumn
+      object Price_3_11: TcxGridDBColumn
         Caption = '11 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_11'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -671,7 +671,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_12: TcxGridDBColumn
+      object Price_1_12: TcxGridDBColumn
         Caption = '12 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_12'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -681,7 +681,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_12: TcxGridDBColumn
+      object Price_2_12: TcxGridDBColumn
         Caption = '12 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_12'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -691,7 +691,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_12: TcxGridDBColumn
+      object Price_3_12: TcxGridDBColumn
         Caption = '12 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_12'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -701,7 +701,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_13: TcxGridDBColumn
+      object Price_1_13: TcxGridDBColumn
         Caption = '13 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_13'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -711,7 +711,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_13: TcxGridDBColumn
+      object Price_2_13: TcxGridDBColumn
         Caption = '13 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_13'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -721,7 +721,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_13: TcxGridDBColumn
+      object Price_3_13: TcxGridDBColumn
         Caption = '13 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_13'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -731,7 +731,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_14: TcxGridDBColumn
+      object Price_1_14: TcxGridDBColumn
         Caption = '14 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_14'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -741,7 +741,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_14: TcxGridDBColumn
+      object Price_2_14: TcxGridDBColumn
         Caption = '14 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_14'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -751,7 +751,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_14: TcxGridDBColumn
+      object Price_3_14: TcxGridDBColumn
         Caption = '14 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_14'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -761,7 +761,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_15: TcxGridDBColumn
+      object Price_1_15: TcxGridDBColumn
         Caption = '15 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_15'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -771,7 +771,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_15: TcxGridDBColumn
+      object Price_2_15: TcxGridDBColumn
         Caption = '15 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_15'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -781,7 +781,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_15: TcxGridDBColumn
+      object Price_3_15: TcxGridDBColumn
         Caption = '15 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_15'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -791,7 +791,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_16: TcxGridDBColumn
+      object Price_1_16: TcxGridDBColumn
         Caption = '16 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_16'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -801,7 +801,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_16: TcxGridDBColumn
+      object Price_2_16: TcxGridDBColumn
         Caption = '16 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_16'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -811,7 +811,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_16: TcxGridDBColumn
+      object Price_3_16: TcxGridDBColumn
         Caption = '16 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_16'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -821,7 +821,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_17: TcxGridDBColumn
+      object Price_1_17: TcxGridDBColumn
         Caption = '17 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_17'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -831,7 +831,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_17: TcxGridDBColumn
+      object Price_2_17: TcxGridDBColumn
         Caption = '17 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_17'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -841,7 +841,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_17: TcxGridDBColumn
+      object Price_3_17: TcxGridDBColumn
         Caption = '17 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_17'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -851,7 +851,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_18: TcxGridDBColumn
+      object Price_1_18: TcxGridDBColumn
         Caption = '18 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_18'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -861,7 +861,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_18: TcxGridDBColumn
+      object Price_2_18: TcxGridDBColumn
         Caption = '18 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_18'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -871,7 +871,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_18: TcxGridDBColumn
+      object Price_3_18: TcxGridDBColumn
         Caption = '18 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_18'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -881,7 +881,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_19: TcxGridDBColumn
+      object Price_1_19: TcxGridDBColumn
         Caption = '19 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_19'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -891,7 +891,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_19: TcxGridDBColumn
+      object Price_2_19: TcxGridDBColumn
         Caption = '19 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_19'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -901,7 +901,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_19: TcxGridDBColumn
+      object Price_3_19: TcxGridDBColumn
         Caption = '19 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_19'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -911,7 +911,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_20: TcxGridDBColumn
+      object Price_1_20: TcxGridDBColumn
         Caption = '20 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_20'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -921,7 +921,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_20: TcxGridDBColumn
+      object Price_2_20: TcxGridDBColumn
         Caption = '20 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_20'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -931,7 +931,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_20: TcxGridDBColumn
+      object Price_3_20: TcxGridDBColumn
         Caption = '20 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_20'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -941,7 +941,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_21: TcxGridDBColumn
+      object Price_1_21: TcxGridDBColumn
         Caption = '21 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_21'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -951,7 +951,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_21: TcxGridDBColumn
+      object Price_2_21: TcxGridDBColumn
         Caption = '21 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_21'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -961,7 +961,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_21: TcxGridDBColumn
+      object Price_3_21: TcxGridDBColumn
         Caption = '21 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_21'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -971,7 +971,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_22: TcxGridDBColumn
+      object Price_1_22: TcxGridDBColumn
         Caption = '22 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_22'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -981,7 +981,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_22: TcxGridDBColumn
+      object Price_2_22: TcxGridDBColumn
         Caption = '22 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_22'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -991,7 +991,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_22: TcxGridDBColumn
+      object Price_3_22: TcxGridDBColumn
         Caption = '22 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_22'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1001,7 +1001,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_23: TcxGridDBColumn
+      object Price_1_23: TcxGridDBColumn
         Caption = '23 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_23'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1011,7 +1011,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_23: TcxGridDBColumn
+      object Price_2_23: TcxGridDBColumn
         Caption = '23 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_23'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1021,7 +1021,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_23: TcxGridDBColumn
+      object Price_3_23: TcxGridDBColumn
         Caption = '23 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_23'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1031,7 +1031,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_24: TcxGridDBColumn
+      object Price_1_24: TcxGridDBColumn
         Caption = '24 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_24'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1041,7 +1041,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_24: TcxGridDBColumn
+      object Price_2_24: TcxGridDBColumn
         Caption = '24 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_24'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1051,7 +1051,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_24: TcxGridDBColumn
+      object Price_3_24: TcxGridDBColumn
         Caption = '24 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_24'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1061,7 +1061,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_25: TcxGridDBColumn
+      object Price_1_25: TcxGridDBColumn
         Caption = '25 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_25'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1071,7 +1071,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_25: TcxGridDBColumn
+      object Price_2_25: TcxGridDBColumn
         Caption = '25 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_25'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1081,7 +1081,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_25: TcxGridDBColumn
+      object Price_3_25: TcxGridDBColumn
         Caption = '25 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_25'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1091,7 +1091,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_26: TcxGridDBColumn
+      object Price_1_26: TcxGridDBColumn
         Caption = '26 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_26'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1101,7 +1101,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_26: TcxGridDBColumn
+      object Price_2_26: TcxGridDBColumn
         Caption = '26 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_26'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1111,7 +1111,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_26: TcxGridDBColumn
+      object Price_3_26: TcxGridDBColumn
         Caption = '26 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_26'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1121,7 +1121,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_27: TcxGridDBColumn
+      object Price_1_27: TcxGridDBColumn
         Caption = '27 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_27'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1131,7 +1131,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_27: TcxGridDBColumn
+      object Price_2_27: TcxGridDBColumn
         Caption = '27 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_27'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1141,7 +1141,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_27: TcxGridDBColumn
+      object Price_3_27: TcxGridDBColumn
         Caption = '27 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_27'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1151,7 +1151,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_28: TcxGridDBColumn
+      object Price_1_28: TcxGridDBColumn
         Caption = '28 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_28'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1161,7 +1161,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_28: TcxGridDBColumn
+      object Price_2_28: TcxGridDBColumn
         Caption = '28 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_28'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1171,7 +1171,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_28: TcxGridDBColumn
+      object Price_3_28: TcxGridDBColumn
         Caption = '28 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_28'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1181,7 +1181,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_29: TcxGridDBColumn
+      object Price_1_29: TcxGridDBColumn
         Caption = '29 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_29'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1191,7 +1191,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_29: TcxGridDBColumn
+      object Price_2_29: TcxGridDBColumn
         Caption = '29 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_29'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1201,7 +1201,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_29: TcxGridDBColumn
+      object Price_3_29: TcxGridDBColumn
         Caption = '29 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_29'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1211,7 +1211,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_30: TcxGridDBColumn
+      object Price_1_30: TcxGridDBColumn
         Caption = '30 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_30'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1221,7 +1221,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_30: TcxGridDBColumn
+      object Price_2_30: TcxGridDBColumn
         Caption = '30 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_30'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1231,7 +1231,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_30: TcxGridDBColumn
+      object Price_3_30: TcxGridDBColumn
         Caption = '30 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_30'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1241,7 +1241,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object cPrice_1_31: TcxGridDBColumn
+      object Price_1_31: TcxGridDBColumn
         Caption = '31 ('#1087#1086#1089#1090'.1)'
         DataBinding.FieldName = 'Price_1_31'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1251,7 +1251,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_2_31: TcxGridDBColumn
+      object Price_2_31: TcxGridDBColumn
         Caption = '31 ('#1087#1086#1089#1090'.2)'
         DataBinding.FieldName = 'Price_2_31'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1261,7 +1261,7 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object cPrice_3_31: TcxGridDBColumn
+      object Price_3_31: TcxGridDBColumn
         Caption = '31 ('#1087#1086#1089#1090'.3)'
         DataBinding.FieldName = 'Price_3_31'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -2073,242 +2073,242 @@ object Report_MovementPriceListForm: TReport_MovementPriceListForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <
       item
-        ColorColumn = cPrice_1_1
+        ColorColumn = Price_1_1
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_2_1
+        ColorColumn = Price_2_1
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_3_1
+        ColorColumn = Price_3_1
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_1_3
+        ColorColumn = Price_1_3
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_2_3
+        ColorColumn = Price_2_3
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_3_3
+        ColorColumn = Price_3_3
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_1_5
+        ColorColumn = Price_1_5
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_2_5
+        ColorColumn = Price_2_5
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_3_5
+        ColorColumn = Price_3_5
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_1_7
+        ColorColumn = Price_1_7
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_2_7
+        ColorColumn = Price_2_7
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_3_7
+        ColorColumn = Price_3_7
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_1_9
+        ColorColumn = Price_1_9
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_2_9
+        ColorColumn = Price_2_9
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_3_9
+        ColorColumn = Price_3_9
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_1_11
+        ColorColumn = Price_1_11
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_2_11
+        ColorColumn = Price_2_11
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_3_11
+        ColorColumn = Price_3_11
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_1_13
+        ColorColumn = Price_1_13
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_2_13
+        ColorColumn = Price_2_13
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_3_13
+        ColorColumn = Price_3_13
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_1_15
+        ColorColumn = Price_1_15
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_2_15
+        ColorColumn = Price_2_15
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_3_15
+        ColorColumn = Price_3_15
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_1_17
+        ColorColumn = Price_1_17
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_2_17
+        ColorColumn = Price_2_17
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_3_17
+        ColorColumn = Price_3_17
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_1_19
+        ColorColumn = Price_1_19
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_2_19
+        ColorColumn = Price_2_19
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_3_19
+        ColorColumn = Price_3_19
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_1_21
+        ColorColumn = Price_1_21
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_2_21
+        ColorColumn = Price_2_21
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_3_21
+        ColorColumn = Price_3_21
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_1_23
+        ColorColumn = Price_1_23
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_2_23
+        ColorColumn = Price_2_23
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_3_23
+        ColorColumn = Price_3_23
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_1_25
+        ColorColumn = Price_1_25
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_2_25
+        ColorColumn = Price_2_25
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_3_25
+        ColorColumn = Price_3_25
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_1_27
+        ColorColumn = Price_1_27
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_2_27
+        ColorColumn = Price_2_27
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_3_27
+        ColorColumn = Price_3_27
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_1_29
+        ColorColumn = Price_1_29
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_2_29
+        ColorColumn = Price_2_29
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_3_29
+        ColorColumn = Price_3_29
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_1_31
+        ColorColumn = Price_1_31
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_2_31
+        ColorColumn = Price_2_31
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end
       item
-        ColorColumn = cPrice_3_31
+        ColorColumn = Price_3_31
         BackGroundValueColumn = Color1
         ColorValueList = <>
       end>

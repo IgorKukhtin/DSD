@@ -4,6 +4,8 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
   ClientWidth = 1066
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -398
+  ExplicitTop = -112
   ExplicitWidth = 1082
   ExplicitHeight = 605
   PixelsPerInch = 96
@@ -140,7 +142,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = clGoodsName
+              Column = GoodsName
             end
             item
               Format = ',0.####'
@@ -251,7 +253,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             Visible = False
@@ -261,7 +263,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             VisibleForCustomization = False
             Width = 230
           end
-          object clGoodsGroupName: TcxGridDBColumn
+          object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupName'
             Visible = False
@@ -271,7 +273,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             VisibleForCustomization = False
             Width = 100
           end
-          object clGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -279,7 +281,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             Options.Editing = False
             Width = 62
           end
-          object clGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -295,7 +297,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             Options.Editing = False
             Width = 55
           end
-          object clNDSKindName: TcxGridDBColumn
+          object NDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
             Visible = False
@@ -305,7 +307,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             VisibleForCustomization = False
             Width = 60
           end
-          object clIsClose: TcxGridDBColumn
+          object IsClose: TcxGridDBColumn
             Caption = #1047#1072#1082#1088#1099#1090' '#1082#1086#1076' '#1087#1086' '#1074#1089#1077#1081' '#1089#1077#1090#1080
             DataBinding.FieldName = 'IsClose'
             Visible = False
@@ -316,7 +318,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             VisibleForCustomization = False
             Width = 67
           end
-          object clIsTop: TcxGridDBColumn
+          object IsTop: TcxGridDBColumn
             Caption = #1058#1054#1055
             DataBinding.FieldName = 'IsTop'
             PropertiesClassName = 'TcxCheckBoxProperties'
@@ -327,7 +329,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             VisibleForCustomization = False
             Width = 37
           end
-          object clisFirst: TcxGridDBColumn
+          object isFirst: TcxGridDBColumn
             Caption = '1-'#1074#1099#1073#1086#1088
             DataBinding.FieldName = 'isFirst'
             Visible = False
@@ -338,7 +340,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             VisibleForCustomization = False
             Width = 45
           end
-          object clisSecond: TcxGridDBColumn
+          object isSecond: TcxGridDBColumn
             Caption = #1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090'. '#1074#1099#1073#1086#1088
             DataBinding.FieldName = 'isSecond'
             Visible = False
@@ -349,7 +351,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             VisibleForCustomization = False
             Width = 60
           end
-          object clPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1085#1072' '#1076#1072#1090#1091' ('#1080#1089#1090#1086#1088#1080#1103')'
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -617,7 +619,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             Options.Editing = False
             Width = 70
           end
-          object colMinExpirationDate: TcxGridDBColumn
+          object MinExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072
             DataBinding.FieldName = 'MinExpirationDate'
             HeaderAlignmentHorz = taCenter
@@ -625,7 +627,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             Options.Editing = False
             Width = 112
           end
-          object clisError: TcxGridDBColumn
+          object isError: TcxGridDBColumn
             Caption = #1054#1096#1080#1073#1082#1072
             DataBinding.FieldName = 'isError'
             HeaderAlignmentHorz = taCenter
@@ -1035,6 +1037,9 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
     object cxTabSheetTotal: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridTotal: TcxGrid
         Left = 0
         Top = 0

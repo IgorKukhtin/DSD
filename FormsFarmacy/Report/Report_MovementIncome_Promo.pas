@@ -18,30 +18,30 @@ uses
 
 type
   TReport_MovementIncome_PromoForm = class(TAncestorReportForm)
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colProducerName: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    ProducerName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
     actRefreshSearch: TdsdExecStoredProc;
     cxLabel3: TcxLabel;
-    colAmount: TcxGridDBColumn;
-    colOperDate: TcxGridDBColumn;
-    colMovementDesc: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    MovementDesc: TcxGridDBColumn;
     edMaker: TcxButtonEdit;
     GuidesMaker: TdsdGuides;
-    colInvNumber: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
     gpGetObjectGoods: TdsdStoredProc;
-    colStatusName: TcxGridDBColumn;
-    colPriceSale: TcxGridDBColumn;
+    StatusName: TcxGridDBColumn;
+    PriceSale: TcxGridDBColumn;
     getMovementForm: TdsdStoredProc;
     FormParams: TdsdFormParams;
-    colPartionGoods: TcxGridDBColumn;
-    colExpirationDate: TcxGridDBColumn;
-    colPaymentDate: TcxGridDBColumn;
-    colInvNumberBranch: TcxGridDBColumn;
-    colBranchDate: TcxGridDBColumn;
+    PartionGoods: TcxGridDBColumn;
+    ExpirationDate: TcxGridDBColumn;
+    PaymentDate: TcxGridDBColumn;
+    InvNumberBranch: TcxGridDBColumn;
+    BranchDate: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
   private

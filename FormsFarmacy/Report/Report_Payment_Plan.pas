@@ -26,7 +26,7 @@ type
     ceJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
     dxBarControlContainerItem4: TdxBarControlContainerItem;
-    colOperDate: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
     TotalSumm: TcxGridDBColumn;
     PaySumm: TcxGridDBColumn;

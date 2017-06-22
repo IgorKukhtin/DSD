@@ -3,7 +3,7 @@ inherited Report_UploadOptimaForm: TReport_UploadOptimaForm
   ClientHeight = 560
   ClientWidth = 577
   ExplicitWidth = 593
-  ExplicitHeight = 598
+  ExplicitHeight = 599
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -11,6 +11,7 @@ inherited Report_UploadOptimaForm: TReport_UploadOptimaForm
     Width = 577
     Height = 501
     TabOrder = 3
+    ExplicitTop = 59
     ExplicitWidth = 577
     ExplicitHeight = 501
     ClientRectBottom = 501
@@ -67,28 +68,28 @@ inherited Report_UploadOptimaForm: TReport_UploadOptimaForm
           OptionsData.Inserting = False
           OptionsView.ColumnAutoWidth = True
           OptionsView.GroupByBox = False
-          object colNeedUpload: TcxGridDBColumn
+          object NeedUpload: TcxGridDBColumn
             Caption = #1042#1099#1075#1088'.'
             DataBinding.FieldName = 'NeedUpload'
             HeaderHint = #1042#1099#1075#1088#1091#1078#1072#1090#1100
             Width = 59
           end
-          object colUnitId: TcxGridDBColumn
+          object UnitId: TcxGridDBColumn
             Caption = #1048#1044
             DataBinding.FieldName = 'UnitId'
             Visible = False
           end
-          object colUnitCode: TcxGridDBColumn
+          object UnitCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'UnitCode'
             Width = 47
           end
-          object colUnitCodePartner: TcxGridDBColumn
+          object UnitCodePartner: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'UnitCodePartner'
             Width = 96
           end
-          object colUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             Width = 239
@@ -202,20 +203,24 @@ inherited Report_UploadOptimaForm: TReport_UploadOptimaForm
           FromParam.Component = cdsUnit
           FromParam.ComponentItem = 'NeedUpload'
           FromParam.DataType = ftBoolean
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = actSelect
           ToParam.ComponentItem = 'Enabled'
           ToParam.DataType = ftBoolean
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = Null
           FromParam.Component = cdsUnit
           FromParam.ComponentItem = 'NeedUpload'
           FromParam.DataType = ftBoolean
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = actExportGrid
           ToParam.ComponentItem = 'Enabled'
           ToParam.DataType = ftBoolean
+          ToParam.MultiSelectSeparator = ','
         end>
       PostDataSetBeforeExecute = False
       StoredProc = spGet_UploadFileName_Optima
@@ -297,6 +302,7 @@ inherited Report_UploadOptimaForm: TReport_UploadOptimaForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inObjectId'
@@ -304,6 +310,7 @@ inherited Report_UploadOptimaForm: TReport_UploadOptimaForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -311,6 +318,7 @@ inherited Report_UploadOptimaForm: TReport_UploadOptimaForm
         Component = cdsUnit
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 456
@@ -375,6 +383,7 @@ inherited Report_UploadOptimaForm: TReport_UploadOptimaForm
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -383,6 +392,7 @@ inherited Report_UploadOptimaForm: TReport_UploadOptimaForm
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -390,6 +400,7 @@ inherited Report_UploadOptimaForm: TReport_UploadOptimaForm
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 360
     Top = 8
@@ -405,6 +416,7 @@ inherited Report_UploadOptimaForm: TReport_UploadOptimaForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inObjectId'
@@ -412,6 +424,7 @@ inherited Report_UploadOptimaForm: TReport_UploadOptimaForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -419,6 +432,7 @@ inherited Report_UploadOptimaForm: TReport_UploadOptimaForm
         Component = cdsUnit
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outFileName'
@@ -426,6 +440,7 @@ inherited Report_UploadOptimaForm: TReport_UploadOptimaForm
         Component = actExportGrid
         ComponentItem = 'DefaultFileName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -445,6 +460,7 @@ inherited Report_UploadOptimaForm: TReport_UploadOptimaForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSelectAll'
@@ -452,6 +468,7 @@ inherited Report_UploadOptimaForm: TReport_UploadOptimaForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 224

@@ -3,8 +3,9 @@ inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
   ClientHeight = 556
   ClientWidth = 841
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -173
   ExplicitWidth = 857
-  ExplicitHeight = 594
+  ExplicitHeight = 595
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -84,7 +85,7 @@ inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colJuridicalName
+              Column = JuridicalName
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -95,14 +96,14 @@ inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colOperDate: TcxGridDBColumn
+          object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 76
           end
-          object colJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter

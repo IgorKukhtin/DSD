@@ -48,17 +48,17 @@ type
     cxLabel12: TcxLabel;
     cePrice6: TcxCurrencyEdit;
     cxGridDBBandedTableView1: TcxGridDBBandedTableView;
-    cxJuridicalMainName: TcxGridDBBandedColumn;
-    cxUnitName: TcxGridDBBandedColumn;
-    cxAmount: TcxGridDBBandedColumn;
-    cxSummaSale: TcxGridDBBandedColumn;
-    cxSumma: TcxGridDBBandedColumn;
-    cxColor_Amount: TcxGridDBBandedColumn;
-    cxColor_Summa: TcxGridDBBandedColumn;
-    cxColor_SummaSale: TcxGridDBBandedColumn;
+    JuridicalMainName: TcxGridDBBandedColumn;
+    UnitName: TcxGridDBBandedColumn;
+    Amount: TcxGridDBBandedColumn;
+    SummaSale: TcxGridDBBandedColumn;
+    Summa: TcxGridDBBandedColumn;
+    Color_Amount: TcxGridDBBandedColumn;
+    Color_Summa: TcxGridDBBandedColumn;
+    Color_SummaSale: TcxGridDBBandedColumn;
     spInsertUpdate: TdsdStoredProc;
     actInsertUpdate: TdsdUpdateDataSet;
-    cxMarginCategoryName: TcxGridDBBandedColumn;
+    MarginCategoryName: TcxGridDBBandedColumn;
     MarginReportItemOpenForm: TdsdOpenForm;
     bbMarginReportItem: TdxBarButton;
   private

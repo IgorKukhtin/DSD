@@ -23,20 +23,20 @@ type
     rdUnit: TRefreshDispatcher;
     UnitGuides: TdsdGuides;
     dxBarButton1: TdxBarButton;
-    colGoodsId: TcxGridDBColumn;
-    colGoodsCode: TcxGridDBColumn;
-    colGoodsName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colPriceSale: TcxGridDBColumn;
-    colSumma: TcxGridDBColumn;
-    colSummaSale: TcxGridDBColumn;
-    colSummaMargin: TcxGridDBColumn;
+    GoodsId: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    PriceSale: TcxGridDBColumn;
+    Summa: TcxGridDBColumn;
+    SummaSale: TcxGridDBColumn;
+    SummaMargin: TcxGridDBColumn;
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    clGoodsGroupName: TcxGridDBColumn;
-    clNDSKindName: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
+    NDSKindName: TcxGridDBColumn;
     JuridicalCode: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
     PriceWithOutVAT: TcxGridDBColumn;
@@ -58,7 +58,7 @@ type
     bbPrint: TdxBarButton;
     cbJuridical: TcxCheckBox;
     actRefreshJuridical: TdsdDataSetRefresh;
-    colisPromoUnit: TcxGridDBColumn;
+    isPromoUnit: TcxGridDBColumn;
   private
     { Private declarations }
   public

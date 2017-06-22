@@ -2,8 +2,10 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
   Caption = #1055#1086#1080#1089#1082' '#1076#1077#1092#1077#1082#1090#1091#1088#1099
   ClientHeight = 459
   ClientWidth = 1118
+  ExplicitLeft = -450
+  ExplicitTop = -5
   ExplicitWidth = 1134
-  ExplicitHeight = 497
+  ExplicitHeight = 498
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -14,29 +16,29 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
     TabOrder = 3
     ExplicitLeft = 145
     ExplicitTop = 26
-    ExplicitWidth = 852
-    ExplicitHeight = 282
+    ExplicitWidth = 973
+    ExplicitHeight = 433
     ClientRectBottom = 433
     ClientRectRight = 973
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 852
-      ExplicitHeight = 282
+      ExplicitWidth = 973
+      ExplicitHeight = 433
       inherited cxGrid: TcxGrid
         Width = 973
         Height = 433
-        ExplicitWidth = 852
-        ExplicitHeight = 282
+        ExplicitWidth = 973
+        ExplicitHeight = 433
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.000'
               Kind = skSum
-              Column = colIncomeAmount
+              Column = IncomeAmount
             end
             item
               Format = ',0.000'
               Kind = skSum
-              Column = colRemains
+              Column = Remains
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -46,7 +48,7 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colPartionGoods: TcxGridDBColumn
+          object PartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoods'
             HeaderAlignmentHorz = taCenter
@@ -54,14 +56,14 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
             Options.CellMerging = True
             Width = 60
           end
-          object colMovementId: TcxGridDBColumn
+          object MovementId: TcxGridDBColumn
             Caption = #1042#1085'. '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'MovementId'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colInvNumber: TcxGridDBColumn
+          object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1087#1088#1080#1093#1086#1076#1072
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
@@ -69,7 +71,7 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
             Options.CellMerging = True
             Width = 56
           end
-          object colOperDate: TcxGridDBColumn
+          object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076#1072
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
@@ -77,7 +79,7 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
             Options.CellMerging = True
             Width = 59
           end
-          object colStatusName: TcxGridDBColumn
+          object StatusName: TcxGridDBColumn
             Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'StatusName'
             HeaderAlignmentHorz = taCenter
@@ -85,7 +87,7 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
             Options.CellMerging = True
             Width = 80
           end
-          object colIncomeUnitName: TcxGridDBColumn
+          object IncomeUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1087#1088#1080#1093#1086#1076#1072
             DataBinding.FieldName = 'IncomeUnitName'
             HeaderAlignmentHorz = taCenter
@@ -93,7 +95,7 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
             Options.CellMerging = True
             Width = 109
           end
-          object colJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
@@ -101,28 +103,28 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
             Options.CellMerging = True
             Width = 109
           end
-          object colGoodsId: TcxGridDBColumn
+          object GoodsId: TcxGridDBColumn
             Caption = #1048#1044' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsId'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 53
           end
-          object colGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 158
           end
-          object colIncomeAmount: TcxGridDBColumn
+          object IncomeAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1087#1088#1080#1093#1086#1076#1077
             DataBinding.FieldName = 'IncomeAmount'
             PropertiesClassName = 'TcxCalcEditProperties'
@@ -131,7 +133,7 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
             HeaderAlignmentVert = vaCenter
             Width = 58
           end
-          object colRemains: TcxGridDBColumn
+          object Remains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1091
             DataBinding.FieldName = 'Remains'
             PropertiesClassName = 'TcxCalcEditProperties'
@@ -139,7 +141,7 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colRemainsUnitName: TcxGridDBColumn
+          object RemainsUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1086#1089#1090#1072#1090#1082#1072
             DataBinding.FieldName = 'RemainsUnitName'
             HeaderAlignmentHorz = taCenter
@@ -157,7 +159,7 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
     Align = alLeft
     ExplicitTop = 26
     ExplicitWidth = 145
-    ExplicitHeight = 282
+    ExplicitHeight = 433
     inherited deStart: TcxDateEdit
       Left = 13
       Top = 52
@@ -193,7 +195,6 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
       Align = alClient
       Properties.ScrollBars = ssVertical
       TabOrder = 4
-      ExplicitHeight = 205
       Height = 356
       Width = 143
     end
@@ -207,7 +208,6 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
       ParentShowHint = False
       ShowHint = True
       TabOrder = 5
-      ExplicitTop = 206
     end
     object btnRefreshOnlyComplete: TcxButton
       Left = 1
@@ -219,7 +219,6 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
       ParentShowHint = False
       ShowHint = True
       TabOrder = 6
-      ExplicitTop = 231
     end
     object btnRefreshHaveRemains: TcxButton
       Left = 1
@@ -231,7 +230,6 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
       ParentShowHint = False
       ShowHint = True
       TabOrder = 7
-      ExplicitTop = 256
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -250,18 +248,22 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
         item
           FromParam.Value = False
           FromParam.DataType = ftBoolean
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'OnlyComplete'
           ToParam.DataType = ftBoolean
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = False
           FromParam.DataType = ftBoolean
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'OnlyHaveRemains'
           ToParam.DataType = ftBoolean
+          ToParam.MultiSelectSeparator = ','
         end>
       Caption = #1053#1072#1081#1090#1080' '#1074#1089#1077' '#1087#1088#1080#1093#1086#1076#1099
       Hint = #1053#1072#1081#1090#1080' '#1074#1089#1077' '#1087#1088#1080#1093#1086#1076#1099
@@ -272,18 +274,22 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
         item
           FromParam.Value = True
           FromParam.DataType = ftBoolean
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'OnlyComplete'
           ToParam.DataType = ftBoolean
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = False
           FromParam.DataType = ftBoolean
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'OnlyHaveRemains'
           ToParam.DataType = ftBoolean
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelect
       StoredProcList = <
@@ -301,15 +307,19 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
       MoveParams = <
         item
           FromParam.Value = True
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'OnlyComplete'
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = True
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'OnlyHaveRemains'
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelect
       StoredProcList = <
@@ -332,6 +342,7 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
       FormNameParam.ComponentItem = 'FormClass'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptInput
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -339,6 +350,7 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
           Component = MasterCDS
           ComponentItem = 'MovementId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -376,6 +388,7 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
         Component = mmoPartionGoods
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOnlyComplete'
@@ -384,6 +397,7 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
         ComponentItem = 'OnlyComplete'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOnlyHaveRemains'
@@ -392,6 +406,7 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
         ComponentItem = 'OnlyHaveRemains'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   inherited BarManager: TdxBarManager
@@ -424,6 +439,7 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
         Component = MasterCDS
         ComponentItem = 'MovementId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outFormClass'
@@ -431,6 +447,7 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
         Component = FormParams
         ComponentItem = 'FormClass'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 376
@@ -442,16 +459,19 @@ inherited Report_Movement_ByPartionGoodsForm: TReport_Movement_ByPartionGoodsFor
         Name = 'OnlyComplete'
         Value = False
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OnlyHaveRemains'
         Value = False
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FormClass'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 328
     Top = 216

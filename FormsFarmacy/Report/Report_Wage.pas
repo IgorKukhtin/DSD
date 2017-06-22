@@ -23,10 +23,10 @@ type
     rdUnit: TRefreshDispatcher;
     UnitGuides: TdsdGuides;
     dxBarButton1: TdxBarButton;
-    colPositionName: TcxGridDBColumn;
-    colTaxService: TcxGridDBColumn;
-    colSummaWage: TcxGridDBColumn;
-    colSummaSale: TcxGridDBColumn;
+    PositionName: TcxGridDBColumn;
+    TaxService: TcxGridDBColumn;
+    SummaWage: TcxGridDBColumn;
+    SummaSale: TcxGridDBColumn;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     dxBarControlContainerItem3: TdxBarControlContainerItem;
@@ -36,19 +36,19 @@ type
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    clPersonalName: TcxGridDBColumn;
-    colOperDate1: TcxGridDBColumn;
-    colTaxServicePersonal: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
+    PersonalName: TcxGridDBColumn;
+    OperDate1: TcxGridDBColumn;
+    TaxServicePersonal: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     bbcbinIsDay: TdxBarControlContainerItem;
-    colDayOfWeekName: TcxGridDBColumn;
+    DayOfWeekName: TcxGridDBColumn;
     actinisDay: TdsdDataSetRefresh;
-    clisVip: TcxGridDBColumn;
+    isVip: TcxGridDBColumn;
     sbisDay: TcxCheckBox;
     sbisVipCheck: TcxCheckBox;
-    colPersonalCount: TcxGridDBColumn;
+    PersonalCount: TcxGridDBColumn;
     actisVipCheck: TdsdDataSetRefresh;
   private
     { Private declarations }

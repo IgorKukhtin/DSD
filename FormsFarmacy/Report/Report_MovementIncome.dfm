@@ -3,7 +3,9 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   ClientWidth = 1065
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -380
   ExplicitWidth = 1081
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -87,108 +89,108 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaWithVAT
+              Column = SummaWithVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaSale
+              Column = SummaSale
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaMarginWithVAT
+              Column = SummaMarginWithVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaWithOutVAT
+              Column = SummaWithOutVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colOrderAmount
+              Column = OrderAmount
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colOverAmount
+              Column = OverAmount
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaWithOutVATOrder
+              Column = SummaWithOutVATOrder
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaWithOutVATOver
+              Column = SummaWithOutVATOver
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSumma
+              Column = Summa
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaSale
+              Column = SummaSale
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaMargin
+              Column = SummaMargin
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colGoodsName
+              Column = GoodsName
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaWithVAT
+              Column = SummaWithVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaMarginWithVAT
+              Column = SummaMarginWithVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaWithOutVAT
+              Column = SummaWithOutVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colOrderAmount
+              Column = OrderAmount
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colOverAmount
+              Column = OverAmount
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaWithOutVATOrder
+              Column = SummaWithOutVATOrder
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaWithOutVATOver
+              Column = SummaWithOutVATOver
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -198,7 +200,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
@@ -206,33 +208,33 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             Options.Editing = False
             Width = 100
           end
-          object clGoodsGroupName: TcxGridDBColumn
+          object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
           end
-          object colGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentVert = vaCenter
             Width = 151
           end
-          object clNDSKindName: TcxGridDBColumn
+          object NDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colExpirationDate: TcxGridDBColumn
+          object ExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'ExpirationDate'
             HeaderAlignmentHorz = taCenter
@@ -240,7 +242,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             Options.Editing = False
             Width = 95
           end
-          object colPartitionGoods: TcxGridDBColumn
+          object PartitionGoods: TcxGridDBColumn
             Caption = #1057#1077#1088#1080#1103
             DataBinding.FieldName = 'PartionGoods'
             HeaderAlignmentHorz = taCenter
@@ -248,7 +250,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             Options.Editing = False
             Width = 70
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -258,7 +260,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colOrderAmount: TcxGridDBColumn
+          object OrderAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1079#1072#1103#1074#1082#1077
             DataBinding.FieldName = 'OrderAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -270,7 +272,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             Options.Editing = False
             Width = 73
           end
-          object colOverAmount: TcxGridDBColumn
+          object OverAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1074#1077#1088#1093' '#1079#1072#1103#1074#1082#1080
             DataBinding.FieldName = 'OverAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -291,7 +293,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colPriceWithVAT: TcxGridDBColumn
+          object PriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'PriceWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -300,7 +302,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 78
           end
-          object colPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -309,7 +311,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 88
           end
-          object colPriceSale: TcxGridDBColumn
+          object PriceSale: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'PriceSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -318,7 +320,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 58
           end
-          object colSummaWithOutVAT: TcxGridDBColumn
+          object SummaWithOutVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'SummaWithOutVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -327,7 +329,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 87
           end
-          object colSummaWithVAT: TcxGridDBColumn
+          object SummaWithVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'SummaWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -336,7 +338,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 87
           end
-          object colSummaWithOutVATOrder: TcxGridDBColumn
+          object SummaWithOutVATOrder: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1073#1077#1079' '#1053#1044#1057') ('#1087#1086' '#1079#1072#1103#1074#1082#1077')'
             DataBinding.FieldName = 'SummaWithOutVATOrder'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -347,7 +349,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             VisibleForCustomization = False
             Width = 87
           end
-          object colSummaWithOutVATOver: TcxGridDBColumn
+          object SummaWithOutVATOver: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1073#1077#1079' '#1053#1044#1057') ('#1089#1074#1077#1088#1093' '#1079#1072#1103#1074#1082#1080')'
             DataBinding.FieldName = 'SummaWithOutVATOver'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -358,7 +360,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             VisibleForCustomization = False
             Width = 87
           end
-          object colSumma: TcxGridDBColumn
+          object Summa: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -367,7 +369,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 102
           end
-          object colSummaSale: TcxGridDBColumn
+          object SummaSale: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'SummaSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -376,7 +378,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colSummaMargin: TcxGridDBColumn
+          object SummaMargin: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072#1094#1077#1085#1082#1080' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'.'
             DataBinding.FieldName = 'SummaMargin'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -385,7 +387,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colSummaMarginWithVAT: TcxGridDBColumn
+          object SummaMarginWithVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'SummaMarginWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -437,7 +439,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             VisibleForCustomization = False
             Width = 30
           end
-          object clConditionsKeepName: TcxGridDBColumn
+          object ConditionsKeepName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
             DataBinding.FieldName = 'ConditionsKeepName'
             GroupSummaryAlignment = taCenter
@@ -661,107 +663,107 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
       item
-        ColorColumn = clGoodsGroupName
+        ColorColumn = GoodsGroupName
         ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clNDSKindName
+        ColorColumn = NDSKindName
         ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colAmount
+        ColorColumn = Amount
         ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colExpirationDate
+        ColorColumn = ExpirationDate
         ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colFromName
+        ColorColumn = FromName
         ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colGoodsCode
+        ColorColumn = GoodsCode
         ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colGoodsName
+        ColorColumn = GoodsName
         ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colOrderAmount
+        ColorColumn = OrderAmount
         ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colOverAmount
+        ColorColumn = OverAmount
         ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colPartitionGoods
+        ColorColumn = PartitionGoods
         ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colPriceSale
+        ColorColumn = PriceSale
         ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colPrice
+        ColorColumn = Price
         ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colPriceWithVAT
+        ColorColumn = PriceWithVAT
         ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colSumma
+        ColorColumn = Summa
         ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colSummaMargin
+        ColorColumn = SummaMargin
         ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colSummaMarginWithVAT
+        ColorColumn = SummaMarginWithVAT
         ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colSummaSale
+        ColorColumn = SummaSale
         ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colSummaWithOutVAT
+        ColorColumn = SummaWithOutVAT
         ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colSummaWithOutVATOrder
+        ColorColumn = SummaWithOutVATOrder
         ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colSummaWithOutVATOver
+        ColorColumn = SummaWithOutVATOver
         ValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colSummaWithVAT
+        ColorColumn = SummaWithVAT
         ValueColumn = Color_calc
         ColorValueList = <>
       end

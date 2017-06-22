@@ -57,10 +57,10 @@ type
     HeaderCDS: TClientDataSet;
     RefreshDispatcher: TRefreshDispatcher;
     cxGridDBBandedTableView: TcxGridDBBandedTableView;
-    BandcolGoodsCode: TcxGridDBBandedColumn;
-    BandcolGoodsName: TcxGridDBBandedColumn;
-    BandcolPromoAmount: TcxGridDBBandedColumn;
-    TemplateColumn: TcxGridDBBandedColumn;
+    GoodsCode: TcxGridDBBandedColumn;
+    GoodsName: TcxGridDBBandedColumn;
+    PromoAmount: TcxGridDBBandedColumn;
+    Value: TcxGridDBBandedColumn;
     OpenWorkTimeKindForm: TOpenChoiceForm;
     MultiAction: TMultiAction;
     InsertAction: TdsdInsertUpdateAction;
