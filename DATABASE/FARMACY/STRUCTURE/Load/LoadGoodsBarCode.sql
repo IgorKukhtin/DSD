@@ -13,6 +13,7 @@
 CREATE TABLE LoadGoodsBarCode
 (
   Id               serial NOT NULL,
+  RetailId         Integer,
   GoodsId          Integer,
   GoodsMainId      Integer,
   GoodsBarCodeId   Integer,
@@ -28,7 +29,7 @@ CREATE TABLE LoadGoodsBarCode
   CONSTRAINT pk_LoadGoodsBarCode PRIMARY KEY (Id)
 );
 
-CREATE UNIQUE INDEX idx_LoadGoodsBarCode_Code ON LoadGoodsBarCode (Code);
+CREATE UNIQUE INDEX idx_LoadGoodsBarCode_Code ON LoadGoodsBarCode (RetailId, Code);
 
 /*-------------------------------------------------------------------------------*/
 
