@@ -160,6 +160,7 @@ type
     actInsertUpdateMIChildTotal: TdsdInsertUpdateAction;
     MacInsertUpdateMIChildTotal: TMultiAction;
     bbInsertUpdateMIChildTotal: TdxBarButton;
+    Remains: TcxGridDBColumn;
   private
   public
   end;

@@ -310,6 +310,11 @@ object SaleForm: TSaleForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalPayReturn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -427,6 +432,11 @@ object SaleForm: TSaleForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalPayReturn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -564,6 +574,16 @@ object SaleForm: TSaleForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object Remains: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'Remains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
           object AmountSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
@@ -1815,6 +1835,14 @@ object SaleForm: TSaleForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'OperPriceList'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Remains'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Remains'
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
