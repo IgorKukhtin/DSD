@@ -2,8 +2,10 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084'>'
   ClientHeight = 556
   ClientWidth = 1020
+  ExplicitLeft = -352
+  ExplicitTop = -102
   ExplicitWidth = 1036
-  ExplicitHeight = 594
+  ExplicitHeight = 595
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -22,7 +24,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 473
-        ExplicitLeft = 256
         ExplicitWidth = 1020
         ExplicitHeight = 473
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -30,107 +31,107 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colStartAmount_A
+              Column = StartAmount_A
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_A
+              Column = EndAmount_A
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSaleSumm
+              Column = SaleSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colServiceSumm
+              Column = ServiceSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colMoneySumm
+              Column = MoneySumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colOtherSumm
+              Column = OtherSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colStartAmount_P
+              Column = StartAmount_P
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colStartAmountD
+              Column = StartAmountD
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colStartAmountK
+              Column = StartAmountK
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colIncomeSumm
+              Column = IncomeSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colReturnOutSumm
+              Column = ReturnOutSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colReturnInSumm
+              Column = ReturnInSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSendDebtSumm
+              Column = SendDebtSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_P
+              Column = EndAmount_P
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_D
+              Column = EndAmount_D
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_K
+              Column = EndAmount_K
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colDebetSumm
+              Column = DebetSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colKreditSumm
+              Column = KreditSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSaleRealSumm
+              Column = SaleRealSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colReturnInRealSumm
+              Column = ReturnInRealSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colTransferDebtSumm
+              Column = TransferDebtSumm
             end
             item
               Format = ',0.00##'
@@ -145,123 +146,123 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colPriceCorrectiveSumm
+              Column = PriceCorrectiveSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colServiceRealSumm
+              Column = ServiceRealSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colChangeCurrencySumm
+              Column = ChangeCurrencySumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colStartAmount_A
+              Column = StartAmount_A
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_A
+              Column = EndAmount_A
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSaleSumm
+              Column = SaleSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colServiceSumm
+              Column = ServiceSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colMoneySumm
+              Column = MoneySumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colOtherSumm
+              Column = OtherSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colStartAmount_P
+              Column = StartAmount_P
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colStartAmountD
+              Column = StartAmountD
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colStartAmountK
+              Column = StartAmountK
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colIncomeSumm
+              Column = IncomeSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colReturnOutSumm
+              Column = ReturnOutSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colReturnInSumm
+              Column = ReturnInSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSendDebtSumm
+              Column = SendDebtSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_P
+              Column = EndAmount_P
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_D
+              Column = EndAmount_D
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_K
+              Column = EndAmount_K
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colDebetSumm
+              Column = DebetSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colKreditSumm
+              Column = KreditSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSaleRealSumm
+              Column = SaleRealSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colReturnInRealSumm
+              Column = ReturnInRealSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colTransferDebtSumm
+              Column = TransferDebtSumm
             end
             item
               Format = ',0.00##'
@@ -276,17 +277,17 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colPriceCorrectiveSumm
+              Column = PriceCorrectiveSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colServiceRealSumm
+              Column = ServiceRealSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colChangeCurrencySumm
+              Column = ChangeCurrencySumm
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -297,7 +298,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colAreaName: TcxGridDBColumn
+          object AreaName: TcxGridDBColumn
             Caption = #1056#1077#1075#1080#1086#1085' ('#1076#1086#1075#1086#1074#1086#1088')'
             DataBinding.FieldName = 'AreaName'
             Visible = False
@@ -306,7 +307,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 70
           end
-          object clRetailName: TcxGridDBColumn
+          object RetailName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
             DataBinding.FieldName = 'RetailName'
             HeaderAlignmentHorz = taCenter
@@ -314,7 +315,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 100
           end
-          object clRetailReportName: TcxGridDBColumn
+          object RetailReportName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072')'
             DataBinding.FieldName = 'RetailReportName'
             Visible = False
@@ -323,7 +324,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 100
           end
-          object colBranchCode: TcxGridDBColumn
+          object BranchCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1092#1083'.'
             DataBinding.FieldName = 'BranchCode'
             Visible = False
@@ -332,7 +333,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 35
           end
-          object colBranchName: TcxGridDBColumn
+          object BranchName: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'BranchName'
             Visible = False
@@ -341,7 +342,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 75
           end
-          object clJuridicalGroupName: TcxGridDBColumn
+          object JuridicalGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'JuridicalGroupName'
             Visible = False
@@ -350,7 +351,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 70
           end
-          object colJuridicalCode: TcxGridDBColumn
+          object JuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
             DataBinding.FieldName = 'JuridicalCode'
             Visible = False
@@ -359,7 +360,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 45
           end
-          object colJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
@@ -367,7 +368,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 142
           end
-          object colOKPO: TcxGridDBColumn
+          object OKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
             Visible = False
@@ -376,7 +377,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 55
           end
-          object clPartnerCode: TcxGridDBColumn
+          object PartnerCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
             DataBinding.FieldName = 'PartnerCode'
             Visible = False
@@ -385,7 +386,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 40
           end
-          object clPartnerName: TcxGridDBColumn
+          object PartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'PartnerName'
             Visible = False
@@ -394,7 +395,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 70
           end
-          object colPaidKindName: TcxGridDBColumn
+          object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
             Visible = False
@@ -403,7 +404,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 55
           end
-          object clContractStateKindName: TcxGridDBColumn
+          object ContractStateKindName: TcxGridDBColumn
             Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractStateKindCode'
             PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -437,7 +438,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 55
           end
-          object colContractCode: TcxGridDBColumn
+          object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
             Visible = False
@@ -446,7 +447,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 45
           end
-          object colContractNumber: TcxGridDBColumn
+          object ContractNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractNumber'
             HeaderAlignmentHorz = taCenter
@@ -454,7 +455,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 55
           end
-          object clContractTagGroupName: TcxGridDBColumn
+          object ContractTagGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1087#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagGroupName'
             HeaderAlignmentHorz = taCenter
@@ -462,7 +463,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 70
           end
-          object clContractTagName: TcxGridDBColumn
+          object ContractTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagName'
             Visible = False
@@ -471,7 +472,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 60
           end
-          object colStartDate: TcxGridDBColumn
+          object StartDate: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088' '#1089
             DataBinding.FieldName = 'StartDate'
             Visible = False
@@ -480,7 +481,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 60
           end
-          object colEndDate: TcxGridDBColumn
+          object EndDate: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086
             DataBinding.FieldName = 'EndDate'
             Visible = False
@@ -489,7 +490,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 60
           end
-          object clPersonalName: TcxGridDBColumn
+          object PersonalName: TcxGridDBColumn
             Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1076#1086#1075'. ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
             DataBinding.FieldName = 'PersonalName'
             HeaderAlignmentHorz = taCenter
@@ -497,7 +498,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 100
           end
-          object clPersonalTradeName: TcxGridDBColumn
+          object PersonalTradeName: TcxGridDBColumn
             Caption = #1058#1055' '#1079#1072' '#1076#1086#1075'. ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
             DataBinding.FieldName = 'PersonalTradeName'
             Visible = False
@@ -506,7 +507,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 70
           end
-          object clPersonalCollationName: TcxGridDBColumn
+          object PersonalCollationName: TcxGridDBColumn
             Caption = #1041#1091#1093#1075'.'#1089#1074#1077#1088#1082#1072' '#1087#1086' '#1076#1086#1075'. ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
             DataBinding.FieldName = 'PersonalCollationName'
             Visible = False
@@ -515,7 +516,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 60
           end
-          object colInfoMoneyCode: TcxGridDBColumn
+          object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -524,7 +525,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 45
           end
-          object colInfoMoneyGroupName: TcxGridDBColumn
+          object InfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -533,7 +534,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 70
           end
-          object colInfoMoneyDestinationName: TcxGridDBColumn
+          object InfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -542,7 +543,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 70
           end
-          object colInfoMoneyName: TcxGridDBColumn
+          object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             HeaderAlignmentHorz = taCenter
@@ -559,7 +560,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 100
           end
-          object colContractConditionKindName: TcxGridDBColumn
+          object ContractConditionKindName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1077' '#1073#1086#1085#1091#1089
             DataBinding.FieldName = 'ContractConditionKindName'
             Visible = False
@@ -568,7 +569,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 75
           end
-          object colContractConditionValue: TcxGridDBColumn
+          object ContractConditionValue: TcxGridDBColumn
             Caption = #1047#1085#1072#1095'. '#1073#1086#1085#1091#1089
             DataBinding.FieldName = 'ContractConditionValue'
             Visible = False
@@ -577,7 +578,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 55
           end
-          object colStartAmount_A: TcxGridDBColumn
+          object StartAmount_A: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1040#1082#1090#1080#1074')'
             DataBinding.FieldName = 'StartAmount_A'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -590,7 +591,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 80
           end
-          object colStartAmount_P: TcxGridDBColumn
+          object StartAmount_P: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1055#1072#1089#1089#1080#1074')'
             DataBinding.FieldName = 'StartAmount_P'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -604,7 +605,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 80
           end
-          object colStartAmountD: TcxGridDBColumn
+          object StartAmountD: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
             DataBinding.FieldName = 'StartAmountD'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -618,7 +619,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 80
           end
-          object colStartAmountK: TcxGridDBColumn
+          object StartAmountK: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
             DataBinding.FieldName = 'StartAmountK'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -632,7 +633,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 80
           end
-          object colIncomeSumm: TcxGridDBColumn
+          object IncomeSumm: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'.'
             DataBinding.FieldName = 'IncomeSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -645,7 +646,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colReturnOutSumm: TcxGridDBColumn
+          object ReturnOutSumm: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090'-'#1082#1091'.'
             DataBinding.FieldName = 'ReturnOutSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -658,7 +659,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colSaleRealSumm: TcxGridDBColumn
+          object SaleRealSumm: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072
             DataBinding.FieldName = 'SaleRealSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -681,7 +682,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 70
           end
-          object colSaleSumm: TcxGridDBColumn
+          object SaleSumm: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072' ('#1073#1091#1093#1075'.)'
             DataBinding.FieldName = 'SaleSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -694,7 +695,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colReturnInRealSumm: TcxGridDBColumn
+          object ReturnInRealSumm: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082'.'
             DataBinding.FieldName = 'ReturnInRealSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -717,7 +718,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 80
           end
-          object colReturnInSumm: TcxGridDBColumn
+          object ReturnInSumm: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082'. ('#1073#1091#1093#1075'.)'
             DataBinding.FieldName = 'ReturnInSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -730,7 +731,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colMoneySumm: TcxGridDBColumn
+          object MoneySumm: TcxGridDBColumn
             Caption = #1054#1087#1083#1072#1090#1072' (+)'#1087#1088#1080#1093' (-)'#1088#1072#1089#1093'.'
             DataBinding.FieldName = 'MoneySumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -742,7 +743,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colServiceRealSumm: TcxGridDBColumn
+          object ServiceRealSumm: TcxGridDBColumn
             Caption = #1059#1089#1083#1091#1075#1080' '#1092#1072#1082#1090' (+)'#1087#1086#1083#1091#1095'. (-)'#1086#1082#1072#1079#1072#1085'.'
             DataBinding.FieldName = 'ServiceRealSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -755,7 +756,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colServiceSumm: TcxGridDBColumn
+          object ServiceSumm: TcxGridDBColumn
             Caption = #1059#1089#1083#1091#1075#1080' '#1073#1091#1093#1075'. (+)'#1087#1086#1083#1091#1095'. (-)'#1086#1082#1072#1079#1072#1085'.'
             DataBinding.FieldName = 'ServiceSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -767,7 +768,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colPriceCorrectiveSumm: TcxGridDBColumn
+          object PriceCorrectiveSumm: TcxGridDBColumn
             Caption = #1050#1086#1088#1088'. '#1094#1077#1085#1099' (+)'#1076#1086#1093#1086#1076' (-)'#1088#1072#1089#1093'.'
             DataBinding.FieldName = 'PriceCorrectiveSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -779,7 +780,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colTransferDebtSumm: TcxGridDBColumn
+          object TransferDebtSumm: TcxGridDBColumn
             Caption = #1055'.'#1076#1086#1083#1075#1072' (+)'#1087#1088#1086#1076'. (-)'#1074#1086#1079#1074#1088'.'
             DataBinding.FieldName = 'TransferDebtSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -792,7 +793,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colSendDebtSumm: TcxGridDBColumn
+          object SendDebtSumm: TcxGridDBColumn
             Caption = #1042#1079'-'#1079#1072#1095#1077#1090' (+)'#1086#1087#1083'.'#1087#1088#1080#1093'. (-)'#1086#1087#1083'.'#1088#1072#1089#1093'.'
             DataBinding.FieldName = 'SendDebtSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -804,7 +805,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colChangeCurrencySumm: TcxGridDBColumn
+          object ChangeCurrencySumm: TcxGridDBColumn
             Caption = #1050#1091#1088#1089' '#1088#1072#1079#1085'.  (+)'#1076#1086#1093#1086#1076' (-)'#1088#1072#1089#1093'.'
             DataBinding.FieldName = 'ChangeCurrencySumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -815,7 +816,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colOtherSumm: TcxGridDBColumn
+          object OtherSumm: TcxGridDBColumn
             Caption = '***'
             DataBinding.FieldName = 'OtherSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -827,7 +828,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colDebetSumm: TcxGridDBColumn
+          object DebetSumm: TcxGridDBColumn
             Caption = #1054#1073#1086#1088#1086#1090' '#1044#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -841,7 +842,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 80
           end
-          object colKreditSumm: TcxGridDBColumn
+          object KreditSumm: TcxGridDBColumn
             Caption = #1054#1073#1086#1088#1086#1090' '#1050#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'KreditSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -855,7 +856,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 80
           end
-          object colEndAmount_A: TcxGridDBColumn
+          object EndAmount_A: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1076#1086#1083#1075' ('#1040#1082#1090#1080#1074')'
             DataBinding.FieldName = 'EndAmount_A'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -868,7 +869,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 80
           end
-          object colEndAmount_P: TcxGridDBColumn
+          object EndAmount_P: TcxGridDBColumn
             Caption = #1050#1086#1085'.  '#1076#1086#1083#1075' ('#1055#1072#1089#1089#1080#1074')'
             DataBinding.FieldName = 'EndAmount_P'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -882,7 +883,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 80
           end
-          object colEndAmount_D: TcxGridDBColumn
+          object EndAmount_D: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
             DataBinding.FieldName = 'EndAmount_D'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -896,7 +897,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 80
           end
-          object colEndAmount_K: TcxGridDBColumn
+          object EndAmount_K: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
             DataBinding.FieldName = 'EndAmount_K'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -910,7 +911,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 80
           end
-          object colAccountName: TcxGridDBColumn
+          object AccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090
             DataBinding.FieldName = 'AccountName'
             Visible = False
@@ -3356,85 +3357,85 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColumnAddOnList = <
       item
-        Column = colIncomeSumm
+        Column = IncomeSumm
         Action = IncomeJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end
       item
-        Column = colReturnOutSumm
+        Column = ReturnOutSumm
         Action = ReturnOutJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end
       item
-        Column = colSaleSumm
+        Column = SaleSumm
         Action = SaleJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end
       item
-        Column = colReturnInSumm
+        Column = ReturnInSumm
         Action = ReturnInJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end
       item
-        Column = colMoneySumm
+        Column = MoneySumm
         Action = MoneyJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end
       item
-        Column = colServiceSumm
+        Column = ServiceSumm
         Action = ServiceJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end
       item
-        Column = colSendDebtSumm
+        Column = SendDebtSumm
         Action = SendDebtJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end
       item
-        Column = colOtherSumm
+        Column = OtherSumm
         Action = OtherJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end
       item
-        Column = colSaleRealSumm
+        Column = SaleRealSumm
         Action = SaleRealJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end
       item
-        Column = colReturnInRealSumm
+        Column = ReturnInRealSumm
         Action = ReturnInRealJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end
       item
-        Column = colTransferDebtSumm
+        Column = TransferDebtSumm
         Action = TransferDebtJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end
       item
-        Column = colPriceCorrectiveSumm
+        Column = PriceCorrectiveSumm
         Action = PriceCorrectiveJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end
       item
-        Column = colServiceRealSumm
+        Column = ServiceRealSumm
         Action = ServiceRealJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end
       item
-        Column = colChangeCurrencySumm
+        Column = ChangeCurrencySumm
         Action = CurrencyJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False

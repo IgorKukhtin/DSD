@@ -16,16 +16,16 @@ uses
 
 type
   TReport_SoldForm = class(TAncestorReportForm)
-    colPlanDate: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
-    colPlanAmount: TcxGridDBColumn;
-    colPlanAmountAccum: TcxGridDBColumn;
+    PlanDate: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    PlanAmount: TcxGridDBColumn;
+    PlanAmountAccum: TcxGridDBColumn;
     FactAmount: TcxGridDBColumn;
-    colFactAmountAccum: TcxGridDBColumn;
-    colDiffAmount: TcxGridDBColumn;
-    colDiffAmountAccum: TcxGridDBColumn;
-    colPercentMake: TcxGridDBColumn;
-    colPercentMakeAccum: TcxGridDBColumn;
+    FactAmountAccum: TcxGridDBColumn;
+    DiffAmount: TcxGridDBColumn;
+    DiffAmountAccum: TcxGridDBColumn;
+    PercentMake: TcxGridDBColumn;
+    PercentMakeAccum: TcxGridDBColumn;
     grChartLevel1: TcxGridLevel;
     grChart: TcxGrid;
     grChartDBChartView1: TcxGridDBChartView;

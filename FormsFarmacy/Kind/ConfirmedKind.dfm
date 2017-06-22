@@ -3,7 +3,7 @@ inherited ConfirmedKindForm: TConfirmedKindForm
   ClientHeight = 457
   ClientWidth = 859
   ExplicitWidth = 875
-  ExplicitHeight = 495
+  ExplicitHeight = 496
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -27,7 +27,7 @@ inherited ConfirmedKindForm: TConfirmedKindForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             HeaderAlignmentHorz = taCenter
@@ -35,14 +35,14 @@ inherited ConfirmedKindForm: TConfirmedKindForm
             Options.Editing = False
             Width = 39
           end
-          object clName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 176
           end
-          object clId: TcxGridDBColumn
+          object Id: TcxGridDBColumn
             DataBinding.FieldName = 'Id'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -51,7 +51,7 @@ inherited ConfirmedKindForm: TConfirmedKindForm
             VisibleForCustomization = False
             Width = 51
           end
-          object clEnumName: TcxGridDBColumn
+          object EnumName: TcxGridDBColumn
             DataBinding.FieldName = 'EnumName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

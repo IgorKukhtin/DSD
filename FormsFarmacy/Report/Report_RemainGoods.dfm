@@ -3,8 +3,9 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
   ClientHeight = 364
   ClientWidth = 1009
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -324
   ExplicitWidth = 1025
-  ExplicitHeight = 402
+  ExplicitHeight = 403
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -23,8 +24,6 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
       inherited cxGrid: TcxGrid
         Width = 1009
         Height = 308
-        ExplicitLeft = 627
-        ExplicitTop = 3
         ExplicitWidth = 1009
         ExplicitHeight = 308
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -36,27 +35,27 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaWithOutVAT
+              Column = SummaWithOutVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaWithVAT
+              Column = SummaWithVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSumma
+              Column = Summa
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaSale
+              Column = SummaSale
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.00'
@@ -84,27 +83,27 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaWithOutVAT
+              Column = SummaWithOutVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaWithVAT
+              Column = SummaWithVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSumma
+              Column = Summa
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaSale
+              Column = SummaSale
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.00'
@@ -119,7 +118,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colGoodsName
+              Column = GoodsName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -130,7 +129,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clGoodsGroupName: TcxGridDBColumn
+          object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
             HeaderAlignmentHorz = taCenter
@@ -138,7 +137,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Options.Editing = False
             Width = 100
           end
-          object colGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -146,7 +145,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Options.Editing = False
             Width = 52
           end
-          object colGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -154,7 +153,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Options.Editing = False
             Width = 214
           end
-          object colNDSKindName: TcxGridDBColumn
+          object NDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
             HeaderAlignmentHorz = taCenter
@@ -162,7 +161,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Options.Editing = False
             Width = 42
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -172,7 +171,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Options.Editing = False
             Width = 80
           end
-          object colMinExpirationDate: TcxGridDBColumn
+          object MinExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072
             DataBinding.FieldName = 'MinExpirationDate'
             HeaderAlignmentHorz = taCenter
@@ -207,7 +206,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Options.Editing = False
             Width = 55
           end
-          object colPriceWithVAT: TcxGridDBColumn
+          object PriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'PriceWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -217,7 +216,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Options.Editing = False
             Width = 78
           end
-          object colPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -227,7 +226,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Options.Editing = False
             Width = 79
           end
-          object colPriceSale: TcxGridDBColumn
+          object PriceSale: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'PriceSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -237,7 +236,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Options.Editing = False
             Width = 58
           end
-          object colSummaWithOutVAT: TcxGridDBColumn
+          object SummaWithOutVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'SummaWithOutVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -247,7 +246,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Options.Editing = False
             Width = 87
           end
-          object colSummaWithVAT: TcxGridDBColumn
+          object SummaWithVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'SummaWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -257,7 +256,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Options.Editing = False
             Width = 87
           end
-          object colSumma: TcxGridDBColumn
+          object Summa: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -267,7 +266,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Options.Editing = False
             Width = 102
           end
-          object colSummaSale: TcxGridDBColumn
+          object SummaSale: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'SummaSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -412,7 +411,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clConditionsKeepName: TcxGridDBColumn
+          object ConditionsKeepName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
             DataBinding.FieldName = 'ConditionsKeepName'
             GroupSummaryAlignment = taCenter
@@ -421,7 +420,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Options.Editing = False
             Width = 75
           end
-          object clisSP: TcxGridDBColumn
+          object isSP: TcxGridDBColumn
             Caption = #1057#1086#1094'. '#1087#1088#1086#1077#1082#1090
             DataBinding.FieldName = 'isSP'
             GroupSummaryAlignment = taCenter

@@ -4,8 +4,10 @@ inherited Report_ProfitForm: TReport_ProfitForm
   ClientWidth = 1198
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -530
+  ExplicitTop = -214
   ExplicitWidth = 1214
-  ExplicitHeight = 706
+  ExplicitHeight = 707
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -45,7 +47,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = clSumma
+              Column = Summa
             end
             item
               Format = ',0.00;-,0.00;0.00;'
@@ -59,7 +61,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = clSummaSale
+              Column = SummaSale
             end
             item
               Format = ',0.00;-,0.00;0.00;'
@@ -88,12 +90,12 @@ inherited Report_ProfitForm: TReport_ProfitForm
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = clSummaSaleFree
+              Column = SummaSaleFree
             end
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = clSummaFree
+              Column = SummaFree
             end
             item
               Format = ',0.00;-,0.00;0.00;'
@@ -103,12 +105,12 @@ inherited Report_ProfitForm: TReport_ProfitForm
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = clSummaSale1
+              Column = SummaSale1
             end
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = clSumma1
+              Column = Summa1
             end
             item
               Format = ',0.00;-,0.00;0.00;'
@@ -122,12 +124,12 @@ inherited Report_ProfitForm: TReport_ProfitForm
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = clSummaSale2
+              Column = SummaSale2
             end
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = clSumma2
+              Column = Summa2
             end
             item
               Format = ',0.00;-,0.00;0.00;'
@@ -155,7 +157,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = clSummaWithVAT
+              Column = SummaWithVAT
             end
             item
               Format = ',0.00;-,0.00;0.00;'
@@ -179,20 +181,12 @@ inherited Report_ProfitForm: TReport_ProfitForm
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = clSumma
+              Column = Summa
             end
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = clSummaSale
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
+              Column = SummaSale
             end
             item
               Format = ',0.00;-,0.00;0.00;'
@@ -213,12 +207,20 @@ inherited Report_ProfitForm: TReport_ProfitForm
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = clSummaSaleFree
             end
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = clSummaFree
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaSaleFree
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skSum
+              Column = SummaFree
             end
             item
               Format = ',0.00;-,0.00;0.00;'
@@ -228,12 +230,12 @@ inherited Report_ProfitForm: TReport_ProfitForm
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = clSummaSale1
+              Column = SummaSale1
             end
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = clSumma1
+              Column = Summa1
             end
             item
               Format = ',0.00;-,0.00;0.00;'
@@ -247,12 +249,12 @@ inherited Report_ProfitForm: TReport_ProfitForm
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = clSummaSale2
+              Column = SummaSale2
             end
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = clSumma2
+              Column = Summa2
             end
             item
               Format = ',0.00;-,0.00;0.00;'
@@ -280,7 +282,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = clSummaWithVAT
+              Column = SummaWithVAT
             end
             item
               Format = ',0.00;-,0.00;0.00;'
@@ -305,14 +307,14 @@ inherited Report_ProfitForm: TReport_ProfitForm
             HeaderAlignmentVert = vaCenter
             Width = 41
           end
-          object colUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 209
           end
-          object clSummaSale: TcxGridDBColumn
+          object SummaSale: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079', '#1075#1088#1085
             DataBinding.FieldName = 'SummaSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -321,7 +323,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             HeaderAlignmentVert = vaCenter
             Width = 123
           end
-          object clSumma: TcxGridDBColumn
+          object Summa: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057'), '#1075#1088#1085
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -330,7 +332,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             HeaderAlignmentVert = vaCenter
             Width = 107
           end
-          object clSummaWithVAT: TcxGridDBColumn
+          object SummaWithVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057'), '#1075#1088#1085
             DataBinding.FieldName = 'SummaWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -375,7 +377,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             HeaderAlignmentVert = vaCenter
             Width = 92
           end
-          object clSummaSaleFree: TcxGridDBColumn
+          object SummaSaleFree: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1088'.'#1087#1086#1089#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079', '#1075#1088#1085
             DataBinding.FieldName = 'SummaSaleFree'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -385,7 +387,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object clSummaFree: TcxGridDBColumn
+          object SummaFree: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1088'.'#1087#1086#1089#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'SummaFree'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -406,7 +408,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             HeaderHint = #1044#1086#1093#1086#1076' '#1087#1088#1086#1095#1080#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1080', '#1075#1088#1085
             Width = 50
           end
-          object clSummaSale1: TcxGridDBColumn
+          object SummaSale1: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1086#1089#1090'1 '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079', '#1075#1088#1085
             DataBinding.FieldName = 'SummaSale1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -416,7 +418,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object clSumma1: TcxGridDBColumn
+          object Summa1: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1086#1089#1090'1 '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'., '#1075#1088#1085
             DataBinding.FieldName = 'Summa1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -456,7 +458,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object clSummaSale2: TcxGridDBColumn
+          object SummaSale2: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1086#1089#1090'2 '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079','#1075#1088#1085
             DataBinding.FieldName = 'SummaSale2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -466,7 +468,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object clSumma2: TcxGridDBColumn
+          object Summa2: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1086#1089#1090'2 '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'., '#1075#1088#1085
             DataBinding.FieldName = 'Summa2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -648,7 +650,6 @@ inherited Report_ProfitForm: TReport_ProfitForm
     inherited deStart: TcxDateEdit
       Left = 127
       Top = 6
-      EditValue = 42370d
       ExplicitLeft = 127
       ExplicitTop = 6
     end
@@ -811,6 +812,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
       FormName = 'TReport_ProfitDialogForm'
       FormNameParam.Value = 'TReport_ProfitDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -818,6 +820,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -825,6 +828,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Juridical1Id'
@@ -832,6 +836,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
           Component = Juridical1Guides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Juridical1Name'
@@ -840,6 +845,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Juridical2Id'
@@ -847,6 +853,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
           Component = Juridical2Guides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Juridical2Name'
@@ -855,6 +862,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -880,16 +888,19 @@ inherited Report_ProfitForm: TReport_ProfitForm
           Value = 42370d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 42371d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1044#1086#1093#1086#1076#1085#1086#1089#1090#1080
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1044#1086#1093#1086#1076#1085#1086#1089#1090#1080
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -909,6 +920,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -916,6 +928,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridical1Id'
@@ -923,6 +936,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
         Component = Juridical1Guides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridical2Id'
@@ -930,18 +944,21 @@ inherited Report_ProfitForm: TReport_ProfitForm
         Component = Juridical2Guides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inTax1'
         Value = Null
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inTax2'
         Value = Null
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 456
     Top = 80
@@ -1074,6 +1091,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
     LookupControl = ceJuridical1
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1083,6 +1101,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
         Component = Juridical1Guides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1091,6 +1110,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 432
   end
@@ -1099,6 +1119,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
     LookupControl = ceJuridical2
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1108,6 +1129,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
         Component = Juridical2Guides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1116,6 +1138,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 416
     Top = 32

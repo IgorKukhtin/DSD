@@ -17,10 +17,10 @@ uses
 
 type
   TReport_CheckPromoForm = class(TAncestorReportForm)
-    colPlanDate: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
-    colPlanAmount: TcxGridDBColumn;
-    colPlanAmountAccum: TcxGridDBColumn;
+    PlanDate: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    PlanAmount: TcxGridDBColumn;
+    PlanAmountAccum: TcxGridDBColumn;
     TotalAmount: TcxGridDBColumn;
     TotalSumma: TcxGridDBColumn;
     AmountPromo: TcxGridDBColumn;

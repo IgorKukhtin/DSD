@@ -73,78 +73,78 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = BandcolPromoAmount
+          Column = PromoAmount
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = BandcolPromoAmountPlanMax
+          Column = PromoAmountPlanMax
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = BandcolPromoPlanMaxSum
+          Column = PromoPlanMaxSum
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = BandcolPromoSum
+          Column = PromoSum
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = BandcolTotalAmount
+          Column = TotalAmount
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = BandcolPromoAmountDiff
+          Column = PromoAmountDiff
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = BandcolPromoAmountPlanMaxDiff
+          Column = PromoAmountPlanMaxDiff
         end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = ',0.##'
           Kind = skSum
-          Column = BandcolPromoAmount
+          Column = PromoAmount
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = BandcolPromoAmountPlanMax
+          Column = PromoAmountPlanMax
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = BandcolPromoPlanMaxSum
+          Column = PromoPlanMaxSum
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = BandcolPromoSum
+          Column = PromoSum
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = BandcolTotalAmount
+          Column = TotalAmount
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = BandcolPromoAmountDiff
+          Column = PromoAmountDiff
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = BandcolPromoAmountPlanMaxDiff
+          Column = PromoAmountPlanMaxDiff
         end
         item
           Format = #1057#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = BandcolGoodsName
+          Column = GoodsName
         end>
       DataController.Summary.SummaryGroups = <>
       OptionsBehavior.GoToNextCellOnEnter = True
@@ -176,7 +176,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
           Options.Moving = False
           Width = 57
         end>
-      object BandcolGoodsCode: TcxGridDBBandedColumn
+      object GoodsCode: TcxGridDBBandedColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentHorz = taCenter
@@ -188,7 +188,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
-      object BandcolGoodsName: TcxGridDBBandedColumn
+      object GoodsName: TcxGridDBBandedColumn
         Caption = #1058#1086#1074#1072#1088
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
@@ -202,7 +202,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Position.ColIndex = 1
         Position.RowIndex = 0
       end
-      object BandcolPromoAmount: TcxGridDBBandedColumn
+      object PromoAmount: TcxGridDBBandedColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'PromoAmount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -216,7 +216,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Position.ColIndex = 2
         Position.RowIndex = 0
       end
-      object BandcolPromoAmountPlanMax: TcxGridDBBandedColumn
+      object PromoAmountPlanMax: TcxGridDBBandedColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080
         DataBinding.FieldName = 'PromoAmountPlanMax'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -230,7 +230,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Position.ColIndex = 4
         Position.RowIndex = 0
       end
-      object BandcolPrice: TcxGridDBBandedColumn
+      object Price: TcxGridDBBandedColumn
         Caption = #1062#1077#1085#1072' '#1085#1072' '#1085#1072#1095'.'
         DataBinding.FieldName = 'Price'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -244,7 +244,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Position.ColIndex = 5
         Position.RowIndex = 0
       end
-      object BandcolPromoSum: TcxGridDBBandedColumn
+      object PromoSum: TcxGridDBBandedColumn
         Caption = #1057#1091#1084#1084#1072
         DataBinding.FieldName = 'PromoSum'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -258,7 +258,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Position.ColIndex = 6
         Position.RowIndex = 0
       end
-      object BandcolPromoPlanMaxSum: TcxGridDBBandedColumn
+      object PromoPlanMaxSum: TcxGridDBBandedColumn
         Caption = #1057#1091#1084#1084#1072' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080
         DataBinding.FieldName = 'PromoPlanMaxSum'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -272,7 +272,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Position.ColIndex = 7
         Position.RowIndex = 0
       end
-      object BandcolTotalAmount: TcxGridDBBandedColumn
+      object TotalAmount: TcxGridDBBandedColumn
         Caption = #1048#1090#1086#1075#1086' '#1087#1088#1086#1076#1072#1085#1086
         DataBinding.FieldName = 'TotalAmount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -286,7 +286,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Position.ColIndex = 8
         Position.RowIndex = 0
       end
-      object BandcolPromoAmountDiff: TcxGridDBBandedColumn
+      object PromoAmountDiff: TcxGridDBBandedColumn
         Caption = #1048#1090#1086#1075#1086' '#1085#1077' '#1093#1074#1072#1090#1072#1077#1090' '#1076#1086' '#1087#1083#1072#1085#1072
         DataBinding.FieldName = 'PromoAmountDiff'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -300,7 +300,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Position.ColIndex = 9
         Position.RowIndex = 0
       end
-      object BandcolPromoAmountPlanMaxDiff: TcxGridDBBandedColumn
+      object PromoAmountPlanMaxDiff: TcxGridDBBandedColumn
         Caption = #1048#1090#1086#1075#1086' '#1085#1077' '#1093#1074#1072#1090#1072#1077#1090' '#1076#1086' '#1087#1088#1077#1084#1080#1080
         DataBinding.FieldName = 'PromoAmountPlanMaxDiff'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -314,7 +314,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Position.ColIndex = 10
         Position.RowIndex = 0
       end
-      object TemplateColumn: TcxGridDBBandedColumn
+      object Value: TcxGridDBBandedColumn
         DataBinding.FieldName = 'Value'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
@@ -989,7 +989,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
     SummaryItemList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueField'
-    TemplateColumn = TemplateColumn
+    TemplateColumn = Value
     Left = 272
     Top = 240
   end

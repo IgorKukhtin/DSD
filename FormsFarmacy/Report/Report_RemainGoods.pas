@@ -21,11 +21,11 @@ type
     cxLabel4: TcxLabel;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
-    colGoodsCode: TcxGridDBColumn;
-    colGoodsName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
     actOpenPartionReport: TdsdOpenForm;
     bbGoodsPartyReport: TdxBarButton;
-    colNDSKindName: TcxGridDBColumn;
+    NDSKindName: TcxGridDBColumn;
     actRefreshPartionPrice: TdsdDataSetRefresh;
     actRefreshIsPartion: TdsdDataSetRefresh;
     cbPartion: TcxCheckBox;
@@ -40,7 +40,7 @@ type
     ContainerId: TcxGridDBColumn;
     actRefreshJuridical: TdsdDataSetRefresh;
     cbJuridical: TcxCheckBox;
-    clisSP: TcxGridDBColumn;
+    isSP: TcxGridDBColumn;
   private
     { Private declarations }
   public

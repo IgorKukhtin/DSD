@@ -19,22 +19,22 @@ uses
 type
   TReport_CheckSPForm = class(TAncestorReportForm)
     dxBarButton1: TdxBarButton;
-    colIntenalSPName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
+    IntenalSPName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    clUnitName: TcxGridDBColumn;
-    clBrandSPName: TcxGridDBColumn;
-    clPriceSP: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    BrandSPName: TcxGridDBColumn;
+    PriceSP: TcxGridDBColumn;
     actRefreshIsPartion: TdsdDataSetRefresh;
-    clCountSP: TcxGridDBColumn;
+    CountSP: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     actRefreshPartionPrice: TdsdDataSetRefresh;
-    clKindOutSPName: TcxGridDBColumn;
+    KindOutSPName: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    clNumLine: TcxGridDBColumn;
+    NumLine: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     ceUnit: TcxButtonEdit;
     UnitGuides: TdsdGuides;
@@ -46,11 +46,11 @@ type
     HospitalGuides: TdsdGuides;
     actPrint1: TdsdPrintAction;
     bbPrint1: TdxBarButton;
-    clOperDate: TcxGridDBColumn;
-    clInvNumberSP: TcxGridDBColumn;
-    clMedicSPName: TcxGridDBColumn;
-    clContractName: TcxGridDBColumn;
-    clContract_StartDate: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    InvNumberSP: TcxGridDBColumn;
+    MedicSPName: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
+    Contract_StartDate: TcxGridDBColumn;
     cbisInsert: TcxCheckBox;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     actPrintInvoice: TdsdPrintAction;

@@ -146,7 +146,7 @@ object Report_MovementPriceList_CrossForm: TReport_MovementPriceList_CrossForm
         item
           Format = #1057#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = BandcolGoodsName
+          Column = GoodsName
         end>
       DataController.Summary.SummaryGroups = <>
       OptionsBehavior.GoToNextCellOnEnter = True
@@ -178,7 +178,7 @@ object Report_MovementPriceList_CrossForm: TReport_MovementPriceList_CrossForm
           Options.Moving = False
           Width = 57
         end>
-      object BandcolCommonCode: TcxGridDBBandedColumn
+      object CommonCode: TcxGridDBBandedColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'CommonCode'
         HeaderAlignmentHorz = taCenter
@@ -190,7 +190,7 @@ object Report_MovementPriceList_CrossForm: TReport_MovementPriceList_CrossForm
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
-      object BandcolGoodsName: TcxGridDBBandedColumn
+      object GoodsName: TcxGridDBBandedColumn
         Caption = #1058#1086#1074#1072#1088
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
@@ -204,7 +204,7 @@ object Report_MovementPriceList_CrossForm: TReport_MovementPriceList_CrossForm
         Position.ColIndex = 1
         Position.RowIndex = 0
       end
-      object TemplateColumn: TcxGridDBBandedColumn
+      object Value: TcxGridDBBandedColumn
         DataBinding.FieldName = 'Value'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
@@ -216,7 +216,7 @@ object Report_MovementPriceList_CrossForm: TReport_MovementPriceList_CrossForm
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
-      object TemplateColumn1: TcxGridDBBandedColumn
+      object Value1: TcxGridDBBandedColumn
         DataBinding.FieldName = 'Value1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
@@ -954,7 +954,7 @@ object Report_MovementPriceList_CrossForm: TReport_MovementPriceList_CrossForm
     SummaryItemList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueField'
-    TemplateColumn = TemplateColumn
+    TemplateColumn = Value
     Left = 272
     Top = 240
   end

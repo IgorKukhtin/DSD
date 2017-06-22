@@ -4,14 +4,13 @@ inherited Report_UploadBaDMForm: TReport_UploadBaDMForm
   ClientWidth = 855
   AddOnFormData.RefreshAction = nil
   ExplicitWidth = 871
-  ExplicitHeight = 443
+  ExplicitHeight = 444
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 855
     Height = 348
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 855
     ExplicitHeight = 348
     ClientRectBottom = 348
@@ -38,7 +37,7 @@ inherited Report_UploadBaDMForm: TReport_UploadBaDMForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colOperDate: TcxGridDBColumn
+          object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
             HeaderHint = 
@@ -46,7 +45,7 @@ inherited Report_UploadBaDMForm: TReport_UploadBaDMForm
               #1103
             Width = 55
           end
-          object colJuridicalCode: TcxGridDBColumn
+          object JuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'JuridicalCode'
             HeaderHint = 
@@ -54,19 +53,19 @@ inherited Report_UploadBaDMForm: TReport_UploadBaDMForm
               ' '#1087#1088#1077#1076#1086#1089#1090#1072#1074#1083#1103#1077#1090#1089#1103' '#1041#1072#1044#1052' '#1087#1088#1080' '#1087#1086#1089#1090#1088#1086#1077#1085#1080#1080' '#1089#1080#1089#1090#1077#1084#1099
             Width = 76
           end
-          object colUnitCode: TcxGridDBColumn
+          object UnitCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1089#1082#1083#1072#1076#1072
             DataBinding.FieldName = 'UnitCode'
             HeaderHint = #1082#1086#1076' '#1072#1087#1090#1077#1082#1080' '#1074' '#1091#1095#1077#1090#1085#1086#1081' '#1089#1080#1089#1090#1077#1084#1077' '#1082#1086#1084#1087#1072#1085#1080#1080' '#1050#1083#1080#1077#1085#1090#1072
             Width = 56
           end
-          object colUnitName: TcxGridDBColumn
+          object lUnitName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1089#1082#1083#1072#1076#1072
             DataBinding.FieldName = 'UnitName'
             HeaderHint = #1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1072#1087#1090#1077#1082#1080' '#1074' '#1091#1095#1077#1090#1085#1086#1081' '#1089#1080#1089#1090#1077#1084#1077' '#1082#1086#1084#1087#1072#1085#1080#1080' '#1050#1083#1080#1077#1085#1090#1072
             Width = 182
           end
-          object colGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsCode'
             HeaderHint = 
@@ -75,13 +74,13 @@ inherited Report_UploadBaDMForm: TReport_UploadBaDMForm
               #1041#1072#1044#1052
             Width = 52
           end
-          object colGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsName'
             HeaderHint = #1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1074' '#1091#1095#1077#1090#1085#1086#1081' '#1089#1080#1089#1090#1077#1084#1077' '#1082#1086#1084#1087#1072#1085#1080#1080' '#1050#1083#1080#1077#1085#1090#1072
             Width = 153
           end
-          object colOperCode: TcxGridDBColumn
+          object OperCode: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1086#1087#1077#1088#1072#1094#1080#1080
             DataBinding.FieldName = 'OperCode'
             HeaderHint = 
@@ -90,37 +89,37 @@ inherited Report_UploadBaDMForm: TReport_UploadBaDMForm
               #1090')'
             Width = 33
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1047#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'Amount'
             HeaderHint = #1095#1080#1089#1083#1086#1074#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1076#1083#1103' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1072' '#1086#1087#1077#1088#1072#1094#1080#1080
             Width = 42
           end
-          object colSegment1: TcxGridDBColumn
+          object Segment1: TcxGridDBColumn
             Caption = #1057#1077#1075#1084#1077#1085#1090' 1'
             DataBinding.FieldName = 'Segment1'
             HeaderHint = #1076#1083#1103' '#1087#1077#1088#1077#1076#1072#1095#1080' '#1083#1102#1086#1081' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1080#1085#1092#1086#1088#1084#1072#1094#1080#1080
             Width = 30
           end
-          object colSegment2: TcxGridDBColumn
+          object Segment2: TcxGridDBColumn
             Caption = #1057#1077#1075#1084#1077#1085#1090' 2'
             DataBinding.FieldName = 'Segment2'
             HeaderHint = #1076#1083#1103' '#1087#1077#1088#1077#1076#1072#1095#1080' '#1083#1102#1086#1081' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1080#1085#1092#1086#1088#1084#1072#1094#1080#1080
             Width = 30
           end
-          object colSegment3: TcxGridDBColumn
+          object Segment3: TcxGridDBColumn
             Caption = #1057#1077#1075#1084#1077#1085#1090' 3'
             DataBinding.FieldName = 'Segment3'
             HeaderHint = #1076#1083#1103' '#1087#1077#1088#1077#1076#1072#1095#1080' '#1083#1102#1086#1081' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1080#1085#1092#1086#1088#1084#1072#1094#1080#1080
             Width = 30
           end
-          object colSegment4: TcxGridDBColumn
+          object Segment4: TcxGridDBColumn
             Caption = #1057#1077#1075#1084#1077#1085#1090' 4'
             DataBinding.FieldName = 'Segment4'
             HeaderHint = #1076#1083#1103' '#1087#1077#1088#1077#1076#1072#1095#1080' '#1083#1102#1086#1081' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1080#1085#1092#1086#1088#1084#1072#1094#1080#1080
             Width = 30
           end
-          object colSegment5: TcxGridDBColumn
+          object Segment5: TcxGridDBColumn
             Caption = #1057#1077#1075#1084#1077#1085#1090' 5'
             DataBinding.FieldName = 'Segment5'
             HeaderHint = #1076#1083#1103' '#1087#1077#1088#1077#1076#1072#1095#1080' '#1083#1102#1086#1081' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1080#1085#1092#1086#1088#1084#1072#1094#1080#1080
@@ -219,6 +218,7 @@ inherited Report_UploadBaDMForm: TReport_UploadBaDMForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inObjectId'
@@ -226,6 +226,7 @@ inherited Report_UploadBaDMForm: TReport_UploadBaDMForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 128
   end
@@ -279,6 +280,7 @@ inherited Report_UploadBaDMForm: TReport_UploadBaDMForm
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -287,6 +289,7 @@ inherited Report_UploadBaDMForm: TReport_UploadBaDMForm
         Value = Null
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -294,6 +297,7 @@ inherited Report_UploadBaDMForm: TReport_UploadBaDMForm
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 360
     Top = 8

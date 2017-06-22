@@ -3,6 +3,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
   ClientWidth = 806
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 822
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -18,23 +19,23 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
-              Column = colAmount
+              Column = Amount
             end
             item
               Kind = skSum
               Position = spFooter
-              Column = colAmount
+              Column = Amount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colName
+              Column = Name
             end>
           OptionsData.Editing = False
           Styles.Content = nil
@@ -42,7 +43,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -57,14 +58,14 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 39
           end
-          object colName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 224
           end
-          object clNDSKindName: TcxGridDBColumn
+          object NDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -74,7 +75,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 68
           end
-          object colPriceWithVAT: TcxGridDBColumn
+          object PriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'PriceWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -84,7 +85,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 66
           end
-          object colPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -95,7 +96,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 72
           end
-          object colPriceSale: TcxGridDBColumn
+          object PriceSale: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
             DataBinding.FieldName = 'PriceSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -105,7 +106,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 84
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taCenter
@@ -113,7 +114,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 46
           end
-          object colAmount_SpecZakaz: TcxGridDBColumn
+          object Amount_SpecZakaz: TcxGridDBColumn
             Caption = #1057#1087#1077#1094#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'Amount_SpecZakaz'
             HeaderAlignmentHorz = taCenter
@@ -121,7 +122,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 46
           end
-          object colStatusName: TcxGridDBColumn
+          object StatusName: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089
             DataBinding.FieldName = 'StatusName'
             HeaderAlignmentHorz = taCenter
@@ -129,7 +130,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 73
           end
-          object colMovementDesc: TcxGridDBColumn
+          object MovementDesc: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'ItemName'
             HeaderAlignmentHorz = taCenter
@@ -137,7 +138,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 90
           end
-          object colUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
@@ -145,21 +146,21 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 114
           end
-          object colOperDate: TcxGridDBColumn
+          object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 46
           end
-          object colInvNumber: TcxGridDBColumn
+          object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 94
           end
-          object colJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
@@ -167,7 +168,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 113
           end
-          object colRetailName: TcxGridDBColumn
+          object RetailName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
             DataBinding.FieldName = 'RetailName'
             HeaderAlignmentHorz = taCenter
@@ -175,14 +176,14 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 113
           end
-          object colMainJuridicalName: TcxGridDBColumn
+          object MainJuridicalName: TcxGridDBColumn
             Caption = #1053#1072#1096#1077' '#1102#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'MainJuridicalName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 113
           end
-          object colProducerName: TcxGridDBColumn
+          object ProducerName: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'ProducerName'
             Visible = False
@@ -191,7 +192,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             VisibleForCustomization = False
             Width = 105
           end
-          object colPartnerGoodsName: TcxGridDBColumn
+          object PartnerGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'PartnerGoodsName'
             HeaderAlignmentHorz = taCenter
@@ -199,7 +200,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 173
           end
-          object colMakerName: TcxGridDBColumn
+          object MakerName: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'MakerName'
             HeaderAlignmentHorz = taCenter
@@ -207,7 +208,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 100
           end
-          object colPartionGoods: TcxGridDBColumn
+          object PartionGoods: TcxGridDBColumn
             Caption = #8470' '#1057#1077#1088#1080#1080' '#1087#1088'-'#1090#1072
             DataBinding.FieldName = 'PartionGoods'
             HeaderAlignmentHorz = taCenter
@@ -215,7 +216,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 75
           end
-          object colExpirationDate: TcxGridDBColumn
+          object ExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'ExpirationDate'
             HeaderAlignmentHorz = taCenter
@@ -223,7 +224,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 78
           end
-          object colPaymentDate: TcxGridDBColumn
+          object PaymentDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaymentDate'
             HeaderAlignmentHorz = taCenter
@@ -231,7 +232,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 81
           end
-          object colInvNumberBranch: TcxGridDBColumn
+          object InvNumberBranch: TcxGridDBColumn
             Caption = #8470' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1074' '#1072#1087#1090#1077#1082#1077
             DataBinding.FieldName = 'InvNumberBranch'
             HeaderAlignmentHorz = taCenter
@@ -239,7 +240,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 85
           end
-          object colBranchDate: TcxGridDBColumn
+          object BranchDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1074' '#1072#1087#1090#1077#1082#1077
             DataBinding.FieldName = 'BranchDate'
             HeaderAlignmentHorz = taCenter
@@ -247,7 +248,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 82
           end
-          object clInsertDate: TcxGridDBColumn
+          object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
             Visible = False

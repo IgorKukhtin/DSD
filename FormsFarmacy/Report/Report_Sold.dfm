@@ -2,15 +2,16 @@ inherited Report_SoldForm: TReport_SoldForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1083#1072#1085#1091' '#1087#1088#1086#1076#1072#1078
   ClientHeight = 556
   ClientWidth = 841
+  ExplicitLeft = -173
+  ExplicitTop = -102
   ExplicitWidth = 857
-  ExplicitHeight = 594
+  ExplicitHeight = 595
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 841
     Height = 499
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 841
     ExplicitHeight = 499
     ClientRectBottom = 499
@@ -22,14 +23,14 @@ inherited Report_SoldForm: TReport_SoldForm
         Width = 841
         Height = 272
         ExplicitWidth = 841
-        ExplicitHeight = 291
+        ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.00;-,0.00'
               Kind = skSum
               Position = spFooter
-              Column = colPlanAmount
+              Column = PlanAmount
             end
             item
               Format = ',0.00;-,0.00'
@@ -41,13 +42,13 @@ inherited Report_SoldForm: TReport_SoldForm
               Format = ',0.00;-,0.00'
               Kind = skSum
               Position = spFooter
-              Column = colDiffAmount
+              Column = DiffAmount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00;-,0.00'
               Kind = skSum
-              Column = colPlanAmount
+              Column = PlanAmount
             end
             item
               Format = ',0.00;-,0.00'
@@ -57,7 +58,7 @@ inherited Report_SoldForm: TReport_SoldForm
             item
               Format = '+,0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = colDiffAmount
+              Column = DiffAmount
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -68,25 +69,25 @@ inherited Report_SoldForm: TReport_SoldForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colPlanDate: TcxGridDBColumn
+          object PlanDate: TcxGridDBColumn
             Caption = #1052#1077#1089#1103#1094
             DataBinding.FieldName = 'PlanDate'
             PropertiesClassName = 'TcxDateEditProperties'
             Properties.DisplayFormat = 'MMMM YYYY'
             Width = 76
           end
-          object colUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             Width = 144
           end
-          object colPlanAmount: TcxGridDBColumn
+          object PlanAmount: TcxGridDBColumn
             Caption = #1055#1083#1072#1085
             DataBinding.FieldName = 'PlanAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
           end
-          object colPlanAmountAccum: TcxGridDBColumn
+          object PlanAmountAccum: TcxGridDBColumn
             Caption = #1055#1083#1072#1085' '#1089' '#1085#1072#1082#1086#1087#1083'.'
             DataBinding.FieldName = 'PlanAmountAccum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -98,25 +99,25 @@ inherited Report_SoldForm: TReport_SoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
           end
-          object colFactAmountAccum: TcxGridDBColumn
+          object FactAmountAccum: TcxGridDBColumn
             Caption = #1060#1072#1082#1090' '#1089' '#1085#1072#1082#1086#1087#1083'.'
             DataBinding.FieldName = 'FactAmountAccum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
           end
-          object colDiffAmount: TcxGridDBColumn
+          object DiffAmount: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072
             DataBinding.FieldName = 'DiffAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '+,0.00;-,0.00;0.00;'
           end
-          object colDiffAmountAccum: TcxGridDBColumn
+          object DiffAmountAccum: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072' '#1089' '#1085#1072#1082#1086#1087#1083'.'
             DataBinding.FieldName = 'DiffAmountAccum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '+,0.00;-,0.00;0.00;'
           end
-          object colPercentMake: TcxGridDBColumn
+          object PercentMake: TcxGridDBColumn
             AlternateCaption = '% '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
             Caption = '% '#1074#1099#1087'.'
             DataBinding.FieldName = 'PercentMake'
@@ -124,7 +125,7 @@ inherited Report_SoldForm: TReport_SoldForm
             Properties.DisplayFormat = ',0.00%'
             HeaderHint = '% '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
           end
-          object colPercentMakeAccum: TcxGridDBColumn
+          object PercentMakeAccum: TcxGridDBColumn
             AlternateCaption = '% '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1089' '#1085#1072#1082#1086#1087#1083#1077#1085#1080#1077#1084
             Caption = '% '#1074#1099#1087'. '#1089' '#1085#1072#1082#1086#1087#1083'.'
             DataBinding.FieldName = 'PercentMakeAccum'
@@ -184,7 +185,6 @@ inherited Report_SoldForm: TReport_SoldForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = grChart
-        ExplicitTop = 291
       end
     end
   end
@@ -209,6 +209,23 @@ inherited Report_SoldForm: TReport_SoldForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Report_Sold'
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41395d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41395d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     Left = 104
     Top = 120
   end

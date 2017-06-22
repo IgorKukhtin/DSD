@@ -4,8 +4,10 @@ inherited Report_CheckPromoForm: TReport_CheckPromoForm
   ClientWidth = 841
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -173
+  ExplicitTop = -102
   ExplicitWidth = 857
-  ExplicitHeight = 594
+  ExplicitHeight = 595
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -30,7 +32,7 @@ inherited Report_CheckPromoForm: TReport_CheckPromoForm
               Format = ',0.####'
               Kind = skSum
               Position = spFooter
-              Column = colPlanAmount
+              Column = PlanAmount
             end
             item
               Format = ',0.####'
@@ -76,7 +78,7 @@ inherited Report_CheckPromoForm: TReport_CheckPromoForm
               Format = ',0.####'
               Kind = skSum
               Position = spFooter
-              Column = colDiffAmount
+              Column = DiffAmount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -112,12 +114,12 @@ inherited Report_CheckPromoForm: TReport_CheckPromoForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colDiffAmount
+              Column = DiffAmount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colPlanAmount
+              Column = PlanAmount
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -128,7 +130,7 @@ inherited Report_CheckPromoForm: TReport_CheckPromoForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colPlanDate: TcxGridDBColumn
+          object PlanDate: TcxGridDBColumn
             Caption = #1052#1077#1089#1103#1094
             DataBinding.FieldName = 'PlanDate'
             PropertiesClassName = 'TcxDateEditProperties'
@@ -137,7 +139,7 @@ inherited Report_CheckPromoForm: TReport_CheckPromoForm
             HeaderAlignmentVert = vaCenter
             Width = 76
           end
-          object colUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
@@ -207,7 +209,7 @@ inherited Report_CheckPromoForm: TReport_CheckPromoForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colPlanAmount: TcxGridDBColumn
+          object PlanAmount: TcxGridDBColumn
             Caption = '% '#1074#1099#1087'. '#1087#1086' '#1084#1072#1088#1082#1077#1090'.'
             DataBinding.FieldName = 'PlanAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -218,7 +220,7 @@ inherited Report_CheckPromoForm: TReport_CheckPromoForm
             Options.Editing = False
             Width = 70
           end
-          object colDiffAmount: TcxGridDBColumn
+          object DiffAmount: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072'  (% '#1074#1099#1087'. '#1084#1072#1088#1082#1077#1090'. - % '#1074#1099#1087'.)'
             DataBinding.FieldName = 'DiffAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -227,7 +229,7 @@ inherited Report_CheckPromoForm: TReport_CheckPromoForm
             HeaderAlignmentVert = vaCenter
             Width = 78
           end
-          object colPlanAmountAccum: TcxGridDBColumn
+          object PlanAmountAccum: TcxGridDBColumn
             Caption = #1055#1083#1072#1085' '#1089' '#1085#1072#1082#1086#1087#1083'.'
             DataBinding.FieldName = 'PlanAmountAccum'
             PropertiesClassName = 'TcxCurrencyEditProperties'

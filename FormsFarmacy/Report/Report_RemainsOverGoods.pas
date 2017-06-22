@@ -42,7 +42,7 @@ type
     chRemainsMCS_from: TcxGridDBColumn;
     chSummaRemainsMCS_from: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
-    chUnitName: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
     chStartDate: TcxGridDBColumn;
     chEndDate: TcxGridDBColumn;
     SummaMCSValue: TcxGridDBColumn;
@@ -84,7 +84,7 @@ type
     macSendOver: TMultiAction;
     bbSendOver: TdxBarButton;
     chGoodsCode: TcxGridDBColumn;
-    chPriceFrom: TcxGridDBColumn;
+    PriceFrom: TcxGridDBColumn;
     TotalCDS: TClientDataSet;
     TotalDS: TDataSource;
     DBViewAddOnTotal: TdsdDBViewAddOn;

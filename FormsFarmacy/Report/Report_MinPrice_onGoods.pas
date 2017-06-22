@@ -18,8 +18,8 @@ uses
 
 type
   TReport_MinPrice_onGoodsForm = class(TAncestorReportForm)
-    colOperDate: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
     Price: TcxGridDBColumn;
     CountPriceList: TcxGridDBColumn;
     isOne: TcxGridDBColumn;
