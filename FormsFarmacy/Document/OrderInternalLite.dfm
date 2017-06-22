@@ -2,8 +2,10 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
   ClientWidth = 1071
+  ExplicitLeft = -403
+  ExplicitTop = -78
   ExplicitWidth = 1087
-  ExplicitHeight = 570
+  ExplicitHeight = 571
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -28,7 +30,7 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -58,7 +60,7 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -90,12 +92,12 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSecond
+              Column = AmountSecond
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountAll
+              Column = AmountAll
             end
             item
               Format = ',0.####'
@@ -117,7 +119,7 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn [0]
+          object GoodsCode: TcxGridDBColumn [0]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -125,7 +127,7 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Options.Editing = False
             Width = 43
           end
-          object colName: TcxGridDBColumn [1]
+          object GoodsName: TcxGridDBColumn [1]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -133,7 +135,7 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Options.Editing = False
             Width = 206
           end
-          object colAmount: TcxGridDBColumn [2]
+          object Amount: TcxGridDBColumn [2]
             Caption = #1057#1087#1077#1094#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -144,7 +146,7 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Options.IncSearch = False
             Width = 75
           end
-          object coJuridicalName: TcxGridDBColumn [3]
+          object JuridicalName: TcxGridDBColumn [3]
             Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090'-'#1082
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
@@ -152,21 +154,21 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Options.Editing = False
             Width = 124
           end
-          object clPartionGoodsDate: TcxGridDBColumn [4]
+          object PartionGoodsDate: TcxGridDBColumn [4]
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'PartionGoodsDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 144
           end
-          object clPartionGoodsDateColor: TcxGridDBColumn [5]
+          object PartionGoodsDateColor: TcxGridDBColumn [5]
             DataBinding.FieldName = 'PartionGoodsDateColor'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
           end
-          object clMCSNotRecalc: TcxGridDBColumn [6]
+          object MCSNotRecalc: TcxGridDBColumn [6]
             Caption = #1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072
             DataBinding.FieldName = 'MCSNotRecalc'
             HeaderAlignmentHorz = taCenter
@@ -175,14 +177,14 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Options.Editing = False
             Width = 59
           end
-          object colisCalculated: TcxGridDBColumn [7]
+          object isCalculated: TcxGridDBColumn [7]
             Caption = #1040#1074#1090#1086
             DataBinding.FieldName = 'isCalculated'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 43
           end
-          object clMCSIsClose: TcxGridDBColumn [8]
+          object MCSIsClose: TcxGridDBColumn [8]
             Caption = #1059#1076#1072#1083#1077#1085' '#1082#1086#1076
             DataBinding.FieldName = 'MCSIsClose'
             HeaderAlignmentHorz = taCenter
@@ -190,35 +192,35 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Options.Editing = False
             Width = 44
           end
-          object colComment: TcxGridDBColumn [9]
+          object Comment: TcxGridDBColumn [9]
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 87
           end
-          object colRemainsInUnit: TcxGridDBColumn [10]
+          object RemainsInUnit: TcxGridDBColumn [10]
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'RemainsInUnit'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 59
           end
-          object colMCS: TcxGridDBColumn [11]
+          object MCS: TcxGridDBColumn [11]
             Caption = #1053#1058#1047
             DataBinding.FieldName = 'MCS'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colIncome_Amount: TcxGridDBColumn [12]
+          object Income_Amount: TcxGridDBColumn [12]
             Caption = #1055#1088#1080#1093#1086#1076#1099' '#1089#1077#1075#1086#1076#1085#1103
             DataBinding.FieldName = 'Income_Amount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 69
           end
-          object colGoodsGroupName: TcxGridDBColumn [13]
+          object GoodsGroupName: TcxGridDBColumn [13]
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074
             DataBinding.FieldName = 'GoodsGroupName'
             HeaderAlignmentHorz = taCenter
@@ -226,7 +228,7 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Options.Editing = False
             Width = 108
           end
-          object colNDSKindName: TcxGridDBColumn [14]
+          object NDSKindName: TcxGridDBColumn [14]
             Caption = #1057#1090#1072#1074#1082#1072' '#1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
             HeaderAlignmentHorz = taCenter
@@ -234,7 +236,7 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Options.Editing = False
             Width = 69
           end
-          object colAmountSecond: TcxGridDBColumn [15]
+          object AmountSecond: TcxGridDBColumn [15]
             Caption = #1040#1074#1090#1086#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'AmountSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -244,7 +246,7 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Options.Editing = False
             Width = 49
           end
-          object colAmountAll: TcxGridDBColumn [16]
+          object AmountAll: TcxGridDBColumn [16]
             Caption = #1042#1089#1077#1075#1086
             DataBinding.FieldName = 'AmountAll'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -255,7 +257,7 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Options.Editing = False
             Width = 51
           end
-          object colCalcAmountAll: TcxGridDBColumn [17]
+          object CalcAmountAll: TcxGridDBColumn [17]
             Caption = #1042#1089#1077#1075#1086' '#1089' '#1084#1080#1085'. '#1086#1082#1088#1091#1075#1083'.'
             DataBinding.FieldName = 'CalcAmountAll'
             HeaderAlignmentHorz = taCenter
@@ -264,21 +266,21 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Options.IncSearch = False
             Width = 62
           end
-          object colPartnerGoodsName: TcxGridDBColumn [18]
+          object PartnerGoodsName: TcxGridDBColumn [18]
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'PartnerGoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 125
           end
-          object colMakerName: TcxGridDBColumn [19]
+          object MakerName: TcxGridDBColumn [19]
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'MakerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 102
           end
-          object colPrice: TcxGridDBColumn [20]
+          object Price: TcxGridDBColumn [20]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             HeaderAlignmentHorz = taCenter
@@ -289,7 +291,7 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object clIsClose: TcxGridDBColumn
+          object IsClose: TcxGridDBColumn
             Caption = #1047#1072#1082#1088#1099#1090' '#1082#1086#1076' '#1087#1086' '#1074#1089#1077#1081' '#1089#1077#1090#1080
             DataBinding.FieldName = 'IsClose'
             HeaderAlignmentHorz = taCenter
@@ -297,7 +299,7 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Options.Editing = False
             Width = 56
           end
-          object clisTOP: TcxGridDBColumn
+          object isTOP: TcxGridDBColumn
             Caption = #1058#1054#1055' '#1089#1077#1090#1080
             DataBinding.FieldName = 'isTOP'
             HeaderAlignmentHorz = taCenter
@@ -305,7 +307,7 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Options.Editing = False
             Width = 60
           end
-          object clisTOP_Price: TcxGridDBColumn
+          object isTOP_Price: TcxGridDBColumn
             Caption = #1058#1054#1055' '#1090#1086#1095#1082#1080
             DataBinding.FieldName = 'isTOP_Price'
             HeaderAlignmentHorz = taCenter
@@ -313,7 +315,7 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Options.Editing = False
             Width = 60
           end
-          object clisFirst: TcxGridDBColumn
+          object isFirst: TcxGridDBColumn
             Caption = '1-'#1074#1099#1073#1086#1088
             DataBinding.FieldName = 'isFirst'
             HeaderAlignmentHorz = taCenter
@@ -321,7 +323,7 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Options.Editing = False
             Width = 60
           end
-          object clisSecond: TcxGridDBColumn
+          object isSecond: TcxGridDBColumn
             Caption = #1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090'. '#1074#1099#1073#1086#1088
             DataBinding.FieldName = 'isSecond'
             HeaderAlignmentHorz = taCenter
@@ -329,7 +331,7 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Options.Editing = False
             Width = 60
           end
-          object clisSp: TcxGridDBColumn
+          object isSp: TcxGridDBColumn
             Caption = #1057#1086#1094'. '#1087#1088#1086#1077#1082#1090
             DataBinding.FieldName = 'isSp'
             HeaderAlignmentHorz = taCenter
@@ -728,8 +730,8 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
       item
-        ColorColumn = clPartionGoodsDate
-        ValueColumn = clPartionGoodsDateColor
+        ColorColumn = PartionGoodsDate
+        ValueColumn = PartionGoodsDateColor
         ColorValueList = <>
       end>
     SummaryItemList = <

@@ -16,14 +16,14 @@ uses
 type
   TIncome_AmountTroubleForm = class(TAncestorEnumForm)
     FormParams: TdsdFormParams;
-    colGoodsCode: TcxGridDBColumn;
-    colGoodsName: TcxGridDBColumn;
-    colPartnerGoodsCode: TcxGridDBColumn;
-    colPartnerGoodsName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
-    colAmountManual: TcxGridDBColumn;
-    colAmountDiff: TcxGridDBColumn;
-    colReasonDifferencesName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    PartnerGoodsCode: TcxGridDBColumn;
+    PartnerGoodsName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    AmountManual: TcxGridDBColumn;
+    AmountDiff: TcxGridDBColumn;
+    ReasonDifferencesName: TcxGridDBColumn;
     actReasonDifferences: TOpenChoiceForm;
     actSetEqual: TdsdExecStoredProc;
     spUpdate_MovementItem_Income_AmountManual: TdsdStoredProc;

@@ -1,6 +1,7 @@
 inherited RepriceForm: TRepriceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1086#1094#1077#1085#1082#1072'>'
   ClientWidth = 1040
+  ExplicitLeft = -355
   ExplicitWidth = 1056
   PixelsPerInch = 96
   TextHeight = 13
@@ -21,13 +22,13 @@ inherited RepriceForm: TRepriceForm
               Format = #1058#1086#1074#1072#1088#1086#1074': ,0'
               Kind = skCount
               FieldName = 'GoodsName'
-              Column = colGoodsName
+              Column = GoodsName
             end
             item
               Format = ',0.00'
               Kind = skSum
               FieldName = 'SummReprice'
-              Column = colSummReprice
+              Column = SummReprice
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -43,21 +44,21 @@ inherited RepriceForm: TRepriceForm
             HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
           end
-          object colGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 46
           end
-          object colGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 181
           end
-          object colNDS: TcxGridDBColumn
+          object NDS: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDS'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -66,27 +67,27 @@ inherited RepriceForm: TRepriceForm
             HeaderAlignmentVert = vaCenter
             Width = 52
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colPriceOld: TcxGridDBColumn
+          object PriceOld: TcxGridDBColumn
             Caption = #1057#1090#1072#1088#1072#1103' '#1094#1077#1085#1072
             DataBinding.FieldName = 'PriceOld'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 49
           end
-          object colPriceNew: TcxGridDBColumn
+          object PriceNew: TcxGridDBColumn
             Caption = #1053#1086#1074#1072#1103' '#1094#1077#1085#1072
             DataBinding.FieldName = 'PriceNew'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 47
           end
-          object colPriceDiff: TcxGridDBColumn
+          object PriceDiff: TcxGridDBColumn
             Caption = '% '#1080#1079#1084#1077#1085#1077#1085#1080#1103
             DataBinding.FieldName = 'PriceDiff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -96,7 +97,7 @@ inherited RepriceForm: TRepriceForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colSummReprice: TcxGridDBColumn
+          object SummReprice: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'SummReprice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -105,28 +106,28 @@ inherited RepriceForm: TRepriceForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colExpirationDate: TcxGridDBColumn
+          object ExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'ExpirationDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 63
           end
-          object colMinExpirationDate: TcxGridDBColumn
+          object MinExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072
             DataBinding.FieldName = 'MinExpirationDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 64
           end
-          object colJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 101
           end
-          object colJuridical_Percent: TcxGridDBColumn
+          object Juridical_Percent: TcxGridDBColumn
             Caption = '% '#1050#1086#1088#1088'. '#1085#1072#1094#1077#1085#1082#1080' ('#1087#1086#1089#1090'.)'
             DataBinding.FieldName = 'Juridical_Percent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -136,14 +137,14 @@ inherited RepriceForm: TRepriceForm
             HeaderHint = '% '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1085#1072#1094#1077#1085#1082#1080' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
             Width = 71
           end
-          object colContractName: TcxGridDBColumn
+          object ContractName: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 49
           end
-          object colContract_Percent: TcxGridDBColumn
+          object Contract_Percent: TcxGridDBColumn
             Caption = '% '#1050#1086#1088#1088'. '#1085#1072#1094#1077#1085#1082#1080' ('#1076#1086#1075#1086#1074#1086#1088')'
             DataBinding.FieldName = 'Contract_Percent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -153,21 +154,21 @@ inherited RepriceForm: TRepriceForm
             HeaderHint = '% '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1085#1072#1094#1077#1085#1082#1080' ('#1076#1086#1075#1086#1074#1086#1088')'
             Width = 71
           end
-          object colJuridical_GoodsName: TcxGridDBColumn
+          object Juridical_GoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'Juridical_GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 113
           end
-          object colMakerName: TcxGridDBColumn
+          object MakerName: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'MakerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 107
           end
-          object colMarginPercent: TcxGridDBColumn
+          object MarginPercent: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1090#1086#1095#1082#1077
             DataBinding.FieldName = 'MarginPercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -176,7 +177,7 @@ inherited RepriceForm: TRepriceForm
             HeaderAlignmentVert = vaCenter
             Width = 71
           end
-          object colJuridical_Price: TcxGridDBColumn
+          object Juridical_Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'Juridical_Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'

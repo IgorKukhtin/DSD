@@ -11,27 +11,27 @@ inherited CheckDeferredForm: TCheckDeferredForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          inherited colCashMember: TcxGridDBColumn
+          inherited CashMember: TcxGridDBColumn
             Visible = False
             VisibleForCustomization = False
           end
-          inherited colBayer: TcxGridDBColumn
+          inherited Bayer: TcxGridDBColumn
             Visible = False
             VisibleForCustomization = False
           end
-          inherited colOperDate: TcxGridDBColumn
+          inherited OperDate: TcxGridDBColumn
             Width = 59
           end
-          inherited colTotalSumm: TcxGridDBColumn
+          inherited TotalSumm: TcxGridDBColumn
             Width = 69
           end
-          inherited colCashRegisterName: TcxGridDBColumn
+          inherited CashRegisterName: TcxGridDBColumn
             Width = 80
           end
-          inherited colInvNumber: TcxGridDBColumn
+          inherited InvNumber: TcxGridDBColumn
             Width = 52
           end
-          inherited colUnitName: TcxGridDBColumn
+          inherited UnitName: TcxGridDBColumn
             Width = 130
           end
         end
@@ -64,9 +64,6 @@ inherited CheckDeferredForm: TCheckDeferredForm
     Top = 144
   end
   inherited BarManager: TdxBarManager
-    OnItemLinkAdd = nil
-    OnItemLinkChange = nil
-    OnItemLinkDelete = nil
     DockControlHeights = (
       0
       0
@@ -124,7 +121,19 @@ inherited CheckDeferredForm: TCheckDeferredForm
         end>
     end
   end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        ColorValueList = <>
+      end>
+  end
   inherited dsdStoredProc1: TdsdStoredProc
     Left = 464
+  end
+  inherited dsdDBViewAddOn1: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        ColorValueList = <>
+      end>
   end
 end

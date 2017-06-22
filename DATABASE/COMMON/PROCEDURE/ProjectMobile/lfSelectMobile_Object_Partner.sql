@@ -34,7 +34,7 @@ BEGIN
                                  FROM ObjectLink AS OL
                                  WHERE OL.ChildObjectId = vbPersonalId
                                    AND OL.DescId = zc_ObjectLink_Partner_Personal()
-                                UNION
+                                 UNION
                                  -- если vbPersonalId - Сотрудник (мерчандайзер)
                                  SELECT OL.ObjectId AS PartnerId
                                  FROM ObjectLink AS OL

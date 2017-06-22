@@ -17,8 +17,8 @@ uses
 
 type
   TLossDebtJournalForm = class(TAncestorJournalForm)
-     colJuridicalBasisName: TcxGridDBColumn;
-     colTotalSumm: TcxGridDBColumn;
+    JuridicalBasisName: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
   private
   public

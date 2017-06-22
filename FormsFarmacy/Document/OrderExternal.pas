@@ -25,9 +25,9 @@ type
     cxLabel4: TcxLabel;
     GuidesFrom: TdsdGuides;
     GuidesTo: TdsdGuides;
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
@@ -40,13 +40,13 @@ type
     bbTax: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
-    colSumm: TcxGridDBColumn;
-    colClientCode: TcxGridDBColumn;
+    Summ: TcxGridDBColumn;
+    PartnerGoodsCode: TcxGridDBColumn;
     cxLabel5: TcxLabel;
     edContract: TcxButtonEdit;
     ContractGuides: TdsdGuides;
-    colPrice: TcxGridDBColumn;
-    colPartionGoodsDate: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    PartionGoodsDate: TcxGridDBColumn;
     actGetDocumentDataForEmail: TdsdExecStoredProc;
     spGetDocumentDataForEmail: TdsdStoredProc;
     mactSMTPSend: TMultiAction;
@@ -59,7 +59,7 @@ type
     actExportStoredproc: TdsdExecStoredProc;
     spGetExportParam: TdsdStoredProc;
     actExportToPartner: TExportGrid;
-    colComment: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
     edComment: TcxTextEdit;
     cxLabel7: TcxLabel;
     cxLabel6: TcxLabel;
@@ -79,7 +79,7 @@ type
     edOrderSumm: TcxTextEdit;
     cxLabel12: TcxLabel;
     edOrderTime: TcxTextEdit;
-    clCalc_Color: TcxGridDBColumn;
+    Calc_Color: TcxGridDBColumn;
   private
     { Private declarations }
   public

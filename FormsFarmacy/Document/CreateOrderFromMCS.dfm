@@ -2,7 +2,7 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
   Caption = #1057#1086#1079#1076#1072#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1085#1072' '#1086#1089#1085#1086#1074#1077' '#1053#1058#1047
   AddOnFormData.Params = FormParams
   ExplicitWidth = 591
-  ExplicitHeight = 343
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -17,7 +17,7 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colNeedReorder: TcxGridDBColumn
+          object NeedReorder: TcxGridDBColumn
             AlternateCaption = #1053#1077#1086#1073#1093#1086#1076#1080#1084#1086' '#1089#1086#1079#1076#1072#1090#1100' '#1079#1072#1082#1072#1079
             Caption = #1044#1072
             DataBinding.FieldName = 'NeedReorder'
@@ -25,7 +25,7 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
             HeaderHint = #1053#1077#1086#1073#1093#1086#1076#1080#1084#1086' '#1089#1086#1079#1076#1072#1090#1100' '#1079#1072#1082#1072#1079
             Width = 26
           end
-          object colUnitCode: TcxGridDBColumn
+          object UnitCode: TcxGridDBColumn
             AlternateCaption = #1050#1086#1076' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'UnitCode'
@@ -33,13 +33,13 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
             Options.Editing = False
             Width = 36
           end
-          object colUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             Options.Editing = False
             Width = 329
           end
-          object colExistsOrderInternal: TcxGridDBColumn
+          object ExistsOrderInternal: TcxGridDBColumn
             AlternateCaption = #1057#1091#1097#1077#1089#1090#1074#1091#1077#1090' '#1072#1074#1090#1086#1079#1072#1082#1072#1079' '#1085#1072' '#1089#1077#1075#1086#1076#1085#1103
             Caption = #1045#1089#1090#1100
             DataBinding.FieldName = 'ExistsOrderInternal'
@@ -47,7 +47,7 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
             Options.Editing = False
             Width = 43
           end
-          object colMovementId: TcxGridDBColumn
+          object MovementId: TcxGridDBColumn
             AlternateCaption = #1055#1077#1088#1077#1081#1090#1080' '#1074' '#1079#1072#1103#1074#1082#1091
             Caption = '->'
             DataBinding.FieldName = 'MovementId'
@@ -99,12 +99,14 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
       FormName = 'TOrderInternalForm'
       FormNameParam.Value = 'TOrderInternalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MovementId'
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -182,6 +184,7 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
         Component = actSelectAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 96
     Top = 96
@@ -245,6 +248,7 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
         Component = MasterCDS
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inNeedCreate'
@@ -253,12 +257,14 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
         ComponentItem = 'NeedReorder'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outOrderExists'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ExistsOrderInternal'
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -275,12 +281,14 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
         Component = FormParams
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outMovementId'
         Value = Null
         Component = FormParams
         ComponentItem = 'MovementId'
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 232
@@ -293,10 +301,12 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'UnitId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MovementId'
         Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 32
     Top = 144

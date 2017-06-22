@@ -165,11 +165,12 @@ BEGIN
            END IF;
       END IF;
 
-      SELECT Id INTO vbId FROM LoadGoodsBarCode WHERE Code = COALESCE (inCode, 0); 
+      SELECT Id INTO vbId FROM LoadGoodsBarCode WHERE RetailId = vbObjectId AND Code = COALESCE (inCode, 0);
 
       IF COALESCE (vbId, 0) = 0
       THEN
-           INSERT INTO LoadGoodsBarCode (GoodsId
+           INSERT INTO LoadGoodsBarCode (RetailId
+                                       , GoodsId
                                        , GoodsMainId
                                        , GoodsBarCodeId
                                        , GoodsJuridicalId
@@ -182,7 +183,8 @@ BEGIN
                                        , JuridicalName
                                        , ErrorText
                                         )
-           VALUES (COALESCE (vbGoodsId, 0)::Integer
+           VALUES (vbObjectId
+                 , COALESCE (vbGoodsId, 0)::Integer
                  , COALESCE (vbGoodsMainId, 0)::Integer
                  , COALESCE (vbGoodsBarCodeId, 0)::Integer
                  , COALESCE (vbGoodsJuridicalId, 0)::Integer

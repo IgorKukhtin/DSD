@@ -6,7 +6,7 @@ inherited LossDebtJournalForm: TLossDebtJournalForm
   ClientWidth = 460
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 476
-  ExplicitHeight = 465
+  ExplicitHeight = 466
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -40,7 +40,7 @@ inherited LossDebtJournalForm: TLossDebtJournalForm
           inherited colOperDate: TcxGridDBColumn
             Options.Editing = False
           end
-          object colJuridicalBasisName: TcxGridDBColumn
+          object JuridicalBasisName: TcxGridDBColumn
             Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalBasisName'
             HeaderAlignmentHorz = taCenter
@@ -48,7 +48,7 @@ inherited LossDebtJournalForm: TLossDebtJournalForm
             Options.Editing = False
             Width = 138
           end
-          object colTotalSumm: TcxGridDBColumn
+          object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -90,6 +90,7 @@ inherited LossDebtJournalForm: TLossDebtJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -97,6 +98,7 @@ inherited LossDebtJournalForm: TLossDebtJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -104,6 +106,7 @@ inherited LossDebtJournalForm: TLossDebtJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -119,6 +122,7 @@ inherited LossDebtJournalForm: TLossDebtJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -126,6 +130,7 @@ inherited LossDebtJournalForm: TLossDebtJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   inherited BarManager: TdxBarManager

@@ -8,8 +8,9 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
   AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
   AddOnFormData.AddOnFormRefresh.GetStoredProc = spUpdate
+  ExplicitTop = -37
   ExplicitWidth = 761
-  ExplicitHeight = 529
+  ExplicitHeight = 530
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -38,7 +39,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colTotalSumm
+              Column = TotalSumm
             end
             item
               Format = ',0.00'
@@ -51,17 +52,17 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = clPartnerMedicalName
+              Column = PartnerMedicalName
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colTotalSummWithOutVAT
+              Column = TotalSummWithOutVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colTotalSummVAT
+              Column = TotalSummVAT
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -70,14 +71,14 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clId: TcxGridDBColumn [0]
+          object Id: TcxGridDBColumn [0]
             Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088
             DataBinding.FieldName = 'Id'
             Visible = False
             Options.Editing = False
             Width = 303
           end
-          object clSPName: TcxGridDBColumn [1]
+          object SPName: TcxGridDBColumn [1]
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072
             DataBinding.FieldName = 'SPName'
             HeaderAlignmentHorz = taCenter
@@ -100,7 +101,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 62
           end
-          object colJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
@@ -126,7 +127,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 110
           end
-          object clPartnerMedicalName: TcxGridDBColumn
+          object PartnerMedicalName: TcxGridDBColumn
             Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077
             DataBinding.FieldName = 'PartnerMedicalName'
             HeaderAlignmentHorz = taCenter
@@ -151,7 +152,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 155
           end
-          object colContractName: TcxGridDBColumn
+          object ContractName: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
@@ -159,7 +160,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 108
           end
-          object colTotalSummWithOutVAT: TcxGridDBColumn
+          object TotalSummWithOutVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummWithOutVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -169,7 +170,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 71
           end
-          object colTotalSummVAT: TcxGridDBColumn
+          object TotalSummVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -179,7 +180,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 71
           end
-          object colTotalSumm: TcxGridDBColumn
+          object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -189,7 +190,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 69
           end
-          object clOperDateStart: TcxGridDBColumn
+          object OperDateStart: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1087#1077#1088#1080#1086#1076#1072' '#1086#1090#1095#1077#1090#1072
             DataBinding.FieldName = 'OperDateStart'
             HeaderAlignmentHorz = taCenter
@@ -197,7 +198,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 91
           end
-          object clOperDateEnd: TcxGridDBColumn
+          object OperDateEnd: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1087#1077#1088#1080#1086#1076#1072' '#1086#1090#1095#1077#1090#1072
             DataBinding.FieldName = 'OperDateEnd'
             HeaderAlignmentHorz = taCenter
@@ -219,7 +220,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clisDocument: TcxGridDBColumn
+          object isDocument: TcxGridDBColumn
             Caption = #1045#1089#1090#1100' '#1085#1072#1096' '#1101#1082#1079'.'
             DataBinding.FieldName = 'isDocument'
             HeaderAlignmentHorz = taCenter

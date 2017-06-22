@@ -22,10 +22,13 @@ RETURNS TABLE (Id               Integer
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbObjectId Integer;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
+      -- определяется <Торговая сеть>
+      vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
       -- Результат
       RETURN QUERY
@@ -42,7 +45,8 @@ BEGIN
              , LoadGoodsBarCode.BarCode
              , LoadGoodsBarCode.JuridicalName
              , LoadGoodsBarCode.ErrorText
-        FROM LoadGoodsBarCode;
+        FROM LoadGoodsBarCode
+        WHERE LoadGoodsBarCode.RetailId = vbObjectId;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

@@ -20,9 +20,9 @@ type
     cxLabel3: TcxLabel;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     spSelectPrint_Loss: TdsdStoredProc;
     N2: TMenuItem;
@@ -35,11 +35,11 @@ type
     cxLabel5: TcxLabel;
     edArticleLoss: TcxButtonEdit;
     GuidesArticleLoss: TdsdGuides;
-    colPrice: TcxGridDBColumn;
-    colRemains_Amount: TcxGridDBColumn;
-    colSumm: TcxGridDBColumn;
-    colPriceIn: TcxGridDBColumn;
-    colSummIn: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    Remains_Amount: TcxGridDBColumn;
+    Summ: TcxGridDBColumn;
+    PriceIn: TcxGridDBColumn;
+    SummIn: TcxGridDBColumn;
   private
     { Private declarations }
   public

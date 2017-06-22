@@ -3,8 +3,10 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
   ClientHeight = 535
   ClientWidth = 828
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -160
+  ExplicitTop = -81
   ExplicitWidth = 844
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -32,7 +34,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -70,7 +72,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -131,21 +133,21 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 95
           end
-          object colUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 156
           end
-          object colOrderKind: TcxGridDBColumn
+          object OrderKind: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1079#1072#1082#1072#1079#1072
             DataBinding.FieldName = 'OrderKindName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 77
           end
-          object colTotalCount: TcxGridDBColumn
+          object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -155,7 +157,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 121
           end
-          object colTotalSumm: TcxGridDBColumn
+          object TotalSumm: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -165,7 +167,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 122
           end
-          object colisDocument: TcxGridDBColumn
+          object isDocument: TcxGridDBColumn
             Caption = #1044#1072#1085#1085#1099#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1099
             DataBinding.FieldName = 'isDocument'
             HeaderAlignmentHorz = taCenter
