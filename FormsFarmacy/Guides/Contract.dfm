@@ -3,7 +3,7 @@ inherited ContractForm: TContractForm
   ClientWidth = 828
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 844
-  ExplicitHeight = 346
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -25,26 +25,26 @@ inherited ContractForm: TContractForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1053#1086#1084#1077#1088' '#1076#1086#1075#1086#1074#1086#1088#1072
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
             Width = 123
           end
-          object clJuridicalBasisName: TcxGridDBColumn
+          object JuridicalBasisName: TcxGridDBColumn
             Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalBasisName'
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 145
           end
-          object clJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
             Width = 212
           end
-          object clBankAccountName: TcxGridDBColumn
+          object BankAccountName: TcxGridDBColumn
             Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
             DataBinding.FieldName = 'BankAccountName'
             HeaderAlignmentHorz = taCenter
@@ -52,7 +52,7 @@ inherited ContractForm: TContractForm
             Options.Editing = False
             Width = 134
           end
-          object clBankName: TcxGridDBColumn
+          object BankName: TcxGridDBColumn
             Caption = #1041#1072#1085#1082
             DataBinding.FieldName = 'BankName'
             HeaderAlignmentHorz = taCenter
@@ -60,7 +60,7 @@ inherited ContractForm: TContractForm
             Options.Editing = False
             Width = 96
           end
-          object colPercent: TcxGridDBColumn
+          object Percent: TcxGridDBColumn
             Caption = '% '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'Percent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -70,7 +70,7 @@ inherited ContractForm: TContractForm
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
-          object colPercent_Juridical: TcxGridDBColumn
+          object Percent_Juridical: TcxGridDBColumn
             Caption = '% '#1082#1086#1088#1088'. '#1085#1072#1094#1077#1085#1082#1080' '#1102#1088'.'#1083#1080#1094#1086
             DataBinding.FieldName = 'Percent_Juridical'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -81,7 +81,7 @@ inherited ContractForm: TContractForm
             Options.Editing = False
             Width = 120
           end
-          object clStartDate: TcxGridDBColumn
+          object StartDate: TcxGridDBColumn
             Caption = #1044#1077#1081#1089#1090#1074'. '#1089
             DataBinding.FieldName = 'StartDate'
             HeaderAlignmentHorz = taCenter
@@ -89,7 +89,7 @@ inherited ContractForm: TContractForm
             Options.Editing = False
             Width = 78
           end
-          object clEndDate: TcxGridDBColumn
+          object EndDate: TcxGridDBColumn
             Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086
             DataBinding.FieldName = 'EndDate'
             HeaderAlignmentHorz = taCenter
@@ -97,13 +97,13 @@ inherited ContractForm: TContractForm
             Options.Editing = False
             Width = 78
           end
-          object colDeferment: TcxGridDBColumn
+          object Deferment: TcxGridDBColumn
             Caption = #1054#1090#1089#1088#1086#1095#1082#1072
             DataBinding.FieldName = 'Deferment'
             HeaderAlignmentVert = vaCenter
             Width = 98
           end
-          object colisReport: TcxGridDBColumn
+          object isReport: TcxGridDBColumn
             Caption = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1086#1090#1095#1077#1090#1077
             DataBinding.FieldName = 'isReport'
             HeaderAlignmentHorz = taCenter
@@ -120,7 +120,7 @@ inherited ContractForm: TContractForm
             Options.Editing = False
             Width = 105
           end
-          object colPercentSP: TcxGridDBColumn
+          object PercentSP: TcxGridDBColumn
             Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
             DataBinding.FieldName = 'PercentSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -132,14 +132,14 @@ inherited ContractForm: TContractForm
             Options.Editing = False
             Width = 86
           end
-          object clComment: TcxGridDBColumn
+          object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 268
           end
-          object clisErased: TcxGridDBColumn
+          object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             Visible = False

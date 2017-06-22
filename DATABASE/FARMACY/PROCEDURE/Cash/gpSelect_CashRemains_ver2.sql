@@ -152,7 +152,7 @@ BEGIN
     FROM
         GoodsRemains
         LEFT OUTER JOIN tmpObject_Price ON tmpObject_Price.GoodsId = GoodsRemains.ObjectId
-        LEFT OUTER JOIN RESERVE ON GoodsRemains.ObjectId = RESERVE.GoodsId;
+        LEFT OUTER JOIN RESERVE ON RESERVE.GoodsId = GoodsRemains.ObjectId;
 
     RETURN QUERY
       -- Маркетинговый контракт

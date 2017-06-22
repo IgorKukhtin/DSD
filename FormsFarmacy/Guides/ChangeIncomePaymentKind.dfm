@@ -3,7 +3,7 @@ inherited ChangeIncomePaymentKindForm: TChangeIncomePaymentKindForm
   ClientHeight = 190
   ClientWidth = 450
   ExplicitWidth = 466
-  ExplicitHeight = 228
+  ExplicitHeight = 229
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -14,8 +14,8 @@ inherited ChangeIncomePaymentKindForm: TChangeIncomePaymentKindForm
     ClientRectBottom = 164
     ClientRectRight = 450
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 575
-      ExplicitHeight = 282
+      ExplicitWidth = 450
+      ExplicitHeight = 164
       inherited cxGrid: TcxGrid
         Width = 450
         Height = 164
@@ -31,17 +31,17 @@ inherited ChangeIncomePaymentKindForm: TChangeIncomePaymentKindForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             Width = 37
           end
-          object colName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             Width = 314
           end
-          object colisErased: TcxGridDBColumn
+          object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
           end

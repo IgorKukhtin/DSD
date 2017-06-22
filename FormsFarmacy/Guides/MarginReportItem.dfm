@@ -4,7 +4,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
   ClientWidth = 885
   AddOnFormData.Params = FormParams
   ExplicitWidth = 901
-  ExplicitHeight = 397
+  ExplicitHeight = 398
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -30,7 +30,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colMarginReportName: TcxGridDBColumn
+          object MarginReportName: TcxGridDBColumn
             Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'MarginReportName'
             HeaderAlignmentHorz = taCenter
@@ -38,7 +38,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
             Options.Editing = False
             Width = 100
           end
-          object colUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -53,7 +53,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
             HeaderAlignmentVert = vaCenter
             Width = 135
           end
-          object colPercent1: TcxGridDBColumn
+          object Percent1: TcxGridDBColumn
             Caption = #1074#1080#1088#1090'. % '#1076#1083#1103' 1-'#1086#1075#1086' '#1087#1077#1088#1077#1076#1077#1083#1072
             DataBinding.FieldName = 'Percent1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -62,7 +62,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
             HeaderAlignmentVert = vaCenter
             Width = 74
           end
-          object colPercent2: TcxGridDBColumn
+          object Percent2: TcxGridDBColumn
             Caption = #1074#1080#1088#1090'. % '#1076#1083#1103' 2-'#1086#1075#1086' '#1087#1077#1088#1077#1076#1077#1083#1072
             DataBinding.FieldName = 'Percent2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -71,7 +71,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
             HeaderAlignmentVert = vaCenter
             Width = 74
           end
-          object colPercent3: TcxGridDBColumn
+          object Percent3: TcxGridDBColumn
             Caption = #1074#1080#1088#1090'. % '#1076#1083#1103' 3-'#1086#1075#1086' '#1087#1077#1088#1077#1076#1077#1083#1072
             DataBinding.FieldName = 'Percent3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -80,7 +80,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
             HeaderAlignmentVert = vaCenter
             Width = 74
           end
-          object colPercent4: TcxGridDBColumn
+          object Percent4: TcxGridDBColumn
             Caption = #1074#1080#1088#1090'. % '#1076#1083#1103' 4-'#1086#1075#1086' '#1087#1077#1088#1077#1076#1077#1083#1072
             DataBinding.FieldName = 'Percent4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -89,7 +89,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
             HeaderAlignmentVert = vaCenter
             Width = 74
           end
-          object colPercent5: TcxGridDBColumn
+          object Percent5: TcxGridDBColumn
             Caption = #1074#1080#1088#1090'. % '#1076#1083#1103' 5-'#1086#1075#1086' '#1087#1077#1088#1077#1076#1077#1083#1072
             DataBinding.FieldName = 'Percent5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -98,7 +98,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
             HeaderAlignmentVert = vaCenter
             Width = 74
           end
-          object colPercent6: TcxGridDBColumn
+          object Percent6: TcxGridDBColumn
             Caption = #1074#1080#1088#1090'. % '#1076#1083#1103' 6-'#1086#1075#1086' '#1087#1077#1088#1077#1076#1077#1083#1072
             DataBinding.FieldName = 'Percent6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -107,7 +107,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
             HeaderAlignmentVert = vaCenter
             Width = 74
           end
-          object colPercent7: TcxGridDBColumn
+          object Percent7: TcxGridDBColumn
             Caption = #1074#1080#1088#1090'. % '#1076#1083#1103' 7-'#1086#1075#1086' '#1087#1077#1088#1077#1076#1077#1083#1072
             DataBinding.FieldName = 'Percent7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -144,6 +144,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MarginReportId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -151,12 +152,14 @@ inherited MarginReportItemForm: TMarginReportItemForm
           Component = MasterCDS
           ComponentItem = 'MarginReportName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MarginReportId'
           Value = Null
           Component = MarginReportGuides
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MarginReportName'
@@ -164,6 +167,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
           Component = MarginReportGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
     end
     object actInsertUpdate: TdsdUpdateDataSet
@@ -186,12 +190,14 @@ inherited MarginReportItemForm: TMarginReportItemForm
       FormName = 'TUnitTreeForm'
       FormNameParam.Value = 'TUnitTreeForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -199,6 +205,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
           Component = MasterCDS
           ComponentItem = 'UnitName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -219,6 +226,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
         Component = MarginReportGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 80
   end
@@ -295,6 +303,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMarginReportId'
@@ -302,6 +311,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
         Component = MarginReportGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -309,6 +319,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
         Component = MasterCDS
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPercent1'
@@ -317,6 +328,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
         ComponentItem = 'Percent1'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPercent2'
@@ -325,6 +337,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
         ComponentItem = 'Percent2'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPercent3'
@@ -333,6 +346,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
         ComponentItem = 'Percent3'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPercent4'
@@ -341,6 +355,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
         ComponentItem = 'Percent4'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPercent5'
@@ -349,6 +364,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
         ComponentItem = 'Percent5'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPercent6'
@@ -357,6 +373,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
         ComponentItem = 'Percent6'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPercent7'
@@ -365,6 +382,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
         ComponentItem = 'Percent7'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 296
@@ -375,6 +393,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
     LookupControl = ceMarginReport
     FormNameParam.Value = 'TMarginReportForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMarginReportForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -383,6 +402,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
         Value = ''
         Component = MarginReportGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -390,12 +410,14 @@ inherited MarginReportItemForm: TMarginReportItemForm
         Component = MarginReportGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 536
     Top = 120
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -412,6 +434,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
         Component = MarginReportGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MarginReportName'
@@ -420,6 +443,7 @@ inherited MarginReportItemForm: TMarginReportItemForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 759
     Top = 110

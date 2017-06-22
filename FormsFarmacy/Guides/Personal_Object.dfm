@@ -47,28 +47,28 @@ object Personal_ObjectForm: TPersonal_ObjectForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clMemberCode: TcxGridDBColumn
+      object MemberCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'MemberCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object clMemberName: TcxGridDBColumn
+      object MemberName: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'MemberName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 200
       end
-      object clPositionName: TcxGridDBColumn
+      object PositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
         DataBinding.FieldName = 'PositionName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object clPersonalGroupName: TcxGridDBColumn
+      object PersonalGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072
         DataBinding.FieldName = 'PersonalGroupName'
         Visible = False
@@ -76,14 +76,14 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 133
       end
-      object clUnitName: TcxGridDBColumn
+      object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 150
       end
-      object clDateIn: TcxGridDBColumn
+      object DateIn: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
         DataBinding.FieldName = 'DateIn'
         Visible = False
@@ -91,7 +91,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object clDateOut: TcxGridDBColumn
+      object DateOut: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
         DataBinding.FieldName = 'DateOut'
         Visible = False
@@ -99,7 +99,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clIsDateOut: TcxGridDBColumn
+      object isDateOut: TcxGridDBColumn
         Caption = #1059#1074#1086#1083#1077#1085
         DataBinding.FieldName = 'isDateOut'
         Visible = False
@@ -107,7 +107,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object clIsMain: TcxGridDBColumn
+      object isMain: TcxGridDBColumn
         Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.'
         DataBinding.FieldName = 'isMain'
         Visible = False
@@ -115,7 +115,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clIsOfficial: TcxGridDBColumn
+      object isOfficial: TcxGridDBColumn
         Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
         DataBinding.FieldName = 'isOfficial'
         Visible = False
@@ -123,7 +123,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -376,12 +376,14 @@ object Personal_ObjectForm: TPersonal_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'MemberCode'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -389,12 +391,14 @@ object Personal_ObjectForm: TPersonal_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'MemberName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PositionId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'PositionId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PositionName'
@@ -402,12 +406,14 @@ object Personal_ObjectForm: TPersonal_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'PositionName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -415,6 +421,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'UnitName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -464,6 +471,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -471,6 +479,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPeriod'
@@ -478,6 +487,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         Component = cbPeriod
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsShowAll'
@@ -485,6 +495,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 48
@@ -528,6 +539,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item

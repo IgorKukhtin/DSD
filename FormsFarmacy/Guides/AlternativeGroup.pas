@@ -10,15 +10,27 @@ uses
   cxDBData, dsdAction, Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar, cxClasses,
   dsdDB, Datasnap.DBClient, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, cxPC, cxButtonEdit, Vcl.DBActns;
+  cxGrid, cxPC, cxButtonEdit, Vcl.DBActns, dxSkinsCore, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue, dxSkinscxPCPainter, cxPCdxBarPopupMenu,
+  dxSkinsdxBarPainter;
 
 type
   TAlternativeGroupForm = class(TAncestorEnumForm)
     actShowDel: TBooleanStoredProcAction;
     actShowDelGoods: TBooleanStoredProcAction;
-    colId: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
-    colisErased: TcxGridDBColumn;
+    Id: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     dxBarButton1: TdxBarButton;
     GridGoods: TcxGrid;
     GridGoodsTableView: TcxGridDBTableView;
@@ -29,11 +41,11 @@ type
     dxBarButton2: TdxBarButton;
     dxBarButton3: TdxBarButton;
     dxBarStatic1: TdxBarStatic;
-    GridGodsColAlternativeGroupId: TcxGridDBColumn;
-    GridGodsColGoodsId: TcxGridDBColumn;
-    GridGodsColGoodsCode: TcxGridDBColumn;
-    GridGodsColGoodsName: TcxGridDBColumn;
-    GridGodsColisErased: TcxGridDBColumn;
+    AlternativeGroupId: TcxGridDBColumn;
+    GoodsId: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    clisErased: TcxGridDBColumn;
     dsdDBViewAddOn1: TdsdDBViewAddOn;
     spInsertUpdate_AlternativeGroup: TdsdStoredProc;
     spInsertUpdate_AlternativeGroup_Goods: TdsdStoredProc;

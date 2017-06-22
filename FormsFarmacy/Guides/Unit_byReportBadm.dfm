@@ -4,7 +4,7 @@ inherited Unit_byReportBadmForm: TUnit_byReportBadmForm
   ClientWidth = 699
   AddOnFormData.ChoiceAction = nil
   ExplicitWidth = 715
-  ExplicitHeight = 458
+  ExplicitHeight = 459
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -42,7 +42,7 @@ inherited Unit_byReportBadmForm: TUnit_byReportBadmForm
             HeaderAlignmentVert = vaCenter
             Width = 48
           end
-          object ceName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentHorz = taCenter
@@ -56,14 +56,14 @@ inherited Unit_byReportBadmForm: TUnit_byReportBadmForm
             HeaderAlignmentVert = vaCenter
             Width = 107
           end
-          object ceParentName: TcxGridDBColumn
+          object ParentName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'ParentName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 217
           end
-          object ceIsErased: TcxGridDBColumn
+          object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             PropertiesClassName = 'TcxCheckBoxProperties'

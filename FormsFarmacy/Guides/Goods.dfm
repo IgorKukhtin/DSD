@@ -27,7 +27,7 @@ inherited GoodsForm: TGoodsForm
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = clName
+              Column = Name
             end>
           OptionsBehavior.IncSearch = True
           OptionsData.CancelOnExit = True
@@ -38,7 +38,7 @@ inherited GoodsForm: TGoodsForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             HeaderAlignmentHorz = taCenter
@@ -46,7 +46,7 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 80
           end
-          object cMorionCode: TcxGridDBColumn
+          object MorionCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1052#1086#1088#1080#1086#1085#1072
             DataBinding.FieldName = 'MorionCode'
             HeaderAlignmentHorz = taCenter
@@ -54,7 +54,7 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 80
           end
-          object colIdBarCode: TcxGridDBColumn
+          object IdBarCode: TcxGridDBColumn
             Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076' ('#1072#1087#1090#1077#1082#1072')'
             DataBinding.FieldName = 'IdBarCode'
             HeaderAlignmentHorz = taCenter
@@ -62,7 +62,7 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 90
           end
-          object cBarCode: TcxGridDBColumn
+          object BarCode: TcxGridDBColumn
             Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076' ('#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100')'
             DataBinding.FieldName = 'BarCode'
             HeaderAlignmentHorz = taCenter
@@ -70,7 +70,7 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 110
           end
-          object clName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentHorz = taCenter
@@ -78,7 +78,7 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 324
           end
-          object clNDSKindName: TcxGridDBColumn
+          object NDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
             HeaderAlignmentHorz = taCenter
@@ -86,7 +86,7 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 68
           end
-          object clMeasureName: TcxGridDBColumn
+          object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -94,7 +94,7 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 59
           end
-          object clConditionsKeepName: TcxGridDBColumn
+          object ConditionsKeepName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
             DataBinding.FieldName = 'ConditionsKeepName'
             GroupSummaryAlignment = taCenter
@@ -103,7 +103,7 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 75
           end
-          object clGoodsGroupName: TcxGridDBColumn
+          object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
             HeaderAlignmentHorz = taCenter
@@ -111,7 +111,7 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 96
           end
-          object clMinimumLot: TcxGridDBColumn
+          object MinimumLot: TcxGridDBColumn
             Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100
             DataBinding.FieldName = 'MinimumLot'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -122,7 +122,7 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 77
           end
-          object clIsClose: TcxGridDBColumn
+          object IsClose: TcxGridDBColumn
             Caption = #1047#1072#1082#1088#1099#1090
             DataBinding.FieldName = 'IsClose'
             PropertiesClassName = 'TcxCheckBoxProperties'
@@ -131,7 +131,7 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 52
           end
-          object cbIsTop: TcxGridDBColumn
+          object IsTop: TcxGridDBColumn
             Caption = #1058#1054#1055
             DataBinding.FieldName = 'IsTop'
             PropertiesClassName = 'TcxCheckBoxProperties'
@@ -140,7 +140,7 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 37
           end
-          object clisFirst: TcxGridDBColumn
+          object isFirst: TcxGridDBColumn
             Caption = '1-'#1074#1099#1073#1086#1088
             DataBinding.FieldName = 'isFirst'
             PropertiesClassName = 'TcxCheckBoxProperties'
@@ -148,7 +148,7 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clisSecond: TcxGridDBColumn
+          object isSecond: TcxGridDBColumn
             Caption = #1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090'. '#1074#1099#1073#1086#1088
             DataBinding.FieldName = 'isSecond'
             PropertiesClassName = 'TcxCheckBoxProperties'
@@ -156,7 +156,7 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clisPublished: TcxGridDBColumn
+          object isPublished: TcxGridDBColumn
             Caption = #1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1085#1072' '#1089#1072#1081#1090#1077
             DataBinding.FieldName = 'isPublished'
             PropertiesClassName = 'TcxCheckBoxProperties'
@@ -166,7 +166,7 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 86
           end
-          object clisPromo: TcxGridDBColumn
+          object isPromo: TcxGridDBColumn
             Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090
             DataBinding.FieldName = 'isPromo'
             PropertiesClassName = 'TcxCheckBoxProperties'
@@ -175,7 +175,7 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 100
           end
-          object clisMarketToday: TcxGridDBColumn
+          object isMarketToday: TcxGridDBColumn
             Caption = #1045#1089#1090#1100' '#1085#1072' '#1088#1099#1085#1082#1077' '#1089#1077#1075#1086#1076#1085#1103
             DataBinding.FieldName = 'isMarketToday'
             HeaderAlignmentHorz = taCenter
@@ -184,7 +184,7 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 70
           end
-          object clLastPriceDate: TcxGridDBColumn
+          object LastPriceDate: TcxGridDBColumn
             Caption = #1055#1086#1089#1083#1077#1076'. '#1076#1072#1090#1072' '#1085#1072#1083#1080#1095#1080#1103' '#1085#1072' '#1088#1099#1085#1082#1077
             DataBinding.FieldName = 'LastPriceDate'
             HeaderAlignmentHorz = taCenter
@@ -193,7 +193,7 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 65
           end
-          object clCountPrice: TcxGridDBColumn
+          object CountPrice: TcxGridDBColumn
             Caption = #1053#1072' '#1088#1099#1085#1082#1077' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1072#1081#1089#1086#1074
             DataBinding.FieldName = 'CountPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -203,7 +203,7 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 60
           end
-          object cbPercentMarkup: TcxGridDBColumn
+          object PercentMarkup: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'PercentMarkup'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -213,7 +213,7 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 84
           end
-          object colPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             AlternateCaption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
             Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079'.'
             DataBinding.FieldName = 'Price'
@@ -243,7 +243,7 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 100
           end
-          object clisErased: TcxGridDBColumn
+          object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             PropertiesClassName = 'TcxCheckBoxProperties'
@@ -253,7 +253,7 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 51
           end
-          object clColor_calc: TcxGridDBColumn
+          object Color_calc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_calc'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -296,7 +296,7 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 70
           end
-          object clisSp: TcxGridDBColumn
+          object isSp: TcxGridDBColumn
             Caption = #1057#1086#1094'. '#1087#1088#1086#1077#1082#1090
             DataBinding.FieldName = 'isSp'
             HeaderAlignmentHorz = taCenter
@@ -605,93 +605,93 @@ inherited GoodsForm: TGoodsForm
       end>
     ColorRuleList = <
       item
-        ColorColumn = cbIsTop
-        BackGroundValueColumn = clColor_calc
+        ColorColumn = IsTop
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = cbPercentMarkup
-        BackGroundValueColumn = clColor_calc
+        ColorColumn = PercentMarkup
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clCode
-        BackGroundValueColumn = clColor_calc
+        ColorColumn = Code
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clGoodsGroupName
-        BackGroundValueColumn = clColor_calc
+        ColorColumn = GoodsGroupName
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clIsClose
-        BackGroundValueColumn = clColor_calc
+        ColorColumn = IsClose
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clisErased
-        BackGroundValueColumn = clColor_calc
+        ColorColumn = isErased
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clisFirst
-        BackGroundValueColumn = clColor_calc
+        ColorColumn = isFirst
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clMeasureName
-        BackGroundValueColumn = clColor_calc
+        ColorColumn = MeasureName
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clMinimumLot
-        BackGroundValueColumn = clColor_calc
+        ColorColumn = MinimumLot
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clName
-        BackGroundValueColumn = clColor_calc
+        ColorColumn = Name
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clNDSKindName
-        BackGroundValueColumn = clColor_calc
+        ColorColumn = NDSKindName
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colPrice
-        BackGroundValueColumn = clColor_calc
+        ColorColumn = Price
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clisSecond
-        BackGroundValueColumn = clColor_calc
+        ColorColumn = isSecond
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clisPromo
-        BackGroundValueColumn = clColor_calc
+        ColorColumn = isPromo
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clisPublished
-        BackGroundValueColumn = clColor_calc
+        ColorColumn = isPublished
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
         ColorColumn = RetailCode
-        BackGroundValueColumn = clColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
         ColorColumn = RetailName
-        BackGroundValueColumn = clColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clConditionsKeepName
-        BackGroundValueColumn = clColor_calc
+        ColorColumn = ConditionsKeepName
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end>
     SearchAsFilter = False

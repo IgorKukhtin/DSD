@@ -9,7 +9,7 @@ CREATE TABLE MovementItemContainer(
    ContainerId    Integer   NOT NULL,
    Amount         TFloat    NOT NULL,
    OperDate       TDateTime NOT NULL,
-   MovementItemId Integer   NOT NULL,
+   MovementItemId Integer       NULL,
    ParentId       BigInt        NULL,
    isActive       Boolean   NOT NULL,
 

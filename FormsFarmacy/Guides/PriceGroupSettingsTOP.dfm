@@ -2,6 +2,7 @@ inherited PriceGroupSettingsTopForm: TPriceGroupSettingsTopForm
   Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080' '#1076#1083#1103' '#1094#1077#1085#1086#1074#1099#1093' '#1075#1088#1091#1087#1087' '#1058#1054#1055
   ClientWidth = 407
   ExplicitWidth = 423
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -21,25 +22,25 @@ inherited PriceGroupSettingsTopForm: TPriceGroupSettingsTopForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1094#1077#1085#1099
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
             Width = 231
           end
-          object colMinPrice: TcxGridDBColumn
+          object MinPrice: TcxGridDBColumn
             Caption = #1053#1080#1078#1085#1103#1103' '#1094#1077#1085#1072
             DataBinding.FieldName = 'MinPrice'
             HeaderAlignmentVert = vaCenter
             Width = 95
           end
-          object colPercent: TcxGridDBColumn
+          object Percent: TcxGridDBColumn
             Caption = #1055#1088#1086#1094#1077#1085#1090
             DataBinding.FieldName = 'Percent'
             HeaderAlignmentVert = vaCenter
             Width = 67
           end
-          object colisErased: TcxGridDBColumn
+          object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             Visible = False

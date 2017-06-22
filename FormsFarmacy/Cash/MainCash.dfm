@@ -12,7 +12,7 @@ inherited MainCashForm: TMainCashForm
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
   ExplicitWidth = 759
-  ExplicitHeight = 450
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
@@ -1842,6 +1842,10 @@ inherited MainCashForm: TMainCashForm
       Caption = 'actUpdateRemainsCDS'
       DataSource = RemainsDS
     end
+    object actSetFilter: TAction
+      Caption = 'actSetFilter'
+      OnExecute = actSetFilterExecute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1993,7 +1997,6 @@ inherited MainCashForm: TMainCashForm
     IndexFieldNames = 'Id'
     Params = <>
     StoreDefs = True
-    AfterScroll = RemainsCDSAfterScroll
     Left = 208
     Top = 32
   end

@@ -1,6 +1,8 @@
 inherited Juridical_ObjectForm: TJuridical_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  ExplicitWidth = 591
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -17,17 +19,17 @@ inherited Juridical_ObjectForm: TJuridical_ObjectForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             Width = 58
           end
-          object clName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             Width = 221
           end
-          object colOKPO: TcxGridDBColumn
+          object OKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
             HeaderAlignmentHorz = taCenter
@@ -35,17 +37,17 @@ inherited Juridical_ObjectForm: TJuridical_ObjectForm
             Options.Editing = False
             Width = 60
           end
-          object clisCorporate: TcxGridDBColumn
+          object isCorporate: TcxGridDBColumn
             Caption = #1053#1072#1096#1077' '#1102#1088'.'#1083#1080#1094#1086
             DataBinding.FieldName = 'isCorporate'
             Width = 98
           end
-          object clRetailName: TcxGridDBColumn
+          object RetailName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
             DataBinding.FieldName = 'RetailName'
             Width = 133
           end
-          object clisErased: TcxGridDBColumn
+          object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             Width = 51

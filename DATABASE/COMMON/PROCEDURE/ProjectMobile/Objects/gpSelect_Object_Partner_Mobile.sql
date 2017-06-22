@@ -24,11 +24,13 @@ RETURNS TABLE (Id              Integer
              , OverSum         TFloat   -- Сумма просроченного долга (нам) - НАЛ - Просрочка наступает спустя определенное кол-во дней
              , OverDays        Integer  -- Кол-во дней просрочки (нам)
              , PrepareDayCount TFloat   -- За сколько дней принимается заказ
+             , PartnerTagName  TVarChar --
              , JuridicalId     Integer  -- Юридическое лицо
              , JuridicalName   TVarChar --
              , RouteId         Integer  -- Маршрут
              , RouteName       TVarChar --
              , RetailId Integer, RetailName TVarChar  -- торговая сеть
+             , PaidKindName    TVarChar --
              , ContractId      Integer  -- Договор - все возможные договора...
              , ContractCode    Integer  --
              , ContractName    TVarChar --
@@ -80,12 +82,14 @@ BEGIN
                , gpSelect.OverSum
                , gpSelect.OverDays
                , gpSelect.PrepareDayCount
+               , Object_PartnerTag.ValueData    AS PartnerTagName
                , Object_Juridical.Id            AS JuridicalId
                , Object_Juridical.ValueData     AS JuridicalName
                , Object_Route.Id                AS RouteId
                , Object_Route.ValueData         AS RouteName
                , Object_Retail.Id               AS RetailId
                , Object_Retail.ValueData        AS RetailName
+               , Object_PaidKind.ValueData      AS PaidKindName
                , Object_Contract.Id             AS ContractId
                , Object_Contract.ObjectCode     AS ContractCode
                , Object_Contract.ValueData      AS ContractName
@@ -121,10 +125,17 @@ BEGIN
                , Object_PersonalTrade.PositionName
 
           FROM gpSelectMobile_Object_Partner (zc_DateStart(), vbUserId_Mobile :: TVarChar) AS gpSelect
-               LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = gpSelect.JuridicalId
-               LEFT JOIN Object AS Object_Route ON Object_Route.Id = gpSelect.RouteId
-               LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = gpSelect.PriceListId
+
+               LEFT JOIN Object AS Object_Juridical     ON Object_Juridical.Id     = gpSelect.JuridicalId
+               LEFT JOIN Object AS Object_Route         ON Object_Route.Id         = gpSelect.RouteId
+               LEFT JOIN Object AS Object_PriceList     ON Object_PriceList.Id     = gpSelect.PriceListId
                LEFT JOIN Object AS Object_PriceList_Ret ON Object_PriceList_Ret.Id = gpSelect.PriceListId_ret
+               LEFT JOIN Object AS Object_PaidKind      ON Object_PaidKind.Id      = gpSelect.PaidKindId
+
+               LEFT JOIN ObjectLink AS ObjectLink_Partner_PartnerTag
+                                    ON ObjectLink_Partner_PartnerTag.ObjectId = gpSelect.Id
+                                   AND ObjectLink_Partner_PartnerTag.DescId   = zc_ObjectLink_Partner_PartnerTag()
+               LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = ObjectLink_Partner_PartnerTag.ChildObjectId
 
                LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = gpSelect.ContractId
                LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind

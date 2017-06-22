@@ -37,7 +37,7 @@ object DiscountCardForm: TDiscountCardForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -50,7 +50,7 @@ object DiscountCardForm: TDiscountCardForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
@@ -58,7 +58,7 @@ object DiscountCardForm: TDiscountCardForm
         Options.Editing = False
         Width = 37
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #8470' '#1076#1080#1089#1082#1086#1085#1090#1085#1086#1081' '#1082#1072#1088#1090#1099
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -66,7 +66,7 @@ object DiscountCardForm: TDiscountCardForm
         Options.Editing = False
         Width = 149
       end
-      object clObjectName: TcxGridDBColumn
+      object ObjectName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1055#1088#1086#1077#1082#1090#1072
         DataBinding.FieldName = 'ObjectName'
         HeaderAlignmentHorz = taCenter
@@ -75,7 +75,7 @@ object DiscountCardForm: TDiscountCardForm
         Options.Editing = False
         Width = 149
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

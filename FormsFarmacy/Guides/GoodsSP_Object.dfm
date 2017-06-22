@@ -37,7 +37,7 @@ object GoodsSP_ObjectForm: TGoodsSP_ObjectForm
         item
           Format = #1057#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = clName
+          Column = Name
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -55,7 +55,7 @@ object GoodsSP_ObjectForm: TGoodsSP_ObjectForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
@@ -63,7 +63,7 @@ object GoodsSP_ObjectForm: TGoodsSP_ObjectForm
         Options.Editing = False
         Width = 63
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072' ('#1085#1072#1096#1072')'
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -71,7 +71,7 @@ object GoodsSP_ObjectForm: TGoodsSP_ObjectForm
         Options.Editing = False
         Width = 216
       end
-      object cbIsSP: TcxGridDBColumn
+      object IsSP: TcxGridDBColumn
         Caption = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1077
         DataBinding.FieldName = 'IsSP'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -89,7 +89,7 @@ object GoodsSP_ObjectForm: TGoodsSP_ObjectForm
         Options.Editing = False
         Width = 56
       end
-      object clIntenalSPName: TcxGridDBColumn
+      object IntenalSPName: TcxGridDBColumn
         Caption = #1052#1110#1078#1085#1072#1088#1086#1076#1085#1072' '#1085#1077#1087#1072#1090#1077#1085#1090#1086#1074#1072#1085#1072' '#1085#1072#1079#1074#1072' (2)'
         DataBinding.FieldName = 'IntenalSPName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -105,7 +105,7 @@ object GoodsSP_ObjectForm: TGoodsSP_ObjectForm
         Options.Editing = False
         Width = 97
       end
-      object clBrandSPName: TcxGridDBColumn
+      object BrandSPName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072' '#1085#1072#1079#1074#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091' (3)'
         DataBinding.FieldName = 'BrandSPName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -121,7 +121,7 @@ object GoodsSP_ObjectForm: TGoodsSP_ObjectForm
         Options.Editing = False
         Width = 115
       end
-      object clKindOutSPName: TcxGridDBColumn
+      object KindOutSPName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1074#1080#1087#1091#1089#1082#1091' (4)'
         DataBinding.FieldName = 'KindOutSPName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -137,7 +137,7 @@ object GoodsSP_ObjectForm: TGoodsSP_ObjectForm
         Options.Editing = False
         Width = 57
       end
-      object clPack: TcxGridDBColumn
+      object Pack: TcxGridDBColumn
         Caption = #1057#1080#1083#1072' '#1076#1110#1111' ('#1076#1086#1079#1091#1074#1072#1085#1085#1103') (5)'
         DataBinding.FieldName = 'Pack'
         HeaderAlignmentHorz = taCenter
@@ -145,7 +145,7 @@ object GoodsSP_ObjectForm: TGoodsSP_ObjectForm
         Options.Editing = False
         Width = 105
       end
-      object cbCountSP: TcxGridDBColumn
+      object CountSP: TcxGridDBColumn
         Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1086#1076#1080#1085#1080#1094#1100' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091' '#1091' '#1089#1087#1086#1078#1080#1074#1095#1110#1081' '#1091#1087#1072#1082#1086#1074#1094#1110' (6)'
         DataBinding.FieldName = 'CountSP'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -155,7 +155,7 @@ object GoodsSP_ObjectForm: TGoodsSP_ObjectForm
         Options.Editing = False
         Width = 77
       end
-      object cbGroupSP: TcxGridDBColumn
+      object GroupSP: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1080' '#1074#1110#1076#1096#1082#1086#1076#1091'-'#1074#1072#1085#1085#1103' '#8211' '#1030' '#1072#1073#1086' '#1030#1030
         DataBinding.FieldName = 'GroupSP'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -235,7 +235,7 @@ object GoodsSP_ObjectForm: TGoodsSP_ObjectForm
         Options.Editing = False
         Width = 111
       end
-      object colPriceSP: TcxGridDBColumn
+      object PriceSP: TcxGridDBColumn
         Caption = #1056#1086#1079#1084#1110#1088' '#1074#1110#1076#1096#1082#1086#1076#1091#1074#1072#1085#1085#1103' '#1079#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091', '#1075#1088#1085' (15)'
         DataBinding.FieldName = 'PriceSP'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -257,7 +257,7 @@ object GoodsSP_ObjectForm: TGoodsSP_ObjectForm
         Options.Editing = False
         Width = 84
       end
-      object cxGridDBTableViewColumn1: TcxGridDBColumn
+      object InsertDateSP: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1079#1072#1075#1088#1091#1079#1082#1080
         DataBinding.FieldName = 'InsertDateSP'
         HeaderAlignmentHorz = taCenter
@@ -265,7 +265,7 @@ object GoodsSP_ObjectForm: TGoodsSP_ObjectForm
         Options.Editing = False
         Width = 65
       end
-      object clisErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -276,7 +276,7 @@ object GoodsSP_ObjectForm: TGoodsSP_ObjectForm
         VisibleForCustomization = False
         Width = 58
       end
-      object clisErased_inf: TcxGridDBColumn
+      object isErased_inf: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085' ('#1080#1085#1092'.)'
         DataBinding.FieldName = 'isErased_inf'
         PropertiesClassName = 'TcxCheckBoxProperties'

@@ -5,7 +5,7 @@ inherited PriceHistoryForm: TPriceHistoryForm
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
   ExplicitWidth = 520
-  ExplicitHeight = 441
+  ExplicitHeight = 445
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -32,28 +32,28 @@ inherited PriceHistoryForm: TPriceHistoryForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colStartDate: TcxGridDBColumn
+          object StartDate: TcxGridDBColumn
             Caption = #1057' '#1076#1072#1090#1099
             DataBinding.FieldName = 'StartDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 104
           end
-          object colPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 98
           end
-          object colMCSValue: TcxGridDBColumn
+          object MCSValue: TcxGridDBColumn
             Caption = #1053#1058#1047
             DataBinding.FieldName = 'MCSValue'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 95
           end
-          object colMCSPeriod: TcxGridDBColumn
+          object MCSPeriod: TcxGridDBColumn
             Caption = #1087#1077#1088#1080#1086#1076' '#1072#1085#1072#1083#1080#1079#1072'***'
             DataBinding.FieldName = 'MCSPeriod'
             HeaderAlignmentHorz = taCenter
@@ -61,7 +61,7 @@ inherited PriceHistoryForm: TPriceHistoryForm
             HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' '#1072#1085#1072#1083#1080#1079#1072' '#1053#1058#1047
             Width = 95
           end
-          object colMCSDay: TcxGridDBColumn
+          object MCSDay: TcxGridDBColumn
             Caption = #1079#1072#1087#1072#1089' '#1076#1085#1077#1081'***'
             DataBinding.FieldName = 'MCSDay'
             HeaderAlignmentHorz = taCenter
@@ -88,6 +88,7 @@ inherited PriceHistoryForm: TPriceHistoryForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 112
   end
@@ -140,6 +141,7 @@ inherited PriceHistoryForm: TPriceHistoryForm
         Name = 'Id'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 16
     Top = 168

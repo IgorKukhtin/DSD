@@ -1,7 +1,5 @@
 inherited JuridicalCorporateForm: TJuridicalCorporateForm
   Caption = #1070#1088'.'#1083#1080#1094#1072' '#1082#1086#1088#1087#1086#1088#1072#1094#1080#1080
-  ExplicitWidth = 591
-  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -13,14 +11,14 @@ inherited JuridicalCorporateForm: TJuridicalCorporateForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          inherited clName: TcxGridDBColumn
+          inherited Name: TcxGridDBColumn
             Width = 297
           end
-          inherited clisCorporate: TcxGridDBColumn
+          inherited isCorporate: TcxGridDBColumn
             Visible = False
             VisibleForCustomization = False
           end
-          inherited clRetailName: TcxGridDBColumn
+          inherited RetailName: TcxGridDBColumn
             Visible = False
             VisibleForCustomization = False
           end

@@ -10,17 +10,27 @@ uses
   dxBar, cxClasses, cxPropertiesStore, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, Vcl.Controls, cxGrid,
   cxPCdxBarPopupMenu, Vcl.Menus, cxPC, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCurrencyEdit;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCurrencyEdit, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TUnit_ObjectForm = class(TAncestorEnumForm)
-    ceJuridicalName: TcxGridDBColumn;
-    ceParentName: TcxGridDBColumn;
-    UnitId: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    ParentName: TcxGridDBColumn;
+    Id: TcxGridDBColumn;
     actProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     spUpdate_Unit_isOver: TdsdStoredProc;
-    colisOver: TcxGridDBColumn;
+    isOver: TcxGridDBColumn;
     actUpdateisOver: TdsdExecStoredProc;
     bbUpdateisOver: TdxBarButton;
     spUpdateisOverYes: TdsdExecStoredProc;
@@ -31,11 +41,11 @@ type
     spUpdateisOverNo: TdsdExecStoredProc;
     macUpdateisOverNo: TMultiAction;
     bbUpdateisOverNoList: TdxBarButton;
-    colisUploadBadm: TcxGridDBColumn;
+    isUploadBadm: TcxGridDBColumn;
     spUpdate_Unit_isUploadBadm: TdsdStoredProc;
     actUpdateisUploadBadm: TdsdExecStoredProc;
     bbUpdateisUploadBadm: TdxBarButton;
-    colisMarginCategory: TcxGridDBColumn;
+    isMarginCategory: TcxGridDBColumn;
     spUpdate_Unit_isMarginCategory: TdsdStoredProc;
     actUpdateisMarginCategory: TdsdExecStoredProc;
     bbisMarginCategory: TdxBarButton;

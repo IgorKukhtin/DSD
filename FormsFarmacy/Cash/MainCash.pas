@@ -286,6 +286,7 @@ type
     Label6: TLabel;
     edDays: TcxCurrencyEdit;
     miMCSAuto: TMenuItem;
+    actSetFilter: TAction;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -299,7 +300,6 @@ type
     procedure ParentFormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure actSetVIPExecute(Sender: TObject);
-    procedure RemainsCDSAfterScroll(DataSet: TDataSet);
     procedure actCalcTotalSummExecute(Sender: TObject);
     procedure MainColReservedGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
@@ -337,7 +337,8 @@ type
     procedure actSetSPExecute(Sender: TObject);
     procedure actGetJuridicalListExecute(Sender: TObject);
     procedure actGetJuridicalListUpdate(Sender: TObject);
-    procedure miMCSAutoClick(Sender: TObject); //***10.08.16
+    procedure miMCSAutoClick(Sender: TObject);
+    procedure actSetFilterExecute(Sender: TObject); //***10.08.16
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -881,7 +882,6 @@ end;
 
 procedure TMainCashForm.actRefreshAllExecute(Sender: TObject);
 var
-  AfterScr: TDataSetNotifyEvent;
   lMsg: String;
 begin
   startSplash('Начало обновления данных с сервера');
@@ -889,8 +889,6 @@ begin
     if gc_User.Local AND RemainsCDS.IsEmpty then
     begin
       MainGridDBTableView.BeginUpdate;
-      AfterScr := RemainsCDS.AfterScroll;
-      RemainsCDS.AfterScroll := nil;
       RemainsCDS.DisableControls;
       AlternativeCDS.DisableControls;
       try
@@ -910,8 +908,6 @@ begin
         RemainsCDS.EnableControls;
         AlternativeCDS.EnableControls;
         MainGridDBTableView.EndUpdate;
-        RemainsCDS.AfterScroll := AfterScr;
-        RemainsCDS.AfterScroll(RemainsCDS);
       end;
     end
     else
@@ -922,8 +918,6 @@ begin
       MainGridDBTableView.BeginUpdate;
       RemainsCDS.DisableControls;
       AlternativeCDS.DisableControls;
-      AfterScr := RemainsCDS.AfterScroll;
-      RemainsCDS.AfterScroll := nil;
       try
         ChangeStatus('Загрузка приходных накладных от дистрибьютора в медреестр Pfizer МДМ');
         lMsg:= '';
@@ -959,8 +953,6 @@ begin
         RemainsCDS.EnableControls;
         AlternativeCDS.EnableControls;
         MainGridDBTableView.EndUpdate;
-        RemainsCDS.AfterScroll := AfterScr;
-        RemainsCDS.AfterScroll(RemainsCDS);
       end;
     End;
   finally
@@ -1025,6 +1017,21 @@ begin
     vipList.Close;
     vipList.Free;
   end;
+end;
+
+procedure TMainCashForm.actSetFilterExecute(Sender: TObject);
+begin
+  inherited;
+ // if RemainsCDS.Active and AlternativeCDS.Active then
+
+//a1  код из события RemainsCDSAfterScroll для ускорения работы приложения
+ if RemainsCDS.FieldByName('AlternativeGroupId').AsInteger = 0 then
+    AlternativeCDS.Filter := 'Remains > 0 AND MainGoodsId='+RemainsCDS.FieldByName('Id').AsString
+  else
+    AlternativeCDS.Filter := '(Remains > 0 AND MainGoodsId='+RemainsCDS.FieldByName('Id').AsString +
+      ') or (Remains > 0 AND AlternativeGroupId='+RemainsCDS.FieldByName('AlternativeGroupId').AsString+
+           ' AND Id <> '+RemainsCDS.FieldByName('Id').AsString+')';
+//a1
 end;
 
 procedure TMainCashForm.actSetFocusExecute(Sender: TObject);
@@ -1401,7 +1408,7 @@ begin
        end;
        //
        RemainsCDS.EnableConstraints;
-       RemainsCDS.AfterScroll := RemainsCDSAfterScroll;
+
    end;
 
    if isFind = true then
@@ -2259,9 +2266,7 @@ begin
     RemainsCDS.Filtered := True;
     RemainsCDS.Locate('Id',GoodsId,[]);
     RemainsCDS.EnableControls;
-    RemainsCDS.AfterScroll := RemainsCDSAfterScroll;
     AlternativeCDS.Filtered := true;
-    RemainsCDSAfterScroll(RemainsCDS);
     AlternativeCDS.EnableControls;
     CheckCDS.EnableControls;
     CheckCDS.Filter := oldFilter;
@@ -2362,10 +2367,15 @@ procedure TMainCashForm.MainGridDBTableViewFocusedRecordChanged(
 var
  Cnt: integer;
 begin
+
+  actSetFilterExecute(nil); // Установка фильтров для товара
+
   if MainGrid.IsFocused then exit;
 
   Cnt := Sender.ViewInfo.RecordsViewInfo.VisibleCount;
   Sender.Controller.TopRecordIndex := Sender.Controller.FocusedRecordIndex - Round((Cnt+1)/2);
+
+
 end;
 
 // процедура обновляет параметры для введения нового чека
@@ -2652,15 +2662,6 @@ begin
              );
 end;
 
-procedure TMainCashForm.RemainsCDSAfterScroll(DataSet: TDataSet);
-begin
-  if RemainsCDS.FieldByName('AlternativeGroupId').AsInteger = 0 then
-    AlternativeCDS.Filter := 'Remains > 0 AND MainGoodsId='+RemainsCDS.FieldByName('Id').AsString
-  else
-    AlternativeCDS.Filter := '(Remains > 0 AND MainGoodsId='+RemainsCDS.FieldByName('Id').AsString +
-      ') or (Remains > 0 AND AlternativeGroupId='+RemainsCDS.FieldByName('AlternativeGroupId').AsString+
-           ' AND Id <> '+RemainsCDS.FieldByName('Id').AsString+')';
-end;
 
 //Находится "ИТОГО" кол-во - сколько уже набрали в продаже и к нему плюсуется или минусуется "новое" кол-во
 function TMainCashForm.fGetCheckAmountTotal(AGoodsId: Integer = 0; AAmount: Currency = 0) : Currency;
@@ -2865,9 +2866,7 @@ begin
     RemainsCDS.Filtered := True;
     RemainsCDS.Locate('Id',GoodsId,[]);
     RemainsCDS.EnableControls;
-    RemainsCDS.AfterScroll := RemainsCDSAfterScroll;
     AlternativeCDS.Filtered := true;
-    RemainsCDSAfterScroll(RemainsCDS);
     AlternativeCDS.EnableControls;
     CheckCDS.Filtered := True;
     if AGoodsId <> 0 then

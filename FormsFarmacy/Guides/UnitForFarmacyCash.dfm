@@ -3,7 +3,7 @@ inherited UnitForFarmacyCashForm: TUnitForFarmacyCashForm
   ClientHeight = 420
   ClientWidth = 699
   ExplicitWidth = 715
-  ExplicitHeight = 458
+  ExplicitHeight = 459
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -33,28 +33,28 @@ inherited UnitForFarmacyCashForm: TUnitForFarmacyCashForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object ceParentName: TcxGridDBColumn
+          object ParentName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'ParentName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 98
           end
-          object ceName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 184
           end
-          object ceJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 123
           end
-          object ceUserFarmacyCashName: TcxGridDBColumn
+          object UserFarmacyCashName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1087#1086#1089#1083'. '#1089#1077#1072#1085#1089#1072
             DataBinding.FieldName = 'UserFarmacyCashName'
             HeaderAlignmentHorz = taCenter
@@ -62,7 +62,7 @@ inherited UnitForFarmacyCashForm: TUnitForFarmacyCashForm
             HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1089#1077#1072#1085#1089#1072' '#1089' FarmacyCash'
             Width = 123
           end
-          object colFarmacyCashDate: TcxGridDBColumn
+          object FarmacyCashDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1089#1077#1072#1085#1089#1072
             DataBinding.FieldName = 'FarmacyCashDate'
             PropertiesClassName = 'TcxDateEditProperties'
@@ -72,7 +72,7 @@ inherited UnitForFarmacyCashForm: TUnitForFarmacyCashForm
             Options.Editing = False
             Width = 92
           end
-          object coFarmacyCashAmount: TcxGridDBColumn
+          object FarmacyCashAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1076#1072#1085#1085#1099#1093
             DataBinding.FieldName = 'FarmacyCashAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -82,7 +82,7 @@ inherited UnitForFarmacyCashForm: TUnitForFarmacyCashForm
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1072#1085#1085#1099#1093' '#1074' '#1089#1080#1085#1093#1088#1086#1085#1080#1079#1072#1094#1080#1080' '#1089' FarmacyCash'
             Width = 65
           end
-          object UnitId: TcxGridDBColumn
+          object Id: TcxGridDBColumn
             Caption = 'UnitId'
             DataBinding.FieldName = 'Id'
             Visible = False

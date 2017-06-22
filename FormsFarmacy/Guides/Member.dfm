@@ -37,7 +37,7 @@ object MemberForm: TMemberForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -48,33 +48,33 @@ object MemberForm: TMemberForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 42
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 103
       end
-      object clMember_INN: TcxGridDBColumn
+      object INN: TcxGridDBColumn
         Caption = #1048#1053#1053
         DataBinding.FieldName = 'INN'
         HeaderAlignmentVert = vaCenter
         Width = 74
       end
-      object clDriverCertificate: TcxGridDBColumn
+      object DriverCertificate: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
         DataBinding.FieldName = 'DriverCertificate'
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object clIsOfficial: TcxGridDBColumn
+      object IsOfficial: TcxGridDBColumn
         Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
         DataBinding.FieldName = 'isOfficial'
         HeaderAlignmentHorz = taCenter
@@ -82,7 +82,7 @@ object MemberForm: TMemberForm
         Options.Editing = False
         Width = 80
       end
-      object clEducationCode: TcxGridDBColumn
+      object EducationCode: TcxGridDBColumn
         Caption = #1050#1086#1076' c'#1087#1077#1094#1080#1072#1083#1100#1085#1086#1089#1090#1100
         DataBinding.FieldName = 'EducationCode'
         Visible = False
@@ -91,7 +91,7 @@ object MemberForm: TMemberForm
         Options.Editing = False
         Width = 52
       end
-      object clEducationName: TcxGridDBColumn
+      object EducationName: TcxGridDBColumn
         Caption = #1057#1087#1077#1094#1080#1072#1083#1100#1085#1086#1089#1090#1100
         DataBinding.FieldName = 'EducationName'
         PropertiesClassName = 'TcxButtonEditProperties'
@@ -106,42 +106,42 @@ object MemberForm: TMemberForm
         HeaderAlignmentVert = vaCenter
         Width = 133
       end
-      object clEMailSign: TcxGridDBColumn
+      object EMailSign: TcxGridDBColumn
         Caption = 'E-Mail '#1087#1086#1076#1087#1080#1089#1100
         DataBinding.FieldName = 'EMailSign'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 62
       end
-      object clEMail: TcxGridDBColumn
+      object EMail: TcxGridDBColumn
         Caption = 'E-Mail'
         DataBinding.FieldName = 'EMail'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 66
       end
-      object clPhoto: TcxGridDBColumn
+      object Photo: TcxGridDBColumn
         Caption = #1060#1086#1090#1086
         DataBinding.FieldName = 'Photo'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 49
       end
-      object clPhone: TcxGridDBColumn
+      object Phone: TcxGridDBColumn
         Caption = #1058#1077#1083#1077#1092#1086#1085
         DataBinding.FieldName = 'Phone'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 61
       end
-      object clAddress: TcxGridDBColumn
+      object Address: TcxGridDBColumn
         Caption = #1052#1077#1089#1090#1086' '#1087#1088#1086#1078#1080#1074#1072#1085#1080#1103
         DataBinding.FieldName = 'Address'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -150,7 +150,7 @@ object MemberForm: TMemberForm
         HeaderAlignmentVert = vaCenter
         Width = 58
       end
-      object clComment: TcxGridDBColumn
+      object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter

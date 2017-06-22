@@ -6092,7 +6092,7 @@ begin
         Add('select Users.Id as ObjectId');
         Add('     , 0 as ObjectCode');
         Add('     , Users.UsersName as UserName');
-        Add('     , Users.UsersPassword as Password');
+        Add('     , ''int''Users.UsersPassword as Password');
         Add('     , zc_erasedDel() as zc_erasedDel');
         Add('     , Users.Erased as Erased');
         Add('     , Users.MemberId_Postgres as MemberId');

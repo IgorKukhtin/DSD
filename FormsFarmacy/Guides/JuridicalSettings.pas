@@ -11,23 +11,33 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxCheckBox, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCurrencyEdit;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCurrencyEdit, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TJuridicalSettingsForm = class(TAncestorEnumForm)
-    colJuridicalName: TcxGridDBColumn;
-    colContract: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     UpdateDataSet: TdsdUpdateDataSet;
-    colisPriceClose: TcxGridDBColumn;
-    colMainJuridical: TcxGridDBColumn;
-    colBonus: TcxGridDBColumn;
-    colStartDate: TcxGridDBColumn;
-    colEndDate: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
-    colPriceLimit: TcxGridDBColumn;
-    col—onditionalPercent: TcxGridDBColumn;
-    colisSite: TcxGridDBColumn;
+    isPriceClose: TcxGridDBColumn;
+    MainJuridicalName: TcxGridDBColumn;
+    Bonus: TcxGridDBColumn;
+    StartDate: TcxGridDBColumn;
+    EndDate: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    PriceLimit: TcxGridDBColumn;
+    —onditionalPercent: TcxGridDBColumn;
+    isSite: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
@@ -35,7 +45,7 @@ type
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
     actShowErased: TBooleanStoredProcAction;
-    colisBonusVirtual: TcxGridDBColumn;
+    isBonusVirtual: TcxGridDBColumn;
     actProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpen: TdxBarButton;
   private

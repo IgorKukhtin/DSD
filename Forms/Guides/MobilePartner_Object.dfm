@@ -63,6 +63,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.Footer = True
+      OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderHeight = 50
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -125,23 +126,13 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         Options.Editing = False
         Width = 100
       end
-      object clGPSN: TcxGridDBColumn
-        Caption = 'GPS '#1058#1058' ('#1096#1080#1088#1086#1090#1072')'
-        DataBinding.FieldName = 'GPSN'
-        Visible = False
+      object PaidKindName: TcxGridDBColumn
+        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+        DataBinding.FieldName = 'PaidKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
-      end
-      object clGPSE: TcxGridDBColumn
-        Caption = 'GPS '#1058#1058' ('#1076#1086#1083#1075#1086#1090#1072')'
-        DataBinding.FieldName = 'GPSE'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 70
+        Width = 55
       end
       object clDebtSum: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1076#1086#1083#1075#1072' ('#1085#1072#1084')'
@@ -182,6 +173,14 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 110
+      end
+      object PartnerTagName: TcxGridDBColumn
+        Caption = #1055#1088#1080#1079#1085#1072#1082' '#1058#1058
+        DataBinding.FieldName = 'PartnerTagName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
       object ceJuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
@@ -434,6 +433,24 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1042#1089' '#1079#1072#1074#1086#1079
         Width = 25
+      end
+      object clGPSN: TcxGridDBColumn
+        Caption = 'GPS '#1058#1058' ('#1096#1080#1088#1086#1090#1072')'
+        DataBinding.FieldName = 'GPSN'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object clGPSE: TcxGridDBColumn
+        Caption = 'GPS '#1058#1058' ('#1076#1086#1083#1075#1086#1090#1072')'
+        DataBinding.FieldName = 'GPSE'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
       object ceisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

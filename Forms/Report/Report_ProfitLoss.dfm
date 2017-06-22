@@ -61,7 +61,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     Align = alClient
     DataSource = DataSource
     Groups = <>
-    TabOrder = 5
+    TabOrder = 3
     object clProfitLossGroupName: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 0
@@ -197,6 +197,30 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       Properties.DisplayFormat = ',0.;-,0.'
       Visible = True
       UniqueName = #1057#1091#1084#1084#1072
+    end
+    object PL_GroupName_original: TcxDBPivotGridField
+      AreaIndex = 11
+      IsCaptionAssigned = True
+      Caption = '***'#1054#1055#1080#1059' '#1075#1088#1091#1087#1087#1072
+      DataBinding.FieldName = 'PL_GroupName_original'
+      Visible = True
+      UniqueName = '***'#1054#1055#1080#1059' '#1075#1088#1091#1087#1087#1072
+    end
+    object PL_DirectionName_original: TcxDBPivotGridField
+      AreaIndex = 12
+      IsCaptionAssigned = True
+      Caption = '***'#1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+      DataBinding.FieldName = 'PL_DirectionName_original'
+      Visible = True
+      UniqueName = '***'#1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+    end
+    object PL_Name_original: TcxDBPivotGridField
+      AreaIndex = 13
+      IsCaptionAssigned = True
+      Caption = '***'#1054#1055#1080#1059' '#1089#1090#1072#1090#1100#1103
+      DataBinding.FieldName = 'PL_Name_original'
+      Visible = True
+      UniqueName = '***'#1054#1055#1080#1059' '#1089#1090#1072#1090#1100#1103
     end
   end
   object cbTotal: TcxCheckBox
