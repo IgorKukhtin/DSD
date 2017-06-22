@@ -18,8 +18,8 @@ uses
 
 type
   TOrderInternalJournalForm = class(TAncestorJournalForm)
-    colUnitName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
     bbTax: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
@@ -29,10 +29,10 @@ type
     bbPrintTax_Us: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
-    colTotalSumm: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
     actCalculateExternalZakaz: TdsdExecStoredProc;
     spCalculate: TdsdStoredProc;
-    colOrderKind: TcxGridDBColumn;
+    OrderKind: TcxGridDBColumn;
     mactCalculateExternalZakaz: TMultiAction;
     ExecuteDialog: TExecuteDialog;
   private

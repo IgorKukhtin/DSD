@@ -19,9 +19,9 @@ uses
 
 type
   TOrderExternalJournalForm = class(TAncestorJournalForm)
-    colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
     bbTax: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
@@ -32,17 +32,17 @@ type
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
-    colTotalSumm: TcxGridDBColumn;
-    colContract: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     Comment: TcxGridDBColumn;
     MasterInvNumber: TcxGridDBColumn;
-    colisZakazToday: TcxGridDBColumn;
-    colisDostavkaToday: TcxGridDBColumn;
-    colOperDate_Zakaz: TcxGridDBColumn;
-    colOperDate_Dostavka: TcxGridDBColumn;
-    clisDeferred: TcxGridDBColumn;
+    isZakazToday: TcxGridDBColumn;
+    isDostavkaToday: TcxGridDBColumn;
+    OperDate_Zakaz: TcxGridDBColumn;
+    OperDate_Dostavka: TcxGridDBColumn;
+    isDeferred: TcxGridDBColumn;
     spUpdate_isDeferred_Yes: TdsdStoredProc;
     spUpdate_isDeferred_No: TdsdStoredProc;
     spUpdateisDeferredNo: TdsdExecStoredProc;

@@ -2,8 +2,9 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1093#1086#1076' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1089#1095#1077#1090#1091'>'
   ClientHeight = 463
   ClientWidth = 1149
+  ExplicitLeft = -481
   ExplicitWidth = 1165
-  ExplicitHeight = 501
+  ExplicitHeight = 502
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -164,7 +165,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 11
     Width = 260
   end
   object cxLabel6: TcxLabel [4]
@@ -273,7 +274,9 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
       MoveParams = <
         item
           FromParam.Value = Null
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
+          ToParam.MultiSelectSeparator = ','
         end>
       DataSets = <
         item
@@ -284,7 +287,9 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
       MoveParams = <
         item
           FromParam.Value = Null
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
+          ToParam.MultiSelectSeparator = ','
         end>
       DataSets = <
         item
@@ -294,14 +299,18 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
       MoveParams = <
         item
           FromParam.Value = Null
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
+          ToParam.MultiSelectSeparator = ','
         end>
     end
     inherited actIsCopyTrue: TdsdExecStoredProc
       MoveParams = <
         item
           FromParam.Value = Null
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
+          ToParam.MultiSelectSeparator = ','
         end>
     end
     inherited ExecuteDialog: TExecuteDialog
@@ -314,6 +323,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -321,6 +331,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'IsPartnerDate'
@@ -328,6 +339,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
           Component = sbIsPartnerDate
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BankAccountId'
@@ -335,6 +347,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
           Component = BankAccountGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BankAccountName'
@@ -343,6 +356,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ObjectId'
@@ -350,6 +364,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
           Component = ObjectGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ObjectName'
@@ -357,6 +372,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
           Component = ObjectGuides
           ComponentItem = 'TextValue'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalCorporateId'
@@ -364,6 +380,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
           Component = JuridicalCorporateGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalCorporateName'
@@ -372,6 +389,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
     end
     object actIsPartnerDate: TdsdDataSetRefresh
@@ -402,6 +420,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -409,6 +428,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -416,6 +436,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPartnerDate'
@@ -423,6 +444,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
         Component = sbIsPartnerDate
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBankAccountId'
@@ -430,6 +452,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
         Component = BankAccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMoneyPlaceId'
@@ -437,6 +460,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
         Component = ObjectGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalCorporateId'
@@ -444,6 +468,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
         Component = JuridicalCorporateGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 171
   end
@@ -493,6 +518,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
     LookupControl = ceBankAccount
     FormNameParam.Value = 'TBankAccount_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBankAccount_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -502,6 +528,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
         Component = BankAccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -510,12 +537,14 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
         Value = 42005d
         Component = deEnd
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 396
     Top = 65533
@@ -525,6 +554,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
     LookupControl = ceObject
     FormNameParam.Value = 'TMoneyPlace_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMoneyPlace_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -533,6 +563,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
         Value = ''
         Component = ObjectGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -540,6 +571,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
         Component = ObjectGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 478
     Top = 12
@@ -549,6 +581,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
     LookupControl = ceJuridicalCorporate
     FormNameParam.Value = 'TJuridicalCorporateForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalCorporateForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -557,6 +590,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
         Value = ''
         Component = JuridicalCorporateGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -564,6 +598,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
         Component = JuridicalCorporateGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 798
     Top = 4

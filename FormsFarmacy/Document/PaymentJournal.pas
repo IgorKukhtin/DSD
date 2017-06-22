@@ -18,10 +18,10 @@ uses
 type
   TPaymentJournalForm = class(TAncestorJournalForm)
     spGet_Movement_Payment: TdsdStoredProc;
-    colJuridicalName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
-    colTotalSumm: TcxGridDBColumn;
-    colId: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
+    Id: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }

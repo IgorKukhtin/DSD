@@ -3,8 +3,10 @@ inherited InventoryForm: TInventoryForm
   ClientHeight = 643
   ClientWidth = 878
   AddOnFormData.RefreshAction = actRefreshStart
+  ExplicitLeft = -210
+  ExplicitTop = -189
   ExplicitWidth = 894
-  ExplicitHeight = 681
+  ExplicitHeight = 682
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -13,11 +15,12 @@ inherited InventoryForm: TInventoryForm
     Height = 566
     Properties.ActivePage = cxTabSheetChild
     ExplicitTop = 77
-    ExplicitWidth = 898
-    ExplicitHeight = 581
+    ExplicitWidth = 878
+    ExplicitHeight = 566
     ClientRectBottom = 566
     ClientRectRight = 878
     inherited tsMain: TcxTabSheet
+      ExplicitTop = 0
       ExplicitWidth = 898
       ExplicitHeight = 557
       inherited cxGrid: TcxGrid
@@ -428,8 +431,6 @@ inherited InventoryForm: TInventoryForm
     object cxTabSheetChild: TcxTabSheet
       Caption = #1048#1089#1090#1086#1088#1080#1103
       ImageIndex = 2
-      ExplicitWidth = 898
-      ExplicitHeight = 557
       object cxGridChild: TcxGrid
         Left = 0
         Top = 83
@@ -437,7 +438,6 @@ inherited InventoryForm: TInventoryForm
         Height = 459
         Align = alClient
         TabOrder = 0
-        ExplicitTop = 81
         object cxGridChildDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -505,7 +505,7 @@ inherited InventoryForm: TInventoryForm
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = chGoodsName
+              Column = GoodsName
             end
             item
               Format = ',0.####'
@@ -528,7 +528,7 @@ inherited InventoryForm: TInventoryForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object chisLast: TcxGridDBColumn
+          object isLast: TcxGridDBColumn
             Caption = #1055#1086#1089#1083#1077#1076#1085#1080#1081
             DataBinding.FieldName = 'isLast'
             HeaderAlignmentHorz = taCenter
@@ -536,7 +536,7 @@ inherited InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 85
           end
-          object chNum: TcxGridDBColumn
+          object Num: TcxGridDBColumn
             Caption = #8470' '#1087'.'#1087'.'
             DataBinding.FieldName = 'Num'
             HeaderAlignmentHorz = taCenter
@@ -544,7 +544,7 @@ inherited InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 60
           end
-          object chGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -552,7 +552,7 @@ inherited InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 84
           end
-          object chGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -571,7 +571,7 @@ inherited InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 180
           end
-          object chUserName: TcxGridDBColumn
+          object UserName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
             DataBinding.FieldName = 'UserName'
             HeaderAlignmentHorz = taCenter
@@ -579,7 +579,7 @@ inherited InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 272
           end
-          object chDate_Insert: TcxGridDBColumn
+          object Date_Insert: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103
             DataBinding.FieldName = 'Date_Insert'
             HeaderAlignmentHorz = taCenter
@@ -600,7 +600,6 @@ inherited InventoryForm: TInventoryForm
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 898
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -740,7 +739,6 @@ inherited InventoryForm: TInventoryForm
         HotZone.Visible = False
         AlignSplitter = salTop
         Control = cxGrid1
-        ExplicitWidth = 898
       end
     end
   end
@@ -748,7 +746,7 @@ inherited InventoryForm: TInventoryForm
     Width = 878
     Height = 51
     TabOrder = 3
-    ExplicitWidth = 898
+    ExplicitWidth = 878
     ExplicitHeight = 51
     inherited edInvNumber: TcxTextEdit
       Left = 8

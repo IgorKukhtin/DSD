@@ -28,10 +28,10 @@ uses
 type
   TInvoiceJournalForm = class(TAncestorJournalForm)
     spUpdate: TdsdStoredProc;
-    colContractName: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
-    colTotalSumm: TcxGridDBColumn;
-    clId: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
+    Id: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
@@ -40,12 +40,12 @@ type
     actPrint: TdsdPrintAction;
     macPrint: TMultiAction;
     bbmacPrint: TdxBarButton;
-    clOperDateEnd: TcxGridDBColumn;
+    OperDateEnd: TcxGridDBColumn;
     DateRegistered: TcxGridDBColumn;
     InvNumberRegistered: TcxGridDBColumn;
     UpdateDataSet: TdsdUpdateDataSet;
-    clisDocument: TcxGridDBColumn;
-    clSPName: TcxGridDBColumn;
+    isDocument: TcxGridDBColumn;
+    SPName: TcxGridDBColumn;
   private
     { Private declarations }
   public

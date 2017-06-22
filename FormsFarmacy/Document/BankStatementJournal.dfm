@@ -2,8 +2,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1041#1072#1085#1082#1086#1074#1089#1082#1080#1077' '#1074#1099#1087#1080#1089#1082#1080'>'
   ClientWidth = 873
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -205
+  ExplicitTop = -221
   ExplicitWidth = 889
-  ExplicitHeight = 713
+  ExplicitHeight = 714
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -123,9 +125,11 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
     end
     object BankMarfin: TMultiAction [5]
       Category = 'Load'
@@ -154,9 +158,11 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
     end
     object BankUkrEximLoad: TClientBankLoadAction
       Category = 'Load'
@@ -165,9 +171,11 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
     end
     object BankPireusLoad: TClientBankLoadAction
       Category = 'Load'
@@ -176,9 +184,11 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
     end
     object BankOTPLoad: TClientBankLoadAction
       Category = 'Load'
@@ -187,9 +197,11 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
     end
     object BankPireusDBFLoad: TClientBankLoadAction
       Category = 'Load'
@@ -198,9 +210,11 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
     end
     object BankPireusDBF: TMultiAction
       Category = 'Load'
@@ -251,9 +265,11 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
     end
     object BankFidoLoad: TClientBankLoadAction
       Category = 'Load'
@@ -262,9 +278,11 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
     end
     object BankPrivat: TMultiAction
       Category = 'Load'
@@ -331,6 +349,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -338,6 +357,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -345,6 +365,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher

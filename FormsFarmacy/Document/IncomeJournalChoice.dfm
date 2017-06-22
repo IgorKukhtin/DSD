@@ -4,7 +4,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
   ClientWidth = 802
   AddOnFormData.isAlwaysRefresh = True
   ExplicitWidth = 818
-  ExplicitHeight = 376
+  ExplicitHeight = 377
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -33,7 +33,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colStatus: TcxGridDBColumn
+          object StatusCode: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089
             DataBinding.FieldName = 'StatusCode'
             PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -57,49 +57,49 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colInvNumber: TcxGridDBColumn
+          object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
-          object colOperDate: TcxGridDBColumn
+          object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 47
           end
-          object colFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090'-'#1082
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 187
           end
-          object colToName: TcxGridDBColumn
+          object ToName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 200
           end
-          object colContractName: TcxGridDBColumn
+          object ContractName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 136
           end
-          object colPaymentDate: TcxGridDBColumn
+          object PaymentDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaymentDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object colTotalCount: TcxGridDBColumn
+          object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -109,7 +109,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colTotalSummMVAT: TcxGridDBColumn
+          object TotalSummMVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummMVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -118,7 +118,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 111
           end
-          object colTotalSumm: TcxGridDBColumn
+          object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -128,14 +128,14 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 109
           end
-          object colNDSKindName: TcxGridDBColumn
+          object NDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 56
           end
-          object colJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1086'. '#1083#1080#1094#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
@@ -211,6 +211,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -218,12 +219,14 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'InvNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'FromId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -231,18 +234,21 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'FromName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ToId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UNitName'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ToName'
+          MultiSelectSeparator = ','
         end>
     end
   end
@@ -255,6 +261,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inenddate'
@@ -262,17 +269,20 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 136
     Top = 163
@@ -292,6 +302,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item

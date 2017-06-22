@@ -19,8 +19,8 @@ uses
 
 type
   TLossJournalForm = class(TAncestorJournalForm)
-    colUnitName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint_Loss: TdsdStoredProc;
@@ -28,7 +28,7 @@ type
     bbPrint: TdxBarButton;
     ArticleLossName: TcxGridDBColumn;
     spGet: TdsdStoredProc;
-    colTotalSumm: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }

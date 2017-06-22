@@ -3,8 +3,10 @@ inherited OverJournalForm: TOverJournalForm
   ClientHeight = 490
   ClientWidth = 969
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -278
+  ExplicitTop = -36
   ExplicitWidth = 985
-  ExplicitHeight = 525
+  ExplicitHeight = 529
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -32,7 +34,7 @@ inherited OverJournalForm: TOverJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = coTotalSummTo
+              Column = TotalSummTo
             end
             item
               Format = ',0.####'
@@ -69,18 +71,18 @@ inherited OverJournalForm: TOverJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummFrom
+              Column = TotalSummFrom
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = coTotalSummTo
+              Column = TotalSummTo
             end
             item
               Format = ',0.####'
@@ -117,12 +119,12 @@ inherited OverJournalForm: TOverJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummFrom
+              Column = TotalSummFrom
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -151,7 +153,7 @@ inherited OverJournalForm: TOverJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 80
           end
-          object coUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
@@ -159,7 +161,7 @@ inherited OverJournalForm: TOverJournalForm
             HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077', '#1089' '#1082#1086#1090#1086#1088#1086#1075#1086' '#1087#1077#1088#1077#1084#1077#1097#1072#1077#1090#1089#1103' '#1090#1086#1074#1072#1088
             Width = 150
           end
-          object colTotalCount: TcxGridDBColumn
+          object TotalCount: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -169,7 +171,7 @@ inherited OverJournalForm: TOverJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colTotalSummFrom: TcxGridDBColumn
+          object TotalSummFrom: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'TotalSummFrom'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -179,7 +181,7 @@ inherited OverJournalForm: TOverJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object coTotalSummTo: TcxGridDBColumn
+          object TotalSummTo: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'TotalSummTo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -189,7 +191,7 @@ inherited OverJournalForm: TOverJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colComment: TcxGridDBColumn
+          object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter

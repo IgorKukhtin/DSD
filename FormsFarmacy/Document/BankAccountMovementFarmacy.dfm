@@ -1,7 +1,7 @@
 inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
   Caption = #1054#1087#1077#1088#1072#1094#1080#1080' '#1089' '#1088#1072#1089#1095#1077#1090#1085#1099#1084' '#1089#1095#1077#1090#1086#1084
   ClientHeight = 447
-  ExplicitHeight = 475
+  ExplicitHeight = 476
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -153,11 +153,6 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
     Top = 195
     ExplicitTop = 195
   end
-  object cxLabel15: TcxLabel [33]
-    Left = 8
-    Top = 195
-    Caption = #8470' '#1087#1088#1080#1093#1086#1076#1072
-  end
   object grIncome: TcxGrid [34]
     Left = 8
     Top = 112
@@ -176,28 +171,28 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.GroupByBox = False
-      object colInvNumber: TcxGridDBColumn
+      object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1055#1053
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 94
       end
-      object colOperDate: TcxGridDBColumn
+      object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1055#1053
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 92
       end
-      object colFromName: TcxGridDBColumn
+      object FromName: TcxGridDBColumn
         Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
         DataBinding.FieldName = 'FromName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 160
       end
-      object colJuridicalName: TcxGridDBColumn
+      object JuridicalName: TcxGridDBColumn
         Caption = #1053#1072#1096#1077' '#1070#1088#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentHorz = taCenter
@@ -241,55 +236,67 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
           FromParam.Value = Null
           FromParam.Component = IncomeCDS
           FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = GuidesIncome
           ToParam.ComponentItem = 'Key'
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = Null
           FromParam.Component = IncomeCDS
           FromParam.ComponentItem = 'InvNumber'
           FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = GuidesIncome
           ToParam.ComponentItem = 'TextValue'
           ToParam.DataType = ftString
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = Null
           FromParam.Component = IncomeCDS
           FromParam.ComponentItem = 'FromId'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = ObjectlGuides
           ToParam.ComponentItem = 'Key'
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = Null
           FromParam.Component = IncomeCDS
           FromParam.ComponentItem = 'FromName'
           FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = ObjectlGuides
           ToParam.ComponentItem = 'TextValue'
           ToParam.DataType = ftString
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = Null
           FromParam.Component = IncomeCDS
           FromParam.ComponentItem = 'UnitId'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = UnitGuides
           ToParam.ComponentItem = 'Key'
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = Null
           FromParam.Component = IncomeCDS
           FromParam.ComponentItem = 'UnitName'
           FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = UnitGuides
           ToParam.ComponentItem = 'TextValue'
           ToParam.DataType = ftString
+          ToParam.MultiSelectSeparator = ','
         end>
       PostDataSetBeforeExecute = False
       Params = <>
@@ -302,15 +309,18 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Name = 'Id'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Value'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 50
     Top = 267
@@ -323,6 +333,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ininvnumber'
@@ -330,6 +341,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inoperdate'
@@ -337,6 +349,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = ceOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inamountin'
@@ -344,6 +357,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = ceAmountIn
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inamountout'
@@ -351,6 +365,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = ceAmountOut
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountSumm'
@@ -358,6 +373,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = ceAmountSumm
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBankAccountId'
@@ -365,6 +381,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = BankAccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'incomment'
@@ -372,6 +389,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMoneyPlaceId'
@@ -379,6 +397,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = ObjectlGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIncomeMovementId'
@@ -386,6 +405,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = GuidesIncome
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'incontactid'
@@ -393,6 +413,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ininfomoneyid'
@@ -400,6 +421,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCurrencyId'
@@ -407,6 +429,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = CurrencyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCurrencyPartnerValue'
@@ -414,6 +437,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = ceCurrencyPartnerValue
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inParPartnerValue'
@@ -421,6 +445,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = ceParPartnerValue
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 504
     Top = 348
@@ -433,6 +458,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Value'
@@ -440,6 +466,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = FormParams
         ComponentItem = 'inMovementId_Value'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -448,48 +475,56 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = '0'
         Component = edInvNumber
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AmountIn'
         Value = 0.000000000000000000
         Component = ceAmountIn
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AmountOut'
         Value = 0.000000000000000000
         Component = ceAmountOut
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AmountSumm'
         Value = 0.000000000000000000
         Component = ceAmountSumm
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Comment'
         Value = ''
         Component = ceComment
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BankAccountId'
         Value = ''
         Component = BankAccountGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BankAccountName'
@@ -497,12 +532,14 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = BankAccountGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'moneyplaceid'
         Value = ''
         Component = ObjectlGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'moneyplacename'
@@ -510,12 +547,14 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = ObjectlGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'infomoneyid'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'infomoneyname'
@@ -523,12 +562,14 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'contractid'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'contractinvnumber'
@@ -536,12 +577,14 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyId'
         Value = ''
         Component = CurrencyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyName'
@@ -549,42 +592,49 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = CurrencyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BankId'
         Value = ''
         Component = BankGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BankName'
         Value = ''
         Component = BankGuides
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyPartnerValue'
         Value = 0.000000000000000000
         Component = ceCurrencyPartnerValue
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ParPartnerValue'
         Value = 1.000000000000000000
         Component = ceParPartnerValue
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'IncomeId'
         Value = Null
         Component = GuidesIncome
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'IncomeInvNumber'
         Value = Null
         Component = GuidesIncome
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end>
     Left = 464
     Top = 348
@@ -597,6 +647,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = BankAccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -605,6 +656,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyId'
@@ -612,6 +664,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = CurrencyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyName'
@@ -620,6 +673,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BankId'
@@ -627,6 +681,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = BankGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BankName'
@@ -635,6 +690,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyValue'
@@ -642,6 +698,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = ceCurrencyPartnerValue
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ParValue'
@@ -649,12 +706,14 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = ceParPartnerValue
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
         Value = 'NULL'
         Component = ceOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
@@ -662,6 +721,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = FormParams
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   inherited ObjectlGuides: TdsdGuides
@@ -671,6 +731,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Value = ''
         Component = ObjectlGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -678,6 +739,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = ObjectlGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 222
     Top = 252
@@ -704,6 +766,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
     isShowModal = True
     FormNameParam.Value = 'TIncomeJournalChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TIncomeJournalChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -713,6 +776,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = GuidesIncome
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -721,6 +785,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
@@ -728,6 +793,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = ObjectlGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -736,6 +802,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitId'
@@ -743,6 +810,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -751,12 +819,14 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 209
   end
   object rdAmountOut: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actSelectIncomeBySumm
     ComponentList = <
       item
@@ -791,6 +861,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = ceAmountOut
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIncome'
@@ -798,6 +869,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = GuidesIncome
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 80

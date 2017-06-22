@@ -27,11 +27,11 @@ type
     edTotalSumm: TcxCurrencyEdit;
     cxLabel5: TcxLabel;
     edTotalCount: TcxCurrencyEdit;
-    colGoodsCode: TcxGridDBColumn;
-    colGoodsName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colSumm: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    Summ: TcxGridDBColumn;
     spSelectPrint: TdsdStoredProc;
     PrintItemsCDS: TClientDataSet;
     PrintHeaderCDS: TClientDataSet;
@@ -40,7 +40,7 @@ type
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     JuridicalName: TcxGridDBColumn;
-    clComment: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     DetailDCS: TClientDataSet;
     DetailDS: TDataSource;
@@ -48,7 +48,7 @@ type
     cxSplitter1: TcxSplitter;
     dsdDBViewAddOn1: TdsdDBViewAddOn;
     JuridicalCode: TcxGridDBColumn;
-    clIsErased: TcxGridDBColumn;
+    IsErased: TcxGridDBColumn;
     spInsertUpdateMIChild: TdsdStoredProc;
     edStartPromo: TcxDateEdit;
     cxLabel3: TcxLabel;

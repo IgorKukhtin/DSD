@@ -4,7 +4,7 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
   ClientWidth = 668
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 684
-  ExplicitHeight = 417
+  ExplicitHeight = 421
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -32,7 +32,7 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colStatusCode: TcxGridDBColumn
+          object StatusCode: TcxGridDBColumn
             AlternateCaption = #1059#1076#1072#1083#1077#1085
             Caption = #1057#1090#1072#1090#1091#1089
             DataBinding.FieldName = 'StatusCode'
@@ -58,7 +58,7 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
             HeaderHint = #1059#1076#1072#1083#1077#1085
             Width = 27
           end
-          object colCommentError: TcxGridDBColumn
+          object CommentError: TcxGridDBColumn
             Caption = #1054#1096#1080#1073#1082#1072
             DataBinding.FieldName = 'CommentError'
             HeaderAlignmentHorz = taCenter
@@ -66,25 +66,25 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
             HeaderHint = #1054#1096#1080#1073#1082#1072' '#1086#1089#1090#1072#1090#1086#1082' - '#1058#1086#1074#1072#1088'/'#1088#1072#1089#1095'/'#1092#1072#1082#1090' '#1082#1086#1083'-'#1074#1086
             Width = 60
           end
-          object colOperDate: TcxGridDBColumn
+          object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentVert = vaCenter
             Width = 48
           end
-          object colTotalSumm: TcxGridDBColumn
+          object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'TotalSumm'
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colCashRegisterName: TcxGridDBColumn
+          object CashRegisterName: TcxGridDBColumn
             Caption = #1050#1072#1089#1089#1072
             DataBinding.FieldName = 'CashRegisterName'
             HeaderAlignmentVert = vaCenter
             Width = 57
           end
-          object colInvNumber: TcxGridDBColumn
+          object InvNumber: TcxGridDBColumn
             AlternateCaption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
@@ -92,13 +92,13 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
             HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             Width = 50
           end
-          object colCashMember: TcxGridDBColumn
+          object CashMember: TcxGridDBColumn
             Caption = #1052#1077#1085#1077#1076#1078#1077#1088
             DataBinding.FieldName = 'CashMember'
             HeaderAlignmentVert = vaCenter
             Width = 83
           end
-          object colUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1040#1087#1090#1077#1082#1072
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentVert = vaCenter
@@ -136,7 +136,7 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object colGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -144,7 +144,7 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
             Options.Editing = False
             Width = 35
           end
-          object colGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -158,7 +158,7 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -169,7 +169,7 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
             Options.Editing = False
             Width = 47
           end
-          object colPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -180,7 +180,7 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
             Options.Editing = False
             Width = 46
           end
-          object colPriceSale: TcxGridDBColumn
+          object PriceSale: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1089#1082'.'
             DataBinding.FieldName = 'PriceSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -191,7 +191,7 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
             Options.Editing = False
             Width = 85
           end
-          object colChangePercent: TcxGridDBColumn
+          object ChangePercent: TcxGridDBColumn
             Caption = '% '#1089#1082'.'
             DataBinding.FieldName = 'ChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -202,7 +202,7 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
             Options.Editing = False
             Width = 45
           end
-          object colSummChangePercent: TcxGridDBColumn
+          object SummChangePercent: TcxGridDBColumn
             Caption = #1089#1091#1084#1084#1072' '#1089#1082'.'
             DataBinding.FieldName = 'SummChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -213,7 +213,7 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
             Options.Editing = False
             Width = 70
           end
-          object colAmountOrder: TcxGridDBColumn
+          object AmountOrder: TcxGridDBColumn
             Caption = #1047#1072#1082#1072#1079
             DataBinding.FieldName = 'AmountOrder'
             PropertiesClassName = 'TcxCurrencyEditProperties'

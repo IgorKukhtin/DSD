@@ -20,9 +20,9 @@ type
     edJuridical: TcxButtonEdit;
     cxLabel4: TcxLabel;
     GuidesJuridical: TdsdGuides;
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
@@ -35,12 +35,12 @@ type
     bbTax: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
-    colPartionGoodsDate: TcxGridDBColumn;
-    colGoodsJuridicalName: TcxGridDBColumn;
+    PartionGoodsDate: TcxGridDBColumn;
+    GoodsJuridicalName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     edContract: TcxButtonEdit;
     GuidesContract: TdsdGuides;
-    colRemains: TcxGridDBColumn;
+    Remains: TcxGridDBColumn;
     actOpenPriceListLoad: TdsdInsertUpdateAction;
     bbOpenPriceListLoad: TdxBarButton;
     cxLabel6: TcxLabel;

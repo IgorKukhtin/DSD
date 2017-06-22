@@ -18,7 +18,6 @@ type
   TBankAccountMovementFarmacyForm = class(TBankAccountMovementForm)
     edIncome: TcxButtonEdit;
     GuidesIncome: TdsdGuides;
-    cxLabel15: TcxLabel;
     rdAmountOut: TRefreshDispatcher;
     grtvIncome: TcxGridDBTableView;
     grlIncome: TcxGridLevel;
@@ -27,10 +26,10 @@ type
     IncomeDS: TDataSource;
     spSelectIncomeBySumm: TdsdStoredProc;
     actSelectIncomeBySumm: TdsdDataSetRefresh;
-    colInvNumber: TcxGridDBColumn;
-    colOperDate: TcxGridDBColumn;
-    colFromName: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
     DBViewAddOn: TdsdDBViewAddOn;
     UpdateRecord1: TUpdateRecord;
   private

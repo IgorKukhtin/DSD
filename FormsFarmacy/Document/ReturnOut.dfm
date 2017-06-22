@@ -2,8 +2,10 @@ inherited ReturnOutForm: TReturnOutForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 526
   ClientWidth = 1001
+  ExplicitLeft = -333
+  ExplicitTop = -48
   ExplicitWidth = 1017
-  ExplicitHeight = 564
+  ExplicitHeight = 565
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -28,7 +30,7 @@ inherited ReturnOutForm: TReturnOutForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -53,18 +55,18 @@ inherited ReturnOutForm: TReturnOutForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSumm
+              Column = Summ
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountCheck
+              Column = AmountCheck
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -92,12 +94,12 @@ inherited ReturnOutForm: TReturnOutForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSumm
+              Column = Summ
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountCheck
+              Column = AmountCheck
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -110,7 +112,7 @@ inherited ReturnOutForm: TReturnOutForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -126,7 +128,7 @@ inherited ReturnOutForm: TReturnOutForm
             Options.Editing = False
             Width = 45
           end
-          object colName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -134,14 +136,14 @@ inherited ReturnOutForm: TReturnOutForm
             Options.Editing = False
             Width = 222
           end
-          object colPartitionGoods: TcxGridDBColumn
+          object PartitionGoods: TcxGridDBColumn
             Caption = #1057#1077#1088#1080#1103
             DataBinding.FieldName = 'PartionGoods'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
-          object colExpirationDate: TcxGridDBColumn
+          object ExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'ExpirationDate'
             HeaderAlignmentHorz = taCenter
@@ -149,14 +151,14 @@ inherited ReturnOutForm: TReturnOutForm
             Options.Editing = False
             Width = 70
           end
-          object colMakerName: TcxGridDBColumn
+          object MakerName: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'MakerName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -166,7 +168,7 @@ inherited ReturnOutForm: TReturnOutForm
             HeaderAlignmentVert = vaCenter
             Width = 73
           end
-          object colPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -177,7 +179,7 @@ inherited ReturnOutForm: TReturnOutForm
             Options.Editing = False
             Width = 60
           end
-          object colSumm: TcxGridDBColumn
+          object Summ: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -188,7 +190,7 @@ inherited ReturnOutForm: TReturnOutForm
             Options.Editing = False
             Width = 60
           end
-          object clAmountCheck: TcxGridDBColumn
+          object AmountCheck: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1086#1090#1083#1086#1078'. '#1095#1077#1082#1072#1093
             DataBinding.FieldName = 'AmountCheck'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -200,7 +202,7 @@ inherited ReturnOutForm: TReturnOutForm
             Options.Editing = False
             Width = 77
           end
-          object colAmountInIncome: TcxGridDBColumn
+          object AmountInIncome: TcxGridDBColumn
             AlternateCaption = #1042' '#1087#1088#1080#1093#1086#1076#1077
             Caption = #1042' '#1087#1088#1080#1093#1086#1076#1077
             DataBinding.FieldName = 'AmountInIncome'
@@ -208,7 +210,7 @@ inherited ReturnOutForm: TReturnOutForm
             Options.Editing = False
             Width = 76
           end
-          object colRemains: TcxGridDBColumn
+          object Remains: TcxGridDBColumn
             AlternateCaption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1072#1088#1090#1080#1080
             Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1072#1088#1090#1080#1080
             DataBinding.FieldName = 'Remains'
@@ -217,7 +219,7 @@ inherited ReturnOutForm: TReturnOutForm
             Options.Editing = False
             Width = 74
           end
-          object colWarningColor: TcxGridDBColumn
+          object WarningColor: TcxGridDBColumn
             AlternateCaption = #1055#1088#1077#1074#1099#1096#1077#1085#1080#1077' '#1086#1089#1090#1072#1090#1082#1072
             Caption = '!'
             DataBinding.FieldName = 'WarningColor'
@@ -913,7 +915,7 @@ inherited ReturnOutForm: TReturnOutForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
       item
-        ValueColumn = colWarningColor
+        ValueColumn = WarningColor
         ColorValueList = <>
       end>
     SummaryItemList = <

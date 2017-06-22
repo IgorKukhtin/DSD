@@ -23,11 +23,11 @@ type
     edPersonal: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
     GuidesPersonal: TdsdGuides;
-    colGoodsCode: TcxGridDBColumn;
-    colGoodsName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colSumm: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    Summ: TcxGridDBColumn;
     spSelectPrint: TdsdStoredProc;
     PrintItemsCDS: TClientDataSet;
     PrintHeaderCDS: TClientDataSet;

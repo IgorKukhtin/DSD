@@ -16,11 +16,11 @@ uses
 
 type
   TCreateOrderFromMCSForm = class(TAncestorEnumForm)
-    colNeedReorder: TcxGridDBColumn;
-    colUnitCode: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
-    colExistsOrderInternal: TcxGridDBColumn;
-    colMovementId: TcxGridDBColumn;
+    NeedReorder: TcxGridDBColumn;
+    UnitCode: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    ExistsOrderInternal: TcxGridDBColumn;
+    MovementId: TcxGridDBColumn;
     actOpenOrderInternalForm: TdsdOpenForm;
     spInsertUpdate_MovementItem_OrderInternalMCS: TdsdStoredProc;
     actExecInsertUpdate_MovementItem_OrderInternalMCS: TdsdExecStoredProc;

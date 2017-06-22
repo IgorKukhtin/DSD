@@ -3,8 +3,10 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   ClientHeight = 535
   ClientWidth = 1073
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -405
+  ExplicitTop = -81
   ExplicitWidth = 1089
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -32,7 +34,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -70,7 +72,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -107,7 +109,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colTotalSumm
+              Column = TotalSumm
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -135,21 +137,21 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 51
           end
-          object colFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090'-'#1082
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 84
           end
-          object colToName: TcxGridDBColumn
+          object ToName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 83
           end
-          object colTotalCount: TcxGridDBColumn
+          object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -159,7 +161,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 35
           end
-          object colTotalSumm: TcxGridDBColumn
+          object TotalSumm: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -169,7 +171,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object colContract: TcxGridDBColumn
+          object ContractName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072' '
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
@@ -177,7 +179,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Options.Editing = False
             Width = 95
           end
-          object colJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1063#1055
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
@@ -192,7 +194,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Options.Editing = False
             Width = 65
           end
-          object colOrderKind: TcxGridDBColumn
+          object OrderKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1079#1072#1082#1072#1079#1072' ('#1074#1085#1091#1090#1088#1077#1085#1085#1080#1081')'
             DataBinding.FieldName = 'OrderKindName'
             HeaderAlignmentHorz = taCenter
@@ -208,7 +210,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Options.Editing = False
             Width = 81
           end
-          object clUpdateName: TcxGridDBColumn
+          object UpdateName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1086#1090#1087#1088#1072#1074#1082#1080')'
             DataBinding.FieldName = 'UpdateName'
             HeaderAlignmentHorz = taCenter
@@ -216,7 +218,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Options.Editing = False
             Width = 92
           end
-          object clUpdateDate: TcxGridDBColumn
+          object UpdateDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1086#1090#1087#1088#1072#1074#1082#1080')'
             DataBinding.FieldName = 'UpdateDate'
             HeaderAlignmentHorz = taCenter
@@ -224,7 +226,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Options.Editing = False
             Width = 80
           end
-          object colisZakazToday: TcxGridDBColumn
+          object isZakazToday: TcxGridDBColumn
             Caption = #1047#1072#1082#1072#1079' '#1089#1077#1075#1086#1076#1085#1103
             DataBinding.FieldName = 'isZakazToday'
             HeaderAlignmentHorz = taCenter
@@ -232,7 +234,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Options.Editing = False
             Width = 55
           end
-          object colisDostavkaToday: TcxGridDBColumn
+          object isDostavkaToday: TcxGridDBColumn
             Caption = #1044#1086#1089#1090'. '#1089#1077#1075#1086#1076#1085#1103
             DataBinding.FieldName = 'isDostavkaToday'
             HeaderAlignmentHorz = taCenter
@@ -241,7 +243,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Options.Editing = False
             Width = 55
           end
-          object colOperDate_Zakaz: TcxGridDBColumn
+          object OperDate_Zakaz: TcxGridDBColumn
             Caption = #1041#1083#1080#1078'. '#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'OperDate_Zakaz'
             HeaderAlignmentHorz = taCenter
@@ -250,7 +252,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Options.Editing = False
             Width = 60
           end
-          object colOperDate_Dostavka: TcxGridDBColumn
+          object OperDate_Dostavka: TcxGridDBColumn
             Caption = #1041#1083#1080#1078'. '#1076#1086#1089#1090#1072#1074#1082#1072
             DataBinding.FieldName = 'OperDate_Dostavka'
             HeaderAlignmentHorz = taCenter
@@ -259,7 +261,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Options.Editing = False
             Width = 60
           end
-          object colZakaz_Text: TcxGridDBColumn
+          object Zakaz_Text: TcxGridDBColumn
             Caption = #1044#1077#1085#1100' '#1079#1072#1082#1072#1079#1072' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
             DataBinding.FieldName = 'Zakaz_Text'
             HeaderAlignmentHorz = taCenter
@@ -268,7 +270,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Options.Editing = False
             Width = 120
           end
-          object colDostavka_Text: TcxGridDBColumn
+          object Dostavka_Text: TcxGridDBColumn
             Caption = #1044#1077#1085#1100' '#1076#1086#1089#1090#1072#1074#1082#1080' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
             DataBinding.FieldName = 'Dostavka_Text'
             HeaderAlignmentHorz = taCenter
@@ -277,7 +279,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Options.Editing = False
             Width = 120
           end
-          object clisDeferred: TcxGridDBColumn
+          object isDeferred: TcxGridDBColumn
             Caption = #1054#1090#1083#1086#1078#1077#1085
             DataBinding.FieldName = 'isDeferred'
             HeaderAlignmentHorz = taCenter

@@ -3,8 +3,9 @@ inherited InventoryJournalForm: TInventoryJournalForm
   ClientHeight = 535
   ClientWidth = 819
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitTop = -81
   ExplicitWidth = 835
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -32,22 +33,22 @@ inherited InventoryJournalForm: TInventoryJournalForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colDeficitSumm
+              Column = DeficitSumm
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colProficitSumm
+              Column = ProficitSumm
             end
             item
               Format = '+,0.00; -,0.00;0.00;'
               Kind = skSum
-              Column = colDiffSumm
+              Column = DiffSumm
             end
             item
               Format = '+,0.0000;-,0.0000;0,0000;'
               Kind = skSum
-              Column = colDiff
+              Column = Diff
             end
             item
               Format = '+,0.0000;-,0.0000;0,0000;'
@@ -73,22 +74,22 @@ inherited InventoryJournalForm: TInventoryJournalForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colDeficitSumm
+              Column = DeficitSumm
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colProficitSumm
+              Column = ProficitSumm
             end
             item
               Format = '+,0.00; -,0.00;0.00;'
               Kind = skSum
-              Column = colDiffSumm
+              Column = DiffSumm
             end
             item
               Format = '+,0.0000;-,0.0000;0,0000;'
               Kind = skSum
-              Column = colDiff
+              Column = Diff
             end
             item
               Format = '+,0.0000;-,0.0000;0,0000;'
@@ -137,14 +138,14 @@ inherited InventoryJournalForm: TInventoryJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 66
           end
-          object colUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 252
           end
-          object colDeficitSumm: TcxGridDBColumn
+          object DeficitSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1077#1076#1086#1089#1090#1072#1095#1080
             DataBinding.FieldName = 'DeficitSumm'
             PropertiesClassName = 'TcxCalcEditProperties'
@@ -153,7 +154,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colProficitSumm: TcxGridDBColumn
+          object ProficitSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1080#1079#1083#1080#1096#1082#1072
             DataBinding.FieldName = 'ProficitSumm'
             PropertiesClassName = 'TcxCalcEditProperties'
@@ -162,7 +163,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colDiff: TcxGridDBColumn
+          object Diff: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074' '#1082#1086#1083'-'#1074#1077
             DataBinding.FieldName = 'Diff'
             PropertiesClassName = 'TcxCalcEditProperties'
@@ -171,7 +172,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colDiffSumm: TcxGridDBColumn
+          object DiffSumm: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074' '#1089#1091#1084#1084#1077
             DataBinding.FieldName = 'DiffSumm'
             PropertiesClassName = 'TcxCalcEditProperties'
@@ -220,7 +221,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colFullInvent: TcxGridDBColumn
+          object FullInvent: TcxGridDBColumn
             Caption = #1055#1086#1083#1085#1072#1103
             DataBinding.FieldName = 'FullInvent'
             HeaderAlignmentHorz = taCenter

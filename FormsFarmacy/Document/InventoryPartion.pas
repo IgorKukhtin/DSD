@@ -32,8 +32,8 @@ type
     cxLabel3: TcxLabel;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
     N2: TMenuItem;
     N3: TMenuItem;
     RefreshDispatcher: TRefreshDispatcher;
@@ -43,10 +43,10 @@ type
     actAssetChoice: TOpenChoiceForm;
     chbFullInvent: TcxCheckBox;
     actSelect: TdsdExecStoredProc;
-    clJuridicalPrice: TcxGridDBColumn;
-    clAmount: TcxGridDBColumn;
-    clAmountDeficit: TcxGridDBColumn;
-    clSummAmount: TcxGridDBColumn;
+    JuridicalPrice: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    AmountDeficit: TcxGridDBColumn;
+    SummAmount: TcxGridDBColumn;
   private
     { Private declarations }
   public

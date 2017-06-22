@@ -2,8 +2,10 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 524
   ClientWidth = 985
+  ExplicitLeft = -317
+  ExplicitTop = -70
   ExplicitWidth = 1001
-  ExplicitHeight = 562
+  ExplicitHeight = 563
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -28,7 +30,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -58,18 +60,18 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
               Format = ',0.00'
               Kind = skSum
               Position = spFooter
-              Column = colSaleSumm
+              Column = SaleSumm
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSaleSumm
+              Column = SaleSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -101,22 +103,22 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSaleSumm
+              Column = SaleSumm
             end
             item
               Format = ',0.###'
               Kind = skSum
-              Column = colAmountManual
+              Column = AmountManual
             end
             item
               Format = '+,0.###;-0.###; ;'
               Kind = skSum
-              Column = colAmountDiff
+              Column = AmountDiff
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colName
+              Column = GoodsName
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -129,7 +131,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -144,14 +146,14 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             Options.Editing = False
             Width = 45
           end
-          object colName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 222
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -161,7 +163,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             Options.Editing = False
             Width = 73
           end
-          object colSalePrice: TcxGridDBColumn
+          object SalePrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083'. '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'SalePrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -169,7 +171,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             Options.Editing = False
             Width = 76
           end
-          object colSaleSumm: TcxGridDBColumn
+          object SaleSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083'. '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'SaleSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -177,76 +179,76 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             Options.Editing = False
             Width = 83
           end
-          object colExpirationDate: TcxGridDBColumn
+          object ExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'ExpirationDate'
             Options.Editing = False
             Width = 70
           end
-          object colPartitionGoods: TcxGridDBColumn
+          object PartitionGoods: TcxGridDBColumn
             Caption = #1057#1077#1088#1080#1103
             DataBinding.FieldName = 'PartionGoods'
             Options.Editing = False
             Width = 70
           end
-          object colMakerName: TcxGridDBColumn
+          object MakerName: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'MakerName'
             Options.Editing = False
             Width = 100
           end
-          object colMeasure: TcxGridDBColumn
+          object Measure: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084
             DataBinding.FieldName = 'Measure'
             Options.Editing = False
             Width = 53
           end
-          object colSertificatNumber: TcxGridDBColumn
+          object SertificatNumber: TcxGridDBColumn
             AlternateCaption = #1053#1086#1084#1077#1088' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
             Caption = #8470' '#1088#1077#1075
             DataBinding.FieldName = 'SertificatNumber'
             HeaderHint = #1053#1086#1084#1077#1088' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
             Width = 54
           end
-          object colSertificatStart: TcxGridDBColumn
+          object SertificatStart: TcxGridDBColumn
             AlternateCaption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
             Caption = #1053#1072#1095'. '#1088#1077#1075'.'
             DataBinding.FieldName = 'SertificatStart'
             HeaderHint = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
             Width = 63
           end
-          object colSertificatEnd: TcxGridDBColumn
+          object SertificatEnd: TcxGridDBColumn
             AlternateCaption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
             Caption = #1054#1082#1086#1085#1095'. '#1088#1077#1075'.'
             DataBinding.FieldName = 'SertificatEnd'
             HeaderHint = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
             Width = 58
           end
-          object colDublePriceColour: TcxGridDBColumn
+          object DublePriceColour: TcxGridDBColumn
             DataBinding.FieldName = 'DublePriceColour'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
           end
-          object colWarningColor: TcxGridDBColumn
+          object WarningColor: TcxGridDBColumn
             DataBinding.FieldName = 'WarningColor'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
           end
-          object colAmountManual: TcxGridDBColumn
+          object AmountManual: TcxGridDBColumn
             Caption = #1060#1072#1082#1090'. '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'AmountManual'
             Width = 59
           end
-          object colAmountDiff: TcxGridDBColumn
+          object AmountDiff: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072' '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'AmountDiff'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = '+0.###;-0.###; ;'
             Options.Editing = False
           end
-          object colReasonDifferencesName: TcxGridDBColumn
+          object ReasonDifferencesName: TcxGridDBColumn
             Caption = #1055#1088#1080#1095#1080#1085#1072' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1103
             DataBinding.FieldName = 'ReasonDifferencesName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -259,14 +261,14 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             Properties.ReadOnly = True
             Width = 131
           end
-          object colisPrint: TcxGridDBColumn
+          object isPrint: TcxGridDBColumn
             Caption = #1055#1077#1095'. '#1089#1090#1080#1082#1077#1088
             DataBinding.FieldName = 'isPrint'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colPrintCount: TcxGridDBColumn
+          object PrintCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1090#1080#1082#1077#1088#1086#1074
             DataBinding.FieldName = 'PrintCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -276,7 +278,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1077#1095#1072#1090#1072#1077#1084#1099#1093' '#1089#1090#1080#1082#1077#1088#1086#1074
             Width = 62
           end
-          object colisDeferred: TcxGridDBColumn
+          object isDeferred: TcxGridDBColumn
             Caption = #1054#1090#1083#1086#1078#1077#1085#1072' ('#1079#1072#1103#1074#1082#1072')'
             DataBinding.FieldName = 'isDeferred'
             Visible = False
@@ -284,7 +286,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             VisibleForCustomization = False
             Width = 30
           end
-          object clisSp: TcxGridDBColumn
+          object isSp: TcxGridDBColumn
             Caption = #1057#1086#1094'. '#1087#1088#1086#1077#1082#1090
             DataBinding.FieldName = 'isSp'
             HeaderAlignmentHorz = taCenter
@@ -1103,11 +1105,11 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
       item
-        BackGroundValueColumn = colDublePriceColour
+        BackGroundValueColumn = DublePriceColour
         ColorValueList = <>
       end
       item
-        ValueColumn = colWarningColor
+        ValueColumn = WarningColor
         ColorValueList = <>
       end>
     SummaryItemList = <

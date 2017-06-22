@@ -21,9 +21,9 @@ type
     edUnit: TcxButtonEdit;
     cxLabel4: TcxLabel;
     GuidesUnit: TdsdGuides;
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     spSelectPrint: TdsdStoredProc;
     N3: TMenuItem;
@@ -36,25 +36,25 @@ type
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
     cxSplitter1: TcxSplitter;
-    coJuridicalName: TcxGridDBColumn;
-    colisCalculated: TcxGridDBColumn;
-    clPartionGoodsDate: TcxGridDBColumn;
-    clPartionGoodsDateColor: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    isCalculated: TcxGridDBColumn;
+    PartionGoodsDate: TcxGridDBColumn;
+    PartionGoodsDateColor: TcxGridDBColumn;
     N2: TMenuItem;
     cxLabel3: TcxLabel;
     edOrderKind: TcxButtonEdit;
-    colComment: TcxGridDBColumn;
-    colRemainsInUnit: TcxGridDBColumn;
-    colMCS: TcxGridDBColumn;
-    colIncome_Amount: TcxGridDBColumn;
-    colNDSKindName: TcxGridDBColumn;
-    colGoodsGroupName: TcxGridDBColumn;
-    colAmountSecond: TcxGridDBColumn;
-    colAmountAll: TcxGridDBColumn;
-    colCalcAmountAll: TcxGridDBColumn;
-    colPartnerGoodsName: TcxGridDBColumn;
-    colMakerName: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    RemainsInUnit: TcxGridDBColumn;
+    MCS: TcxGridDBColumn;
+    Income_Amount: TcxGridDBColumn;
+    NDSKindName: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
+    AmountSecond: TcxGridDBColumn;
+    AmountAll: TcxGridDBColumn;
+    CalcAmountAll: TcxGridDBColumn;
+    PartnerGoodsName: TcxGridDBColumn;
+    MakerName: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
   private
     { Private declarations }
   public

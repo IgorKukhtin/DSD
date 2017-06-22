@@ -24,10 +24,10 @@ type
     cxLabel2: TcxLabel;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
-    colInvNumber: TcxGridDBColumn;
-    colOperDate: TcxGridDBColumn;
-    colTotalSumm: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
     actUpdate: TdsdInsertUpdateAction;
     dxBarButton1: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
