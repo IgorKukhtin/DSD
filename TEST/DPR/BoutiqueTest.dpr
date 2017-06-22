@@ -270,7 +270,6 @@ begin
   Application.Initialize;
   gc_isSetDefault := true;
   Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TReport_Goods_RemainsCurrentForm, Report_Goods_RemainsCurrentForm);
   Application.Run;
 
   DUnitTestRunner.RunRegisteredTests;

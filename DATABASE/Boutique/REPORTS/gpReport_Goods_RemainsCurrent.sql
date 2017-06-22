@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION  gpReport_Goods_RemainsCurrent(
 RETURNS TABLE (InvNumber_Partion  TVarChar,
                OperDate_Partion   TDateTime,
                DescName_Partion   TVarChar,
-               UnitName       TVarChar
+               UnitName       TVarChar,
                PartnerName    TVarChar,
                BrandName      TVarChar,
                FabrikaName    TVarChar,
