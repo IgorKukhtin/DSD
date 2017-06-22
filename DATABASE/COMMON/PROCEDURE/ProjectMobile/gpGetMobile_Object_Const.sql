@@ -160,7 +160,7 @@ BEGIN
             -- AS LastDateIn
             -- AS LastDateOut
 
-            , '1.20.0'::TVarChar             AS MobileVersion
+            , '1.21.0'::TVarChar             AS MobileVersion
             , 'ProjectMobile.apk'::TVarChar  AS MobileAPKFileName
 
             , Object_PriceList_def.Id        AS PriceListId_def

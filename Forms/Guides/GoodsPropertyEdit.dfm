@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
-  ClientHeight = 270
+  ClientHeight = 296
   ClientWidth = 378
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 191
-    Top = 227
+    Left = 100
+    Top = 267
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 1
   end
   object cxButton2: TcxButton
-    Left = 295
-    Top = 227
+    Left = 204
+    Top = 267
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -154,6 +154,19 @@
     TabOrder = 20
     Width = 95
   end
+  object cxLabel11: TcxLabel
+    Left = 194
+    Top = 210
+    Caption = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1076#1083#1103' '#1074#1083#1086#1078#1077#1085#1080#1103
+  end
+  object edTaxDoc: TcxCurrencyEdit
+    Left = 194
+    Top = 231
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 22
+    Width = 153
+  end
   object ActionList: TActionList
     Left = 320
     Top = 40
@@ -198,12 +211,14 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -211,6 +226,7 @@
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartPosInt'
@@ -218,6 +234,7 @@
         Component = edStartPosInt
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndPosInt'
@@ -225,6 +242,7 @@
         Component = edEndPosInt
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartPosFrac'
@@ -232,6 +250,7 @@
         Component = edStartPosFrac
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndPosFrac'
@@ -239,6 +258,7 @@
         Component = edEndPosFrac
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartPosIdent'
@@ -246,6 +266,7 @@
         Component = edStartPosIdent
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndPosIdent'
@@ -253,6 +274,15 @@
         Component = edEndPosIdent
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTaxDoc'
+        Value = Null
+        Component = edTaxDoc
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -264,6 +294,7 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 8
@@ -279,53 +310,69 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StartPosInt'
         Value = Null
         Component = edStartPosInt
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndPosInt'
         Value = Null
         Component = edEndPosInt
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StartPosFrac'
         Value = Null
         Component = edStartPosFrac
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndPosFrac'
         Value = Null
         Component = edEndPosFrac
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StartPosIdent'
         Value = Null
         Component = edStartPosIdent
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndPosIdent'
         Value = Null
         Component = edEndPosIdent
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxDoc'
+        Value = Null
+        Component = edTaxDoc
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 8
@@ -346,7 +393,7 @@
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
-    Left = 216
-    Top = 177
+    Left = 112
+    Top = 105
   end
 end

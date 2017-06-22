@@ -6,7 +6,9 @@ CREATE OR REPLACE FUNCTION gpGet_Object_GoodsPropertyValue(
     IN inId          Integer,       -- Классификатор свойств товаров
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Name TVarChar, isErased Boolean, Amount TFloat, BoxCount TFloat, BarCode TVarChar, Article TVarChar,
+RETURNS TABLE (Id Integer, Name TVarChar, isErased Boolean,
+               Amount TFloat, BoxCount TFloat, AmountDoc TFloat,
+               BarCode TVarChar, Article TVarChar,
                BarCodeGLN TVarChar, ArticleGLN TVarChar, GroupName TVarChar,GoodsPropertyId Integer, GoodsPropertyName TVarChar,
                GoodsId Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar) AS
 $BODY$
@@ -24,6 +26,7 @@ BEGIN
            , NULL :: Boolean  AS isErased
            , NULL :: TFloat   AS Amount
            , NULL :: TFloat   AS BoxCount
+           , NULL :: TFloat   AS AmountDoc
            , '' :: TVarChar   AS BarCode
            , '' :: TVarChar   AS Article
            , '' :: TVarChar   AS BarCodeGLN
@@ -45,8 +48,9 @@ BEGIN
              Object.Id               AS Id
            , Object.ValueData        AS NAME
            , Object.isErased         AS isErased
-           , Amount.ValueData        AS Amount
+           , ObjectFloat_Amount.ValueData         AS Amount
            , ObjectFloat_BoxCount.ValueData       AS BoxCount
+           , ObjectFloat_AmountDoc.ValueData      AS AmountDoc
            , BarCode.ValueData       AS BarCode
            , Article.ValueData       AS Article
            , BarCodeGLN.ValueData    AS BarCodeGLN
@@ -59,37 +63,48 @@ BEGIN
            , GoodsKind.Id            AS GoodsKindId
            , GoodsKind.ValueData     AS GoodsKindName
        FROM Object
-           LEFT JOIN ObjectFloat AS Amount ON Amount.ObjectId = Object.Id
-                                          AND Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
+           LEFT JOIN ObjectFloat AS ObjectFloat_Amount 
+                                 ON ObjectFloat_Amount.ObjectId = Object.Id
+                                AND ObjectFloat_Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
            LEFT JOIN ObjectFloat AS ObjectFloat_BoxCount
                                  ON ObjectFloat_BoxCount.ObjectId = Object.Id
                                 AND ObjectFloat_BoxCount.DescId = zc_ObjectFloat_GoodsPropertyValue_BoxCount()                                          
+           LEFT JOIN ObjectFloat AS ObjectFloat_AmountDoc
+                                 ON ObjectFloat_AmountDoc.ObjectId = Object.Id
+                                AND ObjectFloat_AmountDoc.DescId = zc_ObjectFloat_GoodsPropertyValue_AmountDoc()
 
-           LEFT JOIN ObjectString AS BarCode ON BarCode.ObjectId = Object.Id
-                                            AND BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
+           LEFT JOIN ObjectString AS BarCode
+                                  ON BarCode.ObjectId = Object.Id
+                                 AND BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
 
-           LEFT JOIN ObjectString AS Article ON Article.ObjectId = Object.Id
-                                            AND Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
-           LEFT JOIN ObjectString AS BarCodeGLN ON BarCodeGLN.ObjectId = Object.Id
-                                               AND BarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
+           LEFT JOIN ObjectString AS Article 
+                                  ON Article.ObjectId = Object.Id
+                                 AND Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
+           LEFT JOIN ObjectString AS BarCodeGLN 
+                                  ON BarCodeGLN.ObjectId = Object.Id
+                                 AND BarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
 
-           LEFT JOIN ObjectString AS ArticleGLN ON ArticleGLN.ObjectId = Object.Id
-                                               AND ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
+           LEFT JOIN ObjectString AS ArticleGLN
+                                  ON ArticleGLN.ObjectId = Object.Id
+                                 AND ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
 
            LEFT JOIN ObjectString AS ObjectString_GroupName
                                   ON ObjectString_GroupName.ObjectId = Object.Id
                                  AND ObjectString_GroupName.DescId = zc_ObjectString_GoodsPropertyValue_GroupName()
 
-           LEFT JOIN ObjectLink AS GoodsPropertyValue_GoodsProperty ON GoodsPropertyValue_GoodsProperty.ObjectId = Object.Id
-                                                                   AND GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+           LEFT JOIN ObjectLink AS GoodsPropertyValue_GoodsProperty 
+                                ON GoodsPropertyValue_GoodsProperty.ObjectId = Object.Id
+                               AND GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
            LEFT JOIN Object AS GoodsProperty ON GoodsProperty.Id = GoodsPropertyValue_GoodsProperty.ChildObjectId
 
-           LEFT JOIN ObjectLink AS GoodsPropertyValue_Goods ON GoodsPropertyValue_Goods.ObjectId = Object.Id
-                                                           AND GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+           LEFT JOIN ObjectLink AS GoodsPropertyValue_Goods 
+                                ON GoodsPropertyValue_Goods.ObjectId = Object.Id
+                               AND GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
            LEFT JOIN Object AS Goods ON Goods.Id = GoodsPropertyValue_Goods.ChildObjectId
 
-           LEFT JOIN ObjectLink AS GoodsPropertyValue_GoodsKind ON GoodsPropertyValue_GoodsKind.ObjectId = Object.Id
-                                                               AND GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+           LEFT JOIN ObjectLink AS GoodsPropertyValue_GoodsKind 
+                                ON GoodsPropertyValue_GoodsKind.ObjectId = Object.Id
+                               AND GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
            LEFT JOIN Object AS GoodsKind ON GoodsKind.Id = GoodsPropertyValue_GoodsKind.ChildObjectId
 
        WHERE Object.Id = inId;
@@ -105,6 +120,7 @@ ALTER FUNCTION gpGet_Object_GoodsPropertyValue(integer, TVarChar) OWNER TO postg
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.06.17         * add AmountDoc
  17.09.15         * add BoxCount
  10.10.14                                                       *
  12.06.13         *

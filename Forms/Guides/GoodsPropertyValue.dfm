@@ -54,7 +54,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 82
+        Width = 67
       end
       object clGoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
@@ -62,7 +62,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 150
+        Width = 123
       end
       object clGoodsGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
@@ -79,7 +79,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 36
+        Width = 30
       end
       object clGoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
@@ -94,7 +94,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 82
+        Width = 67
       end
       object clGoodsKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -109,7 +109,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 57
+        Width = 47
       end
       object colMeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -117,14 +117,14 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 37
+        Width = 30
       end
       object ceName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 79
+        Width = 65
       end
       object clisOrder: TcxGridDBColumn
         Caption = #1048#1089#1087#1086#1083#1100#1079#1091#1077#1090#1089#1103' '#1074' '#1079#1072#1103#1074#1082#1072#1093
@@ -132,7 +132,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 91
+        Width = 75
       end
       object BoxCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1077#1076'. '#1074' '#1103#1097'.'
@@ -142,7 +142,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 64
+        Width = 52
       end
       object ceAmount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. '#1087#1088#1080' '#1089#1082#1072#1085'.'
@@ -152,7 +152,18 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 63
+        Width = 52
+      end
+      object ceAmountDoc: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. '#1074#1083#1086#1078'.'
+        DataBinding.FieldName = 'AmountDoc'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1096#1090'. '#1074#1083#1086#1078#1077#1085#1080#1077
+        Width = 69
       end
       object BarCodeShort: TcxGridDBColumn
         Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076' ('#1087#1086#1080#1089#1082')'
@@ -160,42 +171,42 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 63
+        Width = 49
       end
       object ceBarCode: TcxGridDBColumn
         Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
         DataBinding.FieldName = 'BarCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 64
+        Width = 50
       end
       object clArticle: TcxGridDBColumn
         Caption = #1040#1088#1090#1080#1082#1091#1083
         DataBinding.FieldName = 'Article'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 64
+        Width = 49
       end
       object clBarCodeGLN: TcxGridDBColumn
         Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076' GLN'
         DataBinding.FieldName = 'BarCodeGLN'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 63
+        Width = 49
       end
       object clArticleGLN: TcxGridDBColumn
         Caption = #1040#1088#1090#1080#1082#1091#1083' GLN'
         DataBinding.FieldName = 'ArticleGLN'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 64
+        Width = 49
       end
       object GroupName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1099
         DataBinding.FieldName = 'GroupName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 63
+        Width = 49
       end
       object ceisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -816,6 +827,15 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'BoxCount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountDoc'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'AmountDoc'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

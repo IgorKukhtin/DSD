@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsProperty(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , StartPosInt TFloat, EndPosInt TFloat, StartPosFrac TFloat, EndPosFrac TFloat
              , StartPosIdent TFloat, EndPosIdent TFloat
+             , TaxDoc TFloat
              , isErased boolean) AS
 $BODY$BEGIN
    
@@ -27,6 +28,8 @@ $BODY$BEGIN
 
        , ObjectFloat_StartPosIdent.ValueData AS StartPosIdent
        , ObjectFloat_EndPosIdent.ValueData   AS EndPosIdent
+
+       , ObjectFloat_TaxDoc.ValueData        AS TaxDoc
 
        , Object_GoodsProperty.isErased   AS isErased
 
@@ -55,6 +58,10 @@ $BODY$BEGIN
                               ON ObjectFloat_EndPosIdent.ObjectId = Object_GoodsProperty.Id 
                              AND ObjectFloat_EndPosIdent.DescId = zc_ObjectFloat_GoodsProperty_EndPosIdent()
 
+        LEFT JOIN ObjectFloat AS ObjectFloat_TaxDoc
+                              ON ObjectFloat_TaxDoc.ObjectId = Object_GoodsProperty.Id 
+                             AND ObjectFloat_TaxDoc.DescId = zc_ObjectFloat_GoodsProperty_TaxDoc()
+
    WHERE Object_GoodsProperty.DescId = zc_Object_GoodsProperty()
 
     UNION ALL
@@ -68,6 +75,7 @@ $BODY$BEGIN
 
            , NULL :: TFloat AS StartPosIdent
            , NULL :: TFloat AS EndPosIdent
+           , NULL :: TFloat AS TaxDoc
 
            , FALSE AS isErased
      ;
@@ -81,7 +89,8 @@ ALTER FUNCTION gpSelect_Object_GoodsProperty(TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.06.17          * add TaxDoc
  24.09.15          *
  26.05.15          * ADD StartPosInt, EndPosInt, StartPosFrac, EndPosFrac
  12.06.13          *

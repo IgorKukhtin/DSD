@@ -23,10 +23,13 @@ RETURNS TABLE (Id               Integer
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbObjectId Integer;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
+      -- определяется <Торговая сеть>
+      vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
   
       IF COALESCE (inId, 0) = 0
       THEN
@@ -62,7 +65,8 @@ BEGIN
                   , LoadGoodsBarCode.JuridicalName
                   , LoadGoodsBarCode.ErrorText
              FROM LoadGoodsBarCode
-             WHERE LoadGoodsBarCode.Id = inId;
+             WHERE LoadGoodsBarCode.Id = inId
+               AND LoadGoodsBarCode.RetailId = vbObjectId;
       END IF;
 END;
 $BODY$
