@@ -734,6 +734,12 @@ inherited MainForm: TMainForm
       object N63: TMenuItem
         Action = actReport_MovementLoss
       end
+      object N6: TMenuItem
+        Caption = '-'
+      end
+      object N47: TMenuItem
+        Action = actReport_Goods_RemainsCurrent
+      end
     end
     object N46: TMenuItem [4]
       Caption = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'

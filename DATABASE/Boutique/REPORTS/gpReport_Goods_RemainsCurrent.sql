@@ -39,7 +39,8 @@ RETURNS TABLE (InvNumber_Partion  TVarChar,
                TotalSummPrice      TFloat,
                TotalSummPriceList  TFloat,
                TotalSummSale       TFloat,
-               TotalSummBalance    TFloat
+               TotalSummBalance    TFloat,
+               DiscountTax         TFloat
 
   )
 AS
@@ -179,7 +180,27 @@ BEGIN
                             , Object_PartionGoods.PeriodYear
                             , COALESCE (Object_PartionGoods.CountForPrice, 1) 
               )
-              
+ , tmpDiscount AS (SELECT ObjectLink_DiscountPeriodItem_Unit.ChildObjectId      AS UnitId
+                        , ObjectLink_DiscountPeriodItem_Goods.ChildObjectId     AS GoodsId
+                        , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS ValuePrice
+                   FROM ObjectLink AS ObjectLink_DiscountPeriodItem_Unit
+                        INNER JOIN _tmpUnit ON _tmpUnit.UnitId = ObjectLink_DiscountPeriodItem_Unit.ChildObjectId
+                        LEFT JOIN ObjectLink AS ObjectLink_DiscountPeriodItem_Goods
+                               ON ObjectLink_DiscountPeriodItem_Goods.ObjectId = ObjectLink_DiscountPeriodItem_Unit.ObjectId
+                              AND ObjectLink_DiscountPeriodItem_Goods.DescId = zc_ObjectLink_DiscountPeriodItem_Goods()
+       
+                        LEFT JOIN ObjectHistory AS ObjectHistory_DiscountPeriodItem
+                               ON ObjectHistory_DiscountPeriodItem.ObjectId = ObjectLink_DiscountPeriodItem_Unit.ObjectId
+                              AND ObjectHistory_DiscountPeriodItem.DescId = zc_ObjectHistory_DiscountPeriodItem()
+                              AND CURRENT_DATE >= ObjectHistory_DiscountPeriodItem.StartDate AND CURRENT_DATE < ObjectHistory_DiscountPeriodItem.EndDate
+                        LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_DiscountPeriodItem_Value
+                               ON ObjectHistoryFloat_DiscountPeriodItem_Value.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
+                              AND ObjectHistoryFloat_DiscountPeriodItem_Value.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()
+
+                   WHERE ObjectLink_DiscountPeriodItem_Unit.DescId = zc_ObjectLink_DiscountPeriodItem_Unit()
+                     AND ObjectLink_DiscountPeriodItem_Unit.ChildObjectId = 783
+                     AND (ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData <> 0 OR ObjectHistory_DiscountPeriodItem.StartDate <> zc_DateStart())              
+                   )
 
         SELECT
              tmpData.InvNumber_Partion
@@ -217,8 +238,10 @@ BEGIN
            , tmpData.TotalSummPrice          ::TFloat
            , tmpData.TotalSummPriceList      ::TFloat 
            , tmpData.TotalSummSale           ::TFloat 
-            , (CAST (tmpData.TotalSummPrice * tmpCurrency.Amount / CASE WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance
-           
+           , (CAST (tmpData.TotalSummPrice * tmpCurrency.Amount / CASE WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance
+
+           , COALESCE (tmpDiscount.ValuePrice,0) :: TFloat  AS DiscountTax
+
         FROM tmpData
             LEFT JOIN Object AS Object_Unit    ON Object_Unit.Id    = tmpData.UnitId
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpData.PartnerId
@@ -244,8 +267,9 @@ BEGIN
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
         
             LEFT JOIN lfSelect_Movement_Currency_byDate (inOperDate:= CURRENT_DATE, inCurrencyFromId:= zc_Currency_Basis(), inCurrencyToId:= tmpData.CurrencyId) AS tmpCurrency ON 1=1
-
-
+            
+            LEFT JOIN tmpDiscount ON tmpDiscount.UnitId = tmpData.UnitId
+                                 AND tmpDiscount.GoodsId= tmpData.GoodsId
 ;
  END;
 $BODY$
@@ -258,5 +282,4 @@ $BODY$
 */
 
 -- тест
---SELECT * from gpReport_Movement_Income(inUnitId :=0,inisPartion  := TRUE,inisSize:=  TRUE, inisPartner := TRUE, inSession := '2':: TVarChar )
-
+--SELECT * from gpReport_Goods_RemainsCurrent(inUnitId :=0,inisPartion  := TRUE,inisSize:=  TRUE, inisPartner := TRUE, inSession := '2':: TVarChar )

@@ -25,16 +25,12 @@ type
   TReport_Goods_RemainsCurrentDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
-    deEnd: TcxDateEdit;
-    deStart: TcxDateEdit;
     PeriodChoice: TPeriodChoice;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     FormParams: TdsdFormParams;
     edUnit: TcxButtonEdit;
     cxLabel3: TcxLabel;
-    cxLabel6: TcxLabel;
-    cxLabel7: TcxLabel;
     GuidesUnit: TdsdGuides;
     cbPartion: TcxCheckBox;
     cbSize: TcxCheckBox;

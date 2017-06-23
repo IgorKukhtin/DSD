@@ -3,7 +3,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1058#1077#1082#1091#1097#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1090#1086#1074#1072#1088#1072'>'
-  ClientHeight = 204
+  ClientHeight = 142
   ClientWidth = 342
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 43
-    Top = 168
+    Top = 108
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,62 +28,36 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
   end
   object cxButton2: TcxButton
     Left = 217
-    Top = 168
+    Top = 108
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 2
     TabOrder = 1
   end
-  object deEnd: TcxDateEdit
-    Left = 121
-    Top = 27
-    EditValue = 42400d
-    Properties.ShowTime = False
-    TabOrder = 2
-    Width = 90
-  end
-  object deStart: TcxDateEdit
-    Left = 10
-    Top = 27
-    EditValue = 42370d
-    Properties.ShowTime = False
-    TabOrder = 3
-    Width = 90
-  end
   object edUnit: TcxButtonEdit
-    Left = 10
-    Top = 117
+    Left = 13
+    Top = 31
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 4
+    TabOrder = 2
     Width = 305
   end
   object cxLabel3: TcxLabel
-    Left = 10
-    Top = 97
+    Left = 13
+    Top = 11
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' / '#1075#1088#1091#1087#1087#1072':'
-  end
-  object cxLabel6: TcxLabel
-    Left = 10
-    Top = 7
-    Caption = #1044#1072#1090#1072' '#1089' :'
-  end
-  object cxLabel7: TcxLabel
-    Left = 121
-    Top = 7
-    Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object cbPartion: TcxCheckBox
     Left = 10
     Top = 63
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
-    TabOrder = 8
+    TabOrder = 4
     Width = 86
   end
   object cbSize: TcxCheckBox
@@ -91,7 +65,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     Top = 63
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1087#1086' '#1056#1072#1079#1084#1077#1088#1072#1084
-    TabOrder = 9
+    TabOrder = 5
     Width = 85
   end
   object cbPartner: TcxCheckBox
@@ -99,14 +73,12 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     Top = 63
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
-    TabOrder = 10
+    TabOrder = 6
     Width = 109
   end
   object PeriodChoice: TPeriodChoice
-    DateStart = deStart
-    DateEnd = deEnd
-    Left = 271
-    Top = 17
+    Left = 279
+    Top = 65
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 214
@@ -123,26 +95,10 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 303
-    Top = 140
+    Top = 80
   end
   object FormParams: TdsdFormParams
     Params = <
-      item
-        Name = 'StartDate'
-        Value = 41579d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'EndDate'
-        Value = 41608d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
       item
         Name = 'UnitId'
         Value = ''
@@ -185,7 +141,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
         MultiSelectSeparator = ','
       end>
     Left = 6
-    Top = 143
+    Top = 83
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -216,6 +172,6 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
         MultiSelectSeparator = ','
       end>
     Left = 158
-    Top = 126
+    Top = 66
   end
 end
