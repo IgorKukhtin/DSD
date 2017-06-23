@@ -2,8 +2,10 @@ inherited InventoryPartionForm: TInventoryPartionForm
   Caption = '<'#1055#1072#1088#1090#1080#1080' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080'>'
   ClientHeight = 658
   ClientWidth = 898
+  ExplicitLeft = -230
+  ExplicitTop = -204
   ExplicitWidth = 914
-  ExplicitHeight = 696
+  ExplicitHeight = 697
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -66,22 +68,22 @@ inherited InventoryPartionForm: TInventoryPartionForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountDeficit
+              Column = AmountDeficit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSummAmount
+              Column = SummAmount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount
+              Column = Amount
             end
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colName
+              Column = GoodsName
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -95,7 +97,7 @@ inherited InventoryPartionForm: TInventoryPartionForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn [0]
+          object GoodsCode: TcxGridDBColumn [0]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -103,7 +105,7 @@ inherited InventoryPartionForm: TInventoryPartionForm
             Options.Editing = False
             Width = 49
           end
-          object colName: TcxGridDBColumn [1]
+          object GoodsName: TcxGridDBColumn [1]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -114,7 +116,7 @@ inherited InventoryPartionForm: TInventoryPartionForm
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentVert = vaCenter
           end
-          object clJuridicalPrice: TcxGridDBColumn
+          object JuridicalPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'JuridicalPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -123,7 +125,7 @@ inherited InventoryPartionForm: TInventoryPartionForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
-          object clAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1080#1079#1083#1080#1096#1077#1082
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -133,7 +135,7 @@ inherited InventoryPartionForm: TInventoryPartionForm
             HeaderGlyphAlignmentHorz = taCenter
             Width = 80
           end
-          object clAmountDeficit: TcxGridDBColumn
+          object AmountDeficit: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1085#1077#1076#1086#1089#1090'.'
             DataBinding.FieldName = 'AmountDeficit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -143,7 +145,7 @@ inherited InventoryPartionForm: TInventoryPartionForm
             HeaderGlyphAlignmentHorz = taCenter
             Width = 80
           end
-          object clSummAmount: TcxGridDBColumn
+          object SummAmount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'SummAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'

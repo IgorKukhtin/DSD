@@ -29,19 +29,19 @@ uses
 
 type
   TInventoryJournalForm = class(TAncestorJournalForm)
-    colUnitName: TcxGridDBColumn;
-    colDeficitSumm: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    DeficitSumm: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    colProficitSumm: TcxGridDBColumn;
+    ProficitSumm: TcxGridDBColumn;
     bbPrint1: TdxBarButton;
     dxBarButton1: TdxBarButton;
-    colFullInvent: TcxGridDBColumn;
-    colDiff: TcxGridDBColumn;
-    colDiffSumm: TcxGridDBColumn;
+    FullInvent: TcxGridDBColumn;
+    Diff: TcxGridDBColumn;
+    DiffSumm: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     Diff_calc: TcxGridDBColumn;
     DeficitSumm_calc: TcxGridDBColumn;

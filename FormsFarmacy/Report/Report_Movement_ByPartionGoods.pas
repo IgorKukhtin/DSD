@@ -18,18 +18,18 @@ type
   TReport_Movement_ByPartionGoodsForm = class(TAncestorReportForm)
     mmoPartionGoods: TcxMemo;
     btnRefresh: TcxButton;
-    colPartionGoods: TcxGridDBColumn;
-    colMovementId: TcxGridDBColumn;
-    colInvNumber: TcxGridDBColumn;
-    colOperDate: TcxGridDBColumn;
-    colStatusName: TcxGridDBColumn;
-    colIncomeUnitName: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
-    colGoodsId: TcxGridDBColumn;
-    colGoodsCode: TcxGridDBColumn;
-    colGoodsName: TcxGridDBColumn;
-    colIncomeAmount: TcxGridDBColumn;
-    colRemains: TcxGridDBColumn;
+    PartionGoods: TcxGridDBColumn;
+    MovementId: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    StatusName: TcxGridDBColumn;
+    IncomeUnitName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    GoodsId: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    IncomeAmount: TcxGridDBColumn;
+    Remains: TcxGridDBColumn;
     spGet_MovementFormClass: TdsdStoredProc;
     actOpenDocument: TdsdOpenForm;
     actGet_MovementFormClass: TdsdExecStoredProc;
@@ -39,7 +39,7 @@ type
     FormParams: TdsdFormParams;
     btnRefreshOnlyComplete: TcxButton;
     btnRefreshHaveRemains: TcxButton;
-    colRemainsUnitName: TcxGridDBColumn;
+    RemainsUnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public

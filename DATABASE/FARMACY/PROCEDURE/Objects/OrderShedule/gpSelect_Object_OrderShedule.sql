@@ -1,12 +1,13 @@
 -- Function: gpSelect_Object_OrderShedule()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_OrderShedule(Integer, Integer, Boolean, TVarChar);
-
+DROP FUNCTION IF EXISTS gpSelect_Object_OrderShedule(Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_OrderShedule(
     IN inUnitId      Integer,  -- Подразделение
     IN inJuridicalId Integer,  -- Юр. лицо
-    IN inisShowAll   Boolean,  -- показать удаленные да/нет
+    IN inShowErased  Boolean,  -- показать удаленные да/нет
+    IN inisShowAll   Boolean,  -- показать все связи
     IN inSession     TVarChar  -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer,
@@ -30,9 +31,11 @@ BEGIN
 
    RETURN QUERY 
    WITH 
-   tmpObject AS (SELECT Object_OrderShedule.Id           AS Id
-                      , Object_OrderShedule.ObjectCode   AS Code
-       
+   tmpObject AS (SELECT Object_OrderShedule.Id                           AS Id
+                      , Object_OrderShedule.ObjectCode                   AS Code
+                      , ObjectLink_OrderShedule_Unit.ChildObjectId       AS UnitId 
+                      , ObjectLink_OrderShedule_Contract.ChildObjectId   AS ContractId
+                      , ObjectLink_Contract_Juridical.ChildObjectId      AS JuridicalId
                       , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 1) ::TFloat AS Value1
                       , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 2) ::TFloat AS Value2
                       , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 3) ::TFloat AS Value3
@@ -43,9 +46,37 @@ BEGIN
         
                       , Object_OrderShedule.isErased     AS isErased
                  FROM Object AS Object_OrderShedule
+                      INNER JOIN ObjectLink AS ObjectLink_OrderShedule_Unit
+                                            ON ObjectLink_OrderShedule_Unit.ObjectId = Object_OrderShedule.Id
+                                           AND ObjectLink_OrderShedule_Unit.DescId = zc_ObjectLink_OrderShedule_Unit()
+                                           AND (ObjectLink_OrderShedule_Unit.ChildObjectId = inUnitId OR inUnitId = 0)
+                      LEFT JOIN ObjectLink AS ObjectLink_OrderShedule_Contract
+                                           ON ObjectLink_OrderShedule_Contract.ObjectId = Object_OrderShedule.Id
+                                          AND ObjectLink_OrderShedule_Contract.DescId = zc_ObjectLink_OrderShedule_Contract()
+                      INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                             ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_OrderShedule_Contract.ChildObjectId
+                                            AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                                            AND (ObjectLink_Contract_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
                  WHERE Object_OrderShedule.DescId = zc_Object_OrderShedule()
-                  AND (Object_OrderShedule.isErased = inisShowAll OR inisShowAll = True)
+                  AND (Object_OrderShedule.isErased = inShowErased OR inShowErased = True OR inisShowAll = True)
                  )
+   , tmpAll AS (SELECT Object_Unit.Id      AS UnitId
+                     , Object_Contract.Id  AS ContractId
+                     , ObjectLink_Contract_Juridical.ChildObjectId  AS JuridicalId
+                FROM Object AS Object_Unit
+                     LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
+                                          ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
+                                         AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
+                     LEFT JOIN Object AS Object_Contract ON Object_Contract.DescId = zc_Object_Contract()
+                     INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                            ON ObjectLink_Contract_Juridical.ObjectId = Object_Contract.Id
+                                           AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                                           AND (ObjectLink_Contract_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
+                WHERE Object_Unit.DescId = zc_Object_Unit()
+                  AND (Object_Unit.Id = inUnitId OR inUnitId = 0)
+                  AND ObjectLink_Unit_Parent.ChildObjectId is not  NULL
+                  AND inisShowAll = True
+                )
 
        SELECT 
              Object_OrderShedule.Id
@@ -98,28 +129,21 @@ BEGIN
            , COALESCE (ObjectString_OrderTime.ValueData,'') ::TVarChar AS OrderTime
 
        FROM tmpObject AS Object_OrderShedule
-           LEFT JOIN ObjectLink AS ObjectLink_OrderShedule_Contract
-                                ON ObjectLink_OrderShedule_Contract.ObjectId = Object_OrderShedule.Id
-                               AND ObjectLink_OrderShedule_Contract.DescId = zc_ObjectLink_OrderShedule_Contract()
-           LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = ObjectLink_OrderShedule_Contract.ChildObjectId
-           
-           INNER JOIN ObjectLink AS ObjectLink_OrderShedule_Unit
-                                 ON ObjectLink_OrderShedule_Unit.ObjectId = Object_OrderShedule.Id
-                                AND ObjectLink_OrderShedule_Unit.DescId = zc_ObjectLink_OrderShedule_Unit()
-                                AND (ObjectLink_OrderShedule_Unit.ChildObjectId = inUnitId OR inUnitId = 0)
-           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_OrderShedule_Unit.ChildObjectId    
+           FULL JOIN tmpAll ON tmpAll.UnitId = Object_OrderShedule.UnitId
+                           AND tmpAll.ContractId = Object_OrderShedule.ContractId  
 
+           LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = COALESCE (Object_OrderShedule.ContractId, tmpAll.ContractId)
+           
+           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE (Object_OrderShedule.UnitId, tmpAll.UnitId)
+
+           LEFT JOIN Object AS Object_Contract_Juridical ON Object_Contract_Juridical.Id = COALESCE (Object_OrderShedule.JuridicalId, tmpAll.JuridicalId) 
+          
            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                 ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
                                AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
            LEFT JOIN Object AS Object_Unit_Juridical ON Object_Unit_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId       
 
-           INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                 ON ObjectLink_Contract_Juridical.ObjectId = Object_Contract.Id
-                                AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-                                AND (ObjectLink_Contract_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
-           LEFT JOIN Object AS Object_Contract_Juridical ON Object_Contract_Juridical.Id = ObjectLink_Contract_Juridical.ChildObjectId  
-           --
+            --
            LEFT JOIN ObjectFloat AS ObjectFloat_OrderSumm
                                  ON ObjectFloat_OrderSumm.ObjectId = Object_Contract_Juridical.Id
                                 AND ObjectFloat_OrderSumm.DescId = zc_ObjectFloat_Juridical_OrderSumm()
@@ -140,6 +164,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.06.17         *
  14.01.17         *
  05.10.16         * parce
  20.09.14         *
@@ -147,4 +172,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
---select * from  gpSelect_Object_OrderShedule(inUnitId := 0 , inJuridicalId := 0 , inisShowAll := 'True'::Boolean ,  inSession := '3'::TVarChar);
+--select * from  gpSelect_Object_OrderShedule(inUnitId := 0 , inJuridicalId := 0 , inShowErased:= 'True'::Boolean, inisShowAll := 'True'::Boolean ,  inSession := '3'::TVarChar);

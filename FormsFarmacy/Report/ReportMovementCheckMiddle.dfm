@@ -3,8 +3,10 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
   ClientHeight = 569
   ClientWidth = 1251
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -583
+  ExplicitTop = -115
   ExplicitWidth = 1267
-  ExplicitHeight = 607
+  ExplicitHeight = 608
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -14,19 +16,17 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
     TabOrder = 3
     ExplicitTop = 91
     ExplicitWidth = 1251
-    ExplicitHeight = 648
+    ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1251
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1251
-      ExplicitHeight = 648
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1251
         Height = 294
-        ExplicitLeft = -3
-        ExplicitTop = 2
         ExplicitWidth = 1251
-        ExplicitHeight = 464
+        ExplicitHeight = 294
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -140,12 +140,12 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxColor_Amount
+              Column = Color_Amount
             end
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = cxColor_Summa
+              Column = Color_Summa
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -263,12 +263,12 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxColor_Amount
+              Column = Color_Amount
             end
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = cxColor_Summa
+              Column = Color_Summa
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -554,19 +554,19 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object cxColor_Amount: TcxGridDBColumn
+          object Color_Amount: TcxGridDBColumn
             DataBinding.FieldName = 'Color_Amount'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
           end
-          object cxColor_Summa: TcxGridDBColumn
+          object Color_Summa: TcxGridDBColumn
             DataBinding.FieldName = 'Color_Summa'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
           end
-          object cxColor_SummaSale: TcxGridDBColumn
+          object Color_SummaSale: TcxGridDBColumn
             DataBinding.FieldName = 'Color_SummaSale'
             Visible = False
             Options.Editing = False
@@ -581,7 +581,6 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
         Height = 176
         Align = alBottom
         TabOrder = 1
-        ExplicitTop = 472
         object grChartDBChartView1: TcxGridDBChartView
           DataController.DataSource = MasterDS
           DiagramColumn.Active = True
@@ -717,7 +716,6 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
         AlignSplitter = salBottom
         AutoSnap = True
         Control = grChart
-        ExplicitTop = 464
       end
     end
   end
@@ -1209,72 +1207,72 @@ inherited ReportMovementCheckMiddleForm: TReportMovementCheckMiddleForm
     ColorRuleList = <
       item
         ColorColumn = Amount1
-        BackGroundValueColumn = cxColor_Amount
+        BackGroundValueColumn = Color_Amount
         ColorValueList = <>
       end
       item
         ColorColumn = Amount2
-        BackGroundValueColumn = cxColor_Amount
+        BackGroundValueColumn = Color_Amount
         ColorValueList = <>
       end
       item
         ColorColumn = Amount3
-        BackGroundValueColumn = cxColor_Amount
+        BackGroundValueColumn = Color_Amount
         ColorValueList = <>
       end
       item
         ColorColumn = Amount4
-        BackGroundValueColumn = cxColor_Amount
+        BackGroundValueColumn = Color_Amount
         ColorValueList = <>
       end
       item
         ColorColumn = Amount5
-        BackGroundValueColumn = cxColor_Amount
+        BackGroundValueColumn = Color_Amount
         ColorValueList = <>
       end
       item
         ColorColumn = Amount6
-        BackGroundValueColumn = cxColor_Amount
+        BackGroundValueColumn = Color_Amount
         ColorValueList = <>
       end
       item
         ColorColumn = Amount7
-        BackGroundValueColumn = cxColor_Amount
+        BackGroundValueColumn = Color_Amount
         ColorValueList = <>
       end
       item
         ColorColumn = SummaSale1
-        BackGroundValueColumn = cxColor_SummaSale
+        BackGroundValueColumn = Color_SummaSale
         ColorValueList = <>
       end
       item
         ColorColumn = SummaSale2
-        BackGroundValueColumn = cxColor_SummaSale
+        BackGroundValueColumn = Color_SummaSale
         ColorValueList = <>
       end
       item
         ColorColumn = SummaSale3
-        BackGroundValueColumn = cxColor_SummaSale
+        BackGroundValueColumn = Color_SummaSale
         ColorValueList = <>
       end
       item
         ColorColumn = SummaSale4
-        BackGroundValueColumn = cxColor_SummaSale
+        BackGroundValueColumn = Color_SummaSale
         ColorValueList = <>
       end
       item
         ColorColumn = SummaSale5
-        BackGroundValueColumn = cxColor_SummaSale
+        BackGroundValueColumn = Color_SummaSale
         ColorValueList = <>
       end
       item
         ColorColumn = SummaSale6
-        BackGroundValueColumn = cxColor_SummaSale
+        BackGroundValueColumn = Color_SummaSale
         ColorValueList = <>
       end
       item
         ColorColumn = SummaSale7
-        BackGroundValueColumn = cxColor_SummaSale
+        BackGroundValueColumn = Color_SummaSale
         ColorValueList = <>
       end>
   end

@@ -4,7 +4,7 @@ inherited ChangeIncomePaymentJournalForm: TChangeIncomePaymentJournalForm
   ClientWidth = 740
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 756
-  ExplicitHeight = 483
+  ExplicitHeight = 484
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -146,12 +146,14 @@ inherited ChangeIncomePaymentJournalForm: TChangeIncomePaymentJournalForm
           Name = 'Id'
           Value = '0'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = True
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
@@ -159,6 +161,7 @@ inherited ChangeIncomePaymentJournalForm: TChangeIncomePaymentJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
@@ -174,6 +177,7 @@ inherited ChangeIncomePaymentJournalForm: TChangeIncomePaymentJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -181,6 +185,7 @@ inherited ChangeIncomePaymentJournalForm: TChangeIncomePaymentJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -188,6 +193,7 @@ inherited ChangeIncomePaymentJournalForm: TChangeIncomePaymentJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher

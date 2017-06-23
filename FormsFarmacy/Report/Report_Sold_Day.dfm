@@ -4,7 +4,7 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
   ClientWidth = 797
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 813
-  ExplicitHeight = 613
+  ExplicitHeight = 614
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -35,7 +35,7 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
               Format = ',0.00;-,0.00'
               Kind = skSum
               Position = spFooter
-              Column = colPlanAmount
+              Column = PlanAmount
             end
             item
               Format = ',0.00;-,0.00'
@@ -47,13 +47,13 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
               Format = ',0.00;-,0.00'
               Kind = skSum
               Position = spFooter
-              Column = colDiffAmount
+              Column = DiffAmount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00;-,0.00'
               Kind = skSum
-              Column = colPlanAmount
+              Column = PlanAmount
             end
             item
               Format = ',0.00;-,0.00'
@@ -63,7 +63,7 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
             item
               Format = '+,0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = colDiffAmount
+              Column = DiffAmount
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -74,25 +74,25 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colPlanDate: TcxGridDBColumn
+          object PlanDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'PlanDate'
             PropertiesClassName = 'TcxDateEditProperties'
             Properties.DisplayFormat = 'DD.MM.YYYY (DDD)'
             Width = 61
           end
-          object colUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             Width = 154
           end
-          object colPlanAmount: TcxGridDBColumn
+          object PlanAmount: TcxGridDBColumn
             Caption = #1055#1083#1072#1085
             DataBinding.FieldName = 'PlanAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
           end
-          object colPlanAmountAccum: TcxGridDBColumn
+          object PlanAmountAccum: TcxGridDBColumn
             Caption = #1055#1083#1072#1085' '#1089' '#1085#1072#1082#1086#1087#1083'.'
             DataBinding.FieldName = 'PlanAmountAccum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -104,25 +104,25 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
           end
-          object colFactAmountAccum: TcxGridDBColumn
+          object FactAmountAccum: TcxGridDBColumn
             Caption = #1060#1072#1082#1090' '#1089' '#1085#1072#1082#1086#1087#1083'.'
             DataBinding.FieldName = 'FactAmountAccum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
           end
-          object colDiffAmount: TcxGridDBColumn
+          object DiffAmount: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072
             DataBinding.FieldName = 'DiffAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '+,0.00;-,0.00;0.00;'
           end
-          object colDiffAmountAccum: TcxGridDBColumn
+          object DiffAmountAccum: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072' '#1089' '#1085#1072#1082#1086#1087#1083'.'
             DataBinding.FieldName = 'DiffAmountAccum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '+,0.00;-,0.00;0.00;'
           end
-          object colPercentMake: TcxGridDBColumn
+          object PercentMake: TcxGridDBColumn
             AlternateCaption = '% '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
             Caption = '% '#1074#1099#1087'.'
             DataBinding.FieldName = 'PercentMake'
@@ -130,7 +130,7 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
             Properties.DisplayFormat = ',0.00%'
             HeaderHint = '% '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
           end
-          object colPercentMakeAccum: TcxGridDBColumn
+          object PercentMakeAccum: TcxGridDBColumn
             AlternateCaption = '% '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1089' '#1085#1072#1082#1086#1087#1083#1077#1085#1080#1077#1084
             Caption = '% '#1074#1099#1087'. '#1089' '#1085#1072#1082#1086#1087#1083'.'
             DataBinding.FieldName = 'PercentMakeAccum'

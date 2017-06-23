@@ -56,10 +56,10 @@ type
     HeaderCDS: TClientDataSet;
     RefreshDispatcher: TRefreshDispatcher;
     cxGridDBBandedTableView: TcxGridDBBandedTableView;
-    BandcolCommonCode: TcxGridDBBandedColumn;
-    BandcolGoodsName: TcxGridDBBandedColumn;
-    TemplateColumn: TcxGridDBBandedColumn;
-    TemplateColumn1: TcxGridDBBandedColumn;
+    CommonCode: TcxGridDBBandedColumn;
+    GoodsName: TcxGridDBBandedColumn;
+    Value: TcxGridDBBandedColumn;
+    Value1: TcxGridDBBandedColumn;
     isErased: TcxGridDBBandedColumn;
     actShowErased: TBooleanStoredProcAction;
     ExecuteDialog: TExecuteDialog;

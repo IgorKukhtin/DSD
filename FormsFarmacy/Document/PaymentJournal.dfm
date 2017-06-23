@@ -9,7 +9,7 @@ inherited PaymentJournalForm: TPaymentJournalForm
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
   AddOnFormData.AddOnFormRefresh.GetStoredProc = spGet_Movement_Payment
   ExplicitWidth = 679
-  ExplicitHeight = 412
+  ExplicitHeight = 413
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -33,7 +33,7 @@ inherited PaymentJournalForm: TPaymentJournalForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colTotalSumm
+              Column = TotalSumm
             end
             item
               Format = ',0.00'
@@ -47,7 +47,7 @@ inherited PaymentJournalForm: TPaymentJournalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colId: TcxGridDBColumn [0]
+          object Id: TcxGridDBColumn [0]
             Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088
             DataBinding.FieldName = 'Id'
             Visible = False
@@ -64,14 +64,14 @@ inherited PaymentJournalForm: TPaymentJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 62
           end
-          object colJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086' '#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 278
           end
-          object colTotalCount: TcxGridDBColumn
+          object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCalcEditProperties'
@@ -80,7 +80,7 @@ inherited PaymentJournalForm: TPaymentJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 85
           end
-          object colTotalSumm: TcxGridDBColumn
+          object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -107,14 +107,17 @@ inherited PaymentJournalForm: TPaymentJournalForm
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = True
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Value = Null
+          MultiSelectSeparator = ','
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
@@ -130,6 +133,7 @@ inherited PaymentJournalForm: TPaymentJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -137,6 +141,7 @@ inherited PaymentJournalForm: TPaymentJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -144,6 +149,7 @@ inherited PaymentJournalForm: TPaymentJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -207,70 +213,84 @@ inherited PaymentJournalForm: TPaymentJournalForm
         Name = 'inMovementId'
         Value = 41640d
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDateStart'
         Value = 42005d
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDateEnd'
         Value = 42005d
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Id'
         Value = False
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 'NULL'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalCount'
         Value = Null
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSumm'
         Value = Null
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'DateStart'
         Value = 'NULL'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'DateEnd'
         Value = 'NULL'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 168

@@ -3,25 +3,26 @@ inherited PriceListJournalForm: TPriceListJournalForm
   ClientHeight = 535
   ClientWidth = 615
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitTop = -64
   ExplicitWidth = 631
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 615
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 593
+    ExplicitWidth = 615
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 615
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 593
+      ExplicitWidth = 615
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 615
         Height = 478
-        ExplicitWidth = 593
+        ExplicitWidth = 615
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -133,7 +134,7 @@ inherited PriceListJournalForm: TPriceListJournalForm
             Options.Editing = False
             Width = 109
           end
-          object colJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
@@ -141,14 +142,14 @@ inherited PriceListJournalForm: TPriceListJournalForm
             Options.Editing = False
             Width = 316
           end
-          object colContractName: TcxGridDBColumn
+          object ContractName: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 178
           end
-          object clInsertName: TcxGridDBColumn
+          object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
@@ -156,7 +157,7 @@ inherited PriceListJournalForm: TPriceListJournalForm
             Options.Editing = False
             Width = 101
           end
-          object clInsertDate: TcxGridDBColumn
+          object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
@@ -170,7 +171,7 @@ inherited PriceListJournalForm: TPriceListJournalForm
   end
   inherited Panel: TPanel
     Width = 615
-    ExplicitWidth = 593
+    ExplicitWidth = 615
     inherited deStart: TcxDateEdit
       EditValue = 42370d
     end

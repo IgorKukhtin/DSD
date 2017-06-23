@@ -4,85 +4,89 @@ inherited Income_AmountTroubleForm: TIncome_AmountTroubleForm
   ClientWidth = 796
   AddOnFormData.Params = FormParams
   ExplicitWidth = 812
-  ExplicitHeight = 445
+  ExplicitHeight = 446
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 796
     Height = 381
+    ExplicitWidth = 796
+    ExplicitHeight = 381
     ClientRectBottom = 381
     ClientRectRight = 796
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 575
-      ExplicitHeight = 282
+      ExplicitWidth = 796
+      ExplicitHeight = 381
       inherited cxGrid: TcxGrid
         Width = 796
         Height = 381
+        ExplicitWidth = 796
+        ExplicitHeight = 381
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.###'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.###'
               Kind = skSum
-              Column = colAmountManual
+              Column = AmountManual
             end
             item
               Format = '+,0.###;-,0.###; ;'
               Kind = skSum
-              Column = colAmountDiff
+              Column = AmountDiff
             end>
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             Options.Editing = False
             Width = 52
           end
-          object colGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
             Options.Editing = False
             Width = 139
           end
-          object colPartnerGoodsCode: TcxGridDBColumn
+          object PartnerGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'PartnerGoodsCode'
             Options.Editing = False
             Width = 78
           end
-          object colPartnerGoodsName: TcxGridDBColumn
+          object PartnerGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'PartnerGoodsName'
             Options.Editing = False
             Width = 158
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
             DataBinding.FieldName = 'Amount'
             Options.Editing = False
             Width = 78
           end
-          object colAmountManual: TcxGridDBColumn
+          object AmountManual: TcxGridDBColumn
             Caption = #1060#1072#1082#1090'. '#1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'AmountManual'
             Width = 69
           end
-          object colAmountDiff: TcxGridDBColumn
+          object AmountDiff: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072
             DataBinding.FieldName = 'AmountDiff'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = '+,0.###;-,0.###; ;'
             Options.Editing = False
           end
-          object colReasonDifferencesName: TcxGridDBColumn
+          object ReasonDifferencesName: TcxGridDBColumn
             Caption = #1055#1088#1080#1095#1080#1085#1072' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1103
             DataBinding.FieldName = 'ReasonDifferencesName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -107,6 +111,7 @@ inherited Income_AmountTroubleForm: TIncome_AmountTroubleForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -114,6 +119,7 @@ inherited Income_AmountTroubleForm: TIncome_AmountTroubleForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Id'
@@ -121,6 +127,7 @@ inherited Income_AmountTroubleForm: TIncome_AmountTroubleForm
           Component = FormParams
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
     end
     object actReasonDifferences: TOpenChoiceForm
@@ -131,6 +138,7 @@ inherited Income_AmountTroubleForm: TIncome_AmountTroubleForm
       FormName = 'TReasonDifferencesForm'
       FormNameParam.Value = 'TReasonDifferencesForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
@@ -138,6 +146,7 @@ inherited Income_AmountTroubleForm: TIncome_AmountTroubleForm
           Component = MasterCDS
           ComponentItem = 'ReasonDifferencesId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -146,6 +155,7 @@ inherited Income_AmountTroubleForm: TIncome_AmountTroubleForm
           ComponentItem = 'ReasonDifferencesName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -157,24 +167,30 @@ inherited Income_AmountTroubleForm: TIncome_AmountTroubleForm
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'Amount'
           FromParam.DataType = ftFloat
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = MasterCDS
           ToParam.ComponentItem = 'AmountManual'
           ToParam.DataType = ftFloat
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = 0
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = MasterCDS
           ToParam.ComponentItem = 'ReasonDifferencesId'
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = ' '
           FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = MasterCDS
           ToParam.ComponentItem = 'ReasonDifferencesName'
           ToParam.DataType = ftString
+          ToParam.MultiSelectSeparator = ','
         end>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
@@ -215,6 +231,7 @@ inherited Income_AmountTroubleForm: TIncome_AmountTroubleForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 96
     Top = 104
@@ -233,6 +250,7 @@ inherited Income_AmountTroubleForm: TIncome_AmountTroubleForm
       item
         Name = 'Id'
         Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 176
@@ -248,6 +266,7 @@ inherited Income_AmountTroubleForm: TIncome_AmountTroubleForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementItemId'
@@ -255,6 +274,7 @@ inherited Income_AmountTroubleForm: TIncome_AmountTroubleForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountManual'
@@ -263,6 +283,7 @@ inherited Income_AmountTroubleForm: TIncome_AmountTroubleForm
         ComponentItem = 'AmountManual'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inReasonDifferences'
@@ -270,6 +291,7 @@ inherited Income_AmountTroubleForm: TIncome_AmountTroubleForm
         Component = MasterCDS
         ComponentItem = 'ReasonDifferencesId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outAmountDiff'
@@ -277,42 +299,52 @@ inherited Income_AmountTroubleForm: TIncome_AmountTroubleForm
         Component = MasterCDS
         ComponentItem = 'AmountDiff'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 224

@@ -4,8 +4,9 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
   ClientWidth = 1212
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -527
   ExplicitWidth = 1228
-  ExplicitHeight = 466
+  ExplicitHeight = 470
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -48,483 +49,483 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaSale
+              Column = SummaSale
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSumma
+              Column = Summa
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxAmount1
+              Column = Amount1
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaSale1
+              Column = SummaSale1
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSumma1
+              Column = Summa1
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxAmount2
+              Column = Amount2
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaSale2
+              Column = SummaSale2
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSumma2
+              Column = Summa2
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxAmount3
+              Column = Amount3
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaSale3
+              Column = SummaSale3
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSumma3
+              Column = Summa3
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxAmount4
+              Column = Amount4
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaSale4
+              Column = SummaSale4
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSumma4
+              Column = Summa4
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxAmount5
+              Column = Amount5
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaSale5
+              Column = SummaSale5
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSumma5
+              Column = Summa5
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxAmount6
+              Column = Amount6
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaSale6
+              Column = SummaSale6
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSumma6
+              Column = Summa6
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxAmount7
+              Column = Amount7
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaSale7
+              Column = SummaSale7
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSumma7
+              Column = Summa7
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtSummaSale1
+              Column = VirtSummaSale1
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtProfit1
+              Column = VirtProfit1
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtSummaSale2
+              Column = VirtSummaSale2
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtProfit2
+              Column = VirtProfit2
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtSummaSale3
+              Column = VirtSummaSale3
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtProfit3
+              Column = VirtProfit3
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtSummaSale4
+              Column = VirtSummaSale4
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtProfit4
+              Column = VirtProfit4
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtSummaSale5
+              Column = VirtSummaSale5
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtProfit5
+              Column = VirtProfit5
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtSummaSale6
+              Column = VirtSummaSale6
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtProfit6
+              Column = VirtProfit6
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtSummaSale7
+              Column = VirtSummaSale7
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtProfit7
+              Column = VirtProfit7
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaProfit
+              Column = SummaProfit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaProfit1
+              Column = SummaProfit1
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaProfit2
+              Column = SummaProfit2
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaProfit3
+              Column = SummaProfit3
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaProfit4
+              Column = SummaProfit4
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaProfit5
+              Column = SummaProfit5
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaProfit6
+              Column = SummaProfit6
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaProfit7
+              Column = SummaProfit7
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtProfit
+              Column = VirtProfit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtSummaSale
+              Column = VirtSummaSale
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = '0.####'
               Kind = skSum
-              Column = cxAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaSale
+              Column = SummaSale
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSumma
+              Column = Summa
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxAmount1
+              Column = Amount1
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaSale1
+              Column = SummaSale1
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSumma1
+              Column = Summa1
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxAmount2
+              Column = Amount2
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaSale2
+              Column = SummaSale2
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSumma2
+              Column = Summa2
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxAmount3
+              Column = Amount3
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaSale3
+              Column = SummaSale3
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSumma3
+              Column = Summa3
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxAmount4
+              Column = Amount4
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaSale4
+              Column = SummaSale4
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSumma4
+              Column = Summa4
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxAmount5
+              Column = Amount5
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaSale5
+              Column = SummaSale5
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSumma5
+              Column = Summa5
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxAmount6
+              Column = Amount6
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaSale6
+              Column = SummaSale6
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSumma6
+              Column = Summa6
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxAmount7
+              Column = Amount7
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaSale7
+              Column = SummaSale7
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSumma7
+              Column = Summa7
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtSummaSale1
+              Column = VirtSummaSale1
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtProfit1
+              Column = VirtProfit1
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtSummaSale2
+              Column = VirtSummaSale2
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtProfit2
+              Column = VirtProfit2
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtSummaSale3
+              Column = VirtSummaSale3
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtProfit3
+              Column = VirtProfit3
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtSummaSale4
+              Column = VirtSummaSale4
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtProfit4
+              Column = VirtProfit4
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtSummaSale5
+              Column = VirtSummaSale5
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtProfit5
+              Column = VirtProfit5
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtSummaSale6
+              Column = VirtSummaSale6
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtProfit6
+              Column = VirtProfit6
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtSummaSale7
+              Column = VirtSummaSale7
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtProfit7
+              Column = VirtProfit7
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaProfit
+              Column = SummaProfit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaProfit1
+              Column = SummaProfit1
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaProfit2
+              Column = SummaProfit2
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaProfit3
+              Column = SummaProfit3
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaProfit4
+              Column = SummaProfit4
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaProfit5
+              Column = SummaProfit5
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaProfit6
+              Column = SummaProfit6
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxSummaProfit7
+              Column = SummaProfit7
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtProfit
+              Column = VirtProfit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxVirtSummaSale
+              Column = VirtSummaSale
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -584,7 +585,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
               Caption = #1055#1088#1077#1076#1077#1083' 7'
               Options.HoldOwnColumnsOnly = True
             end>
-          object cxJuridicalMainName: TcxGridDBBandedColumn
+          object JuridicalMainName: TcxGridDBBandedColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalMainName'
             HeaderAlignmentHorz = taCenter
@@ -597,7 +598,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxUnitName: TcxGridDBBandedColumn
+          object UnitName: TcxGridDBBandedColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
@@ -610,7 +611,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxMarginCategoryName: TcxGridDBBandedColumn
+          object MarginCategoryName: TcxGridDBBandedColumn
             Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1085#1072#1094#1077#1085#1082#1080' ('#1080#1085#1092'.)'
             DataBinding.FieldName = 'MarginCategoryName'
             Visible = False
@@ -623,7 +624,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxAmount: TcxGridDBBandedColumn
+          object Amount: TcxGridDBBandedColumn
             AlternateCaption = #1048#1090#1086#1075#1086': '#1050#1086#1083'-'#1074#1086', '#1096#1090
             Caption = #1050#1086#1083'-'#1074#1086', '#1096#1090
             DataBinding.FieldName = 'Amount'
@@ -639,7 +640,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSummaSale: TcxGridDBBandedColumn
+          object SummaSale: TcxGridDBBandedColumn
             AlternateCaption = #1048#1090#1086#1075#1086': '#1042' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1042' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'SummaSale'
@@ -655,7 +656,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSumma: TcxGridDBBandedColumn
+          object Summa: TcxGridDBBandedColumn
             AlternateCaption = #1048#1090#1086#1075#1086': '#1042' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             Caption = #1042' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa'
@@ -671,7 +672,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentProfit: TcxGridDBBandedColumn
+          object PercentProfit: TcxGridDBBandedColumn
             AlternateCaption = #1048#1090#1086#1075#1086': % '#1076#1086#1093#1086#1076#1072
             Caption = '% '#1076#1086#1093#1086#1076#1072
             DataBinding.FieldName = 'PercentProfit'
@@ -686,7 +687,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSummaProfit: TcxGridDBBandedColumn
+          object SummaProfit: TcxGridDBBandedColumn
             AlternateCaption = #1048#1090#1086#1075#1086': '#1076#1086#1093#1086#1076
             Caption = #1076#1086#1093#1086#1076
             DataBinding.FieldName = 'SummaProfit'
@@ -701,7 +702,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVitrPercent: TcxGridDBBandedColumn
+          object VirtPercent: TcxGridDBBandedColumn
             AlternateCaption = #1048#1090#1086#1075#1086': '#1074#1080#1088#1090'. %'
             Caption = #1074#1080#1088#1090'. %'
             DataBinding.FieldName = 'VirtPercent'
@@ -716,7 +717,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVirtSummaSale: TcxGridDBBandedColumn
+          object VirtSummaSale: TcxGridDBBandedColumn
             AlternateCaption = #1048#1090#1086#1075#1086': '#1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'VirtSummaSale'
@@ -732,7 +733,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVirtProfit: TcxGridDBBandedColumn
+          object VirtProfit: TcxGridDBBandedColumn
             AlternateCaption = #1048#1090#1086#1075#1086': '#1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             Caption = #1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             DataBinding.FieldName = 'VirtProfit'
@@ -748,7 +749,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxAmount1: TcxGridDBBandedColumn
+          object Amount1: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 1: '#1082#1086#1083'-'#1074#1086', '#1096#1090
             Caption = #1082#1086#1083'-'#1074#1086', '#1096#1090
             DataBinding.FieldName = 'Amount1'
@@ -764,7 +765,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSummaSale1: TcxGridDBBandedColumn
+          object SummaSale1: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 1: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'SummaSale1'
@@ -780,7 +781,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSumma1: TcxGridDBBandedColumn
+          object Summa1: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 1: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa1'
@@ -796,7 +797,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentAmount1: TcxGridDBBandedColumn
+          object PercentAmount1: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 1: % '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
             Caption = '% '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
             DataBinding.FieldName = 'PercentAmount1'
@@ -812,7 +813,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentSummaSale1: TcxGridDBBandedColumn
+          object PercentSummaSale1: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 1: % '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
             DataBinding.FieldName = 'PercentSummaSale1'
@@ -828,7 +829,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentSumma1: TcxGridDBBandedColumn
+          object PercentSumma1: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 1: % '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
             DataBinding.FieldName = 'PercentSumma1'
@@ -844,7 +845,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentProfit1: TcxGridDBBandedColumn
+          object PercentProfit1: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 1: % '#1076#1086#1093#1086#1076#1072
             Caption = '% '#1076#1086#1093#1086#1076#1072
             DataBinding.FieldName = 'PercentProfit1'
@@ -859,7 +860,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSummaProfit1: TcxGridDBBandedColumn
+          object SummaProfit1: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 1: '#1076#1086#1093#1086#1076
             Caption = #1076#1086#1093#1086#1076
             DataBinding.FieldName = 'SummaProfit1'
@@ -874,7 +875,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVitrPercent1: TcxGridDBBandedColumn
+          object VitrPercent1: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 1: '#1074#1080#1088#1090'. %'
             Caption = #1074#1080#1088#1090'. %'
             DataBinding.FieldName = 'VirtPercent1'
@@ -888,7 +889,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVirtSummaSale1: TcxGridDBBandedColumn
+          object VirtSummaSale1: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 1: '#1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'VirtSummaSale1'
@@ -904,7 +905,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVirtProfit1: TcxGridDBBandedColumn
+          object VirtProfit1: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 1: '#1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             Caption = #1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             DataBinding.FieldName = 'VirtProfit1'
@@ -920,7 +921,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxMarginPercent1: TcxGridDBBandedColumn
+          object MarginPercent1: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 1: % '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1087#1088#1077#1076#1077#1083#1091
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1087#1088#1077#1076#1077#1083#1091
             DataBinding.FieldName = 'MarginPercent1'
@@ -935,7 +936,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxAmount2: TcxGridDBBandedColumn
+          object Amount2: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 2:  '#1082#1086#1083'-'#1074#1086', '#1096#1090
             Caption = #1082#1086#1083'-'#1074#1086', '#1096#1090
             DataBinding.FieldName = 'Amount2'
@@ -950,7 +951,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSummaSale2: TcxGridDBBandedColumn
+          object SummaSale2: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 2: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'SummaSale2'
@@ -965,7 +966,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSumma2: TcxGridDBBandedColumn
+          object Summa2: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 2: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa2'
@@ -980,7 +981,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentAmount2: TcxGridDBBandedColumn
+          object PercentAmount2: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 2: % '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
             Caption = '% '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
             DataBinding.FieldName = 'PercentAmount2'
@@ -995,7 +996,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentSummaSale2: TcxGridDBBandedColumn
+          object PercentSummaSale2: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 2: % '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
             DataBinding.FieldName = 'PercentSummaSale2'
@@ -1010,7 +1011,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentSumma2: TcxGridDBBandedColumn
+          object PercentSumma2: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 2: % '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
             DataBinding.FieldName = 'PercentSumma2'
@@ -1025,7 +1026,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentProfit2: TcxGridDBBandedColumn
+          object PercentProfit2: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 2: % '#1076#1086#1093#1086#1076#1072
             Caption = '% '#1076#1086#1093#1086#1076#1072
             DataBinding.FieldName = 'PercentProfit2'
@@ -1040,7 +1041,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSummaProfit2: TcxGridDBBandedColumn
+          object SummaProfit2: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 2: '#1076#1086#1093#1086#1076
             Caption = #1076#1086#1093#1086#1076
             DataBinding.FieldName = 'SummaProfit2'
@@ -1055,7 +1056,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVitrPercent2: TcxGridDBBandedColumn
+          object VitrPercent2: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 2: '#1074#1080#1088#1090'. %'
             Caption = #1074#1080#1088#1090'. %'
             DataBinding.FieldName = 'VirtPercent2'
@@ -1069,7 +1070,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVirtSummaSale2: TcxGridDBBandedColumn
+          object VirtSummaSale2: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 2: '#1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'VirtSummaSale2'
@@ -1085,7 +1086,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVirtProfit2: TcxGridDBBandedColumn
+          object VirtProfit2: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 2: '#1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             Caption = #1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             DataBinding.FieldName = 'VirtProfit2'
@@ -1101,7 +1102,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxMarginPercent2: TcxGridDBBandedColumn
+          object MarginPercent2: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 2: % '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1087#1088#1077#1076#1077#1083#1091
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1087#1088#1077#1076#1077#1083#1091
             DataBinding.FieldName = 'MarginPercent2'
@@ -1116,7 +1117,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxAmount3: TcxGridDBBandedColumn
+          object Amount3: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 3:  '#1082#1086#1083'-'#1074#1086', '#1096#1090
             Caption = #1082#1086#1083'-'#1074#1086', '#1096#1090
             DataBinding.FieldName = 'Amount3'
@@ -1131,7 +1132,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSummaSale3: TcxGridDBBandedColumn
+          object SummaSale3: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 3: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'SummaSale3'
@@ -1146,7 +1147,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSumma3: TcxGridDBBandedColumn
+          object Summa3: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 3: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa3'
@@ -1161,7 +1162,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentAmount3: TcxGridDBBandedColumn
+          object PercentAmount3: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 3: % '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
             Caption = '% '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
             DataBinding.FieldName = 'PercentAmount3'
@@ -1176,7 +1177,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentSummaSale3: TcxGridDBBandedColumn
+          object PercentSummaSale3: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 3: % '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
             DataBinding.FieldName = 'PercentSummaSale3'
@@ -1191,7 +1192,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentSumma3: TcxGridDBBandedColumn
+          object PercentSumma3: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 3: % '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
             DataBinding.FieldName = 'PercentSumma3'
@@ -1206,7 +1207,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentProfit3: TcxGridDBBandedColumn
+          object PercentProfit3: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 3: % '#1076#1086#1093#1086#1076#1072
             Caption = '% '#1076#1086#1093#1086#1076#1072
             DataBinding.FieldName = 'PercentProfit3'
@@ -1221,7 +1222,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSummaProfit3: TcxGridDBBandedColumn
+          object SummaProfit3: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 3: '#1076#1086#1093#1086#1076
             Caption = #1076#1086#1093#1086#1076
             DataBinding.FieldName = 'SummaProfit3'
@@ -1236,7 +1237,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVitrPercent3: TcxGridDBBandedColumn
+          object VitrPercent3: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 3: '#1074#1080#1088#1090'. %'
             Caption = #1074#1080#1088#1090'. %'
             DataBinding.FieldName = 'VirtPercent3'
@@ -1250,7 +1251,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVirtSummaSale3: TcxGridDBBandedColumn
+          object VirtSummaSale3: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 3:'#1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'VirtSummaSale3'
@@ -1266,7 +1267,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVirtProfit3: TcxGridDBBandedColumn
+          object VirtProfit3: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 3: '#1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             Caption = #1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             DataBinding.FieldName = 'VirtProfit3'
@@ -1282,7 +1283,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxMarginPercent3: TcxGridDBBandedColumn
+          object MarginPercent3: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 3: % '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1087#1088#1077#1076#1077#1083#1091
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1087#1088#1077#1076#1077#1083#1091
             DataBinding.FieldName = 'MarginPercent3'
@@ -1297,7 +1298,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxAmount4: TcxGridDBBandedColumn
+          object Amount4: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 4:  '#1082#1086#1083'-'#1074#1086', '#1096#1090
             Caption = #1082#1086#1083'-'#1074#1086', '#1096#1090
             DataBinding.FieldName = 'Amount4'
@@ -1312,7 +1313,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSummaSale4: TcxGridDBBandedColumn
+          object SummaSale4: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 4: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'SummaSale4'
@@ -1327,7 +1328,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSumma4: TcxGridDBBandedColumn
+          object Summa4: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 4: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa4'
@@ -1342,7 +1343,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentAmount4: TcxGridDBBandedColumn
+          object PercentAmount4: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 4: % '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
             Caption = '% '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
             DataBinding.FieldName = 'PercentAmount4'
@@ -1357,7 +1358,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentSummaSale4: TcxGridDBBandedColumn
+          object PercentSummaSale4: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 4: % '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
             DataBinding.FieldName = 'PercentSummaSale4'
@@ -1372,7 +1373,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentSumma4: TcxGridDBBandedColumn
+          object PercentSumma4: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 4: % '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
             DataBinding.FieldName = 'PercentSumma4'
@@ -1387,7 +1388,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentProfit4: TcxGridDBBandedColumn
+          object PercentProfit4: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 4: % '#1076#1086#1093#1086#1076#1072
             Caption = '% '#1076#1086#1093#1086#1076#1072
             DataBinding.FieldName = 'PercentProfit4'
@@ -1402,7 +1403,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSummaProfit4: TcxGridDBBandedColumn
+          object SummaProfit4: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 4: '#1076#1086#1093#1086#1076
             Caption = #1076#1086#1093#1086#1076
             DataBinding.FieldName = 'SummaProfit4'
@@ -1417,7 +1418,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVitrPercent4: TcxGridDBBandedColumn
+          object VirtPercent4: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 4: '#1074#1080#1088#1090'. %'
             Caption = #1074#1080#1088#1090'. %'
             DataBinding.FieldName = 'VirtPercent4'
@@ -1431,7 +1432,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVirtSummaSale4: TcxGridDBBandedColumn
+          object VirtSummaSale4: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 4: '#1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'VirtSummaSale4'
@@ -1447,7 +1448,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxMarginPercent4: TcxGridDBBandedColumn
+          object MarginPercent4: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 4: % '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1087#1088#1077#1076#1077#1083#1091
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1087#1088#1077#1076#1077#1083#1091
             DataBinding.FieldName = 'MarginPercent4'
@@ -1462,7 +1463,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVirtProfit4: TcxGridDBBandedColumn
+          object VirtProfit4: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 4: '#1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             Caption = #1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             DataBinding.FieldName = 'VirtProfit4'
@@ -1478,7 +1479,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxAmount5: TcxGridDBBandedColumn
+          object Amount5: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 5:  '#1082#1086#1083'-'#1074#1086', '#1096#1090
             Caption = #1082#1086#1083'-'#1074#1086', '#1096#1090
             DataBinding.FieldName = 'Amount5'
@@ -1493,7 +1494,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSummaSale5: TcxGridDBBandedColumn
+          object SummaSale5: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 5: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'SummaSale5'
@@ -1508,7 +1509,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSumma5: TcxGridDBBandedColumn
+          object Summa5: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 5: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa5'
@@ -1523,7 +1524,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentAmount5: TcxGridDBBandedColumn
+          object PercentAmount5: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 5: % '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
             Caption = '% '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
             DataBinding.FieldName = 'PercentAmount5'
@@ -1538,7 +1539,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentSummaSale5: TcxGridDBBandedColumn
+          object PercentSummaSale5: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 5: % '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
             DataBinding.FieldName = 'PercentSummaSale5'
@@ -1553,7 +1554,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentSumma5: TcxGridDBBandedColumn
+          object PercentSumma5: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 5: % '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
             DataBinding.FieldName = 'PercentSumma5'
@@ -1568,7 +1569,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentProfit5: TcxGridDBBandedColumn
+          object PercentProfit5: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 5: % '#1076#1086#1093#1086#1076#1072
             Caption = '% '#1076#1086#1093#1086#1076#1072
             DataBinding.FieldName = 'PercentProfit5'
@@ -1583,7 +1584,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSummaProfit5: TcxGridDBBandedColumn
+          object SummaProfit5: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 5: '#1076#1086#1093#1086#1076
             Caption = #1076#1086#1093#1086#1076
             DataBinding.FieldName = 'SummaProfit5'
@@ -1598,7 +1599,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVitrPercent5: TcxGridDBBandedColumn
+          object VitrPercent5: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 5: '#1074#1080#1088#1090'. %'
             Caption = #1074#1080#1088#1090'. %'
             DataBinding.FieldName = 'VirtPercent5'
@@ -1612,7 +1613,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVirtSummaSale5: TcxGridDBBandedColumn
+          object VirtSummaSale5: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 5: '#1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'VirtSummaSale5'
@@ -1628,7 +1629,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVirtProfit5: TcxGridDBBandedColumn
+          object VirtProfit5: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 5: '#1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             Caption = #1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             DataBinding.FieldName = 'VirtProfit5'
@@ -1644,7 +1645,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxMarginPercent5: TcxGridDBBandedColumn
+          object MarginPercent5: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 5: % '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1087#1088#1077#1076#1077#1083#1091
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1087#1088#1077#1076#1077#1083#1091
             DataBinding.FieldName = 'MarginPercent5'
@@ -1659,7 +1660,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxAmount6: TcxGridDBBandedColumn
+          object Amount6: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 6: '#1082#1086#1083'-'#1074#1086', '#1096#1090
             Caption = #1082#1086#1083'-'#1074#1086', '#1096#1090
             DataBinding.FieldName = 'Amount6'
@@ -1674,7 +1675,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSummaSale6: TcxGridDBBandedColumn
+          object SummaSale6: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 6: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'SummaSale6'
@@ -1689,7 +1690,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSumma6: TcxGridDBBandedColumn
+          object Summa6: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 6: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa6'
@@ -1704,7 +1705,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentAmount6: TcxGridDBBandedColumn
+          object PercentAmount6: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 6: % '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
             Caption = '% '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
             DataBinding.FieldName = 'PercentAmount6'
@@ -1719,7 +1720,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentSummaSale6: TcxGridDBBandedColumn
+          object PercentSummaSale6: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 6: % '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
             DataBinding.FieldName = 'PercentSummaSale6'
@@ -1734,7 +1735,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentSumma6: TcxGridDBBandedColumn
+          object PercentSumma6: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 6: % '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
             DataBinding.FieldName = 'PercentSumma6'
@@ -1749,7 +1750,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentProfit6: TcxGridDBBandedColumn
+          object PercentProfit6: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 6: % '#1076#1086#1093#1086#1076#1072
             Caption = '% '#1076#1086#1093#1086#1076#1072
             DataBinding.FieldName = 'PercentProfit6'
@@ -1764,7 +1765,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSummaProfit6: TcxGridDBBandedColumn
+          object SummaProfit6: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 6: '#1076#1086#1093#1086#1076
             Caption = #1076#1086#1093#1086#1076
             DataBinding.FieldName = 'SummaProfit6'
@@ -1779,7 +1780,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVitrPercent6: TcxGridDBBandedColumn
+          object VitrPercent6: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 6: '#1074#1080#1088#1090'. %'
             Caption = #1074#1080#1088#1090'. %'
             DataBinding.FieldName = 'VirtPercent6'
@@ -1793,7 +1794,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVirtSummaSale6: TcxGridDBBandedColumn
+          object VirtSummaSale6: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 6: '#1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'VirtSummaSale6'
@@ -1809,7 +1810,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVirtProfit6: TcxGridDBBandedColumn
+          object VirtProfit6: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 6: '#1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             Caption = #1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             DataBinding.FieldName = 'VirtProfit6'
@@ -1825,7 +1826,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxMarginPercent6: TcxGridDBBandedColumn
+          object MarginPercent6: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 6: % '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1087#1088#1077#1076#1077#1083#1091
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1087#1088#1077#1076#1077#1083#1091
             DataBinding.FieldName = 'MarginPercent6'
@@ -1840,7 +1841,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxAmount7: TcxGridDBBandedColumn
+          object Amount7: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 7:  '#1082#1086#1083'-'#1074#1086', '#1096#1090
             Caption = #1082#1086#1083'-'#1074#1086', '#1096#1090
             DataBinding.FieldName = 'Amount7'
@@ -1855,7 +1856,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSummaSale7: TcxGridDBBandedColumn
+          object SummaSale7: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 7: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'SummaSale7'
@@ -1870,7 +1871,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSumma7: TcxGridDBBandedColumn
+          object Summa7: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 7: '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             Caption = #1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summa7'
@@ -1885,7 +1886,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentAmount7: TcxGridDBBandedColumn
+          object PercentAmount7: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 7: % '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
             Caption = '% '#1086#1090' '#1086#1073#1097#1077#1075#1086' '#1082#1086#1083'-'#1074#1072
             DataBinding.FieldName = 'PercentAmount7'
@@ -1900,7 +1901,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentSummaSale7: TcxGridDBBandedColumn
+          object PercentSummaSale7: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 7: % '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'.'
             DataBinding.FieldName = 'PercentSummaSale7'
@@ -1915,7 +1916,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentSumma7: TcxGridDBBandedColumn
+          object PercentSumma7: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 7: % '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
             Caption = '% '#1086#1090' '#1089#1091#1084#1084#1099' '#1074'  '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072
             DataBinding.FieldName = 'PercentSumma7'
@@ -1930,7 +1931,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxPercentProfit7: TcxGridDBBandedColumn
+          object PercentProfit7: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 7: % '#1076#1086#1093#1086#1076#1072
             Caption = '% '#1076#1086#1093#1086#1076#1072
             DataBinding.FieldName = 'PercentProfit7'
@@ -1945,7 +1946,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxSummaProfit7: TcxGridDBBandedColumn
+          object SummaProfit7: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 7: '#1076#1086#1093#1086#1076
             Caption = #1076#1086#1093#1086#1076
             DataBinding.FieldName = 'SummaProfit7'
@@ -1960,7 +1961,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVitrPercent7: TcxGridDBBandedColumn
+          object VitrPercent7: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 7: '#1074#1080#1088#1090'. %'
             Caption = #1074#1080#1088#1090'. %'
             DataBinding.FieldName = 'VirtPercent7'
@@ -1974,7 +1975,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVirtSummaSale7: TcxGridDBBandedColumn
+          object VirtSummaSale7: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 7: '#1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             Caption = #1074#1080#1088#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1086#1076'., '#1075#1088#1085
             DataBinding.FieldName = 'VirtSummaSale7'
@@ -1990,7 +1991,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxVirtProfit7: TcxGridDBBandedColumn
+          object VirtProfit7: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 7: '#1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             Caption = #1074#1080#1088#1090'. '#1076#1086#1093#1086#1076
             DataBinding.FieldName = 'VirtProfit7'
@@ -2006,7 +2007,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxMarginPercent7: TcxGridDBBandedColumn
+          object MarginPercent7: TcxGridDBBandedColumn
             AlternateCaption = #1055#1088#1077#1076#1077#1083' 7: % '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1087#1088#1077#1076#1077#1083#1091
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1087#1088#1077#1076#1077#1083#1091
             DataBinding.FieldName = 'MarginPercent7'
@@ -2021,7 +2022,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.LineCount = 2
             Position.RowIndex = 0
           end
-          object cxColor_Amount: TcxGridDBBandedColumn
+          object Color_Amount: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_Amount'
             Visible = False
             Options.Editing = False
@@ -2030,7 +2031,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.ColIndex = 2
             Position.RowIndex = 0
           end
-          object cxColor_Summa: TcxGridDBBandedColumn
+          object Color_Summa: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_Summa'
             Visible = False
             Options.Editing = False
@@ -2039,7 +2040,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.ColIndex = 3
             Position.RowIndex = 0
           end
-          object cxColor_SummaSale: TcxGridDBBandedColumn
+          object Color_SummaSale: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_SummaSale'
             Visible = False
             Options.Editing = False
@@ -2048,7 +2049,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.ColIndex = 4
             Position.RowIndex = 0
           end
-          object cxColor_PercentAmount1: TcxGridDBBandedColumn
+          object Color_PercentAmount1: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PercentAmount1'
             Visible = False
             Options.Editing = False
@@ -2057,7 +2058,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.ColIndex = 5
             Position.RowIndex = 0
           end
-          object cxColor_PercentSumma1: TcxGridDBBandedColumn
+          object Color_PercentSumma1: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PercentSumma1'
             Visible = False
             Options.Editing = False
@@ -2066,7 +2067,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.ColIndex = 6
             Position.RowIndex = 0
           end
-          object cxColor_PercentSummaSale1: TcxGridDBBandedColumn
+          object Color_PercentSummaSale1: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PercentSummaSale1'
             Visible = False
             Options.Editing = False
@@ -2075,7 +2076,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.ColIndex = 7
             Position.RowIndex = 0
           end
-          object cxColor_PercentAmount2: TcxGridDBBandedColumn
+          object Color_PercentAmount2: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PercentAmount2'
             Visible = False
             Options.Editing = False
@@ -2084,7 +2085,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.ColIndex = 8
             Position.RowIndex = 0
           end
-          object cxColor_PercentSumma2: TcxGridDBBandedColumn
+          object Color_PercentSumma2: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PercentSumma2'
             Visible = False
             Options.Editing = False
@@ -2093,7 +2094,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.ColIndex = 9
             Position.RowIndex = 0
           end
-          object cxColor_PercentSummaSale2: TcxGridDBBandedColumn
+          object Color_PercentSummaSale2: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PercentSummaSale2'
             Visible = False
             Options.Editing = False
@@ -2102,7 +2103,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.ColIndex = 10
             Position.RowIndex = 0
           end
-          object cxColor_PercentAmount3: TcxGridDBBandedColumn
+          object Color_PercentAmount3: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PercentAmount3'
             Visible = False
             Options.Editing = False
@@ -2111,7 +2112,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.ColIndex = 11
             Position.RowIndex = 0
           end
-          object cxColor_PercentSumma3: TcxGridDBBandedColumn
+          object Color_PercentSumma3: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PercentSumma3'
             Visible = False
             Options.Editing = False
@@ -2120,7 +2121,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.ColIndex = 12
             Position.RowIndex = 0
           end
-          object cxColor_PercentSummaSale3: TcxGridDBBandedColumn
+          object Color_PercentSummaSale3: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PercentSummaSale3'
             Visible = False
             Options.Editing = False
@@ -2129,7 +2130,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.ColIndex = 13
             Position.RowIndex = 0
           end
-          object cxColor_PercentAmount4: TcxGridDBBandedColumn
+          object Color_PercentAmount4: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PercentAmount4'
             Visible = False
             Options.Editing = False
@@ -2138,7 +2139,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.ColIndex = 14
             Position.RowIndex = 0
           end
-          object cxColor_PercentSumma4: TcxGridDBBandedColumn
+          object Color_PercentSumma4: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PercentSumma4'
             Visible = False
             Options.Editing = False
@@ -2147,7 +2148,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.ColIndex = 15
             Position.RowIndex = 0
           end
-          object cxColor_PercentSummaSale4: TcxGridDBBandedColumn
+          object Color_PercentSummaSale4: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PercentSummaSale4'
             Visible = False
             Options.Editing = False
@@ -2156,7 +2157,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.ColIndex = 16
             Position.RowIndex = 0
           end
-          object cxColor_PercentAmount5: TcxGridDBBandedColumn
+          object Color_PercentAmount5: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PercentAmount5'
             Visible = False
             Options.Editing = False
@@ -2165,7 +2166,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.ColIndex = 17
             Position.RowIndex = 0
           end
-          object cxColor_PercentSumma5: TcxGridDBBandedColumn
+          object Color_PercentSumma5: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PercentSumma5'
             Visible = False
             Options.Editing = False
@@ -2174,7 +2175,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.ColIndex = 18
             Position.RowIndex = 0
           end
-          object cxColor_PercentSummaSale5: TcxGridDBBandedColumn
+          object Color_PercentSummaSale5: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PercentSummaSale5'
             Visible = False
             Options.Editing = False
@@ -2183,7 +2184,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.ColIndex = 19
             Position.RowIndex = 0
           end
-          object cxColor_PercentAmount6: TcxGridDBBandedColumn
+          object Color_PercentAmount6: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PercentAmount6'
             Visible = False
             Options.Editing = False
@@ -2192,7 +2193,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.ColIndex = 20
             Position.RowIndex = 0
           end
-          object cxColor_PercentSumma6: TcxGridDBBandedColumn
+          object Color_PercentSumma6: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PercentSumma6'
             Visible = False
             Options.Editing = False
@@ -2201,7 +2202,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.ColIndex = 21
             Position.RowIndex = 0
           end
-          object cxColor_PercentSummaSale6: TcxGridDBBandedColumn
+          object Color_PercentSummaSale6: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PercentSummaSale6'
             Visible = False
             Options.Editing = False
@@ -2210,7 +2211,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.ColIndex = 22
             Position.RowIndex = 0
           end
-          object cxColor_PercentAmount7: TcxGridDBBandedColumn
+          object Color_PercentAmount7: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PercentAmount7'
             Visible = False
             Options.Editing = False
@@ -2219,7 +2220,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.ColIndex = 23
             Position.RowIndex = 0
           end
-          object cxColor_PercentSumma7: TcxGridDBBandedColumn
+          object Color_PercentSumma7: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PercentSumma7'
             Visible = False
             Options.Editing = False
@@ -2228,7 +2229,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
             Position.ColIndex = 24
             Position.RowIndex = 0
           end
-          object cxColor_PercentSummaSale7: TcxGridDBBandedColumn
+          object Color_PercentSummaSale7: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_PercentSummaSale7'
             Visible = False
             Options.Editing = False
@@ -2502,6 +2503,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
       FormName = 'TReport_PriceInterventionDialogForm'
       FormNameParam.Value = 'TReport_PriceInterventionDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -2509,6 +2511,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -2516,6 +2519,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Price1'
@@ -2523,6 +2527,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           Component = cePrice1
           DataType = ftFloat
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Price2'
@@ -2530,6 +2535,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           Component = cePrice2
           DataType = ftFloat
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Price3'
@@ -2537,6 +2543,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           Component = cePrice3
           DataType = ftFloat
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Price4'
@@ -2544,6 +2551,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           Component = cePrice4
           DataType = ftFloat
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Price5'
@@ -2551,6 +2559,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           Component = cePrice5
           DataType = ftFloat
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Price6'
@@ -2558,6 +2567,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           Component = cePrice6
           DataType = ftFloat
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MarginReportId'
@@ -2565,6 +2575,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           Component = MarginReportGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MarginReportName'
@@ -2573,6 +2584,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -2598,12 +2610,14 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
       FormName = 'TMarginReportItemForm'
       FormNameParam.Value = 'TMarginReportItemForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'MarginReportId'
           Value = Null
           Component = MarginReportGuides
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MarginReportName'
@@ -2611,6 +2625,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
           Component = MarginReportGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2630,6 +2645,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -2637,6 +2653,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice1'
@@ -2644,6 +2661,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         Component = cePrice1
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice2'
@@ -2651,6 +2669,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         Component = cePrice2
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice3'
@@ -2658,6 +2677,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         Component = cePrice3
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice4'
@@ -2665,6 +2685,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         Component = cePrice4
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice5'
@@ -2672,6 +2693,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         Component = cePrice5
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice6'
@@ -2679,6 +2701,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         Component = cePrice6
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMarginReportId'
@@ -2686,6 +2709,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         Component = MarginReportGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 584
     Top = 80
@@ -2796,228 +2820,228 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
     View = cxGridDBBandedTableView1
     ColorRuleList = <
       item
-        ColorColumn = cxAmount
-        BackGroundValueColumn = cxColor_Amount
+        ColorColumn = Amount
+        BackGroundValueColumn = Color_Amount
         ColorValueList = <>
       end
       item
-        ColorColumn = cxAmount1
-        BackGroundValueColumn = cxColor_Amount
+        ColorColumn = Amount1
+        BackGroundValueColumn = Color_Amount
         ColorValueList = <>
       end
       item
-        ColorColumn = cxAmount2
-        BackGroundValueColumn = cxColor_Amount
+        ColorColumn = Amount2
+        BackGroundValueColumn = Color_Amount
         ColorValueList = <>
       end
       item
-        ColorColumn = cxAmount3
-        BackGroundValueColumn = cxColor_Amount
+        ColorColumn = Amount3
+        BackGroundValueColumn = Color_Amount
         ColorValueList = <>
       end
       item
-        ColorColumn = cxAmount4
-        BackGroundValueColumn = cxColor_Amount
+        ColorColumn = Amount4
+        BackGroundValueColumn = Color_Amount
         ColorValueList = <>
       end
       item
-        ColorColumn = cxAmount5
-        BackGroundValueColumn = cxColor_Amount
+        ColorColumn = Amount5
+        BackGroundValueColumn = Color_Amount
         ColorValueList = <>
       end
       item
-        ColorColumn = cxAmount6
-        BackGroundValueColumn = cxColor_Amount
+        ColorColumn = Amount6
+        BackGroundValueColumn = Color_Amount
         ColorValueList = <>
       end
       item
-        ColorColumn = cxAmount7
-        BackGroundValueColumn = cxColor_Amount
+        ColorColumn = Amount7
+        BackGroundValueColumn = Color_Amount
         ColorValueList = <>
       end
       item
-        ColorColumn = cxSumma
-        BackGroundValueColumn = cxColor_Summa
+        ColorColumn = Summa
+        BackGroundValueColumn = Color_Summa
         ColorValueList = <>
       end
       item
-        ColorColumn = cxSumma1
-        BackGroundValueColumn = cxColor_Summa
+        ColorColumn = Summa1
+        BackGroundValueColumn = Color_Summa
         ColorValueList = <>
       end
       item
-        ColorColumn = cxSumma2
-        BackGroundValueColumn = cxColor_Summa
+        ColorColumn = Summa2
+        BackGroundValueColumn = Color_Summa
         ColorValueList = <>
       end
       item
-        ColorColumn = cxSumma3
-        BackGroundValueColumn = cxColor_Summa
+        ColorColumn = Summa3
+        BackGroundValueColumn = Color_Summa
         ColorValueList = <>
       end
       item
-        ColorColumn = cxSumma4
-        BackGroundValueColumn = cxColor_Summa
+        ColorColumn = Summa4
+        BackGroundValueColumn = Color_Summa
         ColorValueList = <>
       end
       item
-        ColorColumn = cxSumma5
-        BackGroundValueColumn = cxColor_Summa
+        ColorColumn = Summa5
+        BackGroundValueColumn = Color_Summa
         ColorValueList = <>
       end
       item
-        ColorColumn = cxSumma6
-        BackGroundValueColumn = cxColor_Summa
+        ColorColumn = Summa6
+        BackGroundValueColumn = Color_Summa
         ColorValueList = <>
       end
       item
-        ColorColumn = cxSumma7
-        BackGroundValueColumn = cxColor_Summa
+        ColorColumn = Summa7
+        BackGroundValueColumn = Color_Summa
         ColorValueList = <>
       end
       item
-        ColorColumn = cxSummaSale
-        BackGroundValueColumn = cxColor_SummaSale
+        ColorColumn = SummaSale
+        BackGroundValueColumn = Color_SummaSale
         ColorValueList = <>
       end
       item
-        ColorColumn = cxSummaSale1
-        BackGroundValueColumn = cxColor_SummaSale
+        ColorColumn = SummaSale1
+        BackGroundValueColumn = Color_SummaSale
         ColorValueList = <>
       end
       item
-        ColorColumn = cxSummaSale2
-        BackGroundValueColumn = cxColor_SummaSale
+        ColorColumn = SummaSale2
+        BackGroundValueColumn = Color_SummaSale
         ColorValueList = <>
       end
       item
-        ColorColumn = cxSummaSale3
-        BackGroundValueColumn = cxColor_SummaSale
+        ColorColumn = SummaSale3
+        BackGroundValueColumn = Color_SummaSale
         ColorValueList = <>
       end
       item
-        ColorColumn = cxSummaSale4
-        BackGroundValueColumn = cxColor_SummaSale
+        ColorColumn = SummaSale4
+        BackGroundValueColumn = Color_SummaSale
         ColorValueList = <>
       end
       item
-        ColorColumn = cxSummaSale5
-        BackGroundValueColumn = cxColor_SummaSale
+        ColorColumn = SummaSale5
+        BackGroundValueColumn = Color_SummaSale
         ColorValueList = <>
       end
       item
-        ColorColumn = cxSummaSale6
-        BackGroundValueColumn = cxColor_SummaSale
+        ColorColumn = SummaSale6
+        BackGroundValueColumn = Color_SummaSale
         ColorValueList = <>
       end
       item
-        ColorColumn = cxSummaSale7
-        BackGroundValueColumn = cxColor_SummaSale
+        ColorColumn = SummaSale7
+        BackGroundValueColumn = Color_SummaSale
         ColorValueList = <>
       end
       item
-        ColorColumn = cxPercentAmount1
-        BackGroundValueColumn = cxColor_PercentAmount1
+        ColorColumn = PercentAmount1
+        BackGroundValueColumn = Color_PercentAmount1
         ColorValueList = <>
       end
       item
-        ColorColumn = cxPercentSumma1
-        BackGroundValueColumn = cxColor_PercentSumma1
+        ColorColumn = PercentSumma1
+        BackGroundValueColumn = Color_PercentSumma1
         ColorValueList = <>
       end
       item
-        ColorColumn = cxPercentSummaSale1
-        BackGroundValueColumn = cxColor_PercentSummaSale1
+        ColorColumn = PercentSummaSale1
+        BackGroundValueColumn = Color_PercentSummaSale1
         ColorValueList = <>
       end
       item
-        ColorColumn = cxPercentAmount2
-        BackGroundValueColumn = cxColor_PercentAmount2
+        ColorColumn = PercentAmount2
+        BackGroundValueColumn = Color_PercentAmount2
         ColorValueList = <>
       end
       item
-        ColorColumn = cxPercentSumma2
-        BackGroundValueColumn = cxColor_PercentSumma2
+        ColorColumn = PercentSumma2
+        BackGroundValueColumn = Color_PercentSumma2
         ColorValueList = <>
       end
       item
-        ColorColumn = cxPercentSummaSale2
-        BackGroundValueColumn = cxColor_PercentSummaSale2
+        ColorColumn = PercentSummaSale2
+        BackGroundValueColumn = Color_PercentSummaSale2
         ColorValueList = <>
       end
       item
-        ColorColumn = cxPercentAmount3
-        BackGroundValueColumn = cxColor_PercentAmount3
+        ColorColumn = PercentAmount3
+        BackGroundValueColumn = Color_PercentAmount3
         ColorValueList = <>
       end
       item
-        ColorColumn = cxPercentSumma3
-        BackGroundValueColumn = cxColor_PercentSumma3
+        ColorColumn = PercentSumma3
+        BackGroundValueColumn = Color_PercentSumma3
         ColorValueList = <>
       end
       item
-        ColorColumn = cxPercentSummaSale3
-        BackGroundValueColumn = cxColor_PercentSummaSale3
+        ColorColumn = PercentSummaSale3
+        BackGroundValueColumn = Color_PercentSummaSale3
         ColorValueList = <>
       end
       item
-        ColorColumn = cxPercentAmount4
-        BackGroundValueColumn = cxColor_PercentAmount4
+        ColorColumn = PercentAmount4
+        BackGroundValueColumn = Color_PercentAmount4
         ColorValueList = <>
       end
       item
-        ColorColumn = cxPercentSumma4
-        BackGroundValueColumn = cxColor_PercentSumma4
+        ColorColumn = PercentSumma4
+        BackGroundValueColumn = Color_PercentSumma4
         ColorValueList = <>
       end
       item
-        ColorColumn = cxPercentSummaSale4
-        BackGroundValueColumn = cxColor_PercentSummaSale4
+        ColorColumn = PercentSummaSale4
+        BackGroundValueColumn = Color_PercentSummaSale4
         ColorValueList = <>
       end
       item
-        ColorColumn = cxPercentAmount5
-        BackGroundValueColumn = cxColor_PercentAmount5
+        ColorColumn = PercentAmount5
+        BackGroundValueColumn = Color_PercentAmount5
         ColorValueList = <>
       end
       item
-        ColorColumn = cxPercentSumma5
-        BackGroundValueColumn = cxColor_PercentSumma5
+        ColorColumn = PercentSumma5
+        BackGroundValueColumn = Color_PercentSumma5
         ColorValueList = <>
       end
       item
-        ColorColumn = cxPercentSummaSale5
-        BackGroundValueColumn = cxColor_PercentSummaSale5
+        ColorColumn = PercentSummaSale5
+        BackGroundValueColumn = Color_PercentSummaSale5
         ColorValueList = <>
       end
       item
-        ColorColumn = cxPercentAmount6
-        BackGroundValueColumn = cxColor_PercentAmount6
+        ColorColumn = PercentAmount6
+        BackGroundValueColumn = Color_PercentAmount6
         ColorValueList = <>
       end
       item
-        ColorColumn = cxPercentSumma6
-        BackGroundValueColumn = cxColor_PercentSumma6
+        ColorColumn = PercentSumma6
+        BackGroundValueColumn = Color_PercentSumma6
         ColorValueList = <>
       end
       item
-        ColorColumn = cxPercentSummaSale6
-        BackGroundValueColumn = cxColor_PercentSummaSale6
+        ColorColumn = PercentSummaSale6
+        BackGroundValueColumn = Color_PercentSummaSale6
         ColorValueList = <>
       end
       item
-        ColorColumn = cxPercentAmount7
-        BackGroundValueColumn = cxColor_PercentAmount7
+        ColorColumn = PercentAmount7
+        BackGroundValueColumn = Color_PercentAmount7
         ColorValueList = <>
       end
       item
-        ColorColumn = cxPercentSumma7
-        BackGroundValueColumn = cxColor_PercentSumma7
+        ColorColumn = PercentSumma7
+        BackGroundValueColumn = Color_PercentSumma7
         ColorValueList = <>
       end
       item
-        ColorColumn = cxPercentSummaSale7
-        BackGroundValueColumn = cxColor_PercentSummaSale7
+        ColorColumn = PercentSummaSale7
+        BackGroundValueColumn = Color_PercentSummaSale7
         ColorValueList = <>
       end>
     Left = 360
@@ -3045,6 +3069,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
     LookupControl = ceMarginReport
     FormNameParam.Value = 'TMarginReportForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMarginReportForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -3054,6 +3079,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         Component = MarginReportGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -3062,6 +3088,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 936
     Top = 24
@@ -3077,6 +3104,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         Component = MarginReportGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -3084,6 +3112,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         Component = MasterCDS
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPercent1'
@@ -3092,6 +3121,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         ComponentItem = 'VirtPercent1'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPercent2'
@@ -3100,6 +3130,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         ComponentItem = 'VirtPercent2'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPercent3'
@@ -3108,6 +3139,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         ComponentItem = 'VirtPercent3'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPercent4'
@@ -3116,6 +3148,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         ComponentItem = 'VirtPercent4'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPercent5'
@@ -3124,6 +3157,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         ComponentItem = 'VirtPercent5'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPercent6'
@@ -3132,6 +3166,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         ComponentItem = 'VirtPercent6'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPercent7'
@@ -3140,6 +3175,7 @@ inherited Report_PriceInterventionForm: TReport_PriceInterventionForm
         ComponentItem = 'VirtPercent7'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 840

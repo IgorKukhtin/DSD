@@ -3,8 +3,9 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
   ClientHeight = 575
   ClientWidth = 797
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -129
   ExplicitWidth = 813
-  ExplicitHeight = 613
+  ExplicitHeight = 614
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -88,7 +89,7 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colOperDate: TcxGridDBColumn
+          object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'OperDate'
             PropertiesClassName = 'TcxDateEditProperties'
@@ -131,7 +132,7 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
             HeaderAlignmentVert = vaCenter
             Width = 159
           end
-          object colPlanAmount: TcxGridDBColumn
+          object PlanAmount: TcxGridDBColumn
             Caption = #1055#1083#1072#1085
             DataBinding.FieldName = 'PlanAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -199,6 +200,9 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
     object tsPivot: TcxTabSheet
       Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxDBPivotGrid1: TcxDBPivotGrid
         Left = 0
         Top = 0

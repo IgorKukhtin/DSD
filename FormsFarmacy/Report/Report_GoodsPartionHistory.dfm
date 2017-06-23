@@ -4,7 +4,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
   ClientWidth = 824
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 840
-  ExplicitHeight = 397
+  ExplicitHeight = 398
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -34,7 +34,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colMovementId: TcxGridDBColumn
+          object MovementId: TcxGridDBColumn
             Caption = #1048#1044' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'MovementId'
             Visible = False
@@ -43,7 +43,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
           end
-          object colOperDate: TcxGridDBColumn
+          object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
             GroupSummaryAlignment = taCenter
@@ -51,7 +51,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             HeaderAlignmentVert = vaCenter
             Width = 76
           end
-          object colInvNumber: TcxGridDBColumn
+          object InvNumber: TcxGridDBColumn
             Caption = #8470
             DataBinding.FieldName = 'InvNumber'
             GroupSummaryAlignment = taCenter
@@ -59,7 +59,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colMovementDescId: TcxGridDBColumn
+          object MovementDescId: TcxGridDBColumn
             DataBinding.FieldName = 'MovementDescId'
             Visible = False
             GroupSummaryAlignment = taCenter
@@ -67,7 +67,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
           end
-          object colMovementDescName: TcxGridDBColumn
+          object MovementDescName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'MovementDescName'
             GroupSummaryAlignment = taCenter
@@ -75,14 +75,14 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colFromId: TcxGridDBColumn
+          object FromId: TcxGridDBColumn
             DataBinding.FieldName = 'FromId'
             Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colInsertDate: TcxGridDBColumn
+          object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
@@ -90,7 +90,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             Options.Editing = False
             Width = 78
           end
-          object colInsertName: TcxGridDBColumn
+          object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
@@ -98,7 +98,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             Options.Editing = False
             Width = 101
           end
-          object colFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
             GroupSummaryAlignment = taCenter
@@ -106,14 +106,14 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             HeaderAlignmentVert = vaCenter
             Width = 104
           end
-          object colToId: TcxGridDBColumn
+          object ToId: TcxGridDBColumn
             DataBinding.FieldName = 'ToId'
             Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colToName: TcxGridDBColumn
+          object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
             GroupSummaryAlignment = taCenter
@@ -121,7 +121,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             HeaderAlignmentVert = vaCenter
             Width = 104
           end
-          object colPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -131,7 +131,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             HeaderAlignmentVert = vaCenter
             Width = 52
           end
-          object colSumma: TcxGridDBColumn
+          object Summa: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -140,7 +140,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colAmountIn: TcxGridDBColumn
+          object AmountIn: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'AmountIn'
             GroupSummaryAlignment = taCenter
@@ -148,7 +148,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             HeaderAlignmentVert = vaCenter
             Width = 52
           end
-          object colAmountOut: TcxGridDBColumn
+          object AmountOut: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'AmountOut'
             GroupSummaryAlignment = taCenter
@@ -156,7 +156,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colAmountInvent: TcxGridDBColumn
+          object AmountInvent: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1091#1095#1077#1090
             DataBinding.FieldName = 'AmountInvent'
             GroupSummaryAlignment = taCenter
@@ -164,7 +164,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             HeaderAlignmentVert = vaCenter
             Width = 54
           end
-          object colSaldo: TcxGridDBColumn
+          object Saldo: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Saldo'
             GroupSummaryAlignment = taCenter
@@ -172,7 +172,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             HeaderAlignmentVert = vaCenter
             Width = 44
           end
-          object colMCSValue: TcxGridDBColumn
+          object MCSValue: TcxGridDBColumn
             Caption = #1053#1058#1047
             DataBinding.FieldName = 'MCSValue'
             GroupSummaryAlignment = taCenter
@@ -180,7 +180,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             HeaderAlignmentVert = vaCenter
             Width = 54
           end
-          object colCheckMember: TcxGridDBColumn
+          object CheckMember: TcxGridDBColumn
             Caption = #1052#1077#1085#1077#1076#1078#1077#1088
             DataBinding.FieldName = 'CheckMember'
             GroupSummaryAlignment = taCenter
@@ -188,7 +188,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colBayer: TcxGridDBColumn
+          object Bayer: TcxGridDBColumn
             Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' (VIP)'
             DataBinding.FieldName = 'Bayer'
             GroupSummaryAlignment = taCenter
@@ -223,7 +223,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             Options.Editing = False
             Width = 70
           end
-          object colPartionPrice: TcxGridDBColumn
+          object PartionPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1072#1088#1090#1080#1080
             DataBinding.FieldName = 'PartionPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'

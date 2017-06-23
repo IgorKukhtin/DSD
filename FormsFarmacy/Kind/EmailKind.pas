@@ -15,7 +15,7 @@ uses
 
 type
   TEmailKindForm = class(TAncestorEnumForm)
-    clName: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
   private
     { Private declarations }
   public

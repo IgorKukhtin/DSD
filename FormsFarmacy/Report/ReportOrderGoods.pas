@@ -18,37 +18,37 @@ uses
 
 type
   TReportOrderGoodsForm = class(TAncestorReportForm)
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colProducerName: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
-    colExpirationDate: TcxGridDBColumn;
-    colNDS: TcxGridDBColumn;
-    colGoodsNDS: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    ProducerName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    ExpirationDate: TcxGridDBColumn;
+    NDS: TcxGridDBColumn;
+    GoodsNDS: TcxGridDBColumn;
     actRefreshSearch: TdsdExecStoredProc;
     cxLabel3: TcxLabel;
-    colAmount: TcxGridDBColumn;
-    colOperDate: TcxGridDBColumn;
-    colMovementDesc: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    ItemName: TcxGridDBColumn;
     edGoods: TcxButtonEdit;
     GoodsGuides: TdsdGuides;
-    colInvNumber: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
-    colOrderKindName: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    OrderKindName: TcxGridDBColumn;
     ceCode: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
     gpGetObjectGoods: TdsdStoredProc;
-    colStatusName: TcxGridDBColumn;
-    colComment: TcxGridDBColumn;
-    colPriceSale: TcxGridDBColumn;
+    StatusName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    PriceSale: TcxGridDBColumn;
     getMovementForm: TdsdStoredProc;
     FormParams: TdsdFormParams;
-    colPartionGoods: TcxGridDBColumn;
-    colExpirationDate2: TcxGridDBColumn;
-    colPaymentDate: TcxGridDBColumn;
-    colInvNumberBranch: TcxGridDBColumn;
-    colBranchDate: TcxGridDBColumn;
+    PartionGoods: TcxGridDBColumn;
+    ExpirationDate2: TcxGridDBColumn;
+    PaymentDate: TcxGridDBColumn;
+    InvNumberBranch: TcxGridDBColumn;
+    BranchDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

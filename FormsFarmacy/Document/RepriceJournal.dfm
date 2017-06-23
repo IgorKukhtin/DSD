@@ -3,7 +3,7 @@ inherited RepriceJournalForm: TRepriceJournalForm
   ClientWidth = 709
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 725
-  ExplicitHeight = 346
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -27,12 +27,12 @@ inherited RepriceJournalForm: TRepriceJournalForm
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Kind = skSum
-              Column = colTotalSumm
+              Column = TotalSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Kind = skSum
-              Column = colTotalSumm
+              Column = TotalSumm
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -43,28 +43,28 @@ inherited RepriceJournalForm: TRepriceJournalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colInvNumber: TcxGridDBColumn
+          object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 89
           end
-          object colOperDate: TcxGridDBColumn
+          object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 94
           end
-          object colUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 221
           end
-          object colUnitForwardingName: TcxGridDBColumn
+          object UnitForwardingName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1088#1072#1074#1077#1085#1089#1090#1074#1072' '#1094#1077#1085')'
             DataBinding.FieldName = 'UnitForwardingName'
             HeaderAlignmentHorz = taCenter
@@ -72,14 +72,14 @@ inherited RepriceJournalForm: TRepriceJournalForm
             HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1088#1072#1074#1077#1085#1089#1090#1074#1072' '#1094#1077#1085')'
             Width = 173
           end
-          object colTotalSumm: TcxGridDBColumn
+          object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'TotalSumm'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 93
           end
-          object clInsertName: TcxGridDBColumn
+          object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
@@ -87,7 +87,7 @@ inherited RepriceJournalForm: TRepriceJournalForm
             Options.Editing = False
             Width = 101
           end
-          object clInsertDate: TcxGridDBColumn
+          object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter

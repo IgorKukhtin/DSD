@@ -2,8 +2,8 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
   Caption = #1058#1080#1087#1099' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
   ClientHeight = 376
   ClientWidth = 605
-  ExplicitWidth = 613
-  ExplicitHeight = 410
+  ExplicitWidth = 621
+  ExplicitHeight = 415
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -27,7 +27,7 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             HeaderAlignmentHorz = taRightJustify
@@ -35,20 +35,20 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
             Options.Editing = False
             Width = 58
           end
-          object clName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 189
           end
-          object clShortName: TcxGridDBColumn
+          object ShortName: TcxGridDBColumn
             Caption = #1050#1088#1072#1090#1082#1086#1077' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'ShortName'
             HeaderAlignmentVert = vaCenter
             Width = 165
           end
-          object clErased: TcxGridDBColumn
+          object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             PropertiesClassName = 'TcxCheckBoxProperties'
@@ -95,6 +95,7 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShortName'
@@ -103,6 +104,7 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
         ComponentItem = 'ShortName'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152

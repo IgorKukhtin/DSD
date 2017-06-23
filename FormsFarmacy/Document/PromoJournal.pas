@@ -18,12 +18,12 @@ uses
 type
   TPromoJournalForm = class(TAncestorJournalForm)
     spGet_Movement_Promo: TdsdStoredProc;
-    colMakerName: TcxGridDBColumn;
-    colPersonalName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
-    colTotalSumm: TcxGridDBColumn;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
-    colComment: TcxGridDBColumn;
+    MakerName: TcxGridDBColumn;
+    PersonalName: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
+    Id: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     StartPromo: TcxGridDBColumn;
     EndPromo: TcxGridDBColumn;

@@ -23,10 +23,17 @@ BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
+      -- определяется <Торговая сеть>
+      vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
       IF NOT EXISTS (SELECT 1 FROM LoadGoodsBarCode WHERE Id = inId)
       THEN
            RAISE EXCEPTION 'Задан неверный идентификатор записи';
+      END IF;
+
+      IF NOT EXISTS (SELECT 1 FROM LoadGoodsBarCode WHERE Id = inId AND RetailId = vbObjectId)
+      THEN
+           RAISE EXCEPTION 'Попытка изменения записи чужой сети';
       END IF;
 
       vbErrorText:= '';
@@ -35,9 +42,6 @@ BEGIN
       THEN
            vbErrorText:= vbErrorText || 'Нулевой код нашего товара;';
       END IF;
-
-      -- определяется <Торговая сеть>
-      vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
       -- ищем ИД нашего товара по коду
       SELECT Object_Goods.Id

@@ -5,24 +5,24 @@ inherited WorkTimeKind_ObjectForm: TWorkTimeKind_ObjectForm
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
   ExplicitWidth = 376
-  ExplicitHeight = 411
+  ExplicitHeight = 415
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 360
     Height = 350
     TabOrder = 0
-    ExplicitWidth = 605
+    ExplicitWidth = 360
     ExplicitHeight = 350
     ClientRectBottom = 350
     ClientRectRight = 360
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 605
+      ExplicitWidth = 360
       ExplicitHeight = 350
       inherited cxGrid: TcxGrid
         Width = 360
         Height = 350
-        ExplicitWidth = 605
+        ExplicitWidth = 360
         ExplicitHeight = 350
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Editing = False
@@ -32,7 +32,7 @@ inherited WorkTimeKind_ObjectForm: TWorkTimeKind_ObjectForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             HeaderAlignmentHorz = taRightJustify
@@ -40,21 +40,21 @@ inherited WorkTimeKind_ObjectForm: TWorkTimeKind_ObjectForm
             Options.Editing = False
             Width = 55
           end
-          object clName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
           end
-          object clValue: TcxGridDBColumn
+          object Value: TcxGridDBColumn
             Caption = #1047#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'Value'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object clShortName: TcxGridDBColumn
+          object ShortName: TcxGridDBColumn
             Caption = #1057#1083#1091#1078#1077#1073#1085#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'ShortName'
             Visible = False
@@ -62,7 +62,7 @@ inherited WorkTimeKind_ObjectForm: TWorkTimeKind_ObjectForm
             Options.Editing = False
             Width = 70
           end
-          object clErased: TcxGridDBColumn
+          object Erased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             PropertiesClassName = 'TcxCheckBoxProperties'
@@ -88,6 +88,7 @@ inherited WorkTimeKind_ObjectForm: TWorkTimeKind_ObjectForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -95,6 +96,7 @@ inherited WorkTimeKind_ObjectForm: TWorkTimeKind_ObjectForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Value'
@@ -102,6 +104,7 @@ inherited WorkTimeKind_ObjectForm: TWorkTimeKind_ObjectForm
           Component = MasterCDS
           ComponentItem = 'Value'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
     end
     object actUpdateDataSet: TdsdUpdateDataSet
@@ -173,6 +176,7 @@ inherited WorkTimeKind_ObjectForm: TWorkTimeKind_ObjectForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShortName'
@@ -181,6 +185,7 @@ inherited WorkTimeKind_ObjectForm: TWorkTimeKind_ObjectForm
         ComponentItem = 'ShortName'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152

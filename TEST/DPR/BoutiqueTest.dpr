@@ -244,7 +244,9 @@ uses
   MovementProtocol in '..\..\FormsBoutique\Document\MovementProtocol.pas' {MovementProtocolForm: TParentForm},
   Report_ProfitLoss in '..\..\FormsBoutique\Report\Report_ProfitLoss.pas' {Report_ProfitLossForm: TParentForm},
   Report_ProfitLossDialog in '..\..\FormsBoutique\Report\Report_ProfitLossDialog.pas' {Report_ProfitLossDialogForm: TParentForm},
-  MovementItemContainer in '..\..\FormsBoutique\Document\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm};
+  MovementItemContainer in '..\..\FormsBoutique\Document\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm},
+  Report_Goods_RemainsCurrent in '..\..\FormsBoutique\Report\Report_Goods_RemainsCurrent.pas' {Report_Goods_RemainsCurrentForm: TParentForm},
+  Report_Goods_RemainsCurrentDialog in '..\..\FormsBoutique\Report\Report_Goods_RemainsCurrentDialog.pas' {Report_Goods_RemainsCurrentDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

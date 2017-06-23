@@ -23,9 +23,9 @@ type
     cxLabel4: TcxLabel;
     GuidesFrom: TdsdGuides;
     GuidesTo: TdsdGuides;
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
@@ -43,14 +43,14 @@ type
     edNDSKind: TcxButtonEdit;
     NDSKindGuides: TdsdGuides;
     ContractGuides: TdsdGuides;
-    colExpirationDate: TcxGridDBColumn;
-    colPartitionGoods: TcxGridDBColumn;
-    colMakerName: TcxGridDBColumn;
+    ExpirationDate: TcxGridDBColumn;
+    PartitionGoods: TcxGridDBColumn;
+    MakerName: TcxGridDBColumn;
     spIncome_GoodsId: TdsdStoredProc;
-    colMeasure: TcxGridDBColumn;
+    Measure: TcxGridDBColumn;
     spCalculateSalePrice: TdsdStoredProc;
-    colSalePrice: TcxGridDBColumn;
-    colSaleSumm: TcxGridDBColumn;
+    SalePrice: TcxGridDBColumn;
+    SaleSumm: TcxGridDBColumn;
     cxLabel12: TcxLabel;
     cxLabel11: TcxLabel;
     edPointDate: TcxDateEdit;
@@ -59,17 +59,17 @@ type
     cbFarmacyShow: TcxCheckBox;
     actPrintForManager: TdsdPrintAction;
     dxBarButton1: TdxBarButton;
-    colSertificatNumber: TcxGridDBColumn;
-    colSertificatStart: TcxGridDBColumn;
-    colSertificatEnd: TcxGridDBColumn;
-    colDublePriceColour: TcxGridDBColumn;
-    colWarningColor: TcxGridDBColumn;
-    colAmountManual: TcxGridDBColumn;
-    colReasonDifferencesName: TcxGridDBColumn;
+    SertificatNumber: TcxGridDBColumn;
+    SertificatStart: TcxGridDBColumn;
+    SertificatEnd: TcxGridDBColumn;
+    DublePriceColour: TcxGridDBColumn;
+    WarningColor: TcxGridDBColumn;
+    AmountManual: TcxGridDBColumn;
+    ReasonDifferencesName: TcxGridDBColumn;
     spUpdate_MovementItem_Income_AmountManual: TdsdStoredProc;
     ChoiceReasonDifferences: TOpenChoiceForm;
     actSetAmountEqual: TdsdExecStoredProc;
-    colAmountDiff: TcxGridDBColumn;
+    AmountDiff: TcxGridDBColumn;
     mactFarmacyShow: TMultiAction;
     spGet_Movement_ManualAmountTrouble: TdsdStoredProc;
     actGet_Movement_ManualAmountTrouble: TdsdExecStoredProc;
@@ -90,7 +90,7 @@ type
     actPrintSticker: TdsdPrintAction;
     actPrintSticker_notPrice: TdsdPrintAction;
     bbPrintSticker_notPrice: TdxBarButton;
-    colisDeferred: TcxGridDBColumn;
+    isDeferred: TcxGridDBColumn;
   private
     { Private declarations }
   public

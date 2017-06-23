@@ -18,11 +18,11 @@ uses
 
 type
   TReport_JuridicalCollationForm = class(TAncestorReportForm)
-    colItemName: TcxGridDBColumn;
-    coInvNumber: TcxGridDBColumn;
-    colDebet: TcxGridDBColumn;
-    colKredit: TcxGridDBColumn;
-    colOperDate: TcxGridDBColumn;
+    ItemName: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    Debet: TcxGridDBColumn;
+    Kredit: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
     actPrintOfficial: TdsdPrintAction;
     bbPrintOfficial: TdxBarButton;
     cxLabel6: TcxLabel;
@@ -37,22 +37,22 @@ type
     spJuridicalBalance: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    colStartRemains: TcxGridDBColumn;
-    colEndRemains: TcxGridDBColumn;
-    colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
+    StartRemains: TcxGridDBColumn;
+    EndRemains: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
     actPrintTurnover: TdsdPrintAction;
     bbPrintTurnover: TdxBarButton;
-    colOperationSort: TcxGridDBColumn;
-    colInvNumberPartner: TcxGridDBColumn;
+    OperationSort: TcxGridDBColumn;
+    InvNumberPartner: TcxGridDBColumn;
     actPrintCurrency: TdsdPrintAction;
     bbPrintCurrency: TdxBarButton;
     edJuridicalBasis: TcxButtonEdit;
     cxLabel3: TcxLabel;
     JuridicalBasisGuide: TdsdGuides;
-    colPaymentDate: TcxGridDBColumn;
-    colDateLastPay: TcxGridDBColumn;
-    colBranchDate: TcxGridDBColumn;
+    PaymentDate: TcxGridDBColumn;
+    DateLastPay: TcxGridDBColumn;
+    BranchDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

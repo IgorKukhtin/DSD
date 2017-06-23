@@ -18,27 +18,27 @@ uses
 
 type
   TReport_MovementCheck_PromoForm = class(TAncestorReportForm)
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
     actRefreshSearch: TdsdExecStoredProc;
     cxLabel3: TcxLabel;
-    colAmount: TcxGridDBColumn;
-    colOperDate: TcxGridDBColumn;
-    colMovementDesc: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    ItemName: TcxGridDBColumn;
     edMaker: TcxButtonEdit;
     GuidesMaker: TdsdGuides;
-    colInvNumber: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
     gpGetObjectGoods: TdsdStoredProc;
-    colStatusName: TcxGridDBColumn;
-    colComment: TcxGridDBColumn;
-    colPriceSale: TcxGridDBColumn;
+    StatusName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    PriceSale: TcxGridDBColumn;
     getMovementForm: TdsdStoredProc;
     FormParams: TdsdFormParams;
-    colPartionGoods: TcxGridDBColumn;
-    colExpirationDate: TcxGridDBColumn;
+    PartionGoods: TcxGridDBColumn;
+    ExpirationDate: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
   private

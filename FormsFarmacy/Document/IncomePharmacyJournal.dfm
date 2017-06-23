@@ -4,7 +4,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
   ClientWidth = 807
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 823
-  ExplicitHeight = 507
+  ExplicitHeight = 508
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

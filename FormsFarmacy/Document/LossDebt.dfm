@@ -3,8 +3,9 @@ inherited LossDebtForm: TLossDebtForm
   ClientHeight = 405
   ClientWidth = 1049
   PopupMenu = PopupMenu
+  ExplicitLeft = -332
   ExplicitWidth = 1065
-  ExplicitHeight = 440
+  ExplicitHeight = 444
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -31,14 +32,14 @@ inherited LossDebtForm: TLossDebtForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clJuridicalCode: TcxGridDBColumn
+          object JuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'JuridicalCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
           end
-          object clJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -51,7 +52,7 @@ inherited LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 260
           end
-          object clOKPO: TcxGridDBColumn
+          object OKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -65,7 +66,7 @@ inherited LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clIsCalculated: TcxGridDBColumn
+          object IsCalculated: TcxGridDBColumn
             Caption = #1087#1086' '#1076#1086#1083#1075#1091' ('#1076#1072'/'#1085#1077#1090') '
             DataBinding.FieldName = 'isCalculated'
             Visible = False
@@ -73,7 +74,7 @@ inherited LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 111
           end
-          object clSummDebet: TcxGridDBColumn
+          object SummDebet: TcxGridDBColumn
             Caption = #1044#1077#1073#1077#1090' '#1076#1086#1083#1075' '#1085#1072' '#1076#1072#1090#1091
             DataBinding.FieldName = 'SummDebet'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -83,7 +84,7 @@ inherited LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 168
           end
-          object clSummKredit: TcxGridDBColumn
+          object SummKredit: TcxGridDBColumn
             Caption = #1050#1088#1077#1076#1080#1090' '#1076#1086#1083#1075' '#1085#1072' '#1076#1072#1090#1091
             DataBinding.FieldName = 'SummKredit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -93,7 +94,7 @@ inherited LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 185
           end
-          object clAmountDebet: TcxGridDBColumn
+          object AmountDebet: TcxGridDBColumn
             Caption = #1044#1077#1073#1077#1090' '#1089#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountDebet'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -106,7 +107,7 @@ inherited LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clAmountKredit: TcxGridDBColumn
+          object AmountKredit: TcxGridDBColumn
             Caption = #1050#1088#1077#1076#1080#1090' '#1089#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountKredit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -117,7 +118,7 @@ inherited LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clIsErased: TcxGridDBColumn
+          object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
             Visible = False
@@ -203,6 +204,7 @@ inherited LossDebtForm: TLossDebtForm
       FormName = 'TJuridical_ObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
@@ -210,6 +212,7 @@ inherited LossDebtForm: TLossDebtForm
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -218,6 +221,7 @@ inherited LossDebtForm: TLossDebtForm
           ComponentItem = 'JuridicalName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -231,6 +235,7 @@ inherited LossDebtForm: TLossDebtForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   inherited BarManager: TdxBarManager
@@ -334,11 +339,13 @@ inherited LossDebtForm: TLossDebtForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 304
@@ -355,22 +362,26 @@ inherited LossDebtForm: TLossDebtForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
         Value = ''
         Component = StatusGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -378,12 +389,14 @@ inherited LossDebtForm: TLossDebtForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalBasisId'
         Value = Null
         Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalBasisName'
@@ -391,6 +404,7 @@ inherited LossDebtForm: TLossDebtForm
         Component = GuidesJuridicalBasis
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
@@ -402,6 +416,7 @@ inherited LossDebtForm: TLossDebtForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -409,6 +424,7 @@ inherited LossDebtForm: TLossDebtForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -416,6 +432,7 @@ inherited LossDebtForm: TLossDebtForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalBasisId'
@@ -423,6 +440,7 @@ inherited LossDebtForm: TLossDebtForm
         Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   inherited GuidesFiller: TGuidesFiller
@@ -440,6 +458,7 @@ inherited LossDebtForm: TLossDebtForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -447,6 +466,7 @@ inherited LossDebtForm: TLossDebtForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -454,6 +474,7 @@ inherited LossDebtForm: TLossDebtForm
         Component = MasterCDS
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioAmountDebet'
@@ -462,6 +483,7 @@ inherited LossDebtForm: TLossDebtForm
         ComponentItem = 'AmountDebet'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioAmountKredit'
@@ -470,6 +492,7 @@ inherited LossDebtForm: TLossDebtForm
         ComponentItem = 'AmountKredit'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioSummDebet'
@@ -478,6 +501,7 @@ inherited LossDebtForm: TLossDebtForm
         ComponentItem = 'SummDebet'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioSummKredit'
@@ -486,6 +510,7 @@ inherited LossDebtForm: TLossDebtForm
         ComponentItem = 'SummKredit'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioIsCalculated'
@@ -494,6 +519,7 @@ inherited LossDebtForm: TLossDebtForm
         ComponentItem = 'IsCalculated'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
   end
   object GuidesJuridicalBasis: TdsdGuides
@@ -501,6 +527,7 @@ inherited LossDebtForm: TLossDebtForm
     LookupControl = edJuridicalBasis
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -511,6 +538,7 @@ inherited LossDebtForm: TLossDebtForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -519,6 +547,7 @@ inherited LossDebtForm: TLossDebtForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 440
     Top = 16
@@ -528,6 +557,7 @@ inherited LossDebtForm: TLossDebtForm
     LookupControl = edAccount
     FormNameParam.Value = 'TAccountForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccountForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -537,6 +567,7 @@ inherited LossDebtForm: TLossDebtForm
         Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -545,6 +576,7 @@ inherited LossDebtForm: TLossDebtForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 624
     Top = 8

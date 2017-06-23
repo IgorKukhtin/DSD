@@ -49,33 +49,16 @@ BEGIN
       IF vbPersonalId IS NOT NULL
       THEN
            RETURN QUERY
-             WITH tmpPartner AS (-- если vbPersonalId - Сотрудник (торговый)
-                                 SELECT OL.ObjectId AS PartnerId
-                                 FROM ObjectLink AS OL
-                                 WHERE OL.ChildObjectId = vbPersonalId
-                                   AND OL.DescId        = zc_ObjectLink_Partner_PersonalTrade()
-                                UNION
-                                 -- если vbPersonalId - Сотрудник (супервайзер)
-                                 SELECT OL.ObjectId AS PartnerId
-                                 FROM ObjectLink AS OL
-                                 WHERE OL.ChildObjectId = vbPersonalId
-                                   AND OL.DescId        = zc_ObjectLink_Partner_Personal()
-                                UNION
-                                 -- если vbPersonalId - Сотрудник (мерчандайзер)
-                                 SELECT OL.ObjectId AS PartnerId
-                                 FROM ObjectLink AS OL
-                                 WHERE OL.ChildObjectId = vbPersonalId
-                                   AND OL.DescId        = zc_ObjectLink_Partner_PersonalMerch()
+             WITH tmpPartner AS (SELECT OP.Id AS PartnerId
+                                      , OP.JuridicalId 
+                                 FROM lfSelectMobile_Object_Partner (FALSE, inSession) AS OP
                                 )
                 , tmpContract AS (SELECT tmpPartner.PartnerId
                                        , ObjectLink_Contract_Juridical.ObjectId      AS ContractId
-                                       , ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
+                                       , tmpPartner.JuridicalId
                                   FROM tmpPartner
-                                       JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                       ON ObjectLink_Partner_Juridical.ObjectId = tmpPartner.PartnerId
-                                                      AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
                                        JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                                       ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                       ON ObjectLink_Contract_Juridical.ChildObjectId = tmpPartner.JuridicalId
                                                       AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Contract_Juridical()
                                        -- убрали Удаленные
                                        JOIN Object AS Object_Contract

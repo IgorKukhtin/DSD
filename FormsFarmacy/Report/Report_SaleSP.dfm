@@ -3,8 +3,10 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
   ClientHeight = 480
   ClientWidth = 1077
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -409
+  ExplicitTop = -26
   ExplicitWidth = 1093
-  ExplicitHeight = 518
+  ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -30,7 +32,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.00'
@@ -59,17 +61,17 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSummaSP
+              Column = SummaSP
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSummOriginal
+              Column = SummOriginal
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSummaCompensation
+              Column = SummaComp
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -87,12 +89,12 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colGoodsName
+              Column = GoodsName
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.00'
@@ -109,17 +111,17 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSummaSP
+              Column = SummaSP
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSummOriginal
+              Column = SummOriginal
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSummaCompensation
+              Column = SummaComp
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -130,7 +132,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clNumLine: TcxGridDBColumn
+          object NumLine: TcxGridDBColumn
             Caption = #8470' '#1079'.'#1087'.'
             DataBinding.FieldName = 'NumLine'
             HeaderAlignmentHorz = taCenter
@@ -152,7 +154,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object clOperDate: TcxGridDBColumn
+          object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'OperDate'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -161,7 +163,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             Width = 77
           end
-          object clUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
@@ -169,7 +171,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Options.Editing = False
             Width = 127
           end
-          object clJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
@@ -177,7 +179,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Options.Editing = False
             Width = 110
           end
-          object clHospitalName: TcxGridDBColumn
+          object HospitalName: TcxGridDBColumn
             Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077
             DataBinding.FieldName = 'HospitalName'
             HeaderAlignmentHorz = taCenter
@@ -199,7 +201,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -214,14 +216,14 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Options.Editing = False
             Width = 55
           end
-          object clMemberSP: TcxGridDBColumn
+          object MemberSP: TcxGridDBColumn
             Caption = #1060#1048#1054' '#1087#1072#1094#1080#1077#1085#1090#1072
             DataBinding.FieldName = 'MemberSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 102
           end
-          object clGroupMemberSPName: TcxGridDBColumn
+          object GroupMemberSPName: TcxGridDBColumn
             Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1072#1094#1080#1077#1085#1090#1072
             DataBinding.FieldName = 'GroupMemberSPName'
             HeaderAlignmentHorz = taCenter
@@ -229,7 +231,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Options.Editing = False
             Width = 155
           end
-          object clMedicSP: TcxGridDBColumn
+          object MedicSP: TcxGridDBColumn
             Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
             DataBinding.FieldName = 'MedicSP'
             HeaderAlignmentHorz = taCenter
@@ -237,14 +239,14 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Options.Editing = False
             Width = 108
           end
-          object clInvNumberSP: TcxGridDBColumn
+          object InvNumberSP: TcxGridDBColumn
             Caption = #1053#1086#1084#1077#1088' '#1088#1077#1094#1077#1087#1090#1072
             DataBinding.FieldName = 'InvNumberSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clOperDateSP: TcxGridDBColumn
+          object OperDateSP: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1088#1077#1094#1077#1087#1090#1072
             DataBinding.FieldName = 'OperDateSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -253,7 +255,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             Width = 77
           end
-          object clChangePercent: TcxGridDBColumn
+          object ChangePercent: TcxGridDBColumn
             Caption = '% '#1057#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'ChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -262,7 +264,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             Width = 78
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -272,7 +274,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             Width = 65
           end
-          object clPriceSP: TcxGridDBColumn
+          object PriceSP: TcxGridDBColumn
             Caption = #1062#1077#1085#1072', '#1075#1088#1085
             DataBinding.FieldName = 'PriceSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -281,7 +283,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object clPriceCompensation: TcxGridDBColumn
+          object PriceComp: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080', '#1075#1088#1085
             DataBinding.FieldName = 'PriceComp'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -291,7 +293,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
-          object clPriceOriginal: TcxGridDBColumn
+          object PriceOriginal: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1075#1088#1085
             DataBinding.FieldName = 'PriceOriginal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -300,7 +302,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object colSummaSP: TcxGridDBColumn
+          object SummaSP: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072', '#1075#1088#1085
             DataBinding.FieldName = 'SummaSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -309,7 +311,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             Width = 103
           end
-          object colSummOriginal: TcxGridDBColumn
+          object SummOriginal: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1075#1088#1085
             DataBinding.FieldName = 'SummOriginal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -587,7 +589,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Visible = False
             Width = 80
           end
-          object colSummaCompensation: TcxGridDBColumn
+          object SummaComp: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080', '#1075#1088#1085
             DataBinding.FieldName = 'SummaComp'
             PropertiesClassName = 'TcxCurrencyEditProperties'

@@ -27,8 +27,8 @@ type
     Juridical1Guides: TdsdGuides;
     dxBarControlContainerItem4: TdxBarControlContainerItem;
     JuridicalMainName: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
-    clSumma: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    Summa: TcxGridDBColumn;
     SummaProfit: TcxGridDBColumn;
     tsPivot: TcxTabSheet;
     cxSplitter1: TcxSplitter;

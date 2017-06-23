@@ -3,8 +3,10 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
   ClientHeight = 480
   ClientWidth = 1251
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -583
+  ExplicitTop = -26
   ExplicitWidth = 1267
-  ExplicitHeight = 518
+  ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -30,78 +32,78 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSumma
+              Column = Summa
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaSale
+              Column = SummaSale
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaMargin
+              Column = SummaMargin
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaWithVAT
+              Column = SummaWithVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaWithOutVAT
+              Column = SummaWithOutVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaMarginWithVAT
+              Column = SummaMarginWithVAT
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSumma
+              Column = Summa
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaSale
+              Column = SummaSale
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaMargin
+              Column = SummaMargin
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colGoodsName
+              Column = GoodsName
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaWithVAT
+              Column = SummaWithVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaWithOutVAT
+              Column = SummaWithOutVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaMarginWithVAT
+              Column = SummaMarginWithVAT
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -130,7 +132,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             VisibleForCustomization = False
             Width = 80
           end
-          object clGoodsGroupName: TcxGridDBColumn
+          object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
             HeaderAlignmentHorz = taCenter
@@ -138,7 +140,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             Options.Editing = False
             Width = 155
           end
-          object colGoodsId: TcxGridDBColumn
+          object GoodsId: TcxGridDBColumn
             Caption = #1048#1044' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsId'
             Visible = False
@@ -146,28 +148,28 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             HeaderAlignmentVert = vaCenter
             Width = 27
           end
-          object colGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 247
           end
-          object clNDSKindName: TcxGridDBColumn
+          object NDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 102
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -188,7 +190,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             VisibleForCustomization = False
             Width = 55
           end
-          object colPriceWithVAT: TcxGridDBColumn
+          object PriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'PriceWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -199,7 +201,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             VisibleForCustomization = False
             Width = 78
           end
-          object colPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -210,7 +212,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             VisibleForCustomization = False
             Width = 70
           end
-          object colPriceSale: TcxGridDBColumn
+          object PriceSale: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'PriceSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -219,7 +221,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             HeaderAlignmentVert = vaCenter
             Width = 84
           end
-          object colSummaWithOutVAT: TcxGridDBColumn
+          object SummaWithOutVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'SummaWithOutVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -230,7 +232,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             VisibleForCustomization = False
             Width = 87
           end
-          object colSummaWithVAT: TcxGridDBColumn
+          object SummaWithVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'SummaWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -241,7 +243,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             VisibleForCustomization = False
             Width = 87
           end
-          object colSumma: TcxGridDBColumn
+          object Summa: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -252,7 +254,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             VisibleForCustomization = False
             Width = 102
           end
-          object colSummaSale: TcxGridDBColumn
+          object SummaSale: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'SummaSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -261,7 +263,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             HeaderAlignmentVert = vaCenter
             Width = 138
           end
-          object colSummaMargin: TcxGridDBColumn
+          object SummaMargin: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072#1094#1077#1085#1082#1080' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'.'
             DataBinding.FieldName = 'SummaMargin'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -272,7 +274,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
             VisibleForCustomization = False
             Width = 70
           end
-          object colSummaMarginWithVAT: TcxGridDBColumn
+          object SummaMarginWithVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'SummaMarginWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'

@@ -3,7 +3,7 @@ inherited SPKindForm: TSPKindForm
   ClientHeight = 328
   ClientWidth = 495
   ExplicitWidth = 511
-  ExplicitHeight = 363
+  ExplicitHeight = 367
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -28,7 +28,7 @@ inherited SPKindForm: TSPKindForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             GroupSummaryAlignment = taCenter
@@ -37,7 +37,7 @@ inherited SPKindForm: TSPKindForm
             Options.Editing = False
             Width = 45
           end
-          object clName: TcxGridDBColumn
+          object Name: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             GroupSummaryAlignment = taCenter
@@ -46,7 +46,7 @@ inherited SPKindForm: TSPKindForm
             Options.Editing = False
             Width = 150
           end
-          object clTax: TcxGridDBColumn
+          object Tax: TcxGridDBColumn
             Caption = '% '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1082#1072#1089#1089#1077
             DataBinding.FieldName = 'Tax'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -56,7 +56,7 @@ inherited SPKindForm: TSPKindForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clErased: TcxGridDBColumn
+          object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             PropertiesClassName = 'TcxCheckBoxProperties'

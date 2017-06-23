@@ -33,11 +33,11 @@ type
     cdsUnit: TClientDataSet;
     dsUnit: TDataSource;
     actShowAll: TBooleanStoredProcAction;
-    colNeedUpload: TcxGridDBColumn;
-    colUnitId: TcxGridDBColumn;
-    colUnitCode: TcxGridDBColumn;
-    colUnitCodePartner: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
+    NeedUpload: TcxGridDBColumn;
+    UnitId: TcxGridDBColumn;
+    UnitCode: TcxGridDBColumn;
+    UnitCodePartner: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
     actSelect_Object_UnitForUpload: TdsdExecStoredProc;
     DBViewAddOnUnit: TdsdDBViewAddOn;
     dxBarButton2: TdxBarButton;

@@ -75,11 +75,11 @@ type
     GuidesContract2: TdsdGuides;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clGoodsGroupNameFull: TcxGridDBColumn;
-    clGoodsGroupName: TcxGridDBColumn;
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
-    cPrice_1_1: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    Price_1_1: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     ChildDBViewAddOn: TdsdDBViewAddOn;
     Color1: TcxGridDBColumn;

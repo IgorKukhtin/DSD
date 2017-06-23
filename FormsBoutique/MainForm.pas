@@ -146,6 +146,7 @@ type
     miLine72: TMenuItem;
     miLine73: TMenuItem;
     miLine74: TMenuItem;
+    actReport_Goods_RemainsCurrent: TdsdOpenForm;
   private
     { Private declarations }
   public

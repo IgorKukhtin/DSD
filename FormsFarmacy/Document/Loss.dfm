@@ -3,8 +3,9 @@ inherited LossForm: TLossForm
   ClientHeight = 668
   ClientWidth = 800
   AddOnFormData.AddOnFormRefresh.ParentList = 'Loss'
+  ExplicitTop = -214
   ExplicitWidth = 816
-  ExplicitHeight = 706
+  ExplicitHeight = 707
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -27,7 +28,7 @@ inherited LossForm: TLossForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -36,13 +37,13 @@ inherited LossForm: TLossForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountCheck
+              Column = AmountCheck
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -51,17 +52,17 @@ inherited LossForm: TLossForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSumm
+              Column = Summ
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummIn
+              Column = SummIn
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountCheck
+              Column = AmountCheck
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -75,7 +76,7 @@ inherited LossForm: TLossForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn [0]
+          object GoodsCode: TcxGridDBColumn [0]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             GroupSummaryAlignment = taCenter
@@ -84,7 +85,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 70
           end
-          object colName: TcxGridDBColumn [1]
+          object GoodsName: TcxGridDBColumn [1]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             GroupSummaryAlignment = taCenter
@@ -93,7 +94,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 253
           end
-          object colAmount: TcxGridDBColumn [2]
+          object Amount: TcxGridDBColumn [2]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -104,7 +105,7 @@ inherited LossForm: TLossForm
             HeaderAlignmentVert = vaCenter
             Width = 93
           end
-          object colPrice: TcxGridDBColumn [3]
+          object Price: TcxGridDBColumn [3]
             Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079'.'
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -115,7 +116,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 68
           end
-          object colSumm: TcxGridDBColumn [4]
+          object Summ: TcxGridDBColumn [4]
             Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083'.'
             DataBinding.FieldName = 'Summ'
             GroupSummaryAlignment = taCenter
@@ -125,7 +126,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 69
           end
-          object colRemains_Amount: TcxGridDBColumn [5]
+          object Remains_Amount: TcxGridDBColumn [5]
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Remains_Amount'
             GroupSummaryAlignment = taCenter
@@ -134,7 +135,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 63
           end
-          object clAmountCheck: TcxGridDBColumn [6]
+          object AmountCheck: TcxGridDBColumn [6]
             Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1086#1090#1083#1086#1078'. '#1095#1077#1082#1072#1093
             DataBinding.FieldName = 'AmountCheck'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -147,7 +148,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 62
           end
-          object colPriceIn: TcxGridDBColumn [7]
+          object PriceIn: TcxGridDBColumn [7]
             Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'PriceIn'
             GroupSummaryAlignment = taCenter
@@ -156,7 +157,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 71
           end
-          object colSummIn: TcxGridDBColumn [8]
+          object SummIn: TcxGridDBColumn [8]
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'SummIn'
             GroupSummaryAlignment = taCenter

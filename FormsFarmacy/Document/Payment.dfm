@@ -3,8 +3,10 @@ inherited PaymentForm: TPaymentForm
   ClientHeight = 513
   ClientWidth = 1005
   AddOnFormData.AddOnFormRefresh.ParentList = 'Payment'
+  ExplicitLeft = -337
+  ExplicitTop = -59
   ExplicitWidth = 1021
-  ExplicitHeight = 548
+  ExplicitHeight = 552
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -31,39 +33,39 @@ inherited PaymentForm: TPaymentForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colIncome_TotalSumm
+              Column = Income_TotalSumm
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colIncome_PaySumm
+              Column = Income_PaySumm
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaPay
+              Column = SummaPay
             end
             item
               Format = '+,0.00;-,0.00; ;'
               Kind = skSum
-              Column = colSummaCorrBonus
+              Column = SummaCorrBonus
             end
             item
               Format = '+,0.00;-,0.00; ;'
               Kind = skSum
-              Column = colSummaCorrReturnOut
+              Column = SummaCorrReturnOut
             end
             item
               Format = '+,0.00;-,0.00; ;'
               Kind = skSum
-              Column = colSummaCorrOther
+              Column = SummaCorrOther
             end>
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colId: TcxGridDBColumn [0]
+          object Id: TcxGridDBColumn [0]
             DataBinding.FieldName = 'Id'
             Visible = False
             Options.Editing = False
@@ -73,7 +75,7 @@ inherited PaymentForm: TPaymentForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colIncome_InvNumber: TcxGridDBColumn
+          object Income_InvNumber: TcxGridDBColumn
             Caption = #8470' '#1055'/'#1053
             DataBinding.FieldName = 'Income_InvNumber'
             HeaderAlignmentHorz = taCenter
@@ -81,7 +83,7 @@ inherited PaymentForm: TPaymentForm
             Options.Editing = False
             Width = 61
           end
-          object colIncome_Operdate: TcxGridDBColumn
+          object Income_Operdate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1055'/'#1053
             DataBinding.FieldName = 'Income_Operdate'
             HeaderAlignmentHorz = taCenter
@@ -89,7 +91,7 @@ inherited PaymentForm: TPaymentForm
             Options.Editing = False
             Width = 60
           end
-          object colIncome_PaymentDate: TcxGridDBColumn
+          object Income_PaymentDate: TcxGridDBColumn
             AlternateCaption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
             Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'Income_PaymentDate'
@@ -97,7 +99,7 @@ inherited PaymentForm: TPaymentForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colIncome_StatusName: TcxGridDBColumn
+          object Income_StatusName: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089' '#1055'/'#1053
             DataBinding.FieldName = 'Income_StatusName'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -108,7 +110,7 @@ inherited PaymentForm: TPaymentForm
             Options.Editing = False
             Width = 80
           end
-          object colIncome_JuridicalName: TcxGridDBColumn
+          object Income_JuridicalName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'Income_JuridicalName'
             HeaderAlignmentHorz = taCenter
@@ -116,7 +118,7 @@ inherited PaymentForm: TPaymentForm
             Options.Editing = False
             Width = 137
           end
-          object colIncome_UnitName: TcxGridDBColumn
+          object Income_UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'Income_UnitName'
             HeaderAlignmentHorz = taCenter
@@ -124,7 +126,7 @@ inherited PaymentForm: TPaymentForm
             Options.Editing = False
             Width = 104
           end
-          object colIncome_NDSKindName: TcxGridDBColumn
+          object Income_NDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'Income_NDSKindName'
             HeaderAlignmentHorz = taCenter
@@ -132,7 +134,7 @@ inherited PaymentForm: TPaymentForm
             Options.Editing = False
             Width = 47
           end
-          object colIncome_ContractName: TcxGridDBColumn
+          object Income_ContractName: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088
             DataBinding.FieldName = 'Income_ContractName'
             HeaderAlignmentHorz = taCenter
@@ -140,7 +142,7 @@ inherited PaymentForm: TPaymentForm
             Options.Editing = False
             Width = 79
           end
-          object colIncome_TotalSumm: TcxGridDBColumn
+          object Income_TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1055'/'#1053
             DataBinding.FieldName = 'Income_TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -149,7 +151,7 @@ inherited PaymentForm: TPaymentForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
-          object colIncome_PaySumm: TcxGridDBColumn
+          object Income_PaySumm: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Income_PaySumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -159,28 +161,28 @@ inherited PaymentForm: TPaymentForm
             Options.Editing = False
             Width = 56
           end
-          object colSummaCorrBonus: TcxGridDBColumn
+          object SummaCorrBonus: TcxGridDBColumn
             Caption = #1054#1087#1083#1072#1090#1072' '#1073#1086#1085#1091#1089#1086#1084
             DataBinding.FieldName = 'SummaCorrBonus'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 67
           end
-          object colSummaCorrReturnOut: TcxGridDBColumn
+          object SummaCorrReturnOut: TcxGridDBColumn
             Caption = #1054#1087#1083#1072#1090#1072' '#1074#1086#1079#1074#1088#1072#1090#1086#1084
             DataBinding.FieldName = 'SummaCorrReturnOut'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 78
           end
-          object colSummaCorrOther: TcxGridDBColumn
+          object SummaCorrOther: TcxGridDBColumn
             Caption = #1054#1087#1083#1072#1090#1072' '#1087#1088#1086#1095#1080#1084#1080' '#1082#1086#1088#1088'.'
             DataBinding.FieldName = 'SummaCorrOther'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 71
           end
-          object colSummaPay: TcxGridDBColumn
+          object SummaPay: TcxGridDBColumn
             Caption = #1050' '#1086#1087#1083#1072#1090#1077
             DataBinding.FieldName = 'SummaPay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -190,7 +192,7 @@ inherited PaymentForm: TPaymentForm
             Options.Editing = False
             Width = 61
           end
-          object colNeedPay: TcxGridDBColumn
+          object NeedPay: TcxGridDBColumn
             Caption = #1055#1083#1072#1090#1080#1090#1100
             DataBinding.FieldName = 'NeedPay'
             PropertiesClassName = 'TcxCheckBoxProperties'
@@ -198,7 +200,7 @@ inherited PaymentForm: TPaymentForm
             HeaderAlignmentVert = vaCenter
             Width = 59
           end
-          object colBankAccountName: TcxGridDBColumn
+          object BankAccountName: TcxGridDBColumn
             Caption = #1056'/'#1057
             DataBinding.FieldName = 'BankAccountName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -213,7 +215,7 @@ inherited PaymentForm: TPaymentForm
             HeaderAlignmentVert = vaCenter
             Width = 85
           end
-          object colBankName: TcxGridDBColumn
+          object BankName: TcxGridDBColumn
             Caption = #1041#1072#1085#1082
             DataBinding.FieldName = 'BankName'
             HeaderAlignmentHorz = taCenter
@@ -221,14 +223,14 @@ inherited PaymentForm: TPaymentForm
             Options.Editing = False
             Width = 77
           end
-          object colIncome_PayOrder: TcxGridDBColumn
+          object Income_PayOrder: TcxGridDBColumn
             Caption = #1054#1095#1077#1088#1077#1076#1100' '#1087#1083#1072#1090#1077#1078#1072
             DataBinding.FieldName = 'Income_PayOrder'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
-          object clContractNumber: TcxGridDBColumn
+          object ContractNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractNumber'
             HeaderAlignmentHorz = taCenter
@@ -236,14 +238,14 @@ inherited PaymentForm: TPaymentForm
             Options.Editing = False
             Width = 60
           end
-          object clContractStartDate: TcxGridDBColumn
+          object ContractStartDate: TcxGridDBColumn
             Caption = #1044#1077#1081#1089#1090#1074'. '#1089
             DataBinding.FieldName = 'ContractStartDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clContractEndDate: TcxGridDBColumn
+          object ContractEndDate: TcxGridDBColumn
             Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086
             DataBinding.FieldName = 'ContractEndDate'
             HeaderAlignmentHorz = taCenter
@@ -307,7 +309,7 @@ inherited PaymentForm: TPaymentForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object colContainerAmountBonus: TcxGridDBColumn
+          object ContainerAmountBonus: TcxGridDBColumn
             Caption = #1041#1086#1085#1091#1089
             DataBinding.FieldName = 'ContainerAmountBonus'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -316,7 +318,7 @@ inherited PaymentForm: TPaymentForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colContainerAmountReturnOut: TcxGridDBColumn
+          object ContainerAmountReturnOut: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090
             DataBinding.FieldName = 'ContainerAmountReturnOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -325,7 +327,7 @@ inherited PaymentForm: TPaymentForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colContainerAmountOther: TcxGridDBColumn
+          object ContainerAmountOther: TcxGridDBColumn
             Caption = #1055#1088#1086#1095#1077#1077
             DataBinding.FieldName = 'ContainerAmountOther'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -334,7 +336,7 @@ inherited PaymentForm: TPaymentForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colCorrBonus: TcxGridDBColumn
+          object CorrBonus: TcxGridDBColumn
             Caption = #1048#1089#1087'. '#1073#1086#1085#1091#1089
             DataBinding.FieldName = 'CorrBonus'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -344,7 +346,7 @@ inherited PaymentForm: TPaymentForm
             HeaderHint = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1099#1081' '#1073#1086#1085#1091#1089' '#1074' '#1090#1077#1082#1091#1097#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
             Width = 100
           end
-          object colCorrReturnOut: TcxGridDBColumn
+          object CorrReturnOut: TcxGridDBColumn
             Caption = #1048#1089#1087'. '#1074#1086#1079#1074#1088#1072#1090
             DataBinding.FieldName = 'CorrReturnOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -354,7 +356,7 @@ inherited PaymentForm: TPaymentForm
             HeaderHint = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1099#1081' '#1074#1086#1079#1074#1088#1072#1090' '#1074' '#1090#1077#1082#1091#1097#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
             Width = 98
           end
-          object colCorrOther: TcxGridDBColumn
+          object CorrOther: TcxGridDBColumn
             Caption = #1048#1089#1087'. '#1087#1088#1086#1095#1077#1077
             DataBinding.FieldName = 'CorrOther'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -364,7 +366,7 @@ inherited PaymentForm: TPaymentForm
             HeaderHint = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1072' '#1087#1088#1086#1095#1072#1103' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1074' '#1090#1077#1082#1091#1097#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
             Width = 100
           end
-          object colLeftCorrBonus: TcxGridDBColumn
+          object LeftCorrBonus: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1073#1086#1085#1091#1089
             DataBinding.FieldName = 'LeftCorrBonus'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -374,7 +376,7 @@ inherited PaymentForm: TPaymentForm
             HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1073#1086#1085#1091#1089#1072' '#1087#1086#1089#1083#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1090#1077#1082#1091#1097#1077#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             Width = 100
           end
-          object colLeftCorrReturnOut: TcxGridDBColumn
+          object LeftCorrReturnOut: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1074#1086#1079#1074#1088#1072#1090
             DataBinding.FieldName = 'LeftCorrReturnOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -384,7 +386,7 @@ inherited PaymentForm: TPaymentForm
             HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1087#1086#1089#1083#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1090#1077#1082#1091#1097#1077#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             Width = 100
           end
-          object colLeftCorrOther: TcxGridDBColumn
+          object LeftCorrOther: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1087#1088#1086#1095#1077#1077
             DataBinding.FieldName = 'LeftCorrOther'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -627,12 +629,14 @@ inherited PaymentForm: TPaymentForm
       FormName = 'TBankAccountForm'
       FormNameParam.Value = 'TBankAccountForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'BankAccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -640,6 +644,7 @@ inherited PaymentForm: TPaymentForm
           Component = MasterCDS
           ComponentItem = 'BankAccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BankName'
@@ -648,6 +653,7 @@ inherited PaymentForm: TPaymentForm
           ComponentItem = 'BankName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -738,6 +744,7 @@ inherited PaymentForm: TPaymentForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -746,6 +753,7 @@ inherited PaymentForm: TPaymentForm
         ComponentItem = 'ShowAll'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -753,6 +761,7 @@ inherited PaymentForm: TPaymentForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDateStart'
@@ -760,6 +769,7 @@ inherited PaymentForm: TPaymentForm
         Component = deDateStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDateEnd'
@@ -767,6 +777,7 @@ inherited PaymentForm: TPaymentForm
         Component = deDateEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   inherited BarManager: TdxBarManager
@@ -908,12 +919,14 @@ inherited PaymentForm: TPaymentForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
@@ -921,26 +934,31 @@ inherited PaymentForm: TPaymentForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalCount'
         Value = Null
         Component = edTotalCount
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSumm'
         Value = Null
         Component = edTotalSumm
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BankAccountId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
@@ -948,6 +966,7 @@ inherited PaymentForm: TPaymentForm
         Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 312
@@ -966,6 +985,7 @@ inherited PaymentForm: TPaymentForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDateStart'
@@ -973,6 +993,7 @@ inherited PaymentForm: TPaymentForm
         Component = deDateStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDateEnd'
@@ -980,28 +1001,33 @@ inherited PaymentForm: TPaymentForm
         Component = deDateEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Id'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
         Value = ''
         Component = StatusGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -1009,24 +1035,28 @@ inherited PaymentForm: TPaymentForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalCount'
         Value = Null
         Component = edTotalCount
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSumm'
         Value = Null
         Component = edTotalSumm
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = Null
         Component = GuidesJuridical
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -1034,18 +1064,21 @@ inherited PaymentForm: TPaymentForm
         Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'DateStart'
         Value = 'NULL'
         Component = deDateStart
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'DateEnd'
         Value = 'NULL'
         Component = deDateEnd
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 224
@@ -1059,6 +1092,7 @@ inherited PaymentForm: TPaymentForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -1066,6 +1100,7 @@ inherited PaymentForm: TPaymentForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1073,6 +1108,7 @@ inherited PaymentForm: TPaymentForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -1080,6 +1116,7 @@ inherited PaymentForm: TPaymentForm
         Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
@@ -1137,6 +1174,7 @@ inherited PaymentForm: TPaymentForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1144,6 +1182,7 @@ inherited PaymentForm: TPaymentForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIncomeId'
@@ -1151,6 +1190,7 @@ inherited PaymentForm: TPaymentForm
         Component = MasterCDS
         ComponentItem = 'IncomeId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioBankAccountId'
@@ -1158,6 +1198,7 @@ inherited PaymentForm: TPaymentForm
         Component = MasterCDS
         ComponentItem = 'BankAccountId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outBankAccountName'
@@ -1165,6 +1206,7 @@ inherited PaymentForm: TPaymentForm
         Component = MasterCDS
         ComponentItem = 'BankAccountName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outBankName'
@@ -1172,6 +1214,7 @@ inherited PaymentForm: TPaymentForm
         Component = MasterCDS
         ComponentItem = 'BankName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIncome_PaySumm'
@@ -1180,6 +1223,7 @@ inherited PaymentForm: TPaymentForm
         ComponentItem = 'Income_PaySumm'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioSummaPay'
@@ -1188,6 +1232,7 @@ inherited PaymentForm: TPaymentForm
         ComponentItem = 'SummaPay'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSummaCorrBonus'
@@ -1196,6 +1241,7 @@ inherited PaymentForm: TPaymentForm
         ComponentItem = 'SummaCorrBonus'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSummaCorrReturnOut'
@@ -1204,6 +1250,7 @@ inherited PaymentForm: TPaymentForm
         ComponentItem = 'SummaCorrReturnOut'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSummaCorrOther'
@@ -1212,6 +1259,7 @@ inherited PaymentForm: TPaymentForm
         ComponentItem = 'SummaCorrOther'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioNeedPay'
@@ -1220,6 +1268,7 @@ inherited PaymentForm: TPaymentForm
         ComponentItem = 'NeedPay'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     NeedResetData = True
     ParamKeyField = 'inMovementId'
@@ -1239,6 +1288,7 @@ inherited PaymentForm: TPaymentForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalCount'
@@ -1246,6 +1296,7 @@ inherited PaymentForm: TPaymentForm
         Component = FormParams
         ComponentItem = 'TotalCount'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSumm'
@@ -1253,6 +1304,7 @@ inherited PaymentForm: TPaymentForm
         Component = FormParams
         ComponentItem = 'TotalSumm'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 548
     Top = 172
@@ -1262,6 +1314,7 @@ inherited PaymentForm: TPaymentForm
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridicalCorporateForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalCorporateForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1271,6 +1324,7 @@ inherited PaymentForm: TPaymentForm
         Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1279,6 +1333,7 @@ inherited PaymentForm: TPaymentForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 504
   end
@@ -1303,6 +1358,7 @@ inherited PaymentForm: TPaymentForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 415
@@ -1328,6 +1384,7 @@ inherited PaymentForm: TPaymentForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -1353,6 +1410,7 @@ inherited PaymentForm: TPaymentForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1360,6 +1418,7 @@ inherited PaymentForm: TPaymentForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIncomeId'
@@ -1367,6 +1426,7 @@ inherited PaymentForm: TPaymentForm
         Component = MasterCDS
         ComponentItem = 'IncomeId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBankAccountId'
@@ -1374,6 +1434,7 @@ inherited PaymentForm: TPaymentForm
         Component = FormParams
         ComponentItem = 'BankAccountId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCurrencyId'
@@ -1381,6 +1442,7 @@ inherited PaymentForm: TPaymentForm
         Component = FormParams
         ComponentItem = 'CurrencyId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSummaPay'
@@ -1389,6 +1451,7 @@ inherited PaymentForm: TPaymentForm
         ComponentItem = 'SummaPay'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSummaCorrBonus'
@@ -1397,6 +1460,7 @@ inherited PaymentForm: TPaymentForm
         ComponentItem = 'SummaCorrBonus'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSummaCorrReturnOut'
@@ -1405,6 +1469,7 @@ inherited PaymentForm: TPaymentForm
         ComponentItem = 'SummaCorrReturnOut'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSummaCorrOther'
@@ -1413,6 +1478,7 @@ inherited PaymentForm: TPaymentForm
         ComponentItem = 'SummaCorrOther'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 25
     NeedResetData = True
@@ -1431,18 +1497,21 @@ inherited PaymentForm: TPaymentForm
         Component = FormParams
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BankAccountId'
         Value = Null
         Component = FormParams
         ComponentItem = 'BankAccountId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyId'
         Value = Null
         Component = FormParams
         ComponentItem = 'CurrencyId'
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 584
@@ -1459,6 +1528,7 @@ inherited PaymentForm: TPaymentForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 584
@@ -1478,6 +1548,7 @@ inherited PaymentForm: TPaymentForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -1485,6 +1556,7 @@ inherited PaymentForm: TPaymentForm
         Component = FormParams
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 752

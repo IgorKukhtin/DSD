@@ -3,7 +3,9 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
   ClientWidth = 1142
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -457
   ExplicitWidth = 1158
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -73,68 +75,68 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaWithVAT
+              Column = SummaWithVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaSale
+              Column = SummaSale
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaMarginWithVAT
+              Column = SummaMarginWithVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaWithOutVAT
+              Column = SummaWithOutVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSumma
+              Column = Summa
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaSale
+              Column = SummaSale
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaMargin
+              Column = SummaMargin
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colGoodsName
+              Column = GoodsName
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaWithVAT
+              Column = SummaWithVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaMarginWithVAT
+              Column = SummaMarginWithVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSummaWithOutVAT
+              Column = SummaWithOutVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -144,7 +146,7 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'FromName'
             Visible = False
@@ -154,34 +156,34 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
             VisibleForCustomization = False
             Width = 100
           end
-          object clGoodsGroupName: TcxGridDBColumn
+          object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 140
           end
-          object colGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 64
           end
-          object colGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentVert = vaCenter
             Width = 204
           end
-          object clNDSKindName: TcxGridDBColumn
+          object NDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 89
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -202,7 +204,7 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
             VisibleForCustomization = False
             Width = 55
           end
-          object colPriceWithVAT: TcxGridDBColumn
+          object PriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'PriceWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -213,7 +215,7 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
             VisibleForCustomization = False
             Width = 78
           end
-          object colPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -224,7 +226,7 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
             VisibleForCustomization = False
             Width = 70
           end
-          object colPriceSale: TcxGridDBColumn
+          object PriceSale: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'PriceSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -233,7 +235,7 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
             HeaderAlignmentVert = vaCenter
             Width = 71
           end
-          object colSummaWithOutVAT: TcxGridDBColumn
+          object SummaWithOutVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'SummaWithOutVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -244,7 +246,7 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
             VisibleForCustomization = False
             Width = 87
           end
-          object colSummaWithVAT: TcxGridDBColumn
+          object SummaWithVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'SummaWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -255,7 +257,7 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
             VisibleForCustomization = False
             Width = 87
           end
-          object colSumma: TcxGridDBColumn
+          object Summa: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -266,7 +268,7 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
             VisibleForCustomization = False
             Width = 102
           end
-          object colSummaSale: TcxGridDBColumn
+          object SummaSale: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'SummaSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -275,7 +277,7 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
             HeaderAlignmentVert = vaCenter
             Width = 99
           end
-          object colSummaMargin: TcxGridDBColumn
+          object SummaMargin: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072#1094#1077#1085#1082#1080' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'.'
             DataBinding.FieldName = 'SummaMargin'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -286,7 +288,7 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
             VisibleForCustomization = False
             Width = 70
           end
-          object colSummaMarginWithVAT: TcxGridDBColumn
+          object SummaMarginWithVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'SummaMarginWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -384,6 +386,7 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
       FormName = 'TReport_MovementIncomeFarmDialogForm'
       FormNameParam.Value = 'TReport_MovementIncomeFarmDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -391,6 +394,7 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -398,6 +402,7 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
@@ -405,6 +410,7 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
           Component = UnitGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -413,6 +419,7 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -462,6 +469,7 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDateStart'
@@ -469,6 +477,7 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDateFinal'
@@ -476,18 +485,21 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPartion'
         Value = 'false'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisPartionPrice'
         Value = 'false'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 160
@@ -553,6 +565,7 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
   end
   object rdUnit: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -566,6 +579,7 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
     LookupControl = ceUnit
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitTreeForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -575,6 +589,7 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -583,6 +598,7 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 336
     Top = 24
@@ -597,6 +613,7 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -604,6 +621,7 @@ inherited Report_MovementIncomeFarmForm: TReport_MovementIncomeFarmForm
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 624

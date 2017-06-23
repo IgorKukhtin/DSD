@@ -26,15 +26,15 @@ type
     GuidesUnit: TdsdGuides;
     GuidesGoods: TdsdGuides;
     GuidesParty: TdsdGuides;
-    colGoodsCode: TcxGridDBColumn;
-    colGoodsName: TcxGridDBColumn;
-    colStartRemainsAmount: TcxGridDBColumn;
-    colOperDate: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    StartRemainsAmount: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
     FormParams: TdsdFormParams;
-    colInvNumber: TcxGridDBColumn;
-    colIncomeAmount: TcxGridDBColumn;
-    colOutcomeAmount: TcxGridDBColumn;
-    colEndRemainsAmount: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    IncomeAmount: TcxGridDBColumn;
+    OutcomeAmount: TcxGridDBColumn;
+    EndRemainsAmount: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
   private

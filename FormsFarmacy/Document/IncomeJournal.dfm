@@ -3,8 +3,9 @@ inherited IncomeJournalForm: TIncomeJournalForm
   ClientHeight = 481
   ClientWidth = 896
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -228
   ExplicitWidth = 912
-  ExplicitHeight = 519
+  ExplicitHeight = 520
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

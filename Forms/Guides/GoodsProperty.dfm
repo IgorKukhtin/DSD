@@ -129,6 +129,18 @@ object GoodsPropertyForm: TGoodsPropertyForm
         Options.Editing = False
         Width = 70
       end
+      object TaxDoc: TcxGridDBColumn
+        Caption = '% '#1086#1090#1082#1083'. '#1076#1083#1103' '#1074#1083#1086#1078'.'
+        DataBinding.FieldName = 'TaxDoc'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1076#1083#1103' '#1074#1083#1086#1078#1077#1085#1080#1103
+        Options.Editing = False
+        Width = 70
+      end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -321,10 +333,12 @@ object GoodsPropertyForm: TGoodsPropertyForm
       FormName = 'TGoodsPropertyEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
@@ -340,6 +354,7 @@ object GoodsPropertyForm: TGoodsPropertyForm
       FormName = 'TGoodsPropertyEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -347,6 +362,7 @@ object GoodsPropertyForm: TGoodsPropertyForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       ActionType = acUpdate
@@ -387,6 +403,7 @@ object GoodsPropertyForm: TGoodsPropertyForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -394,6 +411,7 @@ object GoodsPropertyForm: TGoodsPropertyForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -418,6 +436,7 @@ object GoodsPropertyForm: TGoodsPropertyForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -425,6 +444,7 @@ object GoodsPropertyForm: TGoodsPropertyForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -433,6 +453,7 @@ object GoodsPropertyForm: TGoodsPropertyForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end

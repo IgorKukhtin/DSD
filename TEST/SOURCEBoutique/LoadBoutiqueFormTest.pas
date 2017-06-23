@@ -803,6 +803,11 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
   //Отчет пл списанию
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_RemainsCurrentForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_RemainsCurrentForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_RemainsCurrentDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_RemainsCurrentDialogForm');
+  //Отчет пл списанию
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementLossForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementLossForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementLossDialogForm'));

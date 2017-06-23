@@ -59,6 +59,8 @@ type
     ceGroupName: TcxTextEdit;
     cxLabel11: TcxLabel;
     ceBoxCount: TcxCurrencyEdit;
+    cxLabel12: TcxLabel;
+    ceAmountDoc: TcxCurrencyEdit;
   private
     { Private declarations }
   public

@@ -3,8 +3,10 @@ inherited PromoUnitForm: TPromoUnitForm
   ClientHeight = 479
   ClientWidth = 979
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
+  ExplicitLeft = -311
+  ExplicitTop = -25
   ExplicitWidth = 995
-  ExplicitHeight = 517
+  ExplicitHeight = 518
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -28,48 +30,48 @@ inherited PromoUnitForm: TPromoUnitForm
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountPlanMax
+              Column = AmountPlanMax
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSumm
+              Column = Summ
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSummPlanMax
+              Column = SummPlanMax
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colGoodsName
+              Column = GoodsName
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountPlanMax
+              Column = AmountPlanMax
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSummPlanMax
+              Column = SummPlanMax
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSumm
+              Column = Summ
             end>
           OptionsBehavior.IncSearch = True
           OptionsView.ColumnAutoWidth = True
@@ -82,7 +84,7 @@ inherited PromoUnitForm: TPromoUnitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -90,7 +92,7 @@ inherited PromoUnitForm: TPromoUnitForm
             Options.Editing = False
             Width = 58
           end
-          object colGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -98,7 +100,7 @@ inherited PromoUnitForm: TPromoUnitForm
             Options.Editing = False
             Width = 293
           end
-          object colPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -107,7 +109,7 @@ inherited PromoUnitForm: TPromoUnitForm
             HeaderAlignmentVert = vaCenter
             Width = 84
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -117,7 +119,7 @@ inherited PromoUnitForm: TPromoUnitForm
             HeaderAlignmentVert = vaCenter
             Width = 86
           end
-          object colAmountPlanMax: TcxGridDBColumn
+          object AmountPlanMax: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080
             DataBinding.FieldName = 'AmountPlanMax'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -127,7 +129,7 @@ inherited PromoUnitForm: TPromoUnitForm
             HeaderAlignmentVert = vaCenter
             Width = 84
           end
-          object colSumm: TcxGridDBColumn
+          object Summ: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -137,7 +139,7 @@ inherited PromoUnitForm: TPromoUnitForm
             Options.Editing = False
             Width = 95
           end
-          object colSummPlanMax: TcxGridDBColumn
+          object SummPlanMax: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080
             DataBinding.FieldName = 'SummPlanMax'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -147,7 +149,7 @@ inherited PromoUnitForm: TPromoUnitForm
             Options.Editing = False
             Width = 95
           end
-          object colComment: TcxGridDBColumn
+          object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter

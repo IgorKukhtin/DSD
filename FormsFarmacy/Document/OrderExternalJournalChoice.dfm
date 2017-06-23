@@ -4,8 +4,10 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
   ClientWidth = 1334
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -641
+  ExplicitTop = -81
   ExplicitWidth = 1350
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -190,7 +192,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             Options.Editing = False
             Width = 84
           end
-          object colFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090'-'#1082
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
@@ -198,7 +200,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             Options.Editing = False
             Width = 163
           end
-          object colToName: TcxGridDBColumn
+          object ToName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
@@ -206,7 +208,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             Options.Editing = False
             Width = 160
           end
-          object colTotalCount: TcxGridDBColumn
+          object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -217,7 +219,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             Options.Editing = False
             Width = 67
           end
-          object colTotalSumm: TcxGridDBColumn
+          object TotalSumm: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -228,7 +230,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             Options.Editing = False
             Width = 89
           end
-          object colContract: TcxGridDBColumn
+          object ContractName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072' '
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
@@ -236,7 +238,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             Options.Editing = False
             Width = 187
           end
-          object colJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1063#1055
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
@@ -244,7 +246,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             Options.Editing = False
             Width = 105
           end
-          object clisDeferred: TcxGridDBColumn
+          object isDeferred: TcxGridDBColumn
             Caption = #1054#1090#1083#1086#1078#1077#1085
             DataBinding.FieldName = 'isDeferred'
             HeaderAlignmentHorz = taCenter

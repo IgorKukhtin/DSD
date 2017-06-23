@@ -3,8 +3,10 @@ inherited Report_BadmForm: TReport_BadmForm
   ClientHeight = 480
   ClientWidth = 1077
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -409
+  ExplicitTop = -26
   ExplicitWidth = 1093
-  ExplicitHeight = 515
+  ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -103,7 +105,7 @@ inherited Report_BadmForm: TReport_BadmForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = RemainsEnd51
+              Column = RemainsEnd5
             end
             item
               Format = ',0.####'
@@ -440,7 +442,7 @@ inherited Report_BadmForm: TReport_BadmForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = RemainsEnd51
+              Column = RemainsEnd5
             end
             item
               Format = ',0.####'
@@ -807,7 +809,7 @@ inherited Report_BadmForm: TReport_BadmForm
             Options.Editing = False
             Width = 77
           end
-          object RemainsEnd51: TcxGridDBColumn
+          object RemainsEnd5: TcxGridDBColumn
             Caption = #1050#1086#1085'.'#1086#1089#1090'., '#1096#1090' ('#1055#1086#1076#1088'. 5) '
             DataBinding.FieldName = 'RemainsEnd5'
             PropertiesClassName = 'TcxCurrencyEditProperties'

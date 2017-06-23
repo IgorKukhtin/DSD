@@ -28,14 +28,14 @@ uses
 
 type
   TOverJournalForm = class(TAncestorJournalForm)
-    coUnitName: TcxGridDBColumn;
-    colComment: TcxGridDBColumn;
-    coTotalSummTo: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    TotalSummTo: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    colTotalSummFrom: TcxGridDBColumn;
+    TotalSummFrom: TcxGridDBColumn;
     bbPrint1: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
     bbPrintCeh: TdxBarButton;
