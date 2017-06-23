@@ -3,13 +3,13 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_DiscountPeriodItemLast (Integer, Integer, Integer, TDateTime, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_DiscountPeriodItemLast(
- INOUT ioId                     Integer,    -- ключ объекта <Элемент сезонных скидок>
+ INOUT ioId                     Integer,    -- ключ объекта <Элемент ИСТОРИИ>
     IN inUnitId                 Integer,    -- Подразделение
     IN inGoodsId                Integer,    -- Товар
     IN inOperDate               TDateTime,  -- Дата действия % скидки
    OUT outStartDate             TDateTime,  -- Дата действия % скидки
    OUT outEndDate               TDateTime,  -- Дата действия % скидки
-    IN inValue                  TFloat,     -- Значение цены
+    IN inValue                  TFloat,     -- % скидки
     IN inIsLast                 Boolean,    -- 
     IN inSession                TVarChar    -- сессия пользователя
 )
@@ -23,16 +23,17 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_DiscountPeriodItem());
 
-   -- !!!определяется!!!
+   -- !!!меняем значение!!!
    IF inIsLast = TRUE THEN ioId:= 0; END IF;
 
-   -- Получаем ссылку на объект % скидки
+   -- Поиск <Элемент скидки>
    vbDiscountPeriodItemId := lpGetInsert_Object_DiscountPeriodItem (inUnitId, inGoodsId, vbUserId);
  
-   -- Вставляем или меняем объект % скидки
+   -- Сохранили историю
    ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_DiscountPeriodItem(), vbDiscountPeriodItemId, inOperDate, vbUserId);
-   -- Устанавливаем цену
+   -- Сохранили скидку
    PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_DiscountPeriodItem_Value(), ioId, inValue);
+
 
    --
    IF inIsLast = TRUE AND EXISTS (SELECT Id 
@@ -77,5 +78,5 @@ END;$BODY$
  28.04.17         * 
 */
 
---test
---select * from gpInsertUpdate_ObjectHistory_DiscountPeriodItemLast(ioId := 0 , inUnitId := 311 , inGoodsId := 271 , inOperDate := ('08.05.2017')::TDateTime , inValue := 0 , inIsLast := 'False' ,  inSession := '2');
+-- тест
+-- SELECT * FROM gpInsertUpdate_ObjectHistory_DiscountPeriodItemLast (ioId := 0 , inUnitId := 311 , inGoodsId := 271 , inOperDate := ('08.05.2017')::TDateTime , inValue := 0 , inIsLast := 'False' ,  inSession := '2');

@@ -5,7 +5,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 823
-  ExplicitHeight = 507
+  ExplicitHeight = 508
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -33,7 +33,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -70,18 +70,18 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = colTotalSumm
+              Column = TotalSumm
             end
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = colTotalSummMVAT
+              Column = TotalSummMVAT
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -118,12 +118,12 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = colTotalSumm
+              Column = TotalSumm
             end
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = colTotalSummMVAT
+              Column = TotalSummMVAT
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -151,21 +151,21 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 88
           end
-          object colFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 125
           end
-          object colToName: TcxGridDBColumn
+          object ToName: TcxGridDBColumn
             Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090'-'#1082
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 143
           end
-          object colTotalCount: TcxGridDBColumn
+          object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -175,7 +175,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colTotalSummMVAT: TcxGridDBColumn
+          object TotalSummMVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummMVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -184,7 +184,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 65
           end
-          object colTotalSumm: TcxGridDBColumn
+          object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -194,21 +194,21 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 65
           end
-          object colNDSKindName: TcxGridDBColumn
+          object NDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 56
           end
-          object colJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 113
           end
-          object colInvNumberPartner: TcxGridDBColumn
+          object InvNumberPartner: TcxGridDBColumn
             Caption = #8470' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'InvNumberPartner'
             HeaderAlignmentHorz = taCenter
@@ -216,7 +216,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             Options.Editing = False
             Width = 80
           end
-          object colOperDatePartner: TcxGridDBColumn
+          object OperDatePartner: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
@@ -224,21 +224,21 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             Options.Editing = False
             Width = 85
           end
-          object colIncomeOperDate: TcxGridDBColumn
+          object IncomeOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1055#1053
             DataBinding.FieldName = 'IncomeOperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 71
           end
-          object colIncomeInvNumber: TcxGridDBColumn
+          object IncomeInvNumber: TcxGridDBColumn
             Caption = #8470' '#1055#1053
             DataBinding.FieldName = 'IncomeInvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 77
           end
-          object colReturnTypeName: TcxGridDBColumn
+          object ReturnTypeName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1074#1086#1079#1074#1088#1072#1090#1072
             DataBinding.FieldName = 'ReturnTypeName'
             HeaderAlignmentHorz = taCenter

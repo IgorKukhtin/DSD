@@ -32,7 +32,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -78,7 +78,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -123,7 +123,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSaleSumm
+              Column = SaleSumm
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -156,7 +156,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Options.Editing = False
             Width = 88
           end
-          object colFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
@@ -165,7 +165,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Options.Editing = False
             Width = 187
           end
-          object colToName: TcxGridDBColumn
+          object ToName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
@@ -174,7 +174,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Options.Editing = False
             Width = 200
           end
-          object colContractName: TcxGridDBColumn
+          object ContractName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072
             DataBinding.FieldName = 'ContractName'
             GroupSummaryAlignment = taCenter
@@ -183,7 +183,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Options.Editing = False
             Width = 136
           end
-          object colTotalCount: TcxGridDBColumn
+          object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -195,7 +195,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Options.Editing = False
             Width = 60
           end
-          object colSaleSumm: TcxGridDBColumn
+          object SaleSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
             DataBinding.FieldName = 'SaleSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -206,7 +206,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Options.Editing = False
             Width = 79
           end
-          object colNDSKindName: TcxGridDBColumn
+          object NDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
             HeaderAlignmentHorz = taCenter
@@ -215,7 +215,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Options.Editing = False
             Width = 50
           end
-          object colInvNumberBranch: TcxGridDBColumn
+          object InvNumberBranch: TcxGridDBColumn
             Caption = #8470' '#1074' '#1072#1087#1090#1077#1082#1077
             DataBinding.FieldName = 'InvNumberBranch'
             HeaderAlignmentHorz = taCenter
@@ -224,7 +224,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Options.Editing = False
             Width = 47
           end
-          object colBranchDate: TcxGridDBColumn
+          object BranchDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1074' '#1072#1087#1090#1077#1082#1077
             DataBinding.FieldName = 'BranchDate'
             HeaderAlignmentHorz = taCenter
@@ -233,7 +233,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Options.Editing = False
             Width = 50
           end
-          object colChecked: TcxGridDBColumn
+          object Checked: TcxGridDBColumn
             Caption = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084
             DataBinding.FieldName = 'Checked'
             PropertiesClassName = 'TcxCheckBoxProperties'
@@ -243,7 +243,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Options.Editing = False
             Width = 95
           end
-          object colButton: TcxGridDBColumn
+          object Button: TcxGridDBColumn
             AlternateCaption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1092#1090#1086#1084'"'
             Caption = #1048#1079#1084'.'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -261,7 +261,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Options.ShowEditButtons = isebAlways
             Width = 25
           end
-          object colJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1063#1055
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
@@ -270,7 +270,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Options.Editing = False
             Width = 127
           end
-          object colisDocument: TcxGridDBColumn
+          object isDocument: TcxGridDBColumn
             Caption = #1054#1088#1080#1075#1080#1085#1072#1083' '#1085#1072#1082#1083'.'
             DataBinding.FieldName = 'isDocument'
             GroupSummaryAlignment = taCenter
@@ -280,7 +280,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Options.Editing = False
             Width = 68
           end
-          object colisRegistered: TcxGridDBColumn
+          object isRegistered: TcxGridDBColumn
             Caption = #1052#1077#1076#1088#1077#1077#1089#1090#1088' Pfizer'
             DataBinding.FieldName = 'isRegistered'
             GroupSummaryAlignment = taCenter
@@ -291,7 +291,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Options.Editing = False
             Width = 74
           end
-          object clInsertName: TcxGridDBColumn
+          object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
@@ -299,7 +299,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Options.Editing = False
             Width = 101
           end
-          object clInsertDate: TcxGridDBColumn
+          object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
@@ -307,7 +307,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Options.Editing = False
             Width = 78
           end
-          object clUpdateName: TcxGridDBColumn
+          object UpdateName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateName'
             HeaderAlignmentHorz = taCenter
@@ -315,7 +315,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Options.Editing = False
             Width = 101
           end
-          object clUpdateDate: TcxGridDBColumn
+          object UpdateDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateDate'
             HeaderAlignmentHorz = taCenter

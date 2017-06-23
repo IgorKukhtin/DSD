@@ -18,9 +18,9 @@ uses
 
 type
   TIncomeJournalForm = class(TAncestorJournalForm)
-    colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
     bbTax: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
@@ -31,29 +31,29 @@ type
     bbPrintSticker: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
-    colTotalSumm: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
     ADOQueryAction1: TADOQueryAction;
     actGetDataForSend: TdsdExecStoredProc;
     mactSendOneDoc: TMultiAction;
     MultiAction2: TMultiAction;
     bbSendData: TdxBarButton;
     spGetDataForSend: TdsdStoredProc;
-    colTotalSummMVAT: TcxGridDBColumn;
-    colNDSKindName: TcxGridDBColumn;
-    colContractName: TcxGridDBColumn;
-    colPaymentDate: TcxGridDBColumn;
-    colPaySumm: TcxGridDBColumn;
+    TotalSummMVAT: TcxGridDBColumn;
+    NDSKindName: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
+    PaymentDate: TcxGridDBColumn;
+    PaySumm: TcxGridDBColumn;
     mactSendOneDocNEW: TMultiAction;
     actGetDataForSendNew: TdsdExecStoredProc;
     spGetDataForSendNew: TdsdStoredProc;
     bbNewSend: TdxBarButton;
-    colSaleSumm: TcxGridDBColumn;
-    colInvNumberBranch: TcxGridDBColumn;
-    colBranchDate: TcxGridDBColumn;
-    colChecked: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
-    colPayColor: TcxGridDBColumn;
-    colDateLastPay: TcxGridDBColumn;
+    SaleSumm: TcxGridDBColumn;
+    InvNumberBranch: TcxGridDBColumn;
+    BranchDate: TcxGridDBColumn;
+    Checked: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    PayColor: TcxGridDBColumn;
+    DateLastPay: TcxGridDBColumn;
     spUpdateIncome_PartnerData: TdsdStoredProc;
     mactEditPartnerData: TMultiAction;
     actPartnerDataDialod: TExecuteDialog;
@@ -70,8 +70,8 @@ type
     actPrintSticker: TdsdPrintAction;
     actPrintSticker_notPrice: TdsdPrintAction;
     bbPrintSticker_notPrice: TdxBarButton;
-    colMemberIncomeCheckName: TcxGridDBColumn;
-    colCheckDate: TcxGridDBColumn;
+    MemberIncomeCheckName: TcxGridDBColumn;
+    CheckDate: TcxGridDBColumn;
     cxLabel6: TcxLabel;
     deCheckDate: TcxDateEdit;
     cxLabel16: TcxLabel;

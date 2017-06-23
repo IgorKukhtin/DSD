@@ -2,8 +2,10 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 516
   ClientWidth = 1054
+  ExplicitLeft = -327
+  ExplicitTop = -62
   ExplicitWidth = 1070
-  ExplicitHeight = 554
+  ExplicitHeight = 555
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -28,7 +30,7 @@
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -53,13 +55,13 @@
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSumm
+              Column = Summ
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -87,22 +89,22 @@
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSumm
+              Column = Summ
             end
             item
               Format = '+,0.###;-,0.###; ;'
               Kind = skSum
-              Column = colAmountDiff
+              Column = AmountDiff
             end
             item
               Format = ',0.###'
               Kind = skSum
-              Column = colAmountManual
+              Column = AmountManual
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colName
+              Column = GoodsName
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -115,7 +117,7 @@
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -130,7 +132,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object colName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -138,21 +140,21 @@
             Options.Editing = False
             Width = 222
           end
-          object colPartnerGoodsCode: TcxGridDBColumn
+          object PartnerGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'PartnerGoodsCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 82
           end
-          object colPartnerGoodsName: TcxGridDBColumn
+          object PartnerGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'PartnerGoodsName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 173
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -162,7 +164,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 73
           end
-          object colPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -172,7 +174,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colSumm: TcxGridDBColumn
+          object Summ: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -183,7 +185,7 @@
             Options.Editing = False
             Width = 60
           end
-          object colPriceWithVAT: TcxGridDBColumn
+          object PriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'PriceWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -224,7 +226,7 @@
             Options.Editing = False
             Width = 91
           end
-          object colSalePrice: TcxGridDBColumn
+          object SalePrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083'. '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'SalePrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -232,7 +234,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 76
           end
-          object colPercent: TcxGridDBColumn
+          object Percent: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'MarginPercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -242,7 +244,7 @@
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
           end
-          object colSaleSumm: TcxGridDBColumn
+          object SaleSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083'. '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'SaleSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -251,45 +253,45 @@
             Options.Editing = False
             Width = 83
           end
-          object colExpirationDate: TcxGridDBColumn
+          object ExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'ExpirationDate'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
-          object colPartitionGoods: TcxGridDBColumn
+          object PartitionGoods: TcxGridDBColumn
             Caption = #1057#1077#1088#1080#1103
             DataBinding.FieldName = 'PartionGoods'
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colMakerName: TcxGridDBColumn
+          object MakerName: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'MakerName'
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colFEA: TcxGridDBColumn
+          object FEA: TcxGridDBColumn
             Caption = #1059#1050' '#1042#1069#1044
             DataBinding.FieldName = 'FEA'
             HeaderAlignmentVert = vaCenter
             Width = 82
           end
-          object colMeasure: TcxGridDBColumn
+          object Measure: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084
             DataBinding.FieldName = 'Measure'
             HeaderAlignmentVert = vaCenter
             Width = 53
           end
-          object colDublePriceColour: TcxGridDBColumn
+          object DublePriceColour: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1099#1077' '#1094#1077#1085#1099
             DataBinding.FieldName = 'DublePriceColour'
             Visible = False
             VisibleForCustomization = False
             Width = 30
           end
-          object colSertificatNumber: TcxGridDBColumn
+          object SertificatNumber: TcxGridDBColumn
             AlternateCaption = #1053#1086#1084#1077#1088' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
             Caption = #8470' '#1088#1077#1075
             DataBinding.FieldName = 'SertificatNumber'
@@ -297,7 +299,7 @@
             HeaderHint = #1053#1086#1084#1077#1088' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
             Width = 64
           end
-          object colSertificatStart: TcxGridDBColumn
+          object SertificatStart: TcxGridDBColumn
             AlternateCaption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
             Caption = #1053#1072#1095'. '#1088#1077#1075'.'
             DataBinding.FieldName = 'SertificatStart'
@@ -305,7 +307,7 @@
             HeaderHint = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
             Width = 65
           end
-          object colSertificatEnd: TcxGridDBColumn
+          object SertificatEnd: TcxGridDBColumn
             AlternateCaption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
             Caption = #1054#1082#1086#1085#1095'. '#1088#1077#1075'.'
             DataBinding.FieldName = 'SertificatEnd'
@@ -313,13 +315,13 @@
             HeaderHint = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
             Width = 58
           end
-          object colWarningColor: TcxGridDBColumn
+          object WarningColor: TcxGridDBColumn
             Caption = '!'
             DataBinding.FieldName = 'WarningColor'
             Visible = False
             VisibleForCustomization = False
           end
-          object colAVGIncomePrice: TcxGridDBColumn
+          object AVGIncomePrice: TcxGridDBColumn
             Caption = #1057#1088'. '#1094#1077#1085#1072' '#1079#1072' '#1084#1077#1089#1103#1094
             DataBinding.FieldName = 'AVGIncomePrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -328,7 +330,7 @@
             Options.Editing = False
             Width = 81
           end
-          object colAVGIncomePriceWarning: TcxGridDBColumn
+          object AVGIncomePriceWarning: TcxGridDBColumn
             AlternateCaption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1073#1086#1083#1077#1077' 25 %'
             Caption = '>25%'
             DataBinding.FieldName = 'AVGIncomePriceWarning'
@@ -345,14 +347,14 @@
             Options.Editing = False
             Width = 47
           end
-          object colAmountManual: TcxGridDBColumn
+          object AmountManual: TcxGridDBColumn
             Caption = #1060#1072#1082#1090'. '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'AmountManual'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 54
           end
-          object colAmountDiff: TcxGridDBColumn
+          object AmountDiff: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072' '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'AmountDiff'
             PropertiesClassName = 'TcxCalcEditProperties'
@@ -361,14 +363,14 @@
             Options.Editing = False
             Width = 63
           end
-          object colReasonDifferencesName: TcxGridDBColumn
+          object ReasonDifferencesName: TcxGridDBColumn
             Caption = #1055#1088#1080#1095#1080#1085#1072' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1103
             DataBinding.FieldName = 'ReasonDifferencesName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 123
           end
-          object colOrderAmount: TcxGridDBColumn
+          object OrderAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1079#1072#1103#1074#1082#1077
             DataBinding.FieldName = 'OrderAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -379,7 +381,7 @@
             Options.Editing = False
             Width = 73
           end
-          object colOrderPrice: TcxGridDBColumn
+          object OrderPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1074' '#1079#1072#1103#1074#1082#1077
             DataBinding.FieldName = 'OrderPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -390,7 +392,7 @@
             Options.Editing = False
             Width = 60
           end
-          object colOrderSumm: TcxGridDBColumn
+          object OrderSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1074' '#1079#1072#1103#1074#1082#1077
             DataBinding.FieldName = 'OrderSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -401,7 +403,7 @@
             Options.Editing = False
             Width = 60
           end
-          object colisAmountDiff: TcxGridDBColumn
+          object isAmountDiff: TcxGridDBColumn
             Caption = #1054#1090#1082#1083'. '#1087#1086' '#1082#1086#1083'-'#1074#1091
             DataBinding.FieldName = 'isAmountDiff'
             HeaderAlignmentHorz = taCenter
@@ -410,7 +412,7 @@
             Options.Editing = False
             Width = 67
           end
-          object colisSummDiff: TcxGridDBColumn
+          object isSummDiff: TcxGridDBColumn
             Caption = #1054#1090#1082#1083'. '#1087#1086' '#1094#1077#1085#1077
             DataBinding.FieldName = 'isSummDiff'
             HeaderAlignmentHorz = taCenter
@@ -419,7 +421,7 @@
             Options.Editing = False
             Width = 66
           end
-          object colPersentDiff: TcxGridDBColumn
+          object PersentDiff: TcxGridDBColumn
             Caption = '% '#1086#1090#1082#1083#1086#1085'.'
             DataBinding.FieldName = 'PersentDiff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -430,7 +432,7 @@
             Options.Editing = False
             Width = 60
           end
-          object clisTop: TcxGridDBColumn
+          object isTop: TcxGridDBColumn
             Caption = #1058#1054#1055' ('#1072#1087#1090#1077#1082#1072')'
             DataBinding.FieldName = 'isTop'
             HeaderAlignmentHorz = taCenter
@@ -439,7 +441,7 @@
             Options.Editing = False
             Width = 60
           end
-          object colFix_Price: TcxGridDBColumn
+          object Fix_Price: TcxGridDBColumn
             Caption = #1060#1080#1082#1089'. '#1094#1077#1085#1072' ('#1072#1087#1090#1077#1082#1072')'
             DataBinding.FieldName = 'Fix_Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -449,7 +451,7 @@
             Options.Editing = False
             Width = 60
           end
-          object clPercentMarkup: TcxGridDBColumn
+          object PercentMarkup: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1072#1087#1090#1077#1082#1072')'
             DataBinding.FieldName = 'PercentMarkup'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -461,7 +463,7 @@
             Options.Editing = False
             Width = 70
           end
-          object clGoods_isTop: TcxGridDBColumn
+          object Goods_isTop: TcxGridDBColumn
             Caption = #1058#1054#1055' ('#1087#1086' '#1089#1077#1090#1080')'
             DataBinding.FieldName = 'Goods_isTop'
             HeaderAlignmentHorz = taCenter
@@ -470,7 +472,7 @@
             Options.Editing = False
             Width = 60
           end
-          object colGoods_Price: TcxGridDBColumn
+          object Goods_Price: TcxGridDBColumn
             Caption = #1060#1080#1082#1089'. '#1094#1077#1085#1072' ('#1087#1086' '#1089#1077#1090#1080')'
             DataBinding.FieldName = 'Goods_Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -480,7 +482,7 @@
             Options.Editing = False
             Width = 60
           end
-          object clGoods_PercentMarkup: TcxGridDBColumn
+          object Goods_PercentMarkup: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1087#1086' '#1089#1077#1090#1080')'
             DataBinding.FieldName = 'Goods_PercentMarkup'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -492,7 +494,7 @@
             Options.Editing = False
             Width = 70
           end
-          object mainColor_calc: TcxGridDBColumn
+          object Color_calc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_calc'
             Visible = False
             Options.Editing = False
@@ -505,14 +507,14 @@
             VisibleForCustomization = False
             Width = 30
           end
-          object colisPrint: TcxGridDBColumn
+          object isPrint: TcxGridDBColumn
             Caption = #1055#1077#1095'. '#1089#1090#1080#1082#1077#1088
             DataBinding.FieldName = 'isPrint'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colPrintCount: TcxGridDBColumn
+          object PrintCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1090#1080#1082#1077#1088#1086#1074
             DataBinding.FieldName = 'PrintCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -522,7 +524,7 @@
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1077#1095#1072#1090#1072#1077#1084#1099#1093' '#1089#1090#1080#1082#1077#1088#1086#1074
             Width = 62
           end
-          object clisSp: TcxGridDBColumn
+          object isSp: TcxGridDBColumn
             Caption = #1057#1086#1094'. '#1087#1088#1086#1077#1082#1090
             DataBinding.FieldName = 'isSp'
             HeaderAlignmentHorz = taCenter
@@ -1746,227 +1748,227 @@
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
       item
-        BackGroundValueColumn = colDublePriceColour
+        BackGroundValueColumn = DublePriceColour
         ColorValueList = <>
       end
       item
-        ValueColumn = colWarningColor
+        ValueColumn = WarningColor
         ColorValueList = <>
       end
       item
-        ColorColumn = clisTop
+        ColorColumn = isTop
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
         ColorColumn = JuridicalPriceWithVAT
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
         ColorColumn = JuridicalPrice
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colSumm
+        ColorColumn = Summ
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colSertificatStart
+        ColorColumn = SertificatStart
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colSertificatNumber
+        ColorColumn = SertificatNumber
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colSertificatEnd
+        ColorColumn = SertificatEnd
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colSaleSumm
+        ColorColumn = SaleSumm
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colSalePrice
+        ColorColumn = SalePrice
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colPriceWithVAT
+        ColorColumn = PriceWithVAT
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colReasonDifferencesName
+        ColorColumn = ReasonDifferencesName
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colPrice
+        ColorColumn = Price
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colPersentDiff
+        ColorColumn = PersentDiff
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colPercent
+        ColorColumn = Percent
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colPartnerGoodsName
+        ColorColumn = PartnerGoodsName
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colPartnerGoodsCode
+        ColorColumn = PartnerGoodsCode
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colPartitionGoods
+        ColorColumn = PartitionGoods
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colOrderSumm
+        ColorColumn = OrderSumm
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colOrderPrice
+        ColorColumn = OrderPrice
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colName
+        ColorColumn = GoodsName
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colMeasure
+        ColorColumn = Measure
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colOrderAmount
+        ColorColumn = OrderAmount
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colisSummDiff
+        ColorColumn = isSummDiff
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colisAmountDiff
+        ColorColumn = isAmountDiff
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colMakerName
+        ColorColumn = MakerName
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colFix_Price
+        ColorColumn = Fix_Price
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colFEA
+        ColorColumn = FEA
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colExpirationDate
+        ColorColumn = ExpirationDate
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colDublePriceColour
+        ColorColumn = DublePriceColour
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colCode
+        ColorColumn = GoodsCode
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colAVGIncomePriceWarning
+        ColorColumn = AVGIncomePriceWarning
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colAVGIncomePrice
+        ColorColumn = AVGIncomePrice
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colAmountManual
+        ColorColumn = AmountManual
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colAmountDiff
+        ColorColumn = AmountDiff
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = colAmount
+        ColorColumn = Amount
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end
       item
-        ColorColumn = clPercentMarkup
+        ColorColumn = PercentMarkup
         ValueColumn = Color_ExpirationDate
-        BackGroundValueColumn = mainColor_calc
+        BackGroundValueColumn = Color_calc
         ColorValueList = <>
       end>
     SummaryItemList = <

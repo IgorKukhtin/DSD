@@ -27,7 +27,10 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- Нужен ВСЕГДА - ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
-   IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) > 0 THEN ioCode:= NEXTVAL ('Object_Goods_seq'); 
+   IF COALESCE (ioId, 0) = 0 AND ioCode > 0 THEN ioCode:= NEXTVAL ('Object_Goods_seq'); 
+   -- для загрузки из Sybase т.к. там код НЕ = 0 
+   ELSEIF ioCode < 0
+       THEN ioCode:= -1 * ioCode;
    END IF; 
 
    -- НЕ Нужен для загрузки из Sybase т.к. там код НЕ = 0 

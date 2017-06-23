@@ -100,7 +100,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Options.Moving = False
           Width = 50
         end>
-      object BandcolPersonalCode: TcxGridDBBandedColumn
+      object PersonalCode: TcxGridDBBandedColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'PersonalCode'
         HeaderAlignmentVert = vaCenter
@@ -111,7 +111,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
-      object BandcolPersonalName: TcxGridDBBandedColumn
+      object PersonalName: TcxGridDBBandedColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'PersonalName'
         HeaderAlignmentVert = vaCenter
@@ -123,7 +123,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Position.ColIndex = 1
         Position.RowIndex = 0
       end
-      object BandcolPositionName: TcxGridDBBandedColumn
+      object PositionName: TcxGridDBBandedColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
         DataBinding.FieldName = 'PositionName'
         HeaderAlignmentVert = vaCenter
@@ -135,7 +135,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Position.ColIndex = 2
         Position.RowIndex = 0
       end
-      object BandcolPersonalGroupName: TcxGridDBBandedColumn
+      object PersonalGroupName: TcxGridDBBandedColumn
         Caption = #1041#1088#1080#1075#1072#1076#1072
         DataBinding.FieldName = 'PersonalGroupName'
         Visible = False
@@ -149,7 +149,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Position.ColIndex = 3
         Position.RowIndex = 0
       end
-      object TemplateColumn: TcxGridDBBandedColumn
+      object Value: TcxGridDBBandedColumn
         DataBinding.FieldName = 'Value'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -281,7 +281,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Position.ColIndex = 3
         Position.RowIndex = 0
       end
-      object TemplateColumn1: TcxGridDBBandedColumn
+      object colValue: TcxGridDBBandedColumn
         DataBinding.FieldName = 'Value'
         PropertiesClassName = 'TcxTimeEditProperties'
         Properties.AutoCorrectHours = False
@@ -798,6 +798,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
@@ -813,6 +814,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -974,7 +976,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     SummaryItemList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueField'
-    TemplateColumn = TemplateColumn
+    TemplateColumn = Value
     Left = 680
     Top = 112
   end
@@ -1145,7 +1147,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     SummaryItemList = <>
     HeaderDataSet = HeaderCDS_Child
     HeaderColumnName = 'ValueField'
-    TemplateColumn = TemplateColumn1
+    TemplateColumn = colValue
     Left = 600
     Top = 352
   end

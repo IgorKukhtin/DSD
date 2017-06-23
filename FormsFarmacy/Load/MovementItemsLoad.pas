@@ -18,13 +18,13 @@ type
   TMovementItemsLoadForm = class(TAncestorDBGridForm)
     FormParams: TdsdFormParams;
     Panel1: TPanel;
-    colGoodsCode: TcxGridDBColumn;
-    colGoodsName: TcxGridDBColumn;
-    colGoodsId: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colExpirationDate: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
-    colLoadMovementId: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    GoodsId: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    ExpirationDate: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    LoadMovementId: TcxGridDBColumn;
     actChoiceGoods: TOpenChoiceForm;
     cxLabel2: TcxLabel;
     edOperDate: TcxDateEdit;
@@ -32,8 +32,8 @@ type
     edFrom: TcxButtonEdit;
     spGet: TdsdStoredProc;
     GuidesFrom: TdsdGuides;
-    colPackageAmount: TcxGridDBColumn;
-    colSumm: TcxGridDBColumn;
+    PackageAmount: TcxGridDBColumn;
+    Summ: TcxGridDBColumn;
   private
     { Private declarations }
   public

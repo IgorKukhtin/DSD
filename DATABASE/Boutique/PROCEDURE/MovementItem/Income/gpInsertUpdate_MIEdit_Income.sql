@@ -185,7 +185,7 @@ BEGIN
      THEN
          -- Создание
          SELECT tmp.ioId, tmp.ioCode 
-       INTO vbGoodsId, ioGoodsCode
+                INTO vbGoodsId, ioGoodsCode
          FROM gpInsertUpdate_Object_Goods (ioId            := vbGoodsId
                                          , ioCode          := ioGoodsCode
                                          , inName          := inGoodsName

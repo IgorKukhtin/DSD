@@ -3,8 +3,9 @@ inherited SendJournalForm: TSendJournalForm
   ClientHeight = 535
   ClientWidth = 785
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitTop = -81
   ExplicitWidth = 801
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -32,7 +33,7 @@ inherited SendJournalForm: TSendJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -69,33 +70,33 @@ inherited SendJournalForm: TSendJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSumm
+              Column = TotalSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummMVAT
+              Column = TotalSummMVAT
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummPVAT
+              Column = TotalSummPVAT
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummFrom
+              Column = TotalSummFrom
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummTo
+              Column = TotalSummTo
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -132,27 +133,27 @@ inherited SendJournalForm: TSendJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSumm
+              Column = TotalSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummMVAT
+              Column = TotalSummMVAT
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummPVAT
+              Column = TotalSummPVAT
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummFrom
+              Column = TotalSummFrom
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummTo
+              Column = TotalSummTo
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -180,21 +181,21 @@ inherited SendJournalForm: TSendJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 65
           end
-          object colFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 176
           end
-          object colToName: TcxGridDBColumn
+          object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 165
           end
-          object colTotalCount: TcxGridDBColumn
+          object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -204,7 +205,7 @@ inherited SendJournalForm: TSendJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colTotalSumm: TcxGridDBColumn
+          object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1091#1089#1088#1077#1076'. '#1079#1072#1082#1091#1087'. '#1094#1077#1085' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -214,7 +215,7 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 96
           end
-          object colTotalSummMVAT: TcxGridDBColumn
+          object TotalSummMVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1091#1087#1082#1080' '#1074' '#1091#1089#1088#1077#1076'. '#1094#1077#1085#1072#1093' '#1089' '#1091#1095'. % '#1082#1086#1088'-'#1082#1080' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'TotalSummMVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -224,7 +225,7 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 120
           end
-          object colTotalSummPVAT: TcxGridDBColumn
+          object TotalSummPVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1091#1087#1082#1080' '#1074' '#1091#1089#1088#1077#1076'. '#1094#1077#1085#1072#1093' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'TotalSummPVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -234,7 +235,7 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 96
           end
-          object colTotalSummFrom: TcxGridDBColumn
+          object TotalSummFrom: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1074' '#1094#1077#1085#1072#1093' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
             DataBinding.FieldName = 'TotalSummFrom'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -244,7 +245,7 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 96
           end
-          object colTotalSummTo: TcxGridDBColumn
+          object TotalSummTo: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1074' '#1094#1077#1085#1072#1093' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
             DataBinding.FieldName = 'TotalSummTo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -254,7 +255,7 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 96
           end
-          object colisAuto: TcxGridDBColumn
+          object isAuto: TcxGridDBColumn
             Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
             DataBinding.FieldName = 'isAuto'
             HeaderAlignmentHorz = taCenter
@@ -263,7 +264,7 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 32
           end
-          object colChecked: TcxGridDBColumn
+          object Checked: TcxGridDBColumn
             Caption = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1092#1072#1088#1084'.- '#1087#1086#1083#1091#1095'.'
             DataBinding.FieldName = 'Checked'
             GroupSummaryAlignment = taCenter
@@ -273,7 +274,7 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 72
           end
-          object clisComplete: TcxGridDBColumn
+          object isComplete: TcxGridDBColumn
             Caption = #1057#1086#1073#1088#1072#1085#1086' '#1092#1072#1088#1084'.- '#1086#1090#1087#1088#1072#1074'.'
             DataBinding.FieldName = 'isComplete'
             HeaderAlignmentHorz = taCenter
@@ -281,7 +282,7 @@ inherited SendJournalForm: TSendJournalForm
             HeaderHint = #1057#1086#1073#1088#1072#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1077#1084
             Width = 59
           end
-          object colMCSPeriod: TcxGridDBColumn
+          object MCSPeriod: TcxGridDBColumn
             Caption = #1055#1077#1088#1080#1086#1076' '#1088#1072#1089#1095#1077#1090#1072' '#1053#1058#1047
             DataBinding.FieldName = 'MCSPeriod'
             HeaderAlignmentHorz = taCenter
@@ -289,7 +290,7 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 70
           end
-          object colMCSDay: TcxGridDBColumn
+          object MCSDay: TcxGridDBColumn
             Caption = #1053#1072' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1053#1058#1047
             DataBinding.FieldName = 'MCSDay'
             HeaderAlignmentHorz = taCenter
@@ -297,14 +298,14 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 70
           end
-          object colComment: TcxGridDBColumn
+          object Comment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 147
           end
-          object clInsertName: TcxGridDBColumn
+          object lInsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
@@ -312,7 +313,7 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 101
           end
-          object clInsertDate: TcxGridDBColumn
+          object lInsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
@@ -331,7 +332,7 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 71
           end
-          object clUpdateName: TcxGridDBColumn
+          object UpdateName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateName'
             HeaderAlignmentHorz = taCenter
@@ -339,7 +340,7 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 101
           end
-          object clUpdateDate: TcxGridDBColumn
+          object UpdateDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateDate'
             HeaderAlignmentHorz = taCenter

@@ -3,12 +3,12 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_ObjectHistory_PriceListItem (Integer,Integer,Integer,TDateTime,TFloat,Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_ObjectHistory_PriceListItem(
- INOUT ioId                     Integer,    -- ключ объекта <Элемент прайс-листа>
+ INOUT ioId                     Integer,    -- ключ объекта <Элемент ИСТОРИИ>
     IN inPriceListId            Integer,    -- Прайс-лист
     IN inGoodsId                Integer,    -- Товар
-    IN inOperDate               TDateTime,  -- Дата действия прайс-листа
-    IN inValue                  TFloat,     -- Значение цены
-    IN inUserId                 Integer    -- сессия пользователя
+    IN inOperDate               TDateTime,  -- Дата действия цены
+    IN inValue                  TFloat,     -- Цена
+    IN inUserId                 Integer     -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
@@ -16,14 +16,16 @@ DECLARE
    DECLARE vbPriceListItemId Integer;
 BEGIN
 
-
-   -- Получаем ссылку на объект цен
+   -- Поиск <Элемент цены>
    vbPriceListItemId := lpGetInsert_Object_PriceListItem (inPriceListId, inGoodsId, inUserId);
  
-   -- Вставляем или меняем объект историю цен
+   -- Сохранили историю
    ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_PriceListItem(), vbPriceListItemId, inOperDate, inUserId);
-   -- Устанавливаем цену
+   -- Сохранили цену
    PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceListItem_Value(), ioId, inValue);
+
+   -- !!!Кроме Sybase!!! - !!!не забыли - cохранили Последнюю Цену в ПАРТИИ!!!
+   -- PERFORM lpUpdate_Object_PartionGoods ...
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectHistoryProtocol (inObjectId:= ObjectHistory.ObjectId, inUserId:= inUserId, inStartDate:= StartDate, inEndDate:= EndDate, inPrice:= inValue, inIsUpdate:= TRUE, inIsErased:= FALSE)

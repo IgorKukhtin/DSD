@@ -2,7 +2,7 @@ inherited OverForm: TOverForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1048#1079#1083#1080#1096#1082#1080' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1072#1087#1090#1077#1082#1072#1084')>'
   ClientHeight = 532
   ClientWidth = 1002
-  ExplicitLeft = -334
+  ExplicitLeft = -324
   ExplicitTop = -78
   ExplicitWidth = 1018
   ExplicitHeight = 571
@@ -459,7 +459,7 @@ inherited OverForm: TOverForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object chUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter

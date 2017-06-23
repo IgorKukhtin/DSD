@@ -91,6 +91,31 @@ BEGIN
                            FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                            WHERE lfSelect.Ord = 1
                           )
+             , tmpUser AS (SELECT DISTINCT ObjectLink_User_Member_trade.ObjectId AS UserId
+                           FROM ObjectLink AS ObjectLink_User_Member
+                                INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                      ON ObjectLink_Personal_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                                     AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                                INNER JOIN ObjectLink AS OL
+                                                      ON OL.ChildObjectId = ObjectLink_Personal_Member.ObjectId
+                                                     AND OL.DescId        = zc_ObjectLink_Partner_Personal()
+                                INNER JOIN ObjectLink AS OL_Partner_PersonalTrade
+                                                      ON OL_Partner_PersonalTrade.ObjectId = OL.ObjectId
+                                                     AND OL_Partner_PersonalTrade.DescId   = zc_ObjectLink_Partner_PersonalTrade()
+                                INNER JOIN ObjectLink AS ObjectLink_Personal_Member_trade
+                                                      ON ObjectLink_Personal_Member_trade.ObjectId = OL_Partner_PersonalTrade.ChildObjectId
+                                                     AND ObjectLink_Personal_Member_trade.DescId   = zc_ObjectLink_Personal_Member()
+                                INNER JOIN ObjectLink AS ObjectLink_User_Member_trade
+                                                      ON ObjectLink_User_Member_trade.ChildObjectId = ObjectLink_Personal_Member_trade.ChildObjectId
+                                                     AND ObjectLink_User_Member_trade.DescId        = zc_ObjectLink_User_Member()
+                           WHERE ObjectLink_User_Member.ObjectId = vbUserId_Mobile
+                             AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                          UNION
+                           SELECT vbUserId_Mobile AS UserId
+                          UNION
+                           SELECT Object.Id AS UserId FROM Object WHERE Object.DescId = zc_Object_User() AND vbUserId_Mobile = 0
+                          )
+       -- Результат
        SELECT
              Movement.Id                                AS Id
            , Movement.InvNumber                         AS InvNumber
@@ -179,13 +204,16 @@ BEGIN
                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()*/
             ) AS Movement
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
-                                         ON MovementLinkObject_Insert.MovementId = Movement.Id
-                                        AND MovementLinkObject_Insert.DescId     = zc_MovementLinkObject_Insert()
+            INNER JOIN MovementLinkObject AS MovementLinkObject_Insert
+                                          ON MovementLinkObject_Insert.MovementId = Movement.Id
+                                         AND MovementLinkObject_Insert.DescId     = zc_MovementLinkObject_Insert()
+            INNER JOIN tmpUser ON tmpUser.UserId = MovementLinkObject_Insert.ObjectId
+
+            LEFT JOIN Object AS Object_User   ON Object_User.Id   = MovementLinkObject_Insert.ObjectId
+            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.id = Movement.ParentId
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-            LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_Insert.ObjectId
+
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Error
                                       ON MovementBoolean_Error.MovementId =  Movement.Id
@@ -353,8 +381,8 @@ BEGIN
             LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
 
-       WHERE (MovementLinkObject_Insert.ObjectId  = vbUserId_Mobile
-           OR vbUserId_Mobile = 0)
+       -- WHERE (MovementLinkObject_Insert.ObjectId  = vbUserId_Mobile
+       --    OR vbUserId_Mobile = 0)
       ;
 
 END;

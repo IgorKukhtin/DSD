@@ -2,8 +2,10 @@ inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 558
   ClientWidth = 1015
+  ExplicitLeft = -288
+  ExplicitTop = -104
   ExplicitWidth = 1031
-  ExplicitHeight = 596
+  ExplicitHeight = 597
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -28,7 +30,7 @@ inherited SendForm: TSendForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -57,53 +59,53 @@ inherited SendForm: TSendForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountRemains
+              Column = AmountRemains
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSumPriceIn
+              Column = SumPriceIn
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSummaWithVAT
+              Column = SummaWithVAT
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSumma
+              Column = Summa
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountManual
+              Column = AmountManual
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountDiff
+              Column = AmountDiff
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountCheck
+              Column = AmountCheck
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSummaUnitFrom
+              Column = SummaUnitFrom
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSummaUnitTo
+              Column = SummaUnitTo
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -135,47 +137,47 @@ inherited SendForm: TSendForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountRemains
+              Column = AmountRemains
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSumPriceIn
+              Column = SumPriceIn
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSummaWithVAT
+              Column = SummaWithVAT
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSumma
+              Column = Summa
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountManual
+              Column = AmountManual
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountDiff
+              Column = AmountDiff
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountCheck
+              Column = AmountCheck
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSummaUnitFrom
+              Column = SummaUnitFrom
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSummaUnitTo
+              Column = SummaUnitTo
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -189,7 +191,7 @@ inherited SendForm: TSendForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn [0]
+          object GoodsCode: TcxGridDBColumn [0]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -197,7 +199,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 75
           end
-          object colName: TcxGridDBColumn [1]
+          object GoodsName: TcxGridDBColumn [1]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -213,7 +215,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 249
           end
-          object clAmountCheck: TcxGridDBColumn [2]
+          object AmountCheck: TcxGridDBColumn [2]
             Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1086#1090#1083#1086#1078'. '#1095#1077#1082#1072#1093
             DataBinding.FieldName = 'AmountCheck'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -225,7 +227,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 62
           end
-          object colAmountRemains: TcxGridDBColumn [3]
+          object AmountRemains: TcxGridDBColumn [3]
             Caption = #1054#1089#1090'. '#1082#1086#1083'-'#1074#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
             DataBinding.FieldName = 'AmountRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -236,7 +238,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 65
           end
-          object colAmount: TcxGridDBColumn [4]
+          object Amount: TcxGridDBColumn [4]
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -246,7 +248,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Width = 77
           end
-          object colPriceIn: TcxGridDBColumn
+          object PriceIn: TcxGridDBColumn
             Caption = #1059#1089#1088#1077#1076'. '#1079#1072#1082#1091#1087'. '#1094#1077#1085#1072' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'PriceIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -256,7 +258,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 79
           end
-          object colPriceWithVAT: TcxGridDBColumn
+          object PriceWithVAT: TcxGridDBColumn
             Caption = #1059#1089#1088#1077#1076'. '#1094#1077#1085#1072' '#1079#1072#1082#1091#1087'. ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'PriceWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -266,7 +268,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 78
           end
-          object colPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1059#1089#1088#1077#1076'. '#1094#1077#1085#1072' '#1079#1072#1082#1091#1087'.'#1089' '#1091#1095'. % '#1082#1086#1088'-'#1082#1080' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -276,7 +278,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 79
           end
-          object colPriceUnitFrom: TcxGridDBColumn
+          object PriceUnitFrom: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
             DataBinding.FieldName = 'PriceUnitFrom'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -285,7 +287,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
-          object colPriceUnitTo: TcxGridDBColumn
+          object PriceUnitTo: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
             DataBinding.FieldName = 'PriceUnitTo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -294,7 +296,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
-          object colSummaUnitFrom: TcxGridDBColumn
+          object SummaUnitFrom: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1074' '#1094#1077#1085#1072#1093' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
             DataBinding.FieldName = 'SummaUnitFrom'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -304,7 +306,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 87
           end
-          object colSummaUnitTo: TcxGridDBColumn
+          object SummaUnitTo: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1074' '#1094#1077#1085#1072#1093' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
             DataBinding.FieldName = 'SummaUnitTo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -314,7 +316,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 87
           end
-          object colSumPriceIn: TcxGridDBColumn
+          object SumPriceIn: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1091#1089#1088#1077#1076'. '#1079#1072#1082#1091#1087'. '#1094#1077#1085' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'SumPriceIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -324,7 +326,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 80
           end
-          object colSummaWithVAT: TcxGridDBColumn
+          object SummaWithVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1091#1087#1082#1080' '#1074' '#1091#1089#1088#1077#1076'. '#1094#1077#1085#1072#1093' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'SummaWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -334,7 +336,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 87
           end
-          object colSumma: TcxGridDBColumn
+          object Summa: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1091#1087#1082#1080' '#1074' '#1091#1089#1088#1077#1076'. '#1094#1077#1085#1072#1093' '#1089' '#1091#1095'. % '#1082#1086#1088'-'#1082#1080' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -344,14 +346,14 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 102
           end
-          object colAmountManual: TcxGridDBColumn
+          object AmountManual: TcxGridDBColumn
             Caption = #1060#1072#1082#1090'. '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'AmountManual'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 54
           end
-          object colAmountDiff: TcxGridDBColumn
+          object AmountDiff: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072' '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'AmountDiff'
             PropertiesClassName = 'TcxCalcEditProperties'
@@ -360,7 +362,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
-          object colReasonDifferencesName: TcxGridDBColumn
+          object ReasonDifferencesName: TcxGridDBColumn
             Caption = #1055#1088#1080#1095#1080#1085#1072' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1103
             DataBinding.FieldName = 'ReasonDifferencesName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -375,7 +377,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Width = 123
           end
-          object clConditionsKeepName: TcxGridDBColumn
+          object ConditionsKeepName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
             DataBinding.FieldName = 'ConditionsKeepName'
             GroupSummaryAlignment = taCenter
@@ -384,7 +386,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 75
           end
-          object colMinExpirationDate: TcxGridDBColumn
+          object MinExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'MinExpirationDate'
             HeaderAlignmentHorz = taCenter

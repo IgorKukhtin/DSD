@@ -18,12 +18,12 @@ uses
 
 type
   TBankAccountJournalFarmacyForm = class(TBankAccountJournalForm)
-    colIncome_JuridicalName: TcxGridDBColumn;
-    colIncome_OperDate: TcxGridDBColumn;
-    colIncome_InvNumber: TcxGridDBColumn;
-    colIncome_NDSKindName: TcxGridDBColumn;
-    colIncome_SummWithOutVAT: TcxGridDBColumn;
-    colIncome_SummVAT: TcxGridDBColumn;
+    Income_JuridicalName: TcxGridDBColumn;
+    Income_OperDate: TcxGridDBColumn;
+    Income_InvNumber: TcxGridDBColumn;
+    Income_NDSKindName: TcxGridDBColumn;
+    Income_SummWithOutVAT: TcxGridDBColumn;
+    Income_SummVAT: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     ceBankAccount: TcxButtonEdit;
     BankAccountGuides: TdsdGuides;

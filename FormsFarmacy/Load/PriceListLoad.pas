@@ -15,19 +15,19 @@ uses
 
 type
   TPriceListLoadForm = class(TAncestorDBGridForm)
-    colOperDate: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
     actOpenPriceList: TdsdInsertUpdateAction;
-    colNDSinPrice: TcxGridDBColumn;
+    NDSinPrice: TcxGridDBColumn;
     bbOpen: TdxBarButton;
     spLoadPriceList: TdsdStoredProc;
     actLoadPriceList: TdsdExecStoredProc;
     bbLoadPriceList: TdxBarButton;
     spUpdateGoods: TdsdStoredProc;
-    colContractName: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
     mactLoadPriceList: TMultiAction;
     N3: TMenuItem;
-    colIsMoved: TcxGridDBColumn;
+    IsMoved: TcxGridDBColumn;
     actOneLoadPriceList: TdsdExecStoredProc;
     mactLoadPrice1: TMultiAction;
     actDeletePriceListLoad: TdsdExecStoredProc;

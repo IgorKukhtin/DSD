@@ -2,7 +2,7 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1093#1086#1076' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1089#1095#1077#1090#1091'>'
   ClientHeight = 463
   ClientWidth = 1149
-  ExplicitLeft = -481
+  ExplicitLeft = -402
   ExplicitWidth = 1165
   ExplicitHeight = 502
   PixelsPerInch = 96
@@ -79,42 +79,42 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
           inherited colInfoMoneyName_all: TcxGridDBColumn
             VisibleForCustomization = False
           end
-          object colIncome_JuridicalName: TcxGridDBColumn
+          object Income_JuridicalName: TcxGridDBColumn
             Caption = #1053#1072#1096#1077' '#1070#1088#1083#1080#1094#1086
             DataBinding.FieldName = 'Income_JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colIncome_OperDate: TcxGridDBColumn
+          object Income_OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1055#1053' '#1087#1086#1089#1090'-'#1082#1072
             DataBinding.FieldName = 'Income_OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 78
           end
-          object colIncome_InvNumber: TcxGridDBColumn
+          object Income_InvNumber: TcxGridDBColumn
             Caption = #8470' '#1055#1053' '#1087#1086#1089#1090'-'#1082#1072
             DataBinding.FieldName = 'Income_InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
-          object colIncome_NDSKindName: TcxGridDBColumn
+          object Income_NDSKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1053#1044#1057' '#1055#1053
             DataBinding.FieldName = 'Income_NDSKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colIncome_SummWithOutVAT: TcxGridDBColumn
+          object Income_SummWithOutVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1055#1053' '#1073'/'#1053#1044#1057
             DataBinding.FieldName = 'Income_SummWithOutVAT'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colIncome_SummVAT: TcxGridDBColumn
+          object Income_SummVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
             DataBinding.FieldName = 'Income_SummVAT'
             HeaderAlignmentHorz = taCenter

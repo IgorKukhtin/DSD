@@ -2478,6 +2478,8 @@ begin
         Add('            else GoodsGroup2.Id_Postgres');
         Add('       end as GoodsGroupId_pg');
 
+
+        Add('     , -1 * GoodsProperty.CashCode       as GoodsCode');
         Add('     , TRIM(Goods.GoodsName)             as GoodsName ');
         Add('     , TRIM(GoodsInfo.GoodsInfoName)     as GoodsInfoName ');
         Add('     , TRIM(GoodsSize.GoodsSizeName)     as GoodsSizeName ');
@@ -2550,6 +2552,7 @@ begin
              toStoredProc.Params.ParamByName('inGoodsGroupId').Value:=FieldByName('GoodsGroupId_pg').AsInteger;
              toStoredProc.Params.ParamByName('inMeasureId').Value:=FieldByName('MeasureId_pg').AsInteger;
              toStoredProc.Params.ParamByName('inJuridicalId').Value:=FieldByName('JuridicalId_pg').AsInteger;
+             toStoredProc.Params.ParamByName('ioGoodsCode').Value:=FieldByName('GoodsCode').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsName').Value:=FieldByName('GoodsName').AsString;
              toStoredProc.Params.ParamByName('inGoodsInfoName').Value:=FieldByName('GoodsInfoName').AsString;
              toStoredProc.Params.ParamByName('inGoodsSizeName').Value:=FieldByName('GoodsSizeName').AsString;
@@ -5843,18 +5846,19 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select');
+        Add('select DISTINCT');
         Add('  DiscountTaxItems.Id as ObjectId');
-        Add(', Unit.Id_Postgres   as UnitId');
+        Add(', Unit.Id_Postgres as UnitId');
         Add(', BillItemsIncome.GoodsId_Postgres as GoodsID');
         Add(', DiscountTaxItems.StartDate as OperDate');
         Add(', DiscountTaxItems.PercentTax as Value');
         Add(', DiscountTaxItems.Id_Postgres');
         Add('from DBA.DiscountTaxItems');
-        Add('left outer join Unit on Unit.id = DiscountTaxItems.UnitID');
-        Add('left outer join BillItemsIncome on BillItemsIncome.ID= DiscountTaxItems.BillItemsIncomeID');
-        Add('where  BillItemsIncome.GoodsId_Postgres is not null');  // Эта строка только для тестирования в реальной загрузке удалить
-        Add('order by  StartDate');
+        Add('     left outer join Unit on Unit.id = DiscountTaxItems.UnitID');
+        Add('     left outer join BillItemsIncome on BillItemsIncome.ID= DiscountTaxItems.BillItemsIncomeID');
+        Add('where BillItemsIncome.GoodsId_Postgres is not null');  // Эта строка только для тестирования в реальной загрузке НЕ удалять
+        Add('  and (DiscountTaxItems.PercentTax <> 0 or DiscountTaxItems.StartDate <> zc_DateStart())'); //
+        Add('order by StartDate');
         Open;
         //
         fStop:=cbOnlyOpen.Checked;
@@ -5915,7 +5919,7 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select');
+        Add('select DISTINCT');
         Add('  PriceListItems.Id as ObjectId');
         Add(', PriceList.Id_Postgres as PriceListID');
         Add(', BillItemsIncome.GoodsId_Postgres as GoodsId ');
@@ -5923,9 +5927,10 @@ begin
         Add(', PriceListItems.NewPrice as Value');
         Add(', PriceListItems.Id_Postgres');
         Add('from DBA.PriceListItems');
-        Add('left outer join PriceList on PriceList.id = PriceListItems.PriceListID');
-        Add('left outer join BillItemsIncome on BillItemsIncome.GoodsID= PriceListItems.goodsid');
-        Add('where  BillItemsIncome.GoodsId_Postgres is not null'); // Эта строка только для тестирования в реальной загрузке удалить
+        Add('     left outer join PriceList on PriceList.id = PriceListItems.PriceListID');
+        Add('     left outer join BillItemsIncome on BillItemsIncome.GoodsID= PriceListItems.goodsid');
+        Add('where BillItemsIncome.GoodsId_Postgres is not null'); // Эта строка только для тестирования в реальной загрузке НЕ удалять
+        Add('  and PriceListItems.NewPrice <> 0'); //
         Add('order by StartDate');
         Open;
         //

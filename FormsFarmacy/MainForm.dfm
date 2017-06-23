@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 230
+  ExplicitHeight = 226
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -1947,7 +1947,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object dsdGoodsBarCodeLoad: TdsdOpenForm
+    object actGoodsBarCodeLoad: TdsdOpenForm
       Category = #1047#1072#1075#1088#1091#1079#1082#1080
       MoveParams = <>
       Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076#1099' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1077#1081
@@ -2190,7 +2190,7 @@ inherited MainForm: TMainForm
         Action = actPriceListLoad
       end
       object N141: TMenuItem
-        Action = dsdGoodsBarCodeLoad
+        Action = actGoodsBarCodeLoad
       end
     end
     object miDocuments: TMenuItem [3]

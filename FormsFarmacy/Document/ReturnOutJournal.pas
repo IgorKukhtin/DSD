@@ -18,9 +18,9 @@ uses
 
 type
   TReturnOutJournalForm = class(TAncestorJournalForm)
-    colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
     bbTax: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
@@ -31,25 +31,25 @@ type
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
-    colTotalSumm: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
     ADOQueryAction1: TADOQueryAction;
     actGetDataForSend: TdsdExecStoredProc;
     mactSendOneDoc: TMultiAction;
     MultiAction2: TMultiAction;
     bbSendData: TdxBarButton;
     spGetDataForSend: TdsdStoredProc;
-    colTotalSummMVAT: TcxGridDBColumn;
-    colNDSKindName: TcxGridDBColumn;
+    TotalSummMVAT: TcxGridDBColumn;
+    NDSKindName: TcxGridDBColumn;
     mactInsert: TMultiAction;
     actReturnOutMovementInsert: TdsdExecStoredProc;
     spInsertMovement: TdsdStoredProc;
     actChoiceIncomeMovement: TOpenChoiceForm;
-    colJuridicalName: TcxGridDBColumn;
-    colInvNumberPartner: TcxGridDBColumn;
-    colOperDatePartner: TcxGridDBColumn;
-    colIncomeOperDate: TcxGridDBColumn;
-    colIncomeInvNumber: TcxGridDBColumn;
-    colReturnTypeName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    InvNumberPartner: TcxGridDBColumn;
+    OperDatePartner: TcxGridDBColumn;
+    IncomeOperDate: TcxGridDBColumn;
+    IncomeInvNumber: TcxGridDBColumn;
+    ReturnTypeName: TcxGridDBColumn;
     mactEditPartnerData: TMultiAction;
     actPartnerDataDialog: TExecuteDialog;
     actUpdateReturnOut_PartnerData: TdsdExecStoredProc;

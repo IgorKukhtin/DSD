@@ -19,9 +19,9 @@ uses
 
 type
   TIncomePharmacyJournalForm = class(TAncestorJournalForm)
-    colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
     bbTax: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
@@ -33,19 +33,19 @@ type
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
     spGetDataForSend: TdsdStoredProc;
-    colNDSKindName: TcxGridDBColumn;
+    NDSKindName: TcxGridDBColumn;
     spGetDataForSendNew: TdsdStoredProc;
-    colSaleSumm: TcxGridDBColumn;
+    SaleSumm: TcxGridDBColumn;
     actPrintForManager: TdsdPrintAction;
     dxBarButton1: TdxBarButton;
-    colJuridicalName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
     spInsertUpdateMovement: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     mactFarmacyShow: TMultiAction;
     actGet_Movement_ManualAmountTrouble: TdsdExecStoredProc;
     actaOpen_Income_AmountTroubleForm: TdsdOpenForm;
     spGet_Movement_ManualAmountTrouble: TdsdStoredProc;
-    colButton: TcxGridDBColumn;
+    Button: TcxGridDBColumn;
     spisDocument: TdsdStoredProc;
     actisDocument: TdsdExecStoredProc;
     bbisDocument: TdxBarButton;

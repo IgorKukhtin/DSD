@@ -18,14 +18,14 @@ uses
 
 type
   TSendOnPriceJournalForm = class(TAncestorJournalForm)
-    colOperDatePartner: TcxGridDBColumn;
-    colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
-    colTotalCountPartner: TcxGridDBColumn;
-    colTotalSummVAT: TcxGridDBColumn;
-    colTotalSummMVAT: TcxGridDBColumn;
-    colTotalSummPVAT: TcxGridDBColumn;
+    OperDatePartner: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
+    TotalCountPartner: TcxGridDBColumn;
+    TotalSummVAT: TcxGridDBColumn;
+    TotalSummMVAT: TcxGridDBColumn;
+    TotalSummPVAT: TcxGridDBColumn;
     edIsPartnerDate: TcxCheckBox;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;

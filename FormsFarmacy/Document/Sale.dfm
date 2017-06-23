@@ -4,7 +4,7 @@ inherited SaleForm: TSaleForm
   ClientWidth = 740
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
   ExplicitWidth = 756
-  ExplicitHeight = 517
+  ExplicitHeight = 518
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -29,17 +29,17 @@ inherited SaleForm: TSaleForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSumm
+              Column = Summ
             end
             item
               Format = ',0.000'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colGoodsName
+              Column = GoodsName
             end>
           OptionsBehavior.IncSearch = True
           Styles.Content = nil
@@ -51,7 +51,7 @@ inherited SaleForm: TSaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -59,7 +59,7 @@ inherited SaleForm: TSaleForm
             Options.Editing = False
             Width = 51
           end
-          object colGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -67,7 +67,7 @@ inherited SaleForm: TSaleForm
             Options.Editing = False
             Width = 267
           end
-          object colAmountRemains: TcxGridDBColumn
+          object AmountRemains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'AmountRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -77,7 +77,7 @@ inherited SaleForm: TSaleForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -86,7 +86,7 @@ inherited SaleForm: TSaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -94,7 +94,7 @@ inherited SaleForm: TSaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colPriceSale: TcxGridDBColumn
+          object PriceSale: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'PriceSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -103,7 +103,7 @@ inherited SaleForm: TSaleForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
-          object colChangePercent: TcxGridDBColumn
+          object ChangePercent: TcxGridDBColumn
             Caption = '% c'#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'ChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -111,7 +111,7 @@ inherited SaleForm: TSaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colSumm: TcxGridDBColumn
+          object Summ: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -121,7 +121,7 @@ inherited SaleForm: TSaleForm
             Options.Editing = False
             Width = 72
           end
-          object coisSP: TcxGridDBColumn
+          object isSP: TcxGridDBColumn
             Caption = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1077
             DataBinding.FieldName = 'isSP'
             HeaderAlignmentHorz = taCenter
@@ -161,7 +161,7 @@ inherited SaleForm: TSaleForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object colRemains: TcxGridDBColumn
+          object Remains: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1087#1072#1088#1090#1080#1080
             DataBinding.FieldName = 'Remains'
             HeaderAlignmentHorz = taCenter
@@ -169,7 +169,7 @@ inherited SaleForm: TSaleForm
             Options.Editing = False
             Width = 77
           end
-          object colFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'FromName'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -179,7 +179,7 @@ inherited SaleForm: TSaleForm
             HeaderAlignmentVert = vaCenter
             Width = 177
           end
-          object colPriceWithVAT: TcxGridDBColumn
+          object PriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1079#1072#1082#1091#1087#1082#1080' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'PriceWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -189,7 +189,7 @@ inherited SaleForm: TSaleForm
             Options.Editing = False
             Width = 97
           end
-          object colSummWithVAT: TcxGridDBColumn
+          object SummWithVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1082#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'SummWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -199,7 +199,7 @@ inherited SaleForm: TSaleForm
             Options.Editing = False
             Width = 104
           end
-          object colSummOut: TcxGridDBColumn
+          object SummOut: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'SummOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -209,7 +209,7 @@ inherited SaleForm: TSaleForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
-          object colMargin: TcxGridDBColumn
+          object Margin: TcxGridDBColumn
             Caption = #1053#1072#1094#1077#1085#1082#1072
             DataBinding.FieldName = 'Margin'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -217,7 +217,7 @@ inherited SaleForm: TSaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colMarginPercent: TcxGridDBColumn
+          object MarginPercent: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'MarginPercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'

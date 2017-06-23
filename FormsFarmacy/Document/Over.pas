@@ -36,7 +36,7 @@ type
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     chPrice: TcxGridDBColumn;
-    chUnitName: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
     ChildDS: TDataSource;

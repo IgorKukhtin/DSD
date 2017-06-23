@@ -14,16 +14,16 @@ uses
 
 type
   TMovementLoadForm = class(TAncestorDBGridForm)
-    clOperDate: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
     actOpenPriceList: TdsdInsertUpdateAction;
     bbOpen: TdxBarButton;
-    clInvNumber: TcxGridDBColumn;
-    clTotalCount: TcxGridDBColumn;
-    clTotalSumm: TcxGridDBColumn;
-    clJuridicalId: TcxGridDBColumn;
-    clUnitId: TcxGridDBColumn;
-    clNDSKindId: TcxGridDBColumn;
-    clIsAllGoodsConcat: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
+    JuridicalId: TcxGridDBColumn;
+    UnitId: TcxGridDBColumn;
+    NDSKindId: TcxGridDBColumn;
+    IsAllGoodsConcat: TcxGridDBColumn;
   private
     { Private declarations }
   public

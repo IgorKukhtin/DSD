@@ -3,7 +3,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
   ClientHeight = 481
   ClientWidth = 896
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -228
+  ExplicitLeft = -169
+  ExplicitTop = -27
   ExplicitWidth = 912
   ExplicitHeight = 520
   PixelsPerInch = 96
@@ -33,7 +34,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -70,18 +71,18 @@ inherited IncomeJournalForm: TIncomeJournalForm
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = colTotalSumm
+              Column = TotalSumm
             end
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = colTotalSummMVAT
+              Column = TotalSummMVAT
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -118,22 +119,22 @@ inherited IncomeJournalForm: TIncomeJournalForm
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = colTotalSumm
+              Column = TotalSumm
             end
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = colTotalSummMVAT
+              Column = TotalSummMVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSaleSumm
+              Column = SaleSumm
             end
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colToName
+              Column = ToName
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -164,7 +165,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 88
           end
-          object colFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090'-'#1082
             DataBinding.FieldName = 'FromName'
             GroupSummaryAlignment = taCenter
@@ -179,7 +180,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colToName: TcxGridDBColumn
+          object ToName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'ToName'
             GroupSummaryAlignment = taCenter
@@ -187,7 +188,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 200
           end
-          object colJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1063#1055
             DataBinding.FieldName = 'JuridicalName'
             GroupSummaryAlignment = taCenter
@@ -195,7 +196,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 123
           end
-          object colContractName: TcxGridDBColumn
+          object ContractName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072
             DataBinding.FieldName = 'ContractName'
             GroupSummaryAlignment = taCenter
@@ -203,7 +204,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 136
           end
-          object colTotalCount: TcxGridDBColumn
+          object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -214,7 +215,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colTotalSummMVAT: TcxGridDBColumn
+          object TotalSummMVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummMVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -224,7 +225,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 111
           end
-          object colTotalSumm: TcxGridDBColumn
+          object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -235,7 +236,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 109
           end
-          object colNDSKindName: TcxGridDBColumn
+          object NDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
             GroupSummaryAlignment = taCenter
@@ -243,7 +244,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colSaleSumm: TcxGridDBColumn
+          object SaleSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
             DataBinding.FieldName = 'SaleSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -254,7 +255,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Options.Editing = False
             Width = 79
           end
-          object colPaymentDate: TcxGridDBColumn
+          object PaymentDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaymentDate'
             GroupSummaryAlignment = taCenter
@@ -273,7 +274,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Options.Editing = False
             Width = 60
           end
-          object colPaySumm: TcxGridDBColumn
+          object PaySumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1082' '#1086#1087#1083#1072#1090#1077
             DataBinding.FieldName = 'PaySumm'
             GroupSummaryAlignment = taCenter
@@ -282,7 +283,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Options.Editing = False
             Width = 70
           end
-          object colInvNumberBranch: TcxGridDBColumn
+          object InvNumberBranch: TcxGridDBColumn
             Caption = #8470' '#1074' '#1072#1087#1090#1077#1082#1077
             DataBinding.FieldName = 'InvNumberBranch'
             GroupSummaryAlignment = taCenter
@@ -291,7 +292,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Options.Editing = False
             Width = 47
           end
-          object colBranchDate: TcxGridDBColumn
+          object BranchDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1074' '#1072#1087#1090#1077#1082#1077
             DataBinding.FieldName = 'BranchDate'
             GroupSummaryAlignment = taCenter
@@ -300,7 +301,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Options.Editing = False
             Width = 50
           end
-          object colChecked: TcxGridDBColumn
+          object Checked: TcxGridDBColumn
             Caption = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084
             DataBinding.FieldName = 'Checked'
             GroupSummaryAlignment = taCenter
@@ -309,7 +310,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Options.Editing = False
             Width = 95
           end
-          object colisDocument: TcxGridDBColumn
+          object isDocument: TcxGridDBColumn
             Caption = #1054#1088#1080#1075#1080#1085#1072#1083' '#1085#1072#1082#1083'.'
             DataBinding.FieldName = 'isDocument'
             GroupSummaryAlignment = taCenter
@@ -318,7 +319,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Options.Editing = False
             Width = 95
           end
-          object colisRegistered: TcxGridDBColumn
+          object isRegistered: TcxGridDBColumn
             Caption = #1052#1077#1076#1088#1077#1077#1089#1090#1088' Pfizer'
             DataBinding.FieldName = 'isRegistered'
             GroupSummaryAlignment = taCenter
@@ -329,7 +330,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Options.Editing = False
             Width = 74
           end
-          object colPayColor: TcxGridDBColumn
+          object PayColor: TcxGridDBColumn
             DataBinding.FieldName = 'PayColor'
             Visible = False
             GroupSummaryAlignment = taCenter
@@ -337,7 +338,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
           end
-          object colDateLastPay: TcxGridDBColumn
+          object DateLastPay: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1073#1072#1085#1082#1091
             DataBinding.FieldName = 'DateLastPay'
             GroupSummaryAlignment = taCenter
@@ -345,7 +346,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 85
           end
-          object colMovement_OrderInvNumber_full: TcxGridDBColumn
+          object Movement_OrderInvNumber_full: TcxGridDBColumn
             Caption = #1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
             DataBinding.FieldName = 'Movement_OrderInvNumber_full'
             GroupSummaryAlignment = taCenter
@@ -354,7 +355,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Options.Editing = False
             Width = 80
           end
-          object clisDeferred: TcxGridDBColumn
+          object isDeferred: TcxGridDBColumn
             Caption = #1054#1090#1083#1086#1078#1077#1085#1072' ('#1079#1072#1103#1074#1082#1072')'
             DataBinding.FieldName = 'isDeferred'
             HeaderAlignmentHorz = taCenter
@@ -362,7 +363,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Options.Editing = False
             Width = 65
           end
-          object clInsertName: TcxGridDBColumn
+          object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
@@ -370,7 +371,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Options.Editing = False
             Width = 101
           end
-          object clInsertDate: TcxGridDBColumn
+          object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
@@ -378,7 +379,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Options.Editing = False
             Width = 78
           end
-          object clUpdateName: TcxGridDBColumn
+          object UpdateName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateName'
             HeaderAlignmentHorz = taCenter
@@ -386,7 +387,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Options.Editing = False
             Width = 101
           end
-          object clUpdateDate: TcxGridDBColumn
+          object UpdateDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateDate'
             HeaderAlignmentHorz = taCenter
@@ -394,14 +395,14 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Options.Editing = False
             Width = 78
           end
-          object colMemberIncomeCheckName: TcxGridDBColumn
+          object MemberIncomeCheckName: TcxGridDBColumn
             Caption = #1060#1048#1054' '#1091#1087#1086#1083#1085#1086#1084#1086#1095'. '#1083#1080#1094#1072
             DataBinding.FieldName = 'MemberIncomeCheckName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 95
           end
-          object colCheckDate: TcxGridDBColumn
+          object CheckDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1088'.  '#1091#1087'. '#1083#1080#1094#1086#1084
             DataBinding.FieldName = 'CheckDate'
             HeaderAlignmentHorz = taCenter
@@ -1252,7 +1253,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
       item
-        BackGroundValueColumn = colPayColor
+        BackGroundValueColumn = PayColor
         ColorValueList = <>
       end>
     Left = 320

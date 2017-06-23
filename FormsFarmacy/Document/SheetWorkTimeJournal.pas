@@ -40,8 +40,8 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
-    colOperDate: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
@@ -59,7 +59,7 @@ type
     UpdateAction: TdsdInsertUpdateAction;
     bbStatic: TdxBarStatic;
     bbEdit: TdxBarButton;
-    colisComplete: TcxGridDBColumn;
+    isComplete: TcxGridDBColumn;
   private
   public
   end;

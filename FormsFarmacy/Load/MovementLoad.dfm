@@ -2,8 +2,8 @@ inherited MovementLoadForm: TMovementLoadForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1075#1088#1091#1079#1082#1080
   ClientHeight = 399
   ClientWidth = 772
-  ExplicitWidth = 780
-  ExplicitHeight = 426
+  ExplicitWidth = 788
+  ExplicitHeight = 438
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -27,52 +27,52 @@ inherited MovementLoadForm: TMovementLoadForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clInvNumber: TcxGridDBColumn
+          object InvNumber: TcxGridDBColumn
             Caption = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
-          object clOperDate: TcxGridDBColumn
+          object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 84
           end
-          object clJuridicalId: TcxGridDBColumn
+          object JuridicalId: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
             DataBinding.FieldName = 'JuridicalId'
             HeaderAlignmentVert = vaCenter
             Width = 102
           end
-          object clUnitId: TcxGridDBColumn
+          object UnitId: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
             DataBinding.FieldName = 'UnitId'
             HeaderAlignmentVert = vaCenter
             Width = 103
           end
-          object clTotalCount: TcxGridDBColumn
+          object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
             DataBinding.FieldName = 'TotalCount'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 77
           end
-          object clTotalSumm: TcxGridDBColumn
+          object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'TotalSumm'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 103
           end
-          object clNDSKindId: TcxGridDBColumn
+          object NDSKindId: TcxGridDBColumn
             Caption = #1058#1080#1087#1099' '#1053#1044#1057
             DataBinding.FieldName = 'NDSKindId'
             HeaderAlignmentVert = vaCenter
             Width = 101
           end
-          object clIsAllGoodsConcat: TcxGridDBColumn
+          object IsAllGoodsConcat: TcxGridDBColumn
             Caption = #1057#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1103
             DataBinding.FieldName = 'IsAllGoodsConcat'
             HeaderAlignmentVert = vaCenter
@@ -97,12 +97,14 @@ inherited MovementLoadForm: TMovementLoadForm
       FormName = 'TPriceListItemsLoadForm'
       FormNameParam.Value = 'TPriceListItemsLoadForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate

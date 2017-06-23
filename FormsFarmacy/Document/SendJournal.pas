@@ -29,21 +29,21 @@ uses
 
 type
   TSendJournalForm = class(TAncestorJournalForm)
-    colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     bbPrint: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
     actPrint: TdsdPrintAction;
-    colTotalSumm: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
-    colisAuto: TcxGridDBColumn;
-    colMCSDay: TcxGridDBColumn;
-    colMCSPeriod: TcxGridDBColumn;
-    clisComplete: TcxGridDBColumn;
+    isAuto: TcxGridDBColumn;
+    MCSDay: TcxGridDBColumn;
+    MCSPeriod: TcxGridDBColumn;
+    isComplete: TcxGridDBColumn;
   private
     { Private declarations }
   public
