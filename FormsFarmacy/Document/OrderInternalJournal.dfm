@@ -3,7 +3,6 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
   ClientHeight = 535
   ClientWidth = 828
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -160
   ExplicitTop = -81
   ExplicitWidth = 844
   ExplicitHeight = 574

@@ -155,7 +155,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object colOperDate: TcxGridDBColumn
+      object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         PropertiesClassName = 'TcxDateEditProperties'
@@ -166,13 +166,13 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 152
       end
-      object colUnitName: TcxGridDBColumn
+      object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentVert = vaCenter
         Width = 306
       end
-      object colisComplete: TcxGridDBColumn
+      object isComplete: TcxGridDBColumn
         Caption = #1057#1086#1093#1088#1072#1085#1077#1085
         DataBinding.FieldName = 'isComplete'
         HeaderAlignmentHorz = taCenter
@@ -346,6 +346,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
       FormName = 'TSheetWorkTimeForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'OperDate'
@@ -353,12 +354,14 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
           Component = ClientDataSet
           ComponentItem = 'OperDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -366,6 +369,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
           Component = ClientDataSet
           ComponentItem = 'UnitName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -387,6 +391,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -394,6 +399,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 24
@@ -447,6 +453,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item

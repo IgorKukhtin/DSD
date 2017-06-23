@@ -24,9 +24,9 @@ type
     cxLabel4: TcxLabel;
     GuidesFrom: TdsdGuides;
     GuidesTo: TdsdGuides;
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
@@ -40,11 +40,11 @@ type
     actStorageChoiceForm: TOpenChoiceForm;
     actPartionGoodsChoiceForm: TOpenChoiceForm;
     actGoodsChoiceForm: TOpenChoiceForm;
-    colAmountRemains: TcxGridDBColumn;
-    colPriceIn: TcxGridDBColumn;
-    colPriceUnitFrom: TcxGridDBColumn;
-    colPriceUnitTo: TcxGridDBColumn;
-    colSumPriceIn: TcxGridDBColumn;
+    AmountRemains: TcxGridDBColumn;
+    PriceIn: TcxGridDBColumn;
+    PriceUnitFrom: TcxGridDBColumn;
+    PriceUnitTo: TcxGridDBColumn;
+    SumPriceIn: TcxGridDBColumn;
     cxLabel7: TcxLabel;
     edComment: TcxTextEdit;
     edIsAuto: TcxCheckBox;
@@ -73,7 +73,7 @@ type
     ceChecked: TcxCheckBox;
     ChoiceReasonDifferences: TOpenChoiceForm;
     edisComplete: TcxCheckBox;
-    colMinExpirationDate: TcxGridDBColumn;
+    MinExpirationDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

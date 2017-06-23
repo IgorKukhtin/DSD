@@ -3,8 +3,10 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   ClientHeight = 535
   ClientWidth = 1110
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -383
+  ExplicitTop = -57
   ExplicitWidth = 1126
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -32,12 +34,12 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCountPartner
+              Column = TotalCountPartner
             end
             item
               Format = ',0.####'
@@ -46,17 +48,17 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummVAT
+              Column = TotalSummVAT
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummMVAT
+              Column = TotalSummMVAT
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummPVAT
+              Column = TotalSummPVAT
             end
             item
               Format = ',0.####'
@@ -74,12 +76,12 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCountPartner
+              Column = TotalCountPartner
             end
             item
               Format = ',0.####'
@@ -88,17 +90,17 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummVAT
+              Column = TotalSummVAT
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummMVAT
+              Column = TotalSummMVAT
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummPVAT
+              Column = TotalSummPVAT
             end
             item
               Format = ',0.####'
@@ -135,7 +137,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 67
           end
-          object colOperDatePartner: TcxGridDBColumn [2]
+          object OperDatePartner: TcxGridDBColumn [2]
             Caption = #1044#1072#1090#1072' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
@@ -147,21 +149,21 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          object colFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 166
           end
-          object colToName: TcxGridDBColumn
+          object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 148
           end
-          object colTotalCount: TcxGridDBColumn
+          object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -172,7 +174,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colTotalCountPartner: TcxGridDBColumn
+          object TotalCountPartner: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'TotalCountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -182,7 +184,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 96
           end
-          object colTotalSummVAT: TcxGridDBColumn
+          object TotalSummVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -192,7 +194,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colTotalSummMVAT: TcxGridDBColumn
+          object TotalSummMVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummMVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -202,7 +204,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colTotalSummPVAT: TcxGridDBColumn
+          object TotalSummPVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummPVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -255,17 +257,20 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     object actPrintOut: TdsdPrintAction
@@ -276,10 +281,12 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrintOut
       StoredProcList = <
@@ -305,11 +312,13 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_SendOnPrice'
       ReportNameParam.Value = 'PrintMovement_SendOnPrice'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -319,10 +328,12 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -348,12 +359,14 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_SendOnPrice'
       ReportNameParam.Name = #1055#1088#1080#1093#1086#1076
       ReportNameParam.Value = 'PrintMovement_SendOnPrice'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -364,6 +377,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -371,6 +385,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -378,6 +393,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -400,6 +416,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inenddate'
@@ -407,6 +424,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPartnerDate'
@@ -414,6 +432,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         Component = edIsPartnerDate
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -421,6 +440,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 136
     Top = 163
@@ -559,12 +579,14 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inislastcomplete'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 320
@@ -578,6 +600,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 384
@@ -591,6 +614,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 376
@@ -601,30 +625,35 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSendOnPrice'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSendOnPriceTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -659,11 +688,13 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inReportType'
         Value = '1'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 511
@@ -693,11 +724,13 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inReportType'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 359

@@ -2,7 +2,6 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1041#1072#1085#1082#1086#1074#1089#1082#1080#1077' '#1074#1099#1087#1080#1089#1082#1080'>'
   ClientWidth = 873
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -205
   ExplicitTop = -221
   ExplicitWidth = 889
   ExplicitHeight = 714
@@ -40,29 +39,29 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
             Options.Editing = False
             Width = 126
           end
-          object colBankName: TcxGridDBColumn
+          object BankName: TcxGridDBColumn
             Caption = #1041#1072#1085#1082
             DataBinding.FieldName = 'BankName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 175
           end
-          object colBankAccount: TcxGridDBColumn
+          object BankAccountName: TcxGridDBColumn
             Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
             DataBinding.FieldName = 'BankAccountName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 172
           end
-          object colDebet: TcxGridDBColumn
+          object Debet: TcxGridDBColumn
             Caption = #1044#1077#1073#1077#1090
             HeaderAlignmentVert = vaCenter
           end
-          object colKredit: TcxGridDBColumn
+          object Kredit: TcxGridDBColumn
             Caption = #1050#1088#1077#1076#1080#1090
             HeaderAlignmentVert = vaCenter
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1054#1073#1086#1088#1086#1090' '#1087#1086' '#1089#1095#1077#1090#1091
           end
         end

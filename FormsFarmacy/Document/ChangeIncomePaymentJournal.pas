@@ -17,17 +17,17 @@ uses
 
 type
   TChangeIncomePaymentJournalForm = class(TAncestorJournalForm)
-    colFromName: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
-    colChangeIncomePaymentKindName: TcxGridDBColumn;
-    colTotalSumm: TcxGridDBColumn;
-    colComment: TcxGridDBColumn;
-    clReturnOutInvNumber: TcxGridDBColumn;
-    clReturnOutInvNumberPartner: TcxGridDBColumn;
-    clReturnOutOperDate: TcxGridDBColumn;
-    clReturnOutOperDatePartner: TcxGridDBColumn;
-    clIncomeOperDate: TcxGridDBColumn;
-    clIncomeInvNumber: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    ChangeIncomePaymentKindName: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    ReturnOutInvNumber: TcxGridDBColumn;
+    ReturnOutInvNumberPartner: TcxGridDBColumn;
+    ReturnOutOperDate: TcxGridDBColumn;
+    ReturnOutOperDatePartner: TcxGridDBColumn;
+    IncomeOperDate: TcxGridDBColumn;
+    IncomeInvNumber: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }

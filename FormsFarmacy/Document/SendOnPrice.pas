@@ -24,14 +24,14 @@ type
     GuidesTo: TdsdGuides;
     edOperDatePartner: TcxDateEdit;
     cxLabel10: TcxLabel;
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
-    colPartionGoods: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
-    colAmountPartner: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colCountForPrice: TcxGridDBColumn;
-    colAmountSumm: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    PartionGoods: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    AmountPartner: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    CountForPrice: TcxGridDBColumn;
+    AmountSumm: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     cxLabel11: TcxLabel;
     edPriceList: TcxButtonEdit;
@@ -43,12 +43,12 @@ type
     actRefreshPrice: TdsdDataSetRefresh;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
-    colMeasureName: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
     PrintItemsSverkaCDS: TClientDataSet;
     actPrintOut: TdsdPrintAction;
     bbPrintOut: TdxBarButton;
     spSelectPrintOut: TdsdStoredProc;
-    clGoodsGroupNameFull: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
   private
     { Private declarations }
   public

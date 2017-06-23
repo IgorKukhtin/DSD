@@ -18,17 +18,17 @@ uses
 type
   TSaleJournalForm = class(TAncestorJournalForm)
     spGet_Movement_Sale: TdsdStoredProc;
-    colUnitName: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
-    colPaidKindName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
-    colTotalSumm: TcxGridDBColumn;
-    colTotalSummPrimeCost: TcxGridDBColumn;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
-    colComment: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
+    TotalSummPrimeCost: TcxGridDBColumn;
+    Id: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
-    colisSP: TcxGridDBColumn;
-    colGroupMemberSPName: TcxGridDBColumn;
+    isSP: TcxGridDBColumn;
+    GroupMemberSPName: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
@@ -36,8 +36,8 @@ type
     actPrint: TdsdPrintAction;
     macPrint: TMultiAction;
     bbmacPrint: TdxBarButton;
-    clInvNumber_Invoice_Full: TcxGridDBColumn;
-    clSPKindName: TcxGridDBColumn;
+    InvNumber_Invoice_Full: TcxGridDBColumn;
+    SPKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

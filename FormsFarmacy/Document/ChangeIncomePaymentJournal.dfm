@@ -41,7 +41,7 @@ inherited ChangeIncomePaymentJournalForm: TChangeIncomePaymentJournalForm
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
           end
-          object colFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
@@ -49,7 +49,7 @@ inherited ChangeIncomePaymentJournalForm: TChangeIncomePaymentJournalForm
             Options.Editing = False
             Width = 146
           end
-          object colJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1053#1072#1096#1077' '#1102#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
@@ -57,7 +57,7 @@ inherited ChangeIncomePaymentJournalForm: TChangeIncomePaymentJournalForm
             Options.Editing = False
             Width = 134
           end
-          object colChangeIncomePaymentKindName: TcxGridDBColumn
+          object ChangeIncomePaymentKindName: TcxGridDBColumn
             Caption = #1058#1080#1087
             DataBinding.FieldName = 'ChangeIncomePaymentKindName'
             HeaderAlignmentHorz = taCenter
@@ -65,7 +65,7 @@ inherited ChangeIncomePaymentJournalForm: TChangeIncomePaymentJournalForm
             Options.Editing = False
             Width = 94
           end
-          object colTotalSumm: TcxGridDBColumn
+          object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'TotalSumm'
             HeaderAlignmentHorz = taCenter
@@ -73,7 +73,7 @@ inherited ChangeIncomePaymentJournalForm: TChangeIncomePaymentJournalForm
             Options.Editing = False
             Width = 66
           end
-          object colComment: TcxGridDBColumn
+          object Comment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -81,7 +81,7 @@ inherited ChangeIncomePaymentJournalForm: TChangeIncomePaymentJournalForm
             Options.Editing = False
             Width = 135
           end
-          object clReturnOutInvNumber: TcxGridDBColumn
+          object ReturnOutInvNumber: TcxGridDBColumn
             Caption = #8470' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1053#1040#1064
             DataBinding.FieldName = 'ReturnOutInvNumber'
             HeaderAlignmentHorz = taCenter
@@ -89,7 +89,7 @@ inherited ChangeIncomePaymentJournalForm: TChangeIncomePaymentJournalForm
             Options.Editing = False
             Width = 80
           end
-          object clReturnOutOperDate: TcxGridDBColumn
+          object ReturnOutOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1053#1040#1064
             DataBinding.FieldName = 'ReturnOutOperDate'
             HeaderAlignmentHorz = taCenter
@@ -97,7 +97,7 @@ inherited ChangeIncomePaymentJournalForm: TChangeIncomePaymentJournalForm
             Options.Editing = False
             Width = 80
           end
-          object clReturnOutInvNumberPartner: TcxGridDBColumn
+          object ReturnOutInvNumberPartner: TcxGridDBColumn
             Caption = #8470' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'ReturnOutInvNumberPartner'
             HeaderAlignmentHorz = taCenter
@@ -105,7 +105,7 @@ inherited ChangeIncomePaymentJournalForm: TChangeIncomePaymentJournalForm
             Options.Editing = False
             Width = 80
           end
-          object clReturnOutOperDatePartner: TcxGridDBColumn
+          object ReturnOutOperDatePartner: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'ReturnOutOperDatePartner'
             HeaderAlignmentHorz = taCenter
@@ -113,7 +113,7 @@ inherited ChangeIncomePaymentJournalForm: TChangeIncomePaymentJournalForm
             Options.Editing = False
             Width = 80
           end
-          object clIncomeOperDate: TcxGridDBColumn
+          object IncomeOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1055#1053
             DataBinding.FieldName = 'IncomeOperDate'
             HeaderAlignmentHorz = taCenter
@@ -121,7 +121,7 @@ inherited ChangeIncomePaymentJournalForm: TChangeIncomePaymentJournalForm
             Options.Editing = False
             Width = 80
           end
-          object clIncomeInvNumber: TcxGridDBColumn
+          object IncomeInvNumber: TcxGridDBColumn
             Caption = #8470' '#1055#1053
             DataBinding.FieldName = 'IncomeInvNumber'
             HeaderAlignmentHorz = taCenter
