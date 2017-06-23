@@ -17,9 +17,9 @@ uses
 
 type
   TMobileBillsForm = class(TAncestorDocumentForm)
-    colMobileEmployeeCode: TcxGridDBColumn;
-    colMobileEmployeeName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
+    MobileEmployeeCode: TcxGridDBColumn;
+    MobileEmployeeName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
     N3: TMenuItem;
@@ -27,17 +27,17 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     PrintItemsSverkaCDS: TClientDataSet;
-    colCurrMonthly: TcxGridDBColumn;
-    colRegionName: TcxGridDBColumn;
-    colEmployeeName: TcxGridDBColumn;
-    colPrevEmployeeName: TcxGridDBColumn;
-    colPrevMobileTariffName: TcxGridDBColumn;
+    CurrMonthly: TcxGridDBColumn;
+    RegionName: TcxGridDBColumn;
+    EmployeeName: TcxGridDBColumn;
+    PrevEmployeeName: TcxGridDBColumn;
+    PrevMobileTariffName: TcxGridDBColumn;
     actPersonalChoiceForm: TOpenChoiceForm;
     actRegionChoiceForm: TOpenChoiceForm;
     actMobileTariffChoiceForm: TOpenChoiceForm;
-    colDutyLimit: TcxGridDBColumn;
-    colMobileTariffName: TcxGridDBColumn;
-    colOverlimit: TcxGridDBColumn;
+    DutyLimit: TcxGridDBColumn;
+    MobileTariffName: TcxGridDBColumn;
+    Overlimit: TcxGridDBColumn;
     actMobileEmployeeChoiceForm: TOpenChoiceForm;
     actInsertRecord: TInsertRecord;
     bbInsertRecord: TdxBarButton;

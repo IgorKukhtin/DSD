@@ -18,10 +18,10 @@ uses
 
 type
   TCurrencyJournalForm = class(TAncestorJournalForm)
-    clComment: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
     N13: TMenuItem;
-    clParValue: TcxGridDBColumn;
-    clPaidKindName: TcxGridDBColumn;
+    ParValue: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     cxLabel27: TcxLabel;
     edJuridicalBasis: TcxButtonEdit;

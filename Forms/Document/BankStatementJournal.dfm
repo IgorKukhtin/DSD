@@ -3,7 +3,9 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
   ClientWidth = 872
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitTop = -221
   ExplicitWidth = 888
+  ExplicitHeight = 714
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -38,29 +40,29 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
             Options.Editing = False
             Width = 126
           end
-          object colBankName: TcxGridDBColumn
+          object BankName: TcxGridDBColumn
             Caption = #1041#1072#1085#1082
             DataBinding.FieldName = 'BankName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 175
           end
-          object colBankAccount: TcxGridDBColumn
+          object BankAccountName: TcxGridDBColumn
             Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
             DataBinding.FieldName = 'BankAccountName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 172
           end
-          object colDebet: TcxGridDBColumn
+          object Debet: TcxGridDBColumn
             Caption = #1044#1077#1073#1077#1090
             HeaderAlignmentVert = vaCenter
           end
-          object colKredit: TcxGridDBColumn
+          object Kredit: TcxGridDBColumn
             Caption = #1050#1088#1077#1076#1080#1090
             HeaderAlignmentVert = vaCenter
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1054#1073#1086#1088#1086#1090' '#1087#1086' '#1089#1095#1077#1090#1091
           end
         end
@@ -197,6 +199,28 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TBankStatementForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
     end
     inherited actSetErased: TdsdChangeMovementStatus
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'? '

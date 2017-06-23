@@ -79,7 +79,7 @@ object LossDebtJournalForm: TLossDebtJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSumm
+          Column = TotalSumm
         end
         item
           Format = ',0.00'
@@ -113,7 +113,7 @@ object LossDebtJournalForm: TLossDebtJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSumm
+          Column = TotalSumm
         end
         item
           Format = ',0.00'
@@ -150,7 +150,7 @@ object LossDebtJournalForm: TLossDebtJournalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object colStatus: TcxGridDBColumn
+      object StatusCode: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
         PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -175,35 +175,35 @@ object LossDebtJournalForm: TLossDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 139
       end
-      object colInvNumber: TcxGridDBColumn
+      object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object colOperDate: TcxGridDBColumn
+      object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 121
       end
-      object colJuridicalBasisName: TcxGridDBColumn
+      object JuridicalBasisName: TcxGridDBColumn
         Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalBasisName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 204
       end
-      object clPaidKindName: TcxGridDBColumn
+      object PaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 65
       end
-      object colBusinessName: TcxGridDBColumn
+      object BusinessName: TcxGridDBColumn
         Caption = #1041#1080#1079#1085#1077#1089
         DataBinding.FieldName = 'BusinessName'
         Visible = False
@@ -211,14 +211,14 @@ object LossDebtJournalForm: TLossDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 96
       end
-      object colAccountName: TcxGridDBColumn
+      object AccountName: TcxGridDBColumn
         Caption = #1057#1095#1077#1090
         DataBinding.FieldName = 'AccountName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 121
       end
-      object colTotalSumm: TcxGridDBColumn
+      object TotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -228,7 +228,7 @@ object LossDebtJournalForm: TLossDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 123
       end
-      object colisList: TcxGridDBColumn
+      object isList: TcxGridDBColumn
         Caption = #1044#1083#1103' '#1089#1087#1080#1089#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
         DataBinding.FieldName = 'isList'
         HeaderAlignmentHorz = taCenter

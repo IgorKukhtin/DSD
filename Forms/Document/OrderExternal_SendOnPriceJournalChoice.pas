@@ -28,15 +28,15 @@ uses
 
 type
   TOrderExternal_SendOnPriceJournalChoiceForm = class(TAncestorJournalForm)
-    colFromName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
-    colOperDatePartner: TcxGridDBColumn;
-    colOperDateMark: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
+    OperDatePartner: TcxGridDBColumn;
+    OperDateMark: TcxGridDBColumn;
     PersonalName: TcxGridDBColumn;
-    colRouteName: TcxGridDBColumn;
-    colRouteSortingName: TcxGridDBColumn;
-    colPaidKindName: TcxGridDBColumn;
-    colContractName: TcxGridDBColumn;
+    RouteName: TcxGridDBColumn;
+    RouteSortingName: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
     ToName: TcxGridDBColumn;
     TotalCountSh: TcxGridDBColumn;
     TotalCountKg: TcxGridDBColumn;

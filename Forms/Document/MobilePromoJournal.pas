@@ -17,27 +17,27 @@ uses
 
 type
   TMobilePromoJournalForm = class(TAncestorJournalForm)
-    colPromoKindName: TcxGridDBColumn;
-    colPriceListName: TcxGridDBColumn;
-    colStartSale: TcxGridDBColumn;
-    colEndSale: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
-    colPersonalTradeName: TcxGridDBColumn;
-    colPersonalName: TcxGridDBColumn;
+    PromoKindName: TcxGridDBColumn;
+    PriceListName: TcxGridDBColumn;
+    StartSale: TcxGridDBColumn;
+    EndSale: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    PersonalTradeName: TcxGridDBColumn;
+    PersonalName: TcxGridDBColumn;
     dxBarButton1: TdxBarButton;
     spSelect_Movement_Promo_Print: TdsdStoredProc;
     PrintHead: TClientDataSet;
     actPrint: TdsdPrintAction;
-    colPartnerName: TcxGridDBColumn;
-    colPartnerDescName: TcxGridDBColumn;
-    colContractName: TcxGridDBColumn;
-    colContractTagName: TcxGridDBColumn;
-    colCommentMain: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
+    PartnerDescName: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
+    ContractTagName: TcxGridDBColumn;
+    CommentMain: TcxGridDBColumn;
     spUpdate_Movement_Promo_Data: TdsdStoredProc;
     dxBarButton2: TdxBarButton;
     N13: TMenuItem;
     N14: TMenuItem;
-    colChangePercentName: TcxGridDBColumn;
+    ChangePercentName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     EndReturn: TcxGridDBColumn;
     cxLabel27: TcxLabel;

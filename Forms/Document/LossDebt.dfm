@@ -196,22 +196,22 @@ object LossDebtForm: TLossDebtForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountDebet
+              Column = AmountDebet
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountKredit
+              Column = AmountKredit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSummKredit
+              Column = SummKredit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSummDebet
+              Column = SummDebet
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -224,7 +224,7 @@ object LossDebtForm: TLossDebtForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountDebet
+              Column = AmountDebet
             end
             item
               Format = ',0.###;-,0.###; ;'
@@ -237,17 +237,17 @@ object LossDebtForm: TLossDebtForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountKredit
+              Column = AmountKredit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSummKredit
+              Column = SummKredit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSummDebet
+              Column = SummDebet
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -262,7 +262,7 @@ object LossDebtForm: TLossDebtForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object vlBranchName: TcxGridDBColumn
+          object BranchName: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'BranchName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -277,7 +277,7 @@ object LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clJuridicalGroupName: TcxGridDBColumn
+          object JuridicalGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'JuridicalGroupName'
             Visible = False
@@ -286,7 +286,7 @@ object LossDebtForm: TLossDebtForm
             Options.Editing = False
             Width = 70
           end
-          object clJuridicalCode: TcxGridDBColumn
+          object JuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'JuridicalCode'
             Visible = False
@@ -295,7 +295,7 @@ object LossDebtForm: TLossDebtForm
             Options.Editing = False
             Width = 30
           end
-          object clJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -309,7 +309,7 @@ object LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
-          object clPartnerCode: TcxGridDBColumn
+          object PartnerCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088'.'
             DataBinding.FieldName = 'PartnerCode'
             HeaderAlignmentHorz = taCenter
@@ -317,7 +317,7 @@ object LossDebtForm: TLossDebtForm
             Options.Editing = False
             Width = 55
           end
-          object clPartnerName: TcxGridDBColumn
+          object PartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'PartnerName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -332,7 +332,7 @@ object LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
-          object clOKPO: TcxGridDBColumn
+          object OKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -347,7 +347,7 @@ object LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object clPaidKindName: TcxGridDBColumn
+          object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -362,7 +362,7 @@ object LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object clContainerId: TcxGridDBColumn
+          object ContainerId: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' '#1076#1086#1083#1075#1072
             DataBinding.FieldName = 'ContainerId'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -377,14 +377,14 @@ object LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clIsCalculated: TcxGridDBColumn
+          object IsCalculated: TcxGridDBColumn
             Caption = #1087#1086' '#1076#1086#1083#1075#1091' ('#1076#1072'/'#1085#1077#1090') '
             DataBinding.FieldName = 'isCalculated'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object clSummDebet: TcxGridDBColumn
+          object SummDebet: TcxGridDBColumn
             Caption = #1044#1077#1073#1077#1090' '#1076#1086#1083#1075' '#1085#1072' '#1076#1072#1090#1091
             DataBinding.FieldName = 'SummDebet'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -394,7 +394,7 @@ object LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clSummKredit: TcxGridDBColumn
+          object SummKredit: TcxGridDBColumn
             Caption = #1050#1088#1077#1076#1080#1090' '#1076#1086#1083#1075' '#1085#1072' '#1076#1072#1090#1091
             DataBinding.FieldName = 'SummKredit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -404,7 +404,7 @@ object LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clAmountDebet: TcxGridDBColumn
+          object AmountDebet: TcxGridDBColumn
             Caption = #1044#1077#1073#1077#1090' '#1089#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountDebet'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -416,7 +416,7 @@ object LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clAmountKredit: TcxGridDBColumn
+          object AmountKredit: TcxGridDBColumn
             Caption = #1050#1088#1077#1076#1080#1090' '#1089#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountKredit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -426,7 +426,7 @@ object LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clContractCode: TcxGridDBColumn
+          object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
             HeaderAlignmentHorz = taCenter
@@ -434,7 +434,7 @@ object LossDebtForm: TLossDebtForm
             Options.Editing = False
             Width = 55
           end
-          object clContractName: TcxGridDBColumn
+          object ContractName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -449,7 +449,7 @@ object LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object clContractTagName: TcxGridDBColumn
+          object ContractTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagName'
             HeaderAlignmentHorz = taCenter
@@ -457,7 +457,7 @@ object LossDebtForm: TLossDebtForm
             Options.Editing = False
             Width = 60
           end
-          object clInfoMoneyCode: TcxGridDBColumn
+          object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             HeaderAlignmentHorz = taCenter
@@ -465,7 +465,7 @@ object LossDebtForm: TLossDebtForm
             Options.Editing = False
             Width = 45
           end
-          object clInfoMoneyGroupName: TcxGridDBColumn
+          object InfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -474,7 +474,7 @@ object LossDebtForm: TLossDebtForm
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyDestinationName: TcxGridDBColumn
+          object InfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -483,7 +483,7 @@ object LossDebtForm: TLossDebtForm
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyName: TcxGridDBColumn
+          object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -498,7 +498,7 @@ object LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -513,7 +513,7 @@ object LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clIsErased: TcxGridDBColumn
+          object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
             Visible = False
@@ -542,11 +542,13 @@ object LossDebtForm: TLossDebtForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 304
@@ -565,6 +567,7 @@ object LossDebtForm: TLossDebtForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -572,6 +575,7 @@ object LossDebtForm: TLossDebtForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -579,6 +583,7 @@ object LossDebtForm: TLossDebtForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 116
@@ -862,6 +867,7 @@ object LossDebtForm: TLossDebtForm
           Component = edInvNumber
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'From'
@@ -870,6 +876,7 @@ object LossDebtForm: TLossDebtForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDate'
@@ -877,10 +884,12 @@ object LossDebtForm: TLossDebtForm
           Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -944,12 +953,14 @@ object LossDebtForm: TLossDebtForm
       FormName = 'TInfoMoneyForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -957,6 +968,7 @@ object LossDebtForm: TLossDebtForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -968,12 +980,14 @@ object LossDebtForm: TLossDebtForm
       FormName = 'TJuridical_ContainerForm'
       FormNameParam.Value = 'TJuridical_ContainerForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'MasterJuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MasterJuridicalName'
@@ -981,12 +995,14 @@ object LossDebtForm: TLossDebtForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MasterAccountId'
           Value = Null
           Component = GuidesAccount
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MasterAccountName'
@@ -994,18 +1010,21 @@ object LossDebtForm: TLossDebtForm
           Component = GuidesAccount
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContainerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContainerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1013,12 +1032,14 @@ object LossDebtForm: TLossDebtForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1026,6 +1047,7 @@ object LossDebtForm: TLossDebtForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchName'
@@ -1033,24 +1055,28 @@ object LossDebtForm: TLossDebtForm
           Component = MasterCDS
           ComponentItem = 'BranchName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'BranchId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyCode'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyCode'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1058,12 +1084,14 @@ object LossDebtForm: TLossDebtForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1071,18 +1099,21 @@ object LossDebtForm: TLossDebtForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerCode'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerCode'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -1090,12 +1121,14 @@ object LossDebtForm: TLossDebtForm
           Component = MasterCDS
           ComponentItem = 'ContractName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractCode'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractCode'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OKPO'
@@ -1103,6 +1136,7 @@ object LossDebtForm: TLossDebtForm
           Component = MasterCDS
           ComponentItem = 'OKPO'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1113,12 +1147,14 @@ object LossDebtForm: TLossDebtForm
       FormName = 'TPaidKindForm'
       FormNameParam.Value = 'TPaidKindForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1126,6 +1162,7 @@ object LossDebtForm: TLossDebtForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1185,12 +1222,14 @@ object LossDebtForm: TLossDebtForm
       FormName = 'TPartner_ObjectForm'
       FormNameParam.Value = 'TPartner_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1198,12 +1237,14 @@ object LossDebtForm: TLossDebtForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1211,12 +1252,14 @@ object LossDebtForm: TLossDebtForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MasterJuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MasterJuridicalName'
@@ -1224,6 +1267,7 @@ object LossDebtForm: TLossDebtForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1235,12 +1279,14 @@ object LossDebtForm: TLossDebtForm
       FormName = 'TBranch_ObjectForm'
       FormNameParam.Value = 'TBranch_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'BranchId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1248,6 +1294,7 @@ object LossDebtForm: TLossDebtForm
           Component = MasterCDS
           ComponentItem = 'BranchName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1260,6 +1307,7 @@ object LossDebtForm: TLossDebtForm
       FormName = 'TMovementItemContainerForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -1267,6 +1315,7 @@ object LossDebtForm: TLossDebtForm
           Component = FormParams
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1278,6 +1327,7 @@ object LossDebtForm: TLossDebtForm
       FormName = 'TContractChoiceForm'
       FormNameParam.Value = 'TContractChoiceForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
@@ -1285,6 +1335,7 @@ object LossDebtForm: TLossDebtForm
           Component = MasterCDS
           ComponentItem = 'ContractId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1293,6 +1344,7 @@ object LossDebtForm: TLossDebtForm
           ComponentItem = 'ContractName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
@@ -1300,6 +1352,7 @@ object LossDebtForm: TLossDebtForm
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1308,6 +1361,7 @@ object LossDebtForm: TLossDebtForm
           ComponentItem = 'JuridicalName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
@@ -1315,6 +1369,7 @@ object LossDebtForm: TLossDebtForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1323,12 +1378,14 @@ object LossDebtForm: TLossDebtForm
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MasterJuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MasterJuridicalName'
@@ -1336,6 +1393,7 @@ object LossDebtForm: TLossDebtForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1356,6 +1414,7 @@ object LossDebtForm: TLossDebtForm
     LookupControl = edJuridicalBasis
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1366,6 +1425,7 @@ object LossDebtForm: TLossDebtForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1374,6 +1434,7 @@ object LossDebtForm: TLossDebtForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 304
     Top = 8
@@ -1397,6 +1458,7 @@ object LossDebtForm: TLossDebtForm
         Component = MasterCDS
         ComponentItem = 'id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1404,6 +1466,7 @@ object LossDebtForm: TLossDebtForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -1411,6 +1474,7 @@ object LossDebtForm: TLossDebtForm
         Component = MasterCDS
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerId'
@@ -1418,6 +1482,7 @@ object LossDebtForm: TLossDebtForm
         Component = MasterCDS
         ComponentItem = 'PartnerId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchId'
@@ -1425,6 +1490,7 @@ object LossDebtForm: TLossDebtForm
         Component = MasterCDS
         ComponentItem = 'BranchId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContainerId'
@@ -1432,6 +1498,7 @@ object LossDebtForm: TLossDebtForm
         Component = MasterCDS
         ComponentItem = 'ContainerId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioAmountDebet'
@@ -1440,6 +1507,7 @@ object LossDebtForm: TLossDebtForm
         ComponentItem = 'AmountDebet'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioAmountKredit'
@@ -1448,6 +1516,7 @@ object LossDebtForm: TLossDebtForm
         ComponentItem = 'AmountKredit'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioSummDebet'
@@ -1456,6 +1525,7 @@ object LossDebtForm: TLossDebtForm
         ComponentItem = 'SummDebet'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioSummKredit'
@@ -1464,6 +1534,7 @@ object LossDebtForm: TLossDebtForm
         ComponentItem = 'SummKredit'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioIsCalculated'
@@ -1472,6 +1543,7 @@ object LossDebtForm: TLossDebtForm
         ComponentItem = 'isCalculated'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
@@ -1479,6 +1551,7 @@ object LossDebtForm: TLossDebtForm
         Component = MasterCDS
         ComponentItem = 'ContractId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
@@ -1486,6 +1559,7 @@ object LossDebtForm: TLossDebtForm
         Component = MasterCDS
         ComponentItem = 'PaidKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
@@ -1493,6 +1567,7 @@ object LossDebtForm: TLossDebtForm
         Component = MasterCDS
         ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -1500,6 +1575,7 @@ object LossDebtForm: TLossDebtForm
         Component = MasterCDS
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 86
@@ -1536,6 +1612,7 @@ object LossDebtForm: TLossDebtForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -1543,6 +1620,7 @@ object LossDebtForm: TLossDebtForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1550,6 +1628,7 @@ object LossDebtForm: TLossDebtForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBusinessId'
@@ -1557,6 +1636,7 @@ object LossDebtForm: TLossDebtForm
         Component = GuidesBusiness
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalBasisId'
@@ -1564,6 +1644,7 @@ object LossDebtForm: TLossDebtForm
         Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountId'
@@ -1571,6 +1652,7 @@ object LossDebtForm: TLossDebtForm
         Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
@@ -1578,6 +1660,7 @@ object LossDebtForm: TLossDebtForm
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisList'
@@ -1585,6 +1668,7 @@ object LossDebtForm: TLossDebtForm
         Component = cbisList
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 451
@@ -1594,6 +1678,7 @@ object LossDebtForm: TLossDebtForm
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
     StoredProc = spInsertUpdateMovement
     ControlList = <
       item
@@ -1632,6 +1717,7 @@ object LossDebtForm: TLossDebtForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1640,22 +1726,26 @@ object LossDebtForm: TLossDebtForm
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Invnumber'
         Value = '0'
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 41640d
         Component = edOperDate
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
@@ -1663,6 +1753,7 @@ object LossDebtForm: TLossDebtForm
         Component = StatusGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -1670,12 +1761,14 @@ object LossDebtForm: TLossDebtForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalBasisId'
         Value = ''
         Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalBasisName'
@@ -1683,36 +1776,42 @@ object LossDebtForm: TLossDebtForm
         Component = GuidesJuridicalBasis
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BusinessId'
         Value = ''
         Component = GuidesBusiness
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BusinessName'
         Value = ''
         Component = GuidesBusiness
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountId'
         Value = ''
         Component = GuidesAccount
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountName'
         Value = ''
         Component = GuidesAccount
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindId'
         Value = ''
         Component = PaidKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
@@ -1720,12 +1819,14 @@ object LossDebtForm: TLossDebtForm
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isList'
         Value = Null
         Component = cbisList
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 440
@@ -1744,6 +1845,7 @@ object LossDebtForm: TLossDebtForm
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
     GuidesList = <>
     ActionItemList = <
       item
@@ -1763,6 +1865,7 @@ object LossDebtForm: TLossDebtForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsErased'
@@ -1770,6 +1873,7 @@ object LossDebtForm: TLossDebtForm
         Component = MasterCDS
         ComponentItem = 'IsErased'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 574
@@ -1786,6 +1890,7 @@ object LossDebtForm: TLossDebtForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsErased'
@@ -1793,6 +1898,7 @@ object LossDebtForm: TLossDebtForm
         Component = MasterCDS
         ComponentItem = 'IsErased'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 630
@@ -1803,6 +1909,7 @@ object LossDebtForm: TLossDebtForm
     LookupControl = ceStatus
     FormNameParam.Value = ''
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 44
@@ -1819,6 +1926,7 @@ object LossDebtForm: TLossDebtForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStatusCode'
@@ -1826,6 +1934,7 @@ object LossDebtForm: TLossDebtForm
         Component = StatusGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 76
@@ -1836,6 +1945,7 @@ object LossDebtForm: TLossDebtForm
     LookupControl = edBusiness
     FormNameParam.Value = 'TBusiness_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBusiness_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1846,6 +1956,7 @@ object LossDebtForm: TLossDebtForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1854,6 +1965,7 @@ object LossDebtForm: TLossDebtForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 488
     Top = 8
@@ -1863,6 +1975,7 @@ object LossDebtForm: TLossDebtForm
     LookupControl = edAccount
     FormNameParam.Value = 'TAccountForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccountForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1872,6 +1985,7 @@ object LossDebtForm: TLossDebtForm
         Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1880,6 +1994,7 @@ object LossDebtForm: TLossDebtForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 648
     Top = 8
@@ -1889,6 +2004,7 @@ object LossDebtForm: TLossDebtForm
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1898,6 +2014,7 @@ object LossDebtForm: TLossDebtForm
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1906,6 +2023,7 @@ object LossDebtForm: TLossDebtForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 824
     Top = 8

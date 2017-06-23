@@ -5,8 +5,10 @@ inherited CashJournalForm: TCashJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -248
+  ExplicitTop = -97
   ExplicitWidth = 991
-  ExplicitHeight = 589
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -30,83 +32,83 @@ inherited CashJournalForm: TCashJournalForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = clAmountIn
+              Column = AmountIn
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = clAmountOut
+              Column = AmountOut
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = clAmountCurrency
+              Column = AmountCurrency
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = clAmountSumm
+              Column = AmountSumm
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = clCurrencyPartnerValue
+              Column = CurrencyPartnerValue
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = clParPartnerValue
+              Column = ParPartnerValue
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = clCurrencyValue
+              Column = CurrencyValue
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = clParValue
+              Column = ParValue
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00'
               Kind = skSum
-              Column = clAmountIn
+              Column = AmountIn
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = clAmountOut
+              Column = AmountOut
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = clAmountCurrency
+              Column = AmountCurrency
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = clAmountSumm
+              Column = AmountSumm
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = clCurrencyPartnerValue
+              Column = CurrencyPartnerValue
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = clParPartnerValue
+              Column = ParPartnerValue
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = clCurrencyValue
+              Column = CurrencyValue
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = clParValue
+              Column = ParValue
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -142,7 +144,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 50
           end
-          object clCashName: TcxGridDBColumn
+          object CashName: TcxGridDBColumn
             Caption = #1050#1072#1089#1089#1072
             DataBinding.FieldName = 'CashName'
             Visible = False
@@ -151,7 +153,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 70
           end
-          object clMoneyPlaceCode: TcxGridDBColumn
+          object MoneyPlaceCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'MoneyPlaceCode'
             Visible = False
@@ -160,7 +162,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 50
           end
-          object clMoneyPlaceName: TcxGridDBColumn
+          object MoneyPlaceName: TcxGridDBColumn
             Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
             DataBinding.FieldName = 'MoneyPlaceName'
             FooterAlignmentHorz = taCenter
@@ -169,7 +171,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 150
           end
-          object clItemName: TcxGridDBColumn
+          object ItemName: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090
             DataBinding.FieldName = 'ItemName'
             Visible = False
@@ -186,7 +188,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 60
           end
-          object clMemberName: TcxGridDBColumn
+          object MemberName: TcxGridDBColumn
             Caption = #1060#1048#1054' ('#1095#1077#1088#1077#1079' '#1082#1086#1075#1086')'
             DataBinding.FieldName = 'MemberName'
             HeaderAlignmentHorz = taCenter
@@ -194,7 +196,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 100
           end
-          object clPartionMovementName: TcxGridDBColumn
+          object PartionMovementName: TcxGridDBColumn
             Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'PartionMovementName'
             HeaderAlignmentHorz = taCenter
@@ -202,7 +204,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 80
           end
-          object clAmountIn: TcxGridDBColumn
+          object AmountIn: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'AmountIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -213,7 +215,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 80
           end
-          object clAmountOut: TcxGridDBColumn
+          object AmountOut: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'AmountOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -224,7 +226,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 80
           end
-          object clServiceDate: TcxGridDBColumn
+          object ServiceDate: TcxGridDBColumn
             Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
             DataBinding.FieldName = 'ServiceDate'
             PropertiesClassName = 'TcxDateEditProperties'
@@ -235,7 +237,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 89
           end
-          object clPositionName: TcxGridDBColumn
+          object PositionName: TcxGridDBColumn
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1079'/'#1087')'
             DataBinding.FieldName = 'PositionName'
             HeaderAlignmentHorz = taCenter
@@ -260,7 +262,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 80
           end
-          object clInfoMoneyCode: TcxGridDBColumn
+          object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -269,7 +271,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 45
           end
-          object clInfoMoneyGroupName: TcxGridDBColumn
+          object InfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -278,7 +280,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyDestinationName: TcxGridDBColumn
+          object InfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -287,7 +289,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyName: TcxGridDBColumn
+          object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -297,7 +299,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyName_all: TcxGridDBColumn
+          object InfoMoneyName_all: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
             HeaderAlignmentHorz = taCenter
@@ -305,7 +307,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 90
           end
-          object colContractCode: TcxGridDBColumn
+          object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
             Visible = False
@@ -314,7 +316,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 45
           end
-          object clContractInvNumber: TcxGridDBColumn
+          object ContractInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractInvNumber'
             Visible = False
@@ -323,7 +325,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 55
           end
-          object colContractTagName: TcxGridDBColumn
+          object ContractTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagName'
             HeaderAlignmentHorz = taCenter
@@ -349,7 +351,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 80
           end
-          object clComment: TcxGridDBColumn
+          object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -357,14 +359,14 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 85
           end
-          object clAmountCurrency: TcxGridDBColumn
+          object AmountCurrency: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1074' '#1074#1072#1083#1102#1090#1077
             DataBinding.FieldName = 'AmountCurrency'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
-          object clAmountSumm: TcxGridDBColumn
+          object AmountSumm: TcxGridDBColumn
             Caption = 'C'#1091#1084#1084#1072' '#1075#1088#1085', '#1086#1073#1084#1077#1085
             DataBinding.FieldName = 'AmountSumm'
             HeaderAlignmentHorz = taCenter
@@ -372,7 +374,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 60
           end
-          object clCurrencyName: TcxGridDBColumn
+          object CurrencyName: TcxGridDBColumn
             Caption = #1042#1072#1083#1102#1090#1072
             DataBinding.FieldName = 'CurrencyName'
             HeaderAlignmentHorz = taCenter
@@ -380,7 +382,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 60
           end
-          object clCurrencyPartnerName: TcxGridDBColumn
+          object CurrencyPartnerName: TcxGridDBColumn
             Caption = #1042#1072#1083#1102#1090#1072' '#1082#1086#1085#1090#1088'.'
             DataBinding.FieldName = 'CurrencyPartnerName'
             HeaderAlignmentHorz = taCenter
@@ -389,7 +391,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 60
           end
-          object clCurrencyPartnerValue: TcxGridDBColumn
+          object CurrencyPartnerValue: TcxGridDBColumn
             Caption = #1050#1091#1088#1089
             DataBinding.FieldName = 'CurrencyPartnerValue'
             HeaderAlignmentHorz = taCenter
@@ -397,7 +399,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 60
           end
-          object clParPartnerValue: TcxGridDBColumn
+          object ParPartnerValue: TcxGridDBColumn
             Caption = #1053#1086#1084#1080#1085#1072#1083
             DataBinding.FieldName = 'ParPartnerValue'
             HeaderAlignmentHorz = taCenter
@@ -405,7 +407,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 60
           end
-          object clCurrencyValue: TcxGridDBColumn
+          object CurrencyValue: TcxGridDBColumn
             Caption = #1050#1091#1088#1089' '#1059#1055
             DataBinding.FieldName = 'CurrencyValue'
             HeaderAlignmentHorz = taCenter
@@ -413,7 +415,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 60
           end
-          object clParValue: TcxGridDBColumn
+          object ParValue: TcxGridDBColumn
             Caption = #1053#1086#1084#1080#1085#1072#1083' '#1082#1091#1088#1089' '#1059#1055
             DataBinding.FieldName = 'ParValue'
             HeaderAlignmentHorz = taCenter
@@ -421,7 +423,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 60
           end
-          object colInvNumber_Invoice: TcxGridDBColumn
+          object InvNumber_Invoice: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
             DataBinding.FieldName = 'InvNumber_Invoice'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -436,14 +438,14 @@ inherited CashJournalForm: TCashJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
-          object colMovementId_Invoice: TcxGridDBColumn
+          object MovementId_Invoice: TcxGridDBColumn
             DataBinding.FieldName = 'MovementId_Invoice'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
             Width = 60
           end
-          object colComment_Invoice: TcxGridDBColumn
+          object Comment_Invoice: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1076#1086#1082'.'#1057#1095#1077#1090')'
             DataBinding.FieldName = 'Comment_Invoice'
             HeaderAlignmentHorz = taCenter
@@ -451,7 +453,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 100
           end
-          object clInsertDate: TcxGridDBColumn
+          object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
@@ -459,7 +461,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 82
           end
-          object clInsertMobileDate: TcxGridDBColumn
+          object InsertMobileDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1084#1086#1073'.'#1091#1089#1090#1088')'
             DataBinding.FieldName = 'InsertMobileDate'
             Visible = False
@@ -468,7 +470,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 90
           end
-          object clInsertName: TcxGridDBColumn
+          object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
@@ -494,7 +496,7 @@ inherited CashJournalForm: TCashJournalForm
             Options.Editing = False
             Width = 70
           end
-          object clGUID: TcxGridDBColumn
+          object GUID: TcxGridDBColumn
             DataBinding.FieldName = 'GUID'
             Visible = False
             HeaderAlignmentHorz = taCenter

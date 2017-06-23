@@ -3,8 +3,9 @@ inherited MobilePromoForm: TMobilePromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 560
   ClientWidth = 747
+  ExplicitTop = -82
   ExplicitWidth = 763
-  ExplicitHeight = 598
+  ExplicitHeight = 599
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -79,7 +80,7 @@ inherited MobilePromoForm: TMobilePromoForm
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colGoodsName
+              Column = GoodsName
             end>
           OptionsData.Deleting = False
           OptionsData.Editing = False
@@ -88,7 +89,7 @@ inherited MobilePromoForm: TMobilePromoForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colTradeMark: TcxGridDBColumn [0]
+          object TradeMarkName: TcxGridDBColumn [0]
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
             DataBinding.FieldName = 'TradeMarkName'
             HeaderAlignmentHorz = taCenter
@@ -96,7 +97,7 @@ inherited MobilePromoForm: TMobilePromoForm
             Options.Editing = False
             Width = 80
           end
-          object colGoodsCode: TcxGridDBColumn [1]
+          object GoodsCode: TcxGridDBColumn [1]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -104,7 +105,7 @@ inherited MobilePromoForm: TMobilePromoForm
             Options.Editing = False
             Width = 47
           end
-          object colGoodsName: TcxGridDBColumn [2]
+          object GoodsName: TcxGridDBColumn [2]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -119,7 +120,7 @@ inherited MobilePromoForm: TMobilePromoForm
             HeaderAlignmentVert = vaCenter
             Width = 255
           end
-          object colGoodsKindName: TcxGridDBColumn [3]
+          object GoodsKindName: TcxGridDBColumn [3]
             Caption = #1042#1080#1076
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -134,7 +135,7 @@ inherited MobilePromoForm: TMobilePromoForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colMeasureName: TcxGridDBColumn [4]
+          object MeasureName: TcxGridDBColumn [4]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -142,7 +143,7 @@ inherited MobilePromoForm: TMobilePromoForm
             Options.Editing = False
             Width = 35
           end
-          object colPriceWithOutVAT: TcxGridDBColumn [5]
+          object PriceWithOutVAT: TcxGridDBColumn [5]
             Caption = #1073#1077#1079' '#1053#1044#1057' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
             DataBinding.FieldName = 'PriceWithOutVAT'
             HeaderAlignmentHorz = taCenter
@@ -151,7 +152,7 @@ inherited MobilePromoForm: TMobilePromoForm
             Options.Editing = False
             Width = 85
           end
-          object colPriceWithVAT: TcxGridDBColumn [6]
+          object PriceWithVAT: TcxGridDBColumn [6]
             Caption = #1089' '#1053#1044#1057' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
             DataBinding.FieldName = 'PriceWithVAT'
             HeaderAlignmentHorz = taCenter
@@ -160,7 +161,7 @@ inherited MobilePromoForm: TMobilePromoForm
             Options.Editing = False
             Width = 70
           end
-          object colTaxPromo: TcxGridDBColumn [7]
+          object TaxPromo: TcxGridDBColumn [7]
             Caption = '% '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1072#1082#1094#1080#1080
             DataBinding.FieldName = 'TaxPromo'
             HeaderAlignmentHorz = taCenter
@@ -211,7 +212,7 @@ inherited MobilePromoForm: TMobilePromoForm
                   item
                     Format = #1057#1090#1088#1086#1082': ,0'
                     Kind = skCount
-                    Column = colp_PartnerName
+                    Column = PartnerName
                   end>
                 DataController.Summary.SummaryGroups = <>
                 Images = dmMain.SortImageList
@@ -230,7 +231,7 @@ inherited MobilePromoForm: TMobilePromoForm
                 OptionsView.HeaderAutoHeight = True
                 OptionsView.Indicator = True
                 Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-                object colp_Area: TcxGridDBColumn
+                object AreaName: TcxGridDBColumn
                   Caption = #1056#1077#1075#1080#1086#1085
                   DataBinding.FieldName = 'AreaName'
                   Visible = False
@@ -238,7 +239,7 @@ inherited MobilePromoForm: TMobilePromoForm
                   HeaderAlignmentVert = vaCenter
                   Width = 70
                 end
-                object colp_PartnerCode: TcxGridDBColumn
+                object PartnerCode: TcxGridDBColumn
                   Caption = #1050#1086#1076
                   DataBinding.FieldName = 'PartnerCode'
                   PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -249,7 +250,7 @@ inherited MobilePromoForm: TMobilePromoForm
                   Options.Editing = False
                   Width = 28
                 end
-                object colp_PartnerName: TcxGridDBColumn
+                object PartnerName: TcxGridDBColumn
                   Caption = #1053#1072#1079#1074#1072#1085#1080#1077
                   DataBinding.FieldName = 'PartnerName'
                   PropertiesClassName = 'TcxButtonEditProperties'
@@ -264,7 +265,7 @@ inherited MobilePromoForm: TMobilePromoForm
                   HeaderAlignmentVert = vaCenter
                   Width = 201
                 end
-                object colp_PartnerDescName: TcxGridDBColumn
+                object PartnerDescName: TcxGridDBColumn
                   Caption = #1069#1083#1077#1084#1077#1085#1090
                   DataBinding.FieldName = 'PartnerDescName'
                   Visible = False
@@ -273,7 +274,7 @@ inherited MobilePromoForm: TMobilePromoForm
                   Options.Editing = False
                   Width = 58
                 end
-                object colJuridicalName: TcxGridDBColumn
+                object JuridicalName: TcxGridDBColumn
                   Caption = #1070#1088'. '#1083#1080#1094#1086
                   DataBinding.FieldName = 'JuridicalName'
                   HeaderAlignmentHorz = taCenter
@@ -281,7 +282,7 @@ inherited MobilePromoForm: TMobilePromoForm
                   Options.Editing = False
                   Width = 163
                 end
-                object colRetail_Name: TcxGridDBColumn
+                object RetailName: TcxGridDBColumn
                   Caption = #1057#1077#1090#1100
                   DataBinding.FieldName = 'RetailName'
                   HeaderAlignmentHorz = taCenter
@@ -289,7 +290,7 @@ inherited MobilePromoForm: TMobilePromoForm
                   Options.Editing = False
                   Width = 80
                 end
-                object colContractCode: TcxGridDBColumn
+                object ContractCode: TcxGridDBColumn
                   Caption = #1050#1086#1076' '#1076#1086#1075'.'
                   DataBinding.FieldName = 'ContractCode'
                   PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -301,7 +302,7 @@ inherited MobilePromoForm: TMobilePromoForm
                   Options.Editing = False
                   Width = 70
                 end
-                object colContractName: TcxGridDBColumn
+                object ContractName: TcxGridDBColumn
                   Caption = #8470' '#1076#1086#1075'.'
                   DataBinding.FieldName = 'ContractName'
                   PropertiesClassName = 'TcxButtonEditProperties'
@@ -316,7 +317,7 @@ inherited MobilePromoForm: TMobilePromoForm
                   HeaderAlignmentVert = vaCenter
                   Width = 55
                 end
-                object colContractTagName: TcxGridDBColumn
+                object ContractTagName: TcxGridDBColumn
                   Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
                   DataBinding.FieldName = 'ContractTagName'
                   HeaderAlignmentHorz = taCenter
@@ -324,14 +325,14 @@ inherited MobilePromoForm: TMobilePromoForm
                   Options.Editing = False
                   Width = 70
                 end
-                object colp_Comment: TcxGridDBColumn
+                object Comment: TcxGridDBColumn
                   Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
                   DataBinding.FieldName = 'Comment'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
                   Width = 91
                 end
-                object colp_isErased: TcxGridDBColumn
+                object isErased: TcxGridDBColumn
                   Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
                   DataBinding.FieldName = 'isErased'
                   Visible = False
