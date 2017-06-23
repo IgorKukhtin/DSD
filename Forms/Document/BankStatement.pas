@@ -18,11 +18,11 @@ uses
 type
   TBankStatementForm = class(TAncestorDBGridForm)
     FormParams: TdsdFormParams;
-    colDocNumber: TcxGridDBColumn;
-    colOKPO: TcxGridDBColumn;
-    colDebet: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
-    colLinkJuridicalName: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    OKPO: TcxGridDBColumn;
+    Debet: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    LinkJuridicalName: TcxGridDBColumn;
     Panel: TPanel;
     cxLabel1: TcxLabel;
     edInvNumber: TcxTextEdit;
@@ -33,14 +33,14 @@ type
     spGet: TdsdStoredProc;
     edBankName: TcxTextEdit;
     edBankAccount: TcxTextEdit;
-    colInfoMoney: TcxGridDBColumn;
-    colComment: TcxGridDBColumn;
-    colContract: TcxGridDBColumn;
-    colKredit: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
-    colBankAccount: TcxGridDBColumn;
-    colBankName: TcxGridDBColumn;
-    colBankMFO: TcxGridDBColumn;
+    InfoMoney: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    Contract: TcxGridDBColumn;
+    Kredit: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    BankAccount: TcxGridDBColumn;
+    BankName: TcxGridDBColumn;
+    BankMFO: TcxGridDBColumn;
     actChoiceUnit: TOpenChoiceForm;
     actChoiceJuridical: TOpenChoiceForm;
     actChoiceInfoMoney: TOpenChoiceForm;
@@ -54,21 +54,21 @@ type
     cxDetailGridLevel: TcxGridLevel;
     cxDetailGrid: TcxGrid;
     BarManagerBar1: TdxBar;
-    colCurrency: TcxGridDBColumn;
+    CurrencyName: TcxGridDBColumn;
     actSendToBankAccount: TdsdExecStoredProc;
     spBankAccount_From_BankStatement: TdsdStoredProc;
     bbSendToBankAccount: TdxBarButton;
-    clInfoMoneyCode: TcxGridDBColumn;
-    clInfoMoneyGroupName: TcxGridDBColumn;
-    clInfoMoneyDestinationName: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
     bbInsertJuridical: TdxBarButton;
     InsertJuridical: TdsdInsertUpdateAction;
     RefreshAddOn: TRefreshAddOn;
     cxGridLevel1: TcxGridLevel;
-    clInvNumber_Invoice: TcxGridDBColumn;
+    InvNumber_Invoice: TcxGridDBColumn;
     actInvoiceJournalDetailChoiceForm: TOpenChoiceForm;
-    clMovementId_Invoice: TcxGridDBColumn;
-    colComment_Invoice: TcxGridDBColumn;
+    MovementId_Invoice: TcxGridDBColumn;
+    Comment_Invoice: TcxGridDBColumn;
   private
     { Private declarations }
   public

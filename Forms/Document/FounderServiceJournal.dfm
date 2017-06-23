@@ -4,8 +4,10 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
   ClientWidth = 840
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -113
+  ExplicitTop = -83
   ExplicitWidth = 856
-  ExplicitHeight = 575
+  ExplicitHeight = 576
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -33,7 +35,7 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -59,7 +61,7 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -108,14 +110,14 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 118
           end
-          object colFounderName: TcxGridDBColumn
+          object FounderName: TcxGridDBColumn
             Caption = #1059#1095#1088#1077#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'FounderName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 176
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1080#1090#1086#1075#1086')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -125,7 +127,7 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 110
           end
-          object colComment: TcxGridDBColumn
+          object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter

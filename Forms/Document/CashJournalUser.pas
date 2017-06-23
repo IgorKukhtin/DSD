@@ -18,25 +18,25 @@ uses
 
 type
   TCashJournalUserForm = class(TAncestorJournalForm)
-    clAmountOut: TcxGridDBColumn;
-    clInfoMoneyCode: TcxGridDBColumn;
-    clInfoMoneyGroupName: TcxGridDBColumn;
-    clInfoMoneyDestinationName: TcxGridDBColumn;
-    clComment: TcxGridDBColumn;
-    clContractInvNumber: TcxGridDBColumn;
-    clMoneyPlaceCode: TcxGridDBColumn;
+    AmountOut: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    ContractInvNumber: TcxGridDBColumn;
+    MoneyPlaceCode: TcxGridDBColumn;
     ceCash: TcxButtonEdit;
     cxLabel3: TcxLabel;
     CashGuides: TdsdGuides;
-    clInfoMoneyName_all: TcxGridDBColumn;
-    clMemberName: TcxGridDBColumn;
-    clPositionName: TcxGridDBColumn;
-    clItemName: TcxGridDBColumn;
+    InfoMoneyName_all: TcxGridDBColumn;
+    MemberName: TcxGridDBColumn;
+    PositionName: TcxGridDBColumn;
+    ItemName: TcxGridDBColumn;
     actReport_CashUser: TdsdOpenForm;
     bbReport_CashUser: TdxBarButton;
     OKPO: TcxGridDBColumn;
     isLoad: TcxGridDBColumn;
-    clPartionMovementName: TcxGridDBColumn;
+    PartionMovementName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     PersonalServiceListCode: TcxGridDBColumn;
     PersonalServiceListName: TcxGridDBColumn;

@@ -88,7 +88,7 @@ type
     cxLabel21: TcxLabel;
     edPartner: TcxButtonEdit;
     PartnerGuides: TdsdGuides;
-    Article: TcxGridDBColumn;
+    ArticleGLN: TcxGridDBColumn;
     cxLabel18: TcxLabel;
     ceComment: TcxTextEdit;
     cxLabel19: TcxLabel;

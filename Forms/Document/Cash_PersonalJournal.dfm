@@ -4,7 +4,10 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -238
+  ExplicitTop = -197
   ExplicitWidth = 981
+  ExplicitHeight = 714
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

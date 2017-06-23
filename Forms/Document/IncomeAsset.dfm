@@ -318,7 +318,7 @@ object IncomeAssetForm: TIncomeAssetForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -335,7 +335,7 @@ object IncomeAssetForm: TIncomeAssetForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSumm
+              Column = AmountSumm
             end
             item
               Format = ',0.####'
@@ -356,13 +356,13 @@ object IncomeAssetForm: TIncomeAssetForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount_parent
+              Column = Amount_parent
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -379,7 +379,7 @@ object IncomeAssetForm: TIncomeAssetForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSumm
+              Column = AmountSumm
             end
             item
               Format = ',0.####'
@@ -387,15 +387,7 @@ object IncomeAssetForm: TIncomeAssetForm
             end
             item
               Kind = skSum
-              Column = colPrice
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Column = Price
             end
             item
               Format = ',0.####'
@@ -404,7 +396,15 @@ object IncomeAssetForm: TIncomeAssetForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount_parent
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_parent
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -419,7 +419,7 @@ object IncomeAssetForm: TIncomeAssetForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object colGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -434,7 +434,7 @@ object IncomeAssetForm: TIncomeAssetForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1058#1086#1074#1072#1088'/'#1054#1057')'
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -458,7 +458,7 @@ object IncomeAssetForm: TIncomeAssetForm
             Options.Editing = False
             Width = 70
           end
-          object clAssetName: TcxGridDBColumn
+          object AssetName: TcxGridDBColumn
             Caption = #1076#1083#1103' '#1054'C'
             DataBinding.FieldName = 'AssetName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -482,7 +482,7 @@ object IncomeAssetForm: TIncomeAssetForm
             Options.Editing = False
             Width = 100
           end
-          object colUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1103
             DataBinding.FieldName = 'UnitName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -497,7 +497,7 @@ object IncomeAssetForm: TIncomeAssetForm
             HeaderAlignmentVert = vaCenter
             Width = 132
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -507,7 +507,7 @@ object IncomeAssetForm: TIncomeAssetForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -517,7 +517,7 @@ object IncomeAssetForm: TIncomeAssetForm
             HeaderAlignmentVert = vaCenter
             Width = 83
           end
-          object colCountForPrice: TcxGridDBColumn
+          object CountForPrice: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -528,7 +528,7 @@ object IncomeAssetForm: TIncomeAssetForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colAmountSumm: TcxGridDBColumn
+          object AmountSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -540,7 +540,7 @@ object IncomeAssetForm: TIncomeAssetForm
             Options.Editing = False
             Width = 104
           end
-          object colAmount_parent: TcxGridDBColumn
+          object Amount_parent: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1095#1077#1090')'
             DataBinding.FieldName = 'Amount_parent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -551,7 +551,7 @@ object IncomeAssetForm: TIncomeAssetForm
             Options.Editing = False
             Width = 70
           end
-          object colPrice_parent: TcxGridDBColumn
+          object Price_parent: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' ('#1089#1095#1077#1090')'
             DataBinding.FieldName = 'Price_parent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -562,7 +562,7 @@ object IncomeAssetForm: TIncomeAssetForm
             Options.Editing = False
             Width = 91
           end
-          object clInvNumber_Invoice: TcxGridDBColumn
+          object InvNumber_Invoice: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
             DataBinding.FieldName = 'InvNumber_Invoice'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -578,13 +578,13 @@ object IncomeAssetForm: TIncomeAssetForm
             HeaderHint = #1054#1089#1085#1086#1074#1072#1085#1080#1077' ('#1089#1095#1077#1090')'
             Width = 159
           end
-          object colMIId_Invoice: TcxGridDBColumn
+          object MIId_Invoice: TcxGridDBColumn
             DataBinding.FieldName = 'MIId_Invoice'
             Visible = False
             VisibleForCustomization = False
             Width = 30
           end
-          object colIsErased: TcxGridDBColumn
+          object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
             Visible = False
@@ -602,6 +602,9 @@ object IncomeAssetForm: TIncomeAssetForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0

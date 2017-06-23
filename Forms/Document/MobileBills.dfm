@@ -2,8 +2,9 @@ inherited MobileBillsForm: TMobileBillsForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1090#1088#1072#1090#1099' '#1085#1072' '#1084#1086#1073#1080#1083#1100#1085#1091#1102' '#1089#1074#1103#1079#1100'>'
   ClientHeight = 501
   ClientWidth = 751
+  ExplicitTop = -47
   ExplicitWidth = 767
-  ExplicitHeight = 539
+  ExplicitHeight = 540
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -28,7 +29,7 @@ inherited MobileBillsForm: TMobileBillsForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -49,7 +50,7 @@ inherited MobileBillsForm: TMobileBillsForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colCurrMonthly
+              Column = CurrMonthly
             end
             item
               Format = ',0.####'
@@ -62,37 +63,37 @@ inherited MobileBillsForm: TMobileBillsForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colCurrNavigator
+              Column = CurrNavigator
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colPrevNavigator
+              Column = PrevNavigator
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colMobileLimit
+              Column = MobileLimit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colPrevLimit
+              Column = PrevLimit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colDutyLimit
+              Column = DutyLimit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colOverlimit
+              Column = Overlimit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colPrevMonthly
+              Column = PrevMonthly
             end
             item
               Format = ',0.####'
@@ -103,52 +104,52 @@ inherited MobileBillsForm: TMobileBillsForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colCurrMonthly
+              Column = CurrMonthly
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colCurrNavigator
+              Column = CurrNavigator
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colPrevNavigator
+              Column = PrevNavigator
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colMobileLimit
+              Column = MobileLimit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colPrevLimit
+              Column = PrevLimit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colDutyLimit
+              Column = DutyLimit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colOverlimit
+              Column = Overlimit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colPrevMonthly
+              Column = PrevMonthly
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colMobileEmployeeName
+              Column = MobileEmployeeName
             end
             item
               Format = ',0.####'
@@ -158,7 +159,7 @@ inherited MobileBillsForm: TMobileBillsForm
             item
               Format = ',0.####'
               Kind = skCount
-              Column = colEmployeeName
+              Column = EmployeeName
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -195,7 +196,7 @@ inherited MobileBillsForm: TMobileBillsForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colEmployeeName: TcxGridDBColumn [3]
+          object EmployeeName: TcxGridDBColumn [3]
             Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
             DataBinding.FieldName = 'EmployeeName'
             HeaderAlignmentHorz = taCenter
@@ -226,7 +227,7 @@ inherited MobileBillsForm: TMobileBillsForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colMobileEmployeeCode: TcxGridDBColumn [7]
+          object MobileEmployeeCode: TcxGridDBColumn [7]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'MobileEmployeeCode'
             Visible = False
@@ -235,7 +236,7 @@ inherited MobileBillsForm: TMobileBillsForm
             Options.Editing = False
             Width = 45
           end
-          object colMobileEmployeeName: TcxGridDBColumn [8]
+          object MobileEmployeeName: TcxGridDBColumn [8]
             Caption = #8470' '#1090#1077#1083#1077#1092#1086#1085#1072
             DataBinding.FieldName = 'MobileEmployeeName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -250,7 +251,7 @@ inherited MobileBillsForm: TMobileBillsForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colAmount: TcxGridDBColumn [9]
+          object Amount: TcxGridDBColumn [9]
             Caption = #1057#1091#1084#1084#1072' '#1080#1090#1086#1075#1086' '
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -272,7 +273,7 @@ inherited MobileBillsForm: TMobileBillsForm
             Options.Editing = False
             Width = 70
           end
-          object colOverlimit: TcxGridDBColumn [11]
+          object Overlimit: TcxGridDBColumn [11]
             Caption = #1055#1077#1088#1077#1083#1080#1084#1080#1090
             DataBinding.FieldName = 'Overlimit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -282,7 +283,7 @@ inherited MobileBillsForm: TMobileBillsForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colDutyLimit: TcxGridDBColumn [12]
+          object DutyLimit: TcxGridDBColumn [12]
             Caption = #1057#1083#1091#1078#1077#1073#1085#1099#1081' '#1083#1080#1084#1080#1090
             DataBinding.FieldName = 'DutyLimit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -293,7 +294,7 @@ inherited MobileBillsForm: TMobileBillsForm
             Options.Editing = False
             Width = 90
           end
-          object colMobileLimit: TcxGridDBColumn [13]
+          object MobileLimit: TcxGridDBColumn [13]
             Caption = #1051#1080#1084#1080#1090
             DataBinding.FieldName = 'MobileLimit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -305,7 +306,7 @@ inherited MobileBillsForm: TMobileBillsForm
             Options.Editing = False
             Width = 70
           end
-          object colPrevLimit: TcxGridDBColumn [14]
+          object PrevLimit: TcxGridDBColumn [14]
             Caption = #1087#1088#1077#1076'. '#1051#1080#1084#1080#1090
             DataBinding.FieldName = 'PrevLimit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -317,7 +318,7 @@ inherited MobileBillsForm: TMobileBillsForm
             Options.Editing = False
             Width = 70
           end
-          object colCurrMonthly: TcxGridDBColumn [15]
+          object CurrMonthly: TcxGridDBColumn [15]
             Caption = #1040#1073#1086#1085#1087#1083#1072#1090#1072
             DataBinding.FieldName = 'CurrMonthly'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -328,7 +329,7 @@ inherited MobileBillsForm: TMobileBillsForm
             Options.Editing = False
             Width = 92
           end
-          object colPrevMonthly: TcxGridDBColumn [16]
+          object PrevMonthly: TcxGridDBColumn [16]
             Caption = #1087#1088#1077#1076'. '#1040#1073#1086#1085#1087#1083#1072#1090#1072
             DataBinding.FieldName = 'PrevMonthly'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -340,7 +341,7 @@ inherited MobileBillsForm: TMobileBillsForm
             Options.Editing = False
             Width = 86
           end
-          object colCurrNavigator: TcxGridDBColumn [17]
+          object CurrNavigator: TcxGridDBColumn [17]
             Caption = #1053#1072#1074#1080#1075#1072#1090#1086#1088
             DataBinding.FieldName = 'CurrNavigator'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -351,7 +352,7 @@ inherited MobileBillsForm: TMobileBillsForm
             Options.Editing = False
             Width = 100
           end
-          object colPrevNavigator: TcxGridDBColumn [18]
+          object PrevNavigator: TcxGridDBColumn [18]
             Caption = #1087#1088#1077#1076'. '#1053#1072#1074#1080#1075#1072#1090#1086#1088
             DataBinding.FieldName = 'PrevNavigator'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -363,7 +364,7 @@ inherited MobileBillsForm: TMobileBillsForm
             Options.Editing = False
             Width = 95
           end
-          object colMobileTariffName: TcxGridDBColumn [19]
+          object MobileTariffName: TcxGridDBColumn [19]
             Caption = #1058#1077#1082#1091#1097#1080#1081' '#1090#1072#1088#1080#1092#1085#1099#1081' '#1087#1083#1072#1085
             DataBinding.FieldName = 'MobileTariffName'
             HeaderAlignmentHorz = taCenter
@@ -371,7 +372,7 @@ inherited MobileBillsForm: TMobileBillsForm
             Options.Editing = False
             Width = 81
           end
-          object colPrevMobileTariffName: TcxGridDBColumn [20]
+          object PrevMobileTariffName: TcxGridDBColumn [20]
             Caption = #1087#1088#1077#1076'. '#1058#1072#1088#1080#1092#1085#1099#1081' '#1087#1083#1072#1085
             DataBinding.FieldName = 'PrevMobileTariffName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -394,7 +395,7 @@ inherited MobileBillsForm: TMobileBillsForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colPrevEmployeeName: TcxGridDBColumn [22]
+          object PrevEmployeeName: TcxGridDBColumn [22]
             Caption = #1087#1088#1077#1076'. '#1057#1086#1090#1088#1091#1076#1085#1080#1082
             DataBinding.FieldName = 'PrevEmployeeName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -426,7 +427,7 @@ inherited MobileBillsForm: TMobileBillsForm
             Options.Editing = False
             Width = 70
           end
-          object colRegionName: TcxGridDBColumn [25]
+          object RegionName: TcxGridDBColumn [25]
             Caption = #1056#1077#1075#1080#1086#1085
             DataBinding.FieldName = 'RegionName'
             PropertiesClassName = 'TcxButtonEditProperties'

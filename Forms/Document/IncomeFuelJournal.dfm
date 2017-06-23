@@ -73,173 +73,173 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clLimitMoney
+          Column = LimitMoney
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clLimitDistance
+          Column = LimitDistance
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clLimitMoneyChange
+          Column = LimitMoneyChange
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clLimitDistanceChange
+          Column = LimitDistanceChange
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clDistance
+          Column = Distance
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clDistanceReal
+          Column = DistanceReal
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clFuelCalc
+          Column = FuelCalc
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clFuelRealCalc
+          Column = FuelRealCalc
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clFuelReal
+          Column = FuelReal
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clSummReal
+          Column = SummReal
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clFuelDiff
+          Column = FuelDiff
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clFuelSummDiff
+          Column = FuelSummDiff
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clSummDiff
+          Column = SummDiff
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clSummDiffTotal
+          Column = SummDiffTotal
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clSummReparation
+          Column = SummReparation
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clSummPersonal
+          Column = SummPersonal
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clSummaExp
+          Column = SummaExp
         end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clLimitMoney
+          Column = LimitMoney
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clLimitDistance
+          Column = LimitDistance
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clLimitMoneyChange
+          Column = LimitMoneyChange
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clLimitDistanceChange
+          Column = LimitDistanceChange
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clDistance
+          Column = Distance
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clDistanceReal
+          Column = DistanceReal
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clFuelCalc
+          Column = FuelCalc
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clFuelRealCalc
+          Column = FuelRealCalc
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clFuelReal
+          Column = FuelReal
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clSummReal
+          Column = SummReal
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clFuelDiff
+          Column = FuelDiff
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clFuelSummDiff
+          Column = FuelSummDiff
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clSummDiff
+          Column = SummDiff
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clSummDiffTotal
+          Column = SummDiffTotal
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clSummReparation
+          Column = SummReparation
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clSummPersonal
+          Column = SummPersonal
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clSummaExp
+          Column = SummaExp
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -254,7 +254,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object colStatus: TcxGridDBColumn
+      object StatusCode: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
         PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -279,55 +279,55 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object colInvNumber: TcxGridDBColumn
+      object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'.'
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
-      object colOperDate: TcxGridDBColumn
+      object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object colInvNumberPartner: TcxGridDBColumn
+      object InvNumberPartner: TcxGridDBColumn
         Caption = #8470' '#1095#1077#1082#1072
         DataBinding.FieldName = 'InvNumberPartner'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object colOperDatePartner: TcxGridDBColumn
+      object OperDatePartner: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1079#1072#1087#1088#1072#1074'.'
         DataBinding.FieldName = 'OperDatePartner'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
       end
-      object colInvNumberMaster: TcxGridDBColumn
+      object InvNumberMaster: TcxGridDBColumn
         Caption = #8470' '#1055#1091#1090'. '#1083#1080#1089#1090
         DataBinding.FieldName = 'InvNumberMaster'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object colOperDateMaster: TcxGridDBColumn
+      object OperDateMaster: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1055#1091#1090'. '#1083#1080#1089#1090
         DataBinding.FieldName = 'OperDateMaster'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
-      object colFromName: TcxGridDBColumn
+      object FromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086' ('#1048#1089#1090#1086#1095#1085#1080#1082' '#1079#1072#1087#1088#1072#1074#1082#1080')'
         DataBinding.FieldName = 'FromName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object clItemName: TcxGridDBColumn
+      object ItemName: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090' '#1082#1086#1084#1091
         DataBinding.FieldName = 'ItemName'
         HeaderAlignmentHorz = taCenter
@@ -335,14 +335,14 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Options.Editing = False
         Width = 67
       end
-      object colToName: TcxGridDBColumn
+      object ToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091' ('#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100', '#1060#1080#1079'.'#1083'.)'
         DataBinding.FieldName = 'ToName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object colRouteName: TcxGridDBColumn
+      object RouteName: TcxGridDBColumn
         Caption = #1052#1072#1088#1096#1088#1091#1090
         DataBinding.FieldName = 'RouteName'
         Visible = False
@@ -350,7 +350,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object colPersonalDriverName: TcxGridDBColumn
+      object PersonalDriverName: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
         DataBinding.FieldName = 'PersonalDriverName'
         Visible = False
@@ -358,7 +358,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object colBranchCode: TcxGridDBColumn
+      object BranchCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1092#1080#1083#1080#1072#1083#1072
         DataBinding.FieldName = 'BranchCode'
         Visible = False
@@ -366,7 +366,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object colBranchName: TcxGridDBColumn
+      object BranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
         Visible = False
@@ -374,14 +374,14 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object colPaidKindName: TcxGridDBColumn
+      object PaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object colContractName: TcxGridDBColumn
+      object ContractName: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractName'
         Visible = False
@@ -389,14 +389,14 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
-      object colChangePrice: TcxGridDBColumn
+      object ChangePrice: TcxGridDBColumn
         Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077
         DataBinding.FieldName = 'ChangePrice'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
-      object colTotalCount: TcxGridDBColumn
+      object TotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -407,7 +407,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object colTotalCountPartner: TcxGridDBColumn
+      object TotalCountPartner: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' ('#1091' '#1087#1086#1089#1090'.)'
         DataBinding.FieldName = 'TotalCountPartner'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -418,7 +418,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object colTotalSumm: TcxGridDBColumn
+      object TotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -429,7 +429,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object colTotalSummPVAT: TcxGridDBColumn
+      object TotalSummPVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummPVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -440,7 +440,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object colTotalSummMVAT: TcxGridDBColumn
+      object TotalSummMVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummMVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -451,7 +451,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object colTotalSummVAT: TcxGridDBColumn
+      object TotalSummVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -462,7 +462,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
-      object colPriceWithVAT: TcxGridDBColumn
+      object PriceWithVAT: TcxGridDBColumn
         Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
         DataBinding.FieldName = 'PriceWithVAT'
         Visible = False
@@ -470,7 +470,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object colVATPercent: TcxGridDBColumn
+      object VATPercent: TcxGridDBColumn
         Caption = '% '#1053#1044#1057
         DataBinding.FieldName = 'VATPercent'
         Visible = False
@@ -478,7 +478,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 40
       end
-      object colInfoMoneyCode: TcxGridDBColumn
+      object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
         Visible = False
@@ -486,7 +486,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
-      object colInfoMoneyGroupName: TcxGridDBColumn
+      object InfoMoneyGroupName: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyGroupName'
         Visible = False
@@ -494,7 +494,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object colInfoMoneyDestinationName: TcxGridDBColumn
+      object InfoMoneyDestinationName: TcxGridDBColumn
         Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'InfoMoneyDestinationName'
         Visible = False
@@ -502,7 +502,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object colInfoMoneyName: TcxGridDBColumn
+      object InfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
         Visible = False
@@ -510,7 +510,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object colGoodsCode: TcxGridDBColumn
+      object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1090#1086#1074'.'
         DataBinding.FieldName = 'GoodsCode'
         Visible = False
@@ -518,14 +518,14 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object colGoodsName: TcxGridDBColumn
+      object GoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 75
       end
-      object colFuelCode: TcxGridDBColumn
+      object FuelCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1074#1080#1076#1072' '#1090#1086#1087#1083'.'
         DataBinding.FieldName = 'FuelCode'
         Visible = False
@@ -533,7 +533,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object colFuelName: TcxGridDBColumn
+      object FuelName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
         DataBinding.FieldName = 'FuelName'
         Visible = False
@@ -541,7 +541,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 75
       end
-      object clStartOdometre: TcxGridDBColumn
+      object StartOdometre: TcxGridDBColumn
         Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1085#1072#1095'. '#1082#1084
         DataBinding.FieldName = 'StartOdometre'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -552,7 +552,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Options.Editing = False
         Width = 75
       end
-      object clEndOdometre: TcxGridDBColumn
+      object EndOdometre: TcxGridDBColumn
         Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1082#1086#1085'. '#1082#1084
         DataBinding.FieldName = 'EndOdometre'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -563,7 +563,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Options.Editing = False
         Width = 75
       end
-      object clAmountFuel: TcxGridDBColumn
+      object AmountFuel: TcxGridDBColumn
         Caption = #1053#1086#1088#1084#1072' '#1072#1074#1090#1086#1084'.'
         DataBinding.FieldName = 'AmountFuel'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -574,7 +574,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Options.Editing = False
         Width = 50
       end
-      object clReparation: TcxGridDBColumn
+      object Reparation: TcxGridDBColumn
         Caption = #1040#1084#1086#1088#1090'. '#1079#1072' 1 '#1082#1084', '#1075#1088#1085'.'
         DataBinding.FieldName = 'Reparation'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -585,7 +585,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Options.Editing = False
         Width = 55
       end
-      object clLimitDistance: TcxGridDBColumn
+      object LimitDistance: TcxGridDBColumn
         Caption = #1051#1080#1084#1080#1090' '#1082#1084
         DataBinding.FieldName = 'LimitDistance'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -596,7 +596,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Options.Editing = False
         Width = 55
       end
-      object clLimitDistanceChange: TcxGridDBColumn
+      object LimitDistanceChange: TcxGridDBColumn
         Caption = #1051#1080#1084#1080#1090' ('#1089#1083#1091#1078'.) '#1082#1084
         DataBinding.FieldName = 'LimitDistanceChange'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -607,7 +607,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Options.Editing = False
         Width = 55
       end
-      object clLimitMoney: TcxGridDBColumn
+      object LimitMoney: TcxGridDBColumn
         Caption = #1051#1080#1084#1080#1090' '#1075#1088#1085
         DataBinding.FieldName = 'LimitMoney'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -618,7 +618,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Options.Editing = False
         Width = 55
       end
-      object clLimitMoneyChange: TcxGridDBColumn
+      object LimitMoneyChange: TcxGridDBColumn
         Caption = #1051#1080#1084#1080#1090' ('#1089#1083#1091#1078'.) '#1075#1088#1085
         DataBinding.FieldName = 'LimitMoneyChange'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -629,7 +629,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Options.Editing = False
         Width = 55
       end
-      object clDistanceReal: TcxGridDBColumn
+      object DistanceReal: TcxGridDBColumn
         Caption = #1055#1088#1086#1073#1077#1075' '#1086#1073#1097#1080#1081' '#1082#1084
         DataBinding.FieldName = 'DistanceReal'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -639,7 +639,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object clDistance: TcxGridDBColumn
+      object Distance: TcxGridDBColumn
         Caption = #1055#1088#1086#1073#1077#1075' '#1092#1072#1082#1090' '#1082#1084
         DataBinding.FieldName = 'Distance'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -650,7 +650,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Options.Editing = False
         Width = 55
       end
-      object clFuelCalc: TcxGridDBColumn
+      object FuelCalc: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1083'. ('#1088#1072#1089#1095'. '#1085#1072' '#1087#1088#1086#1073#1077#1075' '#1092'.)'
         DataBinding.FieldName = 'FuelCalc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -660,7 +660,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clFuelRealCalc: TcxGridDBColumn
+      object FuelRealCalc: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1083'. ('#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1086')'
         DataBinding.FieldName = 'FuelRealCalc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -670,7 +670,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clFuelReal: TcxGridDBColumn
+      object FuelReal: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1083'. ('#1079#1072#1087#1088#1072#1074#1082#1072')'
         DataBinding.FieldName = 'FuelReal'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -680,7 +680,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clPriceCalc: TcxGridDBColumn
+      object PriceCalc: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1079#1072#1087#1088#1072#1074'.'
         DataBinding.FieldName = 'PriceCalc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -690,7 +690,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object clSummReal: TcxGridDBColumn
+      object SummReal: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1079#1072#1087#1088#1072#1074#1082#1080
         DataBinding.FieldName = 'SummReal'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -700,7 +700,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clSummaExp: TcxGridDBColumn
+      object SummaExp: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1079#1072#1090#1088#1072#1090
         DataBinding.FieldName = 'SummaExp'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -710,7 +710,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clFuelDiff: TcxGridDBColumn
+      object FuelDiff: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1083'. ('#1086#1089#1090#1072#1090#1086#1082' '#1083#1080#1084'. '#1082#1084'.)'
         DataBinding.FieldName = 'FuelDiff'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -720,7 +720,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clFuelSummDiff: TcxGridDBColumn
+      object FuelSummDiff: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1075#1088#1085' ('#1086#1089#1090#1072#1090#1086#1082' '#1083#1080#1084'. '#1082#1084'.)'
         DataBinding.FieldName = 'FuelSummDiff'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -730,7 +730,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clSummDiff: TcxGridDBColumn
+      object SummDiff: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1075#1088#1085' ('#1086#1089#1090#1072#1090#1086#1082' '#1083#1080#1084'. '#1075#1088#1085')'
         DataBinding.FieldName = 'SummDiff'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -740,7 +740,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clSummDiffTotal: TcxGridDBColumn
+      object SummDiffTotal: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1075#1088#1085' ('#1086#1089#1090#1072#1090#1086#1082' '#1048#1058#1054#1043#1054')'
         DataBinding.FieldName = 'SummDiffTotal'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -750,7 +750,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clSummReparation: TcxGridDBColumn
+      object SummReparation: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1075#1088#1085' ('#1072#1084#1086#1088#1090#1080#1079#1072#1094#1080#1103')'
         DataBinding.FieldName = 'SummReparation'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -760,7 +760,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clSummPersonal: TcxGridDBColumn
+      object SummPersonal: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1075#1088#1085' ('#1047#1055' '#1080#1090#1086#1075')'
         DataBinding.FieldName = 'SummPersonal'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -770,7 +770,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clstrSign: TcxGridDBColumn
+      object strSign: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1087#1086#1083#1100#1079'. - '#1077#1089#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
         DataBinding.FieldName = 'strSign'
         HeaderAlignmentHorz = taCenter
@@ -778,7 +778,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Options.Editing = False
         Width = 100
       end
-      object clstrSignNo: TcxGridDBColumn
+      object strSignNo: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1087#1086#1083#1100#1079'. - '#1086#1078#1080#1076#1072#1077#1090#1089#1103' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
         DataBinding.FieldName = 'strSignNo'
         HeaderAlignmentHorz = taCenter

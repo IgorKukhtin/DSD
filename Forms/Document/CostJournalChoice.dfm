@@ -4,8 +4,10 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
   ClientWidth = 1078
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -351
+  ExplicitTop = -27
   ExplicitWidth = 1094
-  ExplicitHeight = 519
+  ExplicitHeight = 520
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -108,7 +110,7 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 109
           end
-          object clInfoMoneyName_all: TcxGridDBColumn
+          object InfoMoneyName_all: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
             HeaderAlignmentHorz = taCenter
@@ -122,7 +124,7 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 132
           end
-          object clInfoMoneyCode: TcxGridDBColumn
+          object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -130,7 +132,7 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
             VisibleForCustomization = False
             Width = 57
           end
-          object clInfoMoneyGroupName: TcxGridDBColumn
+          object InfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -138,7 +140,7 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
             VisibleForCustomization = False
             Width = 99
           end
-          object clInfoMoneyDestinationName: TcxGridDBColumn
+          object InfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -146,7 +148,7 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
             VisibleForCustomization = False
             Width = 70
           end
-          object clInfoMoneyName: TcxGridDBColumn
+          object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False

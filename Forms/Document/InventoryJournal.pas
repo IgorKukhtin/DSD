@@ -28,15 +28,15 @@ uses
 
 type
   TInventoryJournalForm = class(TAncestorJournalForm)
-    colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    colTotalSum: TcxGridDBColumn;
+    TotalSum: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     cxLabel27: TcxLabel;
     edJuridicalBasis: TcxButtonEdit;

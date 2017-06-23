@@ -17,8 +17,8 @@ uses
 
 type
   TBankStatementJournalForm = class(TAncestorJournalForm)
-    colBankName: TcxGridDBColumn;
-    colBankAccount: TcxGridDBColumn;
+    BankName: TcxGridDBColumn;
+    BankAccountName: TcxGridDBColumn;
     BankPrivatLoad: TClientBankLoadAction;
     BankForumLoad: TClientBankLoadAction;
     BankVostokLoad: TClientBankLoadAction;
@@ -31,9 +31,9 @@ type
     BankForum: TMultiAction;
     BankVostok: TMultiAction;
     BankFido: TMultiAction;
-    colAmount: TcxGridDBColumn;
-    colDebet: TcxGridDBColumn;
-    colKredit: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    Debet: TcxGridDBColumn;
+    Kredit: TcxGridDBColumn;
     BankOTPLoad: TClientBankLoadAction;
     BankOTP: TMultiAction;
     bbOTPLoad: TdxBarButton;

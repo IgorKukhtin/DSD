@@ -4,8 +4,9 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
   ClientWidth = 1020
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -276
   ExplicitWidth = 1036
-  ExplicitHeight = 429
+  ExplicitHeight = 433
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -13,17 +14,17 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
     Height = 337
     TabOrder = 3
     ExplicitWidth = 1020
-    ExplicitHeight = 478
+    ExplicitHeight = 337
     ClientRectBottom = 337
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
-      ExplicitHeight = 478
+      ExplicitHeight = 337
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 337
         ExplicitWidth = 1020
-        ExplicitHeight = 478
+        ExplicitHeight = 337
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -33,7 +34,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -100,13 +101,13 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCountSecond
+              Column = TotalCountSecond
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -173,7 +174,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCountSecond
+              Column = TotalCountSecond
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -197,7 +198,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          object colInvNumberPartner: TcxGridDBColumn [2]
+          object InvNumberPartner: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'InvNumberPartner'
             HeaderAlignmentHorz = taCenter
@@ -209,14 +210,14 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             HeaderAlignmentHorz = taCenter
             Width = 70
           end
-          object colOperDatePartner: TcxGridDBColumn
+          object OperDatePartner: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colOperDateMark: TcxGridDBColumn
+          object OperDateMark: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1084#1072#1088#1082'.'
             DataBinding.FieldName = 'OperDateMark'
             Visible = False
@@ -224,7 +225,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
@@ -238,28 +239,28 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
-          object colRouteName: TcxGridDBColumn
+          object RouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
             DataBinding.FieldName = 'RouteName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colRouteSortingName: TcxGridDBColumn
+          object RouteSortingName: TcxGridDBColumn
             Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
             DataBinding.FieldName = 'RouteSortingName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object colPaidKindName: TcxGridDBColumn
+          object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colContractCode: TcxGridDBColumn
+          object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
             Visible = False
@@ -267,14 +268,14 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colContractName: TcxGridDBColumn
+          object ContractName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colContractTagName: TcxGridDBColumn
+          object ContractTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagName'
             HeaderAlignmentHorz = taCenter
@@ -296,7 +297,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object colTotalCount: TcxGridDBColumn
+          object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -306,7 +307,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colTotalCountSecond: TcxGridDBColumn
+          object TotalCountSecond: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1076#1086#1079#1072#1082#1072#1079')'
             DataBinding.FieldName = 'TotalCountSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -438,7 +439,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colIsEDI: TcxGridDBColumn
+          object IsEDI: TcxGridDBColumn
             Caption = 'EDI'
             DataBinding.FieldName = 'isEDI'
             HeaderAlignmentHorz = taCenter

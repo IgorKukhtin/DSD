@@ -85,7 +85,7 @@ type
     cbPrinted: TcxCheckBox;
     edDayCount: TcxCurrencyEdit;
     cxLabel18: TcxLabel;
-    clAmountPartner: TcxGridDBColumn;
+    AmountPartner: TcxGridDBColumn;
     AmountForecast: TcxGridDBColumn;
     spUpdateAmountRemains: TdsdStoredProc;
     actUpdateAmountRemains: TdsdExecStoredProc;

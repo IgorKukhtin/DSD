@@ -28,25 +28,25 @@ uses
 
 type
   TIncomeJournalChoiceForm = class(TAncestorJournalForm)
-    colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
-    colTotalSumm: TcxGridDBColumn;
-    colPriceWithVAT: TcxGridDBColumn;
-    colVATPercent: TcxGridDBColumn;
-    colTotalSummVAT: TcxGridDBColumn;
-    colTotalSummMVAT: TcxGridDBColumn;
-    colTotalSummPVAT: TcxGridDBColumn;
-    colContractName: TcxGridDBColumn;
-    colInfoMoneyGroupName: TcxGridDBColumn;
-    colInfoMoneyDestinationName: TcxGridDBColumn;
-    colInfoMoneyCode: TcxGridDBColumn;
-    colInfoMoneyName: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
+    PriceWithVAT: TcxGridDBColumn;
+    VATPercent: TcxGridDBColumn;
+    TotalSummVAT: TcxGridDBColumn;
+    TotalSummMVAT: TcxGridDBColumn;
+    TotalSummPVAT: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     bbSelect: TdxBarButton;
-    colContractCode: TcxGridDBColumn;
+    ContractCode: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
-    clId: TcxGridDBColumn;
+    Id: TcxGridDBColumn;
   private
     { Private declarations }
   public

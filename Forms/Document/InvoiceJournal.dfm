@@ -74,7 +74,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummPVAT
+          Column = TotalSummPVAT
         end
         item
           Format = ',0.####'
@@ -99,7 +99,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalCount
+          Column = TotalCount
         end
         item
           Format = ',0.####'
@@ -116,12 +116,12 @@ object InvoiceJournalForm: TInvoiceJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummMVAT
+          Column = TotalSummMVAT
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSumm
+          Column = TotalSumm
         end
         item
           Format = ',0.####'
@@ -132,20 +132,12 @@ object InvoiceJournalForm: TInvoiceJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalCount
+          Column = TotalCount
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummPVAT
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
+          Column = TotalSummPVAT
         end
         item
           Format = ',0.####'
@@ -174,12 +166,20 @@ object InvoiceJournalForm: TInvoiceJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummMVAT
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSumm
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummMVAT
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm
         end
         item
           Format = ',0.####'
@@ -199,7 +199,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object colStatus: TcxGridDBColumn
+      object StatusCode: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
         PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -225,7 +225,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         Options.Editing = False
         Width = 53
       end
-      object colisClose: TcxGridDBColumn
+      object isClose: TcxGridDBColumn
         Caption = #1055#1086#1083#1085#1086#1089#1090#1100#1102' '#1086#1087#1083#1072#1095#1077#1085
         DataBinding.FieldName = 'isClosed'
         HeaderAlignmentHorz = taCenter
@@ -233,7 +233,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         Options.Editing = False
         Width = 75
       end
-      object colInvNumber: TcxGridDBColumn
+      object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'.'
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
@@ -241,7 +241,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         Options.Editing = False
         Width = 54
       end
-      object colInvNumberPartner: TcxGridDBColumn
+      object InvNumberPartner: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
         DataBinding.FieldName = 'InvNumberPartner'
         HeaderAlignmentHorz = taCenter
@@ -249,7 +249,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         Options.Editing = False
         Width = 55
       end
-      object colOperDate: TcxGridDBColumn
+      object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
@@ -257,7 +257,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         Options.Editing = False
         Width = 68
       end
-      object colInsertDate: TcxGridDBColumn
+      object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
         DataBinding.FieldName = 'InsertDate'
         HeaderAlignmentHorz = taCenter
@@ -265,7 +265,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         Options.Editing = False
         Width = 68
       end
-      object colInsertName: TcxGridDBColumn
+      object InsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076'.'
         DataBinding.FieldName = 'InsertName'
         HeaderAlignmentHorz = taCenter
@@ -289,7 +289,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         VisibleForCustomization = False
         Width = 30
       end
-      object colContractCode: TcxGridDBColumn
+      object ContractCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractCode'
         Visible = False
@@ -298,7 +298,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         Options.Editing = False
         Width = 68
       end
-      object colContractName: TcxGridDBColumn
+      object ContractName: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractName'
         HeaderAlignmentHorz = taCenter
@@ -306,7 +306,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         Options.Editing = False
         Width = 60
       end
-      object colPaidKindName: TcxGridDBColumn
+      object PaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
         HeaderAlignmentHorz = taCenter
@@ -314,7 +314,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         Options.Editing = False
         Width = 59
       end
-      object colPriceWithVAT: TcxGridDBColumn
+      object PriceWithVAT: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
         DataBinding.FieldName = 'PriceWithVAT'
         HeaderAlignmentHorz = taCenter
@@ -322,7 +322,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         Options.Editing = False
         Width = 60
       end
-      object colChangePercent: TcxGridDBColumn
+      object ChangePercent: TcxGridDBColumn
         Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
         DataBinding.FieldName = 'ChangePercent'
         HeaderAlignmentHorz = taCenter
@@ -331,7 +331,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         Options.Editing = False
         Width = 74
       end
-      object colTotalCount: TcxGridDBColumn
+      object TotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -342,7 +342,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         Options.Editing = False
         Width = 65
       end
-      object colTotalSummMVAT: TcxGridDBColumn
+      object TotalSummMVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummMVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -354,7 +354,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         Options.Editing = False
         Width = 74
       end
-      object colTotalSummPVAT: TcxGridDBColumn
+      object TotalSummPVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummPVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -366,7 +366,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         Options.Editing = False
         Width = 74
       end
-      object colTotalSumm: TcxGridDBColumn
+      object TotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -390,7 +390,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         Options.Editing = False
         Width = 80
       end
-      object colCurrencyDocumentName: TcxGridDBColumn
+      object CurrencyDocumentName: TcxGridDBColumn
         Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1082'.)'
         DataBinding.FieldName = 'CurrencyDocumentName'
         HeaderAlignmentHorz = taCenter
@@ -398,7 +398,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         Options.Editing = False
         Width = 55
       end
-      object colCurrencyValue: TcxGridDBColumn
+      object CurrencyValue: TcxGridDBColumn
         Caption = #1050#1091#1088#1089' '#1059#1055
         DataBinding.FieldName = 'CurrencyValue'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -410,7 +410,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         Options.Editing = False
         Width = 70
       end
-      object colParValue: TcxGridDBColumn
+      object ParValue: TcxGridDBColumn
         Caption = #1053#1086#1084#1080#1085#1072#1083' '#1059#1055
         DataBinding.FieldName = 'ParValue'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -422,7 +422,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         Options.Editing = False
         Width = 70
       end
-      object colInfoMoneyCode: TcxGridDBColumn
+      object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
         Visible = False
@@ -430,7 +430,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
-      object colInfoMoneyGroupName: TcxGridDBColumn
+      object InfoMoneyGroupName: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyGroupName'
         Visible = False
@@ -438,7 +438,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object colInfoMoneyDestinationName: TcxGridDBColumn
+      object InfoMoneyDestinationName: TcxGridDBColumn
         Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'InfoMoneyDestinationName'
         Visible = False
@@ -446,7 +446,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object colInfoMoneyName: TcxGridDBColumn
+      object InfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentHorz = taCenter

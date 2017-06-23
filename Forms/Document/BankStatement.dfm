@@ -4,8 +4,9 @@ inherited BankStatementForm: TBankStatementForm
   ClientWidth = 1084
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -340
   ExplicitWidth = 1100
-  ExplicitHeight = 454
+  ExplicitHeight = 455
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -30,23 +31,23 @@ inherited BankStatementForm: TBankStatementForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colDebet
+              Column = Debet
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colKredit
+              Column = Kredit
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colDebet
+              Column = Debet
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colKredit
+              Column = Kredit
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -57,28 +58,28 @@ inherited BankStatementForm: TBankStatementForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colDocNumber: TcxGridDBColumn
+          object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1087#1083#1072#1090#1077#1078#1082#1080
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 69
           end
-          object colJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
           end
-          object colOKPO: TcxGridDBColumn
+          object OKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 53
           end
-          object colDebet: TcxGridDBColumn
+          object Debet: TcxGridDBColumn
             Caption = #1044#1077#1073#1077#1090
             DataBinding.FieldName = 'Debet'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -87,7 +88,7 @@ inherited BankStatementForm: TBankStatementForm
             Options.Editing = False
             Width = 61
           end
-          object colKredit: TcxGridDBColumn
+          object Kredit: TcxGridDBColumn
             Caption = #1050#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'Kredit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -96,7 +97,7 @@ inherited BankStatementForm: TBankStatementForm
             Options.Editing = False
             Width = 52
           end
-          object colAmountCurrency: TcxGridDBColumn
+          object AmountCurrency: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1074' '#1074#1072#1083#1102#1090#1077
             DataBinding.FieldName = 'AmountCurrency'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -107,7 +108,7 @@ inherited BankStatementForm: TBankStatementForm
             Options.Editing = False
             Width = 70
           end
-          object colAmountSumm: TcxGridDBColumn
+          object AmountSumm: TcxGridDBColumn
             Caption = 'C'#1091#1084#1084#1072' '#1075#1088#1085', '#1086#1073#1084#1077#1085
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -118,7 +119,7 @@ inherited BankStatementForm: TBankStatementForm
             Options.Editing = False
             Width = 80
           end
-          object colCurrency: TcxGridDBColumn
+          object CurrencyName: TcxGridDBColumn
             Caption = '  '
             DataBinding.FieldName = 'CurrencyName'
             Options.Editing = False
@@ -154,7 +155,7 @@ inherited BankStatementForm: TBankStatementForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colContract: TcxGridDBColumn
+          object Contract: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -168,7 +169,7 @@ inherited BankStatementForm: TBankStatementForm
             HeaderAlignmentVert = vaCenter
             Width = 65
           end
-          object colLinkJuridicalName: TcxGridDBColumn
+          object LinkJuridicalName: TcxGridDBColumn
             Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091' ('#1085#1072#1081#1076#1077#1085#1086')'
             DataBinding.FieldName = 'LinkJuridicalName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -182,14 +183,14 @@ inherited BankStatementForm: TBankStatementForm
             HeaderAlignmentVert = vaCenter
             Width = 96
           end
-          object clInfoMoneyCode: TcxGridDBColumn
+          object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
           end
-          object clInfoMoneyGroupName: TcxGridDBColumn
+          object InfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -197,7 +198,7 @@ inherited BankStatementForm: TBankStatementForm
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyDestinationName: TcxGridDBColumn
+          object InfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -205,7 +206,7 @@ inherited BankStatementForm: TBankStatementForm
             Options.Editing = False
             Width = 70
           end
-          object colInfoMoney: TcxGridDBColumn
+          object InfoMoney: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -219,7 +220,7 @@ inherited BankStatementForm: TBankStatementForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colUnitName: TcxGridDBColumn
+          object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -234,28 +235,28 @@ inherited BankStatementForm: TBankStatementForm
             HeaderAlignmentVert = vaCenter
             Width = 112
           end
-          object colBankAccount: TcxGridDBColumn
+          object BankAccount: TcxGridDBColumn
             Caption = #1057#1095#1077#1090
             DataBinding.FieldName = 'BankAccount'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 54
           end
-          object colBankMFO: TcxGridDBColumn
+          object BankMFO: TcxGridDBColumn
             Caption = #1052#1060#1054
             DataBinding.FieldName = 'BankMFO'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
           end
-          object colBankName: TcxGridDBColumn
+          object BankName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1073#1072#1085#1082#1072
             DataBinding.FieldName = 'BankName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 76
           end
-          object colComment: TcxGridDBColumn
+          object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             PropertiesClassName = 'TcxMemoProperties'
@@ -263,7 +264,7 @@ inherited BankStatementForm: TBankStatementForm
             Options.Editing = False
             Width = 158
           end
-          object clInvNumber_Invoice: TcxGridDBColumn
+          object InvNumber_Invoice: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
             DataBinding.FieldName = 'InvNumber_Invoice'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -278,14 +279,14 @@ inherited BankStatementForm: TBankStatementForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object clMovementId_Invoice: TcxGridDBColumn
+          object MovementId_Invoice: TcxGridDBColumn
             DataBinding.FieldName = 'MovementId_Invoice'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
             Width = 100
           end
-          object colComment_Invoice: TcxGridDBColumn
+          object Comment_Invoice: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1076#1086#1082'.'#1057#1095#1077#1090')'
             DataBinding.FieldName = 'Comment_Invoice'
             HeaderAlignmentHorz = taCenter
