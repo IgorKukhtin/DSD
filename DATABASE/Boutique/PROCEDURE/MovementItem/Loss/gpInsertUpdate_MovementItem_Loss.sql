@@ -46,7 +46,7 @@ BEGIN
      --IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
 
      -- сохранили <Ёлемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, CASE WHEN inPartionId > 0 THEN inPartionId ELSE NULL END, inMovementId, inAmount, NULL);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inPartionId, inMovementId, inAmount, NULL);
       
      -- сохранили свойство <÷ена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice(), ioId, outOperPrice);

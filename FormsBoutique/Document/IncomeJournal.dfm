@@ -175,14 +175,14 @@ object IncomeJournalForm: TIncomeJournalForm
         DataBinding.FieldName = 'FromName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 163
+        Width = 100
       end
       object ToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091
         DataBinding.FieldName = 'ToName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 159
+        Width = 100
       end
       object TotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
@@ -192,7 +192,7 @@ object IncomeJournalForm: TIncomeJournalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 50
       end
       object TotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1074#1093'.'
@@ -229,7 +229,7 @@ object IncomeJournalForm: TIncomeJournalForm
         DataBinding.FieldName = 'CurrencyDocumentName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 52
+        Width = 50
       end
       object CurrencyValue: TcxGridDBColumn
         Caption = #1050#1091#1088#1089

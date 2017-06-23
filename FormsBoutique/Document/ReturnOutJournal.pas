@@ -81,7 +81,6 @@ type
     spMovementReCompleteAll: TdsdStoredProc;
     CurrencyValue: TcxGridDBColumn;
     CurrencyDocumentName: TcxGridDBColumn;
-    CurrencyPartnerName: TcxGridDBColumn;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
     MovementProtocolOpenForm: TdsdOpenForm;

@@ -6,12 +6,12 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnOut (Integer, Integer,
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnOut(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , -- Товары
+    IN inGoodsId             Integer   , -- Товар
     IN inPartionId           Integer   , -- Партия
     IN inAmount              TFloat    , -- Количество
     IN inOperPrice           TFloat    , -- Цена
     IN inCountForPrice       TFloat    , -- Цена за количество
-    IN inOperPriceList       TFloat    , -- Цена по прайсу
+    IN inOperPriceList       TFloat    , -- Цена (прайс)
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -22,12 +22,11 @@ BEGIN
      -- проверка - связанные документы Изменять нельзя
      -- PERFORM lfCheck_Movement_Parent (inMovementId:= inMovementId, inComment:= 'изменение');
 
-
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, CASE WHEN inPartionId > 0 THEN inPartionId ELSE NULL END, inMovementId, inAmount, NULL);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inPartionId, inMovementId, inAmount, NULL);
    
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice(), ioId, inOperPrice);
@@ -35,7 +34,7 @@ BEGIN
      IF COALESCE (inCountForPrice, 0) = 0 THEN inCountForPrice := 1; END IF;
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, inCountForPrice);
 
-     -- сохранили свойство <>
+     -- сохранили свойство <Цена (прайс)>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), ioId, inOperPriceList);
      
      -- пересчитали Итоговые суммы по накладной

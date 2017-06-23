@@ -85,35 +85,12 @@ object ReturnOutJournalForm: TReturnOutJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
           Column = TotalCount
         end
         item
           Format = ',0.####'
           Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
+          Column = TotalSummBalance
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -132,37 +109,14 @@ object ReturnOutJournalForm: TReturnOutJournalForm
           Column = TotalSummPriceList
         end
         item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
           Format = 'C'#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = FromName
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummBalance
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -221,14 +175,14 @@ object ReturnOutJournalForm: TReturnOutJournalForm
         DataBinding.FieldName = 'FromName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 163
+        Width = 100
       end
       object ToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091
         DataBinding.FieldName = 'ToName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 159
+        Width = 100
       end
       object TotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
@@ -238,25 +192,51 @@ object ReturnOutJournalForm: TReturnOutJournalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 50
       end
       object TotalSumm: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' ('#1074' '#1074#1072#1083#1102#1090#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072')'
+        Caption = #1057#1091#1084#1084#1072' '#1074#1093'.'
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 92
+        Width = 80
       end
-      object CurrencyValue: TcxGridDBColumn
-        Caption = #1050#1091#1088#1089' '#1074#1072#1083#1102#1090#1099
-        DataBinding.FieldName = 'CurrencyValue'
-        Visible = False
+      object TotalSummBalance: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1074#1093'. ('#1043#1056#1053')'
+        DataBinding.FieldName = 'TotalSummBalance'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 40
+        Width = 80
+      end
+      object TotalSummPriceList: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' ('#1087#1088#1072#1081#1089')'
+        DataBinding.FieldName = 'TotalSummPriceList'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object CurrencyDocumentName: TcxGridDBColumn
+        Caption = #1042#1072#1083#1102#1090#1072
+        DataBinding.FieldName = 'CurrencyDocumentName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
+      object CurrencyValue: TcxGridDBColumn
+        Caption = #1050#1091#1088#1089
+        DataBinding.FieldName = 'CurrencyValue'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
       end
       object ParValue: TcxGridDBColumn
         Caption = #1053#1086#1084#1080#1085#1072#1083
@@ -264,47 +244,7 @@ object ReturnOutJournalForm: TReturnOutJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 40
-      end
-      object CurrencyPartnerValue: TcxGridDBColumn
-        Caption = #1050#1091#1088#1089' '#1074#1072#1083#1102#1090#1099' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-        DataBinding.FieldName = 'CurrencyPartnerValue'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 40
-      end
-      object ParPartnerValue: TcxGridDBColumn
-        Caption = #1053#1086#1084#1080#1085#1072#1083' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-        DataBinding.FieldName = 'ParPartnerValue'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 40
-      end
-      object CurrencyDocumentName: TcxGridDBColumn
-        Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1082')'
-        DataBinding.FieldName = 'CurrencyDocumentName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 52
-      end
-      object CurrencyPartnerName: TcxGridDBColumn
-        Caption = #1042#1072#1083#1102#1090#1072' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
-        DataBinding.FieldName = 'CurrencyPartnerName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 54
-      end
-      object TotalSummPriceList: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
-        DataBinding.FieldName = 'TotalSummPriceList'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 78
+        Width = 45
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
