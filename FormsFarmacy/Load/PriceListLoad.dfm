@@ -4,30 +4,30 @@ inherited PriceListLoadForm: TPriceListLoadForm
   ClientWidth = 788
   AddOnFormData.Params = FormParams
   ExplicitWidth = 804
-  ExplicitHeight = 434
+  ExplicitHeight = 438
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 788
     Height = 373
-    ExplicitWidth = 714
+    ExplicitWidth = 788
     ExplicitHeight = 373
     ClientRectBottom = 373
     ClientRectRight = 788
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 714
+      ExplicitWidth = 788
       ExplicitHeight = 373
       inherited cxGrid: TcxGrid
         Width = 788
         Height = 373
-        ExplicitWidth = 714
+        ExplicitWidth = 788
         ExplicitHeight = 373
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colJuridicalName
+              Column = JuridicalName
             end>
           OptionsBehavior.IncSearch = True
           OptionsData.CancelOnExit = True
@@ -39,27 +39,27 @@ inherited PriceListLoadForm: TPriceListLoadForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colOperDate: TcxGridDBColumn
+          object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 116
           end
-          object colJuridicalName: TcxGridDBColumn
+          object JuridicalName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 199
           end
-          object colContractName: TcxGridDBColumn
+          object ContractName: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentVert = vaCenter
             Width = 199
           end
-          object colNDSinPrice: TcxGridDBColumn
+          object NDSinPrice: TcxGridDBColumn
             Caption = #1053#1044#1057' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'NDSinPrice'
             HeaderAlignmentHorz = taCenter
@@ -67,7 +67,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
             Options.Editing = False
             Width = 88
           end
-          object colIsMoved: TcxGridDBColumn
+          object IsMoved: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1085#1077#1089#1077#1085#1086
             DataBinding.FieldName = 'IsMoved'
             HeaderAlignmentHorz = taCenter
@@ -75,7 +75,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
             Options.Editing = False
             Width = 81
           end
-          object clInsertName: TcxGridDBColumn
+          object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
@@ -83,7 +83,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
             Options.Editing = False
             Width = 101
           end
-          object clInsertDate: TcxGridDBColumn
+          object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
@@ -91,7 +91,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
             Options.Editing = False
             Width = 78
           end
-          object clUpdateName: TcxGridDBColumn
+          object UpdateName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateName'
             HeaderAlignmentHorz = taCenter
@@ -99,7 +99,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
             Options.Editing = False
             Width = 101
           end
-          object clUpdateDate: TcxGridDBColumn
+          object UpdateDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateDate'
             HeaderAlignmentHorz = taCenter

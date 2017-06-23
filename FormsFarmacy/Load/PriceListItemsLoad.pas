@@ -19,13 +19,13 @@ type
   TPriceListItemsLoadForm = class(TAncestorDBGridForm)
     FormParams: TdsdFormParams;
     Panel1: TPanel;
-    colGoodsCode: TcxGridDBColumn;
-    colGoodsName: TcxGridDBColumn;
-    colGoodsNDS: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colExpirationDate: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
-    colCode: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    GoodsNDS: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    ExpirationDate: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
     actChoiceGoods: TOpenChoiceForm;
     cxLabel2: TcxLabel;
     edOperDate: TcxDateEdit;
@@ -35,13 +35,13 @@ type
     GuidesFrom: TdsdGuides;
     actUpdate: TdsdUpdateDataSet;
     spUpdatePriceListItem: TdsdStoredProc;
-    colCommonCode: TcxGridDBColumn;
-    colProducerName: TcxGridDBColumn;
+    CommonCode: TcxGridDBColumn;
+    ProducerName: TcxGridDBColumn;
     bbDeleteGoodsLink: TdxBarButton;
     mactGoodsLinkDelete: TMultiAction;
     DataSetPost: TDataSetPost;
-    colBarCode: TcxGridDBColumn;
-    colRemains: TcxGridDBColumn;
+    BarCode: TcxGridDBColumn;
+    Remains: TcxGridDBColumn;
     spGetMovement: TdsdStoredProc;
     actGetMovement: TdsdExecStoredProc;
     actOpenMovementPriceList: TdsdInsertUpdateAction;

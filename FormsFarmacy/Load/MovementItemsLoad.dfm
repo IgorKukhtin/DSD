@@ -8,48 +8,50 @@ inherited MovementItemsLoadForm: TMovementItemsLoadForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 77
+    Top = 75
     Width = 763
-    Height = 333
-    ExplicitTop = 77
+    Height = 335
+    ExplicitTop = 75
     ExplicitWidth = 763
-    ExplicitHeight = 333
-    ClientRectBottom = 329
-    ClientRectRight = 759
+    ExplicitHeight = 335
+    ClientRectBottom = 335
+    ClientRectRight = 763
     inherited tsMain: TcxTabSheet
+      ExplicitWidth = 763
+      ExplicitHeight = 335
       inherited cxGrid: TcxGrid
-        Width = 755
-        Height = 325
-        ExplicitLeft = -3
-        ExplicitWidth = 755
-        ExplicitHeight = 325
+        Width = 763
+        Height = 335
+        ExplicitWidth = 763
+        ExplicitHeight = 335
         inherited cxGridDBTableView: TcxGridDBTableView
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colGoodsCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 98
           end
-          object colGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 159
           end
-          object colGoodsId: TcxGridDBColumn
+          object GoodsId: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088#1099
             DataBinding.FieldName = 'GoodsId'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 67
           end
-          object colLoadMovementId: TcxGridDBColumn
+          object LoadMovementId: TcxGridDBColumn
             Caption = #1057#1089#1099#1083#1082#1072' '#1085#1072' '#1076#1086#1082#1091#1084#1077#1085#1090
             DataBinding.FieldName = 'LoadMovementId'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -62,19 +64,19 @@ inherited MovementItemsLoadForm: TMovementItemsLoadForm
             HeaderAlignmentVert = vaCenter
             Width = 43
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 204
           end
-          object colPackageAmount: TcxGridDBColumn
+          object PackageAmount: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1091#1087#1072#1082#1086#1074#1082#1077
             DataBinding.FieldName = 'PackageAmount'
             HeaderAlignmentVert = vaCenter
           end
-          object colPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -84,12 +86,12 @@ inherited MovementItemsLoadForm: TMovementItemsLoadForm
             Options.Editing = False
             Width = 72
           end
-          object colSumm: TcxGridDBColumn
+          object Summ: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Summ'
             HeaderAlignmentVert = vaCenter
           end
-          object colExpirationDate: TcxGridDBColumn
+          object ExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'ExpirationDate'
             HeaderAlignmentVert = vaCenter
@@ -164,10 +166,12 @@ inherited MovementItemsLoadForm: TMovementItemsLoadForm
     object actChoiceGoods: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'actChoiceGoods'
       FormName = 'TGoodsForm'
       FormNameParam.Value = 'TGoodsForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
@@ -188,6 +192,7 @@ inherited MovementItemsLoadForm: TMovementItemsLoadForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 128
     Top = 152
@@ -198,7 +203,7 @@ inherited MovementItemsLoadForm: TMovementItemsLoadForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
   end
   inherited PopupMenu: TPopupMenu
@@ -210,6 +215,7 @@ inherited MovementItemsLoadForm: TMovementItemsLoadForm
         Name = 'Id'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 176
@@ -225,18 +231,21 @@ inherited MovementItemsLoadForm: TMovementItemsLoadForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -244,7 +253,9 @@ inherited MovementItemsLoadForm: TMovementItemsLoadForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 288
     Top = 152
   end
@@ -253,6 +264,7 @@ inherited MovementItemsLoadForm: TMovementItemsLoadForm
     LookupControl = edFrom
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -262,6 +274,7 @@ inherited MovementItemsLoadForm: TMovementItemsLoadForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -270,6 +283,7 @@ inherited MovementItemsLoadForm: TMovementItemsLoadForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 352
     Top = 32
