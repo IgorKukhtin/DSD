@@ -386,7 +386,10 @@ BEGIN
                                                       END
       LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Operation.PaidKindId
       
-  ORDER BY Operation.OperationSort;
+  ORDER BY Operation.OperationSort
+         , MovementDesc.Id
+         , Operation.OperDate
+          ;
                                   
 END;
 $BODY$
@@ -413,4 +416,4 @@ ALTER FUNCTION gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integ
 */
 
 -- тест
--- SELECT * FROM gpReport_JuridicalCollation (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inJuridicalId:= 0, inPartnerId:=0, inContractId:= 0, inAccountId:= 0, inPaidKindId:= 0, inInfoMoneyId:= 0, inCurrencyId:= 0, inMovementId_Partion:=0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_JuridicalCollation (inStartDate:= '01.01.2017', inEndDate:= '01.01.2017', inJuridicalId:= 0, inPartnerId:=0, inContractId:= 0, inAccountId:= 0, inPaidKindId:= 0, inInfoMoneyId:= 0, inCurrencyId:= 0, inMovementId_Partion:=0, inSession:= zfCalc_UserAdmin());

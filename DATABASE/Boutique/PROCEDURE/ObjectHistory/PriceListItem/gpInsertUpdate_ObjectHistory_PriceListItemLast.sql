@@ -3,13 +3,13 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItemLast (Integer, Integer, Integer, TDateTime, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceListItemLast(
- INOUT ioId                     Integer,    -- ключ объекта <Элемент прайс-листа>
+ INOUT ioId                     Integer,    -- ключ объекта <Элемент ИСТОРИИ>
     IN inPriceListId            Integer,    -- Прайс-лист
     IN inGoodsId                Integer,    -- Товар
     IN inOperDate               TDateTime,  -- Дата действия цены
    OUT outStartDate             TDateTime,  -- Дата действия цены
    OUT outEndDate               TDateTime,  -- Дата действия цены
-    IN inValue                  TFloat,     -- Значение цены
+    IN inValue                  TFloat,     -- Цена
     IN inIsLast                 Boolean,    -- 
     IN inSession                TVarChar    -- сессия пользователя
 )
@@ -23,16 +23,20 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem());
 
-   -- !!!определяется!!!
+   -- !!!меняем значение!!!
    IF inIsLast = TRUE THEN ioId:= 0; END IF;
 
-   -- Получаем ссылку на объект цен
+   -- Поиск <Элемент цены>
    vbPriceListItemId := lpGetInsert_Object_PriceListItem (inPriceListId, inGoodsId, vbUserId);
  
-   -- Вставляем или меняем объект историю цен
+   -- Сохранили историю
    ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_PriceListItem(), vbPriceListItemId, inOperDate, vbUserId);
-   -- Устанавливаем цену
+   -- Сохранили цену
    PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceListItem_Value(), ioId, inValue);
+
+   -- !!!Кроме Sybase!!! - !!!не забыли - cохранили Последнюю Цену в ПАРТИИ!!!
+   -- PERFORM lpUpdate_Object_PartionGoods ...
+
 
    --
    IF inIsLast = TRUE AND EXISTS (SELECT Id FROM ObjectHistory WHERE DescId = zc_ObjectHistory_PriceListItem() AND ObjectId = vbPriceListItemId AND StartDate > inOperDate)
@@ -74,4 +78,5 @@ END;$BODY$
  09.12.14                                        *
 */
 
--- select * from gpInsertUpdate_ObjectHistory_PriceListItemLast(ioId := 0 , inPriceListId := 372 , inGoodsId := 406 , inOperDate := ('20.08.2015')::TDateTime , inValue := 59 , inIsLast := 'False' ,  inSession := '2');
+-- тест
+-- SELECT * FROM gpInsertUpdate_ObjectHistory_PriceListItemLast (ioId := 0 , inPriceListId := 372 , inGoodsId := 406 , inOperDate := ('20.08.2015')::TDateTime , inValue := 59 , inIsLast := 'False' ,  inSession := '2');
