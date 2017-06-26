@@ -13,7 +13,18 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxSplitter;
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxSplitter,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TOrderInternalForm = class(TAncestorDocumentForm)
@@ -109,20 +120,20 @@ type
     ChildDS: TDataSource;
     cxGridChild: TcxGrid;
     cxGridDBTableViewChild: TcxGridDBTableView;
-    clChGoodsCode: TcxGridDBColumn;
-    clChGoodsName: TcxGridDBColumn;
-    clChMeasureName: TcxGridDBColumn;
-    clChAmount: TcxGridDBColumn;
-    clChPartionGoodsDate: TcxGridDBColumn;
-    clChIsErased: TcxGridDBColumn;
+    ChGoodsCode: TcxGridDBColumn;
+    ChGoodsName: TcxGridDBColumn;
+    ChMeasureName: TcxGridDBColumn;
+    ChAmount: TcxGridDBColumn;
+    PartionGoodsDate: TcxGridDBColumn;
+    IsErased: TcxGridDBColumn;
     cxGridLevelChild: TcxGridLevel;
     ChildDBViewAddOn: TdsdDBViewAddOn;
     cxBottomSplitter: TcxSplitter;
-    clChGoodsKindName_Complete: TcxGridDBColumn;
-    clChGoodsKindName: TcxGridDBColumn;
-    clChContainerId: TcxGridDBColumn;
-    clChAmount_old: TcxGridDBColumn;
-    clChAmount_next: TcxGridDBColumn;
+    GoodsKindName_Complete: TcxGridDBColumn;
+    ChGoodsKindName: TcxGridDBColumn;
+    ContainerId: TcxGridDBColumn;
+    Amount_old: TcxGridDBColumn;
+    Amount_next: TcxGridDBColumn;
     ColorB_AmountPartner: TcxGridDBColumn;
     ColorB_DayCountForecast: TcxGridDBColumn;
     AmountRemainsTerm_calc: TcxGridDBColumn;
@@ -132,7 +143,7 @@ type
     ColorB_const: TcxGridDBColumn;
     Color_remains_calc: TcxGridDBColumn;
     Color_remainsTerm_calc: TcxGridDBColumn;
-    clChAmount_calc: TcxGridDBColumn;
+    Amount_calc: TcxGridDBColumn;
     TaxLoss: TcxGridDBColumn;
     CuterCountSecond: TcxGridDBColumn;
     AmountSend_sh: TcxGridDBColumn;

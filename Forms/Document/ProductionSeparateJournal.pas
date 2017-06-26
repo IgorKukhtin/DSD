@@ -28,16 +28,16 @@ uses
 
 type
   TProductionSeparateJournalForm = class(TAncestorJournalForm)
-    colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    colTotalCountChild: TcxGridDBColumn;
-    colPartionGoods: TcxGridDBColumn;
+    TotalCountChild: TcxGridDBColumn;
+    PartionGoods: TcxGridDBColumn;
     spSelectPrintCeh: TdsdStoredProc;
     actPrint_Ceh: TdsdPrintAction;
     bbPrint_Ceh: TdxBarButton;

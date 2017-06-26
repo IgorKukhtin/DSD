@@ -28,9 +28,9 @@ uses
 
 type
   TPersonalServiceJournalChoiceForm = class(TAncestorJournalForm)
-    colServiceDate: TcxGridDBColumn;
-    colComment: TcxGridDBColumn;
-    colTotalSumm: TcxGridDBColumn;
+    ServiceDate: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
     bbTax: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
@@ -40,12 +40,12 @@ type
     bbPrintTax_Us: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
-    colTotalSummService: TcxGridDBColumn;
-    colTotalSummCard: TcxGridDBColumn;
-    colTotalSummMinus: TcxGridDBColumn;
-    colTotalSummAdd: TcxGridDBColumn;
-    colPersonalServiceListName: TcxGridDBColumn;
-    colTotalSummCash: TcxGridDBColumn;
+    TotalSummService: TcxGridDBColumn;
+    TotalSummCard: TcxGridDBColumn;
+    TotalSummMinus: TcxGridDBColumn;
+    TotalSummAdd: TcxGridDBColumn;
+    PersonalServiceListName: TcxGridDBColumn;
+    TotalSummCash: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
     cxLabel6: TcxLabel;

@@ -13,7 +13,17 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter;
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TSendOnPrice_BranchForm = class(TAncestorDocumentForm)
@@ -30,17 +40,17 @@ type
     GuidesTo: TdsdGuides;
     edOperDatePartner: TcxDateEdit;
     cxLabel10: TcxLabel;
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
-    colGoodsKindName: TcxGridDBColumn;
-    colPartionGoods: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
-    colAmountChangePercent: TcxGridDBColumn;
-    colAmountPartner: TcxGridDBColumn;
-    colChangePercentAmount: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colCountForPrice: TcxGridDBColumn;
-    colAmountSumm: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    PartionGoods: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    AmountChangePercent: TcxGridDBColumn;
+    AmountPartner: TcxGridDBColumn;
+    ChangePercentAmount: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    CountForPrice: TcxGridDBColumn;
+    AmountSumm: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     cxLabel11: TcxLabel;
     edPriceList: TcxButtonEdit;
@@ -52,15 +62,15 @@ type
     actRefreshPrice: TdsdDataSetRefresh;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
-    colMeasureName: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
     PrintItemsSverkaCDS: TClientDataSet;
     cxLabel5: TcxLabel;
     edInvNumberOrder: TcxButtonEdit;
     actPrintOut: TdsdPrintAction;
     bbPrintOut: TdxBarButton;
     spSelectPrintOut: TdsdStoredProc;
-    clGoodsGroupNameFull: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
     UnitChoiceForm: TOpenChoiceForm;
     actPrintUnit: TdsdPrintAction;
     bbPrintUnit: TdxBarButton;

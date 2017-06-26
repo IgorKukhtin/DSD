@@ -353,48 +353,48 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSumm
+              Column = AmountSumm
               Sorted = True
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountRemains
+              Column = AmountRemains
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountRemainsEnd
+              Column = AmountRemainsEnd
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountIncome
+              Column = AmountIncome
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountForecast
+              Column = AmountForecast
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountIn
+              Column = AmountIn
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountOut
+              Column = AmountOut
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountOrder
+              Column = AmountOrder
             end
             item
               Format = ',0.####'
@@ -419,12 +419,12 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSumm
+              Column = AmountSumm
             end
             item
               Format = #1057#1090#1088#1086#1082': ,0'
@@ -433,37 +433,37 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountRemains
+              Column = AmountRemains
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountRemainsEnd
+              Column = AmountRemainsEnd
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountIncome
+              Column = AmountIncome
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountForecast
+              Column = AmountForecast
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountIn
+              Column = AmountIn
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountOut
+              Column = AmountOut
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountOrder
+              Column = AmountOrder
             end
             item
               Format = ',0.####'
@@ -473,7 +473,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colName
+              Column = GoodsName
             end
             item
               Format = ',0.####'
@@ -502,7 +502,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object clisClose: TcxGridDBColumn
+          object isClose: TcxGridDBColumn
             Caption = #1042#1099#1087#1086#1083#1085#1077#1085' '#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'isClose'
             HeaderAlignmentHorz = taCenter
@@ -518,7 +518,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object clGoodsGroupNameFull: TcxGridDBColumn
+          object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
             Visible = False
@@ -527,7 +527,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             Options.Editing = False
             Width = 100
           end
-          object colCode: TcxGridDBColumn
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074'.'
             DataBinding.FieldName = 'GoodsCode'
             Visible = False
@@ -536,7 +536,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             Options.Editing = False
             Width = 50
           end
-          object colName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -544,7 +544,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             Options.Editing = False
             Width = 232
           end
-          object colGoodsName_Partner: TcxGridDBColumn
+          object GoodsName_Partner: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'GoodsName_Partner'
             HeaderAlignmentHorz = taCenter
@@ -552,7 +552,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             Options.Editing = False
             Width = 112
           end
-          object colMeasureName: TcxGridDBColumn
+          object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -567,7 +567,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object colPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -577,7 +577,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -587,7 +587,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colAmountSumm: TcxGridDBColumn
+          object AmountSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -611,7 +611,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             Options.Editing = False
             Width = 58
           end
-          object colAmountRemains: TcxGridDBColumn
+          object AmountRemains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072#1095'.'
             DataBinding.FieldName = 'AmountRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -622,7 +622,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             Options.Editing = False
             Width = 55
           end
-          object colAmountRemainsEnd: TcxGridDBColumn
+          object AmountRemainsEnd: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082' '#1082#1086#1085#1077#1095#1085'.'
             DataBinding.FieldName = 'AmountRemainsEnd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -655,7 +655,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             Options.Editing = False
             Width = 70
           end
-          object colAmountIncome: TcxGridDBColumn
+          object AmountIncome: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076'-'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090'.'
             DataBinding.FieldName = 'AmountIncome'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -666,7 +666,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             Options.Editing = False
             Width = 55
           end
-          object colAmountForecast: TcxGridDBColumn
+          object AmountForecast: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076' '#1085#1072' '#1087#1088'-'#1074#1086
             DataBinding.FieldName = 'AmountForecast'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -677,7 +677,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             Options.Editing = False
             Width = 55
           end
-          object colAmountIn: TcxGridDBColumn
+          object AmountIn: TcxGridDBColumn
             Caption = #1055#1088#1080#1093'. '#1076#1088#1091#1075#1086#1081
             DataBinding.FieldName = 'AmountIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -688,7 +688,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             Options.Editing = False
             Width = 55
           end
-          object colAmountOut: TcxGridDBColumn
+          object AmountOut: TcxGridDBColumn
             Caption = #1056#1072#1089#1093'. '#1076#1088#1091#1075#1086#1081
             DataBinding.FieldName = 'AmountOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -699,7 +699,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             Options.Editing = False
             Width = 55
           end
-          object colAmountOrder: TcxGridDBColumn
+          object AmountOrder: TcxGridDBColumn
             Caption = #1047#1072#1082#1072#1079' '#1074' '#1087#1091#1090#1080
             DataBinding.FieldName = 'AmountOrder'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -766,7 +766,7 @@ object OrderIncomeSnabForm: TOrderIncomeSnabForm
             Options.Editing = False
             Width = 70
           end
-          object colIsErased: TcxGridDBColumn
+          object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
             Visible = False

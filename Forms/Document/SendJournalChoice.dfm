@@ -5,26 +5,27 @@ inherited SendJournalChoiceForm: TSendJournalChoiceForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = 3
+  ExplicitLeft = -116
+  ExplicitTop = -203
   ExplicitWidth = 791
-  ExplicitHeight = 570
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 775
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 814
+    ExplicitWidth = 775
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 775
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 814
+      ExplicitWidth = 775
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 775
         Height = 478
-        ExplicitWidth = 814
+        ExplicitWidth = 775
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -35,7 +36,7 @@ inherited SendJournalChoiceForm: TSendJournalChoiceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -73,7 +74,7 @@ inherited SendJournalChoiceForm: TSendJournalChoiceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
@@ -135,7 +136,7 @@ inherited SendJournalChoiceForm: TSendJournalChoiceForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          object colDocumentKindName: TcxGridDBColumn
+          object DocumentKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'DocumentKindName'
             HeaderAlignmentHorz = taCenter
@@ -143,21 +144,21 @@ inherited SendJournalChoiceForm: TSendJournalChoiceForm
             Options.Editing = False
             Width = 111
           end
-          object colFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object colToName: TcxGridDBColumn
+          object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object colTotalCount: TcxGridDBColumn
+          object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -167,7 +168,7 @@ inherited SendJournalChoiceForm: TSendJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colisAuto: TcxGridDBColumn
+          object isAuto: TcxGridDBColumn
             Caption = #1040#1074#1090#1086'.'
             DataBinding.FieldName = 'isAuto'
             HeaderAlignmentHorz = taCenter
@@ -182,7 +183,7 @@ inherited SendJournalChoiceForm: TSendJournalChoiceForm
   end
   inherited Panel: TPanel
     Width = 775
-    ExplicitWidth = 814
+    ExplicitWidth = 775
     inherited deStart: TcxDateEdit
       EditValue = 42370d
     end

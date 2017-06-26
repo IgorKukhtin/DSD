@@ -5,8 +5,9 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -434
   ExplicitWidth = 1126
-  ExplicitHeight = 445
+  ExplicitHeight = 446
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -34,47 +35,47 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCountPartner
+              Column = TotalCountPartner
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSumm
+              Column = TotalSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummVAT
+              Column = TotalSummVAT
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummMVAT
+              Column = TotalSummMVAT
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummPVAT
+              Column = TotalSummPVAT
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCountTare
+              Column = TotalCountTare
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCountSh
+              Column = TotalCountSh
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCountKg
+              Column = TotalCountKg
             end
             item
               Format = ',0.####'
@@ -95,52 +96,52 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
+              Column = TotalCount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCountPartner
+              Column = TotalCountPartner
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSumm
+              Column = TotalSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummVAT
+              Column = TotalSummVAT
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummMVAT
+              Column = TotalSummMVAT
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummPVAT
+              Column = TotalSummPVAT
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCountTare
+              Column = TotalCountTare
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCountSh
+              Column = TotalCountSh
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCountKg
+              Column = TotalCountKg
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colFromName
+              Column = FromName
             end
             item
               Format = ',0.####'
@@ -180,7 +181,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          object colOperDatePartner: TcxGridDBColumn [2]
+          object OperDatePartner: TcxGridDBColumn [2]
             Caption = #1044#1072#1090#1072' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
@@ -259,21 +260,21 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
             Options.Editing = False
             Width = 70
           end
-          object colFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object colToName: TcxGridDBColumn
+          object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object colTotalCount: TcxGridDBColumn
+          object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -284,7 +285,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colTotalCountPartner: TcxGridDBColumn
+          object TotalCountPartner: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'TotalCountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -295,7 +296,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colTotalCountTare: TcxGridDBColumn
+          object TotalCountTare: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'TotalCountTare'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -317,7 +318,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colTotalCountSh: TcxGridDBColumn
+          object TotalCountSh: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'TotalCountSh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -338,7 +339,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
-          object colTotalCountKg: TcxGridDBColumn
+          object TotalCountKg: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'TotalCountKg'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -358,7 +359,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colTotalSumm: TcxGridDBColumn
+          object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075#1086' '#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -368,14 +369,14 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colChangePercent: TcxGridDBColumn
+          object ChangePercent: TcxGridDBColumn
             Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094
             DataBinding.FieldName = 'ChangePercent'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colPriceWithVAT: TcxGridDBColumn
+          object PriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'PriceWithVAT'
             Visible = False
@@ -383,7 +384,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colVATPercent: TcxGridDBColumn
+          object VATPercent: TcxGridDBColumn
             Caption = '% '#1053#1044#1057
             DataBinding.FieldName = 'VATPercent'
             Visible = False
@@ -391,7 +392,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object colTotalSummVAT: TcxGridDBColumn
+          object TotalSummVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -402,7 +403,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colTotalSummMVAT: TcxGridDBColumn
+          object TotalSummMVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummMVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -413,7 +414,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colTotalSummPVAT: TcxGridDBColumn
+          object TotalSummPVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummPVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -424,7 +425,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colRouteSortingName: TcxGridDBColumn
+          object RouteSortingName: TcxGridDBColumn
             Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
             DataBinding.FieldName = 'RouteSortingName'
             Visible = False

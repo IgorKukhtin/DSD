@@ -28,17 +28,17 @@ uses
 
 type
   TProductionPeresortJournalForm = class(TAncestorJournalForm)
-    colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
-    colTotalCountChild: TcxGridDBColumn;
-    colPartionGoods: TcxGridDBColumn;
+    TotalCountChild: TcxGridDBColumn;
+    PartionGoods: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     cxLabel27: TcxLabel;
     edJuridicalBasis: TcxButtonEdit;

@@ -2,8 +2,9 @@ inherited StoreRealForm: TStoreRealForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1060#1072#1082#1090#1080#1095#1077#1089#1082#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1058#1058'>'
   ClientHeight = 397
   ClientWidth = 937
+  ExplicitLeft = -217
   ExplicitWidth = 953
-  ExplicitHeight = 432
+  ExplicitHeight = 436
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -191,7 +192,7 @@ inherited StoreRealForm: TStoreRealForm
             Options.Editing = False
             Width = 100
           end
-          object colGUID: TcxGridDBColumn [11]
+          object GUID: TcxGridDBColumn [11]
             DataBinding.FieldName = 'GUID'
             Visible = False
             HeaderAlignmentHorz = taCenter

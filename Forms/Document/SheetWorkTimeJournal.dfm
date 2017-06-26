@@ -23,7 +23,6 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
     Height = 50
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 456
     object deStart: TcxDateEdit
       Left = 116
       Top = 3
@@ -85,7 +84,6 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 456
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -174,7 +172,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object colOperDate: TcxGridDBColumn
+      object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         PropertiesClassName = 'TcxDateEditProperties'
@@ -185,13 +183,13 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 152
       end
-      object colUnitName: TcxGridDBColumn
+      object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentVert = vaCenter
         Width = 306
       end
-      object colisComplete: TcxGridDBColumn
+      object isComplete: TcxGridDBColumn
         Caption = #1057#1086#1093#1088#1072#1085#1077#1085
         DataBinding.FieldName = 'isComplete'
         HeaderAlignmentHorz = taCenter

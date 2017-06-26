@@ -14,26 +14,36 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCheckBox, cxImageComboBox, dxSkinsCore, dxSkinsDefaultPainters,
   dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.Menus, cxCurrencyEdit,
-  cxButtonEdit, dsdGuides;
+  cxButtonEdit, dsdGuides, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TProfitLossServiceJournalForm = class(TAncestorJournalForm)
-    colAmountOut: TcxGridDBColumn;
-    clInfoMoneyCode: TcxGridDBColumn;
-    clInfoMoneyGroupName: TcxGridDBColumn;
-    clInfoMoneyDestinationName: TcxGridDBColumn;
-    clComment: TcxGridDBColumn;
-    clContractInvNumber: TcxGridDBColumn;
-    clJuridicalCode: TcxGridDBColumn;
-    clContractConditionKindName: TcxGridDBColumn;
+    AmountOut: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    ContractInvNumber: TcxGridDBColumn;
+    JuridicalCode: TcxGridDBColumn;
+    ContractConditionKindName: TcxGridDBColumn;
     N13: TMenuItem;
     actReCompleteAll: TdsdExecStoredProc;
     spMovementReCompleteAll: TdsdStoredProc;
     bbReCompleteAll: TdxBarButton;
-    clBonusKindName: TcxGridDBColumn;
-    clisLoad: TcxGridDBColumn;
-    clContractMasterInvNumber: TcxGridDBColumn;
-    clContractChildInvNumber: TcxGridDBColumn;
+    BonusKindName: TcxGridDBColumn;
+    isLoad: TcxGridDBColumn;
+    ContractMasterInvNumber: TcxGridDBColumn;
+    ContractChildInvNumber: TcxGridDBColumn;
     BonusValue: TcxGridDBColumn;
     AmountPartner: TcxGridDBColumn;
     Summ: TcxGridDBColumn;

@@ -4,8 +4,9 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
   ClientWidth = 913
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
+  ExplicitTop = -37
   ExplicitWidth = 929
-  ExplicitHeight = 569
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -33,73 +34,73 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSumm
+              Column = TotalSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummService
+              Column = TotalSummService
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummCard
+              Column = TotalSummCard
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummMinus
+              Column = TotalSummMinus
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummAdd
+              Column = TotalSummAdd
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummHoliday
+              Column = TotalSummHoliday
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummCash
+              Column = TotalSummCash
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSumm
+              Column = TotalSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummService
+              Column = TotalSummService
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummCard
+              Column = TotalSummCard
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummMinus
+              Column = TotalSummMinus
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummAdd
+              Column = TotalSummAdd
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummHoliday
+              Column = TotalSummHoliday
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSummCash
+              Column = TotalSummCash
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -128,7 +129,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          object colServiceDate: TcxGridDBColumn
+          object ServiceDate: TcxGridDBColumn
             Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
             DataBinding.FieldName = 'ServiceDate'
             PropertiesClassName = 'TcxDateEditProperties'
@@ -139,14 +140,14 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colPersonalServiceListName: TcxGridDBColumn
+          object PersonalServiceListName: TcxGridDBColumn
             Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
             DataBinding.FieldName = 'PersonalServiceListName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 200
           end
-          object colTotalSumm: TcxGridDBColumn
+          object TotalSumm: TcxGridDBColumn
             Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1090#1086#1075')'
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -156,7 +157,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 89
           end
-          object colTotalSummCash: TcxGridDBColumn
+          object TotalSummCash: TcxGridDBColumn
             Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1079' '#1082#1072#1089#1089#1099')'
             DataBinding.FieldName = 'TotalSummCash'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -166,7 +167,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colTotalSummService: TcxGridDBColumn
+          object TotalSummService: TcxGridDBColumn
             Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103
             DataBinding.FieldName = 'TotalSummService'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -177,7 +178,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colTotalSummCard: TcxGridDBColumn
+          object TotalSummCard: TcxGridDBColumn
             Caption = #1050#1072#1088#1090#1072' '#1041#1053' - 1'#1092
             DataBinding.FieldName = 'TotalSummCard'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -187,7 +188,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colTotalSummMinus: TcxGridDBColumn
+          object TotalSummMinus: TcxGridDBColumn
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103
             DataBinding.FieldName = 'TotalSummMinus'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -198,7 +199,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colTotalSummAdd: TcxGridDBColumn
+          object TotalSummAdd: TcxGridDBColumn
             Caption = #1055#1088#1077#1084#1080#1103
             DataBinding.FieldName = 'TotalSummAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -209,7 +210,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colTotalSummHoliday: TcxGridDBColumn
+          object TotalSummHoliday: TcxGridDBColumn
             Caption = #1054#1090#1087#1091#1089#1082#1085#1099#1077
             DataBinding.FieldName = 'TotalSummHoliday'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -220,7 +221,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colComment: TcxGridDBColumn
+          object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter

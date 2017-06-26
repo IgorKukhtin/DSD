@@ -100,7 +100,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Options.Moving = False
           Width = 50
         end>
-      object BandcolMemberlCode: TcxGridDBBandedColumn
+      object MemberCode: TcxGridDBBandedColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'MemberCode'
         HeaderAlignmentVert = vaCenter
@@ -111,7 +111,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
-      object BandcolMemberName: TcxGridDBBandedColumn
+      object MemberName: TcxGridDBBandedColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'MemberName'
         HeaderAlignmentVert = vaCenter
@@ -123,7 +123,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Position.ColIndex = 1
         Position.RowIndex = 0
       end
-      object BandcolPositionName: TcxGridDBBandedColumn
+      object PositionName: TcxGridDBBandedColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
         DataBinding.FieldName = 'PositionName'
         HeaderAlignmentHorz = taCenter
@@ -136,7 +136,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Position.ColIndex = 2
         Position.RowIndex = 0
       end
-      object BandcolPositionLevelName: TcxGridDBBandedColumn
+      object PositionLevelName: TcxGridDBBandedColumn
         Caption = #1056#1072#1079#1088#1103#1076
         DataBinding.FieldName = 'PositionLevelName'
         HeaderAlignmentHorz = taCenter
@@ -149,7 +149,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Position.ColIndex = 3
         Position.RowIndex = 0
       end
-      object BandcolPersonalGroupName: TcxGridDBBandedColumn
+      object PersonalGroupName: TcxGridDBBandedColumn
         Caption = #1041#1088#1080#1075#1072#1076#1072
         DataBinding.FieldName = 'PersonalGroupName'
         Visible = False
@@ -162,7 +162,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Position.ColIndex = 4
         Position.RowIndex = 0
       end
-      object BandcolStorageLineName: TcxGridDBBandedColumn
+      object StorageLineName: TcxGridDBBandedColumn
         Caption = #1051#1080#1085#1080#1103' '#1087#1088'-'#1074#1072
         DataBinding.FieldName = 'StorageLineName'
         HeaderAlignmentHorz = taCenter
@@ -175,7 +175,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Position.ColIndex = 7
         Position.RowIndex = 0
       end
-      object BandcolAmountHours: TcxGridDBBandedColumn
+      object AmountHours: TcxGridDBBandedColumn
         Caption = #1048#1090#1086#1075#1086' '#1095#1072#1089#1086#1074
         DataBinding.FieldName = 'AmountHours'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -190,7 +190,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Position.ColIndex = 6
         Position.RowIndex = 0
       end
-      object TemplateColumn: TcxGridDBBandedColumn
+      object Value: TcxGridDBBandedColumn
         DataBinding.FieldName = 'Value'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -1056,7 +1056,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     SummaryItemList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueField'
-    TemplateColumn = TemplateColumn
+    TemplateColumn = Value
     Left = 384
     Top = 272
   end

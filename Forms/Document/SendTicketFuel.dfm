@@ -1,7 +1,7 @@
 inherited SendTicketFuelForm: TSendTicketFuelForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1058#1072#1083#1086#1085#1099' '#1085#1072' '#1090#1086#1087#1083#1080#1074#1086')>'
   ClientWidth = 701
-  ExplicitWidth = 709
+  ExplicitWidth = 717
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -14,31 +14,32 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
         Width = 701
         ExplicitWidth = 701
         inherited cxGridDBTableView: TcxGridDBTableView
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn [0]
+          object GoodsCode: TcxGridDBColumn [0]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
           end
-          object colName: TcxGridDBColumn [1]
+          object GoodsName: TcxGridDBColumn [1]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 200
           end
-          object colFuelName: TcxGridDBColumn [2]
+          object FuelName: TcxGridDBColumn [2]
             Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
             DataBinding.FieldName = 'FuelName'
             Options.Editing = False
             Width = 80
           end
-          object colAmount: TcxGridDBColumn [3]
+          object Amount: TcxGridDBColumn [3]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taRightJustify
@@ -107,6 +108,7 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
     SummaryItemList = <
       item
         Param.Value = Null
+        Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 0
       end>
   end
@@ -122,22 +124,26 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
         Value = ''
         Component = StatusGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -145,12 +151,14 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromId'
         Value = ''
         Component = FromGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromName'
@@ -158,12 +166,14 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
         Component = FromGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToId'
         Value = ''
         Component = ToGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToName'
@@ -171,6 +181,7 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
         Component = ToGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
@@ -182,6 +193,7 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -189,6 +201,7 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -196,6 +209,7 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId'
@@ -203,6 +217,7 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
         Component = FromGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inToId'
@@ -210,6 +225,7 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
         Component = ToGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   inherited GuidesFiller: TGuidesFiller
@@ -242,9 +258,11 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -252,52 +270,67 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Count'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inHeadCount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'HeadCount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoods'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionGoods'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAssetId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AssetId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   object FromGuides: TdsdGuides
@@ -305,6 +338,7 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
     LookupControl = edFrom
     FormNameParam.Value = 'TObject_StoragePlace'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TObject_StoragePlace'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -313,6 +347,7 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
         Value = ''
         Component = FromGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -320,6 +355,7 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
         Component = FromGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 479
     Top = 24
@@ -329,6 +365,7 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
     LookupControl = edTo
     FormNameParam.Value = 'TObject_StoragePlace'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TObject_StoragePlace'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -337,6 +374,7 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
         Value = ''
         Component = ToGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -344,6 +382,7 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
         Component = ToGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 640
     Top = 24
