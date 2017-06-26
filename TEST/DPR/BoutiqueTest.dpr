@@ -246,7 +246,9 @@ uses
   Report_ProfitLossDialog in '..\..\FormsBoutique\Report\Report_ProfitLossDialog.pas' {Report_ProfitLossDialogForm: TParentForm},
   MovementItemContainer in '..\..\FormsBoutique\Document\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm},
   Report_Goods_RemainsCurrent in '..\..\FormsBoutique\Report\Report_Goods_RemainsCurrent.pas' {Report_Goods_RemainsCurrentForm: TParentForm},
-  Report_Goods_RemainsCurrentDialog in '..\..\FormsBoutique\Report\Report_Goods_RemainsCurrentDialog.pas' {Report_Goods_RemainsCurrentDialogForm: TParentForm};
+  Report_Goods_RemainsCurrentDialog in '..\..\FormsBoutique\Report\Report_Goods_RemainsCurrentDialog.pas' {Report_Goods_RemainsCurrentDialogForm: TParentForm},
+  Report_Goods in '..\..\FormsBoutique\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm},
+  Report_GoodsDialog in '..\..\FormsBoutique\Report\Report_GoodsDialog.pas' {Report_GoodsDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
