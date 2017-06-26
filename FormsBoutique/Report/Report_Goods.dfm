@@ -1,27 +1,28 @@
 inherited Report_GoodsForm: TReport_GoodsForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
   ClientHeight = 341
-  ClientWidth = 1026
+  ClientWidth = 1053
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1042
+  ExplicitLeft = -26
+  ExplicitWidth = 1069
   ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1026
+    Width = 1053
     Height = 261
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1026
     ExplicitHeight = 261
     ClientRectBottom = 261
-    ClientRectRight = 1026
+    ClientRectRight = 1053
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1026
       ExplicitHeight = 261
       inherited cxGrid: TcxGrid
-        Width = 1026
+        Width = 1053
         Height = 261
         ExplicitWidth = 1026
         ExplicitHeight = 261
@@ -850,7 +851,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
     end
   end
   inherited Panel: TPanel
-    Width = 1026
+    Width = 1053
     Height = 54
     ExplicitWidth = 1026
     ExplicitHeight = 54
